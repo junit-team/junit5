@@ -17,6 +17,7 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -41,9 +42,15 @@ import org.junit.platform.commons.util.StringUtils;
 class ParameterizedTestParameterResolver implements ParameterResolver {
 
 	private final Object[] arguments;
+	private final ConcurrentHashMap<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregatorInstanceMap;
+	private final ConcurrentHashMap<Class<? extends ArgumentConverter>, ArgumentConverter> converterInstanceMap;
 
-	ParameterizedTestParameterResolver(Object[] arguments) {
+	ParameterizedTestParameterResolver(Object[] arguments,
+			ConcurrentHashMap<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregatorInstanceMap,
+			ConcurrentHashMap<Class<? extends ArgumentConverter>, ArgumentConverter> converterInstanceMap) {
 		this.arguments = arguments;
+		this.aggregatorInstanceMap = aggregatorInstanceMap;
+		this.converterInstanceMap = converterInstanceMap;
 	}
 
 	@Override
@@ -85,7 +92,7 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 		Optional<ConvertWith> annotation = AnnotationUtils.findAnnotation(parameter, ConvertWith.class);
 		// @formatter:off
 		ArgumentConverter argumentConverter = annotation.map(ConvertWith::value)
-				.map(clazz -> (ArgumentConverter) ReflectionUtils.newInstance(clazz))
+				.map(clazz -> converterInstanceMap.computeIfAbsent( clazz, ReflectionUtils::newInstance))
 				.map(converter -> AnnotationConsumerInitializer.initialize(parameter, converter))
 				.orElse(DefaultArgumentConverter.INSTANCE);
 		// @formatter:on
@@ -110,7 +117,8 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	private Object aggregateSafely(Class<? extends ArgumentsAggregator> clazz, ArgumentsAccessor accessor,
 			ParameterContext parameterContext) {
 		try {
-			ArgumentsAggregator aggregator = ReflectionSupport.newInstance(clazz);
+			ArgumentsAggregator aggregator = aggregatorInstanceMap.computeIfAbsent(clazz,
+				ReflectionSupport::newInstance);
 			return aggregator.aggregateArguments(accessor, parameterContext);
 		}
 		catch (Exception ex) {

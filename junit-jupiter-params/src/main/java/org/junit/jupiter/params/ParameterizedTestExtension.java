@@ -17,6 +17,7 @@ import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
@@ -24,6 +25,8 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.params.aggregator.AggregationUtils;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
+import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
@@ -61,6 +64,10 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	@Override
 	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
 		Method templateMethod = context.getRequiredTestMethod();
+
+		ConcurrentHashMap<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregatorInstanceMap = new ConcurrentHashMap<>();
+		ConcurrentHashMap<Class<? extends ArgumentConverter>, ArgumentConverter> converterInstanceMap = new ConcurrentHashMap<>();
+
 		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod);
 		AtomicLong invocationCount = new AtomicLong(0);
 		// @formatter:off
@@ -72,7 +79,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.flatMap(provider -> arguments(provider, context))
 				.map(Arguments::get)
 				.map(arguments -> consumedArguments(arguments, templateMethod))
-				.map(arguments -> createInvocationContext(formatter, arguments))
+				.map(arguments -> createInvocationContext(formatter, arguments, aggregatorInstanceMap, converterInstanceMap))
 				.peek(invocationContext -> invocationCount.incrementAndGet())
 				.onClose(() ->
 						Preconditions.condition(invocationCount.get() > 0,
@@ -81,8 +88,11 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private TestTemplateInvocationContext createInvocationContext(ParameterizedTestNameFormatter formatter,
-			Object[] arguments) {
-		return new ParameterizedTestInvocationContext(formatter, arguments);
+			Object[] arguments,
+			ConcurrentHashMap<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> argumentConverterInstanceMap,
+			ConcurrentHashMap<Class<? extends ArgumentConverter>, ArgumentConverter> converterInstanceMap) {
+		return new ParameterizedTestInvocationContext(formatter, arguments, argumentConverterInstanceMap,
+			converterInstanceMap);
 	}
 
 	private ParameterizedTestNameFormatter createNameFormatter(Method templateMethod) {
