@@ -66,22 +66,22 @@ class AssertTimeoutAssertionsTests {
 	@Test
 	void assertTimeoutForExecutableThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
-			() -> assertTimeout(ofMillis(50), () -> Thread.sleep(100)));
-		assertMessageStartsWith(error, "execution exceeded timeout of 50 ms by");
+			() -> assertTimeout(ofMillis(10), () -> Thread.sleep(100)));
+		assertMessageStartsWith(error, "execution exceeded timeout of 10 ms by");
 	}
 
 	@Test
 	void assertTimeoutWithMessageForExecutableThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
-			() -> assertTimeout(ofMillis(50), () -> Thread.sleep(100), "Tempus Fugit"));
-		assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 50 ms by");
+			() -> assertTimeout(ofMillis(10), () -> Thread.sleep(100), "Tempus Fugit"));
+		assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 10 ms by");
 	}
 
 	@Test
 	void assertTimeoutWithMessageSupplierForExecutableThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
-			() -> assertTimeout(ofMillis(50), () -> Thread.sleep(100), () -> "Tempus" + " " + "Fugit"));
-		assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 50 ms by");
+			() -> assertTimeout(ofMillis(10), () -> Thread.sleep(100), () -> "Tempus" + " " + "Fugit"));
+		assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 10 ms by");
 	}
 
 	// --- supplier ------------------------------------------------------------
@@ -126,37 +126,37 @@ class AssertTimeoutAssertionsTests {
 	@Test
 	void assertTimeoutForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
-			assertTimeout(ofMillis(50), () -> {
+			assertTimeout(ofMillis(10), () -> {
 				Thread.sleep(100);
 				return "Tempus Fugit";
 			});
 			fail("timeout assertion should be thrown");
 		});
-		assertMessageStartsWith(error, "execution exceeded timeout of 50 ms by");
+		assertMessageStartsWith(error, "execution exceeded timeout of 10 ms by");
 	}
 
 	@Test
 	void assertTimeoutWithMessageForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
-			assertTimeout(ofMillis(50), () -> {
+			assertTimeout(ofMillis(10), () -> {
 				Thread.sleep(100);
 				return "Tempus Fugit";
 			}, "Tempus Fugit");
 			fail("timeout assertion should be thrown");
 		});
-		assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 50 ms by");
+		assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 10 ms by");
 	}
 
 	@Test
 	void assertTimeoutWithMessageSupplierForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
-			assertTimeout(ofMillis(50), () -> {
+			assertTimeout(ofMillis(10), () -> {
 				Thread.sleep(100);
 				return "Tempus Fugit";
 			}, () -> "Tempus" + " " + "Fugit");
 			fail("timeout assertion should be thrown");
 		});
-		assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 50 ms by");
+		assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 10 ms by");
 	}
 
 	// -- executable - preemptively ---
@@ -191,27 +191,27 @@ class AssertTimeoutAssertionsTests {
 	@Test
 	void assertTimeoutPreemptivelyForExecutableThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
-			() -> assertTimeoutPreemptively(ofMillis(50), () -> Thread.sleep(100)));
-		assertMessageEquals(error, "execution timed out after 50 ms");
+			() -> assertTimeoutPreemptively(ofMillis(10), () -> Thread.sleep(100)));
+		assertMessageEquals(error, "execution timed out after 10 ms");
 	}
 
 	@Test
 	void assertTimeoutPreemptivelyWithMessageForExecutableThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
-			() -> assertTimeoutPreemptively(ofMillis(50), () -> Thread.sleep(100), "Tempus Fugit"));
-		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 50 ms");
+			() -> assertTimeoutPreemptively(ofMillis(10), () -> Thread.sleep(100), "Tempus Fugit"));
+		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
 	}
 
 	@Test
 	void assertTimeoutPreemptivelyWithMessageSupplierForExecutableThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
-			() -> assertTimeoutPreemptively(ofMillis(50), () -> Thread.sleep(100), () -> "Tempus" + " " + "Fugit"));
-		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 50 ms");
+			() -> assertTimeoutPreemptively(ofMillis(10), () -> Thread.sleep(100), () -> "Tempus" + " " + "Fugit"));
+		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
 	}
 
 	@Test
 	void assertTimeoutPreemptivelyWithMessageSupplierForExecutableThatCompletesBeforeTheTimeout() {
-		assertTimeoutPreemptively(ofMillis(100), () -> Thread.sleep(50), () -> "Tempus" + " " + "Fugit");
+		assertTimeoutPreemptively(ofMillis(100), () -> Thread.sleep(10), () -> "Tempus" + " " + "Fugit");
 	}
 
 	// -- supplier - preemptively ---
@@ -256,37 +256,37 @@ class AssertTimeoutAssertionsTests {
 	@Test
 	void assertTimeoutPreemptivelyForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
-			assertTimeoutPreemptively(ofMillis(50), () -> {
+			assertTimeoutPreemptively(ofMillis(10), () -> {
 				Thread.sleep(100);
 				return "Tempus Fugit";
 			});
 			fail("timeout exception should be thrown");
 		});
-		assertMessageEquals(error, "execution timed out after 50 ms");
+		assertMessageEquals(error, "execution timed out after 10 ms");
 	}
 
 	@Test
 	void assertTimeoutPreemptivelyWithMessageForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
-			assertTimeoutPreemptively(ofMillis(50), () -> {
+			assertTimeoutPreemptively(ofMillis(10), () -> {
 				Thread.sleep(100);
 				return "Tempus Fugit";
 			}, "Tempus Fugit");
 			fail("timeout exception should be thrown");
 		});
-		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 50 ms");
+		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
 	}
 
 	@Test
 	void assertTimeoutPreemptivelyWithMessageSupplierForSupplierThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class, () -> {
-			assertTimeoutPreemptively(ofMillis(50), () -> {
+			assertTimeoutPreemptively(ofMillis(10), () -> {
 				Thread.sleep(100);
 				return "Tempus Fugit";
 			}, () -> "Tempus" + " " + "Fugit");
 			fail("timeout exception should be thrown");
 		});
-		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 50 ms");
+		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
 	}
 
 }
