@@ -31,8 +31,9 @@ script:
   - ./gradlew --version
 # Build JUnit 5
   - ./gradlew --scan --stacktrace --warning-mode=all ${JACOCO} build ${INSTALL}
-  - test -v INSTALL && ./gradlew -Dplatform.tooling.support.tests.enabled=true build || true
 
-# If variable JACOCO is set, run JaCoCo report and send report to codecov.io after build success
 after_success:
+# If variable JACOCO is set, run JaCoCo report and send report to codecov.io after build success
   - test -v JACOCO && ./gradlew ${JACOCO} jacocoRootReport && bash <(curl -s https://codecov.io/bash) || true
+# If variable INSTALL is set, run platform-tooling-support-tests
+  - test -v INSTALL && ./gradlew --scan --stacktrace -Dplatform.tooling.support.tests.enabled=true build || true
