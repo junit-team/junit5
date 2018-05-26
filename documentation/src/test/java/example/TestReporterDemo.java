@@ -12,6 +12,7 @@ package example;
 
 // tag::user_guide[]
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
@@ -25,7 +26,7 @@ class TestReporterDemo {
 
 	@Test
 	void reportSeveralValues(TestReporter testReporter) {
-		HashMap<String, String> values = new HashMap<>();
+		Map<String, String> values = new HashMap<>();
 		values.put("user name", "dk38");
 		values.put("award year", "1974");
 
