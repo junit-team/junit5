@@ -2199,6 +2199,7 @@ all reported entries to <code>stdout</code>.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">java.util.HashMap</span>;
+<span class="keyword">import</span> <span class="include">java.util.Map</span>;
 
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.TestReporter</span>;
@@ -2212,7 +2213,7 @@ all reported entries to <code>stdout</code>.</p>
 
     <span class="annotation">@Test</span>
     <span class="type">void</span> reportSeveralValues(TestReporter testReporter) {
-        <span class="predefined-type">HashMap</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; values = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;&gt;();
+        <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; values = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;&gt;();
         values.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">user name</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">dk38</span><span class="delimiter">&quot;</span></span>);
         values.put(<span class="string"><span class="delimiter">&quot;</span><span class="content">award year</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">1974</span><span class="delimiter">&quot;</span></span>);
 
@@ -6351,7 +6352,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-05-25 08:58:29 EDT
+Last updated 2018-05-26 07:42:17 EDT
 </div>
 </div>
 </body>
