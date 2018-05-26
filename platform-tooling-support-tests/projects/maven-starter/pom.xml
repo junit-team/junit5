@@ -10,8 +10,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>10</java.version>
-        <junit.jupiter.version>5.3.0-SNAPSHOT</junit.jupiter.version>
-        <junit.platform.version>1.3.0-SNAPSHOT</junit.platform.version>
+        <junit.jupiter.version>${env.JUNIT_JUPITER_VERSION}</junit.jupiter.version>
+        <junit.platform.version>${env.JUNIT_PLATFORM_VERSION}</junit.platform.version>
     </properties>
 
     <dependencies>

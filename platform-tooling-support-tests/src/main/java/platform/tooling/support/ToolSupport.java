@@ -112,6 +112,9 @@ public class ToolSupport {
 				.directory(workspace.toFile()) //
 				.redirectOutput(result.out.toFile()) //
 				.redirectError(result.err.toFile());
+		setEnv(builder, "JUNIT_JUPITER_VERSION");
+		setEnv(builder, "JUNIT_VINTAGE_VERSION");
+		setEnv(builder, "JUNIT_PLATFORM_VERSION");
 		var process = builder.start();
 		result.status = process.waitFor();
 		var encoding = workspace.resolve("file.encoding.txt");
@@ -119,5 +122,9 @@ public class ToolSupport {
 			result.charset = Charset.forName(new String(Files.readAllBytes(encoding)));
 		}
 		return result;
+	}
+
+	private void setEnv(ProcessBuilder builder, String key) {
+		builder.environment().put(key, System.getProperty(key));
 	}
 }

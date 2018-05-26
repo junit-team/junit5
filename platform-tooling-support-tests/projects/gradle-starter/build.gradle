@@ -5,8 +5,18 @@ plugins {
 // don't use `build` as target to prevent Jenkins picking up
 project.buildDir = 'bin'
 
+// grab jupiter version from system environment
+def jupiterVersion = System.getenv('JUNIT_JUPITER_VERSION')
+def vintageVersion = System.getenv('JUNIT_VINTAGE_VERSION')
+def platformVersion = System.getenv('JUNIT_PLATFORM_VERSION')
+
 // emit default file encoding to a file
 file('file.encoding.txt').write(System.getProperty('file.encoding'))
+file('junit.versions.txt').write("""
+jupiterVersion=${jupiterVersion}
+vintageVersion=${vintageVersion}
+platformVersion=${platformVersion}
+""")
 
 repositories {
 	mavenLocal()
@@ -14,9 +24,9 @@ repositories {
 }
 
 dependencies {
-	testImplementation('org.junit.jupiter:junit-jupiter-api:5.3.0-SNAPSHOT')
-	testImplementation('org.junit.jupiter:junit-jupiter-params:5.3.0-SNAPSHOT')
-	testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.3.0-SNAPSHOT')
+	testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiterVersion}")
+	testImplementation("org.junit.jupiter:junit-jupiter-params:${jupiterVersion}")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}")
 }
 
 test {
