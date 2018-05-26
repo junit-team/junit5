@@ -34,5 +34,10 @@ test {
 	// The standalone artifact is needed by Ant projects using its native <junitlauncher> task
 	dependsOn project(':junit-platform-console-standalone').jar
 
+	// Pass versions to tests as system properties
+	systemProperty 'JUNIT_JUPITER_VERSION', version
+	systemProperty 'JUNIT_VINTAGE_VERSION', vintageVersion
+	systemProperty 'JUNIT_PLATFORM_VERSION', platformVersion
+
 	useJUnitPlatform()
 }
