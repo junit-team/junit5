@@ -1,0 +1,9 @@
+>> 1 line header >>
+
+org.junit.jupiter.api@5.3.0-SNAPSHOT automatic
+requires java.base mandated
+contains org.junit.jupiter.api
+contains org.junit.jupiter.api.condition
+contains org.junit.jupiter.api.extension
+contains org.junit.jupiter.api.function
+

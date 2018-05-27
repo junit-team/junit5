@@ -13,6 +13,7 @@ package platform.tooling.support.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -27,7 +28,7 @@ import platform.tooling.support.Tool;
 class JarDescriptionTests {
 
 	@Test
-	void junitJupiterApi() {
+	void junitJupiterApi() throws Exception {
 		var name = "junit-jupiter-api";
 		var version = Helper.version(name);
 		var file = name + '-' + version + ".jar";
@@ -41,15 +42,7 @@ class JarDescriptionTests {
 
 		assertEquals(0, result.getStatus());
 		assertEquals(List.of(), result.getErrorLines(), "error log isn't empty");
-		assertLinesMatch(List.of(">> HEAD >>", //
-			"", //
-			"org.junit.jupiter.api@" + version + " automatic", //
-			"requires java.base mandated", //
-			"contains org.junit.jupiter.api", //
-			"contains org.junit.jupiter.api.condition", //
-			"contains org.junit.jupiter.api.extension", //
-			"contains org.junit.jupiter.api.function", //
-			""), //
+		assertLinesMatch(Files.readAllLines(result.getWorkspace().resolve(name + ".expected.txt")),
 			result.getOutputLines());
 	}
 }
