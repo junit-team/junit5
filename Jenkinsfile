@@ -9,7 +9,10 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh './gradlew --no-daemon -PenableJaCoCo clean build jacocoRootReport'
+        sh './gradlew --no-daemon clean'
+        sh './gradlew --no-daemon -PenableJaCoCo build publishToMavenLocal'
+        sh './gradlew --no-daemon -Dplatform.tooling.support.tests.enabled=true build'
+        sh './gradlew --no-daemon jacocoRootReport'
       }
       post {
         always {
