@@ -1,6 +1,6 @@
 >> 1 line header >>
 
-org.junit.jupiter.api@5.3.0-SNAPSHOT automatic
+org\.junit\.jupiter\.api@.+ automatic
 requires java.base mandated
 contains org.junit.jupiter.api
 contains org.junit.jupiter.api.condition

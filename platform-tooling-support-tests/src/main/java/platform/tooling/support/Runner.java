@@ -18,9 +18,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.spi.ToolProvider;
 
 import org.apache.commons.io.FileUtils;
@@ -123,7 +121,7 @@ class Runner {
 		// compute program entry point
 		var executable = toolFolderPath.resolve(tool.computeExecutablePath());
 		if (FileSystems.getDefault().supportedFileAttributeViews().contains("posix")) {
-			Files.setPosixFilePermissions(executable, Set.of(PosixFilePermission.OWNER_EXECUTE));
+			executable.toFile().setExecutable(true);
 		}
 		return executable;
 	}
