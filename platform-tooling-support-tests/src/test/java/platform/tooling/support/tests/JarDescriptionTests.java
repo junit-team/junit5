@@ -17,39 +17,39 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+
+import platform.tooling.support.Helper;
 import platform.tooling.support.Tool;
 
 /**
  * @since 1.3
  */
-class AntStarterTests {
+class JarDescriptionTests {
 
 	@Test
-	void ant_1_10_3() {
-		var standalone = Paths.get("..", "junit-platform-console-standalone", "build", "libs");
-		var result = Tool.ANT.builder("1.10.3") //
-				.setProject("ant-starter") //
-				.addArguments("-verbose", "-lib", standalone.toAbsolutePath()) //
+	void junitJupiterApi() {
+		var name = "junit-jupiter-api";
+		var version = Helper.version(name);
+		var file = name + '-' + version + ".jar";
+		var path = Paths.get("..", name, "build", "libs", file);
+		var result = Tool.JAR.builder() //
+				.setProject("jar-description") //
+				.setLogFileNames(name + ".out.text", name + ".err.txt") //
+				.addArguments("--describe-module", "--file", path) //
 				.build() //
 				.run();
 
 		assertEquals(0, result.getStatus());
 		assertEquals(List.of(), result.getErrorLines(), "error log isn't empty");
 		assertLinesMatch(List.of(">> HEAD >>", //
-			"test.junit.launcher:", //
-			">>>>", //
-			"     \\[echo\\] Test run finished after [\\d]+ ms", //
-			">>>>", //
-			"     \\[echo\\] \\[         5 tests successful      \\]", //
-			"     \\[echo\\] \\[         0 tests failed          \\]", //
-			">>>>", //
-			"test.console.launcher:", //
-			">>>>", //
-			"     \\[java\\] Test run finished after [\\d]+ ms", //
-			">>>>", //
-			"     \\[java\\] \\[         5 tests successful      \\]", //
-			"     \\[java\\] \\[         0 tests failed          \\]", //
-			">> TAIL >>"), //
+			"", //
+			"org.junit.jupiter.api@" + version + " automatic", //
+			"requires java.base mandated", //
+			"contains org.junit.jupiter.api", //
+			"contains org.junit.jupiter.api.condition", //
+			"contains org.junit.jupiter.api.extension", //
+			"contains org.junit.jupiter.api.function", //
+			""), //
 			result.getOutputLines());
 	}
 }

@@ -15,22 +15,25 @@ import static java.lang.String.format;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 /**
  * @since 1.3
  */
-public class BuildResult {
+public class Result {
 
+	Request request;
 	int status = Integer.MIN_VALUE;
-	Charset charset = StandardCharsets.UTF_8;
-	Path out = Paths.get("stdout.txt");
-	Path err = Paths.get("stderr.txt");
-	Path workspace = Paths.get(".");
+	Charset charset = Charset.defaultCharset();
+	Path workspace;
+	Path out;
+	Path err;
+
+	public Request getRequest() {
+		return request;
+	}
 
 	public int getStatus() {
 		return status;
@@ -40,20 +43,12 @@ public class BuildResult {
 		return charset;
 	}
 
-	public Path getOutputPath() {
-		return out;
-	}
-
 	public List<String> getOutputLines() {
-		return readAllLines(getOutputPath());
-	}
-
-	public Path getErrorPath() {
-		return err;
+		return readAllLines(out);
 	}
 
 	public List<String> getErrorLines() {
-		return readAllLines(getErrorPath());
+		return readAllLines(err);
 	}
 
 	public Path getWorkspace() {
@@ -65,7 +60,7 @@ public class BuildResult {
 			return Files.readAllLines(path, getCharset());
 		}
 		catch (IOException e) {
-			throw new UncheckedIOException(format("reading '%s' (%s) failed", path, charset), e);
+			throw new UncheckedIOException(format("reading '%s' (%s) failed", path, getCharset()), e);
 		}
 	}
 }
