@@ -12,7 +12,7 @@ pipeline {
         sh './gradlew --no-daemon clean'
         sh './gradlew --no-daemon -PenableJaCoCo build publishToMavenLocal'
         sh './gradlew --no-daemon -Dplatform.tooling.support.tests.enabled=true build'
-        sh './gradlew --no-daemon jacocoRootReport'
+        sh './gradlew --no-daemon -PenableJaCoCo jacocoRootReport'
       }
       post {
         always {
