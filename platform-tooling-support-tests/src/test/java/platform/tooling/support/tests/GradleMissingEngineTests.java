@@ -19,9 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnJre;
 import org.junit.jupiter.api.condition.JRE;
 
-import platform.tooling.support.BuildRequest;
-import platform.tooling.support.BuildTool;
-import platform.tooling.support.ToolSupport;
+import platform.tooling.support.Request;
+import platform.tooling.support.Tool;
 
 /**
  * @since 1.3
@@ -29,26 +28,25 @@ import platform.tooling.support.ToolSupport;
 class GradleMissingEngineTests {
 
 	@Test
-	void gradle_wrapper() throws Exception {
-		test(new ToolSupport(BuildTool.GRADLE), "wrapper");
+	void gradle_wrapper() {
+		test(Tool.GRADLEW, "wrapper");
 	}
 
 	@Test
 	@EnabledOnJre(JRE.JAVA_10)
-	void gradle_4_7() throws Exception {
-		test(new ToolSupport(BuildTool.GRADLE, "4.7"), "4.7");
+	void gradle_4_7() {
+		test(Tool.GRADLE, "4.7");
 	}
 
-	private void test(ToolSupport gradle, String workspaceSuffix) throws Exception {
+	private void test(Tool gradle, String version) {
 		var project = "gradle-missing-engine";
-		var executable = gradle.init();
-		var request = BuildRequest.builder() //
+		var result = Request.builder() //
 				.setProject(project) //
-				.setWorkspace(project + '-' + workspaceSuffix) //
-				.setExecutable(executable) //
+				.setWorkspace(project + '-' + version) //
+				.setTool(gradle, version) //
 				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
-				.build();
-		var result = gradle.run(request);
+				.build() //
+				.run();
 
 		assertEquals(1, result.getStatus());
 		assertLinesMatch(List.of( //

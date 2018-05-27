@@ -14,10 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-
-import platform.tooling.support.BuildRequest;
-import platform.tooling.support.BuildTool;
-import platform.tooling.support.ToolSupport;
+import platform.tooling.support.Tool;
 
 /**
  * @since 1.3
@@ -25,17 +22,12 @@ import platform.tooling.support.ToolSupport;
 class MavenStarterTests {
 
 	@Test
-	void maven_3_5_3() throws Exception {
-		var project = "maven-starter";
-		var maven = new ToolSupport(BuildTool.MAVEN, "3.5.3");
-		var executable = maven.init();
-		var request = BuildRequest.builder() //
-				.setProject(project) //
-				.setWorkspace(project) //
-				.setExecutable(executable) //
+	void maven_3_5_3() {
+		var result = Tool.MAVEN.builder("3.5.3") //
+				.setProject("maven-starter") //
 				.addArguments("--debug", "verify") //
-				.build();
-		var result = maven.run(request);
+				.build() //
+				.run();
 
 		assertEquals(0, result.getStatus());
 		assertTrue(result.getOutputLines().contains("[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0"));

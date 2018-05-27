@@ -14,10 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-
-import platform.tooling.support.BuildRequest;
-import platform.tooling.support.BuildTool;
-import platform.tooling.support.ToolSupport;
+import platform.tooling.support.Tool;
 
 /**
  * @since 1.3
@@ -25,17 +22,12 @@ import platform.tooling.support.ToolSupport;
 class GradleStarterTests {
 
 	@Test
-	void gradle_wrapper() throws Exception {
-		var project = "gradle-starter";
-		var gradle = new ToolSupport(BuildTool.GRADLE);
-		var executable = gradle.init();
-		var request = BuildRequest.builder() //
-				.setProject(project) //
-				.setWorkspace(project) //
-				.setExecutable(executable) //
+	void gradle_wrapper() {
+		var result = Tool.GRADLEW.builder() //
+				.setProject("gradle-starter") //
 				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
-				.build();
-		var result = gradle.run(request);
+				.build() //
+				.run();
 
 		assertEquals(0, result.getStatus());
 		assertTrue(result.getOutputLines().stream().anyMatch(line -> line.contains("BUILD SUCCESSFUL")));
