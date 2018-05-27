@@ -14,10 +14,13 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.spi.ToolProvider;
 
 import org.apache.commons.io.FileUtils;
@@ -117,7 +120,12 @@ class Runner {
 			FileUtils.moveDirectoryToDirectory(Paths.get(toolFolderName).toFile(), toolPath.toFile(), true);
 		}
 
-		return toolFolderPath.resolve(tool.computeExecutablePath());
+		// compute program entry point
+		var executable = toolFolderPath.resolve(tool.computeExecutablePath());
+		if (FileSystems.getDefault().supportedFileAttributeViews().contains("posix")) {
+			Files.setPosixFilePermissions(executable, Set.of(PosixFilePermission.OWNER_EXECUTE));
+		}
+		return executable;
 	}
 
 	private Result runJdkFoundationTool(Result result) throws Exception {

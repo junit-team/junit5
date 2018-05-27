@@ -10,14 +10,9 @@
 
 package platform.tooling.support;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.net.URI;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.PosixFilePermission;
-import java.util.Set;
 
 /**
  * @since 1.3
@@ -101,16 +96,7 @@ public enum Tool {
 
 	public Path computeExecutablePath() {
 		var windows = System.getProperty("os.name").toLowerCase().contains("win");
-		var path = Paths.get(windows ? wincutable : executable);
-		if (!windows) {
-			try {
-				Files.setPosixFilePermissions(path, Set.of(PosixFilePermission.OWNER_EXECUTE));
-			}
-			catch (IOException e) {
-				throw new UncheckedIOException("setting executable failed", e);
-			}
-		}
-		return path;
+		return Paths.get(windows ? wincutable : executable);
 	}
 
 }
