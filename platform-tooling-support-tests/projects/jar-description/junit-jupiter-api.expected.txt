@@ -1,4 +1,4 @@
->> 1 line header >>
+>> 1 line header: No module descriptor found. Derived automatic module. >>
 
 org\.junit\.jupiter\.api@.+ automatic
 requires java.base mandated

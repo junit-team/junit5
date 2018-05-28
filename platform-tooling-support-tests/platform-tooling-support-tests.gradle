@@ -23,6 +23,7 @@ dependencies {
 	}
 
 	testImplementation(project(':junit-jupiter-api'))
+	testImplementation(project(':junit-jupiter-params'))
 	testRuntimeOnly(project(':junit-platform-launcher'))
 	testRuntimeOnly(project(':junit-jupiter-engine'))
 }

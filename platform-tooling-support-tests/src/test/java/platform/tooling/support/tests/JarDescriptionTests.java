@@ -12,12 +12,14 @@ package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.Tool;
@@ -27,22 +29,27 @@ import platform.tooling.support.Tool;
  */
 class JarDescriptionTests {
 
-	@Test
-	void junitJupiterApi() throws Exception {
-		var name = "junit-jupiter-api";
+	@ParameterizedTest
+	@ValueSource(strings = { "junit-jupiter-api", "junit-jupiter-engine", "junit-jupiter-params",
+			"junit-jupiter-migrationsupport" })
+	void describeModule(String name) throws Exception {
 		var version = Helper.version(name);
 		var file = name + '-' + version + ".jar";
 		var path = Paths.get("..", name, "build", "libs", file);
 		var result = Tool.JAR.builder() //
 				.setProject("jar-description") //
-				.setLogFileNames(name + ".out.text", name + ".err.txt") //
+				.setLogFileNames(name + ".out.txt", name + ".err.txt") //
 				.addArguments("--describe-module", "--file", path) //
 				.build() //
 				.run();
 
 		assertEquals(0, result.getStatus());
 		assertEquals(List.of(), result.getErrorLines(), "error log isn't empty");
-		assertLinesMatch(Files.readAllLines(result.getWorkspace().resolve(name + ".expected.txt")),
-			result.getOutputLines());
+		var expected = result.getWorkspace().resolve(name + ".expected.txt");
+		if (Files.notExists(expected)) {
+			result.getOutputLines().forEach(System.err::println);
+			fail("No such file: " + expected);
+		}
+		assertLinesMatch(Files.readAllLines(expected), result.getOutputLines());
 	}
 }
