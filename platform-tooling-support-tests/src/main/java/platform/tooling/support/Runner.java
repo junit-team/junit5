@@ -62,11 +62,11 @@ class Runner {
 			throw new IllegalStateException("Directory " + project + " not found!");
 		}
 		var workspace = result.workspace = workPath.resolve(request.getWorkspace());
-		result.out = workspace.resolve(request.logfileOut);
-		result.err = workspace.resolve(request.logfileErr);
+		result.out = workspace.resolve(request.getLogfileOut());
+		result.err = workspace.resolve(request.getLogfileErr());
 
 		FileUtils.deleteQuietly(workspace.toFile());
-		FileUtils.copyDirectory(project.toFile(), workspace.toFile());
+		FileUtils.copyDirectory(project.toFile(), workspace.toFile(), request.getCopyProjectToWorkspaceFileFilter());
 
 		Path executable;
 		switch (tool.getKind()) {
@@ -76,7 +76,7 @@ class Runner {
 				executable = tool.computeExecutablePath();
 				break;
 			case REMOTE:
-				executable = installRemoteTool(result);
+				executable = installRemoteTool(result).getToolExecutable();
 				break;
 			default:
 				throw new UnsupportedOperationException(tool.getKind() + " is not yet supported");
@@ -89,7 +89,9 @@ class Runner {
 				.directory(workspace.toFile()) //
 				.redirectOutput(result.out.toFile()) //
 				.redirectError(result.err.toFile());
-		tool.visitBeforeStart(builder, result);
+		if (tool.getKind().equals(Tool.Kind.REMOTE)) {
+			builder.environment().put(tool.name() + "_HOME", result.getToolHome().toString());
+		}
 		builder.environment().putAll(request.getEnvironment());
 		var process = builder.start();
 		result.status = process.waitFor();
@@ -100,7 +102,7 @@ class Runner {
 		return result;
 	}
 
-	private Path installRemoteTool(Result result) {
+	private Result installRemoteTool(Result result) {
 		// download
 		var version = request.getVersion();
 		var toolArchive = tool.computeArchive(version);
@@ -139,7 +141,8 @@ class Runner {
 		if (FileSystems.getDefault().supportedFileAttributeViews().contains("posix")) {
 			executable.toFile().setExecutable(true);
 		}
-		return executable;
+		result.toolExecutable = executable;
+		return result;
 	}
 
 	private Result runJdkFoundationTool(Result result) throws Exception {

@@ -1,6 +1,6 @@
 >> 1 line header: No module descriptor found. Derived automatic module. >>
 
-org\.junit\.jupiter\.params@.+ automatic
+org.junit.jupiter.params@${jupiterVersion} automatic
 requires java.base mandated
 contains org.junit.jupiter.params
 contains org.junit.jupiter.params.aggregator

@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -27,29 +28,40 @@ import platform.tooling.support.Tool;
 /**
  * @since 1.3
  */
-class JarDescriptionTests {
+class JarDescribeModuleTests {
 
 	@ParameterizedTest
 	@ValueSource(strings = { "junit-jupiter-api", "junit-jupiter-engine", "junit-jupiter-params",
 			"junit-jupiter-migrationsupport" })
-	void describeModule(String name) throws Exception {
-		var version = Helper.version(name);
-		var file = name + '-' + version + ".jar";
-		var path = Paths.get("..", name, "build", "libs", file);
+	void describeModule(String module) throws Exception {
+		var version = Helper.version(module);
+		var archive = module + '-' + version + ".jar";
+		var path = Paths.get("..", module, "build", "libs", archive);
 		var result = Tool.JAR.builder() //
-				.setProject("jar-description") //
-				.setLogFileNames(name + ".out.txt", name + ".err.txt") //
+				.setProject("jar-describe-module") //
+				.setProjectToWorkspaceCopyFileFilter(file -> file.getName().startsWith(module)) //
+				.setWorkspace("jar-describe-module/" + module) //
+				.setLogFileNames(module + ".out.txt", module + ".err.txt") //
 				.addArguments("--describe-module", "--file", path) //
 				.build() //
 				.run();
 
 		assertEquals(0, result.getStatus());
 		assertEquals(List.of(), result.getErrorLines(), "error log isn't empty");
-		var expected = result.getWorkspace().resolve(name + ".expected.txt");
+		var expected = result.getWorkspace().resolve(module + ".expected.txt");
 		if (Files.notExists(expected)) {
 			result.getOutputLines().forEach(System.err::println);
 			fail("No such file: " + expected);
 		}
-		assertLinesMatch(Files.readAllLines(expected), result.getOutputLines());
+
+		var expectedLines = Files.readAllLines(expected).stream().map(this::replaceTokens).collect(Collectors.toList());
+		assertLinesMatch(expectedLines, result.getOutputLines());
+	}
+
+	private String replaceTokens(String line) {
+		line = line.replace("${jupiterVersion}", Helper.version("junit-jupiter"));
+		line = line.replace("${vintageVersion}", Helper.version("junit-vintage"));
+		line = line.replace("${platformVersion}", Helper.version("junit-platform"));
+		return line;
 	}
 }

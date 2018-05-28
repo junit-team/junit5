@@ -10,6 +10,7 @@
 
 package platform.tooling.support;
 
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,8 +32,9 @@ public class Request {
 	private String workspace;
 	private List<String> arguments = new ArrayList<>();
 	private Map<String, String> environment = new HashMap<>();
-	String logfileOut = "stdout.txt";
-	String logfileErr = "stderr.txt";
+	private String logfileOut = "stdout.txt";
+	private String logfileErr = "stderr.txt";
+	private FileFilter copyProjectToWorkspaceFileFilter;
 
 	public String getVersion() {
 		return version;
@@ -42,8 +44,20 @@ public class Request {
 		return project;
 	}
 
+	public FileFilter getCopyProjectToWorkspaceFileFilter() {
+		return copyProjectToWorkspaceFileFilter;
+	}
+
 	public String getWorkspace() {
 		return workspace;
+	}
+
+	public String getLogfileOut() {
+		return logfileOut;
+	}
+
+	public String getLogfileErr() {
+		return logfileErr;
 	}
 
 	public Map<String, String> getEnvironment() {
@@ -100,6 +114,11 @@ public class Request {
 
 		public Builder setProject(String project) {
 			request.project = project;
+			return this;
+		}
+
+		public Builder setProjectToWorkspaceCopyFileFilter(FileFilter copyProjectToWorkspaceFileFilter) {
+			request.copyProjectToWorkspaceFileFilter = copyProjectToWorkspaceFileFilter;
 			return this;
 		}
 

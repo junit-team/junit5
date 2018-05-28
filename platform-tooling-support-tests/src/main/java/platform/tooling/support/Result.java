@@ -24,8 +24,9 @@ import java.util.List;
  */
 public class Result {
 
-	Path toolHome;
 	Request request;
+	Path toolHome;
+	Path toolExecutable;
 	int status = Integer.MIN_VALUE;
 	Charset charset = Charset.defaultCharset();
 	Path workspace;
@@ -38,6 +39,10 @@ public class Result {
 
 	public Path getToolHome() {
 		return toolHome;
+	}
+
+	public Path getToolExecutable() {
+		return toolExecutable;
 	}
 
 	public int getStatus() {

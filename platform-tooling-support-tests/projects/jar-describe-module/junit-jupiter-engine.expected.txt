@@ -1,6 +1,6 @@
 >> 1 line header: No module descriptor found. Derived automatic module. >>
 
-org\.junit\.jupiter\.engine@.+ automatic
+org.junit.jupiter.engine@${jupiterVersion} automatic
 requires java.base mandated
 provides org.junit.platform.engine.TestEngine with org.junit.jupiter.engine.jupitertestengine
 contains org.junit.jupiter.engine

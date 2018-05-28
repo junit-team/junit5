@@ -1,6 +1,6 @@
 >> 1 line header: No module descriptor found. Derived automatic module. >>
 
-org\.junit\.jupiter\.api@.+ automatic
+org.junit.jupiter.api@${jupiterVersion} automatic
 requires java.base mandated
 contains org.junit.jupiter.api
 contains org.junit.jupiter.api.condition
