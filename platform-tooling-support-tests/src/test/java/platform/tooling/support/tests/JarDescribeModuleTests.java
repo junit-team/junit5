@@ -31,8 +31,23 @@ import platform.tooling.support.Tool;
 class JarDescribeModuleTests {
 
 	@ParameterizedTest
-	@ValueSource(strings = { "junit-jupiter-api", "junit-jupiter-engine", "junit-jupiter-params",
-			"junit-jupiter-migrationsupport" })
+	@ValueSource(strings = { //
+			// jupiter
+			"junit-jupiter-api", //
+			"junit-jupiter-engine", //
+			"junit-jupiter-migrationsupport", //
+			"junit-jupiter-params", //
+			// platform
+			"junit-platform-commons", //
+			"junit-platform-console", //
+			"junit-platform-engine", //
+			"junit-platform-launcher", //
+			"junit-platform-runner", //
+			"junit-platform-suite-api", //
+			"junit-platform-surefire-provider",
+			// vintage
+			"junit-vintage-engine" //
+	})
 	void describeModule(String module) throws Exception {
 		var version = Helper.version(module);
 		var archive = module + '-' + version + ".jar";
@@ -54,7 +69,7 @@ class JarDescribeModuleTests {
 			fail("No such file: " + expected);
 		}
 
-		var expectedLines = Files.readAllLines(expected).stream().map(this::replaceTokens).collect(Collectors.toList());
+		var expectedLines = Files.lines(expected).map(this::replaceTokens).collect(Collectors.toList());
 		assertLinesMatch(expectedLines, result.getOutputLines());
 	}
 

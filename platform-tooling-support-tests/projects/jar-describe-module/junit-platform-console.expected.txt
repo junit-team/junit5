@@ -1,0 +1,12 @@
+>> 1 line header: No module descriptor found. Derived automatic module. >>
+
+org.junit.platform.console@${platformVersion} automatic
+requires java.base mandated
+contains org.junit.platform.console
+contains org.junit.platform.console.options
+contains org.junit.platform.console.shadow.joptsimple
+contains org.junit.platform.console.shadow.joptsimple.internal
+contains org.junit.platform.console.shadow.joptsimple.util
+contains org.junit.platform.console.tasks
+main-class org.junit.platform.console.ConsoleLauncher
+

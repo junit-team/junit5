@@ -1,0 +1,11 @@
+>> 1 line header: No module descriptor found. Derived automatic module. >>
+
+org.junit.platform.engine@${platformVersion} automatic
+requires java.base mandated
+contains org.junit.platform.engine
+contains org.junit.platform.engine.discovery
+contains org.junit.platform.engine.reporting
+contains org.junit.platform.engine.support.descriptor
+contains org.junit.platform.engine.support.filter
+contains org.junit.platform.engine.support.hierarchical
+
