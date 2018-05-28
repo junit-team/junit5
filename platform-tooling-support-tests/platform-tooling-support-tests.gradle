@@ -31,8 +31,10 @@ test {
 	// Opt-in via system property: '-Dplatform.tooling.support.tests.enabled=true'
 	enabled = Boolean.getBoolean('platform.tooling.support.tests.enabled')
 
-	// The standalone artifact is needed by Ant projects using its native <junitlauncher> task
-	dependsOn project(':junit-platform-console-standalone').jar
+	// All maven-aware projects must be installed, i.e. published to the local repository
+	rootProject.ext.mavenizedProjects.each { name ->
+		dependsOn project(":${name}").publishToMavenLocal
+	}
 
 	useJUnitPlatform()
 }

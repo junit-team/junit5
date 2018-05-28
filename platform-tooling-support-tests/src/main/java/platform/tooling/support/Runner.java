@@ -10,15 +10,18 @@
 
 package platform.tooling.support;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.spi.ToolProvider;
 
 import org.apache.commons.io.FileUtils;
@@ -96,14 +99,20 @@ class Runner {
 		return result;
 	}
 
-	private Path installRemoteTool() throws Exception {
+	private Path installRemoteTool() {
 		// download
 		var version = request.getVersion();
 		var toolArchive = tool.computeArchive(version);
 		var toolUri = tool.computeUri(version);
 		var toolArchivePath = toolPath.resolve(toolArchive);
 		if (Files.notExists(toolArchivePath)) {
-			FileUtils.copyURLToFile(toolUri.toURL(), toolArchivePath.toFile(), 5000, 5000);
+			var timeout = (int) TimeUnit.MILLISECONDS.convert(9, TimeUnit.SECONDS);
+			try {
+				FileUtils.copyURLToFile(toolUri.toURL(), toolArchivePath.toFile(), timeout, timeout);
+			}
+			catch (IOException e) {
+				throw new UncheckedIOException("Loading tool failed: " + toolUri, e);
+			}
 		}
 
 		// extract
@@ -114,8 +123,13 @@ class Runner {
 		var toolFolderName = stringWriter.toString().split("\\R")[0];
 		var toolFolderPath = toolPath.resolve(toolFolderName);
 		if (Files.notExists(toolFolderPath)) {
-			jarTool.run(System.out, System.err, "--extract", "--file", toolArchivePath.toString());
-			FileUtils.moveDirectoryToDirectory(Paths.get(toolFolderName).toFile(), toolPath.toFile(), true);
+			try {
+				jarTool.run(System.out, System.err, "--extract", "--file", toolArchivePath.toString());
+				FileUtils.moveDirectoryToDirectory(Paths.get(toolFolderName).toFile(), toolPath.toFile(), true);
+			}
+			catch (IOException e) {
+				throw new UncheckedIOException("Extracting tool failed: " + toolUri, e);
+			}
 		}
 
 		// compute program entry point
