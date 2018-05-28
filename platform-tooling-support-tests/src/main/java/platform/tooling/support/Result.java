@@ -24,6 +24,7 @@ import java.util.List;
  */
 public class Result {
 
+	Path toolHome;
 	Request request;
 	int status = Integer.MIN_VALUE;
 	Charset charset = Charset.defaultCharset();
@@ -33,6 +34,10 @@ public class Result {
 
 	public Request getRequest() {
 		return request;
+	}
+
+	public Path getToolHome() {
+		return toolHome;
 	}
 
 	public int getStatus() {

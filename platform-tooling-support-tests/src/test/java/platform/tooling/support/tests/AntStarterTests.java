@@ -27,14 +27,9 @@ class AntStarterTests {
 	@Test
 	void ant_1_10_3() {
 		var standalone = Paths.get("..", "junit-platform-console-standalone", "build", "libs");
-		var version = "1.10.3";
-		var toolPath = Paths.get("build", "test-tools");
-		var antHome = toolPath.resolve("apache-ant-" + version).normalize().toAbsolutePath().toString();
-		var result = Tool.ANT.builder(version) //
+		var result = Tool.ANT.builder("1.10.3") //
 				.setProject("ant-starter") //
 				.addArguments("-verbose", "-lib", standalone.toAbsolutePath()) //
-				// Set ANT_HOME environment variable to prevent local installation from being used
-				.putEnvironment("ANT_HOME", antHome) //
 				.build() //
 				.run();
 

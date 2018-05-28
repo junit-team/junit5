@@ -30,7 +30,12 @@ public enum Tool {
 	// Downloadable Tools
 
 	ANT("bin/ant", "bin/ant.bat", //
-			"https://www.apache.org/dist/ant/binaries/${ARCHIVE}", "apache-ant-${VERSION}-bin.zip"),
+			"https://www.apache.org/dist/ant/binaries/${ARCHIVE}", "apache-ant-${VERSION}-bin.zip") {
+		@Override
+		void visitBeforeStart(ProcessBuilder builder, Result result) {
+			builder.environment().put("ANT_HOME", result.getToolHome().toString());
+		}
+	},
 
 	GRADLE("bin/gradle", "bin/gradle.bat", //
 			"https://services.gradle.org/distributions/${ARCHIVE}", "gradle-${VERSION}-bin.zip"),
@@ -38,6 +43,9 @@ public enum Tool {
 	MAVEN("bin/mvn", "bin/mvn.cmd", //
 			"https://archive.apache.org/dist/maven/maven-3/${VERSION}/binaries/${ARCHIVE}",
 			"apache-maven-${VERSION}-bin.zip");
+
+	void visitBeforeStart(ProcessBuilder builder, Result result) {
+	}
 
 	public enum Kind {
 		JDK, LOCAL, REMOTE

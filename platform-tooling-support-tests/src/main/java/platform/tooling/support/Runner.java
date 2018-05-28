@@ -76,7 +76,7 @@ class Runner {
 				executable = tool.computeExecutablePath();
 				break;
 			case REMOTE:
-				executable = installRemoteTool();
+				executable = installRemoteTool(result);
 				break;
 			default:
 				throw new UnsupportedOperationException(tool.getKind() + " is not yet supported");
@@ -89,6 +89,7 @@ class Runner {
 				.directory(workspace.toFile()) //
 				.redirectOutput(result.out.toFile()) //
 				.redirectError(result.err.toFile());
+		tool.visitBeforeStart(builder, result);
 		builder.environment().putAll(request.getEnvironment());
 		var process = builder.start();
 		result.status = process.waitFor();
@@ -99,7 +100,7 @@ class Runner {
 		return result;
 	}
 
-	private Path installRemoteTool() {
+	private Path installRemoteTool(Result result) {
 		// download
 		var version = request.getVersion();
 		var toolArchive = tool.computeArchive(version);
@@ -131,6 +132,7 @@ class Runner {
 				throw new UncheckedIOException("Extracting tool failed: " + toolUri, e);
 			}
 		}
+		result.toolHome = toolFolderPath.normalize().toAbsolutePath();
 
 		// compute program entry point
 		var executable = toolFolderPath.resolve(tool.computeExecutablePath());
