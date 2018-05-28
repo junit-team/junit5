@@ -29,7 +29,7 @@ class AntStarterTests {
 		var standalone = Paths.get("..", "junit-platform-console-standalone", "build", "libs");
 		var version = "1.10.3";
 		var toolPath = Paths.get("build", "test-tools");
-		var antHome = toolPath.resolve("apache-ant-" + version).toString();
+		var antHome = toolPath.resolve("apache-ant-" + version).normalize().toAbsolutePath().toString();
 		var result = Tool.ANT.builder(version) //
 				.setProject("ant-starter") //
 				.addArguments("-verbose", "-lib", standalone.toAbsolutePath()) //
