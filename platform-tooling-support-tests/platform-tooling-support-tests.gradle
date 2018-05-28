@@ -31,7 +31,7 @@ dependencies {
 test {
 	// Opt-in via system property: '-Dplatform.tooling.support.tests.enabled=true'
 	enabled = Boolean.getBoolean('platform.tooling.support.tests.enabled')
-		
+
 	if (enabled) {
 		// All maven-aware projects must be installed, i.e. published to the local repository
 		rootProject.ext.mavenizedProjects.each { name ->
