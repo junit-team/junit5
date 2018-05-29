@@ -30,7 +30,7 @@ public enum Tool {
 	// Downloadable Tools
 
 	ANT("bin/ant", "bin/ant.bat", //
-			"https://www.apache.org/dist/ant/binaries/${ARCHIVE}", "apache-ant-${VERSION}-bin.zip"),
+			"http://mirror.netcologne.de/apache.org/ant/binaries/${ARCHIVE}", "apache-ant-${VERSION}-bin.zip"),
 
 	GRADLE("bin/gradle", "bin/gradle.bat", //
 			"https://services.gradle.org/distributions/${ARCHIVE}", "gradle-${VERSION}-bin.zip"),
