@@ -145,22 +145,22 @@ class ClasspathScanner {
 	}
 
 	private String determineFullyQualifiedClassName(Path baseDir, String basePackageName, Path classFile) {
-		String baseDirString = baseDir.toString();
 		String pathSeparator = baseDir.getFileSystem().getSeparator();
-		String basePackageString = basePackageName.replace(PACKAGE_SEPARATOR_STRING, pathSeparator);
-		if (baseDirString.endsWith(basePackageString)) {
-			baseDirString = baseDirString.substring(0, baseDirString.length() - basePackageString.length());
+		String classFileName = classFile.toString();
+		String baseDirString = baseDir.toString();
+		if (!baseDirString.endsWith(pathSeparator)) {
+			baseDirString += pathSeparator;
 		}
-		String name = classFile.toString();
-		if (name.startsWith(baseDirString)) {
-			name = name.substring(baseDirString.length());
+		String relativeClassFile = classFileName.substring(baseDirString.length());
+		String relativeClassName = relativeClassFile.substring(0,
+			relativeClassFile.length() - CLASS_FILE_SUFFIX.length());
+		relativeClassName = relativeClassName.replace(pathSeparator, PACKAGE_SEPARATOR_STRING);
+		if (basePackageName.isEmpty()) {
+			return relativeClassName;
 		}
-		if (name.startsWith(pathSeparator)) {
-			name = name.substring(1);
+		else {
+			return basePackageName + PACKAGE_SEPARATOR_STRING + relativeClassName;
 		}
-		name = name.substring(0, name.length() - CLASS_FILE_SUFFIX.length());
-		name = name.replace(pathSeparator, PACKAGE_SEPARATOR_STRING);
-		return name;
 	}
 
 	private void handleInternalError(Path classFile, String fullyQualifiedClassName, InternalError ex) {
