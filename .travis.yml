@@ -9,21 +9,16 @@ branches:
     - /^r\d.*$/
 
 before_install:
-# Get latest install-jdk.sh script
-  - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
 # https://github.com/travis-ci/travis-ci/issues/8408
+# Also interferes with platform-tooling-support-tests expectations
   - unset _JAVA_OPTIONS
 
 matrix:
   include:
-# Java 10 "Oracle JDK" (not yet provided by Travis CI)
-    - env: JDK='Oracle JDK 10' INSTALL='publishToMavenLocal'
-      install: . ./install-jdk.sh -F 10 -L BCL
-# Java 10 "OpenJDK"
-    - env: JDK='OpenJDK 10' JACOCO='-PenableJaCoCo'
+    - jdk: openjdk10
+      env: JACOCO='-PenableJaCoCo' INSTALL='publishToMavenLocal'
       install: . ./install-jdk.sh -F 10 -L GPL
-# Java 11 "Oracle JDK"
-    - env: JDK='Oracle JDK 11'
+    - jdk: openjdk-ea
       install: . ./install-jdk.sh -F 11 -L BCL
 
 script:
