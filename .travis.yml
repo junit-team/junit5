@@ -13,12 +13,26 @@ before_install:
 # Also interferes with platform-tooling-support-tests expectations
   - unset _JAVA_OPTIONS
 
+os:
+  - linux
+  - osx
+
 jdk:
   - openjdk10
   - openjdk-ea
 
 env:
-  - JACOCO='-PenableJaCoCo' INSTALL='publishToMavenLocal'
+  - JACOCO='-PenableJaCoCo'
+  - INSTALL='publishToMavenLocal'
+
+matrix:
+  exclude:
+    - os: linux
+      jdk: openjdk-ea
+      env: JACOCO='-PenableJaCoCo'
+    - os: osx
+      jdk: openjdk-ea
+      env: JACOCO='-PenableJaCoCo'
 
 script:
 # Display Gradle, Groovy, JVM and other versions
