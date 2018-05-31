@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.tagexpression;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.stream.Stream;
 
@@ -66,29 +67,29 @@ class ParserErrorTests {
 	private static Stream<Arguments> data() {
 		// @formatter:off
 		return Stream.of(
-				Arguments.of("&", "missing lhs and rhs operand for '&' at index <0>"),
-				Arguments.of("|", "missing lhs and rhs operand for '|' at index <0>"),
-				Arguments.of("| |", "missing lhs and rhs operand for '|' at index <0>"),
-				Arguments.of("!", "missing rhs operand for '!' at index <0>"),
-				Arguments.of("foo bar", "missing operator between 'foo' at index <2> and 'bar' at index <4>"),
-				Arguments.of("foo bar |", "missing rhs operand for '|' at index <8>"),
-				Arguments.of("foo bar | baz", "missing operator between 'foo' at index <2> and '(bar | baz)' at index <4>"),
-				Arguments.of("foo bar &", "missing rhs operand for '&' at index <8>"),
-				Arguments.of("foo & (bar !)", "missing rhs operand for '!' at index <11>"),
-				Arguments.of("( foo & bar ) )", "missing opening parenthesis for ')' at index <14>"),
-				Arguments.of("( ( foo & bar )", "missing closing parenthesis for '(' at index <0>"),
+				arguments("&", "missing lhs and rhs operand for '&' at index <0>"),
+				arguments("|", "missing lhs and rhs operand for '|' at index <0>"),
+				arguments("| |", "missing lhs and rhs operand for '|' at index <0>"),
+				arguments("!", "missing rhs operand for '!' at index <0>"),
+				arguments("foo bar", "missing operator between 'foo' at index <2> and 'bar' at index <4>"),
+				arguments("foo bar |", "missing rhs operand for '|' at index <8>"),
+				arguments("foo bar | baz", "missing operator between 'foo' at index <2> and '(bar | baz)' at index <4>"),
+				arguments("foo bar &", "missing rhs operand for '&' at index <8>"),
+				arguments("foo & (bar !)", "missing rhs operand for '!' at index <11>"),
+				arguments("( foo & bar ) )", "missing opening parenthesis for ')' at index <14>"),
+				arguments("( ( foo & bar )", "missing closing parenthesis for '(' at index <0>"),
 
-				Arguments.of("foo & (bar baz) |", "missing operator between 'bar' at index <9> and 'baz' at index <11>"),
+				arguments("foo & (bar baz) |", "missing operator between 'bar' at index <9> and 'baz' at index <11>"),
 
-				Arguments.of("foo & (bar baz) &", "missing operator between 'bar' at index <9> and 'baz' at index <11>"),
-				Arguments.of("foo & (bar |baz) &", "missing rhs operand for '&' at index <17>"),
+				arguments("foo & (bar baz) &", "missing operator between 'bar' at index <9> and 'baz' at index <11>"),
+				arguments("foo & (bar |baz) &", "missing rhs operand for '&' at index <17>"),
 
-				Arguments.of("foo | (bar baz) &", "missing rhs operand for '&' at index <16>"),
-				Arguments.of("foo | (bar baz) &quux", "missing operator between 'bar' at index <9> and '(baz & quux)' at index <11>"),
+				arguments("foo | (bar baz) &", "missing rhs operand for '&' at index <16>"),
+				arguments("foo | (bar baz) &quux", "missing operator between 'bar' at index <9> and '(baz & quux)' at index <11>"),
 
-				Arguments.of("foo & |", "missing rhs operand for '&' at index <4>"),
-				Arguments.of("foo !& bar", "missing rhs operand for '!' at index <4>"),
-				Arguments.of("foo !| bar", "missing rhs operand for '!' at index <4>")
+				arguments("foo & |", "missing rhs operand for '&' at index <4>"),
+				arguments("foo !& bar", "missing rhs operand for '!' at index <4>"),
+				arguments("foo !| bar", "missing rhs operand for '!' at index <4>")
 		);
 		// @formatter:on
 	}

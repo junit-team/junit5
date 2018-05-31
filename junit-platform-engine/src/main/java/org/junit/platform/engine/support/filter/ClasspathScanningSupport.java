@@ -32,11 +32,9 @@ import org.junit.platform.engine.discovery.PackageNameFilter;
 @API(status = INTERNAL, since = "1.0")
 public final class ClasspathScanningSupport {
 
-	///CLOVER:OFF
 	private ClasspathScanningSupport() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Build a {@link Predicate} for fully qualified class names to be used for

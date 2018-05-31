@@ -699,9 +699,8 @@ INFO: About to execute repetition 5 of 5 for repeatedTestInGerman
 include::{testDir}/example/RepeatedTestsDemo.java[tags=user_guide]
 ----
 
-When using the `ConsoleLauncher` or the `junitPlatformTest` Gradle plugin with the
-unicode theme enabled, execution of `RepeatedTestsDemo` results in the following output
-to the console.
+When using the `ConsoleLauncher` with the unicode theme enabled, execution of
+`RepeatedTestsDemo` results in the following output to the console.
 
 ....
 ├─ RepeatedTestsDemo ✔
@@ -773,7 +772,7 @@ In order to use parameterized tests you need to add a dependency on the
 `junit-jupiter-params` artifact. Please refer to <<dependency-metadata>> for details.
 
 [[writing-tests-parameterized-tests-consuming-arguments]]
-=== Consuming Arguments
+==== Consuming Arguments
 
 Parameterized test methods typically _consume_ arguments directly from the configured
 source (see <<writing-tests-parameterized-tests-sources>>) following a one-to-one
@@ -898,8 +897,9 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=primitive_MethodSourc
 ----
 
 If a test method declares multiple parameters, you need to return a collection or stream
-of `Arguments` instances as shown below. Note that `Arguments.of(Object...)` is a static
-factory method defined in the `Arguments` interface.
+of `Arguments` instances as shown below. Note that `arguments(Object...)` is a static
+factory method defined in the `Arguments` interface. In addition,
+`Arguments.of(Object...)` may be used as an alternative to `arguments(Object...)`.
 
 [source,java,indent=0]
 ----

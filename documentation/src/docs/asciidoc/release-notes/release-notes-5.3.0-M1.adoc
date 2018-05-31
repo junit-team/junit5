@@ -1,0 +1,69 @@
+[[release-notes-5.3.0-M1]]
+== 5.3.0-M1
+
+*Date of Release:* ❓
+
+*Scope:* ❓
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/23?closed=1+[5.3 M1] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.3.0-M1-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* Full stacktrace is printed to the console, when running the `ConsoleLauncher`
+  in `--details verbose` mode.
+
+==== Deprecations and Breaking Changes
+
+* The `junit-platform-gradle-plugin` has been discontinued and is no longer released as
+  part of JUnit 5. Please use <<../user-guide/index.adoc#running-tests-build-gradle,
+  Gradle's native support>> for running tests on the JUnit Platform (requires Gradle 4.6
+  or higher) instead.
+
+==== New Features and Improvements
+
+* New overloaded variant of `isAnnotated()` in `AnnotationSupport` that accepts
+  `Optional<? extends AnnotatedElement>` instead of `AnnotatedElement`.
+
+[[release-notes-5.3.0-M1-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* New support for the IBM AIX operating system in `@EnabledOnOs` and `@DisabledOnOs`.
+* New `assertThrows` methods in `Assertions` provide a more specific failure message if
+  the supplied lambda expression or method reference returns a result instead of throwing
+  an exception.
+* New `arguments()` static factory method in the `Arguments` interface that serves as an
+  _alias_ for `Arguments.of()`. `arguments()` is intended to be used via `import static`.
+* New `get<Class>(index)` Kotlin extension method to make `ArgumentsAccessor` friendlier
+  to use from Kotlin.
+
+
+[[release-notes-5.3.0-M1-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓

@@ -30,11 +30,9 @@ import java.util.stream.IntStream;
  */
 class AssertLinesMatch {
 
-	///CLOVER:OFF
 	private AssertLinesMatch() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	private final static int MAX_SNIPPET_LENGTH = 21;
 

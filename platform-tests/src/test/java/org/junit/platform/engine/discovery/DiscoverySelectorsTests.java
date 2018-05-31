@@ -15,6 +15,7 @@ import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathResource;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
@@ -246,16 +247,16 @@ class DiscoverySelectorsTests {
 	static Stream<Arguments> invalidFullyQualifiedMethodNames() {
 		// @formatter:off
 		return Stream.of(
-			Arguments.of(null, "must not be null or blank"),
-			Arguments.of("", "must not be null or blank"),
-			Arguments.of("   ", "must not be null or blank"),
-			Arguments.of("com.example", "not a valid fully qualified method name"),
-			Arguments.of("com.example.Foo", "not a valid fully qualified method name"),
-			Arguments.of("method", "not a valid fully qualified method name"),
-			Arguments.of("#method", "not a valid fully qualified method name"),
-			Arguments.of("#method()", "not a valid fully qualified method name"),
-			Arguments.of("#method(int)", "not a valid fully qualified method name"),
-			Arguments.of("java.lang.String#", "not a valid fully qualified method name")
+			arguments(null, "must not be null or blank"),
+			arguments("", "must not be null or blank"),
+			arguments("   ", "must not be null or blank"),
+			arguments("com.example", "not a valid fully qualified method name"),
+			arguments("com.example.Foo", "not a valid fully qualified method name"),
+			arguments("method", "not a valid fully qualified method name"),
+			arguments("#method", "not a valid fully qualified method name"),
+			arguments("#method()", "not a valid fully qualified method name"),
+			arguments("#method(int)", "not a valid fully qualified method name"),
+			arguments("java.lang.String#", "not a valid fully qualified method name")
 		);
 		// @formatter:on
 	}

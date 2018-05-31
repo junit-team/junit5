@@ -50,6 +50,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * {@code @Disabled*} annotations in this package.
  *
  * @since 5.1
+ * @see JRE
  * @see org.junit.jupiter.api.condition.DisabledOnJre
  * @see org.junit.jupiter.api.condition.EnabledOnOs
  * @see org.junit.jupiter.api.condition.DisabledOnOs

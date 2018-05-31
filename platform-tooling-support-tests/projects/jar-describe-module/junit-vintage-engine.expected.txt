@@ -1,0 +1,11 @@
+>> 1 line header: No module descriptor found. Derived automatic module. >>
+
+org.junit.vintage.engine@${vintageVersion} automatic
+requires java.base mandated
+provides org.junit.platform.engine.TestEngine with org.junit.vintage.engine.vintagetestengine
+contains org.junit.vintage.engine
+contains org.junit.vintage.engine.descriptor
+contains org.junit.vintage.engine.discovery
+contains org.junit.vintage.engine.execution
+contains org.junit.vintage.engine.support
+

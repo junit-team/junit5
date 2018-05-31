@@ -32,11 +32,9 @@ import org.apiguardian.api.API;
 @API(status = INTERNAL, since = "1.0")
 public final class ClassLoaderUtils {
 
-	///CLOVER:OFF
 	private ClassLoaderUtils() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	public static ClassLoader getDefaultClassLoader() {
 		try {

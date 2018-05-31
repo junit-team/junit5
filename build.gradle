@@ -1,32 +1,20 @@
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
-buildscript {
-	repositories {
-		// mavenLocal()
-		maven { url 'https://plugins.gradle.org/m2/' }
-		maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-	}
-	dependencies {
-		classpath('com.diffplug.spotless:spotless-plugin-gradle:3.10.0')
-		classpath('com.github.ben-manes:gradle-versions-plugin:0.17.0')
-		classpath('org.ajoberstar:gradle-git-publish:0.3.3')
-		classpath('org.ajoberstar:gradle-git:1.7.2')
-		classpath('org.junit.platform:junit-platform-gradle-plugin:1.1.0')
-		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
-	}
-}
-
 plugins {
-	id 'com.gradle.build-scan' version '1.13.1'
+	id 'com.gradle.build-scan' version '1.13.4'
 	id 'net.nemerosa.versioning' version '2.6.1'
+	id 'com.github.ben-manes.versions' version '0.17.0' apply false
+	id 'com.diffplug.gradle.spotless' version '3.12.0' apply false
+	id 'org.ajoberstar.git-publish' version '0.4.1' apply false
+	id 'org.jetbrains.kotlin.jvm' version '1.2.41' apply false
+	id 'com.github.johnrengelman.shadow' version '2.0.4' apply false
 }
 
 buildScan {
 	licenseAgreementUrl = 'https://gradle.com/terms-of-service'
 	licenseAgree = 'yes'
 }
-
 
 def buildTimeAndDate = OffsetDateTime.now()
 ext {
@@ -48,7 +36,6 @@ ext {
 		'junit-platform-console',
 		'junit-platform-console-standalone',
 		'junit-platform-engine',
-		'junit-platform-gradle-plugin',
 		'junit-platform-launcher',
 		'junit-platform-runner',
 		'junit-platform-suite-api',
@@ -88,7 +75,7 @@ ext {
 		]
 	}
 
-	cloverTestProjects = [
+	jacocoTestProjects = [
 		'junit-jupiter-engine',
 		'junit-jupiter-migrationsupport',
 		'junit-jupiter-params',
@@ -96,8 +83,6 @@ ext {
 		'junit-platform-surefire-provider',
 		'platform-tests'
 	]
-
-	jacocoTestProjects = cloverTestProjects << 'junit-platform-gradle-plugin'
 	jacocoCoveredProjects = mavenizedProjects - ['junit-platform-console-standalone']
 	jacocoClassesDir = "$buildDir/jacoco/classes"
 }
@@ -105,7 +90,6 @@ ext {
 allprojects { subproj ->
 
 	apply plugin: 'java-library'
-	apply plugin: 'groovy' // apply for all projects so rootProject sees groovy output dir
 	apply plugin: 'kotlin'
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
@@ -141,8 +125,8 @@ allprojects { subproj ->
 
 	subproj.afterEvaluate { evaluatedProject ->
 		evaluatedProject.tasks.withType(JavaCompile) {
-			sourceCompatibility = javacRelease // needed by clover
-			targetCompatibility = javacRelease // needed by clover/asm
+			sourceCompatibility = javacRelease
+			targetCompatibility = javacRelease // needed by asm
 			options.compilerArgs += ['--release', javacRelease]
 			options.encoding = 'UTF-8'
 		}
@@ -207,7 +191,7 @@ allprojects { subproj ->
 	}
 
 	checkstyle {
-		toolVersion = '8.9'
+		toolVersion = '8.10'
 		configDir = rootProject.file('src/checkstyle')
 	}
 	checkstyleMain {
@@ -216,54 +200,21 @@ allprojects { subproj ->
 	checkstyleTest {
 		configFile = rootProject.file('src/checkstyle/checkstyleTest.xml')
 	}
-
-	if (project.hasProperty('enableClover')) {
-
-		configurations {
-			clover
-		}
-
-		dependencies {
-			clover('org.openclover:clover:4.2.0')
-		}
-
-		ext.cloverDir = file("$buildDir/clover")
-		ext.cloverInitstring = "$cloverDir/clover.db"
-
-		def instrumentedJavaSourcesDir = file("$cloverDir/instrumentedSources/java")
-
-		task cloverTaskdef {
-			ant.taskdef(resource:'cloverlib.xml', classpath: configurations.clover.asPath)
-		}
-
-		task cloverInstrumentJava(dependsOn: cloverTaskdef) {
-			outputs.dir cloverDir
-			onlyIf { sourceSets.main.allJava.any { it.exists() } }
-			doLast {
-				ant.'clover-instr'(
-					initstring: cloverInitstring,
-					recordTestResults: false,
-					destdir: instrumentedJavaSourcesDir,
-					encoding: 'UTF-8',
-					source: compileJava.sourceCompatibility) {
-					sourceSets.main.allJava.addToAntBuilder(ant, 'fileset', FileCollection.AntType.FileSet)
-				}
-			}
-		}
-
-		// Disable javac warnings when executing Clover
-		compileJava.options*.compilerArgs = ['-Xlint:none']
-		compileTestJava.options*.compilerArgs = ['-Xlint:none']
-
-		compileJava.source = instrumentedJavaSourcesDir
-		sourceSets.main.compileClasspath += configurations.clover
-		sourceSets.test.compileClasspath += configurations.clover
-		sourceSets.test.runtimeClasspath += configurations.clover
-		compileJava.dependsOn cloverInstrumentJava
-	}
 }
 
 subprojects { subproj ->
+
+	if (subproj.name in jupiterProjects) {
+		subproj.group = jupiterGroup
+	}
+	else if (subproj.name in platformProjects) {
+		subproj.group = platformGroup
+		subproj.version = platformVersion
+	}
+	else if (subproj.name in vintageProjects) {
+		subproj.group = vintageGroup
+		subproj.version = vintageVersion
+	}
 
 	configurations {
 		shadowed
@@ -292,62 +243,24 @@ subprojects { subproj ->
 
 	if (subproj.name in mavenizedProjects) {
 
-		apply from: "$rootDir/gradle/maven.gradle"
-
-		subproj.ext.baseline = null
-
-		if (subproj.name in jupiterProjects) {
-			subproj.group = jupiterGroup
-			subproj.baseline = jupiterBaseline
-		}
-		else if (subproj.name in platformProjects) {
-			subproj.group = platformGroup
-			subproj.version = platformVersion
-			subproj.baseline = platformBaseline
-		}
-		else if (subproj.name in vintageProjects) {
-			subproj.group = vintageGroup
-			subproj.version = vintageVersion
-			subproj.baseline = vintageBaseline
-		}
-
-		configurations {
-			base
-		}
-
-		dependencies {
-			base(group: subproj.group, name: subproj.name, version: subproj.baseline) {
-				force = true
-				transitive = false
-			}
-		}
-
-		task japicc(type: Exec, dependsOn: assemble) {
-			// Requires https://github.com/lvc/japi-compliance-checker to be installed
-			def reportPath = "$buildDir/reports/japicc-${subproj.name}.html"
-			inputs.file configurations.base[0]
-			inputs.file jar.archivePath
-			outputs.file reportPath
-			commandLine 'japi-compliance-checker', configurations.base[0], jar.archivePath, '-report-path', reportPath
-			ignoreExitValue = true
-		}
+		apply from: "$rootDir/gradle/publishing.gradle"
+		apply from: "$rootDir/gradle/japicc.gradle"
 
 		javadoc {
-			// Use external javadoc.options to inject unsupported options, like:
-			//   options.addStringOption('-html5')
-			options.optionFiles(rootProject.file("src/javadoc/javadoc.options"))
-
-			options.memberLevel = JavadocMemberLevel.PROTECTED
-			options.author = true
-			options.header = project.name
-			options.use = true
-			options.addStringOption('Xdoclint:html,syntax', '-quiet')
-			options.addMultilineStringsOption('tag').setValue(['apiNote:a:API Note:', 'implSpec:a:Implementation Requirements:', 'implNote:a:Implementation Note:'])
-			options.encoding = 'UTF-8'
-			options.noTimestamp = true
-			// Remove Kotlin classes from classpath due to "bad" class file: AssertionsKt$sam$Supplier$44378ebd.class
-			// see https://bugs.openjdk.java.net/browse/JDK-8187422
-			classpath = classpath - files(compileKotlin.destinationDir)
+			options {
+				memberLevel = JavadocMemberLevel.PROTECTED
+				author = true
+				header = project.name
+				use = true
+				addBooleanOption('Xdoclint:html,syntax', true)
+				addBooleanOption('html5', true)
+				addMultilineStringsOption('tag').value = [
+					'apiNote:a:API Note:',
+					'implNote:a:Implementation Note:'
+				]
+				encoding = 'UTF-8'
+				noTimestamp = true
+			}
 		}
 
 		task sourcesJar(type: Jar, dependsOn: classes) {
@@ -361,11 +274,6 @@ subprojects { subproj ->
 			from javadoc
 		}
 
-		artifacts {
-			archives sourcesJar
-			archives javadocJar
-		}
-
 		tasks.withType(Jar) {
 			from(project.projectDir) {
 				include 'LICENSE.md'
@@ -377,11 +285,18 @@ subprojects { subproj ->
 			}
 		}
 
+		publishing.publications.maven {
+			from components.java
+			artifact sourcesJar
+			artifact javadocJar
+			pom {
+				description = "Module \"${project.name}\" of JUnit 5." as String
+			}
+		}
 
 	} else {
 		jar.enabled = false
 		javadoc.enabled = false
-		uploadArchives.enabled = false
 	}
 
 	def normalizeVersion = { versionLiteral ->
@@ -396,43 +311,6 @@ subprojects { subproj ->
 		// Enable JAR manifest generation
 		generateManifest = true
 	}
-
-	eclipse {
-		if (project.name.endsWith('-java-9')) {
-			jdt {
-				// Note: this does not work with Gradle 4.3-rc-2, but hopefully it will
-				// in a later Gradle release. Thus, for now we still need the custom
-				// eclipseJdtPrepare task.
-				sourceCompatibility = 9
-				targetCompatibility = 9
-			}
-		} else {
-			jdt {
-				sourceCompatibility = 1.8
-				targetCompatibility = 1.8
-			}
-			classpath.containers "org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"
-		}
-	}
-
-	eclipse.classpath.file.whenMerged { classpath ->
-		if (!project.name.endsWith('-java-9')) {
-			classpath.entries.findAll { it.kind == 'con' && it.path.contains('JavaSE-9') }.each {
-				classpath.entries.remove(it)
-			}
-		}
-	}
-
-	task eclipseJdtPrepare(type: Copy) {
-		if (project.name.endsWith('-java-9')) {
-			from rootProject.file('src/eclipse/org.eclipse.jdt.core.prefs-jdk9')
-			into project.file('.settings/')
-			rename 'org.eclipse.jdt.core.prefs-jdk9', 'org.eclipse.jdt.core.prefs'
-			outputs.upToDateWhen { false }
-		}
-	}
-
-	tasks["eclipse"].dependsOn(eclipseJdtPrepare)
 
 	jar {
 		onlyIf {
@@ -462,10 +340,6 @@ subprojects { subproj ->
 				return
 			}
 
-			if (project.hasProperty('enableClover')) {
-				println "Skip updating $archivePath with $versionedProject - Clover is enabled!"
-				return
-			}
 			// We're only interested in the compiled classes. So we depend
 			// on the classes task and change (-C) to the destination
 			// directory of the version-aware project later.
@@ -500,7 +374,6 @@ subprojects { subproj ->
 		def headerFile = rootProject.file('src/spotless/' + licenseOf(project)['headerFile'])
 		def importOrderConfigFile = rootProject.file('src/eclipse/junit-eclipse.importorder')
 		def javaFormatterConfigFile = rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
-		def groovyFormatterConfigFile = rootProject.file('src/eclipse/junit-greclipse-formatter-settings.prefs')
 
 		java {
 			licenseHeaderFile headerFile, '(package|import|open|module) '
@@ -512,18 +385,6 @@ subprojects { subproj ->
 
 			trimTrailingWhitespace()
 			endWithNewline()
-		}
-
-		groovy {
-			target 'src/**/*.groovy'
-			licenseHeaderFile headerFile, "package "
-			importOrderFile importOrderConfigFile
-			greclipse().configFile javaFormatterConfigFile, groovyFormatterConfigFile
-
-			trimTrailingWhitespace()
-			endWithNewline()
-			replaceRegex 'Empty line between last method and class closure', /\n([\s]+)}\n}\n$/, '\n$1}\n\n}\n'
-			replaceRegex 'Remove line breaks between consecutive closing parentheses', /\)\n[\s]+\)\n/, '))\n'
 		}
 
 		kotlin {
@@ -567,10 +428,9 @@ subprojects { subproj ->
 configure(rootProject) {
 	description = 'JUnit 5'
 
-	apply plugin: "org.ajoberstar.git-publish"
+	apply from: "$rootDir/gradle/gh-pages.gradle"
 
 	jar.enabled = false
-	uploadArchives.enabled = false
 
 	def ota4jDocVersion = ota4jVersion.contains('SNAPSHOT') ? 'snapshot' : ota4jVersion
 	def apiGuardianDocVersion = apiGuardianVersion.contains('SNAPSHOT') ? 'snapshot' : apiGuardianVersion
@@ -578,36 +438,38 @@ configure(rootProject) {
 	task aggregateJavadocs(type: Javadoc) {
 		group = "Documentation"
 		description = "Generates aggregated Javadocs"
+		dependsOn subprojects.collect { it.tasks.getByName("jar") }
+
 		title = "JUnit ${version} API"
 
-		setDependsOn subprojects.collect { it.tasks.getByName("jar") }
+		options {
+			memberLevel = JavadocMemberLevel.PROTECTED
+			author = true
+			header = rootProject.description
+			use = true
+			splitIndex = true
+			addBooleanOption('Xdoclint:none', true)
+			addBooleanOption('html5', true)
+			addMultilineStringsOption('tag').value = [
+				'apiNote:a:API Note:',
+				'implNote:a:Implementation Note:'
+			]
+			encoding = 'UTF-8'
+			noTimestamp = true
+			JFlags = ['-Xmx1g']
+			links('https://docs.oracle.com/javase/8/docs/api/')
+			links("https://ota4j-team.github.io/opentest4j/docs/${ota4jDocVersion}/api/")
+			links("https://apiguardian-team.github.io/apiguardian/docs/${apiGuardianDocVersion}/api/")
+			stylesheetFile = rootProject.file('src/javadoc/stylesheet.css')
+			groups = [
+				Jupiter: ['org.junit.jupiter.*'],
+				Vintage: ['org.junit.vintage.*'],
+				Platform: ['org.junit.platform.*']
+			]
+		}
 
-		// Use external javadoc.options to inject unsupported options, like:
-		//   options.addStringOption('-html5')
-		options.optionFiles(rootProject.file("src/javadoc/javadoc.options"))
-
-		options.memberLevel = JavadocMemberLevel.PROTECTED
-		options.author = true
-		options.header = rootProject.description
-		options.use = true
-		options.splitIndex = true
-		options.addStringOption('Xdoclint:none', '-quiet')
-		options.addMultilineStringsOption('tag').setValue(['apiNote:a:API Note:', 'implSpec:a:Implementation Requirements:', 'implNote:a:Implementation Note:'])
-		options.encoding = 'UTF-8'
-		options.noTimestamp = true
-		options.jFlags '-Xmx1g'
-		options.links(
-			'https://docs.oracle.com/javase/8/docs/api/',
-			"https://ota4j-team.github.io/opentest4j/docs/${ota4jDocVersion}/api/",
-			"https://apiguardian-team.github.io/apiguardian/docs/${apiGuardianDocVersion}/api/"
-		)
-		options.stylesheetFile rootProject.file("src/javadoc/stylesheet.css")
-		options
-			.group("Jupiter", ["org.junit.jupiter.*"])
-			.group("Vintage", ["org.junit.vintage.*"])
-			.group("Platform", ["org.junit.platform.*"])
-
-		setSource subprojects.collect { it.sourceSets.main.allJava }
+		// Only generate JavaDoc for 'main' sources in Mavenized projects
+		source = subprojects.findAll { mavenizedProjects.contains(it.name) }.collect { it.sourceSets.main.allJava }
 
 		maxMemory = "1024m"
 		destinationDir = new File(buildDir, "docs/javadoc")
@@ -630,49 +492,6 @@ configure(rootProject) {
 			target '**/*.adoc', '**/*.md'
 			trimTrailingWhitespace()
 			endWithNewline()
-		}
-	}
-
-	if (project.hasProperty('enableClover')) {
-
-		def cloverAggregationFile = "$cloverDir/coverage.db"
-
-		task cloverAggregateDatabases(dependsOn: cloverTaskdef) {
-			outputs.file cloverAggregationFile
-			subprojects.findAll { it.name in cloverTestProjects }
-				.each { dependsOn it.tasks.withType(Test) }
-			doLast {
-				ant.'clover-merge'(initString: cloverAggregationFile) {
-					subprojects.each { project ->
-						def cloverDbFile = project.file(project.cloverInitstring)
-						if(cloverDbFile.exists()) {
-							cloverDb(initString: project.cloverInitstring)
-						}
-					}
-				}
-			}
-		}
-
-		task cloverHtmlReport(dependsOn: cloverAggregateDatabases) {
-			outputs.dir "$buildDir/reports/clover/html"
-			doLast {
-				ant."clover-report"(initString: cloverAggregationFile) {
-					current(outfile: "$buildDir/reports/clover/html", title: rootProject.description, homepage: 'overview') {
-						format(type: 'html')
-					}
-				}
-			}
-		}
-
-		task cloverXmlReport(dependsOn: cloverAggregateDatabases) {
-			outputs.file "$buildDir/reports/clover/clover.xml"
-			doLast {
-				ant."clover-report"(initString: cloverAggregationFile) {
-					current(outfile: "$buildDir/reports/clover/clover.xml") {
-						format(type: 'xml')
-					}
-				}
-			}
 		}
 	}
 
@@ -699,67 +518,11 @@ configure(rootProject) {
 			}
 		}
 	}
-
-	def docsDir = new File(buildDir, 'ghpages-docs')
-	def replaceCurrentDocs = project.hasProperty('replaceCurrentDocs')
-
-	task prepareDocsForUploadToGhPages(dependsOn: [aggregateJavadocs, ":documentation:asciidoctor"], type: Copy) {
-		outputs.dir docsDir
-
-		from("${project(':documentation').buildDir}/asciidoc") {
-			include 'user-guide/**'
-			include 'release-notes/**'
-		}
-		from("$buildDir/docs") {
-			include 'javadoc/**'
-			filesMatching("**/*.html") {
-				filter { line ->
-					line.startsWith("<head>") ? line.replace("<head>", "<head><link rel=\"icon\" type=\"image/png\" href=\"http://junit.org/junit5/assets/img/junit5-logo.png\">") :
-							line
-				}
-			}
-		}
-		into "${docsDir}/${docsVersion}"
-		filesMatching('javadoc/**') { fileCopyDetails ->
-			fileCopyDetails.path = fileCopyDetails.path.replace('javadoc/', 'api/')
-		}
-		includeEmptyDirs = false
-	}
-
-	task createCurrentDocsFolder(dependsOn: prepareDocsForUploadToGhPages, type: Copy) {
-		outputs.dir "${docsDir}/current"
-
-		from "${docsDir}/${docsVersion}"
-		into "${docsDir}/current"
-	}
-
-	createCurrentDocsFolder.onlyIf { replaceCurrentDocs }
-
-	gitPublish {
-		repoUri = 'https://github.com/junit-team/junit5.git'
-		branch = 'gh-pages'
-
-		contents {
-			from docsDir
-			into "docs"
-		}
-
-		preserve {
-			include '**/*'
-			exclude "docs/${docsVersion}/**"
-			if (replaceCurrentDocs) {
-				exclude "docs/current/**"
-			}
-		}
-	}
-
-	gitPublishCommit.dependsOn(prepareDocsForUploadToGhPages)
-	gitPublishCommit.dependsOn(createCurrentDocsFolder)
 }
 
-task wrapper(type: Wrapper) {
+wrapper {
 	description = 'Generates gradlew and gradlew.bat scripts'
-	gradleVersion = '4.7'
+	gradleVersion = '4.8-rc-2'
 	/*
 	* Reasoning for using BIN:
 	* https://github.com/junit-team/junit5/pull/1012#discussion_r132061924

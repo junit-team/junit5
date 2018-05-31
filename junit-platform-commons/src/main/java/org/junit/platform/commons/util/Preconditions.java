@@ -36,11 +36,9 @@ import org.apiguardian.api.API;
 @API(status = INTERNAL, since = "1.0")
 public final class Preconditions {
 
-	///CLOVER:OFF
 	private Preconditions() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Assert that the supplied {@link Object} is not {@code null}.

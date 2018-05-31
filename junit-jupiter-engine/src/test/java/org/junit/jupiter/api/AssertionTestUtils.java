@@ -18,19 +18,17 @@ import org.opentest4j.ValueWrapper;
 
 class AssertionTestUtils {
 
-	///CLOVER:OFF
 	private AssertionTestUtils() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	static void expectAssertionFailedError() {
 		throw new AssertionError("Should have thrown an " + AssertionFailedError.class.getName());
 	}
 
-	static void assertEmptyMessage(Throwable ex) throws AssertionError {
-		if (!ex.getMessage().isEmpty()) {
-			throw new AssertionError("Exception message should be an empty String, but was [" + ex.getMessage() + "].");
+	static void assertNullMessage(Throwable ex) throws AssertionError {
+		if (ex.getMessage() != null) {
+			throw new AssertionError("Exception message should be null, but was [" + ex.getMessage() + "].");
 		}
 	}
 
@@ -56,6 +54,13 @@ class AssertionTestUtils {
 
 	static void assertMessageContains(Throwable ex, String msg) throws AssertionError {
 		if (!ex.getMessage().contains(msg)) {
+			throw new AssertionError(
+				"Exception message should contain [" + msg + "], but was [" + ex.getMessage() + "].");
+		}
+	}
+
+	static void assertMessageDoesNotContain(Throwable ex, String msg) throws AssertionError {
+		if (ex.getMessage().contains(msg)) {
 			throw new AssertionError(
 				"Exception message should contain [" + msg + "], but was [" + ex.getMessage() + "].");
 		}

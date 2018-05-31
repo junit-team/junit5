@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCH_ALL;
 
@@ -166,8 +167,8 @@ class ParameterizedTestDemo {
 
 	static Stream<Arguments> stringIntAndListProvider() {
 		return Stream.of(
-			Arguments.of("foo", 1, Arrays.asList("a", "b")),
-			Arguments.of("bar", 2, Arrays.asList("x", "y"))
+			arguments("foo", 1, Arrays.asList("a", "b")),
+			arguments("bar", 2, Arrays.asList("x", "y"))
 		);
 	}
 	// end::multi_arg_MethodSource_example[]

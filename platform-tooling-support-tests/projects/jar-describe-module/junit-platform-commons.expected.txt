@@ -1,0 +1,10 @@
+>> 1 line header: No module descriptor found. Derived automatic module. >>
+
+org.junit.platform.commons@${platformVersion} automatic
+requires java.base mandated
+contains org.junit.platform.commons
+contains org.junit.platform.commons.annotation
+contains org.junit.platform.commons.logging
+contains org.junit.platform.commons.support
+contains org.junit.platform.commons.util
+

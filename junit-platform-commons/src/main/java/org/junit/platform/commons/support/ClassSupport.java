@@ -27,11 +27,9 @@ import org.junit.platform.commons.util.ClassUtils;
 @API(status = MAINTAINED, since = "1.1")
 public final class ClassSupport {
 
-	///CLOVER:OFF
 	private ClassSupport() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Generate a comma-separated list of fully qualified class names for the

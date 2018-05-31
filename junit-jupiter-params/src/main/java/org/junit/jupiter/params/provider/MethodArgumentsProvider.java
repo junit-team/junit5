@@ -11,6 +11,7 @@
 package org.junit.jupiter.params.provider;
 
 import static java.lang.String.format;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -87,9 +88,9 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 			return (Arguments) item;
 		}
 		if (item instanceof Object[]) {
-			return Arguments.of((Object[]) item);
+			return arguments((Object[]) item);
 		}
-		return Arguments.of(item);
+		return arguments(item);
 	}
 
 }

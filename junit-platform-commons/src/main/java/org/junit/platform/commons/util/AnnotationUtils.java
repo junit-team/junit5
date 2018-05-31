@@ -58,11 +58,9 @@ import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
 @API(status = INTERNAL, since = "1.0")
 public final class AnnotationUtils {
 
-	///CLOVER:OFF
 	private AnnotationUtils() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	private static final Map<AnnotationCacheKey, Annotation> annotationCache = new ConcurrentHashMap<>(256);
 
@@ -72,6 +70,7 @@ public final class AnnotationUtils {
 	 * {@code element}.
 	 *
 	 * @see #findAnnotation(Optional, Class)
+	 * @see org.junit.platform.commons.support.AnnotationSupport#isAnnotated(Optional, Class)
 	 */
 	public static boolean isAnnotated(Optional<? extends AnnotatedElement> element,
 			Class<? extends Annotation> annotationType) {

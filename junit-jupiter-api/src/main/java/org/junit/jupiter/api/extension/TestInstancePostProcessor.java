@@ -22,10 +22,13 @@ import org.apiguardian.api.API;
  * instance, invoking custom initialization methods on the test instance,
  * etc.
  *
- * <p>Implementations must provide a no-args constructor.
- *
  * <p>Extensions that implement {@code TestInstancePostProcessor} must be
  * registered at the class level.
+ *
+ * <h3>Constructor Requirements</h3>
+ *
+ * <p>Consult the documentation in {@link Extension} for details on
+ * constructor requirements.
  *
  * @since 5.0
  * @see #postProcessTestInstance(Object, ExtensionContext)

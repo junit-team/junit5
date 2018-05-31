@@ -27,11 +27,9 @@ import org.junit.platform.launcher.TestPlan;
 @API(status = MAINTAINED, since = "1.0.3")
 public class LegacyReportingUtils {
 
-	///CLOVER:OFF
 	private LegacyReportingUtils() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Get the class name for the supplied {@link TestIdentifier} using the

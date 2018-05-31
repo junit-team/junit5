@@ -32,11 +32,9 @@ import org.apiguardian.api.API;
 @API(status = INTERNAL, since = "1.0")
 public final class FunctionUtils {
 
-	///CLOVER:OFF
 	private FunctionUtils() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Return a predicate that first applies the specified function and then

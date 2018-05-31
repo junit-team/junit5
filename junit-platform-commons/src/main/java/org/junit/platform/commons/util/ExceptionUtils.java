@@ -31,11 +31,9 @@ import org.apiguardian.api.API;
 @API(status = INTERNAL, since = "1.0")
 public final class ExceptionUtils {
 
-	///CLOVER:OFF
 	private ExceptionUtils() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Throw the supplied {@link Throwable}, <em>masked</em> as an

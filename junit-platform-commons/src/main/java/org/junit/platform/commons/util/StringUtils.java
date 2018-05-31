@@ -31,11 +31,9 @@ import org.apiguardian.api.API;
 @API(status = INTERNAL, since = "1.0")
 public final class StringUtils {
 
-	///CLOVER:OFF
 	private StringUtils() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Determine if the supplied {@link String} is <em>blank</em> (i.e.,

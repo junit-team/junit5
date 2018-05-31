@@ -12,4 +12,5 @@ install:
 
 test_script:
   - gradlew --no-daemon -version
-  - gradlew --no-daemon --stacktrace build
+  - gradlew --no-daemon --stacktrace build publishToMavenLocal
+  - gradlew --no-daemon --stacktrace -Dplatform.tooling.support.tests.enabled=true build

@@ -1,0 +1,28 @@
+task japicc(type: Exec) {
+	// Requires https://github.com/lvc/japi-compliance-checker to be installed
+	def baseline = null
+	if (project.name in jupiterProjects) {
+		baseline = jupiterBaseline
+	}
+	else if (project.name in platformProjects) {
+		baseline = platformBaseline
+	}
+	else if (project.name in vintageProjects) {
+		baseline = vintageBaseline
+	}
+	def reportPath = "$buildDir/reports/japicc-${project.name}.html"
+	def coordinates = [group: project.group, name: project.name, version: baseline]
+	outputs.file reportPath
+	dependsOn assemble
+	inputs.files jar
+	inputs.properties coordinates
+	ignoreExitValue = true
+	doFirst {
+		def config = configurations.detachedConfiguration(dependencies.create(coordinates) {
+			force = true
+			transitive = false
+		})
+		def files = config.resolve()
+		commandLine 'japi-compliance-checker', files[0], jar.archivePath, '-report-path', reportPath
+	}
+}

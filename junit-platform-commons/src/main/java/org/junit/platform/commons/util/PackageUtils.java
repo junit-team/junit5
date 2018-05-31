@@ -41,11 +41,9 @@ import org.apiguardian.api.API;
 @API(status = INTERNAL, since = "1.0")
 public final class PackageUtils {
 
-	///CLOVER:OFF
 	private PackageUtils() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	static final String DEFAULT_PACKAGE_NAME = "";
 

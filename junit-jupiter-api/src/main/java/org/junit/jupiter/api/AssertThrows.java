@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -28,31 +29,45 @@ import org.opentest4j.AssertionFailedError;
  */
 class AssertThrows {
 
-	///CLOVER:OFF
 	private AssertThrows() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable) {
-		return assertThrows(expectedType, executable, (Object) null);
+		return assertThrows(expectedType, asSupplier(executable), (Object) null);
 	}
 
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable, String message) {
-		return assertThrows(expectedType, executable, (Object) message);
+		return assertThrows(expectedType, asSupplier(executable), (Object) message);
 	}
 
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
 			Supplier<String> messageSupplier) {
-		return assertThrows(expectedType, executable, (Object) messageSupplier);
+
+		return assertThrows(expectedType, asSupplier(executable), (Object) messageSupplier);
+	}
+
+	static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier) {
+		return assertThrows(expectedType, supplier::get, (Object) null);
+	}
+
+	static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier, String message) {
+		return assertThrows(expectedType, supplier::get, (Object) message);
+	}
+
+	static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier,
+			Supplier<String> messageSupplier) {
+
+		return assertThrows(expectedType, supplier::get, (Object) messageSupplier);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
+	private static <T extends Throwable> T assertThrows(Class<T> expectedType, ResultAwareThrowingSupplier<?> supplier,
 			Object messageOrSupplier) {
 
+		Object result;
 		try {
-			executable.execute();
+			result = supplier.get();
 		}
 		catch (Throwable actualException) {
 			if (expectedType.isInstance(actualException)) {
@@ -66,8 +81,38 @@ class AssertThrows {
 		}
 
 		String message = buildPrefix(nullSafeGet(messageOrSupplier))
-				+ String.format("Expected %s to be thrown, but nothing was thrown.", getCanonicalName(expectedType));
+				+ String.format("Expected %s to be thrown, but nothing was thrown", getCanonicalName(expectedType))
+				+ (supplier.includeResult() ? String.format(" (returned %s).", result) : ".");
 		throw new AssertionFailedError(message);
+	}
+
+	private interface ResultAwareThrowingSupplier<T> extends ThrowingSupplier<T> {
+
+		/**
+		 * Determine if the result of invoking {@link #get()} should be included
+		 * in the assertion failure message if this supplier returns an actual
+		 * result instead of throwing an exception.
+		 *
+		 * @return {@code true} by default; can be overridden in concrete implementations
+		 */
+		default boolean includeResult() {
+			return true;
+		}
+	}
+
+	private static ResultAwareThrowingSupplier<Void> asSupplier(Executable executable) {
+		return new ResultAwareThrowingSupplier<Void>() {
+			@Override
+			public Void get() throws Throwable {
+				executable.execute();
+				return null;
+			}
+
+			@Override
+			public boolean includeResult() {
+				return false;
+			}
+		};
 	}
 
 }

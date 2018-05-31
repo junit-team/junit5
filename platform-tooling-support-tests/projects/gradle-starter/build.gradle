@@ -1,0 +1,42 @@
+plugins {
+	id 'java'
+}
+
+// don't use `build` as target to prevent Jenkins picking up
+project.buildDir = 'bin'
+
+// grab jupiter version from system environment
+def jupiterVersion = System.getenv('JUNIT_JUPITER_VERSION')
+def vintageVersion = System.getenv('JUNIT_VINTAGE_VERSION')
+def platformVersion = System.getenv('JUNIT_PLATFORM_VERSION')
+
+// emit default file encoding to a file
+file('file.encoding.txt').write(System.getProperty('file.encoding'))
+file('junit.versions.txt').write("""
+jupiterVersion=${jupiterVersion}
+vintageVersion=${vintageVersion}
+platformVersion=${platformVersion}
+""")
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+dependencies {
+	testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiterVersion}")
+	testImplementation("org.junit.jupiter:junit-jupiter-params:${jupiterVersion}")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}")
+}
+
+test {
+	useJUnitPlatform()
+
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
+
+	reports {
+		html.enabled = true
+	}
+}

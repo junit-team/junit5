@@ -27,11 +27,9 @@ class AssertTrue {
 
 	private static final String EXPECTED_TRUE = "expected: <true> but was: <false>";
 
-	///CLOVER:OFF
 	private AssertTrue() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	static void assertTrue(boolean condition) {
 		assertTrue(condition, (String) null);

@@ -27,11 +27,9 @@ import org.opentest4j.AssertionFailedError;
  */
 class AssertDoesNotThrow {
 
-	///CLOVER:OFF
 	private AssertDoesNotThrow() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	static void assertDoesNotThrow(Executable executable) {
 		assertDoesNotThrow(executable, (Object) null);

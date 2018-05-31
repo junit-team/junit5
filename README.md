@@ -4,10 +4,9 @@ This repository is the home of the next generation of JUnit, _JUnit 5_.
 
 ## Latest Releases
 
-- General Availability (GA): [JUnit 5.1.1](https://github.com/junit-team/junit5/releases/tag/r5.1.1)
-(April 8, 2018).
-- Preview (Milestone/Release Candidate): [JUnit 5.2 RC1](https://github.com/junit-team/junit5/releases/tag/r5.2.0-RC1)
-(April 22, 2018).
+- General Availability (GA): [JUnit 5.2.0](https://github.com/junit-team/junit5/releases/tag/r5.2.0)
+(April 29, 2018).
+- Preview (Milestone/Release Candidate): N/A
 
 ## Documentation
 
@@ -45,9 +44,6 @@ Code coverage using [JaCoCo] for the latest build is available on the
 A code coverage report can also be generated locally by executing
 `gradlew -PenableJaCoCo clean jacocoRootReport`. The results will be available in
 `build/reports/jacoco/jacocoRootReport/html/index.html`.
-Alternatively, [OpenClover] can be used locally via
-`gradlew -PenableClover clean cloverHtmlReport`. The results will be available in
-`build/reports/clover/html/index.html`.
 
 ## Gradle Build Scans
 
@@ -79,7 +75,7 @@ Since Gradle has excellent incremental build support, you can usually omit execu
 All modules can be installed in a local Maven repository for consumption in other projects via the following command.
 
 ```
-gradlew clean install
+gradlew clean publishToMavenLocal
 ```
 
 ## Dependency Metadata
@@ -92,13 +88,12 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Platform
 
 - **Group ID**: `org.junit.platform`
-- **Version**: `1.1.1` or `1.2.0-RC1` or `1.2.0-SNAPSHOT`
+- **Version**: `1.2.0` or `1.3.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
   - `junit-platform-commons` (`org.junit.platform.commons`)
   - `junit-platform-console` (`org.junit.platform.console`)
   - `junit-platform-console-standalone` (*N/A*)
   - `junit-platform-engine` (`org.junit.platform.engine`)
-  - `junit-platform-gradle-plugin` (`org.junit.platform.gradle.plugin`)
   - `junit-platform-launcher` (`org.junit.platform.launcher`)
   - `junit-platform-runner` (`org.junit.platform.runner`)
   - `junit-platform-suite-api` (`org.junit.platform.suite.api`)
@@ -107,7 +102,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Jupiter
 
 - **Group ID**: `org.junit.jupiter`
-- **Version**: `5.1.1` or `5.2.0-RC1` or `5.2.0-SNAPSHOT`
+- **Version**: `5.2.0` or `5.3.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
   - `junit-jupiter-api` (`org.junit.jupiter.api`)
   - `junit-jupiter-engine` (`org.junit.jupiter.engine`)
@@ -117,7 +112,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Vintage
 
 - **Group ID**: `org.junit.vintage`
-- **Version**: `5.1.1` or `5.2.0-RC1` or `5.2.0-SNAPSHOT`
+- **Version**: `5.2.0` or `5.3.0-SNAPSHOT`
 - **Artifact ID** and **Automatic-Module-Name**:
   - `junit-vintage-engine` (`org.junit.vintage.engine`)
 
@@ -125,7 +120,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 
 - **Group ID**: `org.junit`
 - **Artifact ID** `junit-bom`
-- **Version**: `5.2.0-RC1` or `5.2.0-SNAPSHOT`
+- **Version**: `5.2.0` or `5.3.0-SNAPSHOT`
 
 ## Java Module Names
 
@@ -157,7 +152,6 @@ as it is not intended to be used as a module.
 [Javadoc]: https://junit.org/junit5/docs/current/api/
 [JDK-10]: http://jdk.java.net/10/
 [Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/job/master/lastSuccessfulBuild/artifact/build/reports/jacoco/jacocoRootReport/html/index.html
-[OpenClover]: http://openclover.org
 [Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
 [Release Notes]: https://junit.org/junit5/docs/current/release-notes/
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5

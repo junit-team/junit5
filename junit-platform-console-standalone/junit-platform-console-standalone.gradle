@@ -3,15 +3,6 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 description = 'JUnit Platform Console Standalone'
 
-buildscript {
-	repositories {
-		jcenter()
-	}
-	dependencies {
-		classpath("com.github.jengelman.gradle.plugins:shadow:${shadowVersion}")
-	}
-}
-
 dependencies {
 	shadowed(project(':junit-platform-console'))
 	shadowed(project(':junit-jupiter-engine'))
@@ -78,11 +69,6 @@ shadowJar {
 			'Multi-Release': 'true'
 		)
 	}
-}
-
-
-artifacts {
-	archives shadowJar
 }
 
 task standaloneExec(type: JavaExec, dependsOn: [shadowJar, testClasses]) {

@@ -8,31 +8,40 @@ branches:
   except:
     - /^r\d.*$/
 
-# Get latest install-jdk.sh script
 before_install:
-  - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
+# https://github.com/travis-ci/travis-ci/issues/8408
+# Also interferes with platform-tooling-support-tests expectations
+  - unset _JAVA_OPTIONS
+
+os:
+  - linux
+  - osx
+
+jdk:
+  - openjdk10
+  - openjdk-ea
+
+env:
+  - JACOCO='-PenableJaCoCo'
+  - INSTALL='publishToMavenLocal'
 
 matrix:
-  include:
-# Java 10 "Oracle JDK" (not yet provided by Travis CI)
-    - env: JDK='Oracle JDK 10'
-      install: . ./install-jdk.sh -F 10 -L BCL
-# Java 10 "OpenJDK"
-    - env: JDK='OpenJDK 10' JACOCO='-PenableJaCoCo'
-      install: . ./install-jdk.sh -F 10 -L GPL
-# Java 11 "Oracle JDK"
-    - env: JDK='Oracle JDK 11'
-      install: . ./install-jdk.sh -F 11 -L BCL
-# The following environments are known to fail
-  allow_failures:
-    - env: JDK='Oracle JDK 11'
+  exclude:
+    - os: linux
+      jdk: openjdk-ea
+      env: JACOCO='-PenableJaCoCo'
+    - os: osx
+      jdk: openjdk-ea
+      env: JACOCO='-PenableJaCoCo'
 
 script:
 # Display Gradle, Groovy, JVM and other versions
   - ./gradlew --version
 # Build JUnit 5
-  - ./gradlew --scan --stacktrace --warning-mode=all ${JACOCO} build
+  - ./gradlew --scan --stacktrace --warning-mode=all ${JACOCO} build ${INSTALL}
 
-# If variable JACOCO is set, run JaCoCo report and send report to codecov.io after build success
 after_success:
+# If variable JACOCO is set, run JaCoCo report and send report to codecov.io after build success
   - test -v JACOCO && ./gradlew ${JACOCO} jacocoRootReport && bash <(curl -s https://codecov.io/bash) || true
+# If variable INSTALL is set, run platform-tooling-support-tests
+  - test -v INSTALL && ./gradlew --scan --stacktrace -Dplatform.tooling.support.tests.enabled=true build || true

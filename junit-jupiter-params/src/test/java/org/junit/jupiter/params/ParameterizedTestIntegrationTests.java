@@ -13,6 +13,7 @@ package org.junit.jupiter.params;
 import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.test.event.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
@@ -297,7 +298,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		static Stream<Arguments> testWithEmptyMethodSource() {
-			return Stream.of(Arguments.of("empty method source"));
+			return Stream.of(arguments("empty method source"));
 		}
 	}
 
@@ -328,7 +329,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		static Stream<Arguments> unusedArgumentsProviderMethod() {
-			return Stream.of(Arguments.of("foo", "unused1"), Arguments.of("bar", "unused2"));
+			return Stream.of(arguments("foo", "unused1"), arguments("bar", "unused2"));
 		}
 
 	}
@@ -392,7 +393,7 @@ class ParameterizedTestIntegrationTests {
 
 		@Override
 		public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
-			return Stream.of(Arguments.of("foo"), Arguments.of("bar"));
+			return Stream.of(arguments("foo"), arguments("bar"));
 		}
 	}
 
@@ -400,7 +401,7 @@ class ParameterizedTestIntegrationTests {
 
 		@Override
 		public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
-			return Stream.of(Arguments.of("foo", "unused1"), Arguments.of("bar", "unused2"));
+			return Stream.of(arguments("foo", "unused1"), arguments("bar", "unused2"));
 		}
 	}
 

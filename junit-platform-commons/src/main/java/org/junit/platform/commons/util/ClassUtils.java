@@ -32,11 +32,9 @@ import org.apiguardian.api.API;
 @API(status = INTERNAL, since = "1.0")
 public final class ClassUtils {
 
-	///CLOVER:OFF
 	private ClassUtils() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	/**
 	 * Generate a comma-separated list of fully qualified class names for the

@@ -1,0 +1,57 @@
+apply plugin: "org.ajoberstar.git-publish"
+
+def docsDir = file("$buildDir/ghpages-docs")
+def replaceCurrentDocs = project.hasProperty('replaceCurrentDocs')
+
+task prepareDocsForUploadToGhPages(type: Copy) {
+	dependsOn 'aggregateJavadocs', ':documentation:asciidoctor'
+	outputs.dir docsDir
+
+	from("${project(':documentation').buildDir}/asciidoc") {
+		include 'user-guide/**'
+		include 'release-notes/**'
+	}
+	from("$buildDir/docs") {
+		include 'javadoc/**'
+		filesMatching("**/*.html") {
+			def favicon = '<link rel="icon" type="image/png" href="http://junit.org/junit5/assets/img/junit5-logo.png">'
+			filter { line ->
+				line.startsWith("<head>") ? line.replace("<head>", "<head>$favicon") : line
+			}
+		}
+	}
+	into "${docsDir}/${docsVersion}"
+	filesMatching('javadoc/**') { fileCopyDetails ->
+		fileCopyDetails.path = fileCopyDetails.path.replace('javadoc/', 'api/')
+	}
+	includeEmptyDirs = false
+}
+
+task createCurrentDocsFolder(type: Copy) {
+	dependsOn prepareDocsForUploadToGhPages
+	outputs.dir "${docsDir}/current"
+	onlyIf { replaceCurrentDocs }
+
+	from "${docsDir}/${docsVersion}"
+	into "${docsDir}/current"
+}
+
+gitPublish {
+	repoUri = 'https://github.com/junit-team/junit5.git'
+	branch = 'gh-pages'
+
+	contents {
+		from docsDir
+		into "docs"
+	}
+
+	preserve {
+		include '**/*'
+		exclude "docs/${docsVersion}/**"
+		if (replaceCurrentDocs) {
+			exclude "docs/current/**"
+		}
+	}
+}
+
+gitPublishCommit.dependsOn(prepareDocsForUploadToGhPages, createCurrentDocsFolder)

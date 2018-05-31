@@ -41,11 +41,9 @@ import org.opentest4j.TestAbortedException;
 @API(status = STABLE, since = "5.0")
 public final class Assumptions {
 
-	///CLOVER:OFF
 	private Assumptions() {
 		/* no-op */
 	}
-	///CLOVER:ON
 
 	// --- assumeTrue ----------------------------------------------------
 

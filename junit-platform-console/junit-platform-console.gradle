@@ -2,15 +2,6 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 description = 'JUnit Platform Console'
 
-buildscript {
-	repositories {
-		jcenter()
-	}
-	dependencies {
-		classpath("com.github.jengelman.gradle.plugins:shadow:${shadowVersion}")
-	}
-}
-
 dependencies {
 	api(project(':junit-platform-launcher'))
 
@@ -52,8 +43,4 @@ shadowJar {
 		include 'LICENSE-jopt-simple.md'
 		into 'META-INF'
 	}
-}
-
-artifacts {
-	archives shadowJar
 }

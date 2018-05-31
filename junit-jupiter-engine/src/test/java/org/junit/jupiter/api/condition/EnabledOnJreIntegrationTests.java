@@ -67,7 +67,7 @@ class EnabledOnJreIntegrationTests {
 	@Test
 	@EnabledOnJre(JAVA_11)
 	void java11() {
-		assertTrue(onJava10());
+		assertTrue(onJava11());
 	}
 
 	@Test

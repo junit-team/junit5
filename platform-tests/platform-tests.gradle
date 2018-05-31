@@ -3,6 +3,11 @@ plugins {
 }
 
 test {
+	// Tests in `AutomaticModuleNameTests` depend on all and these jars. #894
+	dependsOn(
+		project(':junit-jupiter-migrationsupport').jar,
+		project(':junit-platform-surefire-provider').jar
+	)
 	useJUnitPlatform {
 		includeEngines 'junit-jupiter'
 		excludeTags 'exclude'
@@ -17,15 +22,7 @@ test {
 		html.enabled = true
 	}
 	systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
-	systemProperty 'coverage.enabled', project.hasProperty('enableClover') ? 'true' : 'false'
 }
-
-// Tests in `AutomaticModuleNameTests` depend on all and the three jars. #894
-test.dependsOn(
-	project(':junit-jupiter-migrationsupport').jar,
-	project(':junit-platform-gradle-plugin').jar,
-	project(':junit-platform-surefire-provider').jar
-)
 
 dependencies {
 	// --- Things we are testing --------------------------------------------------

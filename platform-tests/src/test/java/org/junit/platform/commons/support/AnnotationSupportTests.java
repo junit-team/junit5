@@ -19,6 +19,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -32,19 +33,35 @@ import org.junit.platform.commons.util.ReflectionUtils;
 class AnnotationSupportTests {
 
 	@Test
-	void isAnnotatedDelegates() throws Throwable {
-		assertEquals(AnnotationUtils.isAnnotated(Probe.class, Tag.class),
-			AnnotationSupport.isAnnotated(Probe.class, Tag.class));
-		assertEquals(AnnotationUtils.isAnnotated(Probe.class, Override.class),
-			AnnotationSupport.isAnnotated(Probe.class, Override.class));
+	void isAnnotatedDelegates() {
+		Class<Probe> element = Probe.class;
+		Optional<Class<Probe>> optional = Optional.of(element);
+
+		assertEquals(AnnotationUtils.isAnnotated(optional, Tag.class),
+			AnnotationSupport.isAnnotated(optional, Tag.class));
+		assertEquals(AnnotationUtils.isAnnotated(optional, Override.class),
+			AnnotationSupport.isAnnotated(optional, Override.class));
+
+		assertEquals(AnnotationUtils.isAnnotated(element, Tag.class),
+			AnnotationSupport.isAnnotated(element, Tag.class));
+		assertEquals(AnnotationUtils.isAnnotated(element, Override.class),
+			AnnotationSupport.isAnnotated(element, Override.class));
 	}
 
 	@Test
-	void findAnnotationDelegates() throws Throwable {
-		assertEquals(AnnotationUtils.findAnnotation(Probe.class, Tag.class),
-			AnnotationSupport.findAnnotation(Probe.class, Tag.class));
-		assertEquals(AnnotationUtils.findAnnotation(Probe.class, Override.class),
-			AnnotationSupport.findAnnotation(Probe.class, Override.class));
+	void findAnnotationDelegates() {
+		Class<Probe> element = Probe.class;
+		Optional<Class<Probe>> optional = Optional.of(element);
+
+		assertEquals(AnnotationUtils.findAnnotation(optional, Tag.class),
+			AnnotationSupport.findAnnotation(optional, Tag.class));
+		assertEquals(AnnotationUtils.findAnnotation(optional, Override.class),
+			AnnotationSupport.findAnnotation(optional, Override.class));
+
+		assertEquals(AnnotationUtils.findAnnotation(element, Tag.class),
+			AnnotationSupport.findAnnotation(element, Tag.class));
+		assertEquals(AnnotationUtils.findAnnotation(element, Override.class),
+			AnnotationSupport.findAnnotation(element, Override.class));
 	}
 
 	@Test
@@ -61,7 +78,7 @@ class AnnotationSupportTests {
 	}
 
 	@Test
-	void findAnnotatedMethodsDelegates() throws Throwable {
+	void findAnnotatedMethodsDelegates() {
 		assertEquals(
 			AnnotationUtils.findAnnotatedMethods(Probe.class, Tag.class,
 				ReflectionUtils.HierarchyTraversalMode.TOP_DOWN),
@@ -82,14 +99,14 @@ class AnnotationSupportTests {
 	}
 
 	@Test
-	void findPublicAnnotatedFieldsDelegates() throws Throwable {
+	void findPublicAnnotatedFieldsDelegates() {
 		assertEquals(AnnotationUtils.findPublicAnnotatedFields(Probe.class, String.class, FieldMarker.class),
 			AnnotationSupport.findPublicAnnotatedFields(Probe.class, String.class, FieldMarker.class));
 		assertEquals(AnnotationUtils.findPublicAnnotatedFields(Probe.class, Throwable.class, Override.class),
 			AnnotationSupport.findPublicAnnotatedFields(Probe.class, Throwable.class, Override.class));
 	}
 
-	@Target({ ElementType.FIELD })
+	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	@interface FieldMarker {
 	}
@@ -112,4 +129,5 @@ class AnnotationSupportTests {
 		void bMethod() {
 		}
 	}
+
 }
