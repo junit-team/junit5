@@ -24,48 +24,48 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
-class NodeExecutorWalkerIntegrationTests {
+class NodeTestTaskWalkerIntegrationTests {
 
 	@Test
 	void pullUpExclusiveChildResourcesToTestClass() {
-		NodeExecutor<?> engineNodeExecutor = prepareNodeExecutorTree(TestCaseWithResourceLock.class);
+		NodeTestTask<?> engineNodeTestTask = prepareNodeExecutorTree(TestCaseWithResourceLock.class);
 
-		assertThat(engineNodeExecutor.getChildren()).hasSize(1);
-		NodeExecutor<?> testClassExecutor = engineNodeExecutor.getChildren().get(0);
+		assertThat(engineNodeTestTask.getChildren()).hasSize(1);
+		NodeTestTask<?> testClassExecutor = engineNodeTestTask.getChildren().get(0);
 		assertThat(testClassExecutor.getResourceLock()).isInstanceOf(CompositeLock.class);
 		assertThat(testClassExecutor.getExecutionMode()).isEqualTo(ExecutionMode.Concurrent);
 
 		assertThat(testClassExecutor.getChildren()).hasSize(1);
-		NodeExecutor<?> testMethodExecutor = testClassExecutor.getChildren().get(0);
+		NodeTestTask<?> testMethodExecutor = testClassExecutor.getChildren().get(0);
 		assertThat(testMethodExecutor.getResourceLock()).isInstanceOf(NopLock.class);
 		assertThat(testMethodExecutor.getExecutionMode()).isEqualTo(ExecutionMode.SameThread);
 	}
 
 	@Test
 	void leavesResourceLockOnTestMethodWhenClassDoesNotUseResource() {
-		NodeExecutor<?> engineNodeExecutor = prepareNodeExecutorTree(TestCaseWithoutResourceLock.class);
+		NodeTestTask<?> engineNodeTestTask = prepareNodeExecutorTree(TestCaseWithoutResourceLock.class);
 
-		assertThat(engineNodeExecutor.getChildren()).hasSize(1);
-		NodeExecutor<?> testClassExecutor = engineNodeExecutor.getChildren().get(0);
+		assertThat(engineNodeTestTask.getChildren()).hasSize(1);
+		NodeTestTask<?> testClassExecutor = engineNodeTestTask.getChildren().get(0);
 		assertThat(testClassExecutor.getResourceLock()).isInstanceOf(NopLock.class);
 		assertThat(testClassExecutor.getExecutionMode()).isEqualTo(ExecutionMode.Concurrent);
 
 		assertThat(testClassExecutor.getChildren()).hasSize(2);
-		NodeExecutor<?> testMethodExecutor = testClassExecutor.getChildren().get(0);
+		NodeTestTask<?> testMethodExecutor = testClassExecutor.getChildren().get(0);
 		assertThat(testMethodExecutor.getResourceLock()).isInstanceOf(SingleLock.class);
 		assertThat(testMethodExecutor.getExecutionMode()).isEqualTo(ExecutionMode.Concurrent);
 
-		NodeExecutor<?> nestedTestClassExecutor = testClassExecutor.getChildren().get(1);
+		NodeTestTask<?> nestedTestClassExecutor = testClassExecutor.getChildren().get(1);
 		assertThat(nestedTestClassExecutor.getResourceLock()).isInstanceOf(CompositeLock.class);
 		assertThat(nestedTestClassExecutor.getExecutionMode()).isEqualTo(ExecutionMode.Concurrent);
 
 		assertThat(nestedTestClassExecutor.getChildren()).hasSize(1);
-		NodeExecutor<?> nestedTestMethodExecutor = nestedTestClassExecutor.getChildren().get(0);
+		NodeTestTask<?> nestedTestMethodExecutor = nestedTestClassExecutor.getChildren().get(0);
 		assertThat(nestedTestMethodExecutor.getResourceLock()).isInstanceOf(NopLock.class);
 		assertThat(nestedTestMethodExecutor.getExecutionMode()).isEqualTo(ExecutionMode.SameThread);
 	}
 
-	private NodeExecutor<?> prepareNodeExecutorTree(Class<?> testClass) {
+	private NodeTestTask<?> prepareNodeExecutorTree(Class<?> testClass) {
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
 		TestDescriptor testDescriptor = new JupiterTestEngine().discover(discoveryRequest,
 			UniqueId.forEngine("junit-jupiter"));

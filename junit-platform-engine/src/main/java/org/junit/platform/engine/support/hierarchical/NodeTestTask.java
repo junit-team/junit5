@@ -26,7 +26,7 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
 
-class NodeExecutor<C extends EngineExecutionContext> implements TestTask {
+class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 	private static final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
 
@@ -36,7 +36,7 @@ class NodeExecutor<C extends EngineExecutionContext> implements TestTask {
 	private final HierarchicalTestExecutorService executorService;
 	private final Node<C> node;
 	private final ExecutionMode executionMode;
-	private final List<NodeExecutor<C>> children;
+	private final List<NodeTestTask<C>> children;
 
 	private ResourceLock resourceLock = NopLock.INSTANCE;
 	private Optional<ExecutionMode> forcedExecutionMode = Optional.empty();
@@ -47,7 +47,7 @@ class NodeExecutor<C extends EngineExecutionContext> implements TestTask {
 	private SkipResult skipResult;
 	private TestExecutionResult executionResult;
 
-	NodeExecutor(TestDescriptor testDescriptor, EngineExecutionListener listener,
+	NodeTestTask(TestDescriptor testDescriptor, EngineExecutionListener listener,
 			HierarchicalTestExecutorService executorService) {
 		this.testDescriptor = testDescriptor;
 		this.listener = listener;
@@ -56,7 +56,7 @@ class NodeExecutor<C extends EngineExecutionContext> implements TestTask {
 		executionMode = node.getExecutionMode();
 		// @formatter:off
 		children = testDescriptor.getChildren().stream()
-				.map(descriptor -> new NodeExecutor<C>(descriptor, listener, executorService))
+				.map(descriptor -> new NodeTestTask<C>(descriptor, listener, executorService))
 				.collect(toCollection(ArrayList::new));
 		// @formatter:on
 	}
@@ -70,7 +70,7 @@ class NodeExecutor<C extends EngineExecutionContext> implements TestTask {
 		return node;
 	}
 
-	public List<NodeExecutor<C>> getChildren() {
+	public List<NodeTestTask<C>> getChildren() {
 		return children;
 	}
 
@@ -131,11 +131,11 @@ class NodeExecutor<C extends EngineExecutionContext> implements TestTask {
 
 				context = node.execute(context, dynamicTestDescriptor -> {
 					listener.dynamicTestRegistered(dynamicTestDescriptor);
-					NodeExecutor<C> nodeExecutor = new NodeExecutor<>(dynamicTestDescriptor, this.listener,
+					NodeTestTask<C> nodeTestTask = new NodeTestTask<>(dynamicTestDescriptor, this.listener,
 						this.executorService);
 					// TODO Validate dynamic children do not add additional resource locks etc.
-					nodeExecutor.setParentContext(context);
-					futures.add(executorService.submit(nodeExecutor));
+					nodeTestTask.setParentContext(context);
+					futures.add(executorService.submit(nodeTestTask));
 				});
 
 				children.forEach(child -> child.setParentContext(context));

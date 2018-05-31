@@ -33,27 +33,27 @@ import org.junit.platform.engine.TestEngine;
  */
 class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
-	private final TestDescriptor rootTestDescriptor;
-	private final EngineExecutionListener listener;
+	private final ExecutionRequest request;
 	private final C rootContext;
 	private final HierarchicalTestExecutorService executorService;
 
 	HierarchicalTestExecutor(ExecutionRequest request, C rootContext, HierarchicalTestExecutorService executorService) {
-		this.rootTestDescriptor = request.getRootTestDescriptor();
-		this.listener = request.getEngineExecutionListener();
+		this.request = request;
 		this.rootContext = rootContext;
 		this.executorService = executorService;
 	}
 
 	Future<Void> execute() {
-		NodeExecutor<C> rootNodeExecutor = prepareNodeExecutorTree();
-		rootNodeExecutor.setParentContext(this.rootContext);
-		return executorService.submit(rootNodeExecutor);
+		NodeTestTask<C> rootTestTask = prepareNodeExecutorTree();
+		rootTestTask.setParentContext(this.rootContext);
+		return this.executorService.submit(rootTestTask);
 	}
 
-	NodeExecutor<C> prepareNodeExecutorTree() {
-		NodeExecutor<C> root = new NodeExecutor<>(this.rootTestDescriptor, this.listener, this.executorService);
-		new NodeExecutorWalker().walk(root);
-		return root;
+	NodeTestTask<C> prepareNodeExecutorTree() {
+		TestDescriptor rootTestDescriptor = this.request.getRootTestDescriptor();
+		EngineExecutionListener executionListener = this.request.getEngineExecutionListener();
+		NodeTestTask<C> rootTestTask = new NodeTestTask<>(rootTestDescriptor, executionListener, this.executorService);
+		new NodeTestTaskWalker().walk(rootTestTask);
+		return rootTestTask;
 	}
 }

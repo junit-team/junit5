@@ -16,25 +16,25 @@ import java.util.function.Consumer;
 
 import org.junit.platform.commons.annotation.ExecutionMode;
 
-class NodeExecutorWalker {
+class NodeTestTaskWalker {
 
 	private final LockManager lockManager = new LockManager();
 
-	void walk(NodeExecutor<?> nodeExecutor) {
-		if (nodeExecutor.getNode().getExclusiveResources().isEmpty()) {
-			nodeExecutor.getChildren().forEach(this::walk);
+	void walk(NodeTestTask<?> nodeTestTask) {
+		if (nodeTestTask.getNode().getExclusiveResources().isEmpty()) {
+			nodeTestTask.getChildren().forEach(this::walk);
 		}
 		else {
-			Set<ExclusiveResource> allResources = new HashSet<>(nodeExecutor.getNode().getExclusiveResources());
-			doForChildrenRecursively(nodeExecutor, child -> {
+			Set<ExclusiveResource> allResources = new HashSet<>(nodeTestTask.getNode().getExclusiveResources());
+			doForChildrenRecursively(nodeTestTask, child -> {
 				allResources.addAll(child.getNode().getExclusiveResources());
 				child.setForcedExecutionMode(ExecutionMode.SameThread);
 			});
-			nodeExecutor.setResourceLock(lockManager.getLockForResources(allResources));
+			nodeTestTask.setResourceLock(lockManager.getLockForResources(allResources));
 		}
 	}
 
-	private void doForChildrenRecursively(NodeExecutor<?> parent, Consumer<NodeExecutor<?>> consumer) {
+	private void doForChildrenRecursively(NodeTestTask<?> parent, Consumer<NodeTestTask<?>> consumer) {
 		parent.getChildren().forEach(child -> {
 			consumer.accept(child);
 			doForChildrenRecursively(child, consumer);
