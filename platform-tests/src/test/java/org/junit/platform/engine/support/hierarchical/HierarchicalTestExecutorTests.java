@@ -22,7 +22,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -148,7 +147,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
 		verify(listener, never()).executionStarted(child);
-		verify(child, times(0)).execute(any(), any());
+		verify(child, never()).execute(any(), any());
 		verify(listener, never()).executionFinished(eq(child), any(TestExecutionResult.class));
 	}
 
@@ -170,7 +169,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
 		verify(listener, never()).executionStarted(child);
-		verify(child, times(0)).execute(any(), any());
+		verify(child, never()).execute(any(), any());
 		verify(listener, never()).executionFinished(eq(child), any(TestExecutionResult.class));
 	}
 
@@ -195,7 +194,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(child), childExecutionResult.capture());
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
-		verify(child, times(0)).execute(any(), any());
+		verify(child, never()).execute(any(), any());
 
 		assertThat(childExecutionResult.getValue().getStatus()).isEqualTo(FAILED);
 		assertThat(childExecutionResult.getValue().getThrowable()).containsSame(anException);
@@ -224,7 +223,7 @@ class HierarchicalTestExecutorTests {
 		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(FAILED);
 		assertThat(rootExecutionResult.getValue().getThrowable()).containsSame(anException);
 
-		verify(child, times(0)).execute(any(), any());
+		verify(child, never()).execute(any(), any());
 	}
 
 	@Test
@@ -371,7 +370,7 @@ class HierarchicalTestExecutorTests {
 		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(ABORTED);
 		assertThat(rootExecutionResult.getValue().getThrowable()).containsSame(anAbortedException);
 
-		verify(child, times(0)).execute(any(), any());
+		verify(child, never()).execute(any(), any());
 	}
 
 	@Test
