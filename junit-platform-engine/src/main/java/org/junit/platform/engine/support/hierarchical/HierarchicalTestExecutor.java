@@ -12,12 +12,10 @@ package org.junit.platform.engine.support.hierarchical;
 
 import java.util.concurrent.Future;
 
-import org.junit.platform.commons.annotation.ExecutionMode;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
-import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
 
 /**
  * Implementation core of all {@link TestEngine TestEngines} that wish to
@@ -49,43 +47,13 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
 	Future<Void> execute() {
 		NodeExecutor<C> rootNodeExecutor = prepareNodeExecutorTree();
-		return executorService.submit(new DefaultTestTask(rootNodeExecutor, this.rootContext));
+		rootNodeExecutor.setParentContext(this.rootContext);
+		return executorService.submit(rootNodeExecutor);
 	}
 
 	NodeExecutor<C> prepareNodeExecutorTree() {
-		NodeExecutor<C> rootNodeExecutor = new NodeExecutor<>(this.rootTestDescriptor);
-		new NodeExecutorWalker().walk(rootNodeExecutor);
-		return rootNodeExecutor;
-	}
-
-	private class DefaultTestTask implements TestTask {
-
-		private final NodeExecutor<C> nodeExecutor;
-		private final C context;
-
-		DefaultTestTask(NodeExecutor<C> nodeExecutor, C context) {
-			this.nodeExecutor = nodeExecutor;
-			this.context = context;
-		}
-
-		@Override
-		public TestDescriptor getTestDescriptor() {
-			return nodeExecutor.getTestDescriptor();
-		}
-
-		@Override
-		public ResourceLock getResourceLock() {
-			return nodeExecutor.getResourceLock();
-		}
-
-		@Override
-		public ExecutionMode getExecutionMode() {
-			return nodeExecutor.getExecutionMode();
-		}
-
-		@Override
-		public void execute() {
-			nodeExecutor.execute(this.context, listener, executorService, DefaultTestTask::new);
-		}
+		NodeExecutor<C> root = new NodeExecutor<>(this.rootTestDescriptor, this.listener, this.executorService);
+		new NodeExecutorWalker().walk(root);
+		return root;
 	}
 }

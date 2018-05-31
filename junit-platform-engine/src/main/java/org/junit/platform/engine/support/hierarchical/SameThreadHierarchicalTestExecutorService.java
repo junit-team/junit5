@@ -24,7 +24,7 @@ public class SameThreadHierarchicalTestExecutorService implements HierarchicalTe
 	}
 
 	@Override
-	public void invokeAll(List<TestTask> tasks) {
+	public void invokeAll(List<? extends TestTask> tasks) {
 		tasks.forEach(TestTask::execute);
 	}
 

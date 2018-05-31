@@ -73,7 +73,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	}
 
 	@Override
-	public void invokeAll(List<TestTask> tasks) {
+	public void invokeAll(List<? extends TestTask> tasks) {
 		if (tasks.size() == 1) {
 			new ExclusiveTask(tasks.get(0)).compute();
 			return;

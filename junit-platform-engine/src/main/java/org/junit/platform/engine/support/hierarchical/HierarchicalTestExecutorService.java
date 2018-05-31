@@ -20,7 +20,7 @@ public interface HierarchicalTestExecutorService extends AutoCloseable {
 
 	Future<Void> submit(TestTask testTask);
 
-	void invokeAll(List<TestTask> testTasks);
+	void invokeAll(List<? extends TestTask> testTasks);
 
 	/**
 	 * Overridden to avoid warning caused by a javac bug:

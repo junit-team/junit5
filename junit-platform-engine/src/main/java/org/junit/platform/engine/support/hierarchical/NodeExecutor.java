@@ -11,7 +11,6 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 
@@ -19,20 +18,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Future;
-import java.util.function.BiFunction;
 
 import org.junit.platform.commons.annotation.ExecutionMode;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
+import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
 
-class NodeExecutor<C extends EngineExecutionContext> {
+class NodeExecutor<C extends EngineExecutionContext> implements TestTask {
 
 	private static final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
 
 	private final List<Throwable> executionErrors = new ArrayList<>();
 	private final TestDescriptor testDescriptor;
+	private final EngineExecutionListener listener;
+	private final HierarchicalTestExecutorService executorService;
 	private final Node<C> node;
 	private final ExecutionMode executionMode;
 	private final List<NodeExecutor<C>> children;
@@ -40,21 +41,27 @@ class NodeExecutor<C extends EngineExecutionContext> {
 	private ResourceLock resourceLock = NopLock.INSTANCE;
 	private Optional<ExecutionMode> forcedExecutionMode = Optional.empty();
 
+	private C parentContext;
 	private C context;
-	private Node.SkipResult skipResult;
+
+	private SkipResult skipResult;
 	private TestExecutionResult executionResult;
 
-	NodeExecutor(TestDescriptor testDescriptor) {
+	NodeExecutor(TestDescriptor testDescriptor, EngineExecutionListener listener,
+			HierarchicalTestExecutorService executorService) {
 		this.testDescriptor = testDescriptor;
+		this.listener = listener;
+		this.executorService = executorService;
 		node = asNode(testDescriptor);
 		executionMode = node.getExecutionMode();
 		// @formatter:off
 		children = testDescriptor.getChildren().stream()
-				.map(descriptor -> new NodeExecutor<C>(descriptor))
+				.map(descriptor -> new NodeExecutor<C>(descriptor, listener, executorService))
 				.collect(toCollection(ArrayList::new));
 		// @formatter:on
 	}
 
+	@Override
 	public TestDescriptor getTestDescriptor() {
 		return testDescriptor;
 	}
@@ -67,6 +74,7 @@ class NodeExecutor<C extends EngineExecutionContext> {
 		return children;
 	}
 
+	@Override
 	public ResourceLock getResourceLock() {
 		return resourceLock;
 	}
@@ -75,6 +83,7 @@ class NodeExecutor<C extends EngineExecutionContext> {
 		this.resourceLock = resourceLock;
 	}
 
+	@Override
 	public ExecutionMode getExecutionMode() {
 		return forcedExecutionMode.orElse(executionMode);
 	}
@@ -83,41 +92,34 @@ class NodeExecutor<C extends EngineExecutionContext> {
 		this.forcedExecutionMode = Optional.of(forcedExecutionMode);
 	}
 
-	void execute(C parentContext, EngineExecutionListener listener, HierarchicalTestExecutorService executorService,
-			BiFunction<NodeExecutor<C>, C, TestTask> testTaskCreator) {
-		prepare(parentContext);
+	public void setParentContext(C parentContext) {
+		this.parentContext = parentContext;
+	}
+
+	@Override
+	public void execute() {
+		prepare();
 		if (executionErrors.isEmpty()) {
 			checkWhetherSkipped();
 		}
 		if (executionErrors.isEmpty() && !skipResult.isSkipped()) {
-			executeRecursively(listener, executorService, testTaskCreator);
+			executeRecursively();
 		}
 		if (context != null) {
 			cleanUp();
 		}
-		reportDone(listener);
+		reportCompletion();
 	}
 
-	private void prepare(C parentContext) {
-		try {
-			context = node.prepare(parentContext);
-		}
-		catch (Throwable t) {
-			addExecutionError(t);
-		}
+	private void prepare() {
+		executeSafely(() -> context = node.prepare(parentContext));
 	}
 
 	private void checkWhetherSkipped() {
-		try {
-			skipResult = node.shouldBeSkipped(context);
-		}
-		catch (Throwable t) {
-			addExecutionError(t);
-		}
+		executeSafely(() -> skipResult = node.shouldBeSkipped(context));
 	}
 
-	private void executeRecursively(EngineExecutionListener listener, HierarchicalTestExecutorService executorService,
-			BiFunction<NodeExecutor<C>, C, TestTask> testTaskCreator) {
+	private void executeRecursively() {
 		listener.executionStarted(testDescriptor);
 
 		executionResult = singleTestExecutor.executeSafely(() -> {
@@ -129,15 +131,15 @@ class NodeExecutor<C extends EngineExecutionContext> {
 
 				context = node.execute(context, dynamicTestDescriptor -> {
 					listener.dynamicTestRegistered(dynamicTestDescriptor);
-					NodeExecutor<C> nodeExecutor = new NodeExecutor<>(dynamicTestDescriptor);
+					NodeExecutor<C> nodeExecutor = new NodeExecutor<>(dynamicTestDescriptor, this.listener,
+						this.executorService);
 					// TODO Validate dynamic children do not add additional resource locks etc.
-					TestTask testTask = testTaskCreator.apply(nodeExecutor, context);
-					futures.add(executorService.submit(testTask));
+					nodeExecutor.setParentContext(context);
+					futures.add(executorService.submit(nodeExecutor));
 				});
 
-				List<TestTask> remainingTasks = children.stream().map(
-					child -> testTaskCreator.apply(child, context)).collect(toList());
-				executorService.invokeAll(remainingTasks);
+				children.forEach(child -> child.setParentContext(context));
+				executorService.invokeAll(children);
 
 				// using a for loop for the sake for ForkJoinPool's work stealing
 				for (Future<?> future : futures) {
@@ -170,15 +172,10 @@ class NodeExecutor<C extends EngineExecutionContext> {
 	}
 
 	private void cleanUp() {
-		try {
-			node.cleanUp(context);
-		}
-		catch (Throwable t) {
-			addExecutionError(t);
-		}
+		executeSafely(() -> node.cleanUp(context));
 	}
 
-	private void reportDone(EngineExecutionListener listener) {
+	private void reportCompletion() {
 		if (executionResult != null) {
 			addExecutionErrorsToTestExecutionResult();
 			listener.executionFinished(testDescriptor, executionResult);
@@ -212,9 +209,19 @@ class NodeExecutor<C extends EngineExecutionContext> {
 		return TestExecutionResult.failed(throwable);
 	}
 
-	private void addExecutionError(Throwable throwable) {
-		rethrowIfBlacklisted(throwable);
-		executionErrors.add(throwable);
+	private void executeSafely(Action action) {
+		try {
+			action.execute();
+		}
+		catch (Throwable t) {
+			rethrowIfBlacklisted(t);
+			executionErrors.add(t);
+		}
+	}
+
+	@FunctionalInterface
+	private interface Action {
+		void execute() throws Exception;
 	}
 
 	@SuppressWarnings("unchecked")
