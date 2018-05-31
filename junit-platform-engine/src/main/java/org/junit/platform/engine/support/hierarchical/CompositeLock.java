@@ -25,6 +25,11 @@ class CompositeLock implements AcquiredResourceLock {
 		this.acquiredLocks = new ArrayList<>(locks.size());
 	}
 
+	// for tests only
+	List<Lock> getLocks() {
+		return locks;
+	}
+
 	@Override
 	public AcquiredResourceLock acquire() throws InterruptedException {
 		ForkJoinPool.managedBlock(new CompositeLockManagedBlocker());

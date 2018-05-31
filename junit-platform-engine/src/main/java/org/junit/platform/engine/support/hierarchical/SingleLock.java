@@ -20,6 +20,11 @@ class SingleLock implements AcquiredResourceLock {
 		this.lock = lock;
 	}
 
+	// for tests only
+	Lock getLock() {
+		return lock;
+	}
+
 	@Override
 	public AcquiredResourceLock acquire() throws InterruptedException {
 		ForkJoinPool.managedBlock(new SingleLockManagedBlocker());

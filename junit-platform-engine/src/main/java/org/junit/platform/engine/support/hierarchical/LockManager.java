@@ -10,10 +10,12 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.annotation.LockMode.Read;
 
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,16 +24,18 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 class LockManager {
 
-	private final Map<String, ReentrantReadWriteLock> locks = new ConcurrentHashMap<>();
+	private final Map<String, ReentrantReadWriteLock> locksByKey = new ConcurrentHashMap<>();
 
 	ResourceLock getLockForResources(Collection<ExclusiveResource> resources) {
 		// @formatter:off
-		List<Lock> locks = resources.stream()
+		Map<String, List<ExclusiveResource>> resourcesByKey = resources.stream()
 				.distinct()
 				.sorted()
-				// TODO remove read locks for keys where a write lock is required
+				.collect(groupingBy(ExclusiveResource::getKey, LinkedHashMap::new, toList()));
+		List<Lock> locks = resourcesByKey.values().stream()
+				.map(resourcesWithSameKey -> resourcesWithSameKey.get(0))
 				.map(resource -> {
-					ReentrantReadWriteLock lock = this.locks.computeIfAbsent(resource.getKey(),
+					ReentrantReadWriteLock lock = this.locksByKey.computeIfAbsent(resource.getKey(),
 							key -> new ReentrantReadWriteLock());
 					return resource.getLockMode() == Read ? lock.readLock() : lock.writeLock();
 				})
