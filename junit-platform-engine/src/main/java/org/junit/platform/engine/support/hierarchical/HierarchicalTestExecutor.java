@@ -44,12 +44,12 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	}
 
 	Future<Void> execute() {
-		NodeTestTask<C> rootTestTask = prepareNodeExecutorTree();
+		NodeTestTask<C> rootTestTask = prepareNodeTestTaskTree();
 		rootTestTask.setParentContext(this.rootContext);
 		return this.executorService.submit(rootTestTask);
 	}
 
-	NodeTestTask<C> prepareNodeExecutorTree() {
+	NodeTestTask<C> prepareNodeTestTaskTree() {
 		TestDescriptor rootTestDescriptor = this.request.getRootTestDescriptor();
 		EngineExecutionListener executionListener = this.request.getEngineExecutionListener();
 		NodeTestTask<C> rootTestTask = new NodeTestTask<>(rootTestDescriptor, executionListener, this.executorService);
