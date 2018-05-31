@@ -50,6 +50,8 @@ import java.util.regex.Pattern;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 
 /**
  * Collection of utilities for working with the Java reflection APIs.
@@ -68,6 +70,8 @@ import org.junit.platform.commons.JUnitException;
  */
 @API(status = INTERNAL, since = "1.0")
 public final class ReflectionUtils {
+
+	private static final Logger logger = LoggerFactory.getLogger(ReflectionUtils.class);
 
 	private ReflectionUtils() {
 		/* no-op */
@@ -781,8 +785,13 @@ public final class ReflectionUtils {
 			return;
 		}
 
-		// Candidates in current class
-		Collections.addAll(candidates, clazz.getDeclaredClasses());
+		try {
+			// Candidates in current class
+			Collections.addAll(candidates, clazz.getDeclaredClasses());
+		}
+		catch (NoClassDefFoundError error) {
+			logger.warn(error, () -> "Failed to retrieve declared classes for " + clazz.getName());
+		}
 
 		// Search class hierarchy
 		findNestedClasses(clazz.getSuperclass(), candidates);

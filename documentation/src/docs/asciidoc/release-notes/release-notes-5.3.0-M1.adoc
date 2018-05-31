@@ -17,6 +17,10 @@ on GitHub.
 
 * Full stacktrace is printed to the console, when running the `ConsoleLauncher`
   in `--details verbose` mode.
+* `ReflectionUtils.findNestedClasses()` and `ReflectionSupport.findNestedClasses()` no
+  longer allow a `NoClassDefFoundError` to propagate if a nested class or nested
+  interface has an invalid class file. Instead, the error will now be swallowed and
+  logged at `WARNING` level.
 
 ==== Deprecations and Breaking Changes
 
@@ -34,12 +38,14 @@ on GitHub.
     exit with a status code of `2`.
 
 
+
 [[release-notes-5.3.0-M1-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
 
-* ❓
+* Test discovery no longer halts prematurely if a nested class or nested interface in a
+  test class has an invalid class file.
 
 ==== Deprecations and Breaking Changes
 

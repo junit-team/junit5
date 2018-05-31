@@ -34,6 +34,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -41,12 +43,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.jupiter.extensions.TempDirectory;
 import org.junit.jupiter.extensions.TempDirectory.Root;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested1;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested2;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested3;
@@ -582,6 +588,34 @@ class ReflectionUtilsTests {
 		assertThat(ReflectionUtils.findNestedClasses(ClassExtendingClassWithNestedClasses.class, clazz -> true))
 			.containsOnly(Nested1.class, Nested2.class, Nested3.class, Nested4.class, Nested5.class);
 		// @formatter:on
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	@Test
+	@TrackLogRecords
+	void findNestedClassesWithInvalidNestedClassFile(LogRecordListener listener) throws Exception {
+		URL jarUrl = getClass().getResource("/gh-1436-invalid-nested-class-file.jar");
+
+		try (URLClassLoader classLoader = new URLClassLoader(new URL[] { jarUrl })) {
+			String fqcn = "tests.NestedInterfaceGroovyTests";
+			Class<?> classWithInvalidNestedClassFile = classLoader.loadClass(fqcn);
+
+			assertEquals(fqcn, classWithInvalidNestedClassFile.getName());
+			NoClassDefFoundError noClassDefFoundError = assertThrows(NoClassDefFoundError.class,
+				() -> classWithInvalidNestedClassFile.getDeclaredClasses());
+			assertEquals("tests/NestedInterfaceGroovyTests$NestedInterface$1", noClassDefFoundError.getMessage());
+
+			assertThat(ReflectionUtils.findNestedClasses(classWithInvalidNestedClassFile, clazz -> true)).isEmpty();
+			// @formatter:off
+			String logMessage = listener.stream(ReflectionUtils.class, Level.WARNING)
+					.findFirst()
+					.map(LogRecord::getMessage)
+					.orElse("didn't find log record");
+			// @formatter:on
+			assertThat(logMessage).isEqualTo("Failed to retrieve declared classes for " + fqcn);
+		}
 	}
 
 	@Test
