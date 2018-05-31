@@ -13,7 +13,6 @@ package org.junit.platform.engine.support.hierarchical;
 import java.util.concurrent.Future;
 
 import org.junit.platform.commons.annotation.ExecutionMode;
-import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -48,25 +47,15 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		this.executorService = executorService;
 	}
 
-	void execute() {
-		NodeExecutor<C> rootNodeExecutor = createRootNodeExecutor();
-		waitFor(executorService.submit(new DefaultTestTask(rootNodeExecutor, this.rootContext)));
+	Future<Void> execute() {
+		NodeExecutor<C> rootNodeExecutor = prepareNodeExecutorTree();
+		return executorService.submit(new DefaultTestTask(rootNodeExecutor, this.rootContext));
 	}
 
-	protected NodeExecutor<C> createRootNodeExecutor() {
+	NodeExecutor<C> prepareNodeExecutorTree() {
 		NodeExecutor<C> rootNodeExecutor = new NodeExecutor<>(this.rootTestDescriptor);
-		new NodeWalker().walk(rootNodeExecutor);
+		new NodeExecutorWalker().walk(rootNodeExecutor);
 		return rootNodeExecutor;
-	}
-
-	static void waitFor(Future<?> future) {
-		try {
-			future.get();
-		}
-		catch (Exception e) {
-			// TODO do something sensible
-			throw ExceptionUtils.throwAsUncheckedException(e);
-		}
 	}
 
 	private class DefaultTestTask implements TestTask {

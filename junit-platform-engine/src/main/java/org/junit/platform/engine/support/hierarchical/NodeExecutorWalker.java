@@ -16,11 +16,11 @@ import java.util.function.Consumer;
 
 import org.junit.platform.commons.annotation.ExecutionMode;
 
-class NodeWalker {
+class NodeExecutorWalker {
 
 	private final LockManager lockManager = new LockManager();
 
-	public void walk(NodeExecutor<?> nodeExecutor) {
+	void walk(NodeExecutor<?> nodeExecutor) {
 		if (nodeExecutor.getNode().getExclusiveResources().isEmpty()) {
 			nodeExecutor.getChildren().forEach(this::walk);
 		}

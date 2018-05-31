@@ -24,11 +24,11 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
-class NodeWalkerIntegrationTests {
+class NodeExecutorWalkerIntegrationTests {
 
 	@Test
 	void pullUpExclusiveChildResourcesToTestClass() {
-		NodeExecutor<?> engineNodeExecutor = createRootNodeExecutor(TestCaseWithResourceLock.class);
+		NodeExecutor<?> engineNodeExecutor = prepareNodeExecutorTree(TestCaseWithResourceLock.class);
 
 		assertThat(engineNodeExecutor.getChildren()).hasSize(1);
 		NodeExecutor<?> testClassExecutor = engineNodeExecutor.getChildren().get(0);
@@ -43,7 +43,7 @@ class NodeWalkerIntegrationTests {
 
 	@Test
 	void leavesResourceLockOnTestMethodWhenClassDoesNotUseResource() {
-		NodeExecutor<?> engineNodeExecutor = createRootNodeExecutor(TestCaseWithoutResourceLock.class);
+		NodeExecutor<?> engineNodeExecutor = prepareNodeExecutorTree(TestCaseWithoutResourceLock.class);
 
 		assertThat(engineNodeExecutor.getChildren()).hasSize(1);
 		NodeExecutor<?> testClassExecutor = engineNodeExecutor.getChildren().get(0);
@@ -65,13 +65,13 @@ class NodeWalkerIntegrationTests {
 		assertThat(nestedTestMethodExecutor.getExecutionMode()).isEqualTo(ExecutionMode.SameThread);
 	}
 
-	private NodeExecutor<?> createRootNodeExecutor(Class<?> testClass) {
+	private NodeExecutor<?> prepareNodeExecutorTree(Class<?> testClass) {
 		LauncherDiscoveryRequest discoveryRequest = request().selectors(selectClass(testClass)).build();
 		TestDescriptor testDescriptor = new JupiterTestEngine().discover(discoveryRequest,
 			UniqueId.forEngine("junit-jupiter"));
 		ExecutionRequest executionRequest = new ExecutionRequest(testDescriptor, null, null);
 		HierarchicalTestExecutor<?> executor = new HierarchicalTestExecutor<>(executionRequest, null, null);
-		return executor.createRootNodeExecutor();
+		return executor.prepareNodeExecutorTree();
 	}
 
 	@UseResource("a")

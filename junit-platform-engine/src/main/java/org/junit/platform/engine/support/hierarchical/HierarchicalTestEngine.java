@@ -37,12 +37,13 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 	 * listener} of test execution events.
 	 *
 	 * @see Node
+	 * @see #createExecutorService
 	 * @see #createExecutionContext
 	 */
 	@Override
 	public final void execute(ExecutionRequest request) {
 		try (HierarchicalTestExecutorService executorService = createExecutorService(request)) {
-			new HierarchicalTestExecutor<>(request, createExecutionContext(request), executorService).execute();
+			new HierarchicalTestExecutor<>(request, createExecutionContext(request), executorService).execute().get();
 		}
 		catch (Exception exception) {
 			throw new JUnitException("Error executing tests for engine " + getId(), exception);

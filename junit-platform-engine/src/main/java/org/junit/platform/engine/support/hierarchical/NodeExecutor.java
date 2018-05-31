@@ -141,7 +141,7 @@ class NodeExecutor<C extends EngineExecutionContext> {
 
 				// using a for loop for the sake for ForkJoinPool's work stealing
 				for (Future<?> future : futures) {
-					HierarchicalTestExecutor.waitFor(future);
+					future.get();
 				}
 			}
 			catch (Throwable t) {
