@@ -16,6 +16,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,6 +48,17 @@ class PrefixedConfigurationParametersTests {
 		assertThat(parameters.getBoolean("qux")).contains(true);
 
 		verify(delegate).getBoolean("foo.bar.qux");
+	}
+
+	@Test
+	void delegatesGetWithTransformerCalls() {
+		when(delegate.get(any(), any())).thenReturn(Optional.of("QUX"));
+		PrefixedConfigurationParameters parameters = new PrefixedConfigurationParameters(delegate, "foo.bar.");
+
+		Function<String, String> transformer = String::toUpperCase;
+		assertThat(parameters.get("qux", transformer)).contains("QUX");
+
+		verify(delegate).get("foo.bar.qux", transformer);
 	}
 
 	@Test

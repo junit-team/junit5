@@ -42,7 +42,7 @@ class StreamInterceptingTestExecutionListener implements TestExecutionListener {
 			return Optional.empty();
 		}
 
-		int maxSize = configurationParameters.get(CAPTURE_MAX_BUFFER_PROPERTY_NAME).map(Integer::valueOf) //
+		int maxSize = configurationParameters.get(CAPTURE_MAX_BUFFER_PROPERTY_NAME, Integer::valueOf) //
 				.orElse(CAPTURE_MAX_BUFFER_DEFAULT);
 
 		Optional<StreamInterceptor> stdoutInterceptor = captureStdout ? StreamInterceptor.registerStdout(maxSize)

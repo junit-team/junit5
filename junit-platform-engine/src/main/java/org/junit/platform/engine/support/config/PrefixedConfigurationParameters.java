@@ -13,6 +13,7 @@ package org.junit.platform.engine.support.config;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -30,12 +31,21 @@ public class PrefixedConfigurationParameters implements ConfigurationParameters 
 
 	@Override
 	public Optional<String> get(String key) {
-		return delegate.get(prefix + key);
+		return delegate.get(prefixed(key));
 	}
 
 	@Override
 	public Optional<Boolean> getBoolean(String key) {
-		return delegate.getBoolean(prefix + key);
+		return delegate.getBoolean(prefixed(key));
+	}
+
+	@Override
+	public <T> Optional<T> get(String key, Function<String, T> transformer) {
+		return delegate.get(prefixed(key), transformer);
+	}
+
+	private String prefixed(String key) {
+		return prefix + key;
 	}
 
 	@Override

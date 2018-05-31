@@ -11,8 +11,6 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import java.math.BigDecimal;
-import java.util.Optional;
-import java.util.function.Function;
 
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
@@ -24,8 +22,8 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 	FIXED {
 		@Override
 		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
-			int parallelism = getSafely(configurationParameters, CONFIG_FIXED_PARALLELISM,
-				Integer::valueOf).orElseThrow(() -> new JUnitException(CONFIG_FIXED_PARALLELISM + " must be set"));
+			int parallelism = configurationParameters.get(CONFIG_FIXED_PARALLELISM, Integer::valueOf).orElseThrow(
+				() -> new JUnitException(CONFIG_FIXED_PARALLELISM + " must be set"));
 			return new DefaultParallelExecutionConfiguration(parallelism, parallelism, 256 + parallelism, parallelism,
 				30);
 		}
@@ -34,7 +32,7 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 	DYNAMIC {
 		@Override
 		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
-			BigDecimal factor = getSafely(configurationParameters, CONFIG_DYNAMIC_FACTOR, BigDecimal::new).orElse(
+			BigDecimal factor = configurationParameters.get(CONFIG_DYNAMIC_FACTOR, BigDecimal::new).orElse(
 				BigDecimal.ONE);
 			Preconditions.condition(factor.compareTo(BigDecimal.ZERO) > 0,
 				() -> CONFIG_DYNAMIC_FACTOR + " must be greater than 0");
@@ -64,23 +62,6 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 	public static final String CONFIG_FIXED_PARALLELISM = "fixed.parallelism";
 	public static final String CONFIG_DYNAMIC_FACTOR = "dynamic.factor";
 	public static final String CONFIG_CUSTOM_CLASS = "custom.class";
-
-	private static <T> Optional<T> getSafely(ConfigurationParameters configurationParameters, String key,
-			Function<String, T> transformation) {
-		return configurationParameters.get(key).map(withExceptionHandling(key, transformation));
-	}
-
-	private static <T, R> Function<T, R> withExceptionHandling(String key, Function<T, R> transformation) {
-		return input -> {
-			try {
-				return transformation.apply(input);
-			}
-			catch (RuntimeException exception) {
-				throw new JUnitException(String.format("Failed to convert key '%s' for input: %s", key, input),
-					exception);
-			}
-		};
-	}
 
 	static ParallelExecutionConfigurationStrategy getStrategy(ConfigurationParameters configurationParameters) {
 		return valueOf(configurationParameters.get(CONFIG_STRATEGY).orElse("dynamic").toUpperCase());
