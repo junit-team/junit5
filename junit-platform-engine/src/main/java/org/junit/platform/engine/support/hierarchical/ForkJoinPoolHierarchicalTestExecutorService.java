@@ -22,10 +22,12 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.Future;
+import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 
 public class ForkJoinPoolHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
@@ -103,4 +105,25 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 		forkJoinPool.shutdownNow();
 	}
 
+	// this class cannot not be serialized because TestTask is not Serializable
+	@SuppressWarnings("serial")
+	static class ExclusiveTask extends RecursiveAction {
+
+		private final TestTask testTask;
+
+		ExclusiveTask(TestTask testTask) {
+			this.testTask = testTask;
+		}
+
+		@SuppressWarnings("try")
+		@Override
+		public void compute() {
+			try (AcquiredResourceLock acquiredLock = testTask.getResourceLock().acquire()) {
+				testTask.execute();
+			}
+			catch (InterruptedException e) {
+				ExceptionUtils.throwAsUncheckedException(e);
+			}
+		}
+	}
 }
