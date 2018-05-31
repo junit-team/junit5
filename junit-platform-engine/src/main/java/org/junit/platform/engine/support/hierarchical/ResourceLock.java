@@ -10,16 +10,10 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import java.util.Optional;
-
-import org.junit.platform.commons.annotation.ExecutionMode;
-
 interface ResourceLock {
 
 	AcquiredResourceLock acquire() throws InterruptedException;
 
 	void release();
-
-	Optional<ExecutionMode> getForcedExecutionMode();
 
 }

@@ -10,22 +10,14 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.locks.Lock;
 
-import org.junit.platform.commons.annotation.ExecutionMode;
-
-public class SingleLock implements AcquiredResourceLock {
+class SingleLock implements AcquiredResourceLock {
 	private final Lock lock;
 
-	public SingleLock(Lock lock) {
+	SingleLock(Lock lock) {
 		this.lock = lock;
-	}
-
-	@Override
-	public Optional<ExecutionMode> getForcedExecutionMode() {
-		return Optional.of(ExecutionMode.SameThread);
 	}
 
 	@Override

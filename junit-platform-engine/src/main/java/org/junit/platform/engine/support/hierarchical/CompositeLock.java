@@ -12,25 +12,17 @@ package org.junit.platform.engine.support.hierarchical;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.locks.Lock;
 
-import org.junit.platform.commons.annotation.ExecutionMode;
-
 class CompositeLock implements AcquiredResourceLock {
-	private final List<Lock> locks;
 
+	private final List<Lock> locks;
 	private final List<Lock> acquiredLocks;
 
 	CompositeLock(List<Lock> locks) {
 		this.locks = locks;
 		this.acquiredLocks = new ArrayList<>(locks.size());
-	}
-
-	@Override
-	public Optional<ExecutionMode> getForcedExecutionMode() {
-		return Optional.of(ExecutionMode.SameThread);
 	}
 
 	@Override

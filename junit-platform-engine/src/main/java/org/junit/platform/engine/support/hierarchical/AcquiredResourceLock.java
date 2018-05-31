@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-public interface AcquiredResourceLock extends ResourceLock, AutoCloseable {
+interface AcquiredResourceLock extends ResourceLock, AutoCloseable {
 
 	@Override
 	default void close() {
