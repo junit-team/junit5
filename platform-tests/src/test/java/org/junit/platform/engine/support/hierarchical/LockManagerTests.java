@@ -16,8 +16,8 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.platform.commons.annotation.LockMode.Read;
-import static org.junit.platform.commons.annotation.LockMode.ReadWrite;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.Read;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.ReadWrite;
 
 import java.util.Collection;
 import java.util.List;

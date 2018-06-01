@@ -15,6 +15,7 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.junit.jupiter.api.parallel.Execution.Mode.SameThread;
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELISM;
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED;
@@ -41,9 +42,9 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestReporter;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.UseResource;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.platform.commons.annotation.SameThreadExecution;
-import org.junit.platform.commons.annotation.UseResource;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.test.event.ExecutionEvent;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
@@ -232,7 +233,7 @@ class ParallelExecutionTests {
 
 	static class TestCaseWithTestFactory {
 		@TestFactory
-		@SameThreadExecution
+		@Execution(SameThread)
 		Stream<DynamicTest> testFactory(TestReporter testReporter) {
 			AtomicInteger sharedResource = new AtomicInteger(0);
 			CountDownLatch countDownLatch = new CountDownLatch(3);

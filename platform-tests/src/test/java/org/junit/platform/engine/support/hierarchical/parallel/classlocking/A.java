@@ -10,10 +10,12 @@
 
 package org.junit.platform.engine.support.hierarchical.parallel.classlocking;
 
+import static org.junit.jupiter.api.parallel.Execution.Mode.Concurrent;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
-import org.junit.platform.commons.annotation.ConcurrentExecution;
-import org.junit.platform.commons.annotation.UseResource;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.UseResource;
 
 @UseResource("1")
 public class A {
@@ -23,7 +25,7 @@ public class A {
 		GloballySharedResource.incrementWaitAndCheck(GloballySharedResource.sharedResource, reporter);
 	}
 
-	@ConcurrentExecution
+	@Execution(Concurrent)
 	@UseResource("2")
 	@Test
 	void secondTest(TestReporter reporter) throws Exception {

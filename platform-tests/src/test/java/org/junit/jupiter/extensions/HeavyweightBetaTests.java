@@ -19,7 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.commons.annotation.UseResource;
+import org.junit.jupiter.api.parallel.UseResource;
 
 /**
  * Unit tests for {@link org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource}

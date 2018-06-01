@@ -16,12 +16,12 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.UseResource;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.platform.commons.annotation.ExecutionMode;
-import org.junit.platform.commons.annotation.UseResource;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 class NodeTestTaskWalkerIntegrationTests {

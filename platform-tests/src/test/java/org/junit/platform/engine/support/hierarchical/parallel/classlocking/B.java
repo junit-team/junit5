@@ -12,7 +12,7 @@ package org.junit.platform.engine.support.hierarchical.parallel.classlocking;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
-import org.junit.platform.commons.annotation.UseResource;
+import org.junit.jupiter.api.parallel.UseResource;
 
 @UseResource("2")
 public class B {

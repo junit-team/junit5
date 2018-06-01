@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.commons.annotation;
+package org.junit.jupiter.api.parallel;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -17,6 +17,8 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
-@ExecutionControl(ExecutionMode.SameThread)
-public @interface SameThreadExecution {
+public @interface UseResources {
+
+	UseResource[] value() default {};
+
 }

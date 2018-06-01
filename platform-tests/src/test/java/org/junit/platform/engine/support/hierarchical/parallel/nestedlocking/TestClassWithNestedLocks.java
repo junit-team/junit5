@@ -10,11 +10,13 @@
 
 package org.junit.platform.engine.support.hierarchical.parallel.nestedlocking;
 
+import static org.junit.jupiter.api.parallel.Execution.Mode.Concurrent;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
-import org.junit.platform.commons.annotation.ConcurrentExecution;
-import org.junit.platform.commons.annotation.UseResource;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.UseResource;
 
 @UseResource("1")
 class TestClassWithNestedLocks {
@@ -25,7 +27,7 @@ class TestClassWithNestedLocks {
 		GloballySharedResource.incrementWaitAndCheck(GloballySharedResource.sharedResource, reporter);
 	}
 
-	@ConcurrentExecution
+	@Execution(Concurrent)
 	@UseResource("2")
 	@Test
 	void secondTest(TestReporter reporter) throws Exception {

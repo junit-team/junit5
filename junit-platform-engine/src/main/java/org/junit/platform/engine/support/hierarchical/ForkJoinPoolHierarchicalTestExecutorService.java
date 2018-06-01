@@ -12,7 +12,7 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.concurrent.ForkJoinPool.defaultForkJoinWorkerThreadFactory;
-import static org.junit.platform.commons.annotation.ExecutionMode.Concurrent;
+import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.Concurrent;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Constructor;

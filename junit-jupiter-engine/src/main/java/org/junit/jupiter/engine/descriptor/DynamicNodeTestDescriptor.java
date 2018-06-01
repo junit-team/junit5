@@ -10,11 +10,10 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.platform.commons.annotation.ExecutionMode.Concurrent;
+import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.Concurrent;
 
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.platform.commons.annotation.ExecutionMode;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;

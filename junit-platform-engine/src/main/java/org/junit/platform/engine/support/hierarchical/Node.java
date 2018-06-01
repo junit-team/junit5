@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.annotation.ExecutionMode;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestDescriptor;
 
@@ -213,6 +212,10 @@ public interface Node<C extends EngineExecutionContext> {
 		 */
 		void execute(TestDescriptor testDescriptor);
 
+	}
+
+	enum ExecutionMode {
+		SameThread, Concurrent
 	}
 
 }

@@ -12,8 +12,6 @@ package org.junit.platform.engine.support.hierarchical;
 
 import java.util.Objects;
 
-import org.junit.platform.commons.annotation.LockMode;
-import org.junit.platform.commons.annotation.UseResource;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 public class ExclusiveResource implements Comparable<ExclusiveResource> {
@@ -21,10 +19,6 @@ public class ExclusiveResource implements Comparable<ExclusiveResource> {
 	private final String key;
 	private final LockMode lockMode;
 	private int hash;
-
-	public ExclusiveResource(UseResource annotation) {
-		this(annotation.value(), annotation.mode());
-	}
 
 	public ExclusiveResource(String key, LockMode lockMode) {
 		this.key = key;
@@ -72,5 +66,14 @@ public class ExclusiveResource implements Comparable<ExclusiveResource> {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("key", key).append("lockMode", lockMode).toString();
+	}
+
+	/**
+	 * LockMode translates to the respective {@link java.util.concurrent.locks.ReentrantReadWriteLock} locks.
+	 *
+	 * Enum order is important, since it can be used to sort locks, so the stronger mode has to be first.
+	 */
+	public enum LockMode {
+		ReadWrite, Read
 	}
 }

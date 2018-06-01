@@ -21,11 +21,11 @@ import java.util.Optional;
 import java.util.concurrent.Future;
 
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.annotation.ExecutionMode;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
+import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
 
 class NodeTestTask<C extends EngineExecutionContext> implements TestTask {

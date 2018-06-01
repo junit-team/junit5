@@ -8,9 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.commons.annotation;
-
-import static org.junit.platform.commons.annotation.LockMode.ReadWrite;
+package org.junit.jupiter.api.parallel;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
@@ -25,6 +23,10 @@ public @interface UseResource {
 
 	String value();
 
-	LockMode mode() default ReadWrite;
+	Mode mode() default Mode.ReadWrite;
+
+	enum Mode {
+		ReadWrite, Read
+	}
 
 }

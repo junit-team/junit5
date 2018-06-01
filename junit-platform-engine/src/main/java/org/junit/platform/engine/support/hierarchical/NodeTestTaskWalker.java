@@ -10,11 +10,11 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.SameThread;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
-
-import org.junit.platform.commons.annotation.ExecutionMode;
 
 class NodeTestTaskWalker {
 
@@ -28,7 +28,7 @@ class NodeTestTaskWalker {
 			Set<ExclusiveResource> allResources = new HashSet<>(nodeTestTask.getNode().getExclusiveResources());
 			doForChildrenRecursively(nodeTestTask, child -> {
 				allResources.addAll(child.getNode().getExclusiveResources());
-				child.setForcedExecutionMode(ExecutionMode.SameThread);
+				child.setForcedExecutionMode(SameThread);
 			});
 			nodeTestTask.setResourceLock(lockManager.getLockForResources(allResources));
 		}

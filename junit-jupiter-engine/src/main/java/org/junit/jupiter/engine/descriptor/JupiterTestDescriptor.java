@@ -30,11 +30,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.UseResource;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.platform.commons.annotation.ExecutionControl;
-import org.junit.platform.commons.annotation.ExecutionMode;
-import org.junit.platform.commons.annotation.UseResource;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -44,6 +44,7 @@ import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
+import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
 import org.junit.platform.engine.support.hierarchical.Node;
 
 /**
@@ -111,8 +112,9 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	protected ExecutionMode getExecutionMode(AnnotatedElement element) {
 		// @formatter:off
-		return findAnnotation(element, ExecutionControl.class)
-				.map(ExecutionControl::value)
+		return findAnnotation(element, Execution.class)
+				.map(Execution::value)
+				.map(JupiterTestDescriptor::toExecutionMode)
 				.orElseGet(() -> getParent()
 						.filter(parent -> parent instanceof Node)
 						.map(parent -> ((Node<?>) parent).getExecutionMode())
@@ -120,12 +122,32 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		// @formatter:on
 	}
 
+	private static ExecutionMode toExecutionMode(Execution.Mode mode) {
+		switch (mode) {
+			case Concurrent:
+				return ExecutionMode.Concurrent;
+			case SameThread:
+				return ExecutionMode.SameThread;
+		}
+		throw new JUnitException("Unknown Execution.Mode: " + mode);
+	}
+
 	protected List<ExclusiveResource> getExclusiveResources(AnnotatedElement element) {
 		// @formatter:off
 		return findRepeatableAnnotations(element, UseResource.class).stream()
-				.map(ExclusiveResource::new)
+				.map(resource -> new ExclusiveResource(resource.value(), toLockMode(resource.mode())))
 				.collect(toList());
 		// @formatter:on
+	}
+
+	private static LockMode toLockMode(UseResource.Mode mode) {
+		switch (mode) {
+			case Read:
+				return LockMode.Read;
+			case ReadWrite:
+				return LockMode.ReadWrite;
+		}
+		throw new JUnitException("Unknown Execution.Mode: " + mode);
 	}
 
 	@Override
