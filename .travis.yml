@@ -13,37 +13,31 @@ before_install:
 # Also interferes with platform-tooling-support-tests expectations
   - unset _JAVA_OPTIONS
 
-os:
-  - linux
-  - osx
-
-jdk:
-  - openjdk10
-  - openjdk-ea
-
-env:
-  - JACOCO='-PenableJaCoCo'
-  - INSTALL='publishToMavenLocal'
+install:
+  - echo "Don't let Travis CI execute './gradlew assemble' by default"
 
 matrix:
-  allow_failures:
-    - jdk: openjdk-ea
-  exclude:
+  include:
+    - os: linux
+      jdk: openjdk10
     - os: linux
       jdk: openjdk-ea
-      env: JACOCO='-PenableJaCoCo'
+    - os: linux
+      jdk: openjdk10
+      env: SCAN='--scan --stacktrace --warning-mode=all' JACOCO='-PenableJaCoCo' INSTALL='publishToMavenLocal'
     - os: osx
-      jdk: openjdk-ea
-      env: JACOCO='-PenableJaCoCo'
+      jdk: openjdk10
+  allow_failures:
+    - jdk: openjdk-ea
 
 script:
 # Display Gradle, Groovy, JVM and other versions
   - ./gradlew --version
 # Build JUnit 5
-  - ./gradlew --scan --stacktrace --warning-mode=all ${JACOCO} build ${INSTALL}
+  - ./gradlew ${SCAN} ${JACOCO} build ${INSTALL}
 
 after_success:
 # If variable JACOCO is set, run JaCoCo report and send report to codecov.io after build success
   - test -v JACOCO && ./gradlew ${JACOCO} jacocoRootReport && bash <(curl -s https://codecov.io/bash) || true
-# If variable INSTALL is set, run platform-tooling-support-tests
+# If variable INSTALL is set, run platform-tooling-support-tests checking the local installation
   - test -v INSTALL && ./gradlew --scan --stacktrace -Dplatform.tooling.support.tests.enabled=true build || true
