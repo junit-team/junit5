@@ -15,7 +15,6 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.DYNAMIC_CONTAINER_SEGMENT_TYPE;
 import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE;
@@ -93,8 +92,8 @@ class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().selectors(selectClass(AbstractTestClass.class)).build(), engineDescriptor);
 
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
-		assertThat(listener.stream(JavaElementsResolver.class, Level.FINE).map(LogRecord::getMessage)) //
-				.contains("Class 'org.junit.jupiter.engine.discovery.AbstractTestClass' could not be resolved.");
+		assertThat(firstDebugLogRecord(listener).getMessage())//
+				.isEqualTo("Class 'org.junit.jupiter.engine.discovery.AbstractTestClass' could not be resolved.");
 	}
 
 	@Test
@@ -105,6 +104,18 @@ class DiscoverySelectorResolverTests {
 
 		assertEquals(4, engineDescriptor.getDescendants().size());
 		assertUniqueIdsForMyTestClass(uniqueIds());
+	}
+
+	@Test
+	@TrackLogRecords
+	void classResolutionForNonexistentClass(LogRecordListener listener) {
+		ClassSelector selector = selectClass("org.example.DoesNotExist");
+
+		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
+
+		assertTrue(engineDescriptor.getDescendants().isEmpty());
+		assertThat(firstDebugLogRecord(listener).getMessage())//
+				.isEqualTo("Class 'org.example.DoesNotExist' could not be resolved.");
 	}
 
 	@Test
@@ -190,6 +201,36 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
+	@TrackLogRecords
+	void methodResolutionForNonexistentClass(LogRecordListener listener) {
+		String className = "org.example.DoesNotExist";
+		String methodName = "bogus";
+		MethodSelector selector = selectMethod(className, methodName, "");
+
+		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
+
+		assertTrue(engineDescriptor.getDescendants().isEmpty());
+		LogRecord logRecord = firstDebugLogRecord(listener);
+		assertThat(logRecord.getMessage())//
+				.isEqualTo("Method '" + methodName + "' in class '" + className + "' could not be resolved.");
+		assertThat(logRecord.getThrown())//
+				.isInstanceOf(PreconditionViolationException.class)//
+				.hasMessageStartingWith("Could not load class with name: " + className);
+	}
+
+	@Test
+	@TrackLogRecords
+	void methodResolutionForNonexistentMethod(LogRecordListener listener) {
+		MethodSelector selector = selectMethod(MyTestClass.class, "bogus", "");
+
+		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
+
+		assertTrue(engineDescriptor.getDescendants().isEmpty());
+		assertThat(firstDebugLogRecord(listener).getMessage())//
+				.isEqualTo("Method 'bogus' in class '" + MyTestClass.class.getName() + "' could not be resolved.");
+	}
+
+	@Test
 	void classResolutionByUniqueId() {
 		UniqueIdSelector selector = selectUniqueId(uniqueIdForClass(MyTestClass.class).toString());
 
@@ -235,8 +276,8 @@ class DiscoverySelectorResolverTests {
 
 		resolver.resolveSelectors(request, engineDescriptor);
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
-		assertThat(listener.stream(JavaElementsResolver.class, Level.WARNING).map(LogRecord::getMessage)) //
-				.contains("Unique ID '" + uniqueId + "' could not be resolved.");
+		assertThat(firstWarningLogRecord(listener).getMessage()) //
+				.isEqualTo("Unique ID '" + uniqueId + "' could not be resolved.");
 	}
 
 	@Test
@@ -249,33 +290,49 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	void methodResolutionByUniqueIdWithMissingMethodName() {
-		UniqueIdSelector selector = selectUniqueId(uniqueIdForMethod(getClass(), "()"));
-		assertMethodDoesNotMatchPattern(selector);
+	@TrackLogRecords
+	void methodResolutionByUniqueIdWithMissingMethodName(LogRecordListener listener) {
+		UniqueId uniqueId = uniqueIdForMethod(getClass(), "()");
+
+		resolver.resolveSelectors(request().selectors(selectUniqueId(uniqueId)).build(), engineDescriptor);
+
+		assertTrue(engineDescriptor.getDescendants().isEmpty());
+		LogRecord logRecord = firstWarningLogRecord(listener);
+		assertThat(logRecord.getMessage()).isEqualTo("Unique ID '" + uniqueId + "' could not be resolved.");
+		assertThat(logRecord.getThrown())//
+				.isInstanceOf(PreconditionViolationException.class)//
+				.hasMessageStartingWith("Method [()] does not match pattern");
 	}
 
 	@Test
-	void methodResolutionByUniqueIdWithMissingParameters() {
-		UniqueIdSelector selector = selectUniqueId(uniqueIdForMethod(getClass(), "methodName"));
-		assertMethodDoesNotMatchPattern(selector);
+	@TrackLogRecords
+	void methodResolutionByUniqueIdWithMissingParameters(LogRecordListener listener) {
+		UniqueId uniqueId = uniqueIdForMethod(getClass(), "methodName");
+
+		resolver.resolveSelectors(request().selectors(selectUniqueId(uniqueId)).build(), engineDescriptor);
+
+		assertTrue(engineDescriptor.getDescendants().isEmpty());
+		LogRecord logRecord = firstWarningLogRecord(listener);
+		assertThat(logRecord.getMessage()).isEqualTo("Unique ID '" + uniqueId + "' could not be resolved.");
+		assertThat(logRecord.getThrown())//
+				.isInstanceOf(PreconditionViolationException.class)//
+				.hasMessageStartingWith("Method [methodName] does not match pattern");
 	}
 
 	@Test
-	void methodResolutionByUniqueIdWithBogusParameters() {
-		UniqueIdSelector selector = selectUniqueId(
-			uniqueIdForMethod(getClass(), "methodName(java.lang.String, junit.foo.Enigma)"));
+	@TrackLogRecords
+	void methodResolutionByUniqueIdWithBogusParameters(LogRecordListener listener) {
+		UniqueId uniqueId = uniqueIdForMethod(getClass(), "methodName(java.lang.String, junit.foo.Enigma)");
 
-		Exception exception = assertThrows(JUnitException.class,
-			() -> resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor));
-		assertThat(exception).hasMessageStartingWith("Failed to load parameter type");
-		assertThat(exception).hasMessageContaining("junit.foo.Enigma");
-	}
+		resolver.resolveSelectors(request().selectors(selectUniqueId(uniqueId)).build(), engineDescriptor);
 
-	private void assertMethodDoesNotMatchPattern(UniqueIdSelector selector) {
-		Exception exception = assertThrows(PreconditionViolationException.class,
-			() -> resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor));
-		assertThat(exception).hasMessageStartingWith("Method");
-		assertThat(exception).hasMessageContaining("does not match pattern");
+		assertTrue(engineDescriptor.getDescendants().isEmpty());
+		LogRecord logRecord = firstWarningLogRecord(listener);
+		assertThat(logRecord.getMessage()).isEqualTo("Unique ID '" + uniqueId + "' could not be resolved.");
+		assertThat(logRecord.getThrown())//
+				.isInstanceOf(JUnitException.class)//
+				.hasMessage("Failed to load parameter type [%s] for method [%s] in class [%s].", "junit.foo.Enigma",
+					"methodName", getClass().getName());
 	}
 
 	@Test
@@ -315,7 +372,8 @@ class DiscoverySelectorResolverTests {
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertThat(uniqueIds).contains(uniqueIdForClass(HerTestClass.class));
 		assertThat(uniqueIds).contains(uniqueIdForMethod(HerTestClass.class, "test7(java.lang.String)"));
-		assertThat(listener.stream(JavaElementsResolver.class)).isEmpty();
+
+		assertZeroLogRecords(listener);
 	}
 
 	@Test
@@ -327,8 +385,8 @@ class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request, engineDescriptor);
 
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
-		assertThat(listener.stream(JavaElementsResolver.class, Level.WARNING).map(LogRecord::getMessage)) //
-				.contains("Unique ID '" + uniqueId + "' could only be partially resolved. "
+		assertThat(firstWarningLogRecord(listener).getMessage())//
+				.isEqualTo("Unique ID '" + uniqueId + "' could only be partially resolved. "
 						+ "All resolved segments will be executed; however, the following segments "
 						+ "could not be resolved: [Segment [type = 'method', value = 'test7(java.math.BigDecimal)']]");
 	}
@@ -577,7 +635,7 @@ class DiscoverySelectorResolverTests {
 		assertThat(dynamicDescendantFilter.test(dynamicTestUid)).isTrue();
 		assertThat(dynamicDescendantFilter.test(differentDynamicTestUid)).isFalse();
 
-		assertThat(listener.stream(JavaElementsResolver.class)).isEmpty();
+		assertZeroLogRecords(listener);
 	}
 
 	@Test
@@ -602,7 +660,7 @@ class DiscoverySelectorResolverTests {
 		assertThat(dynamicDescendantFilter.test(differentDynamicContainerUid)).isFalse();
 		assertThat(dynamicDescendantFilter.test(differentDynamicTestUid)).isFalse();
 
-		assertThat(listener.stream(JavaElementsResolver.class)).isEmpty();
+		assertZeroLogRecords(listener);
 	}
 
 	@Test
@@ -649,6 +707,20 @@ class DiscoverySelectorResolverTests {
 
 	private List<UniqueId> uniqueIds() {
 		return engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId).collect(toList());
+	}
+
+	private void assertZeroLogRecords(LogRecordListener listener) {
+		assertThat(listener.stream(JavaElementsResolver.class)).isEmpty();
+	}
+
+	private LogRecord firstWarningLogRecord(LogRecordListener listener) throws AssertionError {
+		return listener.stream(JavaElementsResolver.class, Level.WARNING).findFirst().orElseThrow(
+			() -> new AssertionError("Failed to find warning log record"));
+	}
+
+	private LogRecord firstDebugLogRecord(LogRecordListener listener) throws AssertionError {
+		return listener.stream(JavaElementsResolver.class, Level.FINE).findFirst().orElseThrow(
+			() -> new AssertionError("Failed to find debug log record"));
 	}
 
 }

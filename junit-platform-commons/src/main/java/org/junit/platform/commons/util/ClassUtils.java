@@ -37,6 +37,23 @@ public final class ClassUtils {
 	}
 
 	/**
+	 * Get the fully qualified name of the supplied class.
+	 *
+	 * <p>This is a null-safe variant of {@link Class#getName()}.
+	 *
+	 * @param clazz the class whose name should be retrieved, potentially
+	 * {@code null}
+	 * @return the fully qualified class name or {@code "null"} if the supplied
+	 * class reference is {@code null}
+	 * @since 1.3
+	 * @see #nullSafeToString(Class...)
+	 * @see StringUtils#nullSafeToString(Object)
+	 */
+	public static String nullSafeToString(Class<?> clazz) {
+		return clazz == null ? "null" : clazz.getName();
+	}
+
+	/**
 	 * Generate a comma-separated list of fully qualified class names for the
 	 * supplied classes.
 	 *

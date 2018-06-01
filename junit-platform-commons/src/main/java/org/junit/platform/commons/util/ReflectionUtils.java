@@ -972,6 +972,7 @@ public final class ReflectionUtils {
 
 		// @formatter:off
 		return Arrays.stream(parameterTypeNames.split(","))
+				.map(String::trim)
 				.map(typeName -> loadRequiredParameterType(clazz, methodName, typeName))
 				.toArray(Class[]::new);
 		// @formatter:on

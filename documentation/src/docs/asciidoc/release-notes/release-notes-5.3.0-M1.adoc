@@ -38,7 +38,6 @@ on GitHub.
     exit with a status code of `2`.
 
 
-
 [[release-notes-5.3.0-M1-junit-jupiter]]
 === JUnit Jupiter
 
@@ -46,6 +45,11 @@ on GitHub.
 
 * Test discovery no longer halts prematurely if a nested class or nested interface in a
   test class has an invalid class file.
+* Certain categories of errors encountered during the test discovery phase no longer
+  cause JUnit Jupiter to prematurely abort the entire discovery process.
+  - Such errors are now logged, thereby enabling JUnit Jupiter to discover and execute as
+    many tests as possible while still informing the user of containers and tests that
+    could not be properly discovered.
 
 ==== Deprecations and Breaking Changes
 
