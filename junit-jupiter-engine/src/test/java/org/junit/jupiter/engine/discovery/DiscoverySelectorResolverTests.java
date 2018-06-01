@@ -104,11 +104,7 @@ class DiscoverySelectorResolverTests {
 		resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor);
 
 		assertEquals(4, engineDescriptor.getDescendants().size());
-		List<UniqueId> uniqueIds = uniqueIds();
-		assertThat(uniqueIds).contains(uniqueIdForClass(MyTestClass.class));
-		assertThat(uniqueIds).contains(uniqueIdForMethod(MyTestClass.class, "test1()"));
-		assertThat(uniqueIds).contains(uniqueIdForMethod(MyTestClass.class, "test2()"));
-		assertThat(uniqueIds).contains(uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()"));
+		assertUniqueIdsForMyTestClass(uniqueIds());
 	}
 
 	@Test
@@ -119,11 +115,7 @@ class DiscoverySelectorResolverTests {
 		).build(), engineDescriptor);
 
 		assertEquals(4, engineDescriptor.getDescendants().size());
-		List<UniqueId> uniqueIds = uniqueIds();
-		assertThat(uniqueIds).contains(uniqueIdForClass(MyTestClass.class));
-		assertThat(uniqueIds).contains(uniqueIdForMethod(MyTestClass.class, "test1()"));
-		assertThat(uniqueIds).contains(uniqueIdForMethod(MyTestClass.class, "test2()"));
-		assertThat(uniqueIds).contains(uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()"));
+		assertUniqueIdsForMyTestClass(uniqueIds());
 	}
 
 	@Test
@@ -135,13 +127,17 @@ class DiscoverySelectorResolverTests {
 
 		assertEquals(7, engineDescriptor.getDescendants().size());
 		List<UniqueId> uniqueIds = uniqueIds();
+		assertUniqueIdsForMyTestClass(uniqueIds);
+		assertThat(uniqueIds).contains(uniqueIdForClass(YourTestClass.class));
+		assertThat(uniqueIds).contains(uniqueIdForMethod(YourTestClass.class, "test3()"));
+		assertThat(uniqueIds).contains(uniqueIdForMethod(YourTestClass.class, "test4()"));
+	}
+
+	private void assertUniqueIdsForMyTestClass(List<UniqueId> uniqueIds) {
 		assertThat(uniqueIds).contains(uniqueIdForClass(MyTestClass.class));
 		assertThat(uniqueIds).contains(uniqueIdForMethod(MyTestClass.class, "test1()"));
 		assertThat(uniqueIds).contains(uniqueIdForMethod(MyTestClass.class, "test2()"));
 		assertThat(uniqueIds).contains(uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()"));
-		assertThat(uniqueIds).contains(uniqueIdForClass(YourTestClass.class));
-		assertThat(uniqueIds).contains(uniqueIdForMethod(YourTestClass.class, "test3()"));
-		assertThat(uniqueIds).contains(uniqueIdForMethod(YourTestClass.class, "test4()"));
 	}
 
 	@Test
@@ -187,7 +183,9 @@ class DiscoverySelectorResolverTests {
 		Method notATest = MyTestClass.class.getDeclaredMethod("notATest");
 		MethodSelector selector = selectMethod(notATest.getDeclaringClass(), notATest);
 		EngineDiscoveryRequest request = request().selectors(selector).build();
+
 		resolver.resolveSelectors(request, engineDescriptor);
+
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
 	}
 
@@ -199,10 +197,7 @@ class DiscoverySelectorResolverTests {
 
 		assertEquals(4, engineDescriptor.getDescendants().size());
 		List<UniqueId> uniqueIds = uniqueIds();
-		assertThat(uniqueIds).contains(uniqueIdForClass(MyTestClass.class));
-		assertThat(uniqueIds).contains(uniqueIdForMethod(MyTestClass.class, "test1()"));
-		assertThat(uniqueIds).contains(uniqueIdForMethod(MyTestClass.class, "test2()"));
-		assertThat(uniqueIds).contains(uniqueIdForTestFactoryMethod(MyTestClass.class, "dynamicTest()"));
+		assertUniqueIdsForMyTestClass(uniqueIds);
 	}
 
 	@Test
@@ -269,6 +264,7 @@ class DiscoverySelectorResolverTests {
 	void methodResolutionByUniqueIdWithBogusParameters() {
 		UniqueIdSelector selector = selectUniqueId(
 			uniqueIdForMethod(getClass(), "methodName(java.lang.String, junit.foo.Enigma)"));
+
 		Exception exception = assertThrows(JUnitException.class,
 			() -> resolver.resolveSelectors(request().selectors(selector).build(), engineDescriptor));
 		assertThat(exception).hasMessageStartingWith("Failed to load parameter type");
@@ -329,6 +325,7 @@ class DiscoverySelectorResolverTests {
 		EngineDiscoveryRequest request = request().selectors(selectUniqueId(uniqueId)).build();
 
 		resolver.resolveSelectors(request, engineDescriptor);
+
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
 		assertThat(listener.stream(JavaElementsResolver.class, Level.WARNING).map(LogRecord::getMessage)) //
 				.contains("Unique ID '" + uniqueId + "' could only be partially resolved. "
@@ -617,6 +614,7 @@ class DiscoverySelectorResolverTests {
 		LauncherDiscoveryRequest request = request() //
 				.selectors(selectUniqueId(dynamicTestUid), selectMethod(clazz, "dynamicTest")) //
 				.build();
+
 		resolver.resolveSelectors(request, engineDescriptor);
 
 		assertThat(engineDescriptor.getDescendants()).hasSize(2);
@@ -655,8 +653,9 @@ class DiscoverySelectorResolverTests {
 
 }
 
-class NonTestClass {
+// -----------------------------------------------------------------------------
 
+class NonTestClass {
 }
 
 abstract class AbstractTestClass {
