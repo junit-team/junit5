@@ -745,7 +745,7 @@ useful.
 | all tests for *bar* plus all tests for *baz*
 
 | +bar & baz+
-| all tests for the interaction between *bar* and *baz*
+| all tests for the intersection between *bar* and *baz*
 
 | +foo & !end-to-end+
 | all tests for *foo*, but not the _end-to-end_ tests
