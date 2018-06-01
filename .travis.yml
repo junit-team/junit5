@@ -26,6 +26,8 @@ env:
   - INSTALL='publishToMavenLocal'
 
 matrix:
+  allow_failures:
+    - jdk: openjdk-ea
   exclude:
     - os: linux
       jdk: openjdk-ea
