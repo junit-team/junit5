@@ -14,6 +14,7 @@ import java.util.Objects;
 
 import org.junit.platform.commons.annotation.LockMode;
 import org.junit.platform.commons.annotation.UseResource;
+import org.junit.platform.commons.util.ToStringBuilder;
 
 public class ExclusiveResource implements Comparable<ExclusiveResource> {
 
@@ -66,5 +67,10 @@ public class ExclusiveResource implements Comparable<ExclusiveResource> {
 			return lockMode.compareTo(other.lockMode);
 		}
 		return compare;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).append("key", key).append("lockMode", lockMode).toString();
 	}
 }

@@ -13,12 +13,14 @@ package org.junit.platform.engine.support.hierarchical;
 import static java.util.stream.Collectors.toCollection;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
+import static org.junit.platform.engine.TestExecutionResult.failed;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Future;
 
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.annotation.ExecutionMode;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
@@ -133,9 +135,17 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 					listener.dynamicTestRegistered(dynamicTestDescriptor);
 					NodeTestTask<C> nodeTestTask = new NodeTestTask<>(dynamicTestDescriptor, this.listener,
 						this.executorService);
-					// TODO Validate dynamic children do not add additional resource locks etc.
-					nodeTestTask.setParentContext(context);
-					futures.add(executorService.submit(nodeTestTask));
+					List<ExclusiveResource> exclusiveResources = nodeTestTask.getNode().getExclusiveResources();
+					if (!exclusiveResources.isEmpty()) {
+						listener.executionStarted(dynamicTestDescriptor);
+						String message = "Dynamic test descriptors must not declare exclusive resources: "
+								+ exclusiveResources;
+						listener.executionFinished(dynamicTestDescriptor, failed(new JUnitException(message)));
+					}
+					else {
+						nodeTestTask.setParentContext(context);
+						futures.add(executorService.submit(nodeTestTask));
+					}
 				});
 
 				children.forEach(child -> child.setParentContext(context));
@@ -206,7 +216,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	private TestExecutionResult createTestExecutionResultFromExecutionErrors() {
 		Throwable throwable = executionErrors.get(0);
 		executionErrors.stream().skip(1).forEach(throwable::addSuppressed);
-		return TestExecutionResult.failed(throwable);
+		return failed(throwable);
 	}
 
 	private void executeSafely(Action action) {

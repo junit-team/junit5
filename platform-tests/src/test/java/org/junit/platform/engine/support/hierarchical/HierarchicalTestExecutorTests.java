@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -28,6 +29,7 @@ import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.commons.annotation.LockMode;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -542,6 +544,35 @@ class HierarchicalTestExecutorTests {
 		assertThat(childExecutionResult.getValue().getStatus()).isEqualTo(FAILED);
 		assertThat(childExecutionResult.getValue().getThrowable().get()).isSameAs(
 			exceptionInExecute).hasSuppressedException(exceptionInAfter);
+	}
+
+	@Test
+	void dynamicTestDescriptorsMustNotDeclareExclusiveResources() throws Exception {
+
+		UniqueId leafUniqueId = UniqueId.root("leaf", "child leaf");
+		MyLeaf child = spy(new MyLeaf(leafUniqueId));
+		MyLeaf dynamicTestDescriptor = spy(new MyLeaf(leafUniqueId.append("dynamic", "child")));
+		when(dynamicTestDescriptor.getExclusiveResources()).thenReturn(
+			singletonList(new ExclusiveResource("foo", LockMode.Read)));
+
+		when(child.execute(any(), any())).thenAnswer(invocation -> {
+			DynamicTestExecutor dynamicTestExecutor = invocation.getArgument(1);
+			dynamicTestExecutor.execute(dynamicTestDescriptor);
+			return invocation.getArgument(0);
+		});
+		root.addChild(child);
+
+		executor.execute();
+
+		ArgumentCaptor<TestExecutionResult> aTestExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		verify(listener).executionStarted(dynamicTestDescriptor);
+		verify(listener).executionFinished(eq(dynamicTestDescriptor), aTestExecutionResult.capture());
+
+		TestExecutionResult executionResult = aTestExecutionResult.getValue();
+		assertThat(executionResult.getStatus()).isEqualTo(FAILED);
+		assertThat(executionResult.getThrowable()).isPresent();
+		assertThat(executionResult.getThrowable().get()).hasMessageContaining(
+			"Dynamic test descriptors must not declare exclusive resources");
 	}
 
 	// -------------------------------------------------------------------
