@@ -28,12 +28,17 @@ class LockManager {
 	private final Map<String, ReadWriteLock> locksByKey = new ConcurrentHashMap<>();
 
 	ResourceLock getLockForResources(Collection<ExclusiveResource> resources) {
+		List<Lock> locks = getDistinctSortedLocks(resources);
+		return toResourceLock(locks);
+	}
+
+	private List<Lock> getDistinctSortedLocks(Collection<ExclusiveResource> resources) {
 		// @formatter:off
 		Map<String, List<ExclusiveResource>> resourcesByKey = resources.stream()
 				.distinct()
 				.sorted()
 				.collect(groupingBy(ExclusiveResource::getKey, LinkedHashMap::new, toList()));
-		List<Lock> locks = resourcesByKey.values().stream()
+		return resourcesByKey.values().stream()
 				.map(resourcesWithSameKey -> resourcesWithSameKey.get(0))
 				.map(resource -> {
 					ReadWriteLock lock = this.locksByKey.computeIfAbsent(resource.getKey(),
@@ -42,6 +47,9 @@ class LockManager {
 				})
 				.collect(toList());
 		// @formatter:on
+	}
+
+	private ResourceLock toResourceLock(List<Lock> locks) {
 		int size = locks.size();
 		if (size == 0) {
 			return NopLock.INSTANCE;

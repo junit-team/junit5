@@ -191,4 +191,5 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 			ExceptionUtils.throwAsUncheckedException(throwable);
 		}
 	}
+
 }

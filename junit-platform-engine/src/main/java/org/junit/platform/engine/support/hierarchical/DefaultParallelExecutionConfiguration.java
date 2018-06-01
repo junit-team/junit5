@@ -11,14 +11,15 @@
 package org.junit.platform.engine.support.hierarchical;
 
 class DefaultParallelExecutionConfiguration implements ParallelExecutionConfiguration {
+
 	private final int parallelism;
 	private final int minimumRunnable;
 	private final int maxPoolSize;
 	private final int corePoolSize;
 	private final int keepAlive;
 
-	public DefaultParallelExecutionConfiguration(int parallelism, int minimumRunnable, int maxPoolSize,
-			int corePoolSize, int keepAlive) {
+	DefaultParallelExecutionConfiguration(int parallelism, int minimumRunnable, int maxPoolSize, int corePoolSize,
+			int keepAlive) {
 		this.parallelism = parallelism;
 		this.minimumRunnable = minimumRunnable;
 		this.maxPoolSize = maxPoolSize;

@@ -13,6 +13,7 @@ package org.junit.platform.launcher.core;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
@@ -142,13 +143,8 @@ class DefaultLauncher implements Launcher {
 
 	private void execute(Root root, ConfigurationParameters configurationParameters,
 			TestExecutionListener... listeners) {
-
 		TestExecutionListenerRegistry listenerRegistry = buildListenerRegistryForExecution(listeners);
-		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
-		Optional<StreamInterceptingTestExecutionListener> streamInterceptingTestExecutionListener = StreamInterceptingTestExecutionListener.create(
-			configurationParameters, testExecutionListener::reportingEntryPublished);
-		streamInterceptingTestExecutionListener.ifPresent(listenerRegistry::registerListeners);
-		try {
+		withInterceptedStreams(configurationParameters, listenerRegistry, testExecutionListener -> {
 			TestPlan testPlan = TestPlan.from(root.getEngineDescriptors());
 			testExecutionListener.testPlanExecutionStarted(testPlan);
 			ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(testPlan,
@@ -159,6 +155,17 @@ class DefaultLauncher implements Launcher {
 					new ExecutionRequest(testDescriptor, engineExecutionListener, configurationParameters));
 			}
 			testExecutionListener.testPlanExecutionFinished(testPlan);
+		});
+	}
+
+	private void withInterceptedStreams(ConfigurationParameters configurationParameters,
+			TestExecutionListenerRegistry listenerRegistry, Consumer<TestExecutionListener> action) {
+		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
+		Optional<StreamInterceptingTestExecutionListener> streamInterceptingTestExecutionListener = StreamInterceptingTestExecutionListener.create(
+			configurationParameters, testExecutionListener::reportingEntryPublished);
+		streamInterceptingTestExecutionListener.ifPresent(listenerRegistry::registerListeners);
+		try {
+			action.accept(testExecutionListener);
 		}
 		finally {
 			streamInterceptingTestExecutionListener.ifPresent(StreamInterceptingTestExecutionListener::unregister);
