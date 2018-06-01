@@ -130,23 +130,8 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 				context = node.before(context);
 
 				List<Future<?>> futures = new ArrayList<>();
-
-				context = node.execute(context, dynamicTestDescriptor -> {
-					listener.dynamicTestRegistered(dynamicTestDescriptor);
-					NodeTestTask<C> nodeTestTask = new NodeTestTask<>(dynamicTestDescriptor, this.listener,
-						this.executorService);
-					List<ExclusiveResource> exclusiveResources = nodeTestTask.getNode().getExclusiveResources();
-					if (!exclusiveResources.isEmpty()) {
-						listener.executionStarted(dynamicTestDescriptor);
-						String message = "Dynamic test descriptors must not declare exclusive resources: "
-								+ exclusiveResources;
-						listener.executionFinished(dynamicTestDescriptor, failed(new JUnitException(message)));
-					}
-					else {
-						nodeTestTask.setParentContext(context);
-						futures.add(executorService.submit(nodeTestTask));
-					}
-				});
+				context = node.execute(context,
+					dynamicTestDescriptor -> executeDynamicTest(dynamicTestDescriptor, futures));
 
 				children.forEach(child -> child.setParentContext(context));
 				executorService.invokeAll(children);
@@ -163,6 +148,21 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 				executeAfter(failure);
 			}
 		});
+	}
+
+	private void executeDynamicTest(TestDescriptor dynamicTestDescriptor, List<Future<?>> futures) {
+		listener.dynamicTestRegistered(dynamicTestDescriptor);
+		NodeTestTask<C> nodeTestTask = new NodeTestTask<>(dynamicTestDescriptor, listener, executorService);
+		List<ExclusiveResource> exclusiveResources = nodeTestTask.getNode().getExclusiveResources();
+		if (!exclusiveResources.isEmpty()) {
+			listener.executionStarted(dynamicTestDescriptor);
+			String message = "Dynamic test descriptors must not declare exclusive resources: " + exclusiveResources;
+			listener.executionFinished(dynamicTestDescriptor, failed(new JUnitException(message)));
+		}
+		else {
+			nodeTestTask.setParentContext(context);
+			futures.add(executorService.submit(nodeTestTask));
+		}
 	}
 
 	private void executeAfter(Throwable failure) throws Throwable {
