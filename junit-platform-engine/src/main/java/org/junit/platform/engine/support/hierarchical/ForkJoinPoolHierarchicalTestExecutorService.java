@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
+import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.concurrent.Future;
 import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.TimeUnit;
@@ -62,7 +63,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	@Override
 	public Future<Void> submit(TestTask testTask) {
 		ExclusiveTask exclusiveTask = new ExclusiveTask(testTask);
-		if (testTask.getTestDescriptor().isRoot()) {
+		if (!isAlreadyRunningInForkJoinPool()) {
 			// ensure we're running inside the ForkJoinPool so we
 			// can use ForkJoinTask API in invokeAll etc.
 			return forkJoinPool.submit(exclusiveTask);
@@ -72,6 +73,12 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 		}
 		exclusiveTask.compute();
 		return completedFuture(null);
+	}
+
+	private boolean isAlreadyRunningInForkJoinPool() {
+		Thread currentThread = Thread.currentThread();
+		return currentThread instanceof ForkJoinWorkerThread
+				&& ((ForkJoinWorkerThread) currentThread).getPool() == forkJoinPool;
 	}
 
 	@Override
