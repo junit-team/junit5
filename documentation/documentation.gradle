@@ -27,7 +27,6 @@ task consoleLauncherTest(type: JavaExec) {
 	args '--exclude-tag', 'exclude'
 	args '--reports-dir', reportsDir
 	systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
-	systemProperty 'junit.jupiter.execution.parallel.enabled', 'true'
 }
 test {
 	dependsOn consoleLauncherTest
