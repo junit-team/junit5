@@ -36,8 +36,8 @@ class StreamInterceptingTestExecutionListener implements TestExecutionListener {
 	static Optional<StreamInterceptingTestExecutionListener> create(ConfigurationParameters configurationParameters,
 			BiConsumer<TestIdentifier, ReportEntry> reporter) {
 
-		boolean captureStdout = configurationParameters.getBoolean(CAPTURE_STDOUT_PROPERTY_NAME).orElse(true);
-		boolean captureStderr = configurationParameters.getBoolean(CAPTURE_STDERR_PROPERTY_NAME).orElse(true);
+		boolean captureStdout = configurationParameters.getBoolean(CAPTURE_STDOUT_PROPERTY_NAME).orElse(false);
+		boolean captureStderr = configurationParameters.getBoolean(CAPTURE_STDERR_PROPERTY_NAME).orElse(false);
 		if (!captureStdout && !captureStderr) {
 			return Optional.empty();
 		}
