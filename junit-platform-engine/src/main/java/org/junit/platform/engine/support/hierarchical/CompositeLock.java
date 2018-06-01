@@ -18,11 +18,9 @@ import java.util.concurrent.locks.Lock;
 class CompositeLock implements AcquiredResourceLock {
 
 	private final List<Lock> locks;
-	private final List<Lock> acquiredLocks;
 
 	CompositeLock(List<Lock> locks) {
 		this.locks = locks;
-		this.acquiredLocks = new ArrayList<>(locks.size());
 	}
 
 	// for tests only
@@ -36,7 +34,8 @@ class CompositeLock implements AcquiredResourceLock {
 		return this;
 	}
 
-	private void _acquire() throws InterruptedException {
+	private void acquireAllLocks() throws InterruptedException {
+		List<Lock> acquiredLocks = new ArrayList<>(locks.size());
 		try {
 			for (Lock lock : locks) {
 				lock.lockInterruptibly();
@@ -44,13 +43,17 @@ class CompositeLock implements AcquiredResourceLock {
 			}
 		}
 		catch (InterruptedException e) {
-			release();
+			release(acquiredLocks);
 			throw e;
 		}
 	}
 
 	@Override
 	public void release() {
+		release(locks);
+	}
+
+	private void release(List<Lock> acquiredLocks) {
 		for (int i = acquiredLocks.size() - 1; i >= 0; i--) {
 			acquiredLocks.get(i).unlock();
 		}
@@ -61,7 +64,7 @@ class CompositeLock implements AcquiredResourceLock {
 
 		@Override
 		public boolean block() throws InterruptedException {
-			_acquire();
+			acquireAllLocks();
 			acquired = true;
 			return true;
 		}
