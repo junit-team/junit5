@@ -107,8 +107,7 @@ class AvailableOptions {
 				.withValuesSeparatedBy(File.pathSeparatorChar) //
 				.describedAs("path1" + File.pathSeparator + "path2" + File.pathSeparator + "...");
 
-		failIfNoTests = parser.accepts("fail-if-no-tests",
-			"Fail and return error exit code, if no tests are found to be executed.");
+		failIfNoTests = parser.accepts("fail-if-no-tests", "Fail and return exit status code 2 if no tests are found.");
 
 		// --- Reports ---------------------------------------------------------
 

@@ -580,8 +580,9 @@ Test run finished after 64 ms
 
 .Exit Code
 NOTE: The `{ConsoleLauncher}` exits with a status code of `1` if any containers or tests
-failed. Also if no tests are found and `--fail-if-no-tests` option is enabled it exits with
-status code `2`. Otherwise the exit code is `0`.
+failed. If no tests are discovered and the `--fail-if-no-tests` command-line option is
+supplied, the `ConsoleLauncher` exits with a status code of `2`. Otherwise the exit code
+is `0`.
 
 [[running-tests-console-launcher-options]]
 ==== Options

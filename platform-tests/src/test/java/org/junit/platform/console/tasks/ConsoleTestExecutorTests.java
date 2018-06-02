@@ -125,9 +125,11 @@ class ConsoleTestExecutorTests {
 		assertThat(exitCode).isEqualTo(1);
 	}
 
+	/**
+	 * @since 1.3
+	 */
 	@Test
 	void hasStatusCode2ForNoTestsAndHasOptionFailIfNoTestsFound() throws Exception {
-
 		options.setFailIfNoTests(true);
 
 		ConsoleTestExecutor task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
@@ -136,9 +138,11 @@ class ConsoleTestExecutorTests {
 		assertThat(exitCode).isEqualTo(2);
 	}
 
+	/**
+	 * @since 1.3
+	 */
 	@Test
 	void hasStatusCode0ForNoTestsAndNotFailIfNoTestsFound() throws Exception {
-
 		ConsoleTestExecutor task = new ConsoleTestExecutor(options, () -> createLauncher(dummyTestEngine));
 		int exitCode = ConsoleLauncherExecutionResult.computeExitCode(task.execute(dummyWriter()), options);
 

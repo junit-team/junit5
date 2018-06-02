@@ -38,14 +38,17 @@ class ConsoleLauncherExecutionResultTests {
 	@Test
 	void hasStatusCode1ForForAnyFailure() {
 		when(summary.getTotalFailureCount()).thenReturn(1L);
+
 		int exitCode = ConsoleLauncherExecutionResult.computeExitCode(summary, options);
 
 		assertThat(exitCode).isEqualTo(1);
 	}
 
+	/**
+	 * @since 1.3
+	 */
 	@Test
 	void hasStatusCode2ForNoTestsAndHasOptionFailIfNoTestsFound() {
-
 		options.setFailIfNoTests(true);
 		when(summary.getTestsFoundCount()).thenReturn(0L);
 
@@ -54,9 +57,11 @@ class ConsoleLauncherExecutionResultTests {
 		assertThat(exitCode).isEqualTo(2);
 	}
 
+	/**
+	 * @since 1.3
+	 */
 	@Test
 	void hasStatusCode0ForTestsAndHasOptionFailIfNoTestsFound() {
-
 		options.setFailIfNoTests(true);
 		when(summary.getTestsFoundCount()).thenReturn(1L);
 		when(summary.getTotalFailureCount()).thenReturn(0L);
@@ -66,6 +71,9 @@ class ConsoleLauncherExecutionResultTests {
 		assertThat(exitCode).isEqualTo(0);
 	}
 
+	/**
+	 * @since 1.3
+	 */
 	@Test
 	void hasStatusCode0ForNoTestsAndNotFailIfNoTestsFound() {
 		options.setFailIfNoTests(false);
@@ -75,4 +83,5 @@ class ConsoleLauncherExecutionResultTests {
 
 		assertThat(exitCode).isEqualTo(0);
 	}
+
 }
