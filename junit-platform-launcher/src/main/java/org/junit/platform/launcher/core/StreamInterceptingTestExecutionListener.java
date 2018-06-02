@@ -29,6 +29,9 @@ import org.junit.platform.launcher.TestIdentifier;
 
 class StreamInterceptingTestExecutionListener implements TestExecutionListener {
 
+	static final String STDOUT_REPORT_KEY = "stdout";
+	static final String STDERR_REPORT_KEY = "stderr";
+
 	private final Optional<StreamInterceptor> stdoutInterceptor;
 	private final Optional<StreamInterceptor> stderrInterceptor;
 	private final BiConsumer<TestIdentifier, ReportEntry> reporter;
@@ -81,11 +84,11 @@ class StreamInterceptingTestExecutionListener implements TestExecutionListener {
 		Map<String, String> map = new HashMap<>();
 		String out = stdoutInterceptor.map(StreamInterceptor::consume).orElse("");
 		if (StringUtils.isNotBlank(out)) {
-			map.put("stdout", out);
+			map.put(STDOUT_REPORT_KEY, out);
 		}
 		String err = stderrInterceptor.map(StreamInterceptor::consume).orElse("");
 		if (StringUtils.isNotBlank(err)) {
-			map.put("stderr", err);
+			map.put(STDERR_REPORT_KEY, err);
 		}
 		if (!map.isEmpty()) {
 			reporter.accept(testIdentifier, ReportEntry.from(map));
