@@ -114,7 +114,7 @@ class ParallelExecutionIntegrationTests {
 			TestCaseWithUnsortedLocks.class);
 
 		assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(6);
-		assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(2);
+		assertThat(ThreadReporter.getThreadNames(executionEvents).count()).isLessThanOrEqualTo(2);
 	}
 
 	@RepeatedTest(10)
