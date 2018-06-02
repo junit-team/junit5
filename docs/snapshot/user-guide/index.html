@@ -4533,8 +4533,9 @@ Test run finished after 64 ms
 <td class="content">
 <div class="title">Exit Code</div>
 The <code><a href="../api/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code> exits with a status code of <code>1</code> if any containers or tests
-failed. Also if no tests are found and <code>--fail-if-no-tests</code> option is enabled it exits with
-status code <code>2</code>. Otherwise the exit code is <code>0</code>.
+failed. If no tests are discovered and the <code>--fail-if-no-tests</code> command-line option is
+supplied, the <code>ConsoleLauncher</code> exits with a status code of <code>2</code>. Otherwise the exit code
+is <code>0</code>.
 </td>
 </tr>
 </table>
@@ -4560,8 +4561,8 @@ status code <code>2</code>. Otherwise the exit code is <code>0</code>.
   path1:path2:...&gt;                               for example, for adding engines and
                                                  their dependencies. This option can be
                                                  repeated.
---fail-if-no-tests                             Fail and return error exit code, if no
-                                                 tests are found to be executed.
+--fail-if-no-tests                             Fail and return exit status code 2 if no
+                                                 tests are found.
 --reports-dir &lt;Path&gt;                           Enable report output into a specified
                                                  local directory (will be created if it
                                                  does not exist).
