@@ -63,11 +63,6 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		// @formatter:on
 	}
 
-	@Override
-	public TestDescriptor getTestDescriptor() {
-		return testDescriptor;
-	}
-
 	public Node<C> getNode() {
 		return node;
 	}

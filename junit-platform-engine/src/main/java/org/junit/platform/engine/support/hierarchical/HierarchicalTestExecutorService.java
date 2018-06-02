@@ -13,7 +13,6 @@ package org.junit.platform.engine.support.hierarchical;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 
 public interface HierarchicalTestExecutorService extends AutoCloseable {
@@ -30,8 +29,6 @@ public interface HierarchicalTestExecutorService extends AutoCloseable {
 	void close();
 
 	interface TestTask {
-
-		TestDescriptor getTestDescriptor();
 
 		ExecutionMode getExecutionMode();
 
