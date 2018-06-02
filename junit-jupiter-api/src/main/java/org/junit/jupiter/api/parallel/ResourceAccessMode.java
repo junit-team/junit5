@@ -11,5 +11,5 @@
 package org.junit.jupiter.api.parallel;
 
 public enum ResourceAccessMode {
-	ReadWrite, Read
+	READ_WRITE, READ
 }

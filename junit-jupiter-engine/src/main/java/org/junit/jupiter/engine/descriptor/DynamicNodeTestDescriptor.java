@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.Concurrent;
+import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.CONCURRENT;
 
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
@@ -34,7 +34,7 @@ abstract class DynamicNodeTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public ExecutionMode getExecutionMode() {
-		return getParent().map(parent -> ((JupiterTestDescriptor) parent).getExecutionMode()).orElse(Concurrent);
+		return getParent().map(parent -> ((JupiterTestDescriptor) parent).getExecutionMode()).orElse(CONCURRENT);
 	}
 
 	@Override

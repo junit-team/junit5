@@ -16,8 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.junit.jupiter.api.parallel.ExecutionMode.Concurrent;
-import static org.junit.jupiter.api.parallel.ExecutionMode.SameThread;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
+import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELISM;
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED;
@@ -252,7 +252,7 @@ class ParallelExecutionIntegrationTests {
 
 	static class TestCaseWithTestFactory {
 		@TestFactory
-		@Execution(SameThread)
+		@Execution(SAME_THREAD)
 		Stream<DynamicTest> testFactory(TestReporter testReporter) {
 			AtomicInteger sharedResource = new AtomicInteger(0);
 			CountDownLatch countDownLatch = new CountDownLatch(3);
@@ -276,7 +276,7 @@ class ParallelExecutionIntegrationTests {
 			assertTrue(B.tryLock());
 		}
 
-		@Execution(Concurrent)
+		@Execution(CONCURRENT)
 		@UseResource("B")
 		@Test
 		void secondTest() {
@@ -308,7 +308,7 @@ class ParallelExecutionIntegrationTests {
 			assertTrue(A.tryLock());
 		}
 
-		@Execution(Concurrent)
+		@Execution(CONCURRENT)
 		@UseResource("A")
 		@Test
 		void secondTest() {
@@ -341,7 +341,7 @@ class ParallelExecutionIntegrationTests {
 			assertTrue(B.tryLock());
 		}
 
-		@Execution(Concurrent)
+		@Execution(CONCURRENT)
 		@UseResource("B")
 		@Test
 		void secondTest() {

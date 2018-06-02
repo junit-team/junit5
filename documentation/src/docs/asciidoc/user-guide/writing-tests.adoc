@@ -1345,12 +1345,12 @@ If parallel execution is enabled, all classes and methods are executed concurren
 default. You can change the execution mode for the annotated element and its subelements
 (if any) by using the `{Execution}` annotation. The following two modes are available:
 
-`SameThread`::
+`SAME_THREAD`::
   Force execution in the same thread used by the parent. For example, when used on a test
   method, the test method will be executed in the same thread as any `@BeforeAll` or
   `@AfterAll` methods of the containing test class.
 
-`Concurrent`::
+`CONCURRENT`::
   Execute concurrently unless a resource constraint forces execution in the same thread.
 
 In addition, the `{UseResource}` annotation allows to declare that a test class or
@@ -1370,5 +1370,5 @@ When access to shared resources is declared using this annotation, the JUnit Jup
 engine uses this information to ensure that no conflicting tests are run in parallel.
 
 In addition to the string that uniquely identifies the used resource, you may specify an
-access mode. Two tests that require `Read` access to a resource may run in parallel with
-each other but not while any other test that requires `ReadWrite` access is running.
+access mode. Two tests that require `READ` access to a resource may run in parallel with
+each other but not while any other test that requires `READ_WRITE` access is running.

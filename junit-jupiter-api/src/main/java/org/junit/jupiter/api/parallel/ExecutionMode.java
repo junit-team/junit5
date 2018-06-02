@@ -11,5 +11,5 @@
 package org.junit.jupiter.api.parallel;
 
 public enum ExecutionMode {
-	SameThread, Concurrent
+	SAME_THREAD, CONCURRENT
 }

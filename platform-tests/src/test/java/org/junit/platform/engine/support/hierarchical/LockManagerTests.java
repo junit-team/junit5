@@ -16,8 +16,8 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.Read;
-import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.ReadWrite;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.READ;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.READ_WRITE;
 
 import java.util.Collection;
 import java.util.List;
@@ -42,7 +42,7 @@ class LockManagerTests {
 
 	@Test
 	void returnsSingleLockForSingleExclusiveResource() {
-		Collection<ExclusiveResource> resources = singleton(new ExclusiveResource("foo", Read));
+		Collection<ExclusiveResource> resources = singleton(new ExclusiveResource("foo", READ));
 
 		List<Lock> locks = getLocks(lockManager, resources);
 
@@ -53,8 +53,8 @@ class LockManagerTests {
 	@Test
 	void returnsCompositeLockForMultipleDifferentExclusiveResources() {
 		Collection<ExclusiveResource> resources = asList( //
-			new ExclusiveResource("a", Read), //
-			new ExclusiveResource("b", ReadWrite));
+			new ExclusiveResource("a", READ), //
+			new ExclusiveResource("b", READ_WRITE));
 
 		List<Lock> locks = getLocks(lockManager, resources);
 
@@ -65,7 +65,7 @@ class LockManagerTests {
 
 	@Test
 	void reusesSameLockForExclusiveResourceWithSameKey() {
-		Collection<ExclusiveResource> resources = singleton(new ExclusiveResource("foo", Read));
+		Collection<ExclusiveResource> resources = singleton(new ExclusiveResource("foo", READ));
 
 		List<Lock> locks1 = getLocks(lockManager, resources);
 		List<Lock> locks2 = getLocks(lockManager, resources);
@@ -78,10 +78,10 @@ class LockManagerTests {
 	@Test
 	void returnsSingleLockForExclusiveResourcWithBothLockModes() {
 		Collection<ExclusiveResource> resources = asList( //
-			new ExclusiveResource("bar", Read), //
-			new ExclusiveResource("foo", Read), //
-			new ExclusiveResource("foo", ReadWrite), //
-			new ExclusiveResource("bar", ReadWrite));
+			new ExclusiveResource("bar", READ), //
+			new ExclusiveResource("foo", READ), //
+			new ExclusiveResource("foo", READ_WRITE), //
+			new ExclusiveResource("bar", READ_WRITE));
 
 		List<Lock> locks = getLocks(lockManager, resources);
 

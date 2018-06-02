@@ -553,7 +553,7 @@ class HierarchicalTestExecutorTests {
 		MyLeaf child = spy(new MyLeaf(leafUniqueId));
 		MyLeaf dynamicTestDescriptor = spy(new MyLeaf(leafUniqueId.append("dynamic", "child")));
 		when(dynamicTestDescriptor.getExclusiveResources()).thenReturn(
-			singletonList(new ExclusiveResource("foo", LockMode.Read)));
+			singletonList(new ExclusiveResource("foo", LockMode.READ)));
 
 		when(child.execute(any(), any())).thenAnswer(invocation -> {
 			DynamicTestExecutor dynamicTestExecutor = invocation.getArgument(1);

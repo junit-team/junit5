@@ -11,7 +11,7 @@
 package example;
 
 // tag::user_guide[]
-import static org.junit.jupiter.api.parallel.ExecutionMode.SameThread;
+import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
 import java.util.stream.IntStream;
 
@@ -22,7 +22,7 @@ import org.junit.jupiter.api.parallel.Execution;
 @Disabled
 class SlowTests {
 
-	@Execution(SameThread)
+	@Execution(SAME_THREAD)
 	@Test
 	void a() {
 		foo();
@@ -103,7 +103,7 @@ class SlowTests {
 		foo();
 	}
 
-	@Execution(SameThread)
+	@Execution(SAME_THREAD)
 	@Test
 	void q() {
 		foo();

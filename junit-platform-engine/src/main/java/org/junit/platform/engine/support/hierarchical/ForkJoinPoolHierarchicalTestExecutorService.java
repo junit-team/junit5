@@ -12,7 +12,7 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.concurrent.ForkJoinPool.defaultForkJoinWorkerThreadFactory;
-import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.Concurrent;
+import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.CONCURRENT;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Constructor;
@@ -68,7 +68,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			// can use ForkJoinTask API in invokeAll etc.
 			return forkJoinPool.submit(exclusiveTask);
 		}
-		if (testTask.getExecutionMode() == Concurrent) {
+		if (testTask.getExecutionMode() == CONCURRENT) {
 			return exclusiveTask.fork();
 		}
 		exclusiveTask.compute();
@@ -91,7 +91,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 		Deque<ExclusiveTask> concurrentTasksInReverseOrder = new LinkedList<>();
 		for (TestTask testTask : tasks) {
 			ExclusiveTask exclusiveTask = new ExclusiveTask(testTask);
-			if (testTask.getExecutionMode() == Concurrent) {
+			if (testTask.getExecutionMode() == CONCURRENT) {
 				exclusiveTask.fork();
 				concurrentTasksInReverseOrder.addFirst(exclusiveTask);
 			}

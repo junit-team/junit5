@@ -119,7 +119,7 @@ public interface Node<C extends EngineExecutionContext> {
 	}
 
 	default ExecutionMode getExecutionMode() {
-		return ExecutionMode.Concurrent;
+		return ExecutionMode.CONCURRENT;
 	}
 
 	/**
@@ -215,7 +215,7 @@ public interface Node<C extends EngineExecutionContext> {
 	}
 
 	enum ExecutionMode {
-		SameThread, Concurrent
+		SAME_THREAD, CONCURRENT
 	}
 
 }

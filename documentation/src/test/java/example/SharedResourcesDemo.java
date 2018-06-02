@@ -13,9 +13,9 @@ package example;
 import static example.Resources.SYSTEM_PROPERTIES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.parallel.ExecutionMode.Concurrent;
-import static org.junit.jupiter.api.parallel.ResourceAccessMode.Read;
-import static org.junit.jupiter.api.parallel.ResourceAccessMode.ReadWrite;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
+import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ;
+import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 
 import java.util.Properties;
 
@@ -26,7 +26,7 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.UseResource;
 
 // tag::user_guide[]
-@Execution(Concurrent)
+@Execution(CONCURRENT)
 class SharedResourcesDemo {
 
 	private Properties backup;
@@ -43,20 +43,20 @@ class SharedResourcesDemo {
 	}
 
 	@Test
-	@UseResource(value = SYSTEM_PROPERTIES, mode = Read)
+	@UseResource(value = SYSTEM_PROPERTIES, mode = READ)
 	void customPropertyIsNotSetByDefault() {
 		assertNull(System.getProperty("my.prop"));
 	}
 
 	@Test
-	@UseResource(value = SYSTEM_PROPERTIES, mode = ReadWrite)
+	@UseResource(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
 	void canSetCustomPropertyToFoo() {
 		System.setProperty("my.prop", "foo");
 		assertEquals("foo", System.getProperty("my.prop"));
 	}
 
 	@Test
-	@UseResource(value = SYSTEM_PROPERTIES, mode = ReadWrite)
+	@UseResource(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
 	void canSetCustomPropertyToBar() {
 		System.setProperty("my.prop", "bar");
 		assertEquals("bar", System.getProperty("my.prop"));

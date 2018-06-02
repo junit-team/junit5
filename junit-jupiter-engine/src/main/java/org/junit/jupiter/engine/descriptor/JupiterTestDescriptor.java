@@ -119,16 +119,16 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 				.orElseGet(() -> getParent()
 						.filter(parent -> parent instanceof Node)
 						.map(parent -> ((Node<?>) parent).getExecutionMode())
-						.orElse(ExecutionMode.Concurrent));
+						.orElse(ExecutionMode.CONCURRENT));
 		// @formatter:on
 	}
 
 	private static ExecutionMode toExecutionMode(org.junit.jupiter.api.parallel.ExecutionMode mode) {
 		switch (mode) {
-			case Concurrent:
-				return ExecutionMode.Concurrent;
-			case SameThread:
-				return ExecutionMode.SameThread;
+			case CONCURRENT:
+				return ExecutionMode.CONCURRENT;
+			case SAME_THREAD:
+				return ExecutionMode.SAME_THREAD;
 		}
 		throw new JUnitException("Unknown ExecutionMode: " + mode);
 	}
@@ -143,10 +143,10 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	private static LockMode toLockMode(ResourceAccessMode mode) {
 		switch (mode) {
-			case Read:
-				return LockMode.Read;
-			case ReadWrite:
-				return LockMode.ReadWrite;
+			case READ:
+				return LockMode.READ;
+			case READ_WRITE:
+				return LockMode.READ_WRITE;
 		}
 		throw new JUnitException("Unknown ResourceAccessMode: " + mode);
 	}

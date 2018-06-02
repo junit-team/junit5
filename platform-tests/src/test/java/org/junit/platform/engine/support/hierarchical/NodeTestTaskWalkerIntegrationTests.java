@@ -33,12 +33,12 @@ class NodeTestTaskWalkerIntegrationTests {
 		assertThat(engineNodeTestTask.getChildren()).hasSize(1);
 		NodeTestTask<?> testClassExecutor = engineNodeTestTask.getChildren().get(0);
 		assertThat(testClassExecutor.getResourceLock()).isInstanceOf(CompositeLock.class);
-		assertThat(testClassExecutor.getExecutionMode()).isEqualTo(ExecutionMode.Concurrent);
+		assertThat(testClassExecutor.getExecutionMode()).isEqualTo(ExecutionMode.CONCURRENT);
 
 		assertThat(testClassExecutor.getChildren()).hasSize(1);
 		NodeTestTask<?> testMethodExecutor = testClassExecutor.getChildren().get(0);
 		assertThat(testMethodExecutor.getResourceLock()).isInstanceOf(NopLock.class);
-		assertThat(testMethodExecutor.getExecutionMode()).isEqualTo(ExecutionMode.SameThread);
+		assertThat(testMethodExecutor.getExecutionMode()).isEqualTo(ExecutionMode.SAME_THREAD);
 	}
 
 	@Test
@@ -48,21 +48,21 @@ class NodeTestTaskWalkerIntegrationTests {
 		assertThat(engineNodeTestTask.getChildren()).hasSize(1);
 		NodeTestTask<?> testClassExecutor = engineNodeTestTask.getChildren().get(0);
 		assertThat(testClassExecutor.getResourceLock()).isInstanceOf(NopLock.class);
-		assertThat(testClassExecutor.getExecutionMode()).isEqualTo(ExecutionMode.Concurrent);
+		assertThat(testClassExecutor.getExecutionMode()).isEqualTo(ExecutionMode.CONCURRENT);
 
 		assertThat(testClassExecutor.getChildren()).hasSize(2);
 		NodeTestTask<?> testMethodExecutor = testClassExecutor.getChildren().get(0);
 		assertThat(testMethodExecutor.getResourceLock()).isInstanceOf(SingleLock.class);
-		assertThat(testMethodExecutor.getExecutionMode()).isEqualTo(ExecutionMode.Concurrent);
+		assertThat(testMethodExecutor.getExecutionMode()).isEqualTo(ExecutionMode.CONCURRENT);
 
 		NodeTestTask<?> nestedTestClassExecutor = testClassExecutor.getChildren().get(1);
 		assertThat(nestedTestClassExecutor.getResourceLock()).isInstanceOf(CompositeLock.class);
-		assertThat(nestedTestClassExecutor.getExecutionMode()).isEqualTo(ExecutionMode.Concurrent);
+		assertThat(nestedTestClassExecutor.getExecutionMode()).isEqualTo(ExecutionMode.CONCURRENT);
 
 		assertThat(nestedTestClassExecutor.getChildren()).hasSize(1);
 		NodeTestTask<?> nestedTestMethodExecutor = nestedTestClassExecutor.getChildren().get(0);
 		assertThat(nestedTestMethodExecutor.getResourceLock()).isInstanceOf(NopLock.class);
-		assertThat(nestedTestMethodExecutor.getExecutionMode()).isEqualTo(ExecutionMode.SameThread);
+		assertThat(nestedTestMethodExecutor.getExecutionMode()).isEqualTo(ExecutionMode.SAME_THREAD);
 	}
 
 	private NodeTestTask<?> prepareNodeTestTaskTree(Class<?> testClass) {

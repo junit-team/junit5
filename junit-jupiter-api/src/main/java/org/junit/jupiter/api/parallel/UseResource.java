@@ -23,6 +23,6 @@ public @interface UseResource {
 
 	String value();
 
-	ResourceAccessMode mode() default ResourceAccessMode.ReadWrite;
+	ResourceAccessMode mode() default ResourceAccessMode.READ_WRITE;
 
 }
