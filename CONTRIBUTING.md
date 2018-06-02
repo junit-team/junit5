@@ -66,6 +66,8 @@ Whenever an acronym is included as part of a field name or parameter name:
 
 ### Formatting
 
+#### Code
+
 Code formatting is enforced using the [Spotless](https://github.com/diffplug/spotless)
 Gradle plugin. You can use `gradle spotlessApply` to format new code and add missing
 license headers to source files. Formatter and import order settings for Eclipse are
@@ -79,8 +81,12 @@ Eclipse settings.
 It is forbidden to use _wildcard imports_ (e.g., `import static org.junit.jupiter.api.Assertions.*;`)
 in Java code.
 
+#### Documentation
+
 Text in `*.adoc` and `*.md` files should be wrapped at 90 characters whenever technically
 possible.
+
+In multi-line bullet point entries, subsequent lines should be indented.
 
 ### Javadoc
 
