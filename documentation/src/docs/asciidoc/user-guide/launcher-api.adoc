@@ -78,6 +78,11 @@ is currently supported via Java's `java.util.ServiceLoader` mechanism. For examp
 in a file named `org.junit.platform.engine.TestEngine` within the `/META-INF/services` in
 the `junit-jupiter-engine` JAR.
 
+NOTE: `{HierarchicalTestEngine}` is a convenient abstract base implementation (used by
+the `{junit-jupiter-engine}`) that only requires implementors to provide the logic for
+test discovery. It implements execution of `TestDescriptors` that implement the `Node`
+interface, including support for parallel execution.
+
 [[launcher-api-listeners-custom]]
 ==== Plugging in Your Own Test Execution Listeners
 
