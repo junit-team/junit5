@@ -23,10 +23,6 @@ public @interface UseResource {
 
 	String value();
 
-	Mode mode() default Mode.ReadWrite;
-
-	enum Mode {
-		ReadWrite, Read
-	}
+	ResourceAccessMode mode() default ResourceAccessMode.ReadWrite;
 
 }

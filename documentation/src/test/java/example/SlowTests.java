@@ -11,7 +11,7 @@
 package example;
 
 // tag::user_guide[]
-import static org.junit.jupiter.api.parallel.Execution.Mode.SameThread;
+import static org.junit.jupiter.api.parallel.ExecutionMode.SameThread;
 
 import java.util.stream.IntStream;
 

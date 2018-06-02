@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.UseResource;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
@@ -122,14 +123,14 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		// @formatter:on
 	}
 
-	private static ExecutionMode toExecutionMode(Execution.Mode mode) {
+	private static ExecutionMode toExecutionMode(org.junit.jupiter.api.parallel.ExecutionMode mode) {
 		switch (mode) {
 			case Concurrent:
 				return ExecutionMode.Concurrent;
 			case SameThread:
 				return ExecutionMode.SameThread;
 		}
-		throw new JUnitException("Unknown Execution.Mode: " + mode);
+		throw new JUnitException("Unknown ExecutionMode: " + mode);
 	}
 
 	protected List<ExclusiveResource> getExclusiveResources(AnnotatedElement element) {
@@ -140,14 +141,14 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		// @formatter:on
 	}
 
-	private static LockMode toLockMode(UseResource.Mode mode) {
+	private static LockMode toLockMode(ResourceAccessMode mode) {
 		switch (mode) {
 			case Read:
 				return LockMode.Read;
 			case ReadWrite:
 				return LockMode.ReadWrite;
 		}
-		throw new JUnitException("Unknown Execution.Mode: " + mode);
+		throw new JUnitException("Unknown ResourceAccessMode: " + mode);
 	}
 
 	@Override
