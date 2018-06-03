@@ -39,6 +39,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	private final HierarchicalTestExecutorService executorService;
 	private final Node<C> node;
 	private final ExecutionMode executionMode;
+	private final Set<ExclusiveResource> exclusiveResources;
 	private final List<NodeTestTask<C>> children;
 
 	private ResourceLock resourceLock = NopLock.INSTANCE;
@@ -57,6 +58,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		this.executorService = executorService;
 		node = asNode(testDescriptor);
 		executionMode = node.getExecutionMode();
+		exclusiveResources = node.getExclusiveResources();
 		// @formatter:off
 		children = testDescriptor.getChildren().stream()
 				.map(descriptor -> new NodeTestTask<C>(descriptor, listener, executorService))
@@ -64,8 +66,8 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		// @formatter:on
 	}
 
-	public Node<C> getNode() {
-		return node;
+	public Set<ExclusiveResource> getExclusiveResources() {
+		return exclusiveResources;
 	}
 
 	public List<NodeTestTask<C>> getChildren() {
@@ -149,7 +151,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	private void executeDynamicTest(TestDescriptor dynamicTestDescriptor, List<Future<?>> futures) {
 		listener.dynamicTestRegistered(dynamicTestDescriptor);
 		NodeTestTask<C> nodeTestTask = new NodeTestTask<>(dynamicTestDescriptor, listener, executorService);
-		Set<ExclusiveResource> exclusiveResources = nodeTestTask.getNode().getExclusiveResources();
+		Set<ExclusiveResource> exclusiveResources = nodeTestTask.getExclusiveResources();
 		if (!exclusiveResources.isEmpty()) {
 			listener.executionStarted(dynamicTestDescriptor);
 			String message = "Dynamic test descriptors must not declare exclusive resources: " + exclusiveResources;

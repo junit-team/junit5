@@ -21,13 +21,13 @@ class NodeTestTaskWalker {
 	private final LockManager lockManager = new LockManager();
 
 	void walk(NodeTestTask<?> nodeTestTask) {
-		if (nodeTestTask.getNode().getExclusiveResources().isEmpty()) {
+		if (nodeTestTask.getExclusiveResources().isEmpty()) {
 			nodeTestTask.getChildren().forEach(this::walk);
 		}
 		else {
-			Set<ExclusiveResource> allResources = new HashSet<>(nodeTestTask.getNode().getExclusiveResources());
+			Set<ExclusiveResource> allResources = new HashSet<>(nodeTestTask.getExclusiveResources());
 			doForChildrenRecursively(nodeTestTask, child -> {
-				allResources.addAll(child.getNode().getExclusiveResources());
+				allResources.addAll(child.getExclusiveResources());
 				child.setForcedExecutionMode(SAME_THREAD);
 			});
 			nodeTestTask.setResourceLock(lockManager.getLockForResources(allResources));
