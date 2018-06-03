@@ -62,7 +62,7 @@ import org.junit.platform.engine.discovery.UniqueIdSelector;
  * <p>Discovery errors related to Unique IDs that are particular to the Jupiter
  * test engine should be logged at WARNING level; whereas, all other discovery
  * errors should be logged at DEBUG level, since the Jupiter engine has no way
- * of knowing that is supposed to actually handle those things (e.g.,
+ * of knowing that it is supposed to actually handle those things (e.g.,
  * classpath roots, packages, etc. selected by a registered discovery selector).
  *
  * @since 5.0
