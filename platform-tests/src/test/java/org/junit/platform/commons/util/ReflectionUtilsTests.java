@@ -16,7 +16,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
@@ -25,7 +24,6 @@ import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import static org.junit.platform.commons.util.ReflectionUtils.invokeMethod;
 import static org.junit.platform.commons.util.ReflectionUtils.readFieldValue;
-import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,31 +69,6 @@ class ReflectionUtilsTests {
 	private static final Predicate<Method> methodContains2 = method -> method.getName().contains("2");
 	private static final Predicate<Method> methodContains4 = method -> method.getName().contains("4");
 	private static final Predicate<Method> methodContains5 = method -> method.getName().contains("5");
-
-	@Test
-	void getDefaultClassLoaderWithExplicitContextClassLoader() {
-		ClassLoader original = Thread.currentThread().getContextClassLoader();
-		ClassLoader mock = mock(ClassLoader.class);
-		Thread.currentThread().setContextClassLoader(mock);
-		try {
-			assertSame(mock, ClassLoaderUtils.getDefaultClassLoader());
-		}
-		finally {
-			Thread.currentThread().setContextClassLoader(original);
-		}
-	}
-
-	@Test
-	void getDefaultClassLoaderWithNullContextClassLoader() {
-		ClassLoader original = Thread.currentThread().getContextClassLoader();
-		Thread.currentThread().setContextClassLoader(null);
-		try {
-			assertSame(ClassLoader.getSystemClassLoader(), ClassLoaderUtils.getDefaultClassLoader());
-		}
-		finally {
-			Thread.currentThread().setContextClassLoader(original);
-		}
-	}
 
 	@Test
 	void isPublic() throws Exception {
