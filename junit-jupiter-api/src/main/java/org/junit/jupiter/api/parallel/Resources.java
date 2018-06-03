@@ -45,5 +45,6 @@ public class Resources {
 	public static final String SYSTEM_ERR = "java.lang.System.err";
 
 	private Resources() {
+		/* no-op */
 	}
 }

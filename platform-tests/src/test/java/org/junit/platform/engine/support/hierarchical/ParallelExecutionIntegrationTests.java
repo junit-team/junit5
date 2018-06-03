@@ -18,9 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
-import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELISM;
-import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY;
-import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED;
+import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
+import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME;
+import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.engine.test.event.ExecutionEvent.Type.REPORTING_ENTRY_PUBLISHED;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
@@ -405,9 +405,9 @@ class ParallelExecutionIntegrationTests {
 		// @formatter:off
 		LauncherDiscoveryRequest discoveryRequest = request()
 				.selectors(Arrays.stream(testClasses).map(DiscoverySelectors::selectClass).collect(toList()))
-				.configurationParameter(PARALLEL_EXECUTION_ENABLED, String.valueOf(true))
-				.configurationParameter(PARALLEL_CONFIG_STRATEGY, "fixed")
-				.configurationParameter(PARALLEL_CONFIG_FIXED_PARALLELISM, String.valueOf(parallelism))
+				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, String.valueOf(true))
+				.configurationParameter(PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME, "fixed")
+				.configurationParameter(PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, String.valueOf(parallelism))
 				.build();
 		// @formatter:on
 		return ExecutionEventRecorder.execute(new JupiterTestEngine(), discoveryRequest);

@@ -14,6 +14,8 @@ import static org.junit.platform.launcher.LauncherConstants.CAPTURE_MAX_BUFFER_D
 import static org.junit.platform.launcher.LauncherConstants.CAPTURE_MAX_BUFFER_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.CAPTURE_STDERR_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.CAPTURE_STDOUT_PROPERTY_NAME;
+import static org.junit.platform.launcher.LauncherConstants.STDERR_REPORT_ENTRY_KEY;
+import static org.junit.platform.launcher.LauncherConstants.STDOUT_REPORT_ENTRY_KEY;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +30,6 @@ import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.core.TestExecutionListenerRegistry.EagerTestExecutionListener;
 
 class StreamInterceptingTestExecutionListener implements EagerTestExecutionListener {
-
-	static final String STDOUT_REPORT_KEY = "stdout";
-	static final String STDERR_REPORT_KEY = "stderr";
 
 	private final Optional<StreamInterceptor> stdoutInterceptor;
 	private final Optional<StreamInterceptor> stderrInterceptor;
@@ -84,11 +83,11 @@ class StreamInterceptingTestExecutionListener implements EagerTestExecutionListe
 		Map<String, String> map = new HashMap<>();
 		String out = stdoutInterceptor.map(StreamInterceptor::consume).orElse("");
 		if (StringUtils.isNotBlank(out)) {
-			map.put(STDOUT_REPORT_KEY, out);
+			map.put(STDOUT_REPORT_ENTRY_KEY, out);
 		}
 		String err = stderrInterceptor.map(StreamInterceptor::consume).orElse("");
 		if (StringUtils.isNotBlank(err)) {
-			map.put(STDERR_REPORT_KEY, err);
+			map.put(STDERR_REPORT_ENTRY_KEY, err);
 		}
 		if (!map.isEmpty()) {
 			reporter.accept(testIdentifier, ReportEntry.from(map));

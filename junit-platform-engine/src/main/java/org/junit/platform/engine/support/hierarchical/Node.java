@@ -11,6 +11,7 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.Collections.emptySet;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.util.Optional;
@@ -28,7 +29,7 @@ import org.junit.platform.engine.TestDescriptor;
  * @since 1.0
  * @see HierarchicalTestEngine
  */
-@API(status = MAINTAINED, since = "1.0")
+@API(status = MAINTAINED, since = "1.0", consumers = "org.junit.platform.engine.support.hierarchical")
 public interface Node<C extends EngineExecutionContext> {
 
 	/**
@@ -114,10 +115,29 @@ public interface Node<C extends EngineExecutionContext> {
 	default void after(C context) throws Exception {
 	}
 
+	/**
+	 * Get the set of {@linkplain ExclusiveResource resources} required to
+	 * execute this node.
+	 *
+	 * @return the set of resources required by this node; never {@code null}
+	 * but potentially empty
+	 * @see ExclusiveResource
+	 * @since 1.3
+	 */
+	@API(status = EXPERIMENTAL, since = "1.3", consumers = "org.junit.platform.engine.support.hierarchical")
 	default Set<ExclusiveResource> getExclusiveResources() {
 		return emptySet();
 	}
 
+	/**
+	 * Get the preferred of {@linkplain ExecutionMode execution mode} for
+	 * parallel execution of this node.
+	 *
+	 * @return the preferred execution mode of this node; never {@code null}
+	 * @see ExecutionMode
+	 * @since 1.3
+	 */
+	@API(status = EXPERIMENTAL, since = "1.3", consumers = "org.junit.platform.engine.support.hierarchical")
 	default ExecutionMode getExecutionMode() {
 		return ExecutionMode.CONCURRENT;
 	}
@@ -214,8 +234,24 @@ public interface Node<C extends EngineExecutionContext> {
 
 	}
 
+	/**
+	 * Supported execution modes for parallel execution.
+	 *
+	 * @see Node#getExecutionMode()
+	 * @since 1.3
+	 */
+	@API(status = EXPERIMENTAL, since = "1.3", consumers = "org.junit.platform.engine.support.hierarchical")
 	enum ExecutionMode {
-		SAME_THREAD, CONCURRENT
+
+		/**
+		 * Force execution in same thread as the parent node.
+		 */
+		SAME_THREAD,
+
+		/**
+		 * Allow concurrent execution with any other node.
+		 */
+		CONCURRENT
 	}
 
 }

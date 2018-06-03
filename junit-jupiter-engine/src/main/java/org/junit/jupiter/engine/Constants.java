@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_CUSTOM_CLASS;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_DYNAMIC_FACTOR;
@@ -17,10 +18,12 @@ import static org.junit.platform.engine.support.hierarchical.DefaultParallelExec
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_STRATEGY;
 
 import org.apiguardian.api.API;
+import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigurationStrategy;
 
 /**
  * Collection of constants related to the {@link JupiterTestEngine}.
  *
+ * @see org.junit.platform.engine.ConfigurationParameters
  * @since 5.0
  */
 @API(status = STABLE, since = "5.0")
@@ -89,13 +92,65 @@ public final class Constants {
 	 */
 	public static final String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = "junit.jupiter.testinstance.lifecycle.default";
 
-	public static final String PARALLEL_EXECUTION_ENABLED = "junit.jupiter.execution.parallel.enabled";
+	/**
+	 * Property name used to enable parallel test execution: {@value}
+	 *
+	 * <p>By default, tests are executed sequentially in a single thread.
+	 *
+	 * @since 5.3
+	 */
+	@API(status = EXPERIMENTAL, since = "5.3")
+	public static final String PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME = "junit.jupiter.execution.parallel.enabled";
 
-	public static final String PARALLEL_CONFIG_PREFIX = "junit.jupiter.execution.parallel.config.";
-	public static final String PARALLEL_CONFIG_STRATEGY = PARALLEL_CONFIG_PREFIX + CONFIG_STRATEGY;
-	public static final String PARALLEL_CONFIG_FIXED_PARALLELISM = PARALLEL_CONFIG_PREFIX + CONFIG_FIXED_PARALLELISM;
-	public static final String PARALLEL_CONFIG_DYNAMIC_FACTOR = PARALLEL_CONFIG_PREFIX + CONFIG_DYNAMIC_FACTOR;
-	public static final String PARALLEL_CONFIG_CUSTOM_CLASS = PARALLEL_CONFIG_PREFIX + CONFIG_CUSTOM_CLASS;
+	static final String PARALLEL_CONFIG_PREFIX = "junit.jupiter.execution.parallel.config.";
+
+	/**
+	 * Property name used to select the
+	 * {@link ParallelExecutionConfigurationStrategy}: {@value}
+	 *
+	 * <p>Potential values: {@code dynamic} (default), {@code fixed}, or
+	 * {@code custom}.
+	 *
+	 * @since 5.3
+	 */
+	@API(status = EXPERIMENTAL, since = "5.3")
+	public static final String PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX + CONFIG_STRATEGY;
+
+	/**
+	 * Property name used to set the desired parallelism for the {@code fixed}
+	 * configuration strategy: {@value}
+	 *
+	 * <p>No default value; must be an integer.
+	 *
+	 * @since 5.3
+	 */
+	@API(status = EXPERIMENTAL, since = "5.3")
+	public static final String PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
+			+ CONFIG_FIXED_PARALLELISM;
+
+	/**
+	 * Property name used to set the factor to be multiplied with the number of
+	 * available processors/cores to determine the desired parallelism for the
+	 * {@code dynamic} configuration strategy: {@value}
+	 *
+	 * <p>Value must be an decimal; defaults to {@code 1}.
+	 *
+	 * @since 5.3
+	 */
+	@API(status = EXPERIMENTAL, since = "5.3")
+	public static final String PARALLEL_CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
+			+ CONFIG_DYNAMIC_FACTOR;
+
+	/**
+	 * Property name used to specify the fully qualified class name of the
+	 * {@link ParallelExecutionConfigurationStrategy} to be used for the
+	 * {@code custom} configuration strategy: {@value}
+	 *
+	 * @since 5.3
+	 */
+	@API(status = EXPERIMENTAL, since = "5.3")
+	public static final String PARALLEL_CONFIG_CUSTOM_CLASS_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
+			+ CONFIG_CUSTOM_CLASS;
 
 	private Constants() {
 		/* no-op */

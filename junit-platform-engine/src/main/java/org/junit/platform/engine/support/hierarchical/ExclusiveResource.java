@@ -10,25 +10,51 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import java.util.Objects;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.Objects;
+import java.util.concurrent.locks.ReadWriteLock;
+
+import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
+/**
+ * An exclusive resource identified by a key with a lock mode that is used to
+ * synchronize access to shared resources when executing nodes in parallel.
+ *
+ * @see Node#getExecutionMode()
+ * @since 1.3
+ */
+@API(status = EXPERIMENTAL, since = "1.3")
 public class ExclusiveResource {
 
 	private final String key;
 	private final LockMode lockMode;
 	private int hash;
 
+	/**
+	 * Create a new {@code ExclusiveResource}.
+	 *
+	 * @param key the identifier of the resource; never {@code null} or blank
+	 * @param lockMode the lock mode to use to synchronize access to the
+	 * resource; never {@code null}
+	 */
 	public ExclusiveResource(String key, LockMode lockMode) {
-		this.key = key;
-		this.lockMode = lockMode;
+		this.key = Preconditions.notBlank(key, "key must not be blank");
+		this.lockMode = Preconditions.notNull(lockMode, "lockMode must not be null");
 	}
 
+	/**
+	 * Get the key of this resource.
+	 */
 	public String getKey() {
 		return key;
 	}
 
+	/**
+	 * Get the lock mode of this resource.
+	 */
 	public LockMode getLockMode() {
 		return lockMode;
 	}
@@ -60,11 +86,26 @@ public class ExclusiveResource {
 	}
 
 	/**
-	 * LockMode translates to the respective {@link java.util.concurrent.locks.ReentrantReadWriteLock} locks.
+	 * LockMode translates to the respective {@link ReadWriteLock} locks.
 	 *
-	 * <p>Enum order is important, since it can be used to sort locks, so the stronger mode has to be first.
+	 * @implNote Enum order is important, since it can be used to sort locks, so
+	 * the stronger mode has to be first.
 	 */
 	public enum LockMode {
-		READ_WRITE, READ
+
+		/**
+		 * Require read and write access to the resource.
+		 *
+		 * @see ReadWriteLock#writeLock()
+		 */
+		READ_WRITE,
+
+		/**
+		 * Require only read access to the resource.
+		 *
+		 * @see ReadWriteLock#readLock()
+		 */
+		READ
+
 	}
 }

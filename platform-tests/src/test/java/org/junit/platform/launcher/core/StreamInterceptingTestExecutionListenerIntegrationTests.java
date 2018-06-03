@@ -17,10 +17,10 @@ import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.LauncherConstants.CAPTURE_STDERR_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.CAPTURE_STDOUT_PROPERTY_NAME;
+import static org.junit.platform.launcher.LauncherConstants.STDERR_REPORT_ENTRY_KEY;
+import static org.junit.platform.launcher.LauncherConstants.STDOUT_REPORT_ENTRY_KEY;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
-import static org.junit.platform.launcher.core.StreamInterceptingTestExecutionListener.STDERR_REPORT_KEY;
-import static org.junit.platform.launcher.core.StreamInterceptingTestExecutionListener.STDOUT_REPORT_KEY;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doAnswer;
@@ -116,8 +116,8 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 
 	private static Stream<Arguments> systemStreams() {
 		return Stream.of(//
-			streamType(CAPTURE_STDOUT_PROPERTY_NAME, () -> System.out, STDOUT_REPORT_KEY), //
-			streamType(CAPTURE_STDERR_PROPERTY_NAME, () -> System.err, STDERR_REPORT_KEY));
+			streamType(CAPTURE_STDOUT_PROPERTY_NAME, () -> System.out, STDOUT_REPORT_ENTRY_KEY), //
+			streamType(CAPTURE_STDERR_PROPERTY_NAME, () -> System.err, STDERR_REPORT_ENTRY_KEY));
 	}
 
 	private static Arguments streamType(String configParam, Supplier<PrintStream> printStreamSupplier,
