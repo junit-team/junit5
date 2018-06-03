@@ -753,3 +753,22 @@ useful.
 | +(micro \| integration) & (foo \| baz)+
 | all _micro_ or _integration_ tests for *foo* or *baz*
 |===
+
+[[running-tests-capturing-output]]
+=== Capturing Standard Output/Error
+
+Since version 1.3, the JUnit Platform provides opt-in support for capturing output
+printed to `System.out` and `System.err`. To enable it, simply set the
+`junit.platform.launcher.capture.stdout` and/or `junit.platform.launcher.capture.stderr`
+<<running-tests-config-params, configuration parameter>> to `true`. In addition, you may
+configure the maximum number of buffered bytes to be used per executed test or container
+using `junit.platform.launcher.capture.maxBuffer`.
+
+If enabled, the JUnit Platform captures the corresponding output and publishes it as a
+report entry using the `stdout` or `stderr` keys to all registered
+`{TestExecutionListener}` instances immediately before reporting the test or container as
+finished.
+
+WARNING: Capturing output is currently an _experimental_ feature. You're invited to give
+it a try and provide feedback to the JUnit team so they can improve and eventually
+<<api-evolution, promote>> this feature.
