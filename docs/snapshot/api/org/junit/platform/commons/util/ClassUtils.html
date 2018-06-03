@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9};
+var methods = {"i0":9,"i1":9,"i2":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -175,13 +175,20 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ClassUtils.html#nullSafeToString(java.lang.Class)">nullSafeToString</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
+<td class="colLast">
+<div class="block">Get the fully qualified name of the supplied class.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ClassUtils.html#nullSafeToString(java.lang.Class...)">nullSafeToString</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;...&nbsp;classes)</code></th>
 <td class="colLast">
 <div class="block">Generate a comma-separated list of fully qualified class names for the
  supplied classes.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ClassUtils.html#nullSafeToString(java.util.function.Function,java.lang.Class...)">nullSafeToString</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;,? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;mapper,
                 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;...&nbsp;classes)</code></th>
@@ -213,6 +220,31 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="nullSafeToString(java.lang.Class)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>nullSafeToString</h4>
+<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;nullSafeToString&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
+<div class="block">Get the fully qualified name of the supplied class.
+
+ <p>This is a null-safe variant of <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true#getName()" title="class or interface in java.lang" class="externalLink"><code>Class.getName()</code></a>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>clazz</code> - the class whose name should be retrieved, potentially
+ <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the fully qualified class name or <code>"null"</code> if the supplied
+ class reference is <code>null</code></dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.3</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../org/junit/platform/commons/util/ClassUtils.html#nullSafeToString(java.lang.Class...)"><code>nullSafeToString(Class...)</code></a>, 
+<a href="../../../../../org/junit/platform/commons/util/StringUtils.html#nullSafeToString(java.lang.Object)"><code>StringUtils.nullSafeToString(Object)</code></a></dd>
+</dl>
+</li>
+</ul>
 <a id="nullSafeToString(java.lang.Class...)">
 <!--   -->
 </a>

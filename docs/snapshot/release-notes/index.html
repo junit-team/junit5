@@ -598,6 +598,12 @@ on GitHub.</p>
 <p>Full stacktrace is printed to the console, when running the <code>ConsoleLauncher</code>
 in <code>--details verbose</code> mode.</p>
 </li>
+<li>
+<p><code>ReflectionUtils.findNestedClasses()</code> and <code>ReflectionSupport.findNestedClasses()</code> no
+longer allow a <code>NoClassDefFoundError</code> to propagate if a nested class or nested
+interface has an invalid class file. Instead, the error will now be swallowed and
+logged at <code>WARNING</code> level.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -643,7 +649,21 @@ exit with a status code of <code>2</code>.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>Test discovery no longer halts prematurely if a nested class or nested interface in a
+test class has an invalid class file.</p>
+</li>
+<li>
+<p>Certain categories of errors encountered during the test discovery phase no longer
+cause JUnit Jupiter to prematurely abort the entire discovery process.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Such errors are now logged, thereby enabling JUnit Jupiter to discover and execute as
+many tests as possible while still informing the user of containers and tests that
+could not be properly discovered.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -979,7 +999,7 @@ invocations within an IDE</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-06-02 12:19:12 EDT
+Last updated 2018-06-03 10:49:17 EDT
 </div>
 </div>
 </body>
