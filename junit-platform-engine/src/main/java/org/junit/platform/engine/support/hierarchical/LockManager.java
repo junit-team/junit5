@@ -10,11 +10,13 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.READ;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,9 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 class LockManager {
+
+	private static final Comparator<ExclusiveResource> COMPARATOR = comparing(ExclusiveResource::getKey).thenComparing(
+		ExclusiveResource::getLockMode);
 
 	private final Map<String, ReadWriteLock> locksByKey = new ConcurrentHashMap<>();
 
@@ -36,7 +41,7 @@ class LockManager {
 		// @formatter:off
 		Map<String, List<ExclusiveResource>> resourcesByKey = resources.stream()
 				.distinct()
-				.sorted()
+				.sorted(COMPARATOR)
 				.collect(groupingBy(ExclusiveResource::getKey, LinkedHashMap::new, toList()));
 		return resourcesByKey.values().stream()
 				.map(resourcesWithSameKey -> resourcesWithSameKey.get(0))

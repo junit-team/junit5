@@ -14,7 +14,7 @@ import java.util.Objects;
 
 import org.junit.platform.commons.util.ToStringBuilder;
 
-public class ExclusiveResource implements Comparable<ExclusiveResource> {
+public class ExclusiveResource {
 
 	private final String key;
 	private final LockMode lockMode;
@@ -55,15 +55,6 @@ public class ExclusiveResource implements Comparable<ExclusiveResource> {
 	}
 
 	@Override
-	public int compareTo(ExclusiveResource other) {
-		int compare = key.compareTo(other.key);
-		if (compare == 0) {
-			return lockMode.compareTo(other.lockMode);
-		}
-		return compare;
-	}
-
-	@Override
 	public String toString() {
 		return new ToStringBuilder(this).append("key", key).append("lockMode", lockMode).toString();
 	}
@@ -71,7 +62,7 @@ public class ExclusiveResource implements Comparable<ExclusiveResource> {
 	/**
 	 * LockMode translates to the respective {@link java.util.concurrent.locks.ReentrantReadWriteLock} locks.
 	 *
-	 * Enum order is important, since it can be used to sort locks, so the stronger mode has to be first.
+	 * <p>Enum order is important, since it can be used to sort locks, so the stronger mode has to be first.
 	 */
 	public enum LockMode {
 		READ_WRITE, READ
