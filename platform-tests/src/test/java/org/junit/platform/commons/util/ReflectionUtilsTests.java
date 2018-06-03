@@ -609,7 +609,7 @@ class ReflectionUtilsTests {
 
 			assertThat(ReflectionUtils.findNestedClasses(classWithInvalidNestedClassFile, clazz -> true)).isEmpty();
 			// @formatter:off
-			String logMessage = listener.stream(ReflectionUtils.class, Level.WARNING)
+			String logMessage = listener.stream(ReflectionUtils.class, Level.FINE)
 					.findFirst()
 					.map(LogRecord::getMessage)
 					.orElse("didn't find log record");

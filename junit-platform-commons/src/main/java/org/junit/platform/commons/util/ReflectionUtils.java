@@ -790,7 +790,7 @@ public final class ReflectionUtils {
 			Collections.addAll(candidates, clazz.getDeclaredClasses());
 		}
 		catch (NoClassDefFoundError error) {
-			logger.warn(error, () -> "Failed to retrieve declared classes for " + clazz.getName());
+			logger.debug(error, () -> "Failed to retrieve declared classes for " + clazz.getName());
 		}
 
 		// Search class hierarchy
