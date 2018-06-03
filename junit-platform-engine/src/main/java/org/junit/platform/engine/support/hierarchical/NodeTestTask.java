@@ -18,6 +18,7 @@ import static org.junit.platform.engine.TestExecutionResult.failed;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Future;
 
 import org.junit.platform.commons.JUnitException;
@@ -148,7 +149,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	private void executeDynamicTest(TestDescriptor dynamicTestDescriptor, List<Future<?>> futures) {
 		listener.dynamicTestRegistered(dynamicTestDescriptor);
 		NodeTestTask<C> nodeTestTask = new NodeTestTask<>(dynamicTestDescriptor, listener, executorService);
-		List<ExclusiveResource> exclusiveResources = nodeTestTask.getNode().getExclusiveResources();
+		Set<ExclusiveResource> exclusiveResources = nodeTestTask.getNode().getExclusiveResources();
 		if (!exclusiveResources.isEmpty()) {
 			listener.executionStarted(dynamicTestDescriptor);
 			String message = "Dynamic test descriptors must not declare exclusive resources: " + exclusiveResources;

@@ -124,7 +124,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	@Override
-	public List<ExclusiveResource> getExclusiveResources() {
+	public Set<ExclusiveResource> getExclusiveResources() {
 		return getExclusiveResources(getTestClass());
 	}
 

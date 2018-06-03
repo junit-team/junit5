@@ -12,7 +12,7 @@ package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
@@ -20,7 +20,6 @@ import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnno
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -133,11 +132,11 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		throw new JUnitException("Unknown ExecutionMode: " + mode);
 	}
 
-	protected List<ExclusiveResource> getExclusiveResources(AnnotatedElement element) {
+	protected Set<ExclusiveResource> getExclusiveResources(AnnotatedElement element) {
 		// @formatter:off
 		return findRepeatableAnnotations(element, UseResource.class).stream()
 				.map(resource -> new ExclusiveResource(resource.value(), toLockMode(resource.mode())))
-				.collect(toList());
+				.collect(toSet());
 		// @formatter:on
 	}
 

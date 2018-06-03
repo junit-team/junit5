@@ -10,11 +10,11 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -114,8 +114,8 @@ public interface Node<C extends EngineExecutionContext> {
 	default void after(C context) throws Exception {
 	}
 
-	default List<ExclusiveResource> getExclusiveResources() {
-		return emptyList();
+	default Set<ExclusiveResource> getExclusiveResources() {
+		return emptySet();
 	}
 
 	default ExecutionMode getExecutionMode() {

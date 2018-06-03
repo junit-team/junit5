@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static java.util.Collections.singletonList;
+import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -553,7 +553,7 @@ class HierarchicalTestExecutorTests {
 		MyLeaf child = spy(new MyLeaf(leafUniqueId));
 		MyLeaf dynamicTestDescriptor = spy(new MyLeaf(leafUniqueId.append("dynamic", "child")));
 		when(dynamicTestDescriptor.getExclusiveResources()).thenReturn(
-			singletonList(new ExclusiveResource("foo", LockMode.READ)));
+			singleton(new ExclusiveResource("foo", LockMode.READ)));
 
 		when(child.execute(any(), any())).thenAnswer(invocation -> {
 			DynamicTestExecutor dynamicTestExecutor = invocation.getArgument(1);

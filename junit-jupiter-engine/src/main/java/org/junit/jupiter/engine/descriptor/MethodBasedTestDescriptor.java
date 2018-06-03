@@ -12,7 +12,6 @@ package org.junit.jupiter.engine.descriptor;
 
 import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.junit.platform.commons.util.ClassUtils;
@@ -59,7 +58,7 @@ abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	@Override
-	public List<ExclusiveResource> getExclusiveResources() {
+	public Set<ExclusiveResource> getExclusiveResources() {
 		return getExclusiveResources(getTestMethod());
 	}
 
