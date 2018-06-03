@@ -24,10 +24,10 @@ import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
-import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.launcher.core.TestExecutionListenerRegistry.EagerTestExecutionListener;
 
-class StreamInterceptingTestExecutionListener implements TestExecutionListener {
+class StreamInterceptingTestExecutionListener implements EagerTestExecutionListener {
 
 	static final String STDOUT_REPORT_KEY = "stdout";
 	static final String STDERR_REPORT_KEY = "stderr";
@@ -74,13 +74,13 @@ class StreamInterceptingTestExecutionListener implements TestExecutionListener {
 	}
 
 	@Override
-	public void executionStarted(TestIdentifier testIdentifier) {
+	public void executionJustStarted(TestIdentifier testIdentifier) {
 		stdoutInterceptor.ifPresent(StreamInterceptor::capture);
 		stderrInterceptor.ifPresent(StreamInterceptor::capture);
 	}
 
 	@Override
-	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+	public void executionJustFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 		Map<String, String> map = new HashMap<>();
 		String out = stdoutInterceptor.map(StreamInterceptor::consume).orElse("");
 		if (StringUtils.isNotBlank(out)) {

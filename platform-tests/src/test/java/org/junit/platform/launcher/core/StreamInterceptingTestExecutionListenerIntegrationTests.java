@@ -13,6 +13,7 @@ package org.junit.platform.launcher.core;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.LauncherConstants.CAPTURE_STDERR_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.CAPTURE_STDOUT_PROPERTY_NAME;
@@ -22,6 +23,8 @@ import static org.junit.platform.launcher.core.StreamInterceptingTestExecutionLi
 import static org.junit.platform.launcher.core.StreamInterceptingTestExecutionListener.STDOUT_REPORT_KEY;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -45,17 +48,27 @@ import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine
 import org.junit.platform.launcher.LauncherConstants;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 
 class StreamInterceptingTestExecutionListenerIntegrationTests {
 
 	@ParameterizedTest(name = "{0}")
 	@MethodSource("systemStreams")
 	@ExtendWith(HiddenSystemOutAndErr.class)
-	void interceptsSystemOut(String configParam, Supplier<PrintStream> printStreamSupplier, String reportKey) {
+	void interceptsStream(String configParam, Supplier<PrintStream> printStreamSupplier, String reportKey) {
 		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("engine");
-		TestDescriptor test = engine.addTest("test", () -> printStreamSupplier.get().print("1234567890"));
+		TestDescriptor test = engine.addTest("test", () -> printStreamSupplier.get().print("4567890"));
+		TestExecutionListener listener = mock(TestExecutionListener.class);
+		doAnswer(invocation -> {
+			TestIdentifier testIdentifier = invocation.getArgument(0);
+			if (testIdentifier.getUniqueId().equals(test.getUniqueId().toString())) {
+				printStreamSupplier.get().print("123");
+			}
+			return null;
+		}).when(listener).executionStarted(any());
 
 		DefaultLauncher launcher = createLauncher(engine);
 		LauncherDiscoveryRequest discoveryRequest = request()//
@@ -63,16 +76,17 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 				.configurationParameter(configParam, String.valueOf(true))//
 				.configurationParameter(LauncherConstants.CAPTURE_MAX_BUFFER_PROPERTY_NAME, String.valueOf(5))//
 				.build();
-		TestExecutionListener listener = mock(TestExecutionListener.class);
 		launcher.execute(discoveryRequest, listener);
 
 		ArgumentCaptor<TestPlan> testPlanArgumentCaptor = ArgumentCaptor.forClass(TestPlan.class);
-		verify(listener).testPlanExecutionStarted(testPlanArgumentCaptor.capture());
+		InOrder inOrder = inOrder(listener);
+		inOrder.verify(listener).testPlanExecutionStarted(testPlanArgumentCaptor.capture());
 		TestPlan testPlan = testPlanArgumentCaptor.getValue();
+		TestIdentifier testIdentifier = testPlan.getTestIdentifier(test.getUniqueId().toString());
 
 		ArgumentCaptor<ReportEntry> reportEntryArgumentCaptor = ArgumentCaptor.forClass(ReportEntry.class);
-		verify(listener).reportingEntryPublished(same(testPlan.getTestIdentifier(test.getUniqueId().toString())),
-			reportEntryArgumentCaptor.capture());
+		inOrder.verify(listener).reportingEntryPublished(same(testIdentifier), reportEntryArgumentCaptor.capture());
+		inOrder.verify(listener).executionFinished(testIdentifier, successful());
 		ReportEntry reportEntry = reportEntryArgumentCaptor.getValue();
 
 		assertThat(reportEntry.getKeyValuePairs()).containsExactly(entry(reportKey, "12345"));
@@ -81,7 +95,7 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 	@ParameterizedTest(name = "{0}")
 	@MethodSource("systemStreams")
 	@ExtendWith(HiddenSystemOutAndErr.class)
-	void doesNotInterceptSystemOutAndErrWhenAlreadyBeingIntercepted(String configParam,
+	void doesNotInterceptStreamWhenAlreadyBeingIntercepted(String configParam,
 			Supplier<PrintStream> printStreamSupplier) {
 		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("engine");
 		TestDescriptor test = engine.addTest("test", () -> printStreamSupplier.get().print("1234567890"));
