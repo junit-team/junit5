@@ -782,7 +782,7 @@ public final class ReflectionUtils {
 		}
 
 		// Candidates in current class
-		candidates.addAll(Arrays.asList(clazz.getDeclaredClasses()));
+		Collections.addAll(candidates, clazz.getDeclaredClasses());
 
 		// Search class hierarchy
 		findNestedClasses(clazz.getSuperclass(), candidates);
