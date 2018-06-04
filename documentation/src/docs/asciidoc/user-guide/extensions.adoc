@@ -241,6 +241,21 @@ Examples:
 - `org.example.MyCondition`: deactivates the condition whose FQCN is exactly
   `org.example.MyCondition`.
 
+[[extensions-test-instance-factories]]
+=== Test Instance Factories
+`{TestInstanceFactory}` defines the API for `Extensions` that wish to _provide new_
+test instances.
+
+Common use cases include acquiring the test instance from a dependency injection
+framework or invoking a static factory method to create the test instance.
+
+[WARNING]
+====
+Registering multiple extensions that implement `{TestInstanceFactory}` will result in an
+exception being thrown for all tests in the test class. It is the users responsibility to
+ensure that only a single `{TestInstanceFactory}` is registered on a test class.
+====
+
 [[extensions-test-instance-post-processing]]
 === Test Instance Post-processing
 
