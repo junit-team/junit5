@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.Nested;
@@ -30,11 +30,11 @@ import org.junit.jupiter.api.Nested;
  * <p>Consult the documentation in {@link Extension} for details on
  * constructor requirements.
  *
- * @since 5.0
+ * @since 5.3
  * @see #instantiateTestClass(Class, ExtensionContext)
  * @see #instantiateNestedTestClass(Class, Object, ExtensionContext)
  */
-@API(status = STABLE, since = "5.0")
+@API(status = EXPERIMENTAL, since = "5.3")
 public interface TestInstanceFactory extends Extension {
 
 	/**
@@ -49,9 +49,10 @@ public interface TestInstanceFactory extends Extension {
 	 *
 	 * @param testClass the test class to instantiate or otherwise obtain
 	 * @param context the current extension context; never {@code null}
-	 * @return The required test instance; never {@code null}
+	 * @return the required test instance; never {@code null}
+	 * @throws TestInstanceCreationException when an error occurs with the invocation of a factory
 	 */
-	Object instantiateTestClass(Class<?> testClass, ExtensionContext context) throws Exception;
+	Object instantiateTestClass(Class<?> testClass, ExtensionContext context) throws TestInstanceCreationException;
 
 	/**
 	 * Callback for producing an instance of {@code testClass}. This method is only
@@ -67,8 +68,9 @@ public interface TestInstanceFactory extends Extension {
 	 * @param outerInstance instance of outer test class (if any)
 	 * @param context the current extension context; never {@code null}
 	 * @return The required test instance; never {@code null}
+	 * @throws TestInstanceCreationException when an error occurs with the invocation of a factory
 	 */
 	Object instantiateNestedTestClass(Class<?> testClass, Object outerInstance, ExtensionContext context)
-			throws Exception;
+			throws TestInstanceCreationException;
 
 }

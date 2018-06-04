@@ -36,6 +36,7 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContextException;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
@@ -46,6 +47,7 @@ import org.junit.jupiter.engine.execution.TestInstanceProvider;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -269,7 +271,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 				"Too many TestInstanceFactory extensions [%s] registered on test class: %s", factoryNames,
 				testClass.getSimpleName());
 
-			throw new JUnitException(errorMessage);
+			throw new ExtensionContextException(errorMessage);
 		}
 
 		return factories.get(0);
@@ -282,21 +284,18 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		if (factory == null) {
 			return invokeTestInstanceConstructor(outerInstance, registry, extensionContext);
 		}
-		else {
-			try {
-				if (outerInstance != null) {
-					return factory.instantiateNestedTestClass(this.testClass, outerInstance, extensionContext);
-				}
-				else {
-					return factory.instantiateTestClass(this.testClass, extensionContext);
-				}
+
+		try {
+			if (outerInstance != null) {
+				return factory.instantiateNestedTestClass(this.testClass, outerInstance, extensionContext);
 			}
-			catch (RuntimeException exception) {
-				throw exception;
+			else {
+				return factory.instantiateTestClass(this.testClass, extensionContext);
 			}
-			catch (Exception exception) {
-				throw new RuntimeException(exception);
-			}
+		}
+		catch (Throwable exception) {
+			BlacklistedExceptions.rethrowIfBlacklisted(exception);
+			throw exception;
 		}
 
 	}
