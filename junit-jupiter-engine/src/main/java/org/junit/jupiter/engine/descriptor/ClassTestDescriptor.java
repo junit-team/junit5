@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -35,6 +36,7 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
@@ -235,11 +237,73 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		return instance;
 	}
 
+	protected Object invokeTestInstanceConstructor(Object outerInstance, ExtensionRegistry registry,
+			ExtensionContext extensionContext) {
+		Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
+		if (outerInstance != null) {
+			return executableInvoker.invoke(constructor, outerInstance, extensionContext, registry);
+		}
+		else {
+			return executableInvoker.invoke(constructor, extensionContext, registry);
+		}
+	}
+
+	protected TestInstanceFactory resolveTestInstanceFactory(ExtensionRegistry registry,
+			ExtensionRegistry parentRegistry) {
+
+		List<TestInstanceFactory> factories = registry.getExtensions(TestInstanceFactory.class);
+		if (factories.isEmpty()) {
+			return null;
+		}
+
+		if (parentRegistry != null) {
+			List<TestInstanceFactory> parentFactories = parentRegistry.getExtensions(TestInstanceFactory.class);
+			factories.removeAll(parentFactories);
+		}
+
+		if (factories.size() > 1) {
+			String factoryNames = factories.stream().map(factory -> factory.getClass().getSimpleName()).collect(
+				Collectors.joining(","));
+
+			String errorMessage = String.format(
+				"Too many TestInstanceFactory extensions [%s] registered on test class: %s", factoryNames,
+				testClass.getSimpleName());
+
+			throw new JUnitException(errorMessage);
+		}
+
+		return factories.get(0);
+	}
+
+	protected Object invokeTestInstanceFactory(Object outerInstance, ExtensionRegistry registry,
+			ExtensionRegistry parentRegistry, ExtensionContext extensionContext) {
+
+		TestInstanceFactory factory = resolveTestInstanceFactory(registry, parentRegistry);
+		if (factory == null) {
+			return invokeTestInstanceConstructor(outerInstance, registry, extensionContext);
+		}
+		else {
+			try {
+				if (outerInstance != null) {
+					return factory.instantiateNestedTestClass(this.testClass, outerInstance, extensionContext);
+				}
+				else {
+					return factory.instantiateTestClass(this.testClass, extensionContext);
+				}
+			}
+			catch (RuntimeException exception) {
+				throw exception;
+			}
+			catch (Exception exception) {
+				throw new RuntimeException(exception);
+			}
+		}
+
+	}
+
 	protected Object instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
-
-		Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
-		return executableInvoker.invoke(constructor, extensionContext, registry);
+		return invokeTestInstanceFactory(null, registry, null, extensionContext);
 	}
 
 	private void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,
