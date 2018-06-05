@@ -17,14 +17,15 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestInstanceCreationException;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
+import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -126,20 +127,15 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	static class FooInstanceFactory implements TestInstanceFactory {
 
 		@Override
-		public Object instantiateTestClass(Class<?> testClass, ExtensionContext context)
-				throws TestInstanceCreationException {
+		public Object instantiateTestClass(Class<?> testClass, Optional<Object> outerInstance, ExtensionContext context)
+				throws TestInstantiationException {
 			callSequence.add("fooInstanceFactoryInstantiated:" + testClass.getSimpleName());
 			try {
 				return testClass.getDeclaredConstructor().newInstance();
 			}
 			catch (Throwable ex) {
-				throw new TestInstanceCreationException("Failed to invoke constructor", ex);
+				throw new TestInstantiationException("Failed to invoke constructor", ex);
 			}
-		}
-
-		@Override
-		public Object instantiateNestedTestClass(Class<?> testClass, Object outerInstance, ExtensionContext context) {
-			return null;
 		}
 
 	}
@@ -147,19 +143,15 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	static class BarInstanceFactory implements TestInstanceFactory {
 
 		@Override
-		public Object instantiateTestClass(Class<?> testClass, ExtensionContext context) {
-			return null;
-		}
-
-		@Override
-		public Object instantiateNestedTestClass(Class<?> testClass, Object outerInstance, ExtensionContext context)
-				throws TestInstanceCreationException {
+		public Object instantiateTestClass(Class<?> testClass, Optional<Object> outerInstance, ExtensionContext context)
+				throws TestInstantiationException {
 			callSequence.add("barInstanceFactoryInstantiatedNested:" + testClass.getSimpleName());
 			try {
-				return testClass.getDeclaredConstructor(outerInstance.getClass()).newInstance(outerInstance);
+				return testClass.getDeclaredConstructor(outerInstance.get().getClass()).newInstance(
+					outerInstance.get());
 			}
 			catch (Throwable ex) {
-				throw new TestInstanceCreationException("Failed to invoke constructor", ex);
+				throw new TestInstantiationException("Failed to invoke constructor", ex);
 			}
 		}
 	}

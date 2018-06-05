@@ -22,15 +22,15 @@ import org.junit.platform.commons.JUnitException;
  * @since 5.3
  */
 @API(status = EXPERIMENTAL, since = "5.3")
-public class TestInstanceCreationException extends JUnitException {
+public class TestInstantiationException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;
 
-	public TestInstanceCreationException(String message) {
+	public TestInstantiationException(String message) {
 		super(message);
 	}
 
-	public TestInstanceCreationException(String message, Throwable cause) {
+	public TestInstantiationException(String message, Throwable cause) {
 		super(message, cause);
 	}
 

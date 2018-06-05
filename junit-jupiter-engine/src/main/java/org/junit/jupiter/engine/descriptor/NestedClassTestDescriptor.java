@@ -72,7 +72,7 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 		Object outerInstance = parentExecutionContext.getTestInstanceProvider().getTestInstance(
 			childExtensionRegistryForOuterInstance);
 		ExtensionRegistry parentRegistry = parentExecutionContext.getExtensionRegistry();
-		return invokeTestInstanceFactory(outerInstance, registry, parentRegistry, extensionContext);
+		return invokeTestInstanceFactory(Optional.of(outerInstance), registry, parentRegistry, extensionContext);
 	}
 
 }

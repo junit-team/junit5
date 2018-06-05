@@ -47,7 +47,6 @@ import org.junit.jupiter.engine.execution.TestInstanceProvider;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -239,11 +238,11 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		return instance;
 	}
 
-	protected Object invokeTestInstanceConstructor(Object outerInstance, ExtensionRegistry registry,
+	protected Object invokeTestInstanceConstructor(Optional<Object> outerInstance, ExtensionRegistry registry,
 			ExtensionContext extensionContext) {
 		Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
-		if (outerInstance != null) {
-			return executableInvoker.invoke(constructor, outerInstance, extensionContext, registry);
+		if (outerInstance.isPresent()) {
+			return executableInvoker.invoke(constructor, outerInstance.get(), extensionContext, registry);
 		}
 		else {
 			return executableInvoker.invoke(constructor, extensionContext, registry);
@@ -277,7 +276,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		return factories.get(0);
 	}
 
-	protected Object invokeTestInstanceFactory(Object outerInstance, ExtensionRegistry registry,
+	protected Object invokeTestInstanceFactory(Optional<Object> outerInstance, ExtensionRegistry registry,
 			ExtensionRegistry parentRegistry, ExtensionContext extensionContext) {
 
 		TestInstanceFactory factory = resolveTestInstanceFactory(registry, parentRegistry);
@@ -285,24 +284,12 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			return invokeTestInstanceConstructor(outerInstance, registry, extensionContext);
 		}
 
-		try {
-			if (outerInstance != null) {
-				return factory.instantiateNestedTestClass(this.testClass, outerInstance, extensionContext);
-			}
-			else {
-				return factory.instantiateTestClass(this.testClass, extensionContext);
-			}
-		}
-		catch (Throwable exception) {
-			BlacklistedExceptions.rethrowIfBlacklisted(exception);
-			throw exception;
-		}
-
+		return factory.instantiateTestClass(this.testClass, outerInstance, extensionContext);
 	}
 
 	protected Object instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
-		return invokeTestInstanceFactory(null, registry, null, extensionContext);
+		return invokeTestInstanceFactory(Optional.empty(), registry, null, extensionContext);
 	}
 
 	private void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,
