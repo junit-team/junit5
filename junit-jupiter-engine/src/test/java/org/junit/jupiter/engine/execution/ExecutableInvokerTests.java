@@ -38,7 +38,6 @@ import org.junit.platform.engine.ConfigurationParameters;
  *
  * @since 5.0
  */
-// @FullLogging(ExecutableInvoker.class)
 class ExecutableInvokerTests {
 
 	private static final String ENIGMA = "enigma";
@@ -53,7 +52,7 @@ class ExecutableInvokerTests {
 	private ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configParams);
 
 	@Test
-	void constructorInjection() throws Exception {
+	void constructorInjection() {
 		register(new StringParameterResolver(), new NumberParameterResolver());
 
 		Class<ConstructorInjectionTestCase> outerClass = ConstructorInjectionTestCase.class;
@@ -71,6 +70,20 @@ class ExecutableInvokerTests {
 
 		assertNotNull(inner);
 		assertEquals(42, inner.num);
+	}
+
+	@Test
+	void constructorInjectionWithMissingResolver() {
+		Constructor<ConstructorInjectionTestCase> constructor = ReflectionUtils.getDeclaredConstructor(
+			ConstructorInjectionTestCase.class);
+
+		Exception exception = assertThrows(ParameterResolutionException.class,
+			() -> newInvoker().invoke(constructor, extensionContext, extensionRegistry));
+
+		assertThat(exception.getMessage())//
+				.contains("No ParameterResolver registered for parameter [java.lang.String")//
+				.contains("in constructor")//
+				.contains(ConstructorInjectionTestCase.class.getName());
 	}
 
 	@Test
@@ -137,10 +150,8 @@ class ExecutableInvokerTests {
 		assertSame(extensionContext, extension.resolveArguments.extensionContext);
 		assertEquals(0, extension.resolveArguments.parameterContext.getIndex());
 		assertSame(instance, extension.resolveArguments.parameterContext.getTarget().get());
-		// @formatter:off
-		assertThat(extension.resolveArguments.parameterContext.toString())
+		assertThat(extension.resolveArguments.parameterContext.toString())//
 				.contains("parameter", String.class.getTypeName(), "index", "0", "target", "Mock");
-		// @formatter:on
 	}
 
 	@Test
@@ -172,6 +183,7 @@ class ExecutableInvokerTests {
 
 		// @formatter:off
 		assertThat(caught.getMessage())
+				.contains("in method")
 				.contains("resolved a null value for parameter [int")
 				.contains("but a primitive of type [int] is required.");
 		// @formatter:on
@@ -183,7 +195,7 @@ class ExecutableInvokerTests {
 
 		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
 
-		assertThat(caught.getMessage()).contains("parameter [java.lang.String");
+		assertThat(caught.getMessage()).contains("parameter [java.lang.String").contains("in method");
 	}
 
 	@Test
@@ -197,6 +209,7 @@ class ExecutableInvokerTests {
 		// @formatter:off
 		assertThat(caught.getMessage())
 				.contains("parameter [java.lang.String")
+				.contains("in method")
 				.contains(ConfigurableParameterResolver.class.getName() + ", " + ConfigurableParameterResolver.class.getName());
 		// @formatter:on
 	}
@@ -211,6 +224,7 @@ class ExecutableInvokerTests {
 		// @formatter:off
 		assertThat(caught.getMessage())
 				.contains("resolved a value of type [java.math.BigDecimal] for parameter [java.lang.String")
+				.contains("in method")
 				.contains("but a value assignment compatible with [java.lang.String] is required.");
 		// @formatter:on
 	}
@@ -224,7 +238,9 @@ class ExecutableInvokerTests {
 		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
 
 		assertSame(cause, caught.getCause(), () -> "cause should be present");
-		assertThat(caught.getMessage()).startsWith("Failed to resolve parameter [java.lang.String");
+		assertThat(caught.getMessage())//
+				.startsWith("Failed to resolve parameter [java.lang.String")//
+				.contains("in method");
 	}
 
 	@Test
