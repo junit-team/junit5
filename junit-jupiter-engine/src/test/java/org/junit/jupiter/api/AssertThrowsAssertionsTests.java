@@ -47,17 +47,17 @@ class AssertThrowsAssertionsTests {
 
 		ExecutionException exception;
 
-		// TODO Does not compile. See https://github.com/junit-team/junit5/issues/1414
 		// Current compiler's type inference
-		// exception = Assertions.assertThrows(ExecutionException.class, future::get);
-		// assertEquals("boom", exception.getCause().getMessage());
+		// For rationale, see https://github.com/junit-team/junit5/issues/1414
+		exception = assertThrows(ExecutionException.class, future::get);
+		assertEquals("boom", exception.getCause().getMessage());
 
 		// Explicitly as an Executable
-		exception = Assertions.assertThrows(ExecutionException.class, (Executable) future::get);
+		exception = assertThrows(ExecutionException.class, (Executable) future::get);
 		assertEquals("boom", exception.getCause().getMessage());
 
 		// Explicitly as a ThrowingSupplier
-		exception = Assertions.assertThrows(ExecutionException.class, (ThrowingSupplier<?>) future::get);
+		exception = assertThrows(ExecutionException.class, (ThrowingSupplier<?>) future::get);
 		assertEquals("boom", exception.getCause().getMessage());
 	}
 
