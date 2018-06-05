@@ -14,14 +14,18 @@ import static org.junit.jupiter.api.AssertionTestUtils.assertMessageContains;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.IOException;
 import java.net.URLClassLoader;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -33,6 +37,29 @@ class AssertThrowsAssertionsTests {
 
 	private static final Executable nix = () -> {
 	};
+
+	@Test
+	void assertThrowsWithFutureMethodReference() {
+		FutureTask<String> future = new FutureTask<>(() -> {
+			throw new RuntimeException("boom");
+		});
+		future.run();
+
+		ExecutionException exception;
+
+		// TODO Does not compile. See https://github.com/junit-team/junit5/issues/1414
+		// Current compiler's type inference
+		// exception = Assertions.assertThrows(ExecutionException.class, future::get);
+		// assertEquals("boom", exception.getCause().getMessage());
+
+		// Explicitly as an Executable
+		exception = Assertions.assertThrows(ExecutionException.class, (Executable) future::get);
+		assertEquals("boom", exception.getCause().getMessage());
+
+		// Explicitly as a ThrowingSupplier
+		exception = Assertions.assertThrows(ExecutionException.class, (ThrowingSupplier<?>) future::get);
+		assertEquals("boom", exception.getCause().getMessage());
+	}
 
 	@Test
 	void assertThrowsWithExecutableThatThrowsThrowable() {
