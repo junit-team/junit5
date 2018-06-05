@@ -34,7 +34,7 @@ import org.junit.platform.engine.UniqueId;
  */
 class AbstractTestDescriptorTests {
 
-	EngineDescriptor engineDescriptor;
+	private EngineDescriptor engineDescriptor;
 
 	@BeforeEach
 	void initTree() {

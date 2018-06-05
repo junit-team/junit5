@@ -44,6 +44,7 @@ class DefaultLauncher implements Launcher {
 	private static final Logger logger = LoggerFactory.getLogger(DefaultLauncher.class);
 
 	private final TestExecutionListenerRegistry listenerRegistry = new TestExecutionListenerRegistry();
+	private final EngineDiscoveryResultValidator discoveryResultValidator = new EngineDiscoveryResultValidator();
 	private final Iterable<TestEngine> testEngines;
 
 	/**
@@ -128,10 +129,7 @@ class DefaultLauncher implements Launcher {
 		UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
 		try {
 			TestDescriptor engineRoot = testEngine.discover(discoveryRequest, uniqueEngineId);
-			Preconditions.notNull(engineRoot,
-				() -> String.format(
-					"The discover() method for TestEngine with ID '%s' must return a non-null root TestDescriptor.",
-					testEngine.getId()));
+			discoveryResultValidator.validate(testEngine, engineRoot);
 			return Optional.of(engineRoot);
 		}
 		catch (Throwable throwable) {
