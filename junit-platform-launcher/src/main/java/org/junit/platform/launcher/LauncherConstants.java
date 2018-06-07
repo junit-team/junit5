@@ -63,7 +63,7 @@ public class LauncherConstants {
 	 * to use per thread and output type if output capturing is enabled:
 	 * {@value}
 	 *
-	 * <p>Value must be an integer; defaults to {@value #CAPTURE_MAX_BUFFER_DEFAULT}.
+	 * <p>Value must be an integer; defaults to {@value CAPTURE_MAX_BUFFER_DEFAULT}.
 	 *
 	 * @see #CAPTURE_MAX_BUFFER_DEFAULT
 	 */
@@ -75,7 +75,7 @@ public class LauncherConstants {
 	 *
 	 * @see #CAPTURE_MAX_BUFFER_PROPERTY_NAME
 	 */
-	public static int CAPTURE_MAX_BUFFER_DEFAULT = 4 * 1024 * 1024;
+	public static final int CAPTURE_MAX_BUFFER_DEFAULT = 4 * 1024 * 1024;
 
 	/**
 	 * Key used to publish captured output to {@link System#out} as part of a

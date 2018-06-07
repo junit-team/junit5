@@ -12,10 +12,10 @@ package org.junit.jupiter.engine;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
-import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_CUSTOM_CLASS;
-import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_DYNAMIC_FACTOR;
-import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_PARALLELISM;
-import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_STRATEGY;
+import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_CUSTOM_CLASS_PROPERTY_NAME;
+import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME;
+import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
+import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_STRATEGY_PROPERTY_NAME;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigurationStrategy;
@@ -114,7 +114,8 @@ public final class Constants {
 	 * @since 5.3
 	 */
 	@API(status = EXPERIMENTAL, since = "5.3")
-	public static final String PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX + CONFIG_STRATEGY;
+	public static final String PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
+			+ CONFIG_STRATEGY_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the desired parallelism for the {@code fixed}
@@ -126,20 +127,20 @@ public final class Constants {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.3")
 	public static final String PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
-			+ CONFIG_FIXED_PARALLELISM;
+			+ CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the factor to be multiplied with the number of
 	 * available processors/cores to determine the desired parallelism for the
 	 * {@code dynamic} configuration strategy: {@value}
 	 *
-	 * <p>Value must be an decimal; defaults to {@code 1}.
+	 * <p>Value must be a decimal number; defaults to {@code 1}.
 	 *
 	 * @since 5.3
 	 */
 	@API(status = EXPERIMENTAL, since = "5.3")
 	public static final String PARALLEL_CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
-			+ CONFIG_DYNAMIC_FACTOR;
+			+ CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME;
 
 	/**
 	 * Property name used to specify the fully qualified class name of the
@@ -150,7 +151,7 @@ public final class Constants {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.3")
 	public static final String PARALLEL_CONFIG_CUSTOM_CLASS_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
-			+ CONFIG_CUSTOM_CLASS;
+			+ CONFIG_CUSTOM_CLASS_PROPERTY_NAME;
 
 	private Constants() {
 		/* no-op */

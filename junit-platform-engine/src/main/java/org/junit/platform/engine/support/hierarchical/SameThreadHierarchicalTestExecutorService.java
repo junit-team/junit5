@@ -11,10 +11,20 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.List;
 import java.util.concurrent.Future;
 
+import org.apiguardian.api.API;
+
+/**
+ * A simple {@linkplain HierarchicalTestExecutorService executor service} that
+ * executes all {@linkplain TestTask test tasks} in the caller's thread.
+ *
+ * @since 1.3
+ */
+@API(status = EXPERIMENTAL, since = "1.3")
 public class SameThreadHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
 
 	@Override

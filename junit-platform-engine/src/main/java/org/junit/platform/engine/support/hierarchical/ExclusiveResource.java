@@ -86,7 +86,8 @@ public class ExclusiveResource {
 	}
 
 	/**
-	 * LockMode translates to the respective {@link ReadWriteLock} locks.
+	 * {@code LockMode} translates to the respective {@link ReadWriteLock}
+	 * locks.
 	 *
 	 * @implNote Enum order is important, since it can be used to sort locks, so
 	 * the stronger mode has to be first.

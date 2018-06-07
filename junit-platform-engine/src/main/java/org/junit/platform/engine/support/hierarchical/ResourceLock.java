@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-interface ResourceLock {
+public interface ResourceLock {
 
 	AcquiredResourceLock acquire() throws InterruptedException;
 

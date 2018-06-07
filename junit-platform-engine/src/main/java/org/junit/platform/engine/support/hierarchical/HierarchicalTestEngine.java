@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import org.apiguardian.api.API;
@@ -50,13 +51,31 @@ public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> i
 		}
 	}
 
+	/**
+	 * Create the {@linkplain HierarchicalTestExecutorService executor service}
+	 * to use for executing the supplied {@linkplain ExecutionRequest request}.
+	 *
+	 * <p>An engine may use the information in the supplied <em>request</em>
+	 * such as the contained
+	 * {@linkplain ExecutionRequest#getConfigurationParameters() configuration parameters}
+	 * to decide what kind of service to return or how to configure it.
+	 *
+	 * <p>By default, this method returns an instance of
+	 * {@link SameThreadHierarchicalTestExecutorService}.
+	 *
+	 * @param request the request about to be executed
+	 * @see ForkJoinPoolHierarchicalTestExecutorService
+	 * @see SameThreadHierarchicalTestExecutorService
+	 * @since 1.3
+	 */
+	@API(status = EXPERIMENTAL, since = "1.3")
 	protected HierarchicalTestExecutorService createExecutorService(ExecutionRequest request) {
 		return new SameThreadHierarchicalTestExecutorService();
 	}
 
 	/**
 	 * Create the initial execution context for executing the supplied
-	 * {@link ExecutionRequest request}.
+	 * {@linkplain ExecutionRequest request}.
 	 *
 	 * @param request the request about to be executed
 	 * @return the initial context that will be passed to nodes in the hierarchy

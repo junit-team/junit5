@@ -1332,8 +1332,8 @@ configuration parameter to one of the following options:
 
 `custom`::
   Allows to specify a custom `{ParallelExecutionConfigurationStrategy}` implementation via
-  the `junit.jupiter.execution.parallel.config.custom.class` configuration parameter
-  to determine the desired configuration.
+  the mandatory `junit.jupiter.execution.parallel.config.custom.class` configuration
+  parameter to determine the desired configuration.
 
 If no configuration strategy is set, JUnit Jupiter uses the `dynamic` configuration
 strategy with a factor of 1, i.e. the desired parallelism will equal the number of

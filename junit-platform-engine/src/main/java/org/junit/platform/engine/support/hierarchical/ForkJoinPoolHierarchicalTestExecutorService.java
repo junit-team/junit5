@@ -12,6 +12,7 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.concurrent.ForkJoinPool.defaultForkJoinWorkerThreadFactory;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.CONCURRENT;
 
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -27,14 +28,31 @@ import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 
+/**
+ * A {@link ForkJoinPool}-based
+ * {@linkplain HierarchicalTestExecutorService executor service} that executes
+ * {@linkplain TestTask test tasks} with a configured parallelism.
+ *
+ * @see ForkJoinPool
+ * @see DefaultParallelExecutionConfigurationStrategy
+ * @since 1.3
+ */
+@API(status = EXPERIMENTAL, since = "1.3")
 public class ForkJoinPoolHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
 
 	private final ForkJoinPool forkJoinPool;
 
+	/**
+	 * Create a new {@code ForkJoinPoolHierarchicalTestExecutorService} based on
+	 * the supplied {@link ConfigurationParameters}.
+	 *
+	 * @see DefaultParallelExecutionConfigurationStrategy
+	 */
 	public ForkJoinPoolHierarchicalTestExecutorService(ConfigurationParameters configurationParameters) {
 		forkJoinPool = createForkJoinPool(configurationParameters);
 		LoggerFactory.getLogger(ForkJoinPoolHierarchicalTestExecutorService.class) //
