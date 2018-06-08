@@ -14,6 +14,7 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.locks.Lock;
 
 class SingleLock implements ResourceLock {
+
 	private final Lock lock;
 
 	SingleLock(Lock lock) {

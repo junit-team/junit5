@@ -10,11 +10,18 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 /**
  * A lock for a one or more resources.
  *
  * @see HierarchicalTestExecutorService.TestTask#getResourceLock()
+ *
+ * @since 1.3
  */
+@API(status = EXPERIMENTAL, since = "1.3")
 public interface ResourceLock extends AutoCloseable {
 
 	/**

@@ -18,12 +18,22 @@ import java.util.function.Function;
 import org.apiguardian.api.API;
 import org.junit.platform.engine.ConfigurationParameters;
 
-@API(status = EXPERIMENTAL)
+/**
+ * View of {@link ConfigurationParameters} that applies a supplied prefix to all
+ * queries.
+ *
+ * @since 1.3
+ */
+@API(status = EXPERIMENTAL, since = "1.3")
 public class PrefixedConfigurationParameters implements ConfigurationParameters {
 
 	private final ConfigurationParameters delegate;
 	private final String prefix;
 
+	/**
+	 * Create a new view of the supplied {@link ConfigurationParameters} that
+	 * applies the supplied prefix to all queries.
+	 */
 	public PrefixedConfigurationParameters(ConfigurationParameters delegate, String prefix) {
 		this.delegate = delegate;
 		this.prefix = prefix;
