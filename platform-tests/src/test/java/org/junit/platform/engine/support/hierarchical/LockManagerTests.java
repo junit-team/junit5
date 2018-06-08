@@ -27,6 +27,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * @since 1.3
+ */
 class LockManagerTests {
 
 	private LockManager lockManager = new LockManager();

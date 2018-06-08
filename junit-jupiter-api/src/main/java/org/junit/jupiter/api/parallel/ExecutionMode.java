@@ -10,6 +10,26 @@
 
 package org.junit.jupiter.api.parallel;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
+/**
+ * Supported execution modes for parallel execution.
+ *
+ * @since 5.3
+ */
+@API(status = EXPERIMENTAL, since = "5.3")
 public enum ExecutionMode {
-	SAME_THREAD, CONCURRENT
+
+	/**
+	 * Force execution in same thread as the parent node.
+	 */
+	SAME_THREAD,
+
+	/**
+	 * Allow concurrent execution with any other node.
+	 */
+	CONCURRENT
+
 }

@@ -10,6 +10,27 @@
 
 package org.junit.jupiter.api.parallel;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
+/**
+ * The access mode required by a test class or method for a given resource.
+ *
+ * @see UseResource
+ * @since 5.3
+ */
+@API(status = EXPERIMENTAL, since = "5.3")
 public enum ResourceAccessMode {
-	READ_WRITE, READ
+
+	/**
+	 * Require read and write access to the resource.
+	 */
+	READ_WRITE,
+
+	/**
+	 * Require only read access to the resource.
+	 */
+	READ
+
 }

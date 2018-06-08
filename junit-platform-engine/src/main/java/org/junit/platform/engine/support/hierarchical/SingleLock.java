@@ -13,6 +13,9 @@ package org.junit.platform.engine.support.hierarchical;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.locks.Lock;
 
+/**
+ * @since 1.3
+ */
 class SingleLock implements ResourceLock {
 
 	private final Lock lock;

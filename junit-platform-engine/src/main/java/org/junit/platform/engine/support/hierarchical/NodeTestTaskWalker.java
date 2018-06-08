@@ -16,6 +16,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
+/**
+ * @since 1.3
+ */
 class NodeTestTaskWalker {
 
 	private final LockManager lockManager = new LockManager();

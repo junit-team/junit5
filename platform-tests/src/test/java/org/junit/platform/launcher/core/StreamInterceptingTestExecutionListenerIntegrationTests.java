@@ -53,6 +53,9 @@ import org.junit.platform.launcher.TestPlan;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 
+/**
+ * @since 1.3
+ */
 class StreamInterceptingTestExecutionListenerIntegrationTests {
 
 	@ParameterizedTest(name = "{0}")

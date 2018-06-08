@@ -10,15 +10,34 @@
 
 package org.junit.jupiter.api.parallel;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.apiguardian.api.API;
+
+/**
+ * {@code @Execution} is used to configure the parallel execution mode of a test
+ * class or test method.
+ *
+ * @see Resources
+ * @see ResourceAccessMode
+ * @see UseResources
+ * @since 5.3
+ */
+@API(status = EXPERIMENTAL, since = "5.3")
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface Execution {
 
+	/**
+	 * The required/preferred execution mode.
+	 *
+	 * @see ExecutionMode
+	 */
 	ExecutionMode value();
 
 }

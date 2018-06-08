@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.locks.Lock;
 
+/**
+ * @since 1.3
+ */
 class CompositeLock implements ResourceLock {
 
 	private final List<Lock> locks;

@@ -23,6 +23,9 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.ConfigurationParameters;
 
+/**
+ * @since 1.3
+ */
 class DefaultParallelExecutionConfigurationStrategyTest {
 
 	private ConfigurationParameters configParams = mock(ConfigurationParameters.class);

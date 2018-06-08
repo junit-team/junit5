@@ -60,6 +60,9 @@ import org.junit.platform.engine.test.event.ExecutionEvent;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
+/**
+ * @since 1.3
+ */
 class ParallelExecutionIntegrationTests {
 
 	@Test

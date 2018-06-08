@@ -17,6 +17,9 @@ import java.util.Deque;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+/**
+ * @since 1.3
+ */
 class StreamInterceptor extends PrintStream {
 
 	private final PrintStream originalStream;

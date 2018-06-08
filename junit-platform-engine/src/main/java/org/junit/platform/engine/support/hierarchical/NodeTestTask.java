@@ -29,6 +29,9 @@ import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorSe
 import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
 
+/**
+ * @since 1.3
+ */
 class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 	private static final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();

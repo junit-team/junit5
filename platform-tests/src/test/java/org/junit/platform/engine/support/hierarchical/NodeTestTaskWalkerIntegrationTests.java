@@ -24,6 +24,9 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
+/**
+ * @since 1.3
+ */
 class NodeTestTaskWalkerIntegrationTests {
 
 	@Test

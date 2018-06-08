@@ -17,6 +17,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * @since 1.3
+ */
 class SingleLockTests {
 
 	@Test

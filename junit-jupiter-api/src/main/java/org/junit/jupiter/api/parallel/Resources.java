@@ -10,14 +10,20 @@
 
 package org.junit.jupiter.api.parallel;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.io.PrintStream;
 import java.util.Properties;
+
+import org.apiguardian.api.API;
 
 /**
  * Common resource names for synchronizing test execution.
  *
  * @see UseResource
+ * @since 5.3
  */
+@API(status = EXPERIMENTAL, since = "5.3")
 public class Resources {
 
 	/**

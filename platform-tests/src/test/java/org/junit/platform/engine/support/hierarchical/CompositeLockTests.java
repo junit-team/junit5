@@ -27,6 +27,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
+/**
+ * @since 1.3
+ */
 class CompositeLockTests {
 
 	@Test

@@ -25,6 +25,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * @since 1.3
+ */
 class LockManager {
 
 	private static final Comparator<ExclusiveResource> COMPARATOR = comparing(ExclusiveResource::getKey).thenComparing(

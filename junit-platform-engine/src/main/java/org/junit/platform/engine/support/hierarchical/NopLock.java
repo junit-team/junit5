@@ -10,6 +10,9 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+/**
+ * @since 1.3
+ */
 class NopLock implements ResourceLock {
 
 	static final ResourceLock INSTANCE = new NopLock();

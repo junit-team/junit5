@@ -10,6 +10,9 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+/**
+ * @since 1.3
+ */
 class DefaultParallelExecutionConfiguration implements ParallelExecutionConfiguration {
 
 	private final int parallelism;
