@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.locks.Lock;
 
-class CompositeLock implements AcquiredResourceLock {
+class CompositeLock implements ResourceLock {
 
 	private final List<Lock> locks;
 
@@ -29,7 +29,7 @@ class CompositeLock implements AcquiredResourceLock {
 	}
 
 	@Override
-	public AcquiredResourceLock acquire() throws InterruptedException {
+	public ResourceLock acquire() throws InterruptedException {
 		ForkJoinPool.managedBlock(new CompositeLockManagedBlocker());
 		return this;
 	}

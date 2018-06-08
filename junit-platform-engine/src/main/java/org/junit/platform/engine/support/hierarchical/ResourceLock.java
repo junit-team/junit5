@@ -10,10 +10,30 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-public interface ResourceLock {
+/**
+ * A lock for a one or more resources.
+ *
+ * @see HierarchicalTestExecutorService.TestTask#getResourceLock()
+ */
+public interface ResourceLock extends AutoCloseable {
 
-	AcquiredResourceLock acquire() throws InterruptedException;
+	/**
+	 * Acquire this resource lock, potentially blocking.
+	 *
+	 * @return this lock so it can easily be used in a try-with-resources
+	 * statement.
+	 * @throws InterruptedException when the calling thread is interrupted
+	 * while waiting to acquire this lock.
+	 */
+	ResourceLock acquire() throws InterruptedException;
 
+	/**
+	 * Release this resource lock.
+	 */
 	void release();
 
+	@Override
+	default void close() {
+		release();
+	}
 }

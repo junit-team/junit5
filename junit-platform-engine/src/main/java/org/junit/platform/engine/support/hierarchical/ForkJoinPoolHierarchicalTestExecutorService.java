@@ -143,7 +143,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 		@SuppressWarnings("try")
 		@Override
 		public void compute() {
-			try (AcquiredResourceLock acquiredLock = testTask.getResourceLock().acquire()) {
+			try (ResourceLock lock = testTask.getResourceLock().acquire()) {
 				testTask.execute();
 			}
 			catch (InterruptedException e) {

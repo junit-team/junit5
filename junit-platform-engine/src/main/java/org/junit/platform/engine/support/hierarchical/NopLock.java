@@ -10,14 +10,14 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-class NopLock implements AcquiredResourceLock {
+class NopLock implements ResourceLock {
 	static final ResourceLock INSTANCE = new NopLock();
 
 	private NopLock() {
 	}
 
 	@Override
-	public AcquiredResourceLock acquire() {
+	public ResourceLock acquire() {
 		return this;
 	}
 
