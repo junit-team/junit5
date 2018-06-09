@@ -15,24 +15,36 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 /**
- * Unit tests for [ArgumentsAccessor] extension methods.
+ * Unit tests for using [ArgumentsAccessor] from Kotlin.
  */
 class ArgumentsAccessorKotlinTests {
 
     @Test
-    fun getWithCast() {
+    fun `get() with reified type and index`() {
         assertEquals(1, DefaultArgumentsAccessor(1).get<Int>(0))
         assertEquals('A', DefaultArgumentsAccessor('A').get<Char>(0))
     }
 
     @Test
-    fun getWithCastToIncompatibleType() {
+    fun `get() with reified type and index for incompatible type`() {
         val exception = assertThrows<ArgumentAccessException> {
             DefaultArgumentsAccessor(Integer.valueOf(1)).get<Char>(0)
         }
 
         assertThat(exception).hasMessage(
                 "Argument at index [0] with value [1] and type [java.lang.Integer] could not be converted or cast to type [java.lang.Character].")
+    }
+
+    @Test
+    fun `get() with index`() {
+        assertEquals(1, DefaultArgumentsAccessor(1).get(0))
+        assertEquals('A', DefaultArgumentsAccessor('A').get(0))
+    }
+
+    @Test
+    fun `get() with index and class reference`() {
+        assertEquals(1, DefaultArgumentsAccessor(1).get(0, Integer::class.java))
+        assertEquals('A', DefaultArgumentsAccessor('A').get(0, Character::class.java))
     }
 
 }
