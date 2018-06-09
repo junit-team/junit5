@@ -13,6 +13,7 @@ package org.junit.jupiter.engine;
 import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
@@ -188,21 +189,40 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 			event(engine(), finishedSuccessfully()));
 	}
 
-	@Test
-	void exceptionInAfterAllCallbackDoesNotHideFailureWhenTestInstancePerClassIsUsed() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectClass(TestCaseWithInvalidConstructorAndThrowingAfterAllCallback.class)).build();
+	// TODO Introduce a test to ensure that an exception thrown by an AfterAllCallback does
+	// not hide an exception thrown by a BeforeAllCallback -- for example, by verifying that
+	// the exception from the AfterAllCallback is stored as a suppressed exception within the
+	// exception from the BeforeAllCallback.
 
-		FailureTestCase.exceptionToThrowInAfterAll = Optional.of(new IOException("after"));
+	@Test
+	void exceptionsInConstructorAndAfterAllCallbackAreReportedWhenTestInstancePerMethodIsUsed() {
+		Class<?> testClass = TestCaseWithInvalidConstructorAndThrowingAfterAllCallbackAndPerMethodLifecycle.class;
+
+		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			event(engine(), started()), //
-			event(container(TestCaseWithInvalidConstructorAndThrowingAfterAllCallback.class), started()), //
-			event(container(TestCaseWithInvalidConstructorAndThrowingAfterAllCallback.class), finishedWithFailure(allOf( //
-				message(m -> m.contains("constructor")), //
-				suppressed(0, message("callback"))))), //
+			event(container(testClass), started()), //
+			event(test("test"), started()), //
+			event(test("test"), finishedWithFailure(message("constructor"))), //
+			event(container(testClass), finishedWithFailure(message("callback"))), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void exceptionInConstructorPreventsExecutionOfAfterAllCallbacksWhenTestInstancePerClassIsUsed() {
+		Class<?> testClass = TestCaseWithInvalidConstructorAndThrowingAfterAllCallbackAndPerClassLifecycle.class;
+
+		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(container(testClass), finishedWithFailure(message("constructor"))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -266,14 +286,23 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	@TestInstance(PER_CLASS)
+	@TestInstance(PER_METHOD)
 	@ExtendWith(ThrowingAfterAllCallback.class)
-	static class TestCaseWithInvalidConstructorAndThrowingAfterAllCallback {
-		TestCaseWithInvalidConstructorAndThrowingAfterAllCallback() {
+	static class TestCaseWithInvalidConstructorAndThrowingAfterAllCallbackAndPerMethodLifecycle {
+		TestCaseWithInvalidConstructorAndThrowingAfterAllCallbackAndPerMethodLifecycle() {
+			throw new IllegalStateException("constructor");
 		}
 
-		@SuppressWarnings("unused")
-		TestCaseWithInvalidConstructorAndThrowingAfterAllCallback(String unused) {
+		@Test
+		void test() {
+		}
+	}
+
+	@TestInstance(PER_CLASS)
+	@ExtendWith(ThrowingAfterAllCallback.class)
+	static class TestCaseWithInvalidConstructorAndThrowingAfterAllCallbackAndPerClassLifecycle {
+		TestCaseWithInvalidConstructorAndThrowingAfterAllCallbackAndPerClassLifecycle() {
+			throw new IllegalStateException("constructor");
 		}
 
 		@Test

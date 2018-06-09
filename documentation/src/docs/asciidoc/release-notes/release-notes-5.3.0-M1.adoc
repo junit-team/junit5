@@ -43,6 +43,10 @@ on GitHub.
 
 ==== Bug Fixes
 
+* When using `@TestInstance(Lifecycle.PER_CLASS)` semantics, registered
+  `AfterAllCallback` extensions are no longer invoked if an exception is thrown by the
+  test class constructor. Consequently, `AfterAllCallback` extensions are now only
+  invoked if `BeforeAllCallback` extensions were invoked.
 * Test discovery no longer halts prematurely if a nested class or nested interface in a
   test class has an invalid class file.
 * Certain categories of errors encountered during the test discovery phase no longer

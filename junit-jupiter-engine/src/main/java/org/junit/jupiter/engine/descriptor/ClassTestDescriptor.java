@@ -158,7 +158,9 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
+		context.beforeAllCallbacksExecuted(true);
 		invokeBeforeAllCallbacks(context);
+
 		if (throwableCollector.isEmpty()) {
 			context.beforeAllMethodsExecuted(true);
 			invokeBeforeAllMethods(context);
@@ -171,10 +173,14 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public void after(JupiterEngineExecutionContext context) throws Exception {
+
 		if (context.beforeAllMethodsExecuted()) {
 			invokeAfterAllMethods(context);
 		}
-		invokeAfterAllCallbacks(context);
+
+		if (context.beforeAllCallbacksExecuted()) {
+			invokeAfterAllCallbacks(context);
+		}
 
 		context.getThrowableCollector().assertEmpty();
 	}
