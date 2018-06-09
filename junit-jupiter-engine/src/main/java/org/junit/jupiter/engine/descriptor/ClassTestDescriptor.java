@@ -147,23 +147,26 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	@Override
-	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) throws Exception {
+	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) {
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
+
 		Lifecycle lifecycle = context.getExtensionContext().getTestInstanceLifecycle().orElse(Lifecycle.PER_METHOD);
 		if (lifecycle == Lifecycle.PER_CLASS) {
 			// Eagerly load test instance for BeforeAllCallbacks, if necessary,
 			// and store the instance in the ExtensionContext.
 			ClassExtensionContext extensionContext = (ClassExtensionContext) context.getExtensionContext();
-			extensionContext.setTestInstance(context.getTestInstanceProvider().getTestInstance(Optional.empty()));
+			throwableCollector.execute(() -> extensionContext.setTestInstance(
+				context.getTestInstanceProvider().getTestInstance(Optional.empty())));
 		}
 
-		ThrowableCollector throwableCollector = context.getThrowableCollector();
-
-		context.beforeAllCallbacksExecuted(true);
-		invokeBeforeAllCallbacks(context);
-
 		if (throwableCollector.isEmpty()) {
-			context.beforeAllMethodsExecuted(true);
-			invokeBeforeAllMethods(context);
+			context.beforeAllCallbacksExecuted(true);
+			invokeBeforeAllCallbacks(context);
+
+			if (throwableCollector.isEmpty()) {
+				context.beforeAllMethodsExecuted(true);
+				invokeBeforeAllMethods(context);
+			}
 		}
 
 		throwableCollector.assertEmpty();
@@ -172,7 +175,9 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	@Override
-	public void after(JupiterEngineExecutionContext context) throws Exception {
+	public void after(JupiterEngineExecutionContext context) {
+
+		boolean throwableWasNotAlreadyThrown = context.getThrowableCollector().isEmpty();
 
 		if (context.beforeAllMethodsExecuted()) {
 			invokeAfterAllMethods(context);
@@ -182,7 +187,13 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			invokeAfterAllCallbacks(context);
 		}
 
-		context.getThrowableCollector().assertEmpty();
+		// if the ThrowableCollector was not empty when after() was called,
+		// the exception was already thrown by before(). If it was already
+		// thrown before, any later exceptions were added as suppressed
+		// exceptions and we don't need to rethrow the same exception here.
+		if (throwableWasNotAlreadyThrown) {
+			context.getThrowableCollector().assertEmpty();
+		}
 	}
 
 	private TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,

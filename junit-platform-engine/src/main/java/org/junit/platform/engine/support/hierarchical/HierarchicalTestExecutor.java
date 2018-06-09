@@ -133,16 +133,17 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		private void executeAfter(Throwable failure) throws Throwable {
 			try {
 				node.after(context);
-				if (failure != null) {
-					throw failure;
-				}
 			}
 			catch (Throwable t) {
 				if (failure != null && failure != t) {
 					failure.addSuppressed(t);
-					throw failure;
 				}
-				throw t;
+				else {
+					throw t;
+				}
+			}
+			if (failure != null) {
+				throw failure;
 			}
 		}
 

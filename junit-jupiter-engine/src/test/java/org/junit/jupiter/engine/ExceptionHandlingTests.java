@@ -41,6 +41,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
@@ -189,10 +190,23 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 			event(engine(), finishedSuccessfully()));
 	}
 
-	// TODO Introduce a test to ensure that an exception thrown by an AfterAllCallback does
-	// not hide an exception thrown by a BeforeAllCallback -- for example, by verifying that
-	// the exception from the AfterAllCallback is stored as a suppressed exception within the
-	// exception from the BeforeAllCallback.
+	@Test
+	void exceptionInAfterAllCallbackDoesNotHideExceptionInBeforeAllCallback() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectClass(TestCaseWithThrowingBeforeAllAndAfterAllCallback.class)).build();
+
+		FailureTestCase.exceptionToThrowInAfterAll = Optional.of(new IOException("after"));
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(TestCaseWithThrowingBeforeAllAndAfterAllCallback.class), started()), //
+			event(container(TestCaseWithThrowingBeforeAllAndAfterAllCallback.class), finishedWithFailure(allOf( //
+				message("beforeAll callback"), //
+				suppressed(0, message("afterAll callback"))))), //
+			event(engine(), finishedSuccessfully()));
+	}
 
 	@Test
 	void exceptionsInConstructorAndAfterAllCallbackAreReportedWhenTestInstancePerMethodIsUsed() {
@@ -207,7 +221,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 			event(container(testClass), started()), //
 			event(test("test"), started()), //
 			event(test("test"), finishedWithFailure(message("constructor"))), //
-			event(container(testClass), finishedWithFailure(message("callback"))), //
+			event(container(testClass), finishedWithFailure(message("afterAll callback"))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -310,10 +324,25 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@ExtendWith(ThrowingBeforeAllCallback.class)
+	@ExtendWith(ThrowingAfterAllCallback.class)
+	static class TestCaseWithThrowingBeforeAllAndAfterAllCallback {
+		@Test
+		void test() {
+		}
+	}
+
+	static class ThrowingBeforeAllCallback implements BeforeAllCallback {
+		@Override
+		public void beforeAll(ExtensionContext context) {
+			throw new IllegalStateException("beforeAll callback");
+		}
+	}
+
 	static class ThrowingAfterAllCallback implements AfterAllCallback {
 		@Override
 		public void afterAll(ExtensionContext context) {
-			throw new IllegalStateException("callback");
+			throw new IllegalStateException("afterAll callback");
 		}
 	}
 
