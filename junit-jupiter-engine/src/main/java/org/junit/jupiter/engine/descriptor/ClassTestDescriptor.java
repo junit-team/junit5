@@ -38,9 +38,11 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContextException;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
+import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
+import org.junit.jupiter.engine.execution.DefaultTestInstanceFactoryContext;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.TestInstanceProvider;
@@ -284,7 +286,9 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			return invokeTestInstanceConstructor(outerInstance, registry, extensionContext);
 		}
 
-		return factory.instantiateTestClass(this.testClass, outerInstance, extensionContext);
+		TestInstanceFactoryContext factoryContext = new DefaultTestInstanceFactoryContext(this.testClass,
+			outerInstance);
+		return factory.instantiateTestClass(factoryContext, extensionContext);
 	}
 
 	protected Object instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
