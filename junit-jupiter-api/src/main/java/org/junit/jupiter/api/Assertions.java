@@ -1215,6 +1215,8 @@ public final class Assertions {
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * simply ignore the return value.
+	 *
+	 * @since 5.3
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier) {
 		return AssertThrows.assertThrows(expectedType, supplier);
@@ -1232,6 +1234,8 @@ public final class Assertions {
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * simply ignore the return value.
+	 *
+	 * @since 5.3
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier,
 			String message) {
@@ -1254,6 +1258,8 @@ public final class Assertions {
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * simply ignore the return value.
+	 *
+	 * @since 5.3
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier,
 			Supplier<String> messageSupplier) {
