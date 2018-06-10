@@ -187,10 +187,16 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			invokeAfterAllCallbacks(context);
 		}
 
-		// if the ThrowableCollector was not empty when after() was called,
-		// the exception was already thrown by before(). If it was already
-		// thrown before, any later exceptions were added as suppressed
-		// exceptions and we don't need to rethrow the same exception here.
+		// If the ThrowableCollector was not empty when this method was called,
+		// that means an exception was already thrown either before or during
+		// the execution of this Node. If an exception was already thrown, any
+		// later exceptions were added as suppressed exceptions to that original
+		// exception, and we don't need to rethrow the original exception here
+		// since it will be thrown by HierarchicalTestExecutor.NodeExecutor.
+		//
+		// However, if no exception was previously thrown, we need to ensure
+		// that any exceptions thrown by @AfterAll methods or AfterAllCallbacks
+		// are thrown here.
 		if (throwableWasNotAlreadyThrown) {
 			context.getThrowableCollector().assertEmpty();
 		}
