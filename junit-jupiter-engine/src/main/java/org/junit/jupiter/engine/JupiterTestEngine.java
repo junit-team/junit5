@@ -31,7 +31,7 @@ import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService;
 
 /**
- * The JUnit Jupiter {@link org.junit.platform.engine.TestEngine}.
+ * The JUnit Jupiter {@link org.junit.platform.engine.TestEngine TestEngine}.
  *
  * @since 5.0
  */

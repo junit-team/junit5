@@ -42,6 +42,7 @@ public final class AnnotationSupport {
 	 * <em>present</em> or <em>meta-present</em> on the supplied optional
 	 * {@code element}.
 	 *
+	 * @since 1.3
 	 * @see #isAnnotated(AnnotatedElement, Class)
 	 * @see #findAnnotation(Optional, Class)
 	 */

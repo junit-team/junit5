@@ -17,6 +17,10 @@ on GitHub.
 
 * Full stacktrace is printed to the console, when running the `ConsoleLauncher`
   in `--details verbose` mode.
+* `ReflectionUtils.findNestedClasses()` and `ReflectionSupport.findNestedClasses()` no
+  longer allow a `NoClassDefFoundError` to propagate if a nested class or nested
+  interface has an invalid class file. Instead, the error will now be swallowed and
+  logged at `WARNING` level.
 
 ==== Deprecations and Breaking Changes
 
@@ -29,13 +33,27 @@ on GitHub.
 
 * New overloaded variant of `isAnnotated()` in `AnnotationSupport` that accepts
   `Optional<? extends AnnotatedElement>` instead of `AnnotatedElement`.
+* New `--fail-if-no-tests` command-line option for the `ConsoleLauncher`.
+  - When this option is enabled and no tests are discovered, the launcher will fail and
+    exit with a status code of `2`.
+
 
 [[release-notes-5.3.0-M1-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
 
-* ❓
+* When using `@TestInstance(Lifecycle.PER_CLASS)` semantics, registered
+  `AfterAllCallback` extensions are no longer invoked if an exception is thrown by the
+  test class constructor. Consequently, `AfterAllCallback` extensions are now only
+  invoked if `BeforeAllCallback` extensions were invoked.
+* Test discovery no longer halts prematurely if a nested class or nested interface in a
+  test class has an invalid class file.
+* Certain categories of errors encountered during the test discovery phase no longer
+  cause JUnit Jupiter to prematurely abort the entire discovery process.
+  - Such errors are now logged, thereby enabling JUnit Jupiter to discover and execute as
+    many tests as possible while still informing the user of containers and tests that
+    could not be properly discovered.
 
 ==== Deprecations and Breaking Changes
 

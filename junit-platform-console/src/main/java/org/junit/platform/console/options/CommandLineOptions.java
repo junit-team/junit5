@@ -41,6 +41,8 @@ public class CommandLineOptions {
 	private boolean ansiColorOutputDisabled;
 	private Details details = DEFAULT_DETAILS;
 	private Theme theme = DEFAULT_THEME;
+	private List<Path> additionalClasspathEntries = emptyList();
+	private boolean failIfNoTests;
 
 	private boolean scanClasspath;
 	private List<Path> selectedClasspathEntries = emptyList();
@@ -64,8 +66,6 @@ public class CommandLineOptions {
 	private List<String> excludedEngines = emptyList();
 	private List<String> includedTagExpressions = emptyList();
 	private List<String> excludedTagExpressions = emptyList();
-
-	private List<Path> additionalClasspathEntries = emptyList();
 
 	private Path reportsDir;
 
@@ -104,7 +104,7 @@ public class CommandLineOptions {
 	}
 
 	public Details getDetails() {
-		return details;
+		return this.details;
 	}
 
 	public void setDetails(Details details) {
@@ -112,15 +112,41 @@ public class CommandLineOptions {
 	}
 
 	public Theme getTheme() {
-		return theme;
+		return this.theme;
 	}
 
 	public void setTheme(Theme theme) {
 		this.theme = theme;
 	}
 
+	public List<Path> getAdditionalClasspathEntries() {
+		return this.additionalClasspathEntries;
+	}
+
+	public void setAdditionalClasspathEntries(List<Path> additionalClasspathEntries) {
+		// Create a modifiable copy
+		this.additionalClasspathEntries = new ArrayList<>(additionalClasspathEntries);
+		this.additionalClasspathEntries.removeIf(path -> !Files.exists(path));
+	}
+
+	public boolean isFailIfNoTests() {
+		return this.failIfNoTests;
+	}
+
+	public void setFailIfNoTests(boolean failIfNoTests) {
+		this.failIfNoTests = failIfNoTests;
+	}
+
+	public List<Path> getSelectedClasspathEntries() {
+		return this.selectedClasspathEntries;
+	}
+
+	public void setSelectedClasspathEntries(List<Path> selectedClasspathEntries) {
+		this.selectedClasspathEntries = selectedClasspathEntries;
+	}
+
 	public List<URI> getSelectedUris() {
-		return selectedUris;
+		return this.selectedUris;
 	}
 
 	public void setSelectedUris(List<URI> selectedUris) {
@@ -128,7 +154,7 @@ public class CommandLineOptions {
 	}
 
 	public List<String> getSelectedFiles() {
-		return selectedFiles;
+		return this.selectedFiles;
 	}
 
 	public void setSelectedFiles(List<String> selectedFiles) {
@@ -136,7 +162,7 @@ public class CommandLineOptions {
 	}
 
 	public List<String> getSelectedDirectories() {
-		return selectedDirectories;
+		return this.selectedDirectories;
 	}
 
 	public void setSelectedDirectories(List<String> selectedDirectories) {
@@ -144,7 +170,7 @@ public class CommandLineOptions {
 	}
 
 	public List<String> getSelectedModules() {
-		return selectedModules;
+		return this.selectedModules;
 	}
 
 	public void setSelectedModules(List<String> selectedModules) {
@@ -152,7 +178,7 @@ public class CommandLineOptions {
 	}
 
 	public List<String> getSelectedPackages() {
-		return selectedPackages;
+		return this.selectedPackages;
 	}
 
 	public void setSelectedPackages(List<String> selectedPackages) {
@@ -160,7 +186,7 @@ public class CommandLineOptions {
 	}
 
 	public List<String> getSelectedClasses() {
-		return selectedClasses;
+		return this.selectedClasses;
 	}
 
 	public void setSelectedClasses(List<String> selectedClasses) {
@@ -168,7 +194,7 @@ public class CommandLineOptions {
 	}
 
 	public List<String> getSelectedMethods() {
-		return selectedMethods;
+		return this.selectedMethods;
 	}
 
 	public void setSelectedMethods(List<String> selectedMethods) {
@@ -176,7 +202,7 @@ public class CommandLineOptions {
 	}
 
 	public List<String> getSelectedClasspathResources() {
-		return selectedClasspathResources;
+		return this.selectedClasspathResources;
 	}
 
 	public void setSelectedClasspathResources(List<String> selectedClasspathResources) {
@@ -189,7 +215,7 @@ public class CommandLineOptions {
 	}
 
 	public List<String> getIncludedClassNamePatterns() {
-		return includedClassNamePatterns;
+		return this.includedClassNamePatterns;
 	}
 
 	public void setIncludedClassNamePatterns(List<String> includedClassNamePatterns) {
@@ -197,7 +223,7 @@ public class CommandLineOptions {
 	}
 
 	public List<String> getExcludedClassNamePatterns() {
-		return excludedClassNamePatterns;
+		return this.excludedClassNamePatterns;
 	}
 
 	public void setExcludedClassNamePatterns(List<String> excludedClassNamePatterns) {
@@ -252,16 +278,6 @@ public class CommandLineOptions {
 		this.excludedTagExpressions = excludedTags;
 	}
 
-	public List<Path> getAdditionalClasspathEntries() {
-		return this.additionalClasspathEntries;
-	}
-
-	public void setAdditionalClasspathEntries(List<Path> additionalClasspathEntries) {
-		// Create a modifiable copy
-		this.additionalClasspathEntries = new ArrayList<>(additionalClasspathEntries);
-		this.additionalClasspathEntries.removeIf(path -> !Files.exists(path));
-	}
-
 	public Optional<Path> getReportsDir() {
 		return Optional.ofNullable(this.reportsDir);
 	}
@@ -270,19 +286,12 @@ public class CommandLineOptions {
 		this.reportsDir = reportsDir;
 	}
 
-	public List<Path> getSelectedClasspathEntries() {
-		return this.selectedClasspathEntries;
-	}
-
-	public void setSelectedClasspathEntries(List<Path> selectedClasspathEntries) {
-		this.selectedClasspathEntries = selectedClasspathEntries;
-	}
-
 	public Map<String, String> getConfigurationParameters() {
-		return configurationParameters;
+		return this.configurationParameters;
 	}
 
 	public void setConfigurationParameters(Map<String, String> configurationParameters) {
 		this.configurationParameters = configurationParameters;
 	}
+
 }

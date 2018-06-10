@@ -11,18 +11,21 @@
 package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageContains;
-import static org.junit.jupiter.api.AssertionTestUtils.assertMessageDoesNotContain;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.IOException;
 import java.net.URLClassLoader;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -36,47 +39,70 @@ class AssertThrowsAssertionsTests {
 	};
 
 	@Test
-	void assertThrowsThrowable() {
-		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, () -> {
+	void assertThrowsWithFutureMethodReference() {
+		FutureTask<String> future = new FutureTask<>(() -> {
+			throw new RuntimeException("boom");
+		});
+		future.run();
+
+		ExecutionException exception;
+
+		// Current compiler's type inference
+		// For rationale, see https://github.com/junit-team/junit5/issues/1414
+		exception = assertThrows(ExecutionException.class, future::get);
+		assertEquals("boom", exception.getCause().getMessage());
+
+		// Explicitly as an Executable
+		exception = assertThrows(ExecutionException.class, (Executable) future::get);
+		assertEquals("boom", exception.getCause().getMessage());
+
+		// Explicitly as a ThrowingSupplier
+		exception = assertThrows(ExecutionException.class, (ThrowingSupplier<?>) future::get);
+		assertEquals("boom", exception.getCause().getMessage());
+	}
+
+	@Test
+	void assertThrowsWithExecutableThatThrowsThrowable() {
+		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, (Executable) () -> {
 			throw new EnigmaThrowable();
 		});
 		assertNotNull(enigmaThrowable);
 	}
 
 	@Test
-	void assertThrowsThrowableWithMessage() {
-		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, () -> {
+	void assertThrowsWithExecutableThatThrowsThrowableWithMessage() {
+		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, (Executable) () -> {
 			throw new EnigmaThrowable();
 		}, "message");
 		assertNotNull(enigmaThrowable);
 	}
 
 	@Test
-	void assertThrowsThrowableWithMessageSupplier() {
-		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, () -> {
+	void assertThrowsWithExecutableThatThrowsThrowableWithMessageSupplier() {
+		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, (Executable) () -> {
 			throw new EnigmaThrowable();
 		}, () -> "message");
 		assertNotNull(enigmaThrowable);
 	}
 
 	@Test
-	void assertThrowsCheckedException() {
-		IOException exception = assertThrows(IOException.class, () -> {
+	void assertThrowsWithExecutableThatThrowsCheckedException() {
+		IOException exception = assertThrows(IOException.class, (Executable) () -> {
 			throw new IOException();
 		});
 		assertNotNull(exception);
 	}
 
 	@Test
-	void assertThrowsRuntimeException() {
-		IllegalStateException illegalStateException = assertThrows(IllegalStateException.class, () -> {
+	void assertThrowsWithExecutableThatThrowsRuntimeException() {
+		IllegalStateException illegalStateException = assertThrows(IllegalStateException.class, (Executable) () -> {
 			throw new IllegalStateException();
 		});
 		assertNotNull(illegalStateException);
 	}
 
 	@Test
-	void assertThrowsError() {
+	void assertThrowsWithExecutableThatThrowsError() {
 		StackOverflowError stackOverflowError = assertThrows(StackOverflowError.class,
 			AssertionTestUtils::recurseIndefinitely);
 		assertNotNull(stackOverflowError);
@@ -89,6 +115,7 @@ class AssertThrowsAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
+			// the following also implicitly verifies that the failure message does not contain "(returned null)".
 			assertMessageEquals(ex, "Expected java.lang.IllegalStateException to be thrown, but nothing was thrown.");
 		}
 	}
@@ -120,7 +147,7 @@ class AssertThrowsAssertionsTests {
 	@Test
 	void assertThrowsWithExecutableThatThrowsAnUnexpectedException() {
 		try {
-			assertThrows(IllegalStateException.class, () -> {
+			assertThrows(IllegalStateException.class, (Executable) () -> {
 				throw new NumberFormatException();
 			});
 			expectAssertionFailedError();
@@ -135,7 +162,7 @@ class AssertThrowsAssertionsTests {
 	@Test
 	void assertThrowsWithExecutableThatThrowsAnUnexpectedExceptionWithMessageString() {
 		try {
-			assertThrows(IllegalStateException.class, () -> {
+			assertThrows(IllegalStateException.class, (Executable) () -> {
 				throw new NumberFormatException();
 			}, "Custom message");
 			expectAssertionFailedError();
@@ -153,7 +180,7 @@ class AssertThrowsAssertionsTests {
 	@Test
 	void assertThrowsWithExecutableThatThrowsAnUnexpectedExceptionWithMessageSupplier() {
 		try {
-			assertThrows(IllegalStateException.class, () -> {
+			assertThrows(IllegalStateException.class, (Executable) () -> {
 				throw new NumberFormatException();
 			}, () -> "Custom message");
 			expectAssertionFailedError();
@@ -172,7 +199,7 @@ class AssertThrowsAssertionsTests {
 	@SuppressWarnings("serial")
 	void assertThrowsWithExecutableThatThrowsInstanceOfAnonymousInnerClassAsUnexpectedException() {
 		try {
-			assertThrows(IllegalStateException.class, () -> {
+			assertThrows(IllegalStateException.class, (Executable) () -> {
 				throw new NumberFormatException() {
 				};
 			});
@@ -192,7 +219,7 @@ class AssertThrowsAssertionsTests {
 	@Test
 	void assertThrowsWithExecutableThatThrowsInstanceOfStaticNestedClassAsUnexpectedException() {
 		try {
-			assertThrows(IllegalStateException.class, () -> {
+			assertThrows(IllegalStateException.class, (Executable) () -> {
 				throw new LocalException();
 			});
 			expectAssertionFailedError();
@@ -215,7 +242,7 @@ class AssertThrowsAssertionsTests {
 				EnigmaThrowable.class.getName());
 
 			try {
-				assertThrows(enigmaThrowableClass, () -> {
+				assertThrows(enigmaThrowableClass, (Executable) () -> {
 					throw new EnigmaThrowable();
 				});
 				expectAssertionFailedError();
@@ -237,7 +264,7 @@ class AssertThrowsAssertionsTests {
 	}
 
 	@Test
-	void assertThrowsReturns() {
+	void assertThrowsWithThrowingSupplierThatReturns() {
 		try {
 			assertThrows(EnigmaThrowable.class, () -> 42);
 			expectAssertionFailedError();
@@ -248,7 +275,7 @@ class AssertThrowsAssertionsTests {
 	}
 
 	@Test
-	void assertThrowsReturnsNull() {
+	void assertThrowsWithThrowingSupplierThatReturnsNull() {
 		try {
 			assertThrows(EnigmaThrowable.class, () -> null);
 			expectAssertionFailedError();
@@ -259,19 +286,7 @@ class AssertThrowsAssertionsTests {
 	}
 
 	@Test
-	void assertThrowsReturnsVoid() {
-		try {
-			assertThrows(EnigmaThrowable.class, () -> {
-			});
-			expectAssertionFailedError();
-		}
-		catch (AssertionFailedError ex) {
-			assertMessageDoesNotContain(ex, "(returned null)");
-		}
-	}
-
-	@Test
-	void assertThrowsReturnsCustomMessage() {
+	void assertThrowsWithThrowingSupplierThatReturnsAndWithCustomMessage() {
 		try {
 			assertThrows(EnigmaThrowable.class, () -> 42, "custom message");
 			expectAssertionFailedError();
@@ -283,7 +298,7 @@ class AssertThrowsAssertionsTests {
 	}
 
 	@Test
-	void assertThrowsReturnsCustomMessageSupplier() {
+	void assertThrowsWithThrowingSupplierThatReturnsAndWithCustomMessageSupplier() {
 		try {
 			assertThrows(EnigmaThrowable.class, () -> 42, () -> "custom message");
 			expectAssertionFailedError();
@@ -293,6 +308,8 @@ class AssertThrowsAssertionsTests {
 			assertMessageContains(ex, "custom message");
 		}
 	}
+
+	// -------------------------------------------------------------------------
 
 	@SuppressWarnings("serial")
 	private static class LocalException extends RuntimeException {

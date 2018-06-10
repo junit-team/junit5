@@ -188,8 +188,8 @@ public class ExecutableInvoker {
 
 			if (matchingResolvers.isEmpty()) {
 				throw new ParameterResolutionException(
-					String.format("No ParameterResolver registered for parameter [%s] in executable [%s].",
-						parameterContext.getParameter(), executable.toGenericString()));
+					String.format("No ParameterResolver registered for parameter [%s] in %s [%s].",
+						parameterContext.getParameter(), asLabel(executable), executable.toGenericString()));
 			}
 
 			if (matchingResolvers.size() > 1) {
@@ -199,8 +199,8 @@ public class ExecutableInvoker {
 						.collect(joining(", "));
 				// @formatter:on
 				throw new ParameterResolutionException(String.format(
-					"Discovered multiple competing ParameterResolvers for parameter [%s] in executable [%s]: %s",
-					parameterContext.getParameter(), executable.toGenericString(), resolverNames));
+					"Discovered multiple competing ParameterResolvers for parameter [%s] in %s [%s]: %s",
+					parameterContext.getParameter(), asLabel(executable), executable.toGenericString(), resolverNames));
 			}
 
 			ParameterResolver resolver = matchingResolvers.get(0);
@@ -208,9 +208,9 @@ public class ExecutableInvoker {
 			validateResolvedType(parameterContext.getParameter(), value, executable, resolver);
 
 			logger.trace(() -> String.format(
-				"ParameterResolver [%s] resolved a value of type [%s] for parameter [%s] in executable [%s].",
+				"ParameterResolver [%s] resolved a value of type [%s] for parameter [%s] in %s [%s].",
 				resolver.getClass().getName(), (value != null ? value.getClass().getName() : null),
-				parameterContext.getParameter(), executable.toGenericString()));
+				parameterContext.getParameter(), asLabel(executable), executable.toGenericString()));
 
 			return value;
 		}
@@ -218,8 +218,8 @@ public class ExecutableInvoker {
 			throw ex;
 		}
 		catch (Throwable ex) {
-			throw new ParameterResolutionException(String.format("Failed to resolve parameter [%s] in executable [%s]",
-				parameterContext.getParameter(), executable.toGenericString()), ex);
+			throw new ParameterResolutionException(String.format("Failed to resolve parameter [%s] in %s [%s]",
+				parameterContext.getParameter(), asLabel(executable), executable.toGenericString()), ex);
 		}
 	}
 
@@ -234,19 +234,24 @@ public class ExecutableInvoker {
 			if (value == null && type.isPrimitive()) {
 				message = String.format(
 					"ParameterResolver [%s] resolved a null value for parameter [%s] "
-							+ "in executable [%s], but a primitive of type [%s] is required.",
-					resolver.getClass().getName(), parameter, executable.toGenericString(), type.getName());
+							+ "in %s [%s], but a primitive of type [%s] is required.",
+					resolver.getClass().getName(), parameter, asLabel(executable), executable.toGenericString(),
+					type.getName());
 			}
 			else {
 				message = String.format(
 					"ParameterResolver [%s] resolved a value of type [%s] for parameter [%s] "
-							+ "in executable [%s], but a value assignment compatible with [%s] is required.",
+							+ "in %s [%s], but a value assignment compatible with [%s] is required.",
 					resolver.getClass().getName(), (value != null ? value.getClass().getName() : null), parameter,
-					executable.toGenericString(), type.getName());
+					asLabel(executable), executable.toGenericString(), type.getName());
 			}
 
 			throw new ParameterResolutionException(message);
 		}
+	}
+
+	private static String asLabel(Executable executable) {
+		return executable instanceof Constructor ? "constructor" : "method";
 	}
 
 }

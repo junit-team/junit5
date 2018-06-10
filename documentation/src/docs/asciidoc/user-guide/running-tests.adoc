@@ -580,7 +580,9 @@ Test run finished after 64 ms
 
 .Exit Code
 NOTE: The `{ConsoleLauncher}` exits with a status code of `1` if any containers or tests
-failed. Otherwise the exit code is `0`.
+failed. If no tests are discovered and the `--fail-if-no-tests` command-line option is
+supplied, the `ConsoleLauncher` exits with a status code of `2`. Otherwise the exit code
+is `0`.
 
 [[running-tests-console-launcher-options]]
 ==== Options
@@ -745,7 +747,7 @@ useful.
 | all tests for *bar* plus all tests for *baz*
 
 | +bar & baz+
-| all tests for the interaction between *bar* and *baz*
+| all tests for the intersection between *bar* and *baz*
 
 | +foo & !end-to-end+
 | all tests for *foo*, but not the _end-to-end_ tests

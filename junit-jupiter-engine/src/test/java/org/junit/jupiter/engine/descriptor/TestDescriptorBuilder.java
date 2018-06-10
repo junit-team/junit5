@@ -11,7 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.platform.engine.TestDescriptor;
@@ -43,7 +43,7 @@ public abstract class TestDescriptorBuilder<T extends TestDescriptor> {
 	}
 
 	public TestDescriptorBuilder<?> with(TestDescriptorBuilder<?>... children) {
-		this.children.addAll(Arrays.asList(children));
+		Collections.addAll(this.children, children);
 		return this;
 	}
 

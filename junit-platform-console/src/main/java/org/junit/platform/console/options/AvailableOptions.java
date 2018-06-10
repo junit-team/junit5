@@ -42,6 +42,7 @@ class AvailableOptions {
 	private final OptionSpec<Details> details;
 	private final OptionSpec<Theme> theme;
 	private final OptionSpec<Path> additionalClasspathEntries;
+	private final OptionSpec<Void> failIfNoTests;
 
 	// Reports
 	private final OptionSpec<Path> reportsDir;
@@ -105,6 +106,8 @@ class AvailableOptions {
 				.withValuesConvertedBy(new PathConverter()) //
 				.withValuesSeparatedBy(File.pathSeparatorChar) //
 				.describedAs("path1" + File.pathSeparator + "path2" + File.pathSeparator + "...");
+
+		failIfNoTests = parser.accepts("fail-if-no-tests", "Fail and return exit status code 2 if no tests are found.");
 
 		// --- Reports ---------------------------------------------------------
 
@@ -224,6 +227,7 @@ class AvailableOptions {
 		result.setDetails(detectedOptions.valueOf(this.details));
 		result.setTheme(detectedOptions.valueOf(this.theme));
 		result.setAdditionalClasspathEntries(detectedOptions.valuesOf(this.additionalClasspathEntries));
+		result.setFailIfNoTests(detectedOptions.has(this.failIfNoTests));
 
 		// Reports
 		result.setReportsDir(detectedOptions.valueOf(this.reportsDir));

@@ -47,14 +47,23 @@ class AssertThrows {
 		return assertThrows(expectedType, asSupplier(executable), (Object) messageSupplier);
 	}
 
+	/**
+	 * @since 5.3
+	 */
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier) {
 		return assertThrows(expectedType, supplier::get, (Object) null);
 	}
 
+	/**
+	 * @since 5.3
+	 */
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier, String message) {
 		return assertThrows(expectedType, supplier::get, (Object) message);
 	}
 
+	/**
+	 * @since 5.3
+	 */
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier,
 			Supplier<String> messageSupplier) {
 
