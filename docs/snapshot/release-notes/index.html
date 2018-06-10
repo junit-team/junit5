@@ -649,6 +649,12 @@ exit with a status code of <code>2</code>.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>When using <code>@TestInstance(Lifecycle.PER_CLASS)</code> semantics, registered
+<code>AfterAllCallback</code> extensions are no longer invoked if an exception is thrown by the
+test class constructor. Consequently, <code>AfterAllCallback</code> extensions are now only
+invoked if <code>BeforeAllCallback</code> extensions were invoked.</p>
+</li>
+<li>
 <p>Test discovery no longer halts prematurely if a nested class or nested interface in a
 test class has an invalid class file.</p>
 </li>
@@ -999,7 +1005,7 @@ invocations within an IDE</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-06-09 05:03:43 EDT
+Last updated 2018-06-10 07:08:31 EDT
 </div>
 </div>
 </body>
