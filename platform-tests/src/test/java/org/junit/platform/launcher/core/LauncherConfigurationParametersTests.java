@@ -142,7 +142,8 @@ class LauncherConfigurationParametersTests {
 		JUnitException exception = assertThrows(JUnitException.class, () -> configParams.get(KEY, input -> {
 			throw new RuntimeException("foo");
 		}));
-		assertThat(exception).hasMessageContaining("Failed to convert configuration parameter with key '" + KEY + "'");
+		assertThat(exception).hasMessageContaining(
+			"Failed to transform configuration parameter with key '" + KEY + "' and initial value '42'");
 	}
 
 	private static LauncherConfigurationParameters fromMap(Map<String, String> map) {

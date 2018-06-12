@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 
 /**
@@ -33,10 +34,14 @@ public class PrefixedConfigurationParameters implements ConfigurationParameters 
 	/**
 	 * Create a new view of the supplied {@link ConfigurationParameters} that
 	 * applies the supplied prefix to all queries.
+	 *
+	 * @param delegate the {@link ConfigurationParameters} to delegate to; never
+	 * {@code null}
+	 * @param prefix the prefix to apply to all queries; never {@code null}
 	 */
 	public PrefixedConfigurationParameters(ConfigurationParameters delegate, String prefix) {
-		this.delegate = delegate;
-		this.prefix = prefix;
+		this.delegate = Preconditions.notNull(delegate, "delegate must not be null");
+		this.prefix = Preconditions.notNull(prefix, "prefix must not be null");
 	}
 
 	@Override

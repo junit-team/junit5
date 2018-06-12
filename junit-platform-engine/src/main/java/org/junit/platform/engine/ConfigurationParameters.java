@@ -17,6 +17,7 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * Configuration parameters that {@link TestEngine TestEngines} may use to
@@ -100,7 +101,7 @@ public interface ConfigurationParameters {
 	 *
 	 * @param key the key to look up; never {@code null} or blank
 	 * @param transformer the transformer to apply in case a value is found;
-	 * never {@code null} or blank
+	 * never {@code null}
 	 * @return an {@code Optional} containing the value; never {@code null}
 	 * but potentially empty
 	 *
@@ -111,13 +112,14 @@ public interface ConfigurationParameters {
 	 */
 	@API(status = STABLE, since = "1.3")
 	default <T> Optional<T> get(String key, Function<String, T> transformer) {
+		Preconditions.notNull(transformer, "transformer must not be null");
 		return get(key).map(input -> {
 			try {
 				return transformer.apply(input);
 			}
 			catch (Exception ex) {
-				String message = String.format("Failed to convert configuration parameter with key '%s' for input: %s",
-					key, input);
+				String message = String.format(
+					"Failed to transform configuration parameter with key '%s' and initial value '%s'", key, input);
 				throw new JUnitException(message, ex);
 			}
 		});

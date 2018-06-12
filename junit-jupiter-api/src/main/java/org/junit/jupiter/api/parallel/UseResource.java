@@ -56,8 +56,9 @@ public @interface UseResource {
 	String value();
 
 	/**
+	 * The resource access mode.
 	 *
-	 * @return
+	 * @see ResourceAccessMode
 	 */
 	ResourceAccessMode mode() default ResourceAccessMode.READ_WRITE;
 
