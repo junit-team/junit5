@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.PreconditionViolationException;
@@ -29,6 +30,14 @@ import org.junit.platform.engine.TestSource;
  * @since 1.0
  */
 class CompositeTestSourceTests extends AbstractTestSourceTests {
+
+	@Override
+	Stream<CompositeTestSource> createSerializableInstances() {
+		FileSource fileSource = FileSource.from(new File("sample.instance"));
+		ClassSource classSource = ClassSource.from(getClass());
+		List<TestSource> sources = new ArrayList<>(Arrays.asList(fileSource, classSource));
+		return Stream.of(CompositeTestSource.from(sources));
+	}
 
 	@Test
 	void createCompositeTestSourceFromNullList() {
@@ -60,8 +69,8 @@ class CompositeTestSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void equalsAndHashCode() {
-		List<TestSource> sources1 = Arrays.asList(ClassSource.from(Number.class));
-		List<TestSource> sources2 = Arrays.asList(ClassSource.from(String.class));
+		List<TestSource> sources1 = Collections.singletonList(ClassSource.from(Number.class));
+		List<TestSource> sources2 = Collections.singletonList(ClassSource.from(String.class));
 		assertEqualsAndHashCode(CompositeTestSource.from(sources1), CompositeTestSource.from(sources1),
 			CompositeTestSource.from(sources2));
 	}
