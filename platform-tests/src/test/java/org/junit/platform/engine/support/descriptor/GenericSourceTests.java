@@ -13,7 +13,9 @@ package org.junit.platform.engine.support.descriptor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
@@ -26,6 +28,17 @@ import org.junit.platform.commons.util.PreconditionViolationException;
  * @since 1.0
  */
 class GenericSourceTests extends AbstractTestSourceTests {
+
+	@Override
+	Stream<Serializable> createSerializableInstances() throws Exception {
+		return Stream.of( //
+			PackageSource.from("package.source"), //
+			ClassSource.from("class.source"), //
+			ClassSource.from("class.and.position", FilePosition.from(1, 2)), //
+			MethodSource.from(getMethod("method1")), //
+			MethodSource.from(getMethod("method2")) //
+		);
+	}
 
 	@Test
 	void packageSourceFromNullPackageName() {

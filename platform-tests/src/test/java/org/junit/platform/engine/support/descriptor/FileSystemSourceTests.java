@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.File;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.PreconditionViolationException;
@@ -24,6 +25,13 @@ import org.junit.platform.commons.util.PreconditionViolationException;
  * @since 1.0
  */
 class FileSystemSourceTests extends AbstractTestSourceTests {
+
+	@Override
+	Stream<FileSource> createSerializableInstances() {
+		return Stream.of( //
+			FileSource.from(new File("file.source")), //
+			FileSource.from(new File("file.and.position"), FilePosition.from(42, 23)));
+	}
 
 	@Test
 	void nullSourceFileOrDirectoryYieldsException() {
@@ -56,7 +64,7 @@ class FileSystemSourceTests extends AbstractTestSourceTests {
 	}
 
 	@Test
-	void fileWithPosition() throws Exception {
+	void fileWithPosition() {
 		File file = new File("test.txt");
 		FilePosition position = FilePosition.from(42, 23);
 		FileSource source = FileSource.from(file, position);

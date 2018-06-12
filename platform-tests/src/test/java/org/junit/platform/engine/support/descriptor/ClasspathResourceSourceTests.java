@@ -13,6 +13,8 @@ package org.junit.platform.engine.support.descriptor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
@@ -26,6 +28,11 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 	private static final String FOO_RESOURCE = "test/foo.xml";
 	private static final String BAR_RESOURCE = "/config/bar.json";
 
+	@Override
+	Stream<ClasspathResourceSource> createSerializableInstances() {
+		return Stream.of(ClasspathResourceSource.from(FOO_RESOURCE));
+	}
+
 	@Test
 	void preconditions() {
 		assertThrows(PreconditionViolationException.class, () -> ClasspathResourceSource.from(null));
@@ -34,7 +41,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 	}
 
 	@Test
-	void resourceWithoutPosition() throws Exception {
+	void resourceWithoutPosition() {
 		ClasspathResourceSource source = ClasspathResourceSource.from(FOO_RESOURCE);
 
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
@@ -42,7 +49,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 	}
 
 	@Test
-	void resourceWithLeadingSlashWithoutPosition() throws Exception {
+	void resourceWithLeadingSlashWithoutPosition() {
 		ClasspathResourceSource source = ClasspathResourceSource.from("/" + FOO_RESOURCE);
 
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
@@ -50,7 +57,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 	}
 
 	@Test
-	void resourceWithPosition() throws Exception {
+	void resourceWithPosition() {
 		FilePosition position = FilePosition.from(42, 23);
 		ClasspathResourceSource source = ClasspathResourceSource.from(FOO_RESOURCE, position);
 

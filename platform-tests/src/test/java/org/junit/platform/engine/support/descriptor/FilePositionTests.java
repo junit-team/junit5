@@ -32,6 +32,11 @@ import org.junit.platform.commons.util.PreconditionViolationException;
 @DisplayName("FilePosition unit tests")
 class FilePositionTests extends AbstractTestSourceTests {
 
+	@Override
+	Stream<FilePosition> createSerializableInstances() {
+		return Stream.of(FilePosition.from(42, 99));
+	}
+
 	@Test
 	@DisplayName("factory method preconditions")
 	void preconditions() {
