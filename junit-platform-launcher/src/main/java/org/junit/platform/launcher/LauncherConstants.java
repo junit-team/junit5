@@ -39,7 +39,7 @@ public class LauncherConstants {
 	 * @see ReportEntry
 	 * @see TestExecutionListener#reportingEntryPublished(TestIdentifier, ReportEntry)
 	 */
-	public static final String CAPTURE_STDOUT_PROPERTY_NAME = "junit.platform.launcher.capture.stdout";
+	public static final String CAPTURE_STDOUT_PROPERTY_NAME = "junit.platform.output.capture.stdout";
 
 	/**
 	 * Property name used to enable capturing output to {@link System#err}:
@@ -56,7 +56,7 @@ public class LauncherConstants {
 	 * @see ReportEntry
 	 * @see TestExecutionListener#reportingEntryPublished(TestIdentifier, ReportEntry)
 	 */
-	public static final String CAPTURE_STDERR_PROPERTY_NAME = "junit.platform.launcher.capture.stderr";
+	public static final String CAPTURE_STDERR_PROPERTY_NAME = "junit.platform.output.capture.stderr";
 
 	/**
 	 * Property name used to configure the maximum number of bytes for buffering
@@ -67,7 +67,7 @@ public class LauncherConstants {
 	 *
 	 * @see #CAPTURE_MAX_BUFFER_DEFAULT
 	 */
-	public static final String CAPTURE_MAX_BUFFER_PROPERTY_NAME = "junit.platform.launcher.capture.maxBuffer";
+	public static final String CAPTURE_MAX_BUFFER_PROPERTY_NAME = "junit.platform.output.capture.maxBuffer";
 
 	/**
 	 * Default maximum number of bytes for buffering to use per thread and
