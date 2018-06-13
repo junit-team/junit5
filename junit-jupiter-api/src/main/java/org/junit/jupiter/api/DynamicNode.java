@@ -42,16 +42,21 @@ public abstract class DynamicNode {
 
 	/**
 	 * Get the display name of this {@code DynamicNode}.
+	 *
+	 * @return the display name
 	 */
 	public String getDisplayName() {
 		return this.displayName;
 	}
 
 	/**
-	 * Get the optional test source of this {@code DynamicNode}.
+	 * Get the optional test source {@link URI} of this {@code DynamicNode}.
+	 *
+	 * @return an {@code Optional} containing the test source {@link URI};
+	 * never {@code null} but potentially empty
 	 * @since 5.3
 	 */
-	public Optional<URI> getTestSourceURI() {
+	public Optional<URI> getTestSourceUri() {
 		return Optional.ofNullable(testSourceUri);
 	}
 

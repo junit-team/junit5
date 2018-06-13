@@ -13,6 +13,7 @@ package org.junit.platform.engine.support.descriptor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -81,13 +82,13 @@ class FilePositionTests extends AbstractTestSourceTests {
 	@SuppressWarnings("unused")
 	static Stream<Arguments> filePositionFromQuery() {
 		return Stream.of( //
-			Arguments.of(null, -1, -1), //
-			Arguments.of("?!", -1, -1), //
-			Arguments.of("line=ZZ", -1, -1), //
-			Arguments.of("line=42", 42, -1), //
-			Arguments.of("line=42&line=24", 24, -1), //
-			Arguments.of("line=42&column=99", 42, 99), //
-			Arguments.of("line=42&column=ZZ", 42, -1) //
+			arguments(null, -1, -1), //
+			arguments("?!", -1, -1), //
+			arguments("line=ZZ", -1, -1), //
+			arguments("line=42", 42, -1), //
+			arguments("line=42&line=24", 24, -1), //
+			arguments("line=42&column=99", 42, 99), //
+			arguments("line=42&column=ZZ", 42, -1) //
 		);
 	}
 

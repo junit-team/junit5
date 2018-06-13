@@ -65,11 +65,11 @@ public class DynamicTest extends DynamicNode {
 
 	/**
 	 * Factory for creating a new {@code DynamicTest} for the supplied display
-	 * name, the test source uri, and executable code block.
+	 * name, the test source {@link URI}, and executable code block.
 	 *
 	 * @param displayName the display name for the dynamic test; never
 	 * {@code null} or blank
-	 * @param testSourceUri the test source uri for the dynamic test; can be {@code null}
+	 * @param testSourceUri the test source URI for the dynamic test; can be {@code null}
 	 * @param executable the executable code block for the dynamic test;
 	 * never {@code null}
 	 * @since 5.3

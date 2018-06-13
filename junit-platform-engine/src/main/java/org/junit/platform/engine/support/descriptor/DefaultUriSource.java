@@ -20,7 +20,7 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
- * Default uri-based test source implementation.
+ * Default implementation of {@link UriSource}.
  *
  * @since 1.3
  */
@@ -32,7 +32,7 @@ class DefaultUriSource implements UriSource {
 	private final URI uri;
 
 	DefaultUriSource(URI uri) {
-		this.uri = Preconditions.notNull(uri, "uri must not be null");
+		this.uri = Preconditions.notNull(uri, "URI must not be null");
 	}
 
 	@Override

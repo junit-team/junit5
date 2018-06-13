@@ -40,29 +40,29 @@ public interface UriSource extends TestSource {
 	URI getUri();
 
 	/**
-	 * Create a new {@code UriSource} using the supplied {@code uri}.
+	 * Create a new {@code UriSource} using the supplied {@code URI}.
 	 * <p>
 	 * This implementation tries resolve the {@code uri} to local file
 	 * system path-based source first. If that fails for any reason, an
-	 * instance of a simple default uri source class storing the supplied
-	 * {@code uri} <em>as-is</em> is returned.
+	 * instance of the default {@code UriSource} implementation storing
+	 * the supplied {@code URI} <em>as-is</em> is returned.
 	 *
-	 * @param uri the uri instance; must not be {@code null}
+	 * @param uri the URI instance; must not be {@code null}
 	 * @return a uri source instance
 	 * @since 1.3
 	 * @see org.junit.platform.engine.support.descriptor.FileSource
 	 * @see org.junit.platform.engine.support.descriptor.DirectorySource
 	 */
 	static UriSource from(final URI uri) {
-		Preconditions.notNull(uri, "uri must not be null");
+		Preconditions.notNull(uri, "URI must not be null");
 		try {
-			URI pathBasedUri = uri;
-			String query = pathBasedUri.getQuery();
+			URI pathBasedUriWithoutQuery = uri;
+			String query = uri.getQuery();
 			if (StringUtils.isNotBlank(query)) {
-				String s = pathBasedUri.toString();
-				pathBasedUri = URI.create(s.substring(0, s.indexOf('?')));
+				String uriAsString = uri.toString();
+				pathBasedUriWithoutQuery = URI.create(uriAsString.substring(0, uriAsString.indexOf('?')));
 			}
-			Path path = Paths.get(pathBasedUri);
+			Path path = Paths.get(pathBasedUriWithoutQuery);
 			if (Files.isRegularFile(path)) {
 				return FileSource.from(path.toFile(), FilePosition.fromQuery(query).orElse(null));
 			}
@@ -70,8 +70,9 @@ public interface UriSource extends TestSource {
 				return DirectorySource.from(path.toFile());
 			}
 		}
-		catch (IllegalArgumentException e) {
-			LoggerFactory.getLogger(UriSource.class).debug(e, () -> "uri not path-based: " + uri);
+		catch (RuntimeException e) {
+			LoggerFactory.getLogger(UriSource.class).debug(e, () -> String.format(
+				"The supplied URI [%s] is not path-based. Falling back to default UriSource implementation.", uri));
 		}
 		// store uri as-is
 		return new DefaultUriSource(uri);

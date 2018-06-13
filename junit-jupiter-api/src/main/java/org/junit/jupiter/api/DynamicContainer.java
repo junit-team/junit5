@@ -71,13 +71,13 @@ public class DynamicContainer extends DynamicNode {
 
 	/**
 	 * Factory for creating a new {@code DynamicContainer} for the supplied display
-	 * name, the test source uri, and stream of dynamic nodes.
+	 * name, the test source {@link URI}, and stream of dynamic nodes.
 	 *
 	 * <p>The stream of dynamic nodes must not contain {@code null} elements.
 	 *
 	 * @param displayName the display name for the dynamic container; never
 	 * {@code null} or blank
-	 * @param testSourceUri the test source uri for the dynamic test; can be {@code null}
+	 * @param testSourceUri the test source URI for the dynamic test; can be {@code null}
 	 * @param dynamicNodes stream of dynamic nodes to execute;
 	 * never {@code null}
 	 * @since 5.3
