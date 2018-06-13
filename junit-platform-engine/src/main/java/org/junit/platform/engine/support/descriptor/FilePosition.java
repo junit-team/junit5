@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
@@ -33,11 +34,14 @@ public class FilePosition implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private static final Logger logger = LoggerFactory.getLogger(FilePosition.class);
+
 	/**
 	 * Create a new {@code FilePosition} using the supplied {@code line} number
 	 * and an undefined column number.
 	 *
 	 * @param line the line number; must be greater than zero
+	 * @return a {@link FilePosition} with the given line number
 	 */
 	public static FilePosition from(int line) {
 		return new FilePosition(line);
@@ -49,13 +53,14 @@ public class FilePosition implements Serializable {
 	 *
 	 * @param line the line number; must be greater than zero
 	 * @param column the column number; must be greater than zero
+	 * @return a {@link FilePosition} with the given line and column numbers
 	 */
 	public static FilePosition from(int line, int column) {
 		return new FilePosition(line, column);
 	}
 
 	/**
-	 * Create an optional {@code FilePosition} parsing the supplied
+	 * Create an optional {@code FilePosition} by parsing the supplied
 	 * {@code query} string.
 	 *
 	 * <p>Examples of valid {@code query} strings:
@@ -65,6 +70,8 @@ public class FilePosition implements Serializable {
 	 * </ul>
 	 *
 	 * @param query the query string; may be {@code null}
+	 * @return an {@link Optional} containing a {@link FilePosition} with
+	 * the parsed line and column numbers; potentially empty
 	 * @since 1.3
 	 */
 	public static Optional<FilePosition> fromQuery(String query) {
@@ -88,7 +95,7 @@ public class FilePosition implements Serializable {
 				}
 			}
 			catch (IllegalArgumentException e) {
-				LoggerFactory.getLogger(FilePosition.class).debug(e, () -> "parsing query failed: " + query);
+				logger.debug(e, () -> "Failed to parse 'line' and/or 'column' from query string: " + query);
 				// fall-through and continue
 			}
 			if (line != null) {

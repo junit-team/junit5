@@ -81,7 +81,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 			Object instance = extensionContext.getRequiredTestInstance();
 			Object testFactoryMethodResult = executableInvoker.invoke(getTestMethod(), instance, extensionContext,
 				context.getExtensionRegistry());
-			TestSource source = getSource().orElseThrow(
+			TestSource defaultTestSource = getSource().orElseThrow(
 				() -> new JUnitException("Illegal state: TestSource must be present"));
 			try (Stream<DynamicNode> dynamicNodeStream = toDynamicNodeStream(testFactoryMethodResult)) {
 				int index = 1;
@@ -89,7 +89,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 				while (iterator.hasNext()) {
 					DynamicNode dynamicNode = iterator.next();
 					Optional<JupiterTestDescriptor> descriptor = createDynamicDescriptor(this, dynamicNode, index++,
-						source, getDynamicDescendantFilter());
+						defaultTestSource, getDynamicDescendantFilter());
 					descriptor.ifPresent(dynamicTestExecutor::execute);
 				}
 			}
@@ -117,10 +117,11 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	}
 
 	static Optional<JupiterTestDescriptor> createDynamicDescriptor(JupiterTestDescriptor parent, DynamicNode node,
-			int index, TestSource testSource, DynamicDescendantFilter dynamicDescendantFilter) {
+			int index, TestSource defaultTestSource, DynamicDescendantFilter dynamicDescendantFilter) {
 		UniqueId uniqueId;
 		Supplier<JupiterTestDescriptor> descriptorCreator;
-		TestSource source = computeOptionalTestSource(node).orElse(testSource);
+		Optional<TestSource> optionalTestSource = node.getTestSourceUri().map(UriSource::from);
+		TestSource source = optionalTestSource.orElse(defaultTestSource);
 		if (node instanceof DynamicTest) {
 			DynamicTest test = (DynamicTest) node;
 			uniqueId = parent.getUniqueId().append(DYNAMIC_TEST_SEGMENT_TYPE, "#" + index);
@@ -138,10 +139,6 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 			return Optional.of(descriptor);
 		}
 		return Optional.empty();
-	}
-
-	static Optional<TestSource> computeOptionalTestSource(DynamicNode node) {
-		return node.getTestSourceURI().map(UriSource::from);
 	}
 
 }

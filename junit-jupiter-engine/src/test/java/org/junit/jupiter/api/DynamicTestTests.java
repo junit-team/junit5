@@ -88,8 +88,11 @@ class DynamicTestTests {
 	@Test
 	void testSourceUriIsNotPresentByDefault() {
 		DynamicTest test = dynamicTest("foo", nix);
-		assertThat(test.getTestSourceURI()).isNotPresent();
-		assertThat(dynamicContainer("bar", Stream.of(test)).getTestSourceURI()).isNotPresent();
+		assertThat(test.getTestSourceUri()).isNotPresent();
+		assertThat(test.toString()).isEqualTo("DynamicTest [displayName = 'foo', testSourceUri = null]");
+		DynamicContainer container = dynamicContainer("bar", Stream.of(test));
+		assertThat(container.getTestSourceUri()).isNotPresent();
+		assertThat(container.toString()).isEqualTo("DynamicContainer [displayName = 'bar', testSourceUri = null]");
 	}
 
 	@Test
@@ -99,8 +102,11 @@ class DynamicTestTests {
 		URI containerSourceUri = URI.create("other://container");
 		DynamicContainer container = dynamicContainer("bar", containerSourceUri, Stream.of(test));
 
-		assertThat(test.getTestSourceURI().get()).isSameAs(testSourceUri);
-		assertThat(container.getTestSourceURI().get()).isSameAs(containerSourceUri);
+		assertThat(test.getTestSourceUri().get()).isSameAs(testSourceUri);
+		assertThat(test.toString()).isEqualTo("DynamicTest [displayName = 'foo', testSourceUri = any://test]");
+		assertThat(container.getTestSourceUri().get()).isSameAs(containerSourceUri);
+		assertThat(container.toString()).isEqualTo(
+			"DynamicContainer [displayName = 'bar', testSourceUri = other://container]");
 	}
 
 	private void assert1Equals48Directly() {
