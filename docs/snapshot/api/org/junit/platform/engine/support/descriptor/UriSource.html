@@ -26,8 +26,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
+var methods = {"i0":1,"i1":6};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -167,13 +167,20 @@ extends <a href="../../../../../../org/junit/platform/engine/TestSource.html" ti
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static <a href="../../../../../../org/junit/platform/engine/support/descriptor/UriSource.html" title="interface in org.junit.platform.engine.support.descriptor">UriSource</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/UriSource.html#from(java.net.URI)">from</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;uri)</code></th>
+<td class="colLast">
+<div class="block">Create a new <code>UriSource</code> using the supplied <code>URI</code>.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/UriSource.html#getUri()">getUri</a></span>()</code></th>
 <td class="colLast">
@@ -200,7 +207,7 @@ extends <a href="../../../../../../org/junit/platform/engine/TestSource.html" ti
 <a id="getUri()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getUri</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;getUri()</pre>
@@ -208,6 +215,32 @@ extends <a href="../../../../../../org/junit/platform/engine/TestSource.html" ti
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the source <code>URI</code>; never <code>null</code></dd>
+</dl>
+</li>
+</ul>
+<a id="from(java.net.URI)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>from</h4>
+<pre>static&nbsp;<a href="../../../../../../org/junit/platform/engine/support/descriptor/UriSource.html" title="interface in org.junit.platform.engine.support.descriptor">UriSource</a>&nbsp;from&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;uri)</pre>
+<div class="block">Create a new <code>UriSource</code> using the supplied <code>URI</code>.
+ <p>
+ This implementation tries resolve the <code>uri</code> to local file
+ system path-based source first. If that fails for any reason, an
+ instance of the default <code>UriSource</code> implementation storing
+ the supplied <code>URI</code> <em>as-is</em> is returned.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>uri</code> - the URI instance; must not be <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a uri source instance</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.3</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../../org/junit/platform/engine/support/descriptor/FileSource.html" title="class in org.junit.platform.engine.support.descriptor"><code>FileSource</code></a>, 
+<a href="../../../../../../org/junit/platform/engine/support/descriptor/DirectorySource.html" title="class in org.junit.platform.engine.support.descriptor"><code>DirectorySource</code></a></dd>
 </dl>
 </li>
 </ul>
