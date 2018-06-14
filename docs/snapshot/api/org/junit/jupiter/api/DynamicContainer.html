@@ -199,7 +199,7 @@ extends <a href="../../../../org/junit/jupiter/api/DynamicNode.html" title="clas
                 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;? extends <a href="../../../../org/junit/jupiter/api/DynamicNode.html" title="class in org.junit.jupiter.api">DynamicNode</a>&gt;&nbsp;dynamicNodes)</code></th>
 <td class="colLast">
 <div class="block">Factory for creating a new <code>DynamicContainer</code> for the supplied display
- name, the test source <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a>, and stream of dynamic nodes.</div>
+ name, custom test source <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a>, and stream of dynamic nodes.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
@@ -306,16 +306,17 @@ extends <a href="../../../../org/junit/jupiter/api/DynamicNode.html" title="clas
                                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;testSourceUri,
                                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;? extends <a href="../../../../org/junit/jupiter/api/DynamicNode.html" title="class in org.junit.jupiter.api">DynamicNode</a>&gt;&nbsp;dynamicNodes)</pre>
 <div class="block">Factory for creating a new <code>DynamicContainer</code> for the supplied display
- name, the test source <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a>, and stream of dynamic nodes.
+ name, custom test source <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a>, and stream of dynamic nodes.
 
  <p>The stream of dynamic nodes must not contain <code>null</code> elements.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>displayName</code> - the display name for the dynamic container; never
  <code>null</code> or blank</dd>
-<dd><code>testSourceUri</code> - the test source URI for the dynamic test; can be <code>null</code></dd>
-<dd><code>dynamicNodes</code> - stream of dynamic nodes to execute;
- never <code>null</code></dd>
+<dd><code>testSourceUri</code> - a custom test source URI for the dynamic container;
+ may be <code>null</code> if the framework should generate the test source based
+ on the <code>@TestFactory</code> method</dd>
+<dd><code>dynamicNodes</code> - stream of dynamic nodes to execute; never <code>null</code></dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.3</dd>
 <dt><span class="seeLabel">See Also:</span></dt>

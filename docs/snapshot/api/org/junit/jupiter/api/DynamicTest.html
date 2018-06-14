@@ -196,7 +196,7 @@ extends <a href="../../../../org/junit/jupiter/api/DynamicNode.html" title="clas
            <a href="../../../../org/junit/jupiter/api/function/Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&nbsp;executable)</code></th>
 <td class="colLast">
 <div class="block">Factory for creating a new <code>DynamicTest</code> for the supplied display
- name, the test source <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a>, and executable code block.</div>
+ name, custom test source <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a>, and executable code block.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -287,12 +287,14 @@ extends <a href="../../../../org/junit/jupiter/api/DynamicNode.html" title="clas
                                       <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;testSourceUri,
                                       <a href="../../../../org/junit/jupiter/api/function/Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&nbsp;executable)</pre>
 <div class="block">Factory for creating a new <code>DynamicTest</code> for the supplied display
- name, the test source <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a>, and executable code block.</div>
+ name, custom test source <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a>, and executable code block.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>displayName</code> - the display name for the dynamic test; never
  <code>null</code> or blank</dd>
-<dd><code>testSourceUri</code> - the test source URI for the dynamic test; can be <code>null</code></dd>
+<dd><code>testSourceUri</code> - a custom test source URI for the dynamic test; may
+ be <code>null</code> if the framework should generate the test source based on
+ the <code>@TestFactory</code> method</dd>
 <dd><code>executable</code> - the executable code block for the dynamic test;
  never <code>null</code></dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
