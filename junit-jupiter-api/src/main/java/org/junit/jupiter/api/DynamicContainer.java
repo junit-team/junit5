@@ -71,20 +71,22 @@ public class DynamicContainer extends DynamicNode {
 
 	/**
 	 * Factory for creating a new {@code DynamicContainer} for the supplied display
-	 * name, the test source {@link URI}, and stream of dynamic nodes.
+	 * name, custom test source {@link URI}, and stream of dynamic nodes.
 	 *
 	 * <p>The stream of dynamic nodes must not contain {@code null} elements.
 	 *
 	 * @param displayName the display name for the dynamic container; never
 	 * {@code null} or blank
-	 * @param testSourceUri the test source URI for the dynamic test; can be {@code null}
-	 * @param dynamicNodes stream of dynamic nodes to execute;
-	 * never {@code null}
+	 * @param testSourceUri a custom test source URI for the dynamic container;
+	 * may be {@code null} if the framework should generate the test source based
+	 * on the {@code @TestFactory} method
+	 * @param dynamicNodes stream of dynamic nodes to execute; never {@code null}
 	 * @since 5.3
 	 * @see #dynamicContainer(String, Iterable)
 	 */
 	public static DynamicContainer dynamicContainer(String displayName, URI testSourceUri,
 			Stream<? extends DynamicNode> dynamicNodes) {
+
 		return new DynamicContainer(displayName, testSourceUri, dynamicNodes);
 	}
 

@@ -32,7 +32,7 @@ public abstract class DynamicNode {
 
 	private final String displayName;
 
-	/** Custom test source {@link URI} instance associated with this node; potentially {@code null}. */
+	/** Custom test source {@link URI} associated with this node; potentially {@code null}. */
 	private final URI testSourceUri;
 
 	DynamicNode(String displayName, URI testSourceUri) {
@@ -50,9 +50,9 @@ public abstract class DynamicNode {
 	}
 
 	/**
-	 * Get the optional test source {@link URI} of this {@code DynamicNode}.
+	 * Get the custom test source {@link URI} of this {@code DynamicNode}.
 	 *
-	 * @return an {@code Optional} containing the test source {@link URI};
+	 * @return an {@code Optional} containing the custom test source {@link URI};
 	 * never {@code null} but potentially empty
 	 * @since 5.3
 	 */

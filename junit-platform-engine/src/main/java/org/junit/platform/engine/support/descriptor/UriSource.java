@@ -41,20 +41,22 @@ public interface UriSource extends TestSource {
 
 	/**
 	 * Create a new {@code UriSource} using the supplied {@code URI}.
-	 * <p>
-	 * This implementation tries resolve the {@code uri} to local file
-	 * system path-based source first. If that fails for any reason, an
-	 * instance of the default {@code UriSource} implementation storing
-	 * the supplied {@code URI} <em>as-is</em> is returned.
 	 *
-	 * @param uri the URI instance; must not be {@code null}
-	 * @return a uri source instance
+	 * <p>This implementation first attempts to resolve the supplied {@code URI}
+	 * to a path-based {@code UriSource} in the local filesystem. If that fails
+	 * for any reason, an instance of the default {@code UriSource}
+	 * implementation storing the supplied {@code URI} <em>as-is</em> will be
+	 * returned.
+	 *
+	 * @param uri the URI to use as the source; never {@code null}
+	 * @return an appropriate {@code UriSource} for the supplied {@code URI}
 	 * @since 1.3
 	 * @see org.junit.platform.engine.support.descriptor.FileSource
 	 * @see org.junit.platform.engine.support.descriptor.DirectorySource
 	 */
-	static UriSource from(final URI uri) {
+	static UriSource from(URI uri) {
 		Preconditions.notNull(uri, "URI must not be null");
+
 		try {
 			URI pathBasedUriWithoutQuery = uri;
 			String query = uri.getQuery();
@@ -74,7 +76,8 @@ public interface UriSource extends TestSource {
 			LoggerFactory.getLogger(UriSource.class).debug(e, () -> String.format(
 				"The supplied URI [%s] is not path-based. Falling back to default UriSource implementation.", uri));
 		}
-		// store uri as-is
+
+		// Store supplied URI as-is
 		return new DefaultUriSource(uri);
 	}
 

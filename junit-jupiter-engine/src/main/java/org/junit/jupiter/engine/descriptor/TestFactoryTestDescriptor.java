@@ -118,10 +118,12 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 
 	static Optional<JupiterTestDescriptor> createDynamicDescriptor(JupiterTestDescriptor parent, DynamicNode node,
 			int index, TestSource defaultTestSource, DynamicDescendantFilter dynamicDescendantFilter) {
+
 		UniqueId uniqueId;
 		Supplier<JupiterTestDescriptor> descriptorCreator;
-		Optional<TestSource> optionalTestSource = node.getTestSourceUri().map(UriSource::from);
-		TestSource source = optionalTestSource.orElse(defaultTestSource);
+		Optional<TestSource> customTestSource = node.getTestSourceUri().map(UriSource::from);
+		TestSource source = customTestSource.orElse(defaultTestSource);
+
 		if (node instanceof DynamicTest) {
 			DynamicTest test = (DynamicTest) node;
 			uniqueId = parent.getUniqueId().append(DYNAMIC_TEST_SEGMENT_TYPE, "#" + index);

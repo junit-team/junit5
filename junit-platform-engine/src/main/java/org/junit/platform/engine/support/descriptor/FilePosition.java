@@ -71,8 +71,11 @@ public class FilePosition implements Serializable {
 	 *
 	 * @param query the query string; may be {@code null}
 	 * @return an {@link Optional} containing a {@link FilePosition} with
-	 * the parsed line and column numbers; potentially empty
+	 * the parsed line and column numbers; never {@code null} but potentially
+	 * empty
 	 * @since 1.3
+	 * @see #from(int)
+	 * @see #from(int, int)
 	 */
 	public static Optional<FilePosition> fromQuery(String query) {
 		FilePosition result = null;
@@ -85,10 +88,10 @@ public class FilePosition implements Serializable {
 					if (data.length == 2) {
 						String key = data[0];
 						int value = Integer.valueOf(data[1]);
-						if (key.equals("line")) {
+						if ("line".equals(key)) {
 							line = value;
 						}
-						if (key.equals("column")) {
+						if ("column".equals(key)) {
 							column = value;
 						}
 					}
