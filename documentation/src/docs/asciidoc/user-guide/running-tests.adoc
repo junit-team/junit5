@@ -208,10 +208,16 @@ additional dependency to the runtime classpath.
 [[running-tests-build-maven]]
 ==== Maven
 
+NOTE: Starting with https://issues.apache.org/jira/browse/SUREFIRE-1330[version 2.22.0],
+Surefire provides
+http://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html[native support]
+for executing tests on the JUnit Platform.
+The `pom.xml` file in the `{junit5-jupiter-starter-maven}` project demonstrates how to
+use it and can serve as a starting point.
+
 The JUnit team has developed a basic provider for Maven Surefire that lets you run JUnit 4
-and JUnit Jupiter tests via `mvn test`. The `pom.xml` file in the
-`{junit5-jupiter-starter-maven}` project demonstrates how to use it and can serve as a starting
-point.
+and JUnit Jupiter tests via `mvn test`. With the release of Surefire 2.22.0 this basic
+provider will deprecated and discontinued soon.
 
 NOTE: Please use Maven Surefire {surefire-version} with the
 `junit-platform-surefire-provider`.
