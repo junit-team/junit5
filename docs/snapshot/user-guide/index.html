@@ -4096,11 +4096,27 @@ additional dependency to the runtime classpath.</p>
 </div>
 <div class="sect3">
 <h4 id="running-tests-build-maven"><a class="anchor" href="#running-tests-build-maven"></a>4.2.2. Maven</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Starting with <a href="https://issues.apache.org/jira/browse/SUREFIRE-1330">version 2.22.0</a>,
+Surefire provides
+<a href="http://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html">native support</a>
+for executing tests on the JUnit Platform.
+The <code>pom.xml</code> file in the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project demonstrates how to
+use it and can serve as a starting point.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>The JUnit team has developed a basic provider for Maven Surefire that lets you run JUnit 4
-and JUnit Jupiter tests via <code>mvn test</code>. The <code>pom.xml</code> file in the
-<code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project demonstrates how to use it and can serve as a starting
-point.</p>
+and JUnit Jupiter tests via <code>mvn test</code>. With the release of Surefire 2.22.0 this basic
+provider will deprecated and discontinued soon.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -6356,7 +6372,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-06-14 05:22:32 EDT
+Last updated 2018-06-16 09:14:03 EDT
 </div>
 </div>
 </body>
