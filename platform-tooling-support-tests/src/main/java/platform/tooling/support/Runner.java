@@ -89,6 +89,8 @@ class Runner {
 				.directory(workspace.toFile()) //
 				.redirectOutput(result.out.toFile()) //
 				.redirectError(result.err.toFile());
+		// ensure we stay in our Java execution environment
+		builder.environment().put("JAVA_HOME", getCurrentJdkHome().toString());
 		if (tool.getKind().equals(Tool.Kind.REMOTE)) {
 			builder.environment().put(tool.name() + "_HOME", result.getToolHome().toString());
 		}
@@ -154,4 +156,22 @@ class Runner {
 		}
 		return result;
 	}
+
+	private Path getCurrentJdkHome() {
+		Path executable = ProcessHandle.current().info().command().map(Paths::get).orElse(null);
+		if (executable != null && executable.getNameCount() > 2) {
+			// noinspection ConstantConditions -- count is 3 or higher: "<JDK_HOME>/bin/java[.exe]"
+			return executable.getParent().getParent().toAbsolutePath();
+		}
+		String jdkHome = System.getenv("JDK_HOME");
+		if (jdkHome != null) {
+			return Paths.get(jdkHome).toAbsolutePath();
+		}
+		String javaHome = System.getenv("JAVA_HOME");
+		if (javaHome != null) {
+			return Paths.get(javaHome).toAbsolutePath();
+		}
+		return Paths.get("jdk-" + Runtime.version().feature()).toAbsolutePath();
+	}
+
 }

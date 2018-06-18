@@ -12,6 +12,13 @@ def platformVersion = System.getenv('JUNIT_PLATFORM_VERSION')
 
 // emit default file encoding to a file
 file('file.encoding.txt').write(System.getProperty('file.encoding'))
+
+// emit more Java runtime information
+file('java.runtime.txt').write("""
+java.version=${System.getProperty('java.version')}
+""")
+
+// emit versions of JUnit groups
 file('junit.versions.txt').write("""
 jupiterVersion=${jupiterVersion}
 vintageVersion=${vintageVersion}
