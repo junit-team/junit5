@@ -1,4 +1,5 @@
-jdk: oraclejdk9
-
 install:
+  - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
+  - source ./install-jdk.sh -F 10 -L GPL
+  - ./gradlew --version
   - ./gradlew publishToMavenLocal -x test
