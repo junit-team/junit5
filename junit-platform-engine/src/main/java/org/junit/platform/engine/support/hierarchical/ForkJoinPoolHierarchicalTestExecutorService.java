@@ -107,6 +107,13 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 		}
 		Deque<ExclusiveTask> nonConcurrentTasks = new LinkedList<>();
 		Deque<ExclusiveTask> concurrentTasksInReverseOrder = new LinkedList<>();
+		forkConcurrentTasks(tasks, nonConcurrentTasks, concurrentTasksInReverseOrder);
+		executeNonConcurrentTasks(nonConcurrentTasks);
+		joinConcurrentTasksInReverseOrderToEnableWorkStealing(concurrentTasksInReverseOrder);
+	}
+
+	private void forkConcurrentTasks(List<? extends TestTask> tasks, Deque<ExclusiveTask> nonConcurrentTasks,
+			Deque<ExclusiveTask> concurrentTasksInReverseOrder) {
 		for (TestTask testTask : tasks) {
 			ExclusiveTask exclusiveTask = new ExclusiveTask(testTask);
 			if (testTask.getExecutionMode() == CONCURRENT) {
@@ -117,9 +124,16 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 				nonConcurrentTasks.add(exclusiveTask);
 			}
 		}
+	}
+
+	private void executeNonConcurrentTasks(Deque<ExclusiveTask> nonConcurrentTasks) {
 		for (ExclusiveTask task : nonConcurrentTasks) {
 			task.compute();
 		}
+	}
+
+	private void joinConcurrentTasksInReverseOrderToEnableWorkStealing(
+			Deque<ExclusiveTask> concurrentTasksInReverseOrder) {
 		for (ExclusiveTask forkedTask : concurrentTasksInReverseOrder) {
 			forkedTask.join();
 		}
