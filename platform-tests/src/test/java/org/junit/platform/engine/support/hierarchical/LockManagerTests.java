@@ -38,7 +38,7 @@ class LockManagerTests {
 	void returnsNopLockWithoutExclusiveResources() {
 		Collection<ExclusiveResource> resources = emptySet();
 
-		List<Lock> locks = getLocks(lockManager, resources);
+		List<Lock> locks = getLocks(resources, NopLock.class);
 
 		assertThat(locks).isEmpty();
 	}
@@ -47,7 +47,7 @@ class LockManagerTests {
 	void returnsSingleLockForSingleExclusiveResource() {
 		Collection<ExclusiveResource> resources = singleton(new ExclusiveResource("foo", READ));
 
-		List<Lock> locks = getLocks(lockManager, resources);
+		List<Lock> locks = getLocks(resources, SingleLock.class);
 
 		assertThat(locks).hasSize(1);
 		assertThat(locks.get(0)).isInstanceOf(ReadLock.class);
@@ -59,7 +59,7 @@ class LockManagerTests {
 			new ExclusiveResource("a", READ), //
 			new ExclusiveResource("b", READ_WRITE));
 
-		List<Lock> locks = getLocks(lockManager, resources);
+		List<Lock> locks = getLocks(resources, CompositeLock.class);
 
 		assertThat(locks).hasSize(2);
 		assertThat(locks.get(0)).isInstanceOf(ReadLock.class);
@@ -70,8 +70,8 @@ class LockManagerTests {
 	void reusesSameLockForExclusiveResourceWithSameKey() {
 		Collection<ExclusiveResource> resources = singleton(new ExclusiveResource("foo", READ));
 
-		List<Lock> locks1 = getLocks(lockManager, resources);
-		List<Lock> locks2 = getLocks(lockManager, resources);
+		List<Lock> locks1 = getLocks(resources, SingleLock.class);
+		List<Lock> locks2 = getLocks(resources, SingleLock.class);
 
 		assertThat(locks1).hasSize(1);
 		assertThat(locks2).hasSize(1);
@@ -79,22 +79,27 @@ class LockManagerTests {
 	}
 
 	@Test
-	void returnsSingleLockForExclusiveResourcWithBothLockModes() {
+	void returnsWriteLockForExclusiveResourceWithBothLockModes() {
 		Collection<ExclusiveResource> resources = asList( //
 			new ExclusiveResource("bar", READ), //
 			new ExclusiveResource("foo", READ), //
 			new ExclusiveResource("foo", READ_WRITE), //
 			new ExclusiveResource("bar", READ_WRITE));
 
-		List<Lock> locks = getLocks(lockManager, resources);
+		List<Lock> locks = getLocks(resources, CompositeLock.class);
 
 		assertThat(locks).hasSize(2);
 		assertThat(locks.get(0)).isInstanceOf(WriteLock.class);
 		assertThat(locks.get(1)).isInstanceOf(WriteLock.class);
 	}
 
-	private List<Lock> getLocks(LockManager lockManager, Collection<ExclusiveResource> resources) {
-		ResourceLock resourceLock = lockManager.getLockForResources(resources);
+	private List<Lock> getLocks(Collection<ExclusiveResource> resources, Class<? extends ResourceLock> type) {
+		ResourceLock lock = lockManager.getLockForResources(resources);
+		assertThat(lock).isInstanceOf(type);
+		return getLocks(lock);
+	}
+
+	private List<Lock> getLocks(ResourceLock resourceLock) {
 		if (resourceLock instanceof NopLock) {
 			return emptyList();
 		}
