@@ -33,12 +33,15 @@ import org.mockito.InOrder;
 class CompositeLockTests {
 
 	@Test
-	void acquiresAllLocks() throws Exception {
-		ReentrantLock lock1 = new ReentrantLock();
-		ReentrantLock lock2 = new ReentrantLock();
+	void acquiresAllLocksInOrder() throws Exception {
+		ReentrantLock lock1 = spy(new ReentrantLock());
+		ReentrantLock lock2 = spy(new ReentrantLock());
 
 		new CompositeLock(asList(lock1, lock2)).acquire();
 
+		InOrder inOrder = inOrder(lock1, lock2);
+		inOrder.verify(lock1).lockInterruptibly();
+		inOrder.verify(lock2).lockInterruptibly();
 		assertTrue(lock1.isLocked());
 		assertTrue(lock2.isLocked());
 	}
