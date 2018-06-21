@@ -12,8 +12,8 @@ package org.junit.platform.commons.logging;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.stream.Stream;
@@ -30,19 +30,21 @@ import org.junit.platform.commons.JUnitException;
 @API(status = INTERNAL, since = "1.1")
 public class LogRecordListener {
 
-	private final List<LogRecord> logRecords = new CopyOnWriteArrayList<>();
+	// capture log records by thread to support parallel test execution
+	private final ThreadLocal<List<LogRecord>> logRecords = ThreadLocal.withInitial(ArrayList::new);
 
 	/**
 	 * Inform the listener of a {@link LogRecord} that was submitted to JUL for
 	 * processing.
 	 */
 	public void logRecordSubmitted(LogRecord logRecord) {
-		this.logRecords.add(logRecord);
+		this.logRecords.get().add(logRecord);
 	}
 
 	/**
 	 * Get a stream of {@link LogRecord log records} that have been
-	 * {@linkplain #logRecordSubmitted submitted} to this listener.
+	 * {@linkplain #logRecordSubmitted submitted} to this listener by the
+	 * current thread.
 	 *
 	 * <p>As stated in the JavaDoc for {@code LogRecord}, a submitted
 	 * {@code LogRecord} should not be updated by the client application. Thus,
@@ -50,15 +52,13 @@ public class LogRecordListener {
 	 * testing purposes and not modified in any way.
 	 */
 	public Stream<LogRecord> stream() {
-		// only return LogRecords for current thread to support parallel test execution
-		int currentThreadId = new LogRecord(Level.OFF, "unused").getThreadID();
-		return this.logRecords.stream().filter(logRecord -> logRecord.getThreadID() == currentThreadId);
+		return this.logRecords.get().stream();
 	}
 
 	/**
 	 * Get a stream of {@link LogRecord log records} that have been
 	 * {@linkplain #logRecordSubmitted submitted} to this listener for the
-	 * logger name equal to the name of the given class.
+	 * logger name equal to the name of the given class by the current thread.
 	 *
 	 * <p>As stated in the JavaDoc for {@code LogRecord}, a submitted
 	 * {@code LogRecord} should not be updated by the client application. Thus,
@@ -80,7 +80,8 @@ public class LogRecordListener {
 	/**
 	 * Get a stream of {@link LogRecord log records} that have been
 	 * {@linkplain #logRecordSubmitted submitted} to this listener for the
-	 * logger name equal to the name of the given class at the given log level.
+	 * logger name equal to the name of the given class at the given log level
+	 * by the current thread.
 	 *
 	 * <p>As stated in the JavaDoc for {@code LogRecord}, a submitted
 	 * {@code LogRecord} should not be updated by the client application. Thus,
@@ -102,10 +103,11 @@ public class LogRecordListener {
 
 	/**
 	 * Clear all existing {@link LogRecord log records} that have been
-	 * {@linkplain #logRecordSubmitted submitted} to this listener.
+	 * {@linkplain #logRecordSubmitted submitted} to this listener by the
+	 * current thread.
 	 */
 	public void clear() {
-		this.logRecords.clear();
+		this.logRecords.get().clear();
 	}
 
 }
