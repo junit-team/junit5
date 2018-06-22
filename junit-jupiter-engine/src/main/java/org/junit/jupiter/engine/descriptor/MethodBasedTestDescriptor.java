@@ -20,6 +20,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 
 /**
  * Base class for {@link TestDescriptor TestDescriptors} based on Java methods.
@@ -54,6 +55,16 @@ abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 		Set<TestTag> allTags = new LinkedHashSet<TestTag>(this.tags);
 		getParent().ifPresent(parentDescriptor -> allTags.addAll(parentDescriptor.getTags()));
 		return allTags;
+	}
+
+	@Override
+	public Set<ExclusiveResource> getExclusiveResources() {
+		return getExclusiveResources(getTestMethod());
+	}
+
+	@Override
+	public ExecutionMode getExecutionMode() {
+		return getExecutionMode(getTestMethod());
 	}
 
 	public final Class<?> getTestClass() {

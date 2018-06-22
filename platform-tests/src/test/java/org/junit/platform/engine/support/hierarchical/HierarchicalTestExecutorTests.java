@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -23,7 +24,6 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +35,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
+import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
 import org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
@@ -148,7 +149,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
 		verify(listener, never()).executionStarted(child);
-		verifyNoMoreInteractions(child);
+		verify(child, never()).execute(any(), any());
 		verify(listener, never()).executionFinished(eq(child), any(TestExecutionResult.class));
 	}
 
@@ -170,7 +171,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
 		verify(listener, never()).executionStarted(child);
-		verifyNoMoreInteractions(child);
+		verify(child, never()).execute(any(), any());
 		verify(listener, never()).executionFinished(eq(child), any(TestExecutionResult.class));
 	}
 
@@ -195,7 +196,7 @@ class HierarchicalTestExecutorTests {
 		inOrder.verify(listener).executionFinished(eq(child), childExecutionResult.capture());
 		inOrder.verify(listener).executionFinished(eq(root), any(TestExecutionResult.class));
 
-		verifyNoMoreInteractions(child);
+		verify(child, never()).execute(any(), any());
 
 		assertThat(childExecutionResult.getValue().getStatus()).isEqualTo(FAILED);
 		assertThat(childExecutionResult.getValue().getThrowable()).containsSame(anException);
@@ -224,7 +225,7 @@ class HierarchicalTestExecutorTests {
 		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(FAILED);
 		assertThat(rootExecutionResult.getValue().getThrowable()).containsSame(anException);
 
-		verifyNoMoreInteractions(child);
+		verify(child, never()).execute(any(), any());
 	}
 
 	@Test
@@ -371,7 +372,7 @@ class HierarchicalTestExecutorTests {
 		assertThat(rootExecutionResult.getValue().getStatus()).isEqualTo(ABORTED);
 		assertThat(rootExecutionResult.getValue().getThrowable()).containsSame(anAbortedException);
 
-		verifyNoMoreInteractions(child);
+		verify(child, never()).execute(any(), any());
 	}
 
 	@Test
@@ -545,6 +546,35 @@ class HierarchicalTestExecutorTests {
 			exceptionInExecute).hasSuppressedException(exceptionInAfter);
 	}
 
+	@Test
+	void dynamicTestDescriptorsMustNotDeclareExclusiveResources() throws Exception {
+
+		UniqueId leafUniqueId = UniqueId.root("leaf", "child leaf");
+		MyLeaf child = spy(new MyLeaf(leafUniqueId));
+		MyLeaf dynamicTestDescriptor = spy(new MyLeaf(leafUniqueId.append("dynamic", "child")));
+		when(dynamicTestDescriptor.getExclusiveResources()).thenReturn(
+			singleton(new ExclusiveResource("foo", LockMode.READ)));
+
+		when(child.execute(any(), any())).thenAnswer(invocation -> {
+			DynamicTestExecutor dynamicTestExecutor = invocation.getArgument(1);
+			dynamicTestExecutor.execute(dynamicTestDescriptor);
+			return invocation.getArgument(0);
+		});
+		root.addChild(child);
+
+		executor.execute();
+
+		ArgumentCaptor<TestExecutionResult> aTestExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		verify(listener).executionStarted(dynamicTestDescriptor);
+		verify(listener).executionFinished(eq(dynamicTestDescriptor), aTestExecutionResult.capture());
+
+		TestExecutionResult executionResult = aTestExecutionResult.getValue();
+		assertThat(executionResult.getStatus()).isEqualTo(FAILED);
+		assertThat(executionResult.getThrowable()).isPresent();
+		assertThat(executionResult.getThrowable().get()).hasMessageContaining(
+			"Dynamic test descriptors must not declare exclusive resources");
+	}
+
 	// -------------------------------------------------------------------
 
 	private static class MyEngineExecutionContext implements EngineExecutionContext {
@@ -596,7 +626,7 @@ class HierarchicalTestExecutorTests {
 	private static class MyExecutor extends HierarchicalTestExecutor<MyEngineExecutionContext> {
 
 		MyExecutor(ExecutionRequest request, MyEngineExecutionContext rootContext) {
-			super(request, rootContext);
+			super(request, rootContext, new SameThreadHierarchicalTestExecutorService());
 		}
 	}
 

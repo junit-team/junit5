@@ -3,7 +3,8 @@
 
 *Date of Release:* ❓
 
-*Scope:* ❓
+*Scope:* Parallel test execution, output capturing, test sources for dynamic tests as well
+as various minor improvements and bug fixes.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/23?closed=1+[5.3 M1] milestone page in the JUnit repository
@@ -34,6 +35,19 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Experimental support for capturing output printed to `System.out` and
+  `System.err` during test execution. This feature is disabled by default and can be
+  enabled using a configuration parameter (cf.
+  <<../user-guide/index.adoc#running-tests-capturing-output, User Guide>>).
+* Reusable support for parallel test execution for test engines that extend
+  `HierarchicalTestEngine`.
+  - `HierarchicalTestEngine` implementations may now specify a
+    `HierarchicalTestExecutorService`
+  - By default, a `SameThreadHierarchicalTestExecutorService` is used.
+  - Test engines may use `ForkJoinPoolHierarchicalTestExecutorService` to support
+    parallel test execution based on the Fork/Join Framework.
+  - `Node` implementations may provide a set of `ExclusiveResources` and an
+    `ExecutionMode` to be used by `ForkJoinPoolHierarchicalTestExecutorService`.
 * New overloaded variant of `isAnnotated()` in `AnnotationSupport` that accepts
   `Optional<? extends AnnotatedElement>` instead of `AnnotatedElement`.
 * New `--fail-if-no-tests` command-line option for the `ConsoleLauncher`.
@@ -64,6 +78,10 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Experimental support for parallel test execution. By default, tests are still executed
+  sequentially; parallelism can be enabled using a configuration parameter (please refer
+  to the <<../user-guide/index.adoc#writing-tests-parallel-execution, User Guide>> for
+  examples and configuration options).
 * New support for the IBM AIX operating system in `@EnabledOnOs` and `@DisabledOnOs`.
 * New `assertThrows` methods in `Assertions` provide a more specific failure message if
   the supplied lambda expression or method reference returns a result instead of throwing

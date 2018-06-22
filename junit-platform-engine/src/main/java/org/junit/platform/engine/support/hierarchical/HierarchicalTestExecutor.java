@@ -10,18 +10,12 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
-import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.Future;
 
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
-import org.junit.platform.engine.TestExecutionResult;
-import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
 
 /**
  * Implementation core of all {@link TestEngine TestEngines} that wish to
@@ -39,170 +33,27 @@ import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
  */
 class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 
-	private static final SingleTestExecutor singleTestExecutor = new SingleTestExecutor();
-
-	private final TestDescriptor rootTestDescriptor;
-	private final EngineExecutionListener listener;
+	private final ExecutionRequest request;
 	private final C rootContext;
+	private final HierarchicalTestExecutorService executorService;
 
-	HierarchicalTestExecutor(ExecutionRequest request, C rootContext) {
-		this.rootTestDescriptor = request.getRootTestDescriptor();
-		this.listener = request.getEngineExecutionListener();
+	HierarchicalTestExecutor(ExecutionRequest request, C rootContext, HierarchicalTestExecutorService executorService) {
+		this.request = request;
 		this.rootContext = rootContext;
+		this.executorService = executorService;
 	}
 
-	void execute() {
-		new NodeExecutor(this.rootTestDescriptor).execute(this.rootContext, new ExecutionTracker());
+	Future<Void> execute() {
+		NodeTestTask<C> rootTestTask = prepareNodeTestTaskTree();
+		rootTestTask.setParentContext(this.rootContext);
+		return this.executorService.submit(rootTestTask);
 	}
 
-	class NodeExecutor {
-
-		private final TestDescriptor testDescriptor;
-		private final Node<C> node;
-		private final List<Throwable> executionErrors = new ArrayList<>();
-		private C context;
-		private SkipResult skipResult;
-		private TestExecutionResult executionResult;
-
-		NodeExecutor(TestDescriptor testDescriptor) {
-			this.testDescriptor = testDescriptor;
-			node = asNode(testDescriptor);
-		}
-
-		void execute(C parentContext, ExecutionTracker tracker) {
-			tracker.markExecuted(testDescriptor);
-			prepare(parentContext);
-			if (executionErrors.isEmpty()) {
-				checkWhetherSkipped();
-			}
-			if (executionErrors.isEmpty() && !skipResult.isSkipped()) {
-				executeRecursively(tracker);
-			}
-			if (context != null) {
-				cleanUp();
-			}
-			reportDone();
-		}
-
-		private void prepare(C parentContext) {
-			try {
-				context = node.prepare(parentContext);
-			}
-			catch (Throwable t) {
-				addExecutionError(t);
-			}
-		}
-
-		private void checkWhetherSkipped() {
-			try {
-				skipResult = node.shouldBeSkipped(context);
-			}
-			catch (Throwable t) {
-				addExecutionError(t);
-			}
-		}
-
-		private void executeRecursively(ExecutionTracker tracker) {
-			listener.executionStarted(testDescriptor);
-
-			executionResult = singleTestExecutor.executeSafely(() -> {
-				Throwable failure = null;
-				try {
-					context = node.before(context);
-
-					context = node.execute(context, dynamicTestDescriptor -> {
-						listener.dynamicTestRegistered(dynamicTestDescriptor);
-						new NodeExecutor(dynamicTestDescriptor).execute(context, tracker);
-					});
-
-					// @formatter:off
-					testDescriptor.getChildren().stream()
-							.filter(child -> !tracker.wasAlreadyExecuted(child))
-							.forEach(child -> new NodeExecutor(child).execute(context, tracker));
-					// @formatter:on
-				}
-				catch (Throwable t) {
-					failure = t;
-				}
-				finally {
-					executeAfter(failure);
-				}
-			});
-		}
-
-		private void executeAfter(Throwable failure) throws Throwable {
-			try {
-				node.after(context);
-			}
-			catch (Throwable t) {
-				if (failure != null && failure != t) {
-					failure.addSuppressed(t);
-				}
-				else {
-					throw t;
-				}
-			}
-			if (failure != null) {
-				throw failure;
-			}
-		}
-
-		private void cleanUp() {
-			try {
-				node.cleanUp(context);
-			}
-			catch (Throwable t) {
-				addExecutionError(t);
-			}
-		}
-
-		private void reportDone() {
-			if (executionResult != null) {
-				addExecutionErrorsToTestExecutionResult();
-				listener.executionFinished(testDescriptor, executionResult);
-			}
-			else if (executionErrors.isEmpty() && skipResult.isSkipped()) {
-				listener.executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
-			}
-			else {
-				// Call executionStarted first to comply with the contract of EngineExecutionListener.
-				listener.executionStarted(testDescriptor);
-				listener.executionFinished(testDescriptor, createTestExecutionResultFromExecutionErrors());
-			}
-		}
-
-		private void addExecutionErrorsToTestExecutionResult() {
-			if (executionErrors.isEmpty()) {
-				return;
-			}
-			if (executionResult.getStatus() == FAILED && executionResult.getThrowable().isPresent()) {
-				Throwable throwable = executionResult.getThrowable().get();
-				executionErrors.forEach(throwable::addSuppressed);
-			}
-			else {
-				executionResult = createTestExecutionResultFromExecutionErrors();
-			}
-		}
-
-		private TestExecutionResult createTestExecutionResultFromExecutionErrors() {
-			Throwable throwable = executionErrors.get(0);
-			executionErrors.stream().skip(1).forEach(throwable::addSuppressed);
-			return TestExecutionResult.failed(throwable);
-		}
-
-		private void addExecutionError(Throwable throwable) {
-			rethrowIfBlacklisted(throwable);
-			executionErrors.add(throwable);
-		}
+	NodeTestTask<C> prepareNodeTestTaskTree() {
+		TestDescriptor rootTestDescriptor = this.request.getRootTestDescriptor();
+		EngineExecutionListener executionListener = this.request.getEngineExecutionListener();
+		NodeTestTask<C> rootTestTask = new NodeTestTask<>(rootTestDescriptor, executionListener, this.executorService);
+		new NodeTestTaskWalker().walk(rootTestTask);
+		return rootTestTask;
 	}
-
-	@SuppressWarnings("unchecked")
-	private Node<C> asNode(TestDescriptor testDescriptor) {
-		return (testDescriptor instanceof Node ? (Node<C>) testDescriptor : noOpNode);
-	}
-
-	@SuppressWarnings("rawtypes")
-	private static final Node noOpNode = new Node() {
-	};
-
 }
