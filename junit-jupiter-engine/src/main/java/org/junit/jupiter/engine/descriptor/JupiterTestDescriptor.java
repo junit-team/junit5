@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
@@ -28,8 +29,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ResourceAccessMode;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -38,6 +43,8 @@ import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
+import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
+import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
 import org.junit.platform.engine.support.hierarchical.Node;
 
 /**
@@ -102,6 +109,46 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	}
 
 	// --- Node ----------------------------------------------------------------
+
+	protected ExecutionMode getExecutionMode(AnnotatedElement element) {
+		// @formatter:off
+		return findAnnotation(element, Execution.class)
+				.map(Execution::value)
+				.map(JupiterTestDescriptor::toExecutionMode)
+				.orElseGet(() -> getParent()
+						.filter(parent -> parent instanceof Node)
+						.map(parent -> ((Node<?>) parent).getExecutionMode())
+						.orElse(ExecutionMode.CONCURRENT));
+		// @formatter:on
+	}
+
+	private static ExecutionMode toExecutionMode(org.junit.jupiter.api.parallel.ExecutionMode mode) {
+		switch (mode) {
+			case CONCURRENT:
+				return ExecutionMode.CONCURRENT;
+			case SAME_THREAD:
+				return ExecutionMode.SAME_THREAD;
+		}
+		throw new JUnitException("Unknown ExecutionMode: " + mode);
+	}
+
+	protected Set<ExclusiveResource> getExclusiveResources(AnnotatedElement element) {
+		// @formatter:off
+		return findRepeatableAnnotations(element, ResourceLock.class).stream()
+				.map(resource -> new ExclusiveResource(resource.value(), toLockMode(resource.mode())))
+				.collect(toSet());
+		// @formatter:on
+	}
+
+	private static LockMode toLockMode(ResourceAccessMode mode) {
+		switch (mode) {
+			case READ:
+				return LockMode.READ;
+			case READ_WRITE:
+				return LockMode.READ_WRITE;
+		}
+		throw new JUnitException("Unknown ResourceAccessMode: " + mode);
+	}
 
 	@Override
 	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {

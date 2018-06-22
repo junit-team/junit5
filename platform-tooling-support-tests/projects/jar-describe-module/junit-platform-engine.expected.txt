@@ -5,6 +5,7 @@ requires java.base mandated
 contains org.junit.platform.engine
 contains org.junit.platform.engine.discovery
 contains org.junit.platform.engine.reporting
+contains org.junit.platform.engine.support.config
 contains org.junit.platform.engine.support.descriptor
 contains org.junit.platform.engine.support.filter
 contains org.junit.platform.engine.support.hierarchical

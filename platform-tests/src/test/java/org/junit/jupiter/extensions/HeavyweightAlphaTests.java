@@ -22,6 +22,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 /**
  * Unit tests for {@link org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource}
@@ -30,6 +31,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @since 1.1
  */
 @ExtendWith(Heavyweight.class)
+@ResourceLock(Heavyweight.Resource.ID)
 class HeavyweightAlphaTests {
 
 	private static int mark;

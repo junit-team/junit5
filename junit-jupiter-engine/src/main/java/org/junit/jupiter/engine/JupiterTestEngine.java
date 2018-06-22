@@ -11,6 +11,8 @@
 package org.junit.jupiter.engine;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_PREFIX;
+import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 
 import java.util.Optional;
 
@@ -18,11 +20,15 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.config.PrefixedConfigurationParameters;
+import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
+import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService;
 
 /**
  * The JUnit Jupiter {@link org.junit.platform.engine.TestEngine TestEngine}.
@@ -60,6 +66,16 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(uniqueId);
 		new DiscoverySelectorResolver().resolveSelectors(discoveryRequest, engineDescriptor);
 		return engineDescriptor;
+	}
+
+	@Override
+	protected HierarchicalTestExecutorService createExecutorService(ExecutionRequest request) {
+		ConfigurationParameters config = request.getConfigurationParameters();
+		if (config.getBoolean(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME).orElse(false)) {
+			return new ForkJoinPoolHierarchicalTestExecutorService(
+				new PrefixedConfigurationParameters(config, PARALLEL_CONFIG_PREFIX));
+		}
+		return super.createExecutorService(request);
 	}
 
 	@Override

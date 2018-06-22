@@ -10,15 +10,17 @@
 
 package org.junit.platform.console.tasks;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.StringReader;
 import java.net.URL;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import org.opentest4j.AssertionFailedError;
 import org.xml.sax.SAXException;
 
 /**
@@ -26,24 +28,37 @@ import org.xml.sax.SAXException;
  */
 class XmlReportAssertions {
 
-	private static Validator schemaValidator;
-
 	static void assertValidAccordingToJenkinsSchema(String content) throws Exception {
 		try {
-			getSchemaValidator().validate(new StreamSource(new StringReader(content)));
+			// Schema is thread-safe, Validator is not
+			Validator validator = CachedSchema.JENKINS.newValidator();
+			validator.validate(new StreamSource(new StringReader(content)));
 		}
 		catch (SAXException e) {
-			throw new AssertionFailedError("Invalid XML document: " + content, e);
+			fail("Invalid XML document: " + content, e);
 		}
 	}
 
-	private static Validator getSchemaValidator() throws SAXException {
-		if (schemaValidator == null) {
-			URL schemaFile = XmlReportsWritingListener.class.getResource("/jenkins-junit.xsd");
+	private enum CachedSchema {
+
+		JENKINS("/jenkins-junit.xsd");
+
+		private final Schema schema;
+
+		CachedSchema(String resourcePath) {
+			URL schemaFile = XmlReportsWritingListener.class.getResource(resourcePath);
 			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			schemaValidator = schemaFactory.newSchema(schemaFile).newValidator();
+			try {
+				this.schema = schemaFactory.newSchema(schemaFile);
+			}
+			catch (SAXException e) {
+				throw new RuntimeException("Failed to create schema using " + schemaFile, e);
+			}
 		}
-		return schemaValidator;
+
+		Validator newValidator() {
+			return schema.newValidator();
+		}
 	}
 
 }

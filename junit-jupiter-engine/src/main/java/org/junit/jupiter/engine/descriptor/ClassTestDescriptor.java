@@ -50,6 +50,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 
 /**
  * {@link TestDescriptor} for tests based on Java classes.
@@ -116,6 +117,16 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	// --- Node ----------------------------------------------------------------
+
+	@Override
+	public ExecutionMode getExecutionMode() {
+		return getExecutionMode(getTestClass());
+	}
+
+	@Override
+	public Set<ExclusiveResource> getExclusiveResources() {
+		return getExclusiveResources(getTestClass());
+	}
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
