@@ -336,6 +336,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/AnnotationUtils.html#findRepeatableAnnotations(java.lang.reflect.AnnotatedElement,java.lang.Class)">findRepeatableAnnotations(AnnotatedElement, Class&lt;A&gt;)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/AnnotationUtils.html" title="class in org.junit.platform.commons.util">AnnotationUtils</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html#FIXED">FIXED</a></span> - org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html" title="enum in org.junit.platform.engine.support.hierarchical">DefaultParallelExecutionConfigurationStrategy</a></dt>
+<dd>
+<div class="block">Uses the mandatory <a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html#CONFIG_FIXED_PARALLELISM_PROPERTY_NAME">"fixed.parallelism"</a> configuration
+ parameter as desired parallelism.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/console/options/Details.html#FLAT">FLAT</a></span> - org.junit.platform.console.options.<a href="../org/junit/platform/console/options/Details.html" title="enum in org.junit.platform.console.options">Details</a></dt>
 <dd>
 <div class="block">Test plan execution details are rendered in a flat, line-by-line mode.</div>
@@ -365,6 +370,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Create a <code>LoggingListener</code> which delegates to a
  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/Logger.html?is-external=true" title="class or interface in java.util.logging" class="externalLink"><code>Logger</code></a> using the supplied
  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/Level.html?is-external=true" title="class or interface in java.util.logging" class="externalLink">log level</a>.</div>
+</dd>
+<dt><a href="../org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.html" title="class in org.junit.platform.engine.support.hierarchical"><span class="typeNameLink">ForkJoinPoolHierarchicalTestExecutorService</span></a> - Class in <a href="../org/junit/platform/engine/support/hierarchical/package-summary.html">org.junit.platform.engine.support.hierarchical</a></dt>
+<dd>
+<div class="block">A <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ForkJoinPool.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink"><code>ForkJoinPool</code></a>-based
+ <a href="../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">executor service</a> that executes
+ <a href="../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> with a configured parallelism.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.html#%3Cinit%3E(org.junit.platform.engine.ConfigurationParameters)">ForkJoinPoolHierarchicalTestExecutorService(ConfigurationParameters)</a></span> - Constructor for class org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.html" title="class in org.junit.platform.engine.support.hierarchical">ForkJoinPoolHierarchicalTestExecutorService</a></dt>
+<dd>
+<div class="block">Create a new <code>ForkJoinPoolHierarchicalTestExecutorService</code> based on
+ the supplied <a href="../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/descriptor/FilePosition.html#from(int)">from(int)</a></span> - Static method in class org.junit.platform.engine.support.descriptor.<a href="../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">FilePosition</a></dt>
 <dd>

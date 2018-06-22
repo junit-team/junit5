@@ -108,6 +108,27 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/vintage/engine/descriptor/VintageTestDescriptor.html#canBeRemovedFromHierarchy()">canBeRemovedFromHierarchy()</a></span> - Method in class org.junit.vintage.engine.descriptor.<a href="../org/junit/vintage/engine/descriptor/VintageTestDescriptor.html" title="class in org.junit.vintage.engine.descriptor">VintageTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/LauncherConstants.html#CAPTURE_MAX_BUFFER_DEFAULT">CAPTURE_MAX_BUFFER_DEFAULT</a></span> - Static variable in class org.junit.platform.launcher.<a href="../org/junit/platform/launcher/LauncherConstants.html" title="class in org.junit.platform.launcher">LauncherConstants</a></dt>
+<dd>
+<div class="block">Default maximum number of bytes for buffering to use per thread and
+ output type if output capturing is enabled.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/LauncherConstants.html#CAPTURE_MAX_BUFFER_PROPERTY_NAME">CAPTURE_MAX_BUFFER_PROPERTY_NAME</a></span> - Static variable in class org.junit.platform.launcher.<a href="../org/junit/platform/launcher/LauncherConstants.html" title="class in org.junit.platform.launcher">LauncherConstants</a></dt>
+<dd>
+<div class="block">Property name used to configure the maximum number of bytes for buffering
+ to use per thread and output type if output capturing is enabled:
+ "junit.platform.output.capture.maxBuffer"</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/LauncherConstants.html#CAPTURE_STDERR_PROPERTY_NAME">CAPTURE_STDERR_PROPERTY_NAME</a></span> - Static variable in class org.junit.platform.launcher.<a href="../org/junit/platform/launcher/LauncherConstants.html" title="class in org.junit.platform.launcher">LauncherConstants</a></dt>
+<dd>
+<div class="block">Property name used to enable capturing output to <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html?is-external=true#err" title="class or interface in java.lang" class="externalLink"><code>System.err</code></a>:
+ "junit.platform.output.capture.stderr"</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/LauncherConstants.html#CAPTURE_STDOUT_PROPERTY_NAME">CAPTURE_STDOUT_PROPERTY_NAME</a></span> - Static variable in class org.junit.platform.launcher.<a href="../org/junit/platform/launcher/LauncherConstants.html" title="class in org.junit.platform.launcher">LauncherConstants</a></dt>
+<dd>
+<div class="block">Property name used to enable capturing output to <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html?is-external=true#out" title="class or interface in java.lang" class="externalLink"><code>System.out</code></a>:
+ "junit.platform.output.capture.stdout"</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/params/provider/ValueSource.html#chars()">chars()</a></span> - Method in annotation type org.junit.jupiter.params.provider.<a href="../org/junit/jupiter/params/provider/ValueSource.html" title="annotation in org.junit.jupiter.params.provider">ValueSource</a></dt>
 <dd>
 <div class="block">The <code>char</code> values to use as sources of arguments; must not be empty.</div>
@@ -201,7 +222,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/logging/LogRecordListener.html#clear()">clear()</a></span> - Method in class org.junit.platform.commons.logging.<a href="../org/junit/platform/commons/logging/LogRecordListener.html" title="class in org.junit.platform.commons.logging">LogRecordListener</a></dt>
 <dd>
 <div class="block">Clear all existing <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogRecord.html?is-external=true" title="class or interface in java.util.logging" class="externalLink"><code>log records</code></a> that have been
- <a href="../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener.</div>
+ <a href="../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener by the
+ current thread.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/UniqueId.html#clone()">clone()</a></span> - Method in class org.junit.platform.engine.<a href="../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></dt>
 <dd>&nbsp;</dd>
@@ -210,6 +232,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Close underlying resources.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html#close()">close()</a></span> - Method in class org.junit.jupiter.engine.execution.<a href="../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.html#close()">close()</a></span> - Method in class org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.html" title="class in org.junit.platform.engine.support.hierarchical">ForkJoinPoolHierarchicalTestExecutorService</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html#close()">close()</a></span> - Method in interface org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></dt>
+<dd>
+<div class="block">Close this service and let it perform any required cleanup work.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/ResourceLock.html#close()">close()</a></span> - Method in interface org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/ResourceLock.html" title="interface in org.junit.platform.engine.support.hierarchical">ResourceLock</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html#close()">close()</a></span> - Method in class org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html" title="class in org.junit.platform.engine.support.hierarchical">SameThreadHierarchicalTestExecutorService</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/execution/ExtensionValuesStore.html#closeAllStoredCloseableValues()">closeAllStoredCloseableValues()</a></span> - Method in class org.junit.jupiter.engine.execution.<a href="../org/junit/jupiter/engine/execution/ExtensionValuesStore.html" title="class in org.junit.jupiter.engine.execution">ExtensionValuesStore</a></dt>
 <dd>
@@ -241,6 +273,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/console/ConsoleLauncherExecutionResult.html#computeExitCode(org.junit.platform.launcher.listeners.TestExecutionSummary,org.junit.platform.console.options.CommandLineOptions)">computeExitCode(TestExecutionSummary, CommandLineOptions)</a></span> - Static method in class org.junit.platform.console.<a href="../org/junit/platform/console/ConsoleLauncherExecutionResult.html" title="class in org.junit.platform.console">ConsoleLauncherExecutionResult</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/parallel/ExecutionMode.html#CONCURRENT">CONCURRENT</a></span> - org.junit.jupiter.api.parallel.<a href="../org/junit/jupiter/api/parallel/ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel">ExecutionMode</a></dt>
+<dd>
+<div class="block">Allow concurrent execution with any other node.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html#CONCURRENT">CONCURRENT</a></span> - org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a></dt>
+<dd>
+<div class="block">Allow concurrent execution with any other node.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/Preconditions.html#condition(boolean,java.lang.String)">condition(boolean, String)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/Preconditions.html" title="class in org.junit.platform.commons.util">Preconditions</a></dt>
 <dd>
 <div class="block">Assert that the supplied <code>predicate</code> is <code>true</code>.</div>
@@ -268,9 +308,29 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Log the message from the provided <code>messageSupplier</code> at config level.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html#CONFIG_CUSTOM_CLASS_PROPERTY_NAME">CONFIG_CUSTOM_CLASS_PROPERTY_NAME</a></span> - Static variable in enum org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html" title="enum in org.junit.platform.engine.support.hierarchical">DefaultParallelExecutionConfigurationStrategy</a></dt>
+<dd>
+<div class="block">Property name used to specify the fully qualified class name of the
+ <a href="../org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>ParallelExecutionConfigurationStrategy</code></a> to be used by the
+ <a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html#CUSTOM"><code>DefaultParallelExecutionConfigurationStrategy.CUSTOM</code></a> configuration strategy.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html#CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME">CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME</a></span> - Static variable in enum org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html" title="enum in org.junit.platform.engine.support.hierarchical">DefaultParallelExecutionConfigurationStrategy</a></dt>
+<dd>
+<div class="block">Property name of the factor used to determine the desired parallelism by the
+ <a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html#DYNAMIC"><code>DefaultParallelExecutionConfigurationStrategy.DYNAMIC</code></a> configuration strategy.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/ConfigurationParameters.html#CONFIG_FILE_NAME">CONFIG_FILE_NAME</a></span> - Static variable in interface org.junit.platform.engine.<a href="../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></dt>
 <dd>
 <div class="block">Name of the JUnit Platform configuration file: "junit-platform.properties".</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html#CONFIG_FIXED_PARALLELISM_PROPERTY_NAME">CONFIG_FIXED_PARALLELISM_PROPERTY_NAME</a></span> - Static variable in enum org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html" title="enum in org.junit.platform.engine.support.hierarchical">DefaultParallelExecutionConfigurationStrategy</a></dt>
+<dd>
+<div class="block">Property name used to determine the desired parallelism by the
+ <a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html#FIXED"><code>DefaultParallelExecutionConfigurationStrategy.FIXED</code></a> configuration strategy.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html#CONFIG_STRATEGY_PROPERTY_NAME">CONFIG_STRATEGY_PROPERTY_NAME</a></span> - Static variable in enum org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html" title="enum in org.junit.platform.engine.support.hierarchical">DefaultParallelExecutionConfigurationStrategy</a></dt>
+<dd>
+<div class="block">Property name used to determine the desired configuration strategy.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html#configurationParameter(java.lang.String,java.lang.String)">configurationParameter(String, String)</a></span> - Method in class org.junit.platform.launcher.core.<a href="../org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core">LauncherDiscoveryRequestBuilder</a></dt>
 <dd>
@@ -380,12 +440,24 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Create a <code>TestTag</code> from the supplied <code>name</code>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.html#createConfiguration(org.junit.platform.engine.ConfigurationParameters)">createConfiguration(ConfigurationParameters)</a></span> - Method in interface org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.html" title="interface in org.junit.platform.engine.support.hierarchical">ParallelExecutionConfigurationStrategy</a></dt>
+<dd>
+<div class="block">Create a configuration for parallel test execution based on the supplied
+ <a href="../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/JupiterTestEngine.html#createExecutionContext(org.junit.platform.engine.ExecutionRequest)">createExecutionContext(ExecutionRequest)</a></span> - Method in class org.junit.jupiter.engine.<a href="../org/junit/jupiter/engine/JupiterTestEngine.html" title="class in org.junit.jupiter.engine">JupiterTestEngine</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html#createExecutionContext(org.junit.platform.engine.ExecutionRequest)">createExecutionContext(ExecutionRequest)</a></span> - Method in class org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html" title="class in org.junit.platform.engine.support.hierarchical">HierarchicalTestEngine</a></dt>
 <dd>
 <div class="block">Create the initial execution context for executing the supplied
- <a href="../org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine"><code>request</code></a>.</div>
+ <a href="../org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine">request</a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/JupiterTestEngine.html#createExecutorService(org.junit.platform.engine.ExecutionRequest)">createExecutorService(ExecutionRequest)</a></span> - Method in class org.junit.jupiter.engine.<a href="../org/junit/jupiter/engine/JupiterTestEngine.html" title="class in org.junit.jupiter.engine">JupiterTestEngine</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html#createExecutorService(org.junit.platform.engine.ExecutionRequest)">createExecutorService(ExecutionRequest)</a></span> - Method in class org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html" title="class in org.junit.platform.engine.support.hierarchical">HierarchicalTestEngine</a></dt>
+<dd>
+<div class="block">Create the <a href="../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">executor service</a>
+ to use for executing the supplied <a href="../org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine">request</a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/extension/ExtensionRegistry.html#createRegistryFrom(org.junit.jupiter.engine.extension.ExtensionRegistry,java.util.List)">createRegistryFrom(ExtensionRegistry, List&lt;Class&lt;? extends Extension&gt;&gt;)</a></span> - Static method in class org.junit.jupiter.engine.extension.<a href="../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></dt>
 <dd>
@@ -411,6 +483,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Placeholder for the current repetition count of a <code>@RepeatedTest</code>
  method: <code>{currentRepetition}</code></div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html#CUSTOM">CUSTOM</a></span> - org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html" title="enum in org.junit.platform.engine.support.hierarchical">DefaultParallelExecutionConfigurationStrategy</a></dt>
+<dd>
+<div class="block">Allows to specify a custom <a href="../org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>ParallelExecutionConfigurationStrategy</code></a>
+ implementation via the mandatory <a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html#CONFIG_CUSTOM_CLASS_PROPERTY_NAME">"custom.class"</a>
+ configuration parameter to determine the desired configuration.</div>
 </dd>
 </dl>
 <a href="index-1.html">A</a>&nbsp;<a href="index-2.html">B</a>&nbsp;<a href="index-3.html">C</a>&nbsp;<a href="index-4.html">D</a>&nbsp;<a href="index-5.html">E</a>&nbsp;<a href="index-6.html">F</a>&nbsp;<a href="index-7.html">G</a>&nbsp;<a href="index-8.html">H</a>&nbsp;<a href="index-9.html">I</a>&nbsp;<a href="index-10.html">J</a>&nbsp;<a href="index-11.html">L</a>&nbsp;<a href="index-12.html">M</a>&nbsp;<a href="index-13.html">N</a>&nbsp;<a href="index-14.html">O</a>&nbsp;<a href="index-15.html">P</a>&nbsp;<a href="index-16.html">R</a>&nbsp;<a href="index-17.html">S</a>&nbsp;<a href="index-18.html">T</a>&nbsp;<a href="index-19.html">U</a>&nbsp;<a href="index-20.html">V</a>&nbsp;<a href="index-21.html">W</a>&nbsp;</div>

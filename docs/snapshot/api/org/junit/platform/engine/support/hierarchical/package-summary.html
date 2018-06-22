@@ -128,6 +128,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></th>
+<td class="colLast">
+<div class="block">A closeable service that executes <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService.TestTask</a></th>
+<td class="colLast">
+<div class="block">An executable task that represents a single test or container.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical">Node</a>&lt;C extends <a href="../../../../../../org/junit/platform/engine/support/hierarchical/EngineExecutionContext.html" title="interface in org.junit.platform.engine.support.hierarchical">EngineExecutionContext</a>&gt;</th>
 <td class="colLast">
 <div class="block">A <em>node</em> within the execution hierarchy.</div>
@@ -141,6 +153,24 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ParallelExecutionConfiguration.html" title="interface in org.junit.platform.engine.support.hierarchical">ParallelExecutionConfiguration</a></th>
+<td class="colLast">
+<div class="block">Configuration to use for parallel test execution.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.html" title="interface in org.junit.platform.engine.support.hierarchical">ParallelExecutionConfigurationStrategy</a></th>
+<td class="colLast">
+<div class="block">A strategy to use for configuring parallel test execution.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ResourceLock.html" title="interface in org.junit.platform.engine.support.hierarchical">ResourceLock</a></th>
+<td class="colLast">
+<div class="block">A lock for a one or more resources.</div>
+</td>
+</tr>
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.Executable.html" title="interface in org.junit.platform.engine.support.hierarchical">SingleTestExecutor.Executable</a></th>
 <td class="colLast">
 <div class="block">Functional interface for a single test to be executed by
@@ -159,6 +189,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">ExclusiveResource</a></th>
+<td class="colLast">
+<div class="block">An exclusive resource identified by a key with a lock mode that is used to
+ synchronize access to shared resources when executing nodes in parallel.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.html" title="class in org.junit.platform.engine.support.hierarchical">ForkJoinPoolHierarchicalTestExecutorService</a></th>
+<td class="colLast">
+<div class="block">A <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ForkJoinPool.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink"><code>ForkJoinPool</code></a>-based
+ <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">executor service</a> that executes
+ <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> with a configured parallelism.</div>
+</td>
+</tr>
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html" title="class in org.junit.platform.engine.support.hierarchical">HierarchicalTestEngine</a>&lt;C extends <a href="../../../../../../org/junit/platform/engine/support/hierarchical/EngineExecutionContext.html" title="interface in org.junit.platform.engine.support.hierarchical">EngineExecutionContext</a>&gt;</th>
 <td class="colLast">
 <div class="block">Abstract base class for all <a href="../../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> implementations that wish
@@ -173,10 +218,48 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html" title="class in org.junit.platform.engine.support.hierarchical">SameThreadHierarchicalTestExecutorService</a></th>
+<td class="colLast">
+<div class="block">A simple <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">executor service</a> that
+ executes all <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> in the caller's thread.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.html" title="class in org.junit.platform.engine.support.hierarchical">SingleTestExecutor</a></th>
 <td class="colLast">
 <div class="block"><code>SingleTestExecutor</code> encapsulates the execution of a single test
  wrapped in an <a href="../../../../../../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.Executable.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>SingleTestExecutor.Executable</code></a>.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList">
+<table class="typeSummary">
+<caption><span>Enum Summary</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Enum</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html" title="enum in org.junit.platform.engine.support.hierarchical">DefaultParallelExecutionConfigurationStrategy</a></th>
+<td class="colLast">
+<div class="block">Default implementations of configuration strategies for parallel test
+ execution.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.LockMode.html" title="enum in org.junit.platform.engine.support.hierarchical">ExclusiveResource.LockMode</a></th>
+<td class="colLast">
+<div class="block"><code>LockMode</code> translates to the respective <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReadWriteLock.html?is-external=true" title="class or interface in java.util.concurrent.locks" class="externalLink"><code>ReadWriteLock</code></a>
+ locks.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a></th>
+<td class="colLast">
+<div class="block">Supported execution modes for parallel execution.</div>
 </td>
 </tr>
 </tbody>

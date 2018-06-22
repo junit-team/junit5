@@ -104,6 +104,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">S</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/parallel/ExecutionMode.html#SAME_THREAD">SAME_THREAD</a></span> - org.junit.jupiter.api.parallel.<a href="../org/junit/jupiter/api/parallel/ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel">ExecutionMode</a></dt>
+<dd>
+<div class="block">Force execution in same thread as the parent node.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html#SAME_THREAD">SAME_THREAD</a></span> - org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a></dt>
+<dd>
+<div class="block">Force execution in same thread as the parent node.</div>
+</dd>
+<dt><a href="../org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html" title="class in org.junit.platform.engine.support.hierarchical"><span class="typeNameLink">SameThreadHierarchicalTestExecutorService</span></a> - Class in <a href="../org/junit/platform/engine/support/hierarchical/package-summary.html">org.junit.platform.engine.support.hierarchical</a></dt>
+<dd>
+<div class="block">A simple <a href="../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">executor service</a> that
+ executes all <a href="../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> in the caller's thread.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html#%3Cinit%3E()">SameThreadHierarchicalTestExecutorService()</a></span> - Constructor for class org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html" title="class in org.junit.platform.engine.support.hierarchical">SameThreadHierarchicalTestExecutorService</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="../org/junit/jupiter/engine/script/Script.html" title="class in org.junit.jupiter.engine.script"><span class="typeNameLink">Script</span></a> - Class in <a href="../org/junit/jupiter/engine/script/package-summary.html">org.junit.jupiter.engine.script</a></dt>
 <dd>
 <div class="block">Script data class.</div>
@@ -358,6 +373,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Get the number of configuration parameters stored directly in this
  <code>ConfigurationParameters</code>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/config/PrefixedConfigurationParameters.html#size()">size()</a></span> - Method in class org.junit.platform.engine.support.config.<a href="../org/junit/platform/engine/support/config/PrefixedConfigurationParameters.html" title="class in org.junit.platform.engine.support.config">PrefixedConfigurationParameters</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/Node.SkipResult.html#skip(java.lang.String)">skip(String)</a></span> - Static method in class org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/Node.SkipResult.html" title="class in org.junit.platform.engine.support.hierarchical">Node.SkipResult</a></dt>
 <dd>
 <div class="block">Factory for creating <em>skipped</em> results.</div>
@@ -376,22 +393,34 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/console/options/Theme.html#status(org.junit.platform.engine.TestExecutionResult)">status(TestExecutionResult)</a></span> - Method in enum org.junit.platform.console.options.<a href="../org/junit/platform/console/options/Theme.html" title="enum in org.junit.platform.console.options">Theme</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/LauncherConstants.html#STDERR_REPORT_ENTRY_KEY">STDERR_REPORT_ENTRY_KEY</a></span> - Static variable in class org.junit.platform.launcher.<a href="../org/junit/platform/launcher/LauncherConstants.html" title="class in org.junit.platform.launcher">LauncherConstants</a></dt>
+<dd>
+<div class="block">Key used to publish captured output to <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html?is-external=true#err" title="class or interface in java.lang" class="externalLink"><code>System.err</code></a> as part of a
+ <a href="../org/junit/platform/engine/reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting"><code>ReportEntry</code></a>: "stderr"</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/LauncherConstants.html#STDOUT_REPORT_ENTRY_KEY">STDOUT_REPORT_ENTRY_KEY</a></span> - Static variable in class org.junit.platform.launcher.<a href="../org/junit/platform/launcher/LauncherConstants.html" title="class in org.junit.platform.launcher">LauncherConstants</a></dt>
+<dd>
+<div class="block">Key used to publish captured output to <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html?is-external=true#out" title="class or interface in java.lang" class="externalLink"><code>System.out</code></a> as part of a
+ <a href="../org/junit/platform/engine/reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting"><code>ReportEntry</code></a>: "stdout"</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/logging/LogRecordListener.html#stream()">stream()</a></span> - Method in class org.junit.platform.commons.logging.<a href="../org/junit/platform/commons/logging/LogRecordListener.html" title="class in org.junit.platform.commons.logging">LogRecordListener</a></dt>
 <dd>
 <div class="block">Get a stream of <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogRecord.html?is-external=true" title="class or interface in java.util.logging" class="externalLink"><code>log records</code></a> that have been
- <a href="../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener.</div>
+ <a href="../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener by the
+ current thread.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/logging/LogRecordListener.html#stream(java.lang.Class)">stream(Class&lt;?&gt;)</a></span> - Method in class org.junit.platform.commons.logging.<a href="../org/junit/platform/commons/logging/LogRecordListener.html" title="class in org.junit.platform.commons.logging">LogRecordListener</a></dt>
 <dd>
 <div class="block">Get a stream of <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogRecord.html?is-external=true" title="class or interface in java.util.logging" class="externalLink"><code>log records</code></a> that have been
  <a href="../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener for the
- logger name equal to the name of the given class.</div>
+ logger name equal to the name of the given class by the current thread.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/logging/LogRecordListener.html#stream(java.lang.Class,java.util.logging.Level)">stream(Class&lt;?&gt;, Level)</a></span> - Method in class org.junit.platform.commons.logging.<a href="../org/junit/platform/commons/logging/LogRecordListener.html" title="class in org.junit.platform.commons.logging">LogRecordListener</a></dt>
 <dd>
 <div class="block">Get a stream of <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogRecord.html?is-external=true" title="class or interface in java.util.logging" class="externalLink"><code>log records</code></a> that have been
  <a href="../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener for the
- logger name equal to the name of the given class at the given log level.</div>
+ logger name equal to the name of the given class at the given log level
+ by the current thread.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/extension/ExtensionRegistry.html#stream(java.lang.Class)">stream(Class&lt;E&gt;)</a></span> - Method in class org.junit.jupiter.engine.extension.<a href="../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></dt>
 <dd>
@@ -412,6 +441,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Collection of utilities for working with <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Strings</code></a>,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/CharSequence.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>CharSequences</code></a>, etc.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.html#submit(org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask)">submit(HierarchicalTestExecutorService.TestTask)</a></span> - Method in class org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.html" title="class in org.junit.platform.engine.support.hierarchical">ForkJoinPoolHierarchicalTestExecutorService</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html#submit(org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask)">submit(HierarchicalTestExecutorService.TestTask)</a></span> - Method in interface org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></dt>
+<dd>
+<div class="block">Submit the supplied <a href="../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test task</a> to be executed by
+ this service.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html#submit(org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask)">submit(HierarchicalTestExecutorService.TestTask)</a></span> - Method in class org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html" title="class in org.junit.platform.engine.support.hierarchical">SameThreadHierarchicalTestExecutorService</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/console/options/Theme.html#successful()">successful()</a></span> - Method in enum org.junit.platform.console.options.<a href="../org/junit/platform/console/options/Theme.html" title="enum in org.junit.platform.console.options">Theme</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/TestExecutionResult.html#successful()">successful()</a></span> - Static method in class org.junit.platform.engine.<a href="../org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a></dt>
@@ -451,6 +489,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Determine if this provider supports providing invocation contexts for the
  test template method represented by the supplied <code>context</code>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/parallel/Resources.html#SYSTEM_ERR">SYSTEM_ERR</a></span> - Static variable in class org.junit.jupiter.api.parallel.<a href="../org/junit/jupiter/api/parallel/Resources.html" title="class in org.junit.jupiter.api.parallel">Resources</a></dt>
+<dd>
+<div class="block">Represents standard error stream of the current process.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/parallel/Resources.html#SYSTEM_OUT">SYSTEM_OUT</a></span> - Static variable in class org.junit.jupiter.api.parallel.<a href="../org/junit/jupiter/api/parallel/Resources.html" title="class in org.junit.jupiter.api.parallel">Resources</a></dt>
+<dd>
+<div class="block">Represents standard output stream of the current process.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/parallel/Resources.html#SYSTEM_PROPERTIES">SYSTEM_PROPERTIES</a></span> - Static variable in class org.junit.jupiter.api.parallel.<a href="../org/junit/jupiter/api/parallel/Resources.html" title="class in org.junit.jupiter.api.parallel">Resources</a></dt>
+<dd>
+<div class="block">Represents Java's system properties.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/script/ScriptAccessor.SystemPropertyAccessor.html#%3Cinit%3E()">SystemPropertyAccessor()</a></span> - Constructor for class org.junit.jupiter.engine.script.<a href="../org/junit/jupiter/engine/script/ScriptAccessor.SystemPropertyAccessor.html" title="class in org.junit.jupiter.engine.script">ScriptAccessor.SystemPropertyAccessor</a></dt>
 <dd>&nbsp;</dd>

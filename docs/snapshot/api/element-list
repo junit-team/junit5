@@ -2,6 +2,7 @@ org.junit.jupiter.api
 org.junit.jupiter.api.condition
 org.junit.jupiter.api.extension
 org.junit.jupiter.api.function
+org.junit.jupiter.api.parallel
 org.junit.jupiter.engine
 org.junit.jupiter.engine.descriptor
 org.junit.jupiter.engine.discovery
@@ -28,6 +29,7 @@ org.junit.platform.console.tasks
 org.junit.platform.engine
 org.junit.platform.engine.discovery
 org.junit.platform.engine.reporting
+org.junit.platform.engine.support.config
 org.junit.platform.engine.support.descriptor
 org.junit.platform.engine.support.filter
 org.junit.platform.engine.support.hierarchical

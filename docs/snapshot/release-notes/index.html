@@ -581,7 +581,8 @@ vendors.</p>
 <p><strong>Date of Release:</strong> ❓</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> ❓</p>
+<p><strong>Scope:</strong> Parallel test execution, output capturing, test sources for dynamic tests as well
+as various minor improvements and bug fixes.</p>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
@@ -628,6 +629,35 @@ unmodified and is therefore semantically identical to the previous behavior.</p>
 <h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
+<li>
+<p>Experimental support for capturing output printed to <code>System.out</code> and
+<code>System.err</code> during test execution. This feature is disabled by default and can be
+enabled using a configuration parameter (cf.
+<a href="../user-guide/index.html#running-tests-capturing-output">User Guide</a>).</p>
+</li>
+<li>
+<p>Reusable support for parallel test execution for test engines that extend
+<code>HierarchicalTestEngine</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>HierarchicalTestEngine</code> implementations may now specify a
+<code>HierarchicalTestExecutorService</code></p>
+</li>
+<li>
+<p>By default, a <code>SameThreadHierarchicalTestExecutorService</code> is used.</p>
+</li>
+<li>
+<p>Test engines may use <code>ForkJoinPoolHierarchicalTestExecutorService</code> to support
+parallel test execution based on the Fork/Join Framework.</p>
+</li>
+<li>
+<p><code>Node</code> implementations may provide a set of <code>ExclusiveResources</code> and an
+<code>ExecutionMode</code> to be used by <code>ForkJoinPoolHierarchicalTestExecutorService</code>.</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>New overloaded variant of <code>isAnnotated()</code> in <code>AnnotationSupport</code> that accepts
 <code>Optional&lt;? extends AnnotatedElement&gt;</code> instead of <code>AnnotatedElement</code>.</p>
@@ -693,6 +723,12 @@ could not be properly discovered.</p>
 <h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
+<li>
+<p>Experimental support for parallel test execution. By default, tests are still executed
+sequentially; parallelism can be enabled using a configuration parameter (please refer
+to the <a href="../user-guide/index.html#writing-tests-parallel-execution">User Guide</a> for
+examples and configuration options).</p>
+</li>
 <li>
 <p>New support for the IBM AIX operating system in <code>@EnabledOnOs</code> and <code>@DisabledOnOs</code>.</p>
 </li>

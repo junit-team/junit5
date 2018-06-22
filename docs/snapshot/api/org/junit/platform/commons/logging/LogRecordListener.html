@@ -194,7 +194,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/logging/LogRecordListener.html#clear()">clear</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Clear all existing <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogRecord.html?is-external=true" title="class or interface in java.util.logging" class="externalLink"><code>log records</code></a> that have been
- <a href="../../../../../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener.</div>
+ <a href="../../../../../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener by the
+ current thread.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -210,7 +211,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/logging/LogRecordListener.html#stream()">stream</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get a stream of <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogRecord.html?is-external=true" title="class or interface in java.util.logging" class="externalLink"><code>log records</code></a> that have been
- <a href="../../../../../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener.</div>
+ <a href="../../../../../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener by the
+ current thread.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -219,7 +221,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <td class="colLast">
 <div class="block">Get a stream of <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogRecord.html?is-external=true" title="class or interface in java.util.logging" class="externalLink"><code>log records</code></a> that have been
  <a href="../../../../../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener for the
- logger name equal to the name of the given class.</div>
+ logger name equal to the name of the given class by the current thread.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
@@ -229,7 +231,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <td class="colLast">
 <div class="block">Get a stream of <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogRecord.html?is-external=true" title="class or interface in java.util.logging" class="externalLink"><code>log records</code></a> that have been
  <a href="../../../../../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener for the
- logger name equal to the name of the given class at the given log level.</div>
+ logger name equal to the name of the given class at the given log level
+ by the current thread.</div>
 </td>
 </tr>
 </table>
@@ -294,7 +297,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <h4>stream</h4>
 <pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogRecord.html?is-external=true" title="class or interface in java.util.logging" class="externalLink">LogRecord</a>&gt;&nbsp;stream()</pre>
 <div class="block">Get a stream of <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogRecord.html?is-external=true" title="class or interface in java.util.logging" class="externalLink"><code>log records</code></a> that have been
- <a href="../../../../../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener.
+ <a href="../../../../../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener by the
+ current thread.
 
  <p>As stated in the JavaDoc for <code>LogRecord</code>, a submitted
  <code>LogRecord</code> should not be updated by the client application. Thus,
@@ -311,7 +315,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogRecord.html?is-external=true" title="class or interface in java.util.logging" class="externalLink">LogRecord</a>&gt;&nbsp;stream&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
 <div class="block">Get a stream of <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogRecord.html?is-external=true" title="class or interface in java.util.logging" class="externalLink"><code>log records</code></a> that have been
  <a href="../../../../../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener for the
- logger name equal to the name of the given class.
+ logger name equal to the name of the given class by the current thread.
 
  <p>As stated in the JavaDoc for <code>LogRecord</code>, a submitted
  <code>LogRecord</code> should not be updated by the client application. Thus,
@@ -333,7 +337,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/Level.html?is-external=true" title="class or interface in java.util.logging" class="externalLink">Level</a>&nbsp;level)</pre>
 <div class="block">Get a stream of <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogRecord.html?is-external=true" title="class or interface in java.util.logging" class="externalLink"><code>log records</code></a> that have been
  <a href="../../../../../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener for the
- logger name equal to the name of the given class at the given log level.
+ logger name equal to the name of the given class at the given log level
+ by the current thread.
 
  <p>As stated in the JavaDoc for <code>LogRecord</code>, a submitted
  <code>LogRecord</code> should not be updated by the client application. Thus,
@@ -354,7 +359,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <h4>clear</h4>
 <pre>public&nbsp;void&nbsp;clear()</pre>
 <div class="block">Clear all existing <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogRecord.html?is-external=true" title="class or interface in java.util.logging" class="externalLink"><code>log records</code></a> that have been
- <a href="../../../../../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener.</div>
+ <a href="../../../../../org/junit/platform/commons/logging/LogRecordListener.html#logRecordSubmitted(java.util.logging.LogRecord)">submitted</a> to this listener by the
+ current thread.</div>
 </li>
 </ul>
 </li>

@@ -122,6 +122,40 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Collection of utilities for working with <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Package.html?is-external=true" title="class or interface in java.lang" class="externalLink">packages</a>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/Constants.html#PARALLEL_CONFIG_CUSTOM_CLASS_PROPERTY_NAME">PARALLEL_CONFIG_CUSTOM_CLASS_PROPERTY_NAME</a></span> - Static variable in class org.junit.jupiter.engine.<a href="../org/junit/jupiter/engine/Constants.html" title="class in org.junit.jupiter.engine">Constants</a></dt>
+<dd>
+<div class="block">Property name used to specify the fully qualified class name of the
+ <a href="../org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>ParallelExecutionConfigurationStrategy</code></a> to be used for the
+ <code>custom</code> configuration strategy: "junit.jupiter.execution.parallel.config.custom.class"</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/Constants.html#PARALLEL_CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME">PARALLEL_CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME</a></span> - Static variable in class org.junit.jupiter.engine.<a href="../org/junit/jupiter/engine/Constants.html" title="class in org.junit.jupiter.engine">Constants</a></dt>
+<dd>
+<div class="block">Property name used to set the factor to be multiplied with the number of
+ available processors/cores to determine the desired parallelism for the
+ <code>dynamic</code> configuration strategy: "junit.jupiter.execution.parallel.config.dynamic.factor"</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/Constants.html#PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME">PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME</a></span> - Static variable in class org.junit.jupiter.engine.<a href="../org/junit/jupiter/engine/Constants.html" title="class in org.junit.jupiter.engine">Constants</a></dt>
+<dd>
+<div class="block">Property name used to set the desired parallelism for the <code>fixed</code>
+ configuration strategy: "junit.jupiter.execution.parallel.config.fixed.parallelism"</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/Constants.html#PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME">PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME</a></span> - Static variable in class org.junit.jupiter.engine.<a href="../org/junit/jupiter/engine/Constants.html" title="class in org.junit.jupiter.engine">Constants</a></dt>
+<dd>
+<div class="block">Property name used to select the
+ <a href="../org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>ParallelExecutionConfigurationStrategy</code></a>: "junit.jupiter.execution.parallel.config.strategy"</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/Constants.html#PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME">PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME</a></span> - Static variable in class org.junit.jupiter.engine.<a href="../org/junit/jupiter/engine/Constants.html" title="class in org.junit.jupiter.engine">Constants</a></dt>
+<dd>
+<div class="block">Property name used to enable parallel test execution: "junit.jupiter.execution.parallel.enabled"</div>
+</dd>
+<dt><a href="../org/junit/platform/engine/support/hierarchical/ParallelExecutionConfiguration.html" title="interface in org.junit.platform.engine.support.hierarchical"><span class="typeNameLink">ParallelExecutionConfiguration</span></a> - Interface in <a href="../org/junit/platform/engine/support/hierarchical/package-summary.html">org.junit.platform.engine.support.hierarchical</a></dt>
+<dd>
+<div class="block">Configuration to use for parallel test execution.</div>
+</dd>
+<dt><a href="../org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.html" title="interface in org.junit.platform.engine.support.hierarchical"><span class="typeNameLink">ParallelExecutionConfigurationStrategy</span></a> - Interface in <a href="../org/junit/platform/engine/support/hierarchical/package-summary.html">org.junit.platform.engine.support.hierarchical</a></dt>
+<dd>
+<div class="block">A strategy to use for configuring parallel test execution.</div>
+</dd>
 <dt><a href="../org/junit/jupiter/api/extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><span class="typeNameLink">ParameterContext</span></a> - Interface in <a href="../org/junit/jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a></dt>
 <dd>
 <div class="block"><code>ParameterContext</code> encapsulates the <em>context</em> in which an
@@ -206,6 +240,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/PreconditionViolationException.html#%3Cinit%3E(java.lang.String,java.lang.Throwable)">PreconditionViolationException(String, Throwable)</a></span> - Constructor for exception org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="../org/junit/platform/engine/support/config/PrefixedConfigurationParameters.html" title="class in org.junit.platform.engine.support.config"><span class="typeNameLink">PrefixedConfigurationParameters</span></a> - Class in <a href="../org/junit/platform/engine/support/config/package-summary.html">org.junit.platform.engine.support.config</a></dt>
+<dd>
+<div class="block">View of <a href="../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a> that applies a supplied prefix to all
+ queries.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/config/PrefixedConfigurationParameters.html#%3Cinit%3E(org.junit.platform.engine.ConfigurationParameters,java.lang.String)">PrefixedConfigurationParameters(ConfigurationParameters, String)</a></span> - Constructor for class org.junit.platform.engine.support.config.<a href="../org/junit/platform/engine/support/config/PrefixedConfigurationParameters.html" title="class in org.junit.platform.engine.support.config">PrefixedConfigurationParameters</a></dt>
+<dd>
+<div class="block">Create a new view of the supplied <a href="../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a> that
+ applies the supplied prefix to all queries.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/Node.html#prepare(C)">prepare(C)</a></span> - Method in interface org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical">Node</a></dt>
 <dd>
 <div class="block">Prepare the supplied <code>context</code> prior to execution.</div>

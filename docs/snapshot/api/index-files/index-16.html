@@ -104,6 +104,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">R</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/parallel/ResourceAccessMode.html#READ">READ</a></span> - org.junit.jupiter.api.parallel.<a href="../org/junit/jupiter/api/parallel/ResourceAccessMode.html" title="enum in org.junit.jupiter.api.parallel">ResourceAccessMode</a></dt>
+<dd>
+<div class="block">Require only read access to the resource.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/ExclusiveResource.LockMode.html#READ">READ</a></span> - org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/ExclusiveResource.LockMode.html" title="enum in org.junit.platform.engine.support.hierarchical">ExclusiveResource.LockMode</a></dt>
+<dd>
+<div class="block">Require only read access to the resource.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/parallel/ResourceAccessMode.html#READ_WRITE">READ_WRITE</a></span> - org.junit.jupiter.api.parallel.<a href="../org/junit/jupiter/api/parallel/ResourceAccessMode.html" title="enum in org.junit.jupiter.api.parallel">ResourceAccessMode</a></dt>
+<dd>
+<div class="block">Require read and write access to the resource.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/ExclusiveResource.LockMode.html#READ_WRITE">READ_WRITE</a></span> - org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/ExclusiveResource.LockMode.html" title="enum in org.junit.platform.engine.support.hierarchical">ExclusiveResource.LockMode</a></dt>
+<dd>
+<div class="block">Require read and write access to the resource.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/ReflectionUtils.html#readFieldValue(java.lang.Class,java.lang.String,T)">readFieldValue(Class&lt;T&gt;, String, T)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
 <dd>
 <div class="block">Read the value of a potentially inaccessible or nonexistent field.</div>
@@ -156,6 +172,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/Launcher.html#registerTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">registerTestExecutionListeners(TestExecutionListener...)</a></span> - Method in interface org.junit.platform.launcher.<a href="../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher">Launcher</a></dt>
 <dd>
 <div class="block">Register one or more listeners for test execution.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/ResourceLock.html#release()">release()</a></span> - Method in interface org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/ResourceLock.html" title="interface in org.junit.platform.engine.support.hierarchical">ResourceLock</a></dt>
+<dd>
+<div class="block">Release this resource lock.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/ExtensionContext.Store.html#remove(java.lang.Object)">remove(Object)</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/ExtensionContext.Store.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext.Store</a></dt>
 <dd>
@@ -237,10 +257,32 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/discovery/DiscoverySelectorResolver.html#resolveSelectors(org.junit.platform.engine.EngineDiscoveryRequest,org.junit.platform.engine.TestDescriptor)">resolveSelectors(EngineDiscoveryRequest, TestDescriptor)</a></span> - Method in class org.junit.jupiter.engine.discovery.<a href="../org/junit/jupiter/engine/discovery/DiscoverySelectorResolver.html" title="class in org.junit.jupiter.engine.discovery">DiscoverySelectorResolver</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="../org/junit/jupiter/api/parallel/ResourceAccessMode.html" title="enum in org.junit.jupiter.api.parallel"><span class="typeNameLink">ResourceAccessMode</span></a> - Enum in <a href="../org/junit/jupiter/api/parallel/package-summary.html">org.junit.jupiter.api.parallel</a></dt>
+<dd>
+<div class="block">The access mode required by a test class or method for a given resource.</div>
+</dd>
+<dt><a href="../org/junit/platform/engine/support/hierarchical/ResourceLock.html" title="interface in org.junit.platform.engine.support.hierarchical"><span class="typeNameLink">ResourceLock</span></a> - Interface in <a href="../org/junit/platform/engine/support/hierarchical/package-summary.html">org.junit.platform.engine.support.hierarchical</a></dt>
+<dd>
+<div class="block">A lock for a one or more resources.</div>
+</dd>
+<dt><a href="../org/junit/jupiter/api/parallel/ResourceLock.html" title="annotation in org.junit.jupiter.api.parallel"><span class="typeNameLink">ResourceLock</span></a> - Annotation Type in <a href="../org/junit/jupiter/api/parallel/package-summary.html">org.junit.jupiter.api.parallel</a></dt>
+<dd>
+<div class="block"><code>@ResourceLock</code> is used to declare that the annotated test class or test
+ method requires access to a resource identified by a key.</div>
+</dd>
+<dt><a href="../org/junit/jupiter/api/parallel/ResourceLocks.html" title="annotation in org.junit.jupiter.api.parallel"><span class="typeNameLink">ResourceLocks</span></a> - Annotation Type in <a href="../org/junit/jupiter/api/parallel/package-summary.html">org.junit.jupiter.api.parallel</a></dt>
+<dd>
+<div class="block"><code>@ResourceLocks</code> is a container for one or more
+ <a href="../org/junit/jupiter/api/parallel/ResourceLock.html" title="annotation in org.junit.jupiter.api.parallel"><code>@ResourceLock</code></a> declarations.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/params/provider/CsvFileSource.html#resources()">resources()</a></span> - Method in annotation type org.junit.jupiter.params.provider.<a href="../org/junit/jupiter/params/provider/CsvFileSource.html" title="annotation in org.junit.jupiter.params.provider">CsvFileSource</a></dt>
 <dd>
 <div class="block">The CSV classpath resources to use as the sources of arguments; must not be
  empty.</div>
+</dd>
+<dt><a href="../org/junit/jupiter/api/parallel/Resources.html" title="class in org.junit.jupiter.api.parallel"><span class="typeNameLink">Resources</span></a> - Class in <a href="../org/junit/jupiter/api/parallel/package-summary.html">org.junit.jupiter.api.parallel</a></dt>
+<dd>
+<div class="block">Common resource names for synchronizing test execution.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/BlacklistedExceptions.html#rethrowIfBlacklisted(java.lang.Throwable)">rethrowIfBlacklisted(Throwable)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/BlacklistedExceptions.html" title="class in org.junit.platform.commons.util">BlacklistedExceptions</a></dt>
 <dd>

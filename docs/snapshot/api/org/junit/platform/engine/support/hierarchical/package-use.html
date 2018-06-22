@@ -159,6 +159,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  to organize test suites hierarchically based on the <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>Node</code></a> abstraction.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/HierarchicalTestExecutorService.html#org.junit.jupiter.engine">HierarchicalTestExecutorService</a></th>
+<td class="colLast">
+<div class="block">A closeable service that executes <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a>.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </li>
@@ -173,16 +179,29 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/ExclusiveResource.html#org.junit.jupiter.engine.descriptor">ExclusiveResource</a></th>
+<td class="colLast">
+<div class="block">An exclusive resource identified by a key with a lock mode that is used to
+ synchronize access to shared resources when executing nodes in parallel.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/Node.html#org.junit.jupiter.engine.descriptor">Node</a></th>
 <td class="colLast">
 <div class="block">A <em>node</em> within the execution hierarchy.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/Node.DynamicTestExecutor.html#org.junit.jupiter.engine.descriptor">Node.DynamicTestExecutor</a></th>
 <td class="colLast">
 <div class="block">Executor for additional, dynamic test descriptors discovered during
  execution of a <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>Node</code></a>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/Node.ExecutionMode.html#org.junit.jupiter.engine.descriptor">Node.ExecutionMode</a></th>
+<td class="colLast">
+<div class="block">Supported execution modes for parallel execution.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -226,17 +245,56 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/DefaultParallelExecutionConfigurationStrategy.html#org.junit.platform.engine.support.hierarchical">DefaultParallelExecutionConfigurationStrategy</a></th>
+<td class="colLast">
+<div class="block">Default implementations of configuration strategies for parallel test
+ execution.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/EngineExecutionContext.html#org.junit.platform.engine.support.hierarchical">EngineExecutionContext</a></th>
 <td class="colLast">
 <div class="block">Marker interface for an execution context used by a concrete implementation
  of <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html" title="class in org.junit.platform.engine.support.hierarchical"><code>HierarchicalTestEngine</code></a> and its collaborators.</div>
 </td>
 </tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/ExclusiveResource.html#org.junit.platform.engine.support.hierarchical">ExclusiveResource</a></th>
+<td class="colLast">
+<div class="block">An exclusive resource identified by a key with a lock mode that is used to
+ synchronize access to shared resources when executing nodes in parallel.</div>
+</td>
+</tr>
 <tr class="rowColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/ExclusiveResource.LockMode.html#org.junit.platform.engine.support.hierarchical">ExclusiveResource.LockMode</a></th>
+<td class="colLast">
+<div class="block"><code>LockMode</code> translates to the respective <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReadWriteLock.html?is-external=true" title="class or interface in java.util.concurrent.locks" class="externalLink"><code>ReadWriteLock</code></a>
+ locks.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/HierarchicalTestExecutorService.html#org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></th>
+<td class="colLast">
+<div class="block">A closeable service that executes <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/HierarchicalTestExecutorService.TestTask.html#org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService.TestTask</a></th>
+<td class="colLast">
+<div class="block">An executable task that represents a single test or container.</div>
+</td>
+</tr>
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/Node.DynamicTestExecutor.html#org.junit.platform.engine.support.hierarchical">Node.DynamicTestExecutor</a></th>
 <td class="colLast">
 <div class="block">Executor for additional, dynamic test descriptors discovered during
  execution of a <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>Node</code></a>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/Node.ExecutionMode.html#org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a></th>
+<td class="colLast">
+<div class="block">Supported execution modes for parallel execution.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -247,6 +305,24 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/ParallelExecutionConfiguration.html#org.junit.platform.engine.support.hierarchical">ParallelExecutionConfiguration</a></th>
+<td class="colLast">
+<div class="block">Configuration to use for parallel test execution.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/ParallelExecutionConfigurationStrategy.html#org.junit.platform.engine.support.hierarchical">ParallelExecutionConfigurationStrategy</a></th>
+<td class="colLast">
+<div class="block">A strategy to use for configuring parallel test execution.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/ResourceLock.html#org.junit.platform.engine.support.hierarchical">ResourceLock</a></th>
+<td class="colLast">
+<div class="block">A lock for a one or more resources.</div>
+</td>
+</tr>
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/class-use/SingleTestExecutor.Executable.html#org.junit.platform.engine.support.hierarchical">SingleTestExecutor.Executable</a></th>
 <td class="colLast">
 <div class="block">Functional interface for a single test to be executed by

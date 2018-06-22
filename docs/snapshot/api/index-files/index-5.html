@@ -226,6 +226,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/descriptor/PackageSource.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class org.junit.platform.engine.support.descriptor.<a href="../org/junit/platform/engine/support/descriptor/PackageSource.html" title="class in org.junit.platform.engine.support.descriptor">PackageSource</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">ExclusiveResource</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/TestTag.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class org.junit.platform.engine.<a href="../org/junit/platform/engine/TestTag.html" title="class in org.junit.platform.engine">TestTag</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/UniqueId.html#equals(java.lang.Object)">equals(Object)</a></span> - Method in class org.junit.platform.engine.<a href="../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></dt>
@@ -336,6 +338,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  <a href="../org/junit/platform/suite/api/ExcludeTags.html#value()">tags or tag expressions</a> to be excluded when running a
  test suite on the JUnit Platform.</div>
 </dd>
+<dt><a href="../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical"><span class="typeNameLink">ExclusiveResource</span></a> - Class in <a href="../org/junit/platform/engine/support/hierarchical/package-summary.html">org.junit.platform.engine.support.hierarchical</a></dt>
+<dd>
+<div class="block">An exclusive resource identified by a key with a lock mode that is used to
+ synchronize access to shared resources when executing nodes in parallel.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html#%3Cinit%3E(java.lang.String,org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode)">ExclusiveResource(String, ExclusiveResource.LockMode)</a></span> - Constructor for class org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">ExclusiveResource</a></dt>
+<dd>
+<div class="block">Create a new <code>ExclusiveResource</code>.</div>
+</dd>
+<dt><a href="../org/junit/platform/engine/support/hierarchical/ExclusiveResource.LockMode.html" title="enum in org.junit.platform.engine.support.hierarchical"><span class="typeNameLink">ExclusiveResource.LockMode</span></a> - Enum in <a href="../org/junit/platform/engine/support/hierarchical/package-summary.html">org.junit.platform.engine.support.hierarchical</a></dt>
+<dd>
+<div class="block"><code>LockMode</code> translates to the respective <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReadWriteLock.html?is-external=true" title="class or interface in java.util.concurrent.locks" class="externalLink"><code>ReadWriteLock</code></a>
+ locks.</div>
+</dd>
 <dt><a href="../org/junit/jupiter/api/function/Executable.html" title="interface in org.junit.jupiter.api.function"><span class="typeNameLink">Executable</span></a> - Interface in <a href="../org/junit/jupiter/api/function/package-summary.html">org.junit.jupiter.api.function</a></dt>
 <dd>
 <div class="block"><code>Executable</code> is a functional interface that can be used to
@@ -356,6 +372,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/function/ThrowingSupplier.html#execute()">execute()</a></span> - Method in interface org.junit.jupiter.api.function.<a href="../org/junit/jupiter/api/function/ThrowingSupplier.html" title="interface in org.junit.jupiter.api.function">ThrowingSupplier</a></dt>
 <dd>
 <div class="block">Delegates to <a href="../org/junit/jupiter/api/function/ThrowingSupplier.html#get()"><code>ThrowingSupplier.get()</code></a> and ignores the return value.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#execute()">execute()</a></span> - Method in interface org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService.TestTask</a></dt>
+<dd>
+<div class="block">Execute this task.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.Executable.html#execute()">execute()</a></span> - Method in interface org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.Executable.html" title="interface in org.junit.platform.engine.support.hierarchical">SingleTestExecutor.Executable</a></dt>
 <dd>
@@ -420,6 +440,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Execute the supplied <a href="../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.Executable.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>SingleTestExecutor.Executable</code></a> and return a
  <a href="../org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a> based on the outcome.</div>
 </dd>
+<dt><a href="../org/junit/jupiter/api/parallel/Execution.html" title="annotation in org.junit.jupiter.api.parallel"><span class="typeNameLink">Execution</span></a> - Annotation Type in <a href="../org/junit/jupiter/api/parallel/package-summary.html">org.junit.jupiter.api.parallel</a></dt>
+<dd>
+<div class="block"><code>@Execution</code> is used to configure the parallel execution mode of a test
+ class or test method.</div>
+</dd>
 <dt><a href="../org/junit/jupiter/api/extension/ExecutionCondition.html" title="interface in org.junit.jupiter.api.extension"><span class="typeNameLink">ExecutionCondition</span></a> - Interface in <a href="../org/junit/jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a></dt>
 <dd>
 <div class="block"><code>ExecutionCondition</code> defines the <a href="../org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extension</code></a> API for
@@ -438,6 +463,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Called when the execution of a leaf or subtree of the <a href="../org/junit/platform/launcher/TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a>
  has finished, regardless of the outcome.</div>
+</dd>
+<dt><a href="../org/junit/jupiter/api/parallel/ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel"><span class="typeNameLink">ExecutionMode</span></a> - Enum in <a href="../org/junit/jupiter/api/parallel/package-summary.html">org.junit.jupiter.api.parallel</a></dt>
+<dd>
+<div class="block">Supported execution modes for parallel execution.</div>
 </dd>
 <dt><a href="../org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine"><span class="typeNameLink">ExecutionRequest</span></a> - Class in <a href="../org/junit/platform/engine/package-summary.html">org.junit.platform.engine</a></dt>
 <dd>

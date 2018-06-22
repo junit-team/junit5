@@ -162,6 +162,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">JupiterTestEngine.</span><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/JupiterTestEngine.html#createExecutionContext(org.junit.platform.engine.ExecutionRequest)">createExecutionContext</a></span>&#8203;(<a href="../../../../../org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine">ExecutionRequest</a>&nbsp;request)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected <a href="../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">JupiterTestEngine.</span><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/JupiterTestEngine.html#createExecutorService(org.junit.platform.engine.ExecutionRequest)">createExecutorService</a></span>&#8203;(<a href="../../../../../org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine">ExecutionRequest</a>&nbsp;request)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -208,10 +213,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">HierarchicalTestEngine.</span><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html#createExecutionContext(org.junit.platform.engine.ExecutionRequest)">createExecutionContext</a></span>&#8203;(<a href="../../../../../org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine">ExecutionRequest</a>&nbsp;request)</code></th>
 <td class="colLast">
 <div class="block">Create the initial execution context for executing the supplied
- <a href="../../../../../org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine"><code>request</code></a>.</div>
+ <a href="../../../../../org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine">request</a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>protected <a href="../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">HierarchicalTestEngine.</span><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html#createExecutorService(org.junit.platform.engine.ExecutionRequest)">createExecutorService</a></span>&#8203;(<a href="../../../../../org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine">ExecutionRequest</a>&nbsp;request)</code></th>
+<td class="colLast">
+<div class="block">Create the <a href="../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">executor service</a>
+ to use for executing the supplied <a href="../../../../../org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine">request</a>.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">HierarchicalTestEngine.</span><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html#execute(org.junit.platform.engine.ExecutionRequest)">execute</a></span>&#8203;(<a href="../../../../../org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine">ExecutionRequest</a>&nbsp;request)</code></th>
 <td class="colLast">
