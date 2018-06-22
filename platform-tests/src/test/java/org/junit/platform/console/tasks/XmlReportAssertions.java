@@ -10,9 +10,10 @@
 
 package org.junit.platform.console.tasks;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.StringReader;
 import java.net.URL;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -20,7 +21,6 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import org.opentest4j.AssertionFailedError;
 import org.xml.sax.SAXException;
 
 /**
@@ -28,27 +28,37 @@ import org.xml.sax.SAXException;
  */
 class XmlReportAssertions {
 
-	private static AtomicReference<Schema> schema = new AtomicReference<>();
-
 	static void assertValidAccordingToJenkinsSchema(String content) throws Exception {
 		try {
 			// Schema is thread-safe, Validator is not
-			Validator validator = getSchema().newValidator();
+			Validator validator = CachedSchema.JENKINS.newValidator();
 			validator.validate(new StreamSource(new StringReader(content)));
 		}
 		catch (SAXException e) {
-			throw new AssertionFailedError("Invalid XML document: " + content, e);
+			fail("Invalid XML document: " + content, e);
 		}
 	}
 
-	private static Schema getSchema() throws SAXException {
-		if (schema.get() == null) {
-			URL schemaFile = XmlReportsWritingListener.class.getResource("/jenkins-junit.xsd");
+	private enum CachedSchema {
+
+		JENKINS("/jenkins-junit.xsd");
+
+		private final Schema schema;
+
+		CachedSchema(String resourcePath) {
+			URL schemaFile = XmlReportsWritingListener.class.getResource(resourcePath);
 			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			Schema newSchema = schemaFactory.newSchema(schemaFile);
-			schema.compareAndSet(null, newSchema);
+			try {
+				this.schema = schemaFactory.newSchema(schemaFile);
+			}
+			catch (SAXException e) {
+				throw new RuntimeException("Failed to create schema using " + schemaFile, e);
+			}
 		}
-		return schema.get();
+
+		Validator newValidator() {
+			return schema.newValidator();
+		}
 	}
 
 }
