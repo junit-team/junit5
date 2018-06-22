@@ -28,6 +28,9 @@ on GitHub.
   part of JUnit 5. Please use <<../user-guide/index.adoc#running-tests-build-gradle,
   Gradle's native support>> for running tests on the JUnit Platform (requires Gradle 4.6
   or higher) instead.
+* The `findAnnotation()` methods in `AnnotationSupport` and `AnnotationUtils` no longer
+  cache annotation lookups. Note, however, that the algorithm remains otherwise
+  unmodified and is therefore semantically identical to the previous behavior.
 
 ==== New Features and Improvements
 

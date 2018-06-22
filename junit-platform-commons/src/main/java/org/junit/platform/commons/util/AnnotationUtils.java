@@ -27,11 +27,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
@@ -61,8 +58,6 @@ public final class AnnotationUtils {
 	private AnnotationUtils() {
 		/* no-op */
 	}
-
-	private static final Map<AnnotationCacheKey, Annotation> annotationCache = new ConcurrentHashMap<>(256);
 
 	/**
 	 * Determine if an annotation of {@code annotationType} is either
@@ -113,7 +108,6 @@ public final class AnnotationUtils {
 		return findAnnotation(element, annotationType, inherited, new HashSet<>());
 	}
 
-	@SuppressWarnings("unchecked")
 	private static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType,
 			boolean inherited, Set<Annotation> visited) {
 
@@ -123,22 +117,14 @@ public final class AnnotationUtils {
 			return Optional.empty();
 		}
 
-		// Cached?
-		AnnotationCacheKey key = new AnnotationCacheKey(element, annotationType);
-		A annotation = (A) annotationCache.get(key);
-		if (annotation != null) {
-			return Optional.of(annotation);
-		}
-
 		// Directly present?
-		annotation = element.getDeclaredAnnotation(annotationType);
+		A annotation = element.getDeclaredAnnotation(annotationType);
 		if (annotation != null) {
-			annotationCache.put(key, annotation);
 			return Optional.of(annotation);
 		}
 
 		// Meta-present on directly present annotations?
-		Optional<A> directMetaAnnotation = findMetaAnnotation(annotationType, element.getDeclaredAnnotations(), key,
+		Optional<A> directMetaAnnotation = findMetaAnnotation(annotationType, element.getDeclaredAnnotations(),
 			inherited, visited);
 		if (directMetaAnnotation.isPresent()) {
 			return directMetaAnnotation;
@@ -171,11 +157,11 @@ public final class AnnotationUtils {
 		}
 
 		// Meta-present on indirectly present annotations?
-		return findMetaAnnotation(annotationType, element.getAnnotations(), key, inherited, visited);
+		return findMetaAnnotation(annotationType, element.getAnnotations(), inherited, visited);
 	}
 
 	private static <A extends Annotation> Optional<A> findMetaAnnotation(Class<A> annotationType,
-			Annotation[] candidates, AnnotationCacheKey key, boolean inherited, Set<Annotation> visited) {
+			Annotation[] candidates, boolean inherited, Set<Annotation> visited) {
 
 		for (Annotation candidateAnnotation : candidates) {
 			Class<? extends Annotation> candidateAnnotationType = candidateAnnotation.annotationType();
@@ -183,7 +169,6 @@ public final class AnnotationUtils {
 				Optional<A> metaAnnotation = findAnnotation(candidateAnnotationType, annotationType, inherited,
 					visited);
 				if (metaAnnotation.isPresent()) {
-					annotationCache.put(key, metaAnnotation.get());
 					return metaAnnotation;
 				}
 			}
@@ -349,33 +334,6 @@ public final class AnnotationUtils {
 
 	private static boolean isInJavaLangAnnotationPackage(Class<? extends Annotation> annotationType) {
 		return (annotationType != null && annotationType.getName().startsWith("java.lang.annotation"));
-	}
-
-	private static class AnnotationCacheKey {
-
-		private final AnnotatedElement element;
-		private final Class<? extends Annotation> annotationType;
-
-		AnnotationCacheKey(AnnotatedElement element, Class<? extends Annotation> annotationType) {
-			this.element = element;
-			this.annotationType = annotationType;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (obj instanceof AnnotationCacheKey) {
-				AnnotationCacheKey that = (AnnotationCacheKey) obj;
-				return Objects.equals(this.element, that.element)
-						&& Objects.equals(this.annotationType, that.annotationType);
-			}
-			return false;
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(this.element, this.annotationType);
-		}
-
 	}
 
 }
