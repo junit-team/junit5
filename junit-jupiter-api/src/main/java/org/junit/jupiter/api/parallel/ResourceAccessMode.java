@@ -17,7 +17,7 @@ import org.apiguardian.api.API;
 /**
  * The access mode required by a test class or method for a given resource.
  *
- * @see UseResource
+ * @see ResourceLock
  * @since 5.3
  */
 @API(status = EXPERIMENTAL, since = "5.3")

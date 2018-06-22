@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @UseResource} is used to declare that the annotated test class or test
+ * {@code @ResourceLock} is used to declare that the annotated test class or test
  * method requires access to a resource identified by a key.
  *
  * <p>The resource key is specified using {@link #value()}. In addition,
@@ -39,14 +39,14 @@ import org.apiguardian.api.API;
  *
  * @see Resources
  * @see ResourceAccessMode
- * @see UseResources
+ * @see ResourceLocks
  * @since 5.3
  */
 @API(status = EXPERIMENTAL, since = "5.3")
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
-@Repeatable(UseResources.class)
-public @interface UseResource {
+@Repeatable(ResourceLocks.class)
+public @interface ResourceLock {
 
 	/**
 	 * The resource key.

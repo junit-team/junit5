@@ -20,24 +20,24 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @UseResources} is a container for one or more
- * {@link UseResource @UseResource} declarations.
+ * {@code @ResourceLocks} is a container for one or more
+ * {@link ResourceLock @ResourceLock} declarations.
  *
- * <p>Note, however, that use of the {@code @UseResources} container is
- * completely optional since {@code @UseResource} is a
+ * <p>Note, however, that use of the {@code @ResourceLocks} container is
+ * completely optional since {@code @ResourceLock} is a
  * {@linkplain java.lang.annotation.Repeatable repeatable} annotation.
  *
- * @see UseResource
+ * @see ResourceLock
  * @since 5.3
  */
 @API(status = EXPERIMENTAL, since = "5.3")
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
-public @interface UseResources {
+public @interface ResourceLocks {
 
 	/**
-	 * An array of one or more {@linkplain UseResource used resources}.
+	 * An array of one or more {@linkplain ResourceLock used resources}.
 	 */
-	UseResource[] value() default {};
+	ResourceLock[] value() default {};
 
 }

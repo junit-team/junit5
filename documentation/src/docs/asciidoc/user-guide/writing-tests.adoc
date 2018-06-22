@@ -1358,7 +1358,7 @@ default. You can change the execution mode for the annotated element and its sub
 `CONCURRENT`::
   Execute concurrently unless a resource constraint forces execution in the same thread.
 
-In addition, the `{UseResource}` annotation allows to declare that a test class or
+In addition, the `{ResourceLock}` annotation allows to declare that a test class or
 method uses a specific shared resource that requires synchronized access to ensure
 reliable test execution.
 

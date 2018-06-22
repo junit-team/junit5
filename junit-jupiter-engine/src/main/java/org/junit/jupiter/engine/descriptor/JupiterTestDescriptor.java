@@ -31,7 +31,7 @@ import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
-import org.junit.jupiter.api.parallel.UseResource;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.JUnitException;
@@ -134,7 +134,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	protected Set<ExclusiveResource> getExclusiveResources(AnnotatedElement element) {
 		// @formatter:off
-		return findRepeatableAnnotations(element, UseResource.class).stream()
+		return findRepeatableAnnotations(element, ResourceLock.class).stream()
 				.map(resource -> new ExclusiveResource(resource.value(), toLockMode(resource.mode())))
 				.collect(toSet());
 		// @formatter:on

@@ -52,7 +52,7 @@ import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.UseResource;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -206,26 +206,26 @@ class ParallelExecutionIntegrationTests {
 		}
 
 		@Test
-		@UseResource("sharedResource")
+		@ResourceLock("sharedResource")
 		void firstTest(TestReporter reporter) throws Exception {
 			incrementBlockAndCheck(sharedResource, countDownLatch);
 		}
 
 		@Test
-		@UseResource("sharedResource")
+		@ResourceLock("sharedResource")
 		void secondTest(TestReporter reporter) throws Exception {
 			incrementBlockAndCheck(sharedResource, countDownLatch);
 		}
 
 		@Test
-		@UseResource("sharedResource")
+		@ResourceLock("sharedResource")
 		void thirdTest(TestReporter reporter) throws Exception {
 			incrementBlockAndCheck(sharedResource, countDownLatch);
 		}
 	}
 
 	@ExtendWith(ThreadReporter.class)
-	@UseResource("sharedResource")
+	@ResourceLock("sharedResource")
 	static class SuccessfulTestWithClassLock {
 
 		static AtomicInteger sharedResource;
@@ -270,9 +270,9 @@ class ParallelExecutionIntegrationTests {
 	private static final ReentrantLock B = new ReentrantLock();
 
 	@ExtendWith(ThreadReporter.class)
-	@UseResource("A")
+	@ResourceLock("A")
 	static class TestCaseWithSortedLocks {
-		@UseResource("B")
+		@ResourceLock("B")
 		@Test
 		void firstTest() {
 			assertTrue(A.tryLock());
@@ -280,14 +280,14 @@ class ParallelExecutionIntegrationTests {
 		}
 
 		@Execution(CONCURRENT)
-		@UseResource("B")
+		@ResourceLock("B")
 		@Test
 		void secondTest() {
 			assertTrue(A.tryLock());
 			assertTrue(B.tryLock());
 		}
 
-		@UseResource("B")
+		@ResourceLock("B")
 		@Test
 		void thirdTest() {
 			assertTrue(A.tryLock());
@@ -302,9 +302,9 @@ class ParallelExecutionIntegrationTests {
 	}
 
 	@ExtendWith(ThreadReporter.class)
-	@UseResource("B")
+	@ResourceLock("B")
 	static class TestCaseWithUnsortedLocks {
-		@UseResource("A")
+		@ResourceLock("A")
 		@Test
 		void firstTest() {
 			assertTrue(B.tryLock());
@@ -312,14 +312,14 @@ class ParallelExecutionIntegrationTests {
 		}
 
 		@Execution(CONCURRENT)
-		@UseResource("A")
+		@ResourceLock("A")
 		@Test
 		void secondTest() {
 			assertTrue(B.tryLock());
 			assertTrue(A.tryLock());
 		}
 
-		@UseResource("A")
+		@ResourceLock("A")
 		@Test
 		void thirdTest() {
 			assertTrue(B.tryLock());
@@ -334,10 +334,10 @@ class ParallelExecutionIntegrationTests {
 	}
 
 	@ExtendWith(ThreadReporter.class)
-	@UseResource("A")
+	@ResourceLock("A")
 	static class TestCaseWithNestedLocks {
 
-		@UseResource("B")
+		@ResourceLock("B")
 		@Test
 		void firstTest() {
 			assertTrue(A.tryLock());
@@ -345,7 +345,7 @@ class ParallelExecutionIntegrationTests {
 		}
 
 		@Execution(CONCURRENT)
-		@UseResource("B")
+		@ResourceLock("B")
 		@Test
 		void secondTest() {
 			assertTrue(A.tryLock());
@@ -365,17 +365,17 @@ class ParallelExecutionIntegrationTests {
 		}
 
 		@Nested
-		@UseResource("B")
+		@ResourceLock("B")
 		class B {
 
-			@UseResource("A")
+			@ResourceLock("A")
 			@Test
 			void firstTest() {
 				assertTrue(B.tryLock());
 				assertTrue(A.tryLock());
 			}
 
-			@UseResource("A")
+			@ResourceLock("A")
 			@Test
 			void secondTest() {
 				assertTrue(B.tryLock());

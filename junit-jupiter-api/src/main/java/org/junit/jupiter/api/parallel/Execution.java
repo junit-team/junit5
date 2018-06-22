@@ -25,7 +25,7 @@ import org.apiguardian.api.API;
  *
  * @see Resources
  * @see ResourceAccessMode
- * @see UseResources
+ * @see ResourceLocks
  * @since 5.3
  */
 @API(status = EXPERIMENTAL, since = "5.3")

@@ -20,7 +20,7 @@ import org.apiguardian.api.API;
 /**
  * Common resource names for synchronizing test execution.
  *
- * @see UseResource
+ * @see ResourceLock
  * @since 5.3
  */
 @API(status = EXPERIMENTAL, since = "5.3")

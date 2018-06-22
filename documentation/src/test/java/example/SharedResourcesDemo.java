@@ -23,7 +23,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.UseResource;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 // tag::user_guide[]
 @Execution(CONCURRENT)
@@ -43,20 +43,20 @@ class SharedResourcesDemo {
 	}
 
 	@Test
-	@UseResource(value = SYSTEM_PROPERTIES, mode = READ)
+	@ResourceLock(value = SYSTEM_PROPERTIES, mode = READ)
 	void customPropertyIsNotSetByDefault() {
 		assertNull(System.getProperty("my.prop"));
 	}
 
 	@Test
-	@UseResource(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
+	@ResourceLock(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
 	void canSetCustomPropertyToFoo() {
 		System.setProperty("my.prop", "foo");
 		assertEquals("foo", System.getProperty("my.prop"));
 	}
 
 	@Test
-	@UseResource(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
+	@ResourceLock(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
 	void canSetCustomPropertyToBar() {
 		System.setProperty("my.prop", "bar");
 		assertEquals("bar", System.getProperty("my.prop"));

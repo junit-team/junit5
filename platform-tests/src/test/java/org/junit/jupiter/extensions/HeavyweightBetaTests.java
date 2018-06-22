@@ -19,7 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.parallel.UseResource;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 /**
  * Unit tests for {@link org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource}
@@ -29,7 +29,7 @@ import org.junit.jupiter.api.parallel.UseResource;
  */
 @ExtendWith(Heavyweight.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@UseResource(Heavyweight.Resource.ID)
+@ResourceLock(Heavyweight.Resource.ID)
 class HeavyweightBetaTests {
 
 	private int mark;

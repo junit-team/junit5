@@ -16,7 +16,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.UseResource;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -77,25 +77,25 @@ class NodeTestTaskWalkerIntegrationTests {
 		return executor.prepareNodeTestTaskTree();
 	}
 
-	@UseResource("a")
+	@ResourceLock("a")
 	static class TestCaseWithResourceLock {
 		@Test
-		@UseResource("b")
+		@ResourceLock("b")
 		void test() {
 		}
 	}
 
 	static class TestCaseWithoutResourceLock {
 		@Test
-		@UseResource("a")
+		@ResourceLock("a")
 		void test() {
 		}
 
 		@Nested
-		@UseResource("c")
+		@ResourceLock("c")
 		class NestedTestCaseWithResourceLock {
 			@Test
-			@UseResource("b")
+			@ResourceLock("b")
 			void test() {
 			}
 		}
