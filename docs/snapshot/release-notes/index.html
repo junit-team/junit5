@@ -616,6 +616,11 @@ logged at <code>WARNING</code> level.</p>
 part of JUnit 5. Please use <a href="../user-guide/index.html#running-tests-build-gradle">Gradle&#8217;s native support</a> for running tests on the JUnit Platform (requires Gradle 4.6
 or higher) instead.</p>
 </li>
+<li>
+<p>The <code>findAnnotation()</code> methods in <code>AnnotationSupport</code> and <code>AnnotationUtils</code> no longer
+cache annotation lookups. Note, however, that the algorithm remains otherwise
+unmodified and is therefore semantically identical to the previous behavior.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -1010,7 +1015,7 @@ invocations within an IDE</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-06-21 09:02:34 EDT
+Last updated 2018-06-22 10:25:21 EDT
 </div>
 </div>
 </body>
