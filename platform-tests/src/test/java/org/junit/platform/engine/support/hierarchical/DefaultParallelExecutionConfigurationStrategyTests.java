@@ -26,7 +26,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 /**
  * @since 1.3
  */
-class DefaultParallelExecutionConfigurationStrategyTest {
+class DefaultParallelExecutionConfigurationStrategyTests {
 
 	private ConfigurationParameters configParams = mock(ConfigurationParameters.class);
 
