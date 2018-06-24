@@ -2,11 +2,7 @@ test {
 	useJUnitPlatform {
 		includeEngines 'junit-jupiter'
 	}
-	filter {
-		includeTestsMatching '*Test'
-		includeTestsMatching '*Tests'
-	}
-	exclude '**/*TestCase*.class'
+	include(['**/*Test.class', '**/*Tests.class'])
 	testLogging {
 		events 'failed'
 		exceptionFormat = 'full'
