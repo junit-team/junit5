@@ -16,10 +16,13 @@ dependencies {
 		exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine'
 	}
 
-	testImplementation(project(':junit-jupiter-api'))
-	testImplementation(project(':junit-jupiter-params'))
+	if (project.name != 'junit-jupiter-engine') {
+		testImplementation(project(':junit-jupiter-api'))
+		testImplementation(project(':junit-jupiter-params'))
 
-	testRuntimeOnly(project(':junit-jupiter-engine'))
+		testRuntimeOnly(project(':junit-jupiter-engine'))
+	}
+
 	testRuntimeOnly(project(':junit-platform-launcher'))
 
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
