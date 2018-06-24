@@ -46,5 +46,4 @@ class ArgumentsAccessorKotlinTests {
         assertEquals(1, DefaultArgumentsAccessor(1).get(0, Integer::class.java))
         assertEquals('A', DefaultArgumentsAccessor('A').get(0, Character::class.java))
     }
-
 }

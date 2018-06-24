@@ -384,7 +384,7 @@ subprojects { subproj ->
 		}
 
 		kotlin {
-			ktlint("0.9.0")
+			ktlint('0.24.0')
 			licenseHeaderFile headerFile
 			trimTrailingWhitespace()
 			endWithNewline()
