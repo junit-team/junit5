@@ -269,8 +269,8 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 				Collectors.joining(","));
 
 			String errorMessage = String.format(
-				"Too many TestInstanceFactory extensions [%s] registered on test class: %s", factoryNames,
-				testClass.getSimpleName());
+				"Too many TestInstanceFactory extensions [%s] registered on test class: %s (allowed is at most 1)",
+				factoryNames, testClass.getSimpleName());
 
 			throw new ExtensionContextException(errorMessage);
 		}

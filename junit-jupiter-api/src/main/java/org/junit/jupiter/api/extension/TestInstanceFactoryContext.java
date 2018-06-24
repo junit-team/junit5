@@ -18,9 +18,9 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.Nested;
 
 /**
- * {@code TestInstanceFactoryContext} encapsulates the <em>context</em> in which a
- * {@link TestInstanceFactory#instantiateTestClass} will be invoked for a given
- * {@link #getTestClass test class}.
+ * {@code TestInstanceFactoryContext} encapsulates the <em>context</em> in which
+ * a {@link #getTestClass test class} is to be instantiated by a
+ * {@link TestInstanceFactory}.
  *
  * @since 5.3
  * @see TestInstanceFactory
@@ -36,11 +36,11 @@ public interface TestInstanceFactoryContext {
 	Class<?> getTestClass();
 
 	/**
-	 * Get the outer class instance for {@link Nested nested}
-	 * test classes. For top level classes there is not outer instance and as such
-	 * the value will be {@link Optional#empty empty}.
+	 * Get the outer class instance for {@link Nested nested} test classes. For
+	 * top level classes there is not outer instance and as such the value will
+	 * be {@link Optional#empty empty}.
 	 *
-	 * @return the outer test class instance, if test class is {@link Nested nested}
+	 * @return the outer test class instance, if test class is nested
 	 * @see org.junit.jupiter.api.Nested
 	 */
 	Optional<Object> getOuterInstance();
