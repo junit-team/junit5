@@ -1,14 +1,6 @@
-description = 'JUnit Jupiter Engine'
+apply from: "$rootDir/gradle/testing.gradle"
 
-test {
-	useJUnitPlatform {
-		includeEngines 'junit-jupiter'
-	}
-	filter {
-		includeTestsMatching '*Tests'
-	}
-	systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
-}
+description = 'JUnit Jupiter Engine'
 
 jar {
 	manifest {
@@ -38,10 +30,5 @@ dependencies {
 	testImplementation(project(':junit-platform-launcher'))
 	testImplementation(project(':junit-platform-runner'))
 	testImplementation(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
-	testImplementation("org.assertj:assertj-core:${assertJVersion}")
-	testImplementation("org.mockito:mockito-core:${mockitoVersion}")
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
-
-	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
-	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 }

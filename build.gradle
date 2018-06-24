@@ -115,10 +115,6 @@ allprojects { subproj ->
 		api("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 	}
 
-	tasks.withType(Test) { task ->
-		task.testLogging.exceptionFormat = 'full'
-	}
-
 	// Declare "javacRelease" as a global property to make it overridable by
 	// a sub-project.
 	ext.javacRelease = rootProject.javacRelease

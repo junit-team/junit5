@@ -83,13 +83,13 @@ class ParallelExecutionIntegrationTests {
 
 	@Test
 	void failingTestWithoutLock() {
-		List<ExecutionEvent> executionEvents = execute(3, FailingTestWithoutLock.class);
+		List<ExecutionEvent> executionEvents = execute(3, FailingWithoutLockTestCase.class);
 		assertThat(executionEvents.stream().filter(event(test(), finishedWithFailure())::matches)).hasSize(2);
 	}
 
 	@Test
 	void successfulTestWithMethodLock() {
-		List<ExecutionEvent> executionEvents = execute(3, SuccessfulTestWithMethodLock.class);
+		List<ExecutionEvent> executionEvents = execute(3, SuccessfulWithMethodLockTestCase.class);
 
 		assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
 		assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(3);
@@ -97,7 +97,7 @@ class ParallelExecutionIntegrationTests {
 
 	@Test
 	void successfulTestWithClassLock() {
-		List<ExecutionEvent> executionEvents = execute(3, SuccessfulTestWithClassLock.class);
+		List<ExecutionEvent> executionEvents = execute(3, SuccessfulWithClassLockTestCase.class);
 
 		assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
 		assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(1);
@@ -166,7 +166,7 @@ class ParallelExecutionIntegrationTests {
 	}
 
 	@ExtendWith(ThreadReporter.class)
-	static class FailingTestWithoutLock {
+	static class FailingWithoutLockTestCase {
 
 		static AtomicInteger sharedResource;
 		static CountDownLatch countDownLatch;
@@ -194,7 +194,7 @@ class ParallelExecutionIntegrationTests {
 	}
 
 	@ExtendWith(ThreadReporter.class)
-	static class SuccessfulTestWithMethodLock {
+	static class SuccessfulWithMethodLockTestCase {
 
 		static AtomicInteger sharedResource;
 		static CountDownLatch countDownLatch;
@@ -226,7 +226,7 @@ class ParallelExecutionIntegrationTests {
 
 	@ExtendWith(ThreadReporter.class)
 	@ResourceLock("sharedResource")
-	static class SuccessfulTestWithClassLock {
+	static class SuccessfulWithClassLockTestCase {
 
 		static AtomicInteger sharedResource;
 		static CountDownLatch countDownLatch;

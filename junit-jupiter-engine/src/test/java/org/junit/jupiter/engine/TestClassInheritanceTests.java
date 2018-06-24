@@ -34,7 +34,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  *
  * @since 5.0
  */
-class TestCaseWithInheritanceTests extends AbstractJupiterTestEngineTests {
+class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 
 	private static final List<String> callSequence = new ArrayList<>();
 
