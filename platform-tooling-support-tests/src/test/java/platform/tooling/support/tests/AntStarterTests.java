@@ -27,7 +27,7 @@ class AntStarterTests {
 	@Test
 	void ant_1_10_3() {
 		var standalone = Paths.get("..", "junit-platform-console-standalone", "build", "libs");
-		var result = Tool.ANT.builder("1.10.3") //
+		var result = Tool.ANT.builder("1.10.4") //
 				.setProject("ant-starter") //
 				.addArguments("-verbose", "-lib", standalone.toAbsolutePath()) //
 				.build() //
