@@ -129,20 +129,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Repeatable.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Repeatable</a>(<a href="../../../../../org/junit/jupiter/api/parallel/ResourceLocks.html" title="annotation in org.junit.jupiter.api.parallel">ResourceLocks.class</a>)
 public @interface <span class="memberNameLabel">ResourceLock</span></pre>
 <div class="block"><code>@ResourceLock</code> is used to declare that the annotated test class or test
- method requires access to a resource identified by a key.
+ method requires access to a shared resource identified by a key.
 
- <p>The resource key is specified using <a href="../../../../../org/junit/jupiter/api/parallel/ResourceLock.html#value()"><code>value()</code></a>. In addition,
- <a href="../../../../../org/junit/jupiter/api/parallel/ResourceLock.html#mode()"><code>mode()</code></a> allows to specify whether the annotated test class or test
- method requires <a href="../../../../../org/junit/jupiter/api/parallel/ResourceAccessMode.html#READ_WRITE"><code>ResourceAccessMode.READ_WRITE</code></a> or only
- <a href="../../../../../org/junit/jupiter/api/parallel/ResourceAccessMode.html#READ"><code>ResourceAccessMode.READ</code></a> access to the resource. In the former case,
+ <p>The resource key is specified via <a href="../../../../../org/junit/jupiter/api/parallel/ResourceLock.html#value()"><code>value()</code></a>. In addition,
+ <a href="../../../../../org/junit/jupiter/api/parallel/ResourceLock.html#mode()"><code>mode()</code></a> allows you to specify whether the annotated test class or test
+ method requires <a href="../../../../../org/junit/jupiter/api/parallel/ResourceAccessMode.html#READ_WRITE"><code>READ_WRITE</code></a> or only
+ <a href="../../../../../org/junit/jupiter/api/parallel/ResourceAccessMode.html#READ"><code>READ</code></a> access to the resource. In the former case,
  execution of the annotated element will occur while no other test class or
- test method that uses this resource is being executed. In the latter case,
+ test method that uses the shared resource is being executed. In the latter case,
  the annotated element may be executed concurrently with other test classes or
- methods that also require <a href="../../../../../org/junit/jupiter/api/parallel/ResourceAccessMode.html#READ"><code>ResourceAccessMode.READ</code></a> access but not at
- the same time as any other test that requires
- <a href="../../../../../org/junit/jupiter/api/parallel/ResourceAccessMode.html#READ_WRITE"><code>ResourceAccessMode.READ_WRITE</code></a> access.
+ methods that also require <code>READ</code> access but not at the same time as any
+ other test that requires <code>READ_WRITE</code> access.
 
- <p>This annotation can be repeated to declare the use of multiple resources.</div>
+ <p>This annotation can be repeated to declare the use of multiple shared resources.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.3</dd>
@@ -247,7 +246,9 @@ public @interface <span class="memberNameLabel">ResourceLock</span></pre>
 <li class="blockList">
 <h4>mode</h4>
 <pre><a href="../../../../../org/junit/jupiter/api/parallel/ResourceAccessMode.html" title="enum in org.junit.jupiter.api.parallel">ResourceAccessMode</a>&nbsp;mode</pre>
-<div class="block">The resource access mode.</div>
+<div class="block">The resource access mode.
+
+ <p>Defaults to <a href="../../../../../org/junit/jupiter/api/parallel/ResourceAccessMode.html#READ_WRITE"><code>READ_WRITE</code></a>.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../org/junit/jupiter/api/parallel/ResourceAccessMode.html" title="enum in org.junit.jupiter.api.parallel"><code>ResourceAccessMode</code></a></dd>
