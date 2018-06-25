@@ -38,6 +38,6 @@ public @interface ResourceLocks {
 	/**
 	 * An array of one or more {@linkplain ResourceLock @ResourceLock} declarations.
 	 */
-	ResourceLock[] value() default {};
+	ResourceLock[] value();
 
 }
