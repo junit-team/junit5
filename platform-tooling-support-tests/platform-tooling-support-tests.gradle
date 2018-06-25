@@ -25,8 +25,14 @@ test {
 	// Opt-in via system property: '-Dplatform.tooling.support.tests.enabled=true'
 	enabled = Boolean.getBoolean('platform.tooling.support.tests.enabled')
 
-	// All maven-aware projects must be installed, i.e. published to the local repository
-	rootProject.ext.mavenizedProjects.each { name ->
-		dependsOn project(":${name}").publishToMavenLocal
+	// The following if-block is necessary since Gradle will otherwise
+	// always publish all mavenizedProjects even if this 'test' task
+	// is not executed.
+	if (enabled) {
+		// All maven-aware projects must be installed, i.e. published to the local repository
+		rootProject.ext.mavenizedProjects.each { name ->
+			dependsOn project(":${name}").publishToMavenLocal
+		}
 	}
+
 }
