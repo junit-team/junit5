@@ -25,7 +25,7 @@ import platform.tooling.support.Tool;
 class AntStarterTests {
 
 	@Test
-	void ant_1_10_3() {
+	void ant_1_10_4() {
 		var standalone = Paths.get("..", "junit-platform-console-standalone", "build", "libs");
 		var result = Tool.ANT.builder("1.10.4") //
 				.setProject("ant-starter") //
@@ -38,10 +38,10 @@ class AntStarterTests {
 		assertLinesMatch(List.of(">> HEAD >>", //
 			"test.junit.launcher:", //
 			">>>>", //
-			"     \\[echo\\] Test run finished after [\\d]+ ms", //
+			"\\[junitlauncher\\] Test run finished after [\\d]+ ms", //
 			">>>>", //
-			"     \\[echo\\] \\[         5 tests successful      \\]", //
-			"     \\[echo\\] \\[         0 tests failed          \\]", //
+			"\\[junitlauncher\\] \\[         5 tests successful      \\]", //
+			"\\[junitlauncher\\] \\[         0 tests failed          \\]", //
 			">>>>", //
 			"test.console.launcher:", //
 			">>>>", //

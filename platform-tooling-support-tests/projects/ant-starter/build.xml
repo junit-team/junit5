@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ant-starter" default="build" basedir=".">
 
-    <fail message="Ant 1.10.3+ is required!">
+    <fail message="Ant 1.10.4+ is required!">
         <condition>
             <not>
-                <antversion atleast="1.10.3"/>
+                <antversion atleast="1.10.4"/>
             </not>
         </condition>
     </fail>
@@ -36,7 +36,7 @@
 
     <!-- https://junit.org/junit5/docs/snapshot/user-guide/#running-tests-build-ant -->
     <target name="test.junit.launcher" depends="compile">
-        <junitlauncher haltOnFailure="true">
+        <junitlauncher haltOnFailure="true" printSummary="true">
             <classpath refid="test.classpath"/>
             <testclasses outputdir="build/test-report">
                 <fileset dir="build/test">
@@ -44,11 +44,8 @@
                 </fileset>
                 <listener type="legacy-xml" sendSysOut="true" sendSysErr="true"/>
                 <listener type="legacy-plain" sendSysOut="true" />
-                <listener classname="com.example.project.SummaryPrintingListener"/>
             </testclasses>
         </junitlauncher>
-        <loadfile property="summary" srcFile="build/test-summary.txt"/>
-        <echo>${summary}</echo>
     </target>
 
     <!-- https://junit.org/junit5/docs/current/user-guide/#running-tests-console-launcher -->
