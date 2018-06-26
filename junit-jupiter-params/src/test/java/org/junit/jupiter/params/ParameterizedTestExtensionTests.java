@@ -103,7 +103,7 @@ class ParameterizedTestExtensionTests {
 		JUnitException exception = assertThrows(JUnitException.class, stream::close);
 
 		assertThat(exception).hasMessage(
-			"Configuration error: You must provide at least one argument for this @ParameterizedTest");
+			"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest");
 	}
 
 	private ExtensionContext getExtensionContextReturningSingleMethod(Object testCase) {
