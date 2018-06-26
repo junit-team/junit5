@@ -378,7 +378,7 @@ class VintageTestEngineExecutionTests {
 		// @formatter:off
 		assertThat(PlainJUnit4TestCaseWithLifecycleMethods.EVENTS).containsExactly(
 			"executionStarted:JUnit Vintage",
-				"executionStarted:" + testClass.getName(),
+				"executionStarted:" + testClass.getSimpleName(),
 					"beforeClass",
 						"executionStarted:failingTest",
 							"before",
@@ -392,7 +392,7 @@ class VintageTestEngineExecutionTests {
 							"after",
 						"executionFinished:succeedingTest",
 					"afterClass",
-				"executionFinished:" + testClass.getName(),
+				"executionFinished:" + testClass.getSimpleName(),
 			"executionFinished:JUnit Vintage"
 		);
 		// @formatter:on

@@ -61,7 +61,7 @@ task testScanModulepath(dependsOn: execScanModulepath) {
 		String text = execScanModulepath.errorOutput.toString() + execScanModulepath.standardOutput.toString()
 		// tree node names
 		assert text.contains("JUnit Vintage")
-		assert text.contains("integration.VintageIntegrationTest")
+		assert text.contains("VintageIntegrationTest")
 		assert text.contains("successfulTest")
 		assert text.contains("JUnit Jupiter")
 		assert text.contains("JupiterIntegrationTests")
