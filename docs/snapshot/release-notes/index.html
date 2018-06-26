@@ -541,22 +541,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#release-notes-5.3.0-M1-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
-<li><a href="#release-notes-5.2.0">5.2.0</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.2.0-overall-improvements">Overall Improvements</a></li>
-<li><a href="#release-notes-5.2.0-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.2.0-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.2.0-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
-<li><a href="#release-notes-5.1.1">5.1.1</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.1.1-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.1.1-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.1.1-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
-<li><a href="#release-notes-5.1.0">5.1.0</a></li>
+<li><a href="#release-notes-5.2.0">5.2.0</a></li>
 </ul>
 </div>
 </div>
@@ -564,7 +549,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This document contains the <em>change log</em> for all JUnit 5 releases since 5.1 GA.</p>
+<p>This document contains the <em>change log</em> for all JUnit 5 releases since 5.2 GA.</p>
 </div>
 <div class="paragraph">
 <p>Please refer to the <a href="../user-guide/index.html#user-guide">User Guide</a> for
@@ -765,248 +750,8 @@ parameterized tests, external factory methods for <code>@MethodSource</code>, as
 minor improvements and bug fixes.</p>
 </div>
 <div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/22?closed=1">5.2 M1</a>,
-<a href="https://github.com/junit-team/junit5/milestone/25?closed=1">5.2 RC1</a>, and
-<a href="https://github.com/junit-team/junit5/milestone/26?closed=1">5.2 GA</a> milestone pages in the JUnit repository
-on GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.2.0-overall-improvements"><a class="anchor" href="#release-notes-5.2.0-overall-improvements"></a>Overall Improvements</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>JUnit BOM: To ease dependency management using
-<a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Importing_Dependencies">Maven</a>
-or <a href="https://docs.gradle.org/current/userguide/managing_transitive_dependencies.html#sec:bom_import">Gradle</a>,
-a <em>Bill of Materials</em> POM is now provided under the <code>org.junit:junit-bom:5.2.0</code> Maven
-coordinates.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.2.0-junit-platform"><a class="anchor" href="#release-notes-5.2.0-junit-platform"></a>JUnit Platform</h3>
-<div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Tag expressions containing spaces are now supported in the JUnit Platform Maven
-Surefire provider.</p>
-</li>
-<li>
-<p>Duplicate <code>--config</code> keys supplied to the <code>ConsoleLauncher</code> are now reported properly.</p>
-</li>
-<li>
-<p>Exceptions thrown in <code>Node.after()</code> (in the <code>HierarchicalTestEngine</code> infrastructure) no
-longer mask earlier exceptions.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The JUnit Platform Surefire Provider (<code>junit-platform-surefire-provider</code>) now works
-with and requires Surefire <code>2.21.0</code> which allows it to be used with Java 9 and Java 10.</p>
-</li>
-<li>
-<p>The default <em>include pattern</em> for filtering class names now matches test classes whose
-names either start with <code>Test</code> or end with <code>Test</code> or <code>Tests</code>.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>This pattern is used by the <code>ConsoleLauncher</code>, the JUnit Platform Gradle Plugin, and
-the <code>JUnitPlatform</code> runner.</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.2.0-junit-jupiter"><a class="anchor" href="#release-notes-5.2.0-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Exceptions thrown by an <code>AfterAllCallback</code> no longer mask exceptions thrown at the
-class level when using the <code>@TestInstance(PER_CLASS)</code> lifecycle mode.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>New <code>assertDoesNotThrow()</code> methods in <code>Assertions</code> which assert that the execution of
-a given code block does <em>not</em> throw any kind of exception.</p>
-</li>
-<li>
-<p>New <code>fail()</code> method in <code>Assertions</code> makes it possible to fail a test without an
-explicit failure message.</p>
-</li>
-<li>
-<p>Implicit support for <em>widening primitive conversion</em> for an argument supplied to a
-<code>@ParameterizedTest</code>.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>For example, a parameterized test annotated with <code>@ValueSource(ints = { 1, 2, 3 })</code>
-can be declared to accept an argument of type <code>int</code>, <code>long</code>, <code>float</code>, or <code>double</code>.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><code>@MethodSource</code> now supports <code>static</code> factory methods declared in external classes
-referenced by <em>fully qualified method name</em>.</p>
-</li>
-<li>
-<p>Support for aggregation of multiple <code>@ParameterizedTest</code> arguments into a single object.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>For details, see
-<a href="../user-guide/index.html#writing-tests-parameterized-tests-argument-aggregation">Argument Aggregation</a>.</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.2.0-junit-vintage"><a class="anchor" href="#release-notes-5.2.0-junit-vintage"></a>JUnit Vintage</h3>
-<div class="paragraph">
-<p>No changes.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="release-notes-5.1.1"><a class="anchor" href="#release-notes-5.1.1"></a>5.1.1</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> April 8, 2018</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong> Bug fixes and minor improvements since the 5.1.0 release</p>
-</div>
-<div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/24?closed=1">5.1.1</a> milestone page in the JUnit repository
-on GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.1.1-junit-platform"><a class="anchor" href="#release-notes-5.1.1-junit-platform"></a>JUnit Platform</h3>
-<div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>New <code>findAllClassesInModule()</code> method in <code>ReflectionSupport</code> which enables third-party
-<code>TestEngine</code> implementations to scan for classes in modules&#8201;&#8212;&#8201;for example, when
-processing a <code>ModuleSelector</code> during the discovery phase.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.1.1-junit-jupiter"><a class="anchor" href="#release-notes-5.1.1-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>ParameterContext</code> API used in <code>ParameterResolver</code> implementations now includes the
-following convenience methods for looking up annotations on parameters. Extension
-authors are strongly encouraged to use these methods instead of those provided in the
-core <code>java.lang.reflect.Parameter</code> API due to a bug in <code>javac</code> on JDK versions prior to
-JDK 9 which causes lookups for annotations on parameters in inner class constructors to
-fail consistently&#8201;&#8212;&#8201;for example, when resolving a parameter for a <code>@Nested</code> test class
-constructor.</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>boolean isAnnotated(Class&lt;? extends Annotation&gt; annotationType)</code></p>
-</li>
-<li>
-<p><code>Optional&lt;A&gt; findAnnotation(Class&lt;A&gt; annotationType)</code></p>
-</li>
-<li>
-<p><code>List&lt;A&gt; findRepeatableAnnotations(Class&lt;A&gt; annotationType)</code></p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.1.1-junit-vintage"><a class="anchor" href="#release-notes-5.1.1-junit-vintage"></a>JUnit Vintage</h3>
-<div class="paragraph">
-<p>No changes.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="release-notes-5.1.0"><a class="anchor" href="#release-notes-5.1.0"></a>5.1.0</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> February 18, 2018</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Discovering tests in Java 9 modules</p>
-</li>
-<li>
-<p>Improved Kotlin support</p>
-</li>
-<li>
-<p><a href="../user-guide/index.html#extensions-registration-programmatic">Programmatic
-extension registration</a> via <code><a href="../api/org/junit/jupiter/api/extension/RegisterExtension.html">@RegisterExtension</a></code></p>
-</li>
-<li>
-<p><a href="../user-guide/index.html#running-tests-tag-expressions">Tag expression language</a> for
-filtering tests to be executed</p>
-</li>
-<li>
-<p>Annotation-based <a href="../user-guide/index.html#writing-tests-conditional-execution">conditional test execution</a> with support for environment variables, system properties,
-operating systems, JRE versions, and dynamic scripts</p>
-</li>
-<li>
-<p>Various improvements for writing
-<a href="../user-guide/index.html#writing-tests-parameterized-tests">parameterized tests</a></p>
-</li>
-<li>
-<p>Refinements to the <code><a href="../api/org/junit/jupiter/api/extension/ExtensionContext.html">ExtensionContext</a></code> API</p>
-</li>
-<li>
-<p>Support for re-running individual dynamic tests, parameterized tests, and test template
-invocations within an IDE</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
 <p>For complete details consult the
-<a href="https://junit.org/junit5/docs/5.1.0/release-notes/index.html">5.1.0 Release Notes</a> online.</p>
+<a href="https://junit.org/junit5/docs/5.2.0/release-notes/index.html">5.2.0 Release Notes</a> online.</p>
 </div>
 </div>
 </div>
@@ -1014,7 +759,7 @@ invocations within an IDE</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-06-26 09:56:41 EDT
+Last updated 2018-06-26 11:25:49 EDT
 </div>
 </div>
 </body>
