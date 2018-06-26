@@ -35,7 +35,7 @@ public class Resources {
 	public static final String SYSTEM_PROPERTIES = "java.lang.System.properties";
 
 	/**
-	 * Represents standard output stream of the current process.
+	 * Represents the standard output stream of the current process.
 	 *
 	 * @see System#out
 	 * @see System#setOut(PrintStream)
@@ -43,7 +43,7 @@ public class Resources {
 	public static final String SYSTEM_OUT = "java.lang.System.out";
 
 	/**
-	 * Represents standard error stream of the current process.
+	 * Represents the standard error stream of the current process.
 	 *
 	 * @see System#err
 	 * @see System#setErr(PrintStream)
@@ -53,4 +53,5 @@ public class Resources {
 	private Resources() {
 		/* no-op */
 	}
+
 }
