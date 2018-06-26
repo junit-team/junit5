@@ -76,7 +76,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.peek(invocationContext -> invocationCount.incrementAndGet())
 				.onClose(() ->
 						Preconditions.condition(invocationCount.get() > 0,
-								"Configuration error: You must provide at least one argument for this @ParameterizedTest"));
+								"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"));
 		// @formatter:on
 	}
 
