@@ -55,4 +55,6 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* The `VintageTestEngine` now uses the _simple name_ of a test class as the display
+  name instead of the _fully qualified class name_. This aligns with the behavior of the
+  `JupiterTestEngine`.
