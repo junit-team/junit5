@@ -264,8 +264,8 @@ implements <a href="../../../../../org/junit/jupiter/engine/descriptor/Filterabl
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">ExclusiveResource</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.html#getExclusiveResources()">getExclusiveResources</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get the set of <a href="../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">resources</a> required to
- execute this node.</div>
+<div class="block">Get the set of <a href="../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">exclusive resources</a>
+ required to execute this node.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -485,7 +485,9 @@ implements <a href="../../../../../org/junit/jupiter/engine/descriptor/Filterabl
  <a href="../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html" title="class in org.junit.platform.engine.support.hierarchical"><code>HierarchicalTestEngine</code></a> handles execution of their children.
 
  <p>The supplied <code>dynamicTestExecutor</code> may be used to submit
- additional dynamic tests for immediate execution.</div>
+ additional dynamic tests for immediate execution.
+
+ <p>The default implementation returns the supplied <code>context</code> unmodified.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execute</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical">Node</a>&lt;<a href="../../../../../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&gt;</code></dd>
@@ -533,12 +535,14 @@ implements <a href="../../../../../org/junit/jupiter/engine/descriptor/Filterabl
 <h4>getExclusiveResources</h4>
 <pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">ExclusiveResource</a>&gt;&nbsp;getExclusiveResources()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html#getExclusiveResources()">Node</a></code></span></div>
-<div class="block">Get the set of <a href="../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">resources</a> required to
- execute this node.</div>
+<div class="block">Get the set of <a href="../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">exclusive resources</a>
+ required to execute this node.
+
+ <p>The default implementation returns an empty set.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the set of resources required by this node; never <code>null</code>
- but potentially empty</dd>
+<dd>the set of exclusive resources required by this node; never
+ <code>null</code> but potentially empty</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical"><code>ExclusiveResource</code></a></dd>
 </dl>
@@ -553,7 +557,9 @@ implements <a href="../../../../../org/junit/jupiter/engine/descriptor/Filterabl
 <pre>public&nbsp;<a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a>&nbsp;getExecutionMode()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html#getExecutionMode()">Node</a></code></span></div>
 <div class="block">Get the preferred of <a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">execution mode</a> for
- parallel execution of this node.</div>
+ parallel execution of this node.
+
+ <p>The default implementation returns <a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html#CONCURRENT"><code>Node.ExecutionMode.CONCURRENT</code></a>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the preferred execution mode of this node; never <code>null</code></dd>

@@ -281,8 +281,8 @@ extends <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestD
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">ExclusiveResource</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#getExclusiveResources()">getExclusiveResources</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get the set of <a href="../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">resources</a> required to
- execute this node.</div>
+<div class="block">Get the set of <a href="../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">exclusive resources</a>
+ required to execute this node.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -495,7 +495,9 @@ extends <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestD
 <pre>public&nbsp;<a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a>&nbsp;getExecutionMode()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html#getExecutionMode()">Node</a></code></span></div>
 <div class="block">Get the preferred of <a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">execution mode</a> for
- parallel execution of this node.</div>
+ parallel execution of this node.
+
+ <p>The default implementation returns <a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html#CONCURRENT"><code>Node.ExecutionMode.CONCURRENT</code></a>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the preferred execution mode of this node; never <code>null</code></dd>
@@ -512,12 +514,14 @@ extends <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestD
 <h4>getExclusiveResources</h4>
 <pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">ExclusiveResource</a>&gt;&nbsp;getExclusiveResources()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html#getExclusiveResources()">Node</a></code></span></div>
-<div class="block">Get the set of <a href="../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">resources</a> required to
- execute this node.</div>
+<div class="block">Get the set of <a href="../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">exclusive resources</a>
+ required to execute this node.
+
+ <p>The default implementation returns an empty set.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the set of resources required by this node; never <code>null</code>
- but potentially empty</dd>
+<dd>the set of exclusive resources required by this node; never
+ <code>null</code> but potentially empty</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical"><code>ExclusiveResource</code></a></dd>
 </dl>
@@ -552,15 +556,18 @@ extends <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestD
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html#before(C)">Node</a></code></span></div>
 <div class="block">Execute the <em>before</em> behavior of this node.
 
- <p>This method will be called once <em>before</em> <a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execution</a> of this node.</div>
+ <p>This method will be called once <em>before</em> <a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execution</a> of this node.
+
+ <p>The default implementation returns the supplied <code>context</code> unmodified.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>context</code> - the context to execute in</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new context to be used for children of this node</dd>
+<dd>the new context to be used for children of this node; never
+ <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)"><code>Node.execute(C, org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html#after(C)"><code>Node.after(C)</code></a></dd>
+<dd><a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)"><code>Node.execute(EngineExecutionContext, DynamicTestExecutor)</code></a>, 
+<a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html#after(C)"><code>Node.after(EngineExecutionContext)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -574,7 +581,9 @@ extends <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestD
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html#after(C)">Node</a></code></span></div>
 <div class="block">Execute the <em>after</em> behavior of this node.
 
- <p>This method will be called once <em>after</em> <a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execution</a> of this node.</div>
+ <p>This method will be called once <em>after</em> <a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execution</a> of this node.
+
+ <p>The default implementation does nothing.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>context</code> - the context to execute in</dd>

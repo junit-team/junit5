@@ -294,7 +294,7 @@ implements <a href="../../../../../../org/junit/platform/engine/support/hierarch
  <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html#CONCURRENT">concurrent</a>.
 
  <p>Implementations must generally acquire and release the task's
- <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#getResourceLock()"><code>resource lock</code></a> before and after its
+ <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#getResourceLock()">resource lock</a> before and after its
  execution unless they execute all tests in the same thread which
  upholds the same guarantees.</div>
 <dl>
@@ -322,12 +322,12 @@ implements <a href="../../../../../../org/junit/platform/engine/support/hierarch
  their execution has finished.
 
  <p>Implementations may <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#execute()">execute</a> one or
- multiple of the supplied tasks in parallel  as long as their
+ multiple of the supplied tasks in parallel as long as their
  <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#getExecutionMode()">execution mode</a> is
  <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html#CONCURRENT">concurrent</a>.
 
  <p>Implementations must generally acquire and release each task's
- <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#getResourceLock()"><code>resource lock</code></a> before and after its
+ <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#getResourceLock()">resource lock</a> before and after its
  execution unless they execute all tests in the same thread which
  upholds the same guarantees.</div>
 <dl>

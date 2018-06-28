@@ -181,7 +181,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.SkipResult.html#getReason()">getReason</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get the reason why execution of the context should be skipped,
+<div class="block">Get the reason that execution of the context should be skipped,
  if available.</div>
 </td>
 </tr>
@@ -240,7 +240,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <p>A context that is skipped will be not be executed.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>reason</code> - the reason why the context should be skipped</dd>
+<dd><code>reason</code> - the reason that the context should be skipped,
+ may be <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a skipped <code>SkipResult</code> with the given reason</dd>
 </dl>
@@ -283,7 +284,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>getReason</h4>
 <pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;getReason()</pre>
-<div class="block">Get the reason why execution of the context should be skipped,
+<div class="block">Get the reason that execution of the context should be skipped,
  if available.</div>
 </li>
 </ul>

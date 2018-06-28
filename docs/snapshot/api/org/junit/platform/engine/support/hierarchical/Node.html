@@ -229,7 +229,7 @@ public interface <span class="typeNameLabel">Node&lt;C extends <a href="../../..
 <td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html#cleanUp(C)">cleanUp</a></span>&#8203;(<a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html" title="type parameter in Node">C</a>&nbsp;context)</code></th>
 <td class="colLast">
-<div class="block">Cleanup the supplied <code>context</code> after execution.</div>
+<div class="block">Clean up the supplied <code>context</code> after execution.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -244,8 +244,8 @@ public interface <span class="typeNameLabel">Node&lt;C extends <a href="../../..
 <td class="colFirst"><code>default <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">ExclusiveResource</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html#getExclusiveResources()">getExclusiveResources</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get the set of <a href="../../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">resources</a> required to
- execute this node.</div>
+<div class="block">Get the set of <a href="../../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">exclusive resources</a>
+ required to execute this node.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
@@ -319,10 +319,12 @@ public interface <span class="typeNameLabel">Node&lt;C extends <a href="../../..
 <h4>cleanUp</h4>
 <pre>default&nbsp;void&nbsp;cleanUp&#8203;(<a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html" title="type parameter in Node">C</a>&nbsp;context)
               throws <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a></pre>
-<div class="block">Cleanup the supplied <code>context</code> after execution.
+<div class="block">Clean up the supplied <code>context</code> after execution.
 
  <p>The default implementation does nothing.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>context</code> - the context to execute in</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a></code></dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -364,17 +366,20 @@ public interface <span class="typeNameLabel">Node&lt;C extends <a href="../../..
           throws <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a></pre>
 <div class="block">Execute the <em>before</em> behavior of this node.
 
- <p>This method will be called once <em>before</em> <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execution</a> of this node.</div>
+ <p>This method will be called once <em>before</em> <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execution</a> of this node.
+
+ <p>The default implementation returns the supplied <code>context</code> unmodified.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>context</code> - the context to execute in</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new context to be used for children of this node</dd>
+<dd>the new context to be used for children of this node; never
+ <code>null</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a></code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)"><code>execute(C, org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)</code></a>, 
-<a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html#after(C)"><code>after(C)</code></a></dd>
+<dd><a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)"><code>execute(EngineExecutionContext, DynamicTestExecutor)</code></a>, 
+<a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html#after(C)"><code>after(EngineExecutionContext)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -395,7 +400,9 @@ public interface <span class="typeNameLabel">Node&lt;C extends <a href="../../..
  <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html" title="class in org.junit.platform.engine.support.hierarchical"><code>HierarchicalTestEngine</code></a> handles execution of their children.
 
  <p>The supplied <code>dynamicTestExecutor</code> may be used to submit
- additional dynamic tests for immediate execution.</div>
+ additional dynamic tests for immediate execution.
+
+ <p>The default implementation returns the supplied <code>context</code> unmodified.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>context</code> - the context to execute in</dd>
@@ -423,7 +430,9 @@ public interface <span class="typeNameLabel">Node&lt;C extends <a href="../../..
             throws <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a></pre>
 <div class="block">Execute the <em>after</em> behavior of this node.
 
- <p>This method will be called once <em>after</em> <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execution</a> of this node.</div>
+ <p>This method will be called once <em>after</em> <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execution</a> of this node.
+
+ <p>The default implementation does nothing.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>context</code> - the context to execute in</dd>
@@ -445,12 +454,14 @@ public interface <span class="typeNameLabel">Node&lt;C extends <a href="../../..
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.3",
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#consumers()" title="class or interface in org.apiguardian.api" class="externalLink">consumers</a>="org.junit.platform.engine.support.hierarchical")
 default&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">ExclusiveResource</a>&gt;&nbsp;getExclusiveResources()</pre>
-<div class="block">Get the set of <a href="../../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">resources</a> required to
- execute this node.</div>
+<div class="block">Get the set of <a href="../../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">exclusive resources</a>
+ required to execute this node.
+
+ <p>The default implementation returns an empty set.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the set of resources required by this node; never <code>null</code>
- but potentially empty</dd>
+<dd>the set of exclusive resources required by this node; never
+ <code>null</code> but potentially empty</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.3</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
@@ -469,7 +480,9 @@ default&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.ht
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#consumers()" title="class or interface in org.apiguardian.api" class="externalLink">consumers</a>="org.junit.platform.engine.support.hierarchical")
 default&nbsp;<a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a>&nbsp;getExecutionMode()</pre>
 <div class="block">Get the preferred of <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">execution mode</a> for
- parallel execution of this node.</div>
+ parallel execution of this node.
+
+ <p>The default implementation returns <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html#CONCURRENT"><code>Node.ExecutionMode.CONCURRENT</code></a>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the preferred execution mode of this node; never <code>null</code></dd>

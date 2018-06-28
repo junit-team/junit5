@@ -149,7 +149,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 implements <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></pre>
 <div class="block">A <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ForkJoinPool.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink"><code>ForkJoinPool</code></a>-based
  <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">executor service</a> that executes
- <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> with a configured parallelism.</div>
+ <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> with the configured parallelism.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.3</dd>
@@ -307,7 +307,7 @@ implements <a href="../../../../../../org/junit/platform/engine/support/hierarch
  <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html#CONCURRENT">concurrent</a>.
 
  <p>Implementations must generally acquire and release the task's
- <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#getResourceLock()"><code>resource lock</code></a> before and after its
+ <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#getResourceLock()">resource lock</a> before and after its
  execution unless they execute all tests in the same thread which
  upholds the same guarantees.</div>
 <dl>
@@ -335,12 +335,12 @@ implements <a href="../../../../../../org/junit/platform/engine/support/hierarch
  their execution has finished.
 
  <p>Implementations may <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#execute()">execute</a> one or
- multiple of the supplied tasks in parallel  as long as their
+ multiple of the supplied tasks in parallel as long as their
  <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#getExecutionMode()">execution mode</a> is
  <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html#CONCURRENT">concurrent</a>.
 
  <p>Implementations must generally acquire and release each task's
- <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#getResourceLock()"><code>resource lock</code></a> before and after its
+ <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#getResourceLock()">resource lock</a> before and after its
  execution unless they execute all tests in the same thread which
  upholds the same guarantees.</div>
 <dl>

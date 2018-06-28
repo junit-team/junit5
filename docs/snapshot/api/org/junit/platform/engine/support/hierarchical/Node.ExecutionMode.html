@@ -161,7 +161,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html?i
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.3</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html#getExecutionMode()"><code>Node.getExecutionMode()</code></a></dd>
+<dd><a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html#SAME_THREAD"><code>SAME_THREAD</code></a>, 
+<a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html#CONCURRENT"><code>CONCURRENT</code></a>, 
+<a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html#getExecutionMode()"><code>Node.getExecutionMode()</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -266,6 +268,10 @@ the order they are declared.</div>
 <h4>SAME_THREAD</h4>
 <pre>public static final&nbsp;<a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a> SAME_THREAD</pre>
 <div class="block">Force execution in same thread as the parent node.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html#CONCURRENT"><code>CONCURRENT</code></a></dd>
+</dl>
 </li>
 </ul>
 <a id="CONCURRENT">
@@ -276,6 +282,10 @@ the order they are declared.</div>
 <h4>CONCURRENT</h4>
 <pre>public static final&nbsp;<a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a> CONCURRENT</pre>
 <div class="block">Allow concurrent execution with any other node.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html#SAME_THREAD"><code>SAME_THREAD</code></a></dd>
+</dl>
 </li>
 </ul>
 </li>
