@@ -40,7 +40,7 @@ public interface HierarchicalTestExecutorService extends AutoCloseable {
 	 * {@linkplain ExecutionMode#CONCURRENT concurrent}.
 	 *
 	 * <p>Implementations must generally acquire and release the task's
-	 * {@link TestTask#getResourceLock() resource lock} before and after its
+	 * {@linkplain TestTask#getResourceLock() resource lock} before and after its
 	 * execution unless they execute all tests in the same thread which
 	 * upholds the same guarantees.
 	 *
@@ -56,12 +56,12 @@ public interface HierarchicalTestExecutorService extends AutoCloseable {
 	 * their execution has finished.
 	 *
 	 * <p>Implementations may {@linkplain TestTask#execute() execute} one or
-	 * multiple of the supplied tasks in parallel  as long as their
+	 * multiple of the supplied tasks in parallel as long as their
 	 * {@linkplain TestTask#getExecutionMode() execution mode} is
 	 * {@linkplain ExecutionMode#CONCURRENT concurrent}.
 	 *
 	 * <p>Implementations must generally acquire and release each task's
-	 * {@link TestTask#getResourceLock() resource lock} before and after its
+	 * {@linkplain TestTask#getResourceLock() resource lock} before and after its
 	 * execution unless they execute all tests in the same thread which
 	 * upholds the same guarantees.
 	 *
@@ -100,4 +100,5 @@ public interface HierarchicalTestExecutorService extends AutoCloseable {
 		void execute();
 
 	}
+
 }

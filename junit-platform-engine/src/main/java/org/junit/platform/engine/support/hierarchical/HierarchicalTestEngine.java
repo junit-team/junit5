@@ -30,8 +30,9 @@ import org.junit.platform.engine.TestEngine;
 public abstract class HierarchicalTestEngine<C extends EngineExecutionContext> implements TestEngine {
 
 	/**
-	 * Create an initial {@linkplain #createExecutionContext execution
-	 * context}, execute the behavior of all {@linkplain Node nodes} in the
+	 * Create an {@linkplain #createExecutorService(ExecutionRequest) executor
+	 * service}; create an initial {@linkplain #createExecutionContext execution
+	 * context}; execute the behavior of all {@linkplain Node nodes} in the
 	 * hierarchy starting with the supplied {@code request}'s
 	 * {@linkplain ExecutionRequest#getRootTestDescriptor() root} and notify
 	 * its {@linkplain ExecutionRequest#getEngineExecutionListener() execution

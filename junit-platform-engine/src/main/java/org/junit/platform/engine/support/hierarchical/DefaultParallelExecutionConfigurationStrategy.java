@@ -31,14 +31,16 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 
 	/**
 	 * Uses the mandatory {@value CONFIG_FIXED_PARALLELISM_PROPERTY_NAME} configuration
-	 * parameter as desired parallelism.
+	 * parameter as the desired parallelism.
 	 */
 	FIXED {
 		@Override
 		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
 			int parallelism = configurationParameters.get(CONFIG_FIXED_PARALLELISM_PROPERTY_NAME,
 				Integer::valueOf).orElseThrow(
-					() -> new JUnitException(CONFIG_FIXED_PARALLELISM_PROPERTY_NAME + " must be set"));
+					() -> new JUnitException(String.format("Configuration parameter '%s' must be set",
+						CONFIG_FIXED_PARALLELISM_PROPERTY_NAME)));
+
 			return new DefaultParallelExecutionConfiguration(parallelism, parallelism, 256 + parallelism, parallelism,
 				30);
 		}
@@ -54,17 +56,21 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
 			BigDecimal factor = configurationParameters.get(CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME,
 				BigDecimal::new).orElse(BigDecimal.ONE);
+
 			Preconditions.condition(factor.compareTo(BigDecimal.ZERO) > 0,
-				() -> CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME + " must be greater than 0");
+				() -> String.format("Factor '%s' specified via configuration parameter '%s' must be greater than 0",
+					factor, CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME));
+
 			int parallelism = Math.max(1,
 				factor.multiply(BigDecimal.valueOf(Runtime.getRuntime().availableProcessors())).intValue());
+
 			return new DefaultParallelExecutionConfiguration(parallelism, parallelism, 256 + parallelism, parallelism,
 				30);
 		}
 	},
 
 	/**
-	 * Allows to specify a custom {@link ParallelExecutionConfigurationStrategy}
+	 * Allows the specification of a custom {@link ParallelExecutionConfigurationStrategy}
 	 * implementation via the mandatory {@value CONFIG_CUSTOM_CLASS_PROPERTY_NAME}
 	 * configuration parameter to determine the desired configuration.
 	 */
@@ -72,14 +78,21 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 		@Override
 		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
 			String className = configurationParameters.get(CONFIG_CUSTOM_CLASS_PROPERTY_NAME).orElseThrow(
-				() -> new JUnitException(CONFIG_CUSTOM_CLASS_PROPERTY_NAME + " must be set"));
-			Class<?> strategyClass = ReflectionUtils.loadClass(className).orElseThrow(
-				() -> new JUnitException("Could not load class for " + CONFIG_CUSTOM_CLASS_PROPERTY_NAME));
+				() -> new JUnitException(
+					String.format("Configuration parameter '%s' must be set", CONFIG_CUSTOM_CLASS_PROPERTY_NAME)));
+
+			Class<?> strategyClass = ReflectionUtils.loadClass(className).orElseThrow(() -> new JUnitException(
+				String.format("Could not load class '%s' specified via configuration parameter '%s'", className,
+					CONFIG_CUSTOM_CLASS_PROPERTY_NAME)));
+
 			Preconditions.condition(ParallelExecutionConfigurationStrategy.class.isAssignableFrom(strategyClass),
-				CONFIG_CUSTOM_CLASS_PROPERTY_NAME + " does not implement "
-						+ ParallelExecutionConfigurationStrategy.class);
+				() -> String.format("Class '%s' specified via configuration parameter '%s' does not implement %s",
+					strategyClass.getName(), CONFIG_CUSTOM_CLASS_PROPERTY_NAME,
+					ParallelExecutionConfigurationStrategy.class.getName()));
+
 			ParallelExecutionConfigurationStrategy strategy = (ParallelExecutionConfigurationStrategy) ReflectionUtils.newInstance(
 				strategyClass);
+
 			return strategy.createConfiguration(configurationParameters);
 		}
 	};
@@ -93,7 +106,7 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 	public static final String CONFIG_STRATEGY_PROPERTY_NAME = "strategy";
 
 	/**
-	 * Property name used to determine the desired parallelism by the
+	 * Property name used to determine the desired parallelism for the
 	 * {@link #FIXED} configuration strategy.
 	 *
 	 * <p>No default value; must be an integer.
@@ -103,7 +116,7 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 	public static final String CONFIG_FIXED_PARALLELISM_PROPERTY_NAME = "fixed.parallelism";
 
 	/**
-	 * Property name of the factor used to determine the desired parallelism by the
+	 * Property name of the factor used to determine the desired parallelism for the
 	 * {@link #DYNAMIC} configuration strategy.
 	 *
 	 * <p>Value must be a decimal number; defaults to {@code 1}.
@@ -119,7 +132,6 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 	 *
 	 * @see #CUSTOM
 	 */
-	@API(status = EXPERIMENTAL, since = "5.3")
 	public static final String CONFIG_CUSTOM_CLASS_PROPERTY_NAME = "custom.class";
 
 	static ParallelExecutionConfigurationStrategy getStrategy(ConfigurationParameters configurationParameters) {

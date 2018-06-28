@@ -41,6 +41,7 @@ class SingleLock implements ResourceLock {
 	}
 
 	private class SingleLockManagedBlocker implements ForkJoinPool.ManagedBlocker {
+
 		private boolean acquired;
 
 		@Override
@@ -54,5 +55,7 @@ class SingleLock implements ResourceLock {
 		public boolean isReleasable() {
 			return acquired || lock.tryLock();
 		}
+
 	}
+
 }

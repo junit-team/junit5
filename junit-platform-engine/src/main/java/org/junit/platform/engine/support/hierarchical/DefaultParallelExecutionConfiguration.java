@@ -54,4 +54,5 @@ class DefaultParallelExecutionConfiguration implements ParallelExecutionConfigur
 	public int getKeepAlive() {
 		return keepAlive;
 	}
+
 }

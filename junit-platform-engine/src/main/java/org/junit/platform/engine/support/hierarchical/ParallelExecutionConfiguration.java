@@ -51,7 +51,7 @@ public interface ParallelExecutionConfiguration {
 	int getMaxPoolSize();
 
 	/**
-	 * Get the thread pool size to be used.
+	 * Get the core thread pool size to be used.
 	 */
 	int getCorePoolSize();
 

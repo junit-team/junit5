@@ -36,7 +36,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 /**
  * A {@link ForkJoinPool}-based
  * {@linkplain HierarchicalTestExecutorService executor service} that executes
- * {@linkplain TestTask test tasks} with a configured parallelism.
+ * {@linkplain TestTask test tasks} with the configured parallelism.
  *
  * @see ForkJoinPool
  * @see DefaultParallelExecutionConfigurationStrategy
@@ -55,7 +55,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	 */
 	public ForkJoinPoolHierarchicalTestExecutorService(ConfigurationParameters configurationParameters) {
 		forkJoinPool = createForkJoinPool(configurationParameters);
-		LoggerFactory.getLogger(ForkJoinPoolHierarchicalTestExecutorService.class) //
+		LoggerFactory.getLogger(getClass()) //
 				.config(() -> "Using ForkJoinPool with parallelism of " + forkJoinPool.getParallelism());
 	}
 
@@ -164,5 +164,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 				ExceptionUtils.throwAsUncheckedException(e);
 			}
 		}
+
 	}
+
 }

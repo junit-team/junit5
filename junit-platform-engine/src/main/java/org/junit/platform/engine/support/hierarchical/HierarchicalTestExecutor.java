@@ -56,4 +56,5 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 		new NodeTestTaskWalker().walk(rootTestTask);
 		return rootTestTask;
 	}
+
 }
