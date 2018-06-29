@@ -48,6 +48,8 @@ on GitHub.
     parallel test execution based on the Fork/Join Framework.
   - `Node` implementations may provide a set of `ExclusiveResources` and an
     `ExecutionMode` to be used by `ForkJoinPoolHierarchicalTestExecutorService`.
+* New extension interface `TestInstanceFactory` that allows extensions to provide
+  specially created or acquired test instances.
 * New overloaded variant of `isAnnotated()` in `AnnotationSupport` that accepts
   `Optional<? extends AnnotatedElement>` instead of `AnnotatedElement`.
 * New `--fail-if-no-tests` command-line option for the `ConsoleLauncher`.
