@@ -243,22 +243,27 @@ Examples:
 
 [[extensions-test-instance-factories]]
 === Test Instance Factories
-`{TestInstanceFactory}` defines the API for `Extensions` that wish to _provide new_
-test instances.
+
+`{TestInstanceFactory}` defines the API for `Extensions` that wish to _create_ test class
+instances.
 
 Common use cases include acquiring the test instance from a dependency injection
-framework or invoking a static factory method to create the test instance.
+framework or invoking a static factory method to create the test class instance.
 
-A single extension that implements `{TestInstanceFactory}` can be registered for
-test classes at the top level and each nested test class. Factories registered on
-a nested test class will override that of factories at higher levels.
+If no `TestInstanceFactory` is registered, the framework will simply invoke the default
+constructor for the test class to instantiate it.
+
+Extensions that implement `TestInstanceFactory` can be registered on top-level test
+classes as well as on `@Nested` test classes. A factory registered on a `@Nested` test
+class will override any factories registered on enclosing classes.
 
 [WARNING]
 ====
-Registering multiple extensions that implement `{TestInstanceFactory}` for any single class
-in the test class hierarchy will result in an exception being thrown for all tests in that
-class and any nested test classes below. It is the user's responsibility to ensure that only
-a single `{TestInstanceFactory}` is registered for any specific test class.
+Registering multiple extensions that implement `TestInstanceFactory` for any single class
+will result in an exception being thrown for all tests in that class and in any nested
+test classes. Note that any `TestInstanceFactory` registered in a superclass is
+_inherited_. It is the user's responsibility to ensure that only a single
+`TestInstanceFactory` is registered for any specific test class.
 ====
 
 [[extensions-test-instance-post-processing]]
