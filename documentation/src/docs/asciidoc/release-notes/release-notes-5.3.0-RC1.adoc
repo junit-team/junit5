@@ -39,7 +39,10 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* New `TestInstanceFactory` extension API that enables custom creation of test class
+  instances.
+  - See <<../user-guide/index.adoc#extensions-test-instance-factories, Test Instance
+    Factories>> in the User Guide for details.
 
 
 [[release-notes-5.3.0-RC1-junit-vintage]]
