@@ -18,7 +18,6 @@ import java.util.Set;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.engine.TestDescriptor;
@@ -37,8 +36,6 @@ import org.junit.platform.engine.UniqueId;
  */
 @API(status = INTERNAL, since = "5.0")
 public class NestedClassTestDescriptor extends ClassTestDescriptor {
-
-	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	/**
 	 * Set of local class-level tags; does not contain tags from parent.
@@ -72,7 +69,7 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 		Object outerInstance = parentExecutionContext.getTestInstanceProvider().getTestInstance(
 			childExtensionRegistryForOuterInstance);
 		ExtensionRegistry parentRegistry = parentExecutionContext.getExtensionRegistry();
-		return invokeTestInstanceFactory(Optional.of(outerInstance), registry, parentRegistry, extensionContext);
+		return instantiateTestClass(Optional.of(outerInstance), registry, parentRegistry, extensionContext);
 	}
 
 }

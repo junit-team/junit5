@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromFields;
@@ -28,21 +29,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ExtensionContextException;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
-import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
-import org.junit.jupiter.engine.execution.DefaultTestInstanceFactoryContext;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.TestInstanceProvider;
@@ -240,18 +238,25 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		return instance;
 	}
 
-	protected Object invokeTestInstanceConstructor(Optional<Object> outerInstance, ExtensionRegistry registry,
-			ExtensionContext extensionContext) {
-		Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
-		if (outerInstance.isPresent()) {
-			return executableInvoker.invoke(constructor, outerInstance.get(), extensionContext, registry);
-		}
-		else {
-			return executableInvoker.invoke(constructor, extensionContext, registry);
-		}
+	protected Object instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
+			ExtensionRegistry registry, ExtensionContext extensionContext) {
+
+		return instantiateTestClass(Optional.empty(), registry, null, extensionContext);
 	}
 
-	protected TestInstanceFactory resolveTestInstanceFactory(ExtensionRegistry registry,
+	protected Object instantiateTestClass(Optional<Object> outerInstance, ExtensionRegistry registry,
+			ExtensionRegistry parentRegistry, ExtensionContext extensionContext) {
+
+		TestInstanceFactory factory = resolveTestInstanceFactory(registry, parentRegistry);
+		if (factory != null) {
+			return factory.createTestInstance(new DefaultTestInstanceFactoryContext(this.testClass, outerInstance),
+				extensionContext);
+		}
+
+		return invokeTestInstanceConstructor(outerInstance, registry, extensionContext);
+	}
+
+	private TestInstanceFactory resolveTestInstanceFactory(ExtensionRegistry registry,
 			ExtensionRegistry parentRegistry) {
 
 		List<TestInstanceFactory> factories = registry.getExtensions(TestInstanceFactory.class);
@@ -265,35 +270,28 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		}
 
 		if (factories.size() > 1) {
-			String factoryNames = factories.stream().map(factory -> factory.getClass().getSimpleName()).collect(
-				Collectors.joining(","));
+			String factoryNames = factories.stream().map(factory -> factory.getClass().getName()).collect(joining(","));
 
 			String errorMessage = String.format(
-				"Too many TestInstanceFactory extensions [%s] registered on test class: %s (allowed is at most 1)",
-				factoryNames, testClass.getSimpleName());
+				"Discovered multiple TestInstanceFactory extensions registered for test class [%s], but only one is permitted: %s",
+				testClass.getName(), factoryNames);
 
-			throw new ExtensionContextException(errorMessage);
+			throw new ExtensionConfigurationException(errorMessage);
 		}
 
 		return factories.get(0);
 	}
 
-	protected Object invokeTestInstanceFactory(Optional<Object> outerInstance, ExtensionRegistry registry,
-			ExtensionRegistry parentRegistry, ExtensionContext extensionContext) {
+	private Object invokeTestInstanceConstructor(Optional<Object> outerInstance, ExtensionRegistry registry,
+			ExtensionContext extensionContext) {
 
-		TestInstanceFactory factory = resolveTestInstanceFactory(registry, parentRegistry);
-		if (factory == null) {
-			return invokeTestInstanceConstructor(outerInstance, registry, extensionContext);
+		Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
+		if (outerInstance.isPresent()) {
+			return executableInvoker.invoke(constructor, outerInstance.get(), extensionContext, registry);
 		}
-
-		TestInstanceFactoryContext factoryContext = new DefaultTestInstanceFactoryContext(this.testClass,
-			outerInstance);
-		return factory.instantiateTestClass(factoryContext, extensionContext);
-	}
-
-	protected Object instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionRegistry registry, ExtensionContext extensionContext) {
-		return invokeTestInstanceFactory(Optional.empty(), registry, null, extensionContext);
+		else {
+			return executableInvoker.invoke(constructor, extensionContext, registry);
+		}
 	}
 
 	private void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,

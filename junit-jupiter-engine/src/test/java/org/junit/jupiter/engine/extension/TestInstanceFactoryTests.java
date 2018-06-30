@@ -13,12 +13,10 @@ package org.junit.jupiter.engine.extension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -30,10 +28,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
-import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * Integration tests that verify support for {@link TestInstanceFactory}.
@@ -50,10 +47,8 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void instanceFactoriesInNestedClasses() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(OuterTestCase.class)).build();
-
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+	void instanceFactoriesInNestedClassHierarchy() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(OuterTestCase.class);
 
 		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -62,36 +57,34 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		assertThat(callSequence).containsExactly(
 
 			// OuterTestCase
-			"fooInstanceFactoryInstantiated:OuterTestCase",
+			"FooInstanceFactory instantiated: OuterTestCase",
 				"beforeOuterMethod",
 					"testOuter",
 
 			// InnerTestCase
-
-			"fooInstanceFactoryInstantiated:OuterTestCase",
-			"barInstanceFactoryInstantiatedNested:InnerTestCase",
+			"FooInstanceFactory instantiated: OuterTestCase",
+				"BarInstanceFactory instantiated: InnerTestCase",
 					"beforeOuterMethod",
 						"beforeInnerMethod",
 							"testInner"
+
 		);
 		// @formatter:on
 	}
 
 	@Test
-	void invalidFactoryRegistration() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(InvalidTestCase.class)).build();
-
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+	void multipleFactoriesRegisteredOnSingleTestClass() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(InvalidTestCase.class);
 
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests aborted");
 	}
 
 	@Test
-	void instanceFactoriesInPerClassTests() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(PerClassTestCase.class)).build();
+	void instanceFactoryUsingPerClassTestInstanceLifecycle() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(PerClassLifecycleTestCase.class);
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		assertEquals(1, PerClassLifecycleTestCase.counter.get());
 
 		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
@@ -99,74 +92,19 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
 
-			"perClassInstanceFactoryInstantiated:PerClassTestCase",
-				"initCounter",
-					"incrementCounter",
-						"aTest",
-					"incrementCounter",
-						"bTest",
-				"checkCounter"
+			"FooInstanceFactory instantiated: PerClassLifecycleTestCase",
+				"@BeforeAll",
+					"@BeforeEach",
+						"test1",
+					"@BeforeEach",
+						"test2",
+				"@AfterAll"
 
 		);
 		// @formatter:on
 	}
 
 	// -------------------------------------------------------------------
-
-	@ExtendWith(PerClassInstanceFactory.class)
-	@TestInstance(PER_CLASS)
-	static class PerClassTestCase {
-
-		int counter = -1;
-
-		@BeforeAll
-		void initCounter() {
-			callSequence.add("initCounter");
-			counter = 0;
-		}
-
-		@BeforeEach
-		void incrementCounter() {
-			callSequence.add("incrementCounter");
-			counter += 1;
-		}
-
-		@Test
-		void aTest() {
-			callSequence.add("aTest");
-			assertEquals(counter, 1);
-		}
-
-		@Test
-		void bTest() {
-			callSequence.add("bTest");
-			assertEquals(counter, 2);
-		}
-
-		@AfterAll
-		void checkCounter() {
-			assertEquals(counter, 2);
-			callSequence.add("checkCounter");
-		}
-
-	}
-
-	static class PerClassInstanceFactory implements TestInstanceFactory {
-
-		@Override
-		public Object instantiateTestClass(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext)
-				throws TestInstantiationException {
-			Class<?> testClass = factoryContext.getTestClass();
-			callSequence.add("perClassInstanceFactoryInstantiated:" + testClass.getSimpleName());
-			try {
-				return testClass.getDeclaredConstructor().newInstance();
-			}
-			catch (Exception ex) {
-				throw new TestInstantiationException("Failed to invoke constructor", ex);
-			}
-		}
-
-	}
 
 	@ExtendWith(FooInstanceFactory.class)
 	static class OuterTestCase {
@@ -208,38 +146,66 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	static class FooInstanceFactory implements TestInstanceFactory {
+	@ExtendWith(FooInstanceFactory.class)
+	@TestInstance(PER_CLASS)
+	static class PerClassLifecycleTestCase {
 
-		@Override
-		public Object instantiateTestClass(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext)
-				throws TestInstantiationException {
-			Class<?> testClass = factoryContext.getTestClass();
-			callSequence.add("fooInstanceFactoryInstantiated:" + testClass.getSimpleName());
-			try {
-				return testClass.getDeclaredConstructor().newInstance();
-			}
-			catch (Throwable ex) {
-				throw new TestInstantiationException("Failed to invoke constructor", ex);
-			}
+		static final AtomicInteger counter = new AtomicInteger();
+
+		PerClassLifecycleTestCase() {
+			counter.incrementAndGet();
+		}
+
+		@BeforeAll
+		void beforeAll() {
+			callSequence.add("@BeforeAll");
+		}
+
+		@BeforeEach
+		void beforeEach() {
+			callSequence.add("@BeforeEach");
+		}
+
+		@Test
+		void test1() {
+			callSequence.add("test1");
+		}
+
+		@Test
+		void test2() {
+			callSequence.add("test2");
+		}
+
+		@AfterAll
+		void afterAll() {
+			callSequence.add("@AfterAll");
 		}
 
 	}
 
-	static class BarInstanceFactory implements TestInstanceFactory {
+	private static class FooInstanceFactory implements TestInstanceFactory {
 
 		@Override
-		public Object instantiateTestClass(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext)
-				throws TestInstantiationException {
+		public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {
 			Class<?> testClass = factoryContext.getTestClass();
-			Object outerInstance = factoryContext.getOuterInstance().orElseThrow(NoSuchElementException::new);
-			callSequence.add("barInstanceFactoryInstantiatedNested:" + testClass.getSimpleName());
-			try {
-				return testClass.getDeclaredConstructor(outerInstance.getClass()).newInstance(outerInstance);
-			}
-			catch (Throwable ex) {
-				throw new TestInstantiationException("Failed to invoke constructor", ex);
-			}
+			instantiated(getClass(), testClass);
+			return ReflectionUtils.newInstance(testClass);
 		}
+	}
+
+	private static class BarInstanceFactory implements TestInstanceFactory {
+
+		@Override
+		public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {
+			Class<?> testClass = factoryContext.getTestClass();
+			Object outerInstance = factoryContext.getOuterInstance().get();
+			instantiated(getClass(), testClass);
+			return ReflectionUtils.newInstance(testClass, outerInstance);
+		}
+	}
+
+	private static boolean instantiated(Class<? extends TestInstanceFactory> factoryClass, Class<?> testClass) {
+		return callSequence.add(factoryClass.getSimpleName() + " instantiated: " + testClass.getSimpleName());
 	}
 
 }

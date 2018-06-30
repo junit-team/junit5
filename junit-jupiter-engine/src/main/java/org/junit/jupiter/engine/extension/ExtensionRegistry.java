@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -172,7 +173,7 @@ public class ExtensionRegistry {
 	 * @see #stream(Class)
 	 */
 	public <E extends Extension> List<E> getExtensions(Class<E> extensionType) {
-		return stream(extensionType).collect(toList());
+		return stream(extensionType).collect(toCollection(ArrayList::new));
 	}
 
 	/**

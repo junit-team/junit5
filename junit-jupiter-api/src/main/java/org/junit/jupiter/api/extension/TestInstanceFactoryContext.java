@@ -15,11 +15,10 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.Nested;
 
 /**
  * {@code TestInstanceFactoryContext} encapsulates the <em>context</em> in which
- * a {@link #getTestClass test class} is to be instantiated by a
+ * a {@linkplain #getTestClass test class} is to be instantiated by a
  * {@link TestInstanceFactory}.
  *
  * @since 5.3
@@ -36,11 +35,14 @@ public interface TestInstanceFactoryContext {
 	Class<?> getTestClass();
 
 	/**
-	 * Get the outer class instance for {@link Nested nested} test classes. For
-	 * top level classes there is not outer instance and as such the value will
-	 * be {@link Optional#empty empty}.
+	 * Get the instance of the outer class, if available.
 	 *
-	 * @return the outer test class instance, if test class is nested
+	 * <p>The returned {@link Optional} will be <em>empty</em> unless the
+	 * current {@linkplain #getTestClass() test class} is a
+	 * {@link org.junit.jupiter.api.Nested @Nested} test class.
+	 *
+	 * @return an {@code Optional} containing the outer test instance; never
+	 * {@code null} but potentially empty
 	 * @see org.junit.jupiter.api.Nested
 	 */
 	Optional<Object> getOuterInstance();

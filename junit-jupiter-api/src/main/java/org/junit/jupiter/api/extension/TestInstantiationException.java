@@ -16,8 +16,8 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 
 /**
- * Thrown if an error is encountered with the invocation of
- * any {@link TestInstanceFactory}.
+ * Thrown if an error is encountered during the execution of
+ * a {@link TestInstanceFactory}.
  *
  * @since 5.3
  */

@@ -16,16 +16,17 @@ import org.apiguardian.api.API;
 
 /**
  * {@code TestInstanceFactory} defines the API for {@link Extension
- * Extensions} that wish to <em>create</em> test instances.
+ * Extensions} that wish to {@linkplain #createTestInstance create} test instances.
  *
  * <p>Common use cases include creating test instances with special construction
- * requirements or acquiring the test from a dependency injection framework.
+ * requirements or acquiring the test instance from a dependency injection
+ * framework.
  *
  * <p>Only one {@code TestInstanceFactory} is allowed to be registered for each
- * test class in the test class hierarchy; with lower level factories overriding
+ * test class in the test class hierarchy, with lower level factories overriding
  * factories registered at higher levels in the hierarchy. Registering multiple
  * factories for any single test class will result in an exception being thrown
- * for all the tests in that test class and any nested test classes below.
+ * for all the tests in that test class and any nested test classes.
  *
  * <p>Extensions that implement {@code TestInstanceFactory} must be registered
  * at the class level.
@@ -36,30 +37,31 @@ import org.apiguardian.api.API;
  * constructor requirements.
  *
  * @since 5.3
+ * @see #createTestInstance(TestInstanceFactoryContext, ExtensionContext)
  * @see TestInstanceFactoryContext
- * @see #instantiateTestClass(TestInstanceFactoryContext, ExtensionContext)
+ * @see TestInstancePostProcessor
  */
 @API(status = EXPERIMENTAL, since = "5.3")
 public interface TestInstanceFactory extends Extension {
 
 	/**
-	 * Callback for producing a test instance for the supplied context.
+	 * Callback for creating a test instance for the supplied context.
 	 *
 	 * <p><strong>Note</strong>: the {@code ExtensionContext} supplied to a
 	 * {@code TestInstanceFactory} will always return an empty
 	 * {@link java.util.Optional} value from
-	 * {@link ExtensionContext#getTestInstance() getTestInstance()}. A
-	 * {@code TestInstanceFactory} should therefore only attempt to create the
-	 * required test instance.
+	 * {@link ExtensionContext#getTestInstance() getTestInstance()} since the
+	 * test instance cannot exist before it has been created by a
+	 * {@code TestInstanceFactory} or the framework itself.
 	 *
 	 * @param factoryContext the context for the test class to be instantiated;
 	 * never {@code null}
 	 * @param extensionContext the current extension context; never {@code null}
-	 * @return the required test instance; never {@code null}
-	 * @throws TestInstantiationException when an error occurs with the
-	 * invocation of a factory
+	 * @return the test instance; never {@code null}
+	 * @throws TestInstantiationException if an error occurs while creating the
+	 * test instance
 	 */
-	Object instantiateTestClass(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext)
+	Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext)
 			throws TestInstantiationException;
 
 }
