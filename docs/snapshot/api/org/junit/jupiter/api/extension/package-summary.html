@@ -219,6 +219,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
+<th class="colFirst" scope="row"><a href="../../../../../org/junit/jupiter/api/extension/TestInstanceFactory.html" title="interface in org.junit.jupiter.api.extension">TestInstanceFactory</a></th>
+<td class="colLast">
+<div class="block"><code>TestInstanceFactory</code> defines the API for <a href="../../../../../org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that wish to <a href="../../../../../org/junit/jupiter/api/extension/TestInstanceFactory.html#createTestInstance(org.junit.jupiter.api.extension.TestInstanceFactoryContext,org.junit.jupiter.api.extension.ExtensionContext)">create</a> test instances.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="../../../../../org/junit/jupiter/api/extension/TestInstanceFactoryContext.html" title="interface in org.junit.jupiter.api.extension">TestInstanceFactoryContext</a></th>
+<td class="colLast">
+<div class="block"><code>TestInstanceFactoryContext</code> encapsulates the <em>context</em> in which
+ a <a href="../../../../../org/junit/jupiter/api/extension/TestInstanceFactoryContext.html#getTestClass()">test class</a> is to be instantiated by a
+ <a href="../../../../../org/junit/jupiter/api/extension/TestInstanceFactory.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstanceFactory</code></a>.</div>
+</td>
+</tr>
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="../../../../../org/junit/jupiter/api/extension/TestInstancePostProcessor.html" title="interface in org.junit.jupiter.api.extension">TestInstancePostProcessor</a></th>
 <td class="colLast">
 <div class="block"><code>TestInstancePostProcessor</code> defines the API for <a href="../../../../../org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that wish to <em>post-process</em> test instances.</div>
@@ -302,6 +316,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">
 <div class="block">Thrown if an error is encountered while evaluating a script-based
  <a href="../../../../../org/junit/jupiter/api/extension/ExecutionCondition.html" title="interface in org.junit.jupiter.api.extension"><code>ExecutionCondition</code></a>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="../../../../../org/junit/jupiter/api/extension/TestInstantiationException.html" title="class in org.junit.jupiter.api.extension">TestInstantiationException</a></th>
+<td class="colLast">
+<div class="block">Thrown if an error is encountered during the execution of
+ a <a href="../../../../../org/junit/jupiter/api/extension/TestInstanceFactory.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstanceFactory</code></a>.</div>
 </td>
 </tr>
 </tbody>

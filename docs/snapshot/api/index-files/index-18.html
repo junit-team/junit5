@@ -235,11 +235,30 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Enumeration of test instance lifecycle <em>modes</em>.</div>
 </dd>
+<dt><a href="../org/junit/jupiter/api/extension/TestInstanceFactory.html" title="interface in org.junit.jupiter.api.extension"><span class="typeNameLink">TestInstanceFactory</span></a> - Interface in <a href="../org/junit/jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a></dt>
+<dd>
+<div class="block"><code>TestInstanceFactory</code> defines the API for <a href="../org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that wish to <a href="../org/junit/jupiter/api/extension/TestInstanceFactory.html#createTestInstance(org.junit.jupiter.api.extension.TestInstanceFactoryContext,org.junit.jupiter.api.extension.ExtensionContext)">create</a> test instances.</div>
+</dd>
+<dt><a href="../org/junit/jupiter/api/extension/TestInstanceFactoryContext.html" title="interface in org.junit.jupiter.api.extension"><span class="typeNameLink">TestInstanceFactoryContext</span></a> - Interface in <a href="../org/junit/jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a></dt>
+<dd>
+<div class="block"><code>TestInstanceFactoryContext</code> encapsulates the <em>context</em> in which
+ a <a href="../org/junit/jupiter/api/extension/TestInstanceFactoryContext.html#getTestClass()">test class</a> is to be instantiated by a
+ <a href="../org/junit/jupiter/api/extension/TestInstanceFactory.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstanceFactory</code></a>.</div>
+</dd>
 <dt><a href="../org/junit/jupiter/api/extension/TestInstancePostProcessor.html" title="interface in org.junit.jupiter.api.extension"><span class="typeNameLink">TestInstancePostProcessor</span></a> - Interface in <a href="../org/junit/jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a></dt>
 <dd>
 <div class="block"><code>TestInstancePostProcessor</code> defines the API for <a href="../org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that wish to <em>post-process</em> test instances.</div>
 </dd>
 <dt><a href="../org/junit/jupiter/engine/execution/TestInstanceProvider.html" title="interface in org.junit.jupiter.engine.execution"><span class="typeNameLink">TestInstanceProvider</span></a> - Interface in <a href="../org/junit/jupiter/engine/execution/package-summary.html">org.junit.jupiter.engine.execution</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="../org/junit/jupiter/api/extension/TestInstantiationException.html" title="class in org.junit.jupiter.api.extension"><span class="typeNameLink">TestInstantiationException</span></a> - Exception in <a href="../org/junit/jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a></dt>
+<dd>
+<div class="block">Thrown if an error is encountered during the execution of
+ a <a href="../org/junit/jupiter/api/extension/TestInstanceFactory.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstanceFactory</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/TestInstantiationException.html#%3Cinit%3E(java.lang.String)">TestInstantiationException(String)</a></span> - Constructor for exception org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/TestInstantiationException.html" title="class in org.junit.jupiter.api.extension">TestInstantiationException</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/TestInstantiationException.html#%3Cinit%3E(java.lang.String,java.lang.Throwable)">TestInstantiationException(String, Throwable)</a></span> - Constructor for exception org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/TestInstantiationException.html" title="class in org.junit.jupiter.api.extension">TestInstantiationException</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="../org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor"><span class="typeNameLink">TestMethodTestDescriptor</span></a> - Class in <a href="../org/junit/jupiter/engine/descriptor/package-summary.html">org.junit.jupiter.engine.descriptor</a></dt>
 <dd>
