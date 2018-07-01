@@ -43,6 +43,9 @@ on GitHub.
   instances.
   - See <<../user-guide/index.adoc#extensions-test-instance-factories, Test Instance
     Factories>> in the User Guide for details.
+* `ArgumentConverters` and `ArgumentsAggregators` registered using `@ConvertWith` and
+  `@AggregateWith`, respectively, are now only instantiated once per `@ParameterizedTest`
+  instead of once for each invocation.
 
 
 [[release-notes-5.3.0-RC1-junit-vintage]]
