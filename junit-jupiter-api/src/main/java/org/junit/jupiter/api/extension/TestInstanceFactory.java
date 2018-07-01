@@ -41,6 +41,7 @@ import org.apiguardian.api.API;
  * @see TestInstanceFactoryContext
  * @see TestInstancePostProcessor
  */
+@FunctionalInterface
 @API(status = EXPERIMENTAL, since = "5.3")
 public interface TestInstanceFactory extends Extension {
 

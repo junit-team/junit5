@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
@@ -44,6 +45,22 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	@BeforeEach
 	void resetCallSequence() {
 		callSequence.clear();
+	}
+
+	@Test
+	void multipleFactoriesRegisteredOnSingleTestClass() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(MultipleFactoriesRegisteredTestCase.class);
+
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests aborted");
+	}
+
+	@Test
+	void bogusTestInstanceFactory() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(BogusTestInstanceFactoryTestCase.class);
+
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests aborted");
 	}
 
 	@Test
@@ -73,19 +90,18 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void multipleFactoriesRegisteredOnSingleTestClass() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(MultipleFactoriesRegisteredTestCase.class);
+	void instanceFactoryRegisteredAsLambdaExpression() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(LambdaFactoryTestCase.class);
 
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests aborted");
-	}
+		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 
-	@Test
-	void bogusTestInstanceFactory() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(BogusTestInstanceFactoryTestCase.class);
-
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests aborted");
+		// @formatter:off
+		assertThat(callSequence).containsExactly(
+			"beforeEach: lambda",
+				"test: lambda"
+		);
+		// @formatter:on
 	}
 
 	@Test
@@ -113,6 +129,26 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// -------------------------------------------------------------------------
+
+	@ExtendWith({ FooInstanceFactory.class, BarInstanceFactory.class })
+	static class MultipleFactoriesRegisteredTestCase {
+
+		@Test
+		void testShouldNotBeCalled() {
+			callSequence.add("testShouldNotBeCalled");
+		}
+
+	}
+
+	@ExtendWith(BogusTestInstanceFactory.class)
+	static class BogusTestInstanceFactoryTestCase {
+
+		@Test
+		void testShouldNotBeCalled() {
+			callSequence.add("testShouldNotBeCalled");
+		}
+
+	}
 
 	@ExtendWith(FooInstanceFactory.class)
 	static class OuterTestCase {
@@ -144,22 +180,25 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	@ExtendWith({ FooInstanceFactory.class, BarInstanceFactory.class })
-	static class MultipleFactoriesRegisteredTestCase {
+	static class LambdaFactoryTestCase {
 
-		@Test
-		void testShouldNotBeCalled() {
-			callSequence.add("testShouldNotBeCalled");
+		private final String text;
+
+		@RegisterExtension
+		static final TestInstanceFactory factory = (__, ___) -> new LambdaFactoryTestCase("lambda");
+
+		LambdaFactoryTestCase(String text) {
+			this.text = text;
 		}
 
-	}
-
-	@ExtendWith(BogusTestInstanceFactory.class)
-	static class BogusTestInstanceFactoryTestCase {
+		@BeforeEach
+		void beforeEach() {
+			callSequence.add("beforeEach: " + this.text);
+		}
 
 		@Test
-		void testShouldNotBeCalled() {
-			callSequence.add("testShouldNotBeCalled");
+		void test() {
+			callSequence.add("test: " + this.text);
 		}
 
 	}
