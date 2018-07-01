@@ -41,6 +41,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
+import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
@@ -81,6 +82,28 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void nullTestInstanceFactory() {
+		Class<?> testClass = NullTestInstanceFactoryTestCase.class;
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
+
+		// Ideally, the test should not even start.
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests aborted");
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(test("testShouldNotBeCalled"), started()), //
+			event(test("testShouldNotBeCalled"),
+				finishedWithFailure(allOf(isA(TestInstantiationException.class),
+					message(m -> m.equals("TestInstanceFactory [" + NullTestInstanceFactory.class.getName()
+							+ "] failed to return an instance of [" + testClass.getName()
+							+ "] and instead returned an instance of [null]."))))), //
+			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
 	void bogusTestInstanceFactory() {
 		Class<?> testClass = BogusTestInstanceFactoryTestCase.class;
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
@@ -89,16 +112,15 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests aborted");
 
-		// TODO Ensure that ClassTestDescriptor throws an ExtensionConfigurationException
-		// instead of allowing an IllegalArgumentException to be thrown when attempting
-		// to invoke a discovered test Method on an Object that is not an instance of the
-		// test class.
-
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("testShouldNotBeCalled"), started()), //
-			event(test("testShouldNotBeCalled"), finishedWithFailure(allOf(isA(IllegalArgumentException.class)))), //
+			event(test("testShouldNotBeCalled"),
+				finishedWithFailure(allOf(isA(TestInstantiationException.class),
+					message(m -> m.equals("TestInstanceFactory [" + BogusTestInstanceFactory.class.getName()
+							+ "] failed to return an instance of [" + testClass.getName()
+							+ "] and instead returned an instance of [java.lang.String]."))))), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -172,6 +194,16 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	@ExtendWith({ FooInstanceFactory.class, BarInstanceFactory.class })
 	static class MultipleFactoriesRegisteredTestCase {
+
+		@Test
+		void testShouldNotBeCalled() {
+			callSequence.add("testShouldNotBeCalled");
+		}
+
+	}
+
+	@ExtendWith(NullTestInstanceFactory.class)
+	static class NullTestInstanceFactoryTestCase {
 
 		@Test
 		void testShouldNotBeCalled() {
@@ -298,6 +330,17 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			Object outerInstance = factoryContext.getOuterInstance().get();
 			instantiated(getClass(), testClass);
 			return ReflectionUtils.newInstance(testClass, outerInstance);
+		}
+	}
+
+	/**
+	 * {@link TestInstanceFactory} that returns null.
+	 */
+	private static class NullTestInstanceFactory implements TestInstanceFactory {
+
+		@Override
+		public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {
+			return null;
 		}
 	}
 

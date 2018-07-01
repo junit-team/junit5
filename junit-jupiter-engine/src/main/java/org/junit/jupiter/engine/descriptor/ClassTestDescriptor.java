@@ -39,6 +39,7 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
@@ -249,8 +250,15 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		TestInstanceFactory factory = resolveTestInstanceFactory(registry, parentRegistry);
 		if (factory != null) {
-			return factory.createTestInstance(new DefaultTestInstanceFactoryContext(this.testClass, outerInstance),
-				extensionContext);
+			Object instance = factory.createTestInstance(
+				new DefaultTestInstanceFactoryContext(this.testClass, outerInstance), extensionContext);
+			if (!this.testClass.isInstance(instance)) {
+				throw new TestInstantiationException(String.format(
+					"TestInstanceFactory [%s] failed to return an instance of [%s] and instead returned an instance of [%s].",
+					factory.getClass().getName(), this.testClass.getName(),
+					(instance == null ? "null" : instance.getClass().getName())));
+			}
+			return instance;
 		}
 
 		return invokeTestInstanceConstructor(outerInstance, registry, extensionContext);
