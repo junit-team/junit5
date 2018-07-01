@@ -33,6 +33,7 @@ import java.lang.annotation.Target;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,9 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ArgumentConversionException;
+import org.junit.jupiter.params.converter.ArgumentConverter;
+import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.Preconditions;
@@ -327,4 +331,59 @@ class AggregatorIntegrationTests {
 		}
 	}
 
+	@Test
+	void aggregatorInstatiatesOnlyOnce() {
+		AtomicInteger counter = InstanceCountingAggregator.instantiateCount;
+		counter.set(0);
+
+		List<ExecutionEvent> executionEvents = execute(selectMethod(CountingTestCase.class,
+			"testWithCountingConverterAggregator", int.class.getName() + "," + Object.class.getName()));
+		assertThat(counter.get()).isEqualTo(1);
+	}
+
+	@Test
+	void converterInstatiatesOnlyOnce() {
+		AtomicInteger counter = InstanceCountingConverter.instantiateCount;
+		counter.set(0);
+
+		List<ExecutionEvent> executionEvents = execute(selectMethod(CountingTestCase.class,
+			"testWithCountingConverterAggregator", int.class.getName() + "," + Object.class.getName()));
+		assertThat(counter.get()).isEqualTo(1);
+	}
+
+	static class InstanceCountingConverter implements ArgumentConverter {
+		public static AtomicInteger instantiateCount = new AtomicInteger();
+
+		public InstanceCountingConverter() {
+			instantiateCount.incrementAndGet();
+		}
+
+		@Override
+		public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+			return source;
+		}
+	}
+
+	static class InstanceCountingAggregator implements ArgumentsAggregator {
+		public static AtomicInteger instantiateCount = new AtomicInteger();
+
+		public InstanceCountingAggregator() {
+			instantiateCount.incrementAndGet();
+		}
+
+		@Override
+		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
+				throws ArgumentsAggregationException {
+			return null;
+		}
+	}
+
+	static class CountingTestCase {
+		@ParameterizedTest
+		@ValueSource(ints = { 1, 2, 3 })
+		void testWithCountingConverterAggregator(@ConvertWith(InstanceCountingConverter.class) int i,
+				@AggregateWith(InstanceCountingAggregator.class) Object o) {
+			System.out.println("noisy test(" + i + ", " + o + ")");
+		}
+	}
 }

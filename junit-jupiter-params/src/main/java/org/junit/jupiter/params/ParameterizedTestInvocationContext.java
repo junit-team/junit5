@@ -13,9 +13,12 @@ package org.junit.jupiter.params;
 import static java.util.Collections.singletonList;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
+import org.junit.jupiter.params.converter.ArgumentConverter;
 
 /**
  * @since 5.0
@@ -24,10 +27,16 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 
 	private final ParameterizedTestNameFormatter formatter;
 	private final Object[] arguments;
+	private final ConcurrentHashMap<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregatorInstanceMap;
+	private final ConcurrentHashMap<Class<? extends ArgumentConverter>, ArgumentConverter> converterInstanceMap;
 
-	ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter, Object[] arguments) {
+	ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter, Object[] arguments,
+			ConcurrentHashMap<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregatorInstanceMap,
+			ConcurrentHashMap<Class<? extends ArgumentConverter>, ArgumentConverter> converterInstanceMap) {
 		this.formatter = formatter;
 		this.arguments = arguments;
+		this.aggregatorInstanceMap = aggregatorInstanceMap;
+		this.converterInstanceMap = converterInstanceMap;
 	}
 
 	@Override
@@ -37,7 +46,8 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 
 	@Override
 	public List<Extension> getAdditionalExtensions() {
-		return singletonList(new ParameterizedTestParameterResolver(this.arguments));
+		return singletonList(new ParameterizedTestParameterResolver(this.arguments, this.aggregatorInstanceMap,
+			this.converterInstanceMap));
 	}
 
 }
