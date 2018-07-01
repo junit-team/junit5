@@ -270,10 +270,11 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		}
 
 		if (factories.size() > 1) {
-			String factoryNames = factories.stream().map(factory -> factory.getClass().getName()).collect(joining(","));
+			String factoryNames = factories.stream().map(factory -> factory.getClass().getName()).collect(
+				joining(", "));
 
 			String errorMessage = String.format(
-				"Discovered multiple TestInstanceFactory extensions registered for test class [%s], but only one is permitted: %s",
+				"The following TestInstanceFactory extensions were registered for test class [%s], but only one is permitted: %s",
 				testClass.getName(), factoryNames);
 
 			throw new ExtensionConfigurationException(errorMessage);

@@ -10,9 +10,20 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.engine;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.started;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
+import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
+import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +36,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
@@ -49,18 +61,46 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void multipleFactoriesRegisteredOnSingleTestClass() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(MultipleFactoriesRegisteredTestCase.class);
+		Class<?> testClass = MultipleFactoriesRegisteredTestCase.class;
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
 
+		// Ideally, the test should not even start.
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests aborted");
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(test("testShouldNotBeCalled"), started()), //
+			event(test("testShouldNotBeCalled"),
+				finishedWithFailure(allOf(isA(ExtensionConfigurationException.class), message(
+					m -> m.startsWith("The following TestInstanceFactory extensions were registered for test class ["
+							+ testClass.getName() + "], but only one is permitted"))))), //
+			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test
 	void bogusTestInstanceFactory() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(BogusTestInstanceFactoryTestCase.class);
+		Class<?> testClass = BogusTestInstanceFactoryTestCase.class;
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
 
+		// Ideally, the test should not even start.
 		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
 		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests aborted");
+
+		// TODO Ensure that ClassTestDescriptor throws an ExtensionConfigurationException
+		// instead of allowing an IllegalArgumentException to be thrown when attempting
+		// to invoke a discovered test Method on an Object that is not an instance of the
+		// test class.
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(test("testShouldNotBeCalled"), started()), //
+			event(test("testShouldNotBeCalled"), finishedWithFailure(allOf(isA(IllegalArgumentException.class)))), //
+			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test
