@@ -33,13 +33,13 @@ import java.lang.annotation.Target;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
@@ -332,30 +332,32 @@ class AggregatorIntegrationTests {
 	}
 
 	@Test
-	void aggregatorInstatiatesOnlyOnce() {
-		AtomicInteger counter = InstanceCountingAggregator.instantiateCount;
-		counter.set(0);
+	@ResourceLock("InstanceCountingConverter.instanceCount")
+	void aggregatorIsInstantiatedOnlyOnce() {
+		InstanceCountingAggregator.instanceCount = 0;
 
-		List<ExecutionEvent> executionEvents = execute(selectMethod(CountingTestCase.class,
-			"testWithCountingConverterAggregator", int.class.getName() + "," + Object.class.getName()));
-		assertThat(counter.get()).isEqualTo(1);
+		execute(selectMethod(CountingTestCase.class, "testWithCountingConverterAggregator",
+			int.class.getName() + "," + Object.class.getName()));
+
+		assertThat(InstanceCountingAggregator.instanceCount).isEqualTo(1);
 	}
 
 	@Test
-	void converterInstatiatesOnlyOnce() {
-		AtomicInteger counter = InstanceCountingConverter.instantiateCount;
-		counter.set(0);
+	@ResourceLock("InstanceCountingConverter.instanceCount")
+	void converterIsInstantiatedOnlyOnce() {
+		InstanceCountingConverter.instanceCount = 0;
 
-		List<ExecutionEvent> executionEvents = execute(selectMethod(CountingTestCase.class,
-			"testWithCountingConverterAggregator", int.class.getName() + "," + Object.class.getName()));
-		assertThat(counter.get()).isEqualTo(1);
+		execute(selectMethod(CountingTestCase.class, "testWithCountingConverterAggregator",
+			int.class.getName() + "," + Object.class.getName()));
+
+		assertThat(InstanceCountingConverter.instanceCount).isEqualTo(1);
 	}
 
 	static class InstanceCountingConverter implements ArgumentConverter {
-		public static AtomicInteger instantiateCount = new AtomicInteger();
+		static int instanceCount;
 
-		public InstanceCountingConverter() {
-			instantiateCount.incrementAndGet();
+		InstanceCountingConverter() {
+			instanceCount++;
 		}
 
 		@Override
@@ -365,10 +367,10 @@ class AggregatorIntegrationTests {
 	}
 
 	static class InstanceCountingAggregator implements ArgumentsAggregator {
-		public static AtomicInteger instantiateCount = new AtomicInteger();
+		static int instanceCount;
 
-		public InstanceCountingAggregator() {
-			instantiateCount.incrementAndGet();
+		InstanceCountingAggregator() {
+			instanceCount++;
 		}
 
 		@Override

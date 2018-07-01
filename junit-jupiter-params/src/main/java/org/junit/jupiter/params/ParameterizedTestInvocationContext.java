@@ -13,7 +13,7 @@ package org.junit.jupiter.params;
 import static java.util.Collections.singletonList;
 
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
@@ -27,16 +27,16 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 
 	private final ParameterizedTestNameFormatter formatter;
 	private final Object[] arguments;
-	private final ConcurrentHashMap<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregatorInstanceMap;
-	private final ConcurrentHashMap<Class<? extends ArgumentConverter>, ArgumentConverter> converterInstanceMap;
+	private final Map<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregators;
+	private final Map<Class<? extends ArgumentConverter>, ArgumentConverter> converters;
 
 	ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter, Object[] arguments,
-			ConcurrentHashMap<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregatorInstanceMap,
-			ConcurrentHashMap<Class<? extends ArgumentConverter>, ArgumentConverter> converterInstanceMap) {
+			Map<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregators,
+			Map<Class<? extends ArgumentConverter>, ArgumentConverter> converters) {
 		this.formatter = formatter;
 		this.arguments = arguments;
-		this.aggregatorInstanceMap = aggregatorInstanceMap;
-		this.converterInstanceMap = converterInstanceMap;
+		this.aggregators = aggregators;
+		this.converters = converters;
 	}
 
 	@Override
@@ -46,8 +46,7 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 
 	@Override
 	public List<Extension> getAdditionalExtensions() {
-		return singletonList(new ParameterizedTestParameterResolver(this.arguments, this.aggregatorInstanceMap,
-			this.converterInstanceMap));
+		return singletonList(new ParameterizedTestParameterResolver(this.arguments, this.aggregators, this.converters));
 	}
 
 }

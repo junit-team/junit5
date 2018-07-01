@@ -16,8 +16,8 @@ import static org.junit.jupiter.params.aggregator.AggregationUtils.isAggregator;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -42,15 +42,15 @@ import org.junit.platform.commons.util.StringUtils;
 class ParameterizedTestParameterResolver implements ParameterResolver {
 
 	private final Object[] arguments;
-	private final ConcurrentHashMap<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregatorInstanceMap;
-	private final ConcurrentHashMap<Class<? extends ArgumentConverter>, ArgumentConverter> converterInstanceMap;
+	private final Map<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregators;
+	private final Map<Class<? extends ArgumentConverter>, ArgumentConverter> converters;
 
 	ParameterizedTestParameterResolver(Object[] arguments,
-			ConcurrentHashMap<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregatorInstanceMap,
-			ConcurrentHashMap<Class<? extends ArgumentConverter>, ArgumentConverter> converterInstanceMap) {
+			Map<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregators,
+			Map<Class<? extends ArgumentConverter>, ArgumentConverter> converters) {
 		this.arguments = arguments;
-		this.aggregatorInstanceMap = aggregatorInstanceMap;
-		this.converterInstanceMap = converterInstanceMap;
+		this.aggregators = aggregators;
+		this.converters = converters;
 	}
 
 	@Override
@@ -92,7 +92,7 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 		Optional<ConvertWith> annotation = AnnotationUtils.findAnnotation(parameter, ConvertWith.class);
 		// @formatter:off
 		ArgumentConverter argumentConverter = annotation.map(ConvertWith::value)
-				.map(clazz -> converterInstanceMap.computeIfAbsent( clazz, ReflectionUtils::newInstance))
+				.map(clazz -> converters.computeIfAbsent(clazz, ReflectionUtils::newInstance))
 				.map(converter -> AnnotationConsumerInitializer.initialize(parameter, converter))
 				.orElse(DefaultArgumentConverter.INSTANCE);
 		// @formatter:on
@@ -117,8 +117,7 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	private Object aggregateSafely(Class<? extends ArgumentsAggregator> clazz, ArgumentsAccessor accessor,
 			ParameterContext parameterContext) {
 		try {
-			ArgumentsAggregator aggregator = aggregatorInstanceMap.computeIfAbsent(clazz,
-				ReflectionSupport::newInstance);
+			ArgumentsAggregator aggregator = aggregators.computeIfAbsent(clazz, ReflectionSupport::newInstance);
 			return aggregator.aggregateArguments(accessor, parameterContext);
 		}
 		catch (Exception ex) {

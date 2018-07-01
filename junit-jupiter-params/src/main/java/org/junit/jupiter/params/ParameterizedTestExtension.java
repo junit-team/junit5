@@ -17,6 +17,7 @@ import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
@@ -65,8 +66,8 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
 		Method templateMethod = context.getRequiredTestMethod();
 
-		ConcurrentHashMap<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregatorInstanceMap = new ConcurrentHashMap<>();
-		ConcurrentHashMap<Class<? extends ArgumentConverter>, ArgumentConverter> converterInstanceMap = new ConcurrentHashMap<>();
+		Map<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregators = new ConcurrentHashMap<>();
+		Map<Class<? extends ArgumentConverter>, ArgumentConverter> converters = new ConcurrentHashMap<>();
 
 		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod);
 		AtomicLong invocationCount = new AtomicLong(0);
@@ -79,7 +80,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.flatMap(provider -> arguments(provider, context))
 				.map(Arguments::get)
 				.map(arguments -> consumedArguments(arguments, templateMethod))
-				.map(arguments -> createInvocationContext(formatter, arguments, aggregatorInstanceMap, converterInstanceMap))
+				.map(arguments -> createInvocationContext(formatter, arguments, aggregators, converters))
 				.peek(invocationContext -> invocationCount.incrementAndGet())
 				.onClose(() ->
 						Preconditions.condition(invocationCount.get() > 0,
@@ -88,11 +89,9 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private TestTemplateInvocationContext createInvocationContext(ParameterizedTestNameFormatter formatter,
-			Object[] arguments,
-			ConcurrentHashMap<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> argumentConverterInstanceMap,
-			ConcurrentHashMap<Class<? extends ArgumentConverter>, ArgumentConverter> converterInstanceMap) {
-		return new ParameterizedTestInvocationContext(formatter, arguments, argumentConverterInstanceMap,
-			converterInstanceMap);
+			Object[] arguments, Map<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregators,
+			Map<Class<? extends ArgumentConverter>, ArgumentConverter> converters) {
+		return new ParameterizedTestInvocationContext(formatter, arguments, aggregators, converters);
 	}
 
 	private ParameterizedTestNameFormatter createNameFormatter(Method templateMethod) {
