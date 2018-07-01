@@ -10,24 +10,19 @@
 
 package org.junit.jupiter.params;
 
-import static org.junit.jupiter.params.aggregator.AggregationUtils.hasAggregator;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
-import org.junit.jupiter.params.aggregator.AggregationUtils;
-import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
-import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
@@ -41,6 +36,8 @@ import org.junit.platform.commons.util.ReflectionUtils;
  */
 class ParameterizedTestExtension implements TestTemplateInvocationContextProvider {
 
+	private static final String METHOD_CONTEXT_KEY = "context";
+
 	@Override
 	public boolean supportsTestTemplate(ExtensionContext context) {
 		if (!context.getTestMethod().isPresent()) {
@@ -52,22 +49,26 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 			return false;
 		}
 
-		Preconditions.condition(AggregationUtils.hasPotentiallyValidSignature(testMethod),
+		ParameterizedTestMethodContext methodContext = new ParameterizedTestMethodContext(testMethod);
+
+		Preconditions.condition(methodContext.hasPotentiallyValidSignature(),
 			() -> String.format(
 				"@ParameterizedTest method [%s] declares formal parameters in an invalid order: "
 						+ "argument aggregators must be declared after any indexed arguments "
 						+ "and before any arguments resolved by another ParameterResolver.",
 				testMethod.toGenericString()));
 
+		getStore(context).put(METHOD_CONTEXT_KEY, methodContext);
+
 		return true;
 	}
 
 	@Override
-	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
-		Method templateMethod = context.getRequiredTestMethod();
-
-		Map<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregators = new ConcurrentHashMap<>();
-		Map<Class<? extends ArgumentConverter>, ArgumentConverter> converters = new ConcurrentHashMap<>();
+	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
+			ExtensionContext extensionContext) {
+		Method templateMethod = extensionContext.getRequiredTestMethod();
+		ParameterizedTestMethodContext methodContext = getStore(extensionContext).get(METHOD_CONTEXT_KEY,
+			ParameterizedTestMethodContext.class);
 
 		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod);
 		AtomicLong invocationCount = new AtomicLong(0);
@@ -77,10 +78,10 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.map(ArgumentsSource::value)
 				.map(ReflectionUtils::newInstance)
 				.map(provider -> AnnotationConsumerInitializer.initialize(templateMethod, provider))
-				.flatMap(provider -> arguments(provider, context))
+				.flatMap(provider -> arguments(provider, extensionContext))
 				.map(Arguments::get)
-				.map(arguments -> consumedArguments(arguments, templateMethod))
-				.map(arguments -> createInvocationContext(formatter, arguments, aggregators, converters))
+				.map(arguments -> consumedArguments(arguments, methodContext))
+				.map(arguments -> createInvocationContext(formatter, methodContext, arguments))
 				.peek(invocationContext -> invocationCount.incrementAndGet())
 				.onClose(() ->
 						Preconditions.condition(invocationCount.get() > 0,
@@ -88,10 +89,13 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		// @formatter:on
 	}
 
+	private ExtensionContext.Store getStore(ExtensionContext context) {
+		return context.getStore(Namespace.create(ParameterizedTestExtension.class, context.getRequiredTestMethod()));
+	}
+
 	private TestTemplateInvocationContext createInvocationContext(ParameterizedTestNameFormatter formatter,
-			Object[] arguments, Map<Class<? extends ArgumentsAggregator>, ArgumentsAggregator> aggregators,
-			Map<Class<? extends ArgumentConverter>, ArgumentConverter> converters) {
-		return new ParameterizedTestInvocationContext(formatter, arguments, aggregators, converters);
+			ParameterizedTestMethodContext methodContext, Object[] arguments) {
+		return new ParameterizedTestInvocationContext(formatter, methodContext, arguments);
 	}
 
 	private ParameterizedTestNameFormatter createNameFormatter(Method templateMethod) {
@@ -112,9 +116,9 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		}
 	}
 
-	private Object[] consumedArguments(Object[] arguments, Method templateMethod) {
-		int parameterCount = templateMethod.getParameterCount();
-		return hasAggregator(templateMethod) ? arguments
+	private Object[] consumedArguments(Object[] arguments, ParameterizedTestMethodContext methodContext) {
+		int parameterCount = methodContext.getParameterCount();
+		return methodContext.hasAggregator() ? arguments
 				: (arguments.length > parameterCount ? Arrays.copyOf(arguments, parameterCount) : arguments);
 	}
 

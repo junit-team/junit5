@@ -30,6 +30,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
+import org.junit.jupiter.engine.execution.ExtensionValuesStore;
+import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
@@ -72,6 +74,7 @@ class ParameterizedTestExtensionTests {
 		ExtensionContext extensionContext = getExtensionContextReturningSingleMethod(
 			new TestCaseWithArgumentSourceAnnotatedMethod());
 
+		this.parameterizedTestExtension.supportsTestTemplate(extensionContext);
 		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
 			extensionContext);
 
@@ -115,6 +118,8 @@ class ParameterizedTestExtensionTests {
 		// @formatter:on
 
 		return new ExtensionContext() {
+
+			private final ExtensionValuesStore store = new ExtensionValuesStore(null);
 
 			@Override
 			public Optional<Method> getTestMethod() {
@@ -182,7 +187,7 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Store getStore(Namespace namespace) {
-				return null;
+				return new NamespaceAwareStore(store, namespace);
 			}
 		};
 	}

@@ -8,39 +8,38 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.params.aggregator;
+package org.junit.jupiter.params;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.params.aggregator.AggregationUtils.hasPotentiallyValidSignature;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.TestInfo;
-import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.AggregatorIntegrationTests.CsvToPerson;
 import org.junit.jupiter.params.aggregator.AggregatorIntegrationTests.Person;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.ValueSource;
 
 /**
- * Unit tests for {@link AggregationUtils}.
+ * Unit tests for {@link ParameterizedTestMethodContext}.
  *
- * @since 5.2
+ * @since 5.3
  */
-class AggregationUtilsTests {
+class ParameterizedTestMethodContextTests {
 
 	@ParameterizedTest
 	@ValueSource(strings = { "onePrimitive", "twoPrimitives", "twoAggregators", "twoAggregatorsWithTestInfoAtTheEnd",
 			"mixedMode" })
 	void validSignatures(String name) {
-		assertTrue(hasPotentiallyValidSignature(method(name)));
+		assertTrue(new ParameterizedTestMethodContext(method(name)).hasPotentiallyValidSignature());
 	}
 
 	@ParameterizedTest
 	@ValueSource(strings = { "twoAggregatorsWithPrimitiveInTheMiddle", "twoAggregatorsWithTestInfoInTheMiddle" })
 	void invalidSignatures(String name) {
-		assertFalse(hasPotentiallyValidSignature(method(name)));
+		assertFalse(new ParameterizedTestMethodContext(method(name)).hasPotentiallyValidSignature());
 	}
 
 	private Method method(String name) {
