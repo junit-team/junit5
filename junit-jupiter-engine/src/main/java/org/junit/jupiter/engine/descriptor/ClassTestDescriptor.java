@@ -75,6 +75,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private final Class<?> testClass;
 	private final Set<TestTag> tags;
 
+	private TestInstanceFactory testInstanceFactory;
 	private List<Method> beforeAllMethods;
 	private List<Method> afterAllMethods;
 
@@ -140,6 +141,12 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		// Register extensions from static fields here, at the class level but
 		// after extensions registered via @ExtendWith.
 		registerExtensionsFromFields(registry, this.testClass, null);
+
+		// Resolve the TestInstanceFactory at the class level in order to fail
+		// the entire class in case of configuration errors (e.g., more than
+		// one factory registered per class).
+		this.testInstanceFactory = resolveTestInstanceFactory(registry);
+
 		registerBeforeEachMethodAdapters(registry);
 		registerAfterEachMethodAdapters(registry);
 
@@ -217,6 +224,36 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		}
 	}
 
+	private TestInstanceFactory resolveTestInstanceFactory(ExtensionRegistry registry) {
+
+		List<TestInstanceFactory> localFactories = registry.getLocalExtensions(TestInstanceFactory.class);
+		if (localFactories.isEmpty()) {
+			return null;
+		}
+
+		ExtensionRegistry parentRegistry = registry.getParent();
+		if (parentRegistry != null) {
+			List<TestInstanceFactory> parentFactories = parentRegistry.getExtensions(TestInstanceFactory.class);
+			localFactories.removeAll(parentFactories);
+			if (localFactories.isEmpty()) {
+				return null;
+			}
+		}
+
+		if (localFactories.size() > 1) {
+			String factoryNames = localFactories.stream().map(factory -> factory.getClass().getName()).collect(
+				joining(", "));
+
+			String errorMessage = String.format(
+				"The following TestInstanceFactory extensions were registered for test class [%s], but only one is permitted: %s",
+				testClass.getName(), factoryNames);
+
+			throw new ExtensionConfigurationException(errorMessage);
+		}
+
+		return localFactories.get(0);
+	}
+
 	private TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ClassExtensionContext extensionContext) {
 
@@ -227,10 +264,10 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			() -> testInstanceProvider.getTestInstance(childRegistry));
 	}
 
-	private Object instantiateAndPostProcessTestInstance(JupiterEngineExecutionContext context,
+	private Object instantiateAndPostProcessTestInstance(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionContext extensionContext, ExtensionRegistry registry) {
 
-		Object instance = instantiateTestClass(context, registry, extensionContext);
+		Object instance = instantiateTestClass(parentExecutionContext, registry, extensionContext);
 		invokeTestInstancePostProcessors(instance, registry, extensionContext);
 		// In addition, we register extensions from instance fields here since the
 		// best time to do that is immediately following test class instantiation
@@ -242,53 +279,25 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	protected Object instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionRegistry registry, ExtensionContext extensionContext) {
 
-		return instantiateTestClass(Optional.empty(), registry, null, extensionContext);
+		return instantiateTestClass(Optional.empty(), registry, extensionContext);
 	}
 
 	protected Object instantiateTestClass(Optional<Object> outerInstance, ExtensionRegistry registry,
-			ExtensionRegistry parentRegistry, ExtensionContext extensionContext) {
+			ExtensionContext extensionContext) {
 
-		TestInstanceFactory factory = resolveTestInstanceFactory(registry, parentRegistry);
-		if (factory != null) {
-			Object instance = factory.createTestInstance(
+		if (this.testInstanceFactory != null) {
+			Object instance = this.testInstanceFactory.createTestInstance(
 				new DefaultTestInstanceFactoryContext(this.testClass, outerInstance), extensionContext);
 			if (!this.testClass.isInstance(instance)) {
 				throw new TestInstantiationException(String.format(
 					"TestInstanceFactory [%s] failed to return an instance of [%s] and instead returned an instance of [%s].",
-					factory.getClass().getName(), this.testClass.getName(),
+					this.testInstanceFactory.getClass().getName(), this.testClass.getName(),
 					(instance == null ? "null" : instance.getClass().getName())));
 			}
 			return instance;
 		}
 
 		return invokeTestInstanceConstructor(outerInstance, registry, extensionContext);
-	}
-
-	private TestInstanceFactory resolveTestInstanceFactory(ExtensionRegistry registry,
-			ExtensionRegistry parentRegistry) {
-
-		List<TestInstanceFactory> factories = registry.getExtensions(TestInstanceFactory.class);
-		if (factories.isEmpty()) {
-			return null;
-		}
-
-		if (parentRegistry != null) {
-			List<TestInstanceFactory> parentFactories = parentRegistry.getExtensions(TestInstanceFactory.class);
-			factories.removeAll(parentFactories);
-		}
-
-		if (factories.size() > 1) {
-			String factoryNames = factories.stream().map(factory -> factory.getClass().getName()).collect(
-				joining(", "));
-
-			String errorMessage = String.format(
-				"The following TestInstanceFactory extensions were registered for test class [%s], but only one is permitted: %s",
-				testClass.getName(), factoryNames);
-
-			throw new ExtensionConfigurationException(errorMessage);
-		}
-
-		return factories.get(0);
 	}
 
 	private Object invokeTestInstanceConstructor(Optional<Object> outerInstance, ExtensionRegistry registry,
