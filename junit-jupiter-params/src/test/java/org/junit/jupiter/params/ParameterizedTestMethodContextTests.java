@@ -25,7 +25,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 /**
  * Unit tests for {@link ParameterizedTestMethodContext}.
  *
- * @since 5.3
+ * @since 5.2
  */
 class ParameterizedTestMethodContextTests {
 

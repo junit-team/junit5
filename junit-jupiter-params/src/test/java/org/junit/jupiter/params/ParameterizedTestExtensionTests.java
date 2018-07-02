@@ -73,8 +73,10 @@ class ParameterizedTestExtensionTests {
 	void streamsReturnedByProvidersAreClosedWhenCallingProvide() {
 		ExtensionContext extensionContext = getExtensionContextReturningSingleMethod(
 			new TestCaseWithArgumentSourceAnnotatedMethod());
-
+		// we need to call supportsTestTemplate() first, because it creates and
+		// puts the ParameterizedTestMethodContext into the Store
 		this.parameterizedTestExtension.supportsTestTemplate(extensionContext);
+
 		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
 			extensionContext);
 

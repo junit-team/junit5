@@ -35,6 +35,9 @@ import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 
 /**
+ * Encapsulates access to the parameters of a parameterized test method and
+ * caches the used converters and aggregators used to resolve them.
+ *
  * @since 5.3
  */
 class ParameterizedTestMethodContext {
@@ -51,11 +54,34 @@ class ParameterizedTestMethodContext {
 		}
 	}
 
+	/**
+	 * Determine if the supplied {@link Parameter} is an aggregator (i.e., of
+	 * type {@link ArgumentsAccessor} or annotated with {@link AggregateWith}).
+	 *
+	 * @return {@code true} if the parameter is an aggregator
+	 */
 	private static boolean isAggregator(Parameter parameter) {
 		return ArgumentsAccessor.class.isAssignableFrom(parameter.getType())
 				|| isAnnotated(parameter, AggregateWith.class);
 	}
 
+	/**
+	 * Determine if the {@link Method} represented by this context has a
+	 * <em>potentially</em> valid signature (i.e., formal parameter
+	 * declarations) with regard to aggregators.
+	 *
+	 * <p>This method takes a best-effort approach at enforcing the following
+	 * policy for parameterized test methods that accept aggregators as arguments.
+	 *
+	 * <ol>
+	 * <li>zero or more <em>indexed arguments</em> come first.</li>
+	 * <li>zero or more <em>aggregators</em> come next.</li>
+	 * <li>zero or more arguments supplied by other {@code ParameterResolver}
+	 * implementations come last.</li>
+	 * </ol>
+	 *
+	 * @return {@code true} if the method has a potentially valid signature
+	 */
 	boolean hasPotentiallyValidSignature() {
 		int indexOfPreviousAggregator = -1;
 		for (int i = 0; i < getParameterCount(); i++) {
@@ -69,22 +95,50 @@ class ParameterizedTestMethodContext {
 		return true;
 	}
 
+	/**
+	 * Get the number of parameters of the {@link Method} represented by this
+	 * context.
+	 */
 	int getParameterCount() {
 		return resolvers.length;
 	}
 
+	/**
+	 * Determine if the {@link Method} represented by this context declares at
+	 * least one {@link Parameter} that is an
+	 * {@linkplain #isAggregator aggregator}.
+	 *
+	 * @return {@code true} if the method has an aggregator
+	 */
 	boolean hasAggregator() {
 		return resolverTypes.contains(AGGREGATOR);
 	}
 
+	/**
+	 * Determine if the {@link Parameter} with the supplied index is an
+	 * aggregator (i.e., of type {@link ArgumentsAccessor} or annotated with
+	 * {@link AggregateWith}).
+	 *
+	 * @return {@code true} if the parameter is an aggregator
+	 */
 	boolean isAggregator(int parameterIndex) {
 		return resolverTypes.get(parameterIndex) == AGGREGATOR;
 	}
 
+	/**
+	 * Find the index of the first {@linkplain #isAggregator aggregator}
+	 * {@link Parameter} in the {@link Method} represented by this context.
+	 *
+	 * @return the index of the first aggregator, or {@code -1} if not found
+	 */
 	int indexOfFirstAggregator() {
 		return resolverTypes.indexOf(AGGREGATOR);
 	}
 
+	/**
+	 * Resolve the parameter for the supplied context using the supplied
+	 * arguments.
+	 */
 	Object resolve(ParameterContext parameterContext, Object[] arguments) {
 		return getResolver(parameterContext).resolve(parameterContext, arguments);
 	}
