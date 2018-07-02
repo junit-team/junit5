@@ -139,11 +139,11 @@ class ParameterizedTestMethodContext {
 		Converter(ParameterContext parameterContext) {
 			try {
 				// @formatter:off
-                this.argumentConverter = AnnotationUtils.findAnnotation(parameterContext.getParameter(), ConvertWith.class)
-                        .map(ConvertWith::value)
-                        .map(clazz -> (ArgumentConverter) ReflectionUtils.newInstance(clazz))
-                        .map(converter -> AnnotationConsumerInitializer.initialize(parameterContext.getParameter(), converter))
-                        .orElse(DefaultArgumentConverter.INSTANCE);
+				this.argumentConverter = AnnotationUtils.findAnnotation(parameterContext.getParameter(), ConvertWith.class)
+						.map(ConvertWith::value)
+						.map(clazz -> (ArgumentConverter) ReflectionUtils.newInstance(clazz))
+						.map(converter -> AnnotationConsumerInitializer.initialize(parameterContext.getParameter(), converter))
+						.orElse(DefaultArgumentConverter.INSTANCE);
                 // @formatter:on
 			}
 			catch (Exception ex) {
@@ -171,10 +171,10 @@ class ParameterizedTestMethodContext {
 		Aggregator(ParameterContext parameterContext) {
 			try {
 				// @formatter:off
-                argumentsAggregator = AnnotationUtils.findAnnotation(parameterContext.getParameter(), AggregateWith.class)
-                        .map(AggregateWith::value)
-                        .map(clazz -> (ArgumentsAggregator) ReflectionSupport.newInstance(clazz))
-                        .orElse((accessor, context) -> accessor);
+				this.argumentsAggregator = AnnotationUtils.findAnnotation(parameterContext.getParameter(), AggregateWith.class)
+						.map(AggregateWith::value)
+						.map(clazz -> (ArgumentsAggregator) ReflectionSupport.newInstance(clazz))
+						.orElse((accessor, context) -> accessor);
                 // @formatter:on
 			}
 			catch (Exception ex) {
