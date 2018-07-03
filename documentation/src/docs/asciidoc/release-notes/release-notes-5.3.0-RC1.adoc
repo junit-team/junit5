@@ -39,6 +39,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Although it is _highly discouraged_, it is now possible to extend the `{Assertions}`
+  and `{Assumptions}` classes for special use cases.
 * New `TestInstanceFactory` extension API that enables custom creation of test class
   instances.
   - See <<../user-guide/index.adoc#extensions-test-instance-factories, Test Instance
