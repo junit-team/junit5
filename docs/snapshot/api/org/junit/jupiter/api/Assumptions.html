@@ -97,13 +97,13 @@ var pathtoroot = "../../../../";loadScripts(document, 'script');</script>
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
@@ -140,7 +140,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <hr>
 <pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#STABLE" title="class or interface in org.apiguardian.api" class="externalLink">STABLE</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.0")
-public final class <span class="typeNameLabel">Assumptions</span>
+public class <span class="typeNameLabel">Assumptions</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
 <div class="block"><code>Assumptions</code> is a collection of utility methods that support
  conditional test execution based on <em>assumptions</em>.
@@ -152,7 +152,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <p>Assumptions are typically used whenever it does not make sense to
  continue execution of a given test method &mdash; for example, if the
  test depends on something that does not exist in the current runtime
- environment.</div>
+ environment.
+
+ <p>Although it is technically possible to extend this class, extension is
+ strongly discouraged. The JUnit Team highly recommends that the methods
+ defined in this class be used via <em>static imports</em>.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.0</dd>
@@ -166,6 +170,31 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="constructor.summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="memberSummary">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier</th>
+<th class="colSecond" scope="col">Constructor</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected </code></td>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/jupiter/api/Assumptions.html#%3Cinit%3E()">Assumptions</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Protected constructor allowing subclassing but not direct instantiation.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+</section>
 <!-- ========== METHOD SUMMARY =========== -->
 <section role="region">
 <ul class="blockList">
@@ -307,6 +336,30 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="constructor.detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a id="&lt;init&gt;()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>Assumptions</h4>
+<pre>protected&nbsp;Assumptions()</pre>
+<div class="block">Protected constructor allowing subclassing but not direct instantiation.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.3</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</section>
 <!-- ============ METHOD DETAIL ========== -->
 <section role="region">
 <ul class="blockList">
@@ -655,13 +708,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
