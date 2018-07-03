@@ -46,6 +46,8 @@ on GitHub.
 * `ArgumentConverters` and `ArgumentsAggregators` registered using `@ConvertWith` and
   `@AggregateWith`, respectively, are now only instantiated once per `@ParameterizedTest`
   instead of once for each invocation.
+* Performance improvements for executing parameterized tests, particularly when the method
+  declares more than a few parameters.
 
 
 [[release-notes-5.3.0-RC1-junit-vintage]]
