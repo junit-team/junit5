@@ -156,14 +156,33 @@ class ParameterizedTestMethodContext {
 		CONVERTER {
 			@Override
 			Resolver createResolver(ParameterContext parameterContext) {
-				return new Converter(parameterContext);
+				try { // @formatter:off
+					return AnnotationUtils.findAnnotation(parameterContext.getParameter(), ConvertWith.class)
+							.map(ConvertWith::value)
+							.map(clazz -> (ArgumentConverter) ReflectionUtils.newInstance(clazz))
+							.map(converter -> AnnotationConsumerInitializer.initialize(parameterContext.getParameter(), converter))
+							.map(Converter::new)
+							.orElse(Converter.DEFAULT);
+				} // @formatter:on
+				catch (Exception ex) {
+					throw parameterResolutionException("Error creating ArgumentConverter", ex, parameterContext);
+				}
 			}
 		},
 
 		AGGREGATOR {
 			@Override
 			Resolver createResolver(ParameterContext parameterContext) {
-				return new Aggregator(parameterContext);
+				try { // @formatter:off
+					return AnnotationUtils.findAnnotation(parameterContext.getParameter(), AggregateWith.class)
+							.map(AggregateWith::value)
+							.map(clazz -> (ArgumentsAggregator) ReflectionSupport.newInstance(clazz))
+							.map(Aggregator::new)
+							.orElse(Aggregator.DEFAULT);
+				} // @formatter:on
+				catch (Exception ex) {
+					throw parameterResolutionException("Error creating ArgumentsAggregator", ex, parameterContext);
+				}
 			}
 		};
 
@@ -175,34 +194,16 @@ class ParameterizedTestMethodContext {
 
 		Object resolve(ParameterContext parameterContext, Object[] arguments);
 
-		default ParameterResolutionException parameterResolutionException(String message, Exception cause,
-				ParameterContext parameterContext) {
-			String fullMessage = message + " at index " + parameterContext.getIndex();
-			if (StringUtils.isNotBlank(cause.getMessage())) {
-				fullMessage += ": " + cause.getMessage();
-			}
-			return new ParameterResolutionException(fullMessage, cause);
-		}
-
 	}
 
 	static class Converter implements Resolver {
 
+		private static final Converter DEFAULT = new Converter(DefaultArgumentConverter.INSTANCE);
+
 		private final ArgumentConverter argumentConverter;
 
-		Converter(ParameterContext parameterContext) {
-			try {
-				// @formatter:off
-				this.argumentConverter = AnnotationUtils.findAnnotation(parameterContext.getParameter(), ConvertWith.class)
-						.map(ConvertWith::value)
-						.map(clazz -> (ArgumentConverter) ReflectionUtils.newInstance(clazz))
-						.map(converter -> AnnotationConsumerInitializer.initialize(parameterContext.getParameter(), converter))
-						.orElse(DefaultArgumentConverter.INSTANCE);
-				// @formatter:on
-			}
-			catch (Exception ex) {
-				throw parameterResolutionException("Error creating ArgumentConverter", ex, parameterContext);
-			}
+		Converter(ArgumentConverter argumentConverter) {
+			this.argumentConverter = argumentConverter;
 		}
 
 		@Override
@@ -220,20 +221,12 @@ class ParameterizedTestMethodContext {
 
 	static class Aggregator implements Resolver {
 
+		private static final Aggregator DEFAULT = new Aggregator((accessor, context) -> accessor);
+
 		private final ArgumentsAggregator argumentsAggregator;
 
-		Aggregator(ParameterContext parameterContext) {
-			try {
-				// @formatter:off
-				this.argumentsAggregator = AnnotationUtils.findAnnotation(parameterContext.getParameter(), AggregateWith.class)
-						.map(AggregateWith::value)
-						.map(clazz -> (ArgumentsAggregator) ReflectionSupport.newInstance(clazz))
-						.orElse((accessor, context) -> accessor);
-				// @formatter:on
-			}
-			catch (Exception ex) {
-				throw parameterResolutionException("Error creating ArgumentsAggregator", ex, parameterContext);
-			}
+		Aggregator(ArgumentsAggregator argumentsAggregator) {
+			this.argumentsAggregator = argumentsAggregator;
 		}
 
 		@Override
@@ -247,6 +240,15 @@ class ParameterizedTestMethodContext {
 			}
 		}
 
+	}
+
+	private static ParameterResolutionException parameterResolutionException(String message, Exception cause,
+			ParameterContext parameterContext) {
+		String fullMessage = message + " at index " + parameterContext.getIndex();
+		if (StringUtils.isNotBlank(cause.getMessage())) {
+			fullMessage += ": " + cause.getMessage();
+		}
+		return new ParameterResolutionException(fullMessage, cause);
 	}
 
 }
