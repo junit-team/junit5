@@ -48,8 +48,10 @@ import org.junit.jupiter.engine.execution.TestInstanceProvider;
 import org.junit.jupiter.engine.execution.ThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
@@ -285,31 +287,52 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	protected Object instantiateTestClass(Optional<Object> outerInstance, ExtensionRegistry registry,
 			ExtensionContext extensionContext) {
 
-		if (this.testInstanceFactory != null) {
-			Object instance = this.testInstanceFactory.createTestInstance(
-				new DefaultTestInstanceFactoryContext(this.testClass, outerInstance), extensionContext);
-			if (!this.testClass.isInstance(instance)) {
-				throw new TestInstantiationException(String.format(
-					"TestInstanceFactory [%s] failed to return an instance of [%s] and instead returned an instance of [%s].",
-					this.testInstanceFactory.getClass().getName(), this.testClass.getName(),
-					(instance == null ? "null" : instance.getClass().getName())));
-			}
-			return instance;
-		}
-
-		return invokeTestInstanceConstructor(outerInstance, registry, extensionContext);
+		return this.testInstanceFactory != null //
+				? invokeTestInstanceFactory(outerInstance, extensionContext) //
+				: invokeTestClassConstructor(outerInstance, registry, extensionContext);
 	}
 
-	private Object invokeTestInstanceConstructor(Optional<Object> outerInstance, ExtensionRegistry registry,
+	private Object invokeTestInstanceFactory(Optional<Object> outerInstance, ExtensionContext extensionContext) {
+		Object instance;
+
+		try {
+			instance = this.testInstanceFactory.createTestInstance(
+				new DefaultTestInstanceFactoryContext(this.testClass, outerInstance), extensionContext);
+		}
+		catch (Throwable throwable) {
+			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+
+			if (throwable instanceof TestInstantiationException) {
+				throw (TestInstantiationException) throwable;
+			}
+
+			String message = String.format("TestInstanceFactory [%s] failed to instantiate test class [%s]",
+				this.testInstanceFactory.getClass().getName(), this.testClass.getName());
+			if (StringUtils.isNotBlank(throwable.getMessage())) {
+				message += ": " + throwable.getMessage();
+			}
+			throw new TestInstantiationException(message, throwable);
+		}
+
+		if (!this.testClass.isInstance(instance)) {
+			String message = String.format(
+				"TestInstanceFactory [%s] failed to return an instance of [%s] and instead returned an instance of [%s].",
+				this.testInstanceFactory.getClass().getName(), this.testClass.getName(),
+				(instance == null ? "null" : instance.getClass().getName()));
+
+			throw new TestInstantiationException(message);
+		}
+
+		return instance;
+	}
+
+	private Object invokeTestClassConstructor(Optional<Object> outerInstance, ExtensionRegistry registry,
 			ExtensionContext extensionContext) {
 
 		Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
-		if (outerInstance.isPresent()) {
-			return executableInvoker.invoke(constructor, outerInstance.get(), extensionContext, registry);
-		}
-		else {
-			return executableInvoker.invoke(constructor, extensionContext, registry);
-		}
+		return outerInstance.isPresent() //
+				? executableInvoker.invoke(constructor, outerInstance.get(), extensionContext, registry) //
+				: executableInvoker.invoke(constructor, extensionContext, registry);
 	}
 
 	private void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,

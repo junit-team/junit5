@@ -161,6 +161,44 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void explosiveTestInstanceFactoryWithPerMethodLifecycle() {
+		Class<?> testClass = ExplosiveTestInstanceFactoryTestCase.class;
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
+
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests aborted");
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(test("testShouldNotBeCalled"), started()), //
+			event(test("testShouldNotBeCalled"),
+				finishedWithFailure(allOf(isA(TestInstantiationException.class),
+					message("TestInstanceFactory [" + ExplosiveTestInstanceFactory.class.getName()
+							+ "] failed to instantiate test class [" + testClass.getName() + "]: boom!")))), //
+			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void explosiveTestInstanceFactoryWithPerClassLifecycle() {
+		Class<?> testClass = PerClassLifecycleExplosiveTestInstanceFactoryTestCase.class;
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
+
+		assertEquals(0, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests aborted");
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(container(testClass), //
+				finishedWithFailure(allOf(isA(TestInstantiationException.class),
+					message("TestInstanceFactory [" + ExplosiveTestInstanceFactory.class.getName()
+							+ "] failed to instantiate test class [" + testClass.getName() + "]: boom!")))), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
 	void instanceFactoryOnToplevelTestClass() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(ParentTestCase.class);
 
@@ -308,6 +346,19 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	@TestInstance(PER_CLASS)
 	static class PerClassLifecycleBogusTestInstanceFactoryTestCase extends BogusTestInstanceFactoryTestCase {
+	}
+
+	@ExtendWith(ExplosiveTestInstanceFactory.class)
+	static class ExplosiveTestInstanceFactoryTestCase {
+
+		@Test
+		void testShouldNotBeCalled() {
+			callSequence.add("testShouldNotBeCalled");
+		}
+	}
+
+	@TestInstance(PER_CLASS)
+	static class PerClassLifecycleExplosiveTestInstanceFactoryTestCase extends ExplosiveTestInstanceFactoryTestCase {
 	}
 
 	@ExtendWith(FooInstanceFactory.class)
@@ -470,6 +521,17 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {
 			return "bogus";
+		}
+	}
+
+	/**
+	 * {@link TestInstanceFactory} that always throws an exception.
+	 */
+	private static class ExplosiveTestInstanceFactory implements TestInstanceFactory {
+
+		@Override
+		public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {
+			throw new RuntimeException("boom!");
 		}
 	}
 
