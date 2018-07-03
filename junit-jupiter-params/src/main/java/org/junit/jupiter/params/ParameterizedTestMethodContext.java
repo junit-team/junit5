@@ -36,7 +36,7 @@ import org.junit.platform.commons.util.StringUtils;
 
 /**
  * Encapsulates access to the parameters of a parameterized test method and
- * caches the used converters and aggregators used to resolve them.
+ * caches the converters and aggregators used to resolve them.
  *
  * @since 5.3
  */
