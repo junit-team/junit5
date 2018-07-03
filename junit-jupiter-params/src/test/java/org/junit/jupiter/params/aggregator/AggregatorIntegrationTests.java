@@ -58,7 +58,7 @@ import org.junit.platform.engine.test.event.ExecutionEventRecorder;
  *
  * @since 5.2
  */
-class AggregatorIntegrationTests {
+public class AggregatorIntegrationTests {
 
 	@ParameterizedTest
 	@CsvSource({ "Jane, Doe, 1980-04-16, F, red", "Jack, Smith, 2000-11-22, M, blue" })
@@ -204,7 +204,7 @@ class AggregatorIntegrationTests {
 
 	// -------------------------------------------------------------------------
 
-	static class Person {
+	public static class Person {
 
 		final String firstName;
 		final String lastName;
@@ -249,7 +249,7 @@ class AggregatorIntegrationTests {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.PARAMETER)
 	@AggregateWith(PersonAggregator.class)
-	@interface CsvToPerson {
+	public @interface CsvToPerson {
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
