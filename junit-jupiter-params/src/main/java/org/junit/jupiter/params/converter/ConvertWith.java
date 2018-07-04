@@ -24,7 +24,7 @@ import org.apiguardian.api.API;
  * {@code @ConvertWith} is an annotation that allows one to specify an explicit
  * {@link ArgumentConverter}.
 
- * <p>This annotation may be applied to method parameters of
+ * <p>This annotation may be applied to parameters of
  * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest} methods
  * which need to have their {@code Arguments} converted before consuming them.
  *

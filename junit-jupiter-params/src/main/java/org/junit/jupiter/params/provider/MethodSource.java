@@ -38,8 +38,8 @@ import org.junit.jupiter.params.ParameterizedTest;
  * multiple parameters, factory methods must return instances of
  * {@link Arguments}, e.g. as {@code Stream<Arguments>}.
  *
- * <p>Factory methods within the test class must be must be {@code static} unless
- * the {@link org.junit.jupiter.api.TestInstance.Lifecycle#PER_CLASS PER_CLASS}
+ * <p>Factory methods within the test class must be {@code static} unless the
+ * {@link org.junit.jupiter.api.TestInstance.Lifecycle#PER_CLASS PER_CLASS}
  * test instance lifecycle mode is used; whereas, factory methods in external
  * classes must always be {@code static}. In any case, factory methods must not
  * declare any parameters.

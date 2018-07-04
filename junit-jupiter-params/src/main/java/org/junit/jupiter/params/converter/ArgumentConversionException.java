@@ -16,9 +16,9 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 
 /**
- * {@code ArgumentConversionException} is an exception that can
- * occur when an object is converted to another object by an implementation
- * of an {@link ArgumentConverter}.
+ * {@code ArgumentConversionException} is an exception that can occur when an
+ * object is converted to another object by an implementation of an
+ * {@link ArgumentConverter}.
  *
  * @since 5.0
  * @see ArgumentConverter
