@@ -34,9 +34,9 @@ import org.junit.jupiter.api.extension.ParameterContext;
  * {@code Order}, etc.
  *
  * <p>Implementations must provide a no-args constructor and should not make any
- * assumptions on when they are instantiated or how often they are called. Since
- * instances may potentially be cached and called from different threads they
- * should be thread-safe and designed to be used as singletons.
+ * assumptions regarding when they are instantiated or how often they are called.
+ * Since instances may potentially be cached and called from different threads,
+ * they should be thread-safe and designed to be used as singletons.
  *
  * @since 5.2
  * @see AggregateWith

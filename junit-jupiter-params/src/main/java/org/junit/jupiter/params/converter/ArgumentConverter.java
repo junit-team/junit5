@@ -29,14 +29,15 @@ import org.junit.jupiter.api.extension.ParameterContext;
  * {@link ParameterContext}.
  *
  * <p>Implementations must provide a no-args constructor and should not make any
- * assumptions on when they are instantiated or how often they are called. Since
- * instances may potentially be cached and called from different threads they
- * should be thread-safe and designed to be used as singletons.
+ * assumptions regarding when they are instantiated or how often they are called.
+ * Since instances may potentially be cached and called from different threads,
+ * they should be thread-safe and designed to be used as singletons.
  *
  * @since 5.0
  * @see SimpleArgumentConverter
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.params.converter.ConvertWith
+ * @see org.junit.jupiter.params.support.AnnotationConsumer
  */
 @API(status = EXPERIMENTAL, since = "5.0")
 public interface ArgumentConverter {
