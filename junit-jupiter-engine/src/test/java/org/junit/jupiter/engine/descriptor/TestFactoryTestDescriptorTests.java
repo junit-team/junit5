@@ -36,7 +36,7 @@ import org.junit.platform.engine.support.descriptor.FilePosition;
 import org.junit.platform.engine.support.descriptor.FileSource;
 import org.junit.platform.engine.support.descriptor.UriSource;
 import org.junit.platform.engine.support.hierarchical.Node;
-import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
+import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
 
 /**
  * Unit tests for {@link TestFactoryTestDescriptor}.
@@ -121,7 +121,7 @@ class TestFactoryTestDescriptorTests {
 			isClosed = false;
 
 			context = new JupiterEngineExecutionContext(null, null).extend().withThrowableCollector(
-				new ThrowableCollector()).withExtensionContext(extensionContext).build();
+				new OpenTest4JAwareThrowableCollector()).withExtensionContext(extensionContext).build();
 
 			Method testMethod = CustomStreamTestCase.class.getDeclaredMethod("customStream");
 			descriptor = new TestFactoryTestDescriptor(UniqueId.forEngine("engine"), CustomStreamTestCase.class,

@@ -36,11 +36,14 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	private final ExecutionRequest request;
 	private final C rootContext;
 	private final HierarchicalTestExecutorService executorService;
+	private final ThrowableCollector.Factory throwableCollectorFactory;
 
-	HierarchicalTestExecutor(ExecutionRequest request, C rootContext, HierarchicalTestExecutorService executorService) {
+	HierarchicalTestExecutor(ExecutionRequest request, C rootContext, HierarchicalTestExecutorService executorService,
+			ThrowableCollector.Factory throwableCollectorFactory) {
 		this.request = request;
 		this.rootContext = rootContext;
 		this.executorService = executorService;
+		this.throwableCollectorFactory = throwableCollectorFactory;
 	}
 
 	Future<Void> execute() {
@@ -52,7 +55,8 @@ class HierarchicalTestExecutor<C extends EngineExecutionContext> {
 	NodeTestTask<C> prepareNodeTestTaskTree() {
 		TestDescriptor rootTestDescriptor = this.request.getRootTestDescriptor();
 		EngineExecutionListener executionListener = this.request.getEngineExecutionListener();
-		NodeTestTask<C> rootTestTask = new NodeTestTask<>(rootTestDescriptor, executionListener, this.executorService);
+		NodeTestTask<C> rootTestTask = new NodeTestTask<>(rootTestDescriptor, executionListener, this.executorService,
+			this.throwableCollectorFactory);
 		new NodeTestTaskWalker().walk(rootTestTask);
 		return rootTestTask;
 	}

@@ -56,6 +56,7 @@ import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
+import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
@@ -153,7 +154,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		registerAfterEachMethodAdapters(registry);
 
 		Lifecycle lifecycle = getTestInstanceLifecycle(this.testClass, context.getConfigurationParameters());
-		ThrowableCollector throwableCollector = new ThrowableCollector();
+		ThrowableCollector throwableCollector = new OpenTest4JAwareThrowableCollector();
 		ClassExtensionContext extensionContext = new ClassExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, lifecycle, context.getConfigurationParameters(), throwableCollector);
 
@@ -201,7 +202,8 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	@Override
 	public void after(JupiterEngineExecutionContext context) {
 
-		Throwable previousThrowable = context.getThrowableCollector().getThrowable();
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
+		Throwable previousThrowable = throwableCollector.getThrowable();
 
 		if (context.beforeAllMethodsExecuted()) {
 			invokeAfterAllMethods(context);
@@ -216,7 +218,9 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		// the execution of this Node. If an exception was already thrown, any
 		// later exceptions were added as suppressed exceptions to that original
 		// exception unless a more severe exception occurred in the meantime.
-		context.getThrowableCollector().assertNotSame(previousThrowable);
+		if (previousThrowable != throwableCollector.getThrowable()) {
+			throwableCollector.assertEmpty();
+		}
 	}
 
 	private TestInstanceFactory resolveTestInstanceFactory(ExtensionRegistry registry) {
