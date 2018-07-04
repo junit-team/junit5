@@ -99,7 +99,7 @@ allprojects { subproj ->
 	apply from: "$rootDir/gradle/degraph.gradle"
 
 	if (project.hasProperty('enableJaCoCo')) {
-		apply plugin: "jacoco"
+		apply plugin: 'jacoco'
 		jacoco {
 			toolVersion = '0.8.1'
 		}
@@ -432,9 +432,9 @@ configure(rootProject) {
 	def apiGuardianDocVersion = apiGuardianVersion.contains('SNAPSHOT') ? 'snapshot' : apiGuardianVersion
 
 	task aggregateJavadocs(type: Javadoc) {
-		group = "Documentation"
-		description = "Generates aggregated Javadocs"
-		dependsOn subprojects.collect { it.tasks.getByName("jar") }
+		group = 'Documentation'
+		description = 'Generates aggregated Javadocs'
+		dependsOn subprojects.collect { it.tasks.getByName('jar') }
 
 		title = "JUnit ${version} API"
 
@@ -467,8 +467,8 @@ configure(rootProject) {
 		// Only generate JavaDoc for 'main' sources in Mavenized projects
 		source = subprojects.findAll { mavenizedProjects.contains(it.name) }.collect { it.sourceSets.main.allJava }
 
-		maxMemory = "1024m"
-		destinationDir = new File(buildDir, "docs/javadoc")
+		maxMemory = '1024m'
+		destinationDir = new File(buildDir, 'docs/javadoc')
 		classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
 			// Remove Kotlin classes from classpath due to "bad" class file
 			// see https://bugs.openjdk.java.net/browse/JDK-8187422

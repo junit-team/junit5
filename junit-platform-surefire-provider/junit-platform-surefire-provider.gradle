@@ -1,6 +1,6 @@
 apply from: "$rootDir/gradle/testing.gradle"
 
-description = "JUnit Platform Surefire Provider"
+description = 'JUnit Platform Surefire Provider'
 
 dependencies {
 	api(project(':junit-platform-launcher'))
