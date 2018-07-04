@@ -28,6 +28,7 @@ import org.apiguardian.api.API;
  *
  * @since 5.0
  */
+@FunctionalInterface
 @API(status = EXPERIMENTAL, since = "5.0")
 public interface AnnotationConsumer<A extends Annotation> extends Consumer<A> {
 }
