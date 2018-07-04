@@ -34,6 +34,7 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executable;
 
@@ -80,7 +81,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		ExtensionRegistry registry = populateNewExtensionRegistry(context);
 		Object testInstance = context.getTestInstanceProvider().getTestInstance(Optional.of(registry));
 
-		ThrowableCollector throwableCollector = new ThrowableCollector();
+		ThrowableCollector throwableCollector = new OpenTest4JAwareThrowableCollector();
 		ExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, context.getConfigurationParameters(), testInstance,
 			throwableCollector);

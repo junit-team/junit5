@@ -16,22 +16,45 @@ import static org.junit.platform.engine.TestExecutionResult.aborted;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 
+import java.util.function.Predicate;
+
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestExecutionResult;
-import org.opentest4j.TestAbortedException;
 
 /**
  * Simple component that can be used to collect one or more instances of
  * {@link Throwable}.
  *
- * @since 5.2
+ * <p>This class distinguishes between {@code Throwables} that <em>abort</em>
+ * and those that <em>fail</em> test execution. The latter take precedence over
+ * the former, i.e. if both types of {@code Throwables} were collected, the ones
+ * that abort execution are reported as
+ * {@linkplain Throwable#addSuppressed(Throwable) suppressed} {@code Throwables}
+ * of the first {@code Throwable} that failed execution.
+ *
+ * @since 5.3
  */
-@API(status = MAINTAINED, since = "5.2")
+@API(status = MAINTAINED, since = "5.3")
 public class ThrowableCollector {
 
+	private final Predicate<? super Throwable> abortedExecutionPredicate;
+
 	private Throwable throwable;
+
+	/**
+	 * Create a new {@code ThrowableCollector} that uses the supplied
+	 * {@link Predicate} to determine whether a {@link Throwable}
+	 * <em>aborted</em> or <em>failed</em> execution.
+	 *
+	 * @param abortedExecutionPredicate the predicate used to decide whether a
+	 * {@code Throwable} aborted execution; never {@code null}.
+	 */
+	public ThrowableCollector(Predicate<? super Throwable> abortedExecutionPredicate) {
+		this.abortedExecutionPredicate = Preconditions.notNull(abortedExecutionPredicate,
+			"abortedExecutionPredicate must not be null");
+	}
 
 	/**
 	 * Execute the supplied {@link Executable} and collect any {@link Throwable}
@@ -67,11 +90,12 @@ public class ThrowableCollector {
 		if (this.throwable == null) {
 			this.throwable = t;
 		}
-		else if (this.throwable instanceof TestAbortedException && !(t instanceof TestAbortedException)) {
+		else if (hasAbortedExecution(this.throwable) && !hasAbortedExecution(t)) {
 			t.addSuppressed(this.throwable);
 			this.throwable = t;
 		}
 		else if (throwable != t) {
+			// Jupiter does not throw the same Throwable from Node.after() anymore but other engines might
 			this.throwable.addSuppressed(t);
 		}
 	}
@@ -81,14 +105,14 @@ public class ThrowableCollector {
 	 * {@code ThrowableCollector}.
 	 *
 	 * <p>If this collector is not empty, the first collected {@code Throwable}
-	 * will be returned with any additional throwables
+	 * will be returned with any additional {@code Throwables}
 	 * {@linkplain Throwable#addSuppressed(Throwable) suppressed} in the
 	 * first {@code Throwable}.
 	 *
-	 * <p>If the first collected {@code Throwable} was a
-	 * {@link TestAbortedException} and at least one later collected throwable
-	 * wasn't, the first non-{@code TestAbortedException} will be returned with
-	 * the {@code TestAbortedException} and any additional throwables
+	 * <p>If the first collected {@code Throwable} <em>aborted</em> execution
+	 * and at least one later collected {@code Throwable} <em>failed</em>
+	 * execution, the first <em>failing</em> {@code Throwable} will be returned
+	 * with the previous <em>aborting</em> and any additional {@code Throwables}
 	 * {@linkplain Throwable#addSuppressed(Throwable) suppressed} inside.
 	 *
 	 * @return the first collected {@code Throwable} or {@code null} if this
@@ -116,24 +140,19 @@ public class ThrowableCollector {
 		return (this.throwable != null);
 	}
 
-	public void assertNotSame(Throwable otherThrowable) {
-		if (this.throwable != otherThrowable) {
-			assertEmpty();
-		}
-	}
-
 	/**
 	 * Assert that this {@code ThrowableCollector} is <em>empty</em> (i.e.,
 	 * has not collected any {@code Throwables}).
 	 *
 	 * <p>If this collector is not empty, the first collected {@code Throwable}
-	 * will be thrown with any additional throwables
+	 * will be thrown with any additional {@code Throwables}
 	 * {@linkplain Throwable#addSuppressed(Throwable) suppressed} in the
 	 * first {@code Throwable}. Note, however, that the {@code Throwable}
 	 * will not be wrapped. Rather, it will be
 	 * {@linkplain ExceptionUtils#throwAsUncheckedException masked}
 	 * as an unchecked exception.
 	 *
+	 * @see #getThrowable()
 	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
 	public void assertEmpty() {
@@ -143,22 +162,26 @@ public class ThrowableCollector {
 	}
 
 	/**
-	 * Convert the collected throwables into a {@link TestExecutionResult}.
+	 * Convert the collected {@link Throwable Throwables} into a {@link TestExecutionResult}.
 	 *
 	 * @return {@linkplain TestExecutionResult#aborted aborted} if the collected
-	 * {@code throwable} is a {@link TestAbortedException};
-	 * {@linkplain TestExecutionResult#failed failed} if any other
-	 * {@link Throwable} was collected; and
-	 * {@linkplain TestExecutionResult#successful successful} otherwise
+	 * {@code Throwable} <em>aborted</em> execution;
+	 * {@linkplain TestExecutionResult#failed failed} if it <em>failed</em>
+	 * execution; and {@linkplain TestExecutionResult#successful successful}
+	 * otherwise
 	 */
-	public TestExecutionResult toTestExecutionResult() {
+	TestExecutionResult toTestExecutionResult() {
 		if (isEmpty()) {
 			return successful();
 		}
-		if (throwable instanceof TestAbortedException) {
+		if (hasAbortedExecution(throwable)) {
 			return aborted(throwable);
 		}
 		return failed(throwable);
+	}
+
+	private boolean hasAbortedExecution(Throwable t) {
+		return this.abortedExecutionPredicate.test(t);
 	}
 
 	/**
@@ -169,12 +192,22 @@ public class ThrowableCollector {
 	public interface Executable {
 
 		/**
-		 * Execute this executable.
-		 *
-		 * @throws TestAbortedException to signal abortion
-		 * @throws Throwable to signal failure
+		 * Execute this executable, potentially throwing a {@link Throwable}
+		 * that signals abortion or failure.
 		 */
 		void execute() throws Throwable;
+
+	}
+
+	/**
+	 * Factory for {@code ThrowableCollector} instances.
+	 */
+	public interface Factory {
+
+		/**
+		 * Create a new instance of a {@code ThrowableCollector}.
+		 */
+		ThrowableCollector create();
 
 	}
 

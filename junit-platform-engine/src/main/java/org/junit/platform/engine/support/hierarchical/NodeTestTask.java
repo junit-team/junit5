@@ -31,10 +31,10 @@ import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
  */
 class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
-	private final ThrowableCollector throwableCollector = new ThrowableCollector();
 	private final TestDescriptor testDescriptor;
 	private final EngineExecutionListener listener;
 	private final HierarchicalTestExecutorService executorService;
+	private final ThrowableCollector.Factory throwableCollectorFactory;
 	private final Node<C> node;
 	private final ExecutionMode executionMode;
 	private final Set<ExclusiveResource> exclusiveResources;
@@ -48,18 +48,20 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 	private SkipResult skipResult;
 	private boolean started;
+	private ThrowableCollector throwableCollector;
 
 	NodeTestTask(TestDescriptor testDescriptor, EngineExecutionListener listener,
-			HierarchicalTestExecutorService executorService) {
+			HierarchicalTestExecutorService executorService, ThrowableCollector.Factory throwableCollectorFactory) {
 		this.testDescriptor = testDescriptor;
 		this.listener = listener;
 		this.executorService = executorService;
+		this.throwableCollectorFactory = throwableCollectorFactory;
 		node = asNode(testDescriptor);
 		executionMode = node.getExecutionMode();
 		exclusiveResources = node.getExclusiveResources();
 		// @formatter:off
 		children = testDescriptor.getChildren().stream()
-				.map(descriptor -> new NodeTestTask<C>(descriptor, listener, executorService))
+				.map(descriptor -> new NodeTestTask<C>(descriptor, listener, executorService, throwableCollectorFactory))
 				.collect(toCollection(ArrayList::new));
 		// @formatter:on
 	}
@@ -96,6 +98,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 	@Override
 	public void execute() {
+		throwableCollector = throwableCollectorFactory.create();
 		prepare();
 		if (throwableCollector.isEmpty()) {
 			checkWhetherSkipped();
@@ -142,7 +145,8 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 	private void executeDynamicTest(TestDescriptor dynamicTestDescriptor, List<Future<?>> futures) {
 		listener.dynamicTestRegistered(dynamicTestDescriptor);
-		NodeTestTask<C> nodeTestTask = new NodeTestTask<>(dynamicTestDescriptor, listener, executorService);
+		NodeTestTask<C> nodeTestTask = new NodeTestTask<>(dynamicTestDescriptor, listener, executorService,
+			throwableCollectorFactory);
 		Set<ExclusiveResource> exclusiveResources = nodeTestTask.getExclusiveResources();
 		if (!exclusiveResources.isEmpty()) {
 			listener.executionStarted(dynamicTestDescriptor);
@@ -169,6 +173,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 			listener.executionStarted(testDescriptor);
 		}
 		listener.executionFinished(testDescriptor, throwableCollector.toTestExecutionResult());
+		throwableCollector = null;
 	}
 
 	@SuppressWarnings("unchecked")

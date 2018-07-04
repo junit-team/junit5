@@ -73,7 +73,8 @@ class NodeTestTaskWalkerIntegrationTests {
 		TestDescriptor testDescriptor = new JupiterTestEngine().discover(discoveryRequest,
 			UniqueId.forEngine("junit-jupiter"));
 		ExecutionRequest executionRequest = new ExecutionRequest(testDescriptor, null, null);
-		HierarchicalTestExecutor<?> executor = new HierarchicalTestExecutor<>(executionRequest, null, null);
+		HierarchicalTestExecutor<?> executor = new HierarchicalTestExecutor<>(executionRequest, null, null,
+			() -> new ThrowableCollector(t -> false));
 		return executor.prepareNodeTestTaskTree();
 	}
 
