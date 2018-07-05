@@ -55,6 +55,10 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 		charset = Charset.forName(annotation.encoding());
 		numLinesToSkip = annotation.numLinesToSkip();
 		settings = new CsvParserSettings();
+		// Do not use the built-in support for skipping rows/lines since it will
+		// throw an IllegalArgumentException if the file does not contain at least
+		// the number of specified lines to skip.
+		// settings.setNumberOfRowsToSkip(annotation.numLinesToSkip());
 		settings.getFormat().setDelimiter(annotation.delimiter());
 		settings.getFormat().setLineSeparator(annotation.lineSeparator());
 		settings.getFormat().setQuote('"');
