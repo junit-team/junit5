@@ -87,6 +87,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	}
 
 	private InputStream openInputStream(ExtensionContext context, String resource) {
+		Preconditions.notBlank(resource, "Classpath resource [" + resource + "] must not be null or blank");
 		Class<?> testClass = context.getRequiredTestClass();
 		return Preconditions.notNull(inputStreamProvider.apply(testClass, resource),
 			() -> "Classpath resource [" + resource + "] does not exist");

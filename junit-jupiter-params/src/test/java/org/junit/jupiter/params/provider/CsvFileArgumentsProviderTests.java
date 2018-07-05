@@ -130,7 +130,7 @@ class CsvFileArgumentsProviderTests {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> provide(new CsvFileArgumentsProvider(), annotation).toArray());
 
-		assertThat(exception).hasMessageContaining("Classpath resource [    ] does not exist");
+		assertThat(exception).hasMessageContaining("Classpath resource [    ] must not be null or blank");
 	}
 
 	@Test
