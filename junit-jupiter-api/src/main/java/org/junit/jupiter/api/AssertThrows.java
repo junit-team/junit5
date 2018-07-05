@@ -19,6 +19,7 @@ import java.util.function.Supplier;
 
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
+import org.junit.platform.commons.util.StringUtils;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -89,9 +90,12 @@ class AssertThrows {
 			}
 		}
 
+		String includedResult = supplier.includeResult()
+				? String.format(" (returned %s).", StringUtils.nullSafeToString(result))
+				: ".";
 		String message = buildPrefix(nullSafeGet(messageOrSupplier))
 				+ String.format("Expected %s to be thrown, but nothing was thrown", getCanonicalName(expectedType))
-				+ (supplier.includeResult() ? String.format(" (returned %s).", result) : ".");
+				+ includedResult;
 		throw new AssertionFailedError(message);
 	}
 
