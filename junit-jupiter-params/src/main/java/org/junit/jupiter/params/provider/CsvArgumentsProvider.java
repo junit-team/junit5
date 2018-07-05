@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params.provider;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
@@ -19,6 +20,8 @@ import com.univocity.parsers.csv.CsvParserSettings;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
+import org.junit.platform.commons.util.BlacklistedExceptions;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -28,19 +31,17 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 
 	private static final String LINE_SEPARATOR = "\n";
 
-	private String[] lines;
-	private char delimiter;
+	private CsvSource annotation;
 
 	@Override
 	public void accept(CsvSource annotation) {
-		lines = annotation.value();
-		delimiter = annotation.delimiter();
+		this.annotation = annotation;
 	}
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
 		CsvParserSettings settings = new CsvParserSettings();
-		settings.getFormat().setDelimiter(delimiter);
+		settings.getFormat().setDelimiter(this.annotation.delimiter());
 		settings.getFormat().setLineSeparator(LINE_SEPARATOR);
 		settings.getFormat().setQuote('\'');
 		settings.getFormat().setQuoteEscape('\'');
@@ -48,15 +49,32 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 		settings.setAutoConfigurationEnabled(false);
 		CsvParser csvParser = new CsvParser(settings);
 		AtomicLong index = new AtomicLong(0);
+
 		// @formatter:off
-		return Arrays.stream(lines)
-				.map(
-					line -> Preconditions.notNull(csvParser.parseLine(line + LINE_SEPARATOR),
-					() -> "Line at index " + index.get() + " contains invalid CSV: \"" + line + "\"")
-				)
+		return Arrays.stream(this.annotation.value())
+				.map(line -> {
+					String[] parsedLine = null;
+					try {
+						parsedLine = csvParser.parseLine(line + LINE_SEPARATOR);
+					}
+					catch (Throwable throwable) {
+						handleCsvException(throwable, this.annotation);
+					}
+					Preconditions.notNull(parsedLine,
+						() -> "Line at index " + index.get() + " contains invalid CSV: \"" + line + "\"");
+					return parsedLine;
+				})
 				.peek(values -> index.incrementAndGet())
 				.map(Arguments::of);
 		// @formatter:on
+	}
+
+	static void handleCsvException(Throwable throwable, Annotation annotation) {
+		BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+		if (throwable instanceof PreconditionViolationException) {
+			throw (PreconditionViolationException) throwable;
+		}
+		throw new CsvParsingException("Failed to parse CSV input configured via " + annotation, throwable);
 	}
 
 }

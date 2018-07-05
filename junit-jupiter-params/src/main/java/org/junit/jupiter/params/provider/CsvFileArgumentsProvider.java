@@ -13,6 +13,7 @@ package org.junit.jupiter.params.provider;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.StreamSupport.stream;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.junit.jupiter.params.provider.CsvArgumentsProvider.handleCsvException;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -27,6 +28,7 @@ import com.univocity.parsers.csv.CsvParserSettings;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -36,6 +38,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 
 	private final BiFunction<Class<?>, String, InputStream> inputStreamProvider;
 
+	private CsvFileSource annotation;
 	private String[] resources;
 	private Charset charset;
 	private CsvParserSettings settings;
@@ -51,8 +54,14 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 
 	@Override
 	public void accept(CsvFileSource annotation) {
+		this.annotation = annotation;
 		resources = annotation.resources();
-		charset = Charset.forName(annotation.encoding());
+		try {
+			this.charset = Charset.forName(annotation.encoding());
+		}
+		catch (Exception ex) {
+			throw new PreconditionViolationException("The charset supplied in " + this.annotation + " is invalid", ex);
+		}
 		numLinesToSkip = annotation.numLinesToSkip();
 		settings = new CsvParserSettings();
 		// Do not use the built-in support for skipping rows/lines since it will
@@ -80,29 +89,45 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	private InputStream openInputStream(ExtensionContext context, String resource) {
 		Class<?> testClass = context.getRequiredTestClass();
 		return Preconditions.notNull(inputStreamProvider.apply(testClass, resource),
-			() -> "Classpath resource does not exist: " + resource);
+			() -> "Classpath resource [" + resource + "] does not exist");
 	}
 
 	private CsvParser createCsvParser(InputStream inputStream) {
 		CsvParser csvParser = new CsvParser(settings);
-		csvParser.beginParsing(inputStream, charset);
+		try {
+			csvParser.beginParsing(inputStream, charset);
+		}
+		catch (Throwable throwable) {
+			handleCsvException(throwable, this.annotation);
+		}
 		return csvParser;
 	}
 
 	private Stream<Arguments> toStream(CsvParser csvParser) {
-		return stream(spliteratorUnknownSize(new CsvParserIterator(csvParser), Spliterator.ORDERED), false) //
-				.skip(numLinesToSkip) //
-				.onClose(csvParser::stopParsing);
+		CsvParserIterator iterator = new CsvParserIterator(csvParser, this.annotation);
+		return stream(spliteratorUnknownSize(iterator, Spliterator.ORDERED), false) //
+				.skip(this.numLinesToSkip) //
+				.onClose(() -> {
+					try {
+						csvParser.stopParsing();
+					}
+					catch (Throwable throwable) {
+						handleCsvException(throwable, this.annotation);
+					}
+				});
 	}
 
 	private static class CsvParserIterator implements Iterator<Arguments> {
 
 		private final CsvParser csvParser;
 
+		private final CsvFileSource annotation;
+
 		private Object[] nextCsvRecord;
 
-		CsvParserIterator(CsvParser csvParser) {
+		CsvParserIterator(CsvParser csvParser, CsvFileSource annotation) {
 			this.csvParser = csvParser;
+			this.annotation = annotation;
 			advance();
 		}
 
@@ -119,7 +144,12 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 		}
 
 		private void advance() {
-			this.nextCsvRecord = csvParser.parseNext();
+			try {
+				this.nextCsvRecord = this.csvParser.parseNext();
+			}
+			catch (Throwable throwable) {
+				handleCsvException(throwable, this.annotation);
+			}
 		}
 	}
 
