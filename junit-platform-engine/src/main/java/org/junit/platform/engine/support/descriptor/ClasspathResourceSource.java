@@ -12,10 +12,12 @@ package org.junit.platform.engine.support.descriptor;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestSource;
@@ -31,6 +33,14 @@ import org.junit.platform.engine.TestSource;
 public class ClasspathResourceSource implements TestSource {
 
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * {@link URI} {@linkplain URI#getScheme() scheme} for classpath
+	 * resources: {@value}
+	 *
+	 * @since 1.3
+	 */
+	public static final String CLASSPATH_SCHEME = "classpath";
 
 	/**
 	 * Create a new {@code ClasspathResourceSource} using the supplied classpath
@@ -68,6 +78,33 @@ public class ClasspathResourceSource implements TestSource {
 	 */
 	public static ClasspathResourceSource from(String classpathResourceName, FilePosition filePosition) {
 		return new ClasspathResourceSource(classpathResourceName, filePosition);
+	}
+
+	/**
+	 * Create a new {@code ClasspathResourceSource} from the supplied {@link URI}.
+	 *
+	 * <p>The {@link URI#getPath() path} component of the {@code URI} (excluding
+	 * the query) will be used as the classpath resource name. The
+	 * {@linkplain URI#getQuery() query} component of the {@code URI}, if present,
+	 * will be used to retrieve the {@link FilePosition} via
+	 * {@link FilePosition#fromQuery(String)}.
+	 *
+	 * @param uri the {@code URI} for the classpath resource; never {@code null}
+	 * @return a new {@code ClasspathResourceSource}; never {@code null}
+	 * @throws PreconditionViolationException if the supplied {@code URI} is
+	 * {@code null} or if the scheme of the supplied {@code URI} is not equal
+	 * to the {@link #CLASSPATH_SCHEME}
+	 * @since 1.3
+	 * @see #CLASSPATH_SCHEME
+	 */
+	public static ClasspathResourceSource from(URI uri) {
+		Preconditions.notNull(uri, "URI must not be null");
+		Preconditions.condition(CLASSPATH_SCHEME.equals(uri.getScheme()),
+			() -> "URI [" + uri + "] must have [" + CLASSPATH_SCHEME + "] scheme");
+
+		String classpathResource = ResourceUtils.stripQueryComponent(uri).getPath();
+		FilePosition filePosition = FilePosition.fromQuery(uri.getQuery()).orElse(null);
+		return ClasspathResourceSource.from(classpathResource, filePosition);
 	}
 
 	private final String classpathResourceName;

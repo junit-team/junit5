@@ -11,8 +11,10 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.engine.support.descriptor.ClasspathResourceSource.CLASSPATH_SCHEME;
 
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -28,8 +30,10 @@ import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.ClasspathResourceSource;
 import org.junit.platform.engine.support.descriptor.UriSource;
 
 /**
@@ -121,7 +125,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 
 		UniqueId uniqueId;
 		Supplier<JupiterTestDescriptor> descriptorCreator;
-		Optional<TestSource> customTestSource = node.getTestSourceUri().map(UriSource::from);
+		Optional<TestSource> customTestSource = node.getTestSourceUri().map(TestFactoryTestDescriptor::fromUri);
 		TestSource source = customTestSource.orElse(defaultTestSource);
 
 		if (node instanceof DynamicTest) {
@@ -141,6 +145,14 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 			return Optional.of(descriptor);
 		}
 		return Optional.empty();
+	}
+
+	/**
+	 * @since 5.3
+	 */
+	static TestSource fromUri(URI uri) {
+		Preconditions.notNull(uri, "URI must not be null");
+		return CLASSPATH_SCHEME.equals(uri.getScheme()) ? ClasspathResourceSource.from(uri) : UriSource.from(uri);
 	}
 
 }
