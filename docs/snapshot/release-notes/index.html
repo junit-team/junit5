@@ -732,7 +732,7 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Full stacktrace is printed to the console, when running the <code>ConsoleLauncher</code>
+<p>The full stacktrace is now printed to the console when running the <code>ConsoleLauncher</code>
 in <code>--details verbose</code> mode.</p>
 </li>
 <li>
@@ -766,10 +766,10 @@ unmodified and is therefore semantically identical to the previous behavior.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Experimental support for capturing output printed to <code>System.out</code> and
-<code>System.err</code> during test execution. This feature is disabled by default and can be
-enabled using a configuration parameter (cf.
-<a href="../user-guide/index.html#running-tests-capturing-output">User Guide</a>).</p>
+<p>Experimental support for capturing output printed to <code>System.out</code> and <code>System.err</code>
+during test execution. This feature is disabled by default and can be enabled using a
+configuration parameter (see the
+<a href="../user-guide/index.html#running-tests-capturing-output">User Guide</a> for details).</p>
 </li>
 <li>
 <p>Reusable support for parallel test execution for test engines that extend
@@ -778,14 +778,14 @@ enabled using a configuration parameter (cf.
 <ul>
 <li>
 <p><code>HierarchicalTestEngine</code> implementations may now specify a
-<code>HierarchicalTestExecutorService</code></p>
+<code>HierarchicalTestExecutorService</code>.</p>
 </li>
 <li>
 <p>By default, a <code>SameThreadHierarchicalTestExecutorService</code> is used.</p>
 </li>
 <li>
 <p>Test engines may use <code>ForkJoinPoolHierarchicalTestExecutorService</code> to support
-parallel test execution based on the Fork/Join Framework.</p>
+parallel test execution based on Java&#8217;s Fork/Join framework.</p>
 </li>
 <li>
 <p><code>Node</code> implementations may provide a set of <code>ExclusiveResources</code> and an
@@ -793,6 +793,12 @@ parallel test execution based on the Fork/Join Framework.</p>
 </li>
 </ul>
 </div>
+</li>
+<li>
+<p>New <code>UriSource.from(URI)</code> static factory method that allows a <code>TestSource</code> to be
+created from a <code>URI</code>. If the <code>URI</code> references a file or directory in the local
+filesystem, a <code>FileSource</code> or <code>DirectorySource</code> will be created; otherwise, an instance
+of the default <code>UriSource</code> implementation will be created.</p>
 </li>
 <li>
 <p>New overloaded variant of <code>isAnnotated()</code> in <code>AnnotationSupport</code> that accepts
@@ -823,7 +829,7 @@ exit with a status code of <code>2</code>.</p>
 <p>When using <code>@TestInstance(Lifecycle.PER_CLASS)</code> semantics, registered
 <code>AfterAllCallback</code> extensions are no longer invoked if an exception is thrown by the
 test class constructor. Consequently, <code>AfterAllCallback</code> extensions are now only
-invoked if <code>BeforeAllCallback</code> extensions were invoked.</p>
+invoked if <code>BeforeAllCallback</code> extensions are invoked.</p>
 </li>
 <li>
 <p>Test discovery no longer halts prematurely if a nested class or nested interface in a
@@ -873,8 +879,16 @@ to use from Kotlin.</p>
 </li>
 <li>
 <p>New support for supplying a custom test source <code>URI</code> when creating a dynamic container
-or test. See factory methods <code>dynamicContainer(String, URI, &#8230;&#8203;)</code> in <code>DynamicContainer</code>
-and <code>dynamicTest(String, URI, Executable)</code> in <code>DynamicTest</code> for details.</p>
+or test.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See the new factory methods <code>dynamicContainer(String, URI, &#8230;&#8203;)</code> in
+<code>DynamicContainer</code> and <code>dynamicTest(String, URI, Executable)</code> in <code>DynamicTest</code> for
+details.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -910,7 +924,7 @@ minor improvements and bug fixes.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-07-05 09:34:49 EDT
+Last updated 2018-07-06 12:22:28 EDT
 </div>
 </div>
 </body>
