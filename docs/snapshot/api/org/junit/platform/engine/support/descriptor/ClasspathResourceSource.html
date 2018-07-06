@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":9,"i2":9,"i3":10,"i4":10,"i5":10,"i6":10};
+var methods = {"i0":10,"i1":9,"i2":9,"i3":9,"i4":10,"i5":10,"i6":10,"i7":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -96,13 +96,13 @@ var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -162,6 +162,32 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="field.summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<table class="memberSummary">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Field</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/ClasspathResourceSource.html#CLASSPATH_SCHEME">CLASSPATH_SCHEME</a></span></code></th>
+<td class="colLast">
+<div class="block"><a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a> <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true#getScheme()" title="class or interface in java.net" class="externalLink">scheme</a> for classpath
+ resources: "classpath"</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+</section>
 <!-- ========== METHOD SUMMARY =========== -->
 <section role="region">
 <ul class="blockList">
@@ -199,25 +225,32 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 </td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code>static <a href="../../../../../../org/junit/platform/engine/support/descriptor/ClasspathResourceSource.html" title="class in org.junit.platform.engine.support.descriptor">ClasspathResourceSource</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/ClasspathResourceSource.html#from(java.net.URI)">from</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;uri)</code></th>
+<td class="colLast">
+<div class="block">Create a new <code>ClasspathResourceSource</code> from the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a>.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/ClasspathResourceSource.html#getClasspathResourceName()">getClasspathResourceName</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the name of the source <em>classpath resource</em>.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">FilePosition</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/ClasspathResourceSource.html#getPosition()">getPosition</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor"><code>FilePosition</code></a>, if available.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/ClasspathResourceSource.html#hashCode()">hashCode</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/ClasspathResourceSource.html#toString()">toString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
@@ -239,6 +272,33 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="field.detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a id="CLASSPATH_SCHEME">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>CLASSPATH_SCHEME</h4>
+<pre>public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> CLASSPATH_SCHEME</pre>
+<div class="block"><a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a> <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true#getScheme()" title="class or interface in java.net" class="externalLink">scheme</a> for classpath
+ resources: "classpath"</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.3</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../../constant-values.html#org.junit.platform.engine.support.descriptor.ClasspathResourceSource.CLASSPATH_SCHEME">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</section>
 <!-- ============ METHOD DETAIL ========== -->
 <section role="region">
 <ul class="blockList">
@@ -293,6 +353,36 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <dd><code>classpathResourceName</code> - the name of the classpath resource; never
  <code>null</code> or blank</dd>
 <dd><code>filePosition</code> - the position in the classpath resource; may be <code>null</code></dd>
+</dl>
+</li>
+</ul>
+<a id="from(java.net.URI)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>from</h4>
+<pre>public static&nbsp;<a href="../../../../../../org/junit/platform/engine/support/descriptor/ClasspathResourceSource.html" title="class in org.junit.platform.engine.support.descriptor">ClasspathResourceSource</a>&nbsp;from&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;uri)</pre>
+<div class="block">Create a new <code>ClasspathResourceSource</code> from the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a>.
+
+ <p>The <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true#getPath()" title="class or interface in java.net" class="externalLink"><code>path</code></a> component of the <code>URI</code> (excluding
+ the query) will be used as the classpath resource name. The
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true#getQuery()" title="class or interface in java.net" class="externalLink">query</a> component of the <code>URI</code>, if present,
+ will be used to retrieve the <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor"><code>FilePosition</code></a> via
+ <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html#fromQuery(java.lang.String)"><code>FilePosition.fromQuery(String)</code></a>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>uri</code> - the <code>URI</code> for the classpath resource; never <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a new <code>ClasspathResourceSource</code>; never <code>null</code></dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="../../../../../../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied <code>URI</code> is
+ <code>null</code> or if the scheme of the supplied <code>URI</code> is not equal
+ to the <a href="../../../../../../org/junit/platform/engine/support/descriptor/ClasspathResourceSource.html#CLASSPATH_SCHEME"><code>CLASSPATH_SCHEME</code></a></dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.3</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../../org/junit/platform/engine/support/descriptor/ClasspathResourceSource.html#CLASSPATH_SCHEME"><code>CLASSPATH_SCHEME</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -426,13 +516,13 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
