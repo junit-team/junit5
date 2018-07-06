@@ -87,10 +87,10 @@ public class FilePosition implements Serializable {
 					String[] data = pair.split("=");
 					if (data.length == 2) {
 						String key = data[0];
-						if ("line".equals(key)) {
+						if (line == null && "line".equals(key)) {
 							line = Integer.valueOf(data[1]);
 						}
-						else if ("column".equals(key)) {
+						else if (column == null && "column".equals(key)) {
 							column = Integer.valueOf(data[1]);
 						}
 					}

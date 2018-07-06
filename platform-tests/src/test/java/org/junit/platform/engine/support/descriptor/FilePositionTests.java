@@ -90,11 +90,13 @@ class FilePositionTests extends AbstractTestSourceTests {
 			arguments("?!", -1, -1), //
 			arguments("line=ZZ", -1, -1), //
 			arguments("line=42", 42, -1), //
-			arguments("line=42&line=24", 24, -1), //
 			arguments("line=42&column=99", 42, 99), //
 			arguments("line=42&column=ZZ", 42, -1), //
 			arguments("line=42&abc=xyz&column=99", 42, 99), //
-			arguments("1=3&foo=X&line=42&abc=xyz&column=99&enigma=393939", 42, 99) //
+			arguments("1=3&foo=X&line=42&abc=xyz&column=99&enigma=393939", 42, 99), //
+			// First one wins:
+			arguments("line=42&line=555", 42, -1), //
+			arguments("line=42&line=555&column=99&column=555", 42, 99) //
 		);
 	}
 
