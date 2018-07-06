@@ -16,7 +16,7 @@ on GitHub.
 
 ==== Bug Fixes
 
-* Full stacktrace is printed to the console, when running the `ConsoleLauncher`
+* The full stacktrace is now printed to the console when running the `ConsoleLauncher`
   in `--details verbose` mode.
 * `ReflectionUtils.findNestedClasses()` and `ReflectionSupport.findNestedClasses()` no
   longer allow a `NoClassDefFoundError` to propagate if a nested class or nested
@@ -35,17 +35,17 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* Experimental support for capturing output printed to `System.out` and
-  `System.err` during test execution. This feature is disabled by default and can be
-  enabled using a configuration parameter (cf.
-  <<../user-guide/index.adoc#running-tests-capturing-output, User Guide>>).
+* Experimental support for capturing output printed to `System.out` and `System.err`
+  during test execution. This feature is disabled by default and can be enabled using a
+  configuration parameter (see the
+  <<../user-guide/index.adoc#running-tests-capturing-output, User Guide>> for details).
 * Reusable support for parallel test execution for test engines that extend
   `HierarchicalTestEngine`.
   - `HierarchicalTestEngine` implementations may now specify a
-    `HierarchicalTestExecutorService`
+    `HierarchicalTestExecutorService`.
   - By default, a `SameThreadHierarchicalTestExecutorService` is used.
   - Test engines may use `ForkJoinPoolHierarchicalTestExecutorService` to support
-    parallel test execution based on the Fork/Join Framework.
+    parallel test execution based on Java's Fork/Join framework.
   - `Node` implementations may provide a set of `ExclusiveResources` and an
     `ExecutionMode` to be used by `ForkJoinPoolHierarchicalTestExecutorService`.
 * New `UriSource.from(URI)` static factory method that allows a `TestSource` to be
@@ -67,7 +67,7 @@ on GitHub.
 * When using `@TestInstance(Lifecycle.PER_CLASS)` semantics, registered
   `AfterAllCallback` extensions are no longer invoked if an exception is thrown by the
   test class constructor. Consequently, `AfterAllCallback` extensions are now only
-  invoked if `BeforeAllCallback` extensions were invoked.
+  invoked if `BeforeAllCallback` extensions are invoked.
 * Test discovery no longer halts prematurely if a nested class or nested interface in a
   test class has an invalid class file.
 * Certain categories of errors encountered during the test discovery phase no longer
@@ -91,8 +91,10 @@ on GitHub.
 * New `get<Class>(index)` Kotlin extension method to make `ArgumentsAccessor` friendlier
   to use from Kotlin.
 * New support for supplying a custom test source `URI` when creating a dynamic container
-  or test. See factory methods `dynamicContainer(String, URI, ...)` in `DynamicContainer`
-  and `dynamicTest(String, URI, Executable)` in `DynamicTest` for details.
+  or test.
+  - See the new factory methods `dynamicContainer(String, URI, ...)` in
+    `DynamicContainer` and `dynamicTest(String, URI, Executable)` in `DynamicTest` for
+    details.
 
 
 [[release-notes-5.3.0-M1-junit-vintage]]
