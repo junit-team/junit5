@@ -48,6 +48,10 @@ on GitHub.
     parallel test execution based on the Fork/Join Framework.
   - `Node` implementations may provide a set of `ExclusiveResources` and an
     `ExecutionMode` to be used by `ForkJoinPoolHierarchicalTestExecutorService`.
+* New `UriSource.from(URI)` static factory method that allows a `TestSource` to be
+  created from a `URI`. If the `URI` references a file or directory in the local
+  filesystem, a `FileSource` or `DirectorySource` will be created; otherwise, an instance
+  of the default `UriSource` implementation will be created.
 * New overloaded variant of `isAnnotated()` in `AnnotationSupport` that accepts
   `Optional<? extends AnnotatedElement>` instead of `AnnotatedElement`.
 * New `--fail-if-no-tests` command-line option for the `ConsoleLauncher`.
