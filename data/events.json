@@ -458,5 +458,15 @@
     "speakers": [
       "billykorando"
     ]
+  },
+  {
+    "title": "JUnit 5: More than just a Testing Framework for Java",
+    "event": "WJAX",
+    "date": "2018-11-07",
+    "location": "Munich, Germany",
+    "link": "https://jax.de/core-java-jvm-languages/junit-5-more-than-just-a-testing-framework-for-java/",
+    "speakers": [
+      "marcphilipp"
+    ]
   }
 ]
