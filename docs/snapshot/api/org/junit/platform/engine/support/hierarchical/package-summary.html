@@ -177,6 +177,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  <a href="../../../../../../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.html" title="class in org.junit.platform.engine.support.hierarchical"><code>SingleTestExecutor</code></a>.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.Executable.html" title="interface in org.junit.platform.engine.support.hierarchical">ThrowableCollector.Executable</a></th>
+<td class="colLast">
+<div class="block">Functional interface for an executable block of code that may throw a
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.Factory.html" title="interface in org.junit.platform.engine.support.hierarchical">ThrowableCollector.Factory</a></th>
+<td class="colLast">
+<div class="block">Factory for <code>ThrowableCollector</code> instances.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </li>
@@ -218,17 +231,31 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/OpenTest4JAwareThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">OpenTest4JAwareThrowableCollector</a></th>
+<td class="colLast">
+<div class="block">Specialization of <a href="../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical"><code>ThrowableCollector</code></a> that treats instances of
+ <a href="https://ota4j-team.github.io/opentest4j/docs/1.1.0/api/org/opentest4j/TestAbortedException.html?is-external=true" title="class or interface in org.opentest4j" class="externalLink"><code>TestAbortedException</code></a> as <em>aborting</em>.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html" title="class in org.junit.platform.engine.support.hierarchical">SameThreadHierarchicalTestExecutorService</a></th>
 <td class="colLast">
 <div class="block">A simple <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">executor service</a> that
  executes all <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> in the caller's thread.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.html" title="class in org.junit.platform.engine.support.hierarchical">SingleTestExecutor</a></th>
+<td class="colLast">Deprecated.
+<div class="deprecationComment">Please use <a href="../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html#execute(org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executable)"><code>ThrowableCollector.execute(org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executable)</code></a> and
+ <a href="../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html#toTestExecutionResult()"><code>ThrowableCollector.toTestExecutionResult()</code></a> instead.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a></th>
 <td class="colLast">
-<div class="block"><code>SingleTestExecutor</code> encapsulates the execution of a single test
- wrapped in an <a href="../../../../../../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.Executable.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>SingleTestExecutor.Executable</code></a>.</div>
+<div class="block">Simple component that can be used to collect one or more instances of
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a>.</div>
 </td>
 </tr>
 </tbody>

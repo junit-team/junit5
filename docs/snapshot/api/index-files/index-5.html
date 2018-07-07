@@ -379,7 +379,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.Executable.html#execute()">execute()</a></span> - Method in interface org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.Executable.html" title="interface in org.junit.platform.engine.support.hierarchical">SingleTestExecutor.Executable</a></dt>
 <dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Execute the test.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/ThrowableCollector.Executable.html#execute()">execute()</a></span> - Method in interface org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/ThrowableCollector.Executable.html" title="interface in org.junit.platform.engine.support.hierarchical">ThrowableCollector.Executable</a></dt>
+<dd>
+<div class="block">Execute this executable, potentially throwing a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a>
+ that signals abortion or failure.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execute(C, Node.DynamicTestExecutor)</a></span> - Method in interface org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical">Node</a></dt>
 <dd>
@@ -389,11 +395,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/console/tasks/ConsoleTestExecutor.html#execute(java.io.PrintWriter)">execute(PrintWriter)</a></span> - Method in class org.junit.platform.console.tasks.<a href="../org/junit/platform/console/tasks/ConsoleTestExecutor.html" title="class in org.junit.platform.console.tasks">ConsoleTestExecutor</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/execution/ThrowableCollector.html#execute(org.junit.jupiter.api.function.Executable)">execute(Executable)</a></span> - Method in class org.junit.jupiter.engine.execution.<a href="../org/junit/jupiter/engine/execution/ThrowableCollector.html" title="class in org.junit.jupiter.engine.execution">ThrowableCollector</a></dt>
-<dd>
-<div class="block">Execute the supplied <a href="../org/junit/jupiter/api/function/Executable.html" title="interface in org.junit.jupiter.api.function"><code>Executable</code></a> and collect any <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a>
- thrown during the execution.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.html#execute(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execute(JupiterEngineExecutionContext, Node.DynamicTestExecutor)</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestMethodTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.html#execute(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execute(JupiterEngineExecutionContext, Node.DynamicTestExecutor)</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestTemplateTestDescriptor</a></dt>
@@ -414,6 +415,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/vintage/engine/VintageTestEngine.html#execute(org.junit.platform.engine.ExecutionRequest)">execute(ExecutionRequest)</a></span> - Method in class org.junit.vintage.engine.<a href="../org/junit/vintage/engine/VintageTestEngine.html" title="class in org.junit.vintage.engine">VintageTestEngine</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html#execute(org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executable)">execute(ThrowableCollector.Executable)</a></span> - Method in class org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a></dt>
+<dd>
+<div class="block">Execute the supplied <a href="../org/junit/platform/engine/support/hierarchical/ThrowableCollector.Executable.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>ThrowableCollector.Executable</code></a> and collect any <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a>
+ thrown during the execution.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/Node.DynamicTestExecutor.html#execute(org.junit.platform.engine.TestDescriptor)">execute(TestDescriptor)</a></span> - Method in interface org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/Node.DynamicTestExecutor.html" title="interface in org.junit.platform.engine.support.hierarchical">Node.DynamicTestExecutor</a></dt>
 <dd>
 <div class="block">Submit a dynamic test descriptor for immediate execution.</div>
@@ -438,6 +444,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.html#executeSafely(org.junit.platform.engine.support.hierarchical.SingleTestExecutor.Executable)">executeSafely(SingleTestExecutor.Executable)</a></span> - Method in class org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.html" title="class in org.junit.platform.engine.support.hierarchical">SingleTestExecutor</a></dt>
 <dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Execute the supplied <a href="../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.Executable.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>SingleTestExecutor.Executable</code></a> and return a
  <a href="../org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a> based on the outcome.</div>
 </dd>
