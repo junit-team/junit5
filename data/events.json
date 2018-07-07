@@ -460,6 +460,16 @@
     ]
   },
   {
+    "title": "JUnit 5 the Next Step in Automated Testing",
+    "event": "SpringOne Platform",
+    "date": "2018-09-25",
+    "location": "Washington, D.C.",
+    "link": "https://springoneplatform.io/2018/sessions/junit-5-the-next-step-in-automated-testing",
+    "speakers": [
+      "sbrannen"
+    ]
+  },
+  {
     "title": "JUnit 5: More than just a Testing Framework for Java",
     "event": "WJAX",
     "date": "2018-11-07",
