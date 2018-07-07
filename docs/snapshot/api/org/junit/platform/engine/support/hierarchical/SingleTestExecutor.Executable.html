@@ -133,8 +133,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt>Enclosing class:</dt>
 <dd><a href="../../../../../../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.html" title="class in org.junit.platform.engine.support.hierarchical">SingleTestExecutor</a></dd>
 </dl>
+<dl>
+<dt>Functional Interface:</dt>
+<dd>This is a functional interface and can therefore be used as the assignment target for a lambda expression or method reference.</dd>
+</dl>
 <hr>
-<pre>public static interface <span class="typeNameLabel">SingleTestExecutor.Executable</span></pre>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterface.html?is-external=true" title="class or interface in java.lang" class="externalLink">@FunctionalInterface</a>
+public static interface <span class="typeNameLabel">SingleTestExecutor.Executable</span></pre>
 <div class="block">Functional interface for a single test to be executed by
  <a href="../../../../../../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.html" title="class in org.junit.platform.engine.support.hierarchical"><code>SingleTestExecutor</code></a>.</div>
 </li>
@@ -193,7 +198,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Execute the test.</div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="https://ota4j-team.github.io/opentest4j/docs/1.1.0/api/org/opentest4j/TestAbortedException.html?is-external=true" title="class or interface in org.opentest4j" class="externalLink">TestAbortedException</a></code> - to signal abortion</dd>
+<dd><code><a href="https://ota4j-team.github.io/opentest4j/docs/1.1.0/api/org/opentest4j/TestAbortedException.html?is-external=true" title="class or interface in org.opentest4j" class="externalLink">TestAbortedException</a></code> - to signal aborted execution</dd>
 <dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a></code> - to signal failure</dd>
 </dl>
 </li>
