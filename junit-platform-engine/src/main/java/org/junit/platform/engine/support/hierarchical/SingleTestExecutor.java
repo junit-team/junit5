@@ -34,12 +34,13 @@ public class SingleTestExecutor {
 	 * Functional interface for a single test to be executed by
 	 * {@link SingleTestExecutor}.
 	 */
+	@FunctionalInterface
 	public interface Executable {
 
 		/**
 		 * Execute the test.
 		 *
-		 * @throws TestAbortedException to signal abortion
+		 * @throws TestAbortedException to signal aborted execution
 		 * @throws Throwable to signal failure
 		 */
 		void execute() throws TestAbortedException, Throwable;
