@@ -115,70 +115,73 @@ allprojects { subproj ->
 		api("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 	}
 
+	compileJava {
+		options.encoding = 'UTF-8'
+		
+		// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
+		options.compilerArgs += [
+			'-Xlint:cast',
+			'-Xlint:classfile',
+			'-Xlint:deprecation',
+			'-Xlint:dep-ann',
+			'-Xlint:divzero',
+			'-Xlint:empty',
+			'-Xlint:fallthrough',
+			'-Xlint:finally',
+			'-Xlint:overrides',
+			'-Xlint:path',
+			'-Xlint:processing',
+			'-Xlint:rawtypes',
+			'-Xlint:serial',
+			'-Xlint:static',
+			'-Xlint:try',
+			'-Xlint:unchecked',
+			'-Xlint:varargs',
+			'-Xlint:-options',
+			'-Werror'
+		]
+	}
+
+	compileTestJava {
+		options.encoding = 'UTF-8'
+		sourceCompatibility = 10
+		targetCompatibility = 10
+
+		// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
+		options.compilerArgs += [
+			'-parameters',
+			'-Xlint:cast',
+			'-Xlint:classfile',
+			'-Xlint:deprecation',
+			'-Xlint:dep-ann',
+			'-Xlint:divzero',
+			'-Xlint:empty',
+			'-Xlint:fallthrough',
+			'-Xlint:finally',
+			'-Xlint:path',
+			'-Xlint:processing',
+			'-Xlint:rawtypes',
+			'-Xlint:serial',
+			'-Xlint:static',
+			'-Xlint:try',
+			'-Xlint:unchecked',
+			'-Xlint:varargs',
+			'-Xlint:-options',
+			'-Xlint:-overrides'
+		]
+	}
+
 	// Declare "javacRelease" as a global property to make it overridable by
 	// a sub-project.
 	ext.javacRelease = rootProject.javacRelease
 
 	subproj.afterEvaluate { evaluatedProject ->
-		evaluatedProject.tasks.withType(JavaCompile) {
-			options.encoding = 'UTF-8'
-		}
 		evaluatedProject.tasks.getByName('compileJava') {
 			sourceCompatibility = javacRelease
 			targetCompatibility = javacRelease // needed by asm
 			options.compilerArgs += ['--release', javacRelease]
 		}
-		evaluatedProject.tasks.getByName('compileTestJava') {
-			sourceCompatibility = 10
-			targetCompatibility = 10
-		}
 	}
-
-	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
-	compileJava.options.compilerArgs += [
-		'-Xlint:cast',
-		'-Xlint:classfile',
-		'-Xlint:deprecation',
-		'-Xlint:dep-ann',
-		'-Xlint:divzero',
-		'-Xlint:empty',
-		'-Xlint:fallthrough',
-		'-Xlint:finally',
-		'-Xlint:overrides',
-		'-Xlint:path',
-		'-Xlint:processing',
-		'-Xlint:rawtypes',
-		'-Xlint:serial',
-		'-Xlint:static',
-		'-Xlint:try',
-		'-Xlint:unchecked',
-		'-Xlint:varargs',
-		'-Xlint:-options',
-		'-Werror'
-	]
-
-	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
-	compileTestJava.options.compilerArgs += [
-		'-parameters',
-		'-Xlint:cast',
-		'-Xlint:classfile',
-		'-Xlint:deprecation',
-		'-Xlint:dep-ann',
-		'-Xlint:divzero',
-		'-Xlint:empty',
-		'-Xlint:fallthrough',
-		'-Xlint:finally',
-		'-Xlint:path',
-		'-Xlint:processing',
-		'-Xlint:rawtypes',
-		'-Xlint:serial',
-		'-Xlint:static',
-		'-Xlint:try',
-		'-Xlint:unchecked',
-		'-Xlint:varargs',
-		'-Xlint:-options',
-		'-Xlint:-overrides'
-	]
 
 	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
 		kotlinOptions {
