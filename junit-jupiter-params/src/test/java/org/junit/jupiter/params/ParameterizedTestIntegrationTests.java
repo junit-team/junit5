@@ -17,6 +17,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.test.event.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.abortedWithReason;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.displayName;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
@@ -34,6 +35,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,6 +58,7 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.test.event.ExecutionEvent;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.opentest4j.TestAbortedException;
 
 /**
  * @since 5.0
@@ -235,6 +238,16 @@ class ParameterizedTestIntegrationTests {
 		assertThat(executionEvents) //
 				.haveExactly(1, event(test(), finishedWithFailure(allOf(isA(ParameterResolutionException.class), //
 					message("Error converting parameter at index 0: something went horribly wrong")))));
+	}
+
+	@Test
+	void reportsContainerWithAssumptionFailureInMethodSourceAsAborted() {
+		List<ExecutionEvent> executionEvents = execute(
+			selectMethod(AssumptionFailureInMethodSourceTestCase.class, "strings", String.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(container("test-template:strings"), //
+					abortedWithReason(
+						allOf(isA(TestAbortedException.class), message("Assumption failed: nothing to test")))));
 	}
 
 	private List<ExecutionEvent> execute(DiscoverySelector... selectors) {
@@ -432,6 +445,20 @@ class ParameterizedTestIntegrationTests {
 		static Book factory(String title) {
 			return new Book(title);
 		}
+	}
+
+	static class AssumptionFailureInMethodSourceTestCase {
+
+		static List<String> strings() {
+			Assumptions.assumeFalse(true, "nothing to test");
+			return null;
+		}
+
+		@ParameterizedTest
+		@MethodSource
+		void strings(String test) {
+		}
+
 	}
 
 }
