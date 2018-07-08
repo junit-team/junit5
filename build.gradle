@@ -117,7 +117,7 @@ allprojects { subproj ->
 
 	compileJava {
 		options.encoding = 'UTF-8'
-		
+
 		// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
 		options.compilerArgs += [
 			'-Xlint:cast',
