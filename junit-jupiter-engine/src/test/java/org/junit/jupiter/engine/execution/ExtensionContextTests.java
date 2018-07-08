@@ -45,6 +45,7 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 /**
@@ -187,7 +188,7 @@ class ExtensionContextTests {
 
 		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
 		Mockito.verify(engineExecutionListener, Mockito.times(3)).reportingEntryPublished(
-			Mockito.eq(classTestDescriptor), entryCaptor.capture());
+			ArgumentMatchers.eq(classTestDescriptor), entryCaptor.capture());
 
 		ReportEntry reportEntry1 = entryCaptor.getAllValues().get(0);
 		ReportEntry reportEntry2 = entryCaptor.getAllValues().get(1);
