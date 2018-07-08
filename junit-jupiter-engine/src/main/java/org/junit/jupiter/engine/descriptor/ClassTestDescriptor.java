@@ -101,7 +101,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	@Override
 	public Set<TestTag> getTags() {
 		// return modifiable copy
-		return new LinkedHashSet<TestTag>(this.tags);
+		return new LinkedHashSet<>(this.tags);
 	}
 
 	public final Class<?> getTestClass() {
