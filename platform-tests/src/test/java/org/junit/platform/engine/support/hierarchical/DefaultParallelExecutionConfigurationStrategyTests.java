@@ -48,7 +48,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getCorePoolSize()).isEqualTo(42);
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(42);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(256 + 42);
-		assertThat(configuration.getKeepAlive()).isEqualTo(30);
+		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
 	}
 
 	@Test
@@ -63,7 +63,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getCorePoolSize()).isEqualTo(availableProcessors * 2);
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(availableProcessors * 2);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(256 + (availableProcessors * 2));
-		assertThat(configuration.getKeepAlive()).isEqualTo(30);
+		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
 	}
 
 	@Test
@@ -78,7 +78,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getCorePoolSize()).isEqualTo(4);
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(2);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(3);
-		assertThat(configuration.getKeepAlive()).isEqualTo(5);
+		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(5);
 	}
 
 	@ParameterizedTest
@@ -117,7 +117,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getCorePoolSize()).isEqualTo(availableProcessors);
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(availableProcessors);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(256 + availableProcessors);
-		assertThat(configuration.getKeepAlive()).isEqualTo(30);
+		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
 	}
 
 	@Test
@@ -155,7 +155,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getCorePoolSize()).isEqualTo(1);
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(1);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(256 + 1);
-		assertThat(configuration.getKeepAlive()).isEqualTo(30);
+		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
 	}
 
 	@Test

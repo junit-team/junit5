@@ -42,7 +42,7 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 						CONFIG_FIXED_PARALLELISM_PROPERTY_NAME)));
 
 			return new DefaultParallelExecutionConfiguration(parallelism, parallelism, 256 + parallelism, parallelism,
-				30);
+				KEEP_ALIVE_SECONDS);
 		}
 	},
 
@@ -65,7 +65,7 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 				factor.multiply(BigDecimal.valueOf(Runtime.getRuntime().availableProcessors())).intValue());
 
 			return new DefaultParallelExecutionConfiguration(parallelism, parallelism, 256 + parallelism, parallelism,
-				30);
+				KEEP_ALIVE_SECONDS);
 		}
 	},
 
@@ -96,6 +96,8 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 			return strategy.createConfiguration(configurationParameters);
 		}
 	};
+
+	private static final int KEEP_ALIVE_SECONDS = 30;
 
 	/**
 	 * Property name used to determine the desired configuration strategy.

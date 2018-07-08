@@ -56,9 +56,9 @@ public interface ParallelExecutionConfiguration {
 	int getCorePoolSize();
 
 	/**
-	 * Get the number of milliseconds for which inactive threads should be kept
-	 * alive before terminating them and shrinking the thread pool.
+	 * Get the number of seconds for which inactive threads should be kept alive
+	 * before terminating them and shrinking the thread pool.
 	 */
-	int getKeepAlive();
+	int getKeepAliveSeconds();
 
 }

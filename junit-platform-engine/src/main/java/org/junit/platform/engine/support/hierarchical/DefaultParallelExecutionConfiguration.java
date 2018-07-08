@@ -19,15 +19,15 @@ class DefaultParallelExecutionConfiguration implements ParallelExecutionConfigur
 	private final int minimumRunnable;
 	private final int maxPoolSize;
 	private final int corePoolSize;
-	private final int keepAlive;
+	private final int keepAliveSeconds;
 
 	DefaultParallelExecutionConfiguration(int parallelism, int minimumRunnable, int maxPoolSize, int corePoolSize,
-			int keepAlive) {
+			int keepAliveSeconds) {
 		this.parallelism = parallelism;
 		this.minimumRunnable = minimumRunnable;
 		this.maxPoolSize = maxPoolSize;
 		this.corePoolSize = corePoolSize;
-		this.keepAlive = keepAlive;
+		this.keepAliveSeconds = keepAliveSeconds;
 	}
 
 	@Override
@@ -51,8 +51,8 @@ class DefaultParallelExecutionConfiguration implements ParallelExecutionConfigur
 	}
 
 	@Override
-	public int getKeepAlive() {
-		return keepAlive;
+	public int getKeepAliveSeconds() {
+		return keepAliveSeconds;
 	}
 
 }
