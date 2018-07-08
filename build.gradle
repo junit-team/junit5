@@ -121,10 +121,16 @@ allprojects { subproj ->
 
 	subproj.afterEvaluate { evaluatedProject ->
 		evaluatedProject.tasks.withType(JavaCompile) {
+			options.encoding = 'UTF-8'
+		}
+		evaluatedProject.tasks.getByName('compileJava') {
 			sourceCompatibility = javacRelease
 			targetCompatibility = javacRelease // needed by asm
 			options.compilerArgs += ['--release', javacRelease]
-			options.encoding = 'UTF-8'
+		}
+		evaluatedProject.tasks.getByName('compileTestJava') {
+			sourceCompatibility = 10
+			targetCompatibility = 10
 		}
 	}
 
@@ -153,6 +159,7 @@ allprojects { subproj ->
 
 	// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
 	compileTestJava.options.compilerArgs += [
+		'-parameters',
 		'-Xlint:cast',
 		'-Xlint:classfile',
 		'-Xlint:deprecation',
@@ -172,11 +179,6 @@ allprojects { subproj ->
 		'-Xlint:-options',
 		'-Xlint:-overrides'
 	]
-
-	compileTestJava {
-		options.encoding = 'UTF-8'
-		options.compilerArgs += '-parameters'
-	}
 
 	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
 		kotlinOptions {

@@ -139,7 +139,7 @@ class CollectionUtilsTests {
 	@SuppressWarnings({ "unchecked", "serial" })
 	void toStreamWithCollection() {
 		AtomicBoolean collectionStreamClosed = new AtomicBoolean(false);
-		Collection<String> input = new ArrayList<String>() {
+		Collection<String> input = new ArrayList<>() {
 
 			{
 				add("foo");
@@ -164,7 +164,7 @@ class CollectionUtilsTests {
 	@SuppressWarnings("unchecked")
 	void toStreamWithIterable() {
 
-		Iterable<String> input = new Iterable<String>() {
+		Iterable<String> input = new Iterable<>() {
 
 			@Override
 			public Iterator<String> iterator() {
