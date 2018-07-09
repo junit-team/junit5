@@ -118,27 +118,10 @@ allprojects { subproj ->
 	compileJava {
 		options.encoding = 'UTF-8'
 
-		// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
+		// See: https://docs.oracle.com/javase/10/tools/javac.htm
 		options.compilerArgs += [
-			'-Xlint:cast',
-			'-Xlint:classfile',
-			'-Xlint:deprecation',
-			'-Xlint:dep-ann',
-			'-Xlint:divzero',
-			'-Xlint:empty',
-			'-Xlint:fallthrough',
-			'-Xlint:finally',
-			'-Xlint:overrides',
-			'-Xlint:path',
-			'-Xlint:processing',
-			'-Xlint:rawtypes',
-			'-Xlint:serial',
-			'-Xlint:static',
-			'-Xlint:try',
-			'-Xlint:unchecked',
-			'-Xlint:varargs',
-			'-Xlint:-options',
-			'-Werror'
+			'-Xlint', // Enables all recommended warnings.
+			'-Werror' // Terminates compilation when warnings occur.
 		]
 	}
 
@@ -147,27 +130,10 @@ allprojects { subproj ->
 		sourceCompatibility = 10
 		targetCompatibility = 10
 
-		// See: https://docs.oracle.com/javase/9/tools/javac.htm#JSWOR627
+		// See: https://docs.oracle.com/javase/10/tools/javac.htm
 		options.compilerArgs += [
-			'-parameters',
-			'-Xlint:cast',
-			'-Xlint:classfile',
-			'-Xlint:deprecation',
-			'-Xlint:dep-ann',
-			'-Xlint:divzero',
-			'-Xlint:empty',
-			'-Xlint:fallthrough',
-			'-Xlint:finally',
-			'-Xlint:path',
-			'-Xlint:processing',
-			'-Xlint:rawtypes',
-			'-Xlint:serial',
-			'-Xlint:static',
-			'-Xlint:try',
-			'-Xlint:unchecked',
-			'-Xlint:varargs',
-			'-Xlint:-options',
-			'-Xlint:-overrides'
+			'-Xlint',     // Enables all recommended warnings.
+			'-parameters' // Generates metadata for reflection on method parameters.
 		]
 	}
 
