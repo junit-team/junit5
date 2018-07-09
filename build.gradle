@@ -133,6 +133,7 @@ allprojects { subproj ->
 		// See: https://docs.oracle.com/javase/10/tools/javac.htm
 		options.compilerArgs += [
 			'-Xlint',     // Enables all recommended warnings.
+			'-Xlint:-overrides', // Disables "method overrides" warnings.
 			'-parameters' // Generates metadata for reflection on method parameters.
 		]
 	}
