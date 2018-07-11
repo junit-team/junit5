@@ -92,6 +92,14 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
+	void executesWithMethodSourceReturning2dObjectArray() {
+		List<ExecutionEvent> executionEvents = execute(selectMethod(TestCase.class,
+			"testWithMethodSourceReturning2dObjectArray", String.class.getName() + ", " + int.class.getName()));
+		assertThat(executionEvents) //
+				.haveExactly(1, event(test(), finishedWithFailure(message("foo:42")))); //
+	}
+
+	@Test
 	void executesWithCustomName() {
 		List<ExecutionEvent> executionEvents = execute(
 			selectMethod(TestCase.class, "testWithCustomName", String.class.getName() + "," + Integer.TYPE.getName()));
@@ -304,15 +312,26 @@ class ParameterizedTestIntegrationTests {
 			fail(argument);
 		}
 
+		static Stream<Arguments> testWithEmptyMethodSource() {
+			return Stream.of(arguments("empty method source"));
+		}
+
+		@ParameterizedTest
+		@MethodSource("twoDimensionalObjectArray")
+		void testWithMethodSourceReturning2dObjectArray(String s, int x) {
+			fail(s + ":" + x);
+		}
+
+		static Object twoDimensionalObjectArray() {
+			return new Object[][] { { "foo", 42 } };
+		}
+
 		@ParameterizedTest
 		@ValueSource(ints = 42)
 		void testWithErroneousConverter(@ConvertWith(ErroneousConverter.class) Object ignored) {
 			fail("this should never be called");
 		}
 
-		static Stream<Arguments> testWithEmptyMethodSource() {
-			return Stream.of(arguments("empty method source"));
-		}
 	}
 
 	static class UnusedParametersTestCase {

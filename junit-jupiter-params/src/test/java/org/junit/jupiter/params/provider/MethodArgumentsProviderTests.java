@@ -21,7 +21,11 @@ import static org.mockito.Mockito.when;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Nested;
@@ -49,6 +53,27 @@ class MethodArgumentsProviderTests {
 		Stream<Object[]> arguments = provideArguments("stringStreamProvider");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
+	}
+
+	@Test
+	void providesArgumentsUsingDoubleStream() {
+		var arguments = provideArguments("doubleStreamProvider");
+
+		assertThat(arguments).containsExactly(array(1.2), array(3.4));
+	}
+
+	@Test
+	void providesArgumentsUsingLongStream() {
+		var arguments = provideArguments("longStreamProvider");
+
+		assertThat(arguments).containsExactly(array(1L), array(2L));
+	}
+
+	@Test
+	void providesArgumentsUsingIntStream() {
+		var arguments = provideArguments("intStreamProvider");
+
+		assertThat(arguments).containsExactly(array(1), array(2));
 	}
 
 	@Test
@@ -82,6 +107,13 @@ class MethodArgumentsProviderTests {
 	@Test
 	void providesArgumentsUsingIterableOfObjectArrays() {
 		Stream<Object[]> arguments = provideArguments("objectArrayIterableProvider");
+
+		assertThat(arguments).containsExactly(array("foo", 42), array("bar", 23));
+	}
+
+	@Test
+	void providesArgumentsUsingListOfObjectArrays() {
+		var arguments = provideArguments("objectArrayListProvider");
 
 		assertThat(arguments).containsExactly(array("foo", 42), array("bar", 23));
 	}
@@ -238,6 +270,25 @@ class MethodArgumentsProviderTests {
 
 	}
 
+	@Nested
+	class ObjectArrays {
+
+		@Test
+		void providesArgumentsUsingObjectArray() {
+			Stream<Object[]> arguments = provideArguments("objectArrayProvider");
+
+			assertThat(arguments).containsExactly(array(42), array("bar"));
+		}
+
+		@Test
+		void providesArgumentsUsing2dObjectArray() {
+			Stream<Object[]> arguments = provideArguments("twoDimensionalObjectArrayProvider");
+
+			assertThat(arguments).containsExactly(array(42, "bar"), array("foo", 'A'));
+		}
+
+	}
+
 	// -------------------------------------------------------------------------
 
 	private static Object[] array(Object... objects) {
@@ -297,17 +348,33 @@ class MethodArgumentsProviderTests {
 			return Stream.of("foo", "bar");
 		}
 
+		static DoubleStream doubleStreamProvider() {
+			return DoubleStream.of(1.2, 3.4);
+		}
+
+		static LongStream longStreamProvider() {
+			return LongStream.of(1L, 2L);
+		}
+
+		static IntStream intStreamProvider() {
+			return IntStream.of(1, 2);
+		}
+
 		static Stream<Arguments> argumentsStreamProvider() {
 			return Stream.of("foo", "bar").map(Arguments::of);
 		}
 
-		// --- Iterable --------------------------------------------------------
+		// --- Iterable / Collection -------------------------------------------
 
 		static Iterable<String> stringIterableProvider() {
 			return TestCase::stringIteratorProvider;
 		}
 
 		static Iterable<Object[]> objectArrayIterableProvider() {
+			return objectArrayListProvider();
+		}
+
+		static List<Object[]> objectArrayListProvider() {
 			return Arrays.asList(array("foo", 42), array("bar", 23));
 		}
 
@@ -350,6 +417,17 @@ class MethodArgumentsProviderTests {
 		static short[] shortArrayProvider() {
 			return new short[] { (short) 47, Short.MIN_VALUE };
 		}
+
+		// --- Array of objects ------------------------------------------------
+
+		static Object[] objectArrayProvider() {
+			return new Object[] { 42, "bar" };
+		}
+
+		static Object[][] twoDimensionalObjectArrayProvider() {
+			return new Object[][] { { 42, "bar" }, { "foo", 'A' } };
+		}
+
 	}
 
 	// This test case mimics @TestInstance(Lifecycle.PER_CLASS)
