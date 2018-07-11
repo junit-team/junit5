@@ -20,6 +20,5 @@ package org.junit.jupiter.params.aggregator
  * @receiver[ArgumentsAccessor]
  * @see ArgumentsAccessor.get(Int, Class<T!>!)
  */
-@Suppress("EXTENSION_SHADOWED_BY_MEMBER") // method is in fact not shadowed due to reified type
-inline fun <reified T : Any> ArgumentsAccessor.get(index: Int): T =
+inline fun <reified T : Any> ArgumentsAccessor.getAs(index: Int): T =
         this.get(index, T::class.java)
