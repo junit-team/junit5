@@ -17,8 +17,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.Iterator;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -29,14 +27,41 @@ import org.junit.jupiter.params.ParameterizedTest;
  * which this annotation is declared or from static factory methods in external
  * classes referenced by <em>fully qualified method name</em>.
  *
- * <p>Each factory method must return a {@link Stream}, {@link Iterable},
- * {@link Iterator}, or array of arguments. The returned values will be provided
- * as arguments to the annotated {@link ParameterizedTest @ParameterizedTest}
- * method. If the parameterized test has a single parameter, each factory method
- * may return value instances, e.g. as {@code Stream<String>} for a single
- * {@code String} parameter, directly. If a parameterized test method declares
- * multiple parameters, factory methods must return instances of
- * {@link Arguments}, e.g. as {@code Stream<Arguments>}.
+ * <p>Each factory method must generate a <em>stream</em> of <em>arguments</em>,
+ * and each set of arguments within the stream will be provided as the physical
+ * arguments for individual invocations of the annotated
+ * {@link ParameterizedTest @ParameterizedTest} method. Generally speaking this
+ * translates to a {@link java.util.stream.Stream Stream} of {@link Arguments}
+ * (i.e., {@code Stream<Arguments>}); however, the actual concrete return type
+ * can take on many forms. In this context, a "stream" is anything that JUnit
+ * can reliably covert into a {@code Stream}, such as
+ * {@link java.util.stream.Stream Stream},
+ * {@link java.util.stream.DoubleStream DoubleStream},
+ * {@link java.util.stream.LongStream LongStream},
+ * {@link java.util.stream.IntStream IntStream},
+ * {@link java.util.Collection Collection},
+ * {@link java.util.Iterator Iterator},
+ * {@link Iterable}, an array of objects, or an array of primitives. The
+ * "arguments" within the stream can be supplied as an instance of
+ * {@link Arguments}, an array of objects (e.g., {@code Object[]}), or a single
+ * value if the parameterized test method accepts a single argument.
+ *
+ * <h4>Examples</h4>
+ *
+ * The following table displays compatible method signatures for parameterized
+ * test methods and their corresponding factory methods.
+ *
+ * <table border="1">
+ * <tr><th>{@code @ParameterizedTest} method</th><th>Factory Method</th></tr>
+ * <tr><td>{@code void test(int)}</td><td>{@code static int[] factory()}</td></tr>
+ * <tr><td>{@code void test(int)}</td><td>{@code static IntStream factory()}</td></tr>
+ * <tr><td>{@code void test(String)}</td><td>{@code static String[] factory()}</td></tr>
+ * <tr><td>{@code void test(String)}</td><td>{@code static Stream<String> factory()}</td></tr>
+ * <tr><td>{@code void test(String)}</td><td>{@code static List<String> factory()}</td></tr>
+ * <tr><td>{@code void test(String, int)}</td><td>{@code static Object[][] factory()}</td></tr>
+ * <tr><td>{@code void test(String, int)}</td><td>{@code static Stream<Object[]> factory()}</td></tr>
+ * <tr><td>{@code void test(String, int)}</td><td>{@code static Stream<Arguments> factory()}</td></tr>
+ * </table>
  *
  * <p>Factory methods within the test class must be {@code static} unless the
  * {@link org.junit.jupiter.api.TestInstance.Lifecycle#PER_CLASS PER_CLASS}
