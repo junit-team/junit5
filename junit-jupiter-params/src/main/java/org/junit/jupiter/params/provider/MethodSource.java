@@ -52,12 +52,12 @@ import org.junit.jupiter.params.ParameterizedTest;
  * test methods and their corresponding factory methods.
  *
  * <table border="1">
- * <tr><th>{@code @ParameterizedTest} method</th><th>Factory Method</th></tr>
+ * <tr><th>{@code @ParameterizedTest} method</th><th>Factory method</th></tr>
  * <tr><td>{@code void test(int)}</td><td>{@code static int[] factory()}</td></tr>
  * <tr><td>{@code void test(int)}</td><td>{@code static IntStream factory()}</td></tr>
  * <tr><td>{@code void test(String)}</td><td>{@code static String[] factory()}</td></tr>
- * <tr><td>{@code void test(String)}</td><td>{@code static Stream<String> factory()}</td></tr>
  * <tr><td>{@code void test(String)}</td><td>{@code static List<String> factory()}</td></tr>
+ * <tr><td>{@code void test(String)}</td><td>{@code static Stream<String> factory()}</td></tr>
  * <tr><td>{@code void test(String, int)}</td><td>{@code static Object[][] factory()}</td></tr>
  * <tr><td>{@code void test(String, int)}</td><td>{@code static Stream<Object[]> factory()}</td></tr>
  * <tr><td>{@code void test(String, int)}</td><td>{@code static Stream<Arguments> factory()}</td></tr>
