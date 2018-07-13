@@ -1,5 +1,5 @@
 plugins {
-	id 'me.champeau.gradle.jmh' version '0.4.6'
+	id 'me.champeau.gradle.jmh' version '0.4.7'
 }
 
 apply from: "$rootDir/gradle/testing.gradle"
