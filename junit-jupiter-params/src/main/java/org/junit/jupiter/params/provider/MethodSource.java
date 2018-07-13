@@ -34,7 +34,7 @@ import org.junit.jupiter.params.ParameterizedTest;
  * translates to a {@link java.util.stream.Stream Stream} of {@link Arguments}
  * (i.e., {@code Stream<Arguments>}); however, the actual concrete return type
  * can take on many forms. In this context, a "stream" is anything that JUnit
- * can reliably covert into a {@code Stream}, such as
+ * can reliably convert into a {@code Stream}, such as
  * {@link java.util.stream.Stream Stream},
  * {@link java.util.stream.DoubleStream DoubleStream},
  * {@link java.util.stream.LongStream LongStream},
