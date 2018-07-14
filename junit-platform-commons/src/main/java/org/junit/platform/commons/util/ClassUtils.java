@@ -87,7 +87,7 @@ public final class ClassUtils {
 		if (classes == null || classes.length == 0) {
 			return "";
 		}
-		return stream(classes).map(v -> v == null ? "null" : mapper.apply(v)).collect(joining(", "));
+		return stream(classes).map(clazz -> clazz == null ? "null" : mapper.apply(clazz)).collect(joining(", "));
 	}
 
 }
