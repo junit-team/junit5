@@ -130,7 +130,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <a href="../../../../../org/junit/jupiter/params/provider/ArgumentsSource.html" title="annotation in org.junit.jupiter.params.provider">@ArgumentsSource</a>(org.junit.jupiter.params.provider.CsvArgumentsProvider.class)
 public @interface <span class="memberNameLabel">CsvSource</span></pre>
 <div class="block"><code>@CsvSource</code> is an <a href="../../../../../org/junit/jupiter/params/provider/ArgumentsSource.html" title="annotation in org.junit.jupiter.params.provider"><code>ArgumentsSource</code></a> which reads
- comma-separated values (CSV) from its <a href="../../../../../org/junit/jupiter/params/provider/CsvSource.html#value()"><code>value()</code></a> attribute.
+ comma-separated values (CSV) from one or more supplied
+ <a href="../../../../../org/junit/jupiter/params/provider/CsvSource.html#value()">CSV lines</a>.
 
  <p>The supplied values will be provided as arguments to the
  annotated <code>@ParameterizedTest</code> method.</div>
@@ -191,8 +192,7 @@ public @interface <span class="memberNameLabel">CsvSource</span></pre>
 <td class="colFirst"><code>char</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/params/provider/CsvSource.html#delimiter()">delimiter</a></span></code></th>
 <td class="colLast">
-<div class="block">The column delimiter to use when reading the
- <a href="../../../../../org/junit/jupiter/params/provider/CsvSource.html#value()">values</a>.</div>
+<div class="block">The column delimiter to use when reading the <a href="../../../../../org/junit/jupiter/params/provider/CsvSource.html#value()">lines</a>.</div>
 </td>
 </tr>
 </table>
@@ -222,7 +222,7 @@ public @interface <span class="memberNameLabel">CsvSource</span></pre>
 <div class="block">The CSV lines to use as source of arguments; must not be empty.
 
  <p>Each value corresponds to a line in a CSV file and will be split using
- the specified <a href="../../../../../org/junit/jupiter/params/provider/CsvSource.html#delimiter()"><code>delimiter()</code></a>.</div>
+ the specified <a href="../../../../../org/junit/jupiter/params/provider/CsvSource.html#delimiter()"><code>delimiter</code></a>.</div>
 </li>
 </ul>
 </li>
@@ -238,8 +238,7 @@ public @interface <span class="memberNameLabel">CsvSource</span></pre>
 <li class="blockList">
 <h4>delimiter</h4>
 <pre>char&nbsp;delimiter</pre>
-<div class="block">The column delimiter to use when reading the
- <a href="../../../../../org/junit/jupiter/params/provider/CsvSource.html#value()">values</a>.
+<div class="block">The column delimiter to use when reading the <a href="../../../../../org/junit/jupiter/params/provider/CsvSource.html#value()">lines</a>.
 
  <p>Defaults to <code>','</code>.</div>
 <dl>
