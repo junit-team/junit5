@@ -16,8 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import java.nio.file.Paths;
 import java.util.List;
 
+import de.sormuras.bartholdy.tool.Ant;
+
 import org.junit.jupiter.api.Test;
-import platform.tooling.support.Tool;
+import platform.tooling.support.Request;
 
 /**
  * @since 1.3
@@ -27,14 +29,15 @@ class AntStarterTests {
 	@Test
 	void ant_1_10_4() {
 		var standalone = Paths.get("..", "junit-platform-console-standalone", "build", "libs");
-		var result = Tool.ANT.builder("1.10.4") //
+		var result = Request.builder() //
+				.setTool(Ant.install("1.10.4", Paths.get("build", "test-tools"))) //
 				.setProject("ant-starter") //
 				.addArguments("-verbose", "-lib", standalone.toAbsolutePath()) //
 				.build() //
 				.run();
 
-		assertEquals(0, result.getStatus());
-		assertEquals(List.of(), result.getErrorLines(), "error log isn't empty");
+		assertEquals(0, result.getExitCode());
+		assertEquals("", result.getOutput("err"), "error log isn't empty");
 		assertLinesMatch(List.of(">> HEAD >>", //
 			"test.junit.launcher:", //
 			">>>>", //
@@ -50,7 +53,7 @@ class AntStarterTests {
 			"     \\[java\\] \\[         5 tests successful      \\]", //
 			"     \\[java\\] \\[         0 tests failed          \\]", //
 			">> TAIL >>"), //
-			result.getOutputLines());
+			result.getOutputLines("out"));
 	}
 
 }

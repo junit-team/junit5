@@ -4,4 +4,3 @@ org.junit.platform.surefire.provider@${platformVersion} automatic
 requires java.base mandated
 provides org.apache.maven.surefire.providerapi.SurefireProvider with org.junit.platform.surefire.provider.junitplatformprovider
 contains org.junit.platform.surefire.provider
-

@@ -3,4 +3,3 @@
 org.junit.platform.runner@${platformVersion} automatic
 requires java.base mandated
 contains org.junit.platform.runner
-

@@ -10,4 +10,3 @@ contains org.junit.jupiter.engine.discovery.predicates
 contains org.junit.jupiter.engine.execution
 contains org.junit.jupiter.engine.extension
 contains org.junit.jupiter.engine.script
-
