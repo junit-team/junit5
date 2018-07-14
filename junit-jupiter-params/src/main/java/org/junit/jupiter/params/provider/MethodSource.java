@@ -46,12 +46,12 @@ import org.junit.jupiter.params.ParameterizedTest;
  * {@link Arguments}, an array of objects (e.g., {@code Object[]}), or a single
  * value if the parameterized test method accepts a single argument.
  *
- * <h4>Examples</h4>
+ * <h3>Examples</h3>
  *
- * The following table displays compatible method signatures for parameterized
+ * <p>The following table displays compatible method signatures for parameterized
  * test methods and their corresponding factory methods.
  *
- * <table border="1">
+ * <p><table border="1">
  * <tr><th>{@code @ParameterizedTest} method</th><th>Factory method</th></tr>
  * <tr><td>{@code void test(int)}</td><td>{@code static int[] factory()}</td></tr>
  * <tr><td>{@code void test(int)}</td><td>{@code static IntStream factory()}</td></tr>
