@@ -9,4 +9,3 @@ contains org.junit.platform.console.shadow.joptsimple.internal
 contains org.junit.platform.console.shadow.joptsimple.util
 contains org.junit.platform.console.tasks
 main-class org.junit.platform.console.ConsoleLauncher
-

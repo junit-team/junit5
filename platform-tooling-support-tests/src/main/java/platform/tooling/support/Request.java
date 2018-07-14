@@ -11,34 +11,42 @@
 package platform.tooling.support;
 
 import java.io.FileFilter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import de.sormuras.bartholdy.Configuration;
+import de.sormuras.bartholdy.Result;
+import de.sormuras.bartholdy.Tool;
+
+import org.apache.commons.io.FileUtils;
+
 /**
  * @since 1.3
  */
 public class Request {
+
+	private static final Path projects = Paths.get("projects");
+	private static final Path toolPath = Paths.get("build", "test-tools");
+	private static final Path workPath = Paths.get("build", "test-workspace");
 
 	public static Builder builder() {
 		return new Builder();
 	}
 
 	private Tool tool;
-	private String version;
 	private String project;
 	private String workspace;
 	private List<String> arguments = new ArrayList<>();
 	private Map<String, String> environment = new HashMap<>();
-	private String logfileOut = "stdout.txt";
-	private String logfileErr = "stderr.txt";
 	private FileFilter copyProjectToWorkspaceFileFilter;
-
-	public String getVersion() {
-		return version;
-	}
+	private Duration timeout = Duration.ofMinutes(1);
 
 	public String getProject() {
 		return project;
@@ -52,14 +60,6 @@ public class Request {
 		return workspace;
 	}
 
-	public String getLogfileOut() {
-		return logfileOut;
-	}
-
-	public String getLogfileErr() {
-		return logfileErr;
-	}
-
 	public Map<String, String> getEnvironment() {
 		return environment;
 	}
@@ -68,10 +68,38 @@ public class Request {
 		return arguments;
 	}
 
+	public Duration getTimeout() {
+		return timeout;
+	}
+
 	public Result run() {
-		var runner = new Runner(this, tool);
 		try {
-			return runner.run();
+			// sanity check
+			if (!Files.isDirectory(projects)) {
+				var cwd = Paths.get(".").normalize().toAbsolutePath();
+				throw new IllegalStateException("Directory " + projects + " not found in: " + cwd);
+			}
+
+			Files.createDirectories(toolPath);
+			Files.createDirectories(workPath);
+
+			// prepare workspace
+			var project = projects.resolve(getProject());
+			if (!Files.isDirectory(project)) {
+				throw new IllegalStateException("Directory " + project + " not found!");
+			}
+			var workspace = workPath.resolve(getWorkspace());
+
+			FileUtils.deleteQuietly(workspace.toFile());
+			FileUtils.copyDirectory(project.toFile(), workspace.toFile(), getCopyProjectToWorkspaceFileFilter());
+
+			var configuration = Configuration.builder();
+			configuration.setArguments(getArguments());
+			configuration.setWorkingDirectory(workspace);
+			configuration.setTimeout(getTimeout());
+			configuration.getEnvironment().putAll(getEnvironment());
+
+			return tool.run(configuration.build());
 		}
 		catch (Exception e) {
 			throw new IllegalStateException("run failed", e);
@@ -106,12 +134,6 @@ public class Request {
 			return this;
 		}
 
-		public Builder setTool(Tool tool, String version) {
-			request.tool = tool;
-			request.version = version;
-			return this;
-		}
-
 		public Builder setProject(String project) {
 			request.project = project;
 			return this;
@@ -127,12 +149,6 @@ public class Request {
 			return this;
 		}
 
-		public Builder setLogFileNames(String out, String err) {
-			request.logfileOut = out;
-			request.logfileErr = err;
-			return this;
-		}
-
 		public Builder addArguments(Object... arguments) {
 			Stream.of(arguments).map(Object::toString).forEach(request.arguments::add);
 			return this;
@@ -140,6 +156,11 @@ public class Request {
 
 		public Builder putEnvironment(String key, String value) {
 			request.environment.put(key, value);
+			return this;
+		}
+
+		public Builder setTimeout(Duration timeout) {
+			request.timeout = timeout;
 			return this;
 		}
 	}

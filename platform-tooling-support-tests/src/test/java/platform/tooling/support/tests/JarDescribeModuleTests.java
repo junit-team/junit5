@@ -16,14 +16,15 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.stream.Collectors;
+
+import de.sormuras.bartholdy.jdk.Jar;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import platform.tooling.support.Helper;
-import platform.tooling.support.Tool;
+import platform.tooling.support.Request;
 
 /**
  * @since 1.3
@@ -36,24 +37,24 @@ class JarDescribeModuleTests {
 		var version = Helper.version(module);
 		var archive = module + '-' + version + ".jar";
 		var path = Paths.get("..", module, "build", "libs", archive);
-		var result = Tool.JAR.builder() //
+		var result = Request.builder() //
+				.setTool(new Jar()) //
 				.setProject("jar-describe-module") //
 				.setProjectToWorkspaceCopyFileFilter(file -> file.getName().startsWith(module)) //
 				.setWorkspace("jar-describe-module/" + module) //
-				.setLogFileNames(module + ".out.txt", module + ".err.txt") //
 				.addArguments("--describe-module", "--file", path) //
 				.build() //
 				.run();
 
-		assertEquals(0, result.getStatus());
-		assertEquals(List.of(), result.getErrorLines(), "error log isn't empty");
-		var expected = result.getWorkspace().resolve(module + ".expected.txt");
+		assertEquals(0, result.getExitCode());
+		assertEquals("", result.getOutput("err"), "error log isn't empty");
+		var expected = Paths.get("build", "test-workspace", "jar-describe-module", module, module + ".expected.txt");
 		if (Files.notExists(expected)) {
-			result.getOutputLines().forEach(System.err::println);
+			result.getOutputLines("out").forEach(System.err::println);
 			fail("No such file: " + expected);
 		}
 		var expectedLines = Files.lines(expected).map(Helper::replaceVersionPlaceholders).collect(Collectors.toList());
-		assertLinesMatch(expectedLines, result.getOutputLines());
+		assertLinesMatch(expectedLines, result.getOutputLines("out"));
 	}
 
 }

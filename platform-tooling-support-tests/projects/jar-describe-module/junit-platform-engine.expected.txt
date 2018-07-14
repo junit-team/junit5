@@ -9,4 +9,3 @@ contains org.junit.platform.engine.support.config
 contains org.junit.platform.engine.support.descriptor
 contains org.junit.platform.engine.support.filter
 contains org.junit.platform.engine.support.hierarchical
-

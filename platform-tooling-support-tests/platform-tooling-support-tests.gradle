@@ -18,8 +18,11 @@ afterEvaluate {
 }
 
 dependencies {
+	implementation('de.sormuras:bartholdy:0.0.23') {
+		because 'manage external tool installations'
+	}
 	implementation('commons-io:commons-io:2.6') {
-		because 'downloading tool archives and moving/deleting directory trees'
+		because 'moving/deleting directory trees'
 	}
 }
 

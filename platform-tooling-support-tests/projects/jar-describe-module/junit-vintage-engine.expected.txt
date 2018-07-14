@@ -8,4 +8,3 @@ contains org.junit.vintage.engine.descriptor
 contains org.junit.vintage.engine.discovery
 contains org.junit.vintage.engine.execution
 contains org.junit.vintage.engine.support
-
