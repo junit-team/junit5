@@ -98,10 +98,17 @@ class MethodArgumentsProviderTests {
 	}
 
 	@Test
-	void providesArgumentsUsingArgumentsStream() {
+	void providesArgumentsUsingStreamOfObjectArrays() {
+		Stream<Object[]> arguments = provideArguments("objectArrayStreamProvider");
+
+		assertThat(arguments).containsExactly(array("foo", 42), array("bar", 23));
+	}
+
+	@Test
+	void providesArgumentsUsingStreamOfArguments() {
 		Stream<Object[]> arguments = provideArguments("argumentsStreamProvider");
 
-		assertThat(arguments).containsExactly(array("foo"), array("bar"));
+		assertThat(arguments).containsExactly(array("foo", 42), array("bar", 23));
 	}
 
 	@Test
@@ -109,6 +116,13 @@ class MethodArgumentsProviderTests {
 		Stream<Object[]> arguments = provideArguments("objectArrayIterableProvider");
 
 		assertThat(arguments).containsExactly(array("foo", 42), array("bar", 23));
+	}
+
+	@Test
+	void providesArgumentsUsingListOfStrings() {
+		var arguments = provideArguments("stringArrayListProvider");
+
+		assertThat(arguments).containsExactly(array("foo"), array("bar"));
 	}
 
 	@Test
@@ -281,10 +295,17 @@ class MethodArgumentsProviderTests {
 		}
 
 		@Test
+		void providesArgumentsUsingStringArray() {
+			Stream<Object[]> arguments = provideArguments("stringArrayProvider");
+
+			assertThat(arguments).containsExactly(array("foo"), array("bar"));
+		}
+
+		@Test
 		void providesArgumentsUsing2dObjectArray() {
 			Stream<Object[]> arguments = provideArguments("twoDimensionalObjectArrayProvider");
 
-			assertThat(arguments).containsExactly(array(42, "bar"), array("foo", 'A'));
+			assertThat(arguments).containsExactly(array("foo", 42), array("bar", 23));
 		}
 
 	}
@@ -360,8 +381,12 @@ class MethodArgumentsProviderTests {
 			return IntStream.of(1, 2);
 		}
 
+		static Stream<Object[]> objectArrayStreamProvider() {
+			return Stream.of(new Object[] { "foo", 42 }, new Object[] { "bar", 23 });
+		}
+
 		static Stream<Arguments> argumentsStreamProvider() {
-			return Stream.of("foo", "bar").map(Arguments::of);
+			return objectArrayStreamProvider().map(Arguments::of);
 		}
 
 		// --- Iterable / Collection -------------------------------------------
@@ -372,6 +397,10 @@ class MethodArgumentsProviderTests {
 
 		static Iterable<Object[]> objectArrayIterableProvider() {
 			return objectArrayListProvider();
+		}
+
+		static List<String> stringArrayListProvider() {
+			return Arrays.asList("foo", "bar");
 		}
 
 		static List<Object[]> objectArrayListProvider() {
@@ -424,8 +453,12 @@ class MethodArgumentsProviderTests {
 			return new Object[] { 42, "bar" };
 		}
 
+		static String[] stringArrayProvider() {
+			return new String[] { "foo", "bar" };
+		}
+
 		static Object[][] twoDimensionalObjectArrayProvider() {
-			return new Object[][] { { 42, "bar" }, { "foo", 'A' } };
+			return new Object[][] { { "foo", 42 }, { "bar", 23 } };
 		}
 
 	}
