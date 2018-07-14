@@ -42,7 +42,7 @@ class MethodArgumentsProviderTests {
 
 	@Test
 	void throwsExceptionForIllegalReturnType() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments("providerWithIllegalReturnType").toArray());
 
 		assertThat(exception).hasMessageContaining("Cannot convert instance of java.lang.Integer into a Stream");
@@ -50,7 +50,7 @@ class MethodArgumentsProviderTests {
 
 	@Test
 	void providesArgumentsUsingStream() {
-		Stream<Object[]> arguments = provideArguments("stringStreamProvider");
+		var arguments = provideArguments("stringStreamProvider");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
 	}
@@ -78,42 +78,42 @@ class MethodArgumentsProviderTests {
 
 	@Test
 	void providesArgumentsUsingIterable() {
-		Stream<Object[]> arguments = provideArguments("stringIterableProvider");
+		var arguments = provideArguments("stringIterableProvider");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
 	}
 
 	@Test
 	void providesArgumentsUsingIterator() {
-		Stream<Object[]> arguments = provideArguments("stringIteratorProvider");
+		var arguments = provideArguments("stringIteratorProvider");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
 	}
 
 	@Test
 	void providesArgumentsUsingMultipleFactoryMethods() {
-		Stream<Object[]> arguments = provideArguments("stringStreamProvider", "stringIterableProvider");
+		var arguments = provideArguments("stringStreamProvider", "stringIterableProvider");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"), array("foo"), array("bar"));
 	}
 
 	@Test
 	void providesArgumentsUsingStreamOfObjectArrays() {
-		Stream<Object[]> arguments = provideArguments("objectArrayStreamProvider");
+		var arguments = provideArguments("objectArrayStreamProvider");
 
 		assertThat(arguments).containsExactly(array("foo", 42), array("bar", 23));
 	}
 
 	@Test
 	void providesArgumentsUsingStreamOfArguments() {
-		Stream<Object[]> arguments = provideArguments("argumentsStreamProvider");
+		var arguments = provideArguments("argumentsStreamProvider");
 
 		assertThat(arguments).containsExactly(array("foo", 42), array("bar", 23));
 	}
 
 	@Test
 	void providesArgumentsUsingIterableOfObjectArrays() {
-		Stream<Object[]> arguments = provideArguments("objectArrayIterableProvider");
+		var arguments = provideArguments("objectArrayIterableProvider");
 
 		assertThat(arguments).containsExactly(array("foo", 42), array("bar", 23));
 	}
@@ -134,7 +134,7 @@ class MethodArgumentsProviderTests {
 
 	@Test
 	void throwsExceptionWhenNonStaticFactoryMethodIsReferencedAndStaticIsRequired() {
-		JUnitException exception = assertThrows(JUnitException.class,
+		var exception = assertThrows(JUnitException.class,
 			() -> provideArguments(NonStaticTestCase.class, null, false, "nonStaticStringStreamProvider").toArray());
 
 		assertThat(exception).hasMessageContaining("Cannot invoke non-static method");
@@ -142,16 +142,14 @@ class MethodArgumentsProviderTests {
 
 	@Test
 	void providesArgumentsFromNonStaticFactoryMethodWhenStaticIsNotRequired() {
-		Stream<Object[]> arguments = provideArguments(NonStaticTestCase.class, null, true,
-			"nonStaticStringStreamProvider");
+		var arguments = provideArguments(NonStaticTestCase.class, null, true, "nonStaticStringStreamProvider");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
 	}
 
 	@Test
 	void throwsExceptionWhenFactoryMethodDoesNotExist() {
-		JUnitException exception = assertThrows(JUnitException.class,
-			() -> provideArguments("unknownMethod").toArray());
+		var exception = assertThrows(JUnitException.class, () -> provideArguments("unknownMethod").toArray());
 
 		assertThat(exception.getMessage()).contains("Could not find factory method [unknownMethod] in class [",
 			TestCase.class.getName());
@@ -159,37 +157,37 @@ class MethodArgumentsProviderTests {
 
 	@Test
 	void providesArgumentsUsingDefaultFactoryMethodName() {
-		Method method = selectMethod(DefaultFactoryMethodNameTestCase.class, TEST_METHOD,
+		var method = selectMethod(DefaultFactoryMethodNameTestCase.class, TEST_METHOD,
 			String.class.getName()).getJavaMethod();
-		Stream<Object[]> arguments = provideArguments(DefaultFactoryMethodNameTestCase.class, method, false, "");
+		var arguments = provideArguments(DefaultFactoryMethodNameTestCase.class, method, false, "");
+
 		assertThat(arguments).containsExactly(array("foo"), array("bar"));
 	}
 
 	@Test
 	void providesArgumentsUsingExternalFactoryMethod() {
-		Stream<Object[]> arguments = provideArguments(ExternalFactoryMethods.class.getName() + "#stringsProvider");
+		var arguments = provideArguments(ExternalFactoryMethods.class.getName() + "#stringsProvider");
 
 		assertThat(arguments).containsExactly(array("string1"), array("string2"));
 	}
 
 	@Test
 	void providesArgumentsUsingExternalFactoryMethodWithParentheses() {
-		Stream<Object[]> arguments = provideArguments(ExternalFactoryMethods.class.getName() + "#stringsProvider()");
+		var arguments = provideArguments(ExternalFactoryMethods.class.getName() + "#stringsProvider()");
 
 		assertThat(arguments).containsExactly(array("string1"), array("string2"));
 	}
 
 	@Test
 	void providesArgumentsUsingExternalFactoryMethodFromStaticNestedClass() {
-		Stream<Object[]> arguments = provideArguments(
-			ExternalFactoryMethods.class.getName() + "$Nested#stringsProvider()");
+		var arguments = provideArguments(ExternalFactoryMethods.class.getName() + "$Nested#stringsProvider()");
 
 		assertThat(arguments).containsExactly(array("nested string1"), array("nested string2"));
 	}
 
 	@Test
 	void providesArgumentsUsingExternalAndInternalFactoryMethodsCombined() {
-		Stream<Object[]> arguments = provideArguments("stringStreamProvider",
+		var arguments = provideArguments("stringStreamProvider",
 			ExternalFactoryMethods.class.getName() + "#stringsProvider");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"), array("string1"), array("string2"));
@@ -197,9 +195,8 @@ class MethodArgumentsProviderTests {
 
 	@Test
 	void throwsExceptionWhenExternalFactoryMethodDeclaresParameters() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments(
-				ExternalFactoryMethods.class.getName() + "#methodWithParams(String, String)").toArray());
+		var exception = assertThrows(PreconditionViolationException.class, () -> provideArguments(
+			ExternalFactoryMethods.class.getName() + "#methodWithParams(String, String)").toArray());
 
 		assertThat(exception.getMessage()).isEqualTo("factory method [" + ExternalFactoryMethods.class.getName()
 				+ "#methodWithParams(String, String)] must not declare formal parameters");
@@ -207,7 +204,7 @@ class MethodArgumentsProviderTests {
 
 	@Test
 	void throwsExceptionWhenClassForExternalFactoryMethodCannotBeLoaded() {
-		JUnitException exception = assertThrows(JUnitException.class,
+		var exception = assertThrows(JUnitException.class,
 			() -> provideArguments("com.example.NonExistentExternalFactoryMethods#stringsProvider").toArray());
 
 		assertThat(exception.getMessage()).isEqualTo(
@@ -216,7 +213,7 @@ class MethodArgumentsProviderTests {
 
 	@Test
 	void throwsExceptionWhenExternalFactoryMethodCannotBeFound() {
-		JUnitException exception = assertThrows(JUnitException.class,
+		var exception = assertThrows(JUnitException.class,
 			() -> provideArguments(ExternalFactoryMethods.class.getName() + "#nonExistentMethod").toArray());
 
 		assertThat(exception.getMessage()).isEqualTo("Could not find factory method [nonExistentMethod] in class ["
@@ -228,56 +225,56 @@ class MethodArgumentsProviderTests {
 
 		@Test
 		void providesArgumentsUsingBooleanArray() {
-			Stream<Object[]> arguments = provideArguments("booleanArrayProvider");
+			var arguments = provideArguments("booleanArrayProvider");
 
 			assertThat(arguments).containsExactly(array(Boolean.TRUE), array(Boolean.FALSE));
 		}
 
 		@Test
 		void providesArgumentsUsingByteArray() {
-			Stream<Object[]> arguments = provideArguments("byteArrayProvider");
+			var arguments = provideArguments("byteArrayProvider");
 
 			assertThat(arguments).containsExactly(array((byte) 1), array(Byte.MIN_VALUE));
 		}
 
 		@Test
 		void providesArgumentsUsingCharArray() {
-			Stream<Object[]> arguments = provideArguments("charArrayProvider");
+			var arguments = provideArguments("charArrayProvider");
 
 			assertThat(arguments).containsExactly(array((char) 1), array(Character.MIN_VALUE));
 		}
 
 		@Test
 		void providesArgumentsUsingDoubleArray() {
-			Stream<Object[]> arguments = provideArguments("doubleArrayProvider");
+			var arguments = provideArguments("doubleArrayProvider");
 
 			assertThat(arguments).containsExactly(array(1d), array(Double.MIN_VALUE));
 		}
 
 		@Test
 		void providesArgumentsUsingFloatArray() {
-			Stream<Object[]> arguments = provideArguments("floatArrayProvider");
+			var arguments = provideArguments("floatArrayProvider");
 
 			assertThat(arguments).containsExactly(array(1f), array(Float.MIN_VALUE));
 		}
 
 		@Test
 		void providesArgumentsUsingIntArray() {
-			Stream<Object[]> arguments = provideArguments("intArrayProvider");
+			var arguments = provideArguments("intArrayProvider");
 
 			assertThat(arguments).containsExactly(array(47), array(Integer.MIN_VALUE));
 		}
 
 		@Test
 		void providesArgumentsUsingLongArray() {
-			Stream<Object[]> arguments = provideArguments("longArrayProvider");
+			var arguments = provideArguments("longArrayProvider");
 
 			assertThat(arguments).containsExactly(array(47L), array(Long.MIN_VALUE));
 		}
 
 		@Test
 		void providesArgumentsUsingShortArray() {
-			Stream<Object[]> arguments = provideArguments("shortArrayProvider");
+			var arguments = provideArguments("shortArrayProvider");
 
 			assertThat(arguments).containsExactly(array((short) 47), array(Short.MIN_VALUE));
 		}
@@ -289,21 +286,21 @@ class MethodArgumentsProviderTests {
 
 		@Test
 		void providesArgumentsUsingObjectArray() {
-			Stream<Object[]> arguments = provideArguments("objectArrayProvider");
+			var arguments = provideArguments("objectArrayProvider");
 
 			assertThat(arguments).containsExactly(array(42), array("bar"));
 		}
 
 		@Test
 		void providesArgumentsUsingStringArray() {
-			Stream<Object[]> arguments = provideArguments("stringArrayProvider");
+			var arguments = provideArguments("stringArrayProvider");
 
 			assertThat(arguments).containsExactly(array("foo"), array("bar"));
 		}
 
 		@Test
 		void providesArgumentsUsing2dObjectArray() {
-			Stream<Object[]> arguments = provideArguments("twoDimensionalObjectArrayProvider");
+			var arguments = provideArguments("twoDimensionalObjectArrayProvider");
 
 			assertThat(arguments).containsExactly(array("foo", 42), array("bar", 23));
 		}
@@ -322,23 +319,24 @@ class MethodArgumentsProviderTests {
 
 	private Stream<Object[]> provideArguments(Class<?> testClass, Method testMethod, boolean allowNonStaticMethod,
 			String... methodNames) {
-		MethodSource annotation = mock(MethodSource.class);
 
-		when(annotation.value()).thenReturn(methodNames);
+		var methodSource = mock(MethodSource.class);
 
-		ExtensionContext context = mock(ExtensionContext.class);
-		when(context.getTestClass()).thenReturn(Optional.ofNullable(testClass));
-		when(context.getTestMethod()).thenReturn(Optional.ofNullable(testMethod));
+		when(methodSource.value()).thenReturn(methodNames);
 
-		doCallRealMethod().when(context).getRequiredTestMethod();
-		doCallRealMethod().when(context).getRequiredTestClass();
+		var extensionContext = mock(ExtensionContext.class);
+		when(extensionContext.getTestClass()).thenReturn(Optional.ofNullable(testClass));
+		when(extensionContext.getTestMethod()).thenReturn(Optional.ofNullable(testMethod));
 
-		Object testInstance = allowNonStaticMethod ? ReflectionUtils.newInstance(testClass) : null;
-		when(context.getTestInstance()).thenReturn(Optional.ofNullable(testInstance));
+		doCallRealMethod().when(extensionContext).getRequiredTestMethod();
+		doCallRealMethod().when(extensionContext).getRequiredTestClass();
 
-		MethodArgumentsProvider provider = new MethodArgumentsProvider();
-		provider.accept(annotation);
-		return provider.provideArguments(context).map(Arguments::get);
+		var testInstance = allowNonStaticMethod ? ReflectionUtils.newInstance(testClass) : null;
+		when(extensionContext.getTestInstance()).thenReturn(Optional.ofNullable(testInstance));
+
+		var provider = new MethodArgumentsProvider();
+		provider.accept(methodSource);
+		return provider.provideArguments(extensionContext).map(Arguments::get);
 	}
 
 	// -------------------------------------------------------------------------
