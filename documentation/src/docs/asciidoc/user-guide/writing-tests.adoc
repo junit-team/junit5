@@ -864,12 +864,23 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_regex_exam
 [[writing-tests-parameterized-tests-sources-MethodSource]]
 ===== @MethodSource
 
-`@MethodSource` allows you to refer to one or more _factory_ methods of the test class or
-external classes. Such factory methods must return a `Stream`, `Iterable`, `Iterator`, or
-array of arguments. In addition, such factory methods must not accept any arguments.
+`{MethodSource}` allows you to refer to one or more _factory_ methods of the test class
+or external classes.
+
 Factory methods within the test class must be `static` unless the test class is annotated
 with `@TestInstance(Lifecycle.PER_CLASS)`; whereas, factory methods in external classes
-must always be `static`.
+must always be `static`. In addition, such factory methods must not accept any arguments.
+
+Each factory method must generate a _stream_ of _arguments_, and each set of arguments
+within the stream will be provided as the physical arguments for individual invocations
+of the annotated `@ParameterizedTest` method. Generally speaking this translates to a
+`Stream` of `Arguments` (i.e., `Stream<Arguments>`); however, the actual concrete return
+type can take on many forms. In this context, a "stream" is anything that JUnit can
+reliably convert into a `Stream`, such as `Stream`, `DoubleStream`, `LongStream`,
+`IntStream`, `Collection`, `Iterator`, `Iterable`, an array of objects, or an array of
+primitives. The "arguments" within the stream can be supplied as an instance of
+`Arguments`, an array of objects (e.g., `Object[]`), or a single value if the
+parameterized test method accepts a single argument.
 
 If you only need a single parameter, you can return a `Stream` of instances of the
 parameter type as demonstrated in the following example.
@@ -896,10 +907,12 @@ supported as demonstrated by the following example.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=primitive_MethodSource_example]
 ----
 
-If a test method declares multiple parameters, you need to return a collection or stream
-of `Arguments` instances as shown below. Note that `arguments(Object...)` is a static
-factory method defined in the `Arguments` interface. In addition,
-`Arguments.of(Object...)` may be used as an alternative to `arguments(Object...)`.
+If a parameterized test method declares multiple parameters, you need to return a
+collection, stream, or array of `Arguments` instances or object arrays as shown below
+(see the JavaDoc for `{MethodSource}` for further details on supported return types).
+Note that `arguments(Object...)` is a static factory method defined in the `Arguments`
+interface. In addition, `Arguments.of(Object...)` may be used as an alternative to
+`arguments(Object...)`.
 
 [source,java,indent=0]
 ----
