@@ -3801,6 +3801,14 @@ expressiveness and power of dynamic tests.</p>
     }
 
     <span class="annotation">@TestFactory</span>
+    DynamicTest<span class="type">[]</span> dynamicTestsFromArray() {
+        <span class="keyword">return</span> <span class="keyword">new</span> DynamicTest<span class="type">[]</span> {
+            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">7th dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(<span class="predefined-constant">true</span>)),
+            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">8th dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertEquals(<span class="integer">4</span>, <span class="integer">2</span> * <span class="integer">2</span>))
+        };
+    }
+
+    <span class="annotation">@TestFactory</span>
     Stream&lt;DynamicTest&gt; dynamicTestsFromStream() {
         <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">A</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">B</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">C</span><span class="delimiter">&quot;</span></span>)
             .map(str -&gt; dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">test</span><span class="delimiter">&quot;</span></span> + str, () -&gt; { <span class="comment">/* ... */</span> }));
