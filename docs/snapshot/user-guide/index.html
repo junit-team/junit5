@@ -2915,12 +2915,25 @@ following examples.</p>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-sources-MethodSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-MethodSource"></a>@MethodSource</h5>
 <div class="paragraph">
-<p><code>@MethodSource</code> allows you to refer to one or more <em>factory</em> methods of the test class or
-external classes. Such factory methods must return a <code>Stream</code>, <code>Iterable</code>, <code>Iterator</code>, or
-array of arguments. In addition, such factory methods must not accept any arguments.
-Factory methods within the test class must be <code>static</code> unless the test class is annotated
+<p><code><a href="../api/org/junit/jupiter/params/provider/MethodSource.html">@MethodSource</a></code> allows you to refer to one or more <em>factory</em> methods of the test class
+or external classes.</p>
+</div>
+<div class="paragraph">
+<p>Factory methods within the test class must be <code>static</code> unless the test class is annotated
 with <code>@TestInstance(Lifecycle.PER_CLASS)</code>; whereas, factory methods in external classes
-must always be <code>static</code>.</p>
+must always be <code>static</code>. In addition, such factory methods must not accept any arguments.</p>
+</div>
+<div class="paragraph">
+<p>Each factory method must generate a <em>stream</em> of <em>arguments</em>, and each set of arguments
+within the stream will be provided as the physical arguments for individual invocations
+of the annotated <code>@ParameterizedTest</code> method. Generally speaking this translates to a
+<code>Stream</code> of <code>Arguments</code> (i.e., <code>Stream&lt;Arguments&gt;</code>); however, the actual concrete return
+type can take on many forms. In this context, a "stream" is anything that JUnit can
+reliably convert into a <code>Stream</code>, such as <code>Stream</code>, <code>DoubleStream</code>, <code>LongStream</code>,
+<code>IntStream</code>, <code>Collection</code>, <code>Iterator</code>, <code>Iterable</code>, an array of objects, or an array of
+primitives. The "arguments" within the stream can be supplied as an instance of
+<code>Arguments</code>, an array of objects (e.g., <code>Object[]</code>), or a single value if the
+parameterized test method accepts a single argument.</p>
 </div>
 <div class="paragraph">
 <p>If you only need a single parameter, you can return a <code>Stream</code> of instances of the
@@ -2975,10 +2988,12 @@ supported as demonstrated by the following example.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>If a test method declares multiple parameters, you need to return a collection or stream
-of <code>Arguments</code> instances as shown below. Note that <code>arguments(Object&#8230;&#8203;)</code> is a static
-factory method defined in the <code>Arguments</code> interface. In addition,
-<code>Arguments.of(Object&#8230;&#8203;)</code> may be used as an alternative to <code>arguments(Object&#8230;&#8203;)</code>.</p>
+<p>If a parameterized test method declares multiple parameters, you need to return a
+collection, stream, or array of <code>Arguments</code> instances or object arrays as shown below
+(see the JavaDoc for <code><a href="../api/org/junit/jupiter/params/provider/MethodSource.html">@MethodSource</a></code> for further details on supported return types).
+Note that <code>arguments(Object&#8230;&#8203;)</code> is a static factory method defined in the <code>Arguments</code>
+interface. In addition, <code>Arguments.of(Object&#8230;&#8203;)</code> may be used as an alternative to
+<code>arguments(Object&#8230;&#8203;)</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3656,10 +3671,10 @@ generated at runtime by a factory method that is annotated with <code>@TestFacto
 <p>In contrast to <code>@Test</code> methods, a <code>@TestFactory</code> method is not itself a test case but
 rather a factory for test cases. Thus, a dynamic test is the product of a factory.
 Technically speaking, a <code>@TestFactory</code> method must return a <code>Stream</code>, <code>Collection</code>,
-<code>Iterable</code>, or <code>Iterator</code> of <code>DynamicNode</code> instances. Instantiable subclasses of
+<code>Iterable</code>, <code>Iterator</code>, or array of <code>DynamicNode</code> instances. Instantiable subclasses of
 <code>DynamicNode</code> are <code>DynamicContainer</code> and <code>DynamicTest</code>. <code>DynamicContainer</code> instances are
 composed of a <em>display name</em> and a list of dynamic child nodes, enabling the creation of
-arbitrarily nested hierarchies of dynamic nodes. <code>DynamicTest</code> instances will then be
+arbitrarily nested hierarchies of dynamic nodes. <code>DynamicTest</code> instances will be
 executed lazily, enabling dynamic and even non-deterministic generation of test cases.</p>
 </div>
 <div class="paragraph">
@@ -6735,7 +6750,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-07-14 09:16:00 EDT
+Last updated 2018-07-15 10:22:33 EDT
 </div>
 </div>
 </body>
