@@ -806,7 +806,7 @@ information.
 ===== @ValueSource
 
 `@ValueSource` is one of the simplest possible sources. It lets you specify a single
-array of literal values and can only be used for providing a single parameter per
+array of literal values and can only be used for providing a single argument per
 parameterized test invocation.
 
 The following types of literal values are supported by `@ValueSource`.
