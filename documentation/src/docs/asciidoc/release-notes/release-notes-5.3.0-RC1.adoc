@@ -40,6 +40,11 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Generation of a detailed failure message for a failed assertion no longer fails if the
+  `toString()` implementation of an object supplied to the assertion throws an exception.
+  Instead, the object with the broken `toString()` implementation will be referenced via
+  a default String representation based on the object's fully qualified class name and
+  system hash code, separated by an `@` symbol.
 * Although it is _highly discouraged_, it is now possible to extend the `{Assertions}`
   and `{Assumptions}` classes for special use cases.
 * A custom test source `URI` for a dynamic container or dynamic test will now be
@@ -53,6 +58,11 @@ on GitHub.
   instead of once for each invocation.
 * Performance improvements for executing parameterized tests, particularly when the method
   declares more than a few parameters.
+* Generation of the display name for a `@ParameterizedTest` no longer fails if the
+  `toString()` implementation of an argument for the parameterized test throws an
+  exception. Instead, the object with the broken `toString()` implementation will be
+  referenced via a default String representation based on the object's fully qualified
+  class name and system hash code, separated by an `@` symbol.
 
 
 [[release-notes-5.3.0-RC1-junit-vintage]]

@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -84,6 +85,24 @@ class ParameterizedTestNameFormatterTests {
 		JUnitException exception = assertThrows(JUnitException.class, () -> formatter.format(1));
 		assertNotNull(exception.getCause());
 		assertEquals(IllegalArgumentException.class, exception.getCause().getClass());
+	}
+
+	@Test
+	void formattingDoesNotFailIfArgumentToStringImplementationThrowsAnException() {
+		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter("[{index}] {arguments}");
+
+		String formattedName = formatter.format(1, new Object[] { new ToStringThrowsException(), "foo" });
+
+		assertThat(formattedName).startsWith("[1] " + ToStringThrowsException.class.getName() + "@");
+		assertThat(formattedName).endsWith("foo");
+	}
+
+	private static class ToStringThrowsException {
+
+		@Override
+		public String toString() {
+			throw new RuntimeException("Boom!");
+		}
 	}
 
 }
