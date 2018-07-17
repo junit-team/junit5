@@ -386,12 +386,16 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  will be used to convert it to a String.</li>
  <li>Otherwise, the result of invoking <code>toString()</code> on the object
  will be returned.</li>
+ <li>If any of the above results in an exception, the String returned by
+ this method will be generated using the supplied object's class name and
+ hash code as follows:
+ <code>obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj))</code></li>
  </ul></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>obj</code> - the object to convert to a String; may be <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a String representation of the supplied object</dd>
+<dd>a String representation of the supplied object; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Arrays.html?is-external=true#deepToString(java.lang.Object%5B%5D)" title="class or interface in java.util" class="externalLink"><code>Arrays.deepToString(Object[])</code></a>, 
 <a href="../../../../../org/junit/platform/commons/util/ClassUtils.html#nullSafeToString(java.lang.Class...)"><code>ClassUtils.nullSafeToString(Class...)</code></a></dd>
