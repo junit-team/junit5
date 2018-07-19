@@ -69,6 +69,17 @@ public class MethodSource implements TestSource {
 		return new MethodSource(method);
 	}
 
+	/**
+	 * Create a new {@code MethodSource} using the supplied
+	 * {@link Class class} and {@link Method method}.
+	 *
+	 * @param testClass the Java class; must not be {@code null}
+	 * @param method the Java method; must not be {@code null}
+	 */
+	public static MethodSource from(Class<?> testClass, Method method) {
+		return new MethodSource(testClass, method);
+	}
+
 	private final String className;
 	private final String methodName;
 	private final String methodParameterTypes;
@@ -86,10 +97,15 @@ public class MethodSource implements TestSource {
 	}
 
 	private MethodSource(Method method) {
-		Preconditions.notNull(method, "method must not be null");
-		this.className = method.getDeclaringClass().getName();
-		this.methodName = method.getName();
-		this.methodParameterTypes = nullSafeToString(method.getParameterTypes());
+		this(Preconditions.notNull(method, "Method must not be null").getDeclaringClass(), method);
+	}
+
+	private MethodSource(Class<?> testClass, Method testMethod) {
+		Preconditions.notNull(testClass, "Class must not be null");
+		Preconditions.notNull(testMethod, "Method must not be null");
+		this.className = testClass.getName();
+		this.methodName = testMethod.getName();
+		this.methodParameterTypes = nullSafeToString(testMethod.getParameterTypes());
 	}
 
 	/**
