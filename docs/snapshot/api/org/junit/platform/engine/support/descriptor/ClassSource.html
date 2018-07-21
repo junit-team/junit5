@@ -147,8 +147,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 public class <span class="typeNameLabel">ClassSource</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
 implements <a href="../../../../../../org/junit/platform/engine/TestSource.html" title="interface in org.junit.platform.engine">TestSource</a></pre>
-<div class="block">Java class based <a href="../../../../../../org/junit/platform/engine/TestSource.html" title="interface in org.junit.platform.engine"><code>TestSource</code></a> with an optional
- <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">position</a>.</div>
+<div class="block">Class based <a href="../../../../../../org/junit/platform/engine/TestSource.html" title="interface in org.junit.platform.engine"><code>TestSource</code></a> with
+ an optional <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">file position</a>.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.0</dd>
@@ -185,8 +185,7 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <td class="colFirst"><code>static <a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html" title="class in org.junit.platform.engine.support.descriptor">ClassSource</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html#from(java.lang.Class)">from</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;javaClass)</code></th>
 <td class="colLast">
-<div class="block">Create a new <code>ClassSource</code> using the supplied
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>javaClass</code></a>.</div>
+<div class="block">Create a new <code>ClassSource</code> using the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">class</a>.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
@@ -195,15 +194,14 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
     <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">FilePosition</a>&nbsp;filePosition)</code></th>
 <td class="colLast">
 <div class="block">Create a new <code>ClassSource</code> using the supplied
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>javaClass</code></a> and <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor"><code>filePosition</code></a>.</div>
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">class</a> and <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">file position</a>.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html" title="class in org.junit.platform.engine.support.descriptor">ClassSource</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html#from(java.lang.String)">from</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className)</code></th>
 <td class="colLast">
-<div class="block">Create a new <code>ClassSource</code> using the supplied
- className.</div>
+<div class="block">Create a new <code>ClassSource</code> using the supplied class name.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
@@ -211,8 +209,8 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html#from(java.lang.String,org.junit.platform.engine.support.descriptor.FilePosition)">from</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className,
     <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">FilePosition</a>&nbsp;filePosition)</code></th>
 <td class="colLast">
-<div class="block">Create a new <code>ClassSource</code> using the supplied
- className and <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor"><code>filePosition</code></a>.</div>
+<div class="block">Create a new <code>ClassSource</code> using the supplied class name and
+ <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">file position</a>.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
@@ -233,8 +231,8 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">FilePosition</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html#getPosition()">getPosition</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get the <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">position</a> in the Java source file for
- the associated <a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html#getJavaClass()">Java class</a>, if available.</div>
+<div class="block">Get the <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">position</a> in the source file for
+ the associated <a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html#getClassName()">class</a>, if available.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
@@ -278,11 +276,10 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <li class="blockList">
 <h4>from</h4>
 <pre>public static&nbsp;<a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html" title="class in org.junit.platform.engine.support.descriptor">ClassSource</a>&nbsp;from&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className)</pre>
-<div class="block">Create a new <code>ClassSource</code> using the supplied
- className.</div>
+<div class="block">Create a new <code>ClassSource</code> using the supplied class name.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>className</code> - the Java class name; must not be <code>null</code></dd>
+<dd><code>className</code> - the class name; must not be <code>null</code></dd>
 </dl>
 </li>
 </ul>
@@ -294,12 +291,12 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <h4>from</h4>
 <pre>public static&nbsp;<a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html" title="class in org.junit.platform.engine.support.descriptor">ClassSource</a>&nbsp;from&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className,
                                <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">FilePosition</a>&nbsp;filePosition)</pre>
-<div class="block">Create a new <code>ClassSource</code> using the supplied
- className and <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor"><code>filePosition</code></a>.</div>
+<div class="block">Create a new <code>ClassSource</code> using the supplied class name and
+ <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">file position</a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>className</code> - the Java class name; must not be <code>null</code></dd>
-<dd><code>filePosition</code> - the position in the Java source file; may be <code>null</code></dd>
+<dd><code>className</code> - the class name; must not be <code>null</code></dd>
+<dd><code>filePosition</code> - the position in the source file; may be <code>null</code></dd>
 </dl>
 </li>
 </ul>
@@ -310,8 +307,7 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <li class="blockList">
 <h4>from</h4>
 <pre>public static&nbsp;<a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html" title="class in org.junit.platform.engine.support.descriptor">ClassSource</a>&nbsp;from&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;javaClass)</pre>
-<div class="block">Create a new <code>ClassSource</code> using the supplied
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>javaClass</code></a>.</div>
+<div class="block">Create a new <code>ClassSource</code> using the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">class</a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>javaClass</code> - the Java class; must not be <code>null</code></dd>
@@ -327,7 +323,7 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <pre>public static&nbsp;<a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html" title="class in org.junit.platform.engine.support.descriptor">ClassSource</a>&nbsp;from&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;javaClass,
                                <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">FilePosition</a>&nbsp;filePosition)</pre>
 <div class="block">Create a new <code>ClassSource</code> using the supplied
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>javaClass</code></a> and <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor"><code>filePosition</code></a>.</div>
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">class</a> and <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">file position</a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>javaClass</code> - the Java class; must not be <code>null</code></dd>
@@ -359,7 +355,8 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Java class</a> of this source.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html#getPosition()"><code>getPosition()</code></a></dd>
+<dd><a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html#getClassName()"><code>getClassName()</code></a>, 
+<a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html#getPosition()"><code>getPosition()</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -370,11 +367,12 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <li class="blockList">
 <h4>getPosition</h4>
 <pre>public final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">FilePosition</a>&gt;&nbsp;getPosition()</pre>
-<div class="block">Get the <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">position</a> in the Java source file for
- the associated <a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html#getJavaClass()">Java class</a>, if available.</div>
+<div class="block">Get the <a href="../../../../../../org/junit/platform/engine/support/descriptor/FilePosition.html" title="class in org.junit.platform.engine.support.descriptor">position</a> in the source file for
+ the associated <a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html#getClassName()">class</a>, if available.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html#getJavaClass()"><code>getJavaClass()</code></a></dd>
+<dd><a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html#getClassName()"><code>getClassName()</code></a>, 
+<a href="../../../../../../org/junit/platform/engine/support/descriptor/ClassSource.html#getJavaClass()"><code>getJavaClass()</code></a></dd>
 </dl>
 </li>
 </ul>
