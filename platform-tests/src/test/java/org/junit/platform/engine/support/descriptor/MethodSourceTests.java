@@ -50,6 +50,22 @@ class MethodSourceTests {
 	}
 
 	@Test
+	void instantiationWithNullClassOrMethodShouldThrowPreconditionViolationException() {
+		assertThrows(PreconditionViolationException.class,
+			() -> MethodSource.from(null, String.class.getDeclaredMethod("getBytes")));
+		assertThrows(PreconditionViolationException.class, () -> MethodSource.from(String.class, null));
+	}
+
+	@Test
+	void instantiationWithClassAndMethodShouldResultInACorrectObject() throws Exception {
+		MethodSource source = MethodSource.from(String.class,
+			String.class.getDeclaredMethod("lastIndexOf", String.class, int.class));
+		assertEquals(String.class.getName(), source.getClassName());
+		assertEquals("lastIndexOf", source.getMethodName());
+		assertEquals("java.lang.String, int", source.getMethodParameterTypes());
+	}
+
+	@Test
 	void twoEqualMethodsShouldHaveEqualMethodSourceObjects() {
 		assertEquals(MethodSource.from("TestClass1", "testMethod1"), MethodSource.from("TestClass1", "testMethod1"));
 	}

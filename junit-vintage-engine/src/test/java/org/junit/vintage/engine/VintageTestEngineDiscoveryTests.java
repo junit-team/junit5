@@ -352,7 +352,7 @@ class VintageTestEngineDiscoveryTests {
 
 		TestDescriptor testDescriptor = getOnlyElement(runnerDescriptor.getChildren());
 		assertEquals("failingTest", testDescriptor.getDisplayName());
-		assertMethodSource(superclass.getMethod("failingTest"), testDescriptor);
+		assertMethodSource(testClass, superclass.getMethod("failingTest"), testDescriptor);
 	}
 
 	@Test
@@ -764,9 +764,14 @@ class VintageTestEngineDiscoveryTests {
 	}
 
 	private static void assertMethodSource(Method expectedMethod, TestDescriptor testDescriptor) {
+		assertMethodSource(expectedMethod.getDeclaringClass(), expectedMethod, testDescriptor);
+	}
+
+	private static void assertMethodSource(Class<?> expectedClass, Method expectedMethod,
+			TestDescriptor testDescriptor) {
 		assertThat(testDescriptor.getSource()).containsInstanceOf(MethodSource.class);
 		MethodSource methodSource = (MethodSource) testDescriptor.getSource().get();
-		assertThat(methodSource.getClassName()).isEqualTo(expectedMethod.getDeclaringClass().getName());
+		assertThat(methodSource.getClassName()).isEqualTo(expectedClass.getName());
 		assertThat(methodSource.getMethodName()).isEqualTo(expectedMethod.getName());
 		assertThat(methodSource.getMethodParameterTypes()).isEqualTo(
 			ClassUtils.nullSafeToString(expectedMethod.getParameterTypes()));
