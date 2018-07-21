@@ -22,8 +22,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
 /**
- * Unit tests for {@link PackageSource}, {@link ClassSource}, and
- * {@link MethodSource}.
+ * Unit tests for {@link PackageSource} and {@link MethodSource}.
  *
  * @since 1.0
  */
@@ -33,8 +32,6 @@ class GenericSourceTests extends AbstractTestSourceTests {
 	Stream<Serializable> createSerializableInstances() throws Exception {
 		return Stream.of( //
 			PackageSource.from("package.source"), //
-			ClassSource.from("class.source"), //
-			ClassSource.from("class.and.position", FilePosition.from(1, 2)), //
 			MethodSource.from(getMethod("method1")), //
 			MethodSource.from(getMethod("method2")) //
 		);
@@ -72,46 +69,6 @@ class GenericSourceTests extends AbstractTestSourceTests {
 	}
 
 	@Test
-	void classNameSource() {
-		String testClassName = "com.unknown.mypackage.ClassByName";
-		ClassSource source = ClassSource.from(testClassName);
-
-		assertThat(source.getClassName()).isEqualTo(testClassName);
-		assertThat(source.getPosition()).isEmpty();
-	}
-
-	@Test
-	void classNameSourceWithFilePosition() {
-		String testClassName = "com.unknown.mypackage.ClassByName";
-		FilePosition position = FilePosition.from(42, 23);
-		ClassSource source = ClassSource.from(testClassName, position);
-
-		assertThat(source.getClassName()).isEqualTo(testClassName);
-		assertThat(source.getPosition()).isNotEmpty();
-		assertThat(source.getPosition()).hasValue(position);
-	}
-
-	@Test
-	void classSource() {
-		Class<?> testClass = getClass();
-		ClassSource source = ClassSource.from(testClass);
-
-		assertThat(source.getJavaClass()).isEqualTo(testClass);
-		assertThat(source.getPosition()).isEmpty();
-	}
-
-	@Test
-	void classSourceWithFilePosition() {
-		Class<?> testClass = getClass();
-		FilePosition position = FilePosition.from(42, 23);
-		ClassSource source = ClassSource.from(testClass, position);
-
-		assertThat(source.getJavaClass()).isEqualTo(testClass);
-		assertThat(source.getPosition()).isNotEmpty();
-		assertThat(source.getPosition()).hasValue(position);
-	}
-
-	@Test
 	void methodSource() throws Exception {
 		Method testMethod = getMethod("method1");
 		MethodSource source = MethodSource.from(testMethod);
@@ -126,13 +83,6 @@ class GenericSourceTests extends AbstractTestSourceTests {
 		Package pkg1 = getClass().getPackage();
 		Package pkg2 = String.class.getPackage();
 		assertEqualsAndHashCode(PackageSource.from(pkg1), PackageSource.from(pkg1), PackageSource.from(pkg2));
-	}
-
-	@Test
-	void equalsAndHashCodeForClassSource() {
-		Class<?> class1 = String.class;
-		Class<?> class2 = Number.class;
-		assertEqualsAndHashCode(ClassSource.from(class1), ClassSource.from(class1), ClassSource.from(class2));
 	}
 
 	@Test
