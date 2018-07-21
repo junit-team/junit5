@@ -30,7 +30,6 @@ import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
-@Disabled
 public class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
 	@Test

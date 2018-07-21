@@ -126,6 +126,7 @@ public interface Node<C extends EngineExecutionContext> {
 
 	default void nodeFinished(C context, TestDescriptor descriptor, TestExecutionResult result) {
 	}
+
 	/**
 	 * Get the set of {@linkplain ExclusiveResource exclusive resources}
 	 * required to execute this node.

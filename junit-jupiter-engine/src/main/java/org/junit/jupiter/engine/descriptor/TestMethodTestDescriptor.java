@@ -237,30 +237,34 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 	@Override
 	public void nodeSkipped(JupiterEngineExecutionContext context, TestDescriptor descriptor, SkipResult result) {
-		invokeTestWatchers(context, t -> {
-			t.testSkipped(createTestIdentifier(), result.getReason(), context.getExtensionContext());
-		});
+		if (context != null) {
+			invokeTestWatchers(context, t -> {
+				t.testSkipped(createTestIdentifier(), result.getReason(), context.getExtensionContext());
+			});
+		}
 	}
 
 	@Override
 	public void nodeFinished(JupiterEngineExecutionContext context, TestDescriptor descriptor,
 			TestExecutionResult result) {
-		invokeTestWatchers(context, t -> {
-			ExtensionContext extensionContext = context.getExtensionContext();
-			Status status = result.getStatus();
-			String identifier = createTestIdentifier();
-			switch (status) {
-				case SUCCESSFUL:
-					t.testSuccessful(identifier, extensionContext);
-					break;
-				case FAILED:
-					t.testFailed(identifier, result.getThrowable().get(), extensionContext);
-					break;
-				case ABORTED:
-					t.testAborted(identifier, result.getThrowable().get(), extensionContext);
-					break;
-			}
-		});
+		if (context != null) {
+			invokeTestWatchers(context, t -> {
+				ExtensionContext extensionContext = context.getExtensionContext();
+				TestExecutionResult.Status status = result.getStatus();
+				String identifier = createTestIdentifier();
+				switch (status) {
+					case SUCCESSFUL:
+						t.testSuccessful(identifier, extensionContext);
+						break;
+					case FAILED:
+						t.testFailed(identifier, result.getThrowable().get(), extensionContext);
+						break;
+					case ABORTED:
+						t.testAborted(identifier, result.getThrowable().get(), extensionContext);
+						break;
+				}
+			});
+		}
 	}
 
 	private void invokeTestWatchers(JupiterEngineExecutionContext context, Consumer<TestWatcher> callback) {
