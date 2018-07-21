@@ -147,10 +147,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 public class <span class="typeNameLabel">MethodSource</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
 implements <a href="../../../../../../org/junit/platform/engine/TestSource.html" title="interface in org.junit.platform.engine">TestSource</a></pre>
-<div class="block">Java method based <a href="../../../../../../org/junit/platform/engine/TestSource.html" title="interface in org.junit.platform.engine"><code>TestSource</code></a>.
+<div class="block">Method based <a href="../../../../../../org/junit/platform/engine/TestSource.html" title="interface in org.junit.platform.engine"><code>TestSource</code></a>.
 
- <p>This class stores the method name along with its parameter types because
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> does not implement <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>Serializable</code></a>.</div>
+ <p>This class stores the method name along with the names of its parameter
+ types because <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> does not implement <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>Serializable</code></a>.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.0</dd>
@@ -186,7 +186,7 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html" title="class in org.junit.platform.engine.support.descriptor">MethodSource</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html#from(java.lang.Class,java.lang.reflect.Method)">from</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;testClass,
-    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</code></th>
+    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;testMethod)</code></th>
 <td class="colLast">
 <div class="block">Create a new <code>MethodSource</code> using the supplied
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>class</code></a> and <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>method</code></a>.</div>
@@ -194,10 +194,9 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html" title="class in org.junit.platform.engine.support.descriptor">MethodSource</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html#from(java.lang.reflect.Method)">from</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html#from(java.lang.reflect.Method)">from</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;testMethod)</code></th>
 <td class="colLast">
-<div class="block">Create a new <code>MethodSource</code> using the supplied
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>method</code></a>.</div>
+<div class="block">Create a new <code>MethodSource</code> using the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>method</code></a>.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -205,8 +204,8 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html#from(java.lang.String,java.lang.String)">from</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className,
     <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName)</code></th>
 <td class="colLast">
-<div class="block">Create a new <code>MethodSource</code> using the supplied
- class and method name.</div>
+<div class="block">Create a new <code>MethodSource</code> using the supplied class name and
+ method name.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
@@ -215,29 +214,29 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
     <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName,
     <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodParameterTypes)</code></th>
 <td class="colLast">
-<div class="block">Create a new <code>MethodSource</code> using the supplied
- class and method name.</div>
+<div class="block">Create a new <code>MethodSource</code> using the supplied class name, method
+ name, and method parameter types.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html#getClassName()">getClassName</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get the declaring <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a> name of this source.</div>
+<div class="block">Get the class name of this source.</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html#getMethodName()">getMethodName</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> name of this source.</div>
+<div class="block">Get the method name of this source.</div>
 </td>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html#getMethodParameterTypes()">getMethodParameterTypes</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> parameter types of this source.</div>
+<div class="block">Get the method parameter types of this source.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
@@ -282,12 +281,12 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <h4>from</h4>
 <pre>public static&nbsp;<a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html" title="class in org.junit.platform.engine.support.descriptor">MethodSource</a>&nbsp;from&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className,
                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName)</pre>
-<div class="block">Create a new <code>MethodSource</code> using the supplied
- class and method name.</div>
+<div class="block">Create a new <code>MethodSource</code> using the supplied class name and
+ method name.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>className</code> - the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a> name; must not be <code>null</code> or blank</dd>
-<dd><code>methodName</code> - the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> name; must not be <code>null</code> or blank</dd>
+<dd><code>className</code> - the class name; must not be <code>null</code> or blank</dd>
+<dd><code>methodName</code> - the method name; must not be <code>null</code> or blank</dd>
 </dl>
 </li>
 </ul>
@@ -300,13 +299,13 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <pre>public static&nbsp;<a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html" title="class in org.junit.platform.engine.support.descriptor">MethodSource</a>&nbsp;from&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className,
                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName,
                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodParameterTypes)</pre>
-<div class="block">Create a new <code>MethodSource</code> using the supplied
- class and method name.</div>
+<div class="block">Create a new <code>MethodSource</code> using the supplied class name, method
+ name, and method parameter types.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>className</code> - the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a> name; must not be <code>null</code> or blank</dd>
-<dd><code>methodName</code> - the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> name; must not be <code>null</code> or blank</dd>
-<dd><code>methodParameterTypes</code> - the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> parameter types as string</dd>
+<dd><code>className</code> - the class name; must not be <code>null</code> or blank</dd>
+<dd><code>methodName</code> - the method name; must not be <code>null</code> or blank</dd>
+<dd><code>methodParameterTypes</code> - the method parameter types as a string</dd>
 </dl>
 </li>
 </ul>
@@ -316,12 +315,11 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>from</h4>
-<pre>public static&nbsp;<a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html" title="class in org.junit.platform.engine.support.descriptor">MethodSource</a>&nbsp;from&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</pre>
-<div class="block">Create a new <code>MethodSource</code> using the supplied
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>method</code></a>.</div>
+<pre>public static&nbsp;<a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html" title="class in org.junit.platform.engine.support.descriptor">MethodSource</a>&nbsp;from&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;testMethod)</pre>
+<div class="block">Create a new <code>MethodSource</code> using the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>method</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>method</code> - the Java method; must not be <code>null</code></dd>
+<dd><code>testMethod</code> - the Java method; must not be <code>null</code></dd>
 </dl>
 </li>
 </ul>
@@ -331,14 +329,18 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <ul class="blockList">
 <li class="blockList">
 <h4>from</h4>
-<pre>public static&nbsp;<a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html" title="class in org.junit.platform.engine.support.descriptor">MethodSource</a>&nbsp;from&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;testClass,
-                                <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</pre>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#STABLE" title="class or interface in org.apiguardian.api" class="externalLink">STABLE</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.3")
+public static&nbsp;<a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html" title="class in org.junit.platform.engine.support.descriptor">MethodSource</a>&nbsp;from&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;testClass,
+                                <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;testMethod)</pre>
 <div class="block">Create a new <code>MethodSource</code> using the supplied
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>class</code></a> and <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>method</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>testClass</code> - the Java class; must not be <code>null</code></dd>
-<dd><code>method</code> - the Java method; must not be <code>null</code></dd>
+<dd><code>testMethod</code> - the Java method; must not be <code>null</code></dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.3</dd>
 </dl>
 </li>
 </ul>
@@ -349,7 +351,7 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <li class="blockList">
 <h4>getClassName</h4>
 <pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getClassName()</pre>
-<div class="block">Get the declaring <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a> name of this source.</div>
+<div class="block">Get the class name of this source.</div>
 </li>
 </ul>
 <a id="getMethodName()">
@@ -359,7 +361,7 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <li class="blockList">
 <h4>getMethodName</h4>
 <pre>public final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getMethodName()</pre>
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> name of this source.</div>
+<div class="block">Get the method name of this source.</div>
 </li>
 </ul>
 <a id="getMethodParameterTypes()">
@@ -369,7 +371,7 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <li class="blockList">
 <h4>getMethodParameterTypes</h4>
 <pre>public final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getMethodParameterTypes()</pre>
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> parameter types of this source.</div>
+<div class="block">Get the method parameter types of this source.</div>
 </li>
 </ul>
 <a id="equals(java.lang.Object)">
