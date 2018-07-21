@@ -20,7 +20,6 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestSource;
-import org.junit.platform.engine.discovery.MethodSelector;
 
 /**
  * Method based {@link org.junit.platform.engine.TestSource TestSource}.
@@ -29,7 +28,7 @@ import org.junit.platform.engine.discovery.MethodSelector;
  * types because {@link Method} does not implement {@link java.io.Serializable}.
  *
  * @since 1.0
- * @see MethodSelector
+ * @see org.junit.platform.engine.discovery.MethodSelector
  */
 @API(status = STABLE, since = "1.0")
 public class MethodSource implements TestSource {

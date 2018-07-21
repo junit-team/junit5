@@ -21,14 +21,13 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestSource;
-import org.junit.platform.engine.discovery.ClassSelector;
 
 /**
- * Java class based {@link org.junit.platform.engine.TestSource} with an optional
- * {@linkplain FilePosition position}.
+ * Class based {@link org.junit.platform.engine.TestSource TestSource} with
+ * an optional {@linkplain FilePosition file position}.
  *
  * @since 1.0
- * @see ClassSelector
+ * @see org.junit.platform.engine.discovery.ClassSelector
  */
 @API(status = STABLE, since = "1.0")
 public class ClassSource implements TestSource {
@@ -36,29 +35,27 @@ public class ClassSource implements TestSource {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Create a new {@code ClassSource} using the supplied
-	 * className.
+	 * Create a new {@code ClassSource} using the supplied class name.
 	 *
-	 * @param className the Java class name; must not be {@code null}
+	 * @param className the class name; must not be {@code null}
 	 */
 	public static ClassSource from(String className) {
 		return new ClassSource(className);
 	}
 
 	/**
-	 * Create a new {@code ClassSource} using the supplied
-	 * className and {@link FilePosition filePosition}.
+	 * Create a new {@code ClassSource} using the supplied class name and
+	 * {@linkplain FilePosition file position}.
 	 *
-	 * @param className the Java class name; must not be {@code null}
-	 * @param filePosition the position in the Java source file; may be {@code null}
+	 * @param className the class name; must not be {@code null}
+	 * @param filePosition the position in the source file; may be {@code null}
 	 */
 	public static ClassSource from(String className, FilePosition filePosition) {
 		return new ClassSource(className, filePosition);
 	}
 
 	/**
-	 * Create a new {@code ClassSource} using the supplied
-	 * {@link Class javaClass}.
+	 * Create a new {@code ClassSource} using the supplied {@linkplain Class class}.
 	 *
 	 * @param javaClass the Java class; must not be {@code null}
 	 */
@@ -68,7 +65,7 @@ public class ClassSource implements TestSource {
 
 	/**
 	 * Create a new {@code ClassSource} using the supplied
-	 * {@link Class javaClass} and {@link FilePosition filePosition}.
+	 * {@linkplain Class class} and {@linkplain FilePosition file position}.
 	 *
 	 * @param javaClass the Java class; must not be {@code null}
 	 * @param filePosition the position in the Java source file; may be {@code null}
@@ -112,6 +109,7 @@ public class ClassSource implements TestSource {
 	/**
 	 * Get the {@linkplain Class Java class} of this source.
 	 *
+	 * @see #getClassName()
 	 * @see #getPosition()
 	 */
 	public final Class<?> getJavaClass() {
@@ -123,9 +121,10 @@ public class ClassSource implements TestSource {
 	}
 
 	/**
-	 * Get the {@linkplain FilePosition position} in the Java source file for
-	 * the associated {@linkplain #getJavaClass Java class}, if available.
+	 * Get the {@linkplain FilePosition position} in the source file for
+	 * the associated {@linkplain #getClassName class}, if available.
 	 *
+	 * @see #getClassName()
 	 * @see #getJavaClass()
 	 */
 	public final Optional<FilePosition> getPosition() {
@@ -158,4 +157,5 @@ public class ClassSource implements TestSource {
 				.toString();
 		// @formatter:on
 	}
+
 }

@@ -18,7 +18,6 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestSource;
-import org.junit.platform.engine.discovery.PackageSelector;
 
 /**
  * Package based {@link org.junit.platform.engine.TestSource}.
@@ -27,7 +26,7 @@ import org.junit.platform.engine.discovery.PackageSelector;
  * implement {@link java.io.Serializable}.
  *
  * @since 1.0
- * @see PackageSelector
+ * @see org.junit.platform.engine.discovery.PackageSelector
  */
 @API(status = STABLE, since = "1.0")
 public class PackageSource implements TestSource {
