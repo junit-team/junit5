@@ -15,7 +15,10 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* `ClassSource` has been revised so that `equals()` and `hashCode()`
+  are now properly based on the required _class name_ instead of the
+  optional `Class` reference. In addition, the non-blank precondition
+  for a class name is now enforced.
 
 ==== Deprecations and Breaking Changes
 

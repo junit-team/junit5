@@ -26,6 +26,16 @@ import org.junit.platform.engine.TestSource;
  * Class based {@link org.junit.platform.engine.TestSource TestSource} with
  * an optional {@linkplain FilePosition file position}.
  *
+ * <p>If a Java {@link Class} reference is provided, the {@code ClassSource}
+ * will contain that {@code Class} and its class name accordingly. If a class
+ * name is provided, the {@code ClassSource} will contain the class name and
+ * will only attempt to lazily load the {@link Class} if {@link #getJavaClass()}
+ * is invoked.
+ *
+ * <p>In this context, Java {@link Class} means anything that can be referenced
+ * as a {@link Class} on the JVM &mdash; for example, classes from other JVM
+ * languages such Groovy, Scala, etc.
+ *
  * @since 1.0
  * @see org.junit.platform.engine.discovery.ClassSelector
  */
@@ -37,7 +47,7 @@ public class ClassSource implements TestSource {
 	/**
 	 * Create a new {@code ClassSource} using the supplied class name.
 	 *
-	 * @param className the class name; must not be {@code null}
+	 * @param className the class name; must not be {@code null} or blank
 	 */
 	public static ClassSource from(String className) {
 		return new ClassSource(className);
@@ -47,7 +57,7 @@ public class ClassSource implements TestSource {
 	 * Create a new {@code ClassSource} using the supplied class name and
 	 * {@linkplain FilePosition file position}.
 	 *
-	 * @param className the class name; must not be {@code null}
+	 * @param className the class name; must not be {@code null} or blank
 	 * @param filePosition the position in the source file; may be {@code null}
 	 */
 	public static ClassSource from(String className, FilePosition filePosition) {
@@ -64,8 +74,8 @@ public class ClassSource implements TestSource {
 	}
 
 	/**
-	 * Create a new {@code ClassSource} using the supplied
-	 * {@linkplain Class class} and {@linkplain FilePosition file position}.
+	 * Create a new {@code ClassSource} using the supplied {@linkplain Class class}
+	 * and {@linkplain FilePosition file position}.
 	 *
 	 * @param javaClass the Java class; must not be {@code null}
 	 * @param filePosition the position in the Java source file; may be {@code null}
@@ -83,7 +93,7 @@ public class ClassSource implements TestSource {
 	}
 
 	private ClassSource(String className, FilePosition filePosition) {
-		this.className = className;
+		this.className = Preconditions.notBlank(className, "Class name must not be null or blank");
 		this.filePosition = filePosition;
 	}
 
@@ -92,7 +102,7 @@ public class ClassSource implements TestSource {
 	}
 
 	private ClassSource(Class<?> javaClass, FilePosition filePosition) {
-		this.javaClass = Preconditions.notNull(javaClass, "class must not be null");
+		this.javaClass = Preconditions.notNull(javaClass, "Class must not be null");
 		this.className = this.javaClass.getName();
 		this.filePosition = filePosition;
 	}
@@ -100,6 +110,7 @@ public class ClassSource implements TestSource {
 	/**
 	 * Get the class name of this source.
 	 *
+	 * @see #getJavaClass()
 	 * @see #getPosition()
 	 */
 	public final String getClassName() {
@@ -108,6 +119,10 @@ public class ClassSource implements TestSource {
 
 	/**
 	 * Get the {@linkplain Class Java class} of this source.
+	 *
+	 * <p>If the {@link Class} was not provided, but only the name, this method
+	 * attempts to lazily load the {@link Class} based on its name and throws a
+	 * {@link PreconditionViolationException} if the class cannot be loaded.
 	 *
 	 * @see #getClassName()
 	 * @see #getPosition()
@@ -140,12 +155,12 @@ public class ClassSource implements TestSource {
 			return false;
 		}
 		ClassSource that = (ClassSource) o;
-		return Objects.equals(this.javaClass, that.javaClass) && Objects.equals(this.filePosition, that.filePosition);
+		return Objects.equals(this.className, that.className) && Objects.equals(this.filePosition, that.filePosition);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.javaClass, this.filePosition);
+		return Objects.hash(this.className, this.filePosition);
 	}
 
 	@Override
