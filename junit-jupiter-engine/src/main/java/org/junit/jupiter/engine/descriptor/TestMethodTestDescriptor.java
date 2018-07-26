@@ -136,7 +136,8 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			((extensionContext, adapter) -> () -> {
 				try {
 					adapter.invokeBeforeEachMethod(extensionContext, registry);
-				} catch (Throwable throwable) {
+				}
+				catch (Throwable throwable) {
 					invokeTestExecutionExceptionHandlers(context.getExtensionRegistry(), throwable,
 						((ex, handler) -> () -> handler.handleExceptionInBeforeEachMethod(extensionContext, ex)));
 				}
@@ -176,7 +177,8 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 				Method testMethod = getTestMethod();
 				Object instance = extensionContext.getRequiredTestInstance();
 				executableInvoker.invoke(testMethod, instance, extensionContext, context.getExtensionRegistry());
-			} catch (Throwable throwable) {
+			}
+			catch (Throwable throwable) {
 				invokeTestExecutionExceptionHandlers(context.getExtensionRegistry(), throwable,
 					((ex, handler) -> () -> handler.handleTestExecutionException(extensionContext, ex)));
 			}
@@ -202,7 +204,8 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			// Invoke next available handler
 			Executable executable = generator.apply(ex, handlers.remove(0));
 			executable.execute();
-		} catch (Throwable t) {
+		}
+		catch (Throwable t) {
 			invokeTestExecutionExceptionHandlers(t, handlers, generator);
 		}
 	}
@@ -219,7 +222,8 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			((extensionContext, adapter) -> () -> {
 				try {
 					adapter.invokeAfterEachMethod(extensionContext, registry);
-				} catch (Throwable throwable) {
+				}
+				catch (Throwable throwable) {
 					invokeTestExecutionExceptionHandlers(context.getExtensionRegistry(), throwable,
 						((ex, handler) -> () -> handler.handleExceptionInAfterEachMethod(extensionContext, ex)));
 				}
