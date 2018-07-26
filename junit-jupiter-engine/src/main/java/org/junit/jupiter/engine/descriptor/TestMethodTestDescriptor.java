@@ -182,7 +182,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			}
 		});
 	}
-	
+
 	private void invokeTestExecutionExceptionHandlers(ExtensionRegistry registry, Throwable ex,
 			BiFunction<Throwable, TestExecutionExceptionHandler, Executable> generator) {
 
