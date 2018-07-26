@@ -12,7 +12,6 @@ package org.junit.platform.commons.util;
 
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.commons.util.ClassFileVisitor.CLASS_FILE_SUFFIX;
@@ -30,7 +29,6 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -147,31 +145,22 @@ class ClasspathScanner {
 	}
 
 	private String determineFullyQualifiedClassName(Path baseDir, String basePackageName, Path classFile) {
-		// @formatter:off
-		return Stream.of(
-					basePackageName,
-					determineSubpackageName(baseDir, classFile),
-					determineSimpleClassName(classFile)
-				)
-				.filter(value -> !value.isEmpty()) // Handle default package appropriately.
-				.collect(joining(PACKAGE_SEPARATOR_STRING));
-		// @formatter:on
-	}
-
-	private String determineSimpleClassName(Path classFile) {
-		String fileName = classFile.getFileName().toString();
-		return fileName.substring(0, fileName.length() - CLASS_FILE_SUFFIX.length());
-	}
-
-	private String determineSubpackageName(Path baseDir, Path classFile) {
-		Path relativePath = baseDir.relativize(classFile.getParent());
 		String pathSeparator = baseDir.getFileSystem().getSeparator();
-		String subpackageName = relativePath.toString().replace(pathSeparator, PACKAGE_SEPARATOR_STRING);
-		if (subpackageName.endsWith(pathSeparator)) {
-			// Workaround for JDK bug: https://bugs.openjdk.java.net/browse/JDK-8153248
-			subpackageName = subpackageName.substring(0, subpackageName.length() - pathSeparator.length());
+		String classFileName = classFile.toString();
+		String baseDirString = baseDir.toString();
+		if (!baseDirString.endsWith(pathSeparator)) {
+			baseDirString += pathSeparator;
 		}
-		return subpackageName;
+		String relativeClassFile = classFileName.substring(baseDirString.length());
+		String relativeClassName = relativeClassFile.substring(0,
+			relativeClassFile.length() - CLASS_FILE_SUFFIX.length());
+		relativeClassName = relativeClassName.replace(pathSeparator, PACKAGE_SEPARATOR_STRING);
+		if (basePackageName.isEmpty()) {
+			return relativeClassName;
+		}
+		else {
+			return basePackageName + PACKAGE_SEPARATOR_STRING + relativeClassName;
+		}
 	}
 
 	private void handleInternalError(Path classFile, String fullyQualifiedClassName, InternalError ex) {
