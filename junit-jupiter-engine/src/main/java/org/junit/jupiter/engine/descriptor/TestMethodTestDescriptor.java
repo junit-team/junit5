@@ -170,7 +170,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	protected void invokeTestMethod(JupiterEngineExecutionContext context, DynamicTestExecutor dynamicTestExecutor) {
 		ExtensionContext extensionContext = context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
-		
+
 		throwableCollector.execute(() -> {
 			try {
 				Method testMethod = getTestMethod();
@@ -185,19 +185,19 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	
 	private void invokeTestExecutionExceptionHandlers(ExtensionRegistry registry, Throwable ex,
 			BiFunction<Throwable, TestExecutionExceptionHandler, Executable> generator) {
-		
+
 		invokeTestExecutionExceptionHandlers(ex, registry.getReversedExtensions(TestExecutionExceptionHandler.class),
 				generator);
 	}
-	
+
 	private void invokeTestExecutionExceptionHandlers(Throwable ex, List<TestExecutionExceptionHandler> handlers,
 			BiFunction<Throwable, TestExecutionExceptionHandler, Executable> generator) {
-		
+
 		// No handlers left?
 		if (handlers.isEmpty()) {
 			ExceptionUtils.throwAsUncheckedException(ex);
 		}
-		
+
 		try {
 			// Invoke next available handler
 			Executable executable = generator.apply(ex, handlers.remove(0));
