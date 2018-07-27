@@ -6,12 +6,12 @@ buildscript {
 
 		// classpath('org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.16')
 		classpath('org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16')
-		classpath('org.asciidoctor:asciidoctorj-diagram:1.5.8')
+		classpath('org.asciidoctor:asciidoctorj-diagram:1.5.9')
 	}
 }
 
 plugins {
-	id 'org.asciidoctor.convert' version '1.5.7'
+	id 'org.asciidoctor.convert' version '1.5.8.1'
 }
 
 task consoleLauncherTest(type: JavaExec) {
