@@ -26,6 +26,10 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* New `MethodSource.from(Class, Method)` static factory method for creating a
+  `MethodSource` from a specific class and method. This method should be used in favor of
+  `MethodSource.from(Method)` when the test method is inherited from a superclass or
+  present as an interface `default` method.
 * A `ClasspathResourceSource` can now be created from a `URI` via the new `from(URI)`
   static factory method if the `URI` uses the `classpath` scheme.
 
@@ -35,7 +39,11 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The `MethodSource` for an _inherited_ `@Test` method now correctly references the
+  _current_ test class instead of the class or interface in which the `@Test` method is
+  _declared_. This allows build tools such as Maven Surefire to properly include
+  inherited `@Test` methods when executing a single test class or specific test classes
+  based on filters -- for example, via `mvn test -Dtest=SubclassTests`).
 
 ==== Deprecations and Breaking Changes
 
@@ -75,7 +83,11 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The `MethodSource` for an _inherited_ `@Test` method now correctly references the
+  _current_ test class instead of the class or interface in which the `@Test` method is
+  _declared_. This allows build tools such as Maven Surefire to properly include
+  inherited `@Test` methods when executing a single test class or specific test classes
+  based on filters -- for example, via `mvn test -Dtest=SubclassTests`).
 
 ==== Deprecations and Breaking Changes
 

@@ -62,6 +62,7 @@ public class MethodSource implements TestSource {
 	 * Create a new {@code MethodSource} using the supplied {@link Method method}.
 	 *
 	 * @param testMethod the Java method; must not be {@code null}
+	 * @see #from(Class, Method)
 	 */
 	public static MethodSource from(Method testMethod) {
 		return new MethodSource(testMethod);
@@ -70,6 +71,10 @@ public class MethodSource implements TestSource {
 	/**
 	 * Create a new {@code MethodSource} using the supplied
 	 * {@link Class class} and {@link Method method}.
+	 *
+	 * <p>This method should be used in favor of {@link #from(Method)} if the
+	 * test method is inherited from a superclass or present as an interface
+	 * {@code default} method.
 	 *
 	 * @param testClass the Java class; must not be {@code null}
 	 * @param testMethod the Java method; must not be {@code null}
