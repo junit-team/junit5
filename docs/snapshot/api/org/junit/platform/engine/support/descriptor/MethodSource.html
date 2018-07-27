@@ -320,6 +320,8 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>testMethod</code> - the Java method; must not be <code>null</code></dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html#from(java.lang.Class,java.lang.reflect.Method)"><code>from(Class, Method)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -334,7 +336,11 @@ implements <a href="../../../../../../org/junit/platform/engine/TestSource.html"
 public static&nbsp;<a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html" title="class in org.junit.platform.engine.support.descriptor">MethodSource</a>&nbsp;from&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;testClass,
                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;testMethod)</pre>
 <div class="block">Create a new <code>MethodSource</code> using the supplied
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>class</code></a> and <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>method</code></a>.</div>
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>class</code></a> and <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>method</code></a>.
+
+ <p>This method should be used in favor of <a href="../../../../../../org/junit/platform/engine/support/descriptor/MethodSource.html#from(java.lang.reflect.Method)"><code>from(Method)</code></a> if the
+ test method is inherited from a superclass or present as an interface
+ <code>default</code> method.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>testClass</code> - the Java class; must not be <code>null</code></dd>

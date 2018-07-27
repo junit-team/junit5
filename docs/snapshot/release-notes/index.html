@@ -615,6 +615,12 @@ for a class name is now enforced.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>New <code>MethodSource.from(Class, Method)</code> static factory method for creating a
+<code>MethodSource</code> from a specific class and method. This method should be used in favor of
+<code>MethodSource.from(Method)</code> when the test method is inherited from a superclass or
+present as an interface <code>default</code> method.</p>
+</li>
+<li>
 <p>A <code>ClasspathResourceSource</code> can now be created from a <code>URI</code> via the new <code>from(URI)</code>
 static factory method if the <code>URI</code> uses the <code>classpath</code> scheme.</p>
 </li>
@@ -629,7 +635,11 @@ static factory method if the <code>URI</code> uses the <code>classpath</code> sc
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The <code>MethodSource</code> for an <em>inherited</em> <code>@Test</code> method now correctly references the
+<em>current</em> test class instead of the class or interface in which the <code>@Test</code> method is
+<em>declared</em>. This allows build tools such as Maven Surefire to properly include
+inherited <code>@Test</code> methods when executing a single test class or specific test classes
+based on filters&#8201;&#8212;&#8201;for example, via <code>mvn test -Dtest=SubclassTests</code>).</p>
 </li>
 </ul>
 </div>
@@ -706,7 +716,11 @@ to use from Kotlin.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The <code>MethodSource</code> for an <em>inherited</em> <code>@Test</code> method now correctly references the
+<em>current</em> test class instead of the class or interface in which the <code>@Test</code> method is
+<em>declared</em>. This allows build tools such as Maven Surefire to properly include
+inherited <code>@Test</code> methods when executing a single test class or specific test classes
+based on filters&#8201;&#8212;&#8201;for example, via <code>mvn test -Dtest=SubclassTests</code>).</p>
 </li>
 </ul>
 </div>
