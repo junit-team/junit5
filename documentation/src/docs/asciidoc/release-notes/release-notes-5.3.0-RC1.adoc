@@ -43,6 +43,8 @@ on GitHub.
   _declared_. This allows build tools such as Maven Surefire to properly include
   inherited `@Test` methods when executing a single test class or specific test classes
   based on filters -- for example, via `mvn test -Dtest=SubclassTests`).
+* Exceptions thrown in `@After` and `@AfterAll` lifecycle methods now take precedence over
+  violated assumptions (i.e. `TestAbortedExceptions`) in test or prior lifecycle methods.
 
 ==== Deprecations and Breaking Changes
 
