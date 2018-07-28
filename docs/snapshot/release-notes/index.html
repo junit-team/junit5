@@ -640,6 +640,10 @@ static factory method if the <code>URI</code> uses the <code>classpath</code> sc
 inherited <code>@Test</code> methods when executing a single test class or specific test classes
 based on filters&#8201;&#8212;&#8201;for example, via <code>mvn test -Dtest=SubclassTests</code>).</p>
 </li>
+<li>
+<p>Exceptions thrown in <code>@After</code> and <code>@AfterAll</code> lifecycle methods now take precedence over
+violated assumptions (i.e. <code>TestAbortedExceptions</code>) in test or prior lifecycle methods.</p>
+</li>
 </ul>
 </div>
 </div>
