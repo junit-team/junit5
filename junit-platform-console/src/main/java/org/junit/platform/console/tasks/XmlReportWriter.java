@@ -17,14 +17,19 @@ import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
 import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 import static org.junit.platform.console.tasks.XmlReportData.isFailure;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
+import static org.junit.platform.launcher.LauncherConstants.STDERR_REPORT_ENTRY_KEY;
+import static org.junit.platform.launcher.LauncherConstants.STDOUT_REPORT_ENTRY_KEY;
 
 import java.io.Writer;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.TreeSet;
@@ -97,7 +102,7 @@ class XmlReportWriter {
 			writeTestcase(test, numberFormat, writer);
 		}
 
-		writeNonStandardAttributesToSystemOutElement(testIdentifier, writer);
+		writeOutputElement("system-out", formatNonStandardAttributesAsString(testIdentifier), writer);
 
 		writer.writeEndElement();
 		newLine(writer);
@@ -146,8 +151,13 @@ class XmlReportWriter {
 		newLine(writer);
 
 		writeSkippedOrErrorOrFailureElement(testIdentifier, writer);
-		writeReportEntriesToSystemOutElement(testIdentifier, writer);
-		writeNonStandardAttributesToSystemOutElement(testIdentifier, writer);
+
+		List<String> systemOutElements = new ArrayList<>();
+		List<String> systemErrElements = new ArrayList<>();
+		systemOutElements.add(formatNonStandardAttributesAsString(testIdentifier));
+		collectReportEntries(testIdentifier, systemOutElements, systemErrElements);
+		writeOutputElements("system-out", systemOutElements, writer);
+		writeOutputElements("system-err", systemErrElements, writer);
 
 		writer.writeEndElement();
 		newLine(writer);
@@ -211,28 +221,41 @@ class XmlReportWriter {
 		writeCDataSafely(writer, readStackTrace(throwable));
 	}
 
-	private void writeReportEntriesToSystemOutElement(TestIdentifier testIdentifier, XMLStreamWriter writer)
-			throws XMLStreamException {
-
+	private void collectReportEntries(TestIdentifier testIdentifier, List<String> systemOutElements,
+			List<String> systemErrElements) {
 		List<ReportEntry> entries = this.reportData.getReportEntries(testIdentifier);
 		if (!entries.isEmpty()) {
-			writer.writeStartElement("system-out");
-			newLine(writer);
+			List<String> systemOutElementsForCapturedOutput = new ArrayList<>();
+			StringBuilder formattedReportEntries = new StringBuilder();
 			for (int i = 0; i < entries.size(); i++) {
-				writer.writeCharacters(buildReportEntryDescription(entries.get(i), i + 1));
+				ReportEntry reportEntry = entries.get(i);
+				Map<String, String> keyValuePairs = new LinkedHashMap<>(reportEntry.getKeyValuePairs());
+				removeIfPresentAndAddAsSeparateElement(keyValuePairs, STDOUT_REPORT_ENTRY_KEY,
+					systemOutElementsForCapturedOutput);
+				removeIfPresentAndAddAsSeparateElement(keyValuePairs, STDERR_REPORT_ENTRY_KEY, systemErrElements);
+				if (!keyValuePairs.isEmpty()) {
+					buildReportEntryDescription(reportEntry.getTimestamp(), keyValuePairs, i + 1,
+						formattedReportEntries);
+				}
 			}
-			writer.writeEndElement();
-			newLine(writer);
+			systemOutElements.add(formattedReportEntries.toString().trim());
+			systemOutElements.addAll(systemOutElementsForCapturedOutput);
 		}
 	}
 
-	private String buildReportEntryDescription(ReportEntry reportEntry, int entryNumber) {
-		StringBuilder builder = new StringBuilder(format("Report Entry #{0} (timestamp: {1})\n", entryNumber,
-			ISO_LOCAL_DATE_TIME.format(reportEntry.getTimestamp())));
+	private void removeIfPresentAndAddAsSeparateElement(Map<String, String> keyValuePairs, String key,
+			List<String> elements) {
+		String value = keyValuePairs.remove(key);
+		if (value != null) {
+			elements.add(value);
+		}
+	}
 
-		reportEntry.getKeyValuePairs().forEach((key, value) -> builder.append(format("\t- {0}: {1}\n", key, value)));
-
-		return builder.toString();
+	private void buildReportEntryDescription(LocalDateTime timestamp, Map<String, String> keyValuePairs,
+			int entryNumber, StringBuilder result) {
+		result.append(
+			format("Report Entry #{0} (timestamp: {1})\n", entryNumber, ISO_LOCAL_DATE_TIME.format(timestamp)));
+		keyValuePairs.forEach((key, value) -> result.append(format("\t- {0}: {1}\n", key, value)));
 	}
 
 	private String getTime(TestIdentifier testIdentifier, NumberFormat numberFormat) {
@@ -252,14 +275,22 @@ class XmlReportWriter {
 		return LocalDateTime.now(this.reportData.getClock()).withNano(0);
 	}
 
-	private void writeNonStandardAttributesToSystemOutElement(TestIdentifier testIdentifier, XMLStreamWriter writer)
+	private String formatNonStandardAttributesAsString(TestIdentifier testIdentifier) {
+		return "unique-id: " + testIdentifier.getUniqueId() //
+				+ "\ndisplay-name: " + testIdentifier.getDisplayName();
+	}
+
+	private void writeOutputElements(String elementName, List<String> elements, XMLStreamWriter writer)
 			throws XMLStreamException {
+		for (String content : elements) {
+			writeOutputElement(elementName, content, writer);
+		}
+	}
 
-		String cData = "\nunique-id: " + testIdentifier.getUniqueId() //
-				+ "\ndisplay-name: " + testIdentifier.getDisplayName() + "\n";
-
-		writer.writeStartElement("system-out");
-		writeCDataSafely(writer, cData);
+	private void writeOutputElement(String elementName, String content, XMLStreamWriter writer)
+			throws XMLStreamException {
+		writer.writeStartElement(elementName);
+		writeCDataSafely(writer, "\n" + content + "\n");
 		writer.writeEndElement();
 		newLine(writer);
 	}
