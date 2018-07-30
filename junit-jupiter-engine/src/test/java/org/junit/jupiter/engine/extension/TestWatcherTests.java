@@ -30,16 +30,16 @@ import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
-public class TestWatcherTests extends AbstractJupiterTestEngineTests {
+class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testWatcherValidityIncludingNestedTest() {
-		ExecutionEventRecorder recorder = executeTestsForClass(nestedTestWatcherTestCase.class);
+		ExecutionEventRecorder recorder = executeTestsForClass(NestedTestWatcherTestCase.class);
 		assertEquals(0, recorder.getContainerFailedCount());
 	}
 
 	@ExtendWith(TestResultAggregator.class)
-	static class nestedTestWatcherTestCase {
+	static class NestedTestWatcherTestCase {
 
 		@Test
 		public void successfulTest() {
@@ -63,7 +63,7 @@ public class TestWatcherTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Nested
-		class secondLevelTestWatcherTestCase {
+		class SecondLevelTestWatcherTestCase {
 			@Test
 			public void successfulTest() {
 				//no-op
@@ -93,37 +93,34 @@ public class TestWatcherTests extends AbstractJupiterTestEngineTests {
 		private Map<String, List<String>> results = new HashMap<>();
 
 		@Override
-		public void testSuccessful(String descriptor, ExtensionContext context) {
-			storeResult("SUCCESSFUL", descriptor);
+		public void testSuccessful(ExtensionContext context) {
+			storeResult("SUCCESSFUL", context.getUniqueId());
 		}
 
 		@Override
-		public void testAborted(String descriptor, Throwable cause, ExtensionContext context) {
-			storeResult("ABORTED", descriptor);
+		public void testAborted(ExtensionContext context, Throwable cause) {
+			storeResult("ABORTED", context.getUniqueId());
 		}
 
 		@Override
-		public void testFailed(String descriptor, Throwable cause, ExtensionContext context) {
-			storeResult("FAILED", descriptor);
+		public void testFailed(ExtensionContext context, Throwable cause) {
+			storeResult("FAILED", context.getUniqueId());
 		}
 
 		@Override
-		public void testSkipped(String descriptor, Optional<String> Reason, ExtensionContext context) {
-			storeResult("SKIPPED", descriptor);
+		public void testDisabled(ExtensionContext context, Optional<String> reason) {
+			storeResult("SKIPPED", context.getUniqueId());
 		}
 
 		private void storeResult(String status, String method) {
-			List<String> l = results.get(status);
-			if (l == null) {
-				l = new ArrayList<>();
-			}
+			List<String> l = results.computeIfAbsent(status, k -> new ArrayList<String>());
 			l.add(method);
 			results.put(status, l);
 		}
 
 		@Override
 		public void afterAll(ExtensionContext context) throws Exception {
-			this.results.entrySet().stream().forEach(resultType -> assertEquals(2, resultType.getValue().size()));
+			this.results.values().forEach(idList -> assertEquals(2, idList.size()));
 		}
 	}
 

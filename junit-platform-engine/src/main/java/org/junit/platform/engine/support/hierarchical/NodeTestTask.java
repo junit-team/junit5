@@ -128,7 +128,12 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 	private void reportCompletion() {
 		if (throwableCollector.isEmpty() && skipResult.isSkipped()) {
-            node.nodeSkipped(context, testDescriptor, skipResult);
+            try {
+                node.nodeSkipped(context, testDescriptor, skipResult);
+            }
+            finally {
+                //swallow
+            }
 			taskContext.getListener().executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
 			return;
 		}
@@ -136,7 +141,12 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 			// Call executionStarted first to comply with the contract of EngineExecutionListener.
 			taskContext.getListener().executionStarted(testDescriptor);
 		}
-        node.nodeFinished(context, testDescriptor, throwableCollector.toTestExecutionResult());
+        try {
+            node.nodeFinished(context, testDescriptor, throwableCollector.toTestExecutionResult());
+        }
+        finally {
+            //swallow
+        }
 		taskContext.getListener().executionFinished(testDescriptor, throwableCollector.toTestExecutionResult());
 		throwableCollector = null;
 	}

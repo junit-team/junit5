@@ -35,6 +35,8 @@ import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
@@ -64,6 +66,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executa
 public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
+	private static final Logger logger = LoggerFactory.getLogger(TestMethodTestDescriptor.class);
 
 	public TestMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId, testClass, testMethod);
@@ -238,9 +241,9 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	@Override
 	public void nodeSkipped(JupiterEngineExecutionContext context, TestDescriptor descriptor, SkipResult result) {
 		if (context != null) {
-			invokeTestWatchers(context, t -> {
-				t.testSkipped(createTestIdentifier(), result.getReason(), context.getExtensionContext());
-			});
+			invokeTestWatchers(context, watcher -> {
+				watcher.testDisabled(context.getExtensionContext(), result.getReason());
+			}, false);
 		}
 	}
 
@@ -248,39 +251,39 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	public void nodeFinished(JupiterEngineExecutionContext context, TestDescriptor descriptor,
 			TestExecutionResult result) {
 		if (context != null) {
-			invokeTestWatchers(context, t -> {
+			invokeTestWatchers(context, watcher -> {
 				ExtensionContext extensionContext = context.getExtensionContext();
 				TestExecutionResult.Status status = result.getStatus();
-				String identifier = createTestIdentifier();
 				switch (status) {
 					case SUCCESSFUL:
-						t.testSuccessful(identifier, extensionContext);
+						watcher.testSuccessful(extensionContext);
 						break;
 					case FAILED:
-						t.testFailed(identifier, result.getThrowable().get(), extensionContext);
+						watcher.testFailed(extensionContext, result.getThrowable().get());
 						break;
 					case ABORTED:
-						t.testAborted(identifier, result.getThrowable().get(), extensionContext);
+						watcher.testAborted(extensionContext, result.getThrowable().get());
 						break;
 				}
-			});
+			}, true);
 		}
 	}
 
-	private void invokeTestWatchers(JupiterEngineExecutionContext context, Consumer<TestWatcher> callback) {
+	private void invokeTestWatchers(JupiterEngineExecutionContext context, Consumer<TestWatcher> callback,
+			boolean reverseOrder) {
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		registry.getReversedExtensions(TestWatcher.class).forEach(t -> {
+		List<? extends TestWatcher> watchers = reverseOrder ? registry.getReversedExtensions(TestWatcher.class)
+				: registry.getExtensions(TestWatcher.class);
+		watchers.forEach(watcher -> {
 			try {
-				callback.accept(t);
+				callback.accept(watcher);
 			}
 			catch (Exception e) {
-				//swallow
+				logger.warn(() -> {
+					return String.format("Error invoking TestWatcher %s for test %s : %s", watcher.getClass().getName(),
+						e);
+				});
 			}
 		});
-	}
-
-	private String createTestIdentifier() {
-		Method testMethod = this.getTestMethod();
-		return String.format("%s#%s", testMethod.getDeclaringClass().getName(), testMethod.getName());
 	}
 }

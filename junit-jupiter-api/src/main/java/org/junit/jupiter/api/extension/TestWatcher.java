@@ -14,15 +14,15 @@ import java.util.Optional;
 
 public interface TestWatcher extends Extension {
 
-	default void testSuccessful(String identifier, ExtensionContext context) {
+	default void testSuccessful(ExtensionContext context) {
 	}
 
-	default void testAborted(String identifier, Throwable cause, ExtensionContext context) {
+	default void testAborted(ExtensionContext context, Throwable cause) {
 	}
 
-	default void testFailed(String identifier, Throwable cause, ExtensionContext context) {
+	default void testFailed(ExtensionContext context, Throwable cause) {
 	}
 
-	default void testSkipped(String identifier, Optional<String> Reason, ExtensionContext context) {
+	default void testDisabled(ExtensionContext context, Optional<String> reason) {
 	}
 }
