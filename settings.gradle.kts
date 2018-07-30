@@ -29,7 +29,12 @@ include("junit-bom")
 // based on the project name
 rootProject.children.forEach { project ->
 	project.buildFileName = "${project.name}.gradle"
-	require(project.buildFile.isFile)
+	if (!project.buildFile.isFile) {
+		project.buildFileName = "${project.name}.gradle.kts"
+	}
+	require(project.buildFile.isFile) {
+		"${project.buildFile} must exist"
+	}
 }
 
 enableFeaturePreview("STABLE_PUBLISHING")
