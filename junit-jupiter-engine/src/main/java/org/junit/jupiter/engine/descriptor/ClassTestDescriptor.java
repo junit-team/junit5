@@ -362,7 +362,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
-		for (Method method: this.beforeAllMethods) {
+		for (Method method : this.beforeAllMethods) {
 			throwableCollector.execute(() -> {
 				try {
 					executableInvoker.invoke(method, testInstance, extensionContext, registry);
