@@ -28,6 +28,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
@@ -37,9 +38,11 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestInstantiationException;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
@@ -47,6 +50,7 @@ import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.TestInstanceProvider;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -358,9 +362,16 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
-		for (Method method : this.beforeAllMethods) {
-			throwableCollector.execute(
-				() -> executableInvoker.invoke(method, testInstance, extensionContext, registry));
+		for (Method method: this.beforeAllMethods) {
+			throwableCollector.execute(() -> {
+				try {
+					executableInvoker.invoke(method, testInstance, extensionContext, registry);
+				}
+				catch (Throwable throwable) {
+					invokeTestExecutionExceptionHandlers(throwable, registry,
+						((ex, handler) -> () -> handler.handleExceptionInBeforeAllMethod(extensionContext, ex)));
+				}
+			});
 			if (throwableCollector.isNotEmpty()) {
 				break;
 			}
@@ -373,8 +384,15 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
-		this.afterAllMethods.forEach(method -> throwableCollector.execute(
-			() -> executableInvoker.invoke(method, testInstance, extensionContext, registry)));
+		this.afterAllMethods.forEach(method -> throwableCollector.execute(() -> {
+			try {
+				executableInvoker.invoke(method, testInstance, extensionContext, registry);
+			}
+			catch (Throwable throwable) {
+				invokeTestExecutionExceptionHandlers(throwable, registry,
+					((ex, handler) -> () -> handler.handleExceptionInAfterAllMethod(extensionContext, ex)));
+			}
+		}));
 	}
 
 	private void invokeAfterAllCallbacks(JupiterEngineExecutionContext context) {
@@ -384,6 +402,31 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		registry.getReversedExtensions(AfterAllCallback.class)//
 				.forEach(extension -> throwableCollector.execute(() -> extension.afterAll(extensionContext)));
+	}
+
+	private void invokeTestExecutionExceptionHandlers(Throwable ex, ExtensionRegistry registry,
+			BiFunction<Throwable, TestExecutionExceptionHandler, Executable> generator) {
+
+		invokeTestExecutionExceptionHandlers(ex, registry.getReversedExtensions(TestExecutionExceptionHandler.class),
+				generator);
+	}
+
+	private void invokeTestExecutionExceptionHandlers(Throwable ex, List<TestExecutionExceptionHandler> handlers,
+			BiFunction<Throwable, TestExecutionExceptionHandler, Executable> generator) {
+
+		// No handlers left?
+		if (handlers.isEmpty()) {
+			ExceptionUtils.throwAsUncheckedException(ex);
+		}
+
+		try {
+			// Invoke next available handler
+			Executable executable = generator.apply(ex, handlers.remove(0));
+			executable.execute();
+		}
+		catch (Throwable t) {
+			invokeTestExecutionExceptionHandlers(t, handlers, generator);
+		}
 	}
 
 	private void registerBeforeEachMethodAdapters(ExtensionRegistry registry) {
