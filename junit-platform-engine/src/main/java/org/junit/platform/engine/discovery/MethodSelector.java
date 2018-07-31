@@ -149,17 +149,6 @@ public class MethodSelector implements DiscoverySelector {
 		return this.javaMethod;
 	}
 
-	@Override
-	public String toString() {
-		// @formatter:off
-		return new ToStringBuilder(this)
-				.append("className", this.className)
-				.append("methodName", this.methodName)
-				.append("methodParameterTypes", this.methodParameterTypes)
-				.toString();
-		// @formatter:on
-	}
-
 	private void lazyLoadJavaClass() {
 		if (this.javaClass == null) {
 			this.javaClass = ReflectionUtils.loadClass(this.className).orElseThrow(
@@ -185,6 +174,17 @@ public class MethodSelector implements DiscoverySelector {
 							this.javaClass.getName())));
 			}
 		}
+	}
+
+	@Override
+	public String toString() {
+		// @formatter:off
+		return new ToStringBuilder(this)
+				.append("className", this.className)
+				.append("methodName", this.methodName)
+				.append("methodParameterTypes", this.methodParameterTypes)
+				.toString();
+		// @formatter:on
 	}
 
 }
