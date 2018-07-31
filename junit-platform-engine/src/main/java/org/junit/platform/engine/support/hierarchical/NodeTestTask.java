@@ -131,7 +131,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
             try {
                 node.nodeSkipped(context, testDescriptor, skipResult);
             }
-            finally {
+            catch(Throwable t) {
                 //swallow
             }
 			taskContext.getListener().executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
@@ -144,7 +144,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
         try {
             node.nodeFinished(context, testDescriptor, throwableCollector.toTestExecutionResult());
         }
-        finally {
+        catch(Throwable t) {
             //swallow
         }
 		taskContext.getListener().executionFinished(testDescriptor, throwableCollector.toTestExecutionResult());
