@@ -61,11 +61,19 @@ public interface TestExecutionExceptionHandler extends Extension {
 	 */
 	void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable;
 
+	default void handleExceptionInBeforeAllMethod(ExtensionContext context, Throwable throwable) throws Throwable {
+		throw throwable;
+	}
+
 	default void handleExceptionInBeforeEachMethod(ExtensionContext context, Throwable throwable) throws Throwable {
 		throw throwable;
 	}
 
 	default void handleExceptionInAfterEachMethod(ExtensionContext context, Throwable throwable) throws Throwable {
+		throw throwable;
+	}
+
+	default void handleExceptionInAfterAllMethod(ExtensionContext context, Throwable throwable) throws Throwable {
 		throw throwable;
 	}
 }
