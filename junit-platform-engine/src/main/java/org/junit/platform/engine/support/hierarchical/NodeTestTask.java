@@ -20,6 +20,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
@@ -31,6 +34,8 @@ import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
  * @since 1.3
  */
 class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
+
+	private static final Logger logger = LoggerFactory.getLogger(NodeTestTask.class);
 
 	private final NodeTestTaskContext taskContext;
 	private final TestDescriptor testDescriptor;
@@ -128,12 +133,14 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 	private void reportCompletion() {
 		if (throwableCollector.isEmpty() && skipResult.isSkipped()) {
-            try {
-                node.nodeSkipped(context, testDescriptor, skipResult);
-            }
-            catch(Throwable t) {
-                //swallow
-            }
+			try {
+				node.nodeSkipped(context, testDescriptor, skipResult);
+			}
+			catch (Throwable throwable) {
+				BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+				logger.debug(throwable,
+					() -> String.format("Failed to invoke nodeSkipped on Node %s", testDescriptor.getUniqueId()));
+			}
 			taskContext.getListener().executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
 			return;
 		}
@@ -141,12 +148,14 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 			// Call executionStarted first to comply with the contract of EngineExecutionListener.
 			taskContext.getListener().executionStarted(testDescriptor);
 		}
-        try {
-            node.nodeFinished(context, testDescriptor, throwableCollector.toTestExecutionResult());
-        }
-        catch(Throwable t) {
-            //swallow
-        }
+		try {
+			node.nodeFinished(context, testDescriptor, throwableCollector.toTestExecutionResult());
+		}
+		catch (Throwable throwable) {
+			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+			logger.debug(throwable,
+				() -> String.format("Failed to invoke nodeFinished on Node %s", testDescriptor.getUniqueId()));
+		}
 		taskContext.getListener().executionFinished(testDescriptor, throwableCollector.toTestExecutionResult());
 		throwableCollector = null;
 	}

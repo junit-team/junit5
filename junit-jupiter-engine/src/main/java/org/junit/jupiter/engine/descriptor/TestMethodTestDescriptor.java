@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.descriptor;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
 import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
-import static org.junit.platform.engine.TestExecutionResult.Status;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -37,6 +36,7 @@ import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
@@ -278,11 +278,10 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			try {
 				callback.accept(watcher);
 			}
-			catch (Exception e) {
-				logger.warn(() -> {
-					return String.format("Error invoking TestWatcher %s for test %s : %s", watcher.getClass().getName(),
-						e);
-				});
+			catch (Throwable throwable) {
+				BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+				logger.warn(throwable, () -> String.format("Failed to invoke TestWatcher %s for test %s",
+					watcher.getClass().getName(), context.getExtensionContext().getUniqueId()));
 			}
 		});
 	}
