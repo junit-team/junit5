@@ -50,7 +50,7 @@ class DefaultUriSource implements UriSource {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.uri);
+		return this.uri.hashCode();
 	}
 
 	@Override
