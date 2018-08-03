@@ -13,6 +13,7 @@ package org.junit.platform.engine.discovery;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ClassUtils;
@@ -174,6 +175,33 @@ public class MethodSelector implements DiscoverySelector {
 							this.javaClass.getName())));
 			}
 		}
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	@API(status = STABLE, since = "1.3")
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		MethodSelector that = (MethodSelector) o;
+		return Objects.equals(this.className, that.className)//
+				&& Objects.equals(this.methodName, that.methodName)//
+				&& Objects.equals(this.methodParameterTypes, that.methodParameterTypes);
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	@API(status = STABLE, since = "1.3")
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.className, this.methodName, this.methodParameterTypes);
 	}
 
 	@Override

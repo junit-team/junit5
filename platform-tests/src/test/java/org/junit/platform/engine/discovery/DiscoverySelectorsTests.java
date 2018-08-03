@@ -612,7 +612,7 @@ class DiscoverySelectorsTests {
 		}
 	}
 
-	static class TestCaseWithDefaultMethod implements TestInterface {
+	private static class TestCaseWithDefaultMethod implements TestInterface {
 	}
 
 	void myTest() {

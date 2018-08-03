@@ -12,6 +12,8 @@ package org.junit.platform.engine.discovery;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.util.Objects;
+
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -73,6 +75,31 @@ public class ClassSelector implements DiscoverySelector {
 				() -> new PreconditionViolationException("Could not load class with name: " + this.className));
 		}
 		return this.javaClass;
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	@API(status = STABLE, since = "1.3")
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		ClassSelector that = (ClassSelector) o;
+		return Objects.equals(this.className, that.className);
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	@API(status = STABLE, since = "1.3")
+	@Override
+	public int hashCode() {
+		return this.className.hashCode();
 	}
 
 	@Override

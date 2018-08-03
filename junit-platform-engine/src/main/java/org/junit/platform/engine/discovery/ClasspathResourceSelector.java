@@ -12,6 +12,8 @@ package org.junit.platform.engine.discovery;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.util.Objects;
+
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
@@ -55,6 +57,31 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	 */
 	public String getClasspathResourceName() {
 		return this.classpathResourceName;
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	@API(status = STABLE, since = "1.3")
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		ClasspathResourceSelector that = (ClasspathResourceSelector) o;
+		return Objects.equals(this.classpathResourceName, that.classpathResourceName);
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	@API(status = STABLE, since = "1.3")
+	@Override
+	public int hashCode() {
+		return this.classpathResourceName.hashCode();
 	}
 
 	@Override
