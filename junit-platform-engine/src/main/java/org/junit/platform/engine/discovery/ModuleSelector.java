@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Objects;
 
@@ -27,7 +27,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * @see DiscoverySelectors#selectModule(String)
  * @see DiscoverySelectors#selectModules(java.util.Set)
  */
-@API(status = EXPERIMENTAL, since = "1.1")
+@API(status = STABLE, since = "1.1")
 public class ModuleSelector implements DiscoverySelector {
 
 	private final String moduleName;
@@ -46,7 +46,7 @@ public class ModuleSelector implements DiscoverySelector {
 	/**
 	 * @since 1.3
 	 */
-	@API(status = EXPERIMENTAL, since = "1.3")
+	@API(status = STABLE, since = "1.3")
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -62,7 +62,7 @@ public class ModuleSelector implements DiscoverySelector {
 	/**
 	 * @since 1.3
 	 */
-	@API(status = EXPERIMENTAL, since = "1.3")
+	@API(status = STABLE, since = "1.3")
 	@Override
 	public int hashCode() {
 		return this.moduleName.hashCode();
