@@ -10,12 +10,7 @@
 
 package org.junit.platform;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Abstract base class for unit tests that wish to test
@@ -26,21 +21,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public abstract class AbstractEqualsAndHashCodeTests {
 
 	protected final <T> void assertEqualsAndHashCode(T equal1, T equal2, T different) {
-		assertNotNull(equal1);
-		assertNotNull(equal2);
-		assertNotNull(different);
+		assertThat(equal1).isNotNull();
+		assertThat(equal2).isNotNull();
+		assertThat(different).isNotNull();
 
-		assertNotSame(equal1, equal2);
-		assertFalse(equal1.equals(null));
-		assertFalse(equal1.equals(new Object()));
-		assertFalse(equal1.equals(different));
-		assertFalse(different.equals(equal1));
-		assertNotEquals(equal1.hashCode(), different.hashCode());
+		assertThat(equal1).isNotSameAs(equal2);
+		assertThat(equal1).isNotEqualTo(null);
+		assertThat(equal1).isNotEqualTo(new Object());
+		assertThat(equal1).isNotEqualTo(different);
+		assertThat(different).isNotEqualTo(equal1);
+		assertThat(different).isNotEqualTo(equal2);
+		assertThat(equal1.hashCode()).isNotEqualTo(different.hashCode());
 
-		assertTrue(equal1.equals(equal1));
-		assertTrue(equal1.equals(equal2));
-		assertTrue(equal2.equals(equal1));
-		assertEquals(equal1.hashCode(), equal2.hashCode());
+		assertThat(equal1).isEqualTo(equal1);
+		assertThat(equal1).isEqualTo(equal2);
+		assertThat(equal2).isEqualTo(equal1);
+		assertThat(equal1.hashCode()).isEqualTo(equal2.hashCode());
 	}
 
 }
