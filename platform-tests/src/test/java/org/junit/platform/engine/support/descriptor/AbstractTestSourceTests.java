@@ -11,10 +11,7 @@
 package org.junit.platform.engine.support.descriptor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
@@ -28,6 +25,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.platform.AbstractEqualsAndHashCodeTests;
 import org.junit.platform.engine.TestSource;
 
 /**
@@ -36,25 +34,7 @@ import org.junit.platform.engine.TestSource;
  *
  * @since 1.0
  */
-abstract class AbstractTestSourceTests {
-
-	<T> void assertEqualsAndHashCode(T equal1, T equal2, T different) {
-		assertNotNull(equal1);
-		assertNotNull(equal2);
-		assertNotNull(different);
-
-		assertNotSame(equal1, equal2);
-		assertFalse(equal1.equals(null));
-		assertFalse(equal1.equals(new Object()));
-		assertFalse(equal1.equals(different));
-		assertFalse(different.equals(equal1));
-		assertNotEquals(equal1.hashCode(), different.hashCode());
-
-		assertTrue(equal1.equals(equal1));
-		assertTrue(equal1.equals(equal2));
-		assertTrue(equal2.equals(equal1));
-		assertEquals(equal1.hashCode(), equal2.hashCode());
-	}
+abstract class AbstractTestSourceTests extends AbstractEqualsAndHashCodeTests {
 
 	abstract Stream<? extends Serializable> createSerializableInstances() throws Exception;
 
