@@ -11,6 +11,9 @@
 package org.junit.jupiter.params;
 
 import static java.util.stream.Collectors.joining;
+import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedTest.DISPLAY_NAME_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedTest.INDEX_PLACEHOLDER;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -24,10 +27,12 @@ import org.junit.platform.commons.util.StringUtils;
  */
 class ParameterizedTestNameFormatter {
 
-	private final String namePattern;
+	private final String pattern;
+	private final String displayName;
 
-	ParameterizedTestNameFormatter(String namePattern) {
-		this.namePattern = namePattern;
+	ParameterizedTestNameFormatter(String pattern, String displayName) {
+		this.pattern = pattern;
+		this.displayName = displayName;
 	}
 
 	String format(int invocationIndex, Object... arguments) {
@@ -37,15 +42,19 @@ class ParameterizedTestNameFormatter {
 	}
 
 	private String prepareMessageFormatPattern(int invocationIndex, Object[] arguments) {
-		String result = namePattern.replace("{index}", String.valueOf(invocationIndex));
-		if (result.contains("{arguments}")) {
+		String result = pattern//
+				.replace(DISPLAY_NAME_PLACEHOLDER, this.displayName)//
+				.replace(INDEX_PLACEHOLDER, String.valueOf(invocationIndex));
+
+		if (result.contains(ARGUMENTS_PLACEHOLDER)) {
 			// @formatter:off
 			String replacement = IntStream.range(0, arguments.length)
 					.mapToObj(index -> "{" + index + "}")
 					.collect(joining(", "));
 			// @formatter:on
-			result = result.replace("{arguments}", replacement);
+			result = result.replace(ARGUMENTS_PLACEHOLDER, replacement);
 		}
+
 		return result;
 	}
 
@@ -62,8 +71,8 @@ class ParameterizedTestNameFormatter {
 			return MessageFormat.format(pattern, arguments);
 		}
 		catch (IllegalArgumentException ex) {
-			String message = "The naming pattern defined for the parameterized tests is invalid. "
-					+ "The nested exception contains more details.";
+			String message = "The display name pattern defined for the parameterized test is invalid. "
+					+ "See nested exception for further details.";
 			throw new JUnitException(message, ex);
 		}
 	}

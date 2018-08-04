@@ -76,6 +76,10 @@ on GitHub.
   instead of once for each invocation.
 * Performance improvements for executing parameterized tests, particularly when the method
   declares more than a few parameters.
+* New `{displayName}` placeholder for the `name` attribute in `@ParameterizedTest` that
+  allows developers to include the display name of the `@ParameterizedTest` method in a
+  custom display name for invocations of that parameterized test.
+  - This aligns with the existing `{displayName}` placeholder support for `@RepeatedTest`.
 * Generation of the display name for a `@ParameterizedTest` no longer fails if the
   `toString()` implementation of an argument for the parameterized test throws an
   exception. Instead, the object with the broken `toString()` implementation will be
