@@ -20,6 +20,11 @@ import org.junit.jupiter.api.TestReporter;
 class TestReporterDemo {
 
 	@Test
+	void reportMessage(TestReporter testReporter) {
+		testReporter.publishMessage("a status message");
+	}
+
+	@Test
 	void reportSingleValue(TestReporter testReporter) {
 		testReporter.publishEntry("a key", "a value");
 	}

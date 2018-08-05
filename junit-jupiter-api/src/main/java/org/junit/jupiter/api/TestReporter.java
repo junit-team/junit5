@@ -43,6 +43,7 @@ public interface TestReporter {
 	 * keys and values within entries in the map also must not be
 	 * {@code null} or blank
 	 * @see #publishEntry(String, String)
+	 * @see #publishMessage(String)
 	 */
 	void publishEntry(Map<String, String> map);
 
@@ -52,9 +53,26 @@ public interface TestReporter {
 	 * @param key the key of the entry to publish
 	 * @param value the value of the entry to publish
 	 * @see #publishEntry(Map)
+	 * @see #publishMessage(String)
 	 */
 	default void publishEntry(String key, String value) {
 		this.publishEntry(Collections.singletonMap(key, value));
+	}
+
+	/**
+	 * Publish the specified message to be consumed by an
+	 * {@code org.junit.platform.engine.EngineExecutionListener}.
+	 *
+	 * <p>This method follows the same key/value logic as {@code publishEntry}.
+	 * It uses the string {@code "message"} as key and the specified
+	 * {@code message} argument as value.
+	 *
+	 * @param message the message to be published; never {@code null} or blank
+	 * @see #publishEntry(Map)
+	 * @see #publishEntry(String, String)
+	 */
+	default void publishMessage(String message) {
+		this.publishEntry("message", message);
 	}
 
 }
