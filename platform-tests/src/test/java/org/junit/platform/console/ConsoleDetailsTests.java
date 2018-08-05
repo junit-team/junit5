@@ -158,6 +158,17 @@ class ConsoleDetailsTests {
 	static class ReportTestCase {
 
 		@Test
+		void reportSingleMessage(TestReporter reporter) {
+			reporter.publishMessage("foo");
+		}
+
+		@Test
+		void reportMultipleMessages(TestReporter reporter) {
+			reporter.publishMessage("foo");
+			reporter.publishMessage("bar");
+		}
+
+		@Test
 		void reportSingleEntryWithSingleMapping(TestReporter reporter) {
 			reporter.publishEntry("foo", "bar");
 		}

@@ -31,7 +31,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 class ReportingTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	void threeReportEntriesArePublished() {
+	void reportEntriesArePublished() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(MyReportingTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -40,7 +40,7 @@ class ReportingTests extends AbstractJupiterTestEngineTests {
 		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
 
-		assertEquals(6, eventRecorder.getReportingEntryPublishedCount(), "# report entries published");
+		assertEquals(7, eventRecorder.getReportingEntryPublishedCount(), "# report entries published");
 	}
 
 	static class MyReportingTestCase {
@@ -59,6 +59,7 @@ class ReportingTests extends AbstractJupiterTestEngineTests {
 		void succeedingTest(TestReporter reporter) {
 			reporter.publishEntry(new HashMap<>());
 			reporter.publishEntry("userName", "dk38");
+			reporter.publishMessage("status message");
 		}
 
 		@Test

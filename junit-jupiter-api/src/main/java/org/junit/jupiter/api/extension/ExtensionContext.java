@@ -275,6 +275,20 @@ public interface ExtensionContext {
 	}
 
 	/**
+	 * Publish the specified message to be consumed by an
+	 * {@code org.junit.platform.engine.EngineExecutionListener}.
+	 *
+	 * <p>This method follows the same key/value logic as {@code publishEntry}.
+	 * It uses the string {@code "message"} as key and the specified
+	 * {@code message} argument as value.
+	 *
+	 * @param message the message to be published; never {@code null} or blank
+	 */
+	default void publishReportMessage(String message) {
+		this.publishReportEntry("message", message);
+	}
+
+	/**
 	 * Get the {@link Store} for the supplied {@link Namespace}.
 	 *
 	 * <p>Use {@code getStore(Namespace.GLOBAL)} to get the default, global {@link Namespace}.
