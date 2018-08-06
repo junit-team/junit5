@@ -26,6 +26,8 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.test
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -195,6 +197,26 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 				finishedWithFailure(allOf(isA(TestInstantiationException.class),
 					message("TestInstanceFactory [" + ExplosiveTestInstanceFactory.class.getName()
 							+ "] failed to instantiate test class [" + testClass.getName() + "]: boom!")))), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void proxyTestInstanceFactoryFailsDueToUseOfDifferentClassLoader() {
+		Class<?> testClass = ProxiedTestCase.class;
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
+
+		assertEquals(0, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests aborted");
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(container(testClass), //
+				// NOTE: the test class name is the same even though the objects are instantiated using different ClassLoaders.
+				finishedWithFailure(allOf(isA(TestInstantiationException.class),
+					message("TestInstanceFactory [" + ProxyTestInstanceFactory.class.getName()
+							+ "] failed to return an instance of [" + testClass.getName()
+							+ "] and instead returned an instance of [" + testClass.getName() + "].")))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -474,6 +496,24 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@ExtendWith(ProxyTestInstanceFactory.class)
+	@TestInstance(PER_CLASS)
+	static class ProxiedTestCase {
+
+		@Test
+		void test1() {
+			callSequence.add("test1");
+		}
+
+		@Test
+		void test2() {
+			callSequence.add("test2");
+		}
+
+	}
+
+	// -------------------------------------------------------------------------
+
 	private static abstract class AbstractTestInstanceFactory implements TestInstanceFactory {
 
 		@Override
@@ -532,6 +572,44 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {
 			throw new RuntimeException("boom!");
+		}
+	}
+
+	/**
+	 * This does not actually create a proxy. Rather, it simply simulates what
+	 * a proxy-based implementation might do, by loading the class from a
+	 * different {@link ClassLoader}.
+	 */
+	private static class ProxyTestInstanceFactory implements TestInstanceFactory {
+
+		@Override
+		public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {
+			Class<?> testClass = factoryContext.getTestClass();
+			String className = testClass.getName();
+			instantiated(getClass(), testClass);
+
+			try (ProxyClassLoader enigmaClassLoader = new ProxyClassLoader()) {
+				// Load test class from different class loader
+				Class<?> clazz = enigmaClassLoader.loadClass(className);
+				return ReflectionUtils.newInstance(clazz);
+			}
+			catch (Exception ex) {
+				throw new RuntimeException("Failed to load class [" + className + "]", ex);
+			}
+		}
+	}
+
+	private static class ProxyClassLoader extends URLClassLoader {
+
+		ProxyClassLoader() {
+			super(new URL[] { ProxyClassLoader.class.getProtectionDomain().getCodeSource().getLocation() },
+				getSystemClassLoader());
+		}
+
+		@Override
+		public Class<?> loadClass(String name) throws ClassNotFoundException {
+			return (name.startsWith(TestInstanceFactoryTests.class.getName()) ? findClass(name)
+					: super.loadClass(name));
 		}
 	}
 
