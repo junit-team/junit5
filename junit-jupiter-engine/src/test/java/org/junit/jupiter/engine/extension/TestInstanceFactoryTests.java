@@ -212,11 +212,16 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass), //
-				// NOTE: the test class name is the same even though the objects are instantiated using different ClassLoaders.
+				// NOTE: the test class names are the same even though the objects are
+				// instantiated using different ClassLoaders. Thus, we check for the
+				// appended "@" but ignore the actual hash code for the test class
+				// loaded by the different ClassLoader.
 				finishedWithFailure(allOf(isA(TestInstantiationException.class),
-					message("TestInstanceFactory [" + ProxyTestInstanceFactory.class.getName()
-							+ "] failed to return an instance of [" + testClass.getName()
-							+ "] and instead returned an instance of [" + testClass.getName() + "].")))), //
+					message(m -> m.startsWith("TestInstanceFactory [" + ProxyTestInstanceFactory.class.getName() + "]")
+							&& m.contains("failed to return an instance of [" + testClass.getName() + "@"
+									+ Integer.toHexString(System.identityHashCode(testClass)))
+							&& m.contains("and instead returned an instance of [" + testClass.getName() + "@")//
+					)))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -588,9 +593,9 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			String className = testClass.getName();
 			instantiated(getClass(), testClass);
 
-			try (ProxyClassLoader enigmaClassLoader = new ProxyClassLoader()) {
+			try (ProxyClassLoader proxyClassLoader = new ProxyClassLoader()) {
 				// Load test class from different class loader
-				Class<?> clazz = enigmaClassLoader.loadClass(className);
+				Class<?> clazz = proxyClassLoader.loadClass(className);
 				return ReflectionUtils.newInstance(clazz);
 			}
 			catch (Exception ex) {

@@ -312,10 +312,20 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		}
 
 		if (!this.testClass.isInstance(instance)) {
+			String testClassName = this.testClass.getName();
+			Class<?> instanceClass = (instance == null ? null : instance.getClass());
+			String instanceClassName = (instanceClass == null ? "null" : instanceClass.getName());
+
+			// If the test instance was loaded via a different ClassLoader, append
+			// the identity hash codes to the type names to help users disambiguate
+			// between otherwise identical "fully qualified class names".
+			if (testClassName.equals(instanceClassName)) {
+				testClassName += "@" + Integer.toHexString(System.identityHashCode(this.testClass));
+				instanceClassName += "@" + Integer.toHexString(System.identityHashCode(instanceClass));
+			}
 			String message = String.format(
 				"TestInstanceFactory [%s] failed to return an instance of [%s] and instead returned an instance of [%s].",
-				this.testInstanceFactory.getClass().getName(), this.testClass.getName(),
-				(instance == null ? "null" : instance.getClass().getName()));
+				this.testInstanceFactory.getClass().getName(), testClassName, instanceClassName);
 
 			throw new TestInstantiationException(message);
 		}
