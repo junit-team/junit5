@@ -42,7 +42,7 @@ Code coverage using [JaCoCo] for the latest build is available on the
 [Jenkins CI server] and on [Codecov].
 
 A code coverage report can also be generated locally by executing
-`gradlew -PenableJaCoCo clean jacocoRootReport`. The results will be available in
+`./gradlew -PenableJaCoCo clean jacocoRootReport` or `gradlew.bat -PenableJaCoCo clean jacocoRootReport`. The results will be available in
 `build/reports/jacoco/jacocoRootReport/html/index.html`.
 
 ## Gradle Build Scans
@@ -59,13 +59,17 @@ You need [JDK-10] to build JUnit 5.
 All modules can be built with Gradle using the following command.
 
 ```
-gradlew clean assemble
+./gradlew clean assemble
+#or
+gradlew.bat clean assemble
 ```
 
 All modules can be tested with Gradle using the following command.
 
 ```
-gradlew clean test
+./gradlew clean test
+#or
+gradlew.bat clean test
 ```
 
 Since Gradle has excellent incremental build support, you can usually omit executing the `clean` task.
@@ -75,7 +79,9 @@ Since Gradle has excellent incremental build support, you can usually omit execu
 All modules can be installed in a local Maven repository for consumption in other projects via the following command.
 
 ```
-gradlew clean publishToMavenLocal
+./gradlew clean publishToMavenLocal
+#or
+gradlew.bat clean publishToMavenLocal
 ```
 
 ## Dependency Metadata
