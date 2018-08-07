@@ -65,8 +65,8 @@ on GitHub.
   system hash code, separated by an `@` symbol.
 * Although it is _highly discouraged_, it is now possible to extend the `{Assertions}`
   and `{Assumptions}` classes for special use cases.
-* New `publishMessage(String)` method in `TestReporter` that makes it easier to publish a
-  report entry based solely on a _message_ without requiring that a _key_ be specified
+* New `publishEntry(String)` method in `TestReporter` that makes it easier to publish a
+  report entry based solely on a _value_ without requiring that a _key_ be specified
   (as is required by the existing `publishEntry()` variants).
 * A custom test source `URI` for a dynamic container or dynamic test will now be
   registered as a `ClasspathResourceSource` if the `URI` uses the `classpath` scheme.

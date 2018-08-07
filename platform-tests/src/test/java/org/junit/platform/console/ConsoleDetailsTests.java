@@ -159,13 +159,13 @@ class ConsoleDetailsTests {
 
 		@Test
 		void reportSingleMessage(TestReporter reporter) {
-			reporter.publishMessage("foo");
+			reporter.publishEntry("foo");
 		}
 
 		@Test
 		void reportMultipleMessages(TestReporter reporter) {
-			reporter.publishMessage("foo");
-			reporter.publishMessage("bar");
+			reporter.publishEntry("foo");
+			reporter.publishEntry("bar");
 		}
 
 		@Test

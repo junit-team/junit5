@@ -185,7 +185,7 @@ class ExtensionContextTests {
 		extensionContext.publishReportEntry(map1);
 		extensionContext.publishReportEntry(map2);
 		extensionContext.publishReportEntry("3rd key", "third value");
-		extensionContext.publishReportMessage("status message");
+		extensionContext.publishReportEntry("status message");
 
 		ArgumentCaptor<ReportEntry> entryCaptor = ArgumentCaptor.forClass(ReportEntry.class);
 		Mockito.verify(engineExecutionListener, Mockito.times(4)).reportingEntryPublished(
@@ -199,7 +199,7 @@ class ExtensionContextTests {
 		assertEquals(map1, reportEntry1.getKeyValuePairs());
 		assertEquals(map2, reportEntry2.getKeyValuePairs());
 		assertEquals("third value", reportEntry3.getKeyValuePairs().get("3rd key"));
-		assertEquals("status message", reportEntry4.getKeyValuePairs().get("message"));
+		assertEquals("status message", reportEntry4.getKeyValuePairs().get("value"));
 	}
 
 	@Test

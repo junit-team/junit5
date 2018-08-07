@@ -3,9 +3,9 @@ Started:     JUnit Jupiter ([engine:junit-jupiter])
 Started:     Report ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase])
 Started:     reportMultipleMessages(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]/[method:reportMultipleMessages(org.junit.jupiter.api.TestReporter)])
 Reported:    reportMultipleMessages(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]/[method:reportMultipleMessages(org.junit.jupiter.api.TestReporter)])
-             => Reported values: ReportEntry \[timestamp = ....-..-..T..:...*, message = 'foo'\]
+             => Reported values: ReportEntry \[timestamp = ....-..-..T..:...*, value = 'foo'\]
 Reported:    reportMultipleMessages(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]/[method:reportMultipleMessages(org.junit.jupiter.api.TestReporter)])
-             => Reported values: ReportEntry \[timestamp = ....-..-..T..:...*, message = 'bar'\]
+             => Reported values: ReportEntry \[timestamp = ....-..-..T..:...*, value = 'bar'\]
 Finished:    reportMultipleMessages(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]/[method:reportMultipleMessages(org.junit.jupiter.api.TestReporter)])
 Finished:    Report ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase])
 Finished:    JUnit Jupiter ([engine:junit-jupiter])

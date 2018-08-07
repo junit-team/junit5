@@ -44,7 +44,7 @@ public interface TestReporter {
 	 * keys and values within entries in the map also must not be
 	 * {@code null} or blank
 	 * @see #publishEntry(String, String)
-	 * @see #publishMessage(String)
+	 * @see #publishEntry(String)
 	 */
 	void publishEntry(Map<String, String> map);
 
@@ -54,25 +54,25 @@ public interface TestReporter {
 	 * @param key the key of the entry to publish; never {@code null} or blank
 	 * @param value the value of the entry to publish; never {@code null} or blank
 	 * @see #publishEntry(Map)
-	 * @see #publishMessage(String)
+	 * @see #publishEntry(String)
 	 */
 	default void publishEntry(String key, String value) {
 		this.publishEntry(Collections.singletonMap(key, value));
 	}
 
 	/**
-	 * Publish the supplied message as a <em>report entry</em>.
+	 * Publish the supplied value as a <em>report entry</em>.
 	 *
 	 * <p>This method delegates to {@link #publishEntry(String, String)},
-	 * supplying {@code "message"} as the key and the supplied {@code message}
+	 * supplying {@code "value"} as the key and the supplied {@code value}
 	 * argument as the value.
 	 *
-	 * @param message the message to be published; never {@code null} or blank
+	 * @param value the value to be published; never {@code null} or blank
 	 * @see #publishEntry(Map)
 	 * @see #publishEntry(String, String)
 	 */
-	default void publishMessage(String message) {
-		this.publishEntry("message", message);
+	default void publishEntry(String value) {
+		this.publishEntry("value", value);
 	}
 
 }

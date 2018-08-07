@@ -2,8 +2,8 @@
 '-- JUnit Jupiter [OK]
   '-- Report [OK]
     '-- reportMultipleMessages(TestReporter) [OK]
-        ....-..-..T..:...* message = `foo`
-        ....-..-..T..:...* message = `bar`
+        ....-..-..T..:...* value = `foo`
+        ....-..-..T..:...* value = `bar`
 
 Test run finished after [\d]+ ms
 [         2 containers found      ]

@@ -2,7 +2,7 @@
 └─ JUnit Jupiter ✔
    └─ Report ✔
       └─ reportSingleMessage(TestReporter) ✔
-            ....-..-..T..:...* message = `foo`
+            ....-..-..T..:...* value = `foo`
 
 Test run finished after [\d]+ ms
 [         2 containers found      ]

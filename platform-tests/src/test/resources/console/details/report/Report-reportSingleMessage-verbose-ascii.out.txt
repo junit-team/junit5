@@ -7,7 +7,7 @@ Test plan execution started. Number of static tests: 1
 | | |  uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]/[method:reportSingleMessage(org.junit.jupiter.api.TestReporter)]
 | | |    parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]
 | | |    source: MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$ReportTestCase', methodName = 'reportSingleMessage', methodParameterTypes = 'org.junit.jupiter.api.TestReporter']
-\| \| \|   reports: ReportEntry \[timestamp = ....-..-..T..:...*, message = 'foo'\]
+\| \| \|   reports: ReportEntry \[timestamp = ....-..-..T..:...*, value = 'foo'\]
 \| \| \|  duration: [\d]+ ms
 | | |    status: [OK] SUCCESSFUL
 \| '-- Report finished after [\d]+ ms\.

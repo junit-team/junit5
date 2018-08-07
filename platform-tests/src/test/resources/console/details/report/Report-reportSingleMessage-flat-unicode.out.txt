@@ -3,7 +3,7 @@ Started:     JUnit Jupiter ([engine:junit-jupiter])
 Started:     Report ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase])
 Started:     reportSingleMessage(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]/[method:reportSingleMessage(org.junit.jupiter.api.TestReporter)])
 Reported:    reportSingleMessage(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]/[method:reportSingleMessage(org.junit.jupiter.api.TestReporter)])
-             => Reported values: ReportEntry \[timestamp = ....-..-..T..:...*, message = 'foo'\]
+             => Reported values: ReportEntry \[timestamp = ....-..-..T..:...*, value = 'foo'\]
 Finished:    reportSingleMessage(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]/[method:reportSingleMessage(org.junit.jupiter.api.TestReporter)])
 Finished:    Report ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase])
 Finished:    JUnit Jupiter ([engine:junit-jupiter])
