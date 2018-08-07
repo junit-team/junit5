@@ -11,8 +11,8 @@
 package org.junit.platform.console.tasks;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 import org.junit.platform.console.options.Theme;
@@ -27,7 +27,8 @@ import org.junit.platform.launcher.TestPlan;
  */
 class TreePrintingListener implements TestExecutionListener {
 
-	private final Map<String, TreeNode> nodesByUniqueId = new ConcurrentHashMap<>();
+	private final Object nodesByUniqueIdLock = new Object();
+	private final Map<String, TreeNode> nodesByUniqueId = new HashMap<>();
 	private TreeNode root;
 	private final TreePrinter treePrinter;
 
@@ -37,13 +38,19 @@ class TreePrintingListener implements TestExecutionListener {
 
 	private TreeNode addNode(TestIdentifier testIdentifier, Supplier<TreeNode> nodeSupplier) {
 		TreeNode node = nodeSupplier.get();
-		nodesByUniqueId.put(testIdentifier.getUniqueId(), node);
-		testIdentifier.getParentId().map(nodesByUniqueId::get).orElse(root).addChild(node);
+		synchronized (nodesByUniqueIdLock) {
+			nodesByUniqueId.put(testIdentifier.getUniqueId(), node);
+			testIdentifier.getParentId().map(nodesByUniqueId::get).orElse(root).addChild(node);
+		}
 		return node;
 	}
 
 	private TreeNode getNode(TestIdentifier testIdentifier) {
-		return nodesByUniqueId.get(testIdentifier.getUniqueId());
+		TreeNode node;
+		synchronized (nodesByUniqueIdLock) {
+			node = nodesByUniqueId.get(testIdentifier.getUniqueId());
+		}
+		return node;
 	}
 
 	@Override
