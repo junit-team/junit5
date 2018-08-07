@@ -27,7 +27,7 @@ import org.junit.platform.launcher.TestPlan;
  */
 class TreePrintingListener implements TestExecutionListener {
 
-	// concurrent access to the map is guarded by the "this" object
+	private final Object nodesByUniqueIdLock = new Object();
 	private final Map<String, TreeNode> nodesByUniqueId = new HashMap<>();
 	private TreeNode root;
 	private final TreePrinter treePrinter;
@@ -36,15 +36,21 @@ class TreePrintingListener implements TestExecutionListener {
 		this.treePrinter = new TreePrinter(out, theme, disableAnsiColors);
 	}
 
-	private synchronized TreeNode addNode(TestIdentifier testIdentifier, Supplier<TreeNode> nodeSupplier) {
+	private TreeNode addNode(TestIdentifier testIdentifier, Supplier<TreeNode> nodeSupplier) {
 		TreeNode node = nodeSupplier.get();
-		nodesByUniqueId.put(testIdentifier.getUniqueId(), node);
-		testIdentifier.getParentId().map(nodesByUniqueId::get).orElse(root).addChild(node);
+		synchronized (nodesByUniqueIdLock) {
+			nodesByUniqueId.put(testIdentifier.getUniqueId(), node);
+			testIdentifier.getParentId().map(nodesByUniqueId::get).orElse(root).addChild(node);
+		}
 		return node;
 	}
 
-	private synchronized TreeNode getNode(TestIdentifier testIdentifier) {
-		return nodesByUniqueId.get(testIdentifier.getUniqueId());
+	private TreeNode getNode(TestIdentifier testIdentifier) {
+		TreeNode node;
+		synchronized (nodesByUniqueIdLock) {
+			node = nodesByUniqueId.get(testIdentifier.getUniqueId());
+		}
+		return node;
 	}
 
 	@Override
