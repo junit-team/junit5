@@ -11,8 +11,8 @@
 package org.junit.platform.console.tasks;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 import org.junit.platform.console.options.Theme;
@@ -27,7 +27,8 @@ import org.junit.platform.launcher.TestPlan;
  */
 class TreePrintingListener implements TestExecutionListener {
 
-	private final Map<String, TreeNode> nodesByUniqueId = new ConcurrentHashMap<>();
+	// concurrent access to the map is guarded by the "this" object
+	private final Map<String, TreeNode> nodesByUniqueId = new HashMap<>();
 	private TreeNode root;
 	private final TreePrinter treePrinter;
 
@@ -35,14 +36,14 @@ class TreePrintingListener implements TestExecutionListener {
 		this.treePrinter = new TreePrinter(out, theme, disableAnsiColors);
 	}
 
-	private TreeNode addNode(TestIdentifier testIdentifier, Supplier<TreeNode> nodeSupplier) {
+	private synchronized TreeNode addNode(TestIdentifier testIdentifier, Supplier<TreeNode> nodeSupplier) {
 		TreeNode node = nodeSupplier.get();
 		nodesByUniqueId.put(testIdentifier.getUniqueId(), node);
 		testIdentifier.getParentId().map(nodesByUniqueId::get).orElse(root).addChild(node);
 		return node;
 	}
 
-	private TreeNode getNode(TestIdentifier testIdentifier) {
+	private synchronized TreeNode getNode(TestIdentifier testIdentifier) {
 		return nodesByUniqueId.get(testIdentifier.getUniqueId());
 	}
 
