@@ -70,7 +70,9 @@ public interface TestReporter {
 	 * @param value the value to be published; never {@code null} or blank
 	 * @see #publishEntry(Map)
 	 * @see #publishEntry(String, String)
+	 * @since 5.3
 	 */
+	@API(status = STABLE, since = "5.3")
 	default void publishEntry(String value) {
 		this.publishEntry("value", value);
 	}

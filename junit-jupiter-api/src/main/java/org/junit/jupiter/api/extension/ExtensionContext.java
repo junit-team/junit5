@@ -295,7 +295,9 @@ public interface ExtensionContext {
 	 * @see #publishReportEntry(Map)
 	 * @see #publishReportEntry(String, String)
 	 * @see org.junit.platform.engine.EngineExecutionListener#reportingEntryPublished
+	 * @since 5.3
 	 */
+	@API(status = STABLE, since = "5.3")
 	default void publishReportEntry(String value) {
 		this.publishReportEntry("value", value);
 	}
