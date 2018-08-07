@@ -26,7 +26,8 @@ import org.apiguardian.api.API;
  * {@link TestFactory @TestFactory}, etc.
  *
  * <p>Within such methods the injected {@code TestReporter} can be used to
- * publish report entries.
+ * publish <em>report entries</em> for the current container or test to the
+ * reporting infrastructure.
  *
  * @since 5.0
  * @see #publishEntry(Map)
@@ -37,7 +38,7 @@ import org.apiguardian.api.API;
 public interface TestReporter {
 
 	/**
-	 * Publish the supplied map of key-value pairs as a report entry.
+	 * Publish the supplied map of key-value pairs as a <em>report entry</em>.
 	 *
 	 * @param map the key-value pairs to be published; never {@code null};
 	 * keys and values within entries in the map also must not be
@@ -48,10 +49,10 @@ public interface TestReporter {
 	void publishEntry(Map<String, String> map);
 
 	/**
-	 * Publish the supplied key-value pair as a report entry.
+	 * Publish the supplied key-value pair as a <em>report entry</em>.
 	 *
-	 * @param key the key of the entry to publish
-	 * @param value the value of the entry to publish
+	 * @param key the key of the entry to publish; never {@code null} or blank
+	 * @param value the value of the entry to publish; never {@code null} or blank
 	 * @see #publishEntry(Map)
 	 * @see #publishMessage(String)
 	 */
@@ -60,12 +61,11 @@ public interface TestReporter {
 	}
 
 	/**
-	 * Publish the specified message to be consumed by an
-	 * {@code org.junit.platform.engine.EngineExecutionListener}.
+	 * Publish the supplied message as a <em>report entry</em>.
 	 *
-	 * <p>This method follows the same key/value logic as {@code publishEntry}.
-	 * It uses the string {@code "message"} as key and the specified
-	 * {@code message} argument as value.
+	 * <p>This method delegates to {@link #publishEntry(String, String)},
+	 * supplying {@code "message"} as the key and the supplied {@code message}
+	 * argument as the value.
 	 *
 	 * @param message the message to be published; never {@code null} or blank
 	 * @see #publishEntry(Map)

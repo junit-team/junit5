@@ -109,15 +109,19 @@ public interface EngineExecutionListener {
 	void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult);
 
 	/**
-	 * Can be called for any {@code testDescriptor} in order to publish additional information, e.g.:
+	 * Can be called for any {@link TestDescriptor} in order to publish additional
+	 * information to the reporting infrastructure &mdash; for example:
+	 *
 	 * <ul>
 	 *     <li>Output that would otherwise go to {@code System.out}</li>
 	 *     <li>Information about test context or test data</li>
 	 * </ul>
 	 *
-	 * <p>The current lifecycle state of {@code testDescriptor} is not relevant;
-	 * that means that reporting events can occur at all times.
-	 * @param testDescriptor the descriptor of the test or container to which the entry belongs
+	 * <p>The current lifecycle state of the supplied {@code TestDescriptor} is
+	 * not relevant: reporting events can occur at any time.
+	 *
+	 * @param testDescriptor the descriptor of the test or container to which
+	 * the reporting entry belongs
 	 * @param entry a {@code ReportEntry} instance to be published
 	 */
 	void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry);
