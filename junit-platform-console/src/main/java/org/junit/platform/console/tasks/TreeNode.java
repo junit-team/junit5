@@ -51,7 +51,7 @@ class TreeNode {
 		this.reason = reason;
 	}
 
-	TreeNode addChild(TreeNode node) {
+	synchronized TreeNode addChild(TreeNode node) {
 		if (children == Collections.EMPTY_LIST) {
 			children = new ArrayList<>();
 		}
@@ -59,7 +59,7 @@ class TreeNode {
 		return this;
 	}
 
-	TreeNode addReportEntry(ReportEntry reportEntry) {
+	synchronized TreeNode addReportEntry(ReportEntry reportEntry) {
 		if (reports == Collections.EMPTY_LIST) {
 			reports = new ArrayList<>();
 		}
