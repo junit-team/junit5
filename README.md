@@ -38,14 +38,12 @@ Ask JUnit 5 related questions on [StackOverflow] or chat with the team and the c
 
 ## Code Coverage
 
-Code coverage using [JaCoCo] for the latest build is available on the
-[Jenkins CI server] and on [Codecov].
+Code coverage using [JaCoCo] for the latest build is available on the [Jenkins CI server]
+and on [Codecov].
 
-A code coverage report can also be generated locally by executing
-`./gradlew -PenableJaCoCo clean jacocoRootReport` (on Mac or Linux) or
-`gradlew.bat -PenableJaCoCo clean jacocoRootReport` (on Windows).
-The results will be available in
-`build/reports/jacoco/jacocoRootReport/html/index.html`.
+A code coverage report can also be generated locally via the [Gradle Wrapper] by
+executing `gradlew -PenableJaCoCo clean jacocoRootReport`. The results will be available
+in `build/reports/jacoco/jacocoRootReport/html/index.html`.
 
 ## Gradle Build Scans
 
@@ -58,27 +56,24 @@ project, click on "See console output" on the build scan page.
 ## Building from Source
 
 You need [JDK-10] to build JUnit 5.
-All modules can be built with Gradle using the following command.
 
-`./gradlew clean assemble` (on Mac or Linux)
+All modules can be _built_ with the [Gradle Wrapper] using the following command.
 
-`gradlew.bat clean assemble` (on Windows)
+`gradlew clean assemble`
 
-All modules can be tested with Gradle using the following command.
+All modules can be _tested_ with the [Gradle Wrapper] using the following command.
 
-`./gradlew clean test` (on Mac or Linux)
+`gradlew clean test`
 
-`gradlew.bat clean test` (on Windows)
-
-Since Gradle has excellent incremental build support, you can usually omit executing the `clean` task.
+Since Gradle has excellent incremental build support, you can usually omit executing the
+`clean` task.
 
 ## Installing in Local Maven Repository
 
-All modules can be installed in a local Maven repository for consumption in other projects via the following command.
+All modules can be _installed_ with the [Gradle Wrapper] in a local Maven repository for
+consumption in other projects via the following command.
 
-`./gradlew clean publishToMavenLocal` (on Mac or Linux)
-
-`gradlew.bat clean publishToMavenLocal` (on Windows)
+`gradlew clean publishToMavenLocal`
 
 ## Dependency Metadata
 
@@ -150,6 +145,7 @@ as it is not intended to be used as a module.
 [Codecov]: https://codecov.io/gh/junit-team/junit5
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
 [Gitter]: https://gitter.im/junit-team/junit5
+[Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: http://www.eclemma.org/jacoco/
 [Javadoc]: https://junit.org/junit5/docs/current/api/
 [JDK-10]: http://jdk.java.net/10/
