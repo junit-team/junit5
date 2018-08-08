@@ -63,7 +63,7 @@ class BeforeAndAfterAllExceptionHandlerTests extends AbstractJupiterTestEngineTe
 			event(engine(), started()), //
 			event(container(RethrowTestCase.class), started()), //
 			event(container(RethrowTestCase.class),
-			      finishedWithFailure(allOf(isA(IOException.class), message("checked")))), //
+				finishedWithFailure(allOf(isA(IOException.class), message("checked")))), //
 			event(engine(), finishedSuccessfully()));
 
 		assertEquals(Arrays.asList("rethrowBeforeAll", "rethrowAfterAll", "rethrowAfterAll"), handlerCalls);
@@ -96,7 +96,7 @@ class BeforeAndAfterAllExceptionHandlerTests extends AbstractJupiterTestEngineTe
 			event(engine(), started()), //
 			event(container(ConvertTestCase.class), started()), //
 			event(container(ConvertTestCase.class),
-			      finishedWithFailure(allOf(isA(RuntimeException.class), message("unchecked")))), //
+				finishedWithFailure(allOf(isA(RuntimeException.class), message("unchecked")))), //
 			event(engine(), finishedSuccessfully()));
 
 		assertEquals(Arrays.asList("convertBeforeAll", "convertAfterAll", "convertAfterAll"), handlerCalls);
