@@ -5,7 +5,7 @@ description = 'JUnit Platform Console'
 dependencies {
 	api(project(':junit-platform-launcher'))
 
-	shadowed('net.sf.jopt-simple:jopt-simple:5.0.4')
+	shadowed('info.picocli:picocli:3.5.0')
 }
 
 jar {
@@ -29,16 +29,7 @@ shadowJar {
 	classifier = null
 	configurations = [project.configurations.shadowed]
 	exclude 'META-INF/**'
-	relocate 'joptsimple', 'org.junit.platform.console.shadow.joptsimple'
-	transform(com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer) {
-		paths = [
-			'joptsimple/ExceptionMessages.properties',
-			'joptsimple/HelpFormatterMessages.properties'
-		]
-		keyTransformer = { key ->
-			key.replaceAll('^(joptsimple\\..*)$', 'org.junit.platform.console.shadow.$1')
-		}
-	}
+	relocate 'picocli', 'org.junit.platform.console.shadow.picocli'
 	from(projectDir) {
 		include 'LICENSE-jopt-simple.md'
 		into 'META-INF'

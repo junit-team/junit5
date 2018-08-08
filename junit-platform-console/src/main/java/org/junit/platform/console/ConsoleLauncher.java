@@ -22,7 +22,7 @@ import java.nio.charset.Charset;
 import org.apiguardian.api.API;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.CommandLineOptionsParser;
-import org.junit.platform.console.options.JOptSimpleCommandLineOptionsParser;
+import org.junit.platform.console.options.PicocliCommandLineOptionsParser;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
@@ -42,7 +42,7 @@ public class ConsoleLauncher {
 
 	@API(status = INTERNAL, since = "1.0")
 	public static ConsoleLauncherExecutionResult execute(PrintStream out, PrintStream err, String... args) {
-		CommandLineOptionsParser parser = new JOptSimpleCommandLineOptionsParser();
+		CommandLineOptionsParser parser = new PicocliCommandLineOptionsParser();
 		ConsoleLauncher consoleLauncher = new ConsoleLauncher(parser, out, err);
 		return consoleLauncher.execute(args);
 	}

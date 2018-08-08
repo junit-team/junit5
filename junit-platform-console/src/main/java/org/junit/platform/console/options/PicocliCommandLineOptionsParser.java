@@ -14,29 +14,25 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.LinkedHashSet;
-import java.util.Map;
-
-import joptsimple.BuiltinHelpFormatter;
-import joptsimple.OptionDescriptor;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
+
+import picocli.CommandLine;
+import picocli.CommandLine.ParseResult;
 
 /**
  * @since 1.0
  */
 @API(status = INTERNAL, since = "1.0")
-public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsParser {
+public class PicocliCommandLineOptionsParser implements CommandLineOptionsParser {
 
 	@Override
 	public CommandLineOptions parse(String... arguments) {
 		AvailableOptions availableOptions = getAvailableOptions();
-		OptionParser parser = availableOptions.getParser();
+		CommandLine parser = availableOptions.getParser();
 		try {
-			OptionSet detectedOptions = parser.parse(arguments);
+			ParseResult detectedOptions = parser.parseArgs(arguments);
 			return availableOptions.toCommandLineOptions(detectedOptions);
 		}
 		catch (Exception e) {
@@ -46,10 +42,8 @@ public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsPar
 
 	@Override
 	public void printHelp(Writer writer) {
-		OptionParser optionParser = getAvailableOptions().getParser();
-		optionParser.formatHelpWith(new OrderPreservingHelpFormatter());
 		try {
-			optionParser.printHelpOn(writer);
+			writer.write(getAvailableOptions().getParser().getUsageMessage());
 		}
 		catch (IOException e) {
 			throw new JUnitException("Error printing help", e);
@@ -58,18 +52,5 @@ public class JOptSimpleCommandLineOptionsParser implements CommandLineOptionsPar
 
 	private AvailableOptions getAvailableOptions() {
 		return new AvailableOptions();
-	}
-
-	private static final class OrderPreservingHelpFormatter extends BuiltinHelpFormatter {
-
-		private OrderPreservingHelpFormatter() {
-			super(90, 4);
-		}
-
-		@Override
-		public String format(Map<String, ? extends OptionDescriptor> options) {
-			addRows(new LinkedHashSet<>(options.values()));
-			return formattedHelpOutput();
-		}
 	}
 }

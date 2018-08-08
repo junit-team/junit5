@@ -4,6 +4,7 @@
 	<property name="severity" value="error" />
 	<module name="TreeWalker">
 		<module name="SuppressWarningsHolder" />
+		<module name="SuppressionCommentFilter"/>
 
 		<module name="JavadocMethod">
 			<property name="allowMissingJavadoc" value="true" />
