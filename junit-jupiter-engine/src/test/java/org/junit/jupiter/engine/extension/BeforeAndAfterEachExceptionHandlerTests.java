@@ -95,6 +95,7 @@ class BeforeAndAfterEachExceptionHandlerTests extends AbstractJupiterTestEngineT
 			event(test("testConvert"), finishedWithFailure(allOf(isA(RuntimeException.class), message("unchecked")))), //
 			event(container(ATestCase.class), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
+
 		assertEquals(Arrays.asList("convertBeforeEach", "convertAfterEach", "convertAfterEach"), handlerCalls);
 	}
 	@Test
