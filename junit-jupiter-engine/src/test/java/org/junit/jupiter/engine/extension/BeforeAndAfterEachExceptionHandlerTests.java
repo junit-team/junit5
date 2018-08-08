@@ -45,97 +45,112 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  * {@link TestExecutionExceptionHandler}.
  */
 class BeforeAndAfterEachExceptionHandlerTests extends AbstractJupiterTestEngineTests {
+
 	static List<String> handlerCalls = new ArrayList<>();
+
 	@BeforeEach
 	void resetStatics() {
 		handlerCalls.clear();
 	}
+
 	@Test
 	void exceptionHandlerRethrowsException() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testRethrow")).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(),
-				event(engine(), started()),
-				event(container(ATestCase.class), started()),
-				event(test("testRethrow"), started()),
-				event(test("testRethrow"), finishedWithFailure(allOf(isA(IOException.class), message("checked")))),
-				event(container(ATestCase.class), finishedSuccessfully()),
-				event(engine(), finishedSuccessfully()));
-		assertEquals(Arrays.asList("rethrowBeforeEach", "rethrowAfterEach", "rethrowAfterEach"),
-				handlerCalls);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(ATestCase.class), started()), //
+			event(test("testRethrow"), started()), //
+			event(test("testRethrow"), finishedWithFailure(allOf(isA(IOException.class), message("checked")))), //
+			event(container(ATestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+
+		assertEquals(Arrays.asList("rethrowBeforeEach", "rethrowAfterEach", "rethrowAfterEach"), handlerCalls);
 	}
 	@Test
 	void exceptionHandlerSwallowsException() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSwallow")).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(),
-				event(engine(), started()),
-				event(container(ATestCase.class), started()),
-				event(test("testSwallow"), started()),
-				event(test("testSwallow"), finishedSuccessfully()),
-				event(container(ATestCase.class), finishedSuccessfully()),
-				event(engine(), finishedSuccessfully()));
-		assertEquals(Arrays.asList("swallowBeforeEach", "swallowBeforeEach", "swallowTest", "swallowAfterEach", "swallowAfterEach"),
-				handlerCalls);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(ATestCase.class), started()), //
+			event(test("testSwallow"), started()), //
+			event(test("testSwallow"), finishedSuccessfully()), //
+			event(container(ATestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+
+		assertEquals(Arrays.asList("swallowBeforeEach", "swallowBeforeEach", "swallowTest", "swallowAfterEach", "swallowAfterEach"), handlerCalls);
 	}
 	@Test
 	void exceptionHandlerConvertsException() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testConvert")).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(),
-				event(engine(), started()),
-				event(container(ATestCase.class), started()),
-				event(test("testConvert"), started()),
-				event(test("testConvert"), finishedWithFailure(allOf(isA(RuntimeException.class), message("unchecked")))),
-				event(container(ATestCase.class), finishedSuccessfully()),
-				event(engine(), finishedSuccessfully()));
-		assertEquals(Arrays.asList("convertBeforeEach", "convertAfterEach", "convertAfterEach"),
-				handlerCalls);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(ATestCase.class), started()), //
+			event(test("testConvert"), started()), //
+			event(test("testConvert"), finishedWithFailure(allOf(isA(RuntimeException.class), message("unchecked")))), //
+			event(container(ATestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+		assertEquals(Arrays.asList("convertBeforeEach", "convertAfterEach", "convertAfterEach"), handlerCalls);
 	}
 	@Test
 	void severalHandlersAreCalledInOrder() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSeveral")).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(),
-				event(engine(), started()),
-				event(container(ATestCase.class), started()),
-				event(test("testSeveral"), started()),
-				event(test("testSeveral"), finishedSuccessfully()),
-				event(container(ATestCase.class), finishedSuccessfully()),
-				event(engine(), finishedSuccessfully()));
-		assertEquals(Arrays.asList(
-				"convertBeforeEach", "rethrowBeforeEach", "swallowBeforeEach",
-				"convertBeforeEach", "rethrowBeforeEach", "swallowBeforeEach",
-				"convertTest", "rethrowTest", "swallowTest",
-				"convertAfterEach", "rethrowAfterEach", "swallowAfterEach",
-				"convertAfterEach", "rethrowAfterEach", "swallowAfterEach"),
-				handlerCalls);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(ATestCase.class), started()), //
+			event(test("testSeveral"), started()), //
+			event(test("testSeveral"), finishedSuccessfully()), //
+			event(container(ATestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+
+		assertEquals(Arrays.asList( //
+			"convertBeforeEach", "rethrowBeforeEach", "swallowBeforeEach", //
+			"convertBeforeEach", "rethrowBeforeEach", "swallowBeforeEach", //
+			"convertTest", "rethrowTest", "swallowTest", //
+			"convertAfterEach", "rethrowAfterEach", "swallowAfterEach", //
+			"convertAfterEach", "rethrowAfterEach", "swallowAfterEach"), //
+			handlerCalls);
 	}
+
 	// -------------------------------------------------------------------
+
 	static class ATestCase {
+
 		@BeforeEach
 		void beforeEach() throws IOException {
 			throw new IOException("checked");
 		}
+
 		@BeforeEach
 		void beforeEach2() throws IOException {
 			throw new IOException("checked");
 		}
+
 		@Test
 		@ExtendWith(RethrowException.class)
 		void testRethrow() throws IOException {
 			throw new IOException("checked");
 		}
+
 		@Test
 		@ExtendWith(SwallowException.class)
 		void testSwallow() throws IOException {
 			throw new IOException("checked");
 		}
+
 		@Test
 		@ExtendWith(ConvertException.class)
 		void testConvert() throws IOException {
 			throw new IOException("checked");
 		}
+
 		@Test
 		@ExtendWith(ShouldNotBeCalled.class)
 		@ExtendWith(SwallowException.class)
@@ -144,73 +159,91 @@ class BeforeAndAfterEachExceptionHandlerTests extends AbstractJupiterTestEngineT
 		void testSeveral() throws IOException {
 			throw new IOException("checked");
 		}
+
 		@AfterEach
 		void afterEach() throws IOException {
 			throw new IOException("checked");
 		}
+
 		@AfterEach
 		void afterEach2() throws IOException {
 			throw new IOException("checked");
 		}
 	}
+
 	static class RethrowException implements TestExecutionExceptionHandler {
+
 		@Override
 		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 			handlerCalls.add("rethrowTest");
 			throw throwable;
 		}
+
 		@Override
 		public void handleExceptionInBeforeEachMethod(ExtensionContext context, Throwable throwable) throws Throwable {
 			handlerCalls.add("rethrowBeforeEach");
 			throw throwable;
 		}
+
 		@Override
 		public void handleExceptionInAfterEachMethod(ExtensionContext context, Throwable throwable) throws Throwable {
 			handlerCalls.add("rethrowAfterEach");
 			throw throwable;
 		}
 	}
+
 	static class SwallowException implements TestExecutionExceptionHandler {
 		// swallow exception by not rethrowing it
+
 		@Override
 		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 			handlerCalls.add("swallowTest");
 		}
+
 		@Override
 		public void handleExceptionInBeforeEachMethod(ExtensionContext context, Throwable throwable) throws Throwable {
 			handlerCalls.add("swallowBeforeEach");
 		}
+
 		@Override
 		public void handleExceptionInAfterEachMethod(ExtensionContext context, Throwable throwable) throws Throwable {
 			handlerCalls.add("swallowAfterEach");
 		}
 	}
+
 	static class ConvertException implements TestExecutionExceptionHandler {
+
 		@Override
 		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 			handlerCalls.add("convertTest");
 			throw new RuntimeException("unchecked");
 		}
+
 		@Override
 		public void handleExceptionInBeforeEachMethod(ExtensionContext context, Throwable throwable) throws Throwable {
 			handlerCalls.add("convertBeforeEach");
 			throw new RuntimeException("unchecked");
 		}
+
 		@Override
 		public void handleExceptionInAfterEachMethod(ExtensionContext context, Throwable throwable) throws Throwable {
 			handlerCalls.add("convertAfterEach");
 			throw new RuntimeException("unchecked");
 		}
 	}
+
 	static class ShouldNotBeCalled implements TestExecutionExceptionHandler {
+
 		@Override
 		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 			handlerCalls.add("shouldNotBeCalledTest");
 		}
+
 		@Override
 		public void handleExceptionInBeforeEachMethod(ExtensionContext context, Throwable throwable) throws Throwable {
 			handlerCalls.add("shouldNotBeCalledBeforeEach");
 		}
+
 		@Override
 		public void handleExceptionInAfterEachMethod(ExtensionContext context, Throwable throwable) throws Throwable {
 			handlerCalls.add("shouldNotBeCalledAfterEach");
