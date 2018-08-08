@@ -50,8 +50,8 @@ import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.TestInstanceProvider;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.BlacklistedExceptions;
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
@@ -408,7 +408,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			BiFunction<Throwable, TestExecutionExceptionHandler, Executable> generator) {
 
 		invokeTestExecutionExceptionHandlers(ex, registry.getReversedExtensions(TestExecutionExceptionHandler.class),
-				generator);
+			generator);
 	}
 
 	private void invokeTestExecutionExceptionHandlers(Throwable ex, List<TestExecutionExceptionHandler> handlers,
