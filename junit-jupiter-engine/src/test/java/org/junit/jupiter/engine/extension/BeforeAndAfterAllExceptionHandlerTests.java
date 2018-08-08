@@ -59,14 +59,13 @@ class BeforeAndAfterAllExceptionHandlerTests extends AbstractJupiterTestEngineTe
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(RethrowTestCase.class, "test")).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(),
-				event(engine(), started()),
-				event(container(RethrowTestCase.class), started()),
-				event(container(RethrowTestCase.class), finishedWithFailure(allOf(isA(IOException.class), message("checked")))),
-				event(engine(), finishedSuccessfully()));
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(RethrowTestCase.class), started()), //
+			event(container(RethrowTestCase.class), finishedWithFailure(allOf(isA(IOException.class), message("checked")))), //
+			event(engine(), finishedSuccessfully()));
 
-		assertEquals(Arrays.asList("rethrowBeforeAll", "rethrowAfterAll", "rethrowAfterAll"),
-				handlerCalls);
+		assertEquals(Arrays.asList("rethrowBeforeAll", "rethrowAfterAll", "rethrowAfterAll"), handlerCalls);
 	}
 
 	@Test
@@ -74,17 +73,15 @@ class BeforeAndAfterAllExceptionHandlerTests extends AbstractJupiterTestEngineTe
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(SwallowTestCase.class, "test")).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(),
-				event(engine(), started()),
-				event(container(SwallowTestCase.class), started()),
-				event(test("test"), started()),
-				event(test("test"), finishedSuccessfully()),
-				event(container(SwallowTestCase.class), finishedSuccessfully()),
-				event(engine(), finishedSuccessfully()));
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(SwallowTestCase.class), started()), //
+			event(test("test"), started()), //
+			event(test("test"), finishedSuccessfully()), //
+			event(container(SwallowTestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
 
-		assertEquals(Arrays.asList(
-				"swallowBeforeAll", "swallowBeforeAll", "swallowTest", "swallowAfterAll", "swallowAfterAll"),
-				handlerCalls);
+		assertEquals(Arrays.asList("swallowBeforeAll", "swallowBeforeAll", "swallowTest", "swallowAfterAll", "swallowAfterAll"), handlerCalls);
 	}
 
 	@Test
@@ -92,14 +89,13 @@ class BeforeAndAfterAllExceptionHandlerTests extends AbstractJupiterTestEngineTe
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ConvertTestCase.class, "test")).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(),
-				event(engine(), started()),
-				event(container(ConvertTestCase.class), started()),
-				event(container(ConvertTestCase.class), finishedWithFailure(allOf(isA(RuntimeException.class), message("unchecked")))),
-				event(engine(), finishedSuccessfully()));
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(ConvertTestCase.class), started()), //
+			event(container(ConvertTestCase.class), finishedWithFailure(allOf(isA(RuntimeException.class), message("unchecked")))), //
+			event(engine(), finishedSuccessfully()));
 
-		assertEquals(Arrays.asList("convertBeforeAll", "convertAfterAll", "convertAfterAll"),
-				handlerCalls);
+		assertEquals(Arrays.asList("convertBeforeAll", "convertAfterAll", "convertAfterAll"), handlerCalls);
 	}
 
 	@Test
@@ -107,20 +103,20 @@ class BeforeAndAfterAllExceptionHandlerTests extends AbstractJupiterTestEngineTe
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(SeveralTestCase.class, "test")).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(),
-				event(engine(), started()),
-				event(container(SeveralTestCase.class), started()),
-				event(test("test"), started()),
-				event(test("test"), finishedSuccessfully()),
-				event(container(SeveralTestCase.class), finishedSuccessfully()),
-				event(engine(), finishedSuccessfully()));
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(SeveralTestCase.class), started()), //
+			event(test("test"), started()), //
+			event(test("test"), finishedSuccessfully()), //
+			event(container(SeveralTestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
 
-		assertEquals(Arrays.asList(
-				"convertBeforeAll", "rethrowBeforeAll", "swallowBeforeAll",
-				"convertBeforeAll", "rethrowBeforeAll", "swallowBeforeAll",
-				"convertTest", "rethrowTest", "swallowTest",
-				"convertAfterAll", "rethrowAfterAll", "swallowAfterAll",
-				"convertAfterAll", "rethrowAfterAll", "swallowAfterAll"),
+		assertEquals(Arrays.asList( //
+				"convertBeforeAll", "rethrowBeforeAll", "swallowBeforeAll", //
+				"convertBeforeAll", "rethrowBeforeAll", "swallowBeforeAll", //
+				"convertTest", "rethrowTest", "swallowTest", //
+				"convertAfterAll", "rethrowAfterAll", "swallowAfterAll", //
+				"convertAfterAll", "rethrowAfterAll", "swallowAfterAll"), //
 				handlerCalls);
 	}
 
