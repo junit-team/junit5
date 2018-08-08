@@ -62,7 +62,8 @@ class BeforeAndAfterAllExceptionHandlerTests extends AbstractJupiterTestEngineTe
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(RethrowTestCase.class), started()), //
-			event(container(RethrowTestCase.class), finishedWithFailure(allOf(isA(IOException.class), message("checked")))), //
+			event(container(RethrowTestCase.class),
+			      finishedWithFailure(allOf(isA(IOException.class), message("checked")))), //
 			event(engine(), finishedSuccessfully()));
 
 		assertEquals(Arrays.asList("rethrowBeforeAll", "rethrowAfterAll", "rethrowAfterAll"), handlerCalls);
@@ -81,7 +82,9 @@ class BeforeAndAfterAllExceptionHandlerTests extends AbstractJupiterTestEngineTe
 			event(container(SwallowTestCase.class), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 
-		assertEquals(Arrays.asList("swallowBeforeAll", "swallowBeforeAll", "swallowTest", "swallowAfterAll", "swallowAfterAll"), handlerCalls);
+		assertEquals(
+			Arrays.asList("swallowBeforeAll", "swallowBeforeAll", "swallowTest", "swallowAfterAll", "swallowAfterAll"),
+			handlerCalls);
 	}
 
 	@Test
@@ -92,7 +95,8 @@ class BeforeAndAfterAllExceptionHandlerTests extends AbstractJupiterTestEngineTe
 		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(ConvertTestCase.class), started()), //
-			event(container(ConvertTestCase.class), finishedWithFailure(allOf(isA(RuntimeException.class), message("unchecked")))), //
+			event(container(ConvertTestCase.class),
+			      finishedWithFailure(allOf(isA(RuntimeException.class), message("unchecked")))), //
 			event(engine(), finishedSuccessfully()));
 
 		assertEquals(Arrays.asList("convertBeforeAll", "convertAfterAll", "convertAfterAll"), handlerCalls);
@@ -112,12 +116,12 @@ class BeforeAndAfterAllExceptionHandlerTests extends AbstractJupiterTestEngineTe
 			event(engine(), finishedSuccessfully()));
 
 		assertEquals(Arrays.asList( //
-				"convertBeforeAll", "rethrowBeforeAll", "swallowBeforeAll", //
-				"convertBeforeAll", "rethrowBeforeAll", "swallowBeforeAll", //
-				"convertTest", "rethrowTest", "swallowTest", //
-				"convertAfterAll", "rethrowAfterAll", "swallowAfterAll", //
-				"convertAfterAll", "rethrowAfterAll", "swallowAfterAll"), //
-				handlerCalls);
+			"convertBeforeAll", "rethrowBeforeAll", "swallowBeforeAll", //
+			"convertBeforeAll", "rethrowBeforeAll", "swallowBeforeAll", //
+			"convertTest", "rethrowTest", "swallowTest", //
+			"convertAfterAll", "rethrowAfterAll", "swallowAfterAll", //
+			"convertAfterAll", "rethrowAfterAll", "swallowAfterAll"), //
+			handlerCalls);
 	}
 
 	// -------------------------------------------------------------------
