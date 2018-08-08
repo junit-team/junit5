@@ -140,8 +140,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 				invokeTestExecutionExceptionHandlers(throwable, registry,
 					((ex, handler) -> () -> handler.handleExceptionInBeforeEachMethod(extensionContext, ex)));
 			}
-		}),
-		BeforeEachMethodAdapter.class);
+		}), BeforeEachMethodAdapter.class);
 	}
 
 	private void invokeBeforeTestExecutionCallbacks(JupiterEngineExecutionContext context) {
@@ -225,8 +224,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 				invokeTestExecutionExceptionHandlers(throwable, registry,
 					((ex, handler) -> () -> handler.handleExceptionInAfterEachMethod(extensionContext, ex)));
 			}
-		}),
-		AfterEachMethodAdapter.class);
+		}), AfterEachMethodAdapter.class);
 	}
 
 	private void invokeAfterEachCallbacks(JupiterEngineExecutionContext context) {
