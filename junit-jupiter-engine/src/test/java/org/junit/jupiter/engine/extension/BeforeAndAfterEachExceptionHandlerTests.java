@@ -68,6 +68,7 @@ class BeforeAndAfterEachExceptionHandlerTests extends AbstractJupiterTestEngineT
 
 		assertEquals(Arrays.asList("rethrowBeforeEach", "rethrowAfterEach", "rethrowAfterEach"), handlerCalls);
 	}
+
 	@Test
 	void exceptionHandlerSwallowsException() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSwallow")).build();
@@ -81,8 +82,11 @@ class BeforeAndAfterEachExceptionHandlerTests extends AbstractJupiterTestEngineT
 			event(container(ATestCase.class), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 
-		assertEquals(Arrays.asList("swallowBeforeEach", "swallowBeforeEach", "swallowTest", "swallowAfterEach", "swallowAfterEach"), handlerCalls);
+		assertEquals(Arrays.asList( //
+			"swallowBeforeEach", "swallowBeforeEach", "swallowTest", "swallowAfterEach", "swallowAfterEach"), //
+			handlerCalls);
 	}
+
 	@Test
 	void exceptionHandlerConvertsException() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testConvert")).build();
@@ -98,6 +102,7 @@ class BeforeAndAfterEachExceptionHandlerTests extends AbstractJupiterTestEngineT
 
 		assertEquals(Arrays.asList("convertBeforeEach", "convertAfterEach", "convertAfterEach"), handlerCalls);
 	}
+
 	@Test
 	void severalHandlersAreCalledInOrder() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSeveral")).build();
