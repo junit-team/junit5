@@ -132,17 +132,16 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 	private void invokeBeforeEachMethods(JupiterEngineExecutionContext context) {
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(context,
-			((extensionContext, adapter) -> () -> {
-				try {
-					adapter.invokeBeforeEachMethod(extensionContext, registry);
-				}
-				catch (Throwable throwable) {
-					invokeTestExecutionExceptionHandlers(throwable, registry,
-						((ex, handler) -> () -> handler.handleExceptionInBeforeEachMethod(extensionContext, ex)));
-				}
-			}),
-			BeforeEachMethodAdapter.class);
+		invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(context, ((extensionContext, adapter) -> () -> {
+			try {
+				adapter.invokeBeforeEachMethod(extensionContext, registry);
+			}
+			catch (Throwable throwable) {
+				invokeTestExecutionExceptionHandlers(throwable, registry,
+					((ex, handler) -> () -> handler.handleExceptionInBeforeEachMethod(extensionContext, ex)));
+			}
+		}),
+		BeforeEachMethodAdapter.class);
 	}
 
 	private void invokeBeforeTestExecutionCallbacks(JupiterEngineExecutionContext context) {
@@ -189,7 +188,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			BiFunction<Throwable, TestExecutionExceptionHandler, Executable> generator) {
 
 		invokeTestExecutionExceptionHandlers(ex, registry.getReversedExtensions(TestExecutionExceptionHandler.class),
-				generator);
+			generator);
 	}
 
 	private void invokeTestExecutionExceptionHandlers(Throwable ex, List<TestExecutionExceptionHandler> handlers,
@@ -218,17 +217,16 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 	private void invokeAfterEachMethods(JupiterEngineExecutionContext context) {
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		invokeAllAfterMethodsOrCallbacks(context,
-			((extensionContext, adapter) -> () -> {
-				try {
-					adapter.invokeAfterEachMethod(extensionContext, registry);
-				}
-				catch (Throwable throwable) {
-					invokeTestExecutionExceptionHandlers(throwable, registry,
-						((ex, handler) -> () -> handler.handleExceptionInAfterEachMethod(extensionContext, ex)));
-				}
-			}),
-			AfterEachMethodAdapter.class);
+		invokeAllAfterMethodsOrCallbacks(context, ((extensionContext, adapter) -> () -> {
+			try {
+				adapter.invokeAfterEachMethod(extensionContext, registry);
+			}
+			catch (Throwable throwable) {
+				invokeTestExecutionExceptionHandlers(throwable, registry,
+					((ex, handler) -> () -> handler.handleExceptionInAfterEachMethod(extensionContext, ex)));
+			}
+		}),
+		AfterEachMethodAdapter.class);
 	}
 
 	private void invokeAfterEachCallbacks(JupiterEngineExecutionContext context) {
