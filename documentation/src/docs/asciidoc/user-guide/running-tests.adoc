@@ -618,7 +618,7 @@ You can troubleshoot by executing the command with system property `picocli.trac
 Multiple @-files may be specified on the command line.
 The specified path may be relative to the current directory or absolute.
 
-You can still pass a real parameter with an initial '@' character by escaping it
+You can pass a real parameter with an initial '@' character by escaping it
 with an additional '@' symbol, e.g. '@@somearg' will become '@somearg' and not be subject to expansion.
 
 
