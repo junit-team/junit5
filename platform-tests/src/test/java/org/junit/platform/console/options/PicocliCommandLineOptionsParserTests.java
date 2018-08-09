@@ -42,7 +42,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.platform.commons.JUnitException;
-import picocli.CommandLine.ParameterException;
 
 /**
  * @since 1.0
