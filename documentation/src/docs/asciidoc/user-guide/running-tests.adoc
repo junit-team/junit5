@@ -598,6 +598,29 @@ is `0`.
 include::{consoleLauncherOptionsFile}[]
 ----
 
+==== @-files
+On some platforms you may run into system limitations on the length of a command line
+when creating a command line with lots of options or with long arguments.
+
+Starting from v5.3-RC1, the `ConsoleLauncher` supports "argument files" or "@-files".
+Argument files are files that themselves contain arguments to the command.
+When the command line https://github.com/remkop/picocli[parser] encounters an argument
+beginning with the character `@`, it expands the contents of that file into the argument list.
+
+The arguments within a file can be space-separated or newline-separated.
+If an argument contains embedded whitespace, put the whole argument in double or single quotes
+(`"-f=My Files\Stuff.java"`).
+
+If the file does not exist, or cannot be read, then the argument will be treated literally, and not removed.
+This will likely result in an "unmatched argument" error message.
+You can troubleshoot by executing the command with system property `picocli.trace` set to `DEBUG`.
+
+Multiple @-files may be specified on the command line.
+The specified path may be relative to the current directory or absolute.
+
+You can still pass a real parameter with an initial '@' character by escaping it
+with an additional '@' symbol, e.g. '@@somearg' will become '@somearg' and not be subject to expansion.
+
 
 [[running-tests-junit-platform-runner]]
 === Using JUnit 4 to run the JUnit Platform
