@@ -604,7 +604,7 @@ when creating a command line with lots of options or with long arguments.
 
 Starting from v5.3-RC1, the `ConsoleLauncher` supports "argument files" or "@-files".
 Argument files are files that themselves contain arguments to the command.
-When the https://github.com/remkop/picocli[picocli] command line parser encounters an argument
+When the underlying https://github.com/remkop/picocli[picocli] command line parser encounters an argument
 beginning with the character `@`, it expands the contents of that file into the argument list.
 
 The arguments within a file can be space-separated or newline-separated.
