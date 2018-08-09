@@ -26,7 +26,6 @@ task consoleLauncherTest(type: JavaExec) {
 	args '--include-classname', '.*Demo'
 	args '--exclude-tag', 'exclude'
 	args '--reports-dir', reportsDir
-	systemProperty 'picocli.trace', 'DEBUG'
 	systemProperty 'java.util.logging.manager', 'org.apache.logging.log4j.jul.LogManager'
 }
 test {
