@@ -27,7 +27,6 @@ dependencies {
 	testImplementation(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
 	testImplementation(project(path: ':junit-jupiter-engine', configuration: 'testArtifacts'))
 	testImplementation("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
-	testCompile('info.picocli:picocli:3.5.0')
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(':junit-vintage-engine'))
