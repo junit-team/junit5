@@ -619,6 +619,11 @@ addition, the non-blank precondition for a class name is now enforced.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>New <code>LauncherConfig</code> and associated <em>builder</em> for configuring the <code>LauncherFactory</code>.
+Specifically, auto-registration of test engines and test execution listeners can now be
+disabled, and additional engines and listeners can be registered programmatically.</p>
+</li>
+<li>
 <p>New <code>MethodSource.from(Class, Method)</code> static factory method for creating a
 <code>MethodSource</code> from a specific class and method. This method should be used in favor of
 <code>MethodSource.from(Method)</code> when the test method is inherited from a superclass or
@@ -994,7 +999,7 @@ minor improvements and bug fixes.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-08-10 09:19:24 EDT
+Last updated 2018-08-10 09:36:21 EDT
 </div>
 </div>
 </body>
