@@ -231,7 +231,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/EngineExecutionListener.html#reportingEntryPublished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.reporting.ReportEntry)">reportingEntryPublished(TestDescriptor, ReportEntry)</a></span> - Method in interface org.junit.platform.engine.<a href="../org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a></dt>
 <dd>
-<div class="block">Can be called for any <code>testDescriptor</code> in order to publish additional information, e.g.:
+<div class="block">Can be called for any <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> in order to publish additional
+ information to the reporting infrastructure &mdash; for example:
+
  
      Output that would otherwise go to <code>System.out</code>
      Information about test context or test data

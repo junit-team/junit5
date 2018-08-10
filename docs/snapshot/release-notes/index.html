@@ -592,6 +592,11 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>All <code>DiscoverySelector</code> implementations (e.g., <code>PackageSelector</code>, <code>ClassSelector</code>,
+<code>MethodSelector</code>, etc.) now implement <code>equals()</code> and <code>hashCode()</code> for proper behavior
+when stored in collections.</p>
+</li>
+<li>
 <p><code>ClassSource</code> has been revised so that <code>equals()</code> and <code>hashCode()</code> are now properly
 based on the required <em>class name</em> instead of the optional <code>Class</code> reference. In
 addition, the non-blank precondition for a class name is now enforced.</p>
@@ -678,6 +683,11 @@ system hash code, separated by an <code>@</code> symbol.</p>
 and <code><a href="../api/org/junit/jupiter/api/Assumptions.html">org.junit.jupiter.api.Assumptions</a></code> classes for special use cases.</p>
 </li>
 <li>
+<p>New <code>publishEntry(String)</code> method in <code>TestReporter</code> that makes it easier to publish a
+report entry based solely on a <em>value</em> without requiring that a <em>key</em> be specified
+(as is required by the existing <code>publishEntry()</code> variants).</p>
+</li>
+<li>
 <p>A custom test source <code>URI</code> for a dynamic container or dynamic test will now be
 registered as a <code>ClasspathResourceSource</code> if the <code>URI</code> uses the <code>classpath</code> scheme.</p>
 </li>
@@ -701,6 +711,18 @@ instead of once for each invocation.</p>
 <li>
 <p>Performance improvements for executing parameterized tests, particularly when the method
 declares more than a few parameters.</p>
+</li>
+<li>
+<p>New <code>{displayName}</code> placeholder for the <code>name</code> attribute in <code>@ParameterizedTest</code> that
+allows developers to include the display name of the <code>@ParameterizedTest</code> method in a
+custom display name for invocations of that parameterized test.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This aligns with the existing <code>{displayName}</code> placeholder support for <code>@RepeatedTest</code>.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p>Generation of the display name for a <code>@ParameterizedTest</code> no longer fails if the
@@ -972,7 +994,7 @@ minor improvements and bug fixes.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-08-01 15:13:44 EDT
+Last updated 2018-08-10 03:56:42 EDT
 </div>
 </div>
 </body>

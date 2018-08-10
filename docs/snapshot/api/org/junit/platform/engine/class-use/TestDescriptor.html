@@ -438,7 +438,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">EngineExecutionListener.</span><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/EngineExecutionListener.html#reportingEntryPublished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.reporting.ReportEntry)">reportingEntryPublished</a></span>&#8203;(<a href="../../../../../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
                        <a href="../../../../../org/junit/platform/engine/reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting">ReportEntry</a>&nbsp;entry)</code></th>
 <td class="colLast">
-<div class="block">Can be called for any <code>testDescriptor</code> in order to publish additional information, e.g.:
+<div class="block">Can be called for any <a href="../../../../../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> in order to publish additional
+ information to the reporting infrastructure &mdash; for example:
+
  
      Output that would otherwise go to <code>System.out</code>
      Information about test context or test data
