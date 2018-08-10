@@ -119,6 +119,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
+<th class="colFirst" scope="row"><a href="#org.junit.platform.launcher.core">org.junit.platform.launcher.core</a></th>
+<td class="colLast">
+<div class="block">Core support classes for the <a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>
+ including the <a href="../../../../../org/junit/platform/launcher/core/LauncherFactory.html" title="class in org.junit.platform.launcher.core"><code>LauncherFactory</code></a>
+ and the <a href="../../../../../org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core"><code>LauncherDiscoveryRequestBuilder</code></a>.</div>
+</td>
+</tr>
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="#org.junit.platform.launcher.listeners">org.junit.platform.launcher.listeners</a></th>
 <td class="colLast">
 <div class="block">Common <a href="../../../../../org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher"><code>TestExecutionListener</code></a> implementations and related support classes for
@@ -158,6 +166,48 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">Launcher.</span><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/Launcher.html#registerTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">registerTestExecutionListeners</a></span>&#8203;(<a href="../../../../../org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>...&nbsp;listeners)</code></th>
 <td class="colLast">
 <div class="block">Register one or more listeners for test execution.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="org.junit.platform.launcher.core">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a> in <a href="../../../../../org/junit/platform/launcher/core/package-summary.html">org.junit.platform.launcher.core</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../../../../org/junit/platform/launcher/core/package-summary.html">org.junit.platform.launcher.core</a> that return types with arguments of type <a href="../../../../../org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../../../../../org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">LauncherConfig.</span><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.html#getAdditionalTestExecutionListeners()">getAdditionalTestExecutionListeners</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Returns additional test execution listeners that should be added to created
+ <a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> instance.</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../../../../org/junit/platform/launcher/core/package-summary.html">org.junit.platform.launcher.core</a> with parameters of type <a href="../../../../../org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">LauncherConfig.Builder.</span><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html#addAdditionalTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">addAdditionalTestExecutionListeners</a></span>&#8203;(<a href="../../../../../org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>...&nbsp;listeners)</code></th>
+<td class="colLast">
+<div class="block">Add all of the supplied <code>listeners</code> to the configuration.</div>
 </td>
 </tr>
 </tbody>
