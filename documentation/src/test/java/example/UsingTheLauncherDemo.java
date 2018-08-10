@@ -91,8 +91,8 @@ class UsingTheLauncherDemo {
 		Launcher launcher = LauncherFactory.create(launcherConfig);
 
 		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
-				.selectors(selectPackage("com.example.mytests"))
-				.build();
+			.selectors(selectPackage("com.example.mytests"))
+			.build();
 
 		launcher.execute(request);
 		// end::launcherConfig[]
