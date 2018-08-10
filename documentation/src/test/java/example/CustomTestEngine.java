@@ -15,6 +15,7 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 
 /**
  * This is a no-op {@link TestEngine} that is only
@@ -24,12 +25,12 @@ class CustomTestEngine implements TestEngine {
 
 	@Override
 	public String getId() {
-		return null;
+		return "custom-test-engine";
 	}
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		return null;
+		return new EngineDescriptor(UniqueId.forEngine(getId()), "Custom Test Engine");
 	}
 
 	@Override
