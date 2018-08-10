@@ -10,10 +10,16 @@
 
 package org.junit.platform.launcher.core;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.TestExecutionListener;
 
@@ -54,10 +60,31 @@ public class LauncherFactory {
 	 * @throws PreconditionViolationException if no test engines are detected
 	 */
 	public static Launcher create() throws PreconditionViolationException {
-		Launcher launcher = new DefaultLauncher(new ServiceLoaderTestEngineRegistry().loadTestEngines());
-		for (TestExecutionListener listener : new ServiceLoaderTestExecutionListenerRegistry().loadListeners()) {
-			launcher.registerTestExecutionListeners(listener);
+		return create(LauncherConfig.builder().build());
+	}
+
+	/**
+	 * Factory method for creating a new {@link Launcher} using provided configuration
+	 *
+	 * @param config the configuration for launcher; never {@code null}
+	 * @throws PreconditionViolationException if no test engines are detected or
+	 * provided configuration is null
+	 */
+	@API(status = EXPERIMENTAL, since = "1.3")
+	public static Launcher create(LauncherConfig config) throws PreconditionViolationException {
+		Preconditions.notNull(config, "configuration must not be null");
+		List<TestEngine> engines = new ArrayList<>();
+		if (config.isTestEngineAutoRegistrationEnabled()) {
+			new ServiceLoaderTestEngineRegistry().loadTestEngines().forEach(engines::add);
 		}
+		engines.addAll(config.getAdditionalTestEngines());
+		Launcher launcher = new DefaultLauncher(engines);
+
+		if (config.isTestExecutionListenerAutoRegistrationEnabled()) {
+			new ServiceLoaderTestExecutionListenerRegistry().loadListeners().forEach(
+				launcher::registerTestExecutionListeners);
+		}
+		config.getAdditionalTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
 		return launcher;
 	}
 
