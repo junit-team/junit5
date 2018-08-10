@@ -34,7 +34,8 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * Default implementation of the {@link Launcher} API.
  *
- * <p>External clients can obtain an instance by invoking {@link LauncherFactory#create()}.
+ * <p>External clients can obtain an instance by invoking
+ * {@link LauncherFactory#create()}.
  *
  * @since 1.0
  * @see Launcher

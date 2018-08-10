@@ -17,19 +17,25 @@ import java.util.Collection;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.TestExecutionListener;
 
+/**
+ * Default implementation of the {@link LauncherConfig} API.
+ *
+ * @since 1.3
+ */
 class DefaultLauncherConfig implements LauncherConfig {
 
 	private final boolean testEngineAutoRegistrationEnabled;
 
-	private final Collection<TestEngine> additionalTestEngines;
-
 	private final boolean testExecutionListenerAutoRegistrationEnabled;
+
+	private final Collection<TestEngine> additionalTestEngines;
 
 	private final Collection<TestExecutionListener> additionalTestExecutionListeners;
 
-	DefaultLauncherConfig(boolean testEngineAutoRegistrationEnabled, Collection<TestEngine> additionalTestEngines,
-			boolean testExecutionListenerAutoRegistrationEnabled,
+	DefaultLauncherConfig(boolean testEngineAutoRegistrationEnabled,
+			boolean testExecutionListenerAutoRegistrationEnabled, Collection<TestEngine> additionalTestEngines,
 			Collection<TestExecutionListener> additionalTestExecutionListeners) {
+
 		this.testExecutionListenerAutoRegistrationEnabled = testExecutionListenerAutoRegistrationEnabled;
 		this.testEngineAutoRegistrationEnabled = testEngineAutoRegistrationEnabled;
 		this.additionalTestEngines = unmodifiableCollection(additionalTestEngines);
@@ -38,21 +44,22 @@ class DefaultLauncherConfig implements LauncherConfig {
 
 	@Override
 	public boolean isTestEngineAutoRegistrationEnabled() {
-		return testEngineAutoRegistrationEnabled;
-	}
-
-	@Override
-	public Collection<TestEngine> getAdditionalTestEngines() {
-		return additionalTestEngines;
+		return this.testEngineAutoRegistrationEnabled;
 	}
 
 	@Override
 	public boolean isTestExecutionListenerAutoRegistrationEnabled() {
-		return testExecutionListenerAutoRegistrationEnabled;
+		return this.testExecutionListenerAutoRegistrationEnabled;
+	}
+
+	@Override
+	public Collection<TestEngine> getAdditionalTestEngines() {
+		return this.additionalTestEngines;
 	}
 
 	@Override
 	public Collection<TestExecutionListener> getAdditionalTestExecutionListeners() {
-		return additionalTestExecutionListeners;
+		return this.additionalTestExecutionListeners;
 	}
+
 }

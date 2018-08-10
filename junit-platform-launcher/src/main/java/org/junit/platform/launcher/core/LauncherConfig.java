@@ -12,33 +12,36 @@ package org.junit.platform.launcher.core;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.TestExecutionListener;
 
 /**
- * Implementations of this interface are responsible for determining
- * configuration used for creating {@link Launcher} instances via {@link LauncherFactory}.
+ * {@code LauncherConfig} defines the configuration API for creating
+ * {@link Launcher} instances via the {@link LauncherFactory}.
  *
  * <h4>Example</h4>
  *
  * <pre class="code">
- * import static org.junit.platform.launcher.core.*;
- * // ...
+ * LauncherConfig launcherConfig = LauncherConfig.builder()
+ *   .enableTestEngineAutoRegistration(false)
+ *   .enableTestExecutionListenerAutoRegistration(false)
+ *   .addTestEngines(new CustomTestEngine())
+ *   .addTestExecutionListeners(new CustomTestExecutionListener())
+ *   .build();
  *
- *   LauncherConfig.builder()
- *     .setTestEngineAutoRegistrationEnabled(true)
- *     .setTestExecutionListenerAutoRegistrationEnabled(true)
- *     .addAdditionalTestEngines(new CustomTestEngine())
- *     .addAdditionalTestExecutionListeners(new CustomTestExecutionListener())
- *     .build();
+ * Launcher launcher = LauncherFactory.create(launcherConfig);
+ * LauncherDiscoveryRequest discoveryRequest = ...
+ * launcher.execute(discoveryRequest);
  * </pre>
  *
+ * @see #builder()
  * @see Launcher
  * @see LauncherFactory
  * @since 1.3
@@ -47,110 +50,134 @@ import org.junit.platform.launcher.TestExecutionListener;
 public interface LauncherConfig {
 
 	/**
-	 * Returns true if test engines should be discovered at runtime using the
-	 * {@link java.util.ServiceLoader ServiceLoader} facility and false otherwise.
+	 * Determine if test engines should be discovered at runtime using the
+	 * {@link java.util.ServiceLoader ServiceLoader} mechanism and
+	 * automatically registered.
 	 *
-	 * @return true if test engines should be discovered at runtime and false otherwise
+	 * @return {@code true} if test engines should be automatically registered
 	 */
 	boolean isTestEngineAutoRegistrationEnabled();
 
 	/**
-	 * Returns additional test engines that should be added to created
-	 * {@link Launcher} instance.
+	 * Determine if test execution listeners should be discovered at runtime
+	 * using the {@link java.util.ServiceLoader ServiceLoader} mechanism and
+	 * automatically registered.
 	 *
-	 * @return additional test engines
-	 */
-	Collection<TestEngine> getAdditionalTestEngines();
-
-	/**
-	 * Returns true if test execution listeners should be discovered at runtime using the
-	 * {@link java.util.ServiceLoader ServiceLoader} facility and false otherwise.
-	 *
-	 * @return true if test execution listeners should be discovered at runtime and false otherwise
+	 * @return {@code true} if test execution listeners should be automatically
+	 * registered
 	 */
 	boolean isTestExecutionListenerAutoRegistrationEnabled();
 
 	/**
-	 * Returns additional test execution listeners that should be added to created
-	 * {@link Launcher} instance.
+	 * Get the collection of additional test engines that should be added to
+	 * the {@link Launcher}.
 	 *
-	 * @return additional test execution listeners
+	 * @return the collection of additional test engines; never {@code null} but
+	 * potentially empty
+	 */
+	Collection<TestEngine> getAdditionalTestEngines();
+
+	/**
+	 * Get the collection of additional test execution listeners that should be
+	 * added to the {@link Launcher}.
+	 *
+	 * @return the collection of additional test execution listeners; never
+	 * {@code null} but potentially empty
 	 */
 	Collection<TestExecutionListener> getAdditionalTestExecutionListeners();
 
 	/**
 	 * Create a new {@link LauncherConfig.Builder}.
 	 *
-	 * @return a new builder
+	 * @return a new builder; never {@code null}
 	 */
 	static Builder builder() {
 		return new Builder();
 	}
 
+	/**
+	 * <em>Builder</em> API for {@link LauncherConfig}.
+	 */
 	class Builder {
 
-		private boolean testExecutionListenerAutoRegistrationEnabled = true;
+		private boolean listenerAutoRegistrationEnabled = true;
 
-		private boolean testEngineAutoRegistrationEnabled = true;
+		private boolean engineAutoRegistrationEnabled = true;
 
-		private final Collection<TestEngine> additionalTestEngines = new ArrayList<>();
+		private final Collection<TestEngine> engines = new LinkedHashSet<>();
 
-		private final Collection<TestExecutionListener> additionalTestExecutionListeners = new ArrayList<>();
+		private final Collection<TestExecutionListener> listeners = new LinkedHashSet<>();
+
+		private Builder() {
+			/* no-op */
+		}
 
 		/**
-		 * Configure test execution listeners auto detection.
+		 * Configure the auto-registration flag for test execution listeners.
 		 *
-		 * @param enabled true if test execution listeners should be auto detected and false otherwise.
+		 * <p>Defaults to {@code true}.
+		 *
+		 * @param enabled {@code true} if test execution listeners should be
+		 * automatically registered
 		 * @return this builder for method chaining
 		 */
-		public Builder setTestExecutionListenerAutoRegistrationEnabled(boolean enabled) {
-			this.testExecutionListenerAutoRegistrationEnabled = enabled;
+		public Builder enableTestExecutionListenerAutoRegistration(boolean enabled) {
+			this.listenerAutoRegistrationEnabled = enabled;
 			return this;
 		}
 
 		/**
-		 * Configure test engines auto detection.
+		 * Configure the auto-registration flag for test engines.
 		 *
-		 * @param enabled true if test engines should be auto detected and false otherwise.
+		 * <p>Defaults to {@code true}.
+		 *
+		 * @param enabled {@code true} if test engines should be automatically
+		 * registered
 		 * @return this builder for method chaining
 		 */
-		public Builder setTestEngineAutoRegistrationEnabled(boolean enabled) {
-			this.testEngineAutoRegistrationEnabled = enabled;
+		public Builder enableTestEngineAutoRegistration(boolean enabled) {
+			this.engineAutoRegistrationEnabled = enabled;
 			return this;
 		}
 
 		/**
 		 * Add all of the supplied {@code engines} to the configuration.
 		 *
-		 * @param engines the list of additional test engines to add;
-		 * never {@code null}
+		 * @param engines additional test engines to register; never {@code null}
+		 * or containing {@code null}
 		 * @return this builder for method chaining
 		 */
-		public Builder addAdditionalTestEngines(TestEngine... engines) {
-			Collections.addAll(this.additionalTestEngines, engines);
+		public Builder addTestEngines(TestEngine... engines) {
+			Preconditions.notNull(engines, "TestEngine array must not be null");
+			Preconditions.containsNoNullElements(engines, "TestEngine array must not contain null elements");
+			Collections.addAll(this.engines, engines);
 			return this;
 		}
 
 		/**
 		 * Add all of the supplied {@code listeners} to the configuration.
 		 *
-		 * @param listeners the list of additional test execution listeners to add;
-		 * never {@code null}
+		 * @param listeners additional test execution listeners to register;
+		 * never {@code null} or containing {@code null}
 		 * @return this builder for method chaining
 		 */
-		public Builder addAdditionalTestExecutionListeners(TestExecutionListener... listeners) {
-			Collections.addAll(this.additionalTestExecutionListeners, listeners);
+		public Builder addTestExecutionListeners(TestExecutionListener... listeners) {
+			Preconditions.notNull(listeners, "TestExecutionListener array must not be null");
+			Preconditions.containsNoNullElements(listeners,
+				"TestExecutionListener array must not contain null elements");
+			Collections.addAll(this.listeners, listeners);
 			return this;
 		}
 
 		/**
-		 * Build the {@link LauncherConfig} that has been configured via
-		 * this builder.
+		 * Build the {@link LauncherConfig} that has been configured via this
+		 * builder.
 		 */
 		public LauncherConfig build() {
-			return new DefaultLauncherConfig(testEngineAutoRegistrationEnabled, additionalTestEngines,
-				testExecutionListenerAutoRegistrationEnabled, additionalTestExecutionListeners);
+			return new DefaultLauncherConfig(this.engineAutoRegistrationEnabled, this.listenerAutoRegistrationEnabled,
+				this.engines, this.listeners);
 		}
 
 	}
+
 }
