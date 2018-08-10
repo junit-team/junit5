@@ -742,7 +742,7 @@ directory. See <a href="#running-tests-console-launcher">Console Launcher</a> fo
 </dd>
 <dt class="hdlist1"><code>junit-platform-engine</code></dt>
 <dd>
-<p>Public API for test engines. See <a href="#launcher-api-engines-custom">Plugging in Your Own Test Engine</a> for details.</p>
+<p>Public API for test engines. See <a href="#launcher-api-engines-custom">Plugging in your own Test Engine</a> for details.</p>
 </dd>
 <dt class="hdlist1"><code>junit-platform-launcher</code></dt>
 <dd>
@@ -6228,10 +6228,10 @@ execute tests. Moreover, third party test libraries – like Spock, Cucumber, an
 <code><a href="../api/org/junit/platform/engine/TestEngine.html">TestEngine</a></code>.</p>
 </div>
 <div class="paragraph">
-<p>The launching API is in the <code><a href="../api/org/junit/platform/launcher/package-summary.html">junit-platform-launcher</a></code> module.</p>
+<p>The launcher API is in the <code><a href="../api/org/junit/platform/launcher/package-summary.html">junit-platform-launcher</a></code> module.</p>
 </div>
 <div class="paragraph">
-<p>An example consumer of the launching API is the <code><a href="../api/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code> in the
+<p>An example consumer of the launcher API is the <code><a href="../api/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code> in the
 <code><a href="../api/org/junit/platform/console/package-summary.html">junit-platform-console</a></code> project.</p>
 </div>
 <div class="sect3">
@@ -6254,6 +6254,7 @@ through to identify test classes and test methods in the past.</p>
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.LauncherDiscoveryRequest</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.TestExecutionListener</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.TestPlan</span>;
+<span class="keyword">import</span> <span class="include">org.junit.platform.launcher.core.LauncherConfig</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.core.LauncherFactory</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.listeners.SummaryGeneratingListener</span>;</code></pre>
@@ -6325,7 +6326,7 @@ aggregate the final results in an object of your own. For an example see the
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-engines-custom"><a class="anchor" href="#launcher-api-engines-custom"></a>7.1.3. Plugging in Your Own Test Engine</h4>
+<h4 id="launcher-api-engines-custom"><a class="anchor" href="#launcher-api-engines-custom"></a>7.1.3. Plugging in your own Test Engine</h4>
 <div class="paragraph">
 <p>JUnit currently provides two <code><a href="../api/org/junit/platform/engine/TestEngine.html">TestEngine</a></code> implementations out of the box:</p>
 </div>
@@ -6342,11 +6343,12 @@ tests with the launcher infrastructure.</p>
 </div>
 <div class="paragraph">
 <p>Third parties may also contribute their own <code>TestEngine</code> by implementing the interfaces
-in the <a href="../api/org/junit/platform/engine/package-summary.html">junit-platform-engine</a> module and <em>registering</em> their engine. Engine registration
-is currently supported via Java&#8217;s <code>java.util.ServiceLoader</code> mechanism. For example, the
-<code>junit-jupiter-engine</code> module registers its <code>org.junit.jupiter.engine.JupiterTestEngine</code>
-in a file named <code>org.junit.platform.engine.TestEngine</code> within the <code>/META-INF/services</code> in
-the <code>junit-jupiter-engine</code> JAR.</p>
+in the <a href="../api/org/junit/platform/engine/package-summary.html">junit-platform-engine</a> module and <em>registering</em> their engine. By default, engine
+registration is supported via Java&#8217;s <code>java.util.ServiceLoader</code> mechanism. For example,
+the <code>junit-jupiter-engine</code> module registers its
+<code>org.junit.jupiter.engine.JupiterTestEngine</code> in a file named
+<code>org.junit.platform.engine.TestEngine</code> within the <code>/META-INF/services</code> in the
+<code>junit-jupiter-engine</code> JAR.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -6365,15 +6367,44 @@ interface, including support for parallel execution.
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-listeners-custom"><a class="anchor" href="#launcher-api-listeners-custom"></a>7.1.4. Plugging in Your Own Test Execution Listeners</h4>
+<h4 id="launcher-api-listeners-custom"><a class="anchor" href="#launcher-api-listeners-custom"></a>7.1.4. Plugging in your own Test Execution Listener</h4>
 <div class="paragraph">
 <p>In addition to the public <code><a href="../api/org/junit/platform/launcher/Launcher.html">Launcher</a></code> API method for registering test execution
-listeners programmatically, custom <code><a href="../api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> implementations discovered
-at runtime via Java&#8217;s <code>java.util.ServiceLoader</code> facility are automatically registered
-with the <code>DefaultLauncher</code>. For example, an <code>example.TestInfoPrinter</code> class
-implementing <code><a href="../api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> and declared within the
-<code>/META-INF/services/org.junit.platform.launcher.TestExecutionListener</code> file is loaded
-and registered automatically.</p>
+listeners programmatically, by default custom <code><a href="../api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> implementations
+will be discovered at runtime via Java&#8217;s <code>java.util.ServiceLoader</code> mechanism and
+automatically registered with the <code>Launcher</code> created via the <code>LauncherFactory</code>. For
+example, an <code>example.TestInfoPrinter</code> class implementing <code><a href="../api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> and
+declared within the
+<code>/META-INF/services/org.junit.platform.launcher.TestExecutionListener</code> file is loaded and
+registered automatically.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="launcher-api-launcher-config"><a class="anchor" href="#launcher-api-launcher-config"></a>7.1.5. Configuring the Launcher</h4>
+<div class="paragraph">
+<p>If you require fine-grained control over automatic detection and registration of test
+engines and test execution listeners, you may create an instance of <code>LauncherConfig</code> and
+supply that to the <code>LauncherFactory.create(LauncherConfig)</code> method. Typically an instance
+of <code>LauncherConfig</code> is created via the built-in fluent <em>builder</em> API, as demonstrated in
+the following example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">LauncherConfig launcherConfig = LauncherConfig.builder()
+    .enableTestEngineAutoRegistration(<span class="predefined-constant">false</span>)
+    .enableTestExecutionListenerAutoRegistration(<span class="predefined-constant">false</span>)
+    .addTestEngines(<span class="keyword">new</span> CustomTestEngine())
+    .addTestExecutionListeners(<span class="keyword">new</span> CustomTestExecutionListener())
+    .build();
+
+Launcher launcher = LauncherFactory.create(launcherConfig);
+
+LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
+    .selectors(selectPackage(<span class="string"><span class="delimiter">&quot;</span><span class="content">com.example.mytests</span><span class="delimiter">&quot;</span></span>))
+    .build();
+
+launcher.execute(request);</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -6754,7 +6785,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-08-10 09:36:21 EDT
+Last updated 2018-08-10 07:26:42 EDT
 </div>
 </div>
 </body>
