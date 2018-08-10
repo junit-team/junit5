@@ -28,6 +28,9 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* New `LauncherConfig` and associated _builder_ for configuring the `LauncherFactory`.
+  Specifically, auto-registration of test engines and test execution listeners can now be
+  disabled, and additional engines and listeners can be registered programmatically.
 * New `MethodSource.from(Class, Method)` static factory method for creating a
   `MethodSource` from a specific class and method. This method should be used in favor of
   `MethodSource.from(Method)` when the test method is inherited from a superclass or
