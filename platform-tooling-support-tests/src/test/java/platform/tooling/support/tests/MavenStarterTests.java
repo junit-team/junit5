@@ -13,8 +13,13 @@ package platform.tooling.support.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.nio.file.Paths;
+import java.time.Duration;
+
+import de.sormuras.bartholdy.tool.Maven;
+
 import org.junit.jupiter.api.Test;
-import platform.tooling.support.Tool;
+import platform.tooling.support.Request;
 
 /**
  * @since 1.3
@@ -22,14 +27,18 @@ import platform.tooling.support.Tool;
 class MavenStarterTests {
 
 	@Test
-	void maven_3_5_3() {
-		var result = Tool.MAVEN.builder("3.5.3") //
+	void maven_3_5_4() {
+		var result = Request.builder() //
+				.setTool(Maven.install("3.5.4", Paths.get("build", "test-tools"))) //
 				.setProject("maven-starter") //
 				.addArguments("--debug", "verify") //
+				.setTimeout(Duration.ofSeconds(99)) //
 				.build() //
 				.run();
 
-		assertEquals(0, result.getStatus());
-		assertTrue(result.getOutputLines().contains("[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0"));
+		assertEquals(0, result.getExitCode(), result.toString());
+		assertEquals("", result.getOutput("err"));
+		assertTrue(result.getOutputLines("out").contains("[INFO] BUILD SUCCESS"));
+		assertTrue(result.getOutputLines("out").contains("[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0"));
 	}
 }

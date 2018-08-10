@@ -131,8 +131,10 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 			context = node.execute(context,
 				dynamicTestDescriptor -> executeDynamicTest(dynamicTestDescriptor, futures));
 
-			children.forEach(child -> child.setParentContext(context));
-			executorService.invokeAll(children);
+			if (!children.isEmpty()) {
+				children.forEach(child -> child.setParentContext(context));
+				executorService.invokeAll(children);
+			}
 
 			// using a for loop for the sake for ForkJoinPool's work stealing
 			for (Future<?> future : futures) {

@@ -18,8 +18,9 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
-import io.github.lukehutch.fastclasspathscanner.scanner.ScanResult;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfoList;
+import io.github.classgraph.ScanResult;
 
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
@@ -62,24 +63,23 @@ class ApiReportGenerator {
 		final String EOL = System.lineSeparator();
 
 		// Scan packages
-		ScanResult scanResult = new FastClasspathScanner(packages).scan();
+		ScanResult scanResult = new ClassGraph().whitelistPackages(packages).enableAnnotationInfo().scan();
 
 		// Collect names
-		List<String> names = new ArrayList<>();
-		names.addAll(scanResult.getNamesOfClassesWithAnnotation(API.class));
-		names.addAll(scanResult.getNamesOfAnnotationsWithMetaAnnotation(API.class));
+		ClassInfoList classesWithApiAnnotation = scanResult.getClassesWithAnnotation(API.class.getCanonicalName());
+		List<String> names = classesWithApiAnnotation.getNames();
 
 		logger.debug(() -> {
 			StringBuilder builder = new StringBuilder(
 				names.size() + " @API declarations (including meta) found in class-path:");
 			builder.append(EOL);
-			scanResult.getUniqueClasspathElements().forEach(e -> builder.append(e).append(EOL));
+			scanResult.getClasspathURLs().forEach(e -> builder.append(e).append(EOL));
 			return builder.toString();
 
 		});
 
 		// Collect types
-		List<Class<?>> types = scanResult.classNamesToClassRefs(names);
+		List<Class<?>> types = classesWithApiAnnotation.loadClasses();
 		// only retain directly annotated types
 		types.removeIf(c -> !c.isAnnotationPresent(API.class));
 		types.sort(Comparator.comparing(type -> type.getName()));

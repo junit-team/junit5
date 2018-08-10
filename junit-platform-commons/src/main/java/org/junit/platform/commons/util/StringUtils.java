@@ -123,10 +123,14 @@ public final class StringUtils {
 	 * will be used to convert it to a String.</li>
 	 * <li>Otherwise, the result of invoking {@code toString()} on the object
 	 * will be returned.</li>
+	 * <li>If any of the above results in an exception, the String returned by
+	 * this method will be generated using the supplied object's class name and
+	 * hash code as follows:
+	 * {@code obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj))}</li>
 	 * </ul>
 	 *
 	 * @param obj the object to convert to a String; may be {@code null}
-	 * @return a String representation of the supplied object
+	 * @return a String representation of the supplied object; never {@code null}
 	 * @see Arrays#deepToString(Object[])
 	 * @see ClassUtils#nullSafeToString(Class...)
 	 */
@@ -134,37 +138,46 @@ public final class StringUtils {
 		if (obj == null) {
 			return "null";
 		}
-		else if (obj.getClass().isArray()) {
-			if (obj.getClass().getComponentType().isPrimitive()) {
-				if (obj instanceof boolean[]) {
-					return Arrays.toString((boolean[]) obj);
+
+		try {
+			if (obj.getClass().isArray()) {
+				if (obj.getClass().getComponentType().isPrimitive()) {
+					if (obj instanceof boolean[]) {
+						return Arrays.toString((boolean[]) obj);
+					}
+					if (obj instanceof char[]) {
+						return Arrays.toString((char[]) obj);
+					}
+					if (obj instanceof short[]) {
+						return Arrays.toString((short[]) obj);
+					}
+					if (obj instanceof byte[]) {
+						return Arrays.toString((byte[]) obj);
+					}
+					if (obj instanceof int[]) {
+						return Arrays.toString((int[]) obj);
+					}
+					if (obj instanceof long[]) {
+						return Arrays.toString((long[]) obj);
+					}
+					if (obj instanceof float[]) {
+						return Arrays.toString((float[]) obj);
+					}
+					if (obj instanceof double[]) {
+						return Arrays.toString((double[]) obj);
+					}
 				}
-				if (obj instanceof char[]) {
-					return Arrays.toString((char[]) obj);
-				}
-				if (obj instanceof short[]) {
-					return Arrays.toString((short[]) obj);
-				}
-				if (obj instanceof byte[]) {
-					return Arrays.toString((byte[]) obj);
-				}
-				if (obj instanceof int[]) {
-					return Arrays.toString((int[]) obj);
-				}
-				if (obj instanceof long[]) {
-					return Arrays.toString((long[]) obj);
-				}
-				if (obj instanceof float[]) {
-					return Arrays.toString((float[]) obj);
-				}
-				if (obj instanceof double[]) {
-					return Arrays.toString((double[]) obj);
-				}
+				return Arrays.deepToString((Object[]) obj);
 			}
-			return Arrays.deepToString((Object[]) obj);
+
+			// else
+			return obj.toString();
 		}
-		// else
-		return obj.toString();
+		catch (Throwable throwable) {
+			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+
+			return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj));
+		}
 	}
 
 }

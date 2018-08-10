@@ -50,13 +50,13 @@ class ExcludePackageNameFilter implements PackageNameFilter {
 				.orElseGet(() -> included(formatInclusionReason(packageName)));
 	}
 
-	private String formatExclusionReason(String packageName, String matchedName) {
-		return String.format("Package name [%s] matches excluded name: '%s'", packageName, matchedName);
-	}
-
 	private String formatInclusionReason(String packageName) {
 		return String.format("Package name [%s] does not match any excluded names: %s", packageName,
-			patternDescription);
+			this.patternDescription);
+	}
+
+	private String formatExclusionReason(String packageName, String matchedName) {
+		return String.format("Package name [%s] matches excluded name: '%s'", packageName, matchedName);
 	}
 
 	@Override
@@ -71,7 +71,9 @@ class ExcludePackageNameFilter implements PackageNameFilter {
 
 	@Override
 	public String toString() {
-		return "Excludes package names that start with " + patternDescription;
+		return String.format(
+			"%s that excludes packages whose names are either equal to or start with one of the following: %s",
+			getClass().getSimpleName(), this.patternDescription);
 	}
 
 }

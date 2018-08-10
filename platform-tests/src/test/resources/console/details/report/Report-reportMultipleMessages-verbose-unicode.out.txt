@@ -1,0 +1,30 @@
+Test plan execution started. Number of static tests: 1
+╷
+├─ JUnit Jupiter
+│  ├─ Report
+│  │  ├─ reportMultipleMessages(TestReporter)
+│  │  │       tags: []
+│  │  │   uniqueId: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]/[method:reportMultipleMessages(org.junit.jupiter.api.TestReporter)]
+│  │  │     parent: [engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]
+│  │  │     source: MethodSource [className = 'org.junit.platform.console.ConsoleDetailsTests$ReportTestCase', methodName = 'reportMultipleMessages', methodParameterTypes = 'org.junit.jupiter.api.TestReporter']
+│  │  │    reports: ReportEntry \[timestamp = ....-..-..T..:...*, value = 'foo'\]
+│  │  │    reports: ReportEntry \[timestamp = ....-..-..T..:...*, value = 'bar'\]
+│  │  │   duration: [\d]+ ms
+│  │  │     status: ✔ SUCCESSFUL
+│  └─ Report finished after [\d]+ ms\.
+└─ JUnit Jupiter finished after [\d]+ ms\.
+Test plan execution finished. Number of all tests: 1
+
+Test run finished after [\d]+ ms
+[         2 containers found      ]
+[         0 containers skipped    ]
+[         2 containers started    ]
+[         0 containers aborted    ]
+[         2 containers successful ]
+[         0 containers failed     ]
+[         1 tests found           ]
+[         0 tests skipped         ]
+[         1 tests started         ]
+[         0 tests aborted         ]
+[         1 tests successful      ]
+[         0 tests failed          ]

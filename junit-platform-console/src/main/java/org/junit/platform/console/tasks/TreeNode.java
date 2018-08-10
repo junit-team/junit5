@@ -10,10 +10,9 @@
 
 package org.junit.platform.console.tasks;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -30,8 +29,8 @@ class TreeNode {
 	private String reason;
 	private TestIdentifier identifier;
 	private TestExecutionResult result;
-	List<ReportEntry> reports = Collections.emptyList();
-	List<TreeNode> children = Collections.emptyList();
+	final Queue<ReportEntry> reports = new ConcurrentLinkedQueue<>();
+	final Queue<TreeNode> children = new ConcurrentLinkedQueue<>();
 	boolean visible;
 
 	TreeNode(String caption) {
@@ -52,17 +51,11 @@ class TreeNode {
 	}
 
 	TreeNode addChild(TreeNode node) {
-		if (children == Collections.EMPTY_LIST) {
-			children = new ArrayList<>();
-		}
 		children.add(node);
 		return this;
 	}
 
 	TreeNode addReportEntry(ReportEntry reportEntry) {
-		if (reports == Collections.EMPTY_LIST) {
-			reports = new ArrayList<>();
-		}
 		reports.add(reportEntry);
 		return this;
 	}

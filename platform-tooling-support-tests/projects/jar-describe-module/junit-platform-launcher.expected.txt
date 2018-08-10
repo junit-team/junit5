@@ -6,4 +6,3 @@ contains org.junit.platform.launcher
 contains org.junit.platform.launcher.core
 contains org.junit.platform.launcher.listeners
 contains org.junit.platform.launcher.tagexpression
-

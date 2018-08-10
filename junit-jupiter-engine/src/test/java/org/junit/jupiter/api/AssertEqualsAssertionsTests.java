@@ -571,14 +571,33 @@ class AssertEqualsAssertionsTests {
 
 	@Test
 	void assertEqualsInvokesEqualsMethodForIdenticalObjects() {
-		Object obj = new EqualsThrowsExceptionClass();
+		Object obj = new EqualsThrowsException();
 		assertThrows(NumberFormatException.class, () -> assertEquals(obj, obj));
 	}
 
-	private static class EqualsThrowsExceptionClass {
+	@Test
+	void assertEqualsWithUnequalObjectWhoseToStringImplementationThrowsAnException() {
+		try {
+			assertEquals(new ToStringThrowsException(), "foo");
+		}
+		catch (AssertionFailedError ex) {
+			assertMessageStartsWith(ex, "expected: <" + ToStringThrowsException.class.getName() + "@");
+			assertMessageEndsWith(ex, "but was: <foo>");
+		}
+	}
+
+	private static class EqualsThrowsException {
 
 		@Override
 		public boolean equals(Object obj) {
+			throw new NumberFormatException();
+		}
+	}
+
+	private static class ToStringThrowsException {
+
+		@Override
+		public String toString() {
 			throw new NumberFormatException();
 		}
 	}

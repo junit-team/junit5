@@ -10,7 +10,9 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
+
+import java.util.Objects;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -25,7 +27,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * @see DiscoverySelectors#selectModule(String)
  * @see DiscoverySelectors#selectModules(java.util.Set)
  */
-@API(status = EXPERIMENTAL, since = "1.1")
+@API(status = STABLE, since = "1.1")
 public class ModuleSelector implements DiscoverySelector {
 
 	private final String moduleName;
@@ -39,6 +41,31 @@ public class ModuleSelector implements DiscoverySelector {
 	 */
 	public String getModuleName() {
 		return this.moduleName;
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	@API(status = STABLE, since = "1.3")
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		ModuleSelector that = (ModuleSelector) o;
+		return Objects.equals(this.moduleName, that.moduleName);
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	@API(status = STABLE, since = "1.3")
+	@Override
+	public int hashCode() {
+		return this.moduleName.hashCode();
 	}
 
 	@Override

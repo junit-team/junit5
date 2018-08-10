@@ -17,7 +17,9 @@ dependencies {
 javacRelease = 9
 
 // https://github.com/schauder/degraph/issues/87
-degraph.enabled = false
+tasks.withType(de.obqo.gradle.degraph.DegraphTask) {
+	it.enabled = false
+}
 
 test {
 	useJUnitPlatform()

@@ -46,6 +46,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 public class ForkJoinPoolHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
 
 	private final ForkJoinPool forkJoinPool;
+	private final int parallelism;
 
 	/**
 	 * Create a new {@code ForkJoinPoolHierarchicalTestExecutorService} based on
@@ -55,8 +56,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	 */
 	public ForkJoinPoolHierarchicalTestExecutorService(ConfigurationParameters configurationParameters) {
 		forkJoinPool = createForkJoinPool(configurationParameters);
-		LoggerFactory.getLogger(getClass()) //
-				.config(() -> "Using ForkJoinPool with parallelism of " + forkJoinPool.getParallelism());
+		parallelism = forkJoinPool.getParallelism();
+		LoggerFactory.getLogger(getClass()).config(() -> "Using ForkJoinPool with parallelism of " + parallelism);
 	}
 
 	private ForkJoinPool createForkJoinPool(ConfigurationParameters configurationParameters) {
@@ -86,8 +87,16 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			// can use ForkJoinTask API in invokeAll etc.
 			return forkJoinPool.submit(exclusiveTask);
 		}
-		// limit the amount of queued work so we don't consume dynamic tests too eagerly
-		if (testTask.getExecutionMode() == CONCURRENT && ForkJoinTask.getSurplusQueuedTaskCount() < 1) {
+		// Limit the amount of queued work so we don't consume dynamic tests too eagerly
+		// by forking only if the current worker thread's queue length is below the
+		// desired parallelism. This optimistically assumes that the already queued tasks
+		// can be stolen by other workers and the new task requires about the same
+		// execution time as the already queued tasks. If the other workers are busy,
+		// the parallelism is already at its desired level. If all already queued tasks
+		// can be stolen by otherwise idle workers and the new task takes significantly
+		// longer, parallelism will drop. However, that only happens if the enclosing test
+		// task is the only one remaining which should rarely be the case.
+		if (testTask.getExecutionMode() == CONCURRENT && ForkJoinTask.getSurplusQueuedTaskCount() < parallelism) {
 			return exclusiveTask.fork();
 		}
 		exclusiveTask.compute();

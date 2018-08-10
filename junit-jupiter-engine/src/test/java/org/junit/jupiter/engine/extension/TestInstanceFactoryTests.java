@@ -15,6 +15,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.engine;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.started;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
+import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
+import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
+
+import java.net.URL;
+import java.net.URLClassLoader;
 import static org.junit.platform.testkit.ExecutionConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.testkit.ExecutionConditions.container;
 import static org.junit.platform.testkit.ExecutionConditions.engine;
@@ -199,11 +212,36 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void instanceFactoryOnToplevelTestClass() {
-		ExecutionsResult executionsResult = executeTestsForClass(ParentTestCase.class).getExecutionsResult();
+	void proxyTestInstanceFactoryFailsDueToUseOfDifferentClassLoader() {
+		Class<?> testClass = ProxiedTestCase.class;
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
 
-		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests aborted");
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(container(testClass), //
+				// NOTE: the test class names are the same even though the objects are
+				// instantiated using different ClassLoaders. Thus, we check for the
+				// appended "@" but ignore the actual hash code for the test class
+				// loaded by the different ClassLoader.
+				finishedWithFailure(allOf(isA(TestInstantiationException.class),
+					message(m -> m.startsWith("TestInstanceFactory [" + ProxyTestInstanceFactory.class.getName() + "]")
+							&& m.contains("failed to return an instance of [" + testClass.getName() + "@"
+									+ Integer.toHexString(System.identityHashCode(testClass)))
+							&& m.contains("and instead returned an instance of [" + testClass.getName() + "@")//
+					)))), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void instanceFactoryOnToplevelTestClass() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(ParentTestCase.class);
+
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
@@ -284,7 +322,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
 			"beforeEach: lambda",
-			"test: lambda"
+				"test: lambda"
 		);
 		// @formatter:on
 	}
@@ -474,6 +512,24 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@ExtendWith(ProxyTestInstanceFactory.class)
+	@TestInstance(PER_CLASS)
+	static class ProxiedTestCase {
+
+		@Test
+		void test1() {
+			callSequence.add("test1");
+		}
+
+		@Test
+		void test2() {
+			callSequence.add("test2");
+		}
+
+	}
+
+	// -------------------------------------------------------------------------
+
 	private static abstract class AbstractTestInstanceFactory implements TestInstanceFactory {
 
 		@Override
@@ -532,6 +588,44 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {
 			throw new RuntimeException("boom!");
+		}
+	}
+
+	/**
+	 * This does not actually create a proxy. Rather, it simply simulates what
+	 * a proxy-based implementation might do, by loading the class from a
+	 * different {@link ClassLoader}.
+	 */
+	private static class ProxyTestInstanceFactory implements TestInstanceFactory {
+
+		@Override
+		public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {
+			Class<?> testClass = factoryContext.getTestClass();
+			String className = testClass.getName();
+			instantiated(getClass(), testClass);
+
+			try (ProxyClassLoader proxyClassLoader = new ProxyClassLoader()) {
+				// Load test class from different class loader
+				Class<?> clazz = proxyClassLoader.loadClass(className);
+				return ReflectionUtils.newInstance(clazz);
+			}
+			catch (Exception ex) {
+				throw new RuntimeException("Failed to load class [" + className + "]", ex);
+			}
+		}
+	}
+
+	private static class ProxyClassLoader extends URLClassLoader {
+
+		ProxyClassLoader() {
+			super(new URL[] { ProxyClassLoader.class.getProtectionDomain().getCodeSource().getLocation() },
+				getSystemClassLoader());
+		}
+
+		@Override
+		public Class<?> loadClass(String name) throws ClassNotFoundException {
+			return (name.startsWith(TestInstanceFactoryTests.class.getName()) ? findClass(name)
+					: super.loadClass(name));
 		}
 	}
 

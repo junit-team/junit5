@@ -21,6 +21,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -31,8 +32,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.JupiterTestDescriptorTests.StaticTestCase.StaticTestCaseLevel2;
+import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 
 /**
  * Unit tests for {@link ClassTestDescriptor}, {@link NestedClassTestDescriptor},
@@ -173,6 +176,21 @@ class JupiterTestDescriptorTests {
 	}
 
 	@Test
+	void constructFromInheritedMethod() throws Exception {
+		Method testMethod = ConcreteTest.class.getMethod("theTest");
+		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, ConcreteTest.class, testMethod);
+
+		assertEquals(testMethod, descriptor.getTestMethod());
+
+		Optional<TestSource> sourceOptional = descriptor.getSource();
+		assertThat(sourceOptional).containsInstanceOf(MethodSource.class);
+
+		MethodSource methodSource = (MethodSource) sourceOptional.get();
+		assertEquals(ConcreteTest.class.getName(), methodSource.getClassName());
+		assertEquals("theTest", methodSource.getMethodName());
+	}
+
+	@Test
 	void defaultDisplayNamesForTestClasses() {
 		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, getClass());
 		assertEquals(getClass().getSimpleName(), descriptor.getDisplayName());
@@ -301,6 +319,16 @@ class JupiterTestDescriptorTests {
 
 		static class StaticTestCaseLevel2 {
 		}
+	}
+
+	private abstract static class AbstractTestBase {
+
+		@Test
+		public void theTest() {
+		}
+	}
+
+	private static class ConcreteTest extends AbstractTestBase {
 	}
 
 }

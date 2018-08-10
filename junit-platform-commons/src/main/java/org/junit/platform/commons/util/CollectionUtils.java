@@ -99,6 +99,7 @@ public final class CollectionUtils {
 	 * <li>{@link Iterable}</li>
 	 * <li>{@link Iterator}</li>
 	 * <li>{@link Object} array</li>
+	 * <li>primitive array</li>
 	 * </ul>
 	 *
 	 * @param object the object to convert into a stream; never {@code null}

@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
@@ -63,10 +65,11 @@ class AutomaticModuleNameTests {
 	@SuppressWarnings("unused")
 	private static List<String> moduleDirectoryNames() throws IOException {
 		// @formatter:off
-		String startOfModuleLine = "include '";
-		try (Stream<String> stream = Files.lines(Paths.get("../settings.gradle"))
-				.filter(line -> line.startsWith(startOfModuleLine))
-				.map(line -> line.substring(startOfModuleLine.length(), line.length() - 1))
+		Pattern moduleLinePattern = Pattern.compile("include\\(\"(.+)\"\\)");
+		try (Stream<String> stream = Files.lines(Paths.get("../settings.gradle.kts"))
+				.map(moduleLinePattern::matcher)
+				.filter(Matcher::matches)
+				.map(matcher -> matcher.group(1))
 				.filter(name -> !name.equals("junit-platform-console-standalone"))
 				.filter(name -> !name.equals("junit-bom"))
 				.filter(name -> !name.endsWith("-java-9"))

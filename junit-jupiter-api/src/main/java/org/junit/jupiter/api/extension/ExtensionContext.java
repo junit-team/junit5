@@ -255,23 +255,51 @@ public interface ExtensionContext {
 
 	/**
 	 * Publish a map of key-value pairs to be consumed by an
-	 * {@code org.junit.platform.engine.EngineExecutionListener}.
+	 * {@code org.junit.platform.engine.EngineExecutionListener} in order to
+	 * supply additional information to the reporting infrastructure.
 	 *
 	 * @param map the key-value pairs to be published; never {@code null};
 	 * keys and values within entries in the map also must not be
 	 * {@code null} or blank
+	 * @see #publishReportEntry(String, String)
+	 * @see #publishReportEntry(String)
+	 * @see org.junit.platform.engine.EngineExecutionListener#reportingEntryPublished
 	 */
 	void publishReportEntry(Map<String, String> map);
 
 	/**
 	 * Publish the specified key-value pair to be consumed by an
-	 * {@code org.junit.platform.engine.EngineExecutionListener}.
+	 * {@code org.junit.platform.engine.EngineExecutionListener} in order to
+	 * supply additional information to the reporting infrastructure.
 	 *
 	 * @param key the key of the published pair; never {@code null} or blank
 	 * @param value the value of the published pair; never {@code null} or blank
+	 * @see #publishReportEntry(Map)
+	 * @see #publishReportEntry(String)
+	 * @see org.junit.platform.engine.EngineExecutionListener#reportingEntryPublished
 	 */
 	default void publishReportEntry(String key, String value) {
 		this.publishReportEntry(Collections.singletonMap(key, value));
+	}
+
+	/**
+	 * Publish the specified value to be consumed by an
+	 * {@code org.junit.platform.engine.EngineExecutionListener} in order to
+	 * supply additional information to the reporting infrastructure.
+	 *
+	 * <p>This method delegates to {@link #publishReportEntry(String, String)},
+	 * supplying {@code "value"} as the key and the supplied {@code value}
+	 * argument as the value.
+	 *
+	 * @param value the value to be published; never {@code null} or blank
+	 * @see #publishReportEntry(Map)
+	 * @see #publishReportEntry(String, String)
+	 * @see org.junit.platform.engine.EngineExecutionListener#reportingEntryPublished
+	 * @since 5.3
+	 */
+	@API(status = STABLE, since = "5.3")
+	default void publishReportEntry(String value) {
+		this.publishReportEntry("value", value);
 	}
 
 	/**

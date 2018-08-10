@@ -18,6 +18,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.test.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.abortedWithReason;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.abortedWithReason;
 import static org.junit.platform.engine.test.ExecutionEventConditions.container;
 import static org.junit.platform.engine.test.ExecutionEventConditions.displayName;
 import static org.junit.platform.engine.test.ExecutionEventConditions.event;
@@ -66,6 +67,7 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.testkit.ExecutionEvent;
 import org.junit.platform.testkit.ExecutionRecorder;
+import org.opentest4j.TestAbortedException;
 import org.opentest4j.TestAbortedException;
 
 /**

@@ -34,8 +34,8 @@ abstract class AbstractClassNameFilter implements ClassNameFilter {
 	protected final String patternDescription;
 
 	AbstractClassNameFilter(String... patterns) {
-		Preconditions.notEmpty(patterns, "patterns must not be null or empty");
-		Preconditions.containsNoNullElements(patterns, "patterns must not contain null elements");
+		Preconditions.notEmpty(patterns, "patterns array must not be null or empty");
+		Preconditions.containsNoNullElements(patterns, "patterns array must not contain null elements");
 		this.patterns = Arrays.stream(patterns).map(Pattern::compile).collect(toList());
 		this.patternDescription = Arrays.stream(patterns).collect(joining("' OR '", "'", "'"));
 	}

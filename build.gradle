@@ -1,13 +1,22 @@
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
+buildscript {
+	dependencies {
+		classpath('gradle.plugin.de.obqo.gradle:gradle-degraph:0.1.4.1') {
+			exclude(group: 'org.codehaus.groovy')
+			because('https://github.com/obecker/gradle-degraph/issues/3')
+		}
+	}
+}
+
 plugins {
-	id 'com.gradle.build-scan' version '1.15'
+	id 'com.gradle.build-scan' version '1.15.1'
 	id 'net.nemerosa.versioning' version '2.7.1'
 	id 'com.github.ben-manes.versions' version '0.20.0' apply false
-	id 'com.diffplug.gradle.spotless' version '3.13.0' apply false
+	id 'com.diffplug.gradle.spotless' version '3.14.0' apply false
 	id 'org.ajoberstar.git-publish' version '1.0.1' apply false
-	id 'org.jetbrains.kotlin.jvm' version '1.2.51' apply false
+	id 'org.jetbrains.kotlin.jvm' version '1.2.60' apply false
 	id 'com.github.johnrengelman.shadow' version '2.0.4' apply false
 }
 
@@ -97,7 +106,7 @@ allprojects { subproj ->
 	apply plugin: 'com.diffplug.gradle.spotless'
 	apply plugin: 'checkstyle'
 	apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates
-	apply from: "$rootDir/gradle/degraph.gradle"
+	apply plugin: 'de.obqo.gradle.degraph'
 
 	if (project.hasProperty('enableJaCoCo')) {
 		apply plugin: 'jacoco'
@@ -168,6 +177,16 @@ allprojects { subproj ->
 	}
 	checkstyleTest {
 		configFile = rootProject.file('src/checkstyle/checkstyleTest.xml')
+	}
+
+	degraph {
+		sourceSets sourceSets.main
+		including 'org.junit.platform.**', 'org.junit.vintage.**', 'org.junit.jupiter.**'
+		slicings {
+			module {
+				patterns "org.junit.(*.*).**"
+			}
+		}
 	}
 }
 
@@ -452,7 +471,7 @@ configure(rootProject) {
 
 	spotless {
 		format 'misc', {
-			target '**/*.gradle', '**/*.gitignore'
+			target '**/*.gradle', '**/*.gradle.kts', '**/*.gitignore'
 			indentWithTabs()
 			trimTrailingWhitespace()
 			endWithNewline()
@@ -491,7 +510,7 @@ configure(rootProject) {
 
 wrapper {
 	description = 'Generates gradlew and gradlew.bat scripts'
-	gradleVersion = '4.9-rc-2'
+	gradleVersion = '4.9'
 	/*
 	* Reasoning for using BIN:
 	* https://github.com/junit-team/junit5/pull/1012#discussion_r132061924

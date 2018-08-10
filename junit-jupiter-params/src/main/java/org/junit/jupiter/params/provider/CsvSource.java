@@ -22,7 +22,8 @@ import org.apiguardian.api.API;
 
 /**
  * {@code @CsvSource} is an {@link ArgumentsSource} which reads
- * comma-separated values (CSV) from its {@link #value} attribute.
+ * comma-separated values (CSV) from one or more supplied
+ * {@linkplain #value CSV lines}.
  *
  * <p>The supplied values will be provided as arguments to the
  * annotated {@code @ParameterizedTest} method.
@@ -43,13 +44,14 @@ public @interface CsvSource {
 	 * The CSV lines to use as source of arguments; must not be empty.
 	 *
 	 * <p>Each value corresponds to a line in a CSV file and will be split using
-	 * the specified {@link #delimiter}.
+	 * the specified {@link #delimiter delimiter}.
 	 */
 	String[] value();
 
 	/**
-	 * The column delimiter to use when reading the
-	 * {@linkplain #value() values}.
+	 * The column delimiter to use when reading the {@linkplain #value lines}.
+	 *
+	 * <p>Defaults to {@code ','}.
 	 *
 	 * <p>Defaults to {@code ','}.
 	 */

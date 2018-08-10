@@ -22,7 +22,8 @@ import org.apiguardian.api.API;
 
 /**
  * {@code @CsvFileSource} is an {@link ArgumentsSource} which is used to load
- * comma-separated value (CSV) files from one or more classpath resources.
+ * comma-separated value (CSV) files from one or more classpath {@link #resources
+ * resources}.
  *
  * <p>The lines of these CSV files will be provided as arguments to the
  * annotated {@code @ParameterizedTest} method.

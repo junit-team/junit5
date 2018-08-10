@@ -16,9 +16,12 @@ import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.console.tasks.XmlReportAssertions.assertValidAccordingToJenkinsSchema;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
+import static org.junit.platform.launcher.LauncherConstants.STDERR_REPORT_ENTRY_KEY;
+import static org.junit.platform.launcher.LauncherConstants.STDOUT_REPORT_ENTRY_KEY;
 
 import java.io.StringWriter;
 import java.time.Clock;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.UniqueId;
@@ -71,9 +74,51 @@ class XmlReportWriterTests {
 		assertThat(content)
 			.containsSubsequence(
 				"<system-out>",
-				"Report Entry #1 (timestamp: ",
-				"- myKey: myValue",
+					"Report Entry #1 (timestamp: ",
+					"- myKey: myValue",
 				"</system-out>");
+		//@formatter:on
+	}
+
+	@Test
+	void writesCapturedOutput() throws Exception {
+		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", "test");
+		TestDescriptorStub testDescriptor = new TestDescriptorStub(uniqueId, "successfulTest");
+		engineDescriptor.addChild(testDescriptor);
+		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+
+		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+		ReportEntry reportEntry = ReportEntry.from(Map.of( //
+			STDOUT_REPORT_ENTRY_KEY, "normal output", //
+			STDERR_REPORT_ENTRY_KEY, "error output", //
+			"foo", "bar"));
+		reportData.addReportEntry(TestIdentifier.from(testDescriptor), reportEntry);
+		reportData.addReportEntry(TestIdentifier.from(testDescriptor), ReportEntry.from(Map.of("baz", "qux")));
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), successful());
+
+		String content = writeXmlReport(testPlan, reportData);
+
+		assertValidAccordingToJenkinsSchema(content);
+		//@formatter:off
+		assertThat(content)
+			.containsSubsequence(
+				"<system-out>",
+					"unique-id: ", "test:test",
+					"display-name: successfulTest",
+				"</system-out>",
+				"<system-out>",
+					"Report Entry #1 (timestamp: ",
+					"- foo: bar",
+					"Report Entry #2 (timestamp: ",
+					"- baz: qux",
+				"</system-out>",
+				"<system-out>",
+					"normal output",
+				"</system-out>",
+				"<system-err>",
+					"error output",
+				"</system-err>")
+			.doesNotContain(STDOUT_REPORT_ENTRY_KEY, STDERR_REPORT_ENTRY_KEY);
 		//@formatter:on
 	}
 

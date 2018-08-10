@@ -12,6 +12,8 @@ package org.junit.platform.engine.discovery;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.util.Objects;
+
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
@@ -39,6 +41,31 @@ public class PackageSelector implements DiscoverySelector {
 	 */
 	public String getPackageName() {
 		return this.packageName;
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	@API(status = STABLE, since = "1.3")
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		PackageSelector that = (PackageSelector) o;
+		return Objects.equals(this.packageName, that.packageName);
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	@API(status = STABLE, since = "1.3")
+	@Override
+	public int hashCode() {
+		return this.packageName.hashCode();
 	}
 
 	@Override

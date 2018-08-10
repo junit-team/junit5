@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -103,6 +104,12 @@ class StringUtilsTests {
 		assertEquals("[[2, 4], [3, 9]]", nullSafeToString(new Integer[][] { { 2, 4 }, { 3, 9 } }));
 	}
 
+	@Test
+	void nullSafeToStringForObjectWhoseToStringImplementationThrowsAnException() {
+		assertThat(nullSafeToString(new ToStringThrowsException()))//
+				.startsWith(ToStringThrowsException.class.getName() + "@");
+	}
+
 	private void shouldContainWhitespace(String str) {
 		assertTrue(containsWhitespace(str), () -> String.format("'%s' should contain whitespace", str));
 		assertFalse(doesNotContainWhitespace(str), () -> String.format("'%s' should contain whitespace", str));
@@ -125,6 +132,14 @@ class StringUtilsTests {
 			() -> String.format("'%s' should not contain ISO control character", str));
 		assertFalse(containsIsoControlCharacter(str),
 			() -> String.format("'%s' should not contain ISO control character", str));
+	}
+
+	private static class ToStringThrowsException {
+
+		@Override
+		public String toString() {
+			throw new RuntimeException("Boom!");
+		}
 	}
 
 }

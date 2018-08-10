@@ -47,6 +47,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.ExecutionGraph;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.opentest4j.AssertionFailedError;
 import org.opentest4j.TestAbortedException;
 
@@ -179,6 +180,28 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void exceptionInAfterEachTakesPrecedenceOverFailedAssumptionInTest() throws NoSuchMethodException {
+		Method method = FailureTestCase.class.getDeclaredMethod("abortedTest");
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
+
+		FailureTestCase.exceptionToThrowInAfterEach = Optional.of(new IOException("checked"));
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(FailureTestCase.class), started()), //
+			event(test("abortedTest"), started()), //
+			event(test("abortedTest"), //
+				finishedWithFailure(allOf( //
+					isA(IOException.class), //
+					message("checked"), //
+					suppressed(0, allOf(isA(TestAbortedException.class)))))), //
+			event(container(FailureTestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
 	void checkedExceptionInBeforeAllIsRegistered() throws NoSuchMethodException {
 		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
@@ -229,6 +252,25 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 			event(container(TestCaseWithInvalidConstructorAndThrowingAfterAllCallback.class), finishedWithFailure(allOf( //
 				message(m -> m.contains("constructor")), //
 				suppressed(0, message("callback"))))), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void failureInAfterAllTakesPrecedenceOverTestAbortedExceptionInBeforeAll() throws NoSuchMethodException {
+		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
+
+		FailureTestCase.exceptionToThrowInBeforeAll = Optional.of(new TestAbortedException("aborted"));
+		FailureTestCase.exceptionToThrowInAfterAll = Optional.of(new IOException("checked"));
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(FailureTestCase.class), started()), //
+			event(container(FailureTestCase.class),
+				finishedWithFailure(allOf(isA(IOException.class), message("checked"),
+					suppressed(0, allOf(isA(TestAbortedException.class), message("aborted")))))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -307,6 +349,20 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void testWithCheckedException() throws IOException {
 			throw new IOException("checked");
+		}
+
+		@Test
+		void abortedTest() {
+			assumeFalse(true, "abortedTest");
+		}
+
+	}
+
+	@TestInstance(PER_METHOD)
+	@ExtendWith(ThrowingAfterAllCallback.class)
+	static class TestCaseWithInvalidConstructorAndThrowingAfterAllCallbackAndPerMethodLifecycle {
+		TestCaseWithInvalidConstructorAndThrowingAfterAllCallbackAndPerMethodLifecycle() {
+			throw new IllegalStateException("constructor");
 		}
 
 		@Test

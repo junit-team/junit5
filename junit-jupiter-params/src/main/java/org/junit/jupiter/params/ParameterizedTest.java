@@ -102,21 +102,72 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public @interface ParameterizedTest {
 
 	/**
-	 * The name pattern to be used for invocations of the parameterized test;
-	 * never blank or consisting solely of whitespace.
+	 * Placeholder for the {@linkplain org.junit.jupiter.api.TestInfo#getDisplayName
+	 * display name} of a {@code @ParameterizedTest} method: <code>{displayName}</code>
 	 *
-	 * <p>You may use the following placeholders:
+	 * @see #name
+	 * @since 5.3
+	 */
+	@API(status = EXPERIMENTAL, since = "5.3")
+	String DISPLAY_NAME_PLACEHOLDER = "{displayName}";
+
+	/**
+	 * Placeholder for the current invocation index of a {@code @ParameterizedTest}
+	 * method (1-based): <code>{index}</code>
+	 *
+	 * @see #name
+	 * @since 5.3
+	 */
+	@API(status = EXPERIMENTAL, since = "5.3")
+	String INDEX_PLACEHOLDER = "{index}";
+
+	/**
+	 * Placeholder for the complete, comma-separated arguments list of the
+	 * current invocation of a {@code @ParameterizedTest} method:
+	 * <code>{arguments}</code>
+	 *
+	 * @see #name
+	 * @since 5.3
+	 */
+	@API(status = EXPERIMENTAL, since = "5.3")
+	String ARGUMENTS_PLACEHOLDER = "{arguments}";
+
+	/**
+	 * Default display name pattern for the current invocation of a
+	 * {@code @ParameterizedTest} method: {@value}
+	 *
+	 * <p>Note that the default pattern does <em>not</em> include the
+	 * {@linkplain #DISPLAY_NAME_PLACEHOLDER display name} of the
+	 * {@code @ParameterizedTest} method.
+	 *
+	 * @see #name
+	 * @see #DISPLAY_NAME_PLACEHOLDER
+	 * @see #INDEX_PLACEHOLDER
+	 * @see #ARGUMENTS_PLACEHOLDER
+	 * @since 5.3
+	 */
+	@API(status = EXPERIMENTAL, since = "5.3")
+	String DEFAULT_DISPLAY_NAME = "[" + INDEX_PLACEHOLDER + "] " + ARGUMENTS_PLACEHOLDER;
+
+	/**
+	 * The display name to be used for individual invocations of the
+	 * parameterized test; never blank or consisting solely of whitespace.
+	 *
+	 * <p>Defaults to {@link #DEFAULT_DISPLAY_NAME}.
+	 *
+	 * <h4>Supported placeholders</h4>
 	 * <ul>
-	 * <li><code>{index}</code>: the current invocation index (1-based)</li>
-	 * <li><code>{arguments}</code>: the complete, comma-separated arguments list</li>
+	 * <li>{@link #DISPLAY_NAME_PLACEHOLDER}</li>
+	 * <li>{@link #INDEX_PLACEHOLDER}</li>
+	 * <li>{@link #ARGUMENTS_PLACEHOLDER}</li>
 	 * <li><code>{0}</code>, <code>{1}</code>, etc.: an individual argument (0-based)</li>
 	 * </ul>
 	 *
 	 * <p>For the latter, you may use {@link java.text.MessageFormat} patterns
-	 * to customize formatting of values.
+	 * to customize formatting.
 	 *
 	 * @see java.text.MessageFormat
 	 */
-	String name() default "[{index}] {arguments}";
+	String name() default DEFAULT_DISPLAY_NAME;
 
 }

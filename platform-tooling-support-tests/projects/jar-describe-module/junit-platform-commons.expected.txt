@@ -7,4 +7,3 @@ contains org.junit.platform.commons.annotation
 contains org.junit.platform.commons.logging
 contains org.junit.platform.commons.support
 contains org.junit.platform.commons.util
-

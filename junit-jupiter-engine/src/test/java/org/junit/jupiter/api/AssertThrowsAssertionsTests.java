@@ -17,9 +17,9 @@ import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedErro
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.IOException;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -318,14 +318,8 @@ class AssertThrowsAssertionsTests {
 	private static class EnigmaClassLoader extends URLClassLoader {
 
 		EnigmaClassLoader() {
-			super(getUrlClassLoader().getURLs());
-		}
-
-		private static URLClassLoader getUrlClassLoader() {
-			ClassLoader systemClassLoader = getSystemClassLoader();
-			assumeTrue(systemClassLoader instanceof URLClassLoader,
-				"aborting test since system ClassLoader is not a URLClassLoader");
-			return (URLClassLoader) systemClassLoader;
+			super(new URL[] { EnigmaClassLoader.class.getProtectionDomain().getCodeSource().getLocation() },
+				getSystemClassLoader());
 		}
 
 		@Override

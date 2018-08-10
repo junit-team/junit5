@@ -37,8 +37,8 @@ class IncludePackageNameFilter implements PackageNameFilter {
 	private final String patternDescription;
 
 	IncludePackageNameFilter(String... packageNames) {
-		Preconditions.notEmpty(packageNames, "packageNames must not be null or empty");
-		Preconditions.containsNoNullElements(packageNames, "packageNames must not contain null elements");
+		Preconditions.notEmpty(packageNames, "packageNames array must not be null or empty");
+		Preconditions.containsNoNullElements(packageNames, "packageNames array must not contain null elements");
 		this.packageNames = Arrays.asList(packageNames);
 		this.patternDescription = Arrays.stream(packageNames).collect(joining("' OR '", "'", "'"));
 	}
@@ -56,7 +56,7 @@ class IncludePackageNameFilter implements PackageNameFilter {
 
 	private String formatExclusionReason(String packageName) {
 		return String.format("Package name [%s] does not match any included names: %s", packageName,
-			patternDescription);
+			this.patternDescription);
 	}
 
 	@Override
@@ -71,7 +71,9 @@ class IncludePackageNameFilter implements PackageNameFilter {
 
 	@Override
 	public String toString() {
-		return "Includes package names that matches all packages that start with " + patternDescription;
+		return String.format(
+			"%s that includes packages whose names are either equal to or start with one of the following: %s",
+			getClass().getSimpleName(), this.patternDescription);
 	}
 
 }

@@ -1,0 +1,24 @@
+Test execution started. Number of static tests: 1
+Started:     JUnit Jupiter ([engine:junit-jupiter])
+Started:     Report ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase])
+Started:     reportSingleMessage(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]/[method:reportSingleMessage(org.junit.jupiter.api.TestReporter)])
+Reported:    reportSingleMessage(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]/[method:reportSingleMessage(org.junit.jupiter.api.TestReporter)])
+             => Reported values: ReportEntry \[timestamp = ....-..-..T..:...*, value = 'foo'\]
+Finished:    reportSingleMessage(TestReporter) ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase]/[method:reportSingleMessage(org.junit.jupiter.api.TestReporter)])
+Finished:    Report ([engine:junit-jupiter]/[class:org.junit.platform.console.ConsoleDetailsTests$ReportTestCase])
+Finished:    JUnit Jupiter ([engine:junit-jupiter])
+Test execution finished.
+
+Test run finished after [\d]+ ms
+[         2 containers found      ]
+[         0 containers skipped    ]
+[         2 containers started    ]
+[         0 containers aborted    ]
+[         2 containers successful ]
+[         0 containers failed     ]
+[         1 tests found           ]
+[         0 tests skipped         ]
+[         1 tests started         ]
+[         0 tests aborted         ]
+[         1 tests successful      ]
+[         0 tests failed          ]

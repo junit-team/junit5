@@ -20,15 +20,15 @@ import org.junit.jupiter.api.assertThrows
 class ArgumentsAccessorKotlinTests {
 
     @Test
-    fun `get() with reified type and index`() {
-        assertEquals(1, DefaultArgumentsAccessor(1).get<Int>(0))
-        assertEquals('A', DefaultArgumentsAccessor('A').get<Char>(0))
+    fun `getAs() with reified type and index`() {
+        assertEquals(1, DefaultArgumentsAccessor(1).getAs(0))
+        assertEquals('A', DefaultArgumentsAccessor('A').getAs(0))
     }
 
     @Test
-    fun `get() with reified type and index for incompatible type`() {
+    fun `getAs() with reified type and index for incompatible type`() {
         val exception = assertThrows<ArgumentAccessException> {
-            DefaultArgumentsAccessor(Integer.valueOf(1)).get<Char>(0)
+            DefaultArgumentsAccessor(Integer.valueOf(1)).getAs<Char>(0)
         }
 
         assertThat(exception).hasMessage(

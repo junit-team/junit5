@@ -13,6 +13,7 @@ package org.junit.platform.engine.discovery;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.net.URI;
+import java.util.Objects;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -49,6 +50,31 @@ public class ClasspathRootSelector implements DiscoverySelector {
 	 */
 	public URI getClasspathRoot() {
 		return this.classpathRoot;
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	@API(status = STABLE, since = "1.3")
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		ClasspathRootSelector that = (ClasspathRootSelector) o;
+		return Objects.equals(this.classpathRoot, that.classpathRoot);
+	}
+
+	/**
+	 * @since 1.3
+	 */
+	@API(status = STABLE, since = "1.3")
+	@Override
+	public int hashCode() {
+		return this.classpathRoot.hashCode();
 	}
 
 	@Override

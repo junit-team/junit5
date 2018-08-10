@@ -785,4 +785,10 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 			return Stream.of(emptyTestTemplateInvocationContext()).onClose(() -> streamClosed.set(true));
 		}
 	}
+
+	private static TestTemplateInvocationContext emptyTestTemplateInvocationContext() {
+		return new TestTemplateInvocationContext() {
+		};
+	}
+
 }

@@ -23,4 +23,3 @@ contains org.junit.jupiter.params.shadow.com.univocity.parsers.csv
 contains org.junit.jupiter.params.shadow.com.univocity.parsers.fixed
 contains org.junit.jupiter.params.shadow.com.univocity.parsers.tsv
 contains org.junit.jupiter.params.support
-

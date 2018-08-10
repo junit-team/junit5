@@ -27,13 +27,13 @@ class PackageNameFilterTests {
 	void includePackageChecksPreconditions() {
 		assertThatThrownBy(() -> PackageNameFilter.includePackageNames((String[]) null)) //
 				.isInstanceOf(PreconditionViolationException.class) //
-				.hasMessage("packageNames must not be null or empty");
+				.hasMessage("packageNames array must not be null or empty");
 		assertThatThrownBy(() -> PackageNameFilter.includePackageNames(new String[0])) //
 				.isInstanceOf(PreconditionViolationException.class) //
-				.hasMessage("packageNames must not be null or empty");
+				.hasMessage("packageNames array must not be null or empty");
 		assertThatThrownBy(() -> PackageNameFilter.includePackageNames(new String[] { null })) //
 				.isInstanceOf(PreconditionViolationException.class) //
-				.hasMessage("packageNames must not contain null elements");
+				.hasMessage("packageNames array must not contain null elements");
 	}
 
 	@Test
@@ -42,8 +42,9 @@ class PackageNameFilterTests {
 		String includedPackage2 = "java.util";
 		PackageNameFilter filter = PackageNameFilter.includePackageNames(includedPackage1, includedPackage2);
 
-		assertThat(filter).hasToString("Includes package names that matches all packages that start with '"
-				+ includedPackage1 + "' OR '" + includedPackage2 + "'");
+		assertThat(filter).hasToString(
+			"IncludePackageNameFilter that includes packages whose names are either equal to or start with one of the following: '"
+					+ includedPackage1 + "' OR '" + includedPackage2 + "'");
 
 		assertTrue(filter.apply("java.lang.String").included());
 		assertTrue(filter.toPredicate().test("java.lang.String"));
@@ -93,7 +94,8 @@ class PackageNameFilterTests {
 		PackageNameFilter filter = PackageNameFilter.excludePackageNames(excludedPackage1, excludedPackage2);
 
 		assertThat(filter).hasToString(
-			"Excludes package names that start with '" + excludedPackage1 + "' OR '" + excludedPackage2 + "'");
+			"ExcludePackageNameFilter that excludes packages whose names are either equal to or start with one of the following: '"
+					+ excludedPackage1 + "' OR '" + excludedPackage2 + "'");
 
 		assertTrue(filter.apply("java.lang.String").excluded());
 		assertFalse(filter.toPredicate().test("java.lang.String"));

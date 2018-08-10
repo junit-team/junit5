@@ -10,12 +10,14 @@
 
 package org.junit.jupiter.engine;
 
+import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +33,7 @@ import org.junit.platform.testkit.ExecutionGraph;
 class ReportingTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	void threeReportEntriesArePublished() {
+	void reportEntriesArePublished() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(MyReportingTestCase.class)).build();
 
 		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
@@ -39,30 +41,49 @@ class ReportingTests extends AbstractJupiterTestEngineTests {
 		assertEquals(2, executionGraph.getTestStartedCount(), "# tests started");
 		assertEquals(2, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
 		assertEquals(0, executionGraph.getTestFailedCount(), "# tests failed");
-		assertEquals(6, executionGraph.getReportingEntryPublishedCount(), "# report entries published");
+		assertEquals(7, executionGraph.getReportingEntryPublishedCount(), "# report entries published");
 	}
 
 	static class MyReportingTestCase {
 
 		@BeforeEach
-		void before(TestReporter reporter) {
-			reporter.publishEntry(new HashMap<>());
+		void beforeEach(TestReporter reporter) {
+			reporter.publishEntry("@BeforeEach");
 		}
 
 		@AfterEach
-		void after(TestReporter reporter) {
-			reporter.publishEntry(new HashMap<>());
+		void afterEach(TestReporter reporter) {
+			reporter.publishEntry("@AfterEach");
 		}
 
 		@Test
 		void succeedingTest(TestReporter reporter) {
-			reporter.publishEntry(new HashMap<>());
-			reporter.publishEntry("userName", "dk38");
+			reporter.publishEntry(emptyMap());
+			reporter.publishEntry("user name", "dk38");
+			reporter.publishEntry("message");
 		}
 
 		@Test
-		void testWithNullReportData(TestReporter reporter) {
-			assertThrows(PreconditionViolationException.class, () -> reporter.publishEntry(null));
+		void invalidReportData(TestReporter reporter) {
+
+			// Maps
+			Map<String, String> map = new HashMap<>();
+
+			map.put("key", null);
+			assertThrows(PreconditionViolationException.class, () -> reporter.publishEntry(map));
+
+			map.clear();
+			map.put(null, "value");
+			assertThrows(PreconditionViolationException.class, () -> reporter.publishEntry(map));
+
+			assertThrows(PreconditionViolationException.class, () -> reporter.publishEntry((Map<String, String>) null));
+
+			// Key-Value pair
+			assertThrows(PreconditionViolationException.class, () -> reporter.publishEntry(null, "bar"));
+			assertThrows(PreconditionViolationException.class, () -> reporter.publishEntry("foo", null));
+
+			// Value
+			assertThrows(PreconditionViolationException.class, () -> reporter.publishEntry((String) null));
 		}
 
 	}
