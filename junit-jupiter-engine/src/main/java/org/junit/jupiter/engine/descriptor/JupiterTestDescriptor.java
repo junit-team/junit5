@@ -39,6 +39,7 @@ import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
@@ -110,15 +111,41 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	// --- Node ----------------------------------------------------------------
 
-	protected ExecutionMode getExecutionMode(AnnotatedElement element) {
+	@Override
+	public final ExecutionMode getExecutionMode() {
+		Optional<ExecutionMode> executionMode = getExplicitExecutionMode();
+		if (executionMode.isPresent()) {
+			return executionMode.get();
+		}
+		Optional<TestDescriptor> parent = getParent();
+		while (parent.isPresent() && parent.get() instanceof JupiterTestDescriptor) {
+			JupiterTestDescriptor jupiterParent = (JupiterTestDescriptor) parent.get();
+			executionMode = jupiterParent.getExplicitExecutionMode();
+			if (executionMode.isPresent()) {
+				return executionMode.get();
+			}
+			executionMode = jupiterParent.getDefaultChildExecutionMode();
+			if (executionMode.isPresent()) {
+				return executionMode.get();
+			}
+			parent = jupiterParent.getParent();
+		}
+		return ExecutionMode.CONCURRENT;
+	}
+
+	protected Optional<ExecutionMode> getExplicitExecutionMode() {
+		return Optional.empty();
+	}
+
+	protected Optional<ExecutionMode> getDefaultChildExecutionMode() {
+		return Optional.empty();
+	}
+
+	protected Optional<ExecutionMode> getExecutionModeFromAnnotation(AnnotatedElement element) {
 		// @formatter:off
 		return findAnnotation(element, Execution.class)
 				.map(Execution::value)
-				.map(JupiterTestDescriptor::toExecutionMode)
-				.orElseGet(() -> getParent()
-						.filter(parent -> parent instanceof Node)
-						.map(parent -> ((Node<?>) parent).getExecutionMode())
-						.orElse(ExecutionMode.CONCURRENT));
+				.map(JupiterTestDescriptor::toExecutionMode);
 		// @formatter:on
 	}
 
@@ -132,7 +159,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		throw new JUnitException("Unknown ExecutionMode: " + mode);
 	}
 
-	protected Set<ExclusiveResource> getExclusiveResources(AnnotatedElement element) {
+	protected Set<ExclusiveResource> getExclusiveResourcesFromAnnotation(AnnotatedElement element) {
 		// @formatter:off
 		return findRepeatableAnnotations(element, ResourceLock.class).stream()
 				.map(resource -> new ExclusiveResource(resource.value(), toLockMode(resource.mode())))

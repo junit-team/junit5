@@ -28,6 +28,7 @@ import org.apache.maven.surefire.testset.TestListResolver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.UniqueId;
 
@@ -38,6 +39,7 @@ import org.junit.platform.engine.UniqueId;
  */
 class TestMethodFilterTests {
 
+	private static final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
 	private final TestListResolver resolver = mock(TestListResolver.class);
 
 	private final TestMethodFilter filter = new TestMethodFilter(this.resolver);
@@ -79,7 +81,7 @@ class TestMethodFilterTests {
 
 	private static ClassTestDescriptor newClassTestDescriptor() throws Exception {
 		UniqueId uniqueId = UniqueId.forEngine("class");
-		return new ClassTestDescriptor(uniqueId, TestClass.class);
+		return new ClassTestDescriptor(uniqueId, TestClass.class, configParams);
 	}
 
 	public static class TestClass {

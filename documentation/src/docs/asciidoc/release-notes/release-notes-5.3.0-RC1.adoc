@@ -93,6 +93,8 @@ on GitHub.
   class name and system hash code, separated by an `@` symbol.
 * New `getAs<Class>(index)` Kotlin extension method to make `ArgumentsAccessor` friendlier
   to use from Kotlin.
+* Tests in classes that use `Lifecycle.PER_CLASS` are now executed in the same thread by
+  default when parallel execution is enabled.
 
 
 [[release-notes-5.3.0-RC1-junit-vintage]]

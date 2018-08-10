@@ -19,6 +19,7 @@ import java.util.Set;
 import org.apiguardian.api.API;
 import org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests;
 import org.junit.platform.commons.util.ClassFilter;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.ClassSelector;
@@ -51,7 +52,8 @@ public class DiscoverySelectorResolver {
 	}
 
 	private void resolve(EngineDiscoveryRequest request, TestDescriptor engineDescriptor, ClassFilter classFilter) {
-		JavaElementsResolver javaElementsResolver = createJavaElementsResolver(engineDescriptor, classFilter);
+		JavaElementsResolver javaElementsResolver = createJavaElementsResolver(request.getConfigurationParameters(),
+			engineDescriptor, classFilter);
 
 		request.getSelectorsByType(ClasspathRootSelector.class).forEach(javaElementsResolver::resolveClasspathRoot);
 		request.getSelectorsByType(ModuleSelector.class).forEach(javaElementsResolver::resolveModule);
@@ -69,10 +71,11 @@ public class DiscoverySelectorResolver {
 		rootDescriptor.accept(TestDescriptor::prune);
 	}
 
-	private JavaElementsResolver createJavaElementsResolver(TestDescriptor engineDescriptor, ClassFilter classFilter) {
+	private JavaElementsResolver createJavaElementsResolver(ConfigurationParameters configurationParameters,
+			TestDescriptor engineDescriptor, ClassFilter classFilter) {
 		Set<ElementResolver> resolvers = new LinkedHashSet<>();
-		resolvers.add(new TestContainerResolver());
-		resolvers.add(new NestedTestsResolver());
+		resolvers.add(new TestContainerResolver(configurationParameters));
+		resolvers.add(new NestedTestsResolver(configurationParameters));
 		resolvers.add(new TestMethodResolver());
 		resolvers.add(new TestFactoryMethodResolver());
 		resolvers.add(new TestTemplateMethodResolver());
