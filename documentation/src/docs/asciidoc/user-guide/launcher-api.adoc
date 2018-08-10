@@ -11,9 +11,9 @@ execute tests. Moreover, third party test libraries – like Spock, Cucumber, an
 – can plug into the JUnit Platform's launching infrastructure by providing a custom
 `{TestEngine}`.
 
-The launching API is in the `{junit-platform-launcher}` module.
+The launcher API is in the `{junit-platform-launcher}` module.
 
-An example consumer of the launching API is the `{ConsoleLauncher}` in the
+An example consumer of the launcher API is the `{ConsoleLauncher}` in the
 `{junit-platform-console}` project.
 
 [[launcher-api-discovery]]
@@ -63,7 +63,7 @@ aggregate the final results in an object of your own. For an example see the
 `{SummaryGeneratingListener}`.
 
 [[launcher-api-engines-custom]]
-==== Plugging in Your Own Test Engine
+==== Plugging in your own Test Engine
 
 JUnit currently provides two `{TestEngine}` implementations out of the box:
 
@@ -72,11 +72,12 @@ JUnit currently provides two `{TestEngine}` implementations out of the box:
   tests with the launcher infrastructure.
 
 Third parties may also contribute their own `TestEngine` by implementing the interfaces
-in the {junit-platform-engine} module and _registering_ their engine. Engine registration
-is currently supported via Java's `java.util.ServiceLoader` mechanism. For example, the
-`junit-jupiter-engine` module registers its `org.junit.jupiter.engine.JupiterTestEngine`
-in a file named `org.junit.platform.engine.TestEngine` within the `/META-INF/services` in
-the `junit-jupiter-engine` JAR.
+in the {junit-platform-engine} module and _registering_ their engine. By default, engine
+registration is supported via Java's `java.util.ServiceLoader` mechanism. For example,
+the `junit-jupiter-engine` module registers its
+`org.junit.jupiter.engine.JupiterTestEngine` in a file named
+`org.junit.platform.engine.TestEngine` within the `/META-INF/services` in the
+`junit-jupiter-engine` JAR.
 
 NOTE: `{HierarchicalTestEngine}` is a convenient abstract base implementation (used by
 the `{junit-jupiter-engine}`) that only requires implementors to provide the logic for
@@ -84,12 +85,27 @@ test discovery. It implements execution of `TestDescriptors` that implement the 
 interface, including support for parallel execution.
 
 [[launcher-api-listeners-custom]]
-==== Plugging in Your Own Test Execution Listeners
+==== Plugging in your own Test Execution Listener
 
 In addition to the public `{Launcher}` API method for registering test execution
-listeners programmatically, custom `{TestExecutionListener}` implementations discovered
-at runtime via Java's `java.util.ServiceLoader` facility are automatically registered
-with the `DefaultLauncher`. For example, an `example.TestInfoPrinter` class
-implementing `{TestExecutionListener}` and declared within the
-`/META-INF/services/org.junit.platform.launcher.TestExecutionListener` file is loaded
-and registered automatically.
+listeners programmatically, by default custom `{TestExecutionListener}` implementations
+will be discovered at runtime via Java's `java.util.ServiceLoader` mechanism and
+automatically registered with the `Launcher` created via the `LauncherFactory`. For
+example, an `example.TestInfoPrinter` class implementing `{TestExecutionListener}` and
+declared within the
+`/META-INF/services/org.junit.platform.launcher.TestExecutionListener` file is loaded and
+registered automatically.
+
+[[launcher-api-launcher-config]]
+==== Configuring the Launcher
+
+If you require fine-grained control over automatic detection and registration of test
+engines and test execution listeners, you may create an instance of `LauncherConfig` and
+supply that to the `LauncherFactory.create(LauncherConfig)` method. Typically an instance
+of `LauncherConfig` is created via the built-in fluent _builder_ API, as demonstrated in
+the following example.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/UsingTheLauncherDemo.java[tags=launcherConfig]
+----
