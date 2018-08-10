@@ -122,8 +122,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core">LauncherConfig</a></th>
 <td class="colLast">
-<div class="block">Implementations of this interface are responsible for determining
- configuration used for creating <a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> instances via <a href="../../../../../org/junit/platform/launcher/core/LauncherFactory.html" title="class in org.junit.platform.launcher.core"><code>LauncherFactory</code></a>.</div>
+<div class="block"><code>LauncherConfig</code> defines the configuration API for creating
+ <a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> instances via the <a href="../../../../../org/junit/platform/launcher/core/LauncherFactory.html" title="class in org.junit.platform.launcher.core"><code>LauncherFactory</code></a>.</div>
 </td>
 </tr>
 </tbody>
@@ -139,7 +139,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block"><em>Builder</em> API for <a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core"><code>LauncherConfig</code></a>.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core">LauncherDiscoveryRequestBuilder</a></th>
@@ -151,7 +153,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/launcher/core/LauncherFactory.html" title="class in org.junit.platform.launcher.core">LauncherFactory</a></th>
 <td class="colLast">
-<div class="block">Factory for creating <a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> instances by invoking <a href="../../../../../org/junit/platform/launcher/core/LauncherFactory.html#create()"><code>LauncherFactory.create()</code></a>.</div>
+<div class="block">Factory for creating <a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> instances by invoking <a href="../../../../../org/junit/platform/launcher/core/LauncherFactory.html#create()"><code>LauncherFactory.create()</code></a>
+ or <a href="../../../../../org/junit/platform/launcher/core/LauncherFactory.html#create(org.junit.platform.launcher.core.LauncherConfig)"><code>LauncherFactory.create(LauncherConfig)</code></a>.</div>
 </td>
 </tr>
 </tbody>

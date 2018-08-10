@@ -97,13 +97,13 @@ var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
@@ -144,33 +144,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <hr>
 <pre>public static class <span class="typeNameLabel">LauncherConfig.Builder</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
+<div class="block"><em>Builder</em> API for <a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core"><code>LauncherConfig</code></a>.</div>
 </li>
 </ul>
 </div>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
-<!-- ======== CONSTRUCTOR SUMMARY ======== -->
-<section role="region">
-<ul class="blockList">
-<li class="blockList"><a id="constructor.summary">
-<!--   -->
-</a>
-<h3>Constructor Summary</h3>
-<table class="memberSummary">
-<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Constructor</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html#%3Cinit%3E()">Builder</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-</table>
-</li>
-</ul>
-</section>
 <!-- ========== METHOD SUMMARY =========== -->
 <section role="region">
 <ul class="blockList">
@@ -187,14 +167,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html#addAdditionalTestEngines(org.junit.platform.engine.TestEngine...)">addAdditionalTestEngines</a></span>&#8203;(<a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>...&nbsp;engines)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html#addTestEngines(org.junit.platform.engine.TestEngine...)">addTestEngines</a></span>&#8203;(<a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>...&nbsp;engines)</code></th>
 <td class="colLast">
 <div class="block">Add all of the supplied <code>engines</code> to the configuration.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html#addAdditionalTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">addAdditionalTestExecutionListeners</a></span>&#8203;(<a href="../../../../../org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>...&nbsp;listeners)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html#addTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">addTestExecutionListeners</a></span>&#8203;(<a href="../../../../../org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>...&nbsp;listeners)</code></th>
 <td class="colLast">
 <div class="block">Add all of the supplied <code>listeners</code> to the configuration.</div>
 </td>
@@ -203,22 +183,22 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <td class="colFirst"><code><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core">LauncherConfig</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html#build()">build</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Build the <a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core"><code>LauncherConfig</code></a> that has been configured via
- this builder.</div>
+<div class="block">Build the <a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core"><code>LauncherConfig</code></a> that has been configured via this
+ builder.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html#setTestEngineAutoRegistrationEnabled(boolean)">setTestEngineAutoRegistrationEnabled</a></span>&#8203;(boolean&nbsp;enabled)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html#enableTestEngineAutoRegistration(boolean)">enableTestEngineAutoRegistration</a></span>&#8203;(boolean&nbsp;enabled)</code></th>
 <td class="colLast">
-<div class="block">Configure test engines auto detection.</div>
+<div class="block">Configure the auto-registration flag for test engines.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html#setTestExecutionListenerAutoRegistrationEnabled(boolean)">setTestExecutionListenerAutoRegistrationEnabled</a></span>&#8203;(boolean&nbsp;enabled)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html#enableTestExecutionListenerAutoRegistration(boolean)">enableTestExecutionListenerAutoRegistration</a></span>&#8203;(boolean&nbsp;enabled)</code></th>
 <td class="colLast">
-<div class="block">Configure test execution listeners auto detection.</div>
+<div class="block">Configure the auto-registration flag for test execution listeners.</div>
 </td>
 </tr>
 </table>
@@ -238,25 +218,6 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
-<!-- ========= CONSTRUCTOR DETAIL ======== -->
-<section role="region">
-<ul class="blockList">
-<li class="blockList"><a id="constructor.detail">
-<!--   -->
-</a>
-<h3>Constructor Detail</h3>
-<a id="&lt;init&gt;()">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>Builder</h4>
-<pre>public&nbsp;Builder()</pre>
-</li>
-</ul>
-</li>
-</ul>
-</section>
 <!-- ============ METHOD DETAIL ========== -->
 <section role="region">
 <ul class="blockList">
@@ -264,67 +225,73 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="setTestExecutionListenerAutoRegistrationEnabled(boolean)">
+<a id="enableTestExecutionListenerAutoRegistration(boolean)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>setTestExecutionListenerAutoRegistrationEnabled</h4>
-<pre>public&nbsp;<a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a>&nbsp;setTestExecutionListenerAutoRegistrationEnabled&#8203;(boolean&nbsp;enabled)</pre>
-<div class="block">Configure test execution listeners auto detection.</div>
+<h4>enableTestExecutionListenerAutoRegistration</h4>
+<pre>public&nbsp;<a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a>&nbsp;enableTestExecutionListenerAutoRegistration&#8203;(boolean&nbsp;enabled)</pre>
+<div class="block">Configure the auto-registration flag for test execution listeners.
+
+ <p>Defaults to <code>true</code>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>enabled</code> - true if test execution listeners should be auto detected and false otherwise.</dd>
+<dd><code>enabled</code> - <code>true</code> if test execution listeners should be
+ automatically registered</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this builder for method chaining</dd>
 </dl>
 </li>
 </ul>
-<a id="setTestEngineAutoRegistrationEnabled(boolean)">
+<a id="enableTestEngineAutoRegistration(boolean)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>setTestEngineAutoRegistrationEnabled</h4>
-<pre>public&nbsp;<a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a>&nbsp;setTestEngineAutoRegistrationEnabled&#8203;(boolean&nbsp;enabled)</pre>
-<div class="block">Configure test engines auto detection.</div>
+<h4>enableTestEngineAutoRegistration</h4>
+<pre>public&nbsp;<a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a>&nbsp;enableTestEngineAutoRegistration&#8203;(boolean&nbsp;enabled)</pre>
+<div class="block">Configure the auto-registration flag for test engines.
+
+ <p>Defaults to <code>true</code>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>enabled</code> - true if test engines should be auto detected and false otherwise.</dd>
+<dd><code>enabled</code> - <code>true</code> if test engines should be automatically
+ registered</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this builder for method chaining</dd>
 </dl>
 </li>
 </ul>
-<a id="addAdditionalTestEngines(org.junit.platform.engine.TestEngine...)">
+<a id="addTestEngines(org.junit.platform.engine.TestEngine...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>addAdditionalTestEngines</h4>
-<pre>public&nbsp;<a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a>&nbsp;addAdditionalTestEngines&#8203;(<a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>...&nbsp;engines)</pre>
+<h4>addTestEngines</h4>
+<pre>public&nbsp;<a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a>&nbsp;addTestEngines&#8203;(<a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>...&nbsp;engines)</pre>
 <div class="block">Add all of the supplied <code>engines</code> to the configuration.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>engines</code> - the list of additional test engines to add;
- never <code>null</code></dd>
+<dd><code>engines</code> - additional test engines to register; never <code>null</code>
+ or containing <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this builder for method chaining</dd>
 </dl>
 </li>
 </ul>
-<a id="addAdditionalTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">
+<a id="addTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>addAdditionalTestExecutionListeners</h4>
-<pre>public&nbsp;<a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a>&nbsp;addAdditionalTestExecutionListeners&#8203;(<a href="../../../../../org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>...&nbsp;listeners)</pre>
+<h4>addTestExecutionListeners</h4>
+<pre>public&nbsp;<a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a>&nbsp;addTestExecutionListeners&#8203;(<a href="../../../../../org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>...&nbsp;listeners)</pre>
 <div class="block">Add all of the supplied <code>listeners</code> to the configuration.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>listeners</code> - the list of additional test execution listeners to add;
- never <code>null</code></dd>
+<dd><code>listeners</code> - additional test execution listeners to register;
+ never <code>null</code> or containing <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this builder for method chaining</dd>
 </dl>
@@ -337,8 +304,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>build</h4>
 <pre>public&nbsp;<a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core">LauncherConfig</a>&nbsp;build()</pre>
-<div class="block">Build the <a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core"><code>LauncherConfig</code></a> that has been configured via
- this builder.</div>
+<div class="block">Build the <a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core"><code>LauncherConfig</code></a> that has been configured via this
+ builder.</div>
 </li>
 </ul>
 </li>
@@ -404,13 +371,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>

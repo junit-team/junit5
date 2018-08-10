@@ -133,27 +133,29 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.3")
 public interface <span class="typeNameLabel">LauncherConfig</span></pre>
-<div class="block">Implementations of this interface are responsible for determining
- configuration used for creating <a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> instances via <a href="../../../../../org/junit/platform/launcher/core/LauncherFactory.html" title="class in org.junit.platform.launcher.core"><code>LauncherFactory</code></a>.
+<div class="block"><code>LauncherConfig</code> defines the configuration API for creating
+ <a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> instances via the <a href="../../../../../org/junit/platform/launcher/core/LauncherFactory.html" title="class in org.junit.platform.launcher.core"><code>LauncherFactory</code></a>.
 
  <h4>Example</h4>
 
  <pre class="code">
- import static org.junit.platform.launcher.core.*;
- // ...
+ LauncherConfig launcherConfig = LauncherConfig.builder()
+   .enableTestEngineAutoRegistration(false)
+   .enableTestExecutionListenerAutoRegistration(false)
+   .addTestEngines(new CustomTestEngine())
+   .addTestExecutionListeners(new CustomTestExecutionListener())
+   .build();
 
-   LauncherConfig.builder()
-     .setTestEngineAutoRegistrationEnabled(true)
-     .setTestExecutionListenerAutoRegistrationEnabled(true)
-     .addAdditionalTestEngines(new CustomTestEngine())
-     .addAdditionalTestExecutionListeners(new CustomTestExecutionListener())
-     .build();
+ Launcher launcher = LauncherFactory.create(launcherConfig);
+ LauncherDiscoveryRequest discoveryRequest = ...
+ launcher.execute(discoveryRequest);
  </pre></div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.3</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>, 
+<dd><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.html#builder()"><code>builder()</code></a>, 
+<a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>, 
 <a href="../../../../../org/junit/platform/launcher/core/LauncherFactory.html" title="class in org.junit.platform.launcher.core"><code>LauncherFactory</code></a></dd>
 </dl>
 </li>
@@ -179,7 +181,9 @@ public interface <span class="typeNameLabel">LauncherConfig</span></pre>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></span></code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block"><em>Builder</em> API for <a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.html" title="interface in org.junit.platform.launcher.core"><code>LauncherConfig</code></a>.</div>
+</td>
 </tr>
 </table>
 </li>
@@ -210,32 +214,34 @@ public interface <span class="typeNameLabel">LauncherConfig</span></pre>
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.html#getAdditionalTestEngines()">getAdditionalTestEngines</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Returns additional test engines that should be added to created
- <a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> instance.</div>
+<div class="block">Get the collection of additional test engines that should be added to
+ the <a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../../../../../org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.html#getAdditionalTestExecutionListeners()">getAdditionalTestExecutionListeners</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Returns additional test execution listeners that should be added to created
- <a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> instance.</div>
+<div class="block">Get the collection of additional test execution listeners that should be
+ added to the <a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.html#isTestEngineAutoRegistrationEnabled()">isTestEngineAutoRegistrationEnabled</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Returns true if test engines should be discovered at runtime using the
- <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>ServiceLoader</code></a> facility and false otherwise.</div>
+<div class="block">Determine if test engines should be discovered at runtime using the
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>ServiceLoader</code></a> mechanism and
+ automatically registered.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.html#isTestExecutionListenerAutoRegistrationEnabled()">isTestExecutionListenerAutoRegistrationEnabled</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Returns true if test execution listeners should be discovered at runtime using the
- <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>ServiceLoader</code></a> facility and false otherwise.</div>
+<div class="block">Determine if test execution listeners should be discovered at runtime
+ using the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>ServiceLoader</code></a> mechanism and
+ automatically registered.</div>
 </td>
 </tr>
 </table>
@@ -262,26 +268,12 @@ public interface <span class="typeNameLabel">LauncherConfig</span></pre>
 <li class="blockList">
 <h4>isTestEngineAutoRegistrationEnabled</h4>
 <pre>boolean&nbsp;isTestEngineAutoRegistrationEnabled()</pre>
-<div class="block">Returns true if test engines should be discovered at runtime using the
- <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>ServiceLoader</code></a> facility and false otherwise.</div>
+<div class="block">Determine if test engines should be discovered at runtime using the
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>ServiceLoader</code></a> mechanism and
+ automatically registered.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if test engines should be discovered at runtime and false otherwise</dd>
-</dl>
-</li>
-</ul>
-<a id="getAdditionalTestEngines()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getAdditionalTestEngines</h4>
-<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>&gt;&nbsp;getAdditionalTestEngines()</pre>
-<div class="block">Returns additional test engines that should be added to created
- <a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> instance.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>additional test engines</dd>
+<dd><code>true</code> if test engines should be automatically registered</dd>
 </dl>
 </li>
 </ul>
@@ -292,11 +284,29 @@ public interface <span class="typeNameLabel">LauncherConfig</span></pre>
 <li class="blockList">
 <h4>isTestExecutionListenerAutoRegistrationEnabled</h4>
 <pre>boolean&nbsp;isTestExecutionListenerAutoRegistrationEnabled()</pre>
-<div class="block">Returns true if test execution listeners should be discovered at runtime using the
- <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>ServiceLoader</code></a> facility and false otherwise.</div>
+<div class="block">Determine if test execution listeners should be discovered at runtime
+ using the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>ServiceLoader</code></a> mechanism and
+ automatically registered.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if test execution listeners should be discovered at runtime and false otherwise</dd>
+<dd><code>true</code> if test execution listeners should be automatically
+ registered</dd>
+</dl>
+</li>
+</ul>
+<a id="getAdditionalTestEngines()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getAdditionalTestEngines</h4>
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>&gt;&nbsp;getAdditionalTestEngines()</pre>
+<div class="block">Get the collection of additional test engines that should be added to
+ the <a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the collection of additional test engines; never <code>null</code> but
+ potentially empty</dd>
 </dl>
 </li>
 </ul>
@@ -307,11 +317,12 @@ public interface <span class="typeNameLabel">LauncherConfig</span></pre>
 <li class="blockList">
 <h4>getAdditionalTestExecutionListeners</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink">Collection</a>&lt;<a href="../../../../../org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>&gt;&nbsp;getAdditionalTestExecutionListeners()</pre>
-<div class="block">Returns additional test execution listeners that should be added to created
- <a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> instance.</div>
+<div class="block">Get the collection of additional test execution listeners that should be
+ added to the <a href="../../../../../org/junit/platform/launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>additional test execution listeners</dd>
+<dd>the collection of additional test execution listeners; never
+ <code>null</code> but potentially empty</dd>
 </dl>
 </li>
 </ul>
@@ -325,7 +336,7 @@ public interface <span class="typeNameLabel">LauncherConfig</span></pre>
 <div class="block">Create a new <a href="../../../../../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core"><code>LauncherConfig.Builder</code></a>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a new builder</dd>
+<dd>a new builder; never <code>null</code></dd>
 </dl>
 </li>
 </ul>
