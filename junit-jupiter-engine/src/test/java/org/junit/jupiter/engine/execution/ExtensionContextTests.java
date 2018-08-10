@@ -250,7 +250,7 @@ class ExtensionContextTests {
 		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(engineUniqueId);
 
 		UniqueId classUniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
-		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(classUniqueId, getClass());
+		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(classUniqueId, getClass(), configParams);
 
 		Method method = getClass().getDeclaredMethod("configurationParameter");
 		UniqueId methodUniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]");
@@ -266,13 +266,13 @@ class ExtensionContextTests {
 	}
 
 	private ClassTestDescriptor nestedClassDescriptor() {
-		return new NestedClassTestDescriptor(UniqueId.root("nested-class", "NestedClass"),
-			OuterClass.NestedClass.class);
+		return new NestedClassTestDescriptor(UniqueId.root("nested-class", "NestedClass"), OuterClass.NestedClass.class,
+			configParams);
 	}
 
 	private ClassTestDescriptor outerClassDescriptor(TestDescriptor child) {
 		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(UniqueId.root("class", "OuterClass"),
-			OuterClass.class);
+			OuterClass.class, configParams);
 		if (child != null) {
 			classTestDescriptor.addChild(child);
 		}

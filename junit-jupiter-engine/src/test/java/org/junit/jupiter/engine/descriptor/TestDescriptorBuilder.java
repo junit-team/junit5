@@ -10,10 +10,13 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static org.mockito.Mockito.mock;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
@@ -22,6 +25,7 @@ import org.junit.platform.engine.UniqueId;
  */
 public abstract class TestDescriptorBuilder<T extends TestDescriptor> {
 
+	private static final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
 	final List<TestDescriptorBuilder<?>> children = new ArrayList<>();
 
 	public static JupiterEngineDescriptorBuilder engineDescriptor() {
@@ -69,7 +73,7 @@ public abstract class TestDescriptorBuilder<T extends TestDescriptor> {
 
 		@Override
 		ClassTestDescriptor buildDescriptor() {
-			return new ClassTestDescriptor(UniqueId.root("class", uniqueId), testClass);
+			return new ClassTestDescriptor(UniqueId.root("class", uniqueId), testClass, configParams);
 		}
 	}
 
@@ -81,7 +85,7 @@ public abstract class TestDescriptorBuilder<T extends TestDescriptor> {
 
 		@Override
 		NestedClassTestDescriptor buildDescriptor() {
-			return new NestedClassTestDescriptor(UniqueId.root("nested-class", uniqueId), testClass);
+			return new NestedClassTestDescriptor(UniqueId.root("nested-class", uniqueId), testClass, configParams);
 		}
 	}
 

@@ -45,7 +45,7 @@ class JupiterEngineExecutionContextTests {
 	@Test
 	void extendWithAllAttributes() {
 		UniqueId uniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
-		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(uniqueId, getClass());
+		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(uniqueId, getClass(), configParams);
 		ClassExtensionContext extensionContext = new ClassExtensionContext(null, null, classTestDescriptor,
 			configParams, null);
 		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configParams);
@@ -64,7 +64,7 @@ class JupiterEngineExecutionContextTests {
 	@Test
 	void canOverrideAttributeWhenContextIsExtended() {
 		UniqueId uniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
-		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(uniqueId, getClass());
+		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(uniqueId, getClass(), configParams);
 		ClassExtensionContext extensionContext = new ClassExtensionContext(null, null, classTestDescriptor,
 			configParams, null);
 		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configParams);

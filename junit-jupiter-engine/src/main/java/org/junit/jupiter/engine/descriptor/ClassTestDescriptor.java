@@ -51,6 +51,7 @@ import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
@@ -77,23 +78,25 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	private final Class<?> testClass;
 	private final Set<TestTag> tags;
+	protected final Lifecycle lifecycle;
 
 	private TestInstanceFactory testInstanceFactory;
 	private List<Method> beforeAllMethods;
 	private List<Method> afterAllMethods;
 
-	public ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass) {
-		this(uniqueId, ClassTestDescriptor::generateDefaultDisplayName, testClass);
+	public ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, ConfigurationParameters configurationParameters) {
+		this(uniqueId, ClassTestDescriptor::generateDefaultDisplayName, testClass, configurationParameters);
 	}
 
 	protected ClassTestDescriptor(UniqueId uniqueId, Function<Class<?>, String> defaultDisplayNameGenerator,
-			Class<?> testClass) {
+			Class<?> testClass, ConfigurationParameters configurationParameters) {
 
 		super(uniqueId, determineDisplayName(Preconditions.notNull(testClass, "Class must not be null"),
 			defaultDisplayNameGenerator), ClassSource.from(testClass));
 
 		this.testClass = testClass;
 		this.tags = getTags(testClass);
+		this.lifecycle = getTestInstanceLifecycle(testClass, configurationParameters);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -127,13 +130,18 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	// --- Node ----------------------------------------------------------------
 
 	@Override
-	public ExecutionMode getExecutionMode() {
-		return getExecutionMode(getTestClass());
+	protected Optional<ExecutionMode> getExplicitExecutionMode() {
+		return getExecutionModeFromAnnotation(getTestClass());
+	}
+
+	@Override
+	protected Optional<ExecutionMode> getDefaultChildExecutionMode() {
+		return this.lifecycle == Lifecycle.PER_CLASS ? Optional.of(ExecutionMode.SAME_THREAD) : Optional.empty();
 	}
 
 	@Override
 	public Set<ExclusiveResource> getExclusiveResources() {
-		return getExclusiveResources(getTestClass());
+		return getExclusiveResourcesFromAnnotation(getTestClass());
 	}
 
 	@Override
@@ -153,7 +161,6 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		registerBeforeEachMethodAdapters(registry);
 		registerAfterEachMethodAdapters(registry);
 
-		Lifecycle lifecycle = getTestInstanceLifecycle(this.testClass, context.getConfigurationParameters());
 		ThrowableCollector throwableCollector = new OpenTest4JAwareThrowableCollector();
 		ClassExtensionContext extensionContext = new ClassExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, lifecycle, context.getConfigurationParameters(), throwableCollector);
