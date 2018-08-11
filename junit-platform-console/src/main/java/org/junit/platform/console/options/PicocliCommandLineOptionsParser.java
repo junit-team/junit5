@@ -36,7 +36,7 @@ public class PicocliCommandLineOptionsParser implements CommandLineOptionsParser
 			return availableOptions.toCommandLineOptions(detectedOptions);
 		}
 		catch (Exception e) {
-			throw new JUnitException("Error parsing command-line arguments", e);
+			throw new JUnitException("Error parsing command-line arguments: " + e.getMessage(), e);
 		}
 	}
 
