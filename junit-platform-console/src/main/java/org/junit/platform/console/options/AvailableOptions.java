@@ -44,10 +44,10 @@ class AvailableOptions {
 	@Option(names = { "--h", "-help" }, help = true, hidden = true)
 	private boolean helpRequested2;
 
-	@Option(names = "--disable-ansi-colors", arity = "0..1", description = "Disable ANSI colors in output (not supported by all terminals).")
+	@Option(names = "--disable-ansi-colors", description = "Disable ANSI colors in output (not supported by all terminals).")
 	private boolean disableAnsiColors;
 
-	@Option(names = "-disable-ansi-colors", arity = "0..1", hidden = true)
+	@Option(names = "-disable-ansi-colors", hidden = true)
 	private boolean disableAnsiColors2;
 
 	@Option(names = "--details", paramLabel = "MODE", description = "Select an output details mode for when tests are executed. " //
@@ -74,10 +74,7 @@ class AvailableOptions {
 	private List<Path> additionalClasspathEntries2 = new ArrayList<>();
 
 	@Option(names = "--fail-if-no-tests", description = "Fail and return exit status code 2 if no tests are found.")
-	private boolean failIfNoTests;
-
-	@Option(names = "-fail-if-no-tests", hidden = true)
-	private boolean failIfNoTests2;
+	private boolean failIfNoTests; // no single-dash equivelent: was introduced in 5.3-M1
 
 	// --- Reports ---------------------------------------------------------
 
@@ -252,8 +249,7 @@ class AvailableOptions {
 	 * @throws picocli.CommandLine.ParameterException if the map already contains this key
 	 * @see <a href="https://github.com/junit-team/junit5/issues/1308">#1308</a>
 	 */
-	@Option(names = {
-			"--config" }, paramLabel = "KEY=VALUE", arity = "1", description = "Set a configuration parameter for test discovery and execution. This option can be repeated.")
+	@Option(names = "--config", paramLabel = "KEY=VALUE", arity = "1", description = "Set a configuration parameter for test discovery and execution. This option can be repeated.")
 	public void setConfigurationParameters(Map<String, String> map) {
 		for (String key : map.keySet()) {
 			String newValue = map.get(key);
@@ -293,7 +289,7 @@ class AvailableOptions {
 		result.setDetails(choose(this.details, this.details2, CommandLineOptions.DEFAULT_DETAILS));
 		result.setTheme(choose(this.theme, this.theme2, CommandLineOptions.DEFAULT_THEME));
 		result.setAdditionalClasspathEntries(merge(this.additionalClasspathEntries, this.additionalClasspathEntries2));
-		result.setFailIfNoTests(this.failIfNoTests || this.failIfNoTests2);
+		result.setFailIfNoTests(this.failIfNoTests);
 
 		// Reports
 		result.setReportsDir(choose(this.reportsDir, this.reportsDir2, null));
