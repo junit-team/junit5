@@ -125,8 +125,8 @@ annotations.  Since, as stated earlier, `@RegisterExtension` fields must not be
 as it generates *private* fields.  Rather, the `@JvmField` annotation must be
 used.
 
-// Note: syntax highlighting won't work until the switch to rouge syntax highlighter
-[source,kotlin,indent=0]
+// TODO: Change to using kotlin language highlighting after switch to rouge syntax highlighter
+[source,groovy,indent=0]
 .Registering an extension via a static field in Kotlin
 ----
 include::{kotlinTestDir}/example/registration/WebServerDemo.kt[tags=user_guide]
