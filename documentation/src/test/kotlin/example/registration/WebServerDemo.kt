@@ -18,9 +18,6 @@ import org.junit.jupiter.api.extension.RegisterExtension
 
 // tag::user_guide[]
 class KotlinWebServerDemo {
-    // end::user_guide[]
-    // @formatter:off
-    // tag::user_guide[]
     companion object {
         @JvmField
         @RegisterExtension
@@ -28,9 +25,6 @@ class KotlinWebServerDemo {
                 .enableSecurity(false)
                 .build()
     }
-    // end::user_guide[]
-    // @formatter:on
-    // tag::user_guide[]
 
     @Test
     fun getProductList() {
