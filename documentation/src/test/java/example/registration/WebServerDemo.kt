@@ -16,55 +16,55 @@ import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.RegisterExtension
 
-//tag::user_guide[]
+// tag::user_guide[]
 class WebServerDemo {
-        // end::user_guide[]
-	// @formatter:off
-	// tag::user_guide[]
-        companion object {
-                @JvmField
-                @RegisterExtension
-                val server = WebServerExtension.builder()
-                                .enableSecurity(false)
-                                .build()
-        }
-        // end::user_guide[]
-	// @formatter:on
-	// tag::user_guide[]
+    // end::user_guide[]
+    // @formatter:off
+    // tag::user_guide[]
+    companion object {
+        @JvmField
+        @RegisterExtension
+        val server = WebServerExtension.builder()
+                .enableSecurity(false)
+                .build()
+    }
+    // end::user_guide[]
+    // @formatter:on
+    // tag::user_guide[]
 
-        @Test
-        fun getProductList() {
-	        // end::user_guide[]
-	        // tag::user_guide[]
-                // Use WebClient to connect to web server using serverUrl and verify response
-                val webClient = WebClient()
-                val serverUrl = server.serverUrl
-                assertEquals(200, webClient.get("$serverUrl/producs").responseStatus)
-        }
+    @Test
+    fun getProductList() {
+        // end::user_guide[]
+        // tag::user_guide[]
+        // Use WebClient to connect to web server using serverUrl and verify response
+        val webClient = WebClient()
+        val serverUrl = server.serverUrl
+        assertEquals(200, webClient.get("$serverUrl/producs").responseStatus)
+    }
 }
-//end::user_guide[]
+// end::user_guide[]
 
-class WebServerExtension: BeforeAllCallback {
-        companion object {
-                fun builder() = Builder()
-        }
+class WebServerExtension : BeforeAllCallback {
+    companion object {
+        fun builder() = Builder()
+    }
 
-        val serverUrl = "http://example.org:8181"
+    val serverUrl = "http://example.org:8181"
 
-        override fun beforeAll(context: ExtensionContext) {
-                // no-op for demo
-        }
+    override fun beforeAll(context: ExtensionContext) {
+        // no-op for demo
+    }
 
-        class Builder {
-                fun enableSecurity(b: Boolean) = this
-                fun build(): WebServerExtension = WebServerExtension()
-        }
+    class Builder {
+        fun enableSecurity(b: Boolean) = this
+        fun build(): WebServerExtension = WebServerExtension()
+    }
 }
 
 class WebClient {
-        fun get(string: String): WebResponse = WebResponse()
+    fun get(string: String): WebResponse = WebResponse()
 }
 
 class WebResponse {
-        val responseStatus = 200
+    val responseStatus = 200
 }
