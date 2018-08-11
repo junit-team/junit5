@@ -31,7 +31,7 @@ class KotlinWebServerDemo {
         // Use WebClient to connect to web server using serverUrl and verify response
         val webClient = WebClient()
         val serverUrl = server.serverUrl
-        assertEquals(200, webClient.get("$serverUrl/producs").responseStatus)
+        assertEquals(200, webClient.get("$serverUrl/products").responseStatus)
     }
 }
 // end::user_guide[]
