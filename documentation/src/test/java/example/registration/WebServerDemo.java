@@ -17,7 +17,7 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-//tag::user_guide[]
+// tag::user_guide[]
 class WebServerDemo {
 
 	// end::user_guide[]
@@ -33,15 +33,14 @@ class WebServerDemo {
 
 	@Test
 	void getProductList() {
-		// end::user_guide[]
-		// tag::user_guide[]
 		WebClient webClient = new WebClient();
 		String serverUrl = server.getServerUrl();
 		// Use WebClient to connect to web server using serverUrl and verify response
 		assertEquals(200, webClient.get(serverUrl + "/products").getResponseStatus());
 	}
+
 }
-//end::user_guide[]
+// end::user_guide[]
 
 class WebServerExtension implements BeforeAllCallback {
 
