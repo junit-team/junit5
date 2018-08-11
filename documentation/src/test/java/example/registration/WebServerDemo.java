@@ -13,8 +13,6 @@ package example.registration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 // tag::user_guide[]
@@ -40,49 +38,4 @@ class WebServerDemo {
 	}
 
 }
-// end::user_guide[]
-
-class WebServerExtension implements BeforeAllCallback {
-
-	static Builder builder() {
-		return new Builder();
-	}
-
-	String getServerUrl() {
-		return "http://example.org:8181";
-	}
-
-	@Override
-	public void beforeAll(ExtensionContext context) {
-		/* no-op for demo */
-	}
-
-	static class Builder {
-
-		public Builder enableSecurity(boolean b) {
-			return this;
-		}
-
-		public WebServerExtension build() {
-			return new WebServerExtension();
-		}
-
-	}
-
-}
-
-class WebClient {
-
-	WebResponse get(String string) {
-		return new WebResponse();
-	}
-
-}
-
-class WebResponse {
-
-	int getResponseStatus() {
-		return 200;
-	}
-
-}
+//end::user_guide[]
