@@ -220,6 +220,10 @@ subprojects { subproj ->
 		classpath = project.sourceSets.main.compileClasspath + configurations.shadowed
 	}
 
+	checkstyleMain {
+		classpath += configurations.shadowed
+	}
+
 	if (subproj.name in mavenizedProjects) {
 
 		apply from: "$rootDir/gradle/publishing.gradle"

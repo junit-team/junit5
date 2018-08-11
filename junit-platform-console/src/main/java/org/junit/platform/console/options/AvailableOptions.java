@@ -243,8 +243,6 @@ class AvailableOptions {
 	AvailableOptions() {
 	}
 
-	// CHECKSTYLE:OFF
-	// Checkstyle fails on @throws ParameterException (regardless of fully qualified or not)
 	/**
 	 * Adds the specified key-value pair (or pairs) to the configuration parameters.
 	 * A {@code ParameterException} is thrown if the same key is specified multiple times
@@ -254,7 +252,6 @@ class AvailableOptions {
 	 * @throws picocli.CommandLine.ParameterException if the map already contains this key
 	 * @see <a href="https://github.com/junit-team/junit5/issues/1308">#1308</a>
 	 */
-	// CHECKSTYLE:ON
 	@Option(names = {
 			"--config" }, paramLabel = "KEY=VALUE", arity = "1", description = "Set a configuration parameter for test discovery and execution. This option can be repeated.")
 	public void setConfigurationParameters(Map<String, String> map) {
