@@ -92,7 +92,7 @@ class ConsoleDetailsTests {
 							"--include-engine", "junit-jupiter", //
 							"--details", details.name(), //
 							"--details-theme", theme.name(), //
-							"--disable-ansi-colors", "true", //
+							"--disable-ansi-colors", //
 							"--include-classname", containerClass.getCanonicalName(), //
 							"--select-method", getFullyQualifiedMethodName(containerClass, methodName, types) //
 					};
