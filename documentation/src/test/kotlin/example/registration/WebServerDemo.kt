@@ -17,7 +17,7 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.RegisterExtension
 
 // tag::user_guide[]
-class WebServerDemoForKotlin {
+class KotlinWebServerDemo {
     // end::user_guide[]
     // @formatter:off
     // tag::user_guide[]
