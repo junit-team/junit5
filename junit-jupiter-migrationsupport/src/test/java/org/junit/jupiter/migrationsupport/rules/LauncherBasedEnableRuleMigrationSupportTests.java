@@ -23,8 +23,8 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.ExecutionGraph;
 import org.junit.platform.testkit.ExecutionRecorder;
+import org.junit.platform.testkit.ExecutionsResult;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Verifier;
@@ -33,13 +33,13 @@ class LauncherBasedEnableRuleMigrationSupportTests {
 
 	@Test
 	void enableRuleMigrationSupportAnnotationWorksForBothRuleTypes() {
-		ExecutionGraph executionGraph = executeTestsForClass(
-			EnableRuleMigrationSupportWithBothRuleTypesTestCase.class).getExecutionGraph();
+		ExecutionsResult executionsResult = executeTestsForClass(
+			EnableRuleMigrationSupportWithBothRuleTypesTestCase.class).getExecutionsResult();
 
-		assertEquals(1, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionGraph.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0, executionGraph.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed");
 
 		assertEquals(true, EnableRuleMigrationSupportWithBothRuleTypesTestCase.afterOfRule1WasExecuted,
 			"after of rule 1 executed?");
@@ -51,13 +51,13 @@ class LauncherBasedEnableRuleMigrationSupportTests {
 
 	@Test
 	void verifierSupportForErrorCollectorFieldFailsTheTest() {
-		ExecutionGraph executionGraph = executeTestsForClass(
-			VerifierSupportForErrorCollectorTestCase.class).getExecutionGraph();
+		ExecutionsResult executionsResult = executeTestsForClass(
+			VerifierSupportForErrorCollectorTestCase.class).getExecutionsResult();
 
-		assertEquals(1, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(0, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionGraph.getTestAbortedCount(), "# tests aborted");
-		assertEquals(1, executionGraph.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(0, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(1, executionsResult.getTestFailedCount(), "# tests failed");
 
 		assertEquals(true, VerifierSupportForErrorCollectorTestCase.survivedBothErrors, "after of rule 1 executed?");
 	}

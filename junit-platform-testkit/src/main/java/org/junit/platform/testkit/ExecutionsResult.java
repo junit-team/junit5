@@ -58,19 +58,18 @@ public class ExecutionsResult {
 			if (executionEvent.getTestDescriptor().isTest()) {
 				switch (executionEvent.getType()) {
 					case STARTED:
-						executionStarts.put(executionEvent.getTestDescriptor(), executionEvent.getInstantOccurred());
+						executionStarts.put(executionEvent.getTestDescriptor(), executionEvent.getTimestamp());
 						continue;
 					case SKIPPED:
 						Instant startInstant = executionStarts.get(executionEvent.getTestDescriptor());
 						executions.add(Execution.skipped(executionEvent.getTestDescriptor(),
-							startInstant != null ? startInstant : executionEvent.getInstantOccurred(),
-							executionEvent.getInstantOccurred(), executionEvent.getPayloadAs(String.class)));
+							startInstant != null ? startInstant : executionEvent.getTimestamp(),
+							executionEvent.getTimestamp(), executionEvent.getPayloadAs(String.class)));
 						executionStarts.remove(executionEvent.getTestDescriptor());
 						continue;
 					case FINISHED:
 						executions.add(Execution.finished(executionEvent.getTestDescriptor(),
-							executionStarts.get(executionEvent.getTestDescriptor()),
-							executionEvent.getInstantOccurred(),
+							executionStarts.get(executionEvent.getTestDescriptor()), executionEvent.getTimestamp(),
 							executionEvent.getPayloadAs(TestExecutionResult.class)));
 						executionStarts.remove(executionEvent.getTestDescriptor());
 						continue;
@@ -225,7 +224,7 @@ public class ExecutionsResult {
 	 * @return the {@link List} of {@link ExecutionEvent}s that occurred for a test with the finished status of {@link TestExecutionResult.Status#SUCCESSFUL}
 	 */
 	public List<ExecutionEvent> getSuccessfulTestFinishedEvents() {
-		return getExecutionEventsFinished(TestExecutionResult.Status.SUCCESSFUL);
+		return testEventsFinished(TestExecutionResult.Status.SUCCESSFUL).collect(toList());
 	}
 
 	/**
@@ -236,7 +235,7 @@ public class ExecutionsResult {
 	 * @return the {@link List} of {@link ExecutionEvent}s that occurred for a test with the finished status of {@link TestExecutionResult.Status#FAILED}
 	 */
 	public List<ExecutionEvent> getFailedTestFinishedEvents() {
-		return getExecutionEventsFinished(TestExecutionResult.Status.FAILED);
+		return testEventsFinished(TestExecutionResult.Status.FAILED).collect(toList());
 	}
 
 	/**

@@ -22,19 +22,19 @@ import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
  * {@link EngineExecutionListener} that records data from every event that occurs during the engine
- * execution lifecycle and provides functionality for retrieving execution state via {@link ExecutionGraph}.
+ * execution lifecycle and provides functionality for retrieving execution state via {@link ExecutionsResult}.
  *
  * @see ExecutionEvent
- * @see ExecutionGraph
+ * @see ExecutionsResult
  * @since 1.3.0
  */
 @API(status = API.Status.EXPERIMENTAL, since = "1.3.0")
 public class ExecutionRecorder implements EngineExecutionListener {
 
-	private ExecutionGraph.Builder graphBuilder;
+	private ExecutionsResult.Builder graphBuilder;
 
 	public ExecutionRecorder() {
-		this.graphBuilder = ExecutionGraph.builder();
+		this.graphBuilder = ExecutionsResult.builder();
 	}
 
 	/**
@@ -45,19 +45,18 @@ public class ExecutionRecorder implements EngineExecutionListener {
 	 * @param discoveryRequest the {@link EngineDiscoveryRequest} to use to discover tests to execute
 	 * @return the recorded {@link ExecutionsResult} of the executed tests
 	 */
-	public static ExecutionGraph execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest) {
+	public static ExecutionsResult execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest) {
 		ExecutionRecorder executionReporter = new ExecutionRecorder();
 		execute(testEngine, discoveryRequest, executionReporter);
-		return executionReporter.getExecutionGraph();
+		return executionReporter.getExecutionsResult();
 	}
 
 	public static void execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest,
 			EngineExecutionListener listener) {
 		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest,
 			UniqueId.forEngine(testEngine.getId()));
-		testEngine.execute(new ExecutionRequest(engineTestDescriptor, executionReporter,
-			discoveryRequest.getConfigurationParameters()));
-		return executionReporter.getExecutionsResult();
+		testEngine.execute(
+			new ExecutionRequest(engineTestDescriptor, listener, discoveryRequest.getConfigurationParameters()));
 	}
 
 	/**
@@ -115,11 +114,11 @@ public class ExecutionRecorder implements EngineExecutionListener {
 	}
 
 	/**
-	 * Gets the state of the engine's execution in the form of a {@link ExecutionGraph}.
+	 * Gets the state of the engine's execution in the form of a {@link ExecutionsResult}.
 	 *
-	 * @return the {@link ExecutionGraph} containing all current state information from the engine
+	 * @return the {@link ExecutionsResult} containing all current state information from the engine
 	 */
-	public ExecutionGraph getExecutionGraph() {
+	public ExecutionsResult getExecutionsResult() {
 		return graphBuilder.build();
 	}
 

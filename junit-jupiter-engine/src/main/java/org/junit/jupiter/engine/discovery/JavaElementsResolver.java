@@ -235,7 +235,7 @@ class JavaElementsResolver {
 					List<Segment> unresolved = segments.subList(1, segments.size()); // Remove engine ID
 					unresolved = unresolved.subList(numSegmentsResolved, unresolved.size()); // Remove resolved segments
 					return format("Unique ID '%s' could only be partially resolved. "
-							+ "All resolved segments will be finished; however, the "
+							+ "All resolved segments will be executed; however, the "
 							+ "following segments could not be resolved: %s",
 						uniqueId, unresolved);
 				});

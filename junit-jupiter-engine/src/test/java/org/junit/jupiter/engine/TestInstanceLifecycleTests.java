@@ -54,7 +54,7 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.testkit.ExecutionGraph;
+import org.junit.platform.testkit.ExecutionsResult;
 
 /**
  * Integration tests for {@link TestInstance @TestInstance} lifecycle support.
@@ -528,19 +528,19 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	private void performAssertions(Class<?> testClass, int containers, int tests,
 			Map.Entry<Class<?>, Integer>[] instanceCountEntries, int allMethods, int eachMethods) {
 
-		ExecutionGraph executionGraph = executeTestsForClass(testClass).getExecutionGraph();
+		ExecutionsResult executionsResult = executeTestsForClass(testClass).getExecutionsResult();
 
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(containers, executionGraph.getContainerStartedCount(), "# containers started"),
-				() -> assertEquals(containers, executionGraph.getContainerFinishedCount(), "# containers finished"),
-				() -> assertEquals(tests, executionGraph.getTestStartedCount(), "# tests started"),
-				() -> assertEquals(tests, executionGraph.getTestSuccessfulCount(), "# tests succeeded"),
-				() -> assertThat(instanceCount).describedAs("instance count").contains(instanceCountEntries),
-				() -> assertEquals(allMethods, beforeAllCount, "@BeforeAll count"),
-				() -> assertEquals(allMethods, afterAllCount, "@AfterAll count"),
-				() -> assertEquals(eachMethods, beforeEachCount, "@BeforeEach count"),
-				() -> assertEquals(eachMethods, afterEachCount, "@AfterEach count")
+			() -> assertEquals(containers, executionsResult.getContainerStartedCount(), "# containers started"),
+			() -> assertEquals(containers, executionsResult.getContainerFinishedCount(), "# containers finished"),
+			() -> assertEquals(tests, executionsResult.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(tests, executionsResult.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertThat(instanceCount).describedAs("instance count").contains(instanceCountEntries),
+			() -> assertEquals(allMethods, beforeAllCount, "@BeforeAll count"),
+			() -> assertEquals(allMethods, afterAllCount, "@AfterAll count"),
+			() -> assertEquals(eachMethods, beforeEachCount, "@BeforeEach count"),
+			() -> assertEquals(eachMethods, afterEachCount, "@AfterEach count")
 		);
 		// @formatter:on
 	}
@@ -687,15 +687,15 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			beforeAllCount++;
 		}
 
+		@Test
+		void outerTest() {
+			assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())));
+		}
+
 		@AfterAll
 		static void afterAll(TestInfo testInfo) {
 			assertNotNull(testInfo);
 			afterAllCount++;
-		}
-
-		@Test
-		void outerTest() {
-			assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())));
 		}
 
 		@Nested

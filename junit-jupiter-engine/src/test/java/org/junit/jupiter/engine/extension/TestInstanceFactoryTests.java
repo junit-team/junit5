@@ -15,30 +15,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.engine;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.started;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
-
-import java.net.URL;
-import java.net.URLClassLoader;
-import static org.junit.platform.testkit.ExecutionConditions.assertRecordedExecutionEventsContainsExactly;
-import static org.junit.platform.testkit.ExecutionConditions.container;
-import static org.junit.platform.testkit.ExecutionConditions.engine;
-import static org.junit.platform.testkit.ExecutionConditions.event;
-import static org.junit.platform.testkit.ExecutionConditions.finishedSuccessfully;
-import static org.junit.platform.testkit.ExecutionConditions.finishedWithFailure;
-import static org.junit.platform.testkit.ExecutionConditions.started;
-import static org.junit.platform.testkit.ExecutionConditions.test;
+import static org.junit.platform.testkit.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.platform.testkit.ExecutionEventConditions.container;
+import static org.junit.platform.testkit.ExecutionEventConditions.engine;
+import static org.junit.platform.testkit.ExecutionEventConditions.event;
+import static org.junit.platform.testkit.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.ExecutionEventConditions.started;
+import static org.junit.platform.testkit.ExecutionEventConditions.test;
 import static org.junit.platform.testkit.TestExecutionResultConditions.isA;
 import static org.junit.platform.testkit.TestExecutionResultConditions.message;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -214,12 +203,12 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void proxyTestInstanceFactoryFailsDueToUseOfDifferentClassLoader() {
 		Class<?> testClass = ProxiedTestCase.class;
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
+		ExecutionsResult executionsResult = executeTestsForClass(testClass).getExecutionsResult();
 
-		assertEquals(0, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests aborted");
+		assertEquals(0, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(0, executionsResult.getTestFailedCount(), "# tests aborted");
 
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass), //
@@ -238,10 +227,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void instanceFactoryOnToplevelTestClass() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(ParentTestCase.class);
+		ExecutionsResult executionsResult = executeTestsForClass(ParentTestCase.class).getExecutionsResult();
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(

@@ -33,7 +33,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.launcher.Launcher;
-import org.junit.platform.testkit.ExecutionGraph;
+import org.junit.platform.testkit.ExecutionsResult;
 
 /**
  * Integration tests for {@link TestInstance @TestInstance} lifecycle
@@ -126,19 +126,19 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 			int failedContainers, int tests, String... methods) {
 
 		// @formatter:off
-		ExecutionGraph executionGraph = executeTests(
+		ExecutionsResult executionsResult = executeTests(
 			request()
 				.selectors(selectClass(testClass))
 				.configurationParameters(configParams)
 				.build()
-		).getExecutionGraph();
+		).getExecutionsResult();
 
 		assertAll(
-			() -> assertEquals(containers, executionGraph.getContainerStartedCount(), "# containers started"),
-			() -> assertEquals(containers, executionGraph.getContainerFinishedCount(), "# containers finished"),
-			() -> assertEquals(failedContainers, executionGraph.getContainerFailedCount(), "# containers failed"),
-			() -> assertEquals(tests, executionGraph.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(tests, executionGraph.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(containers, executionsResult.getContainerStartedCount(), "# containers started"),
+			() -> assertEquals(containers, executionsResult.getContainerFinishedCount(), "# containers finished"),
+			() -> assertEquals(failedContainers, executionsResult.getContainerFailedCount(), "# containers failed"),
+			() -> assertEquals(tests, executionsResult.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(tests, executionsResult.getTestSuccessfulCount(), "# tests succeeded"),
 			() -> assertEquals(Arrays.asList(methods), methodsInvoked)
 		);
 		// @formatter:on

@@ -12,6 +12,7 @@ package org.junit.platform.testkit;
 
 import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.allOf;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
@@ -42,16 +43,16 @@ import org.junit.platform.engine.support.descriptor.EngineDescriptor;
  *
  * @since 1.0
  */
-public class ExecutionConditions {
+public class ExecutionEventConditions {
 
-	private ExecutionConditions() {
+	private ExecutionEventConditions() {
 	}
 
 	@SafeVarargs
 	public static void assertRecordedExecutionEventsContainsExactly(List<ExecutionEvent> executionEvents,
 			Condition<? super ExecutionEvent>... conditions) {
 		SoftAssertions softly = new SoftAssertions();
-		Assertions.assertThat(executionEvents).hasSize(conditions.length);
+		assertThat(executionEvents).hasSize(conditions.length);
 		for (int i = 0; i < conditions.length; i++) {
 			softly.assertThat(executionEvents).has(conditions[i], Index.atIndex(i));
 		}

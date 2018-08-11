@@ -25,7 +25,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.testkit.ExecutionEvent;
-import org.junit.platform.testkit.ExecutionGraph;
+import org.junit.platform.testkit.ExecutionsResult;
 
 /**
  * Integration tests for support of overloaded test methods in conjunction with
@@ -38,32 +38,32 @@ class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void executeTestCaseWithOverloadedMethodsAndThenRerunOnlyOneOfTheMethodsSelectedByUniqueId() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCase.class)).build();
-		ExecutionGraph executionGraph1 = executeTests(request).getExecutionGraph();
+		ExecutionsResult executionsResult1 = executeTests(request).getExecutionsResult();
 
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(2, executionGraph1.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(2, executionGraph1.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(0, executionGraph1.getTestFailedCount(), "# tests failed"));
+				() -> assertEquals(2, executionsResult1.getTestStartedCount(), "# tests started"),
+				() -> assertEquals(2, executionsResult1.getTestSuccessfulCount(), "# tests succeeded"),
+				() -> assertEquals(0, executionsResult1.getTestFailedCount(), "# tests failed"));
 		// @formatter:on
 
-		Optional<ExecutionEvent> first = executionGraph1.getSuccessfulTestFinishedEvents().stream().filter(
+		Optional<ExecutionEvent> first = executionsResult1.getSuccessfulTestFinishedEvents().stream().filter(
 			event -> event.getTestDescriptor().getUniqueId().toString().contains(TestInfo.class.getName())).findFirst();
 		assertTrue(first.isPresent());
 		TestIdentifier testIdentifier = TestIdentifier.from(first.get().getTestDescriptor());
 		String uniqueId = testIdentifier.getUniqueId();
 
 		request = request().selectors(selectUniqueId(uniqueId)).build();
-		ExecutionGraph executionGraph2 = executeTests(request).getExecutionGraph();
+		ExecutionsResult executionsResult2 = executeTests(request).getExecutionsResult();
 
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(1, executionGraph2.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, executionGraph2.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(0, executionGraph2.getTestFailedCount(), "# tests failed"));
+				() -> assertEquals(1, executionsResult2.getTestStartedCount(), "# tests started"),
+				() -> assertEquals(1, executionsResult2.getTestSuccessfulCount(), "# tests succeeded"),
+				() -> assertEquals(0, executionsResult2.getTestFailedCount(), "# tests failed"));
 		// @formatter:on
 
-		first = executionGraph2.getSuccessfulTestFinishedEvents().stream().filter(
+		first = executionsResult2.getSuccessfulTestFinishedEvents().stream().filter(
 			event -> event.getTestDescriptor().getUniqueId().toString().contains(TestInfo.class.getName())).findFirst();
 		assertTrue(first.isPresent());
 	}
@@ -72,16 +72,16 @@ class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 	void executeTestCaseWithOverloadedMethodsWithSingleMethodThatAcceptsArgumentsSelectedByFullyQualifedMethodName() {
 		String fqmn = TestCase.class.getName() + "#test(" + TestInfo.class.getName() + ")";
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(fqmn)).build();
-		ExecutionGraph executionGraph = executeTests(request).getExecutionGraph();
+		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
 
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(1, executionGraph.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(0, executionGraph.getTestFailedCount(), "# tests failed"));
+				() -> assertEquals(1, executionsResult.getTestStartedCount(), "# tests started"),
+				() -> assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded"),
+				() -> assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed"));
 		// @formatter:on
 
-		Optional<ExecutionEvent> first = executionGraph.getSuccessfulTestFinishedEvents().stream().filter(
+		Optional<ExecutionEvent> first = executionsResult.getSuccessfulTestFinishedEvents().stream().filter(
 			event -> event.getTestDescriptor().getUniqueId().toString().contains(TestInfo.class.getName())).findFirst();
 		assertTrue(first.isPresent());
 	}

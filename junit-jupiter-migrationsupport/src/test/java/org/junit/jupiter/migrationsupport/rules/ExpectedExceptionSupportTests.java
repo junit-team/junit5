@@ -33,8 +33,8 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.ExecutionGraph;
 import org.junit.platform.testkit.ExecutionRecorder;
+import org.junit.platform.testkit.ExecutionsResult;
 import org.junit.rules.ExpectedException;
 
 /**
@@ -46,17 +46,17 @@ class ExpectedExceptionSupportTests {
 
 	@Test
 	void expectedExceptionIsProcessedCorrectly() {
-		ExecutionGraph executionGraph = executeTestsForClass(ExpectedExceptionTestCase.class).getExecutionGraph();
+		ExecutionsResult executionsResult = executeTestsForClass(ExpectedExceptionTestCase.class).getExecutionsResult();
 
-		assertEquals(4, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionGraph.getTestAbortedCount(), "# tests aborted");
-		assertEquals(3, executionGraph.getTestFailedCount(), "# tests failed");
+		assertEquals(4, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(3, executionsResult.getTestFailedCount(), "# tests failed");
 
-		assertThat(executionGraph.getSuccessfulTestFinishedEvents()).have(
+		assertThat(executionsResult.getSuccessfulTestFinishedEvents()).have(
 			event(test("correctExceptionExpectedThrown"), finishedSuccessfully()));
 
-		assertThat(executionGraph.getFailedTestFinishedEvents())//
+		assertThat(executionsResult.getFailedTestFinishedEvents())//
 				.haveExactly(1, //
 					event(test("noExceptionExpectedButThrown"), //
 						finishedWithFailure(message("no exception expected")))) //
@@ -72,18 +72,18 @@ class ExpectedExceptionSupportTests {
 
 	@Test
 	void expectedExceptionSupportWithoutExpectedExceptionRule() {
-		ExecutionGraph executionGraph = executeTestsForClass(
-			ExpectedExceptionSupportWithoutExpectedExceptionRuleTestCase.class).getExecutionGraph();
+		ExecutionsResult executionsResult = executeTestsForClass(
+			ExpectedExceptionSupportWithoutExpectedExceptionRuleTestCase.class).getExecutionsResult();
 
-		assertEquals(2, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionGraph.getTestAbortedCount(), "# tests aborted");
-		assertEquals(1, executionGraph.getTestFailedCount(), "# tests failed");
+		assertEquals(2, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(1, executionsResult.getTestFailedCount(), "# tests failed");
 
-		assertThat(executionGraph.getSuccessfulTestFinishedEvents()).have(
+		assertThat(executionsResult.getSuccessfulTestFinishedEvents()).have(
 			event(test("success"), finishedSuccessfully()));
 
-		assertThat(executionGraph.getFailedTestFinishedEvents())//
+		assertThat(executionsResult.getFailedTestFinishedEvents())//
 				.haveExactly(1, event(test("failure"), //
 					finishedWithFailure(message("must fail"))));
 	}

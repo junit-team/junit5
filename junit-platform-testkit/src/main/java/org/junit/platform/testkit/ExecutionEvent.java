@@ -39,7 +39,7 @@ public class ExecutionEvent {
 	private Type type;
 	private TestDescriptor testDescriptor;
 	private Object payload;
-	private Instant instantOccurred;
+	private Instant timestamp;
 
 	/**
 	 * Constructs a new {@link ExecutionEvent} with the provided parameters.
@@ -52,7 +52,7 @@ public class ExecutionEvent {
 		this.type = notNull(type, "ExecutionEvent must have a Type");
 		this.testDescriptor = notNull(testDescriptor, "ExecutionEvent must have a TestDescriptor");
 		this.payload = payload;
-		this.instantOccurred = Instant.now();
+		this.timestamp = Instant.now();
 	}
 
 	/**
@@ -145,26 +145,6 @@ public class ExecutionEvent {
 		return where(ExecutionEvent::getTestDescriptor, predicate);
 	}
 
-	public static <T> Predicate<ExecutionEvent> byPayload(Class<T> payloadClass, Predicate<? super T> predicate) {
-		return event -> event.getPayload(payloadClass).filter(predicate).isPresent();
-	}
-
-	private final Instant timestamp;
-	private final ExecutionEvent.Type type;
-	private final TestDescriptor testDescriptor;
-	private final Object payload;
-
-	private ExecutionEvent(ExecutionEvent.Type type, TestDescriptor testDescriptor, Object payload) {
-		this.timestamp = Instant.now();
-		this.type = type;
-		this.testDescriptor = testDescriptor;
-		this.payload = payload;
-	}
-
-	public Instant getTimestamp() {
-		return timestamp;
-	}
-
 	/**
 	 * Gets the {@link ExecutionEvent.Type} of this {@link ExecutionEvent}.
 	 *
@@ -189,8 +169,8 @@ public class ExecutionEvent {
 	 *
 	 * @return the {@link Instant} of when this {@link ExecutionEvent} occurred
 	 */
-	public Instant getInstantOccurred() {
-		return instantOccurred;
+	public Instant getTimestamp() {
+		return timestamp;
 	}
 
 	/**
@@ -227,7 +207,6 @@ public class ExecutionEvent {
 	 * @param <T> the input type of the {@code payload}
 	 * @return the {@code payload} of type {@code T}
 	 * @throws IllegalArgumentException if the expected payload is of a different type, or isn't present
-	 * @return the {@code payload} of type {@link T}
 	 */
 	public <T> T getPayloadAs(Class<T> payloadClass) {
 		return getPayload(payloadClass).orElseThrow(EXCEPTION_NO_PAYLOAD);
@@ -238,10 +217,9 @@ public class ExecutionEvent {
 		// @formatter:off
 		return new ToStringBuilder(this)
 				.append("type", type)
-				.append("timestamp", timestamp)
 				.append("testDescriptor", testDescriptor)
 				.append("payload", payload)
-				.append("instantOccurred", instantOccurred)
+				.append("timestamp", timestamp)
 				.toString();
 		// @formatter:on
 	}

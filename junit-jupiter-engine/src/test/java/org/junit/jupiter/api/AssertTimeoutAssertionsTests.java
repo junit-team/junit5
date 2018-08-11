@@ -45,7 +45,7 @@ class AssertTimeoutAssertionsTests {
 	void assertTimeoutForExecutableThatCompletesBeforeTheTimeout() {
 		changed.get().set(false);
 		assertTimeout(ofMillis(500), () -> changed.get().set(true));
-		assertTrue(changed.get().get(), "should have finished in the same thread");
+		assertTrue(changed.get().get(), "should have executed in the same thread");
 		assertTimeout(ofMillis(500), nix, "message");
 		assertTimeout(ofMillis(500), nix, () -> "message");
 	}
@@ -167,7 +167,7 @@ class AssertTimeoutAssertionsTests {
 	void assertTimeoutPreemptivelyForExecutableThatCompletesBeforeTheTimeout() {
 		changed.get().set(false);
 		assertTimeoutPreemptively(ofMillis(500), () -> changed.get().set(true));
-		assertFalse(changed.get().get(), "should have finished in a different thread");
+		assertFalse(changed.get().get(), "should have executed in a different thread");
 		assertTimeoutPreemptively(ofMillis(500), nix, "message");
 		assertTimeoutPreemptively(ofMillis(500), nix, () -> "message");
 	}

@@ -21,7 +21,7 @@ import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.testkit.ExecutionGraph;
+import org.junit.platform.testkit.ExecutionsResult;
 
 /**
  * Integration tests that verify support for {@link BeforeAll} and {@link AfterAll}
@@ -36,10 +36,10 @@ class BeforeAllAndAfterAllComposedAnnotationTests extends AbstractJupiterTestEng
 
 	@Test
 	void beforeAllAndAfterAllAsMetaAnnotations() {
-		ExecutionGraph executionGraph = executeTestsForClass(TestCase.class).getExecutionGraph();
+		ExecutionsResult executionsResult = executeTestsForClass(TestCase.class).getExecutionsResult();
 
-		assertEquals(1, executionGraph.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionGraph.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
 		assertEquals(asList("beforeAll", "test", "afterAll"), methodsInvoked);
 	}
 

@@ -52,8 +52,6 @@ public @interface CsvSource {
 	 * The column delimiter to use when reading the {@linkplain #value lines}.
 	 *
 	 * <p>Defaults to {@code ','}.
-	 *
-	 * <p>Defaults to {@code ','}.
 	 */
 	char delimiter() default ',';
 

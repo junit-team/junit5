@@ -16,23 +16,14 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.test.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.abortedWithReason;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.abortedWithReason;
-import static org.junit.platform.engine.test.ExecutionEventConditions.container;
-import static org.junit.platform.engine.test.ExecutionEventConditions.displayName;
-import static org.junit.platform.engine.test.ExecutionEventConditions.event;
-import static org.junit.platform.engine.test.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.engine.test.ExecutionEventConditions.test;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
-import static org.junit.platform.engine.test.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-import static org.junit.platform.testkit.ExecutionConditions.container;
-import static org.junit.platform.testkit.ExecutionConditions.displayName;
-import static org.junit.platform.testkit.ExecutionConditions.event;
-import static org.junit.platform.testkit.ExecutionConditions.finishedWithFailure;
-import static org.junit.platform.testkit.ExecutionConditions.test;
 import static org.junit.platform.testkit.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
+import static org.junit.platform.testkit.ExecutionEventConditions.abortedWithReason;
+import static org.junit.platform.testkit.ExecutionEventConditions.container;
+import static org.junit.platform.testkit.ExecutionEventConditions.displayName;
+import static org.junit.platform.testkit.ExecutionEventConditions.event;
+import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.ExecutionEventConditions.test;
 import static org.junit.platform.testkit.TestExecutionResultConditions.isA;
 import static org.junit.platform.testkit.TestExecutionResultConditions.message;
 
@@ -67,7 +58,6 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.testkit.ExecutionEvent;
 import org.junit.platform.testkit.ExecutionRecorder;
-import org.opentest4j.TestAbortedException;
 import org.opentest4j.TestAbortedException;
 
 /**
