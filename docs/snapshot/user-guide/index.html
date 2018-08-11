@@ -5375,21 +5375,21 @@ used.</p>
 <div class="listingblock">
 <div class="title">Registering an extension via a static field in Kotlin</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="kotlin">class KotlinWebServerDemo {
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="type">class</span> <span class="class">KotlinWebServerDemo</span> {
     companion object {
-        @JvmField
-        @RegisterExtension
+        <span class="annotation">@JvmField</span>
+        <span class="annotation">@RegisterExtension</span>
         val server = WebServerExtension.builder()
-                .enableSecurity(false)
+                .enableSecurity(<span class="predefined-constant">false</span>)
                 .build()
     }
 
-    @Test
+    <span class="annotation">@Test</span>
     fun getProductList() {
-        // Use WebClient to connect to web server using serverUrl and verify response
+        <span class="comment">// Use WebClient to connect to web server using serverUrl and verify response</span>
         val webClient = WebClient()
         val serverUrl = server.serverUrl
-        assertEquals(200, webClient.get(&quot;$serverUrl/products&quot;).responseStatus)
+        assertEquals(<span class="integer">200</span>, webClient.get(<span class="string"><span class="delimiter">&quot;</span><span class="inline"><span class="inline-delimiter">$</span>serverUrl</span><span class="content">/products</span><span class="delimiter">&quot;</span></span>).responseStatus)
     }
 }</code></pre>
 </div>
@@ -6819,7 +6819,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-08-11 14:13:33 EDT
+Last updated 2018-08-11 07:43:24 EDT
 </div>
 </div>
 </body>
