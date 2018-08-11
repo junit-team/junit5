@@ -34,8 +34,6 @@ class WebServerDemo {
 
     @Test
     fun getProductList() {
-        // end::user_guide[]
-        // tag::user_guide[]
         // Use WebClient to connect to web server using serverUrl and verify response
         val webClient = WebClient()
         val serverUrl = server.serverUrl
