@@ -129,7 +129,7 @@ used.
 [source,kotlin,indent=0]
 .Registering an extension via a static field in Kotlin
 ----
-include::{testDir}/example/registration/WebServerDemo.kt[tags=user_guide]
+include::{kotlinTestDir}/example/registration/WebServerDemo.kt[tags=user_guide]
 ----
 
 [[extensions-registration-programmatic-instance-fields]]
