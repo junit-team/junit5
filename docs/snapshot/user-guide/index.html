@@ -5363,6 +5363,39 @@ lifecycle methods annotated with <code>@BeforeAll</code> or <code>@AfterAll</cod
 </div>
 </div>
 <div class="sect4">
+<h5 id="extensions-registration-programmatic-static-fields-kotlin"><a class="anchor" href="#extensions-registration-programmatic-static-fields-kotlin"></a>Registering static fields in Kotlin</h5>
+<div class="paragraph">
+<p>The Kotlin programming language does not have the concept of a static field.
+However, the compiler can be instructed to generate static fields using
+annotations.  Since, as stated earlier, <code>@RegisterExtension</code> fields must not be
+<code>private</code> nor <code>null</code>, one <strong>cannot</strong> use the <code>@JvmStatic</code> annotation in Kotlin
+as it generates <strong>private</strong> fields.  Rather, the <code>@JvmField</code> annotation must be
+used.</p>
+</div>
+<div class="listingblock">
+<div class="title">Registering an extension via a static field in Kotlin</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="kotlin">class KotlinWebServerDemo {
+    companion object {
+        @JvmField
+        @RegisterExtension
+        val server = WebServerExtension.builder()
+                .enableSecurity(false)
+                .build()
+    }
+
+    @Test
+    fun getProductList() {
+        // Use WebClient to connect to web server using serverUrl and verify response
+        val webClient = WebClient()
+        val serverUrl = server.serverUrl
+        assertEquals(200, webClient.get(&quot;$serverUrl/products&quot;).responseStatus)
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
 <h5 id="extensions-registration-programmatic-instance-fields"><a class="anchor" href="#extensions-registration-programmatic-instance-fields"></a>Instance Fields</h5>
 <div class="paragraph">
 <p>If a <code>@RegisterExtension</code> field is non-static (i.e., an instance field), the extension
@@ -6786,7 +6819,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-08-11 07:43:24 EDT
+Last updated 2018-08-11 14:13:33 EDT
 </div>
 </div>
 </body>
