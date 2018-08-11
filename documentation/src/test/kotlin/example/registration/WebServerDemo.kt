@@ -17,7 +17,7 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.RegisterExtension
 
 // tag::user_guide[]
-class WebServerDemo {
+class WebServerDemoForKotlin {
     // end::user_guide[]
     // @formatter:off
     // tag::user_guide[]
@@ -44,6 +44,7 @@ class WebServerDemo {
 
 class WebServerExtension : BeforeAllCallback {
     companion object {
+        @JvmStatic
         fun builder() = Builder()
     }
 
