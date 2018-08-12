@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import org.junit.platform.console.options.CommandLineOptionsParser;
-import org.junit.platform.console.options.JOptSimpleCommandLineOptionsParser;
+import org.junit.platform.console.options.PicocliCommandLineOptionsParser;
 
 /**
  * @since 1.0
@@ -41,7 +41,7 @@ class ConsoleLauncherWrapper {
 	}
 
 	private ConsoleLauncherWrapper(Charset charset) {
-		this(charset, new JOptSimpleCommandLineOptionsParser());
+		this(charset, new PicocliCommandLineOptionsParser());
 	}
 
 	private ConsoleLauncherWrapper(Charset charset, CommandLineOptionsParser parser) {

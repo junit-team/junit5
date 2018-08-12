@@ -17,12 +17,14 @@ import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.CommandLineOptionsParser;
-import org.junit.platform.console.options.JOptSimpleCommandLineOptionsParser;
+import org.junit.platform.console.options.PicocliCommandLineOptionsParser;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
@@ -42,7 +44,7 @@ public class ConsoleLauncher {
 
 	@API(status = INTERNAL, since = "1.0")
 	public static ConsoleLauncherExecutionResult execute(PrintStream out, PrintStream err, String... args) {
-		CommandLineOptionsParser parser = new JOptSimpleCommandLineOptionsParser();
+		CommandLineOptionsParser parser = new PicocliCommandLineOptionsParser();
 		ConsoleLauncher consoleLauncher = new ConsoleLauncher(parser, out, err);
 		return consoleLauncher.execute(args);
 	}
@@ -65,7 +67,18 @@ public class ConsoleLauncher {
 	}
 
 	ConsoleLauncherExecutionResult execute(String... args) {
-		CommandLineOptions options = commandLineOptionsParser.parse(args);
+
+		CommandLineOptions options = null;
+		try {
+			options = commandLineOptionsParser.parse(args);
+		}
+		catch (JUnitException ex) {
+			errStream.println(ex.getMessage());
+			StringWriter sw = new StringWriter();
+			commandLineOptionsParser.printHelp(new PrintWriter(sw));
+			errStream.println(sw);
+			return ConsoleLauncherExecutionResult.failed();
+		}
 		try (PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outStream, charset)))) {
 			if (options.isDisplayHelp()) {
 				commandLineOptionsParser.printHelp(out);
