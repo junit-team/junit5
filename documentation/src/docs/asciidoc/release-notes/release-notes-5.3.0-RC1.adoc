@@ -22,7 +22,7 @@ on GitHub.
   based on the required _class name_ instead of the optional `Class` reference. In
   addition, the non-blank precondition for a class name is now enforced.
 
-==== Deprecations and Breaking Changes
+==== Deprecations
 
 * The JUnit Platform Surefire Provider (`junit-platform-surefire-provider`) is now
   deprecated in favor of the native support for the JUnit Platform provided by Maven
@@ -50,7 +50,6 @@ on GitHub.
   options. The usage help is now displayed using ANSI colors on supported platforms.
 
 
-
 [[release-notes-5.3.0-RC1-junit-jupiter]]
 === JUnit Jupiter
 
@@ -63,10 +62,6 @@ on GitHub.
   based on filters -- for example, via `mvn test -Dtest=SubclassTests`).
 * Exceptions thrown in `@After` and `@AfterAll` lifecycle methods now take precedence over
   violated assumptions (i.e. `TestAbortedExceptions`) in test or prior lifecycle methods.
-
-==== Deprecations and Breaking Changes
-
-* ❓
 
 ==== New Features and Improvements
 
@@ -114,10 +109,6 @@ on GitHub.
   _declared_. This allows build tools such as Maven Surefire to properly include
   inherited `@Test` methods when executing a single test class or specific test classes
   based on filters -- for example, via `mvn test -Dtest=SubclassTests`).
-
-==== Deprecations and Breaking Changes
-
-* ❓
 
 ==== New Features and Improvements
 
