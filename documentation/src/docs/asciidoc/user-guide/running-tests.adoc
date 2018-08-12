@@ -622,8 +622,8 @@ error message. You can troubleshoot such errors by executing the command with th
 Multiple _@-files_ may be specified on the command line. The specified path may be
 relative to the current directory or absolute.
 
-You can pass a real parameter with an initial '@' character by escaping it with an
-additional '@' symbol. For example, '@@somearg' will become '@somearg' and will not be
+You can pass a real parameter with an initial `@` character by escaping it with an
+additional `@` symbol. For example, `@@somearg` will become `@somearg` and will not be
 subject to expansion.
 
 

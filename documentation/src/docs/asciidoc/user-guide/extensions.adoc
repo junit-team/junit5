@@ -83,7 +83,7 @@ classes with `{RegisterExtension}`.
 When an extension is registered _declaratively_ via
 <<extensions-registration-declarative,`@ExtendWith`>>, it can typically only be
 configured via annotations. In contrast, when an extension is registered via
-`@RegisterExtension`, it can be configured _programmatically_ – for example, in order to
+`@RegisterExtension`, it can be configured _programmatically_ -- for example, in order to
 pass arguments to the extension's constructor, a static factory method, or a builder API.
 
 NOTE: `@RegisterExtension` fields must not be `private` or `null` (at evaluation time)
@@ -103,8 +103,8 @@ extension APIs such as `BeforeAllCallback`, `AfterAllCallback`, and
 In the following example, the `server` field in the test class is initialized
 programmatically by using a builder pattern supported by the `WebServerExtension`. The
 configured `WebServerExtension` will be automatically registered as an extension at the
-class level – for example, in order to start the server before all tests in the class and
-then stop the server after all tests in the class have completed. In addition, static
+class level -- for example, in order to start the server before all tests in the class
+and then stop the server after all tests in the class have completed. In addition, static
 lifecycle methods annotated with `@BeforeAll` or `@AfterAll` as well as `@BeforeEach`,
 `@AfterEach`, and `@Test` methods can access the instance of the extension via the
 `server` field if necessary.
