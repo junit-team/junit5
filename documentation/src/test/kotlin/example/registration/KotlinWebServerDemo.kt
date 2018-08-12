@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.RegisterExtension
 
 // tag::user_guide[]
 class KotlinWebServerDemo {
+
     companion object {
         @JvmField
         @RegisterExtension
@@ -33,10 +34,12 @@ class KotlinWebServerDemo {
         val serverUrl = server.serverUrl
         assertEquals(200, webClient.get("$serverUrl/products").responseStatus)
     }
+
 }
 // end::user_guide[]
 
 class WebServerExtension : BeforeAllCallback {
+
     companion object {
         @JvmStatic
         fun builder() = Builder()
@@ -49,13 +52,14 @@ class WebServerExtension : BeforeAllCallback {
     }
 
     class Builder {
-        fun enableSecurity(b: Boolean) = this
+        fun enableSecurity(securityEnabled: Boolean) = this
         fun build(): WebServerExtension = WebServerExtension()
     }
+
 }
 
 class WebClient {
-    fun get(string: String): WebResponse = WebResponse()
+    fun get(path: String): WebResponse = WebResponse()
 }
 
 class WebResponse {
