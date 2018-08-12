@@ -18,7 +18,7 @@ package org.junit.platform.surefire.provider;
 
 import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -40,6 +40,7 @@ import org.apache.maven.surefire.providerapi.AbstractProvider;
 import org.apache.maven.surefire.providerapi.ProviderParameters;
 import org.apache.maven.surefire.report.ConsoleOutputCapture;
 import org.apache.maven.surefire.report.ConsoleOutputReceiver;
+import org.apache.maven.surefire.report.ConsoleStream;
 import org.apache.maven.surefire.report.ReporterException;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.report.RunListener;
@@ -60,8 +61,10 @@ import org.junit.platform.launcher.core.LauncherFactory;
 
 /**
  * @since 1.0
+ * @deprecated Please use the provider that is included in Maven Surefire &ge; 2.22.0.
  */
-@API(status = EXPERIMENTAL, since = "1.0")
+@Deprecated
+@API(status = DEPRECATED, since = "1.3")
 public class JUnitPlatformProvider extends AbstractProvider {
 
 	// Parameter names processed to determine which @Tags should be executed.
@@ -91,6 +94,26 @@ public class JUnitPlatformProvider extends AbstractProvider {
 		this.filters = getFilters();
 		this.configurationParameters = getConfigurationParameters();
 		Logger.getLogger("org.junit").setLevel(Level.WARNING);
+		printDeprecationWarning(parameters);
+	}
+
+	private void printDeprecationWarning(ProviderParameters parameters) {
+		ConsoleStream consoleLogger = parameters.getConsoleLogger();
+		// @formatter:off
+		// Despite its name ConsoleStream.println() does not actually append a line separator
+		consoleLogger.println(String.join(System.lineSeparator(),
+				"",
+				" +-------------------------------------------------------------------------------+",
+				" | WARNING:                                                                      |",
+				" | The junit-platform-surefire-provider has been deprecated and is scheduled to  |",
+				" | be removed in JUnit Platform 1.4. Please use the built-in support in Maven    |",
+				" | Surefire >= 2.22.0 instead.                                                   |",
+				" | » https://junit.org/junit5/docs/current/user-guide/#running-tests-build-maven |",
+				" +-------------------------------------------------------------------------------+",
+				"",
+				"")
+		);
+		// @formatter:on
 	}
 
 	@Override

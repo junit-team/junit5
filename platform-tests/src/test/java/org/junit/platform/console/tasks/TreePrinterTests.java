@@ -30,7 +30,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
+import org.junit.platform.engine.reporting.ReportEntry;
+import org.junit.platform.engine.test.TestDescriptorStub;
 import org.junit.platform.launcher.TestIdentifier;
 
 class TreePrinterTests {
@@ -58,10 +59,10 @@ class TreePrinterTests {
 	@Test
 	void emptyEngines() {
 		TreeNode root = new TreeNode("<root>");
-		root.addChild(new TreeNode(createEngineId("e-0", "engine zero"), "none"));
-		root.addChild(new TreeNode(createEngineId("e-1", "engine one")).setResult(successful()));
-		root.addChild(new TreeNode(createEngineId("e-2", "engine two")).setResult(failed(null)));
-		root.addChild(new TreeNode(createEngineId("e-3", "engine three")).setResult(aborted(null)));
+		root.addChild(new TreeNode(identifier("e-0", "engine zero"), "none"));
+		root.addChild(new TreeNode(identifier("e-1", "engine one")).setResult(successful()));
+		root.addChild(new TreeNode(identifier("e-2", "engine two")).setResult(failed(null)));
+		root.addChild(new TreeNode(identifier("e-3", "engine three")).setResult(aborted(null)));
 		new TreePrinter(out, Theme.UNICODE, true).print(root);
 		assertIterableEquals( //
 			Arrays.asList( //
@@ -77,17 +78,48 @@ class TreePrinterTests {
 	// https://github.com/junit-team/junit5/issues/786
 	void printNodeHandlesNullMessageThrowableGracefully() {
 		TestExecutionResult result = TestExecutionResult.failed(new NullPointerException());
-		TreeNode node = new TreeNode(createEngineId("NPE", "test()")).setResult(result);
+		TreeNode node = new TreeNode(identifier("NPE", "test()")).setResult(result);
 		new TreePrinter(out, Theme.ASCII, true).print(node);
 		assertLinesMatch(Arrays.asList(".", "+-- test() [X] java.lang.NullPointerException"), actual());
 	}
 
-	private TestIdentifier createEngineId(String uniqueId, String displayName) {
-		return TestIdentifier.from(new AbstractTestDescriptor(UniqueId.forEngine(uniqueId), displayName) {
-			@Override
-			public Type getType() {
-				return Type.CONTAINER;
-			}
-		});
+	@Test
+	// https://github.com/junit-team/junit5/issues/1531
+	void reportsAreTabbedCorrectly() {
+		var root = new TreeNode("<root>");
+		var e1 = new TreeNode(identifier("e-1", "engine one")).setResult(successful());
+		e1.addReportEntry(ReportEntry.from("key", "e-1"));
+		root.addChild(e1);
+
+		var c1 = new TreeNode(identifier("c-1", "class one")).setResult(successful());
+		c1.addReportEntry(ReportEntry.from("key", "c-1"));
+		e1.addChild(c1);
+
+		var m1 = new TreeNode(identifier("m-1", "method one")).setResult(successful());
+		m1.addReportEntry(ReportEntry.from("key", "m-1"));
+		c1.addChild(m1);
+
+		var m2 = new TreeNode(identifier("m-2", "method two")).setResult(successful());
+		m2.addReportEntry(ReportEntry.from("key", "m-2"));
+		c1.addChild(m2);
+
+		new TreePrinter(out, Theme.UNICODE, true).print(root);
+		assertLinesMatch(List.of( //
+			"╷", //
+			"└─ engine one ✔", //
+			"   │  ....-..-..T..:...* key = `e-1`", //
+			"   └─ class one ✔", //
+			"      │  ....-..-..T..:...* key = `c-1`", //
+			"      ├─ method one ✔", //
+			"      │     ....-..-..T..:...* key = `m-1`", //
+			"      └─ method two ✔", //
+			"            ....-..-..T..:...* key = `m-2`" //
+		), //
+			actual());
+	}
+
+	private static TestIdentifier identifier(String id, String displayName) {
+		var descriptor = new TestDescriptorStub(UniqueId.forEngine(id), displayName);
+		return TestIdentifier.from(descriptor);
 	}
 }

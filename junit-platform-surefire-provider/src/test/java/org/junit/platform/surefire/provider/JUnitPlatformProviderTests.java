@@ -45,6 +45,7 @@ import java.util.Set;
 
 import org.apache.maven.surefire.providerapi.ProviderParameters;
 import org.apache.maven.surefire.report.ConsoleOutputReceiver;
+import org.apache.maven.surefire.report.ConsoleStream;
 import org.apache.maven.surefire.report.ReportEntry;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.report.RunListener;
@@ -73,6 +74,7 @@ import org.mockito.InOrder;
  *
  * @since 1.0
  */
+@SuppressWarnings("deprecation")
 class JUnitPlatformProviderTests {
 
 	@Test
@@ -452,6 +454,7 @@ class JUnitPlatformProviderTests {
 		when(providerParameters.getRunOrderCalculator()).thenReturn(runOrderCalculator);
 		when(providerParameters.getReporterFactory()).thenReturn(reporterFactory);
 		when(providerParameters.getTestRequest()).thenReturn(testRequest);
+		when(providerParameters.getConsoleLogger()).thenReturn(mock(ConsoleStream.class));
 
 		return providerParameters;
 	}

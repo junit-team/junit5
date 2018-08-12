@@ -148,6 +148,7 @@ final class RunListenerAdapter implements TestExecutionListener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private SimpleReportEntry createTestSetReportEntry(TestIdentifier testIdentifier) {
 		return new SimpleReportEntry(JUnitPlatformProvider.class.getName(), testIdentifier.getLegacyReportingName());
 	}

@@ -19,6 +19,7 @@ import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.core.LauncherConfig;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
@@ -75,7 +76,33 @@ class UsingTheLauncherDemo {
 		// end::execution[]
 		// @formatter:on
 	}
+
+	@org.junit.jupiter.api.Test
+	void launcherConfig() {
+		// @formatter:off
+		// tag::launcherConfig[]
+		LauncherConfig launcherConfig = LauncherConfig.builder()
+			.enableTestEngineAutoRegistration(false)
+			.enableTestExecutionListenerAutoRegistration(false)
+			.addTestEngines(new CustomTestEngine())
+			.addTestExecutionListeners(new CustomTestExecutionListener())
+			.build();
+
+		Launcher launcher = LauncherFactory.create(launcherConfig);
+
+		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
+			.selectors(selectPackage("com.example.mytests"))
+			.build();
+
+		launcher.execute(request);
+		// end::launcherConfig[]
+		// @formatter:on
+	}
+
 }
 
 class MyTestClass {
+}
+
+class CustomTestExecutionListener implements TestExecutionListener {
 }

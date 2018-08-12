@@ -12,6 +12,7 @@ package org.junit.platform.launcher.core;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -20,6 +21,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
@@ -30,6 +33,11 @@ import org.junit.platform.launcher.listeners.NoopTestExecutionListener;
  * @since 1.0
  */
 class LauncherFactoryTests {
+
+	@Test
+	void preconditions() {
+		assertThrows(PreconditionViolationException.class, () -> LauncherFactory.create(null));
+	}
 
 	@Test
 	void noopTestExecutionListenerIsLoadedViaServiceApi() {
@@ -55,6 +63,28 @@ class LauncherFactoryTests {
 		// @formatter:on
 
 		assertThat(ids).containsOnly("[engine:junit-vintage]", "[engine:junit-jupiter]");
+	}
+
+	@Test
+	void createWithConfig() {
+		LauncherDiscoveryRequest discoveryRequest = createLauncherDiscoveryRequestForBothStandardEngineExampleClasses();
+
+		LauncherConfig config = LauncherConfig.builder()//
+				.enableTestEngineAutoRegistration(false)//
+				.addTestEngines(new JupiterTestEngine())//
+				.build();
+
+		TestPlan testPlan = LauncherFactory.create(config).discover(discoveryRequest);
+		Set<TestIdentifier> roots = testPlan.getRoots();
+		assertThat(roots).hasSize(1);
+
+		// @formatter:off
+		List<String> ids = roots.stream()
+				.map(TestIdentifier::getUniqueId)
+				.collect(toList());
+		// @formatter:on
+
+		assertThat(ids).containsOnly("[engine:junit-jupiter]");
 	}
 
 	private LauncherDiscoveryRequest createLauncherDiscoveryRequestForBothStandardEngineExampleClasses() {

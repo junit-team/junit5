@@ -217,8 +217,9 @@ can serve as a starting point for configuring your Maven build.
 
 The JUnit team has developed a basic provider for Maven Surefire that lets you run JUnit
 4 and JUnit Jupiter tests via `mvn test` on versions of Maven Surefire prior to 2.22.0.
-With the release of Surefire 2.22.0 the `junit-platform-surefire-provider` from the JUnit
-team will be deprecated and discontinued soon thereafter.
+Due to the release of Surefire 2.22.0, the `junit-platform-surefire-provider` from the
+JUnit team has been deprecated and will be discontinued in a subsequent release of the
+JUnit Platform.
 
 NOTE: Please use Maven Surefire {surefire-version} with the
 `junit-platform-surefire-provider`.
@@ -543,9 +544,9 @@ link:https://ant.apache.org/manual/Tasks/junitlauncher.html[`junitlauncher` task
 [[running-tests-console-launcher]]
 === Console Launcher
 
-The `{ConsoleLauncher}` is a command-line Java application that lets you launch
-the JUnit Platform from the console. For example, it can be used to run JUnit
-Vintage and JUnit Jupiter tests and print test execution results to the console.
+The `{ConsoleLauncher}` is a command-line Java application that lets you launch the JUnit
+Platform from the console. For example, it can be used to run JUnit Vintage and JUnit
+Jupiter tests and print test execution results to the console.
 
 An executable `junit-platform-console-standalone-{platform-version}.jar` with all
 dependencies included is published in the central Maven repository under the
@@ -597,6 +598,34 @@ is `0`.
 ----
 include::{consoleLauncherOptionsFile}[]
 ----
+
+[[running-tests-console-launcher-argument-files]]
+==== Argument Files (@-files)
+
+On some platforms you may run into system limitations on the length of a command line
+when creating a command line with lots of options or with long arguments.
+
+Since version 1.3, the `ConsoleLauncher` supports _argument files_, also known as
+_@-files_. Argument files are files that themselves contain arguments to be passed to the
+command. When the underlying https://github.com/remkop/picocli[picocli] command line
+parser encounters an argument beginning with the character `@`, it expands the contents
+of that file into the argument list.
+
+The arguments within a file can be separated by spaces or newlines. If an argument
+contains embedded whitespace, the whole argument should be wrapped in double or single
+quotes -- for example, `"-f=My Files/Stuff.java"`.
+
+If the argument file does not exist or cannot be read, the argument will be treated
+literally and will not be removed. This will likely result in an "unmatched argument"
+error message. You can troubleshoot such errors by executing the command with the
+`picocli.trace` system property set to `DEBUG`.
+
+Multiple _@-files_ may be specified on the command line. The specified path may be
+relative to the current directory or absolute.
+
+You can pass a real parameter with an initial `@` character by escaping it with an
+additional `@` symbol. For example, `@@somearg` will become `@somearg` and will not be
+subject to expansion.
 
 
 [[running-tests-junit-platform-runner]]

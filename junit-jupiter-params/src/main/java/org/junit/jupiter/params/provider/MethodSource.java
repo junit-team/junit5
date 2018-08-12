@@ -51,7 +51,7 @@ import org.junit.jupiter.params.ParameterizedTest;
  * <p>The following table displays compatible method signatures for parameterized
  * test methods and their corresponding factory methods.
  *
- * <p><table border="1">
+ * <table border="1">
  * <tr><th>{@code @ParameterizedTest} method</th><th>Factory method</th></tr>
  * <tr><td>{@code void test(int)}</td><td>{@code static int[] factory()}</td></tr>
  * <tr><td>{@code void test(int)}</td><td>{@code static IntStream factory()}</td></tr>

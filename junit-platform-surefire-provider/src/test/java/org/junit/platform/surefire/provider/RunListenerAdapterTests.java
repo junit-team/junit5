@@ -61,6 +61,7 @@ import org.mockito.InOrder;
  *
  * @since 1.0
  */
+@SuppressWarnings("deprecation")
 class RunListenerAdapterTests {
 
 	private RunListener listener;
