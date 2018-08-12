@@ -51,13 +51,13 @@ class WebServerExtension : BeforeAllCallback {
     }
 
     class Builder {
-        fun enableSecurity(securityEnabled: Boolean) = this
+        fun enableSecurity(@Suppress("UNUSED_PARAMETER") securityEnabled: Boolean) = this
         fun build(): WebServerExtension = WebServerExtension()
     }
 }
 
 class WebClient {
-    fun get(path: String): WebResponse = WebResponse()
+    fun get(@Suppress("UNUSED_PARAMETER") path: String): WebResponse = WebResponse()
 }
 
 class WebResponse {
