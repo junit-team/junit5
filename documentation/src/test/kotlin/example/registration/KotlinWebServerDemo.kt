@@ -34,7 +34,6 @@ class KotlinWebServerDemo {
         val serverUrl = server.serverUrl
         assertEquals(200, webClient.get("$serverUrl/products").responseStatus)
     }
-
 }
 // end::user_guide[]
 
@@ -55,7 +54,6 @@ class WebServerExtension : BeforeAllCallback {
         fun enableSecurity(securityEnabled: Boolean) = this
         fun build(): WebServerExtension = WebServerExtension()
     }
-
 }
 
 class WebClient {
