@@ -4848,8 +4848,8 @@ error message. You can troubleshoot such errors by executing the command with th
 relative to the current directory or absolute.</p>
 </div>
 <div class="paragraph">
-<p>You can pass a real parameter with an initial '@' character by escaping it with an
-additional '@' symbol. For example, '@@somearg' will become '@somearg' and will not be
+<p>You can pass a real parameter with an initial <code>@</code> character by escaping it with an
+additional <code>@</code> symbol. For example, <code>@@somearg</code> will become <code>@somearg</code> and will not be
 subject to expansion.</p>
 </div>
 </div>
@@ -5321,7 +5321,7 @@ classes with <code><a href="../api/org/junit/jupiter/api/extension/RegisterExten
 <p>When an extension is registered <em>declaratively</em> via
 <a href="#extensions-registration-declarative"><code>@ExtendWith</code></a>, it can typically only be
 configured via annotations. In contrast, when an extension is registered via
-<code>@RegisterExtension</code>, it can be configured <em>programmatically</em> – for example, in order to
+<code>@RegisterExtension</code>, it can be configured <em>programmatically</em>&#8201;&#8212;&#8201;for example, in order to
 pass arguments to the extension&#8217;s constructor, a static factory method, or a builder API.</p>
 </div>
 <div class="admonitionblock note">
@@ -5352,8 +5352,8 @@ extension APIs such as <code>BeforeAllCallback</code>, <code>AfterAllCallback</c
 <p>In the following example, the <code>server</code> field in the test class is initialized
 programmatically by using a builder pattern supported by the <code>WebServerExtension</code>. The
 configured <code>WebServerExtension</code> will be automatically registered as an extension at the
-class level – for example, in order to start the server before all tests in the class and
-then stop the server after all tests in the class have completed. In addition, static
+class level&#8201;&#8212;&#8201;for example, in order to start the server before all tests in the class
+and then stop the server after all tests in the class have completed. In addition, static
 lifecycle methods annotated with <code>@BeforeAll</code> or <code>@AfterAll</code> as well as <code>@BeforeEach</code>,
 <code>@AfterEach</code>, and <code>@Test</code> methods can access the instance of the extension via the
 <code>server</code> field if necessary.</p>
@@ -5381,19 +5381,39 @@ lifecycle methods annotated with <code>@BeforeAll</code> or <code>@AfterAll</cod
 </div>
 </div>
 <div class="sect4">
-<h5 id="extensions-registration-programmatic-static-fields-kotlin"><a class="anchor" href="#extensions-registration-programmatic-static-fields-kotlin"></a>Registering static fields in Kotlin</h5>
+<h5 id="extensions-registration-programmatic-static-fields-kotlin"><a class="anchor" href="#extensions-registration-programmatic-static-fields-kotlin"></a>Static Fields in Kotlin</h5>
 <div class="paragraph">
-<p>The Kotlin programming language does not have the concept of a static field.
-However, the compiler can be instructed to generate static fields using
-annotations.  Since, as stated earlier, <code>@RegisterExtension</code> fields must not be
-<code>private</code> nor <code>null</code>, one <strong>cannot</strong> use the <code>@JvmStatic</code> annotation in Kotlin
-as it generates <strong>private</strong> fields.  Rather, the <code>@JvmField</code> annotation must be
-used.</p>
+<p>The Kotlin programming language does not have the concept of a <code>static</code> field. However,
+the compiler can be instructed to generate static fields using annotations. Since, as
+stated earlier, <code>@RegisterExtension</code> fields must not be <code>private</code> nor <code>null</code>, one
+<strong>cannot</strong> use the <code>@JvmStatic</code> annotation in Kotlin as it generates <code>private</code> fields.
+Rather, the <code>@JvmField</code> annotation must be used.</p>
+</div>
+<div class="paragraph">
+<p>The following example is a version of the <code>WebServerDemo</code> from the previous section that
+has been ported to Kotlin.</p>
 </div>
 <div class="listingblock">
 <div class="title">Registering an extension via a static field in Kotlin</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy">Unresolved directive <span class="keyword">in</span> extensions.adoc - <span class="key">include</span>::<span class="regexp"><span class="delimiter">/</span><span class="content">scratch</span><span class="delimiter">/</span></span>jenkins/workspace/JUnit5_master-UOWELF6W7NEPTWOAW47XKKYHLZHRQIDJLHIJZOUPTD5AUHAJUJ3Q/documentation/src/test/kotlin/example/registration/WebServerDemo.kt[tags=user_guide]</code></pre>
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="type">class</span> <span class="class">KotlinWebServerDemo</span> {
+
+    companion object {
+        <span class="annotation">@JvmField</span>
+        <span class="annotation">@RegisterExtension</span>
+        val server = WebServerExtension.builder()
+                .enableSecurity(<span class="predefined-constant">false</span>)
+                .build()
+    }
+
+    <span class="annotation">@Test</span>
+    fun getProductList() {
+        <span class="comment">// Use WebClient to connect to web server using serverUrl and verify response</span>
+        val webClient = WebClient()
+        val serverUrl = server.serverUrl
+        assertEquals(<span class="integer">200</span>, webClient.get(<span class="string"><span class="delimiter">&quot;</span><span class="inline"><span class="inline-delimiter">$</span>serverUrl</span><span class="content">/products</span><span class="delimiter">&quot;</span></span>).responseStatus)
+    }
+}</code></pre>
 </div>
 </div>
 </div>
@@ -6821,7 +6841,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-08-11 07:43:24 EDT
+Last updated 2018-08-11 14:13:33 EDT
 </div>
 </div>
 </body>
