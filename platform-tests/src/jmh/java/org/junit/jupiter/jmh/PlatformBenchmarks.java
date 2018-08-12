@@ -25,62 +25,62 @@ import static org.junit.platform.launcher.core.LauncherFactory.create;
 /**
  * JMH benchmarks for platform.
  *
- * @since 5.1
+ * @since 5.4
  */
 public class PlatformBenchmarks {
-    @Benchmark
-    public void junit4_platform_noTest() {
-        runWithJUnit4(NoTest.class);
-    }
+	@Benchmark
+	public void junit4_platform_noTest() {
+		runWithJUnit4(NoTest.class);
+	}
 
-    @Benchmark
-    public void junit4_platform_emptyTest() {
-        runWithJUnit4(JUnit4EmptyTest.class);
-    }
-    
-    @Benchmark
-    public void junitJupiter_platform_vintage_noTest() {
-        runWithJUnitJupiter(NoTest.class, true);
-    }
+	@Benchmark
+	public void junit4_platform_emptyTest() {
+		runWithJUnit4(JUnit4EmptyTest.class);
+	}
 
-    @Benchmark
-    public void junitJupiter_platform_noTest() {
-        runWithJUnitJupiter(NoTest.class, false);
-    }
+	@Benchmark
+	public void junitJupiter_platform_vintage_noTest() {
+		runWithJUnitJupiter(NoTest.class, true);
+	}
 
-    @Benchmark
-    public void junitJupiter_platform_vintage_emptyTest() {
-        runWithJUnitJupiter(JUnitJupiterEmptyTest.class, true);
-    }
+	@Benchmark
+	public void junitJupiter_platform_noTest() {
+		runWithJUnitJupiter(NoTest.class, false);
+	}
 
-    @Benchmark
-    public void junitJupiter_platform_emptyTest() {
-        runWithJUnitJupiter(JUnitJupiterEmptyTest.class, false);
-    }
+	@Benchmark
+	public void junitJupiter_platform_vintage_emptyTest() {
+		runWithJUnitJupiter(JUnitJupiterEmptyTest.class, true);
+	}
 
-    private void runWithJUnit4(Class<?> testClass) {
-        new JUnitCore().run(testClass);
-    }
+	@Benchmark
+	public void junitJupiter_platform_emptyTest() {
+		runWithJUnitJupiter(JUnitJupiterEmptyTest.class, false);
+	}
 
-    private void runWithJUnitJupiter(Class<?> testClass, boolean vintage) {
-        TestEngine testEngine = vintage ? new VintageTestEngine() : new JupiterTestEngine();
-        LauncherConfig config = builder().enableTestEngineAutoRegistration(false).addTestEngines(testEngine).build();
-        RunNotifier notifier = new RunNotifier();
-        new BenchmarksJUnitPlatform(testClass, create(config)).run(notifier);
-    }
+	private void runWithJUnit4(Class<?> testClass) {
+		new JUnitCore().run(testClass);
+	}
 
-    public static class NoTest {
-    }
+	private void runWithJUnitJupiter(Class<?> testClass, boolean vintage) {
+		TestEngine testEngine = vintage ? new VintageTestEngine() : new JupiterTestEngine();
+		LauncherConfig config = builder().enableTestEngineAutoRegistration(false).addTestEngines(testEngine).build();
+		RunNotifier notifier = new RunNotifier();
+		new BenchmarksJUnitPlatform(testClass, create(config)).run(notifier);
+	}
 
-    public static class JUnitJupiterEmptyTest {
-        @org.junit.jupiter.api.Test
-        public void emptyTest() {
-        }
-    }
+	public static class NoTest {
+	}
 
-    public static class JUnit4EmptyTest {
-        @org.junit.Test
-        public void emptyTest() {
-        }
-    }
+	public static class JUnitJupiterEmptyTest {
+		@org.junit.jupiter.api.Test
+		public void emptyTest() {
+		}
+	}
+
+	public static class JUnit4EmptyTest {
+		@org.junit.Test
+		public void emptyTest() {
+		}
+	}
 }
