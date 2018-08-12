@@ -530,7 +530,8 @@ class PicocliCommandLineOptionsParserTests {
 	void parseInvalidConfigurationParametersWithDuplicateKey(ArgsType type) {
 		Exception e = assertThrows(JUnitException.class, () -> type.parseArgLine("--config foo=bar --config foo=baz"));
 
-		assertThat(e.getMessage()).isEqualTo("Error parsing command-line arguments: Duplicate key 'foo' for values 'bar' and 'baz'.");
+		assertThat(e.getMessage()).isEqualTo(
+			"Error parsing command-line arguments: Duplicate key 'foo' for values 'bar' and 'baz'.");
 		assertThat(e.getCause().getMessage()).isEqualTo("Duplicate key 'foo' for values 'bar' and 'baz'.");
 	}
 
