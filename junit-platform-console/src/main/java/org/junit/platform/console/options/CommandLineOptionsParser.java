@@ -25,4 +25,5 @@ public interface CommandLineOptionsParser {
 	CommandLineOptions parse(String... arguments);
 
 	void printHelp(Writer writer);
+
 }
