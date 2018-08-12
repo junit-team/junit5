@@ -40,6 +40,10 @@ dependencies {
 	}
 	jmhAnnotationProcessor("org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}")
 	jmh(project(':junit-jupiter-api'))
+	jmh(project(':junit-vintage-engine'))
+	jmh(project(':junit-jupiter-engine'))
+	jmh(project(':junit-platform-launcher'))
+	jmh(project(':junit-platform-runner'))
 	jmh("junit:junit:${junit4Version}")
 }
 
