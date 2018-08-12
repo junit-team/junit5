@@ -24,7 +24,9 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The JUnit Platform Surefire Provider (`junit-platform-surefire-provider`) is now
+  deprecated in favor of the native support for the JUnit Platform provided by Maven
+  Surefire 2.22.0 and later versions.
 
 ==== New Features and Improvements
 
