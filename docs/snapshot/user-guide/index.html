@@ -4680,9 +4680,9 @@ documentation for the
 <div class="sect2">
 <h3 id="running-tests-console-launcher"><a class="anchor" href="#running-tests-console-launcher"></a>4.3. Console Launcher</h3>
 <div class="paragraph">
-<p>The <code><a href="../api/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code> is a command-line Java application that lets you launch
-the JUnit Platform from the console. For example, it can be used to run JUnit
-Vintage and JUnit Jupiter tests and print test execution results to the console.</p>
+<p>The <code><a href="../api/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code> is a command-line Java application that lets you launch the JUnit
+Platform from the console. For example, it can be used to run JUnit Vintage and JUnit
+Jupiter tests and print test execution results to the console.</p>
 </div>
 <div class="paragraph">
 <p>An executable <code>junit-platform-console-standalone-1.3.0-SNAPSHOT.jar</code> with all
@@ -4820,37 +4820,37 @@ Launches the JUnit Platform from the console.
 </div>
 </div>
 <div class="sect3">
-<h4 id="files"><a class="anchor" href="#files"></a>4.3.2. @-files</h4>
+<h4 id="running-tests-console-launcher-argument-files"><a class="anchor" href="#running-tests-console-launcher-argument-files"></a>4.3.2. Argument Files (@-files)</h4>
 <div class="paragraph">
 <p>On some platforms you may run into system limitations on the length of a command line
 when creating a command line with lots of options or with long arguments.</p>
 </div>
 <div class="paragraph">
-<p>Starting from v5.3-RC1, the <code>ConsoleLauncher</code> supports "argument files" or "@-files".
-Argument files are files that themselves contain arguments to the command.
-When the underlying <a href="https://github.com/remkop/picocli">picocli</a> command line parser
-encounters an argument beginning with the character <code>@</code>, it expands the contents of that
-file into the argument list.</p>
+<p>Since version 1.3, the <code>ConsoleLauncher</code> supports <em>argument files</em>, also known as
+<em>@-files</em>. Argument files are files that themselves contain arguments to be passed to the
+command. When the underlying <a href="https://github.com/remkop/picocli">picocli</a> command line
+parser encounters an argument beginning with the character <code>@</code>, it expands the contents
+of that file into the argument list.</p>
 </div>
 <div class="paragraph">
-<p>The arguments within a file can be space-separated or newline-separated.
-If an argument contains embedded whitespace, put the whole argument in double or single
-quotes (<code>"-f=My Files\Stuff.java"</code>).</p>
+<p>The arguments within a file can be separated by spaces or newlines. If an argument
+contains embedded whitespace, the whole argument should be wrapped in double or single
+quotes&#8201;&#8212;&#8201;for example, <code>"-f=My Files/Stuff.java"</code>.</p>
 </div>
 <div class="paragraph">
-<p>If the file does not exist, or cannot be read, then the argument will be treated
-literally, and not removed. This will likely result in an "unmatched argument" error
-message. You can troubleshoot by executing the command with system property
-<code>picocli.trace</code> set to <code>DEBUG</code>.</p>
+<p>If the argument file does not exist or cannot be read, the argument will be treated
+literally and will not be removed. This will likely result in an "unmatched argument"
+error message. You can troubleshoot such errors by executing the command with the
+<code>picocli.trace</code> system property set to <code>DEBUG</code>.</p>
 </div>
 <div class="paragraph">
-<p>Multiple @-files may be specified on the command line.
-The specified path may be relative to the current directory or absolute.</p>
+<p>Multiple <em>@-files</em> may be specified on the command line. The specified path may be
+relative to the current directory or absolute.</p>
 </div>
 <div class="paragraph">
-<p>You can pass a real parameter with an initial '@' character by escaping it
-with an additional '@' symbol, e.g. '@@somearg' will become '@somearg' and not be subject
-to expansion.</p>
+<p>You can pass a real parameter with an initial '@' character by escaping it with an
+additional '@' symbol. For example, '@@somearg' will become '@somearg' and will not be
+subject to expansion.</p>
 </div>
 </div>
 </div>
@@ -5393,23 +5393,7 @@ used.</p>
 <div class="listingblock">
 <div class="title">Registering an extension via a static field in Kotlin</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy"><span class="type">class</span> <span class="class">KotlinWebServerDemo</span> {
-    companion object {
-        <span class="annotation">@JvmField</span>
-        <span class="annotation">@RegisterExtension</span>
-        val server = WebServerExtension.builder()
-                .enableSecurity(<span class="predefined-constant">false</span>)
-                .build()
-    }
-
-    <span class="annotation">@Test</span>
-    fun getProductList() {
-        <span class="comment">// Use WebClient to connect to web server using serverUrl and verify response</span>
-        val webClient = WebClient()
-        val serverUrl = server.serverUrl
-        assertEquals(<span class="integer">200</span>, webClient.get(<span class="string"><span class="delimiter">&quot;</span><span class="inline"><span class="inline-delimiter">$</span>serverUrl</span><span class="content">/products</span><span class="delimiter">&quot;</span></span>).responseStatus)
-    }
-}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="groovy">Unresolved directive <span class="keyword">in</span> extensions.adoc - <span class="key">include</span>::<span class="regexp"><span class="delimiter">/</span><span class="content">scratch</span><span class="delimiter">/</span></span>jenkins/workspace/JUnit5_master-UOWELF6W7NEPTWOAW47XKKYHLZHRQIDJLHIJZOUPTD5AUHAJUJ3Q/documentation/src/test/kotlin/example/registration/WebServerDemo.kt[tags=user_guide]</code></pre>
 </div>
 </div>
 </div>
@@ -6837,7 +6821,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-08-12 02:27:39 EDT
+Last updated 2018-08-11 07:43:24 EDT
 </div>
 </div>
 </body>
