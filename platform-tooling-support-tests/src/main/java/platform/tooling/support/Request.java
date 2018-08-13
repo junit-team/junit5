@@ -84,14 +84,12 @@ public class Request {
 			Files.createDirectories(workPath);
 
 			// prepare workspace
-			var project = projects.resolve(getProject());
-			if (!Files.isDirectory(project)) {
-				throw new IllegalStateException("Directory " + project + " not found!");
-			}
 			var workspace = workPath.resolve(getWorkspace());
-
 			FileUtils.deleteQuietly(workspace.toFile());
-			FileUtils.copyDirectory(project.toFile(), workspace.toFile(), getCopyProjectToWorkspaceFileFilter());
+			var project = projects.resolve(getProject());
+			if (Files.isDirectory(project)) {
+				FileUtils.copyDirectory(project.toFile(), workspace.toFile(), getCopyProjectToWorkspaceFileFilter());
+			}
 
 			var configuration = Configuration.builder();
 			configuration.setArguments(getArguments());
