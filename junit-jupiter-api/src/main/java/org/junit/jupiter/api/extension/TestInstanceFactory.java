@@ -40,6 +40,7 @@ import org.apiguardian.api.API;
  * @see #createTestInstance(TestInstanceFactoryContext, ExtensionContext)
  * @see TestInstanceFactoryContext
  * @see TestInstancePostProcessor
+ * @see ParameterResolver
  */
 @FunctionalInterface
 @API(status = EXPERIMENTAL, since = "5.3")

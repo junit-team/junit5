@@ -39,6 +39,8 @@ import org.apiguardian.api.API;
  * @see #supportsParameter(ParameterContext, ExtensionContext)
  * @see #resolveParameter(ParameterContext, ExtensionContext)
  * @see ParameterContext
+ * @see TestInstanceFactory
+ * @see TestInstancePostProcessor
  */
 @API(status = STABLE, since = "5.0")
 public interface ParameterResolver extends Extension {
