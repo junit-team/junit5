@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -96,13 +96,13 @@ var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#fields.inherited.from.class.org.junit.platform.engine.support.descriptor.AbstractTestDescriptor">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -208,6 +208,19 @@ extends <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestD
 <!--   -->
 </a>
 <h3>Field Summary</h3>
+<table class="memberSummary">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Field</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected <a href="../../../../../org/junit/jupiter/api/TestInstance.Lifecycle.html" title="enum in org.junit.jupiter.api">TestInstance.Lifecycle</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#lifecycle">lifecycle</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+</table>
 <ul class="blockList">
 <li class="blockList"><a id="fields.inherited.from.class.org.junit.platform.engine.support.descriptor.AbstractTestDescriptor">
 <!--   -->
@@ -234,15 +247,17 @@ extends <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestD
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&nbsp;</code></td>
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#%3Cinit%3E(org.junit.platform.engine.UniqueId,java.lang.Class)">ClassTestDescriptor</a></span>&#8203;(<a href="../../../../../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId,
-                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;testClass)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#%3Cinit%3E(org.junit.platform.engine.UniqueId,java.lang.Class,org.junit.platform.engine.ConfigurationParameters)">ClassTestDescriptor</a></span>&#8203;(<a href="../../../../../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId,
+                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;testClass,
+                   <a href="../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;configurationParameters)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected </code></td>
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#%3Cinit%3E(org.junit.platform.engine.UniqueId,java.util.function.Function,java.lang.Class)">ClassTestDescriptor</a></span>&#8203;(<a href="../../../../../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#%3Cinit%3E(org.junit.platform.engine.UniqueId,java.util.function.Function,java.lang.Class,org.junit.platform.engine.ConfigurationParameters)">ClassTestDescriptor</a></span>&#8203;(<a href="../../../../../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId,
                    <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;,<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;defaultDisplayNameGenerator,
-                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;testClass)</code></th>
+                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;testClass,
+                   <a href="../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;configurationParameters)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -278,6 +293,11 @@ extends <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestD
 </td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#getDefaultChildExecutionMode()">getDefaultChildExecutionMode</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">ExclusiveResource</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#getExclusiveResources()">getExclusiveResources</a></span>()</code></th>
 <td class="colLast">
@@ -285,15 +305,12 @@ extends <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestD
  required to execute this node.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code><a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#getExecutionMode()">getExecutionMode</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Get the preferred of <a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">execution mode</a> for
- parallel execution of this node.</div>
-</td>
-</tr>
 <tr id="i4" class="altColor">
+<td class="colFirst"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#getExplicitExecutionMode()">getExplicitExecutionMode</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#getLegacyReportingName()">getLegacyReportingName</a></span>()</code></th>
 <td class="colLast">
@@ -302,40 +319,40 @@ extends <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestD
  on the Ant-based XML reporting format for JUnit 4.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../../../org/junit/platform/engine/TestTag.html" title="class in org.junit.platform.engine">TestTag</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#getTags()">getTags</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the set of <a href="../../../../../org/junit/platform/engine/TestTag.html" title="class in org.junit.platform.engine">tags</a> associated with this descriptor.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#getTestClass()">getTestClass</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="../../../../../org/junit/platform/engine/TestDescriptor.Type.html" title="enum in org.junit.platform.engine">TestDescriptor.Type</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#getType()">getType</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Determine the <a href="../../../../../org/junit/platform/engine/TestDescriptor.Type.html" title="enum in org.junit.platform.engine"><code>TestDescriptor.Type</code></a> of this descriptor.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#instantiateTestClass(java.util.Optional,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;outerInstance,
                     <a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
                     <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="../../../../../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;parentExecutionContext,
                     <a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
                     <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">prepare</a></span>&#8203;(<a href="../../../../../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">
@@ -355,7 +372,7 @@ extends <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestD
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;org.junit.jupiter.engine.descriptor.<a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">JupiterTestDescriptor</a></h3>
-<code><a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#cleanUp(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">cleanUp</a>, <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#determineDisplayName(E,java.util.function.Function)">determineDisplayName</a>, <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#executeAndMaskThrowable(org.junit.jupiter.api.function.Executable)">executeAndMaskThrowable</a>, <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#getExclusiveResources(java.lang.reflect.AnnotatedElement)">getExclusiveResources</a>, <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#getExecutionMode(java.lang.reflect.AnnotatedElement)">getExecutionMode</a>, <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#getTags(java.lang.reflect.AnnotatedElement)">getTags</a>, <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#shouldBeSkipped(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">shouldBeSkipped</a></code></li>
+<code><a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#cleanUp(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">cleanUp</a>, <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#determineDisplayName(E,java.util.function.Function)">determineDisplayName</a>, <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#executeAndMaskThrowable(org.junit.jupiter.api.function.Executable)">executeAndMaskThrowable</a>, <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#getExclusiveResourcesFromAnnotation(java.lang.reflect.AnnotatedElement)">getExclusiveResourcesFromAnnotation</a>, <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#getExecutionMode()">getExecutionMode</a>, <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#getExecutionModeFromAnnotation(java.lang.reflect.AnnotatedElement)">getExecutionModeFromAnnotation</a>, <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#getTags(java.lang.reflect.AnnotatedElement)">getTags</a>, <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#shouldBeSkipped(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">shouldBeSkipped</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.org.junit.platform.engine.support.hierarchical.Node">
@@ -387,6 +404,25 @@ extends <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestD
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="field.detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a id="lifecycle">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>lifecycle</h4>
+<pre>protected final&nbsp;<a href="../../../../../org/junit/jupiter/api/TestInstance.Lifecycle.html" title="enum in org.junit.jupiter.api">TestInstance.Lifecycle</a> lifecycle</pre>
+</li>
+</ul>
+</li>
+</ul>
+</section>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <section role="region">
 <ul class="blockList">
@@ -394,17 +430,18 @@ extends <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestD
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(org.junit.platform.engine.UniqueId,java.lang.Class)">
+<a id="&lt;init&gt;(org.junit.platform.engine.UniqueId,java.lang.Class,org.junit.platform.engine.ConfigurationParameters)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>ClassTestDescriptor</h4>
 <pre>public&nbsp;ClassTestDescriptor&#8203;(<a href="../../../../../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId,
-                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;testClass)</pre>
+                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;testClass,
+                           <a href="../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;configurationParameters)</pre>
 </li>
 </ul>
-<a id="&lt;init&gt;(org.junit.platform.engine.UniqueId,java.util.function.Function,java.lang.Class)">
+<a id="&lt;init&gt;(org.junit.platform.engine.UniqueId,java.util.function.Function,java.lang.Class,org.junit.platform.engine.ConfigurationParameters)">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -412,7 +449,8 @@ extends <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestD
 <h4>ClassTestDescriptor</h4>
 <pre>protected&nbsp;ClassTestDescriptor&#8203;(<a href="../../../../../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId,
                               <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;,<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;defaultDisplayNameGenerator,
-                              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;testClass)</pre>
+                              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;testClass,
+                              <a href="../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;configurationParameters)</pre>
 </li>
 </ul>
 </li>
@@ -493,23 +531,29 @@ extends <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestD
 </dl>
 </li>
 </ul>
-<a id="getExecutionMode()">
+<a id="getExplicitExecutionMode()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getExecutionMode</h4>
-<pre>public&nbsp;<a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a>&nbsp;getExecutionMode()</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.html#getExecutionMode()">Node</a></code></span></div>
-<div class="block">Get the preferred of <a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">execution mode</a> for
- parallel execution of this node.
-
- <p>The default implementation returns <a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html#CONCURRENT"><code>Node.ExecutionMode.CONCURRENT</code></a>.</div>
+<h4>getExplicitExecutionMode</h4>
+<pre>protected&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a>&gt;&nbsp;getExplicitExecutionMode()</pre>
 <dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the preferred execution mode of this node; never <code>null</code></dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical"><code>Node.ExecutionMode</code></a></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#getExplicitExecutionMode()">getExplicitExecutionMode</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">JupiterTestDescriptor</a></code></dd>
+</dl>
+</li>
+</ul>
+<a id="getDefaultChildExecutionMode()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getDefaultChildExecutionMode</h4>
+<pre>protected&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a>&gt;&nbsp;getDefaultChildExecutionMode()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#getDefaultChildExecutionMode()">getDefaultChildExecutionMode</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">JupiterTestDescriptor</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -684,13 +728,13 @@ extends <a href="../../../../../org/junit/jupiter/engine/descriptor/JupiterTestD
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#fields.inherited.from.class.org.junit.platform.engine.support.descriptor.AbstractTestDescriptor">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
