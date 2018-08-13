@@ -14,6 +14,8 @@ afterEvaluate {
 		options.encoding = 'UTF-8'
 		options.compilerArgs += '-parameters'
 		options.compilerArgs += ['--release', project.ext.javaVersion.majorVersion]
+		// https://discuss.gradle.org/t/getting-more-information-on-gradle-compilejava-annotation-processor-warning/28076
+		options.annotationProcessorPath = configurations.annotationProcessor
 	}
 }
 
@@ -24,6 +26,8 @@ dependencies {
 	implementation('commons-io:commons-io:2.6') {
 		because 'moving/deleting directory trees'
 	}
+	testCompile 'com.paypal.digraph:digraph-parser:1.0'
+	testCompile 'org.jgrapht:jgrapht-core:1.2.0'
 }
 
 test {
