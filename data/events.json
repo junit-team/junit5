@@ -470,6 +470,16 @@
     ]
   },
   {
+    "title": "Spock vs JUnit 5 - Clash of the Titans",
+    "event": "JDD",
+    "date": "2018-10-08",
+    "location": "Cracow, Poland",
+    "link": "https://jdd.org.pl/lecture.html#id=47734",
+    "speakers": [
+      "szpak"
+    ]
+  },
+  {
     "title": "JUnit 5: More than just a Testing Framework for Java",
     "event": "WJAX",
     "date": "2018-11-07",
