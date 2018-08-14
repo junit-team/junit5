@@ -52,7 +52,7 @@ import org.junit.platform.commons.annotation.Testable;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = MAINTAINED, since = "5.0")
+@API(status = MAINTAINED, since = "5.3")
 @Testable
 public @interface TestFactory {
 }

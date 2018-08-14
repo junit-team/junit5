@@ -46,7 +46,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @see DynamicContainer
  * @see Executable
  */
-@API(status = MAINTAINED, since = "5.0")
+@API(status = MAINTAINED, since = "5.3")
 public class DynamicTest extends DynamicNode {
 
 	/**

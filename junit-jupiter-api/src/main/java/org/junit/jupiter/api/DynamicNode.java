@@ -27,7 +27,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * @see DynamicTest
  * @see DynamicContainer
  */
-@API(status = MAINTAINED, since = "5.0")
+@API(status = MAINTAINED, since = "5.3")
 public abstract class DynamicNode {
 
 	private final String displayName;
