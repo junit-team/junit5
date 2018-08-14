@@ -48,14 +48,9 @@ include::{experimentalApisTableFile}[]
 [[api-evolution-deprecated-apis]]
 === Deprecated APIs
 
-The JUnit Platform Surefire Provider <<running-tests-build-maven,`junit-platform-surefire-provider`>>
-is deprecated in favor of the native support for the JUnit Platform provided by
-http://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html[Maven Surefire 2.22.0]
-and later versions.
-
 The following table lists which APIs are currently designated as _deprecated_ via
-`@API(status = DEPRECATED)`. You should try to avoid using deprecated APIs because
-typically it will be removed in next minor release.
+`@API(status = DEPRECATED)`. You should avoid using deprecated APIs whenever possible,
+since such APIs will likely be removed in an upcoming release.
 
 include::{deprecatedApisTableFile}[]
 
