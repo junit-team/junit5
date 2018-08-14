@@ -150,9 +150,9 @@ public interface <span class="typeNameLabel">Extension</span></pre>
  registered via <code>@ExtendWith</code> the default constructor is not required
  to be <code>public</code>. When registered via the <code>ServiceLoader</code> the
  default constructor must be <code>public</code>. When registered via
- <code>@RegisterExtension</code> the extension's constructors must be <code>public</code>
- unless the extension provides <code>static</code> factory methods or a builder
- API as an alternative to public constructors.</div>
+ <code>@RegisterExtension</code> the extension's constructors typically must be
+ <code>public</code> unless the extension provides <code>static</code> factory methods
+ or a builder API as an alternative to constructors.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.0</dd>
