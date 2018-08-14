@@ -28,7 +28,6 @@ shadowJar {
 	}
 	classifier = null
 	configurations = [project.configurations.shadowed]
-	exclude 'META-INF/**'
 	relocate 'picocli', 'org.junit.platform.console.shadow.picocli'
 	from(projectDir) {
 		include 'LICENSE-jopt-simple.md'

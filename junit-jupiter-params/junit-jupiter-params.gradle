@@ -44,7 +44,7 @@ shadowJar {
 	}
 	classifier = null
 	configurations = [project.configurations.shadowed]
-	exclude 'META-INF/**'
+	exclude 'META-INF/maven/**'
 	relocate 'com.univocity', 'org.junit.jupiter.params.shadow.com.univocity'
 	from(projectDir) {
 		include 'LICENSE-univocity-parsers.md'
