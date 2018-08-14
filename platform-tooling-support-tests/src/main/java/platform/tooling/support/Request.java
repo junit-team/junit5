@@ -34,7 +34,7 @@ public class Request {
 
 	private static final Path projects = Paths.get("projects");
 	private static final Path toolPath = Paths.get("build", "test-tools");
-	private static final Path workPath = Paths.get("build", "test-workspace");
+	public static final Path WORKSPACE = Paths.get("build", "test-workspace");
 
 	public static Builder builder() {
 		return new Builder();
@@ -81,10 +81,10 @@ public class Request {
 			}
 
 			Files.createDirectories(toolPath);
-			Files.createDirectories(workPath);
+			Files.createDirectories(WORKSPACE);
 
 			// prepare workspace
-			var workspace = workPath.resolve(getWorkspace());
+			var workspace = WORKSPACE.resolve(getWorkspace());
 			FileUtils.deleteQuietly(workspace.toFile());
 			var project = projects.resolve(getProject());
 			if (Files.isDirectory(project)) {

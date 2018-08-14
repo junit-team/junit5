@@ -43,5 +43,4 @@ test {
 			dependsOn project(":${name}").publishToMavenLocal
 		}
 	}
-
 }
