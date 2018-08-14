@@ -11,8 +11,9 @@
 package org.junit.api.tools;
 
 import java.io.PrintWriter;
-import java.lang.reflect.Modifier;
 import java.nio.CharBuffer;
+
+import org.apiguardian.api.API;
 
 /**
  * @since 1.0
@@ -41,8 +42,13 @@ class MarkdownApiReportWriter extends AbstractApiReportWriter {
 	}
 
 	@Override
+	protected String italic(String element) {
+		return "_" + element + "_";
+	}
+
+	@Override
 	protected void printDeclarationTableHeader(PrintWriter out) {
-		out.printf(MARKDOWN_FORMAT, "Package Name", "Class Name", "Type", "Modifiers");
+		out.printf(MARKDOWN_FORMAT, "Package Name", "Type Name", "Since");
 		out.printf(MARKDOWN_FORMAT, dashes(52), dashes(42), dashes(12), dashes(27));
 	}
 
@@ -54,9 +60,8 @@ class MarkdownApiReportWriter extends AbstractApiReportWriter {
 	protected void printDeclarationTableRow(Class<?> type, PrintWriter out) {
 		out.printf(MARKDOWN_FORMAT, //
 			code(type.getPackage().getName()), //
-			code(type.getSimpleName()), //
-			code(getKind(type)), //
-			code(Modifier.toString(type.getModifiers())) //
+			code(type.getSimpleName()) + " " + italic("(" + getKind(type) + ")"), //
+			code(type.getAnnotation(API.class).since()) //
 		);
 	}
 

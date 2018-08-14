@@ -12,6 +12,8 @@ package org.junit.api.tools;
 
 import java.io.PrintWriter;
 
+import org.apiguardian.api.API;
+
 /**
  * @since 1.0
  */
@@ -39,9 +41,14 @@ class AsciidocApiReportWriter extends AbstractApiReportWriter {
 	}
 
 	@Override
+	protected String italic(String element) {
+		return "_" + element + "_";
+	}
+
+	@Override
 	protected void printDeclarationTableHeader(PrintWriter out) {
 		out.println("|===");
-		out.printf(ASCIIDOC_FORMAT, "Package Name", "Class Name", "Type");
+		out.printf(ASCIIDOC_FORMAT, "Package Name", "Type Name", "Since");
 		out.println();
 	}
 
@@ -49,8 +56,8 @@ class AsciidocApiReportWriter extends AbstractApiReportWriter {
 	protected void printDeclarationTableRow(Class<?> type, PrintWriter out) {
 		out.printf(ASCIIDOC_FORMAT, //
 			code(type.getPackage().getName()), //
-			code(type.getSimpleName()), //
-			code(getKind(type)) //
+			code(type.getSimpleName()) + " " + italic("(" + getKind(type) + ")"), //
+			code(type.getAnnotation(API.class).since()) //
 		);
 	}
 
