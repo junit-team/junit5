@@ -5602,13 +5602,14 @@ instances.</p>
 framework or invoking a static factory method to create the test class instance.</p>
 </div>
 <div class="paragraph">
-<p>If no <code>TestInstanceFactory</code> is registered, the framework will simply invoke the default
-constructor for the test class to instantiate it.</p>
+<p>If no <code>TestInstanceFactory</code> is registered, the framework will simply invoke the <em>sole</em>
+constructor for the test class to instantiate it, potentially resolving constructor
+arguments via registered <code>ParameterResolver</code> extensions.</p>
 </div>
 <div class="paragraph">
-<p>Extensions that implement <code>TestInstanceFactory</code> can be registered on top-level test
-classes as well as on <code>@Nested</code> test classes. A factory registered on a <code>@Nested</code> test
-class will override any factories registered on enclosing classes.</p>
+<p>Extensions that implement <code>TestInstanceFactory</code> can be registered on test interfaces,
+top-level test classes, or <code>@Nested</code> test classes. A factory registered on a <code>@Nested</code>
+test class will override any factories registered on enclosing classes.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
