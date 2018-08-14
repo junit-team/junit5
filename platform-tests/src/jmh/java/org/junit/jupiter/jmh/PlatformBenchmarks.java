@@ -12,14 +12,15 @@ package org.junit.jupiter.jmh;
 
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.TestEngine;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherConfig;
-import org.junit.platform.runner.BenchmarksJUnitPlatform;
 import org.junit.runner.JUnitCore;
-import org.junit.runner.notification.RunNotifier;
 import org.junit.vintage.engine.VintageTestEngine;
 import org.openjdk.jmh.annotations.Benchmark;
 
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherConfig.builder;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.LauncherFactory.create;
 
 /**
@@ -40,33 +41,32 @@ public class PlatformBenchmarks {
 
 	@Benchmark
 	public void junitJupiter_platform_vintage_noTest() {
-		runWithJUnitJupiter(NoTest.class, true);
+		runWithJUnitJupiter(NoTest.class, new VintageTestEngine());
 	}
 
 	@Benchmark
 	public void junitJupiter_platform_noTest() {
-		runWithJUnitJupiter(NoTest.class, false);
+		runWithJUnitJupiter(NoTest.class, new JupiterTestEngine());
 	}
 
 	@Benchmark
 	public void junitJupiter_platform_vintage_emptyTest() {
-		runWithJUnitJupiter(JUnitJupiterEmptyTest.class, true);
+		runWithJUnitJupiter(JUnitJupiterEmptyTest.class, new VintageTestEngine());
 	}
 
 	@Benchmark
 	public void junitJupiter_platform_emptyTest() {
-		runWithJUnitJupiter(JUnitJupiterEmptyTest.class, false);
+		runWithJUnitJupiter(JUnitJupiterEmptyTest.class, new JupiterTestEngine());
 	}
 
 	private void runWithJUnit4(Class<?> testClass) {
 		new JUnitCore().run(testClass);
 	}
 
-	private void runWithJUnitJupiter(Class<?> testClass, boolean vintage) {
-		TestEngine testEngine = vintage ? new VintageTestEngine() : new JupiterTestEngine();
+	private void runWithJUnitJupiter(Class<?> testClass, TestEngine testEngine) {
+		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
 		LauncherConfig config = builder().enableTestEngineAutoRegistration(false).addTestEngines(testEngine).build();
-		RunNotifier notifier = new RunNotifier();
-		new BenchmarksJUnitPlatform(testClass, create(config)).run(notifier);
+		create(config).execute(request);
 	}
 
 	public static class NoTest {
