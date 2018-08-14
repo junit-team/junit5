@@ -43,7 +43,7 @@ class HtmlApiReportWriter extends AbstractApiReportWriter {
 
 	@Override
 	protected String italic(String element) {
-		return "<i>" + element + "</i>";
+		return "<em>" + element + "</em>";
 	}
 
 	@Override
