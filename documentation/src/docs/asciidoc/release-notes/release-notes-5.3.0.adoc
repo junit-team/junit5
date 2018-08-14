@@ -1,0 +1,60 @@
+[[release-notes-5.3.0]]
+== 5.3.0
+
+*Date of Release:* September 3, 2018
+
+*Scope:* ❓
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/28?closed=1+[5.3] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.3.0-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓
+
+
+[[release-notes-5.3.0-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* The dynamic test API is promoted from experimental to maintained status. This affects
+the `TestFactory` annotation as well as the types: `DynamicTest`, `DynamicContainer`,
+and `DynamicNode` in package `org.junit.jupiter.api`.
+
+
+[[release-notes-5.3.0-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓
