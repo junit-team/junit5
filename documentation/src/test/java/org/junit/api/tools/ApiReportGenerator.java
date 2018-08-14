@@ -52,8 +52,12 @@ class ApiReportGenerator {
 		// Print report for all Usage enum constants
 		// reportWriter.printDeclarationInfo(writer, EnumSet.allOf(Usage.class));
 
-		// Print report only for Experimental Usage constant
-		reportWriter.printDeclarationInfo(writer, EnumSet.of(Status.EXPERIMENTAL));
+		// Print report only for a specific Status constant, defaults to EXPERIMENTAL
+		var status = Status.EXPERIMENTAL;
+		if (args.length == 1) {
+			status = Status.valueOf(args[0]);
+		}
+		reportWriter.printDeclarationInfo(writer, EnumSet.of(status));
 	}
 
 	// -------------------------------------------------------------------------
@@ -82,7 +86,7 @@ class ApiReportGenerator {
 		List<Class<?>> types = classesWithApiAnnotation.loadClasses();
 		// only retain directly annotated types
 		types.removeIf(c -> !c.isAnnotationPresent(API.class));
-		types.sort(Comparator.comparing(type -> type.getName()));
+		types.sort(Comparator.comparing(Class::getName));
 
 		logger.debug(() -> {
 			StringBuilder builder = new StringBuilder("Listing of all " + types.size() + " annotated types:");
