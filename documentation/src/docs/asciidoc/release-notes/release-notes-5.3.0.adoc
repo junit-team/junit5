@@ -31,7 +31,10 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The `junit-jupiter-params` JAR file was missing the required Kotlin metadata for the
+  `getAs<Class>(index)` Kotlin extension method. The underlying packaging issue has now
+  been solved and the extension method has been renamed to `get<Class>(index)` as
+  originally intended in 5.3.0-M1.
 
 ==== Deprecations and Breaking Changes
 

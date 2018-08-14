@@ -16,7 +16,7 @@ import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor
-import org.junit.jupiter.params.aggregator.getAs
+import org.junit.jupiter.params.aggregator.get
 import org.junit.jupiter.params.provider.ValueSource
 
 class ExtensionFunctionsTests {
@@ -33,7 +33,7 @@ class ExtensionFunctionsTests {
     @ParameterizedTest
     @ValueSource(ints = [1])
     fun accessor(accessor: ArgumentsAccessor) {
-        val value: Int = accessor.getAs<Int>(0)
+        val value: Int = accessor.get<Int>(0)
         assertEquals(1, value)
     }
 }
