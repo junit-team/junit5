@@ -617,7 +617,8 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#api-evolution-version-and-status">8.1. API Version and Status</a></li>
 <li><a href="#api-evolution-experimental-apis">8.2. Experimental APIs</a></li>
-<li><a href="#api-evolution-tooling">8.3. @API Tooling Support</a></li>
+<li><a href="#api-evolution-deprecated-apis">8.3. Deprecated APIs</a></li>
+<li><a href="#api-evolution-tooling">8.4. @API Tooling Support</a></li>
 </ul>
 </li>
 <li><a href="#contributors">9. Contributors</a></li>
@@ -6536,8 +6537,8 @@ value of lower stability.</p>
 <div class="sect2">
 <h3 id="api-evolution-experimental-apis"><a class="anchor" href="#api-evolution-experimental-apis"></a>8.2. Experimental APIs</h3>
 <div class="paragraph">
-<p>The following table lists which APIs are currently designated as <em>experimental</em> (via
-<code>@API(status = EXPERIMENTAL)</code>). Caution should be taken when relying on such APIs.</p>
+<p>The following table lists which APIs are currently designated as <em>experimental</em> via
+<code>@API(status = EXPERIMENTAL)</code>. Caution should be taken when relying on such APIs.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -6812,7 +6813,42 @@ value of lower stability.</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="api-evolution-tooling"><a class="anchor" href="#api-evolution-tooling"></a>8.3. @API Tooling Support</h3>
+<h3 id="api-evolution-deprecated-apis"><a class="anchor" href="#api-evolution-deprecated-apis"></a>8.3. Deprecated APIs</h3>
+<div class="paragraph">
+<p>The JUnit Platform Surefire Provider <a href="#running-tests-build-maven"><code>junit-platform-surefire-provider</code></a>
+is deprecated in favor of the native support for the JUnit Platform provided by
+<a href="http://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html">Maven Surefire 2.22.0</a>
+and later versions.</p>
+</div>
+<div class="paragraph">
+<p>The following table lists which APIs are currently designated as <em>deprecated</em> via
+<code>@API(status = DEPRECATED)</code>. You should try to avoid using deprecated APIs because
+typically it will be removed in next minor release.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Package Name</th>
+<th class="tableblock halign-left valign-top">Class Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.hierarchical</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SingleTestExecutor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>class</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="api-evolution-tooling"><a class="anchor" href="#api-evolution-tooling"></a>8.4. @API Tooling Support</h3>
 <div class="paragraph">
 <p>The <a href="https://github.com/apiguardian-team/apiguardian">@API Guardian</a> project plans to provide tooling support for publishers and consumers
 of APIs annotated with <a href="https://apiguardian-team.github.io/apiguardian/docs/current/api/">@API</a>. For example, the tooling support will likely provide a
@@ -6842,7 +6878,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-08-13 15:13:41 EDT
+Last updated 2018-08-13 14:51:48 EDT
 </div>
 </div>
 </body>
