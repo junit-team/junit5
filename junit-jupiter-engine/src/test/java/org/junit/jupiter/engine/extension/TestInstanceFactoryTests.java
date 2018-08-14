@@ -302,6 +302,21 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void instanceFactoryRegisteredViaTestInterface() {
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(FactoryFromInterfaceTestCase.class);
+
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+
+		// @formatter:off
+		assertThat(callSequence).containsExactly(
+			"FooInstanceFactory instantiated: FactoryFromInterfaceTestCase",
+				"test"
+		);
+		// @formatter:on
+	}
+
+	@Test
 	void instanceFactoryRegisteredAsLambdaExpression() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(LambdaFactoryTestCase.class);
 
@@ -440,6 +455,18 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			void testInner() {
 				callSequence.add("testInner");
 			}
+		}
+	}
+
+	@ExtendWith(FooInstanceFactory.class)
+	interface TestInterface {
+	}
+
+	static class FactoryFromInterfaceTestCase implements TestInterface {
+
+		@Test
+		void test() {
+			callSequence.add("test");
 		}
 	}
 

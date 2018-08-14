@@ -269,12 +269,13 @@ instances.
 Common use cases include acquiring the test instance from a dependency injection
 framework or invoking a static factory method to create the test class instance.
 
-If no `TestInstanceFactory` is registered, the framework will simply invoke the default
-constructor for the test class to instantiate it.
+If no `TestInstanceFactory` is registered, the framework will simply invoke the _sole_
+constructor for the test class to instantiate it, potentially resolving constructor
+arguments via registered `ParameterResolver` extensions.
 
-Extensions that implement `TestInstanceFactory` can be registered on top-level test
-classes as well as on `@Nested` test classes. A factory registered on a `@Nested` test
-class will override any factories registered on enclosing classes.
+Extensions that implement `TestInstanceFactory` can be registered on test interfaces,
+top-level test classes, or `@Nested` test classes. A factory registered on a `@Nested`
+test class will override any factories registered on enclosing classes.
 
 [WARNING]
 ====
