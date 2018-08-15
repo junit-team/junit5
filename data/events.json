@@ -460,6 +460,16 @@
     ]
   },
   {
+    "title": "Junit5: the next gen of testing, don't stay behind",
+    "event": "Droidcon New York",
+    "date": "2018-08-28",
+    "location": "New York",
+    "link": "https://www.nyc.droidcon.com/sessions",
+    "speakers": [
+      "dpreussler"
+    ]
+  },
+  {
     "title": "JUnit 5 the Next Step in Automated Testing",
     "event": "SpringOne Platform",
     "date": "2018-09-25",
