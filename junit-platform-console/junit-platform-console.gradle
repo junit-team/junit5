@@ -30,7 +30,7 @@ shadowJar {
 	configurations = [project.configurations.shadowed]
 	relocate 'picocli', 'org.junit.platform.console.shadow.picocli'
 	from(projectDir) {
-		include 'LICENSE-jopt-simple.md'
+		include 'LICENSE-picocli.md'
 		into 'META-INF'
 	}
 }
