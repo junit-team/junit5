@@ -4289,90 +4289,36 @@ additional dependency to the runtime classpath.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Starting with <a href="https://issues.apache.org/jira/browse/SUREFIRE-1330">version 2.22.0</a>,
-Maven Surefire provides
-<a href="http://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html">native support</a>
-for executing tests on the JUnit Platform. The <code>pom.xml</code> file in the
-<code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project demonstrates how to use the native support and
-can serve as a starting point for configuring your Maven build.
+The custom <code>junit-platform-surefire-provider</code>, which was originally developed by the JUnit team, has been deprecated and is scheduled to be removed in JUnit Platform 1.4. Please use the Maven Surefire&#8217;s native support instead.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>The JUnit team has developed a basic provider for Maven Surefire that lets you run JUnit
-4 and JUnit Jupiter tests via <code>mvn test</code> on versions of Maven Surefire prior to 2.22.0.
-Due to the release of Surefire 2.22.0, the <code>junit-platform-surefire-provider</code> from the
-JUnit team has been deprecated and will be discontinued in a subsequent release of the
-JUnit Platform.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Please use Maven Surefire 2.22.0 with the
-<code>junit-platform-surefire-provider</code>.
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">...
-<span class="tag">&lt;build&gt;</span>
-    <span class="tag">&lt;plugins&gt;</span>
-        ...
-        <span class="tag">&lt;plugin&gt;</span>
-            <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
-            <span class="tag">&lt;dependencies&gt;</span>
-                <span class="tag">&lt;dependency&gt;</span>
-                    <span class="tag">&lt;groupId&gt;</span>org.junit.platform<span class="tag">&lt;/groupId&gt;</span>
-                    <span class="tag">&lt;artifactId&gt;</span>junit-platform-surefire-provider<span class="tag">&lt;/artifactId&gt;</span>
-                    <span class="tag">&lt;version&gt;</span>1.3.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
-                <span class="tag">&lt;/dependency&gt;</span>
-            <span class="tag">&lt;/dependencies&gt;</span>
-        <span class="tag">&lt;/plugin&gt;</span>
-    <span class="tag">&lt;/plugins&gt;</span>
-<span class="tag">&lt;/build&gt;</span>
-...</code></pre>
-</div>
+<p>Starting with <a href="https://issues.apache.org/jira/browse/SUREFIRE-1330">version 2.22.0</a>,
+Maven Surefire provides
+<a href="http://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html">native support</a>
+for executing tests on the JUnit Platform. The <code>pom.xml</code> file in the
+<code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project demonstrates how to it and can serve as a
+starting point for configuring your Maven build.</p>
 </div>
 <div class="sect4">
 <h5 id="running-tests-build-maven-engines-configure"><a class="anchor" href="#running-tests-build-maven-engines-configure"></a>Configuring Test Engines</h5>
 <div class="paragraph">
-<p>In order to have Maven Surefire run any tests at all, a <code>TestEngine</code> implementation must
-be added to the runtime classpath.</p>
+<p>In order to have Maven Surefire run any tests at all, at least one <code>TestEngine</code>
+implementation must be added to the test classpath.</p>
 </div>
 <div class="paragraph">
 <p>To configure support for JUnit Jupiter based tests, configure a <code>test</code> dependency on the
-JUnit Jupiter API, and add the JUnit Jupiter <code>TestEngine</code> implementation to the
-dependencies of the <code>maven-surefire-plugin</code> similar to the following.</p>
+JUnit Jupiter API and the JUnit Jupiter <code>TestEngine</code> implementation.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">...
-<span class="tag">&lt;build&gt;</span>
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;build&gt;</span>
     <span class="tag">&lt;plugins&gt;</span>
-        ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
             <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
-            <span class="tag">&lt;dependencies&gt;</span>
-                <span class="tag">&lt;dependency&gt;</span>
-                    <span class="tag">&lt;groupId&gt;</span>org.junit.platform<span class="tag">&lt;/groupId&gt;</span>
-                    <span class="tag">&lt;artifactId&gt;</span>junit-platform-surefire-provider<span class="tag">&lt;/artifactId&gt;</span>
-                    <span class="tag">&lt;version&gt;</span>1.3.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
-                <span class="tag">&lt;/dependency&gt;</span>
-                <span class="tag">&lt;dependency&gt;</span>
-                    <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
-                    <span class="tag">&lt;artifactId&gt;</span>junit-jupiter-engine<span class="tag">&lt;/artifactId&gt;</span>
-                    <span class="tag">&lt;version&gt;</span>5.3.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
-                <span class="tag">&lt;/dependency&gt;</span>
-            <span class="tag">&lt;/dependencies&gt;</span>
         <span class="tag">&lt;/plugin&gt;</span>
     <span class="tag">&lt;/plugins&gt;</span>
 <span class="tag">&lt;/build&gt;</span>
@@ -4385,37 +4331,29 @@ dependencies of the <code>maven-surefire-plugin</code> similar to the following.
         <span class="tag">&lt;version&gt;</span>5.3.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
         <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
     <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>junit-jupiter-engine<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>5.3.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+        <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    ...
 <span class="tag">&lt;/dependencies&gt;</span>
 ...</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The JUnit Platform Surefire Provider can run JUnit 4 based tests as long as you configure
-a <code>test</code> dependency on JUnit 4 and add the JUnit Vintage <code>TestEngine</code> implementation to
-the dependencies of the <code>maven-surefire-plugin</code> similar to the following.</p>
+<p>Maven Surefire can run JUnit 4 based tests alongside Jupiter tests as long as you
+configure a <code>test</code> dependency on JUnit 4 and the JUnit Vintage <code>TestEngine</code> implementation similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml">...
 <span class="tag">&lt;build&gt;</span>
     <span class="tag">&lt;plugins&gt;</span>
-        ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
             <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
-            <span class="tag">&lt;dependencies&gt;</span>
-                <span class="tag">&lt;dependency&gt;</span>
-                    <span class="tag">&lt;groupId&gt;</span>org.junit.platform<span class="tag">&lt;/groupId&gt;</span>
-                    <span class="tag">&lt;artifactId&gt;</span>junit-platform-surefire-provider<span class="tag">&lt;/artifactId&gt;</span>
-                    <span class="tag">&lt;version&gt;</span>1.3.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
-                <span class="tag">&lt;/dependency&gt;</span>
-                ...
-                <span class="tag">&lt;dependency&gt;</span>
-                    <span class="tag">&lt;groupId&gt;</span>org.junit.vintage<span class="tag">&lt;/groupId&gt;</span>
-                    <span class="tag">&lt;artifactId&gt;</span>junit-vintage-engine<span class="tag">&lt;/artifactId&gt;</span>
-                    <span class="tag">&lt;version&gt;</span>5.3.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
-                <span class="tag">&lt;/dependency&gt;</span>
-            <span class="tag">&lt;/dependencies&gt;</span>
         <span class="tag">&lt;/plugin&gt;</span>
     <span class="tag">&lt;/plugins&gt;</span>
 <span class="tag">&lt;/build&gt;</span>
@@ -4428,20 +4366,16 @@ the dependencies of the <code>maven-surefire-plugin</code> similar to the follow
         <span class="tag">&lt;version&gt;</span>4.12<span class="tag">&lt;/version&gt;</span>
         <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
     <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;dependency&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.junit.vintage<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>junit-vintage-engine<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>5.3.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+        <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    ...
 <span class="tag">&lt;/dependencies&gt;</span>
 ...</code></pre>
 </div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="running-tests-build-maven-test-system-property"><a class="anchor" href="#running-tests-build-maven-test-system-property"></a>Running a Single Test Class</h5>
-<div class="paragraph">
-<p>The JUnit Platform Surefire Provider supports the <code>test</code> JVM system property supported by
-the Maven Surefire Plugin. For example, to run only test methods in the
-<code>org.example.MyTest</code> test class you can execute <code>mvn -Dtest=org.example.MyTest test</code> from
-the command line. For further details, consult the
-<a href="https://maven.apache.org/surefire/maven-surefire-plugin/examples/single-test.html">Maven Surefire Plugin</a>
-documentation.</p>
 </div>
 </div>
 <div class="sect4">
@@ -4480,7 +4414,6 @@ from excluding static member classes, you can override its exclude rules.</p>
 <pre class="CodeRay highlight"><code data-lang="xml">...
 <span class="tag">&lt;build&gt;</span>
     <span class="tag">&lt;plugins&gt;</span>
-        ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
             <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
@@ -4489,7 +4422,6 @@ from excluding static member classes, you can override its exclude rules.</p>
                     <span class="tag">&lt;exclude</span><span class="tag">/&gt;</span>
                 <span class="tag">&lt;/excludes&gt;</span>
             <span class="tag">&lt;/configuration&gt;</span>
-            ...
         <span class="tag">&lt;/plugin&gt;</span>
     <span class="tag">&lt;/plugins&gt;</span>
 <span class="tag">&lt;/build&gt;</span>
@@ -4511,10 +4443,10 @@ the following configuration properties.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>to include <em>tags</em> or <em>tag expressions</em>, use either <code>groups</code> or <code>includeTags</code>.</p>
+<p>to include <em>tags</em> or <em>tag expressions</em>, use <code>groups</code>.</p>
 </li>
 <li>
-<p>to exclude <em>tags</em> or <em>tag expressions</em>, use either <code>excludedGroups</code> or <code>excludeTags</code>.</p>
+<p>to exclude <em>tags</em> or <em>tag expressions</em>, use <code>excludedGroups</code>.</p>
 </li>
 </ul>
 </div>
@@ -4523,19 +4455,13 @@ the following configuration properties.</p>
 <pre class="CodeRay highlight"><code data-lang="xml">...
 <span class="tag">&lt;build&gt;</span>
     <span class="tag">&lt;plugins&gt;</span>
-        ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
             <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;configuration&gt;</span>
-                <span class="tag">&lt;properties&gt;</span>
-                    <span class="tag">&lt;includeTags&gt;</span>acceptance | !feature-a<span class="tag">&lt;/includeTags&gt;</span>
-                    <span class="tag">&lt;excludeTags&gt;</span>integration, regression<span class="tag">&lt;/excludeTags&gt;</span>
-                <span class="tag">&lt;/properties&gt;</span>
+                <span class="tag">&lt;groups&gt;</span>acceptance | !feature-a<span class="tag">&lt;/groups&gt;</span>
+                <span class="tag">&lt;excludedGroups&gt;</span>integration, regression<span class="tag">&lt;/excludedGroups&gt;</span>
             <span class="tag">&lt;/configuration&gt;</span>
-            <span class="tag">&lt;dependencies&gt;</span>
-                ...
-            <span class="tag">&lt;/dependencies&gt;</span>
         <span class="tag">&lt;/plugin&gt;</span>
     <span class="tag">&lt;/plugins&gt;</span>
 <span class="tag">&lt;/build&gt;</span>
@@ -4556,7 +4482,6 @@ below) or via the <code>junit-platform.properties</code> file.</p>
 <pre class="CodeRay highlight"><code data-lang="xml">...
 <span class="tag">&lt;build&gt;</span>
     <span class="tag">&lt;plugins&gt;</span>
-        ...
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
             <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
@@ -4569,9 +4494,6 @@ below) or via the <code>junit-platform.properties</code> file.</p>
                     <span class="tag">&lt;/configurationParameters&gt;</span>
                 <span class="tag">&lt;/properties&gt;</span>
             <span class="tag">&lt;/configuration&gt;</span>
-            <span class="tag">&lt;dependencies&gt;</span>
-                ...
-            <span class="tag">&lt;/dependencies&gt;</span>
         <span class="tag">&lt;/plugin&gt;</span>
     <span class="tag">&lt;/plugins&gt;</span>
 <span class="tag">&lt;/build&gt;</span>
@@ -6858,7 +6780,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-08-15 11:24:13 EDT
+Last updated 2018-08-16 13:09:11 EDT
 </div>
 </div>
 </body>
