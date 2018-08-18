@@ -4289,17 +4289,19 @@ additional dependency to the runtime classpath.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The custom <code>junit-platform-surefire-provider</code>, which was originally developed by the JUnit team, has been deprecated and is scheduled to be removed in JUnit Platform 1.4. Please use the Maven Surefire&#8217;s native support instead.
+The custom <code>junit-platform-surefire-provider</code>, which was originally developed by
+the JUnit team, has been deprecated and is scheduled to be removed in JUnit Platform 1.4.
+Please use Maven Surefire&#8217;s native support instead.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Starting with <a href="https://issues.apache.org/jira/browse/SUREFIRE-1330">version 2.22.0</a>,
-Maven Surefire provides
+<p>Starting with <a href="https://issues.apache.org/jira/browse/SUREFIRE-1330">version 2.22.0</a>, Maven
+Surefire provides
 <a href="http://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html">native support</a>
 for executing tests on the JUnit Platform. The <code>pom.xml</code> file in the
-<code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project demonstrates how to it and can serve as a
+<code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project demonstrates how to use it and can serve as a
 starting point for configuring your Maven build.</p>
 </div>
 <div class="sect4">
@@ -4309,8 +4311,9 @@ starting point for configuring your Maven build.</p>
 implementation must be added to the test classpath.</p>
 </div>
 <div class="paragraph">
-<p>To configure support for JUnit Jupiter based tests, configure a <code>test</code> dependency on the
-JUnit Jupiter API and the JUnit Jupiter <code>TestEngine</code> implementation.</p>
+<p>To configure support for JUnit Jupiter based tests, configure <code>test</code> scoped dependencies
+on the JUnit Jupiter API and the JUnit Jupiter <code>TestEngine</code> implementation similar to the
+following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4344,7 +4347,8 @@ JUnit Jupiter API and the JUnit Jupiter <code>TestEngine</code> implementation.<
 </div>
 <div class="paragraph">
 <p>Maven Surefire can run JUnit 4 based tests alongside Jupiter tests as long as you
-configure a <code>test</code> dependency on JUnit 4 and the JUnit Vintage <code>TestEngine</code> implementation similar to the following.</p>
+configure <code>test</code> scoped dependencies on JUnit 4 and the JUnit Vintage <code>TestEngine</code>
+implementation similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4406,7 +4410,7 @@ the following patterns.</p>
 <div class="paragraph">
 <p>Note, however, that you can override this default behavior by configuring explicit
 <code>include</code> and <code>exclude</code> rules in your <code>pom.xml</code> file. For example, to keep Maven Surefire
-from excluding static member classes, you can override its exclude rules.</p>
+from excluding static member classes, you can override its exclude rules as follows.</p>
 </div>
 <div class="listingblock">
 <div class="title">Overriding exclude rules of Maven Surefire</div>
@@ -6780,7 +6784,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-08-16 13:09:11 EDT
+Last updated 2018-08-18 11:47:27 EDT
 </div>
 </div>
 </body>
