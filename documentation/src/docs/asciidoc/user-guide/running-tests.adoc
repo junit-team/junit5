@@ -208,13 +208,15 @@ additional dependency to the runtime classpath.
 [[running-tests-build-maven]]
 ==== Maven
 
-NOTE: The custom `junit-platform-surefire-provider`, which was originally developed by the JUnit team, has been deprecated and is scheduled to be removed in JUnit Platform 1.4. Please use the Maven Surefire's native support instead.
+NOTE: The custom `junit-platform-surefire-provider`, which was originally developed by
+the JUnit team, has been deprecated and is scheduled to be removed in JUnit Platform 1.4.
+Please use Maven Surefire's native support instead.
 
-Starting with https://issues.apache.org/jira/browse/SUREFIRE-1330[version 2.22.0],
-Maven Surefire provides
+Starting with https://issues.apache.org/jira/browse/SUREFIRE-1330[version 2.22.0], Maven
+Surefire provides
 http://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html[native support]
 for executing tests on the JUnit Platform. The `pom.xml` file in the
-`{junit5-jupiter-starter-maven}` project demonstrates how to it and can serve as a
+`{junit5-jupiter-starter-maven}` project demonstrates how to use it and can serve as a
 starting point for configuring your Maven build.
 
 [[running-tests-build-maven-engines-configure]]
@@ -223,8 +225,9 @@ starting point for configuring your Maven build.
 In order to have Maven Surefire run any tests at all, at least one `TestEngine`
 implementation must be added to the test classpath.
 
-To configure support for JUnit Jupiter based tests, configure a `test` dependency on the
-JUnit Jupiter API and the JUnit Jupiter `TestEngine` implementation.
+To configure support for JUnit Jupiter based tests, configure `test` scoped dependencies
+on the JUnit Jupiter API and the JUnit Jupiter `TestEngine` implementation similar to the
+following.
 
 [source,xml,indent=0]
 [subs=attributes+]
@@ -258,7 +261,8 @@ JUnit Jupiter API and the JUnit Jupiter `TestEngine` implementation.
 ----
 
 Maven Surefire can run JUnit 4 based tests alongside Jupiter tests as long as you
-configure a `test` dependency on JUnit 4 and the JUnit Vintage `TestEngine` implementation similar to the following.
+configure `test` scoped dependencies on JUnit 4 and the JUnit Vintage `TestEngine`
+implementation similar to the following.
 
 [source,xml,indent=0]
 [subs=attributes+]
@@ -307,7 +311,7 @@ Moreover, it will exclude all nested classes (including static member classes) b
 
 Note, however, that you can override this default behavior by configuring explicit
 `include` and `exclude` rules in your `pom.xml` file. For example, to keep Maven Surefire
-from excluding static member classes, you can override its exclude rules.
+from excluding static member classes, you can override its exclude rules as follows.
 
 [source,xml,indent=0]
 [subs=attributes+]
