@@ -43,4 +43,9 @@ test {
 			dependsOn project(":${name}").publishToMavenLocal
 		}
 	}
+
+	filter {
+		// Include only tests from this module
+		includeTestsMatching "platform.tooling.support.*"
+	}
 }
