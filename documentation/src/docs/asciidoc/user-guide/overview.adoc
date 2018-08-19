@@ -235,3 +235,6 @@ projects based on JUnit Jupiter and JUnit Vintage. You'll find the respective
 
 * For Gradle, check out the `{junit5-jupiter-starter-gradle}` project.
 * For Maven, check out the `{junit5-jupiter-starter-maven}` project.
+* For Kotlin, check out the `{junit5-jupiter-starter-gradle-kotlin}` project.
+* For Groovy, check out the `{junit5-jupiter-starter-gradle-groovy}` project.
+* For Ant, check out the `{junit5-jupiter-starter-ant}` project.
