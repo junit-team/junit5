@@ -26,8 +26,13 @@ dependencies {
 	implementation('commons-io:commons-io:2.6') {
 		because 'moving/deleting directory trees'
 	}
-	testCompile 'com.paypal.digraph:digraph-parser:1.0'
-	testCompile 'org.jgrapht:jgrapht-core:1.2.0'
+
+	testCompile('com.paypal.digraph:digraph-parser:1.0') {
+		because 'parsing jdeps generated .dot files'
+	}
+	testCompile('org.jgrapht:jgrapht-core:1.2.0') {
+		because 'building and analyzing graphs'
+	}
 }
 
 test {
