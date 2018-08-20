@@ -370,9 +370,7 @@ subprojects { subproj ->
 			licenseHeaderFile headerFile, '(package|import|open|module) '
 			importOrderFile importOrderConfigFile
 			eclipse().configFile javaFormatterConfigFile
-			if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
-				removeUnusedImports()
-			}
+			removeUnusedImports()
 
 			trimTrailingWhitespace()
 			endWithNewline()

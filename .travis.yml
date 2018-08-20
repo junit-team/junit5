@@ -30,6 +30,7 @@ matrix:
     - os: osx
       jdk: openjdk10
   allow_failures:
+    - jdk: openjdk11
     - jdk: openjdk-ea
 
 script:
