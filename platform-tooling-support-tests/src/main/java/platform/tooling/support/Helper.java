@@ -10,11 +10,14 @@
 
 package platform.tooling.support;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
+import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -77,4 +80,18 @@ public class Helper {
 		}
 	}
 
+	public static JarFile createJarFile(String module) {
+		var archive = module + '-' + version(module) + ".jar";
+		var path = Paths.get("..", module, "build", "libs", archive);
+		try {
+			return new JarFile(path.toFile());
+		}
+		catch (IOException e) {
+			throw new UncheckedIOException("Creating JarFile for '" + path + "' failed.", e);
+		}
+	}
+
+	public static List<JarFile> loadJarFiles() {
+		return loadModuleDirectoryNames().stream().map(Helper::createJarFile).collect(Collectors.toList());
+	}
 }

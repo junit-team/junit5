@@ -33,6 +33,12 @@ dependencies {
 	testCompile('org.jgrapht:jgrapht-core:1.2.0') {
 		because 'building and analyzing graphs'
 	}
+	testCompile('com.tngtech.archunit:archunit-junit5-api:0.9.0') {
+		because 'checking the architecture of JUnit 5'
+	}
+	testRuntimeOnly('com.tngtech.archunit:archunit-junit5-engine:0.9.0') {
+		because 'contains the ArchUnit TestEngine implementation'
+	}
 }
 
 test {
