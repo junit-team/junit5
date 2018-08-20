@@ -10,39 +10,71 @@
 
 package platform.tooling.support.tests;
 
+import static com.tngtech.archunit.base.DescribedPredicate.not;
+import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage;
+import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.name;
+import static com.tngtech.archunit.lang.conditions.ArchPredicates.are;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static platform.tooling.support.Helper.loadJarFiles;
 
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
-import com.tngtech.archunit.core.importer.ClassFileImporter;
+import com.tngtech.archunit.core.importer.Location;
+import com.tngtech.archunit.junit.AnalyzeClasses;
+import com.tngtech.archunit.junit.ArchTest;
+import com.tngtech.archunit.junit.LocationProvider;
+import com.tngtech.archunit.library.GeneralCodingRules;
 
-import org.junit.jupiter.api.Test;
-import platform.tooling.support.Helper;
-
+@AnalyzeClasses(locations = ArchUnitTests.AllJars.class)
 class ArchUnitTests {
 
-	@Test
-	void acyclicImportPackages() {
-		var packageNames = List.of("org.junit.platform", "org.junit.jupiter", "org.junit.vintage");
-		var classes = new ClassFileImporter().importPackages(packageNames);
-		// about 431 classes found in classpath of this project
-		assertTrue(classes.size() > 300, "expected more than 300 classes, got: " + classes.size());
-		acyclic(classes);
-	}
-
-	@Test
-	void acyclicImportJars() {
-		var jarFiles = Helper.loadJarFiles();
-		var classes = new ClassFileImporter().importJars(jarFiles);
+	@ArchTest
+	void allAreIn(JavaClasses classes) {
 		// about 928 classes found in all jars
 		assertTrue(classes.size() > 800, "expected more than 800 classes, got: " + classes.size());
-		acyclic(classes);
 	}
 
-	private static void acyclic(JavaClasses classes) {
+	@ArchTest
+	void freeOfCycles(JavaClasses classes) {
 		slices().matching("org.junit.(*)..").should().beFreeOfCycles().check(classes);
+	}
+
+	@ArchTest
+	void avoidJavaUtilLogging(JavaClasses classes) {
+		// LoggerFactory.java:80 -> sets field LoggerFactory$DelegatingLogger.julLogger
+		var subset = classes.that(are(not(name("org.junit.platform.commons.logging.LoggerFactory$DelegatingLogger"))));
+		GeneralCodingRules.NO_CLASSES_SHOULD_USE_JAVA_UTIL_LOGGING.check(subset);
+	}
+
+	@ArchTest
+	void avoidThrowingGenericExceptions(JavaClasses classes) {
+		// LoggerFactory.java:155 -> new Throwable()
+		var subset = classes.that(are(not(name("org.junit.platform.commons.logging.LoggerFactory$DelegatingLogger"))));
+		GeneralCodingRules.NO_CLASSES_SHOULD_THROW_GENERIC_EXCEPTIONS.check(subset);
+	}
+
+	@ArchTest
+	void avoidAccessingStandardStreams(JavaClasses classes) {
+		// ConsoleLauncher, StreamInterceptor, Picocli et al...
+		var subset = classes //
+				.that(are(not(name("org.junit.platform.console.ConsoleLauncher")))) //
+				.that(are(not(name("org.junit.platform.launcher.core.StreamInterceptor")))) //
+				.that(are(not(name("org.junit.platform.runner.JUnitPlatformRunnerListener")))) //
+				.that(are(not(resideInAPackage("org.junit.platform.console.shadow.picocli")))) //
+				.that(are(not(resideInAPackage("org.junit.platform.console.shadow.picocli.groovy"))));
+		GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS.check(subset);
+	}
+
+	static class AllJars implements LocationProvider {
+
+		@Override
+		public Set<Location> get(Class<?> testClass) {
+			return loadJarFiles().stream().map(Location::of).collect(Collectors.toSet());
+		}
+
 	}
 
 }
