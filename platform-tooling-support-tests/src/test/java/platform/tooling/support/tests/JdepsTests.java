@@ -17,11 +17,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
-import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 import com.paypal.digraph.parser.GraphEdge;
@@ -90,34 +88,38 @@ class JdepsTests {
 	}
 
 	private static void createDotFiles(String module) {
-		var archive = module + '-' + Helper.version(module) + ".jar";
-		var path = Paths.get("..", module, "build", "libs", archive);
+		var jar = Helper.createJarFile(module);
 
 		var builder = Configuration.builder();
-		try (var jar = new JarFile(path.toFile())) {
-			if (jar.isMultiRelease()) {
-				builder.addArgument("--multi-release");
-				builder.addArgument(Runtime.version().feature());
-			}
-		}
-		catch (Exception e) {
-			fail("loading jar file failed", e);
+		if (jar.isMultiRelease()) {
+			builder.addArgument("--multi-release");
+			builder.addArgument(Runtime.version().feature());
 		}
 
 		var destination = WORKSPACE.resolve(module);
-		var configuration = builder.addArgument("--dot-output").addArgument(destination) //
-				.addArgument("-verbose") // -verbose:class -filter:none
-				.addArgument(path) // junit-{module}-{version}.jar
+		var configuration = builder //
+				.addArgument("--dot-output").addArgument(destination) // Specifies the destination directory for DOT file output.
+				.addArgument("-verbose:class") // Prints class-level dependencies.
+				.addArgument("-filter:none") // No "-filter:package" and no "-filter:archive" filtering.
+				.addArgument(jar.getName()) // JAR file to analyze.
 				.build();
 
 		var result = new Jdeps().run(configuration);
 
 		assertEquals(0, result.getExitCode(), "result = " + result);
+		assertEquals("", result.getOutput("out"), "output log isn't empty");
 		assertEquals("", result.getOutput("err"), "error log isn't empty");
 
+		var summary = destination.resolve("summary.dot");
+		var archive = module + '-' + Helper.version(module) + ".jar";
+		var dot = destination.resolve(archive + ".dot");
+		var raw = destination.resolve(archive + ".raw.dot");
+
+		assertTrue(Files.exists(summary), summary + " doesn't exist");
+		assertTrue(Files.exists(dot), dot + " doesn't exist");
+		assertTrue(Files.notExists(raw), raw + " does already exist");
+
 		try {
-			var dot = destination.resolve(archive + ".dot");
-			var raw = destination.resolve(archive + ".raw.dot");
 			var lines = Files.readAllLines(dot) //
 					.stream() //
 					.map(line -> line.replaceAll(" \\(.+\\)", "")) //
