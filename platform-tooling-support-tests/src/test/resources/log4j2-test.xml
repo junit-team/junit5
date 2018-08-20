@@ -6,6 +6,7 @@
 		</Console>
 	</Appenders>
 	<Loggers>
+		<Logger name="com.tngtech.archunit" level="warn" />
 		<Logger name="org.junit" level="warn" />
 		<Root level="error">
 			<AppenderRef ref="Console" />
