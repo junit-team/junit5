@@ -36,7 +36,9 @@ test {
 dependencies {
 	asciidoctor('org.jruby:jruby-complete:9.1.17.0')
 
-	testImplementation(project(':junit-jupiter-api'))
+	// Jupiter API is used in src/main/java
+	implementation(project(':junit-jupiter-api'))
+
 	testImplementation(project(':junit-jupiter-params'))
 	testImplementation(project(':junit-platform-runner'))
 	testImplementation(project(':junit-platform-launcher'))

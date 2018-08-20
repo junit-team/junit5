@@ -12,8 +12,6 @@ package example.registration
 import org.junit.jupiter.api.Assertions.assertEquals
 
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.BeforeAllCallback
-import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.RegisterExtension
 
 // tag::user_guide[]
@@ -36,30 +34,3 @@ class KotlinWebServerDemo {
     }
 }
 // end::user_guide[]
-
-class WebServerExtension : BeforeAllCallback {
-
-    companion object {
-        @JvmStatic
-        fun builder() = Builder()
-    }
-
-    val serverUrl = "http://example.org:8181"
-
-    override fun beforeAll(context: ExtensionContext) {
-        // no-op for demo
-    }
-
-    class Builder {
-        fun enableSecurity(@Suppress("UNUSED_PARAMETER") securityEnabled: Boolean) = this
-        fun build(): WebServerExtension = WebServerExtension()
-    }
-}
-
-class WebClient {
-    fun get(@Suppress("UNUSED_PARAMETER") path: String): WebResponse = WebResponse()
-}
-
-class WebResponse {
-    val responseStatus = 200
-}
