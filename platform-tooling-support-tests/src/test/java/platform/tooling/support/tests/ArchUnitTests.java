@@ -28,6 +28,7 @@ class ArchUnitTests {
 		var packageNames = List.of("org.junit.platform", "org.junit.jupiter", "org.junit.vintage");
 		var classes = new ClassFileImporter().importPackages(packageNames);
 		// about 431 classes found in classpath of this project
+		assertTrue(classes.size() > 300, "expected more than 300 classes, got: " + classes.size());
 		acyclic(classes);
 	}
 
@@ -36,11 +37,11 @@ class ArchUnitTests {
 		var jarFiles = Helper.loadJarFiles();
 		var classes = new ClassFileImporter().importJars(jarFiles);
 		// about 928 classes found in all jars
+		assertTrue(classes.size() > 800, "expected more than 800 classes, got: " + classes.size());
 		acyclic(classes);
 	}
 
 	private static void acyclic(JavaClasses classes) {
-		assertTrue(classes.iterator().hasNext()); // not empty...
 		slices().matching("org.junit.(*)..").should().beFreeOfCycles().check(classes);
 	}
 

@@ -27,17 +27,20 @@ dependencies {
 		because 'moving/deleting directory trees'
 	}
 
-	testCompile('com.paypal.digraph:digraph-parser:1.0') {
+	testImplementation('com.paypal.digraph:digraph-parser:1.0') {
 		because 'parsing jdeps generated .dot files'
 	}
-	testCompile('org.jgrapht:jgrapht-core:1.2.0') {
+	testImplementation('org.jgrapht:jgrapht-core:1.2.0') {
 		because 'building and analyzing graphs'
 	}
-	testCompile('com.tngtech.archunit:archunit-junit5-api:0.9.0') {
+	testImplementation('com.tngtech.archunit:archunit-junit5-api:0.9.1') {
 		because 'checking the architecture of JUnit 5'
 	}
-	testRuntimeOnly('com.tngtech.archunit:archunit-junit5-engine:0.9.0') {
+	testRuntimeOnly('com.tngtech.archunit:archunit-junit5-engine:0.9.1') {
 		because 'contains the ArchUnit TestEngine implementation'
+	}
+	testRuntimeOnly('org.slf4j:slf4j-jdk14:1.7.25') {
+		because 'provide appropriate SLF4J binding'
 	}
 }
 
