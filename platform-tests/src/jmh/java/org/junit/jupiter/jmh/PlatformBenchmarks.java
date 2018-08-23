@@ -10,6 +10,11 @@
 
 package org.junit.jupiter.jmh;
 
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.launcher.core.LauncherConfig.builder;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.LauncherFactory.create;
+
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -17,11 +22,6 @@ import org.junit.platform.launcher.core.LauncherConfig;
 import org.junit.runner.JUnitCore;
 import org.junit.vintage.engine.VintageTestEngine;
 import org.openjdk.jmh.annotations.Benchmark;
-
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.LauncherConfig.builder;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-import static org.junit.platform.launcher.core.LauncherFactory.create;
 
 /**
  * JMH benchmarks for platform.
