@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -109,6 +110,40 @@ class ParameterizedTestExtensionTests {
 
 		assertThat(exception).hasMessage(
 			"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest");
+	}
+
+	@Test
+	void throwsExceptionWhenArgumentsProviderIsNotStatic() {
+		ExtensionContext extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
+			new TestCaseWithArgumentSourceAnnotatedMethodWithNonStaticArgumentsProvider());
+
+		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
+			extensionContextWithAnnotatedTestMethod);
+
+		JUnitException exception = assertThrows(JUnitException.class, stream::toArray);
+
+		assertInstantiateArgumentsProviderException(exception, NonStaticArgumentsProvider.class);
+	}
+
+	@Test
+	void throwsExceptionWhenArgumentsProviderDoesNotContainNoArgumentConstructor() {
+		ExtensionContext extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
+			new TestCaseWithArgumentSourceAnnotatedMethodWithNoArgumentsConstructorArgumentsProvider());
+
+		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
+			extensionContextWithAnnotatedTestMethod);
+
+		JUnitException exception = assertThrows(JUnitException.class, stream::toArray);
+
+		assertInstantiateArgumentsProviderException(exception, ArgumentsProviderWithNoArgumentConstructor.class);
+	}
+
+	private <T> void assertInstantiateArgumentsProviderException(JUnitException exception, Class<T> clazz) {
+		assertThat(exception).hasMessage(
+			String.format("Failed to find a no-argument constructor for ArgumentsProvider [%s]. "
+					+ "Please ensure that a no-argument constructor exists and "
+					+ "that the class is either a top-level class or a static nested class",
+				clazz.getName()));
 	}
 
 	private ExtensionContext getExtensionContextReturningSingleMethod(Object testCase) {
@@ -225,6 +260,43 @@ class ParameterizedTestExtensionTests {
 		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
 			Stream<Arguments> argumentsStream = Stream.of("foo", "bar").map(Arguments::of);
 			return argumentsStream.onClose(() -> streamWasClosed = true);
+		}
+	}
+
+	static class TestCaseWithArgumentSourceAnnotatedMethodWithNonStaticArgumentsProvider {
+
+		@ParameterizedTest
+		@ArgumentsSource(NonStaticArgumentsProvider.class)
+		void method(Collection<String> parameters) {
+		}
+
+	}
+
+	class NonStaticArgumentsProvider implements ArgumentsProvider {
+
+		@Override
+		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+			return null;
+		}
+	}
+
+	static class TestCaseWithArgumentSourceAnnotatedMethodWithNoArgumentsConstructorArgumentsProvider {
+
+		@ParameterizedTest
+		@ArgumentsSource(ArgumentsProviderWithNoArgumentConstructor.class)
+		void method(Collection<String> parameters) {
+		}
+
+	}
+
+	static class ArgumentsProviderWithNoArgumentConstructor implements ArgumentsProvider {
+
+		ArgumentsProviderWithNoArgumentConstructor(String parameter) {
+		}
+
+		@Override
+		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+			return null;
 		}
 	}
 
