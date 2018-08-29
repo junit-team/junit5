@@ -45,6 +45,8 @@ on GitHub.
 * The dynamic test API has been promoted from _experimental_ to _maintained_ status. This
   affects the `@TestFactory` annotation as well as the `DynamicTest`, `DynamicContainer`,
   and `DynamicNode` types in the `org.junit.jupiter.api` package.
+* Implicit argument conversion for parameterized tests can now convert strings like
+  `java.lang.Integer` to `Class` instances.
 
 
 [[release-notes-5.3.0-junit-vintage]]
