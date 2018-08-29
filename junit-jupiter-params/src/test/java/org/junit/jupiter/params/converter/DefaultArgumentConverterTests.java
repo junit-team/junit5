@@ -13,6 +13,7 @@ package org.junit.jupiter.params.converter;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
+import java.lang.Thread.State;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
@@ -110,6 +111,14 @@ class DefaultArgumentConverterTests {
 		assertConverts("path", Path.class, Paths.get("path"));
 		assertConverts("/path", Path.class, Paths.get("/path"));
 		assertConverts("/some/path", Path.class, Paths.get("/some/path"));
+	}
+
+	// --- java.lang -----------------------------------------------------------
+
+	@Test
+	void convertsStringToClass() {
+		assertConverts("java.lang.Integer", Class.class, Integer.class);
+		assertConverts("java.lang.Thread$State", Class.class, State.class);
 	}
 
 	// --- java.math -----------------------------------------------------------
