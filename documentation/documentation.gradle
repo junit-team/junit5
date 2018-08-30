@@ -55,7 +55,7 @@ dependencies {
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 
 	// for ApiReportGenerator
-	testImplementation('io.github.classgraph:classgraph:4.0.2')
+	testImplementation('io.github.classgraph:classgraph:4.1.3')
 }
 
 asciidoctorj {
