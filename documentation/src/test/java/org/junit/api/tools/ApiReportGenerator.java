@@ -67,7 +67,8 @@ class ApiReportGenerator {
 		final String EOL = System.lineSeparator();
 
 		// Scan packages
-		try (ScanResult scanResult = new ClassGraph().whitelistPackages(packages).enableAnnotationInfo().scan()) {
+		try (ScanResult scanResult = new ClassGraph().whitelistPackages(
+			packages).disableNestedJarScanning().enableAnnotationInfo().scan()) {
 
 			// Collect names
 			ClassInfoList classesWithApiAnnotation = scanResult.getClassesWithAnnotation(API.class.getCanonicalName());
