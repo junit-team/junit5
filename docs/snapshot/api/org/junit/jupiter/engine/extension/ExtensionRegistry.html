@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
+var methods = {"i0":9,"i1":9,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -200,28 +200,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>&lt;E extends <a href="../../../../../org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;E&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#getLocalExtensions(java.lang.Class)">getLocalExtensions</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;E&gt;&nbsp;extensionType)</code></th>
-<td class="colLast">
-<div class="block">Get all <code>Extensions</code> of the specified type that are present
- in this registry, ignoring those present in one of its ancestors.</div>
-</td>
-</tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code><a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#getParent()">getParent</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Get the parent of this <code>ExtensionRegistry</code>.</div>
-</td>
-</tr>
-<tr id="i5" class="rowColor">
-<td class="colFirst"><code>&lt;E extends <a href="../../../../../org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;E&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#getReversedExtensions(java.lang.Class)">getReversedExtensions</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;E&gt;&nbsp;extensionType)</code></th>
 <td class="colLast">
 <div class="block">Get all <code>Extensions</code> of the specified type that are present
  in this registry or one of its ancestors, in reverse order.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#registerExtension(org.junit.jupiter.api.extension.Extension,java.lang.Object)">registerExtension</a></span>&#8203;(<a href="../../../../../org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&nbsp;extension,
                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;source)</code></th>
@@ -230,7 +215,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  if an extension of that type already exists in this registry.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>&lt;E extends <a href="../../../../../org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;E&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#stream(java.lang.Class)">stream</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;E&gt;&nbsp;extensionType)</code></th>
 <td class="colLast">
@@ -305,25 +290,6 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </dl>
 </li>
 </ul>
-<a id="getParent()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getParent</h4>
-<pre>public&nbsp;<a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;getParent()</pre>
-<div class="block">Get the parent of this <code>ExtensionRegistry</code>.
-
- <p><strong>WARNING:</strong> accessing the parent directly is typically
- unnecessary unless you are explicitly working with <a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#getLocalExtensions(java.lang.Class)">local extensions</a>.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the parent registry or <code>null</code> if no parent exists</dd>
-<dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>5.3</dd>
-</dl>
-</li>
-</ul>
 <a id="stream(java.lang.Class)">
 <!--   -->
 </a>
@@ -355,32 +321,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>extensionType</code> - the type of <a href="../../../../../org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extension</code></a> to get</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#getLocalExtensions(java.lang.Class)"><code>getLocalExtensions(Class)</code></a>, 
-<a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#getReversedExtensions(java.lang.Class)"><code>getReversedExtensions(Class)</code></a>, 
-<a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#stream(java.lang.Class)"><code>stream(Class)</code></a></dd>
-</dl>
-</li>
-</ul>
-<a id="getLocalExtensions(java.lang.Class)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getLocalExtensions</h4>
-<pre>public&nbsp;&lt;E extends <a href="../../../../../org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;E&gt;&nbsp;getLocalExtensions&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;E&gt;&nbsp;extensionType)</pre>
-<div class="block">Get all <code>Extensions</code> of the specified type that are present
- in this registry, ignoring those present in one of its ancestors.
-
- <p><strong>WARNING:</strong> you typically need to invoke
- <a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#getExtensions(java.lang.Class)"><code>getExtensions(Class)</code></a> instead of this method.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>extensionType</code> - the type of <a href="../../../../../org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extension</code></a> to get</dd>
-<dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>5.3</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#getExtensions(java.lang.Class)"><code>getExtensions(Class)</code></a>, 
-<a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#getReversedExtensions(java.lang.Class)"><code>getReversedExtensions(Class)</code></a>, 
+<dd><a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#getReversedExtensions(java.lang.Class)"><code>getReversedExtensions(Class)</code></a>, 
 <a href="../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#stream(java.lang.Class)"><code>stream(Class)</code></a></dd>
 </dl>
 </li>

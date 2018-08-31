@@ -5555,8 +5555,7 @@ arguments via registered <code>ParameterResolver</code> extensions.</p>
 </div>
 <div class="paragraph">
 <p>Extensions that implement <code>TestInstanceFactory</code> can be registered on test interfaces,
-top-level test classes, or <code>@Nested</code> test classes. A factory registered on a <code>@Nested</code>
-test class will override any factories registered on enclosing classes.</p>
+top-level test classes, or <code>@Nested</code> test classes.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -5567,10 +5566,11 @@ test class will override any factories registered on enclosing classes.</p>
 <td class="content">
 <div class="paragraph">
 <p>Registering multiple extensions that implement <code>TestInstanceFactory</code> for any single class
-will result in an exception being thrown for all tests in that class and in any nested
-test classes. Note that any <code>TestInstanceFactory</code> registered in a superclass is
-<em>inherited</em>. It is the user&#8217;s responsibility to ensure that only a single
-<code>TestInstanceFactory</code> is registered for any specific test class.</p>
+will result in an exception being thrown for all tests in that class, in any subclass,
+and in any nested class. Note that any <code>TestInstanceFactory</code> registered in a superclass
+or <em>enclosing</em> class (i.e., in the case of a <code>@Nested</code> test class) is <em>inherited</em>. It is
+the user&#8217;s responsibility to ensure that only a single <code>TestInstanceFactory</code> is
+registered for any specific test class.</p>
 </div>
 </td>
 </tr>
@@ -6834,7 +6834,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-08-31 10:19:50 EDT
+Last updated 2018-08-31 05:49:51 EDT
 </div>
 </div>
 </body>

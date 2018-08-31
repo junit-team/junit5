@@ -626,6 +626,10 @@ details.</p>
 been solved, and the extension method has been renamed to <code>get&lt;Class&gt;(index)</code> as
 originally intended in 5.3.0-M1.</p>
 </li>
+<li>
+<p><code>TestInstanceFactory</code> extensions are now properly <em>inherited</em> within <code>@Nested</code> test
+class hierarchies.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -634,7 +638,9 @@ originally intended in 5.3.0-M1.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p><code>@Nested</code> test classes can no longer <em>override</em> <code>TestInstanceFactory</code> extensions
+registered on an <em>enclosing</em> class. This aligns with the behavior for
+<code>TestInstanceFactory</code> extensions registered within a conventional test class hierarchy.</p>
 </li>
 </ul>
 </div>
@@ -1087,7 +1093,7 @@ minor improvements and bug fixes.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-08-31 10:19:50 EDT
+Last updated 2018-08-31 05:49:51 EDT
 </div>
 </div>
 </body>
