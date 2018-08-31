@@ -19,7 +19,10 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The JUnit Platform `Launcher` now enforces that only `TestEngine` implementations
+  published by the JUnit Team may use the `junit-` prefix for their `TestEngine` IDs.
+  - See the <<../user-guide/index.adoc#launcher-api-engines-custom-ids, User Guide>> for
+    details.
 
 ==== New Features and Improvements
 
