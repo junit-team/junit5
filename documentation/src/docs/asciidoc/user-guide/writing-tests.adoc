@@ -1037,10 +1037,9 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_e
 | `double`/`Double`          | `"1.0"`                                  -> `1.0d`
 | `Enum` subclass            | `"SECONDS"`                              -> `TimeUnit.SECONDS`
 | `java.io.File`             | `"/path/to/file"`                        -> `new File("/path/to/file")`
-| `java.lang.Class`          | `"java.lang.Integer"`                    -> `Class.forName("java.lang.Integer")` +
-(remember to use `$` for nested classes, e.g. `"java.lang.Thread$State"`)
-| `java.lang.Class`          | `"byte"`                                 -> `byte.class` (primitive types are supported)
-| `java.lang.Class`          | `"char[]"`                               -> `char[].class` (array types are supported)
+| `java.lang.Class`          | `"java.lang.Integer"`                    -> `java.lang.Integer.class` _(use `$` for nested classes, e.g. `"java.lang.Thread$State"`)_
+| `java.lang.Class`          | `"byte"`                                 -> `byte.class` _(primitive types are supported)_
+| `java.lang.Class`          | `"char[]"`                               -> `char[].class` _(array types are supported)_
 | `java.math.BigDecimal`     | `"123.456e789"`                          -> `new BigDecimal("123.456e789")`
 | `java.math.BigInteger`     | `"1234567890123456789"`                  -> `new BigInteger("1234567890123456789")`
 | `java.net.URI`             | `"http://junit.org/"`                    -> `URI.create("http://junit.org/")`
