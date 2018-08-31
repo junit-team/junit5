@@ -22,14 +22,20 @@ import org.apiguardian.api.API;
  * requirements or acquiring the test instance from a dependency injection
  * framework.
  *
- * <p>Only one {@code TestInstanceFactory} is allowed to be registered for each
- * test class in the test class hierarchy, with lower level factories overriding
- * factories registered at higher levels in the hierarchy. Registering multiple
- * factories for any single test class will result in an exception being thrown
- * for all the tests in that test class and any nested test classes.
- *
  * <p>Extensions that implement {@code TestInstanceFactory} must be registered
  * at the class level.
+ *
+ * <h3>Warning</h3>
+ *
+ * <p>Only one {@code TestInstanceFactory} is allowed to be registered for any
+ * given test class. Registering multiple factories for any single test class
+ * will result in an exception being thrown for all tests in that class, in any
+ * subclass, and in any nested class. Note that any {@code TestInstanceFactory}
+ * registered in a {@linkplain Class#getSuperclass() superclass} or
+ * {@linkplain Class#getEnclosingClass() enclosing} class (i.e., in the case of
+ * a {@code @Nested} test class) is <em>inherited</em>. It is therefore the
+ * user's responsibility to ensure that only a single {@code TestInstanceFactory}
+ * is registered for any specific test class.
  *
  * <h3>Constructor Requirements</h3>
  *

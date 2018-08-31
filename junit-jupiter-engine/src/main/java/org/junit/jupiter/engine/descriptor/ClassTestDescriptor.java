@@ -231,17 +231,14 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private TestInstanceFactory resolveTestInstanceFactory(ExtensionRegistry registry) {
-		// can be null via a recursive call for the parent registry
-		if (registry == null) {
-			return null;
+		List<TestInstanceFactory> factories = registry.getExtensions(TestInstanceFactory.class);
+
+		if (factories.size() == 1) {
+			return factories.get(0);
 		}
 
-		List<TestInstanceFactory> localFactories = registry.getLocalExtensions(TestInstanceFactory.class);
-		if (localFactories.size() == 1) {
-			return localFactories.get(0);
-		}
-		if (localFactories.size() > 1) {
-			String factoryNames = localFactories.stream()//
+		if (factories.size() > 1) {
+			String factoryNames = factories.stream()//
 					.map(factory -> factory.getClass().getName())//
 					.collect(joining(", "));
 
@@ -252,7 +249,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			throw new ExtensionConfigurationException(errorMessage);
 		}
 
-		return resolveTestInstanceFactory(registry.getParent());
+		return null;
 	}
 
 	private TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,

@@ -21,6 +21,7 @@ import static org.junit.platform.engine.test.event.ExecutionEventConditions.engi
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.engine.test.event.ExecutionEventConditions.nestedContainer;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.started;
 import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
 import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
@@ -98,6 +99,30 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 					message("The following TestInstanceFactory extensions were registered for test class ["
 							+ testClass.getName() + "], but only one is permitted: "
 							+ nullSafeToString(FooInstanceFactory.class, BarInstanceFactory.class))))), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void multipleFactoriesRegisteredWithinNestedClassStructure() {
+		Class<?> outerClass = MultipleFactoriesRegisteredWithinNestedClassStructureTestCase.class;
+		Class<?> nestedClass = MultipleFactoriesRegisteredWithinNestedClassStructureTestCase.InnerTestCase.class;
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(outerClass);
+
+		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(outerClass), started()), //
+			event(test("outerTest()"), started()), //
+			event(test("outerTest()"), finishedSuccessfully()), //
+			event(nestedContainer(nestedClass), started()), //
+			event(nestedContainer(nestedClass),
+				finishedWithFailure(allOf(isA(ExtensionConfigurationException.class),
+					message("The following TestInstanceFactory extensions were registered for test class ["
+							+ nestedClass.getName() + "], but only one is permitted: "
+							+ nullSafeToString(FooInstanceFactory.class, BarInstanceFactory.class))))), //
+			event(container(outerClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -277,59 +302,29 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void instanceFactoriesInNestedClassHierarchy() {
+	void instanceFactoriesInNestedClassStructureAreInherited() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(OuterTestCase.class);
 
-		assertEquals(5, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(5, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(3, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(3, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
 
 			// OuterTestCase
 			"FooInstanceFactory instantiated: OuterTestCase",
-				"beforeOuter",
-					"outerTest",
+				"outerTest",
 
 			// InnerTestCase
 			"FooInstanceFactory instantiated: OuterTestCase",
-				"NestedInstanceFactory instantiated: InnerTestCase",
-					"beforeOuter",
-						"beforeInner1",
-							"innerTest1",
+				"FooInstanceFactory instantiated: InnerTestCase",
+					"innerTest1",
 
-			// IdenticalFactoryRegistrationInnerTestCase
+			// InnerInnerTestCase
 			"FooInstanceFactory instantiated: OuterTestCase",
-				"NestedInstanceFactory instantiated: InnerTestCase",
-					"NestedInstanceFactory instantiated: IdenticalFactoryRegistrationInnerTestCase",
-						"beforeOuter",
-							"beforeInner1",
-								"beforeInner2",
-									"innerTest2",
-
-			// InheritedFactoryRegistrationInnerTestCase
-			"FooInstanceFactory instantiated: OuterTestCase",
-				"NestedInstanceFactory instantiated: InnerTestCase",
-					"NestedInstanceFactory instantiated: IdenticalFactoryRegistrationInnerTestCase",
-						"NestedInstanceFactory instantiated: InheritedFactoryRegistrationInnerTestCase",
-							"beforeOuter",
-								"beforeInner1",
-									"beforeInner2",
-										"beforeInner3",
-											"innerTest3",
-
-			// OverriddenFactoryRegistrationInnerTestCase
-			"FooInstanceFactory instantiated: OuterTestCase",
-				"NestedInstanceFactory instantiated: InnerTestCase",
-					"NestedInstanceFactory instantiated: IdenticalFactoryRegistrationInnerTestCase",
-						"NestedInstanceFactory instantiated: InheritedFactoryRegistrationInnerTestCase",
-							"BarInstanceFactory instantiated: OverriddenFactoryRegistrationInnerTestCase",
-								"beforeOuter",
-									"beforeInner1",
-										"beforeInner2",
-											"beforeInner3",
-												"beforeInner4",
-													"innerTest4"
+				"FooInstanceFactory instantiated: InnerTestCase",
+					"FooInstanceFactory instantiated: InnerInnerTestCase",
+						"innerTest2"
 		);
 		// @formatter:on
 	}
@@ -465,24 +460,13 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	@ExtendWith(FooInstanceFactory.class)
 	static class OuterTestCase {
 
-		@BeforeEach
-		void beforeOuter() {
-			callSequence.add("beforeOuter");
-		}
-
 		@Test
 		void outerTest() {
 			callSequence.add("outerTest");
 		}
 
 		@Nested
-		@ExtendWith(NestedInstanceFactory.class)
 		class InnerTestCase {
-
-			@BeforeEach
-			void beforeInner1() {
-				callSequence.add("beforeInner1");
-			}
 
 			@Test
 			void innerTest1() {
@@ -490,50 +474,29 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			}
 
 			@Nested
-			// This @Nested test class intentionally registers the same type of
-			// factory as the enclosing class.
-			@ExtendWith(NestedInstanceFactory.class)
-			class IdenticalFactoryRegistrationInnerTestCase {
-
-				@BeforeEach
-				void beforeInner2() {
-					callSequence.add("beforeInner2");
-				}
+			class InnerInnerTestCase {
 
 				@Test
 				void innerTest2() {
 					callSequence.add("innerTest2");
 				}
+			}
+		}
+	}
 
-				@Nested
-				// This @Nested test class intentionally does NOT register a factory.
-				class InheritedFactoryRegistrationInnerTestCase {
+	@ExtendWith(FooInstanceFactory.class)
+	static class MultipleFactoriesRegisteredWithinNestedClassStructureTestCase {
 
-					@BeforeEach
-					void beforeInner3() {
-						callSequence.add("beforeInner3");
-					}
+		@Test
+		void outerTest() {
+		}
 
-					@Test
-					void innerTest3() {
-						callSequence.add("innerTest3");
-					}
+		@Nested
+		@ExtendWith(BarInstanceFactory.class)
+		class InnerTestCase {
 
-					@Nested
-					@ExtendWith(BarInstanceFactory.class)
-					class OverriddenFactoryRegistrationInnerTestCase {
-
-						@BeforeEach
-						void beforeInner4() {
-							callSequence.add("beforeInner4");
-						}
-
-						@Test
-						void innerTest4() {
-							callSequence.add("innerTest4");
-						}
-					}
-				}
+			@Test
+			void innerTest() {
 			}
 		}
 	}
@@ -621,7 +584,6 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		void test2() {
 			callSequence.add("test2");
 		}
-
 	}
 
 	// -------------------------------------------------------------------------
@@ -645,17 +607,6 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private static class BarInstanceFactory extends AbstractTestInstanceFactory {
-	}
-
-	private static class NestedInstanceFactory implements TestInstanceFactory {
-
-		@Override
-		public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {
-			Class<?> testClass = factoryContext.getTestClass();
-			Object outerInstance = factoryContext.getOuterInstance().get();
-			instantiated(getClass(), testClass);
-			return ReflectionUtils.newInstance(testClass, outerInstance);
-		}
 	}
 
 	/**
