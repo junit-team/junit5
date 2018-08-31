@@ -231,24 +231,19 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private TestInstanceFactory resolveTestInstanceFactory(ExtensionRegistry registry) {
-
-		List<TestInstanceFactory> localFactories = registry.getLocalExtensions(TestInstanceFactory.class);
-		if (localFactories.isEmpty()) {
+		// can be null via a recursive call for the parent registry
+		if (registry == null) {
 			return null;
 		}
 
-		ExtensionRegistry parentRegistry = registry.getParent();
-		if (parentRegistry != null) {
-			List<TestInstanceFactory> parentFactories = parentRegistry.getExtensions(TestInstanceFactory.class);
-			localFactories.removeAll(parentFactories);
-			if (localFactories.isEmpty()) {
-				return null;
-			}
+		List<TestInstanceFactory> localFactories = registry.getLocalExtensions(TestInstanceFactory.class);
+		if (localFactories.size() == 1) {
+			return localFactories.get(0);
 		}
-
 		if (localFactories.size() > 1) {
-			String factoryNames = localFactories.stream().map(factory -> factory.getClass().getName()).collect(
-				joining(", "));
+			String factoryNames = localFactories.stream()//
+					.map(factory -> factory.getClass().getName())//
+					.collect(joining(", "));
 
 			String errorMessage = String.format(
 				"The following TestInstanceFactory extensions were registered for test class [%s], but only one is permitted: %s",
@@ -257,7 +252,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			throw new ExtensionConfigurationException(errorMessage);
 		}
 
-		return localFactories.get(0);
+		return resolveTestInstanceFactory(registry.getParent());
 	}
 
 	private TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,
