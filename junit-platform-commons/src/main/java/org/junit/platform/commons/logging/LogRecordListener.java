@@ -57,8 +57,8 @@ public class LogRecordListener {
 
 	/**
 	 * Get a stream of {@link LogRecord log records} that have been
-	 * {@linkplain #logRecordSubmitted submitted} to this listener for the
-	 * logger name equal to the name of the given class by the current thread.
+	 * {@linkplain #logRecordSubmitted submitted} to this listener by the current
+	 * thread for the logger name equal to the name of the given class.
 	 *
 	 * <p>As stated in the JavaDoc for {@code LogRecord}, a submitted
 	 * {@code LogRecord} should not be updated by the client application. Thus,
@@ -79,9 +79,9 @@ public class LogRecordListener {
 
 	/**
 	 * Get a stream of {@link LogRecord log records} that have been
-	 * {@linkplain #logRecordSubmitted submitted} to this listener for the
-	 * logger name equal to the name of the given class at the given log level
-	 * by the current thread.
+	 * {@linkplain #logRecordSubmitted submitted} to this listener by the current
+	 * thread for the logger name equal to the name of the given class at the given
+	 * log level.
 	 *
 	 * <p>As stated in the JavaDoc for {@code LogRecord}, a submitted
 	 * {@code LogRecord} should not be updated by the client application. Thus,
