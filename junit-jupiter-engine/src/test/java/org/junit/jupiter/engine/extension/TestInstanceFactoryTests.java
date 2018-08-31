@@ -35,7 +35,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -66,7 +65,26 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void multipleFactoriesRegisteredOnSingleTestClass() {
-		Class<?> testClass = MultipleFactoriesRegisteredTestCase.class;
+		Class<?> testClass = MultipleFactoriesRegisteredOnSingleTestCase.class;
+		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
+
+		assertEquals(0, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests aborted");
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(container(testClass),
+				finishedWithFailure(allOf(isA(ExtensionConfigurationException.class),
+					message("The following TestInstanceFactory extensions were registered for test class ["
+							+ testClass.getName() + "], but only one is permitted: "
+							+ nullSafeToString(FooInstanceFactory.class, BarInstanceFactory.class))))), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void multipleFactoriesRegisteredWithinTestClassHierarchy() {
+		Class<?> testClass = MultipleFactoriesRegisteredWithinClassHierarchyTestCase.class;
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
 
 		assertEquals(0, eventRecorder.getTestStartedCount(), "# tests started");
@@ -259,25 +277,6 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	@Disabled("TestInstanceFactory currently cannot be overridden within a test class hierarchy")
-	void overriddenFactoryInTestClassHierarchy() {
-		Class<?> testClass = OverriddenFactoryTestCase.class;
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
-
-		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-
-		// @formatter:off
-		assertThat(callSequence).containsExactly(
-			"BarInstanceFactory instantiated: OverriddenFactoryTestCase",
-				"parentTest",
-			"BarInstanceFactory instantiated: OverriddenFactoryTestCase",
-				"childTest"
-		);
-		// @formatter:on
-	}
-
-	@Test
 	void instanceFactoriesInNestedClassHierarchy() {
 		ExecutionEventRecorder eventRecorder = executeTestsForClass(OuterTestCase.class);
 
@@ -390,7 +389,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------------
 
 	@ExtendWith({ FooInstanceFactory.class, BarInstanceFactory.class })
-	static class MultipleFactoriesRegisteredTestCase {
+	static class MultipleFactoriesRegisteredOnSingleTestCase {
 
 		@Test
 		void testShouldNotBeCalled() {
@@ -455,7 +454,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ExtendWith(BarInstanceFactory.class)
-	static class OverriddenFactoryTestCase extends ParentTestCase {
+	static class MultipleFactoriesRegisteredWithinClassHierarchyTestCase extends ParentTestCase {
 
 		@Test
 		void childTest() {
