@@ -6334,7 +6334,7 @@ aggregate the final results in an object of your own. For an example see the
 <div class="sect3">
 <h4 id="launcher-api-engines-custom"><a class="anchor" href="#launcher-api-engines-custom"></a>7.1.3. Plugging in your own Test Engine</h4>
 <div class="paragraph">
-<p>JUnit currently provides two <code><a href="../api/org/junit/platform/engine/TestEngine.html">TestEngine</a></code> implementations out of the box:</p>
+<p>JUnit currently provides two <code><a href="../api/org/junit/platform/engine/TestEngine.html">TestEngine</a></code> implementations.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -6367,6 +6367,35 @@ the <code>junit-jupiter-engine</code> module registers its
 the <code><a href="../api/org/junit/jupiter/engine/package-summary.html">junit-jupiter-engine</a></code>) that only requires implementors to provide the logic for
 test discovery. It implements execution of <code>TestDescriptors</code> that implement the <code>Node</code>
 interface, including support for parallel execution.
+</td>
+</tr>
+</table>
+</div>
+<div id="launcher-api-engines-custom-ids" class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">The <code>junit-</code> prefix is reserved for TestEngines from the JUnit Team</div>
+<div class="paragraph">
+<p>The JUnit Platform <code>Launcher</code> enforces that only <code>TestEngine</code> implementations published
+by the JUnit Team may use the <code>junit-</code> prefix for their <code>TestEngine</code> IDs.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If any third-party <code>TestEngine</code> claims to be <code>junit-jupiter</code> or <code>junit-vintage</code>, an
+exception will be thrown, immediately halting execution of the JUnit Platform.</p>
+</li>
+<li>
+<p>If any third-party <code>TestEngine</code> uses the <code>junit-</code> prefix for its ID, a warning message
+will be logged. Later releases of the JUnit Platform will throw an exception for such
+violations.</p>
+</li>
+</ul>
+</div>
 </td>
 </tr>
 </table>
@@ -6805,7 +6834,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-08-31 05:49:51 EDT
+Last updated 2018-08-31 07:13:50 EDT
 </div>
 </div>
 </body>
