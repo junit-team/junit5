@@ -129,8 +129,7 @@ class DefaultLauncherTests {
 		TestEngine engine = new TestEngineStub() {
 
 			@Override
-			public TestDescriptor discover(org.junit.platform.engine.EngineDiscoveryRequest discoveryRequest,
-					UniqueId uniqueId) {
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				return null;
 			}
 		};
@@ -140,12 +139,11 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void discoverTestPlanForEngineThatThrowsAnErrorInDiscoverPhase() {
+	void discoverTestPlanForEngineThatThrowsAnErrorInDiscoveryPhase() {
 		TestEngine engine = new TestEngineStub() {
 
 			@Override
-			public TestDescriptor discover(org.junit.platform.engine.EngineDiscoveryRequest discoveryRequest,
-					UniqueId uniqueId) {
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				throw new Error("ignored");
 			}
 		};
@@ -155,12 +153,11 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void discoverTestPlanForEngineThatThrowsRuntimeExceptionInDiscoverPhase() {
+	void discoverTestPlanForEngineThatThrowsRuntimeExceptionInDiscoveryPhase() {
 		TestEngine engine = new TestEngineStub() {
 
 			@Override
-			public TestDescriptor discover(org.junit.platform.engine.EngineDiscoveryRequest discoveryRequest,
-					UniqueId uniqueId) {
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				throw new RuntimeException("ignored");
 			}
 		};
@@ -338,7 +335,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void withoutConfigurationParameters_launcherPassesEmptyConfigurationParametersIntoTheExecutionRequest() {
+	void withoutConfigurationParameters_LauncherPassesEmptyConfigurationParametersIntoTheExecutionRequest() {
 		TestEngineSpy engine = new TestEngineSpy();
 
 		DefaultLauncher launcher = createLauncher(engine);
@@ -350,7 +347,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void withConfigurationParameters_launcherPassesPopulatedConfigurationParametersIntoTheExecutionRequest() {
+	void withConfigurationParameters_LauncherPassesPopulatedConfigurationParametersIntoTheExecutionRequest() {
 		TestEngineSpy engine = new TestEngineSpy();
 
 		DefaultLauncher launcher = createLauncher(engine);
@@ -497,7 +494,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void usingReservedEngineIdPrefixEmitsWarning(LogRecordListener listener) {
+	void thirdPartyEngineUsingReservedEngineIdPrefixEmitsWarning(LogRecordListener listener) {
 		String id = "junit-using-reserved-prefix";
 		createLauncher(new TestEngineStub(id));
 		assertThat(listener.stream(DefaultLauncher.class, Level.WARNING).map(LogRecord::getMessage)) //
@@ -507,20 +504,21 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void impostBeingJupiterWithoutBeingJupiterFails() {
-		String id = "junit-jupiter";
-		TestEngine impostor = new TestEngineStub(id);
-		Exception exception = assertThrows(JUnitException.class, () -> createLauncher(impostor));
-		assertThat(exception).hasMessage("Third-party TestEngine '" + impostor.getClass().getName()
-				+ "' is forbidden to use the reserved '" + id + "' TestEngine ID.");
+	void thirdPartyEngineClaimingToBeJupiterResultsInException() {
+		assertImposter("junit-jupiter");
 	}
 
 	@Test
-	void impostBeingVintageWithoutBeingVintageFails() {
-		String id = "junit-vintage";
-		TestEngine impostor = new TestEngineStub("junit-vintage");
-		Exception exception = assertThrows(JUnitException.class, () -> createLauncher(impostor));
-		assertThat(exception).hasMessage("Third-party TestEngine '" + impostor.getClass().getName()
-				+ "' is forbidden to use the reserved '" + id + "' TestEngine ID.");
+	void thirdPartyEngineClaimingToBeVintageResultsInException() {
+		assertImposter("junit-vintage");
 	}
+
+	private void assertImposter(String id) {
+		TestEngine impostor = new TestEngineStub(id);
+		Exception exception = assertThrows(JUnitException.class, () -> createLauncher(impostor));
+		assertThat(exception).hasMessage(
+			"Third-party TestEngine '%s' is forbidden to use the reserved '%s' TestEngine ID.",
+			impostor.getClass().getName(), id);
+	}
+
 }
