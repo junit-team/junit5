@@ -1039,6 +1039,8 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_e
 | `java.io.File`             | `"/path/to/file"`                        -> `new File("/path/to/file")`
 | `java.lang.Class`          | `"java.lang.Integer"`                    -> `Class.forName("java.lang.Integer")` +
 (remember to use `$` for nested classes, e.g. `"java.lang.Thread$State"`)
+| `java.lang.Class`          | `"byte"`                                 -> `byte.class` (primitive types are supported)
+| `java.lang.Class`          | `"char[]"`                               -> `char[].class` (array types are supported)
 | `java.math.BigDecimal`     | `"123.456e789"`                          -> `new BigDecimal("123.456e789")`
 | `java.math.BigInteger`     | `"1234567890123456789"`                  -> `new BigInteger("1234567890123456789")`
 | `java.net.URI`             | `"http://junit.org/"`                    -> `URI.create("http://junit.org/")`

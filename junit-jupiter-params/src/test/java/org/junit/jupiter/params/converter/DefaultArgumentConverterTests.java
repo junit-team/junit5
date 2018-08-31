@@ -119,6 +119,11 @@ class DefaultArgumentConverterTests {
 	void convertsStringToClass() {
 		assertConverts("java.lang.Integer", Class.class, Integer.class);
 		assertConverts("java.lang.Thread$State", Class.class, State.class);
+		assertConverts("byte", Class.class, byte.class);
+		assertConverts("char[]", Class.class, char[].class);
+		assertConverts("java.lang.Long[][]", Class.class, Long[][].class);
+		assertConverts("[[[I", Class.class, int[][][].class);
+		assertConverts("[[Ljava.lang.String;", Class.class, String[][].class);
 	}
 
 	// --- java.math -----------------------------------------------------------
