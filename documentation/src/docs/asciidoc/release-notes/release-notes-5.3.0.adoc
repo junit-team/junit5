@@ -13,20 +13,12 @@ on GitHub.
 [[release-notes-5.3.0-junit-platform]]
 === JUnit Platform
 
-==== Bug Fixes
-
-* ❓
-
 ==== Deprecations and Breaking Changes
 
 * The JUnit Platform `Launcher` now enforces that only `TestEngine` implementations
   published by the JUnit Team may use the `junit-` prefix for their `TestEngine` IDs.
   - See the <<../user-guide/index.adoc#launcher-api-engines-custom-ids, User Guide>> for
     details.
-
-==== New Features and Improvements
-
-* ❓
 
 
 [[release-notes-5.3.0-junit-jupiter]]
@@ -48,21 +40,11 @@ on GitHub.
 * The dynamic test API has been promoted from _experimental_ to _maintained_ status. This
   affects the `@TestFactory` annotation as well as the `DynamicTest`, `DynamicContainer`,
   and `DynamicNode` types in the `org.junit.jupiter.api` package.
-* Implicit argument conversion for parameterized tests can now convert strings like
-  `java.lang.Integer` to `Class` instances.
+* Implicit argument conversion for parameterized tests can now convert strings such as
+  `"java.lang.Integer"`, `"long"`, and `"byte[]"` to `Class` instances.
 
 
 [[release-notes-5.3.0-junit-vintage]]
 === JUnit Vintage
 
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
+No changes.
