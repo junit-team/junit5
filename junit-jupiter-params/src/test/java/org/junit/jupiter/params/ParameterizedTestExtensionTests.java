@@ -21,7 +21,6 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -73,7 +72,7 @@ class ParameterizedTestExtensionTests {
 	@Test
 	void streamsReturnedByProvidersAreClosedWhenCallingProvide() {
 		ExtensionContext extensionContext = getExtensionContextReturningSingleMethod(
-			new TestCaseWithArgumentSourceAnnotatedMethod());
+			new ArgumentsProviderWithCloseHandlerTestCase());
 		// we need to call supportsTestTemplate() first, because it creates and
 		// puts the ParameterizedTestMethodContext into the Store
 		this.parameterizedTestExtension.supportsTestTemplate(extensionContext);
@@ -81,7 +80,8 @@ class ParameterizedTestExtensionTests {
 		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
 			extensionContext);
 
-		//cause the stream to be evaluated
+		assertFalse(streamWasClosed);
+		// cause the stream to be evaluated
 		stream.count();
 		assertTrue(streamWasClosed);
 	}
@@ -104,7 +104,7 @@ class ParameterizedTestExtensionTests {
 
 		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
 			extensionContextWithAnnotatedTestMethod);
-		//cause the stream to be evaluated
+		// cause the stream to be evaluated
 		stream.toArray();
 		JUnitException exception = assertThrows(JUnitException.class, stream::close);
 
@@ -115,30 +115,30 @@ class ParameterizedTestExtensionTests {
 	@Test
 	void throwsExceptionWhenArgumentsProviderIsNotStatic() {
 		ExtensionContext extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
-			new TestCaseWithArgumentSourceAnnotatedMethodWithNonStaticArgumentsProvider());
+			new NonStaticArgumentsProviderTestCase());
 
 		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
 			extensionContextWithAnnotatedTestMethod);
 
 		JUnitException exception = assertThrows(JUnitException.class, stream::toArray);
 
-		assertInstantiateArgumentsProviderException(exception, NonStaticArgumentsProvider.class);
+		assertArgumentsProviderInstantiationException(exception, NonStaticArgumentsProvider.class);
 	}
 
 	@Test
 	void throwsExceptionWhenArgumentsProviderDoesNotContainNoArgumentConstructor() {
 		ExtensionContext extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
-			new TestCaseWithArgumentSourceAnnotatedMethodWithNoArgumentsConstructorArgumentsProvider());
+			new MissingNoArgumentsConstructorArgumentsProviderTestCase());
 
 		Stream<TestTemplateInvocationContext> stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
 			extensionContextWithAnnotatedTestMethod);
 
 		JUnitException exception = assertThrows(JUnitException.class, stream::toArray);
 
-		assertInstantiateArgumentsProviderException(exception, ArgumentsProviderWithNoArgumentConstructor.class);
+		assertArgumentsProviderInstantiationException(exception, MissingNoArgumentsConstructorArgumentsProvider.class);
 	}
 
-	private <T> void assertInstantiateArgumentsProviderException(JUnitException exception, Class<T> clazz) {
+	private <T> void assertArgumentsProviderInstantiationException(JUnitException exception, Class<T> clazz) {
 		assertThat(exception).hasMessage(
 			String.format("Failed to find a no-argument constructor for ArgumentsProvider [%s]. "
 					+ "Please ensure that a no-argument constructor exists and "
@@ -245,13 +245,12 @@ class ParameterizedTestExtensionTests {
 		}
 	}
 
-	static class TestCaseWithArgumentSourceAnnotatedMethod {
+	static class ArgumentsProviderWithCloseHandlerTestCase {
 
 		@ParameterizedTest
 		@ArgumentsSource(ArgumentsProviderWithCloseHandler.class)
 		void method(String parameter) {
 		}
-
 	}
 
 	static class ArgumentsProviderWithCloseHandler implements ArgumentsProvider {
@@ -263,13 +262,12 @@ class ParameterizedTestExtensionTests {
 		}
 	}
 
-	static class TestCaseWithArgumentSourceAnnotatedMethodWithNonStaticArgumentsProvider {
+	static class NonStaticArgumentsProviderTestCase {
 
 		@ParameterizedTest
 		@ArgumentsSource(NonStaticArgumentsProvider.class)
-		void method(Collection<String> parameters) {
+		void method() {
 		}
-
 	}
 
 	class NonStaticArgumentsProvider implements ArgumentsProvider {
@@ -280,18 +278,17 @@ class ParameterizedTestExtensionTests {
 		}
 	}
 
-	static class TestCaseWithArgumentSourceAnnotatedMethodWithNoArgumentsConstructorArgumentsProvider {
+	static class MissingNoArgumentsConstructorArgumentsProviderTestCase {
 
 		@ParameterizedTest
-		@ArgumentsSource(ArgumentsProviderWithNoArgumentConstructor.class)
-		void method(Collection<String> parameters) {
+		@ArgumentsSource(MissingNoArgumentsConstructorArgumentsProvider.class)
+		void method() {
 		}
-
 	}
 
-	static class ArgumentsProviderWithNoArgumentConstructor implements ArgumentsProvider {
+	static class MissingNoArgumentsConstructorArgumentsProvider implements ArgumentsProvider {
 
-		ArgumentsProviderWithNoArgumentConstructor(String parameter) {
+		MissingNoArgumentsConstructorArgumentsProvider(String parameter) {
 		}
 
 		@Override

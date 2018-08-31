@@ -99,13 +99,11 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		}
 		catch (Exception ex) {
 			if (ex instanceof NoSuchMethodException) {
-				throw new JUnitException(
-					String.format(
-						"Failed to find a no-argument constructor for ArgumentsProvider [%s]. "
-								+ "Please ensure that a no-argument constructor exists and "
-								+ "that the class is either a top-level class or a static nested class",
-						clazz.getName()),
-					ex);
+				String message = String.format("Failed to find a no-argument constructor for ArgumentsProvider [%s]. "
+						+ "Please ensure that a no-argument constructor exists and "
+						+ "that the class is either a top-level class or a static nested class",
+					clazz.getName());
+				throw new JUnitException(message, ex);
 			}
 			throw ex;
 		}
