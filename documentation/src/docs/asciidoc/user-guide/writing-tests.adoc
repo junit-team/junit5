@@ -1310,7 +1310,7 @@ include::{testDir}/example/DynamicTestsDemo.java[tags=user_guide]
 
 By default, JUnit Jupiter tests are run sequentially in a single thread. Running tests in
 parallel, e.g. to speed up execution, is available as an opt-in feature since version 5.3.
-To enable parallel execution, simply set the set the
+To enable parallel execution, simply set the
 `junit.jupiter.execution.parallel.enabled` configuration parameter to `true`, e.g. in `junit-platform.properties` (see <<running-tests-config-params>> for other options).
 
 Once enabled, the JUnit Jupiter engine will execute tests on all levels of the test tree
