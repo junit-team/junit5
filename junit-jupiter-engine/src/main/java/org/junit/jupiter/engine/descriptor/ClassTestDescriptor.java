@@ -163,10 +163,11 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		ThrowableCollector throwableCollector = new OpenTest4JAwareThrowableCollector();
 		ClassExtensionContext extensionContext = new ClassExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, lifecycle, context.getConfigurationParameters(), throwableCollector);
+			context.getExecutionListener(), this, this.lifecycle, context.getConfigurationParameters(),
+			throwableCollector);
 
-		this.beforeAllMethods = findBeforeAllMethods(this.testClass, lifecycle == Lifecycle.PER_METHOD);
-		this.afterAllMethods = findAfterAllMethods(this.testClass, lifecycle == Lifecycle.PER_METHOD);
+		this.beforeAllMethods = findBeforeAllMethods(this.testClass, this.lifecycle == Lifecycle.PER_METHOD);
+		this.afterAllMethods = findAfterAllMethods(this.testClass, this.lifecycle == Lifecycle.PER_METHOD);
 
 		// @formatter:off
 		return context.extend()
