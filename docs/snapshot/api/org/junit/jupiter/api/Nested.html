@@ -129,7 +129,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.0")
 public @interface <span class="memberNameLabel">Nested</span></pre>
 <div class="block"><code>@Nested</code> is used to signal that the annotated class is a nested,
- non-static test class (i.e., an <em>inner class</em>).</div>
+ non-static test class (i.e., an <em>inner class</em>) that can share
+ setup and state with an instance of its <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true#getEnclosingClass()" title="class or interface in java.lang" class="externalLink">enclosing class</a>. The enclosing class may be a top-level test class or
+ another <code>@Nested</code> test class, and nesting can be arbitrarily deep.
+
+ <h3>Test Instance Lifecycle</h3>
+
+ <ul>
+ <li>A <code>@Nested</code> test class <em>can</em> be configured with its own
+ <a href="../../../../org/junit/jupiter/api/TestInstance.Lifecycle.html" title="enum in org.junit.jupiter.api"><code>TestInstance.Lifecycle</code></a> mode which may differ from that of an enclosing test
+ class.</li>
+ <li>A <code>@Nested</code> test class <em>cannot</em> change the <a href="../../../../org/junit/jupiter/api/TestInstance.Lifecycle.html" title="enum in org.junit.jupiter.api"><code>TestInstance.Lifecycle</code></a>
+ mode of an enclosing test class.</li>
+ </ul></div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.0</dd>

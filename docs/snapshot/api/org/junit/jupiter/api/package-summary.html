@@ -267,7 +267,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colFirst" scope="row"><a href="../../../../org/junit/jupiter/api/Nested.html" title="annotation in org.junit.jupiter.api">Nested</a></th>
 <td class="colLast">
 <div class="block"><code>@Nested</code> is used to signal that the annotated class is a nested,
- non-static test class (i.e., an <em>inner class</em>).</div>
+ non-static test class (i.e., an <em>inner class</em>) that can share
+ setup and state with an instance of its <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true#getEnclosingClass()" title="class or interface in java.lang" class="externalLink">enclosing class</a>.</div>
 </td>
 </tr>
 <tr class="rowColor">

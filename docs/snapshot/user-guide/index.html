@@ -2458,14 +2458,14 @@ For example, you can write tests for how implementations of <code>Object.equals<
     }
 
     <span class="annotation">@Test</span>
-    <span class="keyword">default</span> <span class="type">void</span> returnsPositiveNumberComparedToSmallerValue() {
+    <span class="keyword">default</span> <span class="type">void</span> returnsPositiveNumberWhenComparedToSmallerValue() {
         T value = createValue();
         T smallerValue = createSmallerValue();
         assertTrue(value.compareTo(smallerValue) &gt; <span class="integer">0</span>);
     }
 
     <span class="annotation">@Test</span>
-    <span class="keyword">default</span> <span class="type">void</span> returnsNegativeNumberComparedToLargerValue() {
+    <span class="keyword">default</span> <span class="type">void</span> returnsNegativeNumberWhenComparedToLargerValue() {
         T value = createValue();
         T smallerValue = createSmallerValue();
         assertTrue(smallerValue.compareTo(value) &lt; <span class="integer">0</span>);
@@ -6834,7 +6834,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-09-01 07:02:18 EDT
+Last updated 2018-08-31 05:49:51 EDT
 </div>
 </div>
 </body>
