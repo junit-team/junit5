@@ -546,20 +546,6 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#release-notes-5.3.0-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
-<li><a href="#release-notes-5.3.0-RC1">5.3.0-RC1</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.3.0-RC1-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.3.0-RC1-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.3.0-RC1-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
-<li><a href="#release-notes-5.3.0-M1">5.3.0-M1</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.3.0-M1-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.3.0-M1-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.3.0-M1-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
 <li><a href="#release-notes-5.2.0">5.2.0</a></li>
 </ul>
 </div>
@@ -571,10 +557,9 @@ table.CodeRay td.code>pre{padding:0}
 <p>This document contains the <em>change log</em> for all JUnit 5 releases since 5.2 GA.</p>
 </div>
 <div class="paragraph">
-<p>Please refer to the <a href="../user-guide/index.html#user-guide">User Guide</a> for
-comprehensive reference documentation for programmers writing tests,
-extension authors, and engine authors as well as build tool and IDE
-vendors.</p>
+<p>Please refer to the <a href="../user-guide/index.html#user-guide">User Guide</a> for comprehensive
+reference documentation for programmers writing tests, extension authors, and engine
+authors as well as build tool and IDE vendors.</p>
 </div>
 </div>
 </div>
@@ -585,112 +570,35 @@ vendors.</p>
 <p><strong>Date of Release:</strong> September 3, 2018</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> ❓</p>
+<p><strong>Scope:</strong> Parallel test execution, output capturing for <code>System.out</code> and <code>System.err</code>, new
+<code>TestInstanceFactory</code> extension API, custom test sources for dynamic tests, promotion of
+the dynamic test API from <em>experimental</em> to <em>maintained</em> status, discontinuation of the
+<code>junit-platform-gradle-plugin</code>, deprecation of the (<code>junit-platform-surefire-provider</code>),
+as well as various minor improvements and bug fixes.</p>
 </div>
 <div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/28?closed=1">5.3</a> milestone page in the JUnit repository
-on GitHub.</p>
+<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult
+the <a href="https://github.com/junit-team/junit5/milestone/23?closed=1">5.3 M1</a>,
+<a href="https://github.com/junit-team/junit5/milestone/27?closed=1">5.3 RC1</a>, and
+<a href="https://github.com/junit-team/junit5/milestone/28?closed=1">5.3 GA</a> milestone pages in the JUnit
+repository on GitHub.</p>
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.3.0-junit-platform"><a class="anchor" href="#release-notes-5.3.0-junit-platform"></a>JUnit Platform</h3>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The JUnit Platform <code>Launcher</code> now enforces that only <code>TestEngine</code> implementations
-published by the JUnit Team may use the <code>junit-</code> prefix for their <code>TestEngine</code> IDs.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>See the <a href="../user-guide/index.html#launcher-api-engines-custom-ids">User Guide</a> for
-details.</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.3.0-junit-jupiter"><a class="anchor" href="#release-notes-5.3.0-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
 <h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>The <code>junit-jupiter-params</code> JAR file was missing the required Kotlin metadata for the
-<code>getAs&lt;Class&gt;(index)</code> Kotlin extension method. The underlying packaging issue has now
-been solved, and the extension method has been renamed to <code>get&lt;Class&gt;(index)</code> as
-originally intended in 5.3.0-M1.</p>
+<p>The full stacktrace is now printed to the console when running the <code>ConsoleLauncher</code>
+in <code>--details verbose</code> mode.</p>
 </li>
 <li>
-<p><code>TestInstanceFactory</code> extensions are now properly <em>inherited</em> within <code>@Nested</code> test
-class hierarchies.</p>
+<p><code>ReflectionUtils.findNestedClasses()</code> and <code>ReflectionSupport.findNestedClasses()</code> no
+longer allow a <code>NoClassDefFoundError</code> to propagate if a nested class or nested
+interface has an invalid class file. Instead, the error will now be swallowed and
+logged at <code>WARNING</code> level.</p>
 </li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>@Nested</code> test classes can no longer <em>override</em> <code>TestInstanceFactory</code> extensions
-registered on an <em>enclosing</em> class. This aligns with the behavior for
-<code>TestInstanceFactory</code> extensions registered within a conventional test class hierarchy.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The dynamic test API has been promoted from <em>experimental</em> to <em>maintained</em> status. This
-affects the <code>@TestFactory</code> annotation as well as the <code>DynamicTest</code>, <code>DynamicContainer</code>,
-and <code>DynamicNode</code> types in the <code>org.junit.jupiter.api</code> package.</p>
-</li>
-<li>
-<p>Implicit argument conversion for parameterized tests can now convert strings such as
-<code>"java.lang.Integer"</code>, <code>"long"</code>, and <code>"byte[]"</code> to <code>Class</code> instances.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.3.0-junit-vintage"><a class="anchor" href="#release-notes-5.3.0-junit-vintage"></a>JUnit Vintage</h3>
-<div class="paragraph">
-<p>No changes.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="release-notes-5.3.0-RC1"><a class="anchor" href="#release-notes-5.3.0-RC1"></a>5.3.0-RC1</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> August 13, 2018</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong> Finishing touches on parallel test execution and output capturing, bug fixes and
-miscellaneous usability improvements.</p>
-</div>
-<div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/27?closed=1">5.3 RC1</a> milestone page in the JUnit repository
-on GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.3.0-RC1-junit-platform"><a class="anchor" href="#release-notes-5.3.0-RC1-junit-platform"></a>JUnit Platform</h3>
-<div class="sect3">
-<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
 <li>
 <p>All <code>DiscoverySelector</code> implementations (e.g., <code>PackageSelector</code>, <code>ClassSelector</code>,
 <code>MethodSelector</code>, etc.) now implement <code>equals()</code> and <code>hashCode()</code> for proper behavior
@@ -705,222 +613,30 @@ addition, the non-blank precondition for a class name is now enforced.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations"><a class="anchor" href="#deprecations"></a>Deprecations</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The JUnit Platform Surefire Provider (<code>junit-platform-surefire-provider</code>) is now
-deprecated in favor of the native support for the JUnit Platform provided by Maven
-Surefire 2.22.0 and later versions.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>New <code>LauncherConfig</code> and associated <em>builder</em> for configuring the <code>LauncherFactory</code>.
-Specifically, auto-registration of test engines and test execution listeners can now be
-disabled, and additional engines and listeners can be registered programmatically.</p>
-</li>
-<li>
-<p>New <code>MethodSource.from(Class, Method)</code> static factory method for creating a
-<code>MethodSource</code> from a specific class and method. This method should be used in favor of
-<code>MethodSource.from(Method)</code> when the test method is inherited from a superclass or
-present as an interface <code>default</code> method.</p>
-</li>
-<li>
-<p>A <code>ClasspathResourceSource</code> can now be created from a <code>URI</code> via the new <code>from(URI)</code>
-static factory method if the <code>URI</code> uses the <code>classpath</code> scheme.</p>
-</li>
-<li>
-<p>If the new experimental feature is enabled, captured output to <code>System.out</code> and
-<code>System.err</code> is now written to the dedicated <code>system-out</code> and <code>system-err</code> elements,
-respectively, in the XML report generated by <code>ConsoleLauncher</code>.</p>
-</li>
-<li>
-<p>The <code>ConsoleLauncher</code> now uses the <a href="https://github.com/remkop/picocli">picocli</a> library
-under the hood to parse the command line and generate usage help. Users may now pass
-command line arguments via an argument file (<code>@-file</code>) to the console launcher.
-Argument files allow users to work around system limitations on the length of a command
-line when creating a command line with lots of options or with long arguments for
-options. The usage help is now displayed using ANSI colors on supported platforms.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.3.0-RC1-junit-jupiter"><a class="anchor" href="#release-notes-5.3.0-RC1-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>MethodSource</code> for an <em>inherited</em> <code>@Test</code> method now correctly references the
-<em>current</em> test class instead of the class or interface in which the <code>@Test</code> method is
-<em>declared</em>. This allows build tools such as Maven Surefire to properly include
-inherited <code>@Test</code> methods when executing a single test class or specific test classes
-based on filters&#8201;&#8212;&#8201;for example, via <code>mvn test -Dtest=SubclassTests</code>).</p>
-</li>
-<li>
-<p>Exceptions thrown in <code>@After</code> and <code>@AfterAll</code> lifecycle methods now take precedence over
-violated assumptions (i.e. <code>TestAbortedExceptions</code>) in test or prior lifecycle methods.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Generation of a detailed failure message for a failed assertion no longer fails if the
-<code>toString()</code> implementation of an object supplied to the assertion throws an exception.
-Instead, the object with the broken <code>toString()</code> implementation will be referenced via
-a default String representation based on the object&#8217;s fully qualified class name and
-system hash code, separated by an <code>@</code> symbol.</p>
-</li>
-<li>
-<p>Although it is <em>highly discouraged</em>, it is now possible to extend the <code><a href="../api/org/junit/jupiter/api/Assertions.html">org.junit.jupiter.api.Assertions</a></code>
-and <code><a href="../api/org/junit/jupiter/api/Assumptions.html">org.junit.jupiter.api.Assumptions</a></code> classes for special use cases.</p>
-</li>
-<li>
-<p>New <code>publishEntry(String)</code> method in <code>TestReporter</code> that makes it easier to publish a
-report entry based solely on a <em>value</em> without requiring that a <em>key</em> be specified
-(as is required by the existing <code>publishEntry()</code> variants).</p>
-</li>
-<li>
-<p>A custom test source <code>URI</code> for a dynamic container or dynamic test will now be
-registered as a <code>ClasspathResourceSource</code> if the <code>URI</code> uses the <code>classpath</code> scheme.</p>
-</li>
-<li>
-<p>New <code>TestInstanceFactory</code> extension API that enables custom creation of test class
-instances.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>See <a href="../user-guide/index.html#extensions-test-instance-factories">Test Instance
-Factories</a> in the User Guide for details.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><code>ArgumentConverters</code> and <code>ArgumentsAggregators</code> registered using <code>@ConvertWith</code> and
-<code>@AggregateWith</code>, respectively, are now only instantiated once per <code>@ParameterizedTest</code>
-instead of once for each invocation.</p>
-</li>
-<li>
-<p>Performance improvements for executing parameterized tests, particularly when the method
-declares more than a few parameters.</p>
-</li>
-<li>
-<p>New <code>{displayName}</code> placeholder for the <code>name</code> attribute in <code>@ParameterizedTest</code> that
-allows developers to include the display name of the <code>@ParameterizedTest</code> method in a
-custom display name for invocations of that parameterized test.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>This aligns with the existing <code>{displayName}</code> placeholder support for <code>@RepeatedTest</code>.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Generation of the display name for a <code>@ParameterizedTest</code> no longer fails if the
-<code>toString()</code> implementation of an argument for the parameterized test throws an
-exception. Instead, the object with the broken <code>toString()</code> implementation will be
-referenced via a default String representation based on the object&#8217;s fully qualified
-class name and system hash code, separated by an <code>@</code> symbol.</p>
-</li>
-<li>
-<p>New <code>getAs&lt;Class&gt;(index)</code> Kotlin extension method to make <code>ArgumentsAccessor</code> friendlier
-to use from Kotlin.</p>
-</li>
-<li>
-<p>Tests in classes that use <code>Lifecycle.PER_CLASS</code> are now executed in the same thread by
-default when parallel execution is enabled.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.3.0-RC1-junit-vintage"><a class="anchor" href="#release-notes-5.3.0-RC1-junit-vintage"></a>JUnit Vintage</h3>
-<div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>MethodSource</code> for an <em>inherited</em> <code>@Test</code> method now correctly references the
-<em>current</em> test class instead of the class or interface in which the <code>@Test</code> method is
-<em>declared</em>. This allows build tools such as Maven Surefire to properly include
-inherited <code>@Test</code> methods when executing a single test class or specific test classes
-based on filters&#8201;&#8212;&#8201;for example, via <code>mvn test -Dtest=SubclassTests</code>).</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>VintageTestEngine</code> now uses the <em>simple name</em> of a test class as the display
-name instead of the <em>fully qualified class name</em>. This aligns with the behavior of the
-<code>JupiterTestEngine</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="release-notes-5.3.0-M1"><a class="anchor" href="#release-notes-5.3.0-M1"></a>5.3.0-M1</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> June 24, 2018</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong> Parallel test execution, output capturing, test sources for dynamic tests as well
-as various minor improvements and bug fixes.</p>
-</div>
-<div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/23?closed=1">5.3 M1</a> milestone page in the JUnit repository
-on GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.3.0-M1-junit-platform"><a class="anchor" href="#release-notes-5.3.0-M1-junit-platform"></a>JUnit Platform</h3>
-<div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The full stacktrace is now printed to the console when running the <code>ConsoleLauncher</code>
-in <code>--details verbose</code> mode.</p>
-</li>
-<li>
-<p><code>ReflectionUtils.findNestedClasses()</code> and <code>ReflectionSupport.findNestedClasses()</code> no
-longer allow a <code>NoClassDefFoundError</code> to propagate if a nested class or nested
-interface has an invalid class file. Instead, the error will now be swallowed and
-logged at <code>WARNING</code> level.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes"><a class="anchor" href="#deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
 <p>The <code>junit-platform-gradle-plugin</code> has been discontinued and is no longer released as
 part of JUnit 5. Please use <a href="../user-guide/index.html#running-tests-build-gradle">Gradle&#8217;s native support</a> for running tests on the JUnit Platform (requires Gradle 4.6
 or higher) instead.</p>
+</li>
+<li>
+<p>The JUnit Platform Surefire Provider (<code>junit-platform-surefire-provider</code>) is now
+deprecated in favor of the native support for the JUnit Platform provided by Maven
+Surefire 2.22.0 and later versions.</p>
+</li>
+<li>
+<p>The JUnit Platform <code>Launcher</code> now enforces that only <code>TestEngine</code> implementations
+published by the JUnit Team may use the <code>junit-</code> prefix for their <code>TestEngine</code> IDs.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See the <a href="../user-guide/index.html#launcher-api-engines-custom-ids">User Guide</a> for
+details.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p>The <code>findAnnotation()</code> methods in <code>AnnotationSupport</code> and <code>AnnotationUtils</code> no longer
@@ -931,15 +647,9 @@ unmodified and is therefore semantically identical to the previous behavior.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
-<li>
-<p>Experimental support for capturing output printed to <code>System.out</code> and <code>System.err</code>
-during test execution. This feature is disabled by default and can be enabled using a
-configuration parameter (see the
-<a href="../user-guide/index.html#running-tests-capturing-output">User Guide</a> for details).</p>
-</li>
 <li>
 <p>Reusable support for parallel test execution for test engines that extend
 <code>HierarchicalTestEngine</code>.</p>
@@ -964,14 +674,47 @@ parallel test execution based on Java&#8217;s Fork/Join framework.</p>
 </div>
 </li>
 <li>
+<p>Experimental support for capturing output printed to <code>System.out</code> and <code>System.err</code>
+during test execution.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This feature is disabled by default but can be enabled using a configuration
+parameter (see the <a href="../user-guide/index.html#running-tests-capturing-output">User
+Guide</a> for details).</p>
+</li>
+<li>
+<p>If the new experimental feature is enabled, output captured for <code>System.out</code> and
+<code>System.err</code> will be written to the dedicated <code>system-out</code> and <code>system-err</code> elements,
+respectively, in the XML report generated by the <code>ConsoleLauncher</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p>New <code>UriSource.from(URI)</code> static factory method that allows a <code>TestSource</code> to be
 created from a <code>URI</code>. If the <code>URI</code> references a file or directory in the local
 filesystem, a <code>FileSource</code> or <code>DirectorySource</code> will be created; otherwise, an instance
 of the default <code>UriSource</code> implementation will be created.</p>
 </li>
 <li>
+<p>New <code>MethodSource.from(Class, Method)</code> static factory method for creating a
+<code>MethodSource</code> from a specific class and method. This method should be used in favor of
+<code>MethodSource.from(Method)</code> when the test method is inherited from a superclass or
+present as an interface <code>default</code> method.</p>
+</li>
+<li>
+<p>A <code>ClasspathResourceSource</code> can now be created from a <code>URI</code> via the new <code>from(URI)</code>
+static factory method if the <code>URI</code> uses the <code>classpath</code> scheme.</p>
+</li>
+<li>
 <p>New overloaded variant of <code>isAnnotated()</code> in <code>AnnotationSupport</code> that accepts
 <code>Optional&lt;? extends AnnotatedElement&gt;</code> instead of <code>AnnotatedElement</code>.</p>
+</li>
+<li>
+<p>New <code>LauncherConfig</code> and associated <em>builder</em> for configuring the <code>LauncherFactory</code>.
+Specifically, auto-registration of test engines and test execution listeners can now be
+disabled, and additional engines and listeners can be registered programmatically.</p>
 </li>
 <li>
 <p>New <code>--fail-if-no-tests</code> command-line option for the <code>ConsoleLauncher</code>.</p>
@@ -984,14 +727,31 @@ exit with a status code of <code>2</code>.</p>
 </ul>
 </div>
 </li>
+<li>
+<p>The <code>ConsoleLauncher</code> now uses the <a href="https://github.com/remkop/picocli">picocli</a> library
+under the hood to parse the command line and generate usage help.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Users may now pass command-line arguments via an argument file (<code>@-file</code>) to the
+console launcher. Argument files allow users to work around system limitations on the
+length of a command line when creating a command line with lots of options or with
+long arguments for options.</p>
+</li>
+<li>
+<p>The usage help is now displayed using ANSI colors on supported platforms.</p>
+</li>
+</ul>
+</div>
+</li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.3.0-M1-junit-jupiter"><a class="anchor" href="#release-notes-5.3.0-M1-junit-jupiter"></a>JUnit Jupiter</h3>
+<h3 id="release-notes-5.3.0-junit-jupiter"><a class="anchor" href="#release-notes-5.3.0-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -999,6 +759,17 @@ exit with a status code of <code>2</code>.</p>
 <code>AfterAllCallback</code> extensions are no longer invoked if an exception is thrown by the
 test class constructor. Consequently, <code>AfterAllCallback</code> extensions are now only
 invoked if <code>BeforeAllCallback</code> extensions are invoked.</p>
+</li>
+<li>
+<p>Exceptions thrown in <code>@After</code> and <code>@AfterAll</code> lifecycle methods now take precedence over
+violated assumptions (i.e. <code>TestAbortedExceptions</code>) in test or prior lifecycle methods.</p>
+</li>
+<li>
+<p>The <code>MethodSource</code> for an <em>inherited</em> <code>@Test</code> method now correctly references the
+<em>current</em> test class instead of the class or interface in which the <code>@Test</code> method is
+<em>declared</em>. This allows build tools such as Maven Surefire to properly include
+inherited <code>@Test</code> methods when executing a single test class or specific test classes
+based on filters&#8201;&#8212;&#8201;for example, via <code>mvn test -Dtest=SubclassTests</code>).</p>
 </li>
 <li>
 <p>Test discovery no longer halts prematurely if a nested class or nested interface in a
@@ -1021,22 +792,85 @@ could not be properly discovered.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
 <p>Experimental support for parallel test execution. By default, tests are still executed
-sequentially; parallelism can be enabled using a configuration parameter (please refer
-to the <a href="../user-guide/index.html#writing-tests-parallel-execution">User Guide</a> for
-examples and configuration options).</p>
-</li>
-<li>
-<p>New support for the IBM AIX operating system in <code>@EnabledOnOs</code> and <code>@DisabledOnOs</code>.</p>
+sequentially, but parallelism can be enabled using a configuration parameter (please
+refer to the <a href="../user-guide/index.html#writing-tests-parallel-execution">User Guide</a>
+for examples and configuration options).</p>
 </li>
 <li>
 <p>New <code>assertThrows</code> methods in <code>Assertions</code> provide a more specific failure message if
 the supplied lambda expression or method reference returns a result instead of throwing
 an exception.</p>
+</li>
+<li>
+<p>Generation of a detailed failure message for a failed assertion no longer fails if the
+<code>toString()</code> implementation of an object supplied to the assertion throws an exception.
+Instead, the object with the broken <code>toString()</code> implementation will be referenced via
+a default String representation based on the object&#8217;s fully qualified class name and
+system hash code, separated by an <code>@</code> symbol.</p>
+</li>
+<li>
+<p>Although it is <em>highly discouraged</em>, it is now possible to extend the <code><a href="../api/org/junit/jupiter/api/Assertions.html">org.junit.jupiter.api.Assertions</a></code>
+and <code><a href="../api/org/junit/jupiter/api/Assumptions.html">org.junit.jupiter.api.Assumptions</a></code> classes for special use cases.</p>
+</li>
+<li>
+<p>New <code>publishEntry(String)</code> method in <code>TestReporter</code> that makes it easier to publish a
+report entry based solely on a <em>value</em> without requiring that a <em>key</em> be specified
+(as is required by the existing <code>publishEntry()</code> variants).</p>
+</li>
+<li>
+<p>New support for the IBM AIX operating system in <code>@EnabledOnOs</code> and <code>@DisabledOnOs</code>.</p>
+</li>
+<li>
+<p>The dynamic test API has been promoted from <em>experimental</em> to <em>maintained</em> status. This
+affects the <code>@TestFactory</code> annotation as well as the <code>DynamicTest</code>, <code>DynamicContainer</code>,
+and <code>DynamicNode</code> types in the <code>org.junit.jupiter.api</code> package.</p>
+</li>
+<li>
+<p>New support for supplying a custom test source <code>URI</code> when creating a dynamic container
+or test.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>A custom test source <code>URI</code> for a dynamic container or dynamic test will be registered
+as a <code>ClasspathResourceSource</code> if the <code>URI</code> uses the <code>classpath</code> scheme; otherwise,
+such a URI will be registered as a <code>FileSource</code>, <code>DirectorySource</code>, or <code>UriSource</code> as
+appropriate.</p>
+</li>
+<li>
+<p>See the new factory methods <code>dynamicContainer(String, URI, &#8230;&#8203;)</code> in
+<code>DynamicContainer</code> and <code>dynamicTest(String, URI, Executable)</code> in <code>DynamicTest</code> for
+details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>New <code>{displayName}</code> placeholder for the <code>name</code> attribute in <code>@ParameterizedTest</code> that
+allows developers to include the display name of the <code>@ParameterizedTest</code> method in a
+custom display name for invocations of that parameterized test.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This aligns with the existing <code>{displayName}</code> placeholder support for <code>@RepeatedTest</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Generation of the display name for a <code>@ParameterizedTest</code> no longer fails if the
+<code>toString()</code> implementation of an argument for the parameterized test throws an
+exception. Instead, the object with the broken <code>toString()</code> implementation will be
+referenced via a default String representation based on the object&#8217;s fully qualified
+class name and system hash code, separated by an <code>@</code> symbol.</p>
+</li>
+<li>
+<p>Implicit argument conversion for parameterized tests can now convert strings such as
+<code>"java.lang.Integer"</code>, <code>"long"</code>, and <code>"byte[]"</code> to <code>Class</code> instances.</p>
 </li>
 <li>
 <p>New <code>arguments()</code> static factory method in the <code>Arguments</code> interface that serves as an
@@ -1047,14 +881,22 @@ an exception.</p>
 to use from Kotlin.</p>
 </li>
 <li>
-<p>New support for supplying a custom test source <code>URI</code> when creating a dynamic container
-or test.</p>
+<p><code>ArgumentConverters</code> and <code>ArgumentsAggregators</code> registered using <code>@ConvertWith</code> and
+<code>@AggregateWith</code>, respectively, are now only instantiated once per <code>@ParameterizedTest</code>
+instead of once for each invocation.</p>
+</li>
+<li>
+<p>Performance improvements for executing parameterized tests, particularly when the method
+declares more than a few parameters.</p>
+</li>
+<li>
+<p>New <code>TestInstanceFactory</code> extension API that enables custom creation of test class
+instances.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>See the new factory methods <code>dynamicContainer(String, URI, &#8230;&#8203;)</code> in
-<code>DynamicContainer</code> and <code>dynamicTest(String, URI, Executable)</code> in <code>DynamicTest</code> for
-details.</p>
+<p>See <a href="../user-guide/index.html#extensions-test-instance-factories">Test Instance
+Factories</a> in the User Guide for details.</p>
 </li>
 </ul>
 </div>
@@ -1064,9 +906,32 @@ details.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.3.0-M1-junit-vintage"><a class="anchor" href="#release-notes-5.3.0-M1-junit-vintage"></a>JUnit Vintage</h3>
-<div class="paragraph">
-<p>No changes.</p>
+<h3 id="release-notes-5.3.0-junit-vintage"><a class="anchor" href="#release-notes-5.3.0-junit-vintage"></a>JUnit Vintage</h3>
+<div class="sect3">
+<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>MethodSource</code> for an <em>inherited</em> <code>@Test</code> method now correctly references the
+<em>current</em> test class instead of the class or interface in which the <code>@Test</code> method is
+<em>declared</em>. This allows build tools such as Maven Surefire to properly include
+inherited <code>@Test</code> methods when executing a single test class or specific test classes
+based on filters&#8201;&#8212;&#8201;for example, via <code>mvn test -Dtest=SubclassTests</code>).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>VintageTestEngine</code> now uses the <em>simple name</em> of a test class as the display
+name instead of the <em>fully qualified class name</em>. This aligns with the behavior of the
+<code>JupiterTestEngine</code>.</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </div>
@@ -1093,7 +958,7 @@ minor improvements and bug fixes.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-08-31 05:49:51 EDT
+Last updated 2018-09-03 10:46:51 EDT
 </div>
 </div>
 </body>
