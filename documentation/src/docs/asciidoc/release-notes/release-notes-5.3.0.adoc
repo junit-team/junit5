@@ -3,7 +3,7 @@
 
 *Date of Release:* September 3, 2018
 
-*Scope:* Parallel test execution, output capturing for `System.out` and `System.err`, new
+*Scope:* Parallel test execution, output capture for `System.out` and `System.err`, new
 `TestInstanceFactory` extension API, custom test sources for dynamic tests, promotion of
 the dynamic test API from _experimental_ to _maintained_ status, discontinuation of the
 `junit-platform-gradle-plugin`, deprecation of the (`junit-platform-surefire-provider`),
