@@ -792,6 +792,35 @@ could not be properly discovered.</p>
 </div>
 </div>
 <div class="sect3">
+<h4 id="bug-fixes-since-5-3-rc1"><a class="anchor" href="#bug-fixes-since-5-3-rc1"></a>Bug Fixes since 5.3 RC1</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>junit-jupiter-params</code> JAR file was missing the required Kotlin metadata for the
+<code>getAs&lt;Class&gt;(index)</code> Kotlin extension method. The underlying packaging issue has been
+solved, and the extension method has been renamed to <code>get&lt;Class&gt;(index)</code> as originally
+intended in 5.3.0-M1.</p>
+</li>
+<li>
+<p><code>TestInstanceFactory</code> extensions are properly <em>inherited</em> within <code>@Nested</code> test class
+hierarchies.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="breaking-changes-since-5-3-rc1"><a class="anchor" href="#breaking-changes-since-5-3-rc1"></a>Breaking Changes since 5.3 RC1</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@Nested</code> test classes can no longer <em>override</em> <code>TestInstanceFactory</code> extensions
+registered on an <em>enclosing</em> class. This aligns with the behavior for
+<code>TestInstanceFactory</code> extensions registered within a conventional test class hierarchy.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
 <h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
@@ -958,7 +987,7 @@ minor improvements and bug fixes.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.3.0-SNAPSHOT<br>
-Last updated 2018-09-03 10:46:51 EDT
+Last updated 2018-09-03 10:59:32 EDT
 </div>
 </div>
 </body>
