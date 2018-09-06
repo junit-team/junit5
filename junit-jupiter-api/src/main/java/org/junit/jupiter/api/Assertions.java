@@ -53,6 +53,7 @@ public class Assertions {
 	 *
 	 * @since 5.3
 	 */
+	@API(status = STABLE, since = "5.3")
 	protected Assertions() {
 		/* no-op */
 	}
@@ -1227,6 +1228,7 @@ public class Assertions {
 	 *
 	 * @since 5.3
 	 */
+	@API(status = STABLE, since = "5.3")
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier) {
 		return AssertThrows.assertThrows(expectedType, supplier);
 	}
@@ -1246,6 +1248,7 @@ public class Assertions {
 	 *
 	 * @since 5.3
 	 */
+	@API(status = STABLE, since = "5.3")
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier,
 			String message) {
 
@@ -1270,6 +1273,7 @@ public class Assertions {
 	 *
 	 * @since 5.3
 	 */
+	@API(status = STABLE, since = "5.3")
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, ThrowingSupplier<?> supplier,
 			Supplier<String> messageSupplier) {
 
@@ -1290,6 +1294,7 @@ public class Assertions {
 	 *
 	 * @since 5.2
 	 */
+	@API(status = STABLE, since = "5.2")
 	public static void assertDoesNotThrow(Executable executable) {
 		AssertDoesNotThrow.assertDoesNotThrow(executable);
 	}
@@ -1306,6 +1311,7 @@ public class Assertions {
 	 *
 	 * @since 5.2
 	 */
+	@API(status = STABLE, since = "5.2")
 	public static void assertDoesNotThrow(Executable executable, String message) {
 		AssertDoesNotThrow.assertDoesNotThrow(executable, message);
 	}
@@ -1325,6 +1331,7 @@ public class Assertions {
 	 *
 	 * @since 5.2
 	 */
+	@API(status = STABLE, since = "5.2")
 	public static void assertDoesNotThrow(Executable executable, Supplier<String> messageSupplier) {
 		AssertDoesNotThrow.assertDoesNotThrow(executable, messageSupplier);
 	}
@@ -1342,7 +1349,10 @@ public class Assertions {
 	 * to <em>fail</em>, there are certain use cases where it can be beneficial
 	 * to explicitly assert that an exception is not thrown for a given code
 	 * block within a test method.
+	 *
+	 * @since 5.2
 	 */
+	@API(status = STABLE, since = "5.2")
 	public static <T> T assertDoesNotThrow(ThrowingSupplier<T> supplier) {
 		return AssertDoesNotThrow.assertDoesNotThrow(supplier);
 	}
@@ -1360,7 +1370,10 @@ public class Assertions {
 	 * to <em>fail</em>, there are certain use cases where it can be beneficial
 	 * to explicitly assert that an exception is not thrown for a given code
 	 * block within a test method.
+	 *
+	 * @since 5.2
 	 */
+	@API(status = STABLE, since = "5.2")
 	public static <T> T assertDoesNotThrow(ThrowingSupplier<T> supplier, String message) {
 		return AssertDoesNotThrow.assertDoesNotThrow(supplier, message);
 	}
@@ -1379,7 +1392,10 @@ public class Assertions {
 	 * to <em>fail</em>, there are certain use cases where it can be beneficial
 	 * to explicitly assert that an exception is not thrown for a given code
 	 * block within a test method.
+	 *
+	 * @since 5.2
 	 */
+	@API(status = STABLE, since = "5.2")
 	public static <T> T assertDoesNotThrow(ThrowingSupplier<T> supplier, Supplier<String> messageSupplier) {
 		return AssertDoesNotThrow.assertDoesNotThrow(supplier, messageSupplier);
 	}
