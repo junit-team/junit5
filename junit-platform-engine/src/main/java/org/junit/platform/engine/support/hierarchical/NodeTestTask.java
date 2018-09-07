@@ -114,6 +114,10 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 	private void prepare() {
 		throwableCollector.execute(() -> context = node.prepare(parentContext));
+
+		// Clear reference to parent context to allow it to be garbage collected.
+		// See https://github.com/junit-team/junit5/issues/1578
+		parentContext = null;
 	}
 
 	private void checkWhetherSkipped() {
@@ -163,6 +167,10 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 	private void cleanUp() {
 		throwableCollector.execute(() -> node.cleanUp(context));
+
+		// Clear reference to context to allow it to be garbage collected.
+		// See https://github.com/junit-team/junit5/issues/1578
+		context = null;
 	}
 
 	private void reportCompletion() {
