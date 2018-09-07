@@ -55,6 +55,24 @@ class AssertDoesNotThrowAssertionsTests {
 		assertEquals("foo", result);
 	}
 
+	@Test
+	void assertDoesNotThrowWithMethodReferenceForVoidReturnType() {
+		var foo = new Foo();
+
+		// Note: the following does not compile since the compiler cannot properly
+		// perform type inference for a method reference for an overloaded method
+		// that has a void return type such as Foo.overloaded(...)
+		//
+		// assertDoesNotThrow(foo::overloaded);
+
+		// Current compiler's type inference
+		assertDoesNotThrow(foo::normalMethod);
+
+		// Explicitly as an Executable
+		assertDoesNotThrow((Executable) foo::normalMethod);
+		assertDoesNotThrow((Executable) foo::overloaded);
+	}
+
 	// --- executable ----------------------------------------------------------
 
 	@Test
@@ -219,6 +237,21 @@ class AssertDoesNotThrowAssertionsTests {
 			assertMessageEquals(ex,
 				"Custom message ==> Unexpected exception thrown: " + IllegalStateException.class.getName());
 		}
+	}
+
+	// -------------------------------------------------------------------------
+
+	private static class Foo {
+
+		void normalMethod() {
+		}
+
+		void overloaded() {
+		}
+
+		void overloaded(int i) {
+		}
+
 	}
 
 }
