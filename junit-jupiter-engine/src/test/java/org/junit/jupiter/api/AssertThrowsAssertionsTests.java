@@ -79,6 +79,9 @@ class AssertThrowsAssertionsTests {
 		// Explicitly as an Executable
 		exception = assertThrows(IllegalMonitorStateException.class, (Executable) object::notify);
 		assertNotNull(exception);
+
+		exception = assertThrows(IllegalMonitorStateException.class, (Executable) object::wait);
+		assertNotNull(exception);
 	}
 
 	// --- executable ----------------------------------------------------------
