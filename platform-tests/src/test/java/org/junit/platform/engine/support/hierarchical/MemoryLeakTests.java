@@ -26,14 +26,14 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 @TestInstance(Lifecycle.PER_METHOD)
 class MemoryLeakTests {
 
-	// Allocate 1 GB of memory per test method.
+	// Allocate 500 MB of memory per test method.
 	//
 	// If the test instance is garbage collected, this should not cause any
 	// problems for the JUnit 5 build; however, if the instances of this test
 	// class are NOT garbage collected, we should run out of memory pretty
-	// quickly since the instances of this test class would consume 10GB of
+	// quickly since the instances of this test class would consume 5GB of
 	// heap space.
-	final byte[] gigabyte = new byte[1_073_741_824];
+	final byte[] state = new byte[524_288_000];
 
 	@Test
 	void test01() {
