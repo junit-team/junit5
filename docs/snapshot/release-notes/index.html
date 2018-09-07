@@ -590,7 +590,17 @@ repository on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>An <code>OutOfMemoryError</code> regression introduced in JUnit 5.3.0 has been fixed.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Specifically, the <code>NodeTestTask</code> used by implementations of <code>HierarchicalTestEngine</code>
+(such as the Jupiter and Vintage test engines) no longer retains references to
+contextual state after a node has completed execution. This allows state such as
+instances of test classes to be properly garbage collected by the JVM.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -1023,7 +1033,7 @@ name instead of the <em>fully qualified class name</em>. This aligns with the be
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-09-07 08:30:14 EDT
+Last updated 2018-09-07 08:54:44 EDT
 </div>
 </div>
 </body>
