@@ -23,15 +23,6 @@ import org.apiguardian.api.API;
  * {@link java.util.function.Supplier}, except that a {@code ThrowingSupplier}
  * can throw any kind of exception, including checked exceptions.
  *
- * <p>As of JUnit Jupiter 5.3, {@code ThrowingSupplier} extends
- * {@link Executable}, providing a <em>default</em> implementation of
- * {@link #execute()} that delegates to {@link #get()} and ignores the return
- * value. This allows the Java compiler to disambiguate between
- * {@code ThrowingSupplier} and {@code Executable} when performing type
- * inference for a lambda expression or method reference supplied to
- * an overloaded method that accepts either a {@code ThrowingSupplier} or an
- * {@code Executable}.
- *
  * <h4>Rationale for throwing {@code Throwable} instead of {@code Exception}</h4>
  *
  * <p>Although Java applications typically throw exceptions that are instances
@@ -51,23 +42,7 @@ import org.apiguardian.api.API;
  */
 @FunctionalInterface
 @API(status = STABLE, since = "5.0")
-public interface ThrowingSupplier<T> extends Executable {
-
-	/**
-	 * Delegates to {@link #get()} and ignores the return value.
-	 *
-	 * <p>This default method is not intended to be overridden. See
-	 * {@linkplain ThrowingSupplier class-level documentation} for further
-	 * details.
-	 *
-	 * @since 5.3
-	 * @see #get()
-	 */
-	@Override
-	@API(status = STABLE, since = "5.3")
-	default void execute() throws Throwable {
-		get();
-	}
+public interface ThrowingSupplier<T> {
 
 	/**
 	 * Get a result, potentially throwing an exception.

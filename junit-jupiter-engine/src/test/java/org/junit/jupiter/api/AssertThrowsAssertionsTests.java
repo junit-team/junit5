@@ -25,7 +25,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 import org.junit.jupiter.api.function.Executable;
-import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -39,25 +38,13 @@ class AssertThrowsAssertionsTests {
 	};
 
 	@Test
-	void assertThrowsWithFutureMethodReference() {
+	void assertThrowsWithMethodReferenceForNonVoidReturnType() {
 		FutureTask<String> future = new FutureTask<>(() -> {
 			throw new RuntimeException("boom");
 		});
 		future.run();
 
-		ExecutionException exception;
-
-		// Current compiler's type inference
-		// For rationale, see https://github.com/junit-team/junit5/issues/1414
-		exception = assertThrows(ExecutionException.class, future::get);
-		assertEquals("boom", exception.getCause().getMessage());
-
-		// Explicitly as an Executable
-		exception = assertThrows(ExecutionException.class, (Executable) future::get);
-		assertEquals("boom", exception.getCause().getMessage());
-
-		// Explicitly as a ThrowingSupplier
-		exception = assertThrows(ExecutionException.class, (ThrowingSupplier<?>) future::get);
+		ExecutionException exception = assertThrows(ExecutionException.class, future::get);
 		assertEquals("boom", exception.getCause().getMessage());
 	}
 
@@ -66,25 +53,13 @@ class AssertThrowsAssertionsTests {
 		var object = new Object();
 		IllegalMonitorStateException exception;
 
-		// Note: the following does not compile since the compiler cannot properly
-		// perform type inference for a method reference for an overloaded method
-		// that has a void return type such as java.lang.Object.wait(...)
-		//
-		// exception = assertThrows(IllegalMonitorStateException.class, object::wait);
-
-		// Current compiler's type inference
 		exception = assertThrows(IllegalMonitorStateException.class, object::notify);
 		assertNotNull(exception);
 
-		// Explicitly as an Executable
-		exception = assertThrows(IllegalMonitorStateException.class, (Executable) object::notify);
-		assertNotNull(exception);
-
-		exception = assertThrows(IllegalMonitorStateException.class, (Executable) object::wait);
+		// Note that Object.wait(...) is an overloaded method with a void return type
+		exception = assertThrows(IllegalMonitorStateException.class, object::wait);
 		assertNotNull(exception);
 	}
-
-	// --- executable ----------------------------------------------------------
 
 	@Test
 	void assertThrowsWithExecutableThatThrowsThrowable() {
@@ -140,7 +115,6 @@ class AssertThrowsAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			// the following also implicitly verifies that the failure message does not contain "(returned null)".
 			assertMessageEquals(ex, "Expected java.lang.IllegalStateException to be thrown, but nothing was thrown.");
 		}
 	}
@@ -285,54 +259,6 @@ class AssertThrowsAssertionsTests {
 				assertMessageContains(ex, "expected: <org.junit.jupiter.api.EnigmaThrowable@");
 				assertMessageContains(ex, "but was: <org.junit.jupiter.api.EnigmaThrowable@");
 			}
-		}
-	}
-
-	// --- supplier ------------------------------------------------------------
-
-	@Test
-	void assertThrowsWithThrowingSupplierThatReturns() {
-		try {
-			assertThrows(EnigmaThrowable.class, (ThrowingSupplier<?>) () -> 42);
-			expectAssertionFailedError();
-		}
-		catch (AssertionFailedError ex) {
-			assertMessageContains(ex, "(returned 42)");
-		}
-	}
-
-	@Test
-	void assertThrowsWithThrowingSupplierThatReturnsNull() {
-		try {
-			assertThrows(EnigmaThrowable.class, (ThrowingSupplier<?>) () -> null);
-			expectAssertionFailedError();
-		}
-		catch (AssertionFailedError ex) {
-			assertMessageContains(ex, "(returned null)");
-		}
-	}
-
-	@Test
-	void assertThrowsWithThrowingSupplierThatReturnsAndWithCustomMessage() {
-		try {
-			assertThrows(EnigmaThrowable.class, (ThrowingSupplier<?>) () -> 42, "custom message");
-			expectAssertionFailedError();
-		}
-		catch (AssertionFailedError ex) {
-			assertMessageContains(ex, "(returned 42)");
-			assertMessageContains(ex, "custom message");
-		}
-	}
-
-	@Test
-	void assertThrowsWithThrowingSupplierThatReturnsAndWithCustomMessageSupplier() {
-		try {
-			assertThrows(EnigmaThrowable.class, (ThrowingSupplier<?>) () -> 42, () -> "custom message");
-			expectAssertionFailedError();
-		}
-		catch (AssertionFailedError ex) {
-			assertMessageContains(ex, "(returned 42)");
-			assertMessageContains(ex, "custom message");
 		}
 	}
 
