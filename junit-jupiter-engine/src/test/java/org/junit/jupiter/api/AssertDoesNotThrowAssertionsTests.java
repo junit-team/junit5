@@ -249,6 +249,7 @@ class AssertDoesNotThrowAssertionsTests {
 		void overloaded() {
 		}
 
+		@SuppressWarnings("unused")
 		void overloaded(int i) {
 		}
 
