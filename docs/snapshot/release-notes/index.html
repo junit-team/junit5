@@ -539,6 +539,13 @@ table.CodeRay td.code>pre{padding:0}
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
+<li><a href="#release-notes-5.3.1">5.3.1</a>
+<ul class="sectlevel2">
+<li><a href="#release-notes-5.3.1-junit-platform">JUnit Platform</a></li>
+<li><a href="#release-notes-5.3.1-junit-jupiter">JUnit Jupiter</a></li>
+<li><a href="#release-notes-5.3.1-junit-vintage">JUnit Vintage</a></li>
+</ul>
+</li>
 <li><a href="#release-notes-5.3.0">5.3.0</a>
 <ul class="sectlevel2">
 <li><a href="#release-notes-5.3.0-junit-platform">JUnit Platform</a></li>
@@ -546,7 +553,6 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#release-notes-5.3.0-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
-<li><a href="#release-notes-5.2.0">5.2.0</a></li>
 </ul>
 </div>
 </div>
@@ -554,12 +560,60 @@ table.CodeRay td.code>pre{padding:0}
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This document contains the <em>change log</em> for all JUnit 5 releases since 5.2 GA.</p>
+<p>This document contains the <em>change log</em> for all JUnit 5 releases since 5.3 GA.</p>
 </div>
 <div class="paragraph">
 <p>Please refer to the <a href="../user-guide/index.html#user-guide">User Guide</a> for comprehensive
 reference documentation for programmers writing tests, extension authors, and engine
 authors as well as build tool and IDE vendors.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="release-notes-5.3.1"><a class="anchor" href="#release-notes-5.3.1"></a>5.3.1</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Date of Release:</strong> ❓</p>
+</div>
+<div class="paragraph">
+<p><strong>Scope:</strong> Bug fixes since 5.3.0</p>
+</div>
+<div class="paragraph">
+<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult
+the <a href="https://github.com/junit-team/junit5/milestone/30?closed=1">5.3.1</a> milestone page in the JUnit
+repository on GitHub.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.3.1-junit-platform"><a class="anchor" href="#release-notes-5.3.1-junit-platform"></a>JUnit Platform</h3>
+<div class="sect3">
+<h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>❓</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.3.1-junit-jupiter"><a class="anchor" href="#release-notes-5.3.1-junit-jupiter"></a>JUnit Jupiter</h3>
+<div class="sect3">
+<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>❓</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.3.1-junit-vintage"><a class="anchor" href="#release-notes-5.3.1-junit-vintage"></a>JUnit Vintage</h3>
+<div class="paragraph">
+<p>No changes</p>
+</div>
 </div>
 </div>
 </div>
@@ -586,7 +640,7 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.3.0-junit-platform"><a class="anchor" href="#release-notes-5.3.0-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -751,7 +805,7 @@ long arguments for options.</p>
 <div class="sect2">
 <h3 id="release-notes-5.3.0-junit-jupiter"><a class="anchor" href="#release-notes-5.3.0-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -937,7 +991,7 @@ Factories</a> in the User Guide for details.</p>
 <div class="sect2">
 <h3 id="release-notes-5.3.0-junit-vintage"><a class="anchor" href="#release-notes-5.3.0-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -965,29 +1019,11 @@ name instead of the <em>fully qualified class name</em>. This aligns with the be
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="release-notes-5.2.0"><a class="anchor" href="#release-notes-5.2.0"></a>5.2.0</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> April 29, 2018</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong> JUnit BOM, support for Maven Surefire 2.21.0 allowing builds with Java 9 and
-Java 10, <em>argument aggregation</em> and <em>widening primitive conversion</em> for arguments in
-parameterized tests, external factory methods for <code>@MethodSource</code>, as well as various
-minor improvements and bug fixes.</p>
-</div>
-<div class="paragraph">
-<p>For complete details consult the
-<a href="https://junit.org/junit5/docs/5.2.0/release-notes/index.html">5.2.0 Release Notes</a> online.</p>
-</div>
-</div>
-</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-09-06 08:54:41 EDT
+Last updated 2018-09-07 08:30:14 EDT
 </div>
 </div>
 </body>
