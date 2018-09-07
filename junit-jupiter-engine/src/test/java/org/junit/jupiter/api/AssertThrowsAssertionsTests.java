@@ -61,6 +61,26 @@ class AssertThrowsAssertionsTests {
 		assertEquals("boom", exception.getCause().getMessage());
 	}
 
+	@Test
+	void assertThrowsWithMethodReferenceForVoidReturnType() {
+		var object = new Object();
+		IllegalMonitorStateException exception;
+
+		// Note: the following does not compile since the compiler cannot properly
+		// perform type inference for a method reference for an overloaded method
+		// that has a void return type such as java.lang.Object.wait(...)
+		//
+		// exception = assertThrows(IllegalMonitorStateException.class, object::wait);
+
+		// Current compiler's type inference
+		exception = assertThrows(IllegalMonitorStateException.class, object::notify);
+		assertNotNull(exception);
+
+		// Explicitly as an Executable
+		exception = assertThrows(IllegalMonitorStateException.class, (Executable) object::notify);
+		assertNotNull(exception);
+	}
+
 	// --- executable ----------------------------------------------------------
 
 	@Test
