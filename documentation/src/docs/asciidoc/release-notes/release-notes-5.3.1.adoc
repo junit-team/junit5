@@ -20,6 +20,9 @@ repository on GitHub.
     (such as the Jupiter and Vintage test engines) no longer retains references to
     contextual state after a node has completed execution. This allows state such as
     instances of test classes to be properly garbage collected by the JVM.
+  - Previously, a `NodeTestTask` instance was created for each `TestDescriptor` before
+    starting execution. Now they are created on the fly and can be garbage collected by
+    the JVM after the enclosing container has finished.
 
 
 [[release-notes-5.3.1-junit-jupiter]]
