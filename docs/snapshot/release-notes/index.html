@@ -599,6 +599,11 @@ repository on GitHub.</p>
 contextual state after a node has completed execution. This allows state such as
 instances of test classes to be properly garbage collected by the JVM.</p>
 </li>
+<li>
+<p>Previously, a <code>NodeTestTask</code> instance was created for each <code>TestDescriptor</code> before
+starting execution. Now they are created on the fly and can be garbage collected by
+the JVM after the enclosing container has finished.</p>
+</li>
 </ul>
 </div>
 </li>
@@ -1033,7 +1038,7 @@ name instead of the <em>fully qualified class name</em>. This aligns with the be
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-09-07 09:17:34 EDT
+Last updated 2018-09-07 11:10:20 EDT
 </div>
 </div>
 </body>
