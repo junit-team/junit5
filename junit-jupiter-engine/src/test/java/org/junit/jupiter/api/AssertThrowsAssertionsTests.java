@@ -61,6 +61,8 @@ class AssertThrowsAssertionsTests {
 		assertEquals("boom", exception.getCause().getMessage());
 	}
 
+	// --- executable ----------------------------------------------------------
+
 	@Test
 	void assertThrowsWithExecutableThatThrowsThrowable() {
 		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, (Executable) () -> {
@@ -104,7 +106,7 @@ class AssertThrowsAssertionsTests {
 	@Test
 	void assertThrowsWithExecutableThatThrowsError() {
 		StackOverflowError stackOverflowError = assertThrows(StackOverflowError.class,
-			AssertionTestUtils::recurseIndefinitely);
+			(Executable) AssertionTestUtils::recurseIndefinitely);
 		assertNotNull(stackOverflowError);
 	}
 
@@ -263,10 +265,12 @@ class AssertThrowsAssertionsTests {
 		}
 	}
 
+	// --- supplier ------------------------------------------------------------
+
 	@Test
 	void assertThrowsWithThrowingSupplierThatReturns() {
 		try {
-			assertThrows(EnigmaThrowable.class, () -> 42);
+			assertThrows(EnigmaThrowable.class, (ThrowingSupplier<?>) () -> 42);
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
@@ -277,7 +281,7 @@ class AssertThrowsAssertionsTests {
 	@Test
 	void assertThrowsWithThrowingSupplierThatReturnsNull() {
 		try {
-			assertThrows(EnigmaThrowable.class, () -> null);
+			assertThrows(EnigmaThrowable.class, (ThrowingSupplier<?>) () -> null);
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
@@ -288,7 +292,7 @@ class AssertThrowsAssertionsTests {
 	@Test
 	void assertThrowsWithThrowingSupplierThatReturnsAndWithCustomMessage() {
 		try {
-			assertThrows(EnigmaThrowable.class, () -> 42, "custom message");
+			assertThrows(EnigmaThrowable.class, (ThrowingSupplier<?>) () -> 42, "custom message");
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
@@ -300,7 +304,7 @@ class AssertThrowsAssertionsTests {
 	@Test
 	void assertThrowsWithThrowingSupplierThatReturnsAndWithCustomMessageSupplier() {
 		try {
-			assertThrows(EnigmaThrowable.class, () -> 42, () -> "custom message");
+			assertThrows(EnigmaThrowable.class, (ThrowingSupplier<?>) () -> 42, () -> "custom message");
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
