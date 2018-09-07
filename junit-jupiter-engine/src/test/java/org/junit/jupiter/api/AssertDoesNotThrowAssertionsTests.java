@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
+import java.util.concurrent.FutureTask;
 
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
@@ -32,6 +33,27 @@ class AssertDoesNotThrowAssertionsTests {
 	};
 
 	private static final ThrowingSupplier<String> something = () -> "enigma";
+
+	@Test
+	void assertDoesNotThrowWithFutureMethodReference() {
+		FutureTask<String> future = new FutureTask<>(() -> {
+			return "foo";
+		});
+		future.run();
+
+		String result;
+
+		// Current compiler's type inference
+		result = assertDoesNotThrow(future::get);
+		assertEquals("foo", result);
+
+		// Explicitly as an Executable
+		assertDoesNotThrow((Executable) future::get);
+
+		// Explicitly as a ThrowingSupplier
+		result = assertDoesNotThrow((ThrowingSupplier<String>) future::get);
+		assertEquals("foo", result);
+	}
 
 	// --- executable ----------------------------------------------------------
 
