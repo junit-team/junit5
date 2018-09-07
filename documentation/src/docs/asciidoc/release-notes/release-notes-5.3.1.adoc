@@ -15,7 +15,11 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* An `OutOfMemoryError` regression introduced in JUnit 5.3.0 has been fixed.
+  - Specifically, the `NodeTestTask` used by implementations of `HierarchicalTestEngine`
+    (such as the Jupiter and Vintage test engines) no longer retains references to
+    contextual state after a node has completed execution. This allows state such as
+    instances of test classes to be properly garbage collected by the JVM.
 
 
 [[release-notes-5.3.1-junit-jupiter]]
