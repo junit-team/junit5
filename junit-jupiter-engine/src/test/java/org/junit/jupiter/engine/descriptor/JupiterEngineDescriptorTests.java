@@ -18,11 +18,10 @@ class JupiterEngineDescriptorTests {
         // Act
         EngineDescriptor descriptor = new JupiterEngineDescriptor(UNIQUE_ID);
         // Assert
-        assertThat(descriptor)
-                .isNotNull()
-                .isEqualToComparingFieldByField(expectedDescriptor)
-                .extracting(EngineDescriptor::getDisplayName)
-                .isEqualTo("JUnit Jupiter");
+        assertThat(descriptor).isNotNull()
+                              .isEqualToComparingFieldByField(expectedDescriptor)
+                              .extracting(EngineDescriptor::getDisplayName)
+                              .isEqualTo("JUnit Jupiter");
     }
 
     @Test
@@ -32,10 +31,9 @@ class JupiterEngineDescriptorTests {
         // Act
         EngineDescriptor descriptor = new JupiterEngineDescriptor(UNIQUE_ID, "Custom name");
         // Assert
-        assertThat(descriptor)
-                .isNotNull()
-                .isEqualToComparingFieldByField(expectedDescriptor)
-                .extracting(EngineDescriptor::getDisplayName)
-                .isEqualTo("Custom name");
+        assertThat(descriptor).isNotNull()
+                              .isEqualToComparingFieldByField(expectedDescriptor)
+                              .extracting(EngineDescriptor::getDisplayName)
+                              .isEqualTo("Custom name");
     }
 }
