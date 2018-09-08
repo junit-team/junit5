@@ -32,6 +32,10 @@ public class JupiterEngineDescriptor extends EngineDescriptor implements Node<Ju
 		super(uniqueId, "JUnit Jupiter");
 	}
 
+	public JupiterEngineDescriptor(UniqueId uniqueId, String name){
+		super(uniqueId, name);
+	}
+
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
 		ExtensionRegistry extensionRegistry = createRegistryWithDefaultExtensions(context.getConfigurationParameters());
