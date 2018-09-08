@@ -6,15 +6,13 @@ import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * @author Anatoliy Korovin
- */
-class JupiterEngineDescriptorTest {
+
+class JupiterEngineDescriptorTests {
 
     private static final UniqueId UNIQUE_ID = UniqueId.forEngine("test-id");
 
     @Test
-    void testCreateDescriptorWithDefaultDisplayName() {
+    void createDescriptorWithDefaultDisplayName() {
         // Arrange
         EngineDescriptor expectedDescriptor = new EngineDescriptor(UNIQUE_ID, "JUnit Jupiter");
         // Act
@@ -28,7 +26,7 @@ class JupiterEngineDescriptorTest {
     }
 
     @Test
-    void testCreateDescriptorWithCustomDisplayName() {
+    void createDescriptorWithCustomDisplayName() {
         // Arrange
         EngineDescriptor expectedDescriptor = new EngineDescriptor(UNIQUE_ID, "Custom name");
         // Act
