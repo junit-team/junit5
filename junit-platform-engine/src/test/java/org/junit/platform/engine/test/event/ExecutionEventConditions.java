@@ -97,6 +97,11 @@ public class ExecutionEventConditions {
 		return new Condition<>(byTestDescriptor(TestDescriptor::isContainer), "is a container");
 	}
 
+	public static Condition<ExecutionEvent> nestedContainer(Class<?> clazz) {
+		return allOf(container(uniqueIdSubstring(clazz.getEnclosingClass().getName())),
+			container(uniqueIdSubstring(clazz.getSimpleName())));
+	}
+
 	public static Condition<ExecutionEvent> dynamicTestRegistered(String uniqueIdSubstring) {
 		return dynamicTestRegistered(uniqueIdSubstring(uniqueIdSubstring));
 	}

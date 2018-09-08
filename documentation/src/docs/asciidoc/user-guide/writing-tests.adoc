@@ -1037,6 +1037,9 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_e
 | `double`/`Double`          | `"1.0"`                                  -> `1.0d`
 | `Enum` subclass            | `"SECONDS"`                              -> `TimeUnit.SECONDS`
 | `java.io.File`             | `"/path/to/file"`                        -> `new File("/path/to/file")`
+| `java.lang.Class`          | `"java.lang.Integer"`                    -> `java.lang.Integer.class` _(use `$` for nested classes, e.g. `"java.lang.Thread$State"`)_
+| `java.lang.Class`          | `"byte"`                                 -> `byte.class` _(primitive types are supported)_
+| `java.lang.Class`          | `"char[]"`                               -> `char[].class` _(array types are supported)_
 | `java.math.BigDecimal`     | `"123.456e789"`                          -> `new BigDecimal("123.456e789")`
 | `java.math.BigInteger`     | `"1234567890123456789"`                  -> `new BigInteger("1234567890123456789")`
 | `java.net.URI`             | `"http://junit.org/"`                    -> `URI.create("http://junit.org/")`
@@ -1310,7 +1313,7 @@ include::{testDir}/example/DynamicTestsDemo.java[tags=user_guide]
 
 By default, JUnit Jupiter tests are run sequentially in a single thread. Running tests in
 parallel, e.g. to speed up execution, is available as an opt-in feature since version 5.3.
-To enable parallel execution, simply set the set the
+To enable parallel execution, simply set the
 `junit.jupiter.execution.parallel.enabled` configuration parameter to `true`, e.g. in `junit-platform.properties` (see <<running-tests-config-params>> for other options).
 
 Once enabled, the JUnit Jupiter engine will execute tests on all levels of the test tree

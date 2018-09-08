@@ -274,16 +274,16 @@ constructor for the test class to instantiate it, potentially resolving construc
 arguments via registered `ParameterResolver` extensions.
 
 Extensions that implement `TestInstanceFactory` can be registered on test interfaces,
-top-level test classes, or `@Nested` test classes. A factory registered on a `@Nested`
-test class will override any factories registered on enclosing classes.
+top-level test classes, or `@Nested` test classes.
 
 [WARNING]
 ====
 Registering multiple extensions that implement `TestInstanceFactory` for any single class
-will result in an exception being thrown for all tests in that class and in any nested
-test classes. Note that any `TestInstanceFactory` registered in a superclass is
-_inherited_. It is the user's responsibility to ensure that only a single
-`TestInstanceFactory` is registered for any specific test class.
+will result in an exception being thrown for all tests in that class, in any subclass,
+and in any nested class. Note that any `TestInstanceFactory` registered in a superclass
+or _enclosing_ class (i.e., in the case of a `@Nested` test class) is _inherited_. It is
+the user's responsibility to ensure that only a single `TestInstanceFactory` is
+registered for any specific test class.
 ====
 
 [[extensions-test-instance-post-processing]]

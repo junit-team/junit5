@@ -62,6 +62,31 @@ class AssertThrowsAssertionsTests {
 	}
 
 	@Test
+	void assertThrowsWithMethodReferenceForVoidReturnType() {
+		var object = new Object();
+		IllegalMonitorStateException exception;
+
+		// Note: the following does not compile since the compiler cannot properly
+		// perform type inference for a method reference for an overloaded method
+		// that has a void return type such as java.lang.Object.wait(...)
+		//
+		// exception = assertThrows(IllegalMonitorStateException.class, object::wait);
+
+		// Current compiler's type inference
+		exception = assertThrows(IllegalMonitorStateException.class, object::notify);
+		assertNotNull(exception);
+
+		// Explicitly as an Executable
+		exception = assertThrows(IllegalMonitorStateException.class, (Executable) object::notify);
+		assertNotNull(exception);
+
+		exception = assertThrows(IllegalMonitorStateException.class, (Executable) object::wait);
+		assertNotNull(exception);
+	}
+
+	// --- executable ----------------------------------------------------------
+
+	@Test
 	void assertThrowsWithExecutableThatThrowsThrowable() {
 		EnigmaThrowable enigmaThrowable = assertThrows(EnigmaThrowable.class, (Executable) () -> {
 			throw new EnigmaThrowable();
@@ -104,7 +129,7 @@ class AssertThrowsAssertionsTests {
 	@Test
 	void assertThrowsWithExecutableThatThrowsError() {
 		StackOverflowError stackOverflowError = assertThrows(StackOverflowError.class,
-			AssertionTestUtils::recurseIndefinitely);
+			(Executable) AssertionTestUtils::recurseIndefinitely);
 		assertNotNull(stackOverflowError);
 	}
 
@@ -263,10 +288,12 @@ class AssertThrowsAssertionsTests {
 		}
 	}
 
+	// --- supplier ------------------------------------------------------------
+
 	@Test
 	void assertThrowsWithThrowingSupplierThatReturns() {
 		try {
-			assertThrows(EnigmaThrowable.class, () -> 42);
+			assertThrows(EnigmaThrowable.class, (ThrowingSupplier<?>) () -> 42);
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
@@ -277,7 +304,7 @@ class AssertThrowsAssertionsTests {
 	@Test
 	void assertThrowsWithThrowingSupplierThatReturnsNull() {
 		try {
-			assertThrows(EnigmaThrowable.class, () -> null);
+			assertThrows(EnigmaThrowable.class, (ThrowingSupplier<?>) () -> null);
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
@@ -288,7 +315,7 @@ class AssertThrowsAssertionsTests {
 	@Test
 	void assertThrowsWithThrowingSupplierThatReturnsAndWithCustomMessage() {
 		try {
-			assertThrows(EnigmaThrowable.class, () -> 42, "custom message");
+			assertThrows(EnigmaThrowable.class, (ThrowingSupplier<?>) () -> 42, "custom message");
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
@@ -300,7 +327,7 @@ class AssertThrowsAssertionsTests {
 	@Test
 	void assertThrowsWithThrowingSupplierThatReturnsAndWithCustomMessageSupplier() {
 		try {
-			assertThrows(EnigmaThrowable.class, () -> 42, () -> "custom message");
+			assertThrows(EnigmaThrowable.class, (ThrowingSupplier<?>) () -> 42, () -> "custom message");
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {

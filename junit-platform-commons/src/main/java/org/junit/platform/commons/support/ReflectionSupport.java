@@ -42,7 +42,7 @@ public final class ReflectionSupport {
 	 *
 	 * <p>Class names for arrays may be specified using either the JVM's internal
 	 * String representation (e.g., {@code [[I} for {@code int[][]},
-	 * {@code [Lava.lang.String;} for {@code java.lang.String[]}, etc.) or
+	 * {@code [Ljava.lang.String;} for {@code java.lang.String[]}, etc.) or
 	 * <em>source code syntax</em> (e.g., {@code int[][]}, {@code java.lang.String[]},
 	 * etc.).
 	 *

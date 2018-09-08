@@ -163,10 +163,11 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		ThrowableCollector throwableCollector = new OpenTest4JAwareThrowableCollector();
 		ClassExtensionContext extensionContext = new ClassExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, lifecycle, context.getConfigurationParameters(), throwableCollector);
+			context.getExecutionListener(), this, this.lifecycle, context.getConfigurationParameters(),
+			throwableCollector);
 
-		this.beforeAllMethods = findBeforeAllMethods(this.testClass, lifecycle == Lifecycle.PER_METHOD);
-		this.afterAllMethods = findAfterAllMethods(this.testClass, lifecycle == Lifecycle.PER_METHOD);
+		this.beforeAllMethods = findBeforeAllMethods(this.testClass, this.lifecycle == Lifecycle.PER_METHOD);
+		this.afterAllMethods = findAfterAllMethods(this.testClass, this.lifecycle == Lifecycle.PER_METHOD);
 
 		// @formatter:off
 		return context.extend()
@@ -231,24 +232,16 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private TestInstanceFactory resolveTestInstanceFactory(ExtensionRegistry registry) {
+		List<TestInstanceFactory> factories = registry.getExtensions(TestInstanceFactory.class);
 
-		List<TestInstanceFactory> localFactories = registry.getLocalExtensions(TestInstanceFactory.class);
-		if (localFactories.isEmpty()) {
-			return null;
+		if (factories.size() == 1) {
+			return factories.get(0);
 		}
 
-		ExtensionRegistry parentRegistry = registry.getParent();
-		if (parentRegistry != null) {
-			List<TestInstanceFactory> parentFactories = parentRegistry.getExtensions(TestInstanceFactory.class);
-			localFactories.removeAll(parentFactories);
-			if (localFactories.isEmpty()) {
-				return null;
-			}
-		}
-
-		if (localFactories.size() > 1) {
-			String factoryNames = localFactories.stream().map(factory -> factory.getClass().getName()).collect(
-				joining(", "));
+		if (factories.size() > 1) {
+			String factoryNames = factories.stream()//
+					.map(factory -> factory.getClass().getName())//
+					.collect(joining(", "));
 
 			String errorMessage = String.format(
 				"The following TestInstanceFactory extensions were registered for test class [%s], but only one is permitted: %s",
@@ -257,7 +250,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			throw new ExtensionConfigurationException(errorMessage);
 		}
 
-		return localFactories.get(0);
+		return null;
 	}
 
 	private TestInstanceProvider testInstanceProvider(JupiterEngineExecutionContext parentExecutionContext,

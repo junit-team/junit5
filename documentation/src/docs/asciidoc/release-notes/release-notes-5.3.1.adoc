@@ -1,0 +1,39 @@
+[[release-notes-5.3.1]]
+== 5.3.1
+
+*Date of Release:* ❓
+
+*Scope:* Bug fixes since 5.3.0
+
+For a complete list of all _closed_ issues and pull requests for this release, consult
+the link:{junit5-repo}+/milestone/30?closed=1+[5.3.1] milestone page in the JUnit
+repository on GitHub.
+
+
+[[release-notes-5.3.1-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* An `OutOfMemoryError` regression introduced in JUnit 5.3.0 has been fixed.
+  - Specifically, the `NodeTestTask` used by implementations of `HierarchicalTestEngine`
+    (such as the Jupiter and Vintage test engines) no longer retains references to
+    contextual state after a node has completed execution. This allows state such as
+    instances of test classes to be properly garbage collected by the JVM.
+  - Previously, a `NodeTestTask` instance was created for each `TestDescriptor` before
+    starting execution. Now they are created on the fly and can be garbage collected by
+    the JVM after the enclosing container has finished.
+
+
+[[release-notes-5.3.1-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* ❓
+
+
+[[release-notes-5.3.1-junit-vintage]]
+=== JUnit Vintage
+
+No changes

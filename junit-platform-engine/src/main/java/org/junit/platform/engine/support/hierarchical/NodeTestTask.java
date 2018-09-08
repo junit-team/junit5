@@ -15,12 +15,10 @@ import static org.junit.platform.engine.TestExecutionResult.failed;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Future;
 
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
 import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
@@ -31,17 +29,9 @@ import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
  */
 class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
+	private final NodeTestTaskContext taskContext;
 	private final TestDescriptor testDescriptor;
-	private final EngineExecutionListener listener;
-	private final HierarchicalTestExecutorService executorService;
-	private final ThrowableCollector.Factory throwableCollectorFactory;
 	private final Node<C> node;
-	private final ExecutionMode executionMode;
-	private final Set<ExclusiveResource> exclusiveResources;
-	private final List<NodeTestTask<C>> children;
-
-	private ResourceLock resourceLock = NopLock.INSTANCE;
-	private Optional<ExecutionMode> forcedExecutionMode = Optional.empty();
 
 	private C parentContext;
 	private C context;
@@ -50,55 +40,29 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	private boolean started;
 	private ThrowableCollector throwableCollector;
 
-	NodeTestTask(TestDescriptor testDescriptor, EngineExecutionListener listener,
-			HierarchicalTestExecutorService executorService, ThrowableCollector.Factory throwableCollectorFactory) {
+	NodeTestTask(NodeTestTaskContext taskContext, TestDescriptor testDescriptor) {
+		this.taskContext = taskContext;
 		this.testDescriptor = testDescriptor;
-		this.listener = listener;
-		this.executorService = executorService;
-		this.throwableCollectorFactory = throwableCollectorFactory;
-		node = asNode(testDescriptor);
-		executionMode = node.getExecutionMode();
-		exclusiveResources = node.getExclusiveResources();
-		// @formatter:off
-		children = testDescriptor.getChildren().stream()
-				.map(descriptor -> new NodeTestTask<C>(descriptor, listener, executorService, throwableCollectorFactory))
-				.collect(toCollection(ArrayList::new));
-		// @formatter:on
-	}
-
-	public Set<ExclusiveResource> getExclusiveResources() {
-		return exclusiveResources;
-	}
-
-	public List<NodeTestTask<C>> getChildren() {
-		return children;
+		this.node = NodeUtils.asNode(testDescriptor);
 	}
 
 	@Override
 	public ResourceLock getResourceLock() {
-		return resourceLock;
-	}
-
-	public void setResourceLock(ResourceLock resourceLock) {
-		this.resourceLock = resourceLock;
+		return taskContext.getExecutionAdvisor().getResourceLock(testDescriptor);
 	}
 
 	@Override
 	public ExecutionMode getExecutionMode() {
-		return forcedExecutionMode.orElse(executionMode);
+		return taskContext.getExecutionAdvisor().getForcedExecutionMode(testDescriptor).orElse(node.getExecutionMode());
 	}
 
-	public void setForcedExecutionMode(ExecutionMode forcedExecutionMode) {
-		this.forcedExecutionMode = Optional.of(forcedExecutionMode);
-	}
-
-	public void setParentContext(C parentContext) {
+	void setParentContext(C parentContext) {
 		this.parentContext = parentContext;
 	}
 
 	@Override
 	public void execute() {
-		throwableCollector = throwableCollectorFactory.create();
+		throwableCollector = taskContext.getThrowableCollectorFactory().create();
 		prepare();
 		if (throwableCollector.isEmpty()) {
 			checkWhetherSkipped();
@@ -114,6 +78,10 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 	private void prepare() {
 		throwableCollector.execute(() -> context = node.prepare(parentContext));
+
+		// Clear reference to parent context to allow it to be garbage collected.
+		// See https://github.com/junit-team/junit5/issues/1578
+		parentContext = null;
 	}
 
 	private void checkWhetherSkipped() {
@@ -121,10 +89,16 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	}
 
 	private void executeRecursively() {
-		listener.executionStarted(testDescriptor);
+		taskContext.getListener().executionStarted(testDescriptor);
 		started = true;
 
 		throwableCollector.execute(() -> {
+			// @formatter:off
+			List<NodeTestTask<C>> children = testDescriptor.getChildren().stream()
+					.map(descriptor -> new NodeTestTask<C>(taskContext, descriptor))
+					.collect(toCollection(ArrayList::new));
+			// @formatter:on
+
 			context = node.before(context);
 
 			List<Future<?>> futures = new ArrayList<>();
@@ -133,7 +107,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 			if (!children.isEmpty()) {
 				children.forEach(child -> child.setParentContext(context));
-				executorService.invokeAll(children);
+				taskContext.getExecutorService().invokeAll(children);
 			}
 
 			// using a for loop for the sake for ForkJoinPool's work stealing
@@ -146,45 +120,39 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	}
 
 	private void executeDynamicTest(TestDescriptor dynamicTestDescriptor, List<Future<?>> futures) {
-		listener.dynamicTestRegistered(dynamicTestDescriptor);
-		NodeTestTask<C> nodeTestTask = new NodeTestTask<>(dynamicTestDescriptor, listener, executorService,
-			throwableCollectorFactory);
-		Set<ExclusiveResource> exclusiveResources = nodeTestTask.getExclusiveResources();
+		taskContext.getListener().dynamicTestRegistered(dynamicTestDescriptor);
+		Set<ExclusiveResource> exclusiveResources = NodeUtils.asNode(dynamicTestDescriptor).getExclusiveResources();
 		if (!exclusiveResources.isEmpty()) {
-			listener.executionStarted(dynamicTestDescriptor);
+			taskContext.getListener().executionStarted(dynamicTestDescriptor);
 			String message = "Dynamic test descriptors must not declare exclusive resources: " + exclusiveResources;
-			listener.executionFinished(dynamicTestDescriptor, failed(new JUnitException(message)));
+			taskContext.getListener().executionFinished(dynamicTestDescriptor, failed(new JUnitException(message)));
 		}
 		else {
+			NodeTestTask<C> nodeTestTask = new NodeTestTask<>(taskContext, dynamicTestDescriptor);
 			nodeTestTask.setParentContext(context);
-			futures.add(executorService.submit(nodeTestTask));
+			futures.add(taskContext.getExecutorService().submit(nodeTestTask));
 		}
 	}
 
 	private void cleanUp() {
 		throwableCollector.execute(() -> node.cleanUp(context));
+
+		// Clear reference to context to allow it to be garbage collected.
+		// See https://github.com/junit-team/junit5/issues/1578
+		context = null;
 	}
 
 	private void reportCompletion() {
 		if (throwableCollector.isEmpty() && skipResult.isSkipped()) {
-			listener.executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
+			taskContext.getListener().executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
 			return;
 		}
 		if (!started) {
 			// Call executionStarted first to comply with the contract of EngineExecutionListener.
-			listener.executionStarted(testDescriptor);
+			taskContext.getListener().executionStarted(testDescriptor);
 		}
-		listener.executionFinished(testDescriptor, throwableCollector.toTestExecutionResult());
+		taskContext.getListener().executionFinished(testDescriptor, throwableCollector.toTestExecutionResult());
 		throwableCollector = null;
 	}
-
-	@SuppressWarnings("unchecked")
-	private Node<C> asNode(TestDescriptor testDescriptor) {
-		return (testDescriptor instanceof Node ? (Node<C>) testDescriptor : noOpNode);
-	}
-
-	@SuppressWarnings("rawtypes")
-	private static final Node noOpNode = new Node() {
-	};
 
 }
