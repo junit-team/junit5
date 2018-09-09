@@ -573,7 +573,7 @@ authors as well as build tool and IDE vendors.</p>
 <h2 id="release-notes-5.3.1"><a class="anchor" href="#release-notes-5.3.1"></a>5.3.1</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Date of Release:</strong> ❓</p>
+<p><strong>Date of Release:</strong> September ❓, 2018</p>
 </div>
 <div class="paragraph">
 <p><strong>Scope:</strong> Bug fixes since 5.3.0</p>
@@ -618,7 +618,28 @@ the JVM after the enclosing container has finished.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>Invocations of <code>assertThrows()</code> that are passed a method reference for an overloaded
+method with a <code>void</code> return type once again compile.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For example, given an instance of <code>java.lang.Object</code> stored in a variable named
+<code>object</code>, <code>assertThrows(Exception.class, object::wait)</code> compiled against JUnit 5.2.0,
+failed to compile against JUnit 5.3.0, but now compiles against JUnit 5.3.1.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="breaking-changes"><a class="anchor" href="#breaking-changes"></a>Breaking Changes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>In order to revert the aforementioned breaking change, variants of <code>assertThrows()</code>
+introduced in JUnit 5.3.0 that accept <code>ThrowingSupplier</code> arguments have been removed.</p>
 </li>
 </ul>
 </div>

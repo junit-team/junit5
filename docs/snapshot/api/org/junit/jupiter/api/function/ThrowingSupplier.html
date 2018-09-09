@@ -26,8 +26,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":18,"i1":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
+var methods = {"i0":6};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -134,10 +134,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code>T</code> - the type of argument supplied</dd>
 </dl>
 <dl>
-<dt>All Superinterfaces:</dt>
-<dd><code><a href="../../../../../org/junit/jupiter/api/function/Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a></code></dd>
-</dl>
-<dl>
 <dt>Functional Interface:</dt>
 <dd>This is a functional interface and can therefore be used as the assignment target for a lambda expression or method reference.</dd>
 </dl>
@@ -145,8 +141,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterface.html?is-external=true" title="class or interface in java.lang" class="externalLink">@FunctionalInterface</a>
 <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#STABLE" title="class or interface in org.apiguardian.api" class="externalLink">STABLE</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.0")
-public interface <span class="typeNameLabel">ThrowingSupplier&lt;T&gt;</span>
-extends <a href="../../../../../org/junit/jupiter/api/function/Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a></pre>
+public interface <span class="typeNameLabel">ThrowingSupplier&lt;T&gt;</span></pre>
 <div class="block"><code>ThrowingSupplier</code> is a functional interface that can be used to
  implement any generic block of code that returns an object and
  potentially throws a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a>.
@@ -154,15 +149,6 @@ extends <a href="../../../../../org/junit/jupiter/api/function/Executable.html" 
  <p>The <code>ThrowingSupplier</code> interface is similar to
  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink"><code>Supplier</code></a>, except that a <code>ThrowingSupplier</code>
  can throw any kind of exception, including checked exceptions.
-
- <p>As of JUnit Jupiter 5.3, <code>ThrowingSupplier</code> extends
- <a href="../../../../../org/junit/jupiter/api/function/Executable.html" title="interface in org.junit.jupiter.api.function"><code>Executable</code></a>, providing a <em>default</em> implementation of
- <a href="../../../../../org/junit/jupiter/api/function/ThrowingSupplier.html#execute()"><code>execute()</code></a> that delegates to <a href="../../../../../org/junit/jupiter/api/function/ThrowingSupplier.html#get()"><code>get()</code></a> and ignores the return
- value. This allows the Java compiler to disambiguate between
- <code>ThrowingSupplier</code> and <code>Executable</code> when performing type
- inference for a lambda expression or method reference supplied to
- an overloaded method that accepts either a <code>ThrowingSupplier</code> or an
- <code>Executable</code>.
 
  <h4>Rationale for throwing <code>Throwable</code> instead of <code>Exception</code></h4>
 
@@ -196,20 +182,13 @@ extends <a href="../../../../../org/junit/jupiter/api/function/Executable.html" 
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t5" class="tableTab"><span><a href="javascript:show(16);">Default Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>default void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/function/ThrowingSupplier.html#execute()">execute</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Delegates to <a href="../../../../../org/junit/jupiter/api/function/ThrowingSupplier.html#get()"><code>get()</code></a> and ignores the return value.</div>
-</td>
-</tr>
-<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../../org/junit/jupiter/api/function/ThrowingSupplier.html" title="type parameter in ThrowingSupplier">T</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/function/ThrowingSupplier.html#get()">get</a></span>()</code></th>
 <td class="colLast">
@@ -233,33 +212,6 @@ extends <a href="../../../../../org/junit/jupiter/api/function/Executable.html" 
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="execute()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>execute</h4>
-<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#STABLE" title="class or interface in org.apiguardian.api" class="externalLink">STABLE</a>,
-     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.3")
-default&nbsp;void&nbsp;execute()
-              throws <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a></pre>
-<div class="block">Delegates to <a href="../../../../../org/junit/jupiter/api/function/ThrowingSupplier.html#get()"><code>get()</code></a> and ignores the return value.
-
- <p>This default method is not intended to be overridden. See
- <a href="../../../../../org/junit/jupiter/api/function/ThrowingSupplier.html" title="interface in org.junit.jupiter.api.function">class-level documentation</a> for further
- details.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../org/junit/jupiter/api/function/Executable.html#execute()">execute</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../org/junit/jupiter/api/function/Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a></code></dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a></code></dd>
-<dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>5.3</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/jupiter/api/function/ThrowingSupplier.html#get()"><code>get()</code></a></dd>
-</dl>
-</li>
-</ul>
 <a id="get()">
 <!--   -->
 </a>
