@@ -32,7 +32,7 @@ public class JupiterEngineDescriptor extends EngineDescriptor implements Node<Ju
 		super(uniqueId, "JUnit Jupiter");
 	}
 
-	public JupiterEngineDescriptor(UniqueId uniqueId, String name){
+	public JupiterEngineDescriptor(UniqueId uniqueId, String name) {
 		super(uniqueId, name);
 	}
 
