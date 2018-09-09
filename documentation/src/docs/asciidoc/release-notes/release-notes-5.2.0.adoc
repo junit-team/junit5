@@ -1,0 +1,12 @@
+[[release-notes-5.2.0]]
+== 5.2.0
+
+*Date of Release:* April 29, 2018
+
+*Scope:* JUnit BOM, support for Maven Surefire 2.21.0 allowing builds with Java 9 and
+Java 10, _argument aggregation_ and _widening primitive conversion_ for arguments in
+parameterized tests, external factory methods for `@MethodSource`, as well as various
+minor improvements and bug fixes.
+
+For complete details consult the
+https://junit.org/junit5/docs/5.2.0/release-notes/index.html[5.2.0 Release Notes] online.
