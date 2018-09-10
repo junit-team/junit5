@@ -3158,7 +3158,9 @@ primitive type.
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-sources-ArgumentsSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-ArgumentsSource"></a>@ArgumentsSource</h5>
 <div class="paragraph">
-<p><code>@ArgumentsSource</code> can be used to specify a custom, reusable <code>ArgumentsProvider</code>.</p>
+<p><code>@ArgumentsSource</code> can be used to specify a custom, reusable <code>ArgumentsProvider</code>. Note
+that an implementation of <code>ArgumentsProvider</code> must be declared as either a top-level
+class or as a <code>static</code> nested class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3166,9 +3168,12 @@ primitive type.
 <span class="annotation">@ArgumentsSource</span>(MyArgumentsProvider.class)
 <span class="type">void</span> testWithArgumentsSource(<span class="predefined-type">String</span> argument) {
     assertNotNull(argument);
-}
-
-<span class="directive">public</span> <span class="type">class</span> <span class="class">MyArgumentsProvider</span> <span class="directive">implements</span> ArgumentsProvider {
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">MyArgumentsProvider</span> <span class="directive">implements</span> ArgumentsProvider {
 
     <span class="annotation">@Override</span>
     <span class="directive">public</span> Stream&lt;? <span class="directive">extends</span> Arguments&gt; provideArguments(ExtensionContext context) {
@@ -3371,7 +3376,8 @@ of the method can be arbitrary and need not follow any particular convention.</p
 </li>
 <li>
 <p><em>factory constructor</em>: a non-private constructor in the target type that accepts a
-single <code>String</code> argument.</p>
+single <code>String</code> argument. Note that the target type must be declared as either a
+top-level class or as a <code>static</code> nested class.</p>
 </li>
 </ul>
 </div>
@@ -3400,9 +3406,12 @@ as the title of the book.</p>
 <span class="annotation">@ValueSource</span>(strings = <span class="string"><span class="delimiter">&quot;</span><span class="content">42 Cats</span><span class="delimiter">&quot;</span></span>)
 <span class="type">void</span> testWithImplicitFallbackArgumentConversion(<span class="predefined-type">Book</span> book) {
     assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">42 Cats</span><span class="delimiter">&quot;</span></span>, book.getTitle());
-}
-
-<span class="directive">public</span> <span class="type">class</span> <span class="class">Book</span> {
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">Book</span> {
 
     <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> title;
 
@@ -3427,7 +3436,8 @@ as the title of the book.</p>
 <div class="paragraph">
 <p>Instead of relying on implicit argument conversion you may explicitly specify an
 <code>ArgumentConverter</code> to use for a certain parameter using the <code>@ConvertWith</code> annotation
-like in the following example.</p>
+like in the following example. Note that an implementation of <code>ArgumentConverter</code> must be
+declared as either a top-level class or as a <code>static</code> nested class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3437,9 +3447,12 @@ like in the following example.</p>
         <span class="annotation">@ConvertWith</span>(ToStringArgumentConverter.class) <span class="predefined-type">String</span> argument) {
 
     assertNotNull(<span class="predefined-type">TimeUnit</span>.valueOf(argument));
-}
-
-<span class="directive">public</span> <span class="type">class</span> <span class="class">ToStringArgumentConverter</span> <span class="directive">extends</span> SimpleArgumentConverter {
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">ToStringArgumentConverter</span> <span class="directive">extends</span> SimpleArgumentConverter {
 
     <span class="annotation">@Override</span>
     <span class="directive">protected</span> <span class="predefined-type">Object</span> convert(<span class="predefined-type">Object</span> source, <span class="predefined-type">Class</span>&lt;?&gt; targetType) {
@@ -3520,7 +3533,9 @@ test method. In addition, type conversion is supported as discussed in
 <p>To use a custom aggregator simply implement the <code><a href="../api/org/junit/jupiter/params/aggregator/ArgumentsAggregator.html">ArgumentsAggregator</a></code> interface and
 register it via the <code>@AggregateWith</code> annotation on a compatible parameter in the
 <code>@ParameterizedTest</code> method. The result of the aggregation will then be provided as an
-argument for the corresponding parameter when the parameterized test is invoked.</p>
+argument for the corresponding parameter when the parameterized test is invoked. Note
+that an implementation of <code>ArgumentsAggregator</code> must be declared as either a top-level
+class or as a <code>static</code> nested class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3531,9 +3546,12 @@ argument for the corresponding parameter when the parameterized test is invoked.
 })
 <span class="type">void</span> testWithArgumentsAggregator(<span class="annotation">@AggregateWith</span>(PersonAggregator.class) Person person) {
     <span class="comment">// perform assertions against person</span>
-}
-
-<span class="directive">public</span> <span class="type">class</span> <span class="class">PersonAggregator</span> <span class="directive">implements</span> ArgumentsAggregator {
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">PersonAggregator</span> <span class="directive">implements</span> ArgumentsAggregator {
     <span class="annotation">@Override</span>
     <span class="directive">public</span> Person aggregateArguments(ArgumentsAccessor arguments, ParameterContext context) {
         <span class="keyword">return</span> <span class="keyword">new</span> Person(arguments.getString(<span class="integer">0</span>),
@@ -3560,9 +3578,12 @@ action with a custom <code>@CsvToPerson</code> annotation.</p>
 })
 <span class="type">void</span> testWithCustomAggregatorAnnotation(<span class="annotation">@CsvToPerson</span> Person person) {
     <span class="comment">// perform assertions against person</span>
-}
-
-<span class="annotation">@Retention</span>(<span class="predefined-type">RetentionPolicy</span>.RUNTIME)
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Retention</span>(<span class="predefined-type">RetentionPolicy</span>.RUNTIME)
 <span class="annotation">@Target</span>(<span class="predefined-type">ElementType</span>.PARAMETER)
 <span class="annotation">@AggregateWith</span>(PersonAggregator.class)
 <span class="directive">public</span> <span class="annotation">@interface</span> CsvToPerson {
