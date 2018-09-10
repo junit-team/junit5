@@ -983,11 +983,18 @@ primitive type.
 [[writing-tests-parameterized-tests-sources-ArgumentsSource]]
 ===== @ArgumentsSource
 
-`@ArgumentsSource` can be used to specify a custom, reusable `ArgumentsProvider`.
+`@ArgumentsSource` can be used to specify a custom, reusable `ArgumentsProvider`. Note
+that an implementation of `ArgumentsProvider` must be declared as either a top-level
+class or as a `static` nested class.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsSource_example]
+----
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsProvider_example]
 ----
 
 
@@ -1072,7 +1079,8 @@ method_ or a _factory constructor_ as defined below.
   accepts a single `String` argument and returns an instance of the target type. The name
   of the method can be arbitrary and need not follow any particular convention.
 - __factory constructor__: a non-private constructor in the target type that accepts a
-  single `String` argument.
+  single `String` argument. Note that the target type must be declared as either a
+  top-level class or as a `static` nested class.
 
 NOTE: If multiple _factory methods_ are discovered, they will be ignored. If a _factory
 method_ and a _factory constructor_ are discovered, the factory method will be used
@@ -1087,16 +1095,27 @@ as the title of the book.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_fallback_conversion_example]
 ----
 
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_fallback_conversion_example_Book]
+----
+
 [[writing-tests-parameterized-tests-argument-conversion-explicit]]
 ===== Explicit Conversion
 
 Instead of relying on implicit argument conversion you may explicitly specify an
 `ArgumentConverter` to use for a certain parameter using the `@ConvertWith` annotation
-like in the following example.
+like in the following example. Note that an implementation of `ArgumentConverter` must be
+declared as either a top-level class or as a `static` nested class.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_conversion_example]
+----
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_conversion_example_ToStringArgumentConverter]
 ----
 
 Explicit argument converters are meant to be implemented by test and extension authors.
@@ -1139,11 +1158,18 @@ _aggregators_.
 To use a custom aggregator simply implement the `{ArgumentsAggregator}` interface and
 register it via the `@AggregateWith` annotation on a compatible parameter in the
 `@ParameterizedTest` method. The result of the aggregation will then be provided as an
-argument for the corresponding parameter when the parameterized test is invoked.
+argument for the corresponding parameter when the parameterized test is invoked. Note
+that an implementation of `ArgumentsAggregator` must be declared as either a top-level
+class or as a `static` nested class.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAggregator_example]
+----
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAggregator_example_PersonAggregator]
 ----
 
 If you find yourself repeatedly declaring `@AggregateWith(MyTypeAggregator.class)` for
@@ -1155,6 +1181,11 @@ action with a custom `@CsvToPerson` annotation.
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAggregator_with_custom_annotation_example]
+----
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAggregator_with_custom_annotation_example_CsvToPerson]
 ----
 
 
