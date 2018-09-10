@@ -26,9 +26,9 @@ class AssertionTestUtils {
 		throw new AssertionError("Should have thrown an " + AssertionFailedError.class.getName());
 	}
 
-	static void assertNullMessage(Throwable ex) throws AssertionError {
-		if (ex.getMessage() != null) {
-			throw new AssertionError("Exception message should be null, but was [" + ex.getMessage() + "].");
+	static void assertEmptyMessage(Throwable ex) throws AssertionError {
+		if (!ex.getMessage().isEmpty()) {
+			throw new AssertionError("Exception message should be empty, but was [" + ex.getMessage() + "].");
 		}
 	}
 
