@@ -23,6 +23,9 @@ repository on GitHub.
   - Previously, a `NodeTestTask` instance was created for each `TestDescriptor` before
     starting execution. Now they are created on the fly and can be garbage collected by
     the JVM after the enclosing container has finished.
+* The https://github.com/ota4j-team/opentest4j[OpenTest4J] dependency has been updated to
+  1.1.1 to fix a serialization incompatibility between 1.0.0 and 1.1.0 that caused failure
+  messages to be discarded when used from Gradle and potentially other tools and IDEs.
 
 
 [[release-notes-5.3.1-junit-jupiter]]
