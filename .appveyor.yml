@@ -6,9 +6,12 @@ branches:
     - /^r\d.*$/
 
 install:
-  - cinst jdk10 -params 'installdir=C:\\jdk10'
-  - SET JAVA_HOME=C:\jdk10
-  - SET PATH=C:\jdk10\bin;%PATH%
+# Turn off JDK installation from chocolatey
+#  - cinst jdk10 -params 'installdir=C:\\jdk10'
+#  - SET JAVA_HOME=C:\jdk10
+# Use pre-installed JDK
+  - SET JAVA_HOME="C:\Program Files\Java\jdk10"
+  - SET PATH=%JAVA_HOME%\bin;%PATH%
 
 test_script:
   - gradlew --no-daemon -version
