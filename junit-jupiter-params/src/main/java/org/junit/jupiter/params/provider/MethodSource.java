@@ -94,7 +94,7 @@ public @interface MethodSource {
 	 * that has the same name as the test method will be used as the factory
 	 * method by default.
 	 *
-	 * <p>For further information, see the {@linkplain MethodSource class-level JavaDoc}.
+	 * <p>For further information, see the {@linkplain MethodSource class-level Javadoc}.
 	 */
 	String[] value() default "";
 

@@ -450,7 +450,7 @@ values into a store for later retrieval. See the
 using the `Store` with a method-level scope. It is important to remember that values
 stored in an `ExtensionContext` during test execution will not be available in the
 surrounding `ExtensionContext`. Since `ExtensionContexts` may be nested, the scope of
-inner contexts may also be limited. Consult the corresponding JavaDoc for details on the
+inner contexts may also be limited. Consult the corresponding Javadoc for details on the
 methods available for storing and retrieving values via the `{ExtensionContext_Store}`.
 
 .`ExtensionContext.Store.CloseableResource`
@@ -476,14 +476,14 @@ the behavior of the JUnit Platform.
 These include methods to check whether an element is annotated or meta-annotated with a
 particular annotation, to search for specific annotations, and to find annotated methods
 and fields in a class or interface. Some of these methods search on implemented
-interfaces and within class hierarchies to find annotations. Consult the JavaDoc for
+interfaces and within class hierarchies to find annotations. Consult the Javadoc for
 `{AnnotationSupport}` for further details.
 
 [[extensions-supported-utilities-classes]]
 ==== Class Support
 
 `ClassSupport` provides static utility methods for working with classes (i.e., instances
-of `java.lang.Class`). Consult the JavaDoc for `{ClassSupport}` for further details.
+of `java.lang.Class`). Consult the Javadoc for `{ClassSupport}` for further details.
 
 [[extensions-supported-utilities-reflection]]
 ==== Reflection Support
@@ -492,7 +492,7 @@ of `java.lang.Class`). Consult the JavaDoc for `{ClassSupport}` for further deta
 reflection and class-loading mechanisms. These include methods to scan the classpath in
 search of classes matching specified predicates, to load and create new instances of a
 class, and to find and invoke methods. Some of these methods traverse class hierarchies
-to locate matching methods. Consult the JavaDoc for `{ReflectionSupport}` for further
+to locate matching methods. Consult the Javadoc for `{ReflectionSupport}` for further
 details.
 
 [[extensions-execution-order]]
@@ -571,4 +571,4 @@ The following table further explains the twelve steps in the
 In the simplest case only the actual test method will be executed (step 6); all other
 steps are optional depending on the presence of user code or extension support for the
 corresponding lifecycle callback. For further details on the various lifecycle callbacks
-please consult the respective JavaDoc for each annotation and extension.
+please consult the respective Javadoc for each annotation and extension.

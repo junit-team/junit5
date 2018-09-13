@@ -46,7 +46,7 @@ public class LogRecordListener {
 	 * {@linkplain #logRecordSubmitted submitted} to this listener by the
 	 * current thread.
 	 *
-	 * <p>As stated in the JavaDoc for {@code LogRecord}, a submitted
+	 * <p>As stated in the Javadoc for {@code LogRecord}, a submitted
 	 * {@code LogRecord} should not be updated by the client application. Thus,
 	 * the {@code LogRecords} in the returned stream should only be inspected for
 	 * testing purposes and not modified in any way.
@@ -60,7 +60,7 @@ public class LogRecordListener {
 	 * {@linkplain #logRecordSubmitted submitted} to this listener by the current
 	 * thread for the logger name equal to the name of the given class.
 	 *
-	 * <p>As stated in the JavaDoc for {@code LogRecord}, a submitted
+	 * <p>As stated in the Javadoc for {@code LogRecord}, a submitted
 	 * {@code LogRecord} should not be updated by the client application. Thus,
 	 * the {@code LogRecords} in the returned stream should only be inspected for
 	 * testing purposes and not modified in any way.
@@ -83,7 +83,7 @@ public class LogRecordListener {
 	 * thread for the logger name equal to the name of the given class at the given
 	 * log level.
 	 *
-	 * <p>As stated in the JavaDoc for {@code LogRecord}, a submitted
+	 * <p>As stated in the Javadoc for {@code LogRecord}, a submitted
 	 * {@code LogRecord} should not be updated by the client application. Thus,
 	 * the {@code LogRecords} in the returned stream should only be inspected for
 	 * testing purposes and not modified in any way.

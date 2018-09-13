@@ -799,7 +799,7 @@ _aggregator_ is any parameter of type `ArgumentsAccessor` or any parameter annot
 
 Out of the box, JUnit Jupiter provides quite a few _source_ annotations. Each of the
 following subsections provides a brief overview and an example for each of them. Please
-refer to the JavaDoc in the `{params-provider-package}` package for additional
+refer to the Javadoc in the `{params-provider-package}` package for additional
 information.
 
 [[writing-tests-parameterized-tests-sources-ValueSource]]
@@ -909,7 +909,7 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=primitive_MethodSourc
 
 If a parameterized test method declares multiple parameters, you need to return a
 collection, stream, or array of `Arguments` instances or object arrays as shown below
-(see the JavaDoc for `{MethodSource}` for further details on supported return types).
+(see the Javadoc for `{MethodSource}` for further details on supported return types).
 Note that `arguments(Object...)` is a static factory method defined in the `Arguments`
 interface. In addition, `Arguments.of(Object...)` may be used as an alternative to
 `arguments(Object...)`.
