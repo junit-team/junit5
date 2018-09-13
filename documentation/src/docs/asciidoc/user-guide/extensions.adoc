@@ -4,7 +4,7 @@
 [[extensions-overview]]
 === Overview
 
-In contrast to the competing `Runner`, `@Rule`, and `@ClassRule` extension points in
+In contrast to the competing `Runner`, `TestRule`, and `MethodRule` extension points in
 JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concept: the
 `Extension` API. Note, however, that `Extension` itself is just a marker interface.
 
@@ -24,8 +24,8 @@ interface, test class, test method, or custom _<<writing-tests-meta-annotations,
 annotation>>_ with `@ExtendWith(...)` and supplying class references for the extensions
 to register.
 
-For example, to register a custom `RandomParametersExtension` for a particular test method, you
-would annotate the test method as follows.
+For example, to register a custom `RandomParametersExtension` for a particular test
+method, you would annotate the test method as follows.
 
 [source,java,indent=0]
 ----
@@ -36,8 +36,8 @@ void test(@Random int i) {
 }
 ----
 
-To register a custom `RandomParametersExtension` for all tests in a particular class and its
-subclasses, you would annotate the test class as follows.
+To register a custom `RandomParametersExtension` for all tests in a particular class and
+its subclasses, you would annotate the test class as follows.
 
 [source,java,indent=0]
 ----
