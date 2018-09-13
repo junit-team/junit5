@@ -2815,7 +2815,7 @@ parameterized method at the same index in the method&#8217;s formal parameter li
 <div class="paragraph">
 <p>Out of the box, JUnit Jupiter provides quite a few <em>source</em> annotations. Each of the
 following subsections provides a brief overview and an example for each of them. Please
-refer to the JavaDoc in the <code><a href="../api/org/junit/jupiter/params/provider/package-summary.html">org.junit.jupiter.params.provider</a></code> package for additional
+refer to the Javadoc in the <code><a href="../api/org/junit/jupiter/params/provider/package-summary.html">org.junit.jupiter.params.provider</a></code> package for additional
 information.</p>
 </div>
 <div class="sect4">
@@ -3004,7 +3004,7 @@ supported as demonstrated by the following example.</p>
 <div class="paragraph">
 <p>If a parameterized test method declares multiple parameters, you need to return a
 collection, stream, or array of <code>Arguments</code> instances or object arrays as shown below
-(see the JavaDoc for <code><a href="../api/org/junit/jupiter/params/provider/MethodSource.html">@MethodSource</a></code> for further details on supported return types).
+(see the Javadoc for <code><a href="../api/org/junit/jupiter/params/provider/MethodSource.html">@MethodSource</a></code> for further details on supported return types).
 Note that <code>arguments(Object&#8230;&#8203;)</code> is a static factory method defined in the <code>Arguments</code>
 interface. In addition, <code>Arguments.of(Object&#8230;&#8203;)</code> may be used as an alternative to
 <code>arguments(Object&#8230;&#8203;)</code>.</p>
@@ -5195,7 +5195,7 @@ it a try and provide feedback to the JUnit team so they can improve and eventual
 <div class="sect2">
 <h3 id="extensions-overview"><a class="anchor" href="#extensions-overview"></a>5.1. Overview</h3>
 <div class="paragraph">
-<p>In contrast to the competing <code>Runner</code>, <code>@Rule</code>, and <code>@ClassRule</code> extension points in
+<p>In contrast to the competing <code>Runner</code>, <code>TestRule</code>, and <code>MethodRule</code> extension points in
 JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concept: the
 <code>Extension</code> API. Note, however, that <code>Extension</code> itself is just a marker interface.</p>
 </div>
@@ -5217,8 +5217,8 @@ annotation</a></em> with <code>@ExtendWith(&#8230;&#8203;)</code> and supplying 
 to register.</p>
 </div>
 <div class="paragraph">
-<p>For example, to register a custom <code>RandomParametersExtension</code> for a particular test method, you
-would annotate the test method as follows.</p>
+<p>For example, to register a custom <code>RandomParametersExtension</code> for a particular test
+method, you would annotate the test method as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5230,8 +5230,8 @@ would annotate the test method as follows.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>To register a custom <code>RandomParametersExtension</code> for all tests in a particular class and its
-subclasses, you would annotate the test class as follows.</p>
+<p>To register a custom <code>RandomParametersExtension</code> for all tests in a particular class and
+its subclasses, you would annotate the test class as follows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5929,7 +5929,7 @@ values into a store for later retrieval. See the
 using the <code>Store</code> with a method-level scope. It is important to remember that values
 stored in an <code>ExtensionContext</code> during test execution will not be available in the
 surrounding <code>ExtensionContext</code>. Since <code>ExtensionContexts</code> may be nested, the scope of
-inner contexts may also be limited. Consult the corresponding JavaDoc for details on the
+inner contexts may also be limited. Consult the corresponding Javadoc for details on the
 methods available for storing and retrieving values via the <code><a href="../api/org/junit/jupiter/api/extension/ExtensionContext.Store.html">Store</a></code>.</p>
 </div>
 <div class="admonitionblock note">
@@ -5966,7 +5966,7 @@ the behavior of the JUnit Platform.</p>
 These include methods to check whether an element is annotated or meta-annotated with a
 particular annotation, to search for specific annotations, and to find annotated methods
 and fields in a class or interface. Some of these methods search on implemented
-interfaces and within class hierarchies to find annotations. Consult the JavaDoc for
+interfaces and within class hierarchies to find annotations. Consult the Javadoc for
 <code><a href="../api/org/junit/platform/commons/support/AnnotationSupport.html">AnnotationSupport</a></code> for further details.</p>
 </div>
 </div>
@@ -5974,7 +5974,7 @@ interfaces and within class hierarchies to find annotations. Consult the JavaDoc
 <h4 id="extensions-supported-utilities-classes"><a class="anchor" href="#extensions-supported-utilities-classes"></a>5.11.2. Class Support</h4>
 <div class="paragraph">
 <p><code>ClassSupport</code> provides static utility methods for working with classes (i.e., instances
-of <code>java.lang.Class</code>). Consult the JavaDoc for <code><a href="../api/org/junit/platform/commons/support/ClassSupport.html">ClassSupport</a></code> for further details.</p>
+of <code>java.lang.Class</code>). Consult the Javadoc for <code><a href="../api/org/junit/platform/commons/support/ClassSupport.html">ClassSupport</a></code> for further details.</p>
 </div>
 </div>
 <div class="sect3">
@@ -5984,7 +5984,7 @@ of <code>java.lang.Class</code>). Consult the JavaDoc for <code><a href="../api/
 reflection and class-loading mechanisms. These include methods to scan the classpath in
 search of classes matching specified predicates, to load and create new instances of a
 class, and to find and invoke methods. Some of these methods traverse class hierarchies
-to locate matching methods. Consult the JavaDoc for <code><a href="../api/org/junit/platform/commons/support/ReflectionSupport.html">ReflectionSupport</a></code> for further
+to locate matching methods. Consult the Javadoc for <code><a href="../api/org/junit/platform/commons/support/ReflectionSupport.html">ReflectionSupport</a></code> for further
 details.</p>
 </div>
 </div>
@@ -6091,7 +6091,7 @@ and will be repeated for every test method in the test class.</p>
 <p>In the simplest case only the actual test method will be executed (step 6); all other
 steps are optional depending on the presence of user code or extension support for the
 corresponding lifecycle callback. For further details on the various lifecycle callbacks
-please consult the respective JavaDoc for each annotation and extension.</p>
+please consult the respective Javadoc for each annotation and extension.</p>
 </div>
 </div>
 </div>
@@ -6855,7 +6855,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-09-12 11:33:03 EDT
+Last updated 2018-09-13 07:35:32 EDT
 </div>
 </div>
 </body>
