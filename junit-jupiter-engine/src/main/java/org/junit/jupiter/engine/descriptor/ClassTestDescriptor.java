@@ -19,6 +19,7 @@ import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfter
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeAllMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeEachMethods;
 import static org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils.getTestInstanceLifecycle;
+import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -44,7 +45,6 @@ import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.jupiter.engine.execution.OpenTest4JAndJUnit4AwareThrowableCollector;
 import org.junit.jupiter.engine.execution.TestInstanceProvider;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
@@ -161,7 +161,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		registerBeforeEachMethodAdapters(registry);
 		registerAfterEachMethodAdapters(registry);
 
-		ThrowableCollector throwableCollector = new OpenTest4JAndJUnit4AwareThrowableCollector();
+		ThrowableCollector throwableCollector = createThrowableCollector();
 		ClassExtensionContext extensionContext = new ClassExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, this.lifecycle, context.getConfigurationParameters(),
 			throwableCollector);

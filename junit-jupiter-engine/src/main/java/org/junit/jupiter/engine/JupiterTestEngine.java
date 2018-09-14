@@ -20,7 +20,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.jupiter.engine.execution.OpenTest4JAndJUnit4AwareThrowableCollector;
+import org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
@@ -91,7 +91,7 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 	 */
 	@Override
 	protected ThrowableCollector.Factory createThrowableCollectorFactory(ExecutionRequest request) {
-		return OpenTest4JAndJUnit4AwareThrowableCollector::new;
+		return JupiterThrowableCollectorFactory::createThrowableCollector;
 	}
 
 }

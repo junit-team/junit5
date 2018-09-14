@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
+import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -30,7 +31,6 @@ import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.jupiter.engine.execution.OpenTest4JAndJUnit4AwareThrowableCollector;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -81,7 +81,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		ExtensionRegistry registry = populateNewExtensionRegistry(context);
 		Object testInstance = context.getTestInstanceProvider().getTestInstance(Optional.of(registry));
 
-		ThrowableCollector throwableCollector = new OpenTest4JAndJUnit4AwareThrowableCollector();
+		ThrowableCollector throwableCollector = createThrowableCollector();
 		ExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, context.getConfigurationParameters(), testInstance,
 			throwableCollector);
