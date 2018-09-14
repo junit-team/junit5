@@ -125,6 +125,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
+<th class="colFirst" scope="row"><a href="#org.junit.jupiter.engine.support">org.junit.jupiter.engine.support</a></th>
+<td class="colLast">
+<div class="block">Internal support classes for the JUnit Jupiter test engine.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#org.junit.platform.engine.support.hierarchical">org.junit.platform.engine.support.hierarchical</a></th>
 <td class="colLast">
 <div class="block">Support classes and base implementation for any
@@ -188,25 +194,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h3>Uses of <a href="../../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a> in <a href="../../../../../../../org/junit/jupiter/engine/execution/package-summary.html">org.junit.jupiter.engine.execution</a></h3>
 <table class="useSummary">
-<caption><span>Subclasses of <a href="../../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a> in <a href="../../../../../../../org/junit/jupiter/engine/execution/package-summary.html">org.junit.jupiter.engine.execution</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Class</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../../org/junit/jupiter/engine/execution/OpenTest4JAndJUnit4AwareThrowableCollector.html" title="class in org.junit.jupiter.engine.execution">OpenTest4JAndJUnit4AwareThrowableCollector</a></span></code></th>
-<td class="colLast">
-<div class="block">Specialization of <a href="../../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical"><code>ThrowableCollector</code></a> that treats instances of the
- OTA's <a href="https://ota4j-team.github.io/opentest4j/docs/1.1.1/api/org/opentest4j/TestAbortedException.html?is-external=true" title="class or interface in org.opentest4j" class="externalLink"><code>TestAbortedException</code></a> and JUnit 4's
- <code>org.junit.AssumptionViolatedException</code> as <em>aborting</em>.</div>
-</td>
-</tr>
-</tbody>
-</table>
-<table class="useSummary">
 <caption><span>Methods in <a href="../../../../../../../org/junit/jupiter/engine/execution/package-summary.html">org.junit.jupiter.engine.execution</a> that return <a href="../../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
@@ -233,6 +220,32 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code><a href="../../../../../../../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.Builder.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext.Builder</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">JupiterEngineExecutionContext.Builder.</span><code><span class="memberNameLink"><a href="../../../../../../../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.Builder.html#withThrowableCollector(org.junit.platform.engine.support.hierarchical.ThrowableCollector)">withThrowableCollector</a></span>&#8203;(<a href="../../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a>&nbsp;throwableCollector)</code></th>
 <td class="colLast">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="org.junit.jupiter.engine.support">
+<!--   -->
+</a>
+<h3>Uses of <a href="../../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a> in <a href="../../../../../../../org/junit/jupiter/engine/support/package-summary.html">org.junit.jupiter.engine.support</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../../../../../../org/junit/jupiter/engine/support/package-summary.html">org.junit.jupiter.engine.support</a> that return <a href="../../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">JupiterThrowableCollectorFactory.</span><code><span class="memberNameLink"><a href="../../../../../../../org/junit/jupiter/engine/support/JupiterThrowableCollectorFactory.html#createThrowableCollector()">createThrowableCollector</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Create a new <a href="../../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical"><code>ThrowableCollector</code></a> that treats instances of the
+ OTA's <a href="https://ota4j-team.github.io/opentest4j/docs/1.1.1/api/org/opentest4j/TestAbortedException.html?is-external=true" title="class or interface in org.opentest4j" class="externalLink"><code>TestAbortedException</code></a> and JUnit 4's
+ <code>org.junit.AssumptionViolatedException</code> as <em>aborting</em>.</div>
+</td>
 </tr>
 </tbody>
 </table>

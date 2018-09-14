@@ -10,6 +10,7 @@ org.junit.jupiter.engine.discovery.predicates
 org.junit.jupiter.engine.execution
 org.junit.jupiter.engine.extension
 org.junit.jupiter.engine.script
+org.junit.jupiter.engine.support
 org.junit.jupiter.migrationsupport.rules
 org.junit.jupiter.migrationsupport.rules.adapter
 org.junit.jupiter.migrationsupport.rules.member
