@@ -1421,8 +1421,9 @@ then use them in tests like in the <code>assertWithHamcrestMatcher()</code> meth
 <h3 id="writing-tests-assumptions"><a class="anchor" href="#writing-tests-assumptions"></a>3.5. Assumptions</h3>
 <div class="paragraph">
 <p>JUnit Jupiter comes with a subset of the assumption methods that JUnit 4 provides and
-adds a few that lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter
-assumptions are static methods in the <code><a href="../api/org/junit/jupiter/api/Assumptions.html">org.junit.jupiter.api.Assumptions</a></code> class.</p>
+adds a few that lend themselves well to being used with Java 8 lambda expressions and
+method references. All JUnit Jupiter assumptions are static methods in the
+<code><a href="../api/org/junit/jupiter/api/Assumptions.html">org.junit.jupiter.api.Assumptions</a></code> class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1461,6 +1462,21 @@ assumptions are static methods in the <code><a href="../api/org/junit/jupiter/ap
 
 }</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+As of JUnit Jupiter 5.4, it is also possible to use methods from JUnit 4&#8217;s
+<code>org.junit.Assume</code> class for assumptions. Specifically, JUnit Jupiter supports JUnit 4&#8217;s
+<code>AssumptionViolatedException</code> to signal that a test should be aborted instead of marked
+as a failure.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -6154,6 +6170,16 @@ to JUnit Jupiter.</p>
 </li>
 <li>
 <p>Assumptions reside in <code>org.junit.jupiter.api.Assumptions</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Note, however, that JUnit Jupiter 5.4 and later versions support methods from JUnit
+4&#8217;s <code>org.junit.Assume</code> class for assumptions. Specifically, JUnit Jupiter supports
+JUnit 4&#8217;s <code>AssumptionViolatedException</code> to signal that a test should be aborted
+instead of marked as a failure.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p><code>@Before</code> and <code>@After</code> no longer exist; use <code>@BeforeEach</code> and <code>@AfterEach</code> instead.</p>
@@ -6855,7 +6881,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-09-14 11:23:01 EDT
+Last updated 2018-09-13 08:07:49 EDT
 </div>
 </div>
 </body>

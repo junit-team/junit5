@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -237,6 +237,15 @@ extends <a href="../../../../org/junit/platform/engine/support/hierarchical/Hier
 </td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>protected <a href="../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.Factory.html" title="interface in org.junit.platform.engine.support.hierarchical">ThrowableCollector.Factory</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/jupiter/engine/JupiterTestEngine.html#createThrowableCollectorFactory(org.junit.platform.engine.ExecutionRequest)">createThrowableCollectorFactory</a></span>&#8203;(<a href="../../../../org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine">ExecutionRequest</a>&nbsp;request)</code></th>
+<td class="colLast">
+<div class="block">Create the <a href="../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.Factory.html" title="interface in org.junit.platform.engine.support.hierarchical">factory</a> for creating
+ <a href="../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical"><code>ThrowableCollector</code></a> instances used to handle exceptions that occur
+ during execution of this engine's tests.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/jupiter/engine/JupiterTestEngine.html#discover(org.junit.platform.engine.EngineDiscoveryRequest,org.junit.platform.engine.UniqueId)">discover</a></span>&#8203;(<a href="../../../../org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine">EngineDiscoveryRequest</a>&nbsp;discoveryRequest,
         <a href="../../../../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId)</code></th>
@@ -244,21 +253,21 @@ extends <a href="../../../../org/junit/platform/engine/support/hierarchical/Hier
 <div class="block">Discover tests according to the supplied <a href="../../../../org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><code>EngineDiscoveryRequest</code></a>.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/jupiter/engine/JupiterTestEngine.html#getArtifactId()">getArtifactId</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns <code>junit-jupiter-engine</code> as the artifact ID.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/jupiter/engine/JupiterTestEngine.html#getGroupId()">getGroupId</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns <code>org.junit.jupiter</code> as the group ID.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/jupiter/engine/JupiterTestEngine.html#getId()">getId</a></span>()</code></th>
 <td class="colLast">
@@ -271,7 +280,7 @@ extends <a href="../../../../org/junit/platform/engine/support/hierarchical/Hier
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;org.junit.platform.engine.support.hierarchical.<a href="../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html" title="class in org.junit.platform.engine.support.hierarchical">HierarchicalTestEngine</a></h3>
-<code><a href="../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html#createThrowableCollectorFactory(org.junit.platform.engine.ExecutionRequest)">createThrowableCollectorFactory</a>, <a href="../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html#execute(org.junit.platform.engine.ExecutionRequest)">execute</a></code></li>
+<code><a href="../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html#execute(org.junit.platform.engine.ExecutionRequest)">execute</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -459,7 +468,7 @@ extends <a href="../../../../org/junit/platform/engine/support/hierarchical/Hier
 <a id="createExecutionContext(org.junit.platform.engine.ExecutionRequest)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>createExecutionContext</h4>
 <pre>protected&nbsp;<a href="../../../../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;createExecutionContext&#8203;(<a href="../../../../org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine">ExecutionRequest</a>&nbsp;request)</pre>
@@ -473,6 +482,38 @@ extends <a href="../../../../org/junit/platform/engine/support/hierarchical/Hier
 <dd><code>request</code> - the request about to be executed</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the initial context that will be passed to nodes in the hierarchy</dd>
+</dl>
+</li>
+</ul>
+<a id="createThrowableCollectorFactory(org.junit.platform.engine.ExecutionRequest)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>createThrowableCollectorFactory</h4>
+<pre>protected&nbsp;<a href="../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.Factory.html" title="interface in org.junit.platform.engine.support.hierarchical">ThrowableCollector.Factory</a>&nbsp;createThrowableCollectorFactory&#8203;(<a href="../../../../org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine">ExecutionRequest</a>&nbsp;request)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html#createThrowableCollectorFactory(org.junit.platform.engine.ExecutionRequest)">HierarchicalTestEngine</a></code></span></div>
+<div class="block">Create the <a href="../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.Factory.html" title="interface in org.junit.platform.engine.support.hierarchical">factory</a> for creating
+ <a href="../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical"><code>ThrowableCollector</code></a> instances used to handle exceptions that occur
+ during execution of this engine's tests.
+
+ <p>An engine may use the information in the supplied <em>request</em>
+ such as the contained
+ <a href="../../../../org/junit/platform/engine/ExecutionRequest.html#getConfigurationParameters()">configuration parameters</a>
+ to decide what kind of factory to return or how to configure it.
+
+ <p>By default, this method returns a factory that always creates instances of
+ <a href="../../../../org/junit/platform/engine/support/hierarchical/OpenTest4JAwareThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical"><code>OpenTest4JAwareThrowableCollector</code></a>.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html#createThrowableCollectorFactory(org.junit.platform.engine.ExecutionRequest)">createThrowableCollectorFactory</a></code>&nbsp;in class&nbsp;<code><a href="../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html" title="class in org.junit.platform.engine.support.hierarchical">HierarchicalTestEngine</a>&lt;<a href="../../../../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&gt;</code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>request</code> - the request about to be executed</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.4</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../org/junit/platform/engine/support/hierarchical/OpenTest4JAwareThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical"><code>OpenTest4JAwareThrowableCollector</code></a>, 
+<a href="../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical"><code>ThrowableCollector</code></a></dd>
 </dl>
 </li>
 </ul>
