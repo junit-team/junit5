@@ -6157,8 +6157,8 @@ tests before executing them (see <a href="#running-tests">Running Tests</a> for 
 <div class="sect2">
 <h3 id="migrating-from-junit4-tips"><a class="anchor" href="#migrating-from-junit4-tips"></a>6.2. Migration Tips</h3>
 <div class="paragraph">
-<p>The following are things you have to watch out for when migrating existing JUnit 4 tests
-to JUnit Jupiter.</p>
+<p>The following are topics that you should be aware of when migrating existing JUnit 4
+tests to JUnit Jupiter.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -6167,16 +6167,24 @@ to JUnit Jupiter.</p>
 </li>
 <li>
 <p>Assertions reside in <code>org.junit.jupiter.api.Assertions</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Note that you may continue to use assertion methods from <code>org.junit.Assert</code> or any
+other assertion library such as <a href="http://joel-costigliola.github.io/assertj/">AssertJ</a>, <a href="http://hamcrest.org/JavaHamcrest/">Hamcrest</a>, <a href="http://google.github.io/truth/">Truth</a>, etc.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p>Assumptions reside in <code>org.junit.jupiter.api.Assumptions</code>.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Note, however, that JUnit Jupiter 5.4 and later versions support methods from JUnit
-4&#8217;s <code>org.junit.Assume</code> class for assumptions. Specifically, JUnit Jupiter supports
-JUnit 4&#8217;s <code>AssumptionViolatedException</code> to signal that a test should be aborted
-instead of marked as a failure.</p>
+<p>Note that JUnit Jupiter 5.4 and later versions support methods from JUnit 4&#8217;s
+<code>org.junit.Assume</code> class for assumptions. Specifically, JUnit Jupiter supports JUnit
+4&#8217;s <code>AssumptionViolatedException</code> to signal that a test should be aborted instead of
+marked as a failure.</p>
 </li>
 </ul>
 </div>
@@ -6185,10 +6193,12 @@ instead of marked as a failure.</p>
 <p><code>@Before</code> and <code>@After</code> no longer exist; use <code>@BeforeEach</code> and <code>@AfterEach</code> instead.</p>
 </li>
 <li>
-<p><code>@BeforeClass</code> and <code>@AfterClass</code> no longer exist; use <code>@BeforeAll</code> and <code>@AfterAll</code> instead.</p>
+<p><code>@BeforeClass</code> and <code>@AfterClass</code> no longer exist; use <code>@BeforeAll</code> and <code>@AfterAll</code>
+instead.</p>
 </li>
 <li>
-<p><code>@Ignore</code> no longer exists: use <code>@Disabled</code> instead.</p>
+<p><code>@Ignore</code> no longer exists: use <code>@Disabled</code> or one of the other built-in
+<a href="#writing-tests-conditional-execution">execution conditions</a> instead.</p>
 </li>
 <li>
 <p><code>@Category</code> no longer exists; use <code>@Tag</code> instead.</p>
@@ -6197,8 +6207,8 @@ instead of marked as a failure.</p>
 <p><code>@RunWith</code> no longer exists; superseded by <code>@ExtendWith</code>.</p>
 </li>
 <li>
-<p><code>@Rule</code> and <code>@ClassRule</code> no longer exist; superseded by <code>@ExtendWith</code>;
-see the following section for partial rule support.</p>
+<p><code>@Rule</code> and <code>@ClassRule</code> no longer exist; superseded by <code>@ExtendWith</code> and
+<code>@RegisterExtension</code>; see the following section for partial rule support.</p>
 </li>
 </ul>
 </div>
