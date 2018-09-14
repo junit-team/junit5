@@ -20,6 +20,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.jupiter.engine.execution.OpenTest4JAndJUnit4AwareThrowableCollector;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
@@ -29,6 +30,7 @@ import org.junit.platform.engine.support.config.PrefixedConfigurationParameters;
 import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService;
+import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
  * The JUnit Jupiter {@link org.junit.platform.engine.TestEngine TestEngine}.
@@ -82,6 +84,14 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 	protected JupiterEngineExecutionContext createExecutionContext(ExecutionRequest request) {
 		return new JupiterEngineExecutionContext(request.getEngineExecutionListener(),
 			request.getConfigurationParameters());
+	}
+
+	/**
+	 * @since 5.4
+	 */
+	@Override
+	protected ThrowableCollector.Factory createThrowableCollectorFactory(ExecutionRequest request) {
+		return OpenTest4JAndJUnit4AwareThrowableCollector::new;
 	}
 
 }

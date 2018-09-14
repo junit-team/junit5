@@ -44,6 +44,10 @@ to JUnit Jupiter.
 * Annotations reside in the `org.junit.jupiter.api` package.
 * Assertions reside in `org.junit.jupiter.api.Assertions`.
 * Assumptions reside in `org.junit.jupiter.api.Assumptions`.
+  - Note, however, that JUnit Jupiter 5.4 and later versions support methods from JUnit
+    4's `org.junit.Assume` class for assumptions. Specifically, JUnit Jupiter supports
+    JUnit 4's `AssumptionViolatedException` to signal that a test should be aborted
+    instead of marked as a failure.
 * `@Before` and `@After` no longer exist; use `@BeforeEach` and `@AfterEach` instead.
 * `@BeforeClass` and `@AfterClass` no longer exist; use `@BeforeAll` and `@AfterAll` instead.
 * `@Ignore` no longer exists: use `@Disabled` instead.

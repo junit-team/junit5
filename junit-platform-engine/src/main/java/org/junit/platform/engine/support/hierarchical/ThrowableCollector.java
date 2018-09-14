@@ -35,6 +35,7 @@ import org.junit.platform.engine.TestExecutionResult;
  * of the first {@code Throwable} that failed execution.
  *
  * @since 1.3
+ * @see OpenTest4JAwareThrowableCollector
  */
 @API(status = MAINTAINED, since = "1.3")
 public class ThrowableCollector {

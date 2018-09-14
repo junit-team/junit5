@@ -23,7 +23,9 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* JUnit 4's `AssumptionViolatedException` is now supported in JUnit Jupiter for aborting
+  a test mid-flight due to a failed assumption -- for example, via JUnit 4's
+  `org.junit.Assume` utility class.
 
 
 [[release-notes-5.4.0-M1-junit-jupiter]]

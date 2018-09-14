@@ -143,13 +143,19 @@ Naturally, legacy tests based on the JUnit 4 programming model can continue usin
 === Assumptions
 
 JUnit Jupiter comes with a subset of the assumption methods that JUnit 4 provides and
-adds a few that lend themselves well to being used with Java 8 lambdas. All JUnit Jupiter
-assumptions are static methods in the `{Assumptions}` class.
+adds a few that lend themselves well to being used with Java 8 lambda expressions and
+method references. All JUnit Jupiter assumptions are static methods in the
+`{Assumptions}` class.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/AssumptionsDemo.java[tags=user_guide]
 ----
+
+NOTE: As of JUnit Jupiter 5.4, it is also possible to use methods from JUnit 4's
+`org.junit.Assume` class for assumptions. Specifically, JUnit Jupiter supports JUnit 4's
+`AssumptionViolatedException` to signal that a test should be aborted instead of marked
+as a failure.
 
 [[writing-tests-disabling]]
 === Disabling Tests
