@@ -11,8 +11,10 @@
 package org.junit.jupiter.engine.discovery;
 
 import static java.lang.String.format;
+import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
@@ -23,6 +25,7 @@ import static org.junit.platform.commons.util.ReflectionUtils.findNestedClasses;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
@@ -33,9 +36,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.jupiter.api.MethodOrdering;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.Filterable;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
+import org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsInnerClass;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -268,10 +273,40 @@ class JavaElementsResolver {
 
 	private void resolveChildren(TestDescriptor descriptor) {
 		if (descriptor instanceof ClassTestDescriptor) {
-			Class<?> testClass = ((ClassTestDescriptor) descriptor).getTestClass();
-			resolveContainedMethods(descriptor, testClass);
-			resolveContainedNestedClasses(descriptor, testClass);
+			ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptor;
+			Class<?> testClass = classTestDescriptor.getTestClass();
+
+			resolveContainedMethods(classTestDescriptor, testClass);
+			orderContainedMethods(classTestDescriptor, testClass);
+			resolveContainedNestedClasses(classTestDescriptor, testClass);
 		}
+	}
+
+	/**
+	 * @since 5.4
+	 */
+	private void orderContainedMethods(ClassTestDescriptor classTestDescriptor, Class<?> testClass) {
+		findAnnotation(testClass, MethodOrdering.class)//
+				.map(MethodOrdering::value)//
+				.map(ReflectionUtils::newInstance)//
+				.ifPresent(methodOrderer -> {
+
+					List<DefaultMethodDescriptor> methodDescriptors = classTestDescriptor.getChildren().stream()//
+							.filter(MethodBasedTestDescriptor.class::isInstance)//
+							.map(MethodBasedTestDescriptor.class::cast)//
+							.map(DefaultMethodDescriptor::new)//
+							.collect(toCollection(ArrayList::new));
+
+					methodOrderer.orderMethods(methodDescriptors);
+
+					Set<TestDescriptor> sortedTestDescriptors = methodDescriptors.stream()//
+							.map(DefaultMethodDescriptor::getTestDescriptor)//
+							.collect(toCollection(LinkedHashSet::new));
+
+					// Currently no way to removeAll or addAll children at once.
+					sortedTestDescriptors.forEach(classTestDescriptor::removeChild);
+					sortedTestDescriptors.forEach(classTestDescriptor::addChild);
+				});
 	}
 
 	private void resolveContainedNestedClasses(TestDescriptor containerDescriptor, Class<?> clazz) {
