@@ -490,6 +490,16 @@
     ]
   },
   {
+    "title": "JUnit 5: Platform & Jupiter API",
+    "event": "JUG Bonn",
+    "date": "2018-11-06",
+    "location": "Bonn, Germany",
+    "link": "https://www.meetup.com/JUG-Bonn/events/251268745",
+    "speakers": [
+      "sormuras"
+    ]
+  },
+  {
     "title": "JUnit 5: More than just a Testing Framework for Java",
     "event": "WJAX",
     "date": "2018-11-07",
