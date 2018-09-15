@@ -2,6 +2,8 @@
 
 org.junit.jupiter.migrationsupport@${jupiterVersion} automatic
 requires java.base mandated
+contains org.junit.jupiter.migrationsupport
+contains org.junit.jupiter.migrationsupport.conditions
 contains org.junit.jupiter.migrationsupport.rules
 contains org.junit.jupiter.migrationsupport.rules.adapter
 contains org.junit.jupiter.migrationsupport.rules.member

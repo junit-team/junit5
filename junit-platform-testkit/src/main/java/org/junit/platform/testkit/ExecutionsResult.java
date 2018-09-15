@@ -162,6 +162,12 @@ public class ExecutionsResult {
 		return getExecutionEvents(ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED).size();
 	}
 
+	public List<ExecutionEvent> getTestEvents() {
+		return getExecutionEvents().stream()//
+				.filter(ExecutionEvent.byTestDescriptor(TestDescriptor::isTest))//
+				.collect(toList());
+	}
+
 	/**
 	 * Gets the {@link List} of {@link ExecutionEvent}s of the provided {@link ExecutionEvent.Type} where
 	 * the {@link ExecutionEvent} was for a test (in other words: {@link TestDescriptor#isTest()} ()} ()} == {@code true}).

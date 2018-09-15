@@ -128,6 +128,10 @@ public class ExecutionEventConditions {
 		return Assertions.allOf(type(SKIPPED), reason(expectedReason));
 	}
 
+	public static Condition<ExecutionEvent> skippedWithReason(Predicate<String> predicate) {
+		return Assertions.allOf(type(SKIPPED), reason(predicate));
+	}
+
 	public static Condition<ExecutionEvent> started() {
 		return type(STARTED);
 	}
@@ -170,6 +174,10 @@ public class ExecutionEventConditions {
 	public static Condition<ExecutionEvent> reason(String expectedReason) {
 		return new Condition<>(byPayload(String.class, isEqual(expectedReason)), "event with reason '%s'",
 			expectedReason);
+	}
+
+	public static Condition<ExecutionEvent> reason(Predicate<String> predicate) {
+		return new Condition<>(byPayload(String.class, predicate), "event with reason predicate '%s'", predicate);
 	}
 
 }

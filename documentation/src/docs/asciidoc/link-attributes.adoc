@@ -86,6 +86,9 @@ endif::[]
 :CustomAnnotationParameterResolver:      {current-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java[CustomAnnotationParameterResolver]
 :CustomTypeParameterResolver:            {current-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java[CustomTypeParameterResolver]
 //
+:EnableJUnit4MigrationSupport:           {javadoc-root}/org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.html[@EnableJUnit4MigrationSupport]
+:EnableRuleMigrationSupport:             {javadoc-root}/org/junit/jupiter/migrationsupport/EnableRuleMigrationSupport.html[@EnableRuleMigrationSupport]
+//
 :junit-vintage-engine:                   {javadoc-root}/org/junit/vintage/engine/package-summary.html[junit-vintage-engine]
 //
 :junit5-samples-repo:                    {junit-team}/junit5-samples

@@ -15,6 +15,7 @@ existing JUnit 4 tests alongside JUnit Jupiter tests. Furthermore, since the JUn
 will continue to provide maintenance and bug fix releases for the JUnit 4.x baseline,
 developers have plenty of time to migrate to JUnit Jupiter on their own schedule.
 
+
 [[migrating-from-junit4-running]]
 === Running JUnit 4 Tests on the JUnit Platform
 
@@ -28,12 +29,13 @@ find out how this is done with Gradle and Maven.
 [[migrating-from-junit4-categories-support]]
 ==== Categories Support
 
-For test classes or methods that are annotated with `@Category`, the
-_JUnit Vintage test engine_ exposes the category's fully qualified class name as a tag
-of the corresponding test identifier. For example, if a test method is annotated with
+For test classes or methods that are annotated with `@Category`, the _JUnit Vintage test
+engine_ exposes the category's fully qualified class name as a tag of the corresponding
+test identifier. For example, if a test method is annotated with
 `@Category(Example.class)`, it will be tagged with `"com.acme.Example"`. Similar to the
 `Categories` runner in JUnit 4, this information can be used to filter the discovered
 tests before executing them (see <<running-tests>> for details).
+
 
 [[migrating-from-junit4-tips]]
 === Migration Tips
@@ -54,11 +56,14 @@ tests to JUnit Jupiter.
 * `@BeforeClass` and `@AfterClass` no longer exist; use `@BeforeAll` and `@AfterAll`
   instead.
 * `@Ignore` no longer exists: use `@Disabled` or one of the other built-in
-  <<writing-tests-conditional-execution, execution conditions>> instead.
+  <<writing-tests-conditional-execution, execution conditions>> instead
+  - See also <<migrating-from-junit4-ignore-annotation-support>>.
 * `@Category` no longer exists; use `@Tag` instead.
 * `@RunWith` no longer exists; superseded by `@ExtendWith`.
 * `@Rule` and `@ClassRule` no longer exist; superseded by `@ExtendWith` and
-  `@RegisterExtension`; see the following section for partial rule support.
+  `@RegisterExtension`
+  - See also <<migrating-from-junit4-rule-support>>.
+
 
 [[migrating-from-junit4-rule-support]]
 === Limited JUnit 4 Rule Support
@@ -73,7 +78,7 @@ Jupiter extension model, i.e. those that do not completely change the overall ex
 flow of the test.
 
 The `junit-jupiter-migrationsupport` module from JUnit Jupiter currently supports the
-following three `Rule` types including subclasses of those types:
+following three `Rule` types including subclasses of these types:
 
 * `org.junit.rules.ExternalResource` (including `org.junit.rules.TemporaryFolder`)
 * `org.junit.rules.Verifier` (including `org.junit.rules.ErrorCollector`)
@@ -84,12 +89,38 @@ class-level extensions on a test class such `Rule` implementations in legacy cod
 can be _left unchanged_ including the JUnit 4 rule import statements.
 
 This limited form of `Rule` support can be switched on by the class-level annotation
-`org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport`. This annotation is
-a _composed annotation_ which enables all migration support extensions:
-`VerifierSupport`, `ExternalResourceSupport`, and `ExpectedExceptionSupport`.
+`{EnableRuleMigrationSupport}`. This annotation is a _composed annotation_ which enables
+all rule migration support extensions: `VerifierSupport`, `ExternalResourceSupport`, and
+`ExpectedExceptionSupport`. You may alternatively choose to annotate your test class with
+`@EnableJUnit4MigrationSupport` which registers migration support for rules _and_ JUnit
+4's `@Ignore` annotation (see <<migrating-from-junit4-ignore-annotation-support>>).
 
 However, if you intend to develop a new extension for JUnit 5 please use the new
 extension model of JUnit Jupiter instead of the rule-based model of JUnit 4.
 
 WARNING: JUnit 4 `Rule` support in JUnit Jupiter is currently an _experimental_ feature.
 Consult the table in <<api-evolution-experimental-apis>> for detail.
+
+
+[[migrating-from-junit4-ignore-annotation-support]]
+=== JUnit 4 @Ignore Support
+
+In order to provide a smooth migration path from JUnit 4 to JUnit Jupiter, the
+`junit-jupiter-migrationsupport` module provides support for JUnit 4's `@Ignore`
+annotation analogous to Jupiter's `{Disabled}` annotation.
+
+To use `@Ignore` with JUnit Jupiter based tests, configure a _test_ dependency on the
+`junit-jupiter-migrationsupport` module in your build and then annotate your test class
+with `@ExtendWith(IgnoreCondition.class)` or `{EnableJUnit4MigrationSupport}` (which
+automatically registers the `IgnoreCondition` along with
+<<migrating-from-junit4-rule-support>>). The `IgnoreCondition` is an
+`{ExecutionCondition}` that disables test classes or test methods that are annotated with
+`@Ignore`.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/IgnoredTestsDemo.java[tags=user_guide]
+----
+
+WARNING: JUnit 4 `@Ignore` support in JUnit Jupiter is currently an _experimental_
+feature. Consult the table in <<api-evolution-experimental-apis>> for detail.

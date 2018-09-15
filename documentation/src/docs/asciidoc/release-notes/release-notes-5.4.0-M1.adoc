@@ -58,6 +58,10 @@ repository on GitHub.
   types: `char`, `byte`, `short`, `int`, `long`, `float`, and `double`.
 * Implicit conversion from hexadecimal and octal string representations to integral types
   in `@ParameterizedTest` arguments -- for example, conversion from `"0xff"` to `255`.
+* JUnit 4's `@Ignore` annotation is now supported for disabling test classes and test
+  methods via the `junit-jupiter-migrationsupport` module.
+  - See the <<../user-guide/index.adoc#migrating-from-junit4-ignore-annotation-support,
+    User Guide>> for details.
 
 
 [[release-notes-5.4.0-M1-junit-vintage]]
