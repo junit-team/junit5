@@ -22,10 +22,12 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.function.Executable;
@@ -38,6 +40,8 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
@@ -58,6 +62,11 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	private static final Logger logger = LoggerFactory.getLogger(JupiterTestDescriptor.class);
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
+
+	JupiterTestDescriptor(UniqueId uniqueId, AnnotatedElement element, Supplier<String> displayNameSupplier,
+			TestSource source) {
+		this(uniqueId, determineDisplayName(element, displayNameSupplier), source);
+	}
 
 	JupiterTestDescriptor(UniqueId uniqueId, String displayName, TestSource source) {
 		super(uniqueId, displayName, source);
@@ -88,9 +97,40 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		// @formatter:on
 	}
 
-	protected static <E extends AnnotatedElement> String determineDisplayName(E element,
-			Function<E, String> defaultDisplayNameGenerator) {
+	static DisplayNameGenerator getDisplayNameGenerator(Class<?> testClass) {
+		Preconditions.notNull(testClass, "Test class must not be null");
+		DisplayNameGeneration generation = getDisplayNameGenerationOrNull(testClass);
+		// trivial case: no user-defined generation annotation present, return default style
+		if (generation == null) {
+			return DisplayNameGeneration.Style.DEFAULT;
+		}
+		// no user-defined generator supplied case: return selected style
+		if (generation.generator() == DisplayNameGenerator.class) {
+			return generation.value();
+		}
+		// else: create an instance of the supplied generator implementation class and return it
+		return ReflectionUtils.newInstance(generation.generator());
+	}
 
+	/**
+	 * Find the first {@code DisplayNameGeneration} annotation that is either
+	 * <em>directly present</em>, <em>meta-present</em>, <em>indirectly present</em>
+	 * on the supplied {@code testClass} or on an enclosing class.
+	 */
+	private static DisplayNameGeneration getDisplayNameGenerationOrNull(Class<?> testClass) {
+		Class<?> candidate = testClass;
+		do {
+			Optional<DisplayNameGeneration> generation = findAnnotation(candidate, DisplayNameGeneration.class);
+			if (generation.isPresent()) {
+				return generation.get();
+			}
+			candidate = candidate.getEnclosingClass();
+		} while (candidate != null);
+		return null;
+	}
+
+	protected static String determineDisplayName(AnnotatedElement element, Supplier<String> displayNameSupplier) {
+		Preconditions.notNull(element, "Annotated element must not be null");
 		Optional<DisplayName> displayNameAnnotation = findAnnotation(element, DisplayName.class);
 		if (displayNameAnnotation.isPresent()) {
 			String displayName = displayNameAnnotation.get().value().trim();
@@ -106,7 +146,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 			}
 		}
 		// else
-		return defaultDisplayNameGenerator.apply(element);
+		return displayNameSupplier.get();
 	}
 
 	// --- Node ----------------------------------------------------------------
