@@ -38,8 +38,10 @@ abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 	private final Set<TestTag> tags;
 
 	MethodBasedTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
-		this(uniqueId, determineDisplayName(Preconditions.notNull(testMethod, "Method must not be null"),
-			MethodBasedTestDescriptor::generateDefaultDisplayName), testClass, testMethod);
+		this(uniqueId,
+			determineDisplayName(testMethod,
+				() -> getDisplayNameGenerator(testClass).generateDisplayNameForMethod(testClass, testMethod)),
+			testClass, testMethod);
 	}
 
 	MethodBasedTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod) {
@@ -77,10 +79,6 @@ abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public String getLegacyReportingName() {
-		return generateDefaultDisplayName(testMethod);
-	}
-
-	private static String generateDefaultDisplayName(Method testMethod) {
 		return String.format("%s(%s)", testMethod.getName(),
 			ClassUtils.nullSafeToString(Class::getSimpleName, testMethod.getParameterTypes()));
 	}

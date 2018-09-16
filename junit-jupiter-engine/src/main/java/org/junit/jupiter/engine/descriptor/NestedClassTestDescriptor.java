@@ -45,7 +45,9 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 
 	public NestedClassTestDescriptor(UniqueId uniqueId, Class<?> testClass,
 			ConfigurationParameters configurationParameters) {
-		super(uniqueId, Class::getSimpleName, testClass, configurationParameters);
+		super(uniqueId, testClass,
+			() -> getDisplayNameGenerator(testClass).generateDisplayNameForNestedClass(testClass),
+			configurationParameters);
 
 		this.tags = getTags(testClass);
 	}
