@@ -82,6 +82,10 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 			cleanUp();
 		}
 		reportCompletion();
+
+		// Clear reference to context to allow it to be garbage collected.
+		// See https://github.com/junit-team/junit5/issues/1578
+		context = null;
 	}
 
 	private void prepare() {
@@ -125,10 +129,6 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 	private void cleanUp() {
 		throwableCollector.execute(() -> node.cleanUp(context));
-
-		// Clear reference to context to allow it to be garbage collected.
-		// See https://github.com/junit-team/junit5/issues/1578
-		context = null;
 	}
 
 	private void reportCompletion() {
