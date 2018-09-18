@@ -4,7 +4,7 @@
 [[extensions-overview]]
 === Overview
 
-In contrast to the competing `Runner`, `@Rule`, and `@ClassRule` extension points in
+In contrast to the competing `Runner`, `TestRule`, and `MethodRule` extension points in
 JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concept: the
 `Extension` API. Note, however, that `Extension` itself is just a marker interface.
 
@@ -24,8 +24,8 @@ interface, test class, test method, or custom _<<writing-tests-meta-annotations,
 annotation>>_ with `@ExtendWith(...)` and supplying class references for the extensions
 to register.
 
-For example, to register a custom `RandomParametersExtension` for a particular test method, you
-would annotate the test method as follows.
+For example, to register a custom `RandomParametersExtension` for a particular test
+method, you would annotate the test method as follows.
 
 [source,java,indent=0]
 ----
@@ -36,8 +36,8 @@ void test(@Random int i) {
 }
 ----
 
-To register a custom `RandomParametersExtension` for all tests in a particular class and its
-subclasses, you would annotate the test class as follows.
+To register a custom `RandomParametersExtension` for all tests in a particular class and
+its subclasses, you would annotate the test class as follows.
 
 [source,java,indent=0]
 ----
@@ -269,20 +269,21 @@ instances.
 Common use cases include acquiring the test instance from a dependency injection
 framework or invoking a static factory method to create the test class instance.
 
-If no `TestInstanceFactory` is registered, the framework will simply invoke the default
-constructor for the test class to instantiate it.
+If no `TestInstanceFactory` is registered, the framework will simply invoke the _sole_
+constructor for the test class to instantiate it, potentially resolving constructor
+arguments via registered `ParameterResolver` extensions.
 
-Extensions that implement `TestInstanceFactory` can be registered on top-level test
-classes as well as on `@Nested` test classes. A factory registered on a `@Nested` test
-class will override any factories registered on enclosing classes.
+Extensions that implement `TestInstanceFactory` can be registered on test interfaces,
+top-level test classes, or `@Nested` test classes.
 
 [WARNING]
 ====
 Registering multiple extensions that implement `TestInstanceFactory` for any single class
-will result in an exception being thrown for all tests in that class and in any nested
-test classes. Note that any `TestInstanceFactory` registered in a superclass is
-_inherited_. It is the user's responsibility to ensure that only a single
-`TestInstanceFactory` is registered for any specific test class.
+will result in an exception being thrown for all tests in that class, in any subclass,
+and in any nested class. Note that any `TestInstanceFactory` registered in a superclass
+or _enclosing_ class (i.e., in the case of a `@Nested` test class) is _inherited_. It is
+the user's responsibility to ensure that only a single `TestInstanceFactory` is
+registered for any specific test class.
 ====
 
 [[extensions-test-instance-post-processing]]
@@ -449,7 +450,7 @@ values into a store for later retrieval. See the
 using the `Store` with a method-level scope. It is important to remember that values
 stored in an `ExtensionContext` during test execution will not be available in the
 surrounding `ExtensionContext`. Since `ExtensionContexts` may be nested, the scope of
-inner contexts may also be limited. Consult the corresponding JavaDoc for details on the
+inner contexts may also be limited. Consult the corresponding Javadoc for details on the
 methods available for storing and retrieving values via the `{ExtensionContext_Store}`.
 
 .`ExtensionContext.Store.CloseableResource`
@@ -475,14 +476,14 @@ the behavior of the JUnit Platform.
 These include methods to check whether an element is annotated or meta-annotated with a
 particular annotation, to search for specific annotations, and to find annotated methods
 and fields in a class or interface. Some of these methods search on implemented
-interfaces and within class hierarchies to find annotations. Consult the JavaDoc for
+interfaces and within class hierarchies to find annotations. Consult the Javadoc for
 `{AnnotationSupport}` for further details.
 
 [[extensions-supported-utilities-classes]]
 ==== Class Support
 
 `ClassSupport` provides static utility methods for working with classes (i.e., instances
-of `java.lang.Class`). Consult the JavaDoc for `{ClassSupport}` for further details.
+of `java.lang.Class`). Consult the Javadoc for `{ClassSupport}` for further details.
 
 [[extensions-supported-utilities-reflection]]
 ==== Reflection Support
@@ -491,7 +492,7 @@ of `java.lang.Class`). Consult the JavaDoc for `{ClassSupport}` for further deta
 reflection and class-loading mechanisms. These include methods to scan the classpath in
 search of classes matching specified predicates, to load and create new instances of a
 class, and to find and invoke methods. Some of these methods traverse class hierarchies
-to locate matching methods. Consult the JavaDoc for `{ReflectionSupport}` for further
+to locate matching methods. Consult the Javadoc for `{ReflectionSupport}` for further
 details.
 
 [[extensions-execution-order]]
@@ -570,4 +571,4 @@ The following table further explains the twelve steps in the
 In the simplest case only the actual test method will be executed (step 6); all other
 steps are optional depending on the presence of user code or extension support for the
 corresponding lifecycle callback. For further details on the various lifecycle callbacks
-please consult the respective JavaDoc for each annotation and extension.
+please consult the respective Javadoc for each annotation and extension.

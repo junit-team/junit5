@@ -44,7 +44,7 @@ shadowJar {
 	// prevent duplicates, add 3rd-party licenses explicitly
 	exclude 'META-INF/LICENSE*.md'
 	from(project(':junit-platform-console').projectDir) {
-		include 'LICENSE-jopt-simple.md'
+		include 'LICENSE-picocli.md'
 		into 'META-INF'
 	}
 	from(project(':junit-jupiter-params').projectDir) {

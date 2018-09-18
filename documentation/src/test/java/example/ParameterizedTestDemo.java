@@ -201,7 +201,7 @@ class ParameterizedTestDemo {
 
 	// end::ArgumentsSource_example[]
 	static
-	// tag::ArgumentsSource_example[]
+	// tag::ArgumentsProvider_example[]
 	public class MyArgumentsProvider implements ArgumentsProvider {
 
 		@Override
@@ -209,7 +209,7 @@ class ParameterizedTestDemo {
 			return Stream.of("foo", "bar").map(Arguments::of);
 		}
 	}
-	// end::ArgumentsSource_example[]
+	// end::ArgumentsProvider_example[]
 
 	// tag::ParameterResolver_example[]
 	@BeforeEach
@@ -246,7 +246,7 @@ class ParameterizedTestDemo {
 
 	// end::implicit_fallback_conversion_example[]
 	static
-	// tag::implicit_fallback_conversion_example[]
+	// tag::implicit_fallback_conversion_example_Book[]
 	public class Book {
 
 		private final String title;
@@ -263,7 +263,7 @@ class ParameterizedTestDemo {
 			return this.title;
 		}
 	}
-	// end::implicit_fallback_conversion_example[]
+	// end::implicit_fallback_conversion_example_Book[]
 
 	// @formatter:off
 	// tag::explicit_conversion_example[]
@@ -277,7 +277,7 @@ class ParameterizedTestDemo {
 
 	// end::explicit_conversion_example[]
 	static
-	// tag::explicit_conversion_example[]
+	// tag::explicit_conversion_example_ToStringArgumentConverter[]
 	public class ToStringArgumentConverter extends SimpleArgumentConverter {
 
 		@Override
@@ -286,7 +286,7 @@ class ParameterizedTestDemo {
 			return String.valueOf(source);
 		}
 	}
-	// end::explicit_conversion_example[]
+	// end::explicit_conversion_example_ToStringArgumentConverter[]
 
 	// tag::explicit_java_time_converter[]
 	@ParameterizedTest
@@ -337,7 +337,7 @@ class ParameterizedTestDemo {
 
     // end::ArgumentsAggregator_example[]
     static
-    // tag::ArgumentsAggregator_example[]
+    // tag::ArgumentsAggregator_example_PersonAggregator[]
     public class PersonAggregator implements ArgumentsAggregator {
         @Override
         public Person aggregateArguments(ArgumentsAccessor arguments, ParameterContext context) {
@@ -347,7 +347,7 @@ class ParameterizedTestDemo {
                               arguments.get(3, LocalDate.class));
         }
     }
-    // end::ArgumentsAggregator_example[]
+    // end::ArgumentsAggregator_example_PersonAggregator[]
 	// @formatter:on
 
 	// @formatter:off
@@ -360,13 +360,15 @@ class ParameterizedTestDemo {
     void testWithCustomAggregatorAnnotation(@CsvToPerson Person person) {
         // perform assertions against person
     }
+    // end::ArgumentsAggregator_with_custom_annotation_example[]
 
+    // tag::ArgumentsAggregator_with_custom_annotation_example_CsvToPerson[]
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
     @AggregateWith(PersonAggregator.class)
     public @interface CsvToPerson {
     }
-    // end::ArgumentsAggregator_with_custom_annotation_example[]
+    // end::ArgumentsAggregator_with_custom_annotation_example_CsvToPerson[]
 	// @formatter:on
 
 	// tag::custom_display_names[]

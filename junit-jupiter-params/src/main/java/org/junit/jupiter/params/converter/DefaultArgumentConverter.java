@@ -218,6 +218,8 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		static {
 			Map<Class<?>, Function<String, ?>> converters = new HashMap<>();
 
+			// java.lang
+			converters.put(Class.class, StringToCommonJavaTypesConverter::toClass);
 			// java.io and java.nio
 			converters.put(File.class, File::new);
 			converters.put(Charset.class, Charset::forName);
@@ -244,6 +246,15 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		@Override
 		public Object convert(String source, Class<?> targetType) throws Exception {
 			return CONVERTERS.get(targetType).apply(source);
+		}
+
+		private static Class<?> toClass(String type) {
+			//@formatter:off
+			return ReflectionUtils
+					.loadClass(type)
+					.orElseThrow(() -> new ArgumentConversionException(
+							"Failed to convert String \"" + type + "\" to type " + Class.class.getName()));
+			//@formatter:on
 		}
 
 		private static URL toURL(String url) {

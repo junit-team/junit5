@@ -14,6 +14,8 @@ afterEvaluate {
 		options.encoding = 'UTF-8'
 		options.compilerArgs += '-parameters'
 		options.compilerArgs += ['--release', project.ext.javaVersion.majorVersion]
+		// https://discuss.gradle.org/t/getting-more-information-on-gradle-compilejava-annotation-processor-warning/28076
+		options.annotationProcessorPath = configurations.annotationProcessor
 	}
 }
 
@@ -23,6 +25,22 @@ dependencies {
 	}
 	implementation('commons-io:commons-io:2.6') {
 		because 'moving/deleting directory trees'
+	}
+
+	testImplementation('com.paypal.digraph:digraph-parser:1.0') {
+		because 'parsing jdeps generated .dot files'
+	}
+	testImplementation('org.jgrapht:jgrapht-core:1.2.0') {
+		because 'building and analyzing graphs'
+	}
+	testImplementation('com.tngtech.archunit:archunit-junit5-api:0.9.1') {
+		because 'checking the architecture of JUnit 5'
+	}
+	testRuntimeOnly('com.tngtech.archunit:archunit-junit5-engine:0.9.1') {
+		because 'contains the ArchUnit TestEngine implementation'
+	}
+	testRuntimeOnly('org.slf4j:slf4j-jdk14:1.7.25') {
+		because 'provide appropriate SLF4J binding'
 	}
 }
 
@@ -40,4 +58,8 @@ test {
 		}
 	}
 
+	filter {
+		// Include only tests from this module
+		includeTestsMatching "platform.tooling.support.*"
+	}
 }

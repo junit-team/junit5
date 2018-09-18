@@ -961,6 +961,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		}
 
 		private static void trackLifecycle(ExtensionContext context) {
+			assertThat(context.getRoot().getTestInstanceLifecycle()).isEmpty();
 			lifecyclesMap.computeIfAbsent(context.getRequiredTestClass(), clazz -> new ArrayList<>()).add(
 				context.getTestInstanceLifecycle().orElse(null));
 		}

@@ -230,8 +230,11 @@ vintage_engine ..> junit4
 === JUnit Jupiter Sample Projects
 
 The {junit5-samples-repo}[`junit5-samples`] repository hosts a collection of sample
-projects based on JUnit Jupiter and JUnit Vintage. You'll find the respective
-`build.gradle` and `pom.xml` in the projects below.
+projects based on JUnit Jupiter and JUnit Vintage. You'll find the respective build
+scripts (e.g., `build.gradle`, `pom.xml`, etc.) in the projects below.
 
-* For Gradle, check out the `{junit5-jupiter-starter-gradle}` project.
+* For Gradle and Java, check out the `{junit5-jupiter-starter-gradle}` project.
+* For Gradle and Kotlin, check out the `{junit5-jupiter-starter-gradle-kotlin}` project.
+* For Gradle and Groovy, check out the `{junit5-jupiter-starter-gradle-groovy}` project.
 * For Maven, check out the `{junit5-jupiter-starter-maven}` project.
+* For Ant, check out the `{junit5-jupiter-starter-ant}` project.

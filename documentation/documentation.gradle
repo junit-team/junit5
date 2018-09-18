@@ -36,7 +36,9 @@ test {
 dependencies {
 	asciidoctor('org.jruby:jruby-complete:9.1.17.0')
 
-	testImplementation(project(':junit-jupiter-api'))
+	// Jupiter API is used in src/main/java
+	implementation(project(':junit-jupiter-api'))
+
 	testImplementation(project(':junit-jupiter-params'))
 	testImplementation(project(':junit-platform-runner'))
 	testImplementation(project(':junit-platform-launcher'))
@@ -44,6 +46,8 @@ dependencies {
 
 	// Required by :consoleLauncherTest and :generateConsoleLauncherOptions
 	testRuntimeOnly(project(':junit-platform-console'))
+	testRuntimeOnly(project(':junit-platform-suite-api'))
+	testRuntimeOnly(project(':junit-platform-surefire-provider'))
 
 	testRuntimeOnly(project(':junit-vintage-engine'))
 	testRuntimeOnly(project(':junit-jupiter-engine'))
@@ -51,7 +55,7 @@ dependencies {
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 
 	// for ApiReportGenerator
-	testImplementation('io.github.classgraph:classgraph:4.0.2')
+	testImplementation('io.github.classgraph:classgraph:4.1.7')
 }
 
 asciidoctorj {
@@ -62,6 +66,7 @@ ext {
 	generatedAsciiDocPath = buildDir.toPath().resolve('generated/asciidoc')
 	consoleLauncherOptionsFile = generatedAsciiDocPath.resolve('console-launcher-options.txt')
 	experimentalApisTableFile = generatedAsciiDocPath.resolve('experimental-apis-table.txt')
+	deprecatedApisTableFile = generatedAsciiDocPath.resolve('deprecated-apis-table.txt')
 }
 
 def createJavaExecTaskWithOutputFile(taskName, outputFile, mainClass, mainArgs = []) {
@@ -80,10 +85,11 @@ def createJavaExecTaskWithOutputFile(taskName, outputFile, mainClass, mainArgs =
 
 createJavaExecTaskWithOutputFile('generateConsoleLauncherOptions', consoleLauncherOptionsFile, 'org.junit.platform.console.ConsoleLauncher', ['--help'])
 
-createJavaExecTaskWithOutputFile('generateExperimentalApisTable', experimentalApisTableFile, 'org.junit.api.tools.ApiReportGenerator')
+createJavaExecTaskWithOutputFile('generateExperimentalApisTable', experimentalApisTableFile, 'org.junit.api.tools.ApiReportGenerator', ['EXPERIMENTAL'])
+createJavaExecTaskWithOutputFile('generateDeprecatedApisTable', deprecatedApisTableFile, 'org.junit.api.tools.ApiReportGenerator', ['DEPRECATED'])
 
 asciidoctor {
-	dependsOn 'generateConsoleLauncherOptions', 'generateExperimentalApisTable'
+	dependsOn 'generateConsoleLauncherOptions', 'generateExperimentalApisTable', 'generateDeprecatedApisTable'
 
 	// enable the Asciidoctor Diagram extension
 	requires 'asciidoctor-diagram'
@@ -116,6 +122,7 @@ asciidoctor {
 				'kotlinTestDir': sourceSets.test.kotlin.srcDirs[0],
 				'consoleLauncherOptionsFile': consoleLauncherOptionsFile.toString(),
 				'experimentalApisTableFile': experimentalApisTableFile.toString(),
+				'deprecatedApisTableFile': deprecatedApisTableFile.toString(),
 				'testResourcesDir': sourceSets.test.resources.srcDirs[0],
 				'outdir': outputDir.absolutePath,
 				'source-highlighter': 'coderay@', // TODO switch to 'rouge' once supported by the html5 backend and on MS Windows

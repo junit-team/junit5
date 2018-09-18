@@ -27,14 +27,14 @@ public interface ComparableContract<T extends Comparable<T>> extends Testable<T>
 	}
 
 	@Test
-	default void returnsPositiveNumberComparedToSmallerValue() {
+	default void returnsPositiveNumberWhenComparedToSmallerValue() {
 		T value = createValue();
 		T smallerValue = createSmallerValue();
 		assertTrue(value.compareTo(smallerValue) > 0);
 	}
 
 	@Test
-	default void returnsNegativeNumberComparedToSmallerValue() {
+	default void returnsNegativeNumberWhenComparedToLargerValue() {
 		T value = createValue();
 		T smallerValue = createSmallerValue();
 		assertTrue(smallerValue.compareTo(value) < 0);

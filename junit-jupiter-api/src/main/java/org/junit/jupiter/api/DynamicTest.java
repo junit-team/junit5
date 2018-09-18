@@ -12,7 +12,7 @@ package org.junit.jupiter.api;
 
 import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -46,7 +46,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @see DynamicContainer
  * @see Executable
  */
-@API(status = EXPERIMENTAL, since = "5.0")
+@API(status = MAINTAINED, since = "5.3")
 public class DynamicTest extends DynamicNode {
 
 	/**

@@ -36,6 +36,7 @@ import org.apiguardian.api.API;
  * <li>{@link AfterEachCallback}</li>
  * <li>{@link BeforeTestExecutionCallback}</li>
  * <li>{@link AfterTestExecutionCallback}</li>
+ * <li>{@link TestInstanceFactory}</li>
  * <li>{@link TestInstancePostProcessor}</li>
  * <li>{@link ParameterResolver}</li>
  * <li>{@link TestExecutionExceptionHandler}</li>

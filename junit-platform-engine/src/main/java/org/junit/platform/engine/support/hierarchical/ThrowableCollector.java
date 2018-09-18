@@ -34,9 +34,10 @@ import org.junit.platform.engine.TestExecutionResult;
  * {@linkplain Throwable#addSuppressed(Throwable) suppressed} {@code Throwables}
  * of the first {@code Throwable} that failed execution.
  *
- * @since 5.3
+ * @since 1.3
+ * @see OpenTest4JAwareThrowableCollector
  */
-@API(status = MAINTAINED, since = "5.3")
+@API(status = MAINTAINED, since = "1.3")
 public class ThrowableCollector {
 
 	private final Predicate<? super Throwable> abortedExecutionPredicate;

@@ -14,7 +14,7 @@ afterEvaluate {
 dependencies {
 	api(project(':junit-jupiter-api'))
 
-	shadowed('com.univocity:univocity-parsers:2.7.2')
+	shadowed('com.univocity:univocity-parsers:2.7.5')
 
 	testImplementation(project(':junit-platform-testkit'))
 	testImplementation(project(path: ':junit-platform-testkit', configuration: 'testArtifacts'))
@@ -45,7 +45,7 @@ shadowJar {
 	}
 	classifier = null
 	configurations = [project.configurations.shadowed]
-	exclude 'META-INF/**'
+	exclude 'META-INF/maven/**'
 	relocate 'com.univocity', 'org.junit.jupiter.params.shadow.com.univocity'
 	from(projectDir) {
 		include 'LICENSE-univocity-parsers.md'

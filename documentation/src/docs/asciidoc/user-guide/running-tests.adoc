@@ -208,77 +208,35 @@ additional dependency to the runtime classpath.
 [[running-tests-build-maven]]
 ==== Maven
 
-NOTE: Starting with https://issues.apache.org/jira/browse/SUREFIRE-1330[version 2.22.0],
-Maven Surefire provides
+NOTE: The custom `junit-platform-surefire-provider`, which was originally developed by
+the JUnit team, has been deprecated and is scheduled to be removed in JUnit Platform 1.4.
+Please use Maven Surefire's native support instead.
+
+Starting with https://issues.apache.org/jira/browse/SUREFIRE-1330[version 2.22.0], Maven
+Surefire provides
 http://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html[native support]
 for executing tests on the JUnit Platform. The `pom.xml` file in the
-`{junit5-jupiter-starter-maven}` project demonstrates how to use the native support and
-can serve as a starting point for configuring your Maven build.
-
-The JUnit team has developed a basic provider for Maven Surefire that lets you run JUnit
-4 and JUnit Jupiter tests via `mvn test` on versions of Maven Surefire prior to 2.22.0.
-Due to the release of Surefire 2.22.0, the `junit-platform-surefire-provider` from the
-JUnit team has been deprecated and will be discontinued in a subsequent release of the
-JUnit Platform.
-
-NOTE: Please use Maven Surefire {surefire-version} with the
-`junit-platform-surefire-provider`.
-
-[source,xml,indent=0]
-[subs=attributes+]
-----
-	...
-	<build>
-		<plugins>
-			...
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>{surefire-version}</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.junit.platform</groupId>
-						<artifactId>junit-platform-surefire-provider</artifactId>
-						<version>{platform-version}</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-		</plugins>
-	</build>
-	...
-----
+`{junit5-jupiter-starter-maven}` project demonstrates how to use it and can serve as a
+starting point for configuring your Maven build.
 
 [[running-tests-build-maven-engines-configure]]
 ===== Configuring Test Engines
 
-In order to have Maven Surefire run any tests at all, a `TestEngine` implementation must
-be added to the runtime classpath.
+In order to have Maven Surefire run any tests at all, at least one `TestEngine`
+implementation must be added to the test classpath.
 
-To configure support for JUnit Jupiter based tests, configure a `test` dependency on the
-JUnit Jupiter API, and add the JUnit Jupiter `TestEngine` implementation to the
-dependencies of the `maven-surefire-plugin` similar to the following.
+To configure support for JUnit Jupiter based tests, configure `test` scoped dependencies
+on the JUnit Jupiter API and the JUnit Jupiter `TestEngine` implementation similar to the
+following.
 
 [source,xml,indent=0]
 [subs=attributes+]
 ----
-	...
 	<build>
 		<plugins>
-			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>{surefire-version}</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.junit.platform</groupId>
-						<artifactId>junit-platform-surefire-provider</artifactId>
-						<version>{platform-version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.junit.jupiter</groupId>
-						<artifactId>junit-jupiter-engine</artifactId>
-						<version>{jupiter-version}</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
@@ -291,13 +249,20 @@ dependencies of the `maven-surefire-plugin` similar to the following.
 			<version>{jupiter-version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>{jupiter-version}</version>
+			<scope>test</scope>
+		</dependency>
+		...
 	</dependencies>
 	...
 ----
 
-The JUnit Platform Surefire Provider can run JUnit 4 based tests as long as you configure
-a `test` dependency on JUnit 4 and add the JUnit Vintage `TestEngine` implementation to
-the dependencies of the `maven-surefire-plugin` similar to the following.
+Maven Surefire can run JUnit 4 based tests alongside Jupiter tests as long as you
+configure `test` scoped dependencies on JUnit 4 and the JUnit Vintage `TestEngine`
+implementation similar to the following.
 
 [source,xml,indent=0]
 [subs=attributes+]
@@ -305,23 +270,9 @@ the dependencies of the `maven-surefire-plugin` similar to the following.
 	...
 	<build>
 		<plugins>
-			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>{surefire-version}</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.junit.platform</groupId>
-						<artifactId>junit-platform-surefire-provider</artifactId>
-						<version>{platform-version}</version>
-					</dependency>
-					...
-					<dependency>
-						<groupId>org.junit.vintage</groupId>
-						<artifactId>junit-vintage-engine</artifactId>
-						<version>{vintage-version}</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
@@ -334,19 +285,16 @@ the dependencies of the `maven-surefire-plugin` similar to the following.
 			<version>{junit4-version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>{vintage-version}</version>
+			<scope>test</scope>
+		</dependency>
+		...
 	</dependencies>
 	...
 ----
-
-[[running-tests-build-maven-test-system-property]]
-===== Running a Single Test Class
-
-The JUnit Platform Surefire Provider supports the `test` JVM system property supported by
-the Maven Surefire Plugin. For example, to run only test methods in the
-`org.example.MyTest` test class you can execute `mvn -Dtest=org.example.MyTest test` from
-the command line. For further details, consult the
-https://maven.apache.org/surefire/maven-surefire-plugin/examples/single-test.html[Maven Surefire Plugin]
-documentation.
 
 [[running-tests-build-maven-filter-test-class-names]]
 ===== Filtering by Test Class Names
@@ -363,7 +311,7 @@ Moreover, it will exclude all nested classes (including static member classes) b
 
 Note, however, that you can override this default behavior by configuring explicit
 `include` and `exclude` rules in your `pom.xml` file. For example, to keep Maven Surefire
-from excluding static member classes, you can override its exclude rules.
+from excluding static member classes, you can override its exclude rules as follows.
 
 [source,xml,indent=0]
 [subs=attributes+]
@@ -372,7 +320,6 @@ from excluding static member classes, you can override its exclude rules.
 	...
 	<build>
 		<plugins>
-			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>{surefire-version}</version>
@@ -381,7 +328,6 @@ from excluding static member classes, you can override its exclude rules.
 						<exclude/>
 					</excludes>
 				</configuration>
-				...
 			</plugin>
 		</plugins>
 	</build>
@@ -398,8 +344,8 @@ documentation for Maven Surefire for details.
 You can filter tests by tags or <<running-tests-tag-expressions, tag expressions>> using
 the following configuration properties.
 
-- to include _tags_ or _tag expressions_, use either `groups` or `includeTags`.
-- to exclude _tags_ or _tag expressions_, use either `excludedGroups` or `excludeTags`.
+- to include _tags_ or _tag expressions_, use `groups`.
+- to exclude _tags_ or _tag expressions_, use `excludedGroups`.
 
 [source,xml,indent=0]
 [subs=attributes+]
@@ -407,19 +353,13 @@ the following configuration properties.
 	...
 	<build>
 		<plugins>
-			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>{surefire-version}</version>
 				<configuration>
-			        <properties>
-			            <includeTags>acceptance | !feature-a</includeTags>
-			            <excludeTags>integration, regression</excludeTags>
-			        </properties>
+					<groups>acceptance | !feature-a</groups>
+					<excludedGroups>integration, regression</excludedGroups>
 			    </configuration>
-				<dependencies>
-					...
-				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
@@ -440,7 +380,6 @@ below) or via the `junit-platform.properties` file.
 	...
 	<build>
 		<plugins>
-			...
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>{surefire-version}</version>
@@ -453,9 +392,6 @@ below) or via the `junit-platform.properties` file.
 						</configurationParameters>
 					</properties>
 				</configuration>
-				<dependencies>
-					...
-				</dependencies>
 			</plugin>
 		</plugins>
 	</build>

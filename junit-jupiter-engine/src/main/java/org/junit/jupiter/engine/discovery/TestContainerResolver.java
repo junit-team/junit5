@@ -18,6 +18,7 @@ import java.util.Set;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsPotentialTestContainer;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
@@ -29,6 +30,12 @@ class TestContainerResolver implements ElementResolver {
 	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();
 
 	static final String SEGMENT_TYPE = "class";
+
+	protected final ConfigurationParameters configurationParameters;
+
+	public TestContainerResolver(ConfigurationParameters configurationParameters) {
+		this.configurationParameters = configurationParameters;
+	}
 
 	@Override
 	public Set<TestDescriptor> resolveElement(AnnotatedElement element, TestDescriptor parent) {
@@ -97,7 +104,7 @@ class TestContainerResolver implements ElementResolver {
 	}
 
 	protected TestDescriptor resolveClass(Class<?> testClass, UniqueId uniqueId) {
-		return new ClassTestDescriptor(uniqueId, testClass);
+		return new ClassTestDescriptor(uniqueId, testClass, this.configurationParameters);
 	}
 
 }

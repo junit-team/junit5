@@ -2,7 +2,7 @@
 
 org.junit.vintage.engine@${vintageVersion} automatic
 requires java.base mandated
-provides org.junit.platform.engine.TestEngine with org.junit.vintage.engine.vintagetestengine
+provides org.junit.platform.engine.TestEngine with org.junit.vintage.engine.[V|v]intage[T|t]est[E|e]ngine
 contains org.junit.vintage.engine
 contains org.junit.vintage.engine.descriptor
 contains org.junit.vintage.engine.discovery

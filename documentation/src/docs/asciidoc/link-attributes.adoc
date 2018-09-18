@@ -89,6 +89,8 @@ endif::[]
 //
 :junit5-samples-repo:                    {junit-team}/junit5-samples
 :junit5-jupiter-starter-ant:             {junit5-samples-repo}/tree/{release-branch}/junit5-jupiter-starter-ant[junit5-jupiter-starter-ant]
+:junit5-jupiter-starter-gradle-groovy:   {junit5-samples-repo}/tree/{release-branch}/junit5-jupiter-starter-gradle-groovy[junit5-jupiter-starter-gradle-groovy]
+:junit5-jupiter-starter-gradle-kotlin:   {junit5-samples-repo}/tree/{release-branch}/junit5-jupiter-starter-gradle-kotlin[junit5-jupiter-starter-gradle-kotlin]
 :junit5-jupiter-starter-gradle:          {junit5-samples-repo}/tree/{release-branch}/junit5-jupiter-starter-gradle[junit5-jupiter-starter-gradle]
 :junit5-jupiter-starter-maven:           {junit5-samples-repo}/tree/{release-branch}/junit5-jupiter-starter-maven[junit5-jupiter-starter-maven]
 :RandomParametersExtension:              {junit5-samples-repo}/tree/{release-branch}/junit5-jupiter-extensions/src/main/java/com/example/random/RandomParametersExtension.java[RandomParametersExtension]

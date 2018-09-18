@@ -38,19 +38,27 @@ tests before executing them (see <<running-tests>> for details).
 [[migrating-from-junit4-tips]]
 === Migration Tips
 
-The following are things you have to watch out for when migrating existing JUnit 4 tests
-to JUnit Jupiter.
+The following are topics that you should be aware of when migrating existing JUnit 4
+tests to JUnit Jupiter.
 
 * Annotations reside in the `org.junit.jupiter.api` package.
 * Assertions reside in `org.junit.jupiter.api.Assertions`.
+  - Note that you may continue to use assertion methods from `org.junit.Assert` or any
+    other assertion library such as {AssertJ}, {Hamcrest}, {Truth}, etc.
 * Assumptions reside in `org.junit.jupiter.api.Assumptions`.
+  - Note that JUnit Jupiter 5.4 and later versions support methods from JUnit 4's
+    `org.junit.Assume` class for assumptions. Specifically, JUnit Jupiter supports JUnit
+    4's `AssumptionViolatedException` to signal that a test should be aborted instead of
+    marked as a failure.
 * `@Before` and `@After` no longer exist; use `@BeforeEach` and `@AfterEach` instead.
-* `@BeforeClass` and `@AfterClass` no longer exist; use `@BeforeAll` and `@AfterAll` instead.
-* `@Ignore` no longer exists: use `@Disabled` instead.
+* `@BeforeClass` and `@AfterClass` no longer exist; use `@BeforeAll` and `@AfterAll`
+  instead.
+* `@Ignore` no longer exists: use `@Disabled` or one of the other built-in
+  <<writing-tests-conditional-execution, execution conditions>> instead.
 * `@Category` no longer exists; use `@Tag` instead.
 * `@RunWith` no longer exists; superseded by `@ExtendWith`.
-* `@Rule` and `@ClassRule` no longer exist; superseded by `@ExtendWith`;
-   see the following section for partial rule support.
+* `@Rule` and `@ClassRule` no longer exist; superseded by `@ExtendWith` and
+  `@RegisterExtension`; see the following section for partial rule support.
 
 [[migrating-from-junit4-rule-support]]
 === Limited JUnit 4 Rule Support

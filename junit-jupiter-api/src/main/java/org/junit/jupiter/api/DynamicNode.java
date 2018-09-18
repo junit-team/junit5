@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.net.URI;
 import java.util.Optional;
@@ -27,7 +27,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * @see DynamicTest
  * @see DynamicContainer
  */
-@API(status = EXPERIMENTAL, since = "5.0")
+@API(status = MAINTAINED, since = "5.3")
 public abstract class DynamicNode {
 
 	private final String displayName;

@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -52,7 +52,7 @@ import org.junit.platform.commons.annotation.Testable;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = EXPERIMENTAL, since = "5.0")
+@API(status = MAINTAINED, since = "5.3")
 @Testable
 public @interface TestFactory {
 }

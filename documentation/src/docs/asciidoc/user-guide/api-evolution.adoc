@@ -40,10 +40,19 @@ value of lower stability.
 [[api-evolution-experimental-apis]]
 === Experimental APIs
 
-The following table lists which APIs are currently designated as _experimental_ (via
-`@API(status = EXPERIMENTAL)`). Caution should be taken when relying on such APIs.
+The following table lists which APIs are currently designated as _experimental_ via
+`@API(status = EXPERIMENTAL)`. Caution should be taken when relying on such APIs.
 
 include::{experimentalApisTableFile}[]
+
+[[api-evolution-deprecated-apis]]
+=== Deprecated APIs
+
+The following table lists which APIs are currently designated as _deprecated_ via
+`@API(status = DEPRECATED)`. You should avoid using deprecated APIs whenever possible,
+since such APIs will likely be removed in an upcoming release.
+
+include::{deprecatedApisTableFile}[]
 
 [[api-evolution-tooling]]
 === @API Tooling Support

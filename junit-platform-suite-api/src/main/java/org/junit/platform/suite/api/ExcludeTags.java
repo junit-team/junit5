@@ -84,7 +84,7 @@ public @interface ExcludeTags {
 	 *
 	 * <p>Note: each tag will be {@linkplain String#trim() trimmed} and
 	 * validated according to the <em>Syntax Rules for Tags</em> (see
-	 * {@linkplain ExcludeTags class-level JavaDoc} for details).
+	 * {@linkplain ExcludeTags class-level Javadoc} for details).
 	 */
 	String[] value();
 

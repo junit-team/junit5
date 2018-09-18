@@ -43,6 +43,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestDescriptor.Type;
 import org.junit.platform.engine.TestExecutionResult;
@@ -63,6 +64,8 @@ import org.mockito.InOrder;
  */
 @SuppressWarnings("deprecation")
 class RunListenerAdapterTests {
+
+	private static final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
 
 	private RunListener listener;
 	private RunListenerAdapter adapter;
@@ -394,7 +397,8 @@ class RunListenerAdapterTests {
 	}
 
 	private static TestDescriptor newClassDescriptor() {
-		return new ClassTestDescriptor(UniqueId.root("class", MyTestClass.class.getName()), MyTestClass.class);
+		return new ClassTestDescriptor(UniqueId.root("class", MyTestClass.class.getName()), MyTestClass.class,
+			configParams);
 	}
 
 	private static TestIdentifier newSourcelessChildIdentifierWithParent(TestPlan testPlan, String parentDisplay,

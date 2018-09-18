@@ -30,9 +30,9 @@ import org.apiguardian.api.API;
  * registered via {@code @ExtendWith} the default constructor is not required
  * to be {@code public}. When registered via the {@code ServiceLoader} the
  * default constructor must be {@code public}. When registered via
- * {@code @RegisterExtension} the extension's constructors must be {@code public}
- * unless the extension provides {@code static} factory methods or a builder
- * API as an alternative to public constructors.
+ * {@code @RegisterExtension} the extension's constructors typically must be
+ * {@code public} unless the extension provides {@code static} factory methods
+ * or a builder API as an alternative to constructors.
  *
  * @since 5.0
  */

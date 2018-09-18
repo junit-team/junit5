@@ -27,9 +27,13 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -56,6 +60,7 @@ import org.mockito.InOrder;
 /**
  * @since 1.0
  */
+@TrackLogRecords
 class DefaultLauncherTests {
 
 	private static final String FOO = DefaultLauncherTests.class.getSimpleName() + ".foo";
@@ -124,8 +129,7 @@ class DefaultLauncherTests {
 		TestEngine engine = new TestEngineStub() {
 
 			@Override
-			public TestDescriptor discover(org.junit.platform.engine.EngineDiscoveryRequest discoveryRequest,
-					UniqueId uniqueId) {
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				return null;
 			}
 		};
@@ -135,12 +139,11 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void discoverTestPlanForEngineThatThrowsAnErrorInDiscoverPhase() {
+	void discoverTestPlanForEngineThatThrowsAnErrorInDiscoveryPhase() {
 		TestEngine engine = new TestEngineStub() {
 
 			@Override
-			public TestDescriptor discover(org.junit.platform.engine.EngineDiscoveryRequest discoveryRequest,
-					UniqueId uniqueId) {
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				throw new Error("ignored");
 			}
 		};
@@ -150,12 +153,11 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void discoverTestPlanForEngineThatThrowsRuntimeExceptionInDiscoverPhase() {
+	void discoverTestPlanForEngineThatThrowsRuntimeExceptionInDiscoveryPhase() {
 		TestEngine engine = new TestEngineStub() {
 
 			@Override
-			public TestDescriptor discover(org.junit.platform.engine.EngineDiscoveryRequest discoveryRequest,
-					UniqueId uniqueId) {
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				throw new RuntimeException("ignored");
 			}
 		};
@@ -333,7 +335,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void withoutConfigurationParameters_launcherPassesEmptyConfigurationParametersIntoTheExecutionRequest() {
+	void withoutConfigurationParameters_LauncherPassesEmptyConfigurationParametersIntoTheExecutionRequest() {
 		TestEngineSpy engine = new TestEngineSpy();
 
 		DefaultLauncher launcher = createLauncher(engine);
@@ -345,7 +347,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void withConfigurationParameters_launcherPassesPopulatedConfigurationParametersIntoTheExecutionRequest() {
+	void withConfigurationParameters_LauncherPassesPopulatedConfigurationParametersIntoTheExecutionRequest() {
 		TestEngineSpy engine = new TestEngineSpy();
 
 		DefaultLauncher launcher = createLauncher(engine);
@@ -489,6 +491,34 @@ class DefaultLauncherTests {
 		inOrder.verify(listener).executionFinished(containerAndTestIdentifier, successful());
 		inOrder.verify(listener).executionFinished(engineTestIdentifier, successful());
 		inOrder.verify(listener).testPlanExecutionFinished(same(testPlan));
+	}
+
+	@Test
+	void thirdPartyEngineUsingReservedEngineIdPrefixEmitsWarning(LogRecordListener listener) {
+		String id = "junit-using-reserved-prefix";
+		createLauncher(new TestEngineStub(id));
+		assertThat(listener.stream(DefaultLauncher.class, Level.WARNING).map(LogRecord::getMessage)) //
+				.containsExactly(
+					"Third-party TestEngine implementations are forbidden to use the reserved 'junit-' prefix for their ID: '"
+							+ id + "'");
+	}
+
+	@Test
+	void thirdPartyEngineClaimingToBeJupiterResultsInException() {
+		assertImposter("junit-jupiter");
+	}
+
+	@Test
+	void thirdPartyEngineClaimingToBeVintageResultsInException() {
+		assertImposter("junit-vintage");
+	}
+
+	private void assertImposter(String id) {
+		TestEngine impostor = new TestEngineStub(id);
+		Exception exception = assertThrows(JUnitException.class, () -> createLauncher(impostor));
+		assertThat(exception).hasMessage(
+			"Third-party TestEngine '%s' is forbidden to use the reserved '%s' TestEngine ID.",
+			impostor.getClass().getName(), id);
 	}
 
 }

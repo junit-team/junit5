@@ -19,16 +19,14 @@ install:
 matrix:
   include:
     - os: linux
-      jdk: openjdk10
+      jdk: openjdk11
     - os: linux
+      jdk: openjdk11
+      env: SCAN='--scan --stacktrace --warning-mode=all' JACOCO='-PenableJaCoCo' INSTALL='publishToMavenLocal'
+    - os: osx
       jdk: openjdk11
     - os: linux
       jdk: openjdk-ea
-    - os: linux
-      jdk: openjdk10
-      env: SCAN='--scan --stacktrace --warning-mode=all' JACOCO='-PenableJaCoCo' INSTALL='publishToMavenLocal'
-    - os: osx
-      jdk: openjdk10
   allow_failures:
     - jdk: openjdk-ea
 

@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.execution;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
 import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
@@ -26,7 +27,6 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContextException;
-import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
@@ -52,7 +52,7 @@ public class ExtensionValuesStore {
 	 * does not close values in parent stores.
 	 */
 	public void closeAllStoredCloseableValues() {
-		ThrowableCollector throwableCollector = new OpenTest4JAwareThrowableCollector();
+		ThrowableCollector throwableCollector = createThrowableCollector();
 		for (Supplier<Object> supplier : storedValues.values()) {
 			Object value = supplier.get();
 			if (value instanceof ExtensionContext.Store.CloseableResource) {

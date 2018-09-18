@@ -40,6 +40,7 @@ public class KitchenSinkExtension implements
 	AfterAllCallback,
 
 	// Dependency Injection
+	TestInstanceFactory,
 	TestInstancePostProcessor,
 	ParameterResolver,
 
@@ -83,6 +84,13 @@ public class KitchenSinkExtension implements
 	}
 
 	// --- Dependency Injection ------------------------------------------------
+
+	@Override
+	public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext)
+			throws TestInstantiationException {
+
+		return null;
+	}
 
 	@Override
 	public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {

@@ -5,7 +5,7 @@ description = 'JUnit Platform Console'
 dependencies {
 	api(project(':junit-platform-launcher'))
 
-	shadowed('info.picocli:picocli:3.5.1')
+	shadowed('info.picocli:picocli:3.6.0')
 }
 
 jar {
@@ -28,10 +28,9 @@ shadowJar {
 	}
 	classifier = null
 	configurations = [project.configurations.shadowed]
-	exclude 'META-INF/**'
 	relocate 'picocli', 'org.junit.platform.console.shadow.picocli'
 	from(projectDir) {
-		include 'LICENSE-jopt-simple.md'
+		include 'LICENSE-picocli.md'
 		into 'META-INF'
 	}
 }

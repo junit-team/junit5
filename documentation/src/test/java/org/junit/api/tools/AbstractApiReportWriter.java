@@ -76,6 +76,8 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 
 	protected abstract String code(String element);
 
+	protected abstract String italic(String element);
+
 	protected String paragraph(String element) {
 		return element;
 	}

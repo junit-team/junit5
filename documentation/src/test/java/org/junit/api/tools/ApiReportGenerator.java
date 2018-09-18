@@ -52,8 +52,12 @@ class ApiReportGenerator {
 		// Print report for all Usage enum constants
 		// reportWriter.printDeclarationInfo(writer, EnumSet.allOf(Usage.class));
 
-		// Print report only for Experimental Usage constant
-		reportWriter.printDeclarationInfo(writer, EnumSet.of(Status.EXPERIMENTAL));
+		// Print report only for a specific Status constant, defaults to EXPERIMENTAL
+		var status = Status.EXPERIMENTAL;
+		if (args.length == 1) {
+			status = Status.valueOf(args[0]);
+		}
+		reportWriter.printDeclarationInfo(writer, EnumSet.of(status));
 	}
 
 	// -------------------------------------------------------------------------
@@ -63,43 +67,45 @@ class ApiReportGenerator {
 		final String EOL = System.lineSeparator();
 
 		// Scan packages
-		ScanResult scanResult = new ClassGraph().whitelistPackages(packages).enableAnnotationInfo().scan();
+		try (ScanResult scanResult = new ClassGraph().whitelistPackages(
+			packages).disableNestedJarScanning().enableAnnotationInfo().scan()) {
 
-		// Collect names
-		ClassInfoList classesWithApiAnnotation = scanResult.getClassesWithAnnotation(API.class.getCanonicalName());
-		List<String> names = classesWithApiAnnotation.getNames();
+			// Collect names
+			ClassInfoList classesWithApiAnnotation = scanResult.getClassesWithAnnotation(API.class.getCanonicalName());
+			List<String> names = classesWithApiAnnotation.getNames();
 
-		logger.debug(() -> {
-			StringBuilder builder = new StringBuilder(
-				names.size() + " @API declarations (including meta) found in class-path:");
-			builder.append(EOL);
-			scanResult.getClasspathURLs().forEach(e -> builder.append(e).append(EOL));
-			return builder.toString();
+			logger.debug(() -> {
+				StringBuilder builder = new StringBuilder(
+					names.size() + " @API declarations (including meta) found in class-path:");
+				builder.append(EOL);
+				scanResult.getClasspathURLs().forEach(e -> builder.append(e).append(EOL));
+				return builder.toString();
 
-		});
+			});
 
-		// Collect types
-		List<Class<?>> types = classesWithApiAnnotation.loadClasses();
-		// only retain directly annotated types
-		types.removeIf(c -> !c.isAnnotationPresent(API.class));
-		types.sort(Comparator.comparing(type -> type.getName()));
+			// Collect types
+			List<Class<?>> types = classesWithApiAnnotation.loadClasses();
+			// only retain directly annotated types
+			types.removeIf(c -> !c.isAnnotationPresent(API.class));
+			types.sort(Comparator.comparing(Class::getName));
 
-		logger.debug(() -> {
-			StringBuilder builder = new StringBuilder("Listing of all " + types.size() + " annotated types:");
-			builder.append(EOL);
-			types.forEach(e -> builder.append(e).append(EOL));
-			return builder.toString();
-		});
+			logger.debug(() -> {
+				StringBuilder builder = new StringBuilder("Listing of all " + types.size() + " annotated types:");
+				builder.append(EOL);
+				types.forEach(e -> builder.append(e).append(EOL));
+				return builder.toString();
+			});
 
-		// Build map
-		Map<Status, List<Class<?>>> declarationsMap = new EnumMap<>(Status.class);
-		for (Status status : Status.values()) {
-			declarationsMap.put(status, new ArrayList<>());
+			// Build map
+			Map<Status, List<Class<?>>> declarationsMap = new EnumMap<>(Status.class);
+			for (Status status : Status.values()) {
+				declarationsMap.put(status, new ArrayList<>());
+			}
+			types.forEach(type -> declarationsMap.get(type.getAnnotation(API.class).status()).add(type));
+
+			// Create report
+			return new ApiReport(types, declarationsMap);
 		}
-		types.forEach(type -> declarationsMap.get(type.getAnnotation(API.class).status()).add(type));
-
-		// Create report
-		return new ApiReport(types, declarationsMap);
 	}
 
 }

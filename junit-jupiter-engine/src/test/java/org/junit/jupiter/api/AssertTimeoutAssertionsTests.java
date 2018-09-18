@@ -108,7 +108,6 @@ class AssertTimeoutAssertionsTests {
 				ExceptionUtils.throwAsUncheckedException(new RuntimeException("not this time"));
 				return "Tempus Fugit";
 			});
-			fail("exception should be thrown");
 		});
 		assertMessageEquals(exception, "not this time");
 	}
@@ -120,7 +119,6 @@ class AssertTimeoutAssertionsTests {
 				fail("enigma");
 				return "Tempus Fugit";
 			});
-			fail("assertion failed should be thrown");
 		});
 		assertMessageEquals(exception, "enigma");
 	}
@@ -132,7 +130,6 @@ class AssertTimeoutAssertionsTests {
 				nap();
 				return "Tempus Fugit";
 			});
-			fail("timeout assertion should be thrown");
 		});
 		assertMessageStartsWith(error, "execution exceeded timeout of 10 ms by");
 	}
@@ -144,7 +141,6 @@ class AssertTimeoutAssertionsTests {
 				nap();
 				return "Tempus Fugit";
 			}, "Tempus Fugit");
-			fail("timeout assertion should be thrown");
 		});
 		assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 10 ms by");
 	}
@@ -156,7 +152,6 @@ class AssertTimeoutAssertionsTests {
 				nap();
 				return "Tempus Fugit";
 			}, () -> "Tempus" + " " + "Fugit");
-			fail("timeout assertion should be thrown");
 		});
 		assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 10 ms by");
 	}
@@ -236,7 +231,6 @@ class AssertTimeoutAssertionsTests {
 				ExceptionUtils.throwAsUncheckedException(new RuntimeException("not this time"));
 				return "Tempus Fugit";
 			});
-			fail("exception should be thrown");
 		});
 		assertMessageEquals(exception, "not this time");
 	}
@@ -248,7 +242,6 @@ class AssertTimeoutAssertionsTests {
 				fail("enigma");
 				return "Tempus Fugit";
 			});
-			fail("assertion exception should be thrown");
 		});
 		assertMessageEquals(exception, "enigma");
 	}
@@ -260,7 +253,6 @@ class AssertTimeoutAssertionsTests {
 				nap();
 				return "Tempus Fugit";
 			});
-			fail("timeout exception should be thrown");
 		});
 		assertMessageEquals(error, "execution timed out after 10 ms");
 	}
@@ -272,7 +264,6 @@ class AssertTimeoutAssertionsTests {
 				nap();
 				return "Tempus Fugit";
 			}, "Tempus Fugit");
-			fail("timeout exception should be thrown");
 		});
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
 	}
@@ -284,7 +275,6 @@ class AssertTimeoutAssertionsTests {
 				nap();
 				return "Tempus Fugit";
 			}, () -> "Tempus" + " " + "Fugit");
-			fail("timeout exception should be thrown");
 		});
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
 	}

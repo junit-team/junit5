@@ -84,7 +84,7 @@ public @interface IncludeTags {
 	 *
 	 * <p>Note: each tag will be {@linkplain String#trim() trimmed} and
 	 * validated according to the <em>Syntax Rules for Tags</em> (see
-	 * {@linkplain IncludeTags class-level JavaDoc} for details).
+	 * {@linkplain IncludeTags class-level Javadoc} for details).
 	 */
 	String[] value();
 
