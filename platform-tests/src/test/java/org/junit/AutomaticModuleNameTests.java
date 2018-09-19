@@ -97,6 +97,7 @@ class AutomaticModuleNameTests {
 			List<String> unexpectedNames = jarFile.stream()
 					.map(ZipEntry::getName)
 					.filter(n -> n.endsWith(".class"))
+					.filter(n -> !n.equals("module-info.class"))
 					.filter(n -> !n.startsWith(expectedStartOfPackageName))
 					.filter(n -> !(n.startsWith("META-INF/versions/") && n.contains(expectedStartOfPackageName)))
 					.collect(toList());

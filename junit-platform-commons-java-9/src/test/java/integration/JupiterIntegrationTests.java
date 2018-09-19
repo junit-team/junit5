@@ -13,7 +13,6 @@ package integration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import org.junit.jupiter.api.Test;
@@ -67,7 +66,7 @@ class JupiterIntegrationTests {
 		resolver.resolveSelectors(request().selectors(selector).build(), engine);
 
 		assertEquals(1, engine.getChildren().size()); // JupiterIntegrationTests.class
-		assertEquals(5, getOnlyElement(engine.getChildren()).getChildren().size()); // 5 test methods
+		assertEquals(5, engine.getChildren().iterator().next().getChildren().size()); // 5 test methods
 	}
 
 	@Test

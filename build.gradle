@@ -105,7 +105,7 @@ allprojects { subproj ->
 	apply plugin: 'com.diffplug.gradle.spotless'
 	apply plugin: 'checkstyle'
 	apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates
-	apply plugin: 'de.obqo.gradle.degraph'
+	// TODO "1091" apply plugin: 'de.obqo.gradle.degraph'
 
 	if (project.hasProperty('enableJaCoCo')) {
 		apply plugin: 'jacoco'
@@ -130,7 +130,7 @@ allprojects { subproj ->
 		// See: https://docs.oracle.com/javase/10/tools/javac.htm
 		options.compilerArgs += [
 			'-Xlint', // Enables all recommended warnings.
-			'-Werror' // Terminates compilation when warnings occur.
+			// TODO "1091" '-Werror' // Terminates compilation when warnings occur.
 		]
 	}
 
@@ -168,7 +168,7 @@ allprojects { subproj ->
 	}
 
 	checkstyle {
-		toolVersion = '8.10'
+		toolVersion = '8.12'
 		configDir = rootProject.file('src/checkstyle')
 	}
 	checkstyleMain {
@@ -177,16 +177,19 @@ allprojects { subproj ->
 	checkstyleTest {
 		configFile = rootProject.file('src/checkstyle/checkstyleTest.xml')
 	}
-
-	degraph {
-		sourceSets sourceSets.main
-		including 'org.junit.platform.**', 'org.junit.vintage.**', 'org.junit.jupiter.**'
-		slicings {
-			module {
-				patterns "org.junit.(*.*).**"
-			}
-		}
+	tasks.withType(Checkstyle) {
+		exclude '**/module-info.java'
 	}
+
+//	degraph {
+//		sourceSets sourceSets.main
+//		including 'org.junit.platform.**', 'org.junit.vintage.**', 'org.junit.jupiter.**'
+//		slicings {
+//			module {
+//				patterns "org.junit.(*.*).**"
+//			}
+//		}
+//	}
 }
 
 subprojects { subproj ->
