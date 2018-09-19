@@ -2682,13 +2682,13 @@ INFO: About to execute repetition 5 of 5 for repeatedTestInGerman</pre>
     <span class="annotation">@RepeatedTest</span>(value = <span class="integer">1</span>, name = <span class="string"><span class="delimiter">&quot;</span><span class="content">{displayName} {currentRepetition}/{totalRepetitions}</span><span class="delimiter">&quot;</span></span>)
     <span class="annotation">@DisplayName</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Repeat!</span><span class="delimiter">&quot;</span></span>)
     <span class="type">void</span> customDisplayName(TestInfo testInfo) {
-        assertEquals(testInfo.getDisplayName(), <span class="string"><span class="delimiter">&quot;</span><span class="content">Repeat! 1/1</span><span class="delimiter">&quot;</span></span>);
+        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Repeat! 1/1</span><span class="delimiter">&quot;</span></span>, testInfo.getDisplayName());
     }
 
     <span class="annotation">@RepeatedTest</span>(value = <span class="integer">1</span>, name = RepeatedTest.LONG_DISPLAY_NAME)
     <span class="annotation">@DisplayName</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Details...</span><span class="delimiter">&quot;</span></span>)
     <span class="type">void</span> customDisplayNameWithLongPattern(TestInfo testInfo) {
-        assertEquals(testInfo.getDisplayName(), <span class="string"><span class="delimiter">&quot;</span><span class="content">Details... :: repetition 1 of 1</span><span class="delimiter">&quot;</span></span>);
+        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Details... :: repetition 1 of 1</span><span class="delimiter">&quot;</span></span>, testInfo.getDisplayName());
     }
 
     <span class="annotation">@RepeatedTest</span>(value = <span class="integer">5</span>, name = <span class="string"><span class="delimiter">&quot;</span><span class="content">Wiederholung {currentRepetition} von {totalRepetitions}</span><span class="delimiter">&quot;</span></span>)
@@ -3952,16 +3952,18 @@ expressiveness and power of dynamic tests.</p>
 <h3 id="writing-tests-parallel-execution"><a class="anchor" href="#writing-tests-parallel-execution"></a>3.17. Parallel Execution</h3>
 <div class="paragraph">
 <p>By default, JUnit Jupiter tests are run sequentially in a single thread. Running tests in
-parallel, e.g. to speed up execution, is available as an opt-in feature since version 5.3.
-To enable parallel execution, simply set the
-<code>junit.jupiter.execution.parallel.enabled</code> configuration parameter to <code>true</code>, e.g. in <code>junit-platform.properties</code> (see <a href="#running-tests-config-params">Configuration Parameters</a> for other options).</p>
+parallel&#8201;&#8212;&#8201;for example, to speed up execution&#8201;&#8212;&#8201;is available as an opt-in feature since
+version 5.3. To enable parallel execution, set the
+<code>junit.jupiter.execution.parallel.enabled</code> configuration parameter to <code>true</code>&#8201;&#8212;&#8201;for
+example, in <code>junit-platform.properties</code> (see <a href="#running-tests-config-params">Configuration Parameters</a> for other
+options).</p>
 </div>
 <div class="paragraph">
 <p>Once enabled, the JUnit Jupiter engine will execute tests on all levels of the test tree
 fully in parallel according to the provided
 <a href="#writing-tests-parallel-execution-config">configuration</a> while observing the declarative
 <a href="#writing-tests-parallel-execution-synchronization">synchronization</a> mechanisms. Please
-note that the <a href="#running-tests-capturing-output">Capturing Standard Output/Error</a> feature needs to enabled separately.</p>
+note that the <a href="#running-tests-capturing-output">Capturing Standard Output/Error</a> feature needs to be enabled separately.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -3980,13 +3982,13 @@ eventually <a href="#api-evolution">promote</a> this feature.
 <div class="sect3">
 <h4 id="writing-tests-parallel-execution-config"><a class="anchor" href="#writing-tests-parallel-execution-config"></a>3.17.1. Configuration</h4>
 <div class="paragraph">
-<p>Properties like the desired parallelism and the maximum pool size can be configured using
-a <code><a href="../api/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.html">ParallelExecutionConfigurationStrategy</a></code>. The JUnit Platform provides two
+<p>Properties such as the desired parallelism and the maximum pool size can be configured
+using a <code><a href="../api/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.html">ParallelExecutionConfigurationStrategy</a></code>. The JUnit Platform provides two
 implementations out of the box: <code>dynamic</code> and <code>fixed</code>. Alternatively, you may implement a
 <code>custom</code> strategy.</p>
 </div>
 <div class="paragraph">
-<p>To select a strategy, simply set the <code>junit.jupiter.execution.parallel.config.strategy</code>
+<p>To select a strategy, set the <code>junit.jupiter.execution.parallel.config.strategy</code>
 configuration parameter to one of the following options:</p>
 </div>
 <div class="dlist">
@@ -4000,20 +4002,20 @@ configuration parameter (defaults to <code>1</code>).</p>
 <dt class="hdlist1"><code>fixed</code></dt>
 <dd>
 <p>Uses the mandatory <code>junit.jupiter.execution.parallel.config.fixed.parallelism</code>
-configuration parameter as desired parallelism.</p>
+configuration parameter as the desired parallelism.</p>
 </dd>
 <dt class="hdlist1"><code>custom</code></dt>
 <dd>
-<p>Allows to specify a custom <code><a href="../api/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.html">ParallelExecutionConfigurationStrategy</a></code> implementation via
-the mandatory <code>junit.jupiter.execution.parallel.config.custom.class</code> configuration
-parameter to determine the desired configuration.</p>
+<p>Allows you to specify a custom <code><a href="../api/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.html">ParallelExecutionConfigurationStrategy</a></code>
+implementation via the mandatory <code>junit.jupiter.execution.parallel.config.custom.class</code>
+configuration parameter to determine the desired configuration.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
 <p>If no configuration strategy is set, JUnit Jupiter uses the <code>dynamic</code> configuration
-strategy with a factor of 1, i.e. the desired parallelism will equal the number of
-available processors/cores.</p>
+strategy with a factor of <code>1</code>. Consequently, the desired parallelism will be equal to the
+number of available processors/cores.</p>
 </div>
 </div>
 <div class="sect3">
@@ -4038,19 +4040,33 @@ method, the test method will be executed in the same thread as any <code>@Before
 </dd>
 <dt class="hdlist1"><code>CONCURRENT</code></dt>
 <dd>
-<p>Execute concurrently unless a resource constraint forces execution in the same thread.</p>
+<p>Execute concurrently unless a resource lock forces execution in the same thread.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
-<p>In addition, the <code><a href="../api/org/junit/jupiter/api/parallel/ResourceLock.html">@ResourceLock</a></code> annotation allows to declare that a test class or
+<p>In addition, the <code><a href="../api/org/junit/jupiter/api/parallel/ResourceLock.html">@ResourceLock</a></code> annotation allows you to declare that a test class or
 method uses a specific shared resource that requires synchronized access to ensure
-reliable test execution.</p>
+reliable test execution. The shared resource is identified by a unique name which is a
+<code>String</code>. The name can be user-defined or one of the predefined constants in
+<code><a href="../api/org/junit/jupiter/api/parallel/Resources.html">Resources</a></code>: <code>SYSTEM_PROPERTIES</code>, <code>SYSTEM_OUT</code>, or <code>SYSTEM_ERR</code>.</p>
 </div>
 <div class="paragraph">
-<p>If the tests in the following example were run in parallel they would be flaky, i.e.
-sometimes pass and other times fail, because of the inherent race condition of
-writing and then reading the same system property.</p>
+<p>If the tests in the following example were run in parallel <em>without</em> the use of
+<a href="../api/org/junit/jupiter/api/parallel/ResourceLock.html">@ResourceLock</a>, they would be <em>flaky</em>. Sometimes they would pass, and at other times they
+would fail due to the inherent race condition of writing and then reading the same JVM
+System Property.</p>
+</div>
+<div class="paragraph">
+<p>When access to shared resources is declared using the <a href="../api/org/junit/jupiter/api/parallel/ResourceLock.html">@ResourceLock</a> annotation, the
+JUnit Jupiter engine uses this information to ensure that no conflicting tests are run in
+parallel.</p>
+</div>
+<div class="paragraph">
+<p>In addition to the <code>String</code> that uniquely identifies the shared resource, you may specify
+an access mode. Two tests that require <code>READ</code> access to a shared resource may run in
+parallel with each other but not while any other test that requires <code>READ_WRITE</code> access
+to the same shared resource is running.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4091,15 +4107,6 @@ writing and then reading the same system property.</p>
     }
 }</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>When access to shared resources is declared using this annotation, the JUnit Jupiter
-engine uses this information to ensure that no conflicting tests are run in parallel.</p>
-</div>
-<div class="paragraph">
-<p>In addition to the string that uniquely identifies the used resource, you may specify an
-access mode. Two tests that require <code>READ</code> access to a resource may run in parallel with
-each other but not while any other test that requires <code>READ_WRITE</code> access is running.</p>
 </div>
 </div>
 </div>
@@ -6891,7 +6898,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-09-14 13:22:18 EDT
+Last updated 2018-09-19 14:39:50 EDT
 </div>
 </div>
 </body>
