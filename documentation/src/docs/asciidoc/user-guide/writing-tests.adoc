@@ -1349,15 +1349,17 @@ include::{testDir}/example/DynamicTestsDemo.java[tags=user_guide]
 === Parallel Execution
 
 By default, JUnit Jupiter tests are run sequentially in a single thread. Running tests in
-parallel, e.g. to speed up execution, is available as an opt-in feature since version 5.3.
-To enable parallel execution, simply set the
-`junit.jupiter.execution.parallel.enabled` configuration parameter to `true`, e.g. in `junit-platform.properties` (see <<running-tests-config-params>> for other options).
+parallel -- for example, to speed up execution -- is available as an opt-in feature since
+version 5.3. To enable parallel execution, set the
+`junit.jupiter.execution.parallel.enabled` configuration parameter to `true` -- for
+example, in `junit-platform.properties` (see <<running-tests-config-params>> for other
+options).
 
 Once enabled, the JUnit Jupiter engine will execute tests on all levels of the test tree
 fully in parallel according to the provided
 <<writing-tests-parallel-execution-config, configuration>> while observing the declarative
 <<writing-tests-parallel-execution-synchronization, synchronization>> mechanisms. Please
-note that the <<running-tests-capturing-output>> feature needs to enabled separately.
+note that the <<running-tests-capturing-output>> feature needs to be enabled separately.
 
 WARNING: Parallel test execution is currently an _experimental_ feature. You're invited
 to give it a try and provide feedback to the JUnit team so they can improve and
@@ -1366,12 +1368,12 @@ eventually <<api-evolution, promote>> this feature.
 [[writing-tests-parallel-execution-config]]
 ==== Configuration
 
-Properties like the desired parallelism and the maximum pool size can be configured using
-a `{ParallelExecutionConfigurationStrategy}`. The JUnit Platform provides two
+Properties such as the desired parallelism and the maximum pool size can be configured
+using a `{ParallelExecutionConfigurationStrategy}`. The JUnit Platform provides two
 implementations out of the box: `dynamic` and `fixed`. Alternatively, you may implement a
 `custom` strategy.
 
-To select a strategy, simply set the `junit.jupiter.execution.parallel.config.strategy`
+To select a strategy, set the `junit.jupiter.execution.parallel.config.strategy`
 configuration parameter to one of the following options:
 
 `dynamic`::
@@ -1381,16 +1383,16 @@ configuration parameter to one of the following options:
 
 `fixed`::
   Uses the mandatory `junit.jupiter.execution.parallel.config.fixed.parallelism`
-  configuration parameter as desired parallelism.
+  configuration parameter as the desired parallelism.
 
 `custom`::
-  Allows to specify a custom `{ParallelExecutionConfigurationStrategy}` implementation via
-  the mandatory `junit.jupiter.execution.parallel.config.custom.class` configuration
-  parameter to determine the desired configuration.
+  Allows you to specify a custom `{ParallelExecutionConfigurationStrategy}`
+  implementation via the mandatory `junit.jupiter.execution.parallel.config.custom.class`
+  configuration parameter to determine the desired configuration.
 
 If no configuration strategy is set, JUnit Jupiter uses the `dynamic` configuration
-strategy with a factor of 1, i.e. the desired parallelism will equal the number of
-available processors/cores.
+strategy with a factor of `1`. Consequently, the desired parallelism will be equal to the
+number of available processors/cores.
 
 [[writing-tests-parallel-execution-synchronization]]
 ==== Synchronization
@@ -1409,24 +1411,29 @@ default. You can change the execution mode for the annotated element and its sub
   `@AfterAll` methods of the containing test class.
 
 `CONCURRENT`::
-  Execute concurrently unless a resource constraint forces execution in the same thread.
+  Execute concurrently unless a resource lock forces execution in the same thread.
 
-In addition, the `{ResourceLock}` annotation allows to declare that a test class or
+In addition, the `{ResourceLock}` annotation allows you to declare that a test class or
 method uses a specific shared resource that requires synchronized access to ensure
-reliable test execution.
+reliable test execution. The shared resource is identified by a unique name which is a
+`String`. The name can be user-defined or one of the predefined constants in
+`{Resources}`: `SYSTEM_PROPERTIES`, `SYSTEM_OUT`, or `SYSTEM_ERR`.
 
-If the tests in the following example were run in parallel they would be flaky, i.e.
-sometimes pass and other times fail, because of the inherent race condition of
-writing and then reading the same system property.
+If the tests in the following example were run in parallel _without_ the use of
+{ResourceLock}, they would be _flaky_. Sometimes they would pass, and at other times they
+would fail due to the inherent race condition of writing and then reading the same JVM
+System Property.
+
+When access to shared resources is declared using the {ResourceLock} annotation, the
+JUnit Jupiter engine uses this information to ensure that no conflicting tests are run in
+parallel.
+
+In addition to the `String` that uniquely identifies the shared resource, you may specify
+an access mode. Two tests that require `READ` access to a shared resource may run in
+parallel with each other but not while any other test that requires `READ_WRITE` access
+to the same shared resource is running.
 
 [source,java]
 ----
 include::{testDir}/example/SharedResourcesDemo.java[tags=user_guide]
 ----
-
-When access to shared resources is declared using this annotation, the JUnit Jupiter
-engine uses this information to ensure that no conflicting tests are run in parallel.
-
-In addition to the string that uniquely identifies the used resource, you may specify an
-access mode. Two tests that require `READ` access to a resource may run in parallel with
-each other but not while any other test that requires `READ_WRITE` access is running.
