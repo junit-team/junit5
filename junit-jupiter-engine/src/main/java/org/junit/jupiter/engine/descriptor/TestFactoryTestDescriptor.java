@@ -87,20 +87,30 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 				context.getExtensionRegistry());
 			TestSource defaultTestSource = getSource().orElseThrow(
 				() -> new JUnitException("Illegal state: TestSource must be present"));
+			// since 5.4: handle single node case (#1521)
+			if (testFactoryMethodResult instanceof DynamicNode) {
+				execute((DynamicNode) testFactoryMethodResult, defaultTestSource, 1, dynamicTestExecutor);
+				return;
+			}
+			// else try converting result into a stream of nodes
 			try (Stream<DynamicNode> dynamicNodeStream = toDynamicNodeStream(testFactoryMethodResult)) {
 				int index = 1;
 				Iterator<DynamicNode> iterator = dynamicNodeStream.iterator();
 				while (iterator.hasNext()) {
-					DynamicNode dynamicNode = iterator.next();
-					Optional<JupiterTestDescriptor> descriptor = createDynamicDescriptor(this, dynamicNode, index++,
-						defaultTestSource, getDynamicDescendantFilter());
-					descriptor.ifPresent(dynamicTestExecutor::execute);
+					execute(iterator.next(), defaultTestSource, index++, dynamicTestExecutor);
 				}
 			}
 			catch (ClassCastException ex) {
 				throw invalidReturnTypeException(ex);
 			}
 		});
+	}
+
+	private void execute(DynamicNode dynamicNode, TestSource defaultTestSource, int index,
+			DynamicTestExecutor dynamicTestExecutor) {
+		Optional<JupiterTestDescriptor> descriptor = createDynamicDescriptor(this, dynamicNode, index,
+			defaultTestSource, getDynamicDescendantFilter());
+		descriptor.ifPresent(dynamicTestExecutor::execute);
 	}
 
 	@SuppressWarnings("unchecked")
