@@ -68,7 +68,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 	void testFactoryMethodsAreCorrectlyDiscoveredForClassSelector() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(MyDynamicTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request);
-		assertThat(engineDescriptor.getDescendants()).as("# resolved test descriptors").hasSize(10);
+		assertThat(engineDescriptor.getDescendants()).as("# resolved test descriptors").hasSize(12);
 	}
 
 	@Test
@@ -367,6 +367,50 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 			event(engine(), finishedSuccessfully()));
 	}
 
+	@Test
+	void testFactoryMethodsMayReturnSingleDynamicContainer() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(MyDynamicTestCase.class, "singleContainer")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(MyDynamicTestCase.class), started()), //
+			event(container("singleContainer"), started()), //
+			event(dynamicTestRegistered("dynamic-container:#1")), //
+			event(container("dynamic-container:#1"), started()), //
+			event(dynamicTestRegistered("dynamic-test:#1")), //
+			event(test("dynamic-test:#1", "succeedingTest"), started()), //
+			event(test("dynamic-test:#1", "succeedingTest"), finishedSuccessfully()), //
+			event(dynamicTestRegistered("dynamic-test:#2")), //
+			event(test("dynamic-test:#2", "failingTest"), started()), //
+			event(test("dynamic-test:#2", "failingTest"), finishedWithFailure(message("failing"))), //
+			event(container("dynamic-container:#1"), finishedSuccessfully()), //
+			event(container("singleContainer"), finishedSuccessfully()), //
+			event(container(MyDynamicTestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void testFactoryMethodsMayReturnSingleDynamicTest() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(MyDynamicTestCase.class, "singleTest")).build();
+
+		ExecutionEventRecorder eventRecorder = executeTests(request);
+
+		assertRecordedExecutionEventsContainsExactly(eventRecorder.getExecutionEvents(), //
+			event(engine(), started()), //
+			event(container(MyDynamicTestCase.class), started()), //
+			event(container("singleTest"), started()), //
+			event(dynamicTestRegistered("dynamic-test:#1")), //
+			event(test("dynamic-test:#1", "succeedingTest"), started()), //
+			event(test("dynamic-test:#1", "succeedingTest"), finishedSuccessfully()), //
+			event(container("singleTest"), finishedSuccessfully()), //
+			event(container(MyDynamicTestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
 	static class MyDynamicTestCase {
 
 		private static final List<DynamicTest> list = Arrays.asList(
@@ -426,6 +470,16 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 		@TestFactory
 		Iterable<DynamicNode> dynamicContainerWithNullChildren() {
 			return singleton(dynamicContainer("box", singleton(null)));
+		}
+
+		@TestFactory
+		DynamicNode singleContainer() {
+			return dynamicContainer("box", list);
+		}
+
+		@TestFactory
+		DynamicNode singleTest() {
+			return dynamicTest("succeedingTest", () -> assertTrue(true));
 		}
 
 	}
