@@ -14,12 +14,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.lang.module.ModuleFinder;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
+import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 import com.paypal.digraph.parser.GraphEdge;
@@ -33,6 +38,7 @@ import org.apache.commons.io.FileUtils;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedAcyclicGraph;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -44,6 +50,7 @@ import platform.tooling.support.Request;
 /**
  * @since 1.3
  */
+@Disabled("TODO 1091")
 class JdepsTests {
 
 	private static Path WORKSPACE = Request.WORKSPACE.resolve("jdeps-dot-files");
@@ -60,9 +67,14 @@ class JdepsTests {
 		"org.junit.jupiter.params.shadow.com.univocity.parsers");
 
 	@BeforeAll
-	static void setup() {
+	static void setup() throws Exception {
 		FileUtils.deleteQuietly(WORKSPACE.toFile());
-		Helper.loadModuleDirectoryNames().stream().parallel().forEach(JdepsTests::createDotFiles);
+		var deps = WORKSPACE.resolve("deps").toFile();
+		// FileUtils.copyToDirectory(Helper.loadModulesAsFiles(), deps);
+		FileUtils.copyToDirectory(new File("../junit-platform-commons-java-9/build/deps/apiguardian-api-1.0.0.jar"),
+			deps);
+		FileUtils.copyToDirectory(new File("../junit-platform-commons-java-9/build/deps/opentest4j-1.1.1.jar"), deps);
+		Helper.loadModuleDirectoryNames().stream().sequential().forEach(JdepsTests::createDotFiles);
 	}
 
 	@ParameterizedTest
@@ -98,20 +110,22 @@ class JdepsTests {
 
 		var destination = WORKSPACE.resolve(module);
 		var configuration = builder //
+				.addArgument("--module-path").addArgument(WORKSPACE.resolve("deps")) //
 				.addArgument("--dot-output").addArgument(destination) // Specifies the destination directory for DOT file output.
 				.addArgument("-verbose:class") // Prints class-level dependencies.
 				.addArgument("-filter:none") // No "-filter:package" and no "-filter:archive" filtering.
 				.addArgument(jar.getName()) // JAR file to analyze.
 				.build();
 
+		System.out.println(configuration);
 		var result = new Jdeps().run(configuration);
 
-		assertEquals(0, result.getExitCode(), "result = " + result);
+		assertEquals(0, result.getExitCode(), module + " // result = " + result);
 		assertEquals("", result.getOutput("out"), "output log isn't empty");
 		assertEquals("", result.getOutput("err"), "error log isn't empty");
 
 		var summary = destination.resolve("summary.dot");
-		var archive = module + '-' + Helper.version(module) + ".jar";
+		var archive = moduleNameOf(jar).orElseGet(() -> module + '-' + Helper.version(module) + ".jar");
 		var dot = destination.resolve(archive + ".dot");
 		var raw = destination.resolve(archive + ".raw.dot");
 
@@ -131,8 +145,21 @@ class JdepsTests {
 		}
 	}
 
+	private static Optional<String> moduleNameOf(JarFile jarFile) {
+		var modules = ModuleFinder.of(Paths.get(jarFile.getName())).findAll();
+		if (modules.size() != 1) {
+			throw new IllegalStateException("Expected exactly a single module, but got: " + modules);
+		}
+		var descriptor = modules.iterator().next().descriptor();
+		if (!descriptor.isAutomatic()) {
+			return Optional.of(descriptor.name());
+		}
+		return Optional.empty();
+	}
+
 	private static GraphParser parseGraph(String module) {
-		var archive = module + '-' + Helper.version(module) + ".jar";
+		var jar = Helper.createJarFile(module);
+		var archive = moduleNameOf(jar).orElseGet(() -> module + '-' + Helper.version(module) + ".jar");
 		var destination = WORKSPACE.resolve(module);
 		var raw = destination.resolve(archive + ".raw.dot");
 
