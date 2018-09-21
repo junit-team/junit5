@@ -10,12 +10,12 @@ install:
 #  - cinst jdk10 -params 'installdir=C:\\jdk-10'
 #  - SET JAVA_HOME=C:\jdk-10
 # Use pre-installed JDK 10
-  #  - SET JAVA_HOME="C:\Program Files\Java\jdk10"
+  - SET JAVA_HOME="C:\Program Files\Java\jdk10"
 # Download JDK 11 from java.net
-  - curl -fsS -o jdk-11.zip https://download.java.net/java/early_access/jdk11/28/GPL/openjdk-11+28_windows-x64_bin.zip
-  - 7z x jdk-11.zip -y -o"C:\" >NUL
-  - SET JAVA_HOME="C:\jdk-11"
-  - SET PATH="%JAVA_HOME%\bin;%PATH%"
+#  - curl -fsS -o jdk-11.zip https://download.java.net/java/early_access/jdk11/28/GPL/openjdk-11+28_windows-x64_bin.zip
+#  - 7z x jdk-11.zip -y -o"C:\" >NUL
+#  - SET JAVA_HOME="C:\jdk-11"
+  - SET PATH=%JAVA_HOME%\bin;%PATH%
 
 test_script:
   - gradlew --no-daemon -version
