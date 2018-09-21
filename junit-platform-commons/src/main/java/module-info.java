@@ -27,6 +27,7 @@ module org.junit.platform.commons {
 			org.junit.platform.engine,
 			org.junit.platform.console,
 			org.junit.platform.launcher,
+			org.junit.jupiter.api,
 			org.junit.jupiter.engine,
 			org.junit.vintage.engine;
 

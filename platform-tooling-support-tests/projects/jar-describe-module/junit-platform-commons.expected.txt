@@ -6,5 +6,5 @@ requires java.base mandated
 requires java.compiler static
 requires java.logging
 requires org.apiguardian.api
-qualified exports org.junit.platform.commons.logging to org.junit.jupiter.engine org.junit.platform.console org.junit.platform.engine org.junit.platform.launcher org.junit.vintage.engine
+qualified exports org.junit.platform.commons.logging to org.junit.jupiter.api org.junit.jupiter.engine org.junit.platform.console org.junit.platform.engine org.junit.platform.launcher org.junit.vintage.engine
 qualified exports org.junit.platform.commons.util to org.junit.jupiter.api org.junit.jupiter.engine org.junit.platform.console org.junit.platform.engine org.junit.platform.launcher org.junit.vintage.engine
