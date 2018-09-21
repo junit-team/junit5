@@ -86,6 +86,10 @@ class AutomaticModuleNameTests {
 		String jarName = module + "-" + version(module) + ".jar";
 		Path jarPath = Paths.get("..", module).resolve("build/libs").resolve(jarName).normalize();
 		try (JarFile jarFile = new JarFile(jarPath.toFile())) {
+			// skip explicit module
+			if (jarFile.getEntry("module-info.class") != null) {
+				return;
+			}
 			// first, check automatic module name
 			Manifest manifest = jarFile.getManifest();
 			String automaticModuleName = manifest.getMainAttributes().getValue("Automatic-Module-Name");
