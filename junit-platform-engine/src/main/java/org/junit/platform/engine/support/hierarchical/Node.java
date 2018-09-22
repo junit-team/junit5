@@ -121,9 +121,25 @@ public interface Node<C extends EngineExecutionContext> {
 	default void after(C context) throws Exception {
 	}
 
+	/**
+	 * Action triggered when the execution of this Node is skipped.
+	 *
+	 *  @param context the execution context
+	 *  @param descriptor  the skipped test {@link TestDescriptor}
+	 *  @param result the cause of skipped execution
+	 * @since 5.4
+	 */
 	default void nodeSkipped(C context, TestDescriptor descriptor, SkipResult result) {
 	}
 
+	/**
+	 * Action triggered when the execution of this Node has finished.
+	 *
+	 * @param context the execution context
+	 * @param descriptor the skipped test's {@link TestDescriptor}
+	 * @param result the {@link TestExecutionResult} resulting from the execution of {@code descriptor}
+	 * @since 5.4
+	 */
 	default void nodeFinished(C context, TestDescriptor descriptor, TestExecutionResult result) {
 	}
 
