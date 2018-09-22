@@ -135,6 +135,10 @@ public class ExecutionEventRecorder implements EngineExecutionListener {
 		return containerEventsByType(STARTED).count();
 	}
 
+	public long getContainerAbortedCount() {
+		return getContainerFinishedCount(Status.ABORTED);
+	}
+
 	public long getContainerFinishedCount() {
 		return containerEventsByType(FINISHED).count();
 	}
