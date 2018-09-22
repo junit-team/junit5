@@ -18,23 +18,24 @@ module.
 
 [cols="20,80"]
 |===
-| Annotation           | Description
+| Annotation               | Description
 
-| `@Test`              | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit Jupiter operate based on their own dedicated annotations. Such methods are _inherited_ unless they are _overridden_.
-| `@ParameterizedTest` | Denotes that a method is a <<writing-tests-parameterized-tests, parameterized test>>. Such methods are _inherited_ unless they are _overridden_.
-| `@RepeatedTest`      | Denotes that a method is a test template for a <<writing-tests-repeated-tests, repeated test>>. Such methods are _inherited_ unless they are _overridden_.
-| `@TestFactory`       | Denotes that a method is a test factory for <<writing-tests-dynamic-tests, dynamic tests>>. Such methods are _inherited_ unless they are _overridden_.
-| `@TestInstance`      | Used to configure the <<writing-tests-test-instance-lifecycle, test instance lifecycle>> for the annotated test class. Such annotations are _inherited_.
-| `@TestTemplate`      | Denotes that a method is a <<writing-tests-test-templates, template for test cases>> designed to be invoked multiple times depending on the number of invocation contexts returned by the registered <<extensions-test-templates, providers>>. Such methods are _inherited_ unless they are _overridden_.
-| `@DisplayName`       | Declares a custom display name for the test class or test method. Such annotations are not _inherited_.
-| `@BeforeEach`        | Denotes that the annotated method should be executed _before_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@Before`. Such methods are _inherited_ unless they are _overridden_.
-| `@AfterEach`         | Denotes that the annotated method should be executed _after_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@After`. Such methods are _inherited_ unless they are _overridden_.
-| `@BeforeAll`         | Denotes that the annotated method should be executed _before_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@BeforeClass`. Such methods are _inherited_ (unless they are _hidden_ or _overridden_) and must be `static` (unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used).
-| `@AfterAll`          | Denotes that the annotated method should be executed _after_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@AfterClass`. Such methods are _inherited_ (unless they are _hidden_ or _overridden_) and must be `static` (unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used).
-| `@Nested`            | Denotes that the annotated class is a nested, non-static test class. `@BeforeAll` and `@AfterAll` methods cannot be used directly in a `@Nested` test class unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used. Such annotations are not _inherited_.
-| `@Tag`               | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4. Such annotations are _inherited_ at the class level but not at the method level.
-| `@Disabled`          | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore`. Such annotations are not _inherited_.
-| `@ExtendWith`        | Used to register custom <<extensions,extensions>>. Such annotations are _inherited_.
+| `@Test`                  | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit Jupiter operate based on their own dedicated annotations. Such methods are _inherited_ unless they are _overridden_.
+| `@ParameterizedTest`     | Denotes that a method is a <<writing-tests-parameterized-tests, parameterized test>>. Such methods are _inherited_ unless they are _overridden_.
+| `@RepeatedTest`          | Denotes that a method is a test template for a <<writing-tests-repeated-tests, repeated test>>. Such methods are _inherited_ unless they are _overridden_.
+| `@TestFactory`           | Denotes that a method is a test factory for <<writing-tests-dynamic-tests, dynamic tests>>. Such methods are _inherited_ unless they are _overridden_.
+| `@TestInstance`          | Used to configure the <<writing-tests-test-instance-lifecycle, test instance lifecycle>> for the annotated test class. Such annotations are _inherited_.
+| `@TestTemplate`          | Denotes that a method is a <<writing-tests-test-templates, template for test cases>> designed to be invoked multiple times depending on the number of invocation contexts returned by the registered <<extensions-test-templates, providers>>. Such methods are _inherited_ unless they are _overridden_.
+| `@DisplayName`           | Declares a custom display name for the test class or test method. Such annotations are not _inherited_.
+| `@DisplayNameGeneration` | Declares a custom display name generator for the test class. Such annotations are _inherited_.
+| `@BeforeEach`            | Denotes that the annotated method should be executed _before_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@Before`. Such methods are _inherited_ unless they are _overridden_.
+| `@AfterEach`             | Denotes that the annotated method should be executed _after_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@After`. Such methods are _inherited_ unless they are _overridden_.
+| `@BeforeAll`             | Denotes that the annotated method should be executed _before_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@BeforeClass`. Such methods are _inherited_ (unless they are _hidden_ or _overridden_) and must be `static` (unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used).
+| `@AfterAll`              | Denotes that the annotated method should be executed _after_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@AfterClass`. Such methods are _inherited_ (unless they are _hidden_ or _overridden_) and must be `static` (unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used).
+| `@Nested`                | Denotes that the annotated class is a nested, non-static test class. `@BeforeAll` and `@AfterAll` methods cannot be used directly in a `@Nested` test class unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used. Such annotations are not _inherited_.
+| `@Tag`                   | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4. Such annotations are _inherited_ at the class level but not at the method level.
+| `@Disabled`              | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore`. Such annotations are not _inherited_.
+| `@ExtendWith`            | Used to register custom <<extensions,extensions>>. Such annotations are _inherited_.
 |===
 
 Methods annotated with `@Test`, `@TestTemplate`, `@RepeatedTest`, `@BeforeAll`,
@@ -85,6 +86,33 @@ characters, and even emojis -- that will be displayed by test runners and test r
 ----
 include::{testDir}/example/DisplayNameDemo.java[tags=user_guide]
 ----
+
+==== Display Name Generators
+
+JUnit Jupiter supports since version 5.4.0-SNAPSHOT custom display name generators.
+
+Values provided with a `@DisplayName` annotations always take precedence over display names
+generated by a display name generator.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/DisplayNameGeneratorDemo.java[tags=user_guide]
+----
+
+```
++-- DisplayNameGeneratorDemo [OK]
+  +-- A year is not supported [OK]
+  | +-- A negative value for year is not supported by the leap year computation. [OK]
+  | | +-- For example, year -1 is not supported. [OK]
+  | | '-- For example, year -4 is not supported. [OK]
+  | '-- if it is zero() [OK]
+  '-- A year is a leap year... [OK]
+    +-- A year is a leap year if it is divisible by 4 but not by 100. [OK]
+    '-- A year is a leap year if it is one of the following years. [OK]
+      +-- Year 2016 is a leap year. [OK]
+      +-- Year 2020 is a leap year. [OK]
+      '-- Year 2048 is a leap year. [OK]
+```
 
 [[writing-tests-assertions]]
 === Assertions

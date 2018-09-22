@@ -63,6 +63,8 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
+	private static final DisplayNameGenerator defaultDisplayNameGenerator = new DisplayNameGenerator.DefaultGenerator();
+
 	JupiterTestDescriptor(UniqueId uniqueId, AnnotatedElement element, Supplier<String> displayNameSupplier,
 			TestSource source) {
 		this(uniqueId, determineDisplayName(element, displayNameSupplier), source);
@@ -100,16 +102,12 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	static DisplayNameGenerator getDisplayNameGenerator(Class<?> testClass) {
 		Preconditions.notNull(testClass, "Test class must not be null");
 		DisplayNameGeneration generation = getDisplayNameGenerationOrNull(testClass);
-		// trivial case: no user-defined generation annotation present, return default style
+		// trivial case: no user-defined generation annotation present, return default generator
 		if (generation == null) {
-			return DisplayNameGeneration.Style.DEFAULT;
-		}
-		// no user-defined generator supplied case: return selected style
-		if (generation.generator() == DisplayNameGenerator.class) {
-			return generation.value();
+			return defaultDisplayNameGenerator;
 		}
 		// else: create an instance of the supplied generator implementation class and return it
-		return ReflectionUtils.newInstance(generation.generator());
+		return ReflectionUtils.newInstance(generation.value());
 	}
 
 	/**
@@ -145,7 +143,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 				return displayName;
 			}
 		}
-		// else
+		// else let a 'DisplayNameGenerator' generator generate a display name
 		return displayNameSupplier.get();
 	}
 

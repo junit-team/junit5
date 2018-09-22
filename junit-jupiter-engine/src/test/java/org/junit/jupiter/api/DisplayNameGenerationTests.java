@@ -28,7 +28,8 @@ import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.engine.TestDescriptor;
 
 /**
- * Test correct test discovery in simple test classes for {@link DisplayNameGeneration}.
+ * Test correct test discovery and reported display names in simple test
+ * classes for {@link DisplayNameGeneration}.
  *
  * @since 5.4
  */
@@ -124,7 +125,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@DisplayNameGeneration(generator = NoNameGenerator.class)
+	@DisplayNameGeneration(NoNameGenerator.class)
 	static abstract class AbstractTestCase {
 		@Test
 		void test() {
@@ -158,15 +159,15 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@DisplayNameGeneration(DisplayNameGeneration.Style.DEFAULT)
+	@DisplayNameGeneration
 	static class DefaultStyleTestCase extends AbstractTestCase {
 	}
 
-	@DisplayNameGeneration(DisplayNameGeneration.Style.UNDERSCORE)
+	@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 	static class UnderscoreStyleTestCase extends AbstractTestCase {
 	}
 
-	@DisplayNameGeneration(generator = NoNameGenerator.class)
+	@DisplayNameGeneration(NoNameGenerator.class)
 	static class NoNameStyleTestCase extends AbstractTestCase {
 	}
 
@@ -177,7 +178,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------
 
 	@DisplayName("A stack")
-	@DisplayNameGeneration(DisplayNameGeneration.Style.UNDERSCORE)
+	@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 	static class StackTestCase {
 
 		Stack<Object> stack;
