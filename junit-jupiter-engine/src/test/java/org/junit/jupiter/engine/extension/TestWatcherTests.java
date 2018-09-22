@@ -32,10 +32,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.LogRecordListener;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 
 class TestWatcherTests extends AbstractJupiterTestEngineTests {
@@ -47,21 +47,19 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void testWatcherExceptionsAreLoggedAndSwallowedTest() {
+	@TrackLogRecords
+	void testWatcherExceptionsAreLoggedAndSwallowedTest(LogRecordListener logRecordListener) {
 
 		List<String> testWatcherMethodNames = getTestWatcherMethodNames();
-
-		LogRecordListener listener = new LogRecordListener();
-		LoggerFactory.addListener(listener);
 		ExecutionEventRecorder recorder = executeTestsForClass(TestWatcherSimpleExceptionHandlingTestCase.class);
-		LoggerFactory.removeListener(listener);
 
 		assertAll(
 			() -> assertEquals(8,
-				listener.stream().filter(l -> l.getSourceClassName().equals(TestMethodTestDescriptor.class.getName())
-						&& l.getSourceMethodName().contains("invokeTestWatchers")
-						&& l.getThrown() instanceof JUnitException
-						&& testWatcherMethodNames.contains(l.getThrown().getStackTrace()[0].getMethodName())).count(),
+				logRecordListener.stream(TestMethodTestDescriptor.class).filter(
+					listener -> listener.getSourceMethodName().contains("invokeTestWatchers")
+							&& listener.getThrown() instanceof JUnitException
+							&& testWatcherMethodNames.contains(
+								listener.getThrown().getStackTrace()[0].getMethodName())).count(),
 				"Thrown exceptions were not logged properly."),
 			() -> assertEquals(2, recorder.getTestFailedCount(), "Thrown exceptions were not successfully caught."));
 	}
