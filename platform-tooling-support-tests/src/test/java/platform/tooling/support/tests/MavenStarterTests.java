@@ -32,7 +32,7 @@ class MavenStarterTests {
 				.setTool(Maven.install("3.5.4", Paths.get("build", "test-tools"))) //
 				.setProject("maven-starter") //
 				.addArguments("--debug", "verify") //
-				.setTimeout(Duration.ofSeconds(99)) //
+				.setTimeout(Duration.ofMinutes(2)) //
 				.build() //
 				.run();
 
