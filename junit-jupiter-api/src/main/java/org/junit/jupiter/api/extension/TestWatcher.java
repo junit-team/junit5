@@ -10,11 +10,11 @@
 
 package org.junit.jupiter.api.extension;
 
-import org.apiguardian.api.API;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Optional;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import org.apiguardian.api.API;
 
 /**
  * The {@code TestWatcher} interface defines an extension API for processing test results.
@@ -38,8 +38,7 @@ public interface TestWatcher extends Extension {
 	 *
 	 * @param context the current extension context; never {@code null}
 	 */
-	default void testSuccessful(ExtensionContext context) {
-	}
+	void testSuccessful(ExtensionContext context);
 
 	/**
 	 * Invoked after a test was aborted.
@@ -47,8 +46,7 @@ public interface TestWatcher extends Extension {
 	 * @param context the current extension context; never {@code null}
 	 * @param cause the throwable responsible for the test being aborted; may be {@code null}
 	 */
-	default void testAborted(ExtensionContext context, Throwable cause) {
-	}
+	void testAborted(ExtensionContext context, Throwable cause);
 
 	/**
 	 * Invoked after a test has failed.
@@ -56,8 +54,7 @@ public interface TestWatcher extends Extension {
 	 * @param context the current extension context; never {@code null}
 	 * @param cause the throwable that caused test failure; may be {@code null}
 	 */
-	default void testFailed(ExtensionContext context, Throwable cause) {
-	}
+	void testFailed(ExtensionContext context, Throwable cause);
 
 	/**
 	 * Invoked after skipping a disabled test.
@@ -65,6 +62,5 @@ public interface TestWatcher extends Extension {
 	 * @param context the current extension context; never {@code null}
 	 * @param reason the reason for skipping the test; never {@code null}
 	 */
-	default void testDisabled(ExtensionContext context, Optional<String> reason) {
-	}
+	void testDisabled(ExtensionContext context, Optional<String> reason);
 }
