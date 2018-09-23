@@ -88,6 +88,7 @@ endif::[]
 :TestTemplate:                           {javadoc-root}/org/junit/jupiter/api/TestTemplate.html[@TestTemplate]
 :TestTemplateInvocationContext:          {javadoc-root}/org/junit/jupiter/api/extension/TestTemplateInvocationContext.html[TestTemplateInvocationContext]
 :TestTemplateInvocationContextProvider:  {javadoc-root}/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html[TestTemplateInvocationContextProvider]
+:TestWatcher:                            {javadoc-root}/org/junit/jupiter/api/extension/TestWatcher.html[TestWatcher]
 //
 :DisabledCondition:                      {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java[DisabledCondition]
 :RepetitionInfoParameterResolver:        {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepetitionInfoParameterResolver.java[RepetitionInfoParameterResolver]
