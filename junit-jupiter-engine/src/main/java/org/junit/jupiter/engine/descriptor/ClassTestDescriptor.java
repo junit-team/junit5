@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.createDisplayNameSupplierForClass;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromFields;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterAllMethods;
@@ -85,8 +86,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private List<Method> afterAllMethods;
 
 	public ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, ConfigurationParameters configurationParameters) {
-		this(uniqueId, testClass, () -> getDisplayNameGenerator(testClass).generateDisplayNameForClass(testClass),
-			configurationParameters);
+		this(uniqueId, testClass, createDisplayNameSupplierForClass(testClass), configurationParameters);
 	}
 
 	ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, Supplier<String> displayNameSupplier,

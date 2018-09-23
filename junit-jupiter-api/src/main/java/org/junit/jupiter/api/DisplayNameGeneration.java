@@ -39,9 +39,8 @@ public @interface DisplayNameGeneration {
 	/**
 	 * Custom display name generator.
 	 *
-	 * @return custom display name generator implementation, defaults
-	 *         to {@link org.junit.jupiter.api.DisplayNameGenerator.DefaultGenerator}
+	 * @return custom display name generator class
 	 */
-	Class<? extends DisplayNameGenerator> value() default DisplayNameGenerator.DefaultGenerator.class;
+	Class<? extends DisplayNameGenerator> value();
 
 }

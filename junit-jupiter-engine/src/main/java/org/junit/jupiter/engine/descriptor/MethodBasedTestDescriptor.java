@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayNameForMethod;
+
 import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
 import java.util.Optional;
@@ -38,10 +40,7 @@ abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 	private final Set<TestTag> tags;
 
 	MethodBasedTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
-		this(uniqueId,
-			determineDisplayName(testMethod,
-				() -> getDisplayNameGenerator(testClass).generateDisplayNameForMethod(testClass, testMethod)),
-			testClass, testMethod);
+		this(uniqueId, determineDisplayNameForMethod(testClass, testMethod), testClass, testMethod);
 	}
 
 	MethodBasedTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod) {
