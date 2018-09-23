@@ -28,7 +28,8 @@ repository on GitHub.
   `org.junit.Assume` utility class.
 * In addition to returning streams, `@TestFactory`-annotated methods may return a single
   `DynamicNode`, i.e. a `DynamicTest` or a `DynamicContainer`, instance.
-
+* New `DisplayNameGenerator` interface and `@DisplayNameGeneration` annotation that allow
+  declarative configuration of a pre-defined or custom display name generator.
 
 [[release-notes-5.4.0-M1-junit-jupiter]]
 === JUnit Jupiter

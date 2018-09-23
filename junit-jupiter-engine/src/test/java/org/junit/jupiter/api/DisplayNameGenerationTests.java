@@ -28,15 +28,17 @@ import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.engine.TestDescriptor;
 
 /**
- * Test correct test discovery and reported display names in simple test
- * classes for {@link DisplayNameGeneration}.
+ * Check generated display names.
  *
+ * @see DisplayName
+ * @see DisplayNameGenerator
+ * @see DisplayNameGeneration
  * @since 5.4
  */
 class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	void defaultStyle() {
+	void standardGenerator() {
 		check(DefaultStyleTestCase.class, List.of( //
 			"CONTAINER: DisplayNameGenerationTests$DefaultStyleTestCase", //
 			"TEST: @DisplayName prevails", //
@@ -50,7 +52,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void underscoreStyle() {
+	void underscoreGenerator() {
 		var expectedDisplayNames = List.of( //
 			"CONTAINER: DisplayNameGenerationTests\\$UnderscoreStyle.*", //
 			"TEST: @DisplayName prevails", //
@@ -65,7 +67,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void noNameStyle() {
+	void noNameGenerator() {
 		check(NoNameStyleTestCase.class, List.of( //
 			"CONTAINER: nn", //
 			"TEST: @DisplayName prevails", //
@@ -159,7 +161,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@DisplayNameGeneration
+	@DisplayNameGeneration(DisplayNameGenerator.Standard.class)
 	static class DefaultStyleTestCase extends AbstractTestCase {
 	}
 

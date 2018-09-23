@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.createDisplayNameSupplierForNestedClass;
 
 import java.util.LinkedHashSet;
 import java.util.Optional;
@@ -45,9 +46,7 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 
 	public NestedClassTestDescriptor(UniqueId uniqueId, Class<?> testClass,
 			ConfigurationParameters configurationParameters) {
-		super(uniqueId, testClass,
-			() -> getDisplayNameGenerator(testClass).generateDisplayNameForNestedClass(testClass),
-			configurationParameters);
+		super(uniqueId, testClass, createDisplayNameSupplierForNestedClass(testClass), configurationParameters);
 
 		this.tags = getTags(testClass);
 	}
