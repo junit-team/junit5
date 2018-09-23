@@ -89,6 +89,8 @@ repository on GitHub.
   methods via the `junit-jupiter-migrationsupport` module.
   - See the <<../user-guide/index.adoc#migrating-from-junit4-ignore-annotation-support,
     User Guide>> for details.
+* New TestWatcher extension API allows extensions to process test results by defining
+result based callbacks invoked after text execution.
 
 
 [[release-notes-5.4.0-M1-junit-vintage]]
