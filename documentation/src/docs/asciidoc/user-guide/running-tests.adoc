@@ -209,7 +209,7 @@ additional dependency to the runtime classpath.
 ==== Maven
 
 NOTE: The custom `junit-platform-surefire-provider`, which was originally developed by
-the JUnit team, has been deprecated and is scheduled to be removed in JUnit Platform 1.4.
+the JUnit team, is removed from JUnit Platform 1.4.
 Please use Maven Surefire's native support instead.
 
 Starting with https://issues.apache.org/jira/browse/SUREFIRE-1330[version 2.22.0], Maven
