@@ -17,3 +17,5 @@ You're invited to follow our ongoing work, review it, and give feedback. This sh
 ## Sponsors and Backers
 
 - Sebastian Esser
+- Jose Luis De la Cruz Morales
+- Gabriel Yoran
