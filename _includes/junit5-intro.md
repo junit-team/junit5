@@ -13,3 +13,7 @@ You're invited to follow our ongoing work, review it, and give feedback. This sh
 - [User Guide]({{ site.baseurl }}/docs/current/user-guide)
 - [Javadoc]({{ site.baseurl }}/docs/current/api)
 - [GitHub Repository](https://github.com/junit-team/junit5/) with all the code and issues
+
+## Sponsors and Backers
+
+- Sebastian Esser
