@@ -461,7 +461,8 @@ configure(rootProject) {
 		}
 
 		// Only generate JavaDoc for 'main' sources in Mavenized projects
-		source = subprojects.findAll { mavenizedProjects.contains(it.name) }.collect { it.sourceSets.main.allJava }
+		source = subprojects.findAll { mavenizedProjects.contains(it.name) }
+				.collect { it.sourceSets.main.allJava.filter { !it.path.contains('module-info.java') } }
 
 		maxMemory = '1024m'
 		destinationDir = new File(buildDir, 'docs/javadoc')
