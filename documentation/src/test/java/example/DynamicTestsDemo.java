@@ -27,7 +27,6 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Tag;
@@ -183,12 +182,12 @@ class DynamicTestsDemo {
 	}
 
 	@TestFactory
-	DynamicTest dynamicNodeSingle() {
+	DynamicNode dynamicNodeSingleTest() {
 		return dynamicTest("single dynamic test", () -> assertFalse(false));
 	}
 
 	@TestFactory
-	DynamicContainer dynamicNodeTree() {
+	DynamicNode dynamicNodeSingleContainer() {
 		// end::user_guide[]
 		// @formatter:off
 		// tag::user_guide[]
