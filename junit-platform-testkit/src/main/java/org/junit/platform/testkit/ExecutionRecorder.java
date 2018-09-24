@@ -26,9 +26,9 @@ import org.junit.platform.engine.reporting.ReportEntry;
  *
  * @see ExecutionEvent
  * @see ExecutionsResult
- * @since 1.3.0
+ * @since 1.4.0
  */
-@API(status = API.Status.EXPERIMENTAL, since = "1.3.0")
+@API(status = API.Status.EXPERIMENTAL, since = "1.4.0")
 public class ExecutionRecorder implements EngineExecutionListener {
 
 	private ExecutionsResult.Builder graphBuilder;

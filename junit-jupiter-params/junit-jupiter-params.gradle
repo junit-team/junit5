@@ -17,7 +17,6 @@ dependencies {
 	shadowed('com.univocity:univocity-parsers:2.7.5')
 
 	testImplementation(project(':junit-platform-testkit'))
-	testImplementation(project(path: ':junit-platform-testkit', configuration: 'testArtifacts'))
 	testImplementation(project(':junit-jupiter-engine'))
 	testImplementation(project(':junit-platform-launcher'))
 	testImplementation(project(':junit-platform-runner'))

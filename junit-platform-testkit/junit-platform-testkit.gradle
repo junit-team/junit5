@@ -1,22 +1,9 @@
-configurations {
-	testArtifacts.extendsFrom testRuntime
-}
-
-task testJar(type: Jar) {
-	classifier 'test'
-	from sourceSets.test.output
-}
-
-artifacts {
-	testArtifacts testJar
-}
-
 dependencies {
 	api(project(':junit-platform-commons'))
 	api(project(':junit-platform-engine'))
 	api("org.opentest4j:opentest4j:${ota4jVersion}")
 
-	testImplementation("org.assertj:assertj-core:${assertJVersion}")
+	api("org.assertj:assertj-core:${assertJVersion}")
 }
 
 jar {

@@ -32,9 +32,9 @@ import org.junit.platform.engine.TestExecutionResult;
 /**
  * Represents the entirety of multiple test or container execution runs.
  *
- * @since 1.3.0
+ * @since 1.4.0
  */
-@API(status = API.Status.EXPERIMENTAL, since = "1.3.0")
+@API(status = API.Status.EXPERIMENTAL, since = "1.4.0")
 public class ExecutionsResult {
 
 	private List<ExecutionEvent> events;

@@ -28,9 +28,9 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * Represents a single event fired during execution of the testing lifecycle.
  *
  * @see ExecutionEvent.Type
- * @since 1.3.0
+ * @since 1.4.0
  */
-@API(status = API.Status.EXPERIMENTAL, since = "1.3.0")
+@API(status = API.Status.EXPERIMENTAL, since = "1.4.0")
 public class ExecutionEvent {
 
 	private static final Supplier<IllegalArgumentException> EXCEPTION_NO_PAYLOAD = () -> new IllegalArgumentException(

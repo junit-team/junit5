@@ -21,9 +21,9 @@ import org.junit.platform.engine.TestExecutionResult;
  * Encapsulates metadata around the execution of a single Test,
  * this includes metadata of whether or not the Test was skipped.
  *
- * @since 1.3.0
+ * @since 1.4.0
  */
-@API(status = API.Status.EXPERIMENTAL, since = "1.3.0")
+@API(status = API.Status.EXPERIMENTAL, since = "1.4.0")
 public class Execution {
 
 	private final TestDescriptor descriptor;

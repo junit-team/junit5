@@ -11,8 +11,6 @@
 package org.junit.platform.testkit;
 
 import static java.util.function.Predicate.isEqual;
-import static org.assertj.core.api.Assertions.allOf;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
@@ -52,7 +50,7 @@ public class ExecutionEventConditions {
 	public static void assertRecordedExecutionEventsContainsExactly(List<ExecutionEvent> executionEvents,
 			Condition<? super ExecutionEvent>... conditions) {
 		SoftAssertions softly = new SoftAssertions();
-		assertThat(executionEvents).hasSize(conditions.length);
+		Assertions.assertThat(executionEvents).hasSize(conditions.length);
 		for (int i = 0; i < conditions.length; i++) {
 			softly.assertThat(executionEvents).has(conditions[i], Index.atIndex(i));
 		}
@@ -62,7 +60,7 @@ public class ExecutionEventConditions {
 	@SafeVarargs
 	@SuppressWarnings("varargs")
 	public static Condition<ExecutionEvent> event(Condition<? super ExecutionEvent>... conditions) {
-		return allOf(conditions);
+		return Assertions.allOf(conditions);
 	}
 
 	public static Condition<ExecutionEvent> engine() {
@@ -70,11 +68,11 @@ public class ExecutionEventConditions {
 	}
 
 	public static Condition<ExecutionEvent> test(String uniqueIdSubstring) {
-		return allOf(test(), uniqueIdSubstring(uniqueIdSubstring));
+		return Assertions.allOf(test(), uniqueIdSubstring(uniqueIdSubstring));
 	}
 
 	public static Condition<ExecutionEvent> test(String uniqueIdSubstring, String displayName) {
-		return allOf(test(), uniqueIdSubstring(uniqueIdSubstring), displayName(displayName));
+		return Assertions.allOf(test(), uniqueIdSubstring(uniqueIdSubstring), displayName(displayName));
 	}
 
 	public static Condition<ExecutionEvent> test() {
@@ -90,7 +88,7 @@ public class ExecutionEventConditions {
 	}
 
 	public static Condition<ExecutionEvent> container(Condition<ExecutionEvent> condition) {
-		return allOf(container(), condition);
+		return Assertions.allOf(container(), condition);
 	}
 
 	public static Condition<ExecutionEvent> container() {
@@ -98,7 +96,7 @@ public class ExecutionEventConditions {
 	}
 
 	public static Condition<ExecutionEvent> nestedContainer(Class<?> clazz) {
-		return allOf(container(uniqueIdSubstring(clazz.getEnclosingClass().getName())),
+		return Assertions.allOf(container(uniqueIdSubstring(clazz.getEnclosingClass().getName())),
 			container(uniqueIdSubstring(clazz.getSimpleName())));
 	}
 
@@ -144,7 +142,7 @@ public class ExecutionEventConditions {
 
 	private static Condition<ExecutionEvent> finishedWithCause(Status expectedStatus,
 			Condition<? super Throwable> causeCondition) {
-		return finished(allOf(TestExecutionResultConditions.status(expectedStatus),
+		return finished(Assertions.allOf(TestExecutionResultConditions.status(expectedStatus),
 			TestExecutionResultConditions.cause(causeCondition)));
 	}
 
@@ -157,7 +155,7 @@ public class ExecutionEventConditions {
 	}
 
 	public static Condition<ExecutionEvent> finished(Condition<TestExecutionResult> resultCondition) {
-		return allOf(type(FINISHED), result(resultCondition));
+		return Assertions.allOf(type(FINISHED), result(resultCondition));
 	}
 
 	public static Condition<ExecutionEvent> type(ExecutionEvent.Type expectedType) {

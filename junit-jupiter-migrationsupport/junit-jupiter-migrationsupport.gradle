@@ -10,7 +10,6 @@ dependencies {
 	testImplementation(project(':junit-platform-launcher'))
 	testImplementation(project(':junit-platform-runner'))
 	testImplementation(project(':junit-platform-testkit'))
-	testImplementation(project(path: ':junit-platform-testkit', configuration: 'testArtifacts'))
 }
 
 jar {
