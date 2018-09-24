@@ -47,8 +47,7 @@ ext {
 		'junit-platform-engine',
 		'junit-platform-launcher',
 		'junit-platform-runner',
-		'junit-platform-suite-api',
-		'junit-platform-surefire-provider'
+		'junit-platform-suite-api'
 	]
 
 	jupiterProjects = [
@@ -77,19 +76,13 @@ ext {
 		]
 	]
 
-	licenseOf = { project -> licenses[
-		project.name == 'junit-platform-surefire-provider'
-			? 'Apache-2.0'
-			: 'EPL-2.0'
-		]
-	}
+	licenseOf = { project -> licenses['EPL-2.0'] }
 
 	jacocoTestProjects = [
 		'junit-jupiter-engine',
 		'junit-jupiter-migrationsupport',
 		'junit-jupiter-params',
 		'junit-vintage-engine',
-		'junit-platform-surefire-provider',
 		'platform-tests'
 	]
 	jacocoCoveredProjects = mavenizedProjects - ['junit-platform-console-standalone']
