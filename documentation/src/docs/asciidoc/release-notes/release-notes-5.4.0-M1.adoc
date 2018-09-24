@@ -33,7 +33,7 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* `Assertions.assertAll()` is now thread-safe, i.e. it can be used with _parallel_ `Streams`.
 
 ==== Deprecations and Breaking Changes
 

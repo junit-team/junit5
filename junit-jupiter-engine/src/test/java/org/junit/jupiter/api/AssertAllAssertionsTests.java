@@ -11,6 +11,7 @@
 package org.junit.jupiter.api;
 
 import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -179,6 +180,17 @@ class AssertAllAssertionsTests {
 			() -> assertAll(AssertionTestUtils::runOutOfMemory));
 
 		assertEquals("boom", outOfMemoryError.getMessage());
+	}
+
+	@Test
+	void assertAllWithParallelStream() {
+		Executable executable = () -> {
+			throw new RuntimeException();
+		};
+		MultipleFailuresError multipleFailuresError = assertThrows(MultipleFailuresError.class,
+			() -> assertAll(Stream.generate(() -> executable).parallel().limit(100)));
+
+		assertThat(multipleFailuresError.getFailures()).hasSize(100).doesNotContainNull();
 	}
 
 	private void assertPrecondition(String msg, Executable executable) {

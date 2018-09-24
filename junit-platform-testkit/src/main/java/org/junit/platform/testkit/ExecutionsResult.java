@@ -310,7 +310,7 @@ public class ExecutionsResult {
 	 * Gets the count of {@link ExecutionEvent}s of where the {@link ExecutionEvent.Type} is {@code FINISHED}
 	 * and the {@link ExecutionEvent} was for a container (in other words: {@link TestDescriptor#isContainer()} ()} == {@code true}).
 	 *
-	 * @return the count of {@link ExecutionEvent}s that occurred for a container of the provided type
+	 * @return the count of {@link ExecutionEvent}s that occurred for a container that finished.
 	 */
 	public int getContainerFinishedCount() {
 		return getContainerEventsCount(ExecutionEvent.Type.FINISHED);
@@ -320,10 +320,20 @@ public class ExecutionsResult {
 	 * Gets the count of {@link ExecutionEvent}s of where the {@link ExecutionEvent.Type} is {@code FINISHED}
 	 * and {@link TestExecutionResult.Status#FAILED} where the {@link ExecutionEvent} was for a container (in other words: {@link TestDescriptor#isContainer()} ()} == {@code true}).
 	 *
-	 * @return the count of {@link ExecutionEvent}s that occurred for a container of the provided type
+	 * @return the count of {@link ExecutionEvent}s that occurred for a container that finished with a FAILED status.
 	 */
 	public int getContainerFailedCount() {
 		return getContainerEventsFinishedCount(TestExecutionResult.Status.FAILED);
+	}
+
+	/**
+	 * Gets the count of {@link ExecutionEvent}s of where the {@link ExecutionEvent.Type} is {@code FINISHED}
+	 * and {@link TestExecutionResult.Status#ABORTED} where the {@link ExecutionEvent} was for a container (in other words: {@link TestDescriptor#isContainer()} ()} == {@code true}).
+	 *
+	 * @return the count of {@link ExecutionEvent}s that occurred for a container that finished with an ABORTED status.
+	 */
+	public int getContainerAbortedCount() {
+		return getContainerEventsFinishedCount(TestExecutionResult.Status.ABORTED);
 	}
 
 	/**

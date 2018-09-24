@@ -10,10 +10,11 @@
 
 package org.junit.jupiter.api;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.function.Executable;
@@ -60,18 +61,20 @@ class AssertAll {
 	static void assertAll(String heading, Stream<Executable> executables) {
 		Preconditions.notNull(executables, "executables stream must not be null");
 
-		List<Throwable> failures = new ArrayList<>();
-		executables//
+		List<Throwable> failures = executables //
 				.peek(executable -> Preconditions.notNull(executable, "individual executables must not be null"))//
-				.forEach(executable -> {
+				.map(executable -> {
 					try {
 						executable.execute();
+						return null;
 					}
 					catch (Throwable t) {
 						BlacklistedExceptions.rethrowIfBlacklisted(t);
-						failures.add(t);
+						return t;
 					}
-				});
+				}) //
+				.filter(Objects::nonNull) //
+				.collect(Collectors.toList());
 
 		if (!failures.isEmpty()) {
 			throw new MultipleFailuresError(heading, failures);

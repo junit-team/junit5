@@ -2,6 +2,8 @@
 
 This repository is the home of the next generation of JUnit, _JUnit 5_.
 
+[![Support us on Steady](https://img.shields.io/badge/support_us-on_Steady-ff7264.svg)](https://steadyhq.com/en/junit)
+
 ## Latest Releases
 
 - General Availability (GA): [JUnit 5.3.1](https://github.com/junit-team/junit5/releases/tag/r5.3.1)
