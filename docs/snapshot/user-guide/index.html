@@ -3943,6 +3943,18 @@ expressiveness and power of dynamic tests.</p>
             )));
     }
 
+    <span class="annotation">@TestFactory</span>
+    DynamicNode dynamicNodeSingleTest() {
+        <span class="keyword">return</span> dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">single dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertFalse(<span class="predefined-constant">false</span>));
+    }
+
+    <span class="annotation">@TestFactory</span>
+    DynamicNode dynamicNodeSingleContainer() {
+        <span class="keyword">return</span> dynamicContainer(<span class="string"><span class="delimiter">&quot;</span><span class="content">single dynamic container</span><span class="delimiter">&quot;</span></span>, Stream.of(
+            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(<span class="predefined-constant">true</span>)),
+            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>, () -&gt; assertFalse(<span class="predefined-constant">false</span>))
+        ));
+    }
 }</code></pre>
 </div>
 </div>
@@ -6898,7 +6910,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-09-21 10:18:11 EDT
+Last updated 2018-09-25 03:57:54 EDT
 </div>
 </div>
 </body>
