@@ -3733,12 +3733,13 @@ generated at runtime by a factory method that is annotated with <code>@TestFacto
 <div class="paragraph">
 <p>In contrast to <code>@Test</code> methods, a <code>@TestFactory</code> method is not itself a test case but
 rather a factory for test cases. Thus, a dynamic test is the product of a factory.
-Technically speaking, a <code>@TestFactory</code> method must return a <code>Stream</code>, <code>Collection</code>,
-<code>Iterable</code>, <code>Iterator</code>, or array of <code>DynamicNode</code> instances. Instantiable subclasses of
-<code>DynamicNode</code> are <code>DynamicContainer</code> and <code>DynamicTest</code>. <code>DynamicContainer</code> instances are
-composed of a <em>display name</em> and a list of dynamic child nodes, enabling the creation of
-arbitrarily nested hierarchies of dynamic nodes. <code>DynamicTest</code> instances will be
-executed lazily, enabling dynamic and even non-deterministic generation of test cases.</p>
+Technically speaking, a <code>@TestFactory</code> method must return a single <code>DynamicNode</code> or a
+<code>Stream</code>, <code>Collection</code>, <code>Iterable</code>, <code>Iterator</code>, or array of <code>DynamicNode</code> instances.
+Instantiable subclasses of <code>DynamicNode</code> are <code>DynamicContainer</code> and <code>DynamicTest</code>.
+<code>DynamicContainer</code> instances are composed of a <em>display name</em> and a list of dynamic child
+nodes, enabling the creation of arbitrarily nested hierarchies of dynamic nodes.
+<code>DynamicTest</code> instances will be executed lazily, enabling dynamic and even non-deterministic
+generation of test cases.</p>
 </div>
 <div class="paragraph">
 <p>Any <code>Stream</code> returned by a <code>@TestFactory</code> will be properly closed by calling
@@ -6910,7 +6911,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-09-25 03:57:54 EDT
+Last updated 2018-09-25 07:54:24 EDT
 </div>
 </div>
 </body>
