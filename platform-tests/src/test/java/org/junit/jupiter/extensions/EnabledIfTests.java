@@ -131,6 +131,11 @@ class EnabledIfTests {
 	}
 
 	@Test
+	@EnabledIf(engine = "java", value = "return 9 == 9;")
+	void java() {
+	}
+
+	@Test
 	@EnabledIf("true")
 	@Disabled
 	void enabledAndDisabled() {

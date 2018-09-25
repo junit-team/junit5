@@ -28,6 +28,9 @@ dependencies {
 	testRuntimeOnly("org.codehaus.groovy:groovy-jsr223:${Versions.groovy}") {
 		because("Tests annotated with @EnabledIf(engine = \"groovy\", ...) need it.")
 	}
+	testRuntimeOnly("de.sormuras:java-compiler-script-engine:${Versions.javaCompilerScriptEngine}") {
+		because("Tests annotated with @EnabledIf(engine = \"java\", ...) need it.")
+	}
 
 	// --- http://openjdk.java.net/projects/code-tools/jmh/ -----------------------
 	jmh("org.openjdk.jmh:jmh-core:${Versions.jmh}") {

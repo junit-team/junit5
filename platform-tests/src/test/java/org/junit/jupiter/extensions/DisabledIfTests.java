@@ -125,6 +125,12 @@ class DisabledIfTests {
 	}
 
 	@Test
+	@DisabledIf(engine = "java", value = "return 9 == 9;")
+	void java() {
+		fail("test must not be executed");
+	}
+
+	@Test
 	@DisabledIf("false")
 	@Disabled
 	void disabledIfAndDisabled() {
