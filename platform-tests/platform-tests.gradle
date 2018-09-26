@@ -30,7 +30,7 @@ dependencies {
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(':junit-vintage-engine'))
-	testRuntimeOnly('org.codehaus.groovy:groovy-jsr223:' + GroovySystem.getVersion()) {
+	testRuntimeOnly('org.codehaus.groovy:groovy-jsr223:2.5.2') {
 		because 'Tests annotated with @EnabledIf(engine = "groovy", ...) need it.'
 	}
 
