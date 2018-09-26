@@ -10,6 +10,7 @@
 
 package platform.tooling.support;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -80,18 +81,25 @@ public class Helper {
 		}
 	}
 
-	public static JarFile createJarFile(String module) {
+	public static File createFile(String module) {
 		var archive = module + '-' + version(module) + ".jar";
-		var path = Paths.get("..", module, "build", "libs", archive);
+		return Paths.get("..", module, "build", "libs", archive).toFile();
+	}
+
+	public static JarFile createJarFile(String module) {
 		try {
-			return new JarFile(path.toFile());
+			return new JarFile(createFile(module));
 		}
 		catch (IOException e) {
-			throw new UncheckedIOException("Creating JarFile for '" + path + "' failed.", e);
+			throw new UncheckedIOException("Creating JarFile for '" + module + "' failed.", e);
 		}
 	}
 
 	public static List<JarFile> loadJarFiles() {
 		return loadModuleDirectoryNames().stream().map(Helper::createJarFile).collect(Collectors.toList());
+	}
+
+	public static List<File> loadModulesAsFiles() {
+		return loadModuleDirectoryNames().stream().map(Helper::createFile).collect(Collectors.toList());
 	}
 }

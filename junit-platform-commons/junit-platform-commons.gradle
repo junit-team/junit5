@@ -1,9 +1,5 @@
-description = 'JUnit Platform Commons'
-
-jar {
-	manifest {
-		attributes(
-			'Automatic-Module-Name': 'org.junit.platform.commons'
-		)
-	}
+plugins {
+	id 'com.zyxist.chainsaw' version '0.3.1'
 }
+
+description = 'JUnit Platform Commons'
