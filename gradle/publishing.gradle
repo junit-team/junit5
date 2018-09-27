@@ -31,8 +31,8 @@ publishing {
 				}
 				licenses {
 					license {
-						name = licenseOf(project)['name']
-						url = licenseOf(project)['url']
+						name = project.license['name']
+						url =  project.license['url']
 					}
 				}
 				developers {

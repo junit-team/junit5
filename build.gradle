@@ -63,20 +63,11 @@ ext {
 
 	mavenizedProjects = platformProjects + jupiterProjects + vintageProjects
 
-	licenses = [
-		'EPL-2.0': [
-			name: 'Eclipse Public License v2.0',
-			url: 'http://www.eclipse.org/legal/epl-v20.html',
-			headerFile: 'eclipse-public-license-2.0.java'
-		],
-		'Apache-2.0': [
-			name: 'The Apache License, Version 2.0',
-			url: 'http://www.apache.org/licenses/LICENSE-2.0.txt',
-			headerFile: 'apache-license-2.0.java'
-		]
+	license = [
+		name: 'Eclipse Public License v2.0',
+		url: 'http://www.eclipse.org/legal/epl-v20.html',
+		headerFile: 'eclipse-public-license-2.0.java'
 	]
-
-	licenseOf = { project -> licenses['EPL-2.0'] }
 
 	jacocoTestProjects = [
 		'junit-jupiter-engine',
@@ -355,7 +346,7 @@ subprojects { subproj ->
 	}
 
 	spotless {
-		def headerFile = rootProject.file('src/spotless/' + licenseOf(project)['headerFile'])
+		def headerFile = rootProject.file('src/spotless/' + license['headerFile'])
 		def importOrderConfigFile = rootProject.file('src/eclipse/junit-eclipse.importorder')
 		def javaFormatterConfigFile = rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
 
