@@ -250,11 +250,8 @@ subprojects { subproj ->
 		}
 
 		tasks.withType(Jar) {
-			from(project.projectDir) {
-				include 'LICENSE.md'
-				into 'META-INF'
-			}
 			from(project.rootDir) {
+				include 'LICENSE.md'
 				include 'LICENSE-notice.md'
 				into 'META-INF'
 			}
