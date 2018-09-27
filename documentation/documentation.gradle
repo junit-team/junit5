@@ -47,7 +47,6 @@ dependencies {
 	// Required by :consoleLauncherTest and :generateConsoleLauncherOptions
 	testRuntimeOnly(project(':junit-platform-console'))
 	testRuntimeOnly(project(':junit-platform-suite-api'))
-	testRuntimeOnly(project(':junit-platform-surefire-provider'))
 
 	testRuntimeOnly(project(':junit-vintage-engine'))
 	testRuntimeOnly(project(':junit-jupiter-engine'))

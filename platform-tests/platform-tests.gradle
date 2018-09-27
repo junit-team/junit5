@@ -7,8 +7,7 @@ apply from: "$rootDir/gradle/testing.gradle"
 test {
 	// Tests in `AutomaticModuleNameTests` depend on all and these jars. #894
 	dependsOn(
-		project(':junit-jupiter-migrationsupport').jar,
-		project(':junit-platform-surefire-provider').jar
+		project(':junit-jupiter-migrationsupport').jar
 	)
 	useJUnitPlatform {
 		excludeTags 'exclude'

@@ -34,7 +34,6 @@ class HelperTests {
 			"junit-platform-launcher", //
 			"junit-platform-runner", //
 			"junit-platform-suite-api", //
-			"junit-platform-surefire-provider", //
 			"junit-vintage-engine"//
 		), Helper.loadModuleDirectoryNames());
 	}

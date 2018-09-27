@@ -47,8 +47,7 @@ ext {
 		'junit-platform-engine',
 		'junit-platform-launcher',
 		'junit-platform-runner',
-		'junit-platform-suite-api',
-		'junit-platform-surefire-provider'
+		'junit-platform-suite-api'
 	]
 
 	jupiterProjects = [
@@ -64,32 +63,17 @@ ext {
 
 	mavenizedProjects = platformProjects + jupiterProjects + vintageProjects
 
-	licenses = [
-		'EPL-2.0': [
-			name: 'Eclipse Public License v2.0',
-			url: 'http://www.eclipse.org/legal/epl-v20.html',
-			headerFile: 'eclipse-public-license-2.0.java'
-		],
-		'Apache-2.0': [
-			name: 'The Apache License, Version 2.0',
-			url: 'http://www.apache.org/licenses/LICENSE-2.0.txt',
-			headerFile: 'apache-license-2.0.java'
-		]
+	license = [
+		name: 'Eclipse Public License v2.0',
+		url: 'http://www.eclipse.org/legal/epl-v20.html',
+		headerFile: 'eclipse-public-license-2.0.java'
 	]
-
-	licenseOf = { project -> licenses[
-		project.name == 'junit-platform-surefire-provider'
-			? 'Apache-2.0'
-			: 'EPL-2.0'
-		]
-	}
 
 	jacocoTestProjects = [
 		'junit-jupiter-engine',
 		'junit-jupiter-migrationsupport',
 		'junit-jupiter-params',
 		'junit-vintage-engine',
-		'junit-platform-surefire-provider',
 		'platform-tests'
 	]
 	jacocoCoveredProjects = mavenizedProjects - ['junit-platform-console-standalone']
@@ -266,11 +250,8 @@ subprojects { subproj ->
 		}
 
 		tasks.withType(Jar) {
-			from(project.projectDir) {
-				include 'LICENSE.md'
-				into 'META-INF'
-			}
 			from(project.rootDir) {
+				include 'LICENSE.md'
 				include 'LICENSE-notice.md'
 				into 'META-INF'
 			}
@@ -362,7 +343,7 @@ subprojects { subproj ->
 	}
 
 	spotless {
-		def headerFile = rootProject.file('src/spotless/' + licenseOf(project)['headerFile'])
+		def headerFile = rootProject.file('src/spotless/' + license['headerFile'])
 		def importOrderConfigFile = rootProject.file('src/eclipse/junit-eclipse.importorder')
 		def javaFormatterConfigFile = rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
 
