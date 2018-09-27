@@ -61,7 +61,7 @@ class VerboseTreePrintingListener implements TestExecutionListener {
 		frames.push(System.currentTimeMillis());
 
 		long tests = testPlan.countTestIdentifiers(TestIdentifier::isTest);
-		printf(NONE, "Test plan execution started. Number of static tests: ");
+		printf(NONE, "%s", "Test plan execution started. Number of static tests: ");
 		printf(Color.TEST, "%d%n", tests);
 		printf(Color.CONTAINER, "%s%n", theme.root());
 	}
@@ -71,7 +71,7 @@ class VerboseTreePrintingListener implements TestExecutionListener {
 		frames.pop();
 
 		long tests = testPlan.countTestIdentifiers(TestIdentifier::isTest);
-		printf(NONE, "Test plan execution finished. Number of all tests: ");
+		printf(NONE, "%s", "Test plan execution finished. Number of all tests: ");
 		printf(Color.TEST, "%d%n", tests);
 	}
 
@@ -120,7 +120,7 @@ class VerboseTreePrintingListener implements TestExecutionListener {
 	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
 		printVerticals(theme.entry());
 		printf(Color.DYNAMIC, " %s", testIdentifier.getDisplayName());
-		printf(NONE, " dynamically registered%n");
+		printf(NONE, "%s", " dynamically registered%n");
 	}
 
 	@Override
@@ -171,7 +171,7 @@ class VerboseTreePrintingListener implements TestExecutionListener {
 		String detailFormat = "%9s";
 		// omit detail string if it's empty
 		if (!detail.isEmpty()) {
-			printf(NONE, String.format(detailFormat + ": ", detail));
+			printf(NONE, "%s", String.format(detailFormat + ": ", detail));
 		}
 		// trivial case: at least one arg is given? Let printf do the entire work
 		if (args.length > 0) {
@@ -180,12 +180,12 @@ class VerboseTreePrintingListener implements TestExecutionListener {
 		}
 		// still here? Split format into separate lines and indent them from the second line on
 		String[] lines = format.split("\\R");
-		printf(color, lines[0]);
+		printf(color, "%s", lines[0]);
 		if (lines.length > 1) {
 			String delimiter = System.lineSeparator() + verticals + String.format(detailFormat + "    ", "");
 			for (int i = 1; i < lines.length; i++) {
-				printf(NONE, delimiter);
-				printf(color, lines[i]);
+				printf(NONE, "%s", delimiter);
+				printf(color, "%s", lines[i]);
 			}
 		}
 		printf(NONE, "%n");
