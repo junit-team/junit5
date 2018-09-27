@@ -118,13 +118,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../org/junit/jupiter/api/DisplayNameGenerator.html" title="interface in org.junit.jupiter.api">DisplayNameGenerator</a></th>
-<td class="colLast">
-<div class="block"><code>DisplayNameGenerator</code> defines the SPI for generating display
- names programmatically.</div>
-</td>
-</tr>
-<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="../../../../org/junit/jupiter/api/RepetitionInfo.html" title="interface in org.junit.jupiter.api">RepetitionInfo</a></th>
 <td class="colLast">
 <div class="block"><code>RepetitionInfo</code> is used to inject information about the current
@@ -132,7 +125,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  and <code>@AfterEach</code> methods.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="../../../../org/junit/jupiter/api/TestInfo.html" title="interface in org.junit.jupiter.api">TestInfo</a></th>
 <td class="colLast">
 <div class="block"><code>TestInfo</code> is used to inject information about the current test or
@@ -141,7 +134,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  <code>@AfterEach</code>, <code>@BeforeAll</code>, and <code>@AfterAll</code> methods.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="../../../../org/junit/jupiter/api/TestReporter.html" title="interface in org.junit.jupiter.api">TestReporter</a></th>
 <td class="colLast">
 <div class="block">Parameters of type <code>TestReporter</code> can be injected into
@@ -175,18 +168,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">
 <div class="block"><code>Assumptions</code> is a collection of utility methods that support
  conditional test execution based on <em>assumptions</em>.</div>
-</td>
-</tr>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../org/junit/jupiter/api/DisplayNameGenerator.ReplaceUnderscores.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.ReplaceUnderscores</a></th>
-<td class="colLast">
-<div class="block">Replace all underscore characters with spaces.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../org/junit/jupiter/api/DisplayNameGenerator.Standard.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Standard</a></th>
-<td class="colLast">
-<div class="block">Standard display name generator.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -283,13 +264,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../org/junit/jupiter/api/DisplayNameGeneration.html" title="annotation in org.junit.jupiter.api">DisplayNameGeneration</a></th>
-<td class="colLast">
-<div class="block"><code>@DisplayNameGeneration</code> is used to declare a custom display name
- generator for the annotated test class.</div>
-</td>
-</tr>
-<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="../../../../org/junit/jupiter/api/Nested.html" title="annotation in org.junit.jupiter.api">Nested</a></th>
 <td class="colLast">
 <div class="block"><code>@Nested</code> is used to signal that the annotated class is a nested,
@@ -297,7 +271,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  setup and state with an instance of its <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true#getEnclosingClass()" title="class or interface in java.lang" class="externalLink">enclosing class</a>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="../../../../org/junit/jupiter/api/RepeatedTest.html" title="annotation in org.junit.jupiter.api">RepeatedTest</a></th>
 <td class="colLast">
 <div class="block"><code>@RepeatedTest</code> is used to signal that the annotated method is a
@@ -305,34 +279,34 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  name</a>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="../../../../org/junit/jupiter/api/Tag.html" title="annotation in org.junit.jupiter.api">Tag</a></th>
 <td class="colLast">
 <div class="block"><code>@Tag</code> is a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Repeatable.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">repeatable</a> annotation that is
  used to declare a <em>tag</em> for the annotated test class or test method.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="../../../../org/junit/jupiter/api/Tags.html" title="annotation in org.junit.jupiter.api">Tags</a></th>
 <td class="colLast">
 <div class="block"><code>@Tags</code> is a container for one or more <a href="../../../../org/junit/jupiter/api/Tag.html" title="annotation in org.junit.jupiter.api"><code>@Tag</code></a> declarations.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="../../../../org/junit/jupiter/api/Test.html" title="annotation in org.junit.jupiter.api">Test</a></th>
 <td class="colLast">
 <div class="block"><code>@Test</code> is used to signal that the annotated method is a
  <em>test</em> method.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="../../../../org/junit/jupiter/api/TestFactory.html" title="annotation in org.junit.jupiter.api">TestFactory</a></th>
 <td class="colLast">
 <div class="block"><code>@TestFactory</code> is used to signal that the annotated method is a
  <em>test factory</em> method.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="../../../../org/junit/jupiter/api/TestInstance.html" title="annotation in org.junit.jupiter.api">TestInstance</a></th>
 <td class="colLast">
 <div class="block"><code>@TestInstance</code> is a type-level annotation that is used to configure
@@ -340,7 +314,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  test class or test interface.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="../../../../org/junit/jupiter/api/TestTemplate.html" title="annotation in org.junit.jupiter.api">TestTemplate</a></th>
 <td class="colLast">
 <div class="block"><code>@TestTemplate</code> is used to signal that the annotated method is a

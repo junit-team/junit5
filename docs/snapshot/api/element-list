@@ -40,6 +40,7 @@ org.junit.platform.launcher.listeners
 org.junit.platform.launcher.tagexpression
 org.junit.platform.runner
 org.junit.platform.suite.api
+org.junit.platform.surefire.provider
 org.junit.vintage.engine
 org.junit.vintage.engine.descriptor
 org.junit.vintage.engine.discovery
