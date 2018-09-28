@@ -16,7 +16,6 @@ before_cache:
 cache:
   directories:
     - $HOME/.gradle/caches/jars-3
-    - $HOME/.gradle/caches/journal-1
     - $HOME/.gradle/caches/modules-2
     - $HOME/.gradle/wrapper/dists
 
