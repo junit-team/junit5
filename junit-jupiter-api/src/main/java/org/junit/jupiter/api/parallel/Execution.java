@@ -23,9 +23,7 @@ import org.apiguardian.api.API;
  * {@code @Execution} is used to configure the parallel execution
  * {@linkplain #value mode} of a test class or test method.
  *
- * @see Resources
- * @see ResourceAccessMode
- * @see ResourceLocks
+ * @see ResourceLock
  * @since 5.3
  */
 @API(status = EXPERIMENTAL, since = "5.3")
