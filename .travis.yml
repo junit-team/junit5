@@ -8,6 +8,18 @@ branches:
   except:
     - /^r\d.*$/
 
+# Remove lock files before caching
+before_cache:
+  - rm -f  $HOME/.gradle/caches/*/*.lock
+
+# Cache only relevant directories
+cache:
+  directories:
+    - $HOME/.gradle/caches/jars-3
+    - $HOME/.gradle/caches/journal-1
+    - $HOME/.gradle/caches/modules-2
+    - $HOME/.gradle/wrapper/dists
+
 before_install:
 # https://github.com/travis-ci/travis-ci/issues/8408
 # Also interferes with platform-tooling-support-tests expectations
@@ -52,7 +64,7 @@ jobs:
         - secure: KB6nXD6SU+g7jNB+JnmOy9aOx21tazy+j2SbFj6UTayfEWfD3E7nw8AxQLRy9XWVaUQZGk+F8UWvHMX/5qhfqS3eXsdqGY3BaDM6QB8O3kMIZjO2I1JxmLoEBXqzWPFo0qfdexm78FhU3LCqzwofl4eCkwCErjF0483MfUOe54Q=
         # ORG_GRADLE_PROJECT_ossrhPassword
         - secure: haIyH2wZSfmnH/oKJ0J1pMBl1wsYMhc26iOPunaMELKUgPCBC4+y5qYJBcG3/G9gy3qYYi3GdFLvHVkqxlAABTC5lcNyBqsU20SzKD6HNyf4rv7Dtv+x1GjI7Yz50zAaJyPnoQBdboMdevPTfczcCAf6mRvA5nmEZc1D1fbbGA8=
-      script: ./gradlew --scan publish -x test
+      script: ./gradlew --scan publish -x check
     - name: "Update snapshot documentation"
       jdk: openjdk10 # asciidoctor does currently not work on Java 11, see https://github.com/jruby/jruby-openssl/issues/175
       addons:
