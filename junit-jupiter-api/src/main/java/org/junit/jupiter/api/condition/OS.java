@@ -100,7 +100,7 @@ public enum OS {
 		if (osName.contains("mac")) {
 			return MAC;
 		}
-		if (osName.contains("solaris")) {
+		if (osName.contains("sunos") || osName.contains("solaris")) {
 			return SOLARIS;
 		}
 		if (osName.contains("win")) {
