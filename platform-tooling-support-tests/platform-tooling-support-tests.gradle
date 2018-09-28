@@ -1,10 +1,5 @@
 apply from: "$rootDir/gradle/testing.gradle"
 
-// https://github.com/schauder/degraph/issues/87
-tasks.withType(de.obqo.gradle.degraph.DegraphTask) {
-	it.enabled = false
-}
-
 // Use Java 10
 project.ext.javaVersion = JavaVersion.VERSION_1_10
 afterEvaluate {

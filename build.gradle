@@ -1,15 +1,6 @@
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
-buildscript {
-	dependencies {
-		classpath('gradle.plugin.de.obqo.gradle:gradle-degraph:0.1.4.1') {
-			exclude(group: 'org.codehaus.groovy')
-			because('https://github.com/obecker/gradle-degraph/issues/3')
-		}
-	}
-}
-
 plugins {
 	id 'com.gradle.build-scan' version '1.16'
 	id 'net.nemerosa.versioning' version '2.7.1'
@@ -89,7 +80,6 @@ allprojects { subproj ->
 	apply plugin: 'com.diffplug.gradle.spotless'
 	apply plugin: 'checkstyle'
 	apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates
-	apply plugin: 'de.obqo.gradle.degraph'
 
 	if (project.hasProperty('enableJaCoCo')) {
 		apply plugin: 'jacoco'
@@ -160,16 +150,6 @@ allprojects { subproj ->
 	}
 	checkstyleTest {
 		configFile = rootProject.file('src/checkstyle/checkstyleTest.xml')
-	}
-
-	degraph {
-		sourceSets sourceSets.main
-		including 'org.junit.platform.**', 'org.junit.vintage.**', 'org.junit.jupiter.**'
-		slicings {
-			module {
-				patterns "org.junit.(*.*).**"
-			}
-		}
 	}
 }
 
