@@ -126,4 +126,51 @@ public interface DisplayNameGenerator {
 		}
 	}
 
+	/**
+	 * Create a descriptive string composed from the class and
+	 * method names within the current test container.
+	 *
+	 * <p>
+	 * The {@code IndicativeSentences} generator prepends the enclosing class
+	 * display name to every nested class and method name in order to create a
+	 * contextual human readable test names.
+	 */
+	class IndicativeSentences extends ReplaceUnderscores {
+
+		@Override
+		public String generateDisplayNameForClass(Class<?> testClass) {
+			return generateName(testClass) + "...";
+		}
+
+		@Override
+		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
+			return generateName(nestedClass) + "...";
+		}
+
+		@Override
+		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
+			return generateName(testClass) + ' ' + super.generateDisplayNameForMethod(testClass, testMethod);
+		}
+
+		private String generateName(Class<?> testClass) {
+			DisplayName explicitDisplayName = testClass.getAnnotation(DisplayName.class);
+			if (explicitDisplayName != null) {
+				return explicitDisplayName.value();
+			}
+			if (testClass.getEnclosingClass() == null) {
+				return super.generateDisplayNameForClass(testClass);
+			}
+			DisplayNameGeneration annotation = testClass.getAnnotation(DisplayNameGeneration.class);
+			if (annotation != null && annotation.value() == IndicativeSentences.class) {
+				return super.generateDisplayNameForNestedClass(testClass);
+			}
+			String name = super.generateDisplayNameForNestedClass(testClass);
+			name = name.trim();
+			if (name.length() > 1) {
+				name = Character.toLowerCase(name.charAt(0)) + name.substring(1);
+			}
+			return generateName(testClass.getEnclosingClass()) + ' ' + name;
+		}
+	}
+
 }

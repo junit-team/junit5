@@ -81,6 +81,34 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void indicativeSentencesGenerator() {
+		check(IndicativeSentencesStyleTestCase.class, List.of( //
+			"CONTAINER: IndicativeSentencesStyleTestCase...", //
+			"TEST: @DisplayName prevails", //
+			"TEST: IndicativeSentencesStyleTestCase test with underscores()", //
+			"TEST: IndicativeSentencesStyleTestCase test()", //
+			"TEST: IndicativeSentencesStyleTestCase test(TestInfo)", //
+			"TEST: IndicativeSentencesStyleTestCase testUsingCamelCase and also UnderScores keepingParameterTypeNamesIntact(TestInfo)", //
+			"TEST: IndicativeSentencesStyleTestCase testUsingCamelCase and also UnderScores()", //
+			"TEST: IndicativeSentencesStyleTestCase testUsingCamelCaseStyle()" //
+		));
+	}
+
+	@Test
+	void indicativeSentencesGeneratorInheritedFromSuperClass() {
+		check(IndicativeSentencesInheritedFromSuperClassTestCase.class, List.of( //
+			"CONTAINER: IndicativeSentencesInheritedFromSuperClassTestCase...", //
+			"TEST: @DisplayName prevails", //
+			"TEST: IndicativeSentencesInheritedFromSuperClassTestCase test with underscores()", //
+			"TEST: IndicativeSentencesInheritedFromSuperClassTestCase test()", //
+			"TEST: IndicativeSentencesInheritedFromSuperClassTestCase test(TestInfo)", //
+			"TEST: IndicativeSentencesInheritedFromSuperClassTestCase testUsingCamelCase and also UnderScores keepingParameterTypeNamesIntact(TestInfo)", //
+			"TEST: IndicativeSentencesInheritedFromSuperClassTestCase testUsingCamelCase and also UnderScores()", //
+			"TEST: IndicativeSentencesInheritedFromSuperClassTestCase testUsingCamelCaseStyle()" //
+		));
+	}
+
+	@Test
 	void checkDisplayNameGeneratedForTestingAStackDemo() {
 		check(StackTestCase.class, List.of( //
 			"CONTAINER: A new stack", //
@@ -93,6 +121,26 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			"TEST: the stack is no longer empty()", //
 			"TEST: throws an EmptyStackException when peeked()", //
 			"TEST: throws an EmptyStackException when popped()" //
+		));
+	}
+
+	@Test
+	void checkIndicativeSentencesDisplayNameGeneratedForTestingAStackDemo() {
+		check(IndicativeSentencesStackTestCase.class, List.of( //
+			"CONTAINER: A new stack after pushing an element to it...", //
+			"CONTAINER: A new stack...", //
+			"CONTAINER: A stack", //
+			"CONTAINER: A stack when new...", //
+
+			"TEST: A new stack after pushing an element to it peek returns that element without removing it from the stack()", //
+			"TEST: A new stack after pushing an element to it pop returns that element and leaves an empty stack()", //
+			"TEST: A new stack after pushing an element to it the stack is no longer empty()", //
+			"TEST: A new stack has no components.", //
+			"TEST: A new stack is empty()", //
+			"TEST: A new stack throws an EmptyStackException when peeked()", //
+			"TEST: A new stack throws an EmptyStackException when popped()", //
+			"TEST: A stack is instantiated using its noarg constructor()", //
+			"TEST: A stack when new is empty()" //
 		));
 	}
 
@@ -177,6 +225,14 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	static class UnderscoreStyleInheritedFromSuperClassTestCase extends UnderscoreStyleTestCase {
 	}
 
+	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
+	static class IndicativeSentencesStyleTestCase extends UnderscoreStyleTestCase {
+	}
+
+	// No annotation here! @DisplayNameGeneration is inherited from super class
+	static class IndicativeSentencesInheritedFromSuperClassTestCase extends IndicativeSentencesStyleTestCase {
+	}
+
 	// -------------------------------------------------------------------
 
 	@DisplayName("A stack")
@@ -242,4 +298,92 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 	}
+
+	// -------------------------------------------------------------------
+
+	@DisplayName("A stack")
+	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
+	static class IndicativeSentencesStackTestCase {
+
+		Stack<Object> stack;
+
+		@Test
+		void is_instantiated_using_its_noarg_constructor() {
+			new Stack<>();
+		}
+
+		@Nested
+		class When_new {
+			@BeforeEach
+			void createNewStack() {
+				stack = new Stack<>();
+			}
+
+			@Test
+			void is_empty() {
+				assertTrue(stack.isEmpty());
+			}
+
+			@DisplayName("A new stack has no components.")
+			@Test
+			void has_size_zero() {
+				assertTrue(stack.isEmpty());
+			}
+		}
+
+		@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
+		@Nested
+		class A_new_stack {
+
+			@BeforeEach
+			void createNewStack() {
+				stack = new Stack<>();
+			}
+
+			@Test
+			void is_empty() {
+				assertTrue(stack.isEmpty());
+			}
+
+			@Test
+			void throws_an_EmptyStackException_when_popped() {
+				assertThrows(EmptyStackException.class, () -> stack.pop());
+			}
+
+			@Test
+			void throws_an_EmptyStackException_when_peeked() {
+				assertThrows(EmptyStackException.class, () -> stack.peek());
+			}
+
+			@Nested
+			class After_pushing_an_element_to_it {
+
+				String anElement = "an element";
+
+				@BeforeEach
+				void pushAnElement() {
+					stack.push(anElement);
+				}
+
+				@Test
+				void the_stack_is_no_longer_empty() {
+					assertFalse(stack.isEmpty());
+				}
+
+				@Test
+				void pop_returns_that_element_and_leaves_an_empty_stack() {
+					assertEquals(anElement, stack.pop());
+					assertTrue(stack.isEmpty());
+				}
+
+				@Test
+				void peek_returns_that_element_without_removing_it_from_the_stack() {
+					assertEquals(anElement, stack.peek());
+					assertFalse(stack.isEmpty());
+				}
+			}
+
+		}
+	}
+
 }
