@@ -13,7 +13,8 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../../jquery/jquery-migrate-3.0.1.js"></script>
 <script type="text/javascript" src="../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -26,13 +27,15 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6};
+var data = {"i0":6,"i1":6,"i2":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
-var pathtoroot = "../../../../";loadScripts(document, 'script');</script>
+var pathtoroot = "../../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
@@ -48,7 +51,7 @@ var pathtoroot = "../../../../";loadScripts(document, 'script');</script>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/EngineDiscoveryRequest.html">Use</a></li>
@@ -60,16 +63,8 @@ var pathtoroot = "../../../../";loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../index.html?org/junit/platform/engine/EngineDiscoveryRequest.html" target="_top">Frames</a></li>
-<li><a href="EngineDiscoveryRequest.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
@@ -122,7 +117,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="../../../../org/junit/platform/engine/package-summary.html">org.junit.platform.engine</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">org.junit.platform.engine</a></div>
 <h2 title="Interface EngineDiscoveryRequest" class="title">Interface EngineDiscoveryRequest</h2>
 </div>
 <div class="contentContainer">
@@ -131,31 +126,31 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Known Subinterfaces:</dt>
-<dd><code><a href="../../../../org/junit/platform/launcher/LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryRequest</a></code></dd>
+<dd><code><a href="../launcher/LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryRequest</a></code></dd>
 </dl>
 <hr>
 <pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#STABLE" title="class or interface in org.apiguardian.api" class="externalLink">STABLE</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.0")
 public interface <span class="typeNameLabel">EngineDiscoveryRequest</span></pre>
-<div class="block"><code>EngineDiscoveryRequest</code> provides a <a href="../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> access to the
+<div class="block"><code>EngineDiscoveryRequest</code> provides a <a href="TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> access to the
  information necessary to discover tests and containers.
 
- <p>A request is comprised of <a href="../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine">selectors</a> and
- <a href="../../../../org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine">filters</a>. While the former <em>select</em>
+ <p>A request is comprised of <a href="DiscoverySelector.html" title="interface in org.junit.platform.engine">selectors</a> and
+ <a href="DiscoveryFilter.html" title="interface in org.junit.platform.engine">filters</a>. While the former <em>select</em>
  resources that engines can use to discover tests, the latter specify how
  such resources are to be <em>filtered</em>. All of the <em>filters</em>
  have to include a resource for it to end up in the test plan.
 
- <p>In addition, the supplied <a href="../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">configuration parameters</a> can be used to influence the discovery process.</div>
+ <p>In addition, the supplied <a href="ConfigurationParameters.html" title="interface in org.junit.platform.engine">configuration parameters</a> can be used to influence the discovery process.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.0</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>, 
-<a href="../../../../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>, 
-<a href="../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a>, 
-<a href="../../../../org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilter</code></a>, 
-<a href="../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a></dd>
+<dd><a href="TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>, 
+<a href="TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>, 
+<a href="DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a>, 
+<a href="DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilter</code></a>, 
+<a href="ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -178,25 +173,25 @@ public interface <span class="typeNameLabel">EngineDiscoveryRequest</span></pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/platform/engine/EngineDiscoveryRequest.html#getConfigurationParameters()">getConfigurationParameters</a></span>()</code></th>
+<td class="colFirst"><code><a href="ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getConfigurationParameters()">getConfigurationParameters</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get the <a href="../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a> for this request.</div>
+<div class="block">Get the <a href="ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a> for this request.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>&lt;T extends <a href="../../../../org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine">DiscoveryFilter</a>&lt;?&gt;&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/platform/engine/EngineDiscoveryRequest.html#getFiltersByType(java.lang.Class)">getFiltersByType</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;filterType)</code></th>
+<td class="colFirst"><code>&lt;T extends <a href="DiscoveryFilter.html" title="interface in org.junit.platform.engine">DiscoveryFilter</a>&lt;?&gt;&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFiltersByType(java.lang.Class)">getFiltersByType</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;filterType)</code></th>
 <td class="colLast">
-<div class="block">Get the <a href="../../../../org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilters</code></a> for this request, filtered
+<div class="block">Get the <a href="DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilters</code></a> for this request, filtered
  by a particular type.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>&lt;T extends <a href="../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/platform/engine/EngineDiscoveryRequest.html#getSelectorsByType(java.lang.Class)">getSelectorsByType</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;selectorType)</code></th>
+<td class="colFirst"><code>&lt;T extends <a href="DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSelectorsByType(java.lang.Class)">getSelectorsByType</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;selectorType)</code></th>
 <td class="colLast">
-<div class="block">Get the <a href="../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelectors</code></a> for this request,
+<div class="block">Get the <a href="DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelectors</code></a> for this request,
  filtered by a particular type.</div>
 </td>
 </tr>
@@ -223,12 +218,12 @@ public interface <span class="typeNameLabel">EngineDiscoveryRequest</span></pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getSelectorsByType</h4>
-<pre>&lt;T extends <a href="../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;getSelectorsByType&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;selectorType)</pre>
-<div class="block">Get the <a href="../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelectors</code></a> for this request,
+<pre class="methodSignature">&lt;T extends <a href="DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;getSelectorsByType&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;selectorType)</pre>
+<div class="block">Get the <a href="DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelectors</code></a> for this request,
  filtered by a particular type.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>selectorType</code> - the type of <a href="../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> to filter by</dd>
+<dd><code>selectorType</code> - the type of <a href="DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> to filter by</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>all selectors of this request that are instances of <code>selectorType</code></dd>
 </dl>
@@ -240,15 +235,15 @@ public interface <span class="typeNameLabel">EngineDiscoveryRequest</span></pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getFiltersByType</h4>
-<pre>&lt;T extends <a href="../../../../org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine">DiscoveryFilter</a>&lt;?&gt;&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;getFiltersByType&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;filterType)</pre>
-<div class="block">Get the <a href="../../../../org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilters</code></a> for this request, filtered
+<pre class="methodSignature">&lt;T extends <a href="DiscoveryFilter.html" title="interface in org.junit.platform.engine">DiscoveryFilter</a>&lt;?&gt;&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;getFiltersByType&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;filterType)</pre>
+<div class="block">Get the <a href="DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilters</code></a> for this request, filtered
  by a particular type.
 
  <p>The returned filters are to be combined using AND semantics, i.e. all of
  them have to include a resource for it to end up in the test plan.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>filterType</code> - the type of <a href="../../../../org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilter</code></a> to filter by</dd>
+<dd><code>filterType</code> - the type of <a href="DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilter</code></a> to filter by</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>all filters of this request that are instances of <code>filterType</code></dd>
 </dl>
@@ -260,8 +255,8 @@ public interface <span class="typeNameLabel">EngineDiscoveryRequest</span></pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getConfigurationParameters</h4>
-<pre><a href="../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;getConfigurationParameters()</pre>
-<div class="block">Get the <a href="../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a> for this request.</div>
+<pre class="methodSignature"><a href="ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;getConfigurationParameters()</pre>
+<div class="block">Get the <a href="ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a> for this request.</div>
 </li>
 </ul>
 </li>
@@ -284,7 +279,7 @@ public interface <span class="typeNameLabel">EngineDiscoveryRequest</span></pre>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/EngineDiscoveryRequest.html">Use</a></li>
@@ -296,16 +291,8 @@ public interface <span class="typeNameLabel">EngineDiscoveryRequest</span></pre>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../index.html?org/junit/platform/engine/EngineDiscoveryRequest.html" target="_top">Frames</a></li>
-<li><a href="EngineDiscoveryRequest.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--

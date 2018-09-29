@@ -13,7 +13,8 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../../../jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../../../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../../../../jquery/jquery-migrate-3.0.1.js"></script>
 <script type="text/javascript" src="../../../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -26,13 +27,15 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
-var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
+var pathtoroot = "../../../../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
@@ -48,7 +51,7 @@ var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/PrefixedConfigurationParameters.html">Use</a></li>
@@ -60,16 +63,8 @@ var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li>Prev&nbsp;Class</li>
-<li>Next&nbsp;Class</li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../../index.html?org/junit/platform/engine/support/config/PrefixedConfigurationParameters.html" target="_top">Frames</a></li>
-<li><a href="PrefixedConfigurationParameters.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
@@ -96,7 +91,7 @@ var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
@@ -122,7 +117,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="../../../../../../org/junit/platform/engine/support/config/package-summary.html">org.junit.platform.engine.support.config</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">org.junit.platform.engine.support.config</a></div>
 <h2 title="Class PrefixedConfigurationParameters" class="title">Class PrefixedConfigurationParameters</h2>
 </div>
 <div class="contentContainer">
@@ -139,15 +134,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></code></dd>
+<dd><code><a href="../../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></code></dd>
 </dl>
 <hr>
 <pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.3")
 public class <span class="typeNameLabel">PrefixedConfigurationParameters</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
-implements <a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></pre>
-<div class="block">View of <a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a> that applies a supplied prefix to all
+implements <a href="../../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></pre>
+<div class="block">View of <a href="../../ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a> that applies a supplied prefix to all
  queries.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -170,8 +165,8 @@ implements <a href="../../../../../../org/junit/platform/engine/ConfigurationPar
 <li class="blockList"><a id="fields.inherited.from.class.org.junit.platform.engine.ConfigurationParameters">
 <!--   -->
 </a>
-<h3>Fields inherited from interface&nbsp;org.junit.platform.engine.<a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></h3>
-<code><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#CONFIG_FILE_NAME">CONFIG_FILE_NAME</a></code></li>
+<h3>Fields inherited from interface&nbsp;org.junit.platform.engine.<a href="../../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></h3>
+<code><a href="../../ConfigurationParameters.html#CONFIG_FILE_NAME">CONFIG_FILE_NAME</a></code></li>
 </ul>
 </li>
 </ul>
@@ -190,10 +185,10 @@ implements <a href="../../../../../../org/junit/platform/engine/ConfigurationPar
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/config/PrefixedConfigurationParameters.html#%3Cinit%3E(org.junit.platform.engine.ConfigurationParameters,java.lang.String)">PrefixedConfigurationParameters</a></span>&#8203;(<a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;delegate,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(org.junit.platform.engine.ConfigurationParameters,java.lang.String)">PrefixedConfigurationParameters</a></span>&#8203;(<a href="../../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;delegate,
                                <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</code></th>
 <td class="colLast">
-<div class="block">Create a new view of the supplied <a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a> that
+<div class="block">Create a new view of the supplied <a href="../../ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a> that
  applies the supplied prefix to all queries.</div>
 </td>
 </tr>
@@ -217,15 +212,15 @@ implements <a href="../../../../../../org/junit/platform/engine/ConfigurationPar
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/config/PrefixedConfigurationParameters.html#get(java.lang.String)">get</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(java.lang.String)">get</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key)</code></th>
 <td class="colLast">
 <div class="block">Get the configuration parameter stored under the specified <code>key</code>.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/config/PrefixedConfigurationParameters.html#get(java.lang.String,java.util.function.Function)">get</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key,
-   <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,T&gt;&nbsp;transformer)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(java.lang.String,java.util.function.Function)">get</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key,
+   <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;T&gt;&nbsp;transformer)</code></th>
 <td class="colLast">
 <div class="block">Get and transform the configuration parameter stored under the specified
  <code>key</code> using the specified <code>transformer</code>.</div>
@@ -233,7 +228,7 @@ implements <a href="../../../../../../org/junit/platform/engine/ConfigurationPar
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/config/PrefixedConfigurationParameters.html#getBoolean(java.lang.String)">getBoolean</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getBoolean(java.lang.String)">getBoolean</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key)</code></th>
 <td class="colLast">
 <div class="block">Get the boolean configuration parameter stored under the specified
  <code>key</code>.</div>
@@ -241,7 +236,7 @@ implements <a href="../../../../../../org/junit/platform/engine/ConfigurationPar
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/config/PrefixedConfigurationParameters.html#size()">size</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#size()">size</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the number of configuration parameters stored directly in this
  <code>ConfigurationParameters</code>.</div>
@@ -277,13 +272,13 @@ implements <a href="../../../../../../org/junit/platform/engine/ConfigurationPar
 <ul class="blockListLast">
 <li class="blockList">
 <h4>PrefixedConfigurationParameters</h4>
-<pre>public&nbsp;PrefixedConfigurationParameters&#8203;(<a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;delegate,
+<pre>public&nbsp;PrefixedConfigurationParameters&#8203;(<a href="../../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;delegate,
                                        <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</pre>
-<div class="block">Create a new view of the supplied <a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a> that
+<div class="block">Create a new view of the supplied <a href="../../ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a> that
  applies the supplied prefix to all queries.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>delegate</code> - the <a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a> to delegate to; never
+<dd><code>delegate</code> - the <a href="../../ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a> to delegate to; never
  <code>null</code></dd>
 <dd><code>prefix</code> - the prefix to apply to all queries; never <code>null</code></dd>
 </dl>
@@ -305,27 +300,27 @@ implements <a href="../../../../../../org/junit/platform/engine/ConfigurationPar
 <ul class="blockList">
 <li class="blockList">
 <h4>get</h4>
-<pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;get&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#get(java.lang.String)">ConfigurationParameters</a></code></span></div>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;get&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../ConfigurationParameters.html#get(java.lang.String)">ConfigurationParameters</a></code></span></div>
 <div class="block">Get the configuration parameter stored under the specified <code>key</code>.
 
  <p>If no such key is present in this <code>ConfigurationParameters</code>,
  an attempt will be made to look up the value as a JVM system property.
  If no such system property exists, an attempt will be made to look up
- the value in the <a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#CONFIG_FILE_NAME">JUnit Platform properties
+ the value in the <a href="../../ConfigurationParameters.html#CONFIG_FILE_NAME">JUnit Platform properties
  file</a>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#get(java.lang.String)">get</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></code></dd>
+<dd><code><a href="../../ConfigurationParameters.html#get(java.lang.String)">get</a></code>&nbsp;in interface&nbsp;<code><a href="../../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>key</code> - the key to look up; never <code>null</code> or blank</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>an <code>Optional</code> containing the value; never <code>null</code>
  but potentially empty</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#getBoolean(java.lang.String)"><code>ConfigurationParameters.getBoolean(String)</code></a>, 
+<dd><a href="../../ConfigurationParameters.html#getBoolean(java.lang.String)"><code>ConfigurationParameters.getBoolean(String)</code></a>, 
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html?is-external=true#getProperty(java.lang.String)" title="class or interface in java.lang" class="externalLink"><code>System.getProperty(String)</code></a>, 
-<a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#CONFIG_FILE_NAME"><code>ConfigurationParameters.CONFIG_FILE_NAME</code></a></dd>
+<a href="../../ConfigurationParameters.html#CONFIG_FILE_NAME"><code>ConfigurationParameters.CONFIG_FILE_NAME</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -335,29 +330,29 @@ implements <a href="../../../../../../org/junit/platform/engine/ConfigurationPar
 <ul class="blockList">
 <li class="blockList">
 <h4>getBoolean</h4>
-<pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a>&gt;&nbsp;getBoolean&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#getBoolean(java.lang.String)">ConfigurationParameters</a></code></span></div>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a>&gt;&nbsp;getBoolean&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../ConfigurationParameters.html#getBoolean(java.lang.String)">ConfigurationParameters</a></code></span></div>
 <div class="block">Get the boolean configuration parameter stored under the specified
  <code>key</code>.
 
  <p>If no such key is present in this <code>ConfigurationParameters</code>,
  an attempt will be made to look up the value as a JVM system property.
  If no such system property exists, an attempt will be made to look up
- the value in the <a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#CONFIG_FILE_NAME">JUnit Platform properties
+ the value in the <a href="../../ConfigurationParameters.html#CONFIG_FILE_NAME">JUnit Platform properties
  file</a>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#getBoolean(java.lang.String)">getBoolean</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></code></dd>
+<dd><code><a href="../../ConfigurationParameters.html#getBoolean(java.lang.String)">getBoolean</a></code>&nbsp;in interface&nbsp;<code><a href="../../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>key</code> - the key to look up; never <code>null</code> or blank</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>an <code>Optional</code> containing the value; never <code>null</code>
  but potentially empty</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#get(java.lang.String)"><code>ConfigurationParameters.get(String)</code></a>, 
+<dd><a href="../../ConfigurationParameters.html#get(java.lang.String)"><code>ConfigurationParameters.get(String)</code></a>, 
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html?is-external=true#parseBoolean(java.lang.String)" title="class or interface in java.lang" class="externalLink"><code>Boolean.parseBoolean(String)</code></a>, 
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html?is-external=true#getProperty(java.lang.String)" title="class or interface in java.lang" class="externalLink"><code>System.getProperty(String)</code></a>, 
-<a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#CONFIG_FILE_NAME"><code>ConfigurationParameters.CONFIG_FILE_NAME</code></a></dd>
+<a href="../../ConfigurationParameters.html#CONFIG_FILE_NAME"><code>ConfigurationParameters.CONFIG_FILE_NAME</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -367,23 +362,23 @@ implements <a href="../../../../../../org/junit/platform/engine/ConfigurationPar
 <ul class="blockList">
 <li class="blockList">
 <h4>get</h4>
-<pre>public&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;T&gt;&nbsp;get&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key,
-                           <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,T&gt;&nbsp;transformer)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#get(java.lang.String,java.util.function.Function)">ConfigurationParameters</a></code></span></div>
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;T&gt;&nbsp;get&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key,
+                           <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;T&gt;&nbsp;transformer)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../ConfigurationParameters.html#get(java.lang.String,java.util.function.Function)">ConfigurationParameters</a></code></span></div>
 <div class="block">Get and transform the configuration parameter stored under the specified
  <code>key</code> using the specified <code>transformer</code>.
 
  <p>If no such key is present in this <code>ConfigurationParameters</code>,
  an attempt will be made to look up the value as a JVM system property.
  If no such system property exists, an attempt will be made to look up
- the value in the <a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#CONFIG_FILE_NAME">JUnit Platform properties
+ the value in the <a href="../../ConfigurationParameters.html#CONFIG_FILE_NAME">JUnit Platform properties
  file</a>.
 
  <p>In case the transformer throws an exception, it will be wrapped in a
- <a href="../../../../../../org/junit/platform/commons/JUnitException.html" title="class in org.junit.platform.commons"><code>JUnitException</code></a> with a helpful message.</div>
+ <a href="../../../commons/JUnitException.html" title="class in org.junit.platform.commons"><code>JUnitException</code></a> with a helpful message.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#get(java.lang.String,java.util.function.Function)">get</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></code></dd>
+<dd><code><a href="../../ConfigurationParameters.html#get(java.lang.String,java.util.function.Function)">get</a></code>&nbsp;in interface&nbsp;<code><a href="../../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>key</code> - the key to look up; never <code>null</code> or blank</dd>
 <dd><code>transformer</code> - the transformer to apply in case a value is found;
@@ -392,9 +387,9 @@ implements <a href="../../../../../../org/junit/platform/engine/ConfigurationPar
 <dd>an <code>Optional</code> containing the value; never <code>null</code>
  but potentially empty</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#getBoolean(java.lang.String)"><code>ConfigurationParameters.getBoolean(String)</code></a>, 
+<dd><a href="../../ConfigurationParameters.html#getBoolean(java.lang.String)"><code>ConfigurationParameters.getBoolean(String)</code></a>, 
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html?is-external=true#getProperty(java.lang.String)" title="class or interface in java.lang" class="externalLink"><code>System.getProperty(String)</code></a>, 
-<a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#CONFIG_FILE_NAME"><code>ConfigurationParameters.CONFIG_FILE_NAME</code></a></dd>
+<a href="../../ConfigurationParameters.html#CONFIG_FILE_NAME"><code>ConfigurationParameters.CONFIG_FILE_NAME</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -404,13 +399,13 @@ implements <a href="../../../../../../org/junit/platform/engine/ConfigurationPar
 <ul class="blockListLast">
 <li class="blockList">
 <h4>size</h4>
-<pre>public&nbsp;int&nbsp;size()</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#size()">ConfigurationParameters</a></code></span></div>
+<pre class="methodSignature">public&nbsp;int&nbsp;size()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../ConfigurationParameters.html#size()">ConfigurationParameters</a></code></span></div>
 <div class="block">Get the number of configuration parameters stored directly in this
  <code>ConfigurationParameters</code>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html#size()">size</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></code></dd>
+<dd><code><a href="../../ConfigurationParameters.html#size()">size</a></code>&nbsp;in interface&nbsp;<code><a href="../../ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -434,7 +429,7 @@ implements <a href="../../../../../../org/junit/platform/engine/ConfigurationPar
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/PrefixedConfigurationParameters.html">Use</a></li>
@@ -446,16 +441,8 @@ implements <a href="../../../../../../org/junit/platform/engine/ConfigurationPar
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li>Prev&nbsp;Class</li>
-<li>Next&nbsp;Class</li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../../index.html?org/junit/platform/engine/support/config/PrefixedConfigurationParameters.html" target="_top">Frames</a></li>
-<li><a href="PrefixedConfigurationParameters.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--
@@ -476,7 +463,7 @@ implements <a href="../../../../../../org/junit/platform/engine/ConfigurationPar
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>

@@ -13,7 +13,8 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../../jquery/jquery-migrate-3.0.1.js"></script>
 <script type="text/javascript" src="../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -26,7 +27,9 @@
     catch(err) {
     }
 //-->
-var pathtoroot = "../../../../";loadScripts(document, 'script');</script>
+var pathtoroot = "../../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
@@ -42,7 +45,7 @@ var pathtoroot = "../../../../";loadScripts(document, 'script');</script>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li>Class</li>
 <li class="navBarCell1Rev">Use</li>
@@ -54,16 +57,8 @@ var pathtoroot = "../../../../";loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li>Prev</li>
-<li>Next</li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../index.html?org/junit/platform/commons/package-use.html" target="_top">Frames</a></li>
-<li><a href="package-use.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
@@ -106,7 +101,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <table class="useSummary">
-<caption><span>Packages that use <a href="../../../../org/junit/platform/commons/package-summary.html">org.junit.platform.commons</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Packages that use <a href="package-summary.html">org.junit.platform.commons</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Package</th>
 <th class="colLast" scope="col">Description</th>
@@ -121,25 +116,25 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#org.junit.jupiter.params.aggregator">org.junit.jupiter.params.aggregator</a></th>
 <td class="colLast">
-<div class="block">The <a href="../../../../org/junit/jupiter/params/aggregator/ArgumentsAggregator.html" title="interface in org.junit.jupiter.params.aggregator"><code>ArgumentsAggregator</code></a> and
- <a href="../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator"><code>ArgumentsAccessor</code></a> interfaces and the
- <a href="../../../../org/junit/jupiter/params/aggregator/AggregateWith.html" title="annotation in org.junit.jupiter.params.aggregator"><code>AggregateWith</code></a> annotation.</div>
+<div class="block">The <a href="../../jupiter/params/aggregator/ArgumentsAggregator.html" title="interface in org.junit.jupiter.params.aggregator"><code>ArgumentsAggregator</code></a> and
+ <a href="../../jupiter/params/aggregator/ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator"><code>ArgumentsAccessor</code></a> interfaces and the
+ <a href="../../jupiter/params/aggregator/AggregateWith.html" title="annotation in org.junit.jupiter.params.aggregator"><code>AggregateWith</code></a> annotation.</div>
 </td>
 </tr>
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="#org.junit.jupiter.params.converter">org.junit.jupiter.params.converter</a></th>
 <td class="colLast">
-<div class="block"><a href="../../../../org/junit/jupiter/params/converter/ArgumentConverter.html" title="interface in org.junit.jupiter.params.converter"><code>ArgumentConverter</code></a>
+<div class="block"><a href="../../jupiter/params/converter/ArgumentConverter.html" title="interface in org.junit.jupiter.params.converter"><code>ArgumentConverter</code></a>
  implementations and the corresponding
- <a href="../../../../org/junit/jupiter/params/converter/ConvertWith.html" title="annotation in org.junit.jupiter.params.converter"><code>@ConvertWith</code></a> annotation.</div>
+ <a href="../../jupiter/params/converter/ConvertWith.html" title="annotation in org.junit.jupiter.params.converter"><code>@ConvertWith</code></a> annotation.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#org.junit.jupiter.params.provider">org.junit.jupiter.params.provider</a></th>
 <td class="colLast">
-<div class="block"><a href="../../../../org/junit/jupiter/params/provider/ArgumentsProvider.html" title="interface in org.junit.jupiter.params.provider"><code>ArgumentsProvider</code></a>
+<div class="block"><a href="../../jupiter/params/provider/ArgumentsProvider.html" title="interface in org.junit.jupiter.params.provider"><code>ArgumentsProvider</code></a>
  implementations and their corresponding
- <a href="../../../../org/junit/jupiter/params/provider/ArgumentsSource.html" title="annotation in org.junit.jupiter.params.provider"><code>ArgumentsSource</code></a>
+ <a href="../../jupiter/params/provider/ArgumentsSource.html" title="annotation in org.junit.jupiter.params.provider"><code>ArgumentsSource</code></a>
  annotations.</div>
 </td>
 </tr>
@@ -162,14 +157,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <table class="useSummary">
-<caption><span>Classes in <a href="../../../../org/junit/platform/commons/package-summary.html">org.junit.platform.commons</a> used by <a href="../../../../org/junit/jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Classes in <a href="package-summary.html">org.junit.platform.commons</a> used by <a href="../../jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../org/junit/platform/commons/class-use/JUnitException.html#org.junit.jupiter.api.extension">JUnitException</a></th>
+<th class="colFirst" scope="row"><a href="class-use/JUnitException.html#org.junit.jupiter.api.extension">JUnitException</a></th>
 <td class="colLast">
 <div class="block">Base class for all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>RuntimeExceptions</code></a> thrown
  by JUnit.</div>
@@ -182,14 +177,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <table class="useSummary">
-<caption><span>Classes in <a href="../../../../org/junit/platform/commons/package-summary.html">org.junit.platform.commons</a> used by <a href="../../../../org/junit/jupiter/params/aggregator/package-summary.html">org.junit.jupiter.params.aggregator</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Classes in <a href="package-summary.html">org.junit.platform.commons</a> used by <a href="../../jupiter/params/aggregator/package-summary.html">org.junit.jupiter.params.aggregator</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../org/junit/platform/commons/class-use/JUnitException.html#org.junit.jupiter.params.aggregator">JUnitException</a></th>
+<th class="colFirst" scope="row"><a href="class-use/JUnitException.html#org.junit.jupiter.params.aggregator">JUnitException</a></th>
 <td class="colLast">
 <div class="block">Base class for all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>RuntimeExceptions</code></a> thrown
  by JUnit.</div>
@@ -202,14 +197,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <table class="useSummary">
-<caption><span>Classes in <a href="../../../../org/junit/platform/commons/package-summary.html">org.junit.platform.commons</a> used by <a href="../../../../org/junit/jupiter/params/converter/package-summary.html">org.junit.jupiter.params.converter</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Classes in <a href="package-summary.html">org.junit.platform.commons</a> used by <a href="../../jupiter/params/converter/package-summary.html">org.junit.jupiter.params.converter</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../org/junit/platform/commons/class-use/JUnitException.html#org.junit.jupiter.params.converter">JUnitException</a></th>
+<th class="colFirst" scope="row"><a href="class-use/JUnitException.html#org.junit.jupiter.params.converter">JUnitException</a></th>
 <td class="colLast">
 <div class="block">Base class for all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>RuntimeExceptions</code></a> thrown
  by JUnit.</div>
@@ -222,14 +217,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <table class="useSummary">
-<caption><span>Classes in <a href="../../../../org/junit/platform/commons/package-summary.html">org.junit.platform.commons</a> used by <a href="../../../../org/junit/jupiter/params/provider/package-summary.html">org.junit.jupiter.params.provider</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Classes in <a href="package-summary.html">org.junit.platform.commons</a> used by <a href="../../jupiter/params/provider/package-summary.html">org.junit.jupiter.params.provider</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../org/junit/platform/commons/class-use/JUnitException.html#org.junit.jupiter.params.provider">JUnitException</a></th>
+<th class="colFirst" scope="row"><a href="class-use/JUnitException.html#org.junit.jupiter.params.provider">JUnitException</a></th>
 <td class="colLast">
 <div class="block">Base class for all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>RuntimeExceptions</code></a> thrown
  by JUnit.</div>
@@ -242,14 +237,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <table class="useSummary">
-<caption><span>Classes in <a href="../../../../org/junit/platform/commons/package-summary.html">org.junit.platform.commons</a> used by <a href="../../../../org/junit/platform/commons/util/package-summary.html">org.junit.platform.commons.util</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Classes in <a href="package-summary.html">org.junit.platform.commons</a> used by <a href="util/package-summary.html">org.junit.platform.commons.util</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../org/junit/platform/commons/class-use/JUnitException.html#org.junit.platform.commons.util">JUnitException</a></th>
+<th class="colFirst" scope="row"><a href="class-use/JUnitException.html#org.junit.platform.commons.util">JUnitException</a></th>
 <td class="colLast">
 <div class="block">Base class for all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>RuntimeExceptions</code></a> thrown
  by JUnit.</div>
@@ -262,14 +257,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <table class="useSummary">
-<caption><span>Classes in <a href="../../../../org/junit/platform/commons/package-summary.html">org.junit.platform.commons</a> used by <a href="../../../../org/junit/platform/engine/package-summary.html">org.junit.platform.engine</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Classes in <a href="package-summary.html">org.junit.platform.commons</a> used by <a href="../engine/package-summary.html">org.junit.platform.engine</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../org/junit/platform/commons/class-use/JUnitException.html#org.junit.platform.engine">JUnitException</a></th>
+<th class="colFirst" scope="row"><a href="class-use/JUnitException.html#org.junit.platform.engine">JUnitException</a></th>
 <td class="colLast">
 <div class="block">Base class for all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>RuntimeExceptions</code></a> thrown
  by JUnit.</div>
@@ -292,7 +287,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li>Class</li>
 <li class="navBarCell1Rev">Use</li>
@@ -304,16 +299,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li>Prev</li>
-<li>Next</li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../index.html?org/junit/platform/commons/package-use.html" target="_top">Frames</a></li>
-<li><a href="package-use.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--

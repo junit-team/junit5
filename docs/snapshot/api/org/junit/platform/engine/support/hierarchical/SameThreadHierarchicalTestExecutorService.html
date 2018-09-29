@@ -13,7 +13,8 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../../../jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../../../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../../../../jquery/jquery-migrate-3.0.1.js"></script>
 <script type="text/javascript" src="../../../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -26,13 +27,15 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10};
+var data = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
-var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
+var pathtoroot = "../../../../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
@@ -48,7 +51,7 @@ var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/SameThreadHierarchicalTestExecutorService.html">Use</a></li>
@@ -60,16 +63,8 @@ var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ResourceLock.html" title="interface in org.junit.platform.engine.support.hierarchical"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.html" title="class in org.junit.platform.engine.support.hierarchical"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../../index.html?org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html" target="_top">Frames</a></li>
-<li><a href="SameThreadHierarchicalTestExecutorService.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
@@ -95,7 +90,7 @@ var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -122,7 +117,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="../../../../../../org/junit/platform/engine/support/hierarchical/package-summary.html">org.junit.platform.engine.support.hierarchical</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">org.junit.platform.engine.support.hierarchical</a></div>
 <h2 title="Class SameThreadHierarchicalTestExecutorService" class="title">Class SameThreadHierarchicalTestExecutorService</h2>
 </div>
 <div class="contentContainer">
@@ -139,16 +134,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/AutoCloseable.html?is-external=true" title="class or interface in java.lang" class="externalLink">AutoCloseable</a></code>, <code><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></code></dd>
+<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/AutoCloseable.html?is-external=true" title="class or interface in java.lang" class="externalLink">AutoCloseable</a></code>, <code><a href="HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></code></dd>
 </dl>
 <hr>
 <pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.3")
 public class <span class="typeNameLabel">SameThreadHierarchicalTestExecutorService</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
-implements <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></pre>
-<div class="block">A simple <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">executor service</a> that
- executes all <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> in the caller's thread.</div>
+implements <a href="HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></pre>
+<div class="block">A simple <a href="HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">executor service</a> that
+ executes all <a href="HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> in the caller's thread.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.3</dd>
@@ -170,8 +165,8 @@ implements <a href="../../../../../../org/junit/platform/engine/support/hierarch
 <li class="blockList"><a id="nested.classes.inherited.from.class.org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService">
 <!--   -->
 </a>
-<h3>Nested classes/interfaces inherited from interface&nbsp;org.junit.platform.engine.support.hierarchical.<a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></h3>
-<code><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService.TestTask</a></code></li>
+<h3>Nested classes/interfaces inherited from interface&nbsp;org.junit.platform.engine.support.hierarchical.<a href="HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></h3>
+<code><a href="HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService.TestTask</a></code></li>
 </ul>
 </li>
 </ul>
@@ -190,7 +185,7 @@ implements <a href="../../../../../../org/junit/platform/engine/support/hierarch
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html#%3Cinit%3E()">SameThreadHierarchicalTestExecutorService</a></span>()</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">SameThreadHierarchicalTestExecutorService</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -213,24 +208,24 @@ implements <a href="../../../../../../org/junit/platform/engine/support/hierarch
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html#close()">close</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#close()">close</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Close this service and let it perform any required cleanup work.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html#invokeAll(java.util.List)">invokeAll</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;? extends <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService.TestTask</a>&gt;&nbsp;tasks)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#invokeAll(java.util.List)">invokeAll</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;? extends <a href="HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService.TestTask</a>&gt;&nbsp;tasks)</code></th>
 <td class="colLast">
-<div class="block">Invoke all supplied <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> and block until
+<div class="block">Invoke all supplied <a href="HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> and block until
  their execution has finished.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">Future</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang" class="externalLink">Void</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html#submit(org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask)">submit</a></span>&#8203;(<a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService.TestTask</a>&nbsp;testTask)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#submit(org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask)">submit</a></span>&#8203;(<a href="HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService.TestTask</a>&nbsp;testTask)</code></th>
 <td class="colLast">
-<div class="block">Submit the supplied <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test task</a> to be executed by
+<div class="block">Submit the supplied <a href="HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test task</a> to be executed by
  this service.</div>
 </td>
 </tr>
@@ -283,30 +278,30 @@ implements <a href="../../../../../../org/junit/platform/engine/support/hierarch
 <ul class="blockList">
 <li class="blockList">
 <h4>submit</h4>
-<pre>public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">Future</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang" class="externalLink">Void</a>&gt;&nbsp;submit&#8203;(<a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService.TestTask</a>&nbsp;testTask)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html#submit(org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask)">HierarchicalTestExecutorService</a></code></span></div>
-<div class="block">Submit the supplied <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test task</a> to be executed by
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">Future</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Void.html?is-external=true" title="class or interface in java.lang" class="externalLink">Void</a>&gt;&nbsp;submit&#8203;(<a href="HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService.TestTask</a>&nbsp;testTask)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="HierarchicalTestExecutorService.html#submit(org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask)">HierarchicalTestExecutorService</a></code></span></div>
+<div class="block">Submit the supplied <a href="HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test task</a> to be executed by
  this service.
 
- <p>Implementations may <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#execute()">execute</a> the task
+ <p>Implementations may <a href="HierarchicalTestExecutorService.TestTask.html#execute()">execute</a> the task
  asynchronously as long as its
- <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#getExecutionMode()">execution mode</a> is
- <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html#CONCURRENT">concurrent</a>.
+ <a href="HierarchicalTestExecutorService.TestTask.html#getExecutionMode()">execution mode</a> is
+ <a href="Node.ExecutionMode.html#CONCURRENT">concurrent</a>.
 
  <p>Implementations must generally acquire and release the task's
- <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#getResourceLock()">resource lock</a> before and after its
+ <a href="HierarchicalTestExecutorService.TestTask.html#getResourceLock()">resource lock</a> before and after its
  execution unless they execute all tests in the same thread which
  upholds the same guarantees.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html#submit(org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask)">submit</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></code></dd>
+<dd><code><a href="HierarchicalTestExecutorService.html#submit(org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask)">submit</a></code>&nbsp;in interface&nbsp;<code><a href="HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>testTask</code> - the test task to be executed</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a future that the caller can use to wait for the task's execution
  to be finished</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html#invokeAll(java.util.List)"><code>HierarchicalTestExecutorService.invokeAll(List)</code></a></dd>
+<dd><a href="HierarchicalTestExecutorService.html#invokeAll(java.util.List)"><code>HierarchicalTestExecutorService.invokeAll(List)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -316,27 +311,27 @@ implements <a href="../../../../../../org/junit/platform/engine/support/hierarch
 <ul class="blockList">
 <li class="blockList">
 <h4>invokeAll</h4>
-<pre>public&nbsp;void&nbsp;invokeAll&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;? extends <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService.TestTask</a>&gt;&nbsp;tasks)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html#invokeAll(java.util.List)">HierarchicalTestExecutorService</a></code></span></div>
-<div class="block">Invoke all supplied <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> and block until
+<pre class="methodSignature">public&nbsp;void&nbsp;invokeAll&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;? extends <a href="HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService.TestTask</a>&gt;&nbsp;tasks)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="HierarchicalTestExecutorService.html#invokeAll(java.util.List)">HierarchicalTestExecutorService</a></code></span></div>
+<div class="block">Invoke all supplied <a href="HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> and block until
  their execution has finished.
 
- <p>Implementations may <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#execute()">execute</a> one or
+ <p>Implementations may <a href="HierarchicalTestExecutorService.TestTask.html#execute()">execute</a> one or
  multiple of the supplied tasks in parallel as long as their
- <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#getExecutionMode()">execution mode</a> is
- <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html#CONCURRENT">concurrent</a>.
+ <a href="HierarchicalTestExecutorService.TestTask.html#getExecutionMode()">execution mode</a> is
+ <a href="Node.ExecutionMode.html#CONCURRENT">concurrent</a>.
 
  <p>Implementations must generally acquire and release each task's
- <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html#getResourceLock()">resource lock</a> before and after its
+ <a href="HierarchicalTestExecutorService.TestTask.html#getResourceLock()">resource lock</a> before and after its
  execution unless they execute all tests in the same thread which
  upholds the same guarantees.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html#invokeAll(java.util.List)">invokeAll</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></code></dd>
+<dd><code><a href="HierarchicalTestExecutorService.html#invokeAll(java.util.List)">invokeAll</a></code>&nbsp;in interface&nbsp;<code><a href="HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>tasks</code> - the test tasks to be executed</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html#submit(org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask)"><code>HierarchicalTestExecutorService.submit(TestTask)</code></a></dd>
+<dd><a href="HierarchicalTestExecutorService.html#submit(org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask)"><code>HierarchicalTestExecutorService.submit(TestTask)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -346,8 +341,8 @@ implements <a href="../../../../../../org/junit/platform/engine/support/hierarch
 <ul class="blockListLast">
 <li class="blockList">
 <h4>close</h4>
-<pre>public&nbsp;void&nbsp;close()</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html#close()">HierarchicalTestExecutorService</a></code></span></div>
+<pre class="methodSignature">public&nbsp;void&nbsp;close()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="HierarchicalTestExecutorService.html#close()">HierarchicalTestExecutorService</a></code></span></div>
 <div class="block">Close this service and let it perform any required cleanup work.
 
  <p>For example, thread-based implementations should usually close their
@@ -356,7 +351,7 @@ implements <a href="../../../../../../org/junit/platform/engine/support/hierarch
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/AutoCloseable.html?is-external=true#close()" title="class or interface in java.lang" class="externalLink">close</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/AutoCloseable.html?is-external=true" title="class or interface in java.lang" class="externalLink">AutoCloseable</a></code></dd>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html#close()">close</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></code></dd>
+<dd><code><a href="HierarchicalTestExecutorService.html#close()">close</a></code>&nbsp;in interface&nbsp;<code><a href="HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -380,7 +375,7 @@ implements <a href="../../../../../../org/junit/platform/engine/support/hierarch
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/SameThreadHierarchicalTestExecutorService.html">Use</a></li>
@@ -392,16 +387,8 @@ implements <a href="../../../../../../org/junit/platform/engine/support/hierarch
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ResourceLock.html" title="interface in org.junit.platform.engine.support.hierarchical"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.html" title="class in org.junit.platform.engine.support.hierarchical"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../../index.html?org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html" target="_top">Frames</a></li>
-<li><a href="SameThreadHierarchicalTestExecutorService.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--
@@ -421,7 +408,7 @@ implements <a href="../../../../../../org/junit/platform/engine/support/hierarch
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>

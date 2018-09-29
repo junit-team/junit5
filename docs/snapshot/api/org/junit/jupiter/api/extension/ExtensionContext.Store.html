@@ -13,7 +13,8 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../../jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../../../jquery/jquery-migrate-3.0.1.js"></script>
 <script type="text/javascript" src="../../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -26,13 +27,15 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":18,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6};
+var data = {"i0":6,"i1":6,"i2":18,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
-var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
+var pathtoroot = "../../../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
@@ -48,7 +51,7 @@ var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/ExtensionContext.Store.html">Use</a></li>
@@ -60,16 +63,8 @@ var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Namespace.html" title="class in org.junit.jupiter.api.extension"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../index.html?org/junit/jupiter/api/extension/ExtensionContext.Store.html" target="_top">Frames</a></li>
-<li><a href="ExtensionContext.Store.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
@@ -122,7 +117,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="../../../../../org/junit/jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">org.junit.jupiter.api.extension</a></div>
 <h2 title="Interface ExtensionContext.Store" class="title">Interface ExtensionContext.Store</h2>
 </div>
 <div class="contentContainer">
@@ -131,11 +126,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="../../../../../org/junit/jupiter/engine/execution/NamespaceAwareStore.html" title="class in org.junit.jupiter.engine.execution">NamespaceAwareStore</a></code></dd>
+<dd><code><a href="../../engine/execution/NamespaceAwareStore.html" title="class in org.junit.jupiter.engine.execution">NamespaceAwareStore</a></code></dd>
 </dl>
 <dl>
 <dt>Enclosing interface:</dt>
-<dd><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a></dd>
+<dd><a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a></dd>
 </dl>
 <hr>
 <pre>public static interface <span class="typeNameLabel">ExtensionContext.Store</span></pre>
@@ -162,10 +157,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static interface&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext.Store.CloseableResource</a></span></code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext.Store.CloseableResource</a></span></code></th>
 <td class="colLast">
-<div class="block">Classes implementing this interface indicate that they want to <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.CloseableResource.html#close()"><code>ExtensionContext.Store.CloseableResource.close()</code></a>
- some underlying resource or resources when the enclosing <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html" title="interface in org.junit.jupiter.api.extension"><code>Store</code></a>
+<div class="block">Classes implementing this interface indicate that they want to <a href="ExtensionContext.Store.CloseableResource.html#close()"><code>ExtensionContext.Store.CloseableResource.close()</code></a>
+ some underlying resource or resources when the enclosing <a href="ExtensionContext.Store.html" title="interface in org.junit.jupiter.api.extension"><code>Store</code></a>
  is closed.</div>
 </td>
 </tr>
@@ -189,14 +184,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#get(java.lang.Object)">get</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(java.lang.Object)">get</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key)</code></th>
 <td class="colLast">
 <div class="block">Get the value that is stored under the supplied <code>key</code>.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>&lt;V&gt;&nbsp;V</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#get(java.lang.Object,java.lang.Class)">get</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(java.lang.Object,java.lang.Class)">get</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key,
    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;V&gt;&nbsp;requiredType)</code></th>
 <td class="colLast">
 <div class="block">Get the value of the specified required type that is stored under
@@ -205,7 +200,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>default &lt;V&gt;&nbsp;V</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#getOrComputeIfAbsent(java.lang.Class)">getOrComputeIfAbsent</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;V&gt;&nbsp;type)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getOrComputeIfAbsent(java.lang.Class)">getOrComputeIfAbsent</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;V&gt;&nbsp;type)</code></th>
 <td class="colLast">
 <div class="block">Get the object of type <code>type</code> that is present in this
  <code>Store</code> (<em>keyed</em> by <code>type</code>); and otherwise invoke
@@ -214,17 +209,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code>&lt;K,V&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#getOrComputeIfAbsent(K,java.util.function.Function)">getOrComputeIfAbsent</a></span>&#8203;(K&nbsp;key,
-                    <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;K,V&gt;&nbsp;defaultCreator)</code></th>
+<td class="colFirst"><code>&lt;K,&#8203;V&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getOrComputeIfAbsent(K,java.util.function.Function)">getOrComputeIfAbsent</a></span>&#8203;(K&nbsp;key,
+                    <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;K,&#8203;V&gt;&nbsp;defaultCreator)</code></th>
 <td class="colLast">
 <div class="block">Get the value that is stored under the supplied <code>key</code>.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>&lt;K,V&gt;&nbsp;V</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#getOrComputeIfAbsent(K,java.util.function.Function,java.lang.Class)">getOrComputeIfAbsent</a></span>&#8203;(K&nbsp;key,
-                    <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;K,V&gt;&nbsp;defaultCreator,
+<td class="colFirst"><code>&lt;K,&#8203;V&gt;<br>V</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getOrComputeIfAbsent(K,java.util.function.Function,java.lang.Class)">getOrComputeIfAbsent</a></span>&#8203;(K&nbsp;key,
+                    <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;K,&#8203;V&gt;&nbsp;defaultCreator,
                     <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;V&gt;&nbsp;requiredType)</code></th>
 <td class="colLast">
 <div class="block">Get the value of the specified required type that is stored under the
@@ -233,7 +228,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#put(java.lang.Object,java.lang.Object)">put</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#put(java.lang.Object,java.lang.Object)">put</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key,
    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Store a <code>value</code> for later retrieval under the supplied <code>key</code>.</div>
@@ -241,14 +236,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#remove(java.lang.Object)">remove</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#remove(java.lang.Object)">remove</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key)</code></th>
 <td class="colLast">
 <div class="block">Remove the value that was previously stored under the supplied <code>key</code>.</div>
 </td>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>&lt;V&gt;&nbsp;V</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#remove(java.lang.Object,java.lang.Class)">remove</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#remove(java.lang.Object,java.lang.Class)">remove</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key,
       <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;V&gt;&nbsp;requiredType)</code></th>
 <td class="colLast">
 <div class="block">Remove the value of the specified required type that was previously stored
@@ -278,15 +273,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>get</h4>
-<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;get&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key)</pre>
+<pre class="methodSignature"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;get&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key)</pre>
 <div class="block">Get the value that is stored under the supplied <code>key</code>.
 
- <p>If no value is stored in the current <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>
+ <p>If no value is stored in the current <a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>
  for the supplied <code>key</code>, ancestors of the context will be queried
  for a value with the same <code>key</code> in the <code>Namespace</code> used
  to create this store.
 
- <p>For greater type safety, consider using <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#get(java.lang.Object,java.lang.Class)"><code>get(Object, Class)</code></a>
+ <p>For greater type safety, consider using <a href="#get(java.lang.Object,java.lang.Class)"><code>get(Object, Class)</code></a>
  instead.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -294,7 +289,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value; potentially <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#get(java.lang.Object,java.lang.Class)"><code>get(Object, Class)</code></a></dd>
+<dd><a href="#get(java.lang.Object,java.lang.Class)"><code>get(Object, Class)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -304,12 +299,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>get</h4>
-<pre>&lt;V&gt;&nbsp;V&nbsp;get&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key,
+<pre class="methodSignature">&lt;V&gt;&nbsp;V&nbsp;get&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key,
           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;V&gt;&nbsp;requiredType)</pre>
 <div class="block">Get the value of the specified required type that is stored under
  the supplied <code>key</code>.
 
- <p>If no value is stored in the current <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>
+ <p>If no value is stored in the current <a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>
  for the supplied <code>key</code>, ancestors of the context will be queried
  for a value with the same <code>key</code> in the <code>Namespace</code> used
  to create this store.</div>
@@ -322,7 +317,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value; potentially <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#get(java.lang.Object)"><code>get(Object)</code></a></dd>
+<dd><a href="#get(java.lang.Object)"><code>get(Object)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -332,7 +327,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>getOrComputeIfAbsent</h4>
-<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#STABLE" title="class or interface in org.apiguardian.api" class="externalLink">STABLE</a>,
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#STABLE" title="class or interface in org.apiguardian.api" class="externalLink">STABLE</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.1")
 default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;V&gt;&nbsp;type)</pre>
 <div class="block">Get the object of type <code>type</code> that is present in this
@@ -349,10 +344,10 @@ default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(<a href="https://
  // X x = store.getOrComputeIfAbsent(X.class);
  </pre>
 
- <p>See <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#getOrComputeIfAbsent(K,java.util.function.Function,java.lang.Class)"><code>getOrComputeIfAbsent(Object, Function, Class)</code></a> for
+ <p>See <a href="#getOrComputeIfAbsent(K,java.util.function.Function,java.lang.Class)"><code>getOrComputeIfAbsent(Object, Function, Class)</code></a> for
  further details.
 
- <p>If <code>type</code> implements <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a>
+ <p>If <code>type</code> implements <a href="ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a>
  the <code>close()</code> method will be invoked on the stored object when
  the store is closed.</div>
 <dl>
@@ -365,9 +360,9 @@ default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(<a href="https://
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.1</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#getOrComputeIfAbsent(K,java.util.function.Function)"><code>getOrComputeIfAbsent(Object, Function)</code></a>, 
-<a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#getOrComputeIfAbsent(K,java.util.function.Function,java.lang.Class)"><code>getOrComputeIfAbsent(Object, Function, Class)</code></a>, 
-<a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a></dd>
+<dd><a href="#getOrComputeIfAbsent(K,java.util.function.Function)"><code>getOrComputeIfAbsent(Object, Function)</code></a>, 
+<a href="#getOrComputeIfAbsent(K,java.util.function.Function,java.lang.Class)"><code>getOrComputeIfAbsent(Object, Function, Class)</code></a>, 
+<a href="ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -379,11 +374,11 @@ default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(<a href="https://
 <ul class="blockList">
 <li class="blockList">
 <h4>getOrComputeIfAbsent</h4>
-<pre>&lt;K,V&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;getOrComputeIfAbsent&#8203;(K&nbsp;key,
-                                  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;K,V&gt;&nbsp;defaultCreator)</pre>
+<pre class="methodSignature">&lt;K,&#8203;V&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;getOrComputeIfAbsent&#8203;(K&nbsp;key,
+                                        <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;K,&#8203;V&gt;&nbsp;defaultCreator)</pre>
 <div class="block">Get the value that is stored under the supplied <code>key</code>.
 
- <p>If no value is stored in the current <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>
+ <p>If no value is stored in the current <a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>
  for the supplied <code>key</code>, ancestors of the context will be queried
  for a value with the same <code>key</code> in the <code>Namespace</code> used
  to create this store. If no value is found for the supplied <code>key</code>,
@@ -391,9 +386,9 @@ default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(<a href="https://
  the <code>key</code> as input), stored, and returned.
 
  <p>For greater type safety, consider using
- <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#getOrComputeIfAbsent(K,java.util.function.Function,java.lang.Class)"><code>getOrComputeIfAbsent(Object, Function, Class)</code></a> instead.
+ <a href="#getOrComputeIfAbsent(K,java.util.function.Function,java.lang.Class)"><code>getOrComputeIfAbsent(Object, Function, Class)</code></a> instead.
 
- <p>If the created value is an instance of <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a>
+ <p>If the created value is an instance of <a href="ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a>
  the <code>close()</code> method will be invoked on the stored object when
  the store is closed.</div>
 <dl>
@@ -407,9 +402,9 @@ default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(<a href="https://
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value; potentially <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#getOrComputeIfAbsent(java.lang.Class)"><code>getOrComputeIfAbsent(Class)</code></a>, 
-<a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#getOrComputeIfAbsent(K,java.util.function.Function,java.lang.Class)"><code>getOrComputeIfAbsent(Object, Function, Class)</code></a>, 
-<a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a></dd>
+<dd><a href="#getOrComputeIfAbsent(java.lang.Class)"><code>getOrComputeIfAbsent(Class)</code></a>, 
+<a href="#getOrComputeIfAbsent(K,java.util.function.Function,java.lang.Class)"><code>getOrComputeIfAbsent(Object, Function, Class)</code></a>, 
+<a href="ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -421,20 +416,20 @@ default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(<a href="https://
 <ul class="blockList">
 <li class="blockList">
 <h4>getOrComputeIfAbsent</h4>
-<pre>&lt;K,V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(K&nbsp;key,
-                             <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;K,V&gt;&nbsp;defaultCreator,
-                             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;V&gt;&nbsp;requiredType)</pre>
+<pre class="methodSignature">&lt;K,&#8203;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(K&nbsp;key,
+                                   <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;K,&#8203;V&gt;&nbsp;defaultCreator,
+                                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;V&gt;&nbsp;requiredType)</pre>
 <div class="block">Get the value of the specified required type that is stored under the
  supplied <code>key</code>.
 
- <p>If no value is stored in the current <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>
+ <p>If no value is stored in the current <a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>
  for the supplied <code>key</code>, ancestors of the context will be queried
  for a value with the same <code>key</code> in the <code>Namespace</code> used
  to create this store. If no value is found for the supplied <code>key</code>,
  a new value will be computed by the <code>defaultCreator</code> (given
  the <code>key</code> as input), stored, and returned.
 
- <p>If <code>requiredType</code> implements <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a>
+ <p>If <code>requiredType</code> implements <a href="ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a>
  the <code>close()</code> method will be invoked on the stored object when
  the store is closed.</div>
 <dl>
@@ -449,9 +444,9 @@ default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(<a href="https://
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value; potentially <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#getOrComputeIfAbsent(java.lang.Class)"><code>getOrComputeIfAbsent(Class)</code></a>, 
-<a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#getOrComputeIfAbsent(K,java.util.function.Function)"><code>getOrComputeIfAbsent(Object, Function)</code></a>, 
-<a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a></dd>
+<dd><a href="#getOrComputeIfAbsent(java.lang.Class)"><code>getOrComputeIfAbsent(Class)</code></a>, 
+<a href="#getOrComputeIfAbsent(K,java.util.function.Function)"><code>getOrComputeIfAbsent(Object, Function)</code></a>, 
+<a href="ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -461,14 +456,14 @@ default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(<a href="https://
 <ul class="blockList">
 <li class="blockList">
 <h4>put</h4>
-<pre>void&nbsp;put&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key,
+<pre class="methodSignature">void&nbsp;put&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key,
          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
 <div class="block">Store a <code>value</code> for later retrieval under the supplied <code>key</code>.
 
- <p>A stored <code>value</code> is visible in child <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContexts</code></a> for the store's <code>Namespace</code> unless they
+ <p>A stored <code>value</code> is visible in child <a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContexts</code></a> for the store's <code>Namespace</code> unless they
  overwrite it.
 
- <p>If the <code>value</code> is an instance of <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a>
+ <p>If the <code>value</code> is an instance of <a href="ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a>
  the <code>close()</code> method will be invoked on the stored object when
  the store is closed.</div>
 <dl>
@@ -477,7 +472,7 @@ default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(<a href="https://
  <code>null</code></dd>
 <dd><code>value</code> - the value to store; may be <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a></dd>
+<dd><a href="ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -487,14 +482,14 @@ default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(<a href="https://
 <ul class="blockList">
 <li class="blockList">
 <h4>remove</h4>
-<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;remove&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key)</pre>
+<pre class="methodSignature"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;remove&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key)</pre>
 <div class="block">Remove the value that was previously stored under the supplied <code>key</code>.
 
- <p>The value will only be removed in the current <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>,
- not in ancestors. In addition, the <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a> API will not
+ <p>The value will only be removed in the current <a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>,
+ not in ancestors. In addition, the <a href="ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a> API will not
  be honored for values that are manually removed via this method.
 
- <p>For greater type safety, consider using <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#remove(java.lang.Object,java.lang.Class)"><code>remove(Object, Class)</code></a>
+ <p>For greater type safety, consider using <a href="#remove(java.lang.Object,java.lang.Class)"><code>remove(Object, Class)</code></a>
  instead.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -503,7 +498,7 @@ default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(<a href="https://
 <dd>the previous value or <code>null</code> if no value was present
  for the specified key</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#remove(java.lang.Object,java.lang.Class)"><code>remove(Object, Class)</code></a></dd>
+<dd><a href="#remove(java.lang.Object,java.lang.Class)"><code>remove(Object, Class)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -513,13 +508,13 @@ default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(<a href="https://
 <ul class="blockListLast">
 <li class="blockList">
 <h4>remove</h4>
-<pre>&lt;V&gt;&nbsp;V&nbsp;remove&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key,
+<pre class="methodSignature">&lt;V&gt;&nbsp;V&nbsp;remove&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key,
              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;V&gt;&nbsp;requiredType)</pre>
 <div class="block">Remove the value of the specified required type that was previously stored
  under the supplied <code>key</code>.
 
- <p>The value will only be removed in the current <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>,
- not in ancestors. In addition, the <a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a> API will not
+ <p>The value will only be removed in the current <a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>,
+ not in ancestors. In addition, the <a href="ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext.Store.CloseableResource</code></a> API will not
  be honored for values that are manually removed via this method.</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -531,7 +526,7 @@ default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(<a href="https://
 <dd>the previous value or <code>null</code> if no value was present
  for the specified key</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.html#remove(java.lang.Object)"><code>remove(Object)</code></a></dd>
+<dd><a href="#remove(java.lang.Object)"><code>remove(Object)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -555,7 +550,7 @@ default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(<a href="https://
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/ExtensionContext.Store.html">Use</a></li>
@@ -567,16 +562,8 @@ default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrComputeIfAbsent&#8203;(<a href="https://
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Namespace.html" title="class in org.junit.jupiter.api.extension"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../org/junit/jupiter/api/extension/ExtensionContext.Store.CloseableResource.html" title="interface in org.junit.jupiter.api.extension"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../index.html?org/junit/jupiter/api/extension/ExtensionContext.Store.html" target="_top">Frames</a></li>
-<li><a href="ExtensionContext.Store.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--

@@ -13,7 +13,8 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../../../jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../../../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../../../../jquery/jquery-migrate-3.0.1.js"></script>
 <script type="text/javascript" src="../../../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -26,7 +27,9 @@
     catch(err) {
     }
 //-->
-var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
+var pathtoroot = "../../../../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
@@ -42,9 +45,9 @@ var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../../index.html">Overview</a></li>
 <li><a href="../package-summary.html">Package</a></li>
-<li><a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">Class</a></li>
+<li><a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">Class</a></li>
 <li class="navBarCell1Rev">Use</li>
 <li><a href="../package-tree.html">Tree</a></li>
 <li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
@@ -54,16 +57,8 @@ var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li>Prev</li>
-<li>Next</li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../../index.html?org/junit/jupiter/engine/extension/class-use/ExtensionRegistry.html" target="_top">Frames</a></li>
-<li><a href="ExtensionRegistry.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
@@ -106,7 +101,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <table class="useSummary">
-<caption><span>Packages that use <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Packages that use <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Package</th>
 <th class="colLast" scope="col">Description</th>
@@ -139,9 +134,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <section role="region"><a id="org.junit.jupiter.engine.descriptor">
 <!--   -->
 </a>
-<h3>Uses of <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a> in <a href="../../../../../../org/junit/jupiter/engine/descriptor/package-summary.html">org.junit.jupiter.engine.descriptor</a></h3>
+<h3>Uses of <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a> in <a href="../../descriptor/package-summary.html">org.junit.jupiter.engine.descriptor</a></h3>
 <table class="useSummary">
-<caption><span>Methods in <a href="../../../../../../org/junit/jupiter/engine/descriptor/package-summary.html">org.junit.jupiter.engine.descriptor</a> that return <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../../descriptor/package-summary.html">org.junit.jupiter.engine.descriptor</a> that return <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -149,19 +144,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code>protected <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">TestMethodTestDescriptor.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.html#populateNewExtensionRegistry(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">populateNewExtensionRegistry</a></span>&#8203;(<a href="../../../../../../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
+<td class="colFirst"><code>protected <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">TestMethodTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/TestMethodTestDescriptor.html#populateNewExtensionRegistry(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">populateNewExtensionRegistry</a></span>&#8203;(<a href="../../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>protected <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">TestTemplateInvocationTestDescriptor.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/descriptor/TestTemplateInvocationTestDescriptor.html#populateNewExtensionRegistry(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">populateNewExtensionRegistry</a></span>&#8203;(<a href="../../../../../../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
+<td class="colFirst"><code>protected <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">TestTemplateInvocationTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/TestTemplateInvocationTestDescriptor.html#populateNewExtensionRegistry(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">populateNewExtensionRegistry</a></span>&#8203;(<a href="../../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>
 <table class="useSummary">
-<caption><span>Methods in <a href="../../../../../../org/junit/jupiter/engine/descriptor/package-summary.html">org.junit.jupiter.engine.descriptor</a> with parameters of type <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../../descriptor/package-summary.html">org.junit.jupiter.engine.descriptor</a> with parameters of type <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -170,23 +165,23 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ClassTestDescriptor.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#instantiateTestClass(java.util.Optional,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;outerInstance,
-                    <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
-                    <a href="../../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ClassTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/ClassTestDescriptor.html#instantiateTestClass(java.util.Optional,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;outerInstance,
+                    <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
+                    <a href="../../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ClassTestDescriptor.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="../../../../../../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;parentExecutionContext,
-                    <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
-                    <a href="../../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ClassTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/ClassTestDescriptor.html#instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="../../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;parentExecutionContext,
+                    <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
+                    <a href="../../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">NestedClassTestDescriptor.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/descriptor/NestedClassTestDescriptor.html#instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="../../../../../../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;parentExecutionContext,
-                    <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
-                    <a href="../../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">NestedClassTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/NestedClassTestDescriptor.html#instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="../../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;parentExecutionContext,
+                    <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
+                    <a href="../../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -197,9 +192,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <section role="region"><a id="org.junit.jupiter.engine.execution">
 <!--   -->
 </a>
-<h3>Uses of <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a> in <a href="../../../../../../org/junit/jupiter/engine/execution/package-summary.html">org.junit.jupiter.engine.execution</a></h3>
+<h3>Uses of <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a> in <a href="../../execution/package-summary.html">org.junit.jupiter.engine.execution</a></h3>
 <table class="useSummary">
-<caption><span>Methods in <a href="../../../../../../org/junit/jupiter/engine/execution/package-summary.html">org.junit.jupiter.engine.execution</a> that return <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../../execution/package-summary.html">org.junit.jupiter.engine.execution</a> that return <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -207,14 +202,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code><a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">JupiterEngineExecutionContext.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html#getExtensionRegistry()">getExtensionRegistry</a></span>()</code></th>
+<td class="colFirst"><code><a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">JupiterEngineExecutionContext.</span><code><span class="memberNameLink"><a href="../../execution/JupiterEngineExecutionContext.html#getExtensionRegistry()">getExtensionRegistry</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>
 <table class="useSummary">
-<caption><span>Methods in <a href="../../../../../../org/junit/jupiter/engine/execution/package-summary.html">org.junit.jupiter.engine.execution</a> with parameters of type <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../../execution/package-summary.html">org.junit.jupiter.engine.execution</a> with parameters of type <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -222,21 +217,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code><a href="../../../../../../org/junit/jupiter/api/extension/ConditionEvaluationResult.html" title="class in org.junit.jupiter.api.extension">ConditionEvaluationResult</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ConditionEvaluator.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/execution/ConditionEvaluator.html#evaluate(org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.platform.engine.ConfigurationParameters,org.junit.jupiter.api.extension.ExtensionContext)">evaluate</a></span>&#8203;(<a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry,
-        <a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;configurationParameters,
-        <a href="../../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></th>
+<td class="colFirst"><code><a href="../../../api/extension/ConditionEvaluationResult.html" title="class in org.junit.jupiter.api.extension">ConditionEvaluationResult</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ConditionEvaluator.</span><code><span class="memberNameLink"><a href="../../execution/ConditionEvaluator.html#evaluate(org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.platform.engine.ConfigurationParameters,org.junit.jupiter.api.extension.ExtensionContext)">evaluate</a></span>&#8203;(<a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry,
+        <a href="../../../../platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;configurationParameters,
+        <a href="../../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></th>
 <td class="colLast">
-<div class="block">Evaluate all <a href="../../../../../../org/junit/jupiter/api/extension/ExecutionCondition.html" title="interface in org.junit.jupiter.api.extension"><code>ExecutionCondition</code></a> extensions registered for the
- supplied <a href="../../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>.</div>
+<div class="block">Evaluate all <a href="../../../api/extension/ExecutionCondition.html" title="interface in org.junit.jupiter.api.extension"><code>ExecutionCondition</code></a> extensions registered for the
+ supplied <a href="../../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutableInvoker.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/execution/ExecutableInvoker.html#invoke(java.lang.reflect.Constructor,java.lang.Object,org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry)">invoke</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;T&gt;&nbsp;constructor,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutableInvoker.</span><code><span class="memberNameLink"><a href="../../execution/ExecutableInvoker.html#invoke(java.lang.reflect.Constructor,java.lang.Object,org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry)">invoke</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;T&gt;&nbsp;constructor,
       <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;outerInstance,
-      <a href="../../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext,
-      <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry)</code></th>
+      <a href="../../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext,
+      <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry)</code></th>
 <td class="colLast">
 <div class="block">Invoke the supplied constructor with the supplied outer instance and
  dynamic parameter resolution.</div>
@@ -244,19 +239,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutableInvoker.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/execution/ExecutableInvoker.html#invoke(java.lang.reflect.Constructor,org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry)">invoke</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;T&gt;&nbsp;constructor,
-      <a href="../../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext,
-      <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutableInvoker.</span><code><span class="memberNameLink"><a href="../../execution/ExecutableInvoker.html#invoke(java.lang.reflect.Constructor,org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry)">invoke</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;T&gt;&nbsp;constructor,
+      <a href="../../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext,
+      <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry)</code></th>
 <td class="colLast">
 <div class="block">Invoke the supplied constructor with dynamic parameter resolution.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutableInvoker.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/execution/ExecutableInvoker.html#invoke(java.lang.reflect.Method,java.lang.Object,org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry)">invoke</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutableInvoker.</span><code><span class="memberNameLink"><a href="../../execution/ExecutableInvoker.html#invoke(java.lang.reflect.Method,java.lang.Object,org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry)">invoke</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method,
       <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;target,
-      <a href="../../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext,
-      <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry)</code></th>
+      <a href="../../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext,
+      <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry)</code></th>
 <td class="colLast">
 <div class="block">Invoke the supplied method on the supplied target object with dynamic parameter
  resolution.</div>
@@ -264,34 +259,34 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutableInvoker.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/execution/ExecutableInvoker.html#invoke(java.lang.reflect.Method,org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry)">invoke</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method,
-      <a href="../../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext,
-      <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutableInvoker.</span><code><span class="memberNameLink"><a href="../../execution/ExecutableInvoker.html#invoke(java.lang.reflect.Method,org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry)">invoke</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method,
+      <a href="../../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext,
+      <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry)</code></th>
 <td class="colLast">
 <div class="block">Invoke the supplied <code>static</code> method with dynamic parameter resolution.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">AfterEachMethodAdapter.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/execution/AfterEachMethodAdapter.html#invokeAfterEachMethod(org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry)">invokeAfterEachMethod</a></span>&#8203;(<a href="../../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
-                     <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">AfterEachMethodAdapter.</span><code><span class="memberNameLink"><a href="../../execution/AfterEachMethodAdapter.html#invokeAfterEachMethod(org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry)">invokeAfterEachMethod</a></span>&#8203;(<a href="../../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
+                     <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">BeforeEachMethodAdapter.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/execution/BeforeEachMethodAdapter.html#invokeBeforeEachMethod(org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry)">invokeBeforeEachMethod</a></span>&#8203;(<a href="../../../../../../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
-                      <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">BeforeEachMethodAdapter.</span><code><span class="memberNameLink"><a href="../../execution/BeforeEachMethodAdapter.html#invokeBeforeEachMethod(org.junit.jupiter.api.extension.ExtensionContext,org.junit.jupiter.engine.extension.ExtensionRegistry)">invokeBeforeEachMethod</a></span>&#8203;(<a href="../../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
+                      <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="../../../../../../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.Builder.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext.Builder</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">JupiterEngineExecutionContext.Builder.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.Builder.html#withExtensionRegistry(org.junit.jupiter.engine.extension.ExtensionRegistry)">withExtensionRegistry</a></span>&#8203;(<a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry)</code></th>
+<td class="colFirst"><code><a href="../../execution/JupiterEngineExecutionContext.Builder.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext.Builder</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">JupiterEngineExecutionContext.Builder.</span><code><span class="memberNameLink"><a href="../../execution/JupiterEngineExecutionContext.Builder.html#withExtensionRegistry(org.junit.jupiter.engine.extension.ExtensionRegistry)">withExtensionRegistry</a></span>&#8203;(<a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>
 <table class="useSummary">
-<caption><span>Method parameters in <a href="../../../../../../org/junit/jupiter/engine/execution/package-summary.html">org.junit.jupiter.engine.execution</a> with type arguments of type <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Method parameters in <a href="../../execution/package-summary.html">org.junit.jupiter.engine.execution</a> with type arguments of type <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -300,7 +295,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">TestInstanceProvider.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/execution/TestInstanceProvider.html#getTestInstance(java.util.Optional)">getTestInstance</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&gt;&nbsp;childExtensionRegistry)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">TestInstanceProvider.</span><code><span class="memberNameLink"><a href="../../execution/TestInstanceProvider.html#getTestInstance(java.util.Optional)">getTestInstance</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&gt;&nbsp;childExtensionRegistry)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -311,9 +306,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <section role="region"><a id="org.junit.jupiter.engine.extension">
 <!--   -->
 </a>
-<h3>Uses of <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a> in <a href="../../../../../../org/junit/jupiter/engine/extension/package-summary.html">org.junit.jupiter.engine.extension</a></h3>
+<h3>Uses of <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a> in <a href="../package-summary.html">org.junit.jupiter.engine.extension</a></h3>
 <table class="useSummary">
-<caption><span>Methods in <a href="../../../../../../org/junit/jupiter/engine/extension/package-summary.html">org.junit.jupiter.engine.extension</a> that return <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../package-summary.html">org.junit.jupiter.engine.extension</a> that return <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -321,17 +316,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExtensionRegistry.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#createRegistryFrom(org.junit.jupiter.engine.extension.ExtensionRegistry,java.util.List)">createRegistryFrom</a></span>&#8203;(<a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;parentRegistry,
-                  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="../../../../../../org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&gt;&gt;&nbsp;extensionTypes)</code></th>
+<td class="colFirst"><code>static <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExtensionRegistry.</span><code><span class="memberNameLink"><a href="../ExtensionRegistry.html#createRegistryFrom(org.junit.jupiter.engine.extension.ExtensionRegistry,java.util.List)">createRegistryFrom</a></span>&#8203;(<a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;parentRegistry,
+                  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="../../../api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&gt;&gt;&nbsp;extensionTypes)</code></th>
 <td class="colLast">
 <div class="block">Factory for creating and populating a new registry from a list of
  extension types and a parent registry.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExtensionRegistry.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#createRegistryWithDefaultExtensions(org.junit.platform.engine.ConfigurationParameters)">createRegistryWithDefaultExtensions</a></span>&#8203;(<a href="../../../../../../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;configParams)</code></th>
+<td class="colFirst"><code>static <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExtensionRegistry.</span><code><span class="memberNameLink"><a href="../ExtensionRegistry.html#createRegistryWithDefaultExtensions(org.junit.platform.engine.ConfigurationParameters)">createRegistryWithDefaultExtensions</a></span>&#8203;(<a href="../../../../platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;configParams)</code></th>
 <td class="colLast">
 <div class="block">Factory for creating and populating a new root registry with the default
  extensions.</div>
@@ -340,7 +335,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody>
 </table>
 <table class="useSummary">
-<caption><span>Methods in <a href="../../../../../../org/junit/jupiter/engine/extension/package-summary.html">org.junit.jupiter.engine.extension</a> with parameters of type <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../package-summary.html">org.junit.jupiter.engine.extension</a> with parameters of type <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -348,9 +343,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExtensionRegistry.</span><code><span class="memberNameLink"><a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html#createRegistryFrom(org.junit.jupiter.engine.extension.ExtensionRegistry,java.util.List)">createRegistryFrom</a></span>&#8203;(<a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;parentRegistry,
-                  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="../../../../../../org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&gt;&gt;&nbsp;extensionTypes)</code></th>
+<td class="colFirst"><code>static <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExtensionRegistry.</span><code><span class="memberNameLink"><a href="../ExtensionRegistry.html#createRegistryFrom(org.junit.jupiter.engine.extension.ExtensionRegistry,java.util.List)">createRegistryFrom</a></span>&#8203;(<a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;parentRegistry,
+                  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="../../../api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&gt;&gt;&nbsp;extensionTypes)</code></th>
 <td class="colLast">
 <div class="block">Factory for creating and populating a new registry from a list of
  extension types and a parent registry.</div>
@@ -376,9 +371,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../../index.html">Overview</a></li>
 <li><a href="../package-summary.html">Package</a></li>
-<li><a href="../../../../../../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">Class</a></li>
+<li><a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">Class</a></li>
 <li class="navBarCell1Rev">Use</li>
 <li><a href="../package-tree.html">Tree</a></li>
 <li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
@@ -388,16 +383,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li>Prev</li>
-<li>Next</li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../../index.html?org/junit/jupiter/engine/extension/class-use/ExtensionRegistry.html" target="_top">Frames</a></li>
-<li><a href="ExtensionRegistry.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--

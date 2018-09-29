@@ -13,7 +13,8 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../../../jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../../../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../../../../jquery/jquery-migrate-3.0.1.js"></script>
 <script type="text/javascript" src="../../../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -26,7 +27,9 @@
     catch(err) {
     }
 //-->
-var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
+var pathtoroot = "../../../../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
@@ -42,7 +45,7 @@ var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../../index.html">Overview</a></li>
 <li class="navBarCell1Rev">Package</li>
 <li>Class</li>
 <li><a href="package-use.html">Use</a></li>
@@ -54,16 +57,8 @@ var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../../org/junit/platform/engine/support/filter/package-summary.html">Prev&nbsp;Package</a></li>
-<li><a href="../../../../../../org/junit/platform/launcher/package-summary.html">Next&nbsp;Package</a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../../index.html?org/junit/platform/engine/support/hierarchical/package-summary.html" target="_top">Frames</a></li>
-<li><a href="package-summary.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
@@ -107,9 +102,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <div class="block">Support classes and base implementation for any
- <a href="../../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> that wishes to organize test suites
+ <a href="../../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> that wishes to organize test suites
  hierarchically based on the
- <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>Node</code></a> abstraction.</div>
+ <a href="Node.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>Node</code></a> abstraction.</div>
 </section>
 <ul class="blockList">
 <li class="blockList">
@@ -121,71 +116,71 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/EngineExecutionContext.html" title="interface in org.junit.platform.engine.support.hierarchical">EngineExecutionContext</a></th>
+<th class="colFirst" scope="row"><a href="EngineExecutionContext.html" title="interface in org.junit.platform.engine.support.hierarchical">EngineExecutionContext</a></th>
 <td class="colLast">
 <div class="block">Marker interface for an execution context used by a concrete implementation
- of <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html" title="class in org.junit.platform.engine.support.hierarchical"><code>HierarchicalTestEngine</code></a> and its collaborators.</div>
+ of <a href="HierarchicalTestEngine.html" title="class in org.junit.platform.engine.support.hierarchical"><code>HierarchicalTestEngine</code></a> and its collaborators.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></th>
+<th class="colFirst" scope="row"><a href="HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService</a></th>
 <td class="colLast">
-<div class="block">A closeable service that executes <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a>.</div>
+<div class="block">A closeable service that executes <a href="HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a>.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService.TestTask</a></th>
+<th class="colFirst" scope="row"><a href="HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">HierarchicalTestExecutorService.TestTask</a></th>
 <td class="colLast">
 <div class="block">An executable task that represents a single test or container.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical">Node</a>&lt;C extends <a href="../../../../../../org/junit/platform/engine/support/hierarchical/EngineExecutionContext.html" title="interface in org.junit.platform.engine.support.hierarchical">EngineExecutionContext</a>&gt;</th>
+<th class="colFirst" scope="row"><a href="Node.html" title="interface in org.junit.platform.engine.support.hierarchical">Node</a>&lt;C extends <a href="EngineExecutionContext.html" title="interface in org.junit.platform.engine.support.hierarchical">EngineExecutionContext</a>&gt;</th>
 <td class="colLast">
 <div class="block">A <em>node</em> within the execution hierarchy.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.DynamicTestExecutor.html" title="interface in org.junit.platform.engine.support.hierarchical">Node.DynamicTestExecutor</a></th>
+<th class="colFirst" scope="row"><a href="Node.DynamicTestExecutor.html" title="interface in org.junit.platform.engine.support.hierarchical">Node.DynamicTestExecutor</a></th>
 <td class="colLast">
 <div class="block">Executor for additional, dynamic test descriptors discovered during
- execution of a <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>Node</code></a>.</div>
+ execution of a <a href="Node.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>Node</code></a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ParallelExecutionConfiguration.html" title="interface in org.junit.platform.engine.support.hierarchical">ParallelExecutionConfiguration</a></th>
+<th class="colFirst" scope="row"><a href="ParallelExecutionConfiguration.html" title="interface in org.junit.platform.engine.support.hierarchical">ParallelExecutionConfiguration</a></th>
 <td class="colLast">
 <div class="block">Configuration to use for parallel test execution.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.html" title="interface in org.junit.platform.engine.support.hierarchical">ParallelExecutionConfigurationStrategy</a></th>
+<th class="colFirst" scope="row"><a href="ParallelExecutionConfigurationStrategy.html" title="interface in org.junit.platform.engine.support.hierarchical">ParallelExecutionConfigurationStrategy</a></th>
 <td class="colLast">
 <div class="block">A strategy to use for configuring parallel test execution.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ResourceLock.html" title="interface in org.junit.platform.engine.support.hierarchical">ResourceLock</a></th>
+<th class="colFirst" scope="row"><a href="ResourceLock.html" title="interface in org.junit.platform.engine.support.hierarchical">ResourceLock</a></th>
 <td class="colLast">
 <div class="block">A lock for a one or more resources.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.Executable.html" title="interface in org.junit.platform.engine.support.hierarchical">SingleTestExecutor.Executable</a></th>
+<th class="colFirst" scope="row"><a href="SingleTestExecutor.Executable.html" title="interface in org.junit.platform.engine.support.hierarchical">SingleTestExecutor.Executable</a></th>
 <td class="colLast">
 <div class="block">Functional interface for a single test to be executed by
- <a href="../../../../../../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.html" title="class in org.junit.platform.engine.support.hierarchical"><code>SingleTestExecutor</code></a>.</div>
+ <a href="SingleTestExecutor.html" title="class in org.junit.platform.engine.support.hierarchical"><code>SingleTestExecutor</code></a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.Executable.html" title="interface in org.junit.platform.engine.support.hierarchical">ThrowableCollector.Executable</a></th>
+<th class="colFirst" scope="row"><a href="ThrowableCollector.Executable.html" title="interface in org.junit.platform.engine.support.hierarchical">ThrowableCollector.Executable</a></th>
 <td class="colLast">
 <div class="block">Functional interface for an executable block of code that may throw a
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a>.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.Factory.html" title="interface in org.junit.platform.engine.support.hierarchical">ThrowableCollector.Factory</a></th>
+<th class="colFirst" scope="row"><a href="ThrowableCollector.Factory.html" title="interface in org.junit.platform.engine.support.hierarchical">ThrowableCollector.Factory</a></th>
 <td class="colLast">
 <div class="block">Factory for <code>ThrowableCollector</code> instances.</div>
 </td>
@@ -202,57 +197,57 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">ExclusiveResource</a></th>
+<th class="colFirst" scope="row"><a href="ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">ExclusiveResource</a></th>
 <td class="colLast">
 <div class="block">An exclusive resource identified by a key with a lock mode that is used to
  synchronize access to shared resources when executing nodes in parallel.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.html" title="class in org.junit.platform.engine.support.hierarchical">ForkJoinPoolHierarchicalTestExecutorService</a></th>
+<th class="colFirst" scope="row"><a href="ForkJoinPoolHierarchicalTestExecutorService.html" title="class in org.junit.platform.engine.support.hierarchical">ForkJoinPoolHierarchicalTestExecutorService</a></th>
 <td class="colLast">
 <div class="block">A <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ForkJoinPool.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink"><code>ForkJoinPool</code></a>-based
- <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">executor service</a> that executes
- <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> with the configured parallelism.</div>
+ <a href="HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">executor service</a> that executes
+ <a href="HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> with the configured parallelism.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestEngine.html" title="class in org.junit.platform.engine.support.hierarchical">HierarchicalTestEngine</a>&lt;C extends <a href="../../../../../../org/junit/platform/engine/support/hierarchical/EngineExecutionContext.html" title="interface in org.junit.platform.engine.support.hierarchical">EngineExecutionContext</a>&gt;</th>
+<th class="colFirst" scope="row"><a href="HierarchicalTestEngine.html" title="class in org.junit.platform.engine.support.hierarchical">HierarchicalTestEngine</a>&lt;C extends <a href="EngineExecutionContext.html" title="interface in org.junit.platform.engine.support.hierarchical">EngineExecutionContext</a>&gt;</th>
 <td class="colLast">
-<div class="block">Abstract base class for all <a href="../../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> implementations that wish
- to organize test suites hierarchically based on the <a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>Node</code></a> abstraction.</div>
+<div class="block">Abstract base class for all <a href="../../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> implementations that wish
+ to organize test suites hierarchically based on the <a href="Node.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>Node</code></a> abstraction.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.SkipResult.html" title="class in org.junit.platform.engine.support.hierarchical">Node.SkipResult</a></th>
+<th class="colFirst" scope="row"><a href="Node.SkipResult.html" title="class in org.junit.platform.engine.support.hierarchical">Node.SkipResult</a></th>
 <td class="colLast">
 <div class="block">The result of determining whether the execution of a given <code>context</code>
  should be <em>skipped</em>.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/OpenTest4JAwareThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">OpenTest4JAwareThrowableCollector</a></th>
+<th class="colFirst" scope="row"><a href="OpenTest4JAwareThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">OpenTest4JAwareThrowableCollector</a></th>
 <td class="colLast">
-<div class="block">Specialization of <a href="../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical"><code>ThrowableCollector</code></a> that treats instances of
+<div class="block">Specialization of <a href="ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical"><code>ThrowableCollector</code></a> that treats instances of
  <a href="https://ota4j-team.github.io/opentest4j/docs/1.1.1/api/org/opentest4j/TestAbortedException.html?is-external=true" title="class or interface in org.opentest4j" class="externalLink"><code>TestAbortedException</code></a> as <em>aborting</em>.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.html" title="class in org.junit.platform.engine.support.hierarchical">SameThreadHierarchicalTestExecutorService</a></th>
+<th class="colFirst" scope="row"><a href="SameThreadHierarchicalTestExecutorService.html" title="class in org.junit.platform.engine.support.hierarchical">SameThreadHierarchicalTestExecutorService</a></th>
 <td class="colLast">
-<div class="block">A simple <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">executor service</a> that
- executes all <a href="../../../../../../org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> in the caller's thread.</div>
+<div class="block">A simple <a href="HierarchicalTestExecutorService.html" title="interface in org.junit.platform.engine.support.hierarchical">executor service</a> that
+ executes all <a href="HierarchicalTestExecutorService.TestTask.html" title="interface in org.junit.platform.engine.support.hierarchical">test tasks</a> in the caller's thread.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/SingleTestExecutor.html" title="class in org.junit.platform.engine.support.hierarchical">SingleTestExecutor</a></th>
+<th class="colFirst" scope="row"><a href="SingleTestExecutor.html" title="class in org.junit.platform.engine.support.hierarchical">SingleTestExecutor</a></th>
 <td class="colLast">Deprecated.
-<div class="deprecationComment">Please use <a href="../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html#execute(org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executable)"><code>ThrowableCollector.execute(org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executable)</code></a> and
- <a href="../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html#toTestExecutionResult()"><code>ThrowableCollector.toTestExecutionResult()</code></a> instead.</div>
+<div class="deprecationComment">Please use <a href="ThrowableCollector.html#execute(org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executable)"><code>ThrowableCollector.execute(org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executable)</code></a> and
+ <a href="ThrowableCollector.html#toTestExecutionResult()"><code>ThrowableCollector.toTestExecutionResult()</code></a> instead.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a></th>
+<th class="colFirst" scope="row"><a href="ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a></th>
 <td class="colLast">
 <div class="block">Simple component that can be used to collect one or more instances of
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a>.</div>
@@ -270,21 +265,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html" title="enum in org.junit.platform.engine.support.hierarchical">DefaultParallelExecutionConfigurationStrategy</a></th>
+<th class="colFirst" scope="row"><a href="DefaultParallelExecutionConfigurationStrategy.html" title="enum in org.junit.platform.engine.support.hierarchical">DefaultParallelExecutionConfigurationStrategy</a></th>
 <td class="colLast">
 <div class="block">Default implementations of configuration strategies for parallel test
  execution.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/ExclusiveResource.LockMode.html" title="enum in org.junit.platform.engine.support.hierarchical">ExclusiveResource.LockMode</a></th>
+<th class="colFirst" scope="row"><a href="ExclusiveResource.LockMode.html" title="enum in org.junit.platform.engine.support.hierarchical">ExclusiveResource.LockMode</a></th>
 <td class="colLast">
 <div class="block"><code>LockMode</code> translates to the respective <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReadWriteLock.html?is-external=true" title="class or interface in java.util.concurrent.locks" class="externalLink"><code>ReadWriteLock</code></a>
  locks.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a></th>
+<th class="colFirst" scope="row"><a href="Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a></th>
 <td class="colLast">
 <div class="block">Supported execution modes for parallel execution.</div>
 </td>
@@ -306,7 +301,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../../index.html">Overview</a></li>
 <li class="navBarCell1Rev">Package</li>
 <li>Class</li>
 <li><a href="package-use.html">Use</a></li>
@@ -318,16 +313,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../../org/junit/platform/engine/support/filter/package-summary.html">Prev&nbsp;Package</a></li>
-<li><a href="../../../../../../org/junit/platform/launcher/package-summary.html">Next&nbsp;Package</a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../../index.html?org/junit/platform/engine/support/hierarchical/package-summary.html" target="_top">Frames</a></li>
-<li><a href="package-summary.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--

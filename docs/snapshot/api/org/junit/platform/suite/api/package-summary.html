@@ -13,7 +13,8 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../../jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../../../jquery/jquery-migrate-3.0.1.js"></script>
 <script type="text/javascript" src="../../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -26,7 +27,9 @@
     catch(err) {
     }
 //-->
-var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
+var pathtoroot = "../../../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
@@ -42,7 +45,7 @@ var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../index.html">Overview</a></li>
 <li class="navBarCell1Rev">Package</li>
 <li>Class</li>
 <li><a href="package-use.html">Use</a></li>
@@ -54,16 +57,8 @@ var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../org/junit/platform/runner/package-summary.html">Prev&nbsp;Package</a></li>
-<li><a href="../../../../../org/junit/vintage/engine/package-summary.html">Next&nbsp;Package</a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../index.html?org/junit/platform/suite/api/package-summary.html" target="_top">Frames</a></li>
-<li><a href="package-summary.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
@@ -118,7 +113,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/suite/api/ExcludeClassNamePatterns.html" title="annotation in org.junit.platform.suite.api">ExcludeClassNamePatterns</a></th>
+<th class="colFirst" scope="row"><a href="ExcludeClassNamePatterns.html" title="annotation in org.junit.platform.suite.api">ExcludeClassNamePatterns</a></th>
 <td class="colLast">
 <div class="block"><code>@ExcludeClassNamePatterns</code> specifies regular expressions that are used
  to match against fully qualified class names when running a test suite on the
@@ -126,30 +121,30 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/suite/api/ExcludeEngines.html" title="annotation in org.junit.platform.suite.api">ExcludeEngines</a></th>
+<th class="colFirst" scope="row"><a href="ExcludeEngines.html" title="annotation in org.junit.platform.suite.api">ExcludeEngines</a></th>
 <td class="colLast">
-<div class="block"><code>@ExcludeEngines</code> specifies the <a href="../../../../../org/junit/platform/suite/api/ExcludeEngines.html#value()">IDs</a> of
- <a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> to be excluded
+<div class="block"><code>@ExcludeEngines</code> specifies the <a href="ExcludeEngines.html#value()">IDs</a> of
+ <a href="../../engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> to be excluded
  when running a test suite on the JUnit Platform.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/suite/api/ExcludePackages.html" title="annotation in org.junit.platform.suite.api">ExcludePackages</a></th>
+<th class="colFirst" scope="row"><a href="ExcludePackages.html" title="annotation in org.junit.platform.suite.api">ExcludePackages</a></th>
 <td class="colLast">
-<div class="block"><code>@ExcludePackages</code> specifies the <a href="../../../../../org/junit/platform/suite/api/ExcludePackages.html#value()">packages</a> to be
+<div class="block"><code>@ExcludePackages</code> specifies the <a href="ExcludePackages.html#value()">packages</a> to be
  excluded when running a test suite on the JUnit Platform.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/suite/api/ExcludeTags.html" title="annotation in org.junit.platform.suite.api">ExcludeTags</a></th>
+<th class="colFirst" scope="row"><a href="ExcludeTags.html" title="annotation in org.junit.platform.suite.api">ExcludeTags</a></th>
 <td class="colLast">
 <div class="block"><code>@ExcludeTags</code> specifies the
- <a href="../../../../../org/junit/platform/suite/api/ExcludeTags.html#value()">tags or tag expressions</a> to be excluded when running a
+ <a href="ExcludeTags.html#value()">tags or tag expressions</a> to be excluded when running a
  test suite on the JUnit Platform.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/suite/api/IncludeClassNamePatterns.html" title="annotation in org.junit.platform.suite.api">IncludeClassNamePatterns</a></th>
+<th class="colFirst" scope="row"><a href="IncludeClassNamePatterns.html" title="annotation in org.junit.platform.suite.api">IncludeClassNamePatterns</a></th>
 <td class="colLast">
 <div class="block"><code>@IncludeClassNamePatterns</code> specifies regular expressions that are used
  to match against fully qualified class names when running a test suite on the
@@ -157,52 +152,52 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/suite/api/IncludeEngines.html" title="annotation in org.junit.platform.suite.api">IncludeEngines</a></th>
+<th class="colFirst" scope="row"><a href="IncludeEngines.html" title="annotation in org.junit.platform.suite.api">IncludeEngines</a></th>
 <td class="colLast">
-<div class="block"><code>@IncludeEngines</code> specifies the <a href="../../../../../org/junit/platform/suite/api/IncludeEngines.html#value()">IDs</a> of
- <a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> to be included
+<div class="block"><code>@IncludeEngines</code> specifies the <a href="IncludeEngines.html#value()">IDs</a> of
+ <a href="../../engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> to be included
  when running a test suite on the JUnit Platform.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/suite/api/IncludePackages.html" title="annotation in org.junit.platform.suite.api">IncludePackages</a></th>
+<th class="colFirst" scope="row"><a href="IncludePackages.html" title="annotation in org.junit.platform.suite.api">IncludePackages</a></th>
 <td class="colLast">
-<div class="block"><code>@IncludePackages</code> specifies the <a href="../../../../../org/junit/platform/suite/api/IncludePackages.html#value()">packages</a> to be
+<div class="block"><code>@IncludePackages</code> specifies the <a href="IncludePackages.html#value()">packages</a> to be
  included when running a test suite on the JUnit Platform.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/suite/api/IncludeTags.html" title="annotation in org.junit.platform.suite.api">IncludeTags</a></th>
+<th class="colFirst" scope="row"><a href="IncludeTags.html" title="annotation in org.junit.platform.suite.api">IncludeTags</a></th>
 <td class="colLast">
 <div class="block"><code>@IncludeTags</code> specifies the
- <a href="../../../../../org/junit/platform/suite/api/IncludeTags.html#value()">tags or tag expressions</a> to be included when running a
+ <a href="IncludeTags.html#value()">tags or tag expressions</a> to be included when running a
  test suite on the JUnit Platform.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/suite/api/SelectClasses.html" title="annotation in org.junit.platform.suite.api">SelectClasses</a></th>
+<th class="colFirst" scope="row"><a href="SelectClasses.html" title="annotation in org.junit.platform.suite.api">SelectClasses</a></th>
 <td class="colLast">
 <div class="block"><code>@SelectClasses</code> specifies the classes to <em>select</em> when running
  a test suite on the JUnit Platform.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/suite/api/SelectPackages.html" title="annotation in org.junit.platform.suite.api">SelectPackages</a></th>
+<th class="colFirst" scope="row"><a href="SelectPackages.html" title="annotation in org.junit.platform.suite.api">SelectPackages</a></th>
 <td class="colLast">
 <div class="block"><code>@SelectPackages</code> specifies the names of packages to <em>select</em>
  when running a test suite on the JUnit Platform.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/suite/api/SuiteDisplayName.html" title="annotation in org.junit.platform.suite.api">SuiteDisplayName</a></th>
+<th class="colFirst" scope="row"><a href="SuiteDisplayName.html" title="annotation in org.junit.platform.suite.api">SuiteDisplayName</a></th>
 <td class="colLast">
-<div class="block"><code>@SuiteDisplayName</code> is used to declare a <a href="../../../../../org/junit/platform/suite/api/SuiteDisplayName.html#value()">custom
+<div class="block"><code>@SuiteDisplayName</code> is used to declare a <a href="SuiteDisplayName.html#value()">custom
  display name</a> for the annotated test class that is executed as a test suite
  on the JUnit Platform.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/suite/api/UseTechnicalNames.html" title="annotation in org.junit.platform.suite.api">UseTechnicalNames</a></th>
+<th class="colFirst" scope="row"><a href="UseTechnicalNames.html" title="annotation in org.junit.platform.suite.api">UseTechnicalNames</a></th>
 <td class="colLast">
 <div class="block"><code>@UseTechnicalNames</code> specifies that <em>technical names</em> should be
  used instead of <em>display names</em> when running a test suite on the
@@ -226,7 +221,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../index.html">Overview</a></li>
 <li class="navBarCell1Rev">Package</li>
 <li>Class</li>
 <li><a href="package-use.html">Use</a></li>
@@ -238,16 +233,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../org/junit/platform/runner/package-summary.html">Prev&nbsp;Package</a></li>
-<li><a href="../../../../../org/junit/vintage/engine/package-summary.html">Next&nbsp;Package</a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../index.html?org/junit/platform/suite/api/package-summary.html" target="_top">Frames</a></li>
-<li><a href="package-summary.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--

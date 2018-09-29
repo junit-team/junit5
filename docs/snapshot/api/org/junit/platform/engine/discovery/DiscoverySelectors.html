@@ -13,7 +13,8 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../../jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../../../jquery/jquery-migrate-3.0.1.js"></script>
 <script type="text/javascript" src="../../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -26,13 +27,15 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
-var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
+var pathtoroot = "../../../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
@@ -48,7 +51,7 @@ var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/DiscoverySelectors.html">Use</a></li>
@@ -60,16 +63,8 @@ var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../org/junit/platform/engine/discovery/DirectorySelector.html" title="class in org.junit.platform.engine.discovery"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../org/junit/platform/engine/discovery/FileSelector.html" title="class in org.junit.platform.engine.discovery"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../index.html?org/junit/platform/engine/discovery/DiscoverySelectors.html" target="_top">Frames</a></li>
-<li><a href="DiscoverySelectors.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
@@ -122,7 +117,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/package-summary.html">org.junit.platform.engine.discovery</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">org.junit.platform.engine.discovery</a></div>
 <h2 title="Class DiscoverySelectors" class="title">Class DiscoverySelectors</h2>
 </div>
 <div class="contentContainer">
@@ -143,21 +138,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 public final class <span class="typeNameLabel">DiscoverySelectors</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
 <div class="block">Collection of <code>static</code> factory methods for creating
- <a href="../../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelectors</code></a>.</div>
+ <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelectors</code></a>.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.0</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/UriSelector.html" title="class in org.junit.platform.engine.discovery"><code>UriSelector</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/FileSelector.html" title="class in org.junit.platform.engine.discovery"><code>FileSelector</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DirectorySelector.html" title="class in org.junit.platform.engine.discovery"><code>DirectorySelector</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/ClasspathRootSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClasspathRootSelector</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/ClasspathResourceSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClasspathResourceSelector</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/ModuleSelector.html" title="class in org.junit.platform.engine.discovery"><code>ModuleSelector</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/PackageSelector.html" title="class in org.junit.platform.engine.discovery"><code>PackageSelector</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/ClassSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClassSelector</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery"><code>UniqueIdSelector</code></a></dd>
+<dd><a href="UriSelector.html" title="class in org.junit.platform.engine.discovery"><code>UriSelector</code></a>, 
+<a href="FileSelector.html" title="class in org.junit.platform.engine.discovery"><code>FileSelector</code></a>, 
+<a href="DirectorySelector.html" title="class in org.junit.platform.engine.discovery"><code>DirectorySelector</code></a>, 
+<a href="ClasspathRootSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClasspathRootSelector</code></a>, 
+<a href="ClasspathResourceSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClasspathResourceSelector</code></a>, 
+<a href="ModuleSelector.html" title="class in org.junit.platform.engine.discovery"><code>ModuleSelector</code></a>, 
+<a href="PackageSelector.html" title="class in org.junit.platform.engine.discovery"><code>PackageSelector</code></a>, 
+<a href="ClassSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClassSelector</code></a>, 
+<a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a>, 
+<a href="UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery"><code>UniqueIdSelector</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -180,82 +175,82 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectClass(java.lang.Class)">selectClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
+<td class="colFirst"><code>static <a href="ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectClass(java.lang.Class)">selectClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
 <div class="block">Create a <code>ClassSelector</code> for the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a>.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectClass(java.lang.String)">selectClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className)</code></th>
+<td class="colFirst"><code>static <a href="ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectClass(java.lang.String)">selectClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className)</code></th>
 <td class="colLast">
 <div class="block">Create a <code>ClassSelector</code> for the supplied class name.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/ClasspathResourceSelector.html" title="class in org.junit.platform.engine.discovery">ClasspathResourceSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectClasspathResource(java.lang.String)">selectClasspathResource</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;classpathResourceName)</code></th>
+<td class="colFirst"><code>static <a href="ClasspathResourceSelector.html" title="class in org.junit.platform.engine.discovery">ClasspathResourceSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectClasspathResource(java.lang.String)">selectClasspathResource</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;classpathResourceName)</code></th>
 <td class="colLast">
 <div class="block">Create a <code>ClasspathResourceSelector</code> for the supplied classpath
  resource name.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../../../../../org/junit/platform/engine/discovery/ClasspathRootSelector.html" title="class in org.junit.platform.engine.discovery">ClasspathRootSelector</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectClasspathRoots(java.util.Set)">selectClasspathRoots</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink">Path</a>&gt;&nbsp;classpathRoots)</code></th>
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="ClasspathRootSelector.html" title="class in org.junit.platform.engine.discovery">ClasspathRootSelector</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectClasspathRoots(java.util.Set)">selectClasspathRoots</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink">Path</a>&gt;&nbsp;classpathRoots)</code></th>
 <td class="colLast">
 <div class="block">Create a list of <code>ClasspathRootSelectors</code> for the supplied
  <em>classpath roots</em> (directories or JAR files).</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/DirectorySelector.html" title="class in org.junit.platform.engine.discovery">DirectorySelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectDirectory(java.io.File)">selectDirectory</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;directory)</code></th>
+<td class="colFirst"><code>static <a href="DirectorySelector.html" title="class in org.junit.platform.engine.discovery">DirectorySelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectDirectory(java.io.File)">selectDirectory</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;directory)</code></th>
 <td class="colLast">
 <div class="block">Create a <code>DirectorySelector</code> for the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">directory</a>.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/DirectorySelector.html" title="class in org.junit.platform.engine.discovery">DirectorySelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectDirectory(java.lang.String)">selectDirectory</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;path)</code></th>
+<td class="colFirst"><code>static <a href="DirectorySelector.html" title="class in org.junit.platform.engine.discovery">DirectorySelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectDirectory(java.lang.String)">selectDirectory</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;path)</code></th>
 <td class="colLast">
 <div class="block">Create a <code>DirectorySelector</code> for the supplied directory path.</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/FileSelector.html" title="class in org.junit.platform.engine.discovery">FileSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectFile(java.io.File)">selectFile</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;file)</code></th>
+<td class="colFirst"><code>static <a href="FileSelector.html" title="class in org.junit.platform.engine.discovery">FileSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectFile(java.io.File)">selectFile</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;file)</code></th>
 <td class="colLast">
 <div class="block">Create a <code>FileSelector</code> for the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">file</a>.</div>
 </td>
 </tr>
 <tr id="i7" class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/FileSelector.html" title="class in org.junit.platform.engine.discovery">FileSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectFile(java.lang.String)">selectFile</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;path)</code></th>
+<td class="colFirst"><code>static <a href="FileSelector.html" title="class in org.junit.platform.engine.discovery">FileSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectFile(java.lang.String)">selectFile</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;path)</code></th>
 <td class="colLast">
 <div class="block">Create a <code>FileSelector</code> for the supplied file path.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.Class,java.lang.reflect.Method)">selectMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;javaClass,
+<td class="colFirst"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectMethod(java.lang.Class,java.lang.reflect.Method)">selectMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;javaClass,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</code></th>
 <td class="colLast">
 <div class="block">Create a <code>MethodSelector</code> for the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a> and <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a>.</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.Class,java.lang.String)">selectMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;javaClass,
+<td class="colFirst"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectMethod(java.lang.Class,java.lang.String)">selectMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;javaClass,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName)</code></th>
 <td class="colLast">
 <div class="block">Create a <code>MethodSelector</code> for the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a> and method name.</div>
 </td>
 </tr>
 <tr id="i10" class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.Class,java.lang.String,java.lang.String)">selectMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;javaClass,
+<td class="colFirst"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectMethod(java.lang.Class,java.lang.String,java.lang.String)">selectMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;javaClass,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodParameterTypes)</code></th>
 <td class="colLast">
@@ -264,24 +259,24 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr id="i11" class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.String)">selectMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fullyQualifiedMethodName)</code></th>
+<td class="colFirst"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectMethod(java.lang.String)">selectMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fullyQualifiedMethodName)</code></th>
 <td class="colLast">
 <div class="block">Create a <code>MethodSelector</code> for the supplied <em>fully qualified
  method name</em>.</div>
 </td>
 </tr>
 <tr id="i12" class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.String,java.lang.String)">selectMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className,
+<td class="colFirst"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectMethod(java.lang.String,java.lang.String)">selectMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName)</code></th>
 <td class="colLast">
 <div class="block">Create a <code>MethodSelector</code> for the supplied class name and method name.</div>
 </td>
 </tr>
 <tr id="i13" class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectMethod(java.lang.String,java.lang.String,java.lang.String)">selectMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className,
+<td class="colFirst"><code>static <a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectMethod(java.lang.String,java.lang.String,java.lang.String)">selectMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodParameterTypes)</code></th>
 <td class="colLast">
@@ -290,50 +285,50 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr id="i14" class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/ModuleSelector.html" title="class in org.junit.platform.engine.discovery">ModuleSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectModule(java.lang.String)">selectModule</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;moduleName)</code></th>
+<td class="colFirst"><code>static <a href="ModuleSelector.html" title="class in org.junit.platform.engine.discovery">ModuleSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectModule(java.lang.String)">selectModule</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;moduleName)</code></th>
 <td class="colLast">
 <div class="block">Create a <code>ModuleSelector</code> for the supplied module name.</div>
 </td>
 </tr>
 <tr id="i15" class="rowColor">
-<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../../../../../org/junit/platform/engine/discovery/ModuleSelector.html" title="class in org.junit.platform.engine.discovery">ModuleSelector</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectModules(java.util.Set)">selectModules</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;moduleNames)</code></th>
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="ModuleSelector.html" title="class in org.junit.platform.engine.discovery">ModuleSelector</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectModules(java.util.Set)">selectModules</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;moduleNames)</code></th>
 <td class="colLast">
 <div class="block">Create a list of <code>ModuleSelectors</code> for the supplied module names.</div>
 </td>
 </tr>
 <tr id="i16" class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/PackageSelector.html" title="class in org.junit.platform.engine.discovery">PackageSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectPackage(java.lang.String)">selectPackage</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;packageName)</code></th>
+<td class="colFirst"><code>static <a href="PackageSelector.html" title="class in org.junit.platform.engine.discovery">PackageSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectPackage(java.lang.String)">selectPackage</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;packageName)</code></th>
 <td class="colLast">
 <div class="block">Create a <code>PackageSelector</code> for the supplied package name.</div>
 </td>
 </tr>
 <tr id="i17" class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery">UniqueIdSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectUniqueId(java.lang.String)">selectUniqueId</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;uniqueId)</code></th>
+<td class="colFirst"><code>static <a href="UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery">UniqueIdSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectUniqueId(java.lang.String)">selectUniqueId</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;uniqueId)</code></th>
 <td class="colLast">
 <div class="block">Create a <code>UniqueIdSelector</code> for the supplied unique ID.</div>
 </td>
 </tr>
 <tr id="i18" class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery">UniqueIdSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectUniqueId(org.junit.platform.engine.UniqueId)">selectUniqueId</a></span>&#8203;(<a href="../../../../../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId)</code></th>
+<td class="colFirst"><code>static <a href="UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery">UniqueIdSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectUniqueId(org.junit.platform.engine.UniqueId)">selectUniqueId</a></span>&#8203;(<a href="../UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId)</code></th>
 <td class="colLast">
-<div class="block">Create a <code>UniqueIdSelector</code> for the supplied <a href="../../../../../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine"><code>UniqueId</code></a>.</div>
+<div class="block">Create a <code>UniqueIdSelector</code> for the supplied <a href="../UniqueId.html" title="class in org.junit.platform.engine"><code>UniqueId</code></a>.</div>
 </td>
 </tr>
 <tr id="i19" class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/UriSelector.html" title="class in org.junit.platform.engine.discovery">UriSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectUri(java.lang.String)">selectUri</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;uri)</code></th>
+<td class="colFirst"><code>static <a href="UriSelector.html" title="class in org.junit.platform.engine.discovery">UriSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectUri(java.lang.String)">selectUri</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;uri)</code></th>
 <td class="colLast">
 <div class="block">Create a <code>UriSelector</code> for the supplied URI.</div>
 </td>
 </tr>
 <tr id="i20" class="altColor">
-<td class="colFirst"><code>static <a href="../../../../../org/junit/platform/engine/discovery/UriSelector.html" title="class in org.junit.platform.engine.discovery">UriSelector</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectUri(java.net.URI)">selectUri</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;uri)</code></th>
+<td class="colFirst"><code>static <a href="UriSelector.html" title="class in org.junit.platform.engine.discovery">UriSelector</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectUri(java.net.URI)">selectUri</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;uri)</code></th>
 <td class="colLast">
 <div class="block">Create a <code>UriSelector</code> for the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a>.</div>
 </td>
@@ -368,18 +363,18 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>selectUri</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/UriSelector.html" title="class in org.junit.platform.engine.discovery">UriSelector</a>&nbsp;selectUri&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;uri)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="UriSelector.html" title="class in org.junit.platform.engine.discovery">UriSelector</a>&nbsp;selectUri&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;uri)</pre>
 <div class="block">Create a <code>UriSelector</code> for the supplied URI.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>uri</code> - the URI to select; never <code>null</code> or blank</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/UriSelector.html" title="class in org.junit.platform.engine.discovery"><code>UriSelector</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectUri(java.net.URI)"><code>selectUri(URI)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectFile(java.lang.String)"><code>selectFile(String)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectFile(java.io.File)"><code>selectFile(File)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectDirectory(java.lang.String)"><code>selectDirectory(String)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectDirectory(java.io.File)"><code>selectDirectory(File)</code></a></dd>
+<dd><a href="UriSelector.html" title="class in org.junit.platform.engine.discovery"><code>UriSelector</code></a>, 
+<a href="#selectUri(java.net.URI)"><code>selectUri(URI)</code></a>, 
+<a href="#selectFile(java.lang.String)"><code>selectFile(String)</code></a>, 
+<a href="#selectFile(java.io.File)"><code>selectFile(File)</code></a>, 
+<a href="#selectDirectory(java.lang.String)"><code>selectDirectory(String)</code></a>, 
+<a href="#selectDirectory(java.io.File)"><code>selectDirectory(File)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -389,18 +384,18 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>selectUri</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/UriSelector.html" title="class in org.junit.platform.engine.discovery">UriSelector</a>&nbsp;selectUri&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;uri)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="UriSelector.html" title="class in org.junit.platform.engine.discovery">UriSelector</a>&nbsp;selectUri&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;uri)</pre>
 <div class="block">Create a <code>UriSelector</code> for the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>uri</code> - the URI to select; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/UriSelector.html" title="class in org.junit.platform.engine.discovery"><code>UriSelector</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectUri(java.lang.String)"><code>selectUri(String)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectFile(java.lang.String)"><code>selectFile(String)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectFile(java.io.File)"><code>selectFile(File)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectDirectory(java.lang.String)"><code>selectDirectory(String)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectDirectory(java.io.File)"><code>selectDirectory(File)</code></a></dd>
+<dd><a href="UriSelector.html" title="class in org.junit.platform.engine.discovery"><code>UriSelector</code></a>, 
+<a href="#selectUri(java.lang.String)"><code>selectUri(String)</code></a>, 
+<a href="#selectFile(java.lang.String)"><code>selectFile(String)</code></a>, 
+<a href="#selectFile(java.io.File)"><code>selectFile(File)</code></a>, 
+<a href="#selectDirectory(java.lang.String)"><code>selectDirectory(String)</code></a>, 
+<a href="#selectDirectory(java.io.File)"><code>selectDirectory(File)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -410,7 +405,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>selectFile</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/FileSelector.html" title="class in org.junit.platform.engine.discovery">FileSelector</a>&nbsp;selectFile&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;path)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="FileSelector.html" title="class in org.junit.platform.engine.discovery">FileSelector</a>&nbsp;selectFile&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;path)</pre>
 <div class="block">Create a <code>FileSelector</code> for the supplied file path.
 
  <p>This method selects the file using the supplied path <em>as is</em>,
@@ -419,10 +414,10 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>path</code> - the path to the file to select; never <code>null</code> or blank</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/FileSelector.html" title="class in org.junit.platform.engine.discovery"><code>FileSelector</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectFile(java.io.File)"><code>selectFile(File)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectDirectory(java.lang.String)"><code>selectDirectory(String)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectDirectory(java.io.File)"><code>selectDirectory(File)</code></a></dd>
+<dd><a href="FileSelector.html" title="class in org.junit.platform.engine.discovery"><code>FileSelector</code></a>, 
+<a href="#selectFile(java.io.File)"><code>selectFile(File)</code></a>, 
+<a href="#selectDirectory(java.lang.String)"><code>selectDirectory(String)</code></a>, 
+<a href="#selectDirectory(java.io.File)"><code>selectDirectory(File)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -432,19 +427,19 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>selectFile</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/FileSelector.html" title="class in org.junit.platform.engine.discovery">FileSelector</a>&nbsp;selectFile&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;file)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="FileSelector.html" title="class in org.junit.platform.engine.discovery">FileSelector</a>&nbsp;selectFile&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;file)</pre>
 <div class="block">Create a <code>FileSelector</code> for the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">file</a>.
 
- <p>This method selects the file in its <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true#getCanonicalPath()" title="class or interface in java.io" class="externalLink">canonical</a> form and throws a <a href="../../../../../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util"><code>PreconditionViolationException</code></a> if the
+ <p>This method selects the file in its <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true#getCanonicalPath()" title="class or interface in java.io" class="externalLink">canonical</a> form and throws a <a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util"><code>PreconditionViolationException</code></a> if the
  file does not exist.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>file</code> - the file to select; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/FileSelector.html" title="class in org.junit.platform.engine.discovery"><code>FileSelector</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectFile(java.lang.String)"><code>selectFile(String)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectDirectory(java.lang.String)"><code>selectDirectory(String)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectDirectory(java.io.File)"><code>selectDirectory(File)</code></a></dd>
+<dd><a href="FileSelector.html" title="class in org.junit.platform.engine.discovery"><code>FileSelector</code></a>, 
+<a href="#selectFile(java.lang.String)"><code>selectFile(String)</code></a>, 
+<a href="#selectDirectory(java.lang.String)"><code>selectDirectory(String)</code></a>, 
+<a href="#selectDirectory(java.io.File)"><code>selectDirectory(File)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -454,7 +449,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>selectDirectory</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/DirectorySelector.html" title="class in org.junit.platform.engine.discovery">DirectorySelector</a>&nbsp;selectDirectory&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;path)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="DirectorySelector.html" title="class in org.junit.platform.engine.discovery">DirectorySelector</a>&nbsp;selectDirectory&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;path)</pre>
 <div class="block">Create a <code>DirectorySelector</code> for the supplied directory path.
 
  <p>This method selects the directory using the supplied path <em>as is</em>,
@@ -463,10 +458,10 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>path</code> - the path to the directory to select; never <code>null</code> or blank</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/DirectorySelector.html" title="class in org.junit.platform.engine.discovery"><code>DirectorySelector</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectDirectory(java.io.File)"><code>selectDirectory(File)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectFile(java.lang.String)"><code>selectFile(String)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectFile(java.io.File)"><code>selectFile(File)</code></a></dd>
+<dd><a href="DirectorySelector.html" title="class in org.junit.platform.engine.discovery"><code>DirectorySelector</code></a>, 
+<a href="#selectDirectory(java.io.File)"><code>selectDirectory(File)</code></a>, 
+<a href="#selectFile(java.lang.String)"><code>selectFile(String)</code></a>, 
+<a href="#selectFile(java.io.File)"><code>selectFile(File)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -476,19 +471,19 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>selectDirectory</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/DirectorySelector.html" title="class in org.junit.platform.engine.discovery">DirectorySelector</a>&nbsp;selectDirectory&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;directory)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="DirectorySelector.html" title="class in org.junit.platform.engine.discovery">DirectorySelector</a>&nbsp;selectDirectory&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;directory)</pre>
 <div class="block">Create a <code>DirectorySelector</code> for the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">directory</a>.
 
- <p>This method selects the directory in its <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true#getCanonicalPath()" title="class or interface in java.io" class="externalLink">canonical</a> form and throws a <a href="../../../../../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util"><code>PreconditionViolationException</code></a> if the
+ <p>This method selects the directory in its <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true#getCanonicalPath()" title="class or interface in java.io" class="externalLink">canonical</a> form and throws a <a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util"><code>PreconditionViolationException</code></a> if the
  directory does not exist.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>directory</code> - the directory to select; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/DirectorySelector.html" title="class in org.junit.platform.engine.discovery"><code>DirectorySelector</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectDirectory(java.lang.String)"><code>selectDirectory(String)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectFile(java.lang.String)"><code>selectFile(String)</code></a>, 
-<a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html#selectFile(java.io.File)"><code>selectFile(File)</code></a></dd>
+<dd><a href="DirectorySelector.html" title="class in org.junit.platform.engine.discovery"><code>DirectorySelector</code></a>, 
+<a href="#selectDirectory(java.lang.String)"><code>selectDirectory(String)</code></a>, 
+<a href="#selectFile(java.lang.String)"><code>selectFile(String)</code></a>, 
+<a href="#selectFile(java.io.File)"><code>selectFile(File)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -498,7 +493,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>selectClasspathRoots</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../../../../../org/junit/platform/engine/discovery/ClasspathRootSelector.html" title="class in org.junit.platform.engine.discovery">ClasspathRootSelector</a>&gt;&nbsp;selectClasspathRoots&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink">Path</a>&gt;&nbsp;classpathRoots)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="ClasspathRootSelector.html" title="class in org.junit.platform.engine.discovery">ClasspathRootSelector</a>&gt;&nbsp;selectClasspathRoots&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink">Path</a>&gt;&nbsp;classpathRoots)</pre>
 <div class="block">Create a list of <code>ClasspathRootSelectors</code> for the supplied
  <em>classpath roots</em> (directories or JAR files).
 
@@ -508,7 +503,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  has been created by an installed
  <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/spi/FileSystemProvider.html?is-external=true" title="class or interface in java.nio.file.spi" class="externalLink"><code>FileSystemProvider</code></a>.
 
- <p>Since <a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">engines</a> are not
+ <p>Since <a href="../TestEngine.html" title="interface in org.junit.platform.engine">engines</a> are not
  expected to modify the classpath, the classpath roots represented by the
  resulting selectors must be on the classpath of the
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html?is-external=true#getContextClassLoader()" title="class or interface in java.lang" class="externalLink">context class loader</a> of the
@@ -521,7 +516,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd>a list of selectors for the supplied classpath roots; elements
  which do not physically exist in the filesystem will be filtered out</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/ClasspathRootSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClasspathRootSelector</code></a>, 
+<dd><a href="ClasspathRootSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClasspathRootSelector</code></a>, 
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html?is-external=true#getContextClassLoader()" title="class or interface in java.lang" class="externalLink"><code>Thread.getContextClassLoader()</code></a></dd>
 </dl>
 </li>
@@ -532,7 +527,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>selectClasspathResource</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/ClasspathResourceSelector.html" title="class in org.junit.platform.engine.discovery">ClasspathResourceSelector</a>&nbsp;selectClasspathResource&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;classpathResourceName)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="ClasspathResourceSelector.html" title="class in org.junit.platform.engine.discovery">ClasspathResourceSelector</a>&nbsp;selectClasspathResource&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;classpathResourceName)</pre>
 <div class="block">Create a <code>ClasspathResourceSelector</code> for the supplied classpath
  resource name.
 
@@ -542,7 +537,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <p>If the supplied classpath resource name is prefixed with a slash
  (<code>/</code>), the slash will be removed.
 
- <p>Since <a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">engines</a> are not
+ <p>Since <a href="../TestEngine.html" title="interface in org.junit.platform.engine">engines</a> are not
  expected to modify the classpath, the supplied classpath resource must be
  on the classpath of the
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html?is-external=true#getContextClassLoader()" title="class or interface in java.lang" class="externalLink">context class loader</a> of the
@@ -552,7 +547,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>classpathResourceName</code> - the name of the classpath resource; never
  <code>null</code> or blank</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/ClasspathResourceSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClasspathResourceSelector</code></a>, 
+<dd><a href="ClasspathResourceSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClasspathResourceSelector</code></a>, 
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html?is-external=true#getResource(java.lang.String)" title="class or interface in java.lang" class="externalLink"><code>ClassLoader.getResource(String)</code></a>, 
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html?is-external=true#getResourceAsStream(java.lang.String)" title="class or interface in java.lang" class="externalLink"><code>ClassLoader.getResourceAsStream(String)</code></a>, 
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html?is-external=true#getResources(java.lang.String)" title="class or interface in java.lang" class="externalLink"><code>ClassLoader.getResources(String)</code></a></dd>
@@ -565,9 +560,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>selectModule</h4>
-<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.1")
-public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/ModuleSelector.html" title="class in org.junit.platform.engine.discovery">ModuleSelector</a>&nbsp;selectModule&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;moduleName)</pre>
+public static&nbsp;<a href="ModuleSelector.html" title="class in org.junit.platform.engine.discovery">ModuleSelector</a>&nbsp;selectModule&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;moduleName)</pre>
 <div class="block">Create a <code>ModuleSelector</code> for the supplied module name.
 
  <p>The unnamed module is not supported.</div>
@@ -577,7 +572,7 @@ public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/M
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.1</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/ModuleSelector.html" title="class in org.junit.platform.engine.discovery"><code>ModuleSelector</code></a></dd>
+<dd><a href="ModuleSelector.html" title="class in org.junit.platform.engine.discovery"><code>ModuleSelector</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -587,9 +582,9 @@ public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/M
 <ul class="blockList">
 <li class="blockList">
 <h4>selectModules</h4>
-<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.1")
-public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../../../../../org/junit/platform/engine/discovery/ModuleSelector.html" title="class in org.junit.platform.engine.discovery">ModuleSelector</a>&gt;&nbsp;selectModules&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;moduleNames)</pre>
+public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="ModuleSelector.html" title="class in org.junit.platform.engine.discovery">ModuleSelector</a>&gt;&nbsp;selectModules&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;moduleNames)</pre>
 <div class="block">Create a list of <code>ModuleSelectors</code> for the supplied module names.
 
  <p>The unnamed module is not supported.</div>
@@ -600,7 +595,7 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.1</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/ModuleSelector.html" title="class in org.junit.platform.engine.discovery"><code>ModuleSelector</code></a></dd>
+<dd><a href="ModuleSelector.html" title="class in org.junit.platform.engine.discovery"><code>ModuleSelector</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -610,7 +605,7 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <ul class="blockList">
 <li class="blockList">
 <h4>selectPackage</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/PackageSelector.html" title="class in org.junit.platform.engine.discovery">PackageSelector</a>&nbsp;selectPackage&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;packageName)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="PackageSelector.html" title="class in org.junit.platform.engine.discovery">PackageSelector</a>&nbsp;selectPackage&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;packageName)</pre>
 <div class="block">Create a <code>PackageSelector</code> for the supplied package name.
 
  <p>The default package is represented by an empty string (<code>""</code>).</div>
@@ -619,7 +614,7 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <dd><code>packageName</code> - the package name to select; never <code>null</code> and
  never containing whitespace only</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/PackageSelector.html" title="class in org.junit.platform.engine.discovery"><code>PackageSelector</code></a></dd>
+<dd><a href="PackageSelector.html" title="class in org.junit.platform.engine.discovery"><code>PackageSelector</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -629,13 +624,13 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <ul class="blockList">
 <li class="blockList">
 <h4>selectClass</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a>&nbsp;selectClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a>&nbsp;selectClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
 <div class="block">Create a <code>ClassSelector</code> for the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>clazz</code> - the class to select; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/ClassSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClassSelector</code></a></dd>
+<dd><a href="ClassSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClassSelector</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -645,14 +640,14 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <ul class="blockList">
 <li class="blockList">
 <h4>selectClass</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a>&nbsp;selectClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a>&nbsp;selectClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className)</pre>
 <div class="block">Create a <code>ClassSelector</code> for the supplied class name.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>className</code> - the fully qualified name of the class to select;
  never <code>null</code> or blank</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/ClassSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClassSelector</code></a></dd>
+<dd><a href="ClassSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClassSelector</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -662,8 +657,8 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <ul class="blockList">
 <li class="blockList">
 <h4>selectMethod</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a>&nbsp;selectMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fullyQualifiedMethodName)
-                                   throws <a href="../../../../../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
+<pre class="methodSignature">public static&nbsp;<a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a>&nbsp;selectMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fullyQualifiedMethodName)
+                                   throws <a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
 <div class="block">Create a <code>MethodSelector</code> for the supplied <em>fully qualified
  method name</em>.
 
@@ -706,9 +701,9 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <dd><code>fullyQualifiedMethodName</code> - the fully qualified name of the method to select; never
  <code>null</code> or blank</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code></dd>
+<dd><code><a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a></dd>
+<dd><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -718,7 +713,7 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <ul class="blockList">
 <li class="blockList">
 <h4>selectMethod</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a>&nbsp;selectMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className,
+<pre class="methodSignature">public static&nbsp;<a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a>&nbsp;selectMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className,
                                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName)</pre>
 <div class="block">Create a <code>MethodSelector</code> for the supplied class name and method name.</div>
 <dl>
@@ -727,7 +722,7 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
  is declared, or a subclass thereof; never <code>null</code> or blank</dd>
 <dd><code>methodName</code> - the name of the method to select; never <code>null</code> or blank</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a></dd>
+<dd><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -737,7 +732,7 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <ul class="blockList">
 <li class="blockList">
 <h4>selectMethod</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a>&nbsp;selectMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className,
+<pre class="methodSignature">public static&nbsp;<a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a>&nbsp;selectMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;className,
                                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName,
                                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodParameterTypes)</pre>
 <div class="block">Create a <code>MethodSelector</code> for the supplied class name, method name,
@@ -755,7 +750,7 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
  <code>null</code> though potentially an empty string if the method does not accept
  arguments</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a></dd>
+<dd><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -765,7 +760,7 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <ul class="blockList">
 <li class="blockList">
 <h4>selectMethod</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a>&nbsp;selectMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;javaClass,
+<pre class="methodSignature">public static&nbsp;<a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a>&nbsp;selectMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;javaClass,
                                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName)</pre>
 <div class="block">Create a <code>MethodSelector</code> for the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a> and method name.</div>
 <dl>
@@ -774,7 +769,7 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
  never <code>null</code></dd>
 <dd><code>methodName</code> - the name of the method to select; never <code>null</code> or blank</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a></dd>
+<dd><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -784,7 +779,7 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <ul class="blockList">
 <li class="blockList">
 <h4>selectMethod</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a>&nbsp;selectMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;javaClass,
+<pre class="methodSignature">public static&nbsp;<a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a>&nbsp;selectMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;javaClass,
                                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName,
                                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodParameterTypes)</pre>
 <div class="block">Create a <code>MethodSelector</code> for the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a>, method name,
@@ -802,7 +797,7 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
  <code>null</code> though potentially an empty string if the method does not accept
  arguments</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a></dd>
+<dd><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -812,7 +807,7 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <ul class="blockList">
 <li class="blockList">
 <h4>selectMethod</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a>&nbsp;selectMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;javaClass,
+<pre class="methodSignature">public static&nbsp;<a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a>&nbsp;selectMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;javaClass,
                                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</pre>
 <div class="block">Create a <code>MethodSelector</code> for the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a> and <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a>.</div>
 <dl>
@@ -821,7 +816,7 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
  never <code>null</code></dd>
 <dd><code>method</code> - the method to select; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a></dd>
+<dd><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -831,13 +826,13 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <ul class="blockList">
 <li class="blockList">
 <h4>selectUniqueId</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery">UniqueIdSelector</a>&nbsp;selectUniqueId&#8203;(<a href="../../../../../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId)</pre>
-<div class="block">Create a <code>UniqueIdSelector</code> for the supplied <a href="../../../../../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine"><code>UniqueId</code></a>.</div>
+<pre class="methodSignature">public static&nbsp;<a href="UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery">UniqueIdSelector</a>&nbsp;selectUniqueId&#8203;(<a href="../UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId)</pre>
+<div class="block">Create a <code>UniqueIdSelector</code> for the supplied <a href="../UniqueId.html" title="class in org.junit.platform.engine"><code>UniqueId</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>uniqueId</code> - the <code>UniqueId</code> to select; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery"><code>UniqueIdSelector</code></a></dd>
+<dd><a href="UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery"><code>UniqueIdSelector</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -847,13 +842,13 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <ul class="blockListLast">
 <li class="blockList">
 <h4>selectUniqueId</h4>
-<pre>public static&nbsp;<a href="../../../../../org/junit/platform/engine/discovery/UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery">UniqueIdSelector</a>&nbsp;selectUniqueId&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;uniqueId)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery">UniqueIdSelector</a>&nbsp;selectUniqueId&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;uniqueId)</pre>
 <div class="block">Create a <code>UniqueIdSelector</code> for the supplied unique ID.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>uniqueId</code> - the unique ID to select; never <code>null</code> or blank</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/engine/discovery/UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery"><code>UniqueIdSelector</code></a></dd>
+<dd><a href="UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery"><code>UniqueIdSelector</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -877,7 +872,7 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/DiscoverySelectors.html">Use</a></li>
@@ -889,16 +884,8 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../org/junit/platform/engine/discovery/DirectorySelector.html" title="class in org.junit.platform.engine.discovery"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../org/junit/platform/engine/discovery/FileSelector.html" title="class in org.junit.platform.engine.discovery"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../index.html?org/junit/platform/engine/discovery/DiscoverySelectors.html" target="_top">Frames</a></li>
-<li><a href="DiscoverySelectors.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--

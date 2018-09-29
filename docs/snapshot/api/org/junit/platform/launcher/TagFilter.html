@@ -13,7 +13,8 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../../jquery/jquery-migrate-3.0.1.js"></script>
 <script type="text/javascript" src="../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -26,13 +27,15 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
-var pathtoroot = "../../../../";loadScripts(document, 'script');</script>
+var pathtoroot = "../../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
@@ -48,7 +51,7 @@ var pathtoroot = "../../../../";loadScripts(document, 'script');</script>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/TagFilter.html">Use</a></li>
@@ -60,16 +63,8 @@ var pathtoroot = "../../../../";loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../org/junit/platform/launcher/PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../index.html?org/junit/platform/launcher/TagFilter.html" target="_top">Frames</a></li>
-<li><a href="TagFilter.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
@@ -122,7 +117,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="../../../../org/junit/platform/launcher/package-summary.html">org.junit.platform.launcher</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">org.junit.platform.launcher</a></div>
 <h2 title="Class TagFilter" class="title">Class TagFilter</h2>
 </div>
 <div class="contentContainer">
@@ -142,7 +137,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.0")
 public final class <span class="typeNameLabel">TagFilter</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
-<div class="block">Factory methods for creating <a href="../../../../org/junit/platform/launcher/PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher"><code>PostDiscoveryFilters</code></a>
+<div class="block">Factory methods for creating <a href="PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher"><code>PostDiscoveryFilters</code></a>
  based on <em>included</em> and <em>excluded</em> tags or tag expressions.
 
  <p>Tag expressions are boolean expressions with the following allowed
@@ -157,9 +152,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.0</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/junit/platform/launcher/TagFilter.html#includeTags(java.lang.String...)"><code>includeTags(String...)</code></a>, 
-<a href="../../../../org/junit/platform/launcher/TagFilter.html#excludeTags(java.lang.String...)"><code>excludeTags(String...)</code></a>, 
-<a href="../../../../org/junit/platform/engine/TestTag.html" title="class in org.junit.platform.engine"><code>TestTag</code></a></dd>
+<dd><a href="#includeTags(java.lang.String...)"><code>includeTags(String...)</code></a>, 
+<a href="#excludeTags(java.lang.String...)"><code>excludeTags(String...)</code></a>, 
+<a href="../engine/TestTag.html" title="class in org.junit.platform.engine"><code>TestTag</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -182,29 +177,29 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>static <a href="../../../../org/junit/platform/launcher/PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/platform/launcher/TagFilter.html#excludeTags(java.lang.String...)">excludeTags</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;tagExpressions)</code></th>
+<td class="colFirst"><code>static <a href="PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#excludeTags(java.lang.String...)">excludeTags</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;tagExpressions)</code></th>
 <td class="colLast">
 <div class="block">Create an <em>exclude</em> filter based on the supplied tag expressions.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../org/junit/platform/launcher/PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/platform/launcher/TagFilter.html#excludeTags(java.util.List)">excludeTags</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;tagExpressions)</code></th>
+<td class="colFirst"><code>static <a href="PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#excludeTags(java.util.List)">excludeTags</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;tagExpressions)</code></th>
 <td class="colLast">
 <div class="block">Create an <em>exclude</em> filter based on the supplied tag expressions.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>static <a href="../../../../org/junit/platform/launcher/PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/platform/launcher/TagFilter.html#includeTags(java.lang.String...)">includeTags</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;tagExpressions)</code></th>
+<td class="colFirst"><code>static <a href="PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#includeTags(java.lang.String...)">includeTags</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;tagExpressions)</code></th>
 <td class="colLast">
 <div class="block">Create an <em>include</em> filter based on the supplied tag expressions.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code>static <a href="../../../../org/junit/platform/launcher/PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/platform/launcher/TagFilter.html#includeTags(java.util.List)">includeTags</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;tagExpressions)</code></th>
+<td class="colFirst"><code>static <a href="PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#includeTags(java.util.List)">includeTags</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;tagExpressions)</code></th>
 <td class="colLast">
 <div class="block">Create an <em>include</em> filter based on the supplied tag expressions.</div>
 </td>
@@ -239,8 +234,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>includeTags</h4>
-<pre>public static&nbsp;<a href="../../../../org/junit/platform/launcher/PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&nbsp;includeTags&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;tagExpressions)
-                                       throws <a href="../../../../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
+<pre class="methodSignature">public static&nbsp;<a href="PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&nbsp;includeTags&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;tagExpressions)
+                                       throws <a href="../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
 <div class="block">Create an <em>include</em> filter based on the supplied tag expressions.
 
  <p>Containers and tests will only be executed if their tags match at
@@ -250,12 +245,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>tagExpressions</code> - the included tag expressions; never <code>null</code> or
  empty</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied tag expressions
+<dd><code><a href="../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied tag expressions
  array is <code>null</code> or empty, or if any individual tag expression is
  not syntactically valid</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/junit/platform/launcher/TagFilter.html#includeTags(java.util.List)"><code>includeTags(List)</code></a>, 
-<a href="../../../../org/junit/platform/engine/TestTag.html#isValid(java.lang.String)"><code>TestTag.isValid(String)</code></a></dd>
+<dd><a href="#includeTags(java.util.List)"><code>includeTags(List)</code></a>, 
+<a href="../engine/TestTag.html#isValid(java.lang.String)"><code>TestTag.isValid(String)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -265,8 +260,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>includeTags</h4>
-<pre>public static&nbsp;<a href="../../../../org/junit/platform/launcher/PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&nbsp;includeTags&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;tagExpressions)
-                                       throws <a href="../../../../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
+<pre class="methodSignature">public static&nbsp;<a href="PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&nbsp;includeTags&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;tagExpressions)
+                                       throws <a href="../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
 <div class="block">Create an <em>include</em> filter based on the supplied tag expressions.
 
  <p>Containers and tests will only be executed if their tags match at
@@ -276,12 +271,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>tagExpressions</code> - the included tag expressions; never <code>null</code> or
  empty</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied tag expressions
+<dd><code><a href="../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied tag expressions
  array is <code>null</code> or empty, or if any individual tag expression is
  not syntactically valid</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/junit/platform/launcher/TagFilter.html#includeTags(java.lang.String...)"><code>includeTags(String...)</code></a>, 
-<a href="../../../../org/junit/platform/engine/TestTag.html#isValid(java.lang.String)"><code>TestTag.isValid(String)</code></a></dd>
+<dd><a href="#includeTags(java.lang.String...)"><code>includeTags(String...)</code></a>, 
+<a href="../engine/TestTag.html#isValid(java.lang.String)"><code>TestTag.isValid(String)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -291,8 +286,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>excludeTags</h4>
-<pre>public static&nbsp;<a href="../../../../org/junit/platform/launcher/PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&nbsp;excludeTags&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;tagExpressions)
-                                       throws <a href="../../../../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
+<pre class="methodSignature">public static&nbsp;<a href="PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&nbsp;excludeTags&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;tagExpressions)
+                                       throws <a href="../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
 <div class="block">Create an <em>exclude</em> filter based on the supplied tag expressions.
 
  <p>Containers and tests will only be executed if their tags do
@@ -302,12 +297,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>tagExpressions</code> - the excluded tag expressions; never <code>null</code> or
  empty</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied tag expressions
+<dd><code><a href="../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied tag expressions
  array is <code>null</code> or empty, or if any individual tag expression is
  not syntactically valid</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/junit/platform/launcher/TagFilter.html#excludeTags(java.util.List)"><code>excludeTags(List)</code></a>, 
-<a href="../../../../org/junit/platform/engine/TestTag.html#isValid(java.lang.String)"><code>TestTag.isValid(String)</code></a></dd>
+<dd><a href="#excludeTags(java.util.List)"><code>excludeTags(List)</code></a>, 
+<a href="../engine/TestTag.html#isValid(java.lang.String)"><code>TestTag.isValid(String)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -317,8 +312,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockListLast">
 <li class="blockList">
 <h4>excludeTags</h4>
-<pre>public static&nbsp;<a href="../../../../org/junit/platform/launcher/PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&nbsp;excludeTags&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;tagExpressions)
-                                       throws <a href="../../../../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
+<pre class="methodSignature">public static&nbsp;<a href="PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&nbsp;excludeTags&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;tagExpressions)
+                                       throws <a href="../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
 <div class="block">Create an <em>exclude</em> filter based on the supplied tag expressions.
 
  <p>Containers and tests will only be executed if their tags do
@@ -328,12 +323,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>tagExpressions</code> - the excluded tag expressions; never <code>null</code> or
  empty</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied tag expressions
+<dd><code><a href="../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied tag expressions
  array is <code>null</code> or empty, or if any individual tag expression is
  not syntactically valid</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/junit/platform/launcher/TagFilter.html#excludeTags(java.lang.String...)"><code>excludeTags(String...)</code></a>, 
-<a href="../../../../org/junit/platform/engine/TestTag.html#isValid(java.lang.String)"><code>TestTag.isValid(String)</code></a></dd>
+<dd><a href="#excludeTags(java.lang.String...)"><code>excludeTags(String...)</code></a>, 
+<a href="../engine/TestTag.html#isValid(java.lang.String)"><code>TestTag.isValid(String)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -357,7 +352,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/TagFilter.html">Use</a></li>
@@ -369,16 +364,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../org/junit/platform/launcher/PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../org/junit/platform/launcher/TestExecutionListener.html" title="interface in org.junit.platform.launcher"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../index.html?org/junit/platform/launcher/TagFilter.html" target="_top">Frames</a></li>
-<li><a href="TagFilter.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--

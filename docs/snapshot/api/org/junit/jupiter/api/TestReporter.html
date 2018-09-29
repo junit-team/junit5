@@ -13,7 +13,8 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../../jquery/jquery-migrate-3.0.1.js"></script>
 <script type="text/javascript" src="../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -26,13 +27,15 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":18,"i1":18,"i2":6};
+var data = {"i0":18,"i1":18,"i2":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
-var pathtoroot = "../../../../";loadScripts(document, 'script');</script>
+var pathtoroot = "../../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
@@ -48,7 +51,7 @@ var pathtoroot = "../../../../";loadScripts(document, 'script');</script>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/TestReporter.html">Use</a></li>
@@ -60,16 +63,8 @@ var pathtoroot = "../../../../";loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../org/junit/jupiter/api/TestInstance.Lifecycle.html" title="enum in org.junit.jupiter.api"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../org/junit/jupiter/api/TestTemplate.html" title="annotation in org.junit.jupiter.api"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../index.html?org/junit/jupiter/api/TestReporter.html" target="_top">Frames</a></li>
-<li><a href="TestReporter.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
@@ -122,7 +117,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="../../../../org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">org.junit.jupiter.api</a></div>
 <h2 title="Interface TestReporter" class="title">Interface TestReporter</h2>
 </div>
 <div class="contentContainer">
@@ -139,11 +134,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.0")
 public interface <span class="typeNameLabel">TestReporter</span></pre>
 <div class="block">Parameters of type <code>TestReporter</code> can be injected into
- <a href="../../../../org/junit/jupiter/api/BeforeEach.html" title="annotation in org.junit.jupiter.api"><code>@BeforeEach</code></a> and <a href="../../../../org/junit/jupiter/api/AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> lifecycle
- methods as well as methods annotated with <a href="../../../../org/junit/jupiter/api/Test.html" title="annotation in org.junit.jupiter.api"><code>@Test</code></a>,
- <a href="../../../../org/junit/jupiter/api/RepeatedTest.html" title="annotation in org.junit.jupiter.api"><code>@RepeatedTest</code></a>,
- <a href="../../../../org/junit/jupiter/params/ParameterizedTest.html" title="annotation in org.junit.jupiter.params"><code>@ParameterizedTest</code></a>,
- <a href="../../../../org/junit/jupiter/api/TestFactory.html" title="annotation in org.junit.jupiter.api"><code>@TestFactory</code></a>, etc.
+ <a href="BeforeEach.html" title="annotation in org.junit.jupiter.api"><code>@BeforeEach</code></a> and <a href="AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> lifecycle
+ methods as well as methods annotated with <a href="Test.html" title="annotation in org.junit.jupiter.api"><code>@Test</code></a>,
+ <a href="RepeatedTest.html" title="annotation in org.junit.jupiter.api"><code>@RepeatedTest</code></a>,
+ <a href="../params/ParameterizedTest.html" title="annotation in org.junit.jupiter.params"><code>@ParameterizedTest</code></a>,
+ <a href="TestFactory.html" title="annotation in org.junit.jupiter.api"><code>@TestFactory</code></a>, etc.
 
  <p>Within such methods the injected <code>TestReporter</code> can be used to
  publish <em>report entries</em> for the current container or test to the
@@ -152,8 +147,8 @@ public interface <span class="typeNameLabel">TestReporter</span></pre>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.0</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/junit/jupiter/api/TestReporter.html#publishEntry(java.util.Map)"><code>publishEntry(Map)</code></a>, 
-<a href="../../../../org/junit/jupiter/api/TestReporter.html#publishEntry(java.lang.String,java.lang.String)"><code>publishEntry(String, String)</code></a></dd>
+<dd><a href="#publishEntry(java.util.Map)"><code>publishEntry(Map)</code></a>, 
+<a href="#publishEntry(java.lang.String,java.lang.String)"><code>publishEntry(String, String)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -177,14 +172,14 @@ public interface <span class="typeNameLabel">TestReporter</span></pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>default void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/jupiter/api/TestReporter.html#publishEntry(java.lang.String)">publishEntry</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#publishEntry(java.lang.String)">publishEntry</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Publish the supplied value as a <em>report entry</em>.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>default void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/jupiter/api/TestReporter.html#publishEntry(java.lang.String,java.lang.String)">publishEntry</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#publishEntry(java.lang.String,java.lang.String)">publishEntry</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Publish the supplied key-value pair as a <em>report entry</em>.</div>
@@ -192,7 +187,7 @@ public interface <span class="typeNameLabel">TestReporter</span></pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../org/junit/jupiter/api/TestReporter.html#publishEntry(java.util.Map)">publishEntry</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;map)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#publishEntry(java.util.Map)">publishEntry</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;map)</code></th>
 <td class="colLast">
 <div class="block">Publish the supplied map of key-value pairs as a <em>report entry</em>.</div>
 </td>
@@ -220,7 +215,7 @@ public interface <span class="typeNameLabel">TestReporter</span></pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>publishEntry</h4>
-<pre>void&nbsp;publishEntry&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;map)</pre>
+<pre class="methodSignature">void&nbsp;publishEntry&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;map)</pre>
 <div class="block">Publish the supplied map of key-value pairs as a <em>report entry</em>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -228,8 +223,8 @@ public interface <span class="typeNameLabel">TestReporter</span></pre>
  keys and values within entries in the map also must not be
  <code>null</code> or blank</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/junit/jupiter/api/TestReporter.html#publishEntry(java.lang.String,java.lang.String)"><code>publishEntry(String, String)</code></a>, 
-<a href="../../../../org/junit/jupiter/api/TestReporter.html#publishEntry(java.lang.String)"><code>publishEntry(String)</code></a></dd>
+<dd><a href="#publishEntry(java.lang.String,java.lang.String)"><code>publishEntry(String, String)</code></a>, 
+<a href="#publishEntry(java.lang.String)"><code>publishEntry(String)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -239,7 +234,7 @@ public interface <span class="typeNameLabel">TestReporter</span></pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>publishEntry</h4>
-<pre>default&nbsp;void&nbsp;publishEntry&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key,
+<pre class="methodSignature">default&nbsp;void&nbsp;publishEntry&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key,
                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</pre>
 <div class="block">Publish the supplied key-value pair as a <em>report entry</em>.</div>
 <dl>
@@ -247,8 +242,8 @@ public interface <span class="typeNameLabel">TestReporter</span></pre>
 <dd><code>key</code> - the key of the entry to publish; never <code>null</code> or blank</dd>
 <dd><code>value</code> - the value of the entry to publish; never <code>null</code> or blank</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/junit/jupiter/api/TestReporter.html#publishEntry(java.util.Map)"><code>publishEntry(Map)</code></a>, 
-<a href="../../../../org/junit/jupiter/api/TestReporter.html#publishEntry(java.lang.String)"><code>publishEntry(String)</code></a></dd>
+<dd><a href="#publishEntry(java.util.Map)"><code>publishEntry(Map)</code></a>, 
+<a href="#publishEntry(java.lang.String)"><code>publishEntry(String)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -258,12 +253,12 @@ public interface <span class="typeNameLabel">TestReporter</span></pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>publishEntry</h4>
-<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#STABLE" title="class or interface in org.apiguardian.api" class="externalLink">STABLE</a>,
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#STABLE" title="class or interface in org.apiguardian.api" class="externalLink">STABLE</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.3")
 default&nbsp;void&nbsp;publishEntry&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</pre>
 <div class="block">Publish the supplied value as a <em>report entry</em>.
 
- <p>This method delegates to <a href="../../../../org/junit/jupiter/api/TestReporter.html#publishEntry(java.lang.String,java.lang.String)"><code>publishEntry(String, String)</code></a>,
+ <p>This method delegates to <a href="#publishEntry(java.lang.String,java.lang.String)"><code>publishEntry(String, String)</code></a>,
  supplying <code>"value"</code> as the key and the supplied <code>value</code>
  argument as the value.</div>
 <dl>
@@ -272,8 +267,8 @@ default&nbsp;void&nbsp;publishEntry&#8203;(<a href="https://docs.oracle.com/java
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.3</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/junit/jupiter/api/TestReporter.html#publishEntry(java.util.Map)"><code>publishEntry(Map)</code></a>, 
-<a href="../../../../org/junit/jupiter/api/TestReporter.html#publishEntry(java.lang.String,java.lang.String)"><code>publishEntry(String, String)</code></a></dd>
+<dd><a href="#publishEntry(java.util.Map)"><code>publishEntry(Map)</code></a>, 
+<a href="#publishEntry(java.lang.String,java.lang.String)"><code>publishEntry(String, String)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -297,7 +292,7 @@ default&nbsp;void&nbsp;publishEntry&#8203;(<a href="https://docs.oracle.com/java
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/TestReporter.html">Use</a></li>
@@ -309,16 +304,8 @@ default&nbsp;void&nbsp;publishEntry&#8203;(<a href="https://docs.oracle.com/java
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../org/junit/jupiter/api/TestInstance.Lifecycle.html" title="enum in org.junit.jupiter.api"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../org/junit/jupiter/api/TestTemplate.html" title="annotation in org.junit.jupiter.api"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../index.html?org/junit/jupiter/api/TestReporter.html" target="_top">Frames</a></li>
-<li><a href="TestReporter.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--

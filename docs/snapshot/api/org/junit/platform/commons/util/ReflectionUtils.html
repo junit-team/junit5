@@ -13,7 +13,8 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../../jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../../../jquery/jquery-migrate-3.0.1.js"></script>
 <script type="text/javascript" src="../../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -26,13 +27,15 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9,"i29":9,"i30":9,"i31":9,"i32":9,"i33":9,"i34":9,"i35":9,"i36":9,"i37":9,"i38":9,"i39":9,"i40":9,"i41":9,"i42":9,"i43":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9,"i29":9,"i30":9,"i31":9,"i32":9,"i33":9,"i34":9,"i35":9,"i36":9,"i37":9,"i38":9,"i39":9,"i40":9,"i41":9,"i42":9,"i43":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
-var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
+var pathtoroot = "../../../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
@@ -48,7 +51,7 @@ var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/ReflectionUtils.html">Use</a></li>
@@ -60,16 +63,8 @@ var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.HierarchyTraversalMode.html" title="enum in org.junit.platform.commons.util"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../index.html?org/junit/platform/commons/util/ReflectionUtils.html" target="_top">Frames</a></li>
-<li><a href="ReflectionUtils.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
@@ -122,7 +117,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="../../../../../org/junit/platform/commons/util/package-summary.html">org.junit.platform.commons.util</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">org.junit.platform.commons.util</a></div>
 <h2 title="Class ReflectionUtils" class="title">Class ReflectionUtils</h2>
 </div>
 <div class="contentContainer">
@@ -156,7 +151,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.0</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/support/ReflectionSupport.html" title="class in org.junit.platform.commons.support"><code>ReflectionSupport</code></a></dd>
+<dd><a href="../support/ReflectionSupport.html" title="class in org.junit.platform.commons.support"><code>ReflectionSupport</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -180,7 +175,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.HierarchyTraversalMode.html" title="enum in org.junit.platform.commons.util">ReflectionUtils.HierarchyTraversalMode</a></span></code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="ReflectionUtils.HierarchyTraversalMode.html" title="enum in org.junit.platform.commons.util">ReflectionUtils.HierarchyTraversalMode</a></span></code></th>
 <td class="colLast">
 <div class="block">Modes in which a hierarchy can be traversed &mdash; for example, when
  searching for methods or fields within a class hierarchy.</div>
@@ -206,46 +201,46 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#findAllClassesInClasspathRoot(java.net.URI,java.util.function.Predicate,java.util.function.Predicate)">findAllClassesInClasspathRoot</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;root,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAllClassesInClasspathRoot(java.net.URI,java.util.function.Predicate,java.util.function.Predicate)">findAllClassesInClasspathRoot</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;root,
                              <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;classFilter,
                              <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;classNameFilter)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#findAllClassesInClasspathRoot(java.net.URI,org.junit.platform.commons.util.ClassFilter)">findAllClassesInClasspathRoot</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;root,
-                             <a href="../../../../../org/junit/platform/commons/util/ClassFilter.html" title="class in org.junit.platform.commons.util">ClassFilter</a>&nbsp;classFilter)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAllClassesInClasspathRoot(java.net.URI,org.junit.platform.commons.util.ClassFilter)">findAllClassesInClasspathRoot</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;root,
+                             <a href="ClassFilter.html" title="class in org.junit.platform.commons.util">ClassFilter</a>&nbsp;classFilter)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#findAllClassesInModule(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)">findAllClassesInModule</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;moduleName,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAllClassesInModule(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)">findAllClassesInModule</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;moduleName,
                       <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;classFilter,
                       <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;classNameFilter)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#findAllClassesInModule(java.lang.String,org.junit.platform.commons.util.ClassFilter)">findAllClassesInModule</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;moduleName,
-                      <a href="../../../../../org/junit/platform/commons/util/ClassFilter.html" title="class in org.junit.platform.commons.util">ClassFilter</a>&nbsp;classFilter)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAllClassesInModule(java.lang.String,org.junit.platform.commons.util.ClassFilter)">findAllClassesInModule</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;moduleName,
+                      <a href="ClassFilter.html" title="class in org.junit.platform.commons.util">ClassFilter</a>&nbsp;classFilter)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#findAllClassesInPackage(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)">findAllClassesInPackage</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;basePackageName,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAllClassesInPackage(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)">findAllClassesInPackage</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;basePackageName,
                        <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;classFilter,
                        <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;classNameFilter)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#findAllClassesInPackage(java.lang.String,org.junit.platform.commons.util.ClassFilter)">findAllClassesInPackage</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;basePackageName,
-                       <a href="../../../../../org/junit/platform/commons/util/ClassFilter.html" title="class in org.junit.platform.commons.util">ClassFilter</a>&nbsp;classFilter)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAllClassesInPackage(java.lang.String,org.junit.platform.commons.util.ClassFilter)">findAllClassesInPackage</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;basePackageName,
+                       <a href="ClassFilter.html" title="class in org.junit.platform.commons.util">ClassFilter</a>&nbsp;classFilter)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;?&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#findConstructors(java.lang.Class,java.util.function.Predicate)">findConstructors</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findConstructors(java.lang.Class,java.util.function.Predicate)">findConstructors</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;?&gt;&gt;&nbsp;predicate)</code></th>
 <td class="colLast">
 <div class="block">Find all constructors in the supplied class that match the supplied predicate.</div>
@@ -253,9 +248,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#findFields(java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode)">findFields</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findFields(java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode)">findFields</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
           <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&gt;&nbsp;predicate,
-          <a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.HierarchyTraversalMode.html" title="enum in org.junit.platform.commons.util">ReflectionUtils.HierarchyTraversalMode</a>&nbsp;traversalMode)</code></th>
+          <a href="ReflectionUtils.HierarchyTraversalMode.html" title="enum in org.junit.platform.commons.util">ReflectionUtils.HierarchyTraversalMode</a>&nbsp;traversalMode)</code></th>
 <td class="colLast">
 <div class="block">Find all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">fields</a> of the supplied class or interface
  that match the specified <code>predicate</code>.</div>
@@ -263,21 +258,21 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#findMethod(java.lang.Class,java.lang.String,java.lang.Class...)">findMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findMethod(java.lang.Class,java.lang.String,java.lang.Class...)">findMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName,
           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;...&nbsp;parameterTypes)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#findMethod(java.lang.Class,java.lang.String,java.lang.String)">findMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findMethod(java.lang.Class,java.lang.String,java.lang.String)">findMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName,
           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;parameterTypeNames)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#findMethods(java.lang.Class,java.util.function.Predicate)">findMethods</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findMethods(java.lang.Class,java.util.function.Predicate)">findMethods</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
            <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;&nbsp;predicate)</code></th>
 <td class="colLast">
 <div class="block">Find all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">methods</a> of the supplied class or interface
@@ -287,20 +282,20 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#findMethods(java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode)">findMethods</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findMethods(java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode)">findMethods</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
            <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;&nbsp;predicate,
-           <a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.HierarchyTraversalMode.html" title="enum in org.junit.platform.commons.util">ReflectionUtils.HierarchyTraversalMode</a>&nbsp;traversalMode)</code></th>
+           <a href="ReflectionUtils.HierarchyTraversalMode.html" title="enum in org.junit.platform.commons.util">ReflectionUtils.HierarchyTraversalMode</a>&nbsp;traversalMode)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#findNestedClasses(java.lang.Class,java.util.function.Predicate)">findNestedClasses</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findNestedClasses(java.lang.Class,java.util.function.Predicate)">findNestedClasses</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;predicate)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#getAllAssignmentCompatibleClasses(java.lang.Class)">getAllAssignmentCompatibleClasses</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAllAssignmentCompatibleClasses(java.lang.Class)">getAllAssignmentCompatibleClasses</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
 <div class="block">Return all classes and interfaces that can be used as assignment types
  for instances of the specified <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a>, including itself.</div>
@@ -308,19 +303,19 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink">Path</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#getAllClasspathRootDirectories()">getAllClasspathRootDirectories</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getAllClasspathRootDirectories()">getAllClasspathRootDirectories</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#getDeclaredConstructor(java.lang.Class)">getDeclaredConstructor</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDeclaredConstructor(java.lang.Class)">getDeclaredConstructor</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
 <div class="block">Get the sole declared <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Constructor</code></a> for the supplied class.</div>
 </td>
 </tr>
 <tr id="i16" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#getFullyQualifiedMethodName(java.lang.Class,java.lang.String,java.lang.Class...)">getFullyQualifiedMethodName</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFullyQualifiedMethodName(java.lang.Class,java.lang.String,java.lang.Class...)">getFullyQualifiedMethodName</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName,
                            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;...&nbsp;parameterTypes)</code></th>
 <td class="colLast">
@@ -330,7 +325,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i17" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#getOutermostInstance(java.lang.Object,java.lang.Class)">getOutermostInstance</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;inner,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getOutermostInstance(java.lang.Object,java.lang.Class)">getOutermostInstance</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;inner,
                     <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;requiredType)</code></th>
 <td class="colLast">
 <div class="block">Get the outermost instance of the required type, searching recursively
@@ -339,38 +334,38 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i18" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#getWrapperType(java.lang.Class)">getWrapperType</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;type)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getWrapperType(java.lang.Class)">getWrapperType</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;type)</code></th>
 <td class="colLast">
 <div class="block">Get the wrapper type for the supplied primitive type.</div>
 </td>
 </tr>
 <tr id="i19" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#invokeMethod(java.lang.reflect.Method,java.lang.Object,java.lang.Object...)">invokeMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#invokeMethod(java.lang.reflect.Method,java.lang.Object,java.lang.Object...)">invokeMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;target,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>...&nbsp;args)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i20" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#isAbstract(java.lang.Class)">isAbstract</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isAbstract(java.lang.Class)">isAbstract</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i21" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#isAbstract(java.lang.reflect.Member)">isAbstract</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isAbstract(java.lang.reflect.Member)">isAbstract</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i22" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#isArray(java.lang.Object)">isArray</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;obj)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isArray(java.lang.Object)">isArray</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;obj)</code></th>
 <td class="colLast">
 <div class="block">Determine if the supplied object is an array.</div>
 </td>
 </tr>
 <tr id="i23" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#isAssignableTo(java.lang.Object,java.lang.Class)">isAssignableTo</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;obj,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isAssignableTo(java.lang.Object,java.lang.Class)">isAssignableTo</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;obj,
               <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;targetType)</code></th>
 <td class="colLast">
 <div class="block">Determine if the supplied object can be assigned to the supplied target
@@ -379,7 +374,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i24" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#isInnerClass(java.lang.Class)">isInnerClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isInnerClass(java.lang.Class)">isInnerClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
 <div class="block">Determine if the supplied class is an <em>inner class</em> (i.e., a
  non-static member class).</div>
@@ -387,7 +382,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i25" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#isMethodPresent(java.lang.Class,java.util.function.Predicate)">isMethodPresent</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isMethodPresent(java.lang.Class,java.util.function.Predicate)">isMethodPresent</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;&nbsp;predicate)</code></th>
 <td class="colLast">
 <div class="block">Determine if a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> matching the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink"><code>Predicate</code></a>
@@ -398,52 +393,52 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i26" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#isNotPrivate(java.lang.reflect.Member)">isNotPrivate</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isNotPrivate(java.lang.reflect.Member)">isNotPrivate</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#isNotStatic(java.lang.reflect.Member)">isNotStatic</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isNotStatic(java.lang.reflect.Member)">isNotStatic</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i28" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#isPrivate(java.lang.Class)">isPrivate</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isPrivate(java.lang.Class)">isPrivate</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i29" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#isPrivate(java.lang.reflect.Member)">isPrivate</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isPrivate(java.lang.reflect.Member)">isPrivate</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i30" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#isPublic(java.lang.Class)">isPublic</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isPublic(java.lang.Class)">isPublic</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i31" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#isPublic(java.lang.reflect.Member)">isPublic</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isPublic(java.lang.reflect.Member)">isPublic</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i32" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#isStatic(java.lang.Class)">isStatic</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isStatic(java.lang.Class)">isStatic</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i33" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#isStatic(java.lang.reflect.Member)">isStatic</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isStatic(java.lang.reflect.Member)">isStatic</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i34" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#loadClass(java.lang.String)">loadClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#loadClass(java.lang.String)">loadClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i35" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#loadClass(java.lang.String,java.lang.ClassLoader)">loadClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#loadClass(java.lang.String,java.lang.ClassLoader)">loadClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink">ClassLoader</a>&nbsp;classLoader)</code></th>
 <td class="colLast">
 <div class="block">Load a class by its <em>primitive name</em> or <em>fully qualified name</em>,
@@ -452,18 +447,18 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i36" class="altColor">
 <td class="colFirst"><code>static &lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/AccessibleObject.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">AccessibleObject</a>&gt;<br>T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#makeAccessible(T)">makeAccessible</a></span>&#8203;(T&nbsp;object)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#makeAccessible(T)">makeAccessible</a></span>&#8203;(T&nbsp;object)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i37" class="rowColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#newInstance(java.lang.Class,java.lang.Object...)">newInstance</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#newInstance(java.lang.Class,java.lang.Object...)">newInstance</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz,
            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>...&nbsp;args)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i38" class="altColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#newInstance(java.lang.reflect.Constructor,java.lang.Object...)">newInstance</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;T&gt;&nbsp;constructor,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#newInstance(java.lang.reflect.Constructor,java.lang.Object...)">newInstance</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;T&gt;&nbsp;constructor,
            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>...&nbsp;args)</code></th>
 <td class="colLast">
 <div class="block">Create a new instance of type <code>T</code> by invoking the supplied constructor
@@ -472,7 +467,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i39" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#parseFullyQualifiedMethodName(java.lang.String)">parseFullyQualifiedMethodName</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fullyQualifiedMethodName)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parseFullyQualifiedMethodName(java.lang.String)">parseFullyQualifiedMethodName</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fullyQualifiedMethodName)</code></th>
 <td class="colLast">
 <div class="block">Parse the supplied <em>fully qualified method name</em> into a 3-element
  <code>String[]</code> with the following content.</div>
@@ -480,7 +475,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i40" class="altColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#readFieldValue(java.lang.Class,java.lang.String,T)">readFieldValue</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readFieldValue(java.lang.Class,java.lang.String,T)">readFieldValue</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz,
               <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldName,
               T&nbsp;instance)</code></th>
 <td class="colLast">
@@ -489,14 +484,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i41" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#readFieldValue(java.lang.reflect.Field)">readFieldValue</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readFieldValue(java.lang.reflect.Field)">readFieldValue</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field)</code></th>
 <td class="colLast">
 <div class="block">Read the value of a potentially inaccessible static field.</div>
 </td>
 </tr>
 <tr id="i42" class="altColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#readFieldValue(java.lang.reflect.Field,T)">readFieldValue</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readFieldValue(java.lang.reflect.Field,T)">readFieldValue</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field,
               T&nbsp;instance)</code></th>
 <td class="colLast">
 <div class="block">Read the value of a potentially inaccessible field.</div>
@@ -504,7 +499,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i43" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#returnsVoid(java.lang.reflect.Method)">returnsVoid</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#returnsVoid(java.lang.reflect.Method)">returnsVoid</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -537,7 +532,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>isPublic</h4>
-<pre>public static&nbsp;boolean&nbsp;isPublic&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;isPublic&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
 </li>
 </ul>
 <a id="isPublic(java.lang.reflect.Member)">
@@ -546,7 +541,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>isPublic</h4>
-<pre>public static&nbsp;boolean&nbsp;isPublic&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</pre>
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;isPublic&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</pre>
 </li>
 </ul>
 <a id="isPrivate(java.lang.Class)">
@@ -555,7 +550,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>isPrivate</h4>
-<pre>public static&nbsp;boolean&nbsp;isPrivate&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;isPrivate&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
 </li>
 </ul>
 <a id="isPrivate(java.lang.reflect.Member)">
@@ -564,7 +559,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>isPrivate</h4>
-<pre>public static&nbsp;boolean&nbsp;isPrivate&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</pre>
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;isPrivate&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</pre>
 </li>
 </ul>
 <a id="isNotPrivate(java.lang.reflect.Member)">
@@ -573,7 +568,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>isNotPrivate</h4>
-<pre>public static&nbsp;boolean&nbsp;isNotPrivate&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</pre>
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;isNotPrivate&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</pre>
 </li>
 </ul>
 <a id="isAbstract(java.lang.Class)">
@@ -582,7 +577,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>isAbstract</h4>
-<pre>public static&nbsp;boolean&nbsp;isAbstract&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;isAbstract&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
 </li>
 </ul>
 <a id="isAbstract(java.lang.reflect.Member)">
@@ -591,7 +586,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>isAbstract</h4>
-<pre>public static&nbsp;boolean&nbsp;isAbstract&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</pre>
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;isAbstract&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</pre>
 </li>
 </ul>
 <a id="isStatic(java.lang.Class)">
@@ -600,7 +595,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>isStatic</h4>
-<pre>public static&nbsp;boolean&nbsp;isStatic&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;isStatic&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
 </li>
 </ul>
 <a id="isStatic(java.lang.reflect.Member)">
@@ -609,7 +604,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>isStatic</h4>
-<pre>public static&nbsp;boolean&nbsp;isStatic&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</pre>
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;isStatic&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</pre>
 </li>
 </ul>
 <a id="isNotStatic(java.lang.reflect.Member)">
@@ -618,7 +613,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>isNotStatic</h4>
-<pre>public static&nbsp;boolean&nbsp;isNotStatic&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</pre>
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;isNotStatic&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Member.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Member</a>&nbsp;member)</pre>
 </li>
 </ul>
 <a id="isInnerClass(java.lang.Class)">
@@ -627,7 +622,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>isInnerClass</h4>
-<pre>public static&nbsp;boolean&nbsp;isInnerClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;isInnerClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
 <div class="block">Determine if the supplied class is an <em>inner class</em> (i.e., a
  non-static member class).
 
@@ -649,7 +644,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>returnsVoid</h4>
-<pre>public static&nbsp;boolean&nbsp;returnsVoid&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</pre>
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;returnsVoid&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</pre>
 </li>
 </ul>
 <a id="isArray(java.lang.Object)">
@@ -658,7 +653,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>isArray</h4>
-<pre>public static&nbsp;boolean&nbsp;isArray&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;obj)</pre>
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;isArray&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;obj)</pre>
 <div class="block">Determine if the supplied object is an array.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -674,7 +669,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>isAssignableTo</h4>
-<pre>public static&nbsp;boolean&nbsp;isAssignableTo&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;obj,
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;isAssignableTo&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;obj,
                                      <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;targetType)</pre>
 <div class="block">Determine if the supplied object can be assigned to the supplied target
  type for the purpose of reflective method invocations.
@@ -707,7 +702,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>getWrapperType</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;getWrapperType&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;type)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;getWrapperType&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;type)</pre>
 <div class="block">Get the wrapper type for the supplied primitive type.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -724,12 +719,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>newInstance</h4>
-<pre>public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;newInstance&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz,
+<pre class="methodSignature">public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;newInstance&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz,
                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>...&nbsp;args)</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/support/ReflectionSupport.html#newInstance(java.lang.Class,java.lang.Object...)"><code>ReflectionSupport.newInstance(Class, Object...)</code></a>, 
-<a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#newInstance(java.lang.reflect.Constructor,java.lang.Object...)"><code>newInstance(Constructor, Object...)</code></a></dd>
+<dd><a href="../support/ReflectionSupport.html#newInstance(java.lang.Class,java.lang.Object...)"><code>ReflectionSupport.newInstance(Class, Object...)</code></a>, 
+<a href="#newInstance(java.lang.reflect.Constructor,java.lang.Object...)"><code>newInstance(Constructor, Object...)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -739,13 +734,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>newInstance</h4>
-<pre>public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;newInstance&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;T&gt;&nbsp;constructor,
+<pre class="methodSignature">public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;newInstance&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;T&gt;&nbsp;constructor,
                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>...&nbsp;args)</pre>
 <div class="block">Create a new instance of type <code>T</code> by invoking the supplied constructor
  with the supplied arguments.
 
  <p>The constructor will be made accessible if necessary, and any checked
- exception will be <a href="../../../../../org/junit/platform/commons/util/ExceptionUtils.html#throwAsUncheckedException(java.lang.Throwable)">masked</a>
+ exception will be <a href="ExceptionUtils.html#throwAsUncheckedException(java.lang.Throwable)">masked</a>
  as an unchecked exception.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -754,8 +749,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new instance; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#newInstance(java.lang.Class,java.lang.Object...)"><code>newInstance(Class, Object...)</code></a>, 
-<a href="../../../../../org/junit/platform/commons/util/ExceptionUtils.html#throwAsUncheckedException(java.lang.Throwable)"><code>ExceptionUtils.throwAsUncheckedException(Throwable)</code></a></dd>
+<dd><a href="#newInstance(java.lang.Class,java.lang.Object...)"><code>newInstance(Class, Object...)</code></a>, 
+<a href="ExceptionUtils.html#throwAsUncheckedException(java.lang.Throwable)"><code>ExceptionUtils.throwAsUncheckedException(Throwable)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -767,7 +762,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>readFieldValue</h4>
-<pre>public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;readFieldValue&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz,
+<pre class="methodSignature">public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;readFieldValue&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz,
                                                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldName,
                                                   T&nbsp;instance)</pre>
 <div class="block">Read the value of a potentially inaccessible or nonexistent field.
@@ -782,8 +777,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>instance</code> - the instance from where the value is to be read; may
  be <code>null</code> for a static field</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#readFieldValue(java.lang.reflect.Field)"><code>readFieldValue(Field)</code></a>, 
-<a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#readFieldValue(java.lang.reflect.Field,T)"><code>readFieldValue(Field, Object)</code></a></dd>
+<dd><a href="#readFieldValue(java.lang.reflect.Field)"><code>readFieldValue(Field)</code></a>, 
+<a href="#readFieldValue(java.lang.reflect.Field,T)"><code>readFieldValue(Field, Object)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -793,7 +788,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>readFieldValue</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;readFieldValue&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;readFieldValue&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field)</pre>
 <div class="block">Read the value of a potentially inaccessible static field.
 
  <p>If an exception occurs while reading the field or if the value of the
@@ -802,8 +797,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>field</code> - the field to read; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#readFieldValue(java.lang.reflect.Field,T)"><code>readFieldValue(Field, Object)</code></a>, 
-<a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#readFieldValue(java.lang.Class,java.lang.String,T)"><code>readFieldValue(Class, String, Object)</code></a></dd>
+<dd><a href="#readFieldValue(java.lang.reflect.Field,T)"><code>readFieldValue(Field, Object)</code></a>, 
+<a href="#readFieldValue(java.lang.Class,java.lang.String,T)"><code>readFieldValue(Class, String, Object)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -815,7 +810,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>readFieldValue</h4>
-<pre>public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;readFieldValue&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field,
+<pre class="methodSignature">public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;readFieldValue&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field,
                                                   T&nbsp;instance)</pre>
 <div class="block">Read the value of a potentially inaccessible field.
 
@@ -827,8 +822,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>instance</code> - the instance from which the value is to be read; may
  be <code>null</code> for a static field</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#readFieldValue(java.lang.reflect.Field)"><code>readFieldValue(Field)</code></a>, 
-<a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#readFieldValue(java.lang.Class,java.lang.String,T)"><code>readFieldValue(Class, String, Object)</code></a></dd>
+<dd><a href="#readFieldValue(java.lang.reflect.Field)"><code>readFieldValue(Field)</code></a>, 
+<a href="#readFieldValue(java.lang.Class,java.lang.String,T)"><code>readFieldValue(Class, String, Object)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -838,12 +833,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>invokeMethod</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;invokeMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method,
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;invokeMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method,
                                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;target,
                                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>...&nbsp;args)</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/support/ReflectionSupport.html#invokeMethod(java.lang.reflect.Method,java.lang.Object,java.lang.Object...)"><code>ReflectionSupport.invokeMethod(Method, Object, Object...)</code></a></dd>
+<dd><a href="../support/ReflectionSupport.html#invokeMethod(java.lang.reflect.Method,java.lang.Object,java.lang.Object...)"><code>ReflectionSupport.invokeMethod(Method, Object, Object...)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -853,10 +848,10 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>loadClass</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;loadClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;loadClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/support/ReflectionSupport.html#loadClass(java.lang.String)"><code>ReflectionSupport.loadClass(String)</code></a></dd>
+<dd><a href="../support/ReflectionSupport.html#loadClass(java.lang.String)"><code>ReflectionSupport.loadClass(String)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -866,19 +861,19 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>loadClass</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;loadClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;loadClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                                            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink">ClassLoader</a>&nbsp;classLoader)</pre>
 <div class="block">Load a class by its <em>primitive name</em> or <em>fully qualified name</em>,
  using the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>ClassLoader</code></a>.
 
- <p>See <a href="../../../../../org/junit/platform/commons/support/ReflectionSupport.html#loadClass(java.lang.String)"><code>ReflectionSupport.loadClass(String)</code></a>
+ <p>See <a href="../support/ReflectionSupport.html#loadClass(java.lang.String)"><code>ReflectionSupport.loadClass(String)</code></a>
  for details on support for class names for arrays.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>name</code> - the name of the class to load; never <code>null</code> or blank</dd>
 <dd><code>classLoader</code> - the <code>ClassLoader</code> to use; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#loadClass(java.lang.String)"><code>loadClass(String)</code></a></dd>
+<dd><a href="#loadClass(java.lang.String)"><code>loadClass(String)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -888,7 +883,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>getFullyQualifiedMethodName</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getFullyQualifiedMethodName&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getFullyQualifiedMethodName&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                                                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName,
                                                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;...&nbsp;parameterTypes)</pre>
 <div class="block">Build the <em>fully qualified method name</em> for the method described by the
@@ -909,7 +904,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>parseFullyQualifiedMethodName</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]&nbsp;parseFullyQualifiedMethodName&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fullyQualifiedMethodName)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]&nbsp;parseFullyQualifiedMethodName&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fullyQualifiedMethodName)</pre>
 <div class="block">Parse the supplied <em>fully qualified method name</em> into a 3-element
  <code>String[]</code> with the following content.
 
@@ -934,7 +929,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>getOutermostInstance</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;getOutermostInstance&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;inner,
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;getOutermostInstance&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;inner,
                                                     <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;requiredType)</pre>
 <div class="block">Get the outermost instance of the required type, searching recursively
  through enclosing instances.
@@ -957,7 +952,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>getAllClasspathRootDirectories</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink">Path</a>&gt;&nbsp;getAllClasspathRootDirectories()</pre>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink">Path</a>&gt;&nbsp;getAllClasspathRootDirectories()</pre>
 </li>
 </ul>
 <a id="findAllClassesInClasspathRoot(java.net.URI,java.util.function.Predicate,java.util.function.Predicate)">
@@ -966,12 +961,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>findAllClassesInClasspathRoot</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;findAllClassesInClasspathRoot&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;root,
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;findAllClassesInClasspathRoot&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;root,
                                                            <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;classFilter,
                                                            <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;classNameFilter)</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/support/ReflectionSupport.html#findAllClassesInClasspathRoot(java.net.URI,java.util.function.Predicate,java.util.function.Predicate)"><code>ReflectionSupport.findAllClassesInClasspathRoot(URI, Predicate, Predicate)</code></a></dd>
+<dd><a href="../support/ReflectionSupport.html#findAllClassesInClasspathRoot(java.net.URI,java.util.function.Predicate,java.util.function.Predicate)"><code>ReflectionSupport.findAllClassesInClasspathRoot(URI, Predicate, Predicate)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -981,8 +976,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>findAllClassesInClasspathRoot</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;findAllClassesInClasspathRoot&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;root,
-                                                           <a href="../../../../../org/junit/platform/commons/util/ClassFilter.html" title="class in org.junit.platform.commons.util">ClassFilter</a>&nbsp;classFilter)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;findAllClassesInClasspathRoot&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink">URI</a>&nbsp;root,
+                                                           <a href="ClassFilter.html" title="class in org.junit.platform.commons.util">ClassFilter</a>&nbsp;classFilter)</pre>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.1</dd>
@@ -995,12 +990,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>findAllClassesInPackage</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;findAllClassesInPackage&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;basePackageName,
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;findAllClassesInPackage&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;basePackageName,
                                                      <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;classFilter,
                                                      <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;classNameFilter)</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/support/ReflectionSupport.html#findAllClassesInPackage(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)"><code>ReflectionSupport.findAllClassesInPackage(String, Predicate, Predicate)</code></a></dd>
+<dd><a href="../support/ReflectionSupport.html#findAllClassesInPackage(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)"><code>ReflectionSupport.findAllClassesInPackage(String, Predicate, Predicate)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1010,8 +1005,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>findAllClassesInPackage</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;findAllClassesInPackage&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;basePackageName,
-                                                     <a href="../../../../../org/junit/platform/commons/util/ClassFilter.html" title="class in org.junit.platform.commons.util">ClassFilter</a>&nbsp;classFilter)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;findAllClassesInPackage&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;basePackageName,
+                                                     <a href="ClassFilter.html" title="class in org.junit.platform.commons.util">ClassFilter</a>&nbsp;classFilter)</pre>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.1</dd>
@@ -1024,14 +1019,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>findAllClassesInModule</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;findAllClassesInModule&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;moduleName,
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;findAllClassesInModule&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;moduleName,
                                                     <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;classFilter,
                                                     <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;classNameFilter)</pre>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.1.1</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/support/ReflectionSupport.html#findAllClassesInModule(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)"><code>ReflectionSupport.findAllClassesInModule(String, Predicate, Predicate)</code></a></dd>
+<dd><a href="../support/ReflectionSupport.html#findAllClassesInModule(java.lang.String,java.util.function.Predicate,java.util.function.Predicate)"><code>ReflectionSupport.findAllClassesInModule(String, Predicate, Predicate)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1041,8 +1036,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>findAllClassesInModule</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;findAllClassesInModule&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;moduleName,
-                                                    <a href="../../../../../org/junit/platform/commons/util/ClassFilter.html" title="class in org.junit.platform.commons.util">ClassFilter</a>&nbsp;classFilter)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;findAllClassesInModule&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;moduleName,
+                                                    <a href="ClassFilter.html" title="class in org.junit.platform.commons.util">ClassFilter</a>&nbsp;classFilter)</pre>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.1.1</dd>
@@ -1055,11 +1050,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>findNestedClasses</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;findNestedClasses&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;findNestedClasses&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                                                <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;predicate)</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/support/ReflectionSupport.html#findNestedClasses(java.lang.Class,java.util.function.Predicate)"><code>ReflectionSupport.findNestedClasses(Class, Predicate)</code></a></dd>
+<dd><a href="../support/ReflectionSupport.html#findNestedClasses(java.lang.Class,java.util.function.Predicate)"><code>ReflectionSupport.findNestedClasses(Class, Predicate)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1069,10 +1064,10 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>getDeclaredConstructor</h4>
-<pre>public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;T&gt;&nbsp;getDeclaredConstructor&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz)</pre>
+<pre class="methodSignature">public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;T&gt;&nbsp;getDeclaredConstructor&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz)</pre>
 <div class="block">Get the sole declared <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Constructor</code></a> for the supplied class.
 
- <p>Throws a <a href="../../../../../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util"><code>PreconditionViolationException</code></a> if the supplied
+ <p>Throws a <a href="PreconditionViolationException.html" title="class in org.junit.platform.commons.util"><code>PreconditionViolationException</code></a> if the supplied
  class declares more than one constructor.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1090,7 +1085,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>findConstructors</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;?&gt;&gt;&nbsp;findConstructors&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;?&gt;&gt;&nbsp;findConstructors&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                                                     <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;?&gt;&gt;&nbsp;predicate)</pre>
 <div class="block">Find all constructors in the supplied class that match the supplied predicate.</div>
 <dl>
@@ -1109,9 +1104,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>findFields</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&gt;&nbsp;findFields&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&gt;&nbsp;findFields&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                                      <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&gt;&nbsp;predicate,
-                                     <a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.HierarchyTraversalMode.html" title="enum in org.junit.platform.commons.util">ReflectionUtils.HierarchyTraversalMode</a>&nbsp;traversalMode)</pre>
+                                     <a href="ReflectionUtils.HierarchyTraversalMode.html" title="enum in org.junit.platform.commons.util">ReflectionUtils.HierarchyTraversalMode</a>&nbsp;traversalMode)</pre>
 <div class="block">Find all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">fields</a> of the supplied class or interface
  that match the specified <code>predicate</code>.
 
@@ -1133,7 +1128,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>isMethodPresent</h4>
-<pre>public static&nbsp;boolean&nbsp;isMethodPresent&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<pre class="methodSignature">public static&nbsp;boolean&nbsp;isMethodPresent&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                                       <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;&nbsp;predicate)</pre>
 <div class="block">Determine if a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> matching the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink"><code>Predicate</code></a>
  is present within the type hierarchy of the specified class, beginning
@@ -1148,8 +1143,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd><code>true</code> if such a method is present</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#findMethod(java.lang.Class,java.lang.String,java.lang.String)"><code>findMethod(Class, String, String)</code></a>, 
-<a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#findMethod(java.lang.Class,java.lang.String,java.lang.Class...)"><code>findMethod(Class, String, Class...)</code></a></dd>
+<dd><a href="#findMethod(java.lang.Class,java.lang.String,java.lang.String)"><code>findMethod(Class, String, String)</code></a>, 
+<a href="#findMethod(java.lang.Class,java.lang.String,java.lang.Class...)"><code>findMethod(Class, String, Class...)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1159,12 +1154,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>findMethod</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;&nbsp;findMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;&nbsp;findMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName,
                                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;parameterTypeNames)</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/support/ReflectionSupport.html#findMethod(java.lang.Class,java.lang.String,java.lang.String)"><code>ReflectionSupport.findMethod(Class, String, String)</code></a></dd>
+<dd><a href="../support/ReflectionSupport.html#findMethod(java.lang.Class,java.lang.String,java.lang.String)"><code>ReflectionSupport.findMethod(Class, String, String)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1174,12 +1169,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>findMethod</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;&nbsp;findMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;&nbsp;findMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName,
                                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;...&nbsp;parameterTypes)</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/support/ReflectionSupport.html#findMethod(java.lang.Class,java.lang.String,java.lang.Class...)"><code>ReflectionSupport.findMethod(Class, String, Class...)</code></a></dd>
+<dd><a href="../support/ReflectionSupport.html#findMethod(java.lang.Class,java.lang.String,java.lang.Class...)"><code>ReflectionSupport.findMethod(Class, String, Class...)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1189,7 +1184,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>findMethods</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;&nbsp;findMethods&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;&nbsp;findMethods&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                                        <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;&nbsp;predicate)</pre>
 <div class="block">Find all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">methods</a> of the supplied class or interface
  that match the specified <code>predicate</code>, using top-down search semantics
@@ -1204,8 +1199,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>an immutable list of all such methods found; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.HierarchyTraversalMode.html#TOP_DOWN"><code>ReflectionUtils.HierarchyTraversalMode.TOP_DOWN</code></a>, 
-<a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.html#findMethods(java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode)"><code>findMethods(Class, Predicate, HierarchyTraversalMode)</code></a></dd>
+<dd><a href="ReflectionUtils.HierarchyTraversalMode.html#TOP_DOWN"><code>ReflectionUtils.HierarchyTraversalMode.TOP_DOWN</code></a>, 
+<a href="#findMethods(java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode)"><code>findMethods(Class, Predicate, HierarchyTraversalMode)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1215,12 +1210,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>findMethods</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;&nbsp;findMethods&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;&nbsp;findMethods&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                                        <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;&nbsp;predicate,
-                                       <a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.HierarchyTraversalMode.html" title="enum in org.junit.platform.commons.util">ReflectionUtils.HierarchyTraversalMode</a>&nbsp;traversalMode)</pre>
+                                       <a href="ReflectionUtils.HierarchyTraversalMode.html" title="enum in org.junit.platform.commons.util">ReflectionUtils.HierarchyTraversalMode</a>&nbsp;traversalMode)</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/platform/commons/support/ReflectionSupport.html#findMethods(java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.support.HierarchyTraversalMode)"><code>ReflectionSupport.findMethods(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)</code></a></dd>
+<dd><a href="../support/ReflectionSupport.html#findMethods(java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.support.HierarchyTraversalMode)"><code>ReflectionSupport.findMethods(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1232,7 +1227,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>makeAccessible</h4>
-<pre>public static&nbsp;&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/AccessibleObject.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">AccessibleObject</a>&gt;&nbsp;T&nbsp;makeAccessible&#8203;(T&nbsp;object)</pre>
+<pre class="methodSignature">public static&nbsp;&lt;T extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/AccessibleObject.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">AccessibleObject</a>&gt;&nbsp;T&nbsp;makeAccessible&#8203;(T&nbsp;object)</pre>
 </li>
 </ul>
 <a id="getAllAssignmentCompatibleClasses(java.lang.Class)">
@@ -1241,7 +1236,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getAllAssignmentCompatibleClasses</h4>
-<pre>public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;getAllAssignmentCompatibleClasses&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;getAllAssignmentCompatibleClasses&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</pre>
 <div class="block">Return all classes and interfaces that can be used as assignment types
  for instances of the specified <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a>, including itself.</div>
 <dl>
@@ -1272,7 +1267,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/ReflectionUtils.html">Use</a></li>
@@ -1284,16 +1279,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../org/junit/platform/commons/util/ReflectionUtils.HierarchyTraversalMode.html" title="enum in org.junit.platform.commons.util"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../index.html?org/junit/platform/commons/util/ReflectionUtils.html" target="_top">Frames</a></li>
-<li><a href="ReflectionUtils.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--

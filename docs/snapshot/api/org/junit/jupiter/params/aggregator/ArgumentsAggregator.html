@@ -13,7 +13,8 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../../jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../../../jquery/jquery-migrate-3.0.1.js"></script>
 <script type="text/javascript" src="../../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -26,13 +27,15 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6};
+var data = {"i0":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
-var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
+var pathtoroot = "../../../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
@@ -48,7 +51,7 @@ var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/ArgumentsAggregator.html">Use</a></li>
@@ -60,16 +63,8 @@ var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAggregationException.html" title="class in org.junit.jupiter.params.aggregator"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../org/junit/jupiter/params/aggregator/DefaultArgumentsAccessor.html" title="class in org.junit.jupiter.params.aggregator"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../index.html?org/junit/jupiter/params/aggregator/ArgumentsAggregator.html" target="_top">Frames</a></li>
-<li><a href="ArgumentsAggregator.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
@@ -122,7 +117,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="../../../../../org/junit/jupiter/params/aggregator/package-summary.html">org.junit.jupiter.params.aggregator</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">org.junit.jupiter.params.aggregator</a></div>
 <h2 title="Interface ArgumentsAggregator" class="title">Interface ArgumentsAggregator</h2>
 </div>
 <div class="contentContainer">
@@ -134,12 +129,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.2")
 public interface <span class="typeNameLabel">ArgumentsAggregator</span></pre>
 <div class="block"><code>ArgumentsAggregator</code> is an abstraction for the aggregation of arguments
- provided by an <a href="../../../../../org/junit/jupiter/params/provider/ArgumentsProvider.html" title="interface in org.junit.jupiter.params.provider"><code>ArgumentsProvider</code></a> for a single invocation of a
- <a href="../../../../../org/junit/jupiter/params/ParameterizedTest.html" title="annotation in org.junit.jupiter.params"><code>@ParameterizedTest</code></a> method
+ provided by an <a href="../provider/ArgumentsProvider.html" title="interface in org.junit.jupiter.params.provider"><code>ArgumentsProvider</code></a> for a single invocation of a
+ <a href="../ParameterizedTest.html" title="annotation in org.junit.jupiter.params"><code>@ParameterizedTest</code></a> method
  into a single object.
 
  <p>An <code>ArgumentsAggregator</code> is applied to a method parameter of a
- <code>@ParameterizedTest</code> method via the <a href="../../../../../org/junit/jupiter/params/aggregator/AggregateWith.html" title="annotation in org.junit.jupiter.params.aggregator"><code>@AggregateWith</code></a>
+ <code>@ParameterizedTest</code> method via the <a href="AggregateWith.html" title="annotation in org.junit.jupiter.params.aggregator"><code>@AggregateWith</code></a>
  annotation.
 
  <p>The result of the aggregation will be passed as an argument to the
@@ -157,9 +152,9 @@ public interface <span class="typeNameLabel">ArgumentsAggregator</span></pre>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.2</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/junit/jupiter/params/aggregator/AggregateWith.html" title="annotation in org.junit.jupiter.params.aggregator"><code>AggregateWith</code></a>, 
-<a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator"><code>ArgumentsAccessor</code></a>, 
-<a href="../../../../../org/junit/jupiter/params/ParameterizedTest.html" title="annotation in org.junit.jupiter.params"><code>ParameterizedTest</code></a></dd>
+<dd><a href="AggregateWith.html" title="annotation in org.junit.jupiter.params.aggregator"><code>AggregateWith</code></a>, 
+<a href="ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator"><code>ArgumentsAccessor</code></a>, 
+<a href="../ParameterizedTest.html" title="annotation in org.junit.jupiter.params"><code>ParameterizedTest</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -183,8 +178,8 @@ public interface <span class="typeNameLabel">ArgumentsAggregator</span></pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAggregator.html#aggregateArguments(org.junit.jupiter.params.aggregator.ArgumentsAccessor,org.junit.jupiter.api.extension.ParameterContext)">aggregateArguments</a></span>&#8203;(<a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator">ArgumentsAccessor</a>&nbsp;accessor,
-                  <a href="../../../../../org/junit/jupiter/api/extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;context)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#aggregateArguments(org.junit.jupiter.params.aggregator.ArgumentsAccessor,org.junit.jupiter.api.extension.ParameterContext)">aggregateArguments</a></span>&#8203;(<a href="ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator">ArgumentsAccessor</a>&nbsp;accessor,
+                  <a href="../../api/extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;context)</code></th>
 <td class="colLast">
 <div class="block">Aggregate the arguments contained in the supplied <code>accessor</code> into a
  single object.</div>
@@ -213,14 +208,14 @@ public interface <span class="typeNameLabel">ArgumentsAggregator</span></pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>aggregateArguments</h4>
-<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;aggregateArguments&#8203;(<a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator">ArgumentsAccessor</a>&nbsp;accessor,
-                          <a href="../../../../../org/junit/jupiter/api/extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;context)
-                   throws <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAggregationException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAggregationException</a></pre>
+<pre class="methodSignature"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;aggregateArguments&#8203;(<a href="ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator">ArgumentsAccessor</a>&nbsp;accessor,
+                          <a href="../../api/extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;context)
+                   throws <a href="ArgumentsAggregationException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAggregationException</a></pre>
 <div class="block">Aggregate the arguments contained in the supplied <code>accessor</code> into a
  single object.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>accessor</code> - an <a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator"><code>ArgumentsAccessor</code></a> containing the arguments to be
+<dd><code>accessor</code> - an <a href="ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator"><code>ArgumentsAccessor</code></a> containing the arguments to be
  aggregated; never <code>null</code></dd>
 <dd><code>context</code> - the parameter context where the aggregated result is to be
  supplied; never <code>null</code></dd>
@@ -228,7 +223,7 @@ public interface <span class="typeNameLabel">ArgumentsAggregator</span></pre>
 <dd>the aggregated result; may be <code>null</code> but only if the target
  type is a reference type</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAggregationException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAggregationException</a></code> - if an error occurs during the
+<dd><code><a href="ArgumentsAggregationException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAggregationException</a></code> - if an error occurs during the
  aggregation</dd>
 </dl>
 </li>
@@ -253,7 +248,7 @@ public interface <span class="typeNameLabel">ArgumentsAggregator</span></pre>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
 <li><a href="class-use/ArgumentsAggregator.html">Use</a></li>
@@ -265,16 +260,8 @@ public interface <span class="typeNameLabel">ArgumentsAggregator</span></pre>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../org/junit/jupiter/params/aggregator/ArgumentsAggregationException.html" title="class in org.junit.jupiter.params.aggregator"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../org/junit/jupiter/params/aggregator/DefaultArgumentsAccessor.html" title="class in org.junit.jupiter.params.aggregator"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../index.html?org/junit/jupiter/params/aggregator/ArgumentsAggregator.html" target="_top">Frames</a></li>
-<li><a href="ArgumentsAggregator.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--

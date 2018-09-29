@@ -13,7 +13,8 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../../../jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../../../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../../../../jquery/jquery-migrate-3.0.1.js"></script>
 <script type="text/javascript" src="../../../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -26,7 +27,9 @@
     catch(err) {
     }
 //-->
-var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
+var pathtoroot = "../../../../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
@@ -42,7 +45,7 @@ var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../../index.html">Overview</a></li>
 <li class="navBarCell1Rev">Package</li>
 <li>Class</li>
 <li><a href="package-use.html">Use</a></li>
@@ -54,16 +57,8 @@ var pathtoroot = "../../../../../../";loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../../org/junit/jupiter/engine/discovery/package-summary.html">Prev&nbsp;Package</a></li>
-<li><a href="../../../../../../org/junit/jupiter/engine/execution/package-summary.html">Next&nbsp;Package</a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../../index.html?org/junit/jupiter/engine/discovery/predicates/package-summary.html" target="_top">Frames</a></li>
-<li><a href="package-summary.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
@@ -118,47 +113,47 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/jupiter/engine/discovery/predicates/IsInnerClass.html" title="class in org.junit.jupiter.engine.discovery.predicates">IsInnerClass</a></th>
+<th class="colFirst" scope="row"><a href="IsInnerClass.html" title="class in org.junit.jupiter.engine.discovery.predicates">IsInnerClass</a></th>
 <td class="colLast">
 <div class="block">Test if a class is a non-private inner class (i.e., a non-static nested class).</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/jupiter/engine/discovery/predicates/IsNestedTestClass.html" title="class in org.junit.jupiter.engine.discovery.predicates">IsNestedTestClass</a></th>
+<th class="colFirst" scope="row"><a href="IsNestedTestClass.html" title="class in org.junit.jupiter.engine.discovery.predicates">IsNestedTestClass</a></th>
 <td class="colLast">
-<div class="block">Test if a class is a JUnit Jupiter <a href="../../../../../../org/junit/jupiter/api/Nested.html" title="annotation in org.junit.jupiter.api"><code>@Nested</code></a> test class.</div>
+<div class="block">Test if a class is a JUnit Jupiter <a href="../../../api/Nested.html" title="annotation in org.junit.jupiter.api"><code>@Nested</code></a> test class.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/jupiter/engine/discovery/predicates/IsPotentialTestContainer.html" title="class in org.junit.jupiter.engine.discovery.predicates">IsPotentialTestContainer</a></th>
+<th class="colFirst" scope="row"><a href="IsPotentialTestContainer.html" title="class in org.junit.jupiter.engine.discovery.predicates">IsPotentialTestContainer</a></th>
 <td class="colLast">
 <div class="block">Test if a class is a potential top-level JUnit Jupiter test container, even if
  it does not contain tests.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/jupiter/engine/discovery/predicates/IsTestClassWithTests.html" title="class in org.junit.jupiter.engine.discovery.predicates">IsTestClassWithTests</a></th>
+<th class="colFirst" scope="row"><a href="IsTestClassWithTests.html" title="class in org.junit.jupiter.engine.discovery.predicates">IsTestClassWithTests</a></th>
 <td class="colLast">
 <div class="block">Test if a class is a JUnit Jupiter test class containing executable tests,
  test factories, test templates, or nested tests.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/jupiter/engine/discovery/predicates/IsTestFactoryMethod.html" title="class in org.junit.jupiter.engine.discovery.predicates">IsTestFactoryMethod</a></th>
+<th class="colFirst" scope="row"><a href="IsTestFactoryMethod.html" title="class in org.junit.jupiter.engine.discovery.predicates">IsTestFactoryMethod</a></th>
 <td class="colLast">
-<div class="block">Test if a method is a JUnit Jupiter <a href="../../../../../../org/junit/jupiter/api/TestFactory.html" title="annotation in org.junit.jupiter.api"><code>@TestFactory</code></a> method.</div>
+<div class="block">Test if a method is a JUnit Jupiter <a href="../../../api/TestFactory.html" title="annotation in org.junit.jupiter.api"><code>@TestFactory</code></a> method.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/jupiter/engine/discovery/predicates/IsTestMethod.html" title="class in org.junit.jupiter.engine.discovery.predicates">IsTestMethod</a></th>
+<th class="colFirst" scope="row"><a href="IsTestMethod.html" title="class in org.junit.jupiter.engine.discovery.predicates">IsTestMethod</a></th>
 <td class="colLast">
-<div class="block">Test if a method is a JUnit Jupiter <a href="../../../../../../org/junit/jupiter/api/Test.html" title="annotation in org.junit.jupiter.api"><code>@Test</code></a> method.</div>
+<div class="block">Test if a method is a JUnit Jupiter <a href="../../../api/Test.html" title="annotation in org.junit.jupiter.api"><code>@Test</code></a> method.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../../org/junit/jupiter/engine/discovery/predicates/IsTestTemplateMethod.html" title="class in org.junit.jupiter.engine.discovery.predicates">IsTestTemplateMethod</a></th>
+<th class="colFirst" scope="row"><a href="IsTestTemplateMethod.html" title="class in org.junit.jupiter.engine.discovery.predicates">IsTestTemplateMethod</a></th>
 <td class="colLast">
-<div class="block">Test if a method is a JUnit Jupiter <a href="../../../../../../org/junit/jupiter/api/TestTemplate.html" title="annotation in org.junit.jupiter.api"><code>@TestTemplate</code></a> method.</div>
+<div class="block">Test if a method is a JUnit Jupiter <a href="../../../api/TestTemplate.html" title="annotation in org.junit.jupiter.api"><code>@TestTemplate</code></a> method.</div>
 </td>
 </tr>
 </tbody>
@@ -178,7 +173,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../../index.html">Overview</a></li>
 <li class="navBarCell1Rev">Package</li>
 <li>Class</li>
 <li><a href="package-use.html">Use</a></li>
@@ -190,16 +185,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../../org/junit/jupiter/engine/discovery/package-summary.html">Prev&nbsp;Package</a></li>
-<li><a href="../../../../../../org/junit/jupiter/engine/execution/package-summary.html">Next&nbsp;Package</a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../../index.html?org/junit/jupiter/engine/discovery/predicates/package-summary.html" target="_top">Frames</a></li>
-<li><a href="package-summary.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--

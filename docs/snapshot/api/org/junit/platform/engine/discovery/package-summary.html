@@ -13,7 +13,8 @@
 <!--[if IE]>
 <script type="text/javascript" src="../../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
 <![endif]-->
-<script type="text/javascript" src="../../../../../jquery/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="../../../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../../../jquery/jquery-migrate-3.0.1.js"></script>
 <script type="text/javascript" src="../../../../../jquery/jquery-ui.js"></script>
 </head>
 <body>
@@ -26,7 +27,9 @@
     catch(err) {
     }
 //-->
-var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
+var pathtoroot = "../../../../../";
+var useModuleDirectories = true;
+loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
@@ -42,7 +45,7 @@ var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../index.html">Overview</a></li>
 <li class="navBarCell1Rev">Package</li>
 <li>Class</li>
 <li><a href="package-use.html">Use</a></li>
@@ -54,16 +57,8 @@ var pathtoroot = "../../../../../";loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../org/junit/platform/engine/package-summary.html">Prev&nbsp;Package</a></li>
-<li><a href="../../../../../org/junit/platform/engine/reporting/package-summary.html">Next&nbsp;Package</a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../index.html?org/junit/platform/engine/discovery/package-summary.html" target="_top">Frames</a></li>
-<li><a href="package-summary.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
@@ -106,9 +101,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <section role="region"><a id="package.description">
 <!--   -->
 </a>
-<div class="block">Concrete <a href="../../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine">selectors</a> and
- <a href="../../../../../org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine">filters</a> to be used in
- <a href="../../../../../org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine">discovery requests</a>.</div>
+<div class="block">Concrete <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">selectors</a> and
+ <a href="../DiscoveryFilter.html" title="interface in org.junit.platform.engine">filters</a> to be used in
+ <a href="../EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine">discovery requests</a>.</div>
 </section>
 <ul class="blockList">
 <li class="blockList">
@@ -120,15 +115,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/engine/discovery/ClassNameFilter.html" title="interface in org.junit.platform.engine.discovery">ClassNameFilter</a></th>
+<th class="colFirst" scope="row"><a href="ClassNameFilter.html" title="interface in org.junit.platform.engine.discovery">ClassNameFilter</a></th>
 <td class="colLast">
-<div class="block"><a href="../../../../../org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilter</code></a> that is applied to the name of a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a>.</div>
+<div class="block"><a href="../DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilter</code></a> that is applied to the name of a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/engine/discovery/PackageNameFilter.html" title="interface in org.junit.platform.engine.discovery">PackageNameFilter</a></th>
+<th class="colFirst" scope="row"><a href="PackageNameFilter.html" title="interface in org.junit.platform.engine.discovery">PackageNameFilter</a></th>
 <td class="colLast">
-<div class="block"><a href="../../../../../org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilter</code></a> that is applied to the name of a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Package.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Package</code></a>.</div>
+<div class="block"><a href="../DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilter</code></a> that is applied to the name of a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Package.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Package</code></a>.</div>
 </td>
 </tr>
 </tbody>
@@ -143,94 +138,94 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/engine/discovery/ClasspathResourceSelector.html" title="class in org.junit.platform.engine.discovery">ClasspathResourceSelector</a></th>
+<th class="colFirst" scope="row"><a href="ClasspathResourceSelector.html" title="class in org.junit.platform.engine.discovery">ClasspathResourceSelector</a></th>
 <td class="colLast">
-<div class="block">A <a href="../../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects the name of a <em>classpath resource</em>
- so that <a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can load resources
+<div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects the name of a <em>classpath resource</em>
+ so that <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can load resources
  from the classpath &mdash; for example, to load XML or JSON files from the classpath,
  potentially within JARs.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/engine/discovery/ClasspathRootSelector.html" title="class in org.junit.platform.engine.discovery">ClasspathRootSelector</a></th>
+<th class="colFirst" scope="row"><a href="ClasspathRootSelector.html" title="class in org.junit.platform.engine.discovery">ClasspathRootSelector</a></th>
 <td class="colLast">
-<div class="block">A <a href="../../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a <em>classpath root</em> so that
- <a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can search for class
+<div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a <em>classpath root</em> so that
+ <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can search for class
  files or resources within the physical classpath &mdash; for example, to
  scan for test classes.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/engine/discovery/ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a></th>
+<th class="colFirst" scope="row"><a href="ClassSelector.html" title="class in org.junit.platform.engine.discovery">ClassSelector</a></th>
 <td class="colLast">
-<div class="block">A <a href="../../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a> or class name so
- that <a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover
+<div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a> or class name so
+ that <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover
  tests or containers based on classes.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/engine/discovery/DirectorySelector.html" title="class in org.junit.platform.engine.discovery">DirectorySelector</a></th>
+<th class="colFirst" scope="row"><a href="DirectorySelector.html" title="class in org.junit.platform.engine.discovery">DirectorySelector</a></th>
 <td class="colLast">
-<div class="block">A <a href="../../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a directory so that
- <a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a>
+<div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a directory so that
+ <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a>
  can discover tests or containers based on directories in the
  file system.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/engine/discovery/DiscoverySelectors.html" title="class in org.junit.platform.engine.discovery">DiscoverySelectors</a></th>
+<th class="colFirst" scope="row"><a href="DiscoverySelectors.html" title="class in org.junit.platform.engine.discovery">DiscoverySelectors</a></th>
 <td class="colLast">
 <div class="block">Collection of <code>static</code> factory methods for creating
- <a href="../../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelectors</code></a>.</div>
+ <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelectors</code></a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/engine/discovery/FileSelector.html" title="class in org.junit.platform.engine.discovery">FileSelector</a></th>
+<th class="colFirst" scope="row"><a href="FileSelector.html" title="class in org.junit.platform.engine.discovery">FileSelector</a></th>
 <td class="colLast">
-<div class="block">A <a href="../../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a file so that
- <a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a>
+<div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a file so that
+ <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a>
  can discover tests or containers based on files in the
  file system.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></th>
+<th class="colFirst" scope="row"><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></th>
 <td class="colLast">
-<div class="block">A <a href="../../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> or a combination of
+<div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> or a combination of
  class name, method name, and parameter types so that
- <a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover tests
+ <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover tests
  or containers based on methods.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/engine/discovery/ModuleSelector.html" title="class in org.junit.platform.engine.discovery">ModuleSelector</a></th>
+<th class="colFirst" scope="row"><a href="ModuleSelector.html" title="class in org.junit.platform.engine.discovery">ModuleSelector</a></th>
 <td class="colLast">
-<div class="block">A <a href="../../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a module name so that
- <a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover
+<div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a module name so that
+ <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover
  tests or containers based on modules.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/engine/discovery/PackageSelector.html" title="class in org.junit.platform.engine.discovery">PackageSelector</a></th>
+<th class="colFirst" scope="row"><a href="PackageSelector.html" title="class in org.junit.platform.engine.discovery">PackageSelector</a></th>
 <td class="colLast">
-<div class="block">A <a href="../../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a package name so that
- <a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover
+<div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a package name so that
+ <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover
  tests or containers based on packages.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/engine/discovery/UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery">UniqueIdSelector</a></th>
+<th class="colFirst" scope="row"><a href="UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery">UniqueIdSelector</a></th>
 <td class="colLast">
-<div class="block">A <a href="../../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a <a href="../../../../../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine"><code>UniqueId</code></a> so that
- <a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover
+<div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a <a href="../UniqueId.html" title="class in org.junit.platform.engine"><code>UniqueId</code></a> so that
+ <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a> can discover
  tests or containers based on unique IDs.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="../../../../../org/junit/platform/engine/discovery/UriSelector.html" title="class in org.junit.platform.engine.discovery">UriSelector</a></th>
+<th class="colFirst" scope="row"><a href="UriSelector.html" title="class in org.junit.platform.engine.discovery">UriSelector</a></th>
 <td class="colLast">
-<div class="block">A <a href="../../../../../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a> so that
- <a href="../../../../../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a>
+<div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a> so that
+ <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a>
  can discover tests or containers based on URIs.</div>
 </td>
 </tr>
@@ -251,7 +246,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <ul class="navList" title="Navigation">
-<li><a href="../../../../../overview-summary.html">Overview</a></li>
+<li><a href="../../../../../index.html">Overview</a></li>
 <li class="navBarCell1Rev">Package</li>
 <li>Class</li>
 <li><a href="package-use.html">Use</a></li>
@@ -263,16 +258,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<ul class="navList">
-<li><a href="../../../../../org/junit/platform/engine/package-summary.html">Prev&nbsp;Package</a></li>
-<li><a href="../../../../../org/junit/platform/engine/reporting/package-summary.html">Next&nbsp;Package</a></li>
-</ul>
-<ul class="navList">
-<li><a href="../../../../../index.html?org/junit/platform/engine/discovery/package-summary.html" target="_top">Frames</a></li>
-<li><a href="package-summary.html" target="_top">No&nbsp;Frames</a></li>
-</ul>
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../../allclasses-noframe.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--
