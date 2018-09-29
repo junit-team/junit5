@@ -72,4 +72,4 @@ jobs:
       env:
         # GRGIT_USER
         - secure: PwwKcsVdukfzvDBHmdajhMsIVHSbPt+lorgibpRXImBt+C4XHlaz/Z78Bq8jtkDvrXb+DTSfSGvAxg1IBM+rtCzrYb5DAqq+OfuG9Uu6FDTnkIOHs5Gii7pAfT0+W31Oj76OgiCAXX+p8lbFTchz6ope5zVYEpSlAe7aXCVTGM0=
-      script: ./gradlew --scan gitPublishPush
+      script: ./src/publishDocumentationSnapshotOnlyIfNecessary.sh
