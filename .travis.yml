@@ -65,7 +65,6 @@ jobs:
         - secure: haIyH2wZSfmnH/oKJ0J1pMBl1wsYMhc26iOPunaMELKUgPCBC4+y5qYJBcG3/G9gy3qYYi3GdFLvHVkqxlAABTC5lcNyBqsU20SzKD6HNyf4rv7Dtv+x1GjI7Yz50zAaJyPnoQBdboMdevPTfczcCAf6mRvA5nmEZc1D1fbbGA8=
       script: ./gradlew --scan publish -x check
     - name: "Update snapshot documentation"
-      jdk: openjdk10 # asciidoctor does currently not work on Java 11, see https://github.com/jruby/jruby-openssl/issues/175
       addons:
         apt:
           packages:

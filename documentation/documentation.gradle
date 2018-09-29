@@ -5,7 +5,7 @@ buildscript {
 		classpath('org.jruby:jruby-complete:9.1.17.0')
 
 		// classpath('org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.16')
-		classpath('org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16')
+		// classpath('org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16')
 		classpath('org.asciidoctor:asciidoctorj-diagram:1.5.9')
 	}
 }
@@ -103,7 +103,7 @@ asciidoctor {
 		}
 	}
 
-	backends 'html5', 'pdf'
+	backends 'html5' // does not work on Java 11: 'pdf' https://github.com/junit-team/junit5/issues/1608
 
 	attributes	'jupiter-version': version,
 				'platform-version': platformVersion,
