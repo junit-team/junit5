@@ -466,9 +466,6 @@ db2e98900785b50b6a69ea0f9c58461d  ./junit-platform-console/src/main/java/org/jun
 db52e52e7246321e4dfba1cf19fb90cf  ./junit-jupiter-params/src/main/java/org/junit/jupiter/params/support/AnnotationConsumerInitializer.java
 db570ec1abefa4c0cc3043c26940eb2d  ./junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/package-info.java
 dc26873f09592368c9e43cf9d9ec99c2  ./junit-platform-engine/src/main/java/org/junit/platform/engine/support/filter/ClasspathScanningSupport.java
-dc3f7240f698e6115a70dcb343d57611  ./platform-tooling-support-tests/build/test-workspace/ant-starter/src/main/java/com/example/project/Calculator.java
-dc3f7240f698e6115a70dcb343d57611  ./platform-tooling-support-tests/build/test-workspace/gradle-starter/src/main/java/com/example/project/Calculator.java
-dc3f7240f698e6115a70dcb343d57611  ./platform-tooling-support-tests/build/test-workspace/maven-starter/src/main/java/com/example/project/Calculator.java
 dc3f7240f698e6115a70dcb343d57611  ./platform-tooling-support-tests/projects/ant-starter/src/main/java/com/example/project/Calculator.java
 dc3f7240f698e6115a70dcb343d57611  ./platform-tooling-support-tests/projects/gradle-starter/src/main/java/com/example/project/Calculator.java
 dc3f7240f698e6115a70dcb343d57611  ./platform-tooling-support-tests/projects/maven-starter/src/main/java/com/example/project/Calculator.java
