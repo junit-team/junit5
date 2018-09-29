@@ -13,6 +13,7 @@ package platform.tooling.support.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -45,6 +46,8 @@ class JarDescribeModuleTests {
 				.addArguments("--describe-module", "--file", path) //
 				.build() //
 				.run();
+
+		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
 		assertEquals(0, result.getExitCode());
 		assertEquals("", result.getOutput("err"), "error log isn't empty");
