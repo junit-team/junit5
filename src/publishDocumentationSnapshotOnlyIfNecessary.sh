@@ -7,14 +7,16 @@ readonly github_pages_url='https://raw.githubusercontent.com/junit-team/junit5/g
 #
 # always generate current sums
 #
-rm --force "${current}"
+echo "Generating checksum file..."
 md5sum documentation/documentation.gradle > "${current}"
-find documentation/src/ -type f -exec md5sum {} + > "${current}"
+md5sum $(find documentation/src/ -type f) >> "${current}"
+md5sum $(find . -wholename '**/src/main/java/*.java') >> "${current}"
+stat "${current}"
+md5sum "${current}"
 
 #
 # compare current with published sums
 #
-rm --force "${published}"
 curl --silent --output "${published}" "${github_pages_url}"
 if cmp --silent "${current}" "${published}" ; then
   #
@@ -27,5 +29,5 @@ else
   #
   echo "Creating and publishing documentation..."
   cp --force "${current}" "${published}"
-  echo "./gradlew --scan gitPublishPush"
+  ./gradlew --scan gitPublishPush
 fi
