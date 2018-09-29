@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
-readonly current='documentation/build/current-checksum.txt'
-readonly published='documentation/build/published-checksum.txt'
+readonly checksum_directory='documentation/build/checksum'
+readonly current="${checksum_directory}/current-checksum.txt"
+readonly published="${checksum_directory}/published-checksum.txt"
 readonly github_pages_url='https://raw.githubusercontent.com/junit-team/junit5/gh-pages/docs/snapshot/published-checksum.txt'
 
 #
 # always generate current sums
 #
-echo "Generating checksum file..."
+echo "Generating checksum file ${current}..."
+mkdir --parents "${checksum_directory}"
 md5sum documentation/documentation.gradle > "${current}"
 md5sum $(find documentation/src/ -type f) >> "${current}"
 md5sum $(find . -wholename '**/src/main/java/*.java') >> "${current}"
