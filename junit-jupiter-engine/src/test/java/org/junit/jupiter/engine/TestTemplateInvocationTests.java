@@ -725,28 +725,28 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 				TestExecutionExceptionHandler, AfterTestExecutionCallback, AfterEachCallback {
 
 			@Override
-			public void beforeEach(ExtensionContext context) throws Exception {
+			public void beforeEach(ExtensionContext context) {
 				TestTemplateTestClassWithDynamicLifecycleCallbacks.lifecycleEvents.add("beforeEach");
 			}
 
 			@Override
-			public void beforeTestExecution(ExtensionContext context) throws Exception {
+			public void beforeTestExecution(ExtensionContext context) {
 				TestTemplateTestClassWithDynamicLifecycleCallbacks.lifecycleEvents.add("beforeTestExecution");
 			}
 
 			@Override
-			public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+			public void handleTestExecutionException(ExtensionContext context, Throwable throwable) {
 				TestTemplateTestClassWithDynamicLifecycleCallbacks.lifecycleEvents.add("handleTestExecutionException");
 				throw new AssertionError(throwable);
 			}
 
 			@Override
-			public void afterTestExecution(ExtensionContext context) throws Exception {
+			public void afterTestExecution(ExtensionContext context) {
 				TestTemplateTestClassWithDynamicLifecycleCallbacks.lifecycleEvents.add("afterTestExecution");
 			}
 
 			@Override
-			public void afterEach(ExtensionContext context) throws Exception {
+			public void afterEach(ExtensionContext context) {
 				TestTemplateTestClassWithDynamicLifecycleCallbacks.lifecycleEvents.add("afterEach");
 			}
 		}

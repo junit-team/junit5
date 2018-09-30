@@ -73,7 +73,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void executeTestCaseWithDefaultMethodFromGenericInterfaceSelectedByFullyQualifedMethodName() throws Exception {
+	void executeTestCaseWithDefaultMethodFromGenericInterfaceSelectedByFullyQualifedMethodName() {
 		String fqmn = GenericTestCaseWithDefaultMethod.class.getName() + "#test(" + Long.class.getName() + ")";
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(fqmn)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -92,8 +92,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void executeTestCaseWithOverloadedMethodNextToGenericDefaultMethodSelectedByFullyQualifedMethodName()
-			throws Exception {
+	void executeTestCaseWithOverloadedMethodNextToGenericDefaultMethodSelectedByFullyQualifedMethodName() {
 
 		String fqmn = GenericTestCaseWithDefaultMethod.class.getName() + "#test(" + Double.class.getName() + ")";
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(fqmn)).build();
@@ -113,7 +112,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void executeTestCaseWithOverloadedMethodNextToGenericDefaultMethodSelectedByClass() throws Exception {
+	void executeTestCaseWithOverloadedMethodNextToGenericDefaultMethodSelectedByClass() {
 		Class<?> clazz = GenericTestCaseWithDefaultMethod.class;
 		LauncherDiscoveryRequest request = request().selectors(selectClass(clazz)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);
@@ -132,7 +131,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void executeTestCaseWithOverriddenGenericDefaultMethodSelectedByClass() throws Exception {
+	void executeTestCaseWithOverriddenGenericDefaultMethodSelectedByClass() {
 		Class<?> clazz = GenericTestCaseWithOverriddenDefaultMethod.class;
 		LauncherDiscoveryRequest request = request().selectors(selectClass(clazz)).build();
 		ExecutionEventRecorder eventRecorder = executeTests(request);

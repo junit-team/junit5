@@ -281,7 +281,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 			field.getType());
 
 		@Override
-		public void postProcessTestInstance(Object testInstance, ExtensionContext context) throws Exception {
+		public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
 			// @formatter:off
 			AnnotationUtils.findAnnotatedFields(testInstance.getClass(), RegisterExtension.class, isCrystalBall).stream()
 				.findFirst()

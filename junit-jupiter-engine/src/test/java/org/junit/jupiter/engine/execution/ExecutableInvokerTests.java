@@ -87,7 +87,7 @@ class ExecutableInvokerTests {
 	}
 
 	@Test
-	void invokingMethodsWithoutParameterDoesNotDependOnExtensions() throws Exception {
+	void invokingMethodsWithoutParameterDoesNotDependOnExtensions() {
 		testMethodWithNoParameters();
 		extensionRegistry = null;
 

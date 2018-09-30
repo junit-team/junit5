@@ -49,12 +49,12 @@ public @interface TrackLogRecords {
 	class Extension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
 		@Override
-		public void beforeEach(ExtensionContext context) throws Exception {
+		public void beforeEach(ExtensionContext context) {
 			LoggerFactory.addListener(getListener(context));
 		}
 
 		@Override
-		public void afterEach(ExtensionContext context) throws Exception {
+		public void afterEach(ExtensionContext context) {
 			LoggerFactory.removeListener(getListener(context));
 		}
 

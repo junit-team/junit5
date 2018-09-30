@@ -89,7 +89,7 @@ class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 
 	static class OnlyIncrementCounterOnce implements BeforeAllCallback {
 		@Override
-		public void beforeAll(ExtensionContext context) throws Exception {
+		public void beforeAll(ExtensionContext context) {
 			ExtensionContext.Store store = getRoot(context).getStore(ExtensionContext.Namespace.GLOBAL);
 			store.getOrComputeIfAbsent("counter", key -> Parent.counter.incrementAndGet());
 		}

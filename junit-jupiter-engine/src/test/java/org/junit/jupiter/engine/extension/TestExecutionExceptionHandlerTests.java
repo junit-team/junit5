@@ -183,7 +183,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 		static boolean handleExceptionCalled = false;
 
 		@Override
-		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) {
 			assertTrue(throwable instanceof IOException);
 			handleExceptionCalled = true;
 			handlerCalls.add("swallow");
@@ -210,7 +210,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 		static boolean handleExceptionCalled = false;
 
 		@Override
-		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) {
 			handleExceptionCalled = true;
 		}
 	}
