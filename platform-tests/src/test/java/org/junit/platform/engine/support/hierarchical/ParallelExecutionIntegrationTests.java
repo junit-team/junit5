@@ -433,7 +433,7 @@ class ParallelExecutionIntegrationTests {
 		}
 
 		@Override
-		public void afterTestExecution(ExtensionContext context) throws Exception {
+		public void afterTestExecution(ExtensionContext context) {
 			context.publishReportEntry("thread", Thread.currentThread().getName());
 		}
 	}

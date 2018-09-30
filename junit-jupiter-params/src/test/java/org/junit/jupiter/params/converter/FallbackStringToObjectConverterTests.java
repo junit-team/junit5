@@ -86,13 +86,13 @@ class FallbackStringToObjectConverterTests {
 
 	@Test
 	@DisplayName("Cannot convert String to Diary because Diary has neither a static factory method nor a factory constructor")
-	void cannotConvertStringToDiary() throws Exception {
+	void cannotConvertStringToDiary() {
 		assertThat(converter.canConvert(Diary.class)).isFalse();
 	}
 
 	@Test
 	@DisplayName("Cannot convert String to Magazine because Magazine has multiple static factory methods")
-	void cannotConvertStringToMagazine() throws Exception {
+	void cannotConvertStringToMagazine() {
 		assertThat(converter.canConvert(Magazine.class)).isFalse();
 	}
 

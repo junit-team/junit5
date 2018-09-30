@@ -424,7 +424,7 @@ class ParameterizedTestIntegrationTests {
 	private static class TwoSingleStringArgumentsProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
+		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
 			return Stream.of(arguments("foo"), arguments("bar"));
 		}
 	}
@@ -432,7 +432,7 @@ class ParameterizedTestIntegrationTests {
 	private static class TwoUnusedStringArgumentsProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
+		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
 			return Stream.of(arguments("foo", "unused1"), arguments("bar", "unused2"));
 		}
 	}

@@ -40,7 +40,7 @@ public class EnableRuleMigrationSupportWithBothRuleTypesTests {
 		}
 
 		@Override
-		protected void verify() throws Throwable {
+		protected void verify() {
 			afterOfRule1WasExecuted = true;
 		}
 	};
@@ -55,7 +55,7 @@ public class EnableRuleMigrationSupportWithBothRuleTypesTests {
 			private Object instance;
 
 			@Override
-			protected void before() throws Throwable {
+			protected void before() {
 				instance = this;
 				beforeOfRule2WasExecuted = true;
 			}

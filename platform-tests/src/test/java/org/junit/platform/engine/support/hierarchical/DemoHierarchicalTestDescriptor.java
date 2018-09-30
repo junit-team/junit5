@@ -47,7 +47,7 @@ public class DemoHierarchicalTestDescriptor extends AbstractTestDescriptor imple
 	}
 
 	@Override
-	public SkipResult shouldBeSkipped(DemoEngineExecutionContext context) throws Exception {
+	public SkipResult shouldBeSkipped(DemoEngineExecutionContext context) {
 		return skipped ? skip(skippedReason) : doNotSkip();
 	}
 

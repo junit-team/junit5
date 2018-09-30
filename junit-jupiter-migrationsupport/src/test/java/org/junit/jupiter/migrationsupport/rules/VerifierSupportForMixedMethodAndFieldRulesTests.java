@@ -28,7 +28,7 @@ public class VerifierSupportForMixedMethodAndFieldRulesTests {
 	public Verifier verifier1 = new Verifier() {
 
 		@Override
-		protected void verify() throws Throwable {
+		protected void verify() {
 			afterOfRule1WasExecuted = true;
 		}
 	};
@@ -36,7 +36,7 @@ public class VerifierSupportForMixedMethodAndFieldRulesTests {
 	private Verifier verifier2 = new Verifier() {
 
 		@Override
-		protected void verify() throws Throwable {
+		protected void verify() {
 			afterOfRule2WasExecuted = true;
 		}
 	};

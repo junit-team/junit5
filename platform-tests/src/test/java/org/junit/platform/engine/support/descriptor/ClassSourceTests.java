@@ -27,7 +27,7 @@ import org.junit.platform.commons.util.PreconditionViolationException;
 class ClassSourceTests extends AbstractTestSourceTests {
 
 	@Override
-	Stream<Serializable> createSerializableInstances() throws Exception {
+	Stream<Serializable> createSerializableInstances() {
 		return Stream.of( //
 			ClassSource.from("class.source"), //
 			ClassSource.from("class.and.position", FilePosition.from(1, 2)), //

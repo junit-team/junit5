@@ -27,7 +27,7 @@ public class WrongExtendWithForVerifierFieldTests {
 	public Verifier verifier1 = new Verifier() {
 
 		@Override
-		protected void verify() throws Throwable {
+		protected void verify() {
 			afterOfRule1WasExecuted = true;
 		}
 	};

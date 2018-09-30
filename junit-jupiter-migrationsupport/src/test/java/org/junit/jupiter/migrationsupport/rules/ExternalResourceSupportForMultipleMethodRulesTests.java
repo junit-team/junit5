@@ -32,7 +32,7 @@ public class ExternalResourceSupportForMultipleMethodRulesTests {
 	public ExternalResource getResource1() {
 		return new ExternalResource() {
 			@Override
-			protected void before() throws Throwable {
+			protected void before() {
 				beforeOfRule1WasExecuted = true;
 			}
 
@@ -47,7 +47,7 @@ public class ExternalResourceSupportForMultipleMethodRulesTests {
 	public ExternalResource getResource2() {
 		return new ExternalResource() {
 			@Override
-			protected void before() throws Throwable {
+			protected void before() {
 				beforeOfRule2WasExecuted = true;
 			}
 

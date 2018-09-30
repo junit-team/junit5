@@ -135,7 +135,7 @@ class ClasspathScannerTests {
 	}
 
 	@Test
-	void scanForClassesInClasspathRootWhenOutOfMemoryErrorOccurs() throws Exception {
+	void scanForClassesInClasspathRootWhenOutOfMemoryErrorOccurs() {
 		Predicate<Class<?>> outOfMemoryErrorSimulationFilter = clazz -> {
 			if (clazz.getSimpleName().equals(ClassForOutOfMemoryErrorSimulation.class.getSimpleName())) {
 				throw new OutOfMemoryError();
@@ -174,7 +174,7 @@ class ClasspathScannerTests {
 	}
 
 	@Test
-	void scanForClassesInPackage() throws Exception {
+	void scanForClassesInPackage() {
 		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("org.junit.platform.commons", allClasses);
 		assertThat(classes.size()).isGreaterThanOrEqualTo(20);
 		assertTrue(classes.contains(NestedClassToBeFound.class));
@@ -198,7 +198,7 @@ class ClasspathScannerTests {
 	}
 
 	@Test
-	void scanForClassesInDefaultPackage() throws Exception {
+	void scanForClassesInDefaultPackage() {
 		ClassFilter classFilter = ClassFilter.of(this::inDefaultPackage);
 		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("", classFilter);
 
@@ -208,7 +208,7 @@ class ClasspathScannerTests {
 	}
 
 	@Test
-	void scanForClassesInPackageWithFilter() throws Exception {
+	void scanForClassesInPackageWithFilter() {
 		ClassFilter thisClassOnly = ClassFilter.of(clazz -> clazz == ClasspathScannerTests.class);
 		List<Class<?>> classes = classpathScanner.scanForClassesInPackage("org.junit.platform.commons", thisClassOnly);
 		assertSame(ClasspathScannerTests.class, classes.get(0));
@@ -240,7 +240,7 @@ class ClasspathScannerTests {
 	}
 
 	@Test
-	void scanForClassesInPackageOnlyLoadsClassesThatAreIncludedByTheClassNameFilter() throws Exception {
+	void scanForClassesInPackageOnlyLoadsClassesThatAreIncludedByTheClassNameFilter() {
 		Predicate<String> classNameFilter = name -> ClasspathScannerTests.class.getName().equals(name);
 		ClassFilter classFilter = ClassFilter.of(classNameFilter, type -> true);
 
@@ -300,19 +300,19 @@ class ClasspathScannerTests {
 	}
 
 	@Test
-	void findAllClassesInClasspathRootForNullRoot() throws Exception {
+	void findAllClassesInClasspathRootForNullRoot() {
 		assertThrows(PreconditionViolationException.class,
 			() -> classpathScanner.scanForClassesInClasspathRoot(null, allClasses));
 	}
 
 	@Test
-	void findAllClassesInClasspathRootForNonExistingRoot() throws Exception {
+	void findAllClassesInClasspathRootForNonExistingRoot() {
 		assertThrows(PreconditionViolationException.class,
 			() -> classpathScanner.scanForClassesInClasspathRoot(Paths.get("does_not_exist").toUri(), allClasses));
 	}
 
 	@Test
-	void findAllClassesInClasspathRootForNullClassFilter() throws Exception {
+	void findAllClassesInClasspathRootForNullClassFilter() {
 		assertThrows(PreconditionViolationException.class,
 			() -> classpathScanner.scanForClassesInClasspathRoot(getTestClasspathRoot(), null));
 	}

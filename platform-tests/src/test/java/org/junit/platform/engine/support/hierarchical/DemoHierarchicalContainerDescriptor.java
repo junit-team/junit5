@@ -53,12 +53,12 @@ public class DemoHierarchicalContainerDescriptor extends AbstractTestDescriptor
 	}
 
 	@Override
-	public SkipResult shouldBeSkipped(DemoEngineExecutionContext context) throws Exception {
+	public SkipResult shouldBeSkipped(DemoEngineExecutionContext context) {
 		return this.skipped ? skip(this.skippedReason) : doNotSkip();
 	}
 
 	@Override
-	public DemoEngineExecutionContext before(DemoEngineExecutionContext context) throws Exception {
+	public DemoEngineExecutionContext before(DemoEngineExecutionContext context) {
 		if (this.beforeBlock != null) {
 			this.beforeBlock.run();
 		}
