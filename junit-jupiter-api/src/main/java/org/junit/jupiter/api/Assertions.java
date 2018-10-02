@@ -474,6 +474,7 @@ public class Assertions {
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.</p>
+	 * {@code delta} have to be greater or equals <em>0</em>
 	 */
 	public static void assertEquals(double expected, double actual, double delta) {
 		AssertEquals.assertEquals(expected, actual, delta);
@@ -483,6 +484,7 @@ public class Assertions {
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.</p>
+	 * {@code delta} have to be greater or equals <em>0</em>
 	 */
 	public static void assertEquals(double expected, double actual, double delta, String message) {
 		AssertEquals.assertEquals(expected, actual, delta, message);
@@ -492,6 +494,7 @@ public class Assertions {
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.</p>
+	 * {@code delta} have to be greater or equals <em>0</em>
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertEquals(double expected, double actual, double delta, Supplier<String> messageSupplier) {
@@ -721,6 +724,7 @@ public class Assertions {
 	 * <em>Asserts</em> that {@code expected} and {@code actual} float arrays are equal within the given {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
 	 * {@link Float#compare(float, float)}.</p>
+	 * {@code delta} have to be greater or equals <em>0</em>
 	 */
 	public static void assertArrayEquals(float[] expected, float[] actual, float delta) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, delta);
@@ -730,6 +734,7 @@ public class Assertions {
 	 * <em>Asserts</em> that {@code expected} and {@code actual} float arrays are equal within the given {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
 	 * {@link Float#compare(float, float)}.</p>
+	 * {@code delta} have to be greater or equals <em>0</em>
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
 	public static void assertArrayEquals(float[] expected, float[] actual, float delta, String message) {
@@ -740,6 +745,7 @@ public class Assertions {
 	 * <em>Asserts</em> that {@code expected} and {@code actual} float arrays are equal within the given {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
 	 * {@link Float#compare(float, float)}.</p>
+	 * {@code delta} have to be greater or equals <em>0</em>
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertArrayEquals(float[] expected, float[] actual, float delta,
