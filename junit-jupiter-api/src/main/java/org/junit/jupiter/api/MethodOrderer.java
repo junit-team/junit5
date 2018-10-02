@@ -36,31 +36,52 @@ public interface MethodOrderer {
 	}
 
 	/**
-	 * {@code MethodOrderer} that supports the {@link Order @Order} annotation.
+	 * {@code MethodOrderer} that sorts methods alphanumerically based on their
+	 * names using {@link String#compareTo(String)}.
+	 *
+	 * <p>If two methods have the same name, {@link Method#toString()} will be
+	 * used as a fallback for comparing them.
 	 */
-	class OrderAnnotation implements MethodOrderer {
-
-		private static final Comparator<MethodDescriptor> comparator = new OrderAnnotationComparator();
+	class Alphanumeric implements MethodOrderer {
 
 		@Override
 		public void orderMethods(List<? extends MethodDescriptor> methodDescriptors) {
 			methodDescriptors.sort(comparator);
 		}
 
-		private static final class OrderAnnotationComparator implements Comparator<MethodDescriptor> {
+		private static final Comparator<MethodDescriptor> comparator = (descriptor1, descriptor2) -> {
+			Method method1 = descriptor1.getTestMethod();
+			Method method2 = descriptor2.getTestMethod();
 
-			@Override
-			public int compare(MethodDescriptor descriptor1, MethodDescriptor descriptor2) {
-				return Integer.compare(getOrder(descriptor1), getOrder(descriptor2));
-			}
+			int result = method1.getName().compareTo(method2.getName());
+			// TODO Fallback to (name + formal argument list) instead of toString().
+			return (result != 0) ? result : method1.toString().compareTo(method2.toString());
+		};
+	}
 
-			private Integer getOrder(MethodDescriptor descriptor) {
-				return AnnotationUtils.findAnnotation(descriptor.getTestMethod(), Order.class)//
-						.map(Order::value)//
-						.orElse(Integer.MAX_VALUE);
-			}
+	/**
+	 * {@code MethodOrderer} that sorts methods based on the {@link Order @Order}
+	 * annotation.
+	 *
+	 * <p>Any methods not annotated with {@code @Order} will appear at the end of
+	 * the sorted list.
+	 */
+	class OrderAnnotation implements MethodOrderer {
+
+		@Override
+		public void orderMethods(List<? extends MethodDescriptor> methodDescriptors) {
+			methodDescriptors.sort(comparator);
 		}
 
+		private static final Comparator<MethodDescriptor> comparator = (descriptor1, descriptor2) -> {
+			return Integer.compare(getOrder(descriptor1), getOrder(descriptor2));
+		};
+
+		private static Integer getOrder(MethodDescriptor descriptor) {
+			return AnnotationUtils.findAnnotation(descriptor.getTestMethod(), Order.class)//
+					.map(Order::value)//
+					.orElse(Integer.MAX_VALUE);
+		}
 	}
 
 }
