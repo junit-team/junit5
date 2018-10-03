@@ -14,20 +14,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.MethodOrderer.Random;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.testkit.ExecutionResults;
@@ -63,6 +66,24 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 		assertEquals(callSequence.size(), executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(callSequence.size(), executionResults.getTestsSuccessfulCount(), "# tests succeeded");
 		assertThat(callSequence).containsExactly("test1", "test2", "test3", "test4", "test5", "test6");
+	}
+
+	@Test
+	void random() {
+		Set<String> uniqueSequences = new HashSet<>();
+
+		for (int i = 0; i < 10; i++) {
+			callSequence.clear();
+
+			ExecutionEventRecorder eventRecorder = executeTestsForClass(RandomTestCase.class);
+			uniqueSequences.add(callSequence.stream().collect(Collectors.joining(",")));
+
+			assertEquals(callSequence.size(), eventRecorder.getTestStartedCount(), "# tests started");
+			assertEquals(callSequence.size(), eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+		}
+
+		// We hope that 3 out of 10 are different...
+		assertThat(uniqueSequences.size()).isGreaterThan(3);
 	}
 
 	// -------------------------------------------------------------------------
@@ -154,6 +175,37 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 		@DisplayName("test2")
 		@Order(2)
 		void ___() {
+		}
+	}
+
+	@TestMethodOrder(Random.class)
+	static class RandomTestCase {
+
+		@BeforeEach
+		void trackInvocations(TestInfo testInfo) {
+			callSequence.add(testInfo.getDisplayName());
+		}
+
+		@Test
+		void test1() {
+		}
+
+		@Test
+		void test2() {
+		}
+
+		@Test
+		void test3() {
+		}
+
+		@TestFactory
+		DynamicTest test4() {
+			return dynamicTest("dynamic", () -> {
+			});
+		}
+
+		@RepeatedTest(1)
+		void test5() {
 		}
 	}
 

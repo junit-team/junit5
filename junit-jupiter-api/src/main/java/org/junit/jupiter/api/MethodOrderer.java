@@ -13,6 +13,7 @@ package org.junit.jupiter.api;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -81,6 +82,17 @@ public interface MethodOrderer {
 			return AnnotationUtils.findAnnotation(descriptor.getTestMethod(), Order.class)//
 					.map(Order::value)//
 					.orElse(Integer.MAX_VALUE);
+		}
+	}
+
+	/**
+	 * {@code MethodOrderer} that orders methods randomly.
+	 */
+	class Random implements MethodOrderer {
+
+		@Override
+		public void orderMethods(List<? extends MethodDescriptor> methodDescriptors) {
+			Collections.shuffle(methodDescriptors);
 		}
 	}
 
