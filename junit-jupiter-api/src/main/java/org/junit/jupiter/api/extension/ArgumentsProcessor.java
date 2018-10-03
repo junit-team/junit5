@@ -15,7 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import org.apiguardian.api.API;
 
 /**
- * {@code BeforeParameterizedTestExecutionCallback} defines the API for {@link Extension
+ * {@code ArgumentsProcessor} defines the API for {@link Extension
  * Extensions} that wish to provide additional behavior to tests immediately
  * before each test is executed.
  *
@@ -40,7 +40,7 @@ import org.apiguardian.api.API;
  */
 @FunctionalInterface
 @API(status = STABLE, since = "5.0")
-public interface BeforeParameterizedTestExecutionCallback extends Extension {
+public interface ArgumentsProcessor extends Extension {
 	/**
 	 * Callback that is invoked <em>immediately before</em> each test is executed.
 	 * This callback is invoked <em>after</em> the {@link BeforeTestExecutionCallback}
@@ -48,5 +48,5 @@ public interface BeforeParameterizedTestExecutionCallback extends Extension {
 	 * @param context the current extension context; never {@code null}
 	 * @param arguments a copy of the arguments with which this test method invocation will use; never {@code null}
 	 */
-	void beforeParameterizedTestExecution(ExtensionContext context, Object[] arguments);
+	void processArguments(ExtensionContext context, Object[] arguments);
 }

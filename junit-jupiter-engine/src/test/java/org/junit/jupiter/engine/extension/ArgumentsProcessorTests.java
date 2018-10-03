@@ -27,7 +27,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
-import org.junit.jupiter.api.extension.BeforeParameterizedTestExecutionCallback;
+import org.junit.jupiter.api.extension.ArgumentsProcessor;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -37,14 +37,14 @@ import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
- * Integration tests that verify support for {@link BeforeParameterizedTestExecutionCallback},
+ * Integration tests that verify support for {@link ArgumentsProcessor},
  * {@link AfterTestExecutionCallback}, {@link BeforeEach}, and {@link AfterEach}
  * in the {@link JupiterTestEngine}.
  *
  * @since 5.0
  * @see BeforeAndAfterEachTests
  */
-class BeforeParameterizedTestExecutionCallbackTests extends AbstractJupiterTestEngineTests {
+class ArgumentsProcessorTests extends AbstractJupiterTestEngineTests {
 
 	private static List<String> callSequence = new ArrayList<>();
 	private static Optional<Throwable> actualExceptionInAfterTestExecution;
@@ -73,8 +73,8 @@ class BeforeParameterizedTestExecutionCallbackTests extends AbstractJupiterTestE
 			"beforeEachMethodOuter",
 				"fooBeforeTestExecutionCallback",
 				"barBeforeTestExecutionCallback",
-    				"fooBeforeParameterizedTestExecutionCallback",
-    				"barBeforeParameterizedTestExecutionCallback",
+    				"fooArgumentsProcessor",
+    				"barArgumentsProcessor",
     					"testOuter",
 				"barAfterTestExecutionCallback",
 				"fooAfterTestExecutionCallback",
@@ -86,8 +86,8 @@ class BeforeParameterizedTestExecutionCallbackTests extends AbstractJupiterTestE
 					"fooBeforeTestExecutionCallback",
 					"barBeforeTestExecutionCallback",
 						"fizzBeforeTestExecutionCallback",
-							"fooBeforeParameterizedTestExecutionCallback",
-							"barBeforeParameterizedTestExecutionCallback",
+							"fooArgumentsProcessor",
+							"barArgumentsProcessor",
 								"testInner",
 						"fizzAfterTestExecutionCallback",
 					"barAfterTestExecutionCallback",
@@ -114,8 +114,8 @@ class BeforeParameterizedTestExecutionCallbackTests extends AbstractJupiterTestE
 		assertEquals(asList(
 			"fooBeforeTestExecutionCallback",
 			"barBeforeTestExecutionCallback",
-			    "fooBeforeParameterizedTestExecutionCallback",
-			    "barBeforeParameterizedTestExecutionCallback",
+			    "fooArgumentsProcessor",
+			    "barArgumentsProcessor",
     				"testChild",
 			"barAfterTestExecutionCallback",
 			"fooAfterTestExecutionCallback"
@@ -141,8 +141,8 @@ class BeforeParameterizedTestExecutionCallbackTests extends AbstractJupiterTestE
             // Test Interface
      		"fooBeforeTestExecutionCallback",
         		"barBeforeTestExecutionCallback",
-                    "fooBeforeParameterizedTestExecutionCallback",
-                    "barBeforeParameterizedTestExecutionCallback",
+                    "fooArgumentsProcessor",
+                    "barArgumentsProcessor",
         			    "defaultTestMethod",
         		"barAfterTestExecutionCallback",
         	"fooAfterTestExecutionCallback",
@@ -150,8 +150,8 @@ class BeforeParameterizedTestExecutionCallbackTests extends AbstractJupiterTestE
         	// Test Class
             "fooBeforeTestExecutionCallback",
                 "barBeforeTestExecutionCallback",
-                    "fooBeforeParameterizedTestExecutionCallback",
-        			"barBeforeParameterizedTestExecutionCallback",
+                    "fooArgumentsProcessor",
+        			"barArgumentsProcessor",
                  		"localTestMethod",
              	"barAfterTestExecutionCallback",
             "fooAfterTestExecutionCallback"
@@ -177,7 +177,7 @@ class BeforeParameterizedTestExecutionCallbackTests extends AbstractJupiterTestE
 		assertEquals(asList(
             "beforeEachMethod", // throws an exception.
     			// fooBeforeTestExecutionCallback should not get invoked.
-    			    // fooBeforeParameterizedTestExecutionCallback should not get invoked.
+    			    // fooArgumentsProcessor should not get invoked.
             		    // test should not get invoked.
             	// fooAfterTestExecutionCallback should not get invoked.
             "afterEachMethod"
@@ -191,7 +191,7 @@ class BeforeParameterizedTestExecutionCallbackTests extends AbstractJupiterTestE
 	@Test
 	void beforeParameterizedTestExecutionCallbackThrowsAnException() {
 		LauncherDiscoveryRequest request = request().selectors(
-			selectClass(ExceptionInBeforeParameterizedTestExecutionCallbackTestCase.class)).build();
+			selectClass(ExceptionInArgumentsProcessorTestCase.class)).build();
 
 		ExecutionEventRecorder eventRecorder = executeTests(request);
 
@@ -206,9 +206,9 @@ class BeforeParameterizedTestExecutionCallbackTests extends AbstractJupiterTestE
 			"beforeEachMethod",
 				"fooBeforeTestExecutionCallback",
 				"barBeforeTestExecutionCallback",
-				    "fooBeforeParameterizedTestExecutionCallback",
-				    "exceptionThrowingBeforeParameterizedTestExecutionCallback", // throws an exception.
-                    // barBeforeParameterizedTestExecutionCallback should not get invoked.
+				    "fooArgumentsProcessor",
+				    "exceptionThrowingArgumentsProcessor", // throws an exception.
+                    // barArgumentsProcessor should not get invoked.
 					    // test() should not get invoked.
 				"barAfterTestExecutionCallback",
 				"fooAfterTestExecutionCallback",
@@ -238,7 +238,7 @@ class BeforeParameterizedTestExecutionCallbackTests extends AbstractJupiterTestE
 		assertEquals(asList(
 			"beforeEachMethod",
 				"fooBeforeTestExecutionCallback",
-				    "fooBeforeParameterizedTestExecutionCallback",
+				    "fooArgumentsProcessor",
 					    "test", // throws an exception.
 				"fooAfterTestExecutionCallback",
 			"afterEachMethod"
@@ -322,9 +322,9 @@ class BeforeParameterizedTestExecutionCallbackTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ExtendWith({ FooTestExecutionCallbacks.class, ExceptionThrowingBeforeParameterizedTestExecutionCallback.class,
+	@ExtendWith({ FooTestExecutionCallbacks.class, ExceptionThrowingArgumentsProcessor.class,
 			BarTestExecutionCallbacks.class })
-	static class ExceptionInBeforeParameterizedTestExecutionCallbackTestCase {
+	static class ExceptionInArgumentsProcessorTestCase {
 
 		@BeforeEach
 		void beforeEach() {
@@ -384,12 +384,12 @@ class BeforeParameterizedTestExecutionCallbackTests extends AbstractJupiterTestE
 
 	// -------------------------------------------------------------------------
 
-	static class FooTestExecutionCallbacks implements BeforeTestExecutionCallback,
-			BeforeParameterizedTestExecutionCallback, AfterTestExecutionCallback {
+	static class FooTestExecutionCallbacks
+			implements BeforeTestExecutionCallback, ArgumentsProcessor, AfterTestExecutionCallback {
 
 		@Override
-		public void beforeParameterizedTestExecution(ExtensionContext context, Object[] arguments) {
-			callSequence.add("fooBeforeParameterizedTestExecutionCallback");
+		public void processArguments(ExtensionContext context, Object[] arguments) {
+			callSequence.add("fooArgumentsProcessor");
 		}
 
 		@Override
@@ -404,12 +404,12 @@ class BeforeParameterizedTestExecutionCallbackTests extends AbstractJupiterTestE
 		}
 	}
 
-	static class BarTestExecutionCallbacks implements BeforeTestExecutionCallback,
-			BeforeParameterizedTestExecutionCallback, AfterTestExecutionCallback {
+	static class BarTestExecutionCallbacks
+			implements BeforeTestExecutionCallback, ArgumentsProcessor, AfterTestExecutionCallback {
 
 		@Override
-		public void beforeParameterizedTestExecution(ExtensionContext context, Object[] arguments) {
-			callSequence.add("barBeforeParameterizedTestExecutionCallback");
+		public void processArguments(ExtensionContext context, Object[] arguments) {
+			callSequence.add("barArgumentsProcessor");
 		}
 
 		@Override
@@ -436,13 +436,12 @@ class BeforeParameterizedTestExecutionCallbackTests extends AbstractJupiterTestE
 		}
 	}
 
-	static class ExceptionThrowingBeforeParameterizedTestExecutionCallback
-			implements BeforeParameterizedTestExecutionCallback {
+	static class ExceptionThrowingArgumentsProcessor implements ArgumentsProcessor {
 
 		@Override
-		public void beforeParameterizedTestExecution(ExtensionContext context, Object[] arguments) {
-			callSequence.add("exceptionThrowingBeforeParameterizedTestExecutionCallback");
-			throw new EnigmaException("BeforeParameterizedTestExecutionCallback");
+		public void processArguments(ExtensionContext context, Object[] arguments) {
+			callSequence.add("exceptionThrowingArgumentsProcessor");
+			throw new EnigmaException("ArgumentsProcessor");
 		}
 	}
 }

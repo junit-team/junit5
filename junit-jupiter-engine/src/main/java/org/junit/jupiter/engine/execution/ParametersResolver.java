@@ -29,9 +29,9 @@ import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
 
-public class DefaultParameterResolver {
+public class ParametersResolver {
 
-	private static final Logger logger = LoggerFactory.getLogger(DefaultParameterResolver.class);
+	private static final Logger logger = LoggerFactory.getLogger(ParametersResolver.class);
 
 	/**
 	 * Resolve the array of parameters for the supplied executable and target.

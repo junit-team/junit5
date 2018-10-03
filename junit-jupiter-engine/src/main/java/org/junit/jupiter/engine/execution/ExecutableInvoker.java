@@ -33,7 +33,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(status = INTERNAL, since = "5.0")
 public class ExecutableInvoker {
 
-	private final DefaultParameterResolver parameterResolver = new DefaultParameterResolver();
+	private static final ParametersResolver parameterResolver = new ParametersResolver();
 
 	/**
 	 * Invoke the supplied constructor with dynamic parameter resolution.
@@ -103,5 +103,9 @@ public class ExecutableInvoker {
 				: Optional.ofNullable(target));
 		return ReflectionUtils.invokeMethod(method, target,
 			parameterResolver.resolveParameters(method, optionalTarget, extensionContext, extensionRegistry));
+	}
+
+	public Object invoke(Method method, Object target, Object... arguments) {
+		return ReflectionUtils.invokeMethod(method, target, arguments);
 	}
 }

@@ -15,6 +15,7 @@ import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExte
 import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -22,17 +23,17 @@ import java.util.function.BiFunction;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.ArgumentsProcessor;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.BeforeParameterizedTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
-import org.junit.jupiter.engine.execution.DefaultParameterResolver;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.jupiter.engine.execution.ParametersResolver;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -62,7 +63,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executa
 public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
-	private static final DefaultParameterResolver parameterResolver = new DefaultParameterResolver();
+	private static final ParametersResolver parametersResolver = new ParametersResolver();
 
 	public TestMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId, testClass, testMethod);
@@ -166,20 +167,22 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	private void resolveParametersAndInvokeTestMethod(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor, ThrowableCollector throwableCollector) {
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		Object[] arguments = parameterResolver.resolveParameters(getTestMethod(), Optional.empty(),
+		Object instance = context.getExtensionContext().getRequiredTestInstance();
+		Object[] arguments = parametersResolver.resolveParameters(getTestMethod(), Optional.ofNullable(instance),
 			context.getExtensionContext(), registry);
 
 		invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(context,
-			((extensionContext,
-					callback) -> () -> callback.beforeParameterizedTestExecution(extensionContext, arguments)),
-			BeforeParameterizedTestExecutionCallback.class);
+			((extensionContext, callback) -> () -> callback.processArguments(extensionContext,
+				Arrays.copyOf(arguments, arguments.length))),
+			ArgumentsProcessor.class);
 
 		if (throwableCollector.isEmpty()) {
-			invokeTestMethod(context, dynamicTestExecutor);
+			invokeTestMethod(context, dynamicTestExecutor, arguments);
 		}
 	}
 
-	protected void invokeTestMethod(JupiterEngineExecutionContext context, DynamicTestExecutor dynamicTestExecutor) {
+	protected void invokeTestMethod(JupiterEngineExecutionContext context, DynamicTestExecutor dynamicTestExecutor,
+			Object... arguments) {
 		ExtensionContext extensionContext = context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
@@ -187,7 +190,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			try {
 				Method testMethod = getTestMethod();
 				Object instance = extensionContext.getRequiredTestInstance();
-				executableInvoker.invoke(testMethod, instance, extensionContext, context.getExtensionRegistry());
+				executableInvoker.invoke(testMethod, instance, arguments);
 			}
 			catch (Throwable throwable) {
 				invokeTestExecutionExceptionHandlers(context.getExtensionRegistry(), extensionContext, throwable);

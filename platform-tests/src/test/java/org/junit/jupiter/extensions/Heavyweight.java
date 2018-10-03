@@ -72,7 +72,7 @@ public class Heavyweight implements ParameterResolver, BeforeEachCallback {
 		@Override
 		public void close() {
 			// Close resources here.
-			assertEquals(13, usages.get(), "Usage counter mismatch!");
+			assertEquals(9, usages.get(), "Usage counter mismatch!");
 		}
 
 		@Override
