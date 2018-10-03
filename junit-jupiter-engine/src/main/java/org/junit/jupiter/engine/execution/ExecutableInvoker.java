@@ -105,6 +105,15 @@ public class ExecutableInvoker {
 			parameterResolver.resolveParameters(method, optionalTarget, extensionContext, extensionRegistry));
 	}
 
+	/**
+	 * Invoke the supplied method on the supplied target object with the supplied arguments
+	 *
+	 * @param method the method to invoke and resolve parameters for
+	 * @param target the object on which the method will be invoked; should be
+	 * {@code null} for static methods
+	 * @param arguments the arguments with which to call the method
+	 * {@code ParameterResolvers} from
+	 */
 	public Object invoke(Method method, Object target, Object... arguments) {
 		return ReflectionUtils.invokeMethod(method, target, arguments);
 	}
