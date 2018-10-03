@@ -93,9 +93,8 @@ class JupiterEngineExecutionContextTests {
 	void closeAttemptExceptionWillBeThrownDownTheCallStack() {
 		FailingAutoClosableExtenstionContext failingExtensionContext = mock(FailingAutoClosableExtenstionContext.class);
 		doCallRealMethod().when(failingExtensionContext).close();
-		JupiterEngineExecutionContext newContext = originalContext.extend()
-				.withExtensionContext(failingExtensionContext)
-				.build();
+		JupiterEngineExecutionContext newContext = originalContext.extend().withExtensionContext(
+			failingExtensionContext).build();
 
 		assertThrows(Exception.class, newContext::close);
 	}
