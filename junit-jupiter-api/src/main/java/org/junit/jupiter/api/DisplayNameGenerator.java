@@ -13,6 +13,8 @@ package org.junit.jupiter.api;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ClassUtils;
@@ -123,6 +125,54 @@ public interface DisplayNameGenerator {
 
 		private String replaceUnderscores(String name) {
 			return name.replace('_', ' ');
+		}
+	}
+
+	class CamelCaseGenerator extends Standard {
+
+		@Override
+		public String generateDisplayNameForClass(Class<?> testClass) {
+			return insertSpacesBetweenWords(super.generateDisplayNameForClass(testClass));
+		}
+
+		@Override
+		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
+			return insertSpacesBetweenWords(super.generateDisplayNameForNestedClass(nestedClass));
+		}
+
+		@Override
+		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
+			return insertSpacesBetweenWords(testMethod.getName()) + parameterTypesAsString(testMethod);
+		}
+
+		private String insertSpacesBetweenWords(String str) {
+			if (str == null) {
+				return null;
+			}
+			else if (str.length() == 0) {
+				return "";
+			}
+			else {
+				char[] c = str.toCharArray();
+				List<String> list = new ArrayList<>();
+				int tokenStart = 0;
+				int currentType = Character.getType(c[tokenStart]);
+
+				for (int pos = tokenStart + 1; pos < c.length; ++pos) {
+					int type = Character.getType(c[pos]);
+					if (type == Character.LOWERCASE_LETTER && currentType == Character.UPPERCASE_LETTER) {
+						int newTokenStart = pos - 1;
+						if (newTokenStart != tokenStart) {
+							list.add(new String(c, tokenStart, newTokenStart - tokenStart));
+							tokenStart = newTokenStart;
+						}
+					}
+					currentType = type;
+				}
+
+				list.add(new String(c, tokenStart, c.length - tokenStart));
+				return String.join(" ", list);
+			}
 		}
 	}
 

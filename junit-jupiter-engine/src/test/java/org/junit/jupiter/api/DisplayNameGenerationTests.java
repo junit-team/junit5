@@ -67,6 +67,20 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void camelCaseGenerator() {
+		var expectedDisplayNames = List.of( //
+			"CONTAINER: Display Name Generation Tests\\$ Camel Case Style.*", //
+			"TEST: @DisplayName prevails", //
+			"TEST: test Using Camel Case Style()", //
+			"TEST: test Using Camel Case_and_also_ Under Scores()", //
+			"TEST: test Using Camel Case_and_also_ Under Scores_keeping Parameter Type Names Intact(TestInfo)", //
+			"TEST: test()", //
+			"TEST: test(TestInfo)", "TEST: test_with_underscores()");
+		check(CamelCaseStyleTestCase.class, expectedDisplayNames);
+		check(CamelCaseStyleInheritedFromSuperClassTestCase.class, expectedDisplayNames);
+	}
+
+	@Test
 	void noNameGenerator() {
 		check(NoNameStyleTestCase.class, List.of( //
 			"CONTAINER: nn", //
@@ -169,12 +183,20 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	static class UnderscoreStyleTestCase extends AbstractTestCase {
 	}
 
+	@DisplayNameGeneration(DisplayNameGenerator.CamelCaseGenerator.class)
+	static class CamelCaseStyleTestCase extends AbstractTestCase {
+	}
+
 	@DisplayNameGeneration(NoNameGenerator.class)
 	static class NoNameStyleTestCase extends AbstractTestCase {
 	}
 
 	// No annotation here! @DisplayNameGeneration is inherited from super class
 	static class UnderscoreStyleInheritedFromSuperClassTestCase extends UnderscoreStyleTestCase {
+	}
+
+	// No annotation here! @DisplayNameGeneration is inherited from super class
+	static class CamelCaseStyleInheritedFromSuperClassTestCase extends CamelCaseStyleTestCase {
 	}
 
 	// -------------------------------------------------------------------
