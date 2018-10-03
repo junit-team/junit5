@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.jupiter.api.MethodOrdering;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.Filterable;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
@@ -286,8 +286,8 @@ class JavaElementsResolver {
 	 * @since 5.4
 	 */
 	private void orderContainedMethods(ClassTestDescriptor classTestDescriptor, Class<?> testClass) {
-		findAnnotation(testClass, MethodOrdering.class)//
-				.map(MethodOrdering::value)//
+		findAnnotation(testClass, TestMethodOrder.class)//
+				.map(TestMethodOrder::value)//
 				.map(ReflectionUtils::newInstance)//
 				.ifPresent(methodOrderer -> {
 

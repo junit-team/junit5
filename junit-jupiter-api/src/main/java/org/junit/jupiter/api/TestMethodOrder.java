@@ -29,7 +29,7 @@ import org.apiguardian.api.API;
 @Documented
 @Inherited
 @API(status = EXPERIMENTAL, since = "5.4")
-public @interface MethodOrdering {
+public @interface TestMethodOrder {
 
 	Class<? extends MethodOrderer> value();
 

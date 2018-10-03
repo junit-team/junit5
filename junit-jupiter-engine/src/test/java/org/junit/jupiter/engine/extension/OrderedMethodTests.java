@@ -22,7 +22,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.MethodOrdering;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -67,7 +67,7 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 
 	// -------------------------------------------------------------------------
 
-	@MethodOrdering(Alphanumeric.class)
+	@TestMethodOrder(Alphanumeric.class)
 	static class AlphanumericTestCase {
 
 		@BeforeEach
@@ -110,7 +110,7 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@MethodOrdering(OrderAnnotation.class)
+	@TestMethodOrder(OrderAnnotation.class)
 	static class OrderAnnotationTestCase {
 
 		@BeforeEach
