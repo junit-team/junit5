@@ -10,10 +10,15 @@
 
 package org.junit.jupiter.engine.execution;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.withSettings;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.descriptor.ClassExtensionContext;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
@@ -84,6 +89,28 @@ class JupiterEngineExecutionContextTests {
 		assertSame(newExtensionContext, newContext.getExtensionContext());
 		assertSame(extensionRegistry, newContext.getExtensionRegistry());
 		assertSame(testInstanceProvider, newContext.getTestInstanceProvider());
+	}
+
+	@Test
+	void closeAttemptExceptionWillBeThrownDownTheCallStack() throws Exception {
+		ExtensionContext failingExtensionContext = mock(ExtensionContext.class,
+			withSettings().extraInterfaces(AutoCloseable.class));
+		Exception expectedException = new Exception("test message");
+		doThrow(expectedException).when(((AutoCloseable) failingExtensionContext)).close();
+
+		// @formatter:off
+		JupiterEngineExecutionContext newContext = originalContext.extend()
+				.withExtensionContext(failingExtensionContext)
+				.build();
+		// @formatter:on
+		try {
+			newContext.close();
+			fail("`close()` method did not raised an exception");
+		}
+		catch (Exception actual) {
+			assertSame(expectedException, actual);
+			assertEquals("test message", actual.getMessage());
+		}
 	}
 
 }
