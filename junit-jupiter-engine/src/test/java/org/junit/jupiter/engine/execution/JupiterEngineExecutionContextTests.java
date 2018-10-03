@@ -11,9 +11,12 @@
 package org.junit.jupiter.engine.execution;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.descriptor.ClassExtensionContext;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
@@ -86,4 +89,21 @@ class JupiterEngineExecutionContextTests {
 		assertSame(testInstanceProvider, newContext.getTestInstanceProvider());
 	}
 
+	@Test
+	void closeAttemptExceptionWillBeThrownDownTheCallStack() {
+		FailingAutoClosableExtenstionContext failingExtensionContext = mock(FailingAutoClosableExtenstionContext.class);
+		doCallRealMethod().when(failingExtensionContext).close();
+		JupiterEngineExecutionContext newContext = originalContext.extend()
+				.withExtensionContext(failingExtensionContext)
+				.build();
+
+		assertThrows(Exception.class, newContext::close);
+	}
+
+	private abstract class FailingAutoClosableExtenstionContext implements ExtensionContext, AutoCloseable {
+		@Override
+		public void close() {
+			throw new RuntimeException("failed to close");
+		}
+	}
 }
