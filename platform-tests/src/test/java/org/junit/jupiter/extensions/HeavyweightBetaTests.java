@@ -52,6 +52,6 @@ class HeavyweightBetaTests {
 
 	@AfterAll
 	void afterAll(Heavyweight.Resource resource) {
-		assertEquals(mark, resource.usages() - 3);
+		assertEquals(mark, resource.usages() - 4);
 	}
 }

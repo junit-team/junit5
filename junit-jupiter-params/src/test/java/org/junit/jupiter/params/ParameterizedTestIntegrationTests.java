@@ -13,6 +13,7 @@ package org.junit.jupiter.params;
 import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -28,8 +29,10 @@ import static org.junit.platform.engine.test.event.TestExecutionResultConditions
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -40,6 +43,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.extension.BeforeParameterizedTestExecutionCallback;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -193,6 +199,25 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
+	void executesExtendedTestCase() {
+		execute(selectClass(BeforeParameterizedTestExecutionTestCase.class));
+
+		Map<String, Object[]> allCallbackArguments = BeforeParameterizedTestExecutionExtension.callbackArguments;
+		Map<String, Object[]> allTestMethodArguments = BeforeParameterizedTestExecutionTestCase.testMethodArguments;
+
+		assertThat(allCallbackArguments).hasSize(allTestMethodArguments.size());
+		for (String methodName : allCallbackArguments.keySet()) {
+			Object[] callbackArguments = allCallbackArguments.get(methodName);
+			Object[] testMethodArguments = allTestMethodArguments.get(methodName);
+
+			assertNotSame(testMethodArguments, callbackArguments, String.format("Method [%s] : arguments passed to callback should be a copy", methodName));
+			assertThat(callbackArguments)
+					.overridingErrorMessage(String.format("Method [%s] : arguments passed to callback do not match real arguments", methodName))
+										 .containsSequence(testMethodArguments);
+		}
+	}
+
+	@Test
 	void executesLifecycleMethods() {
 		// reset static collections
 		LifecycleTestCase.lifecycleEvents.clear();
@@ -332,6 +357,35 @@ class ParameterizedTestIntegrationTests {
 			fail("this should never be called");
 		}
 
+	}
+
+	@ExtendWith(BeforeParameterizedTestExecutionExtension.class)
+	static class BeforeParameterizedTestExecutionTestCase {
+
+		private static Map<String, Object[]> testMethodArguments = new HashMap<>();
+
+		@ParameterizedTest
+		@ValueSource(strings = { "book 1", "book 2" })
+		void testWithTwoSingleStrings(String argument) {
+			testMethodArguments.put("testWithTwoSingleStrings", new Object[] { argument });
+			fail(argument);
+		}
+
+		@Test
+		void testWithNoParameters() {
+			Object[] arguments = new Object[0];
+			testMethodArguments.put("testWithNoParameters", arguments);
+		}
+	}
+
+	static class BeforeParameterizedTestExecutionExtension
+			implements Extension, BeforeParameterizedTestExecutionCallback {
+		private static Map<String, Object[]> callbackArguments = new HashMap<>();
+
+		@Override
+		public void beforeParameterizedTestExecution(ExtensionContext context, Object[] arguments) {
+			callbackArguments.put(context.getRequiredTestMethod().getName(), arguments);
+		}
 	}
 
 	static class UnusedParametersTestCase {
@@ -479,5 +533,4 @@ class ParameterizedTestIntegrationTests {
 		}
 
 	}
-
 }

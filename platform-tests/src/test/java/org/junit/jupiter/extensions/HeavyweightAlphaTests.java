@@ -59,6 +59,6 @@ class HeavyweightAlphaTests {
 
 	@AfterAll
 	static void checkMark(Heavyweight.Resource resource) {
-		assertEquals(mark, resource.usages() - 4);
+		assertEquals(mark, resource.usages() - 7);
 	}
 }

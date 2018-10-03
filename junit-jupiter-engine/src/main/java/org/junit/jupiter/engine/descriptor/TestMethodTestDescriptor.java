@@ -23,12 +23,14 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.BeforeParameterizedTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
+import org.junit.jupiter.engine.execution.DefaultParameterResolver;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
@@ -60,6 +62,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executa
 public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
+	private static final DefaultParameterResolver parameterResolver = new DefaultParameterResolver();
 
 	public TestMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
 		super(uniqueId, testClass, testMethod);
@@ -111,7 +114,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 				if (throwableCollector.isEmpty()) {
 					invokeBeforeTestExecutionCallbacks(context);
 					if (throwableCollector.isEmpty()) {
-						invokeTestMethod(context, dynamicTestExecutor);
+						resolveParametersAndInvokeTestMethod(context, dynamicTestExecutor, throwableCollector);
 					}
 					invokeAfterTestExecutionCallbacks(context);
 				}
@@ -157,6 +160,22 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			if (throwableCollector.isNotEmpty()) {
 				break;
 			}
+		}
+	}
+
+	private void resolveParametersAndInvokeTestMethod(JupiterEngineExecutionContext context,
+			DynamicTestExecutor dynamicTestExecutor, ThrowableCollector throwableCollector) {
+		ExtensionRegistry registry = context.getExtensionRegistry();
+		Object[] arguments = parameterResolver.resolveParameters(getTestMethod(), Optional.empty(),
+			context.getExtensionContext(), registry);
+
+		invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(context,
+			((extensionContext,
+					callback) -> () -> callback.beforeParameterizedTestExecution(extensionContext, arguments)),
+			BeforeParameterizedTestExecutionCallback.class);
+
+		if (throwableCollector.isEmpty()) {
+			invokeTestMethod(context, dynamicTestExecutor);
 		}
 	}
 
