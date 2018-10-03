@@ -12,17 +12,21 @@ package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.MethodOrdering;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
@@ -71,8 +75,10 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 			callSequence.add(testInfo.getTestMethod().get().getName());
 		}
 
-		@Test
-		void b() {
+		@TestFactory
+		DynamicTest b() {
+			return dynamicTest("dynamic", () -> {
+			});
 		}
 
 		@Test
@@ -99,7 +105,7 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 		void a2() {
 		}
 
-		@Test
+		@RepeatedTest(1)
 		void zzz() {
 		}
 	}
@@ -130,10 +136,12 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 		void AAA() {
 		}
 
-		@Test
+		@TestFactory
 		@DisplayName("test4")
 		@Order(4)
-		void aaa() {
+		DynamicTest aaa() {
+			return dynamicTest("test4", () -> {
+			});
 		}
 
 		@Test
@@ -142,7 +150,7 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 		void zzz() {
 		}
 
-		@Test
+		@RepeatedTest(value = 1, name = "{displayName}")
 		@DisplayName("test2")
 		@Order(2)
 		void ___() {
