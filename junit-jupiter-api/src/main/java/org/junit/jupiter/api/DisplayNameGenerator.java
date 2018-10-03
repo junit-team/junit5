@@ -149,7 +149,8 @@ public interface DisplayNameGenerator {
 
 		@Override
 		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
-			return generateName(testClass) + ' ' + super.generateDisplayNameForMethod(testClass, testMethod);
+			String methodName = super.generateDisplayNameForMethod(testClass, testMethod);
+			return generateName(testClass) + ' ' + methodName.replaceAll("\\(\\)$", ".");
 		}
 
 		private String generateName(Class<?> testClass) {

@@ -85,12 +85,12 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		check(IndicativeSentencesStyleTestCase.class, List.of( //
 			"CONTAINER: IndicativeSentencesStyleTestCase...", //
 			"TEST: @DisplayName prevails", //
-			"TEST: IndicativeSentencesStyleTestCase test with underscores()", //
-			"TEST: IndicativeSentencesStyleTestCase test()", //
+			"TEST: IndicativeSentencesStyleTestCase test with underscores.", //
 			"TEST: IndicativeSentencesStyleTestCase test(TestInfo)", //
+			"TEST: IndicativeSentencesStyleTestCase test.", //
 			"TEST: IndicativeSentencesStyleTestCase testUsingCamelCase and also UnderScores keepingParameterTypeNamesIntact(TestInfo)", //
-			"TEST: IndicativeSentencesStyleTestCase testUsingCamelCase and also UnderScores()", //
-			"TEST: IndicativeSentencesStyleTestCase testUsingCamelCaseStyle()" //
+			"TEST: IndicativeSentencesStyleTestCase testUsingCamelCase and also UnderScores.", //
+			"TEST: IndicativeSentencesStyleTestCase testUsingCamelCaseStyle." //
 		));
 	}
 
@@ -99,12 +99,12 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		check(IndicativeSentencesInheritedFromSuperClassTestCase.class, List.of( //
 			"CONTAINER: IndicativeSentencesInheritedFromSuperClassTestCase...", //
 			"TEST: @DisplayName prevails", //
-			"TEST: IndicativeSentencesInheritedFromSuperClassTestCase test with underscores()", //
-			"TEST: IndicativeSentencesInheritedFromSuperClassTestCase test()", //
+			"TEST: IndicativeSentencesInheritedFromSuperClassTestCase test with underscores.", //
 			"TEST: IndicativeSentencesInheritedFromSuperClassTestCase test(TestInfo)", //
+			"TEST: IndicativeSentencesInheritedFromSuperClassTestCase test.", //
 			"TEST: IndicativeSentencesInheritedFromSuperClassTestCase testUsingCamelCase and also UnderScores keepingParameterTypeNamesIntact(TestInfo)", //
-			"TEST: IndicativeSentencesInheritedFromSuperClassTestCase testUsingCamelCase and also UnderScores()", //
-			"TEST: IndicativeSentencesInheritedFromSuperClassTestCase testUsingCamelCaseStyle()" //
+			"TEST: IndicativeSentencesInheritedFromSuperClassTestCase testUsingCamelCase and also UnderScores.", //
+			"TEST: IndicativeSentencesInheritedFromSuperClassTestCase testUsingCamelCaseStyle." //
 		));
 	}
 
@@ -132,15 +132,15 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			"CONTAINER: A stack", //
 			"CONTAINER: A stack when new...", //
 
-			"TEST: A new stack after pushing an element to it peek returns that element without removing it from the stack()", //
-			"TEST: A new stack after pushing an element to it pop returns that element and leaves an empty stack()", //
-			"TEST: A new stack after pushing an element to it the stack is no longer empty()", //
+			"TEST: A new stack after pushing an element to it peek returns that element without removing it from the stack.", //
+			"TEST: A new stack after pushing an element to it pop returns that element and leaves an empty stack.", //
+			"TEST: A new stack after pushing an element to it the stack is no longer empty.", //
 			"TEST: A new stack has no components.", //
-			"TEST: A new stack is empty()", //
-			"TEST: A new stack throws an EmptyStackException when peeked()", //
-			"TEST: A new stack throws an EmptyStackException when popped()", //
-			"TEST: A stack is instantiated using its noarg constructor()", //
-			"TEST: A stack when new is empty()" //
+			"TEST: A new stack is empty.", //
+			"TEST: A new stack throws an EmptyStackException when peeked.", //
+			"TEST: A new stack throws an EmptyStackException when popped.", //
+			"TEST: A stack is instantiated using its noarg constructor.", //
+			"TEST: A stack when new is empty." //
 		));
 	}
 
