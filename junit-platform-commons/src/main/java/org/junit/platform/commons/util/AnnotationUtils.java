@@ -270,6 +270,13 @@ public final class AnnotationUtils {
 	}
 
 	/**
+	 * @see org.junit.platform.commons.support.AnnotationSupport#findPublicAnnotatedFields(Class, Class)
+	 */
+	public static List<Field> findPublicAnnotatedFields(Class<?> clazz, Class<? extends Annotation> annotationType) {
+		return findPublicAnnotatedFields(clazz, Object.class, annotationType);
+	}
+
+	/**
 	 * @see org.junit.platform.commons.support.AnnotationSupport#findPublicAnnotatedFields(Class, Class, Class)
 	 */
 	public static List<Field> findPublicAnnotatedFields(Class<?> clazz, Class<?> fieldType,
