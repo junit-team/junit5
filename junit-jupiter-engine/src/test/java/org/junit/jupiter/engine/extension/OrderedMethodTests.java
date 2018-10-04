@@ -25,6 +25,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.MethodOrderer.Random;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -61,7 +62,16 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void orderAnnotation() {
-		ExecutionResults executionResults = executeTestsForClass(OrderAnnotationTestCase.class);
+		assertOrderAnnotationSupport(OrderAnnotationTestCase.class);
+	}
+
+	@Test
+	void orderAnnotationInNestedTestClass() {
+		assertOrderAnnotationSupport(OuterTestCase.class);
+	}
+
+	private void assertOrderAnnotationSupport(Class<?> testClass) {
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		assertEquals(callSequence.size(), executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(callSequence.size(), executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -75,11 +85,11 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 		for (int i = 0; i < 10; i++) {
 			callSequence.clear();
 
-			ExecutionEventRecorder eventRecorder = executeTestsForClass(RandomTestCase.class);
+			ExecutionResults executionResults = executeTestsForClass(RandomTestCase.class);
 			uniqueSequences.add(callSequence.stream().collect(Collectors.joining(",")));
 
-			assertEquals(callSequence.size(), eventRecorder.getTestStartedCount(), "# tests started");
-			assertEquals(callSequence.size(), eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
+			assertEquals(callSequence.size(), executionResults.getTestsStartedCount(), "# tests started");
+			assertEquals(callSequence.size(), executionResults.getTestsSuccessfulCount(), "# tests succeeded");
 		}
 
 		// We hope that 3 out of 10 are different...
@@ -175,6 +185,13 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 		@DisplayName("test2")
 		@Order(2)
 		void ___() {
+		}
+	}
+
+	static class OuterTestCase {
+
+		@Nested
+		class NestedOrderAnnotationTestCase extends OrderAnnotationTestCase {
 		}
 	}
 
