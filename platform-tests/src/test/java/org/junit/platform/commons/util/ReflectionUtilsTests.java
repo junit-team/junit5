@@ -36,6 +36,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -1041,6 +1043,66 @@ class ReflectionUtilsTests {
 		}
 	}
 
+	@Test
+	void getFieldValuesForInstanceWithNullParameters() {
+		assertThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.getFieldValuesForInstance(null, new Object()));
+		assertThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.getFieldValuesForInstance(new ArrayList<>(), null));
+		assertThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.getFieldValuesForInstance(new ArrayList<>(), new Object(), null));
+	}
+
+	@Test
+	void getFieldValuesForInstance() {
+		ClassWithFields classWithFields = new ClassWithFields();
+		classWithFields.stringField = "string";
+		classWithFields.integerField = 10;
+		classWithFields.doubleField = 11.0;
+		List<Field> fields = Arrays.asList(classWithFields.getClass().getFields());
+
+		List<Object> fieldValuesForInstance = ReflectionUtils.getFieldValuesForInstance(fields, classWithFields);
+		assertEquals(3, fieldValuesForInstance.size());
+
+		assertTrue(fieldValuesForInstance.get(0) instanceof Integer);
+		assertEquals(classWithFields.integerField, (int) fieldValuesForInstance.get(0));
+
+		assertTrue(fieldValuesForInstance.get(1) instanceof String);
+		assertEquals(classWithFields.stringField, fieldValuesForInstance.get(1).toString());
+
+		assertTrue(fieldValuesForInstance.get(2) instanceof Double);
+		assertEquals(classWithFields.doubleField, (double) fieldValuesForInstance.get(2));
+	}
+
+	@Test
+	void getFieldValuesOfTypeForInstance() {
+		ClassWithFields classWithFields = new ClassWithFields();
+		classWithFields.stringField = "string";
+		classWithFields.integerField = 10;
+		classWithFields.doubleField = 11.0;
+
+		List<Field> stringFields = ReflectionUtils.findFields(ClassWithFields.class,
+			f -> f.getType().isAssignableFrom(String.class), TOP_DOWN);
+		List<String> stringFieldValues = ReflectionUtils.getFieldValuesForInstance(stringFields, classWithFields,
+			String.class);
+		assertEquals(1, stringFieldValues.size());
+		assertEquals(classWithFields.stringField, stringFieldValues.get(0));
+
+		List<Field> integerFields = ReflectionUtils.findFields(ClassWithFields.class,
+			f -> f.getType().isAssignableFrom(int.class), TOP_DOWN);
+		List<Integer> integerFieldValues = ReflectionUtils.getFieldValuesForInstance(integerFields, classWithFields,
+			Integer.class);
+		assertEquals(1, integerFieldValues.size());
+		assertEquals(classWithFields.integerField, integerFieldValues.get(0).intValue());
+
+		List<Field> doubleFields = ReflectionUtils.findFields(ClassWithFields.class,
+			f -> f.getType().isAssignableFrom(double.class), TOP_DOWN);
+		List<Double> doubleFieldValues = ReflectionUtils.getFieldValuesForInstance(doubleFields, classWithFields,
+			Double.class);
+		assertEquals(1, doubleFieldValues.size());
+		assertEquals(classWithFields.doubleField, doubleFieldValues.get(0).doubleValue());
+	}
+
 	private static void createDirectories(Path... paths) throws IOException {
 		for (Path path : paths) {
 			Files.createDirectory(path);
@@ -1426,6 +1488,15 @@ class ReflectionUtilsTests {
 		@Override
 		public void otherMethod2() {
 		}
+	}
+
+	public static class ClassWithFields {
+
+		public int integerField;
+
+		public String stringField;
+
+		public double doubleField;
 	}
 
 	@SuppressWarnings("unused")

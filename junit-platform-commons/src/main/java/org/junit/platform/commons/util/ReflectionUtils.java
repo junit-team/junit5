@@ -1058,6 +1058,41 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * Get the values of the specified fields on the given instance.
+	 *
+	 * @param fields list of fields on a class; never {@code null}
+	 * @param object instance of a class; never {@code null}
+	 * @return an immutable list of values of the specified fields on the given instance
+	 */
+	public static List<Object> getFieldValuesForInstance(List<Field> fields, Object object) {
+		return getFieldValuesForInstance(fields, object, Object.class);
+	}
+
+	/**
+	 * Get the values of the specified fields of specified type on the given instance.
+	 *
+	 * @param fields list of fields on a class; never {@code null}
+	 * @param object instance of a class; never {@code null}
+	 * @param fieldType the type of all fields from fields; never {@code null}
+	 * @return an immutable list of values of the specified fields on the given instance
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> getFieldValuesForInstance(List<Field> fields, Object object, Class<T> fieldType) {
+		Preconditions.notNull(fields, "Fields must not be null");
+		Preconditions.notNull(object, "Object must not be null");
+		Preconditions.notNull(fieldType, "Field type must not be null");
+
+		return fields.stream().map(f -> {
+			try {
+				return (T) f.get(object);
+			}
+			catch (IllegalAccessException e) {
+				throw ExceptionUtils.throwAsUncheckedException(e);
+			}
+		}).collect(toUnmodifiableList());
+	}
+
+	/**
 	 * Find all non-synthetic methods in the superclass and interface hierarchy,
 	 * excluding Object.
 	 */

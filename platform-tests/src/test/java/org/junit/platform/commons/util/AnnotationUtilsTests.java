@@ -502,6 +502,12 @@ class AnnotationUtilsTests {
 		assertThat(asNames(fields)).containsExactlyInAnyOrder("foo", "bar");
 	}
 
+	@Test
+	void findPublicAnnotatedFieldsDelegates() {
+		assertEquals(findPublicAnnotatedFields(getClass(), Object.class, Annotation1.class),
+			findPublicAnnotatedFields(getClass(), Annotation1.class));
+	}
+
 	private List<String> asNames(List<Field> fields) {
 		return fields.stream().map(Field::getName).collect(toList());
 	}

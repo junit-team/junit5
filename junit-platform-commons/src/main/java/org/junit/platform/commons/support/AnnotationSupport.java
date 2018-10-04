@@ -135,6 +135,23 @@ public final class AnnotationSupport {
 
 	/**
 	 * Find all {@code public} {@linkplain Field fields} of the supplied class
+	 * or interface that are annotated or <em>meta-annotated</em> with the specified {@code annotationType}.
+	 *
+	 * <p>Consult the Javadoc for {@link Class#getFields()} for details on
+	 * inheritance and ordering.
+	 *
+	 * @param clazz the class or interface in which to find the fields; never {@code null}
+	 * @param annotationType the annotation type to search for; never {@code null}
+	 * @return the list of all such fields found; neither {@code null} nor mutable
+	 * @see Class#getFields()
+	 */
+	public static List<Field> findPublicAnnotatedFields(Class<?> clazz, Class<? extends Annotation> annotationType) {
+
+		return AnnotationUtils.findAnnotatedFields(clazz, annotationType, f -> true);
+	}
+
+	/**
+	 * Find all {@code public} {@linkplain Field fields} of the supplied class
 	 * or interface that are of the specified {@code fieldType} and annotated
 	 * or <em>meta-annotated</em> with the specified {@code annotationType}.
 	 *
@@ -151,6 +168,45 @@ public final class AnnotationSupport {
 			Class<? extends Annotation> annotationType) {
 
 		return AnnotationUtils.findPublicAnnotatedFields(clazz, fieldType, annotationType);
+	}
+
+	/**
+	 * Find all {@code public} {@linkplain Field fields} values of the supplied instance
+	 * that are annotated or <em>meta-annotated</em> with the specified {@code annotationType}.
+	 *
+	 * <p>Consult the Javadoc for {@link Class#getFields()} for details on
+	 * inheritance and ordering.
+	 *
+	 * @param object the instance in which to find the fields; never {@code null}
+	 * @param annotationType the annotation type to search for; never {@code null}
+	 * @return the list of all such field values found; neither {@code null} nor mutable
+	 * @see Class#getFields()
+	 */
+	public static List<Object> findPublicAnnotatedFieldsValues(Object object,
+			Class<? extends Annotation> annotationType) {
+		return ReflectionUtils.getFieldValuesForInstance(findPublicAnnotatedFields(object.getClass(), annotationType),
+			object);
+	}
+
+	/**
+	 * Find all {@code public} {@linkplain Field fields} values of the supplied instance
+	 * that are of the specified {@code fieldType} and annotated
+	 * or <em>meta-annotated</em> with the specified {@code annotationType}.
+	 *
+	 * <p>Consult the Javadoc for {@link Class#getFields()} for details on
+	 * inheritance and ordering.
+	 *
+	 * @param object the instance in which to find the fields; never {@code null}
+	 * @param fieldType the type of field to find; never {@code null}
+	 * @param annotationType the annotation type to search for; never {@code null}
+	 * @return the list of all such field values found; neither {@code null} nor mutable
+	 * @see Class#getFields()
+	 */
+	public static <T> List<T> findPublicAnnotatedFieldsValues(Object object, Class<T> fieldType,
+			Class<? extends Annotation> annotationType) {
+
+		return ReflectionUtils.getFieldValuesForInstance(findPublicAnnotatedFields(object.getClass(), annotationType),
+			object, fieldType);
 	}
 
 	/**
