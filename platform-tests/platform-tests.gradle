@@ -1,5 +1,5 @@
 plugins {
-	id 'me.champeau.gradle.jmh' version '0.4.7'
+	id 'me.champeau.gradle.jmh'
 }
 
 apply from: "$rootDir/gradle/testing.gradle"
@@ -25,25 +25,25 @@ dependencies {
 	testImplementation(project(':junit-platform-runner'))
 	testImplementation(project(':junit-platform-testkit'))
 	testImplementation(project(path: ':junit-jupiter-engine', configuration: 'testArtifacts'))
-	testImplementation("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
+	testImplementation("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(':junit-vintage-engine'))
-	testRuntimeOnly('org.codehaus.groovy:groovy-jsr223:2.4.15') {
+	testRuntimeOnly("org.codehaus.groovy:groovy-jsr223:${Versions.groovy}") {
 		because 'Tests annotated with @EnabledIf(engine = "groovy", ...) need it.'
 	}
 
 	// --- http://openjdk.java.net/projects/code-tools/jmh/ -----------------------
-	jmh("org.openjdk.jmh:jmh-core:${jmhVersion}") {
+	jmh("org.openjdk.jmh:jmh-core:${Versions.jmh}") {
 		exclude group: 'net.sf.jopt-simple', module: 'jopt-simple'
 	}
-	jmhAnnotationProcessor("org.openjdk.jmh:jmh-generator-annprocess:${jmhVersion}")
+	jmhAnnotationProcessor("org.openjdk.jmh:jmh-generator-annprocess:${Versions.jmh}")
 	jmh(project(':junit-jupiter-api'))
-	jmh("junit:junit:${junit4Version}")
+	jmh("junit:junit:${Versions.junit4}")
 }
 
 jmh {
-	jmhVersion = "${jmhVersion}"
+	jmhVersion = Versions.jmh
 
 	duplicateClassesStrategy = DuplicatesStrategy.WARN
 	fork = 0 // Too long command line on Windows...

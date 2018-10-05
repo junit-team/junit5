@@ -5,7 +5,7 @@ description = 'JUnit Platform Console'
 dependencies {
 	api(project(':junit-platform-launcher'))
 
-	shadowed('info.picocli:picocli:3.6.0')
+	shadowed("info.picocli:picocli:${Versions.picocli}")
 }
 
 jar {

@@ -2,13 +2,13 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 plugins {
-	id 'com.gradle.build-scan' version '1.16'
-	id 'net.nemerosa.versioning' version '2.7.1'
-	id 'com.github.ben-manes.versions' version '0.20.0' apply false
-	id 'com.diffplug.gradle.spotless' version '3.15.0' apply false
-	id 'org.ajoberstar.git-publish' version '1.0.1' apply false
-	id 'org.jetbrains.kotlin.jvm' version '1.2.71' apply false
-	id 'com.github.johnrengelman.shadow' version '4.0.1' apply false
+	id 'com.gradle.build-scan'
+	id 'net.nemerosa.versioning'
+	id 'com.github.ben-manes.versions' apply false
+	id 'com.diffplug.gradle.spotless' apply false
+	id 'org.ajoberstar.git-publish' apply false
+	id 'org.jetbrains.kotlin.jvm' apply false
+	id 'com.github.johnrengelman.shadow' apply false
 }
 
 buildScan {
@@ -85,7 +85,7 @@ allprojects { subproj ->
 	if (project.hasProperty('enableJaCoCo')) {
 		apply plugin: 'jacoco'
 		jacoco {
-			toolVersion = '0.8.2'
+			toolVersion =  Versions.jacoco
 		}
 	}
 
@@ -96,7 +96,7 @@ allprojects { subproj ->
 	}
 
 	dependencies {
-		api("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
+		api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 	}
 
 	compileJava {
@@ -124,26 +124,30 @@ allprojects { subproj ->
 
 	// Declare "javacRelease" as a global property to make it overridable by
 	// a sub-project.
-	ext.javacRelease = rootProject.javacRelease
+	ext.javacRelease = Versions.jvmTarget
 
 	subproj.afterEvaluate { evaluatedProject ->
 		evaluatedProject.tasks.getByName('compileJava') {
 			sourceCompatibility = javacRelease
 			targetCompatibility = javacRelease // needed by asm
+			// --release release
+			// Compiles against the public, supported and documented API for a specific VM version.
+			// Supported release targets are 6, 7, 8, 9, 10, and 11.
+			// Note that if --release is added then -target and -source are ignored.
 			options.compilerArgs += ['--release', javacRelease]
 		}
 	}
 
 	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
 		kotlinOptions {
-			jvmTarget = '1.8'
+			jvmTarget = "1.${Versions.jvmTarget}"
 			apiVersion = '1.1'
 			languageVersion = '1.1'
 		}
 	}
 
 	checkstyle {
-		toolVersion = '8.10'
+		toolVersion = Versions.checkstyle
 		configDir = rootProject.file('src/checkstyle')
 	}
 	checkstyleMain {
@@ -339,7 +343,7 @@ subprojects { subproj ->
 		}
 
 		kotlin {
-			ktlint('0.24.0')
+			ktlint(Versions.ktlint)
 			licenseHeaderFile headerFile
 			trimTrailingWhitespace()
 			endWithNewline()
@@ -383,8 +387,8 @@ configure(rootProject) {
 
 	jar.enabled = false
 
-	def ota4jDocVersion = ota4jVersion.contains('SNAPSHOT') ? 'snapshot' : ota4jVersion
-	def apiGuardianDocVersion = apiGuardianVersion.contains('SNAPSHOT') ? 'snapshot' : apiGuardianVersion
+	def ota4jDocVersion = Versions.ota4j.contains('SNAPSHOT') ? 'snapshot' : Versions.ota4j
+	def apiGuardianDocVersion = Versions.apiGuardian.contains('SNAPSHOT') ? 'snapshot' : Versions.apiGuardian
 
 	task aggregateJavadocs(type: Javadoc) {
 		group = 'Documentation'

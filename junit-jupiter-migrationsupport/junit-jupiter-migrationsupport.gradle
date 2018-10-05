@@ -3,7 +3,7 @@ apply from: "$rootDir/gradle/testing.gradle"
 description = 'JUnit Jupiter Migration Support'
 
 dependencies {
-	api("junit:junit:${junit4Version}")
+	api("junit:junit:${Versions.junit4}")
 	api(project(':junit-jupiter-api'))
 
 	testImplementation(project(':junit-jupiter-engine'))

@@ -11,8 +11,8 @@ test {
 }
 
 dependencies {
-	testImplementation("org.assertj:assertj-core:${assertJVersion}")
-	testImplementation("org.mockito:mockito-junit-jupiter:${mockitoVersion}") {
+	testImplementation("org.assertj:assertj-core:${Versions.assertJ}")
+	testImplementation("org.mockito:mockito-junit-jupiter:${Versions.mockito}") {
 		exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine'
 	}
 
@@ -25,6 +25,6 @@ dependencies {
 
 	testRuntimeOnly(project(':junit-platform-launcher'))
 
-	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
-	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${Versions.log4j}")
+	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${Versions.log4j}")
 }

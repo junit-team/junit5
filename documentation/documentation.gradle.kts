@@ -7,16 +7,16 @@ buildscript {
 	dependencies {
 		// upgrade to latest jruby version due to a bugfix needed for Windows 10.
 		// can be removed, when asciidoctorj uses this as a default version.
-		classpath("org.jruby:jruby-complete:9.1.17.0")
+		classpath("org.jruby:jruby-complete:${Versions.jruby}")
 
-		// classpath("org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.16")
-		classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16")
-		classpath("org.asciidoctor:asciidoctorj-diagram:1.5.9")
+		// classpath("org.asciidoctor:asciidoctorj-epub3:${Versions.asciidoctorPdf}")
+		classpath("org.asciidoctor:asciidoctorj-pdf:${Versions.asciidoctorPdf}")
+		classpath("org.asciidoctor:asciidoctorj-diagram:${Versions.asciidoctorDiagram}")
 	}
 }
 
 plugins {
-	id("org.asciidoctor.convert") version "1.5.8.1"
+	id("org.asciidoctor.convert")
 }
 
 val consoleLauncherTest by tasks.creating(JavaExec::class) {
@@ -39,7 +39,7 @@ tasks.named<Test>("test") {
 }
 
 dependencies {
-	"asciidoctor"("org.jruby:jruby-complete:9.1.17.0")
+	"asciidoctor"("org.jruby:jruby-complete:${Versions.jruby}")
 
 	// Jupiter API is used in src/main/java
 	implementation(project(":junit-jupiter-api"))
@@ -55,16 +55,15 @@ dependencies {
 
 	testRuntimeOnly(project(":junit-vintage-engine"))
 	testRuntimeOnly(project(":junit-jupiter-engine"))
-	val log4jVersion: String by project
-	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${log4jVersion}")
-	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${Versions.log4j}")
+	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${Versions.log4j}")
 
 	// for ApiReportGenerator
-	testImplementation("io.github.classgraph:classgraph:4.2.2")
+	testImplementation("io.github.classgraph:classgraph:${Versions.classgraph}")
 }
 
 asciidoctorj {
-	version = "1.5.7"
+	version = Versions.asciidoctorJ
 }
 
 val generatedAsciiDocPath = file("$buildDir/generated/asciidoc")
@@ -122,10 +121,10 @@ tasks.named<AsciidoctorTask>("asciidoctor") {
 			"platform-version" to project.properties["platformVersion"],
 			"vintage-version" to project.properties["vintageVersion"],
 			"bom-version" to version,
-			"junit4-version" to project.properties["junit4Version"],
-			"apiguardian-version" to project.properties["apiGuardianVersion"],
-			"ota4j-version" to project.properties["ota4jVersion"],
-			"surefire-version" to project.properties["surefireVersion"],
+			"junit4-version" to Versions.junit4,
+			"apiguardian-version" to Versions.apiGuardian,
+			"ota4j-version" to Versions.ota4j,
+			"surefire-version" to  Versions.surefire,
 			"release-branch" to project.properties["releaseBranch"],
 			"docs-version" to project.properties["docsVersion"],
 			"revnumber" to version,

@@ -11,7 +11,7 @@ dependencies {
 
 	testCompileOnly(project(':junit-jupiter-api'))
 	testCompileOnly(project(':junit-jupiter-params'))
-	testCompileOnly("junit:junit:${junit4Version}")
+	testCompileOnly("junit:junit:${Versions.junit4}")
 }
 
 jar {

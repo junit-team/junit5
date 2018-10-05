@@ -1,3 +1,21 @@
+pluginManagement {
+	resolutionStrategy {
+		eachPlugin {
+			when (requested.id.id) {
+				"com.gradle.build-scan" -> useVersion(Versions.buildScanPlugin)
+				"net.nemerosa.versioning" -> useVersion(Versions.versioningPlugin)
+				"com.github.ben-manes.versions" -> useVersion(Versions.versionsPlugin)
+				"com.diffplug.gradle.spotless" -> useVersion(Versions.spotlessPlugin)
+				"org.ajoberstar.git-publish" -> useVersion(Versions.gitPublishPlugin)
+				"org.jetbrains.kotlin.jvm" -> useVersion(Versions.kotlin)
+				"com.github.johnrengelman.shadow" -> useVersion(Versions.shadowPlugin)
+				"org.asciidoctor.convert" -> useVersion(Versions.asciidoctorPlugin)
+				"me.champeau.gradle.jmh" -> useVersion(Versions.jmhPlugin)
+			}
+		}
+	}
+}
+
 // Require Java 10 or higher
 val javaVersion = JavaVersion.current()
 require(javaVersion.isJava10Compatible) {
