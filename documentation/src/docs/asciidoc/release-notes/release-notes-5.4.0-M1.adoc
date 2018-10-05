@@ -54,6 +54,8 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
+* New `Assertions.assertNotEquals()` variants that accept the following primitive data
+  types: `char`, `byte`, `short`, `int`, `long`, `float`, and `double`.
 * Implicit conversion from hexadecimal and octal string representations to integral types
   in `@ParameterizedTest` arguments -- for example, conversion from `"0xff"` to `255`.
 
