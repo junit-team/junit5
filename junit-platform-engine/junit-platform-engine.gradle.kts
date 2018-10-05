@@ -1,16 +1,16 @@
-description = 'JUnit Platform Engine API'
+description = "JUnit Platform Engine API"
 
 dependencies {
-	api(project(':junit-platform-commons'))
+	api(project(":junit-platform-commons"))
 	api("org.opentest4j:opentest4j:${Versions.ota4j}")
 
 	testImplementation("org.assertj:assertj-core:${Versions.assertJ}")
 }
 
-jar {
+tasks.named<Jar>("jar") {
 	manifest {
 		attributes(
-			'Automatic-Module-Name': 'org.junit.platform.engine'
+			"Automatic-Module-Name" to "org.junit.platform.engine"
 		)
 	}
 }
