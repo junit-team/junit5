@@ -1,4 +1,6 @@
-apply plugin: 'com.github.johnrengelman.shadow'
+plugins {
+	id 'com.github.johnrengelman.shadow'
+}
 
 description = 'JUnit Platform Console'
 

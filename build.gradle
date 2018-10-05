@@ -8,7 +8,6 @@ plugins {
 	id 'com.diffplug.gradle.spotless' apply false
 	id 'org.ajoberstar.git-publish' apply false
 	id 'org.jetbrains.kotlin.jvm' apply false
-	id 'com.github.johnrengelman.shadow' apply false
 }
 
 buildScan {
