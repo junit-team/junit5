@@ -216,24 +216,30 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
+<th class="colFirst" scope="row"><a href="#org.junit.platform.testkit">org.junit.platform.testkit</a></th>
+<td class="colLast">
+<div class="block">Provides functionality for describing executions of a test, which is useful for meta-testing JUnit engine features.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#org.junit.vintage.engine">org.junit.vintage.engine</a></th>
 <td class="colLast">
 <div class="block">Core package for the JUnit Vintage test engine.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="#org.junit.vintage.engine.descriptor">org.junit.vintage.engine.descriptor</a></th>
 <td class="colLast">
 <div class="block">Test descriptors used within the JUnit Vintage test engine.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#org.junit.vintage.engine.discovery">org.junit.vintage.engine.discovery</a></th>
 <td class="colLast">
 <div class="block">Internal classes for test discovery within the JUnit Vintage test engine.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="#org.junit.vintage.engine.execution">org.junit.vintage.engine.execution</a></th>
 <td class="colLast">
 <div class="block">Internal classes for test execution within the JUnit Vintage test engine.</div>
@@ -883,6 +889,79 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">
 <div class="block">Immutable value object for a <em>tag</em> that is assigned to a test or
  container.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList"><a id="org.junit.platform.testkit">
+<!--   -->
+</a>
+<table class="useSummary">
+<caption><span>Classes in <a href="package-summary.html">org.junit.platform.engine</a> used by <a href="../testkit/package-summary.html">org.junit.platform.testkit</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Class</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="class-use/EngineDiscoveryRequest.html#org.junit.platform.testkit">EngineDiscoveryRequest</a></th>
+<td class="colLast">
+<div class="block"><code>EngineDiscoveryRequest</code> provides a <a href="TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> access to the
+ information necessary to discover tests and containers.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="class-use/EngineExecutionListener.html#org.junit.platform.testkit">EngineExecutionListener</a></th>
+<td class="colLast">
+<div class="block">Listener to be notified of test execution events by
+ <a href="TestEngine.html" title="interface in org.junit.platform.engine">test engines</a>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="class-use/ExecutionRequest.html#org.junit.platform.testkit">ExecutionRequest</a></th>
+<td class="colLast">
+<div class="block">Provides a single <a href="TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> access to the information necessary to
+ execute its tests.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="class-use/TestDescriptor.html#org.junit.platform.testkit">TestDescriptor</a></th>
+<td class="colLast">
+<div class="block">Mutable descriptor for a test or container that has been discovered by a
+ <a href="TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="class-use/TestDescriptor.Type.html#org.junit.platform.testkit">TestDescriptor.Type</a></th>
+<td class="colLast">
+<div class="block">Supported types for <a href="TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptors</code></a>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="class-use/TestEngine.html#org.junit.platform.testkit">TestEngine</a></th>
+<td class="colLast">
+<div class="block">A <code>TestEngine</code> facilitates <em>discovery</em> and <em>execution</em> of
+ tests for a particular programming model.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="class-use/TestExecutionResult.html#org.junit.platform.testkit">TestExecutionResult</a></th>
+<td class="colLast">
+<div class="block">Result of executing a single test or container.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="class-use/TestExecutionResult.Status.html#org.junit.platform.testkit">TestExecutionResult.Status</a></th>
+<td class="colLast">
+<div class="block">Status of executing a single test or container.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="class-use/UniqueId.html#org.junit.platform.testkit">UniqueId</a></th>
+<td class="colLast">
+<div class="block"><code>UniqueId</code> encapsulates the creation, parsing, and display of unique IDs
+ for <a href="TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptors</code></a>.</div>
 </td>
 </tr>
 </tbody>

@@ -126,6 +126,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Public API for configuring and launching test plans.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="#org.junit.platform.testkit">org.junit.platform.testkit</a></th>
+<td class="colLast">
+<div class="block">Provides functionality for describing executions of a test, which is useful for meta-testing JUnit engine features.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </li>
@@ -214,6 +220,39 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">
 <div class="block">Called when additional test reporting data has been published for
  the supplied <a href="../../../launcher/TestIdentifier.html" title="class in org.junit.platform.launcher"><code>TestIdentifier</code></a>.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="org.junit.platform.testkit">
+<!--   -->
+</a>
+<h3>Uses of <a href="../ReportEntry.html" title="class in org.junit.platform.engine.reporting">ReportEntry</a> in <a href="../../../testkit/package-summary.html">org.junit.platform.testkit</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../../testkit/package-summary.html">org.junit.platform.testkit</a> with parameters of type <a href="../ReportEntry.html" title="class in org.junit.platform.engine.reporting">ReportEntry</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionEvent.</span><code><span class="memberNameLink"><a href="../../../testkit/ExecutionEvent.html#reportingEntryPublished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.reporting.ReportEntry)">reportingEntryPublished</a></span>&#8203;(<a href="../../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+                       <a href="../ReportEntry.html" title="class in org.junit.platform.engine.reporting">ReportEntry</a>&nbsp;entry)</code></th>
+<td class="colLast">
+<div class="block">Construct a new <a href="../../../testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> of type: <a href="../../../testkit/ExecutionEvent.Type.html#REPORTING_ENTRY_PUBLISHED"><code>ExecutionEvent.Type.REPORTING_ENTRY_PUBLISHED</code></a>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionRecorder.</span><code><span class="memberNameLink"><a href="../../../testkit/ExecutionRecorder.html#reportingEntryPublished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.reporting.ReportEntry)">reportingEntryPublished</a></span>&#8203;(<a href="../../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+                       <a href="../ReportEntry.html" title="class in org.junit.platform.engine.reporting">ReportEntry</a>&nbsp;entry)</code></th>
+<td class="colLast">
+<div class="block">Records an <a href="../../../testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> where a <a href="../ReportEntry.html" title="class in org.junit.platform.engine.reporting"><code>ReportEntry</code></a> was published.</div>
 </td>
 </tr>
 </tbody>

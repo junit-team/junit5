@@ -381,6 +381,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/console/options/Theme.html#skipped()">skipped()</a></span> - Method in enum org.junit.platform.console.options.<a href="../org/junit/platform/console/options/Theme.html" title="enum in org.junit.platform.console.options">Theme</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/TerminationInfo.html#skipped(java.lang.String)">skipped(String)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/TerminationInfo.html" title="class in org.junit.platform.testkit">TerminationInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Execution.html#skipped(org.junit.platform.engine.TestDescriptor,java.time.Instant,java.time.Instant,java.lang.String)">skipped(TestDescriptor, Instant, Instant, String)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit">Execution</a></dt>
+<dd>
+<div class="block">Constructs a new instance of an <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a> that was skipped with the provided
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>String</code></a> <code>skipReason</code>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEvent.Type.html#SKIPPED">SKIPPED</a></span> - org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit">ExecutionEvent.Type</a></dt>
+<dd>
+<div class="block">Called when the execution of a leaf or subtree of the test tree has been skipped.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEventConditions.html#skippedWithReason(java.lang.String)">skippedWithReason(String)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEventConditions.html" title="class in org.junit.platform.testkit">ExecutionEventConditions</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/condition/OS.html#SOLARIS">SOLARIS</a></span> - org.junit.jupiter.api.condition.<a href="../org/junit/jupiter/api/condition/OS.html" title="enum in org.junit.jupiter.api.condition">OS</a></dt>
 <dd>
 <div class="block">Oracle Solaris operating system.</div>
@@ -393,7 +406,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  used to match against fully qualified class names:
  "^(Test.*|.+[.$]Test.*|.*Tests?)$"</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEventConditions.html#started()">started()</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEventConditions.html" title="class in org.junit.platform.testkit">ExecutionEventConditions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEvent.Type.html#STARTED">STARTED</a></span> - org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit">ExecutionEvent.Type</a></dt>
+<dd>
+<div class="block">Called when the execution of a leaf or subtree of the test tree is about to be started.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/console/options/Theme.html#status(org.junit.platform.engine.TestExecutionResult)">status(TestExecutionResult)</a></span> - Method in enum org.junit.platform.console.options.<a href="../org/junit/platform/console/options/Theme.html" title="enum in org.junit.platform.console.options">Theme</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/TestExecutionResultConditions.html#status(org.junit.platform.engine.TestExecutionResult.Status)">status(TestExecutionResult.Status)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/TestExecutionResultConditions.html" title="class in org.junit.platform.testkit">TestExecutionResultConditions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/LauncherConstants.html#STDERR_REPORT_ENTRY_KEY">STDERR_REPORT_ENTRY_KEY</a></span> - Static variable in class org.junit.platform.launcher.<a href="../org/junit/platform/launcher/LauncherConstants.html" title="class in org.junit.platform.launcher">LauncherConstants</a></dt>
 <dd>
@@ -492,6 +513,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Determine if this provider supports providing invocation contexts for the
  test template method represented by the supplied <code>context</code>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/TestExecutionResultConditions.html#suppressed(int,org.assertj.core.api.Condition)">suppressed(int, Condition&lt;Throwable&gt;)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/TestExecutionResultConditions.html" title="class in org.junit.platform.testkit">TestExecutionResultConditions</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/parallel/Resources.html#SYSTEM_ERR">SYSTEM_ERR</a></span> - Static variable in class org.junit.jupiter.api.parallel.<a href="../org/junit/jupiter/api/parallel/Resources.html" title="class in org.junit.jupiter.api.parallel">Resources</a></dt>
 <dd>
 <div class="block">Represents the standard error stream of the current process.</div>

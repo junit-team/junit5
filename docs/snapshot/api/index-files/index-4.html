@@ -216,6 +216,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Discover tests according to the supplied <a href="../org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><code>EngineDiscoveryRequest</code></a>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/TestEngineSpy.html#discover(org.junit.platform.engine.EngineDiscoveryRequest,org.junit.platform.engine.UniqueId)">discover(EngineDiscoveryRequest, UniqueId)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/TestEngineSpy.html" title="class in org.junit.platform.testkit">TestEngineSpy</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/TestEngineStub.html#discover(org.junit.platform.engine.EngineDiscoveryRequest,org.junit.platform.engine.UniqueId)">discover(EngineDiscoveryRequest, UniqueId)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/TestEngineStub.html" title="class in org.junit.platform.testkit">TestEngineStub</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/vintage/engine/discovery/VintageDiscoverer.html#discover(org.junit.platform.engine.EngineDiscoveryRequest,org.junit.platform.engine.UniqueId)">discover(EngineDiscoveryRequest, UniqueId)</a></span> - Method in class org.junit.vintage.engine.discovery.<a href="../org/junit/vintage/engine/discovery/VintageDiscoverer.html" title="class in org.junit.vintage.engine.discovery">VintageDiscoverer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/vintage/engine/VintageTestEngine.html#discover(org.junit.platform.engine.EngineDiscoveryRequest,org.junit.platform.engine.UniqueId)">discover(EngineDiscoveryRequest, UniqueId)</a></span> - Method in class org.junit.vintage.engine.<a href="../org/junit/vintage/engine/VintageTestEngine.html" title="class in org.junit.vintage.engine">VintageTestEngine</a></dt>
@@ -231,6 +235,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">A <a href="../org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilter</code></a> is applied during test discovery to determine if
  a given container or test should be included in the test plan.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/TestEngineSpy.html#discoveryRequestForDiscovery">discoveryRequestForDiscovery</a></span> - Variable in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/TestEngineSpy.html" title="class in org.junit.platform.testkit">TestEngineSpy</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><span class="typeNameLink">DiscoverySelector</span></a> - Interface in <a href="../org/junit/platform/engine/package-summary.html">org.junit.platform.engine</a></dt>
 <dd>
 <div class="block">A selector defines what a <a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> can use to discover tests
@@ -259,6 +265,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Placeholder for the <a href="../org/junit/jupiter/api/TestInfo.html#getDisplayName()">display name</a> of a <code>@ParameterizedTest</code> method: <code>{displayName}</code></div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEventConditions.html#displayName(java.lang.String)">displayName(String)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEventConditions.html" title="class in org.junit.platform.testkit">ExecutionEventConditions</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="../org/junit/jupiter/api/DisplayName.html" title="annotation in org.junit.jupiter.api"><span class="typeNameLink">DisplayName</span></a> - Annotation Type in <a href="../org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a></dt>
 <dd>
 <div class="block"><code>@DisplayName</code> is used to declare a <a href="../org/junit/jupiter/api/DisplayName.html#value()">custom display
@@ -308,6 +316,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.html#DYNAMIC_CONTAINER_SEGMENT_TYPE">DYNAMIC_CONTAINER_SEGMENT_TYPE</a></span> - Static variable in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestFactoryTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEvent.Type.html#DYNAMIC_TEST_REGISTERED">DYNAMIC_TEST_REGISTERED</a></span> - org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit">ExecutionEvent.Type</a></dt>
+<dd>
+<div class="block">Called when a new, dynamic <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has been registered.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.html#DYNAMIC_TEST_SEGMENT_TYPE">DYNAMIC_TEST_SEGMENT_TYPE</a></span> - Static variable in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestFactoryTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/DynamicContainer.html#dynamicContainer(java.lang.String,java.lang.Iterable)">dynamicContainer(String, Iterable&lt;? extends DynamicNode&gt;)</a></span> - Static method in class org.junit.jupiter.api.<a href="../org/junit/jupiter/api/DynamicContainer.html" title="class in org.junit.jupiter.api">DynamicContainer</a></dt>
@@ -355,10 +367,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">A <code>DynamicTest</code> is a test case generated at runtime.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEventConditions.html#dynamicTestRegistered(java.lang.String)">dynamicTestRegistered(String)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEventConditions.html" title="class in org.junit.platform.testkit">ExecutionEventConditions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEventConditions.html#dynamicTestRegistered(org.assertj.core.api.Condition)">dynamicTestRegistered(Condition&lt;ExecutionEvent&gt;)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEventConditions.html" title="class in org.junit.platform.testkit">ExecutionEventConditions</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/EngineExecutionListener.html#dynamicTestRegistered(org.junit.platform.engine.TestDescriptor)">dynamicTestRegistered(TestDescriptor)</a></span> - Method in interface org.junit.platform.engine.<a href="../org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a></dt>
 <dd>
 <div class="block">Must be called when a new, dynamic <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has been
  registered.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEvent.html#dynamicTestRegistered(org.junit.platform.engine.TestDescriptor)">dynamicTestRegistered(TestDescriptor)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a></dt>
+<dd>
+<div class="block">Construct a new <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> of type: <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html#DYNAMIC_TEST_REGISTERED"><code>ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionRecorder.html#dynamicTestRegistered(org.junit.platform.engine.TestDescriptor)">dynamicTestRegistered(TestDescriptor)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionRecorder.html" title="class in org.junit.platform.testkit">ExecutionRecorder</a></dt>
+<dd>
+<div class="block">Records an <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> where a dynamic test was registered.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/LoggingListener.html#dynamicTestRegistered(org.junit.platform.launcher.TestIdentifier)">dynamicTestRegistered(TestIdentifier)</a></span> - Method in class org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/LoggingListener.html" title="class in org.junit.platform.launcher.listeners">LoggingListener</a></dt>
 <dd>&nbsp;</dd>
