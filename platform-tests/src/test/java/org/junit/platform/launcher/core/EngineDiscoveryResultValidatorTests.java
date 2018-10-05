@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.test.TestDescriptorStub;
+import org.junit.platform.testkit.TestDescriptorStub;
 
 /**
  * @since 1.3

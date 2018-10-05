@@ -22,7 +22,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
-import org.junit.platform.engine.test.TestDescriptorStub;
+import org.junit.platform.testkit.TestDescriptorStub;
 
 /**
  * @since 1.0

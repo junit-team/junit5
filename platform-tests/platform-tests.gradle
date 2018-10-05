@@ -23,7 +23,7 @@ dependencies {
 
 	// --- Things we are testing with ---------------------------------------------
 	testImplementation(project(':junit-platform-runner'))
-	testImplementation(project(path: ':junit-platform-engine', configuration: 'testArtifacts'))
+	testImplementation(project(':junit-platform-testkit'))
 	testImplementation(project(path: ':junit-jupiter-engine', configuration: 'testArtifacts'))
 	testImplementation("org.apiguardian:apiguardian-api:${apiGuardianVersion}")
 

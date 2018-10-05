@@ -20,8 +20,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.ExecutionsResult;
 
 /**
  * Integration tests that very proper handling of invalid configuration for
@@ -58,16 +58,16 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCase.class),
 			selectClass(invalidTestClass)).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
 
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(3, eventRecorder.getContainerStartedCount(), "# containers started"),
-			() -> assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed"),
-			() -> assertEquals(3, eventRecorder.getContainerFinishedCount(), "# containers finished"),
-			() -> assertEquals(1, eventRecorder.getContainerFailedCount(), "# containers failed")
+			() -> assertEquals(3, executionsResult.getContainerStartedCount(), "# containers started"),
+			() -> assertEquals(1, executionsResult.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed"),
+			() -> assertEquals(3, executionsResult.getContainerFinishedCount(), "# containers finished"),
+			() -> assertEquals(1, executionsResult.getContainerFailedCount(), "# containers failed")
 		);
 		// @formatter:on
 	}

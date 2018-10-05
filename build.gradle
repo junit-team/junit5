@@ -38,7 +38,8 @@ ext {
 		'junit-platform-engine',
 		'junit-platform-launcher',
 		'junit-platform-runner',
-		'junit-platform-suite-api'
+		'junit-platform-suite-api',
+		'junit-platform-testkit'
 	]
 
 	jupiterProjects = [

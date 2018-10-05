@@ -21,8 +21,8 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.ExecutionRecorder;
 
 /**
  * Abstract base class for tests involving the {@link JupiterTestEngine}.
@@ -33,19 +33,19 @@ public abstract class AbstractJupiterTestEngineTests {
 
 	private final JupiterTestEngine engine = new JupiterTestEngine();
 
-	protected ExecutionEventRecorder executeTestsForClass(Class<?> testClass) {
+	protected ExecutionRecorder executeTestsForClass(Class<?> testClass) {
 		return executeTests(selectClass(testClass));
 	}
 
-	protected ExecutionEventRecorder executeTests(DiscoverySelector... selectors) {
+	protected ExecutionRecorder executeTests(DiscoverySelector... selectors) {
 		return executeTests(request().selectors(selectors).build());
 	}
 
-	protected ExecutionEventRecorder executeTests(LauncherDiscoveryRequest request) {
+	protected ExecutionRecorder executeTests(LauncherDiscoveryRequest request) {
 		TestDescriptor testDescriptor = discoverTests(request);
-		ExecutionEventRecorder eventRecorder = new ExecutionEventRecorder();
-		engine.execute(new ExecutionRequest(testDescriptor, eventRecorder, request.getConfigurationParameters()));
-		return eventRecorder;
+		ExecutionRecorder executionRecorder = new ExecutionRecorder();
+		engine.execute(new ExecutionRequest(testDescriptor, executionRecorder, request.getConfigurationParameters()));
+		return executionRecorder;
 	}
 
 	protected TestDescriptor discoverTests(DiscoverySelector... selectors) {

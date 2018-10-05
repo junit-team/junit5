@@ -13,14 +13,12 @@ package org.junit.jupiter.engine.extension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.displayName;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-
-import java.util.List;
+import static org.junit.platform.testkit.ExecutionEventConditions.container;
+import static org.junit.platform.testkit.ExecutionEventConditions.displayName;
+import static org.junit.platform.testkit.ExecutionEventConditions.event;
+import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.TestExecutionResultConditions.message;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -31,8 +29,8 @@ import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.test.event.ExecutionEvent;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.testkit.ExecutionRecorder;
+import org.junit.platform.testkit.ExecutionsResult;
 
 /**
  * Integration tests for {@link RepeatedTest @RepeatedTest} and supporting
@@ -130,38 +128,38 @@ class RepeatedTestTests {
 
 	@RepeatedTest(1)
 	void failsContainerOnEmptyPattern() {
-		List<ExecutionEvent> executionEvents = execute(selectMethod(TestCase.class, "testWithEmptyPattern"));
-		assertThat(executionEvents) //
+		ExecutionsResult executionsResult = execute(selectMethod(TestCase.class, "testWithEmptyPattern"));
+		assertThat(executionsResult.getExecutionEvents()) //
 				.haveExactly(1, event(container(), displayName("testWithEmptyPattern()"), //
 					finishedWithFailure(message(value -> value.contains("must be declared with a non-empty name")))));
 	}
 
 	@RepeatedTest(1)
 	void failsContainerOnBlankPattern() {
-		List<ExecutionEvent> executionEvents = execute(selectMethod(TestCase.class, "testWithBlankPattern"));
-		assertThat(executionEvents) //
+		ExecutionsResult executionsResult = execute(selectMethod(TestCase.class, "testWithBlankPattern"));
+		assertThat(executionsResult.getExecutionEvents()) //
 				.haveExactly(1, event(container(), displayName("testWithBlankPattern()"), //
 					finishedWithFailure(message(value -> value.contains("must be declared with a non-empty name")))));
 	}
 
 	@RepeatedTest(1)
 	void failsContainerOnNegativeRepeatCount() {
-		List<ExecutionEvent> executionEvents = execute(selectMethod(TestCase.class, "negativeRepeatCount"));
-		assertThat(executionEvents) //
+		ExecutionsResult executionsResult = execute(selectMethod(TestCase.class, "negativeRepeatCount"));
+		assertThat(executionsResult.getExecutionEvents()) //
 				.haveExactly(1, event(container(), displayName("negativeRepeatCount()"), //
 					finishedWithFailure(message(value -> value.contains("must be declared with a positive 'value'")))));
 	}
 
 	@RepeatedTest(1)
 	void failsContainerOnZeroRepeatCount() {
-		List<ExecutionEvent> executionEvents = execute(selectMethod(TestCase.class, "zeroRepeatCount"));
-		assertThat(executionEvents) //
+		ExecutionsResult executionsResult = execute(selectMethod(TestCase.class, "zeroRepeatCount"));
+		assertThat(executionsResult.getExecutionEvents()) //
 				.haveExactly(1, event(container(), displayName("zeroRepeatCount()"), //
 					finishedWithFailure(message(value -> value.contains("must be declared with a positive 'value'")))));
 	}
 
-	private List<ExecutionEvent> execute(DiscoverySelector... selectors) {
-		return ExecutionEventRecorder.execute(new JupiterTestEngine(), request().selectors(selectors).build());
+	private ExecutionsResult execute(DiscoverySelector... selectors) {
+		return ExecutionRecorder.execute(new JupiterTestEngine(), request().selectors(selectors).build());
 	}
 
 	static class TestCase {

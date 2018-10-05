@@ -22,8 +22,8 @@ import java.io.StringWriter;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
-import org.junit.platform.engine.test.TestDescriptorStub;
 import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.testkit.TestDescriptorStub;
 
 /**
  * @since 1.0

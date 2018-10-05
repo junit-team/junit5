@@ -29,6 +29,6 @@ dependencies {
 
 	testImplementation(project(":junit-platform-launcher"))
 	testImplementation(project(":junit-platform-runner"))
-	testImplementation(project(path = ":junit-platform-engine", configuration = "testArtifacts"))
+	testImplementation(project(":junit-platform-testkit"))
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
 }

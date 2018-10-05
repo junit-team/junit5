@@ -19,12 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.testkit.ExecutionEventConditions.event;
+import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.ExecutionEventConditions.test;
+import static org.junit.platform.testkit.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.TestExecutionResultConditions.message;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -49,8 +49,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.test.event.ExecutionEvent;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.testkit.ExecutionEvent;
+import org.junit.platform.testkit.ExecutionRecorder;
 
 /**
  * Integration tests for {@link ArgumentsAccessor}, {@link AggregateWith},
@@ -199,7 +199,8 @@ public class AggregatorIntegrationTests {
 	}
 
 	private List<ExecutionEvent> execute(DiscoverySelector... selectors) {
-		return ExecutionEventRecorder.execute(new JupiterTestEngine(), request().selectors(selectors).build());
+		return ExecutionRecorder.execute(new JupiterTestEngine(),
+			request().selectors(selectors).build()).getExecutionEvents();
 	}
 
 	// -------------------------------------------------------------------------

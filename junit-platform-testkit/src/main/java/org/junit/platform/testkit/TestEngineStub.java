@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.engine.test;
+package org.junit.platform.testkit;
 
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
@@ -19,33 +19,30 @@ import org.junit.platform.engine.UniqueId;
 /**
  * @since 1.0
  */
-public class TestEngineSpy implements TestEngine {
+public class TestEngineStub implements TestEngine {
 
-	public static final String ID = TestEngineSpy.class.getSimpleName();
+	private final String id;
 
-	public EngineDiscoveryRequest discoveryRequestForDiscovery;
-	public UniqueId uniqueIdForDiscovery;
-	public ExecutionRequest requestForExecution;
+	public TestEngineStub() {
+		this(TestEngineStub.class.getSimpleName());
+	}
+
+	public TestEngineStub(String id) {
+		this.id = id;
+	}
 
 	@Override
 	public String getId() {
-		return ID;
+		return this.id;
 	}
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		this.discoveryRequestForDiscovery = discoveryRequest;
-		this.uniqueIdForDiscovery = uniqueId;
-
-		UniqueId engineUniqueId = UniqueId.forEngine(ID);
-		TestDescriptorStub engineDescriptor = new TestDescriptorStub(engineUniqueId, ID);
-		TestDescriptorStub testDescriptor = new TestDescriptorStub(engineUniqueId.append("test", "test"), "test");
-		engineDescriptor.addChild(testDescriptor);
-		return engineDescriptor;
+		return new TestDescriptorStub(UniqueId.forEngine(getId()), getId());
 	}
 
 	@Override
 	public void execute(ExecutionRequest request) {
-		this.requestForExecution = request;
 	}
+
 }

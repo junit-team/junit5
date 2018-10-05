@@ -24,8 +24,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.platform.commons.util.PreconditionViolationException;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.ExecutionsResult;
 
 /**
  * @since 5.0
@@ -36,13 +36,12 @@ class ReportingTests extends AbstractJupiterTestEngineTests {
 	void reportEntriesArePublished() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(MyReportingTestCase.class)).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
 
-		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
-
-		assertEquals(7, eventRecorder.getReportingEntryPublishedCount(), "# report entries published");
+		assertEquals(2, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(2, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed");
+		assertEquals(7, executionsResult.getReportingEntryPublishedCount(), "# report entries published");
 	}
 
 	static class MyReportingTestCase {

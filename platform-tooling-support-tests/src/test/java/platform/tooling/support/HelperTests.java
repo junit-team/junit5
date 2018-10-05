@@ -31,6 +31,7 @@ class HelperTests {
 			"junit-platform-commons", //
 			"junit-platform-console", //
 			"junit-platform-engine", //
+			"junit-platform-testkit", //
 			"junit-platform-launcher", //
 			"junit-platform-runner", //
 			"junit-platform-suite-api", //

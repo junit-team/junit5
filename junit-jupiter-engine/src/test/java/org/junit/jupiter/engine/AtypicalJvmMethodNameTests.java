@@ -18,7 +18,7 @@ import static org.junit.jupiter.engine.kotlin.ArbitraryNamingKotlinTestCase.METH
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.kotlin.ArbitraryNamingKotlinTestCase;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.testkit.ExecutionsResult;
 
 /**
  * Integration tests for JVM languages that allow special characters
@@ -31,15 +31,16 @@ class AtypicalJvmMethodNameTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void kotlinTestWithMethodNameContainingSpecialCharacters() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(ArbitraryNamingKotlinTestCase.class);
-		assertThat(eventRecorder.getTestFinishedCount()).isEqualTo(2);
+		ExecutionsResult executionsResult = executeTestsForClass(
+			ArbitraryNamingKotlinTestCase.class).getExecutionsResult();
+		assertThat(executionsResult.getTestStartedCount()).isEqualTo(2);
 
-		TestDescriptor testDescriptor1 = eventRecorder.getSuccessfulTestFinishedEvents().get(0).getTestDescriptor();
+		TestDescriptor testDescriptor1 = executionsResult.getSuccessfulTestFinishedEvents().get(0).getTestDescriptor();
 		assertAll(//
 			() -> assertEquals(METHOD_NAME + "()", testDescriptor1.getDisplayName()), //
 			() -> assertEquals(METHOD_NAME + "()", testDescriptor1.getLegacyReportingName()));
 
-		TestDescriptor testDescriptor2 = eventRecorder.getSuccessfulTestFinishedEvents().get(1).getTestDescriptor();
+		TestDescriptor testDescriptor2 = executionsResult.getSuccessfulTestFinishedEvents().get(1).getTestDescriptor();
 		assertAll(//
 			() -> assertEquals("test name ends with parentheses()()", testDescriptor2.getDisplayName()), //
 			() -> assertEquals("test name ends with parentheses()()", testDescriptor2.getLegacyReportingName()));

@@ -17,13 +17,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.testkit.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.platform.testkit.ExecutionEventConditions.event;
+import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.ExecutionEventConditions.test;
+import static org.junit.platform.testkit.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.TestExecutionResultConditions.message;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -53,7 +53,7 @@ import org.junit.jupiter.engine.execution.injection.sample.NumberParameterResolv
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveArrayParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveIntegerParameterResolver;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.testkit.ExecutionsResult;
 
 /**
  * Integration tests that verify support for {@link ParameterResolver}
@@ -65,45 +65,47 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void constructorInjection() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(ConstructorInjectionTestCase.class);
+		ExecutionsResult executionsResult = executeTestsForClass(
+			ConstructorInjectionTestCase.class).getExecutionsResult();
 
-		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(2, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(2, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
 	void constructorInjectionWithAnnotatedParameter() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(
-			AnnotatedParameterConstructorInjectionTestCase.class);
+		ExecutionsResult executionsResult = executeTestsForClass(
+			AnnotatedParameterConstructorInjectionTestCase.class).getExecutionsResult();
 
-		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(2, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(2, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
 	void executeTestsForMethodInjectionCases() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(MethodInjectionTestCase.class);
+		ExecutionsResult executionsResult = executeTestsForClass(MethodInjectionTestCase.class).getExecutionsResult();
 
-		assertEquals(7, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(6, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(7, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(6, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(1, executionsResult.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
 	void executeTestsForNullValuedMethodInjectionCases() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(NullMethodInjectionTestCase.class);
+		ExecutionsResult executionsResult = executeTestsForClass(
+			NullMethodInjectionTestCase.class).getExecutionsResult();
 
-		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(2, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, executionsResult.getTestFailedCount(), "# tests failed");
 
 		// @formatter:off
 		Predicate<String> expectations = s ->
@@ -111,7 +113,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 				s.contains("resolved a null value for parameter") &&
 				s.contains("but a primitive of type [int] is required");
 
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getFailedTestFinishedEvents(),
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getFailedTestFinishedEvents(),
 			event(
 				test("injectPrimitive"),
 				finishedWithFailure(allOf(isA(ParameterResolutionException.class), message(expectations)))
@@ -121,30 +123,32 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestsForPrimitiveIntegerMethodInjectionCases() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(PrimitiveIntegerMethodInjectionTestCase.class);
+		ExecutionsResult executionsResult = executeTestsForClass(
+			PrimitiveIntegerMethodInjectionTestCase.class).getExecutionsResult();
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
 	void executeTestsForPrimitiveArrayMethodInjectionCases() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(PrimitiveArrayMethodInjectionTestCase.class);
+		ExecutionsResult executionsResult = executeTestsForClass(
+			PrimitiveArrayMethodInjectionTestCase.class).getExecutionsResult();
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
 	void executeTestsForPotentiallyIncompatibleTypeMethodInjectionCases() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(
-			PotentiallyIncompatibleTypeMethodInjectionTestCase.class);
+		ExecutionsResult executionsResult = executeTestsForClass(
+			PotentiallyIncompatibleTypeMethodInjectionTestCase.class).getExecutionsResult();
 
-		assertEquals(3, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(3, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(2, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, executionsResult.getTestFailedCount(), "# tests failed");
 
 		// @formatter:off
 		Predicate<String> expectations = s ->
@@ -152,7 +156,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 				s.contains("resolved a value of type [java.lang.Integer]") &&
 				s.contains("but a value assignment compatible with [java.lang.Double] is required");
 
-		assertRecordedExecutionEventsContainsExactly(eventRecorder.getFailedTestFinishedEvents(),
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getFailedTestFinishedEvents(),
 			event(
 				test("doubleParameterInjection"),
 				finishedWithFailure(allOf(isA(ParameterResolutionException.class), message(expectations)
@@ -162,40 +166,43 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestsForMethodInjectionInBeforeAndAfterEachMethods() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class);
+		ExecutionsResult executionsResult = executeTestsForClass(
+			BeforeAndAfterMethodInjectionTestCase.class).getExecutionsResult();
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
 	void executeTestsForMethodInjectionInBeforeAndAfterAllMethods() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(BeforeAndAfterAllMethodInjectionTestCase.class);
+		ExecutionsResult executionsResult = executeTestsForClass(
+			BeforeAndAfterAllMethodInjectionTestCase.class).getExecutionsResult();
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
 	void executeTestsForMethodWithExtendWithAnnotation() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(ExtendWithOnMethodTestCase.class);
+		ExecutionsResult executionsResult = executeTestsForClass(
+			ExtendWithOnMethodTestCase.class).getExecutionsResult();
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
 	void executeTestsForParameterizedTypesSelectingByClass() {
-		assertEventsForParameterizedTypes(executeTestsForClass(ParameterizedTypeTestCase.class));
+		assertEventsForParameterizedTypes(executeTestsForClass(ParameterizedTypeTestCase.class).getExecutionsResult());
 	}
 
 	@Test
@@ -203,7 +210,8 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		String fqmn = ReflectionUtils.getFullyQualifiedMethodName(ParameterizedTypeTestCase.class, "testMapOfStrings",
 			Map.class);
 
-		assertEventsForParameterizedTypes(executeTests(request().selectors(selectMethod(fqmn)).build()));
+		assertEventsForParameterizedTypes(
+			executeTests(request().selectors(selectMethod(fqmn)).build()).getExecutionsResult());
 	}
 
 	@Disabled("Disabled until a decision has been made regarding #956")
@@ -214,15 +222,16 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		String fqmn = String.format("%s#%s(%s)", ParameterizedTypeTestCase.class.getName(), "testMapOfStrings",
 			genericParameterTypeName);
 
-		assertEventsForParameterizedTypes(executeTests(request().selectors(selectMethod(fqmn)).build()));
+		assertEventsForParameterizedTypes(
+			executeTests(request().selectors(selectMethod(fqmn)).build()).getExecutionsResult());
 	}
 
-	private void assertEventsForParameterizedTypes(ExecutionEventRecorder eventRecorder) {
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+	private void assertEventsForParameterizedTypes(ExecutionsResult executionsResult) {
+		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed");
 	}
 
 	// -------------------------------------------------------------------
