@@ -26,7 +26,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 public class Heavyweight implements ParameterResolver, BeforeEachCallback {
 
 	@Override
-	public void beforeEach(ExtensionContext context) throws Exception {
+	public void beforeEach(ExtensionContext context) {
 		context.getStore(ExtensionContext.Namespace.GLOBAL).put("once", new CloseableOnlyOnceResource());
 	}
 

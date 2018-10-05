@@ -86,7 +86,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void discoverMultipleMethodsOfSameClass() throws NoSuchMethodException {
+	void discoverMultipleMethodsOfSameClass() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(LocalTestCase.class, "test1"),
 			selectMethod(LocalTestCase.class, "test2")).build();
 

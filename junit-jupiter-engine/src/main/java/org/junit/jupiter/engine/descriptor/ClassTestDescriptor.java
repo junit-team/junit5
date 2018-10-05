@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.createDisplayNameSupplierForClass;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromFields;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterAllMethods;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -49,7 +51,6 @@ import org.junit.jupiter.engine.execution.TestInstanceProvider;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.BlacklistedExceptions;
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -85,14 +86,12 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private List<Method> afterAllMethods;
 
 	public ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, ConfigurationParameters configurationParameters) {
-		this(uniqueId, ClassTestDescriptor::generateDefaultDisplayName, testClass, configurationParameters);
+		this(uniqueId, testClass, createDisplayNameSupplierForClass(testClass), configurationParameters);
 	}
 
-	protected ClassTestDescriptor(UniqueId uniqueId, Function<Class<?>, String> defaultDisplayNameGenerator,
-			Class<?> testClass, ConfigurationParameters configurationParameters) {
-
-		super(uniqueId, determineDisplayName(Preconditions.notNull(testClass, "Class must not be null"),
-			defaultDisplayNameGenerator), ClassSource.from(testClass));
+	ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, Supplier<String> displayNameSupplier,
+			ConfigurationParameters configurationParameters) {
+		super(uniqueId, testClass, displayNameSupplier, ClassSource.from(testClass));
 
 		this.testClass = testClass;
 		this.tags = getTags(testClass);
@@ -119,12 +118,6 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	@Override
 	public String getLegacyReportingName() {
 		return this.testClass.getName();
-	}
-
-	private static String generateDefaultDisplayName(Class<?> testClass) {
-		String name = testClass.getName();
-		int index = name.lastIndexOf('.');
-		return name.substring(index + 1);
 	}
 
 	// --- Node ----------------------------------------------------------------

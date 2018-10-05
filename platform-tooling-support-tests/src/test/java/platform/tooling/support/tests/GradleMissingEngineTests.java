@@ -12,6 +12,7 @@ package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -36,9 +37,9 @@ class GradleMissingEngineTests {
 	}
 
 	@Test
-	@EnabledOnJre(JRE.JAVA_10)
-	void gradle_4_7() {
-		test(Gradle.install("4.7", Paths.get("build", "test-tools")), "4.7");
+	@EnabledOnJre(JRE.JAVA_11)
+	void gradle_4_10_2() {
+		test(Gradle.install("4.10.2", Paths.get("build", "test-tools")), "4.10.2");
 	}
 
 	private void test(Tool gradle, String version) {
@@ -50,6 +51,8 @@ class GradleMissingEngineTests {
 				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
 				.build() //
 				.run();
+
+		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
 		assertEquals(1, result.getExitCode(), result.toString());
 		assertLinesMatch(List.of( //

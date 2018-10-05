@@ -106,7 +106,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@Test
-	void parseInvalidDetails() throws Exception {
+	void parseInvalidDetails() {
 		assertOptionWithMissingRequiredArgumentThrowsException("--details");
 	}
 
@@ -125,7 +125,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@Test
-	void parseInvalidDetailsTheme() throws Exception {
+	void parseInvalidDetailsTheme() {
 		assertOptionWithMissingRequiredArgumentThrowsException("--details-theme");
 	}
 
@@ -160,12 +160,12 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@Test
-	void parseInvalidIncludeClassNamePatterns() throws Exception {
+	void parseInvalidIncludeClassNamePatterns() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-n", "--include-classname");
 	}
 
 	@Test
-	void parseInvalidExcludeClassNamePatterns() throws Exception {
+	void parseInvalidExcludeClassNamePatterns() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-N", "--exclude-classname");
 	}
 
@@ -248,7 +248,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@Test
-	void parseInvalidIncludedEngines() throws Exception {
+	void parseInvalidIncludedEngines() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-e", "--include-engine");
 	}
 
@@ -265,7 +265,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@Test
-	void parseInvalidExcludedEngines() throws Exception {
+	void parseInvalidExcludedEngines() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-E", "--exclude-engine");
 	}
 
@@ -307,7 +307,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@Test
-	void parseInvalidXmlReportsDirs() throws Exception {
+	void parseInvalidXmlReportsDirs() {
 		assertOptionWithMissingRequiredArgumentThrowsException("--reports-dir");
 	}
 

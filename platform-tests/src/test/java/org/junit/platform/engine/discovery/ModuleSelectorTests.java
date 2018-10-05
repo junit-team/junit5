@@ -22,7 +22,7 @@ import org.junit.platform.AbstractEqualsAndHashCodeTests;
 class ModuleSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
-	void equalsAndHashCode() throws Exception {
+	void equalsAndHashCode() {
 		var selector1 = new ModuleSelector("foo-api");
 		var selector2 = new ModuleSelector("foo-api");
 		var selector3 = new ModuleSelector("bar-impl");

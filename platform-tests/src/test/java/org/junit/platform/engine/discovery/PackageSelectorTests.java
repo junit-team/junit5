@@ -22,7 +22,7 @@ import org.junit.platform.AbstractEqualsAndHashCodeTests;
 class PackageSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
-	void equalsAndHashCode() throws Exception {
+	void equalsAndHashCode() {
 		var selector1 = new PackageSelector("org.example.foo");
 		var selector2 = new PackageSelector("org.example.foo");
 		var selector3 = new PackageSelector("org.example.bar");

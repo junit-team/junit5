@@ -1,23 +1,14 @@
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
-buildscript {
-	dependencies {
-		classpath('gradle.plugin.de.obqo.gradle:gradle-degraph:0.1.4.1') {
-			exclude(group: 'org.codehaus.groovy')
-			because('https://github.com/obecker/gradle-degraph/issues/3')
-		}
-	}
-}
-
 plugins {
 	id 'com.gradle.build-scan' version '1.16'
 	id 'net.nemerosa.versioning' version '2.7.1'
 	id 'com.github.ben-manes.versions' version '0.20.0' apply false
-	id 'com.diffplug.gradle.spotless' version '3.14.0' apply false
+	id 'com.diffplug.gradle.spotless' version '3.15.0' apply false
 	id 'org.ajoberstar.git-publish' version '1.0.1' apply false
-	id 'org.jetbrains.kotlin.jvm' version '1.2.70' apply false
-	id 'com.github.johnrengelman.shadow' version '2.0.4' apply false
+	id 'org.jetbrains.kotlin.jvm' version '1.2.71' apply false
+	id 'com.github.johnrengelman.shadow' version '4.0.1' apply false
 }
 
 buildScan {
@@ -48,7 +39,6 @@ ext {
 		'junit-platform-launcher',
 		'junit-platform-runner',
 		'junit-platform-suite-api',
-		'junit-platform-surefire-provider',
 		'junit-platform-testkit'
 	]
 
@@ -65,32 +55,17 @@ ext {
 
 	mavenizedProjects = platformProjects + jupiterProjects + vintageProjects
 
-	licenses = [
-		'EPL-2.0': [
-			name: 'Eclipse Public License v2.0',
-			url: 'http://www.eclipse.org/legal/epl-v20.html',
-			headerFile: 'eclipse-public-license-2.0.java'
-		],
-		'Apache-2.0': [
-			name: 'The Apache License, Version 2.0',
-			url: 'http://www.apache.org/licenses/LICENSE-2.0.txt',
-			headerFile: 'apache-license-2.0.java'
-		]
+	license = [
+		name: 'Eclipse Public License v2.0',
+		url: 'http://www.eclipse.org/legal/epl-v20.html',
+		headerFile: 'eclipse-public-license-2.0.java'
 	]
-
-	licenseOf = { project -> licenses[
-		project.name == 'junit-platform-surefire-provider'
-			? 'Apache-2.0'
-			: 'EPL-2.0'
-		]
-	}
 
 	jacocoTestProjects = [
 		'junit-jupiter-engine',
 		'junit-jupiter-migrationsupport',
 		'junit-jupiter-params',
 		'junit-vintage-engine',
-		'junit-platform-surefire-provider',
 		'platform-tests'
 	]
 	jacocoCoveredProjects = mavenizedProjects - ['junit-platform-console-standalone']
@@ -106,7 +81,6 @@ allprojects { subproj ->
 	apply plugin: 'com.diffplug.gradle.spotless'
 	apply plugin: 'checkstyle'
 	apply plugin: 'com.github.ben-manes.versions' // gradle dependencyUpdates
-	apply plugin: 'de.obqo.gradle.degraph'
 
 	if (project.hasProperty('enableJaCoCo')) {
 		apply plugin: 'jacoco'
@@ -177,16 +151,6 @@ allprojects { subproj ->
 	}
 	checkstyleTest {
 		configFile = rootProject.file('src/checkstyle/checkstyleTest.xml')
-	}
-
-	degraph {
-		sourceSets sourceSets.main
-		including 'org.junit.platform.**', 'org.junit.vintage.**', 'org.junit.jupiter.**'
-		slicings {
-			module {
-				patterns "org.junit.(*.*).**"
-			}
-		}
 	}
 }
 
@@ -267,11 +231,8 @@ subprojects { subproj ->
 		}
 
 		tasks.withType(Jar) {
-			from(project.projectDir) {
-				include 'LICENSE.md'
-				into 'META-INF'
-			}
 			from(project.rootDir) {
+				include 'LICENSE.md'
 				include 'LICENSE-notice.md'
 				into 'META-INF'
 			}
@@ -363,7 +324,7 @@ subprojects { subproj ->
 	}
 
 	spotless {
-		def headerFile = rootProject.file('src/spotless/' + licenseOf(project)['headerFile'])
+		def headerFile = rootProject.file('src/spotless/' + license['headerFile'])
 		def importOrderConfigFile = rootProject.file('src/eclipse/junit-eclipse.importorder')
 		def javaFormatterConfigFile = rootProject.file('src/eclipse/junit-eclipse-formatter-settings.xml')
 

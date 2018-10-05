@@ -10,8 +10,7 @@
 
 ### Project Licenses
 
-- `junit-platform-surefire-provider` uses [Apache License v2.0](junit-platform-surefire-provider/LICENSE.md)
-- All other modules use [Eclipse Public License v2.0](junit-jupiter-api/LICENSE.md).
+- All modules use [Eclipse Public License v2.0](junit-jupiter-api/LICENSE.md).
 
 ## Commit Messages
 

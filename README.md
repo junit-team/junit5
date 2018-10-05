@@ -32,16 +32,14 @@ Ask JUnit 5 related questions on [StackOverflow] or chat with the team and the c
 
 ## Continuous Integration Builds
 
-| CI Server | OS      | Status | Description |
-| --------- | ------- | ------ | ----------- |
-| Jenkins   | Linux   | [![Build Status](https://junit.ci.cloudbees.com/job/JUnit5/job/master/badge/icon)](https://junit.ci.cloudbees.com/blue/organizations/jenkins/JUnit5/branches/) | Official CI build server for JUnit 5 |
-| Travis CI | Linux   | [![Travis CI build status](https://travis-ci.org/junit-team/junit5.svg?branch=master)](https://travis-ci.org/junit-team/junit5) | Used to perform quick checks on submitted pull requests and for build matrices including JDK 8 and JDK 9 early access builds |
-| AppVeyor  | Windows | [![Build status](https://ci.appveyor.com/api/projects/status/xv8wc8w9sr44ghc4/branch/master?svg=true)](https://ci.appveyor.com/project/marcphilipp/junit5/branch/master) | Used to ensure that JUnit 5 can be built on Windows |
+| CI Server | OS           | Status | Description |
+| --------- | ------------ | ------ | ----------- |
+| Travis CI | Linux, macOS | [![Travis CI build status](https://travis-ci.org/junit-team/junit5.svg?branch=master)](https://travis-ci.org/junit-team/junit5) | Official CI build server for JUnit 5. Used to perform quick checks on submitted pull requests and for build matrices including the latest released OpenJDK and early access builds of the next OpenJDK |
+| AppVeyor  | Windows      | [![Build status](https://ci.appveyor.com/api/projects/status/xv8wc8w9sr44ghc4/branch/master?svg=true)](https://ci.appveyor.com/project/marcphilipp/junit5/branch/master) | Used to ensure that JUnit 5 can be built on Windows |
 
 ## Code Coverage
 
-Code coverage using [JaCoCo] for the latest build is available on the [Jenkins CI server]
-and on [Codecov].
+Code coverage using [JaCoCo] for the latest build is available on [Codecov].
 
 A code coverage report can also be generated locally via the [Gradle Wrapper] by
 executing `gradlew -PenableJaCoCo clean jacocoRootReport`. The results will be available
@@ -49,11 +47,8 @@ in `build/reports/jacoco/jacocoRootReport/html/index.html`.
 
 ## Gradle Build Scans
 
-JUnit 5 utilizes [Gradle's](https://gradle.com/) support for _Build Scans_. An example
-build scan for JUnit 5 can be viewed [here](https://scans.gradle.com/s/pgjgssca2kkli).
-Note, however, that the number of listed tests only reflects the Spock tests within the
-JUnit 5 test suite. To see a full representation of the number of tests executed per
-project, click on "See console output" on the build scan page.
+JUnit 5 utilizes [Gradle's](https://gradle.org/) support for _Build Scans_. An example
+build scan for JUnit 5 can be viewed [here](https://scans.gradle.com/s/bl3pw4mrbgsao).
 
 ## Building from Source
 
@@ -97,7 +92,6 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
   - `junit-platform-launcher` (`org.junit.platform.launcher`)
   - `junit-platform-runner` (`org.junit.platform.runner`)
   - `junit-platform-suite-api` (`org.junit.platform.suite.api`)
-  - `junit-platform-surefire-provider` (`org.junit.platform.surefire.provider`)
 
 ### JUnit Jupiter
 
@@ -152,8 +146,6 @@ as it is not intended to be used as a module.
 [JaCoCo]: http://www.eclemma.org/jacoco/
 [Javadoc]: https://junit.org/junit5/docs/current/api/
 [JDK-10]: http://jdk.java.net/10/
-[Jenkins CI server]: https://junit.ci.cloudbees.com/job/JUnit5/job/master/lastSuccessfulBuild/artifact/build/reports/jacoco/jacocoRootReport/html/index.html
-[Prototype]: https://github.com/junit-team/junit5/wiki/Prototype
 [Release Notes]: https://junit.org/junit5/docs/current/release-notes/
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
 [User Guide]: https://junit.org/junit5/docs/current/user-guide/

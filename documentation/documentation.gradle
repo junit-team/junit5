@@ -47,7 +47,6 @@ dependencies {
 	// Required by :consoleLauncherTest and :generateConsoleLauncherOptions
 	testRuntimeOnly(project(':junit-platform-console'))
 	testRuntimeOnly(project(':junit-platform-suite-api'))
-	testRuntimeOnly(project(':junit-platform-surefire-provider'))
 
 	testRuntimeOnly(project(':junit-vintage-engine'))
 	testRuntimeOnly(project(':junit-jupiter-engine'))
@@ -55,11 +54,11 @@ dependencies {
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 
 	// for ApiReportGenerator
-	testImplementation('io.github.classgraph:classgraph:4.1.7')
+	testImplementation('io.github.classgraph:classgraph:4.2.2')
 }
 
 asciidoctorj {
-	version = '1.5.6'
+	version = '1.5.7'
 }
 
 ext {
@@ -88,6 +87,9 @@ createJavaExecTaskWithOutputFile('generateConsoleLauncherOptions', consoleLaunch
 createJavaExecTaskWithOutputFile('generateExperimentalApisTable', experimentalApisTableFile, 'org.junit.api.tools.ApiReportGenerator', ['EXPERIMENTAL'])
 createJavaExecTaskWithOutputFile('generateDeprecatedApisTable', deprecatedApisTableFile, 'org.junit.api.tools.ApiReportGenerator', ['DEPRECATED'])
 
+// does currently not work on Java 11, see https://github.com/junit-team/junit5/issues/1608
+def enableAsciidoctorPdfBackend = JavaVersion.current() < JavaVersion.VERSION_11
+
 asciidoctor {
 	dependsOn 'generateConsoleLauncherOptions', 'generateExperimentalApisTable', 'generateDeprecatedApisTable'
 
@@ -104,7 +106,11 @@ asciidoctor {
 		}
 	}
 
-	backends 'html5', 'pdf'
+	backends 'html5'
+	if (enableAsciidoctorPdfBackend) {
+		backends 'pdf'
+		attributes linkToPdf: enableAsciidoctorPdfBackend.toString()
+	}
 
 	attributes	'jupiter-version': version,
 				'platform-version': platformVersion,

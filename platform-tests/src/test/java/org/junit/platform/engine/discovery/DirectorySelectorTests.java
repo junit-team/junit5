@@ -22,7 +22,7 @@ import org.junit.platform.AbstractEqualsAndHashCodeTests;
 class DirectorySelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
-	void equalsAndHashCode() throws Exception {
+	void equalsAndHashCode() {
 		var selector1 = new DirectorySelector("/example/foo");
 		var selector2 = new DirectorySelector("/example/foo");
 		var selector3 = new DirectorySelector("/example/bar");

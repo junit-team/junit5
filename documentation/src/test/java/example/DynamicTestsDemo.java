@@ -181,5 +181,23 @@ class DynamicTestsDemo {
 		// tag::user_guide[]
 	}
 
+	@TestFactory
+	DynamicNode dynamicNodeSingleTest() {
+		return dynamicTest("single dynamic test", () -> assertFalse(false));
+	}
+
+	@TestFactory
+	DynamicNode dynamicNodeSingleContainer() {
+		// end::user_guide[]
+		// @formatter:off
+		// tag::user_guide[]
+		return dynamicContainer("single dynamic container", Stream.of(
+			dynamicTest("foo", () -> assertTrue(true)),
+			dynamicTest("bar", () -> assertFalse(false))
+		));
+		// end::user_guide[]
+		// @formatter:on
+		// tag::user_guide[]
+	}
 }
 // end::user_guide[]

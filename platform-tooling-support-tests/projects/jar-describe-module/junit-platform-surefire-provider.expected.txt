@@ -1,6 +1,0 @@
->> 1 line header: No module descriptor found. Derived automatic module. >>
-
-org.junit.platform.surefire.provider@${platformVersion} automatic
-requires java.base mandated
-provides org.apache.maven.surefire.providerapi.SurefireProvider with org.junit.platform.surefire.provider.[J|j][U|u]nit[P|p]latform[P|p]rovider
-contains org.junit.platform.surefire.provider

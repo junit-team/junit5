@@ -7,6 +7,9 @@ task prepareDocsForUploadToGhPages(type: Copy) {
 	dependsOn 'aggregateJavadocs', ':documentation:asciidoctor'
 	outputs.dir docsDir
 
+	from("${project(':documentation').buildDir}/checksum") {
+		include 'published-checksum.txt'
+	}
 	from("${project(':documentation').buildDir}/asciidoc") {
 		include 'user-guide/**'
 		include 'release-notes/**'

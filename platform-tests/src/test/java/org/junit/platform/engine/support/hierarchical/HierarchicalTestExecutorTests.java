@@ -542,7 +542,7 @@ class HierarchicalTestExecutorTests {
 	 * Verifies support for blacklisted exceptions.
 	 */
 	@Test
-	void outOfMemoryErrorInLeafExecution() throws Exception {
+	void outOfMemoryErrorInLeafExecution() {
 		MyLeaf child = spy(new MyLeaf(UniqueId.root("leaf", "leaf")));
 		OutOfMemoryError outOfMemoryError = new OutOfMemoryError("in test");
 		when(child.execute(eq(rootContext), any())).thenThrow(outOfMemoryError);
@@ -577,7 +577,7 @@ class HierarchicalTestExecutorTests {
 	}
 
 	@Test
-	void dynamicTestDescriptorsMustNotDeclareExclusiveResources() throws Exception {
+	void dynamicTestDescriptorsMustNotDeclareExclusiveResources() {
 
 		UniqueId leafUniqueId = UniqueId.root("leaf", "child leaf");
 		MyLeaf child = spy(new MyLeaf(leafUniqueId));
@@ -654,7 +654,7 @@ class HierarchicalTestExecutorTests {
 
 		@Override
 		public MyEngineExecutionContext execute(MyEngineExecutionContext context,
-				DynamicTestExecutor dynamicTestExecutor) throws Exception {
+				DynamicTestExecutor dynamicTestExecutor) {
 			return context;
 		}
 

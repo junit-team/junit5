@@ -23,7 +23,7 @@ import org.junit.platform.engine.UniqueId;
 class UniqueIdSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
-	void equalsAndHashCode() throws Exception {
+	void equalsAndHashCode() {
 		var testEngine = UniqueId.forEngine("test-engine");
 		var selector1 = new UniqueIdSelector(testEngine.append("test-class", "org.example.TestClass"));
 		var selector2 = new UniqueIdSelector(testEngine.append("test-class", "org.example.TestClass"));

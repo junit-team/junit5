@@ -105,6 +105,9 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 
 	@SuppressWarnings("unchecked")
 	private Stream<DynamicNode> toDynamicNodeStream(Object testFactoryMethodResult) {
+		if (testFactoryMethodResult instanceof DynamicNode) {
+			return Stream.of((DynamicNode) testFactoryMethodResult);
+		}
 		try {
 			return (Stream<DynamicNode>) CollectionUtils.toStream(testFactoryMethodResult);
 		}

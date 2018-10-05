@@ -22,7 +22,7 @@ import org.junit.platform.AbstractEqualsAndHashCodeTests;
 class MethodSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
-	void equalsAndHashCode() throws Exception {
+	void equalsAndHashCode() {
 		var selector1 = new MethodSelector("TestClass", "method", "int, boolean");
 		var selector2 = new MethodSelector("TestClass", "method", "int, boolean");
 

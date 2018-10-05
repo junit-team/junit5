@@ -49,7 +49,7 @@ class UniqueIdStringifierTests {
 	}
 
 	@Test
-	void usesToStringWhenSerializationFails() throws Exception {
+	void usesToStringWhenSerializationFails() {
 		UniqueIdStringifier stringifier = new UniqueIdStringifier();
 		String serialized = stringifier.apply(new ClassWithErroneousSerialization());
 

@@ -31,7 +31,7 @@ public class ExternalResourceSupportForMultipleFieldRulesTests {
 	@Rule
 	public ExternalResource resource1 = new ExternalResource() {
 		@Override
-		protected void before() throws Throwable {
+		protected void before() {
 			beforeOfRule1WasExecuted = true;
 		}
 
@@ -44,7 +44,7 @@ public class ExternalResourceSupportForMultipleFieldRulesTests {
 	@Rule
 	public ExternalResource resource2 = new ExternalResource() {
 		@Override
-		protected void before() throws Throwable {
+		protected void before() {
 			beforeOfRule2WasExecuted = true;
 		}
 

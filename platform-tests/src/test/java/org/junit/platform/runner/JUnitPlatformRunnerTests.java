@@ -103,7 +103,7 @@ class JUnitPlatformRunnerTests {
 	class Discovery {
 
 		@Test
-		void requestsClassSelectorForAnnotatedClassWhenNoAdditionalAnnotationsArePresent() throws Exception {
+		void requestsClassSelectorForAnnotatedClassWhenNoAdditionalAnnotationsArePresent() {
 
 			class TestCase {
 			}
@@ -117,7 +117,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void requestsClassSelectorsWhenSelectClassesAnnotationIsPresent() throws Exception {
+		void requestsClassSelectorsWhenSelectClassesAnnotationIsPresent() {
 
 			@SelectClasses({ Short.class, Byte.class })
 			class TestCase {
@@ -132,7 +132,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void requestsPackageSelectorsWhenPackagesAnnotationIsPresent() throws Exception {
+		void requestsPackageSelectorsWhenPackagesAnnotationIsPresent() {
 
 			@SelectPackages({ "foo", "bar" })
 			class TestCase {
@@ -147,7 +147,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsPackageFiltersToRequestWhenIncludePackageAnnotationIsPresent() throws Exception {
+		void addsPackageFiltersToRequestWhenIncludePackageAnnotationIsPresent() {
 
 			@IncludePackages({ "includedpackage1", "includedpackage2" })
 			class TestCase {
@@ -165,7 +165,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsPackageFiltersToRequestWhenExcludePackageAnnotationIsPresent() throws Exception {
+		void addsPackageFiltersToRequestWhenExcludePackageAnnotationIsPresent() {
 
 			@ExcludePackages({ "excludedpackage1", "excludedpackage2" })
 			class TestCase {
@@ -183,7 +183,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsTagFilterToRequestWhenIncludeTagsAnnotationIsPresent() throws Exception {
+		void addsTagFilterToRequestWhenIncludeTagsAnnotationIsPresent() {
 
 			@IncludeTags({ "foo", "bar" })
 			class TestCase {
@@ -201,7 +201,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsTagFilterToRequestWhenExcludeTagsAnnotationIsPresent() throws Exception {
+		void addsTagFilterToRequestWhenExcludeTagsAnnotationIsPresent() {
 
 			@ExcludeTags({ "foo", "bar" })
 			class TestCase {
@@ -219,7 +219,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void includeTagsAcceptsTagExpressions() throws Exception {
+		void includeTagsAcceptsTagExpressions() {
 
 			@IncludeTags("foo & !bar")
 			class TestCase {
@@ -239,7 +239,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void excludeTagsAcceptsTagExpressions() throws Exception {
+		void excludeTagsAcceptsTagExpressions() {
 
 			@ExcludeTags("foo & !bar")
 			class TestCase {
@@ -259,7 +259,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsEngineFiltersToRequestWhenIncludeEnginesOrExcludeEnginesAnnotationsArePresent() throws Exception {
+		void addsEngineFiltersToRequestWhenIncludeEnginesOrExcludeEnginesAnnotationsArePresent() {
 
 			@IncludeEngines({ "foo", "bar", "baz" })
 			@ExcludeEngines({ "bar", "quux" })
@@ -290,8 +290,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsDefaultClassNameFilterToRequestWhenFilterClassNameAnnotationIsNotPresentOnTestSuite()
-				throws Exception {
+		void addsDefaultClassNameFilterToRequestWhenFilterClassNameAnnotationIsNotPresentOnTestSuite() {
 
 			@SelectPackages("foo")
 			class TestCase {
@@ -304,8 +303,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsDefaultClassNameFilterToRequestWhenFilterClassNameAnnotationIsNotPresentOnTestClass()
-				throws Exception {
+		void addsDefaultClassNameFilterToRequestWhenFilterClassNameAnnotationIsNotPresentOnTestClass() {
 
 			class TestCase {
 			}
@@ -317,8 +315,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsSingleExplicitClassNameFilterToRequestWhenIncludeClassNamePatternsAnnotationIsPresent()
-				throws Exception {
+		void addsSingleExplicitClassNameFilterToRequestWhenIncludeClassNamePatternsAnnotationIsPresent() {
 
 			@IncludeClassNamePatterns(".*Foo")
 			class TestCase {
@@ -331,7 +328,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsSingleClassNameFilterToRequestWhenExcludeClassNamePatternsAnnotationIsPresent() throws Exception {
+		void addsSingleClassNameFilterToRequestWhenExcludeClassNamePatternsAnnotationIsPresent() {
 
 			@ExcludeClassNamePatterns(".*Foo")
 			class TestCase {
@@ -344,8 +341,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsMultipleExplicitClassNameFilterToRequestWhenIncludeClassNamePatternsAnnotationIsPresent()
-				throws Exception {
+		void addsMultipleExplicitClassNameFilterToRequestWhenIncludeClassNamePatternsAnnotationIsPresent() {
 
 			@IncludeClassNamePatterns({ ".*Foo", "Bar.*" })
 			class TestCase {
@@ -358,7 +354,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void addsMultipleClassNameFilterToRequestWhenExcludeClassNamePatternsAnnotationIsPresent() throws Exception {
+		void addsMultipleClassNameFilterToRequestWhenExcludeClassNamePatternsAnnotationIsPresent() {
 
 			@ExcludeClassNamePatterns({ ".*Foo", "Bar.*" })
 			class TestCase {
@@ -371,8 +367,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void usesStandardIncludePatternWhenIncludeClassNamePatternsAnnotationIsPresentWithoutArguments()
-				throws Exception {
+		void usesStandardIncludePatternWhenIncludeClassNamePatternsAnnotationIsPresentWithoutArguments() {
 
 			@IncludeClassNamePatterns
 			class TestCase {
@@ -385,8 +380,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void doesNotAddClassNameFilterWhenIncludeClassNamePatternsAnnotationIsPresentWithEmptyArguments()
-				throws Exception {
+		void doesNotAddClassNameFilterWhenIncludeClassNamePatternsAnnotationIsPresentWithEmptyArguments() {
 
 			@IncludeClassNamePatterns({})
 			class TestCase {
@@ -399,8 +393,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void doesNotAddClassNameFilterWhenExcludeClassNamePatternsAnnotationIsPresentWithEmptyArguments()
-				throws Exception {
+		void doesNotAddClassNameFilterWhenExcludeClassNamePatternsAnnotationIsPresentWithEmptyArguments() {
 
 			@ExcludeClassNamePatterns({})
 			class TestCase {
@@ -413,7 +406,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void trimsArgumentsOfIncludeClassNamePatternsAnnotation() throws Exception {
+		void trimsArgumentsOfIncludeClassNamePatternsAnnotation() {
 
 			@IncludeClassNamePatterns({ " foo", "bar " })
 			class TestCase {
@@ -426,7 +419,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void trimsArgumentsOfExcludeClassNamePatternsAnnotation() throws Exception {
+		void trimsArgumentsOfExcludeClassNamePatternsAnnotation() {
 
 			@ExcludeClassNamePatterns({ " foo", "bar " })
 			class TestCase {
@@ -439,7 +432,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void convertsTestIdentifiersIntoDescriptions() throws Exception {
+		void convertsTestIdentifiersIntoDescriptions() {
 
 			TestDescriptor container1 = new TestDescriptorStub(UniqueId.root("root", "container1"), "container1");
 			container1.addChild(new TestDescriptorStub(UniqueId.root("root", "test1"), "test1"));
@@ -508,7 +501,7 @@ class JUnitPlatformRunnerTests {
 		}
 
 		@Test
-		void throwsNoTestsRemainExceptionWhenNoTestIdentifierMatchesFilter() throws Exception {
+		void throwsNoTestsRemainExceptionWhenNoTestIdentifierMatchesFilter() {
 			TestPlan testPlan = TestPlan.from(singleton(new TestDescriptorStub(UniqueId.root("root", "test"), "test")));
 
 			Launcher launcher = mock(Launcher.class);
@@ -622,7 +615,7 @@ class JUnitPlatformRunnerTests {
 
 		@Test
 		@DisplayName("Suite with default display name")
-		void descriptionForTestSuiteWithDefaultDisplayName() throws Exception {
+		void descriptionForTestSuiteWithDefaultDisplayName() {
 			Class<?> testClass = TestSuiteWithDefaultDisplayName.class;
 			JUnitPlatform platformRunner = new JUnitPlatform(testClass,
 				createLauncher(new DemoHierarchicalTestEngine("suite names")));
@@ -632,7 +625,7 @@ class JUnitPlatformRunnerTests {
 
 		@Test
 		@DisplayName("Suite with @SuiteDisplayName")
-		void descriptionForTestSuiteWithCustomDisplayName() throws Exception {
+		void descriptionForTestSuiteWithCustomDisplayName() {
 			JUnitPlatform platformRunner = new JUnitPlatform(TestSuiteWithCustomDisplayName.class,
 				createLauncher(new DemoHierarchicalTestEngine("suite names")));
 
@@ -641,7 +634,7 @@ class JUnitPlatformRunnerTests {
 
 		@Test
 		@DisplayName("Suite with @SuiteDisplayName and @UseTechnicalNames")
-		void descriptionForTestSuiteWithCustomDisplayNameAndTechnicalNames() throws Exception {
+		void descriptionForTestSuiteWithCustomDisplayNameAndTechnicalNames() {
 			Class<?> testClass = TestSuiteWithCustomDisplayNameAndTechnicalNames.class;
 			JUnitPlatform platformRunner = new JUnitPlatform(testClass,
 				createLauncher(new DemoHierarchicalTestEngine("suite names")));

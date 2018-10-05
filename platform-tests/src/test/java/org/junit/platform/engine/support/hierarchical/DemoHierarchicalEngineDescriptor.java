@@ -45,7 +45,7 @@ public class DemoHierarchicalEngineDescriptor extends EngineDescriptor implement
 	}
 
 	@Override
-	public DemoEngineExecutionContext before(DemoEngineExecutionContext context) throws Exception {
+	public DemoEngineExecutionContext before(DemoEngineExecutionContext context) {
 		beforeAllBehavior.run();
 		return context;
 	}

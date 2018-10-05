@@ -13,6 +13,7 @@ package platform.tooling.support.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.io.FileInputStream;
 import java.nio.file.Files;
@@ -106,6 +107,7 @@ class JdepsTests {
 
 		var result = new Jdeps().run(configuration);
 
+		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 		assertEquals(0, result.getExitCode(), "result = " + result);
 		assertEquals("", result.getOutput("out"), "output log isn't empty");
 		assertEquals("", result.getOutput("err"), "error log isn't empty");

@@ -26,7 +26,7 @@ class VintageTestDescriptorTests {
 	private static final UniqueId uniqueId = UniqueId.forEngine("vintage");
 
 	@Test
-	void constructFromInheritedMethod() throws Exception {
+	void constructFromInheritedMethod() {
 		Description description = Description.createTestDescription(ConcreteTest.class, "theTest");
 		VintageTestDescriptor descriptor = new VintageTestDescriptor(uniqueId, description);
 

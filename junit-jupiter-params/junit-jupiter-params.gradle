@@ -14,7 +14,7 @@ afterEvaluate {
 dependencies {
 	api(project(':junit-jupiter-api'))
 
-	shadowed('com.univocity:univocity-parsers:2.7.5')
+	shadowed('com.univocity:univocity-parsers:2.7.6')
 
 	testImplementation(project(':junit-platform-testkit'))
 	testImplementation(project(':junit-jupiter-engine'))

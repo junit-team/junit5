@@ -22,7 +22,7 @@ import org.junit.platform.AbstractEqualsAndHashCodeTests;
 class ClasspathResourceSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
-	void equalsAndHashCode() throws Exception {
+	void equalsAndHashCode() {
 		var selector1 = new ClasspathResourceSelector("/foo/bar.txt");
 		var selector2 = new ClasspathResourceSelector("/foo/bar.txt");
 		var selector3 = new ClasspathResourceSelector("/foo/X.txt");

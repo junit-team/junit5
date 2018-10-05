@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayName;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 
@@ -22,10 +23,9 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.function.Executable;
@@ -38,7 +38,6 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
@@ -58,6 +57,11 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	private static final Logger logger = LoggerFactory.getLogger(JupiterTestDescriptor.class);
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
+
+	JupiterTestDescriptor(UniqueId uniqueId, AnnotatedElement element, Supplier<String> displayNameSupplier,
+			TestSource source) {
+		this(uniqueId, determineDisplayName(element, displayNameSupplier), source);
+	}
 
 	JupiterTestDescriptor(UniqueId uniqueId, String displayName, TestSource source) {
 		super(uniqueId, displayName, source);
@@ -86,27 +90,6 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 				.map(TestTag::create)
 				.collect(collectingAndThen(toCollection(LinkedHashSet::new), Collections::unmodifiableSet));
 		// @formatter:on
-	}
-
-	protected static <E extends AnnotatedElement> String determineDisplayName(E element,
-			Function<E, String> defaultDisplayNameGenerator) {
-
-		Optional<DisplayName> displayNameAnnotation = findAnnotation(element, DisplayName.class);
-		if (displayNameAnnotation.isPresent()) {
-			String displayName = displayNameAnnotation.get().value().trim();
-
-			// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
-			// handling validation exceptions during the TestEngine discovery phase.
-			if (StringUtils.isBlank(displayName)) {
-				logger.warn(() -> String.format(
-					"Configuration error: @DisplayName on [%s] must be declared with a non-empty value.", element));
-			}
-			else {
-				return displayName;
-			}
-		}
-		// else
-		return defaultDisplayNameGenerator.apply(element);
 	}
 
 	// --- Node ----------------------------------------------------------------

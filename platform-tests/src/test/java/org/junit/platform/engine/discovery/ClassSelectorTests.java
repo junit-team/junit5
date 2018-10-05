@@ -22,7 +22,7 @@ import org.junit.platform.AbstractEqualsAndHashCodeTests;
 class ClassSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
-	void equalsAndHashCode() throws Exception {
+	void equalsAndHashCode() {
 		var selector1 = new ClassSelector("org.example.TestClass");
 		var selector2 = new ClassSelector("org.example.TestClass");
 		var selector3 = new ClassSelector("org.example.X");

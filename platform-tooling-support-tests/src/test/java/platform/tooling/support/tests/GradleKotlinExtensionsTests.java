@@ -12,8 +12,10 @@ package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.nio.file.Paths;
+import java.time.Duration;
 
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
@@ -31,10 +33,13 @@ class GradleKotlinExtensionsTests {
 				.setTool(new GradleWrapper(Paths.get(".."))) //
 				.setProject("gradle-kotlin-extensions") //
 				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
+				.setTimeout(Duration.ofMinutes(2)) //
 				.build() //
 				.run();
 
-		assertEquals(0, result.getExitCode());
+		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
+
+		assertEquals(0, result.getExitCode(), "result=" + result);
 		assertTrue(result.getOutputLines("out").stream().anyMatch(line -> line.contains("BUILD SUCCESSFUL")));
 	}
 }

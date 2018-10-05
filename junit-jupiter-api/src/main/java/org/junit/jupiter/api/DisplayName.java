@@ -31,6 +31,8 @@ import org.apiguardian.api.API;
  * @see Test
  * @see Tag
  * @see TestInfo
+ * @see DisplayNameGeneration
+ * @see DisplayNameGenerator
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)

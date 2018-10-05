@@ -38,7 +38,7 @@ class ExternalResourceSupportForDifferentDeclaredReturnTypesRulesTests {
 	public TestRule getResource2() {
 		return new ExternalResource() {
 			@Override
-			protected void before() throws Throwable {
+			protected void before() {
 				beforeOfRule2WasExecuted = true;
 			}
 
@@ -65,7 +65,7 @@ class ExternalResourceSupportForDifferentDeclaredReturnTypesRulesTests {
 
 	private static class MyExternalResource1 extends ExternalResource {
 		@Override
-		protected void before() throws Throwable {
+		protected void before() {
 			beforeOfRule1WasExecuted = true;
 		}
 

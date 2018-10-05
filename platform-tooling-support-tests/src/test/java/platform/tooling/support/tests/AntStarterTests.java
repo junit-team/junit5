@@ -12,6 +12,7 @@ package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -35,6 +36,8 @@ class AntStarterTests {
 				.addArguments("-verbose", "-lib", standalone.toAbsolutePath()) //
 				.build() //
 				.run();
+
+		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
 		assertEquals(0, result.getExitCode());
 		assertEquals("", result.getOutput("err"), "error log isn't empty");

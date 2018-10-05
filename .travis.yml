@@ -8,36 +8,68 @@ branches:
   except:
     - /^r\d.*$/
 
+# Remove lock files before caching
+before_cache:
+  - rm -f  $HOME/.gradle/caches/*/*.lock
+
+# Cache only relevant directories
+cache:
+  directories:
+    - $HOME/.gradle/caches/jars-3
+    - $HOME/.gradle/caches/modules-2
+    - $HOME/.gradle/wrapper/dists
+
 before_install:
 # https://github.com/travis-ci/travis-ci/issues/8408
 # Also interferes with platform-tooling-support-tests expectations
   - unset _JAVA_OPTIONS
 
 install:
-  - echo "Don't let Travis CI execute './gradlew assemble' by default"
+  - ./gradlew --version # Display Gradle, Groovy, JVM and other versions
+
+jdk:
+  - openjdk11
+  - openjdk-ea
+
+os:
+  - linux
+  - osx
 
 matrix:
-  include:
-    - os: linux
-      jdk: openjdk11
-    - os: linux
-      jdk: openjdk11
-      env: SCAN='--scan --stacktrace --warning-mode=all' JACOCO='-PenableJaCoCo' INSTALL='publishToMavenLocal'
+  exclude:
     - os: osx
-      jdk: openjdk11
-    - os: linux
       jdk: openjdk-ea
   allow_failures:
     - jdk: openjdk-ea
 
 script:
-# Display Gradle, Groovy, JVM and other versions
-  - ./gradlew --version
-# Build JUnit 5
-  - ./gradlew ${SCAN} ${JACOCO} build ${INSTALL}
+  - ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
 
-after_success:
-# If variable JACOCO is set, run JaCoCo report and send report to codecov.io after build success
-  - test -v JACOCO && ./gradlew ${JACOCO} jacocoRootReport && bash <(curl -s https://codecov.io/bash) || true
-# If variable INSTALL is set, run platform-tooling-support-tests checking the local installation
-  - test -v INSTALL && ./gradlew --scan --stacktrace -Dplatform.tooling.support.tests.enabled=true build || true
+stages:
+  - test
+  - name: deploy
+    if: (branch = master) AND (NOT type IN (pull_request))
+
+jobs:
+  include:
+    - name: "Coverage"
+      script:
+        - ./gradlew --scan --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport
+        - bash <(curl -s https://codecov.io/bash)
+    - stage: deploy
+      name: "Publish snapshot artifacts"
+      env:
+        # ORG_GRADLE_PROJECT_ossrhUsername
+        - secure: KB6nXD6SU+g7jNB+JnmOy9aOx21tazy+j2SbFj6UTayfEWfD3E7nw8AxQLRy9XWVaUQZGk+F8UWvHMX/5qhfqS3eXsdqGY3BaDM6QB8O3kMIZjO2I1JxmLoEBXqzWPFo0qfdexm78FhU3LCqzwofl4eCkwCErjF0483MfUOe54Q=
+        # ORG_GRADLE_PROJECT_ossrhPassword
+        - secure: haIyH2wZSfmnH/oKJ0J1pMBl1wsYMhc26iOPunaMELKUgPCBC4+y5qYJBcG3/G9gy3qYYi3GdFLvHVkqxlAABTC5lcNyBqsU20SzKD6HNyf4rv7Dtv+x1GjI7Yz50zAaJyPnoQBdboMdevPTfczcCAf6mRvA5nmEZc1D1fbbGA8=
+      script: ./gradlew --scan publish -x check
+    - name: "Update snapshot documentation"
+      addons:
+        apt:
+          packages:
+            - graphviz
+      env:
+        # GRGIT_USER
+        - secure: PwwKcsVdukfzvDBHmdajhMsIVHSbPt+lorgibpRXImBt+C4XHlaz/Z78Bq8jtkDvrXb+DTSfSGvAxg1IBM+rtCzrYb5DAqq+OfuG9Uu6FDTnkIOHs5Gii7pAfT0+W31Oj76OgiCAXX+p8lbFTchz6ope5zVYEpSlAe7aXCVTGM0=
+      script: ./src/publishDocumentationSnapshotOnlyIfNecessary.sh

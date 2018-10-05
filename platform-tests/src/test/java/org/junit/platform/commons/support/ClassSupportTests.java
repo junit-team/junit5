@@ -24,7 +24,7 @@ import org.junit.platform.commons.util.ClassUtils;
 class ClassSupportTests {
 
 	@Test
-	void nullSafeToStringDelegates() throws Throwable {
+	void nullSafeToStringDelegates() {
 		assertEquals(ClassUtils.nullSafeToString(String.class, List.class),
 			ClassSupport.nullSafeToString(String.class, List.class));
 

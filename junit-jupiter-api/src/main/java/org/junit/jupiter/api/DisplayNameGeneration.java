@@ -8,11 +8,13 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.api.parallel;
+package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -20,22 +22,25 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @Execution} is used to configure the parallel execution
- * {@linkplain #value mode} of a test class or test method.
+ * {@code @DisplayNameGeneration} is used to declare a custom display name
+ * generator for the annotated test class.
  *
- * @see ResourceLock
- * @since 5.3
+ * @since 5.4
+ * @see DisplayName
+ * @see DisplayNameGenerator
  */
-@API(status = EXPERIMENTAL, since = "5.3")
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE, ElementType.METHOD })
-public @interface Execution {
+@Documented
+@Inherited
+@API(status = EXPERIMENTAL, since = "5.4")
+public @interface DisplayNameGeneration {
 
 	/**
-	 * The required/preferred execution mode.
+	 * Custom display name generator.
 	 *
-	 * @see ExecutionMode
+	 * @return custom display name generator class
 	 */
-	ExecutionMode value();
+	Class<? extends DisplayNameGenerator> value();
 
 }

@@ -91,14 +91,14 @@ class LauncherBasedEnableRuleMigrationSupportTests {
 		public Verifier verifier1 = new Verifier() {
 
 			@Override
-			protected void verify() throws Throwable {
+			protected void verify() {
 				afterOfRule1WasExecuted = true;
 			}
 		};
 
 		private ExternalResource resource2 = new ExternalResource() {
 			@Override
-			protected void before() throws Throwable {
+			protected void before() {
 				beforeOfRule2WasExecuted = true;
 			}
 

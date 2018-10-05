@@ -18,7 +18,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -53,7 +52,7 @@ class CsvFileArgumentsProviderTests {
 		InputStream inputStream = new ByteArrayInputStream("foo".getBytes()) {
 
 			@Override
-			public void close() throws IOException {
+			public void close() {
 				closed.set(true);
 			}
 		};

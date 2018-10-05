@@ -82,7 +82,7 @@ public class ExternalResourceSupportForMixedMethodAndFieldRulesTests {
 		}
 
 		@Override
-		protected void before() throws Throwable {
+		protected void before() {
 			beforeEvents.add(name);
 		}
 

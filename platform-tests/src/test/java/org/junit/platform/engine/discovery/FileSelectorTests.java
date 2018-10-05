@@ -22,7 +22,7 @@ import org.junit.platform.AbstractEqualsAndHashCodeTests;
 class FileSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
-	void equalsAndHashCode() throws Exception {
+	void equalsAndHashCode() {
 		var selector1 = new FileSelector("/example/foo.txt");
 		var selector2 = new FileSelector("/example/foo.txt");
 		var selector3 = new FileSelector("/example/bar.txt");

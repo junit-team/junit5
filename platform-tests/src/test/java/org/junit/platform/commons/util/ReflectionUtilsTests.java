@@ -1032,7 +1032,7 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void isGeneric() throws Exception {
+	void isGeneric() {
 		for (Method method : Generic.class.getMethods()) {
 			assertTrue(ReflectionUtils.isGeneric(method));
 		}

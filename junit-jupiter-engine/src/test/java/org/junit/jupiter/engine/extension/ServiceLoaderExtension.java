@@ -22,7 +22,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 public class ServiceLoaderExtension implements BeforeAllCallback {
 
 	@Override
-	public void beforeAll(ExtensionContext context) throws Exception {
+	public void beforeAll(ExtensionContext context) {
 	}
 
 }

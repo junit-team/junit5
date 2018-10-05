@@ -188,97 +188,96 @@ class AnnotationUtilsTests {
 	}
 
 	@Test
-	void findRepeatableAnnotationsWithSingleTag() throws Exception {
+	void findRepeatableAnnotationsWithSingleTag() {
 		assertTagsFound(SingleTaggedClass.class, "a");
 	}
 
 	@Test
-	void findRepeatableAnnotationsWithSingleComposedTag() throws Exception {
+	void findRepeatableAnnotationsWithSingleComposedTag() {
 		assertTagsFound(SingleComposedTaggedClass.class, "fast");
 	}
 
 	@Test
-	void findRepeatableAnnotationsWithSingleComposedTagOnImplementedInterface() throws Exception {
+	void findRepeatableAnnotationsWithSingleComposedTagOnImplementedInterface() {
 		assertTagsFound(TaggedInterfaceClass.class, "fast");
 	}
 
 	@Test
-	void findRepeatableAnnotationsWithLocalComposedTagAndComposedTagOnImplementedInterface() throws Exception {
+	void findRepeatableAnnotationsWithLocalComposedTagAndComposedTagOnImplementedInterface() {
 		assertTagsFound(LocalTagOnTaggedInterfaceClass.class, "fast", "smoke");
 	}
 
 	@Test
-	void findRepeatableAnnotationsWithMultipleTags() throws Exception {
+	void findRepeatableAnnotationsWithMultipleTags() {
 		assertTagsFound(MultiTaggedClass.class, "a", "b", "c");
 	}
 
 	@Test
-	void findRepeatableAnnotationsWithMultipleComposedTags() throws Exception {
+	void findRepeatableAnnotationsWithMultipleComposedTags() {
 		assertTagsFound(MultiComposedTaggedClass.class, "fast", "smoke");
 		assertTagsFound(FastAndSmokyTaggedClass.class, "fast", "smoke");
 	}
 
 	@Test
-	void findRepeatableAnnotationsWithContainer() throws Exception {
+	void findRepeatableAnnotationsWithContainer() {
 		assertTagsFound(ContainerTaggedClass.class, "a", "b", "c", "d");
 	}
 
 	@Test
-	void findRepeatableAnnotationsWithComposedTagBeforeContainer() throws Exception {
+	void findRepeatableAnnotationsWithComposedTagBeforeContainer() {
 		assertTagsFound(ContainerAfterComposedTaggedClass.class, "fast", "a", "b", "c");
 	}
 
-	private void assertTagsFound(Class<?> clazz, String... tags) throws Exception {
+	private void assertTagsFound(Class<?> clazz, String... tags) {
 		assertEquals(asList(tags),
 			findRepeatableAnnotations(clazz, Tag.class).stream().map(Tag::value).collect(toList()),
 			() -> "Tags found for class " + clazz.getName());
 	}
 
 	@Test
-	void findInheritedRepeatableAnnotationsWithSingleAnnotationOnSuperclass() throws Exception {
+	void findInheritedRepeatableAnnotationsWithSingleAnnotationOnSuperclass() {
 		assertExtensionsFound(SingleExtensionClass.class, "a");
 		assertExtensionsFound(SubSingleExtensionClass.class, "a");
 	}
 
 	@Test
-	void findInheritedRepeatableAnnotationsWithMultipleAnnotationsOnSuperclass() throws Exception {
+	void findInheritedRepeatableAnnotationsWithMultipleAnnotationsOnSuperclass() {
 		assertExtensionsFound(MultiExtensionClass.class, "a", "b", "c");
 		assertExtensionsFound(SubMultiExtensionClass.class, "a", "b", "c", "x", "y", "z");
 	}
 
 	@Test
-	void findInheritedRepeatableAnnotationsWithContainerAnnotationOnSuperclass() throws Exception {
+	void findInheritedRepeatableAnnotationsWithContainerAnnotationOnSuperclass() {
 		assertExtensionsFound(ContainerExtensionClass.class, "a", "b", "c");
 		assertExtensionsFound(SubContainerExtensionClass.class, "a", "b", "c", "x");
 	}
 
 	@Test
-	void findInheritedRepeatableAnnotationsWithSingleComposedAnnotation() throws Exception {
+	void findInheritedRepeatableAnnotationsWithSingleComposedAnnotation() {
 		assertExtensionsFound(SingleComposedExtensionClass.class, "foo");
 	}
 
 	@Test
-	void findInheritedRepeatableAnnotationsWithSingleComposedAnnotationOnSuperclass() throws Exception {
+	void findInheritedRepeatableAnnotationsWithSingleComposedAnnotationOnSuperclass() {
 		assertExtensionsFound(SubSingleComposedExtensionClass.class, "foo");
 	}
 
 	@Test
-	void findInheritedRepeatableAnnotationsWithMultipleComposedAnnotations() throws Exception {
+	void findInheritedRepeatableAnnotationsWithMultipleComposedAnnotations() {
 		assertExtensionsFound(MultiComposedExtensionClass.class, "foo", "bar");
 	}
 
 	@Test
-	void findInheritedRepeatableAnnotationsWithMultipleComposedAnnotationsOnSuperclass() throws Exception {
+	void findInheritedRepeatableAnnotationsWithMultipleComposedAnnotationsOnSuperclass() {
 		assertExtensionsFound(SubMultiComposedExtensionClass.class, "foo", "bar");
 	}
 
 	@Test
-	void findInheritedRepeatableAnnotationsWithMultipleComposedAnnotationsOnSuperclassAndLocalContainerAndComposed()
-			throws Exception {
+	void findInheritedRepeatableAnnotationsWithMultipleComposedAnnotationsOnSuperclassAndLocalContainerAndComposed() {
 		assertExtensionsFound(ContainerPlusSubMultiComposedExtensionClass.class, "foo", "bar", "x", "y", "z");
 	}
 
-	private void assertExtensionsFound(Class<?> clazz, String... tags) throws Exception {
+	private void assertExtensionsFound(Class<?> clazz, String... tags) {
 		assertEquals(asList(tags),
 			findRepeatableAnnotations(clazz, ExtendWith.class).stream().map(ExtendWith::value).collect(toList()),
 			() -> "Extensions found for class " + clazz.getName());
