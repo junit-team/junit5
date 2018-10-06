@@ -67,8 +67,8 @@ class AssertNotEqualsAssertionsTests {
 
 		@Test
 		void withEqualValuesWithMessageProvider() {
-			byte unexpected = 1;
-			byte actual = 1;
+			short unexpected = 1;
+			short actual = 1;
 			try {
 				assertNotEquals(unexpected, actual, () -> "custom message from provider");
 				expectAssertionFailedError();
@@ -177,8 +177,8 @@ class AssertNotEqualsAssertionsTests {
 
 		@Test
 		void withEqualValuesWithMessageProvider() {
-			byte unexpected = 1;
-			byte actual = 1;
+			int unexpected = 1;
+			int actual = 1;
 			try {
 				assertNotEquals(unexpected, actual, () -> "custom message from provider");
 				expectAssertionFailedError();
