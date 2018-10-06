@@ -26,8 +26,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.ExecutionsResult;
 
 /**
  * Integration tests for test class hierarchy support in the {@link JupiterTestEngine}.
@@ -49,13 +49,13 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeAllTestsInClass() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(LocalTestCase.class);
+		ExecutionsResult executionsResult = executeTestsForClass(LocalTestCase.class).getExecutionsResult();
 
-		assertEquals(6, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(3, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(1, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(2, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(6, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(3, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestSkippedCount(), "# tests skipped");
+		assertEquals(1, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(2, executionsResult.getTestFailedCount(), "# tests failed");
 
 		assertEquals(6, LocalTestCase.countBeforeInvoked, "# before calls");
 		assertEquals(6, LocalTestCase.countAfterInvoked, "# after calls");
@@ -68,26 +68,26 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(LocalTestCase.class, "alwaysPasses")).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
 	void executeTestDeclaredInSuperClass() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(LocalTestCase.class, "superTest")).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed");
 
 		assertEquals(1, LocalTestCase.countBeforeInvoked, "# after calls");
 		assertEquals(1, LocalTestCase.countAfterInvoked, "# after calls");
@@ -101,26 +101,26 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(LocalTestCase.class, "throwExceptionInAfterMethod")).build();
 
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(0, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped");
-		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(0, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestSkippedCount(), "# tests skipped");
+		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(1, executionsResult.getTestFailedCount(), "# tests failed");
 	}
 
 	@Test
 	void beforeAndAfterMethodsInTestClassHierarchy() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCase3.class);
+		ExecutionsResult executionsResult = executeTestsForClass(TestCase3.class).getExecutionsResult();
 
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped"),
-			() -> assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted"),
-			() -> assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed")
+			() -> assertEquals(1, executionsResult.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(0, executionsResult.getTestSkippedCount(), "# tests skipped"),
+			() -> assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted"),
+			() -> assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed")
 		);
 		// @formatter:on
 

@@ -17,8 +17,8 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.ExecutionsResult;
 
 /**
  * Integration tests that verify support for {@link Disabled @Disabled} in the {@link JupiterTestEngine}.
@@ -30,23 +30,23 @@ class DisabledTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void executeTestsWithDisabledTestClass() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(DisabledTestClassTestCase.class)).build();
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
 
-		assertEquals(1, eventRecorder.getContainerSkippedCount(), "# container skipped");
-		assertEquals(0, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getContainerSkippedCount(), "# container skipped");
+		assertEquals(0, executionsResult.getTestStartedCount(), "# tests started");
 	}
 
 	@Test
 	void executeTestsWithDisabledTestMethods() throws Exception {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(DisabledTestMethodsTestCase.class)).build();
-		ExecutionEventRecorder eventRecorder = executeTests(request);
+		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, eventRecorder.getTestSkippedCount(), "# tests skipped");
+		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, executionsResult.getTestSkippedCount(), "# tests skipped");
 
 		String method = DisabledTestMethodsTestCase.class.getDeclaredMethod("disabledTest").toString();
-		String reason = eventRecorder.getSkippedTestEvents().get(0).getPayload(String.class).get();
+		String reason = executionsResult.getSkippedTestEvents().get(0).getPayload(String.class).get();
 		assertEquals(method + " is @Disabled", reason);
 	}
 

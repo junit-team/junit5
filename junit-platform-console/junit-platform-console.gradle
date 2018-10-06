@@ -1,11 +1,13 @@
-apply plugin: 'com.github.johnrengelman.shadow'
+plugins {
+	id 'com.github.johnrengelman.shadow'
+}
 
 description = 'JUnit Platform Console'
 
 dependencies {
 	api(project(':junit-platform-launcher'))
 
-	shadowed('info.picocli:picocli:3.6.0')
+	shadowed("info.picocli:picocli:${Versions.picocli}")
 }
 
 jar {

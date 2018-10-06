@@ -54,7 +54,7 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.testkit.ExecutionsResult;
 
 /**
  * Integration tests for {@link TestInstance @TestInstance} lifecycle support.
@@ -528,14 +528,14 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	private void performAssertions(Class<?> testClass, int containers, int tests,
 			Map.Entry<Class<?>, Integer>[] instanceCountEntries, int allMethods, int eachMethods) {
 
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
+		ExecutionsResult executionsResult = executeTestsForClass(testClass).getExecutionsResult();
 
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(containers, eventRecorder.getContainerStartedCount(), "# containers started"),
-			() -> assertEquals(containers, eventRecorder.getContainerFinishedCount(), "# containers finished"),
-			() -> assertEquals(tests, eventRecorder.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(tests, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(containers, executionsResult.getContainerStartedCount(), "# containers started"),
+			() -> assertEquals(containers, executionsResult.getContainerFinishedCount(), "# containers finished"),
+			() -> assertEquals(tests, executionsResult.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(tests, executionsResult.getTestSuccessfulCount(), "# tests succeeded"),
 			() -> assertThat(instanceCount).describedAs("instance count").contains(instanceCountEntries),
 			() -> assertEquals(allMethods, beforeAllCount, "@BeforeAll count"),
 			() -> assertEquals(allMethods, afterAllCount, "@AfterAll count"),

@@ -35,7 +35,7 @@ import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.testkit.ExecutionsResult;
 
 /**
  * Integration tests that verify support for programmatic extension registration
@@ -76,13 +76,13 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	}
 
 	private void assertOneTestSucceeded(Class<?> testClass) {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(testClass);
+		ExecutionsResult executionsResult = executeTestsForClass(testClass).getExecutionsResult();
 		assertAll(//
-			() -> assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started"), //
-			() -> assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded"), //
-			() -> assertEquals(0, eventRecorder.getTestSkippedCount(), "# tests skipped"), //
-			() -> assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted"), //
-			() -> assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed")//
+			() -> assertEquals(1, executionsResult.getTestStartedCount(), "# tests started"), //
+			() -> assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded"), //
+			() -> assertEquals(0, executionsResult.getTestSkippedCount(), "# tests skipped"), //
+			() -> assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted"), //
+			() -> assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed")//
 		);
 	}
 

@@ -13,20 +13,20 @@ package org.junit.vintage.engine;
 import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.abortedWithReason;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.dynamicTestRegistered;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.engine;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedSuccessfully;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.skippedWithReason;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.started;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.uniqueIdSubstring;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
+import static org.junit.platform.testkit.ExecutionEventConditions.abortedWithReason;
+import static org.junit.platform.testkit.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
+import static org.junit.platform.testkit.ExecutionEventConditions.container;
+import static org.junit.platform.testkit.ExecutionEventConditions.dynamicTestRegistered;
+import static org.junit.platform.testkit.ExecutionEventConditions.engine;
+import static org.junit.platform.testkit.ExecutionEventConditions.event;
+import static org.junit.platform.testkit.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.ExecutionEventConditions.skippedWithReason;
+import static org.junit.platform.testkit.ExecutionEventConditions.started;
+import static org.junit.platform.testkit.ExecutionEventConditions.test;
+import static org.junit.platform.testkit.ExecutionEventConditions.uniqueIdSubstring;
+import static org.junit.platform.testkit.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.TestExecutionResultConditions.message;
 import static org.junit.runner.Description.createSuiteDescription;
 import static org.junit.runner.Description.createTestDescription;
 
@@ -36,13 +36,17 @@ import org.assertj.core.api.Condition;
 import org.junit.AssumptionViolatedException;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.EngineExecutionListener;
+import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
-import org.junit.platform.engine.test.event.ExecutionEvent;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+import org.junit.platform.testkit.ExecutionEvent;
+import org.junit.platform.testkit.ExecutionRecorder;
+import org.junit.platform.testkit.ExecutionsResult;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
@@ -85,9 +89,9 @@ class VintageTestEngineExecutionTests {
 	void executesPlainJUnit4TestCaseWithSingleTestWhichFails() {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("failingTest"), started()), //
@@ -101,9 +105,9 @@ class VintageTestEngineExecutionTests {
 	void executesPlainJUnit4TestCaseWithTwoTests() {
 		Class<?> testClass = PlainJUnit4TestCaseWithTwoTestMethods.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("failingTest"), started()), //
@@ -119,9 +123,9 @@ class VintageTestEngineExecutionTests {
 	void executesPlainJUnit4TestCaseWithFiveTests() {
 		Class<?> testClass = PlainJUnit4TestCaseWithFiveTestMethods.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("abortedTest"), started()), //
@@ -144,9 +148,9 @@ class VintageTestEngineExecutionTests {
 		Class<?> testClass = EnclosedJUnit4TestCase.class;
 		Class<?> nestedClass = EnclosedJUnit4TestCase.NestedClass.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(nestedClass), started()), //
@@ -165,9 +169,9 @@ class VintageTestEngineExecutionTests {
 		Class<?> junit4SuiteClass = JUnit4SuiteWithJUnit3SuiteWithSingleTestCase.class;
 		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
 
-		List<ExecutionEvent> executionEvents = execute(junit4SuiteClass);
+		ExecutionsResult executionsResult = execute(junit4SuiteClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(junit4SuiteClass), started()), //
 			event(container("TestSuite with 1 tests"), started()), //
@@ -185,9 +189,9 @@ class VintageTestEngineExecutionTests {
 	void executesMalformedJUnit4TestCase() {
 		Class<?> testClass = MalformedJUnit4TestCase.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("initializationError"), started()), //
@@ -200,9 +204,9 @@ class VintageTestEngineExecutionTests {
 	void executesJUnit4TestCaseWithErrorInBeforeClass() {
 		Class<?> testClass = JUnit4TestCaseWithErrorInBeforeClass.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass),
@@ -215,9 +219,9 @@ class VintageTestEngineExecutionTests {
 		Class<?> suiteClass = JUnit4SuiteWithJUnit4TestCaseWithErrorInBeforeClass.class;
 		Class<?> testClass = JUnit4TestCaseWithErrorInBeforeClass.class;
 
-		List<ExecutionEvent> executionEvents = execute(suiteClass);
+		ExecutionsResult executionsResult = execute(suiteClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(suiteClass), started()), //
 			event(container(testClass), started()), //
@@ -233,9 +237,9 @@ class VintageTestEngineExecutionTests {
 		Class<?> suiteClass = JUnit4SuiteWithJUnit4TestCaseWithErrorInBeforeClass.class;
 		Class<?> testClass = JUnit4TestCaseWithErrorInBeforeClass.class;
 
-		List<ExecutionEvent> executionEvents = execute(suiteOfSuiteClass);
+		ExecutionsResult executionsResult = execute(suiteOfSuiteClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(suiteOfSuiteClass), started()), //
 			event(container(suiteClass), started()), //
@@ -251,7 +255,7 @@ class VintageTestEngineExecutionTests {
 	void executesJUnit4TestCaseWithAssumptionFailureInBeforeClass() {
 		Class<?> testClass = JUnit4TestCaseWithAssumptionFailureInBeforeClass.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		List<ExecutionEvent> executionEvents = execute(testClass).getExecutionEvents();
 
 		assertRecordedExecutionEventsContainsExactly(executionEvents, //
 			event(engine(), started()), //
@@ -267,9 +271,9 @@ class VintageTestEngineExecutionTests {
 		Class<?> suiteClass = JUnit4SuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass.class;
 		Class<?> testClass = JUnit4TestCaseWithAssumptionFailureInBeforeClass.class;
 
-		List<ExecutionEvent> executionEvents = execute(suiteOfSuiteClass);
+		ExecutionsResult executionsResult = execute(suiteOfSuiteClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(suiteOfSuiteClass), started()), //
 			event(container(suiteClass), started()), //
@@ -285,9 +289,9 @@ class VintageTestEngineExecutionTests {
 	void executesJUnit4TestCaseWithErrorInAfterClass() {
 		Class<?> testClass = JUnit4TestCaseWithErrorInAfterClass.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("failingTest"), started()), //
@@ -304,9 +308,9 @@ class VintageTestEngineExecutionTests {
 	void executesJUnit4TestCaseWithOverloadedMethod() {
 		Class<?> testClass = JUnit4TestCaseWithOverloadedMethod.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("theory(" + JUnit4TestCaseWithOverloadedMethod.class.getName() + ")[0]"), started()), //
@@ -321,9 +325,9 @@ class VintageTestEngineExecutionTests {
 	void executesIgnoredJUnit4TestCase() {
 		Class<?> testClass = IgnoredJUnit4TestCase.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), skippedWithReason("complete class is ignored")), //
 			event(engine(), finishedSuccessfully()));
@@ -333,9 +337,9 @@ class VintageTestEngineExecutionTests {
 	void executesEmptyIgnoredTestClass() {
 		Class<?> testClass = EmptyIgnoredTestCase.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(test(testClass.getName()), skippedWithReason("empty")), //
 			event(engine(), finishedSuccessfully()));
@@ -403,9 +407,9 @@ class VintageTestEngineExecutionTests {
 		Class<?> suiteClass = JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored.class;
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichIsIgnored.class;
 
-		List<ExecutionEvent> executionEvents = execute(suiteClass);
+		ExecutionsResult executionsResult = execute(suiteClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(suiteClass), started()), //
 			event(container(testClass), started()), //
@@ -421,9 +425,9 @@ class VintageTestEngineExecutionTests {
 		Class<?> suiteClass = JUnit4SuiteWithIgnoredJUnit4TestCase.class;
 		Class<?> testClass = IgnoredJUnit4TestCase.class;
 
-		List<ExecutionEvent> executionEvents = execute(suiteOfSuiteClass);
+		ExecutionsResult executionsResult = execute(suiteOfSuiteClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(suiteOfSuiteClass), started()), //
 			event(container(suiteClass), started()), //
@@ -437,9 +441,9 @@ class VintageTestEngineExecutionTests {
 	void executesParameterizedTestCase() {
 		Class<?> testClass = ParameterizedTestCase.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container("[foo]"), started()), //
@@ -459,9 +463,9 @@ class VintageTestEngineExecutionTests {
 	void executesJUnit4TestCaseWithExceptionThrowingRunner() {
 		Class<?> testClass = JUnit4TestCaseWithExceptionThrowingRunner.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(test(testClass.getName()), started()), //
 			event(test(testClass.getName()), finishedWithFailure()), //
@@ -472,9 +476,9 @@ class VintageTestEngineExecutionTests {
 	void executesJUnit4SuiteWithExceptionThrowingRunner() {
 		Class<?> testClass = JUnit4SuiteWithExceptionThrowingRunner.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass), finishedWithFailure()), //
@@ -512,9 +516,9 @@ class VintageTestEngineExecutionTests {
 	void reportsDynamicTestsForUnknownDescriptions() {
 		Class<?> testClass = DynamicTestClass.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(test(testClass.getName()), started()), //
 			event(dynamicTestRegistered("dynamicTest")), //
@@ -553,9 +557,9 @@ class VintageTestEngineExecutionTests {
 	void ignoreEventsForUnknownDescriptionsByMisbehavingChildlessRunner() {
 		Class<?> testClass = MisbehavingChildTestClass.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(test(testClass.getName()), started()), //
 			event(dynamicTestRegistered("doesNotExist")), //
@@ -568,9 +572,9 @@ class VintageTestEngineExecutionTests {
 	void executesJUnit4TestCaseWithRunnerWithCustomUniqueIds() {
 		Class<?> testClass = JUnit4TestCaseWithRunnerWithCustomUniqueIds.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(uniqueIdSubstring(testClass.getName()), started()), //
@@ -579,12 +583,17 @@ class VintageTestEngineExecutionTests {
 			event(engine(), finishedSuccessfully()));
 	}
 
-	private static List<ExecutionEvent> execute(Class<?> testClass) {
-		return ExecutionEventRecorder.execute(new VintageTestEngine(), request(testClass));
+	private static ExecutionsResult execute(Class<?> testClass) {
+		return ExecutionRecorder.execute(new VintageTestEngine(), request(testClass));
 	}
 
 	private static void execute(Class<?> testClass, EngineExecutionListener listener) {
-		ExecutionEventRecorder.execute(new VintageTestEngine(), request(testClass), listener);
+		TestEngine testEngine = new VintageTestEngine();
+		LauncherDiscoveryRequest discoveryRequest = request(testClass);
+		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest,
+			UniqueId.forEngine(testEngine.getId()));
+		testEngine.execute(
+			new ExecutionRequest(engineTestDescriptor, listener, discoveryRequest.getConfigurationParameters()));
 	}
 
 	private static LauncherDiscoveryRequest request(Class<?> testClass) {
@@ -595,9 +604,9 @@ class VintageTestEngineExecutionTests {
 	void executesJUnit4TestCaseWithErrorCollectorStoringMultipleFailures() {
 		Class<?> testClass = JUnit4TestCaseWithErrorCollectorStoringMultipleFailures.class;
 
-		List<ExecutionEvent> executionEvents = execute(testClass);
+		ExecutionsResult executionsResult = execute(testClass);
 
-		assertRecordedExecutionEventsContainsExactly(executionEvents, //
+		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("example"), started()), //

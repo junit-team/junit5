@@ -16,16 +16,16 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.test.event.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.abortedWithReason;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.container;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.displayName;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.event;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.engine.test.event.ExecutionEventConditions.test;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.isA;
-import static org.junit.platform.engine.test.event.TestExecutionResultConditions.message;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.testkit.ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED;
+import static org.junit.platform.testkit.ExecutionEventConditions.abortedWithReason;
+import static org.junit.platform.testkit.ExecutionEventConditions.container;
+import static org.junit.platform.testkit.ExecutionEventConditions.displayName;
+import static org.junit.platform.testkit.ExecutionEventConditions.event;
+import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.ExecutionEventConditions.test;
+import static org.junit.platform.testkit.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.TestExecutionResultConditions.message;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -56,8 +56,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.test.event.ExecutionEvent;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.testkit.ExecutionEvent;
+import org.junit.platform.testkit.ExecutionRecorder;
 import org.opentest4j.TestAbortedException;
 
 /**
@@ -259,7 +259,8 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	private List<ExecutionEvent> execute(DiscoverySelector... selectors) {
-		return ExecutionEventRecorder.execute(new JupiterTestEngine(), request().selectors(selectors).build());
+		return ExecutionRecorder.execute(new JupiterTestEngine(),
+			request().selectors(selectors).build()).getExecutionEvents();
 	}
 
 	static class TestCase {

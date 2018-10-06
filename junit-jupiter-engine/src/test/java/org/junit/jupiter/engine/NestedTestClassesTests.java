@@ -21,8 +21,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.ExecutionsResult;
 
 /**
  * Integration tests that verify support for {@linkplain Nested nested contexts}
@@ -41,14 +41,14 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void nestedTestsAreExecuted() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithNesting.class);
+		ExecutionsResult executionsResult = executeTestsForClass(TestCaseWithNesting.class).getExecutionsResult();
 
-		assertEquals(3, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(2, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(3, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(2, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, executionsResult.getTestFailedCount(), "# tests failed");
 
-		assertEquals(3, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(3, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(3, executionsResult.getContainerStartedCount(), "# containers started");
+		assertEquals(3, executionsResult.getContainerFinishedCount(), "# containers finished");
 	}
 
 	@Test
@@ -60,14 +60,14 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void doublyNestedTestsAreExecuted() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithDoubleNesting.class);
+		ExecutionsResult executionsResult = executeTestsForClass(TestCaseWithDoubleNesting.class).getExecutionsResult();
 
-		assertEquals(5, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(3, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(2, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(5, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(3, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(2, executionsResult.getTestFailedCount(), "# tests failed");
 
-		assertEquals(4, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(4, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(4, executionsResult.getContainerStartedCount(), "# containers started");
+		assertEquals(4, executionsResult.getContainerFinishedCount(), "# containers finished");
 
 		assertAll("before each counts", //
 			() -> assertEquals(5, TestCaseWithDoubleNesting.beforeTopCount),
@@ -83,14 +83,15 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void inheritedNestedTestsAreExecuted() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestCaseWithInheritedNested.class);
+		ExecutionsResult executionsResult = executeTestsForClass(
+			TestCaseWithInheritedNested.class).getExecutionsResult();
 
-		assertEquals(2, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(2, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, executionsResult.getTestFailedCount(), "# tests failed");
 
-		assertEquals(3, eventRecorder.getContainerStartedCount(), "# containers started");
-		assertEquals(3, eventRecorder.getContainerFinishedCount(), "# containers finished");
+		assertEquals(3, executionsResult.getContainerStartedCount(), "# containers started");
+		assertEquals(3, executionsResult.getContainerFinishedCount(), "# containers finished");
 	}
 
 	// -------------------------------------------------------------------

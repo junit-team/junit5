@@ -16,7 +16,7 @@ import org.junit.Assume;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.testkit.ExecutionsResult;
 
 /**
  * Integration tests that verify support for failed assumptions in the
@@ -28,19 +28,20 @@ class FailedAssumptionsTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testAbortedExceptionInBeforeAll() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(TestAbortedExceptionInBeforeAllTestCase.class);
+		ExecutionsResult executionsResult = executeTestsForClass(
+			TestAbortedExceptionInBeforeAllTestCase.class).getExecutionsResult();
 
-		assertEquals(1, eventRecorder.getContainerAbortedCount(), "# containers aborted");
-		assertEquals(0, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getContainerAbortedCount(), "# containers aborted");
+		assertEquals(0, executionsResult.getTestStartedCount(), "# tests started");
 	}
 
 	@Test
 	void assumptionViolatedExceptionInBeforeAll() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(
-			AssumptionViolatedExceptionInBeforeAllTestCase.class);
+		ExecutionsResult executionsResult = executeTestsForClass(
+			AssumptionViolatedExceptionInBeforeAllTestCase.class).getExecutionsResult();
 
-		assertEquals(1, eventRecorder.getContainerAbortedCount(), "# containers aborted");
-		assertEquals(0, eventRecorder.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getContainerAbortedCount(), "# containers aborted");
+		assertEquals(0, executionsResult.getTestStartedCount(), "# tests started");
 	}
 
 	// -------------------------------------------------------------------

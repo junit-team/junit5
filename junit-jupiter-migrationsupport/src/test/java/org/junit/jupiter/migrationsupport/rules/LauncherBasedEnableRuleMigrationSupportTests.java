@@ -22,8 +22,9 @@ import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.ExecutionRecorder;
+import org.junit.platform.testkit.ExecutionsResult;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Verifier;
@@ -32,13 +33,13 @@ class LauncherBasedEnableRuleMigrationSupportTests {
 
 	@Test
 	void enableRuleMigrationSupportAnnotationWorksForBothRuleTypes() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(
-			EnableRuleMigrationSupportWithBothRuleTypesTestCase.class);
+		ExecutionsResult executionsResult = executeTestsForClass(
+			EnableRuleMigrationSupportWithBothRuleTypesTestCase.class).getExecutionsResult();
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(1, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(0, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed");
 
 		assertEquals(true, EnableRuleMigrationSupportWithBothRuleTypesTestCase.afterOfRule1WasExecuted,
 			"after of rule 1 executed?");
@@ -50,25 +51,26 @@ class LauncherBasedEnableRuleMigrationSupportTests {
 
 	@Test
 	void verifierSupportForErrorCollectorFieldFailsTheTest() {
-		ExecutionEventRecorder eventRecorder = executeTestsForClass(VerifierSupportForErrorCollectorTestCase.class);
+		ExecutionsResult executionsResult = executeTestsForClass(
+			VerifierSupportForErrorCollectorTestCase.class).getExecutionsResult();
 
-		assertEquals(1, eventRecorder.getTestStartedCount(), "# tests started");
-		assertEquals(0, eventRecorder.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, eventRecorder.getTestAbortedCount(), "# tests aborted");
-		assertEquals(1, eventRecorder.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(0, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
+		assertEquals(1, executionsResult.getTestFailedCount(), "# tests failed");
 
 		assertEquals(true, VerifierSupportForErrorCollectorTestCase.survivedBothErrors, "after of rule 1 executed?");
 	}
 
 	private final JupiterTestEngine engine = new JupiterTestEngine();
 
-	private ExecutionEventRecorder executeTestsForClass(Class<?> testClass) {
+	private ExecutionRecorder executeTestsForClass(Class<?> testClass) {
 		return executeTests(request().selectors(selectClass(testClass)).build());
 	}
 
-	private ExecutionEventRecorder executeTests(LauncherDiscoveryRequest request) {
+	private ExecutionRecorder executeTests(LauncherDiscoveryRequest request) {
 		TestDescriptor testDescriptor = discoverTests(request);
-		ExecutionEventRecorder eventRecorder = new ExecutionEventRecorder();
+		ExecutionRecorder eventRecorder = new ExecutionRecorder();
 		engine.execute(new ExecutionRequest(testDescriptor, eventRecorder, request.getConfigurationParameters()));
 		return eventRecorder;
 	}

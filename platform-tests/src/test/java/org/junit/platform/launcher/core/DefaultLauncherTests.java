@@ -45,15 +45,15 @@ import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
-import org.junit.platform.engine.test.TestDescriptorStub;
-import org.junit.platform.engine.test.TestEngineSpy;
-import org.junit.platform.engine.test.TestEngineStub;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.PostDiscoveryFilterStub;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+import org.junit.platform.testkit.TestDescriptorStub;
+import org.junit.platform.testkit.TestEngineSpy;
+import org.junit.platform.testkit.TestEngineStub;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 

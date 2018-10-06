@@ -18,8 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.TestEngine;
-import org.junit.platform.engine.test.TestEngineStub;
 import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.testkit.TestEngineStub;
 
 /**
  * Unit tests for {@link LauncherConfig} and {@link LauncherConfig.Builder}.
