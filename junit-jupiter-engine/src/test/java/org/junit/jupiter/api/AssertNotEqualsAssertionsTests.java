@@ -27,6 +27,61 @@ import org.opentest4j.AssertionFailedError;
 class AssertNotEqualsAssertionsTests {
 
 	@Nested
+	class AssertNotEqualsShort {
+
+		@Test
+		void assertNotEqualsShort() {
+			short unexpected = 1;
+			short actual = 2;
+			assertNotEquals(unexpected, actual);
+			assertNotEquals(unexpected, actual, "message");
+			assertNotEquals(unexpected, actual, () -> "message");
+		}
+
+		@Test
+		void withEqualValues() {
+			short unexpected = 1;
+			short actual = 1;
+			try {
+				assertNotEquals(unexpected, actual);
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageEquals(ex, "expected: not equal but was: <1>");
+			}
+		}
+
+		@Test
+		void withEqualValuesWithMessage() {
+			short unexpected = 1;
+			short actual = 1;
+			try {
+				assertNotEquals(unexpected, actual, "custom message");
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageStartsWith(ex, "custom message");
+				assertMessageEndsWith(ex, "expected: not equal but was: <1>");
+			}
+		}
+
+		@Test
+		void withEqualValuesWithMessageProvider() {
+			byte unexpected = 1;
+			byte actual = 1;
+			try {
+				assertNotEquals(unexpected, actual, () -> "custom message from provider");
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageStartsWith(ex, "custom message from provider");
+				assertMessageEndsWith(ex, "expected: not equal but was: <1>");
+			}
+		}
+
+	}
+
+	@Nested
 	class AssertNotEqualsByte {
 
 		@Test
