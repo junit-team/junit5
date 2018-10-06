@@ -1,5 +1,6 @@
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
+import java.util.spi.ToolProvider
 
 plugins {
 	id 'com.gradle.build-scan'
@@ -301,26 +302,12 @@ subprojects { subproj ->
 			// directory of the version-aware project later.
 			dependsOn = [versionedProject.classes]
 			doLast {
-				// The following two external "project.exec" commands should be replaced by:
-				// 		ToolProvider.findFirst("jar").get().run(System.out, System.err,
-				//				'--update',
-				//				'--file', archivePath,
-				//				'--release', version,
-				//				'-C', versionedProject.compileJava.destinationDir,
-				//				'.')
-				// Blocked by: https://github.com/gradle/gradle/issues/721
-				project.exec {
-					executable "${System.properties['java.home']}/bin/jar"
-					args = ['--version']
-				}
-				project.exec {
-					executable "${System.properties['java.home']}/bin/jar"
-					args = ['--update','--file', archivePath,
-							'--release', version,
-							'-C', versionedProject.compileJava.destinationDir,
-							'.'
-					]
-				}
+				ToolProvider.findFirst("jar").get().run(System.out, System.err,
+						'--update',
+						'--file', archivePath.toString(),
+						'--release', version,
+						'-C', versionedProject.compileJava.destinationDir.toString(),
+						'.')
 			}
 		}
 
