@@ -14,12 +14,10 @@ object Versions {
     // Test Dependencies
     val archunit = "0.9.1"
     val assertJ = "3.11.1"
-    val bartholdy = "0.0.24"
+    val bartholdy = "0.0.26"
     val classgraph = "4.2.2"
     val commonsIo = "2.6"
-    val digraphParser = "1.0"
     val groovy = "2.4.15"
-    val jgrapht = "1.2.0"
     val log4j = "2.11.1"
     val mockito = "2.23.0"
     val slf4j = "1.7.25"
