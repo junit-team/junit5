@@ -191,6 +191,61 @@ class AssertNotEqualsAssertionsTests {
 
 	}
 
+	@Nested
+	class AssertNotEqualsLong {
+
+		@Test
+		void assertNotEqualsLong() {
+			long unexpected = 1L;
+			long actual = 2L;
+			assertNotEquals(unexpected, actual);
+			assertNotEquals(unexpected, actual, "message");
+			assertNotEquals(unexpected, actual, () -> "message");
+		}
+
+		@Test
+		void withEqualValues() {
+			long unexpected = 1L;
+			long actual = 1L;
+			try {
+				assertNotEquals(unexpected, actual);
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageEquals(ex, "expected: not equal but was: <1>");
+			}
+		}
+
+		@Test
+		void withEqualValuesWithMessage() {
+			long unexpected = 1L;
+			long actual = 1L;
+			try {
+				assertNotEquals(unexpected, actual, "custom message");
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageStartsWith(ex, "custom message");
+				assertMessageEndsWith(ex, "expected: not equal but was: <1>");
+			}
+		}
+
+		@Test
+		void withEqualValuesWithMessageProvider() {
+			long unexpected = 1L;
+			long actual = 1L;
+			try {
+				assertNotEquals(unexpected, actual, () -> "custom message from provider");
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageStartsWith(ex, "custom message from provider");
+				assertMessageEndsWith(ex, "expected: not equal but was: <1>");
+			}
+		}
+
+	}
+
 	@Test
 	void assertNotEqualsWithNullVsObject() {
 		assertNotEquals(null, "foo");
