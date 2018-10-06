@@ -82,6 +82,61 @@ class AssertNotEqualsAssertionsTests {
 	}
 
 	@Nested
+	class AssertNotEqualsChar {
+
+		@Test
+		void assertNotEqualsChar() {
+			char unexpected = 'a';
+			char actual = 'b';
+			assertNotEquals(unexpected, actual);
+			assertNotEquals(unexpected, actual, "message");
+			assertNotEquals(unexpected, actual, () -> "message");
+		}
+
+		@Test
+		void withEqualValues() {
+			char unexpected = 'a';
+			char actual = 'a';
+			try {
+				assertNotEquals(unexpected, actual);
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageEquals(ex, "expected: not equal but was: <a>");
+			}
+		}
+
+		@Test
+		void withEqualValuesWithMessage() {
+			char unexpected = 'a';
+			char actual = 'a';
+			try {
+				assertNotEquals(unexpected, actual, "custom message");
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageStartsWith(ex, "custom message");
+				assertMessageEndsWith(ex, "expected: not equal but was: <a>");
+			}
+		}
+
+		@Test
+		void withEqualValuesWithMessageProvider() {
+			char unexpected = 'a';
+			char actual = 'a';
+			try {
+				assertNotEquals(unexpected, actual, () -> "custom message from provider");
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageStartsWith(ex, "custom message from provider");
+				assertMessageEndsWith(ex, "expected: not equal but was: <a>");
+			}
+		}
+
+	}
+
+	@Nested
 	class AssertNotEqualsByte {
 
 		@Test

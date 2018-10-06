@@ -1061,6 +1061,29 @@ public class Assertions {
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
+	 */
+	public static void assertNotEquals(char unexpected, char actual) {
+		AssertNotEquals.assertNotEquals(unexpected, actual);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
+	 * <p>Fails with the supplied failure {@code message}.
+	 */
+	public static void assertNotEquals(char unexpected, char actual, String message) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, message);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
+	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 */
+	public static void assertNotEquals(char unexpected, char actual, Supplier<String> messageSupplier) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
 	 * <p>Fails if both are {@code null}.
 	 *
 	 * @see Object#equals(Object)
