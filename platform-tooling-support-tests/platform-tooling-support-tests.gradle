@@ -45,6 +45,10 @@ test {
 		rootProject.ext.mavenizedProjects.each { name ->
 			dependsOn project(":${name}").publishToMavenLocal
 		}
+		// TODO Enabling parallel execution fails due to Gradle's listener not being thread-safe:
+		//   Received a completed event for test with unknown id '10.5'.
+		//   Registered test ids: '[:platform-tooling-support-tests:test, 10.1]'
+		// systemProperty('junit.jupiter.execution.parallel.enabled', 'true')
 	}
 
 	filter {
