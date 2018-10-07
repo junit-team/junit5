@@ -7,7 +7,7 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.assertj:assertj-core:${Versions.assertJ}") {
-			because("the testScanModulepath and testNoJavaScripting tasks needs to check the generated output")
+			because("the testScanModulePath and testNoJavaScripting tasks needs to check the generated output")
 		}
 	}
 }
@@ -47,25 +47,27 @@ val generateDependenciesDirectory by tasks.creating(Copy::class) {
 	from(configurations.testRuntimeClasspath)
 }
 
-val testScanModulepath by tasks.creating {
+val modulePath = files(
+		generateDependenciesDirectory.destinationDir,
+		generateIntegrationTestsJar.archivePath
+).asPath
+
+val testScanModulePath by tasks.creating {
 	dependsOn(generateDependenciesDirectory, generateIntegrationTestsJar)
+	description = "Execute console launcher on the module-path and checks output"
 	doLast {
 		val out = ByteArrayOutputStream()
 		val err = ByteArrayOutputStream()
 
-		exec {
-			executable = "${System.getProperty("java.home")}/bin/java"
+		javaexec {
 			standardOutput = out
 			errorOutput = err
-			args = listOf(
-				"--module-path", files(
-						generateDependenciesDirectory.destinationDir,
-						generateIntegrationTestsJar.archivePath
-				).asPath,
-				"--add-modules", "ALL-MODULE-PATH,ALL-DEFAULT",
-				"--module", "org.junit.platform.console",
-				"--scan-modules"
+			jvmArgs = listOf(
+				"--module-path", modulePath,
+				"--add-modules", "ALL-MODULE-PATH,ALL-DEFAULT"
 			)
+			main = "--module"
+			args = listOf("org.junit.platform.console", "--scan-modules")
 		}
 		val text = "$err$out"
 
@@ -103,19 +105,18 @@ val testScanModulepath by tasks.creating {
 
 val testNoJavaScripting by tasks.creating {
 	dependsOn(generateDependenciesDirectory, generateIntegrationTestsJar)
+	description = "Executes ConsoleLauncher on the module-path w/o 'java.scripting' and checks output"
 	doLast {
 		val out = ByteArrayOutputStream()
 		val err = ByteArrayOutputStream()
 
-		// Execute console launcher on the module-path w/o "java.scripting"
-		exec {
+		javaexec {
 			isIgnoreExitValue = true
 			standardOutput = out
 			errorOutput = err
-			executable = "${System.getProperty("java.home")}/bin/java"
-			args = listOf(
+			jvmArgs = listOf(
 				"--show-module-resolution",
-				"--module-path", files(generateDependenciesDirectory.destinationDir, generateIntegrationTestsJar.archivePath).asPath,
+				"--module-path", modulePath,
 				// only "java.base" and "java.logging" are visible
 				"--limit-modules", "java.base",
 				"--limit-modules", "java.logging",
@@ -132,11 +133,11 @@ val testNoJavaScripting by tasks.creating {
 				"--add-modules", "org.opentest4j",
 				"--add-modules", "org.apiguardian.api",
 				// local module containing tests
-				"--add-modules", "junit.commons.integration.tests",
-				// console launcher with arguments
-				"--module", "org.junit.platform.console",
-				"--scan-modules"
+				"--add-modules", "junit.commons.integration.tests"
 			)
+			// console launcher with arguments
+			main = "--module"
+			args = listOf("org.junit.platform.console", "--scan-modules")
 		}
 		val text = "$err$out"
 
@@ -172,8 +173,8 @@ val testNoJavaScripting by tasks.creating {
 	}
 }
 
-val test = tasks.named<Test>("test") {
-	dependsOn(testScanModulepath, testNoJavaScripting)
+tasks.named<Test>("test") {
+	dependsOn(testScanModulePath, testNoJavaScripting)
 	useJUnitPlatform()
 	// Exclude "integration" package from default "class-path based" test run.
 	// Tests in the "integration" package assume to be run on the module-path.
