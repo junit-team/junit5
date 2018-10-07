@@ -1061,6 +1061,60 @@ public class Assertions {
 
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
+	 * <p>Inequality imposed by this method is consistent with {@link Float#equals(Object)} and
+	 * {@link Float#compare(float, float)}.</p>
+	 */
+	public static void assertNotEquals(float unexpected, float actual) {
+		AssertNotEquals.assertNotEquals(unexpected, actual);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
+	 * <p>Inequality imposed by this method is consistent with {@link Float#equals(Object)} and
+	 * {@link Float#compare(float, float)}.</p>
+	 */
+	public static void assertNotEquals(float unexpected, float actual, String message) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, message);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
+	 * <p>Inequality imposed by this method is consistent with {@link Float#equals(Object)} and
+	 * {@link Float#compare(float, float)}.</p>
+	 */
+	public static void assertNotEquals(float unexpected, float actual, Supplier<String> messageSupplier) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal within the given {@code delta}.
+	 * <p>Inequality imposed by this method is consistent with {@link Float#equals(Object)} and
+	 * {@link Float#compare(float, float)}.</p>
+	 */
+	public static void assertNotEquals(float unexpected, float actual, float delta) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, delta);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal within the given {@code delta}.
+	 * <p>Inequality imposed by this method is consistent with {@link Float#equals(Object)} and
+	 * {@link Float#compare(float, float)}.</p>
+	 */
+	public static void assertNotEquals(float unexpected, float actual, float delta, String message) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, delta, message);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal within the given {@code delta}.
+	 * <p>Inequality imposed by this method is consistent with {@link Float#equals(Object)} and
+	 * {@link Float#compare(float, float)}.</p>
+	 */
+	public static void assertNotEquals(float unexpected, float actual, float delta, Supplier<String> messageSupplier) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, delta, messageSupplier);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
 	 */
 	public static void assertNotEquals(char unexpected, char actual) {
 		AssertNotEquals.assertNotEquals(unexpected, actual);
