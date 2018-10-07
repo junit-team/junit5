@@ -47,6 +47,22 @@ class AssertNotEquals {
 		}
 	}
 
+	static void assertNotEquals(boolean unexpected, boolean actual) {
+		assertNotEquals(unexpected, actual, (String) null);
+	}
+
+	static void assertNotEquals(boolean unexpected, boolean actual, String message) {
+		if (unexpected == actual) {
+			failEqual(actual, message);
+		}
+	}
+
+	static void assertNotEquals(boolean unexpected, boolean actual, Supplier<String> messageSupplier) {
+		if (unexpected == actual) {
+			failEqual(actual, nullSafeGet(messageSupplier));
+		}
+	}
+
 	static void assertNotEquals(char unexpected, char actual) {
 		assertNotEquals(unexpected, actual, (String) null);
 	}
