@@ -1,4 +1,4 @@
-apply(from = "$rootDir/gradle/testing.gradle")
+apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 afterEvaluate {
 	tasks.withType<JavaCompile> {

@@ -2,7 +2,7 @@ plugins {
 	id("me.champeau.gradle.jmh")
 }
 
-apply(from = "$rootDir/gradle/testing.gradle")
+apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 tasks.named<Test>("test") {
 	// Tests in `AutomaticModuleNameTests` depend on all and these jars. #894
