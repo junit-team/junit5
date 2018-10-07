@@ -14,6 +14,7 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static org.junit.jupiter.engine.descriptor.JupiterTestDescriptor.toExecutionMode;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
@@ -55,6 +56,7 @@ import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
+import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 
 /**
  * <h3>NOTES TO DEVELOPERS</h3>
@@ -290,6 +292,10 @@ class JavaElementsResolver {
 				.map(TestMethodOrder::value)//
 				.map(ReflectionUtils::newInstance)//
 				.ifPresent(methodOrderer -> {
+
+					ExecutionMode defaultExecutionMode = toExecutionMode(methodOrderer.getDefaultExecutionMode());
+					// TODO Decide if we should set the default ExecutionMode for the class or individual methods.
+					classTestDescriptor.setDefaultChildExecutionMode(defaultExecutionMode);
 
 					List<DefaultMethodDescriptor> methodDescriptors = classTestDescriptor.getChildren().stream()//
 							.filter(MethodBasedTestDescriptor.class::isInstance)//

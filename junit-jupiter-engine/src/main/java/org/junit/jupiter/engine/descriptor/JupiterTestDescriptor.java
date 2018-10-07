@@ -132,7 +132,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		// @formatter:on
 	}
 
-	private static ExecutionMode toExecutionMode(org.junit.jupiter.api.parallel.ExecutionMode mode) {
+	public static ExecutionMode toExecutionMode(org.junit.jupiter.api.parallel.ExecutionMode mode) {
 		switch (mode) {
 			case CONCURRENT:
 				return ExecutionMode.CONCURRENT;

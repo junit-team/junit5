@@ -44,6 +44,8 @@ import org.junit.platform.testkit.ExecutionResults;
  */
 class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 
+	// TODO Test concurrent execution.
+
 	private static final Set<String> callSequence = new LinkedHashSet<>();
 
 	@BeforeEach
@@ -92,8 +94,8 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 			assertEquals(callSequence.size(), executionResults.getTestsSuccessfulCount(), "# tests succeeded");
 		}
 
-		// We hope that 3 out of 10 are different...
-		assertThat(uniqueSequences.size()).isGreaterThan(3);
+		// We assume that at least 3 out of 10 are different...
+		assertThat(uniqueSequences.size()).isGreaterThanOrEqualTo(3);
 	}
 
 	// -------------------------------------------------------------------------

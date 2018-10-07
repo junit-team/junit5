@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.platform.commons.util.AnnotationUtils;
 
 /**
@@ -27,6 +28,22 @@ import org.junit.platform.commons.util.AnnotationUtils;
 public interface MethodOrderer {
 
 	void orderMethods(List<? extends MethodDescriptor> methodDescriptors);
+
+	/**
+	 * Get the <em>default</em> {@link ExecutionMode} for the annotated class.
+	 *
+	 * <p>Defaults to {@link ExecutionMode#SAME_THREAD SAME_THREAD}, since
+	 * ordered methods are typically sorted in a fashion that would conflict
+	 * with concurrent execution.
+	 *
+	 * <p>Can be overridden via an explicit
+	 * {@link org.junit.jupiter.api.parallel.Execution @Execution} declaration.
+	 *
+	 * @return the default {@code ExecutionMode}; never {@code null}
+	 */
+	default ExecutionMode getDefaultExecutionMode() {
+		return ExecutionMode.SAME_THREAD;
+	}
 
 	interface MethodDescriptor {
 
@@ -86,13 +103,25 @@ public interface MethodOrderer {
 	}
 
 	/**
-	 * {@code MethodOrderer} that orders methods randomly.
+	 * {@code MethodOrderer} that orders methods randomly and allows for concurrent
+	 * execution by default.
+	 *
+	 * @see #getDefaultExecutionMode()
 	 */
 	class Random implements MethodOrderer {
 
 		@Override
 		public void orderMethods(List<? extends MethodDescriptor> methodDescriptors) {
 			Collections.shuffle(methodDescriptors);
+		}
+
+		/**
+		 * Returns {@link ExecutionMode#CONCURRENT CONCURRENT} to allow concurrent
+		 * execution of randomly ordered methods by default.
+		 */
+		@Override
+		public ExecutionMode getDefaultExecutionMode() {
+			return ExecutionMode.CONCURRENT;
 		}
 	}
 

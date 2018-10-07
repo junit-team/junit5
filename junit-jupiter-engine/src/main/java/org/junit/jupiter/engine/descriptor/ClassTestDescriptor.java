@@ -81,6 +81,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private final Set<TestTag> tags;
 	protected final Lifecycle lifecycle;
 
+	private ExecutionMode defaultChildExecutionMode;
 	private TestInstanceFactory testInstanceFactory;
 	private List<Method> beforeAllMethods;
 	private List<Method> afterAllMethods;
@@ -96,6 +97,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		this.testClass = testClass;
 		this.tags = getTags(testClass);
 		this.lifecycle = getTestInstanceLifecycle(testClass, configurationParameters);
+		this.defaultChildExecutionMode = (this.lifecycle == Lifecycle.PER_CLASS ? ExecutionMode.SAME_THREAD : null);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -129,7 +131,11 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	protected Optional<ExecutionMode> getDefaultChildExecutionMode() {
-		return this.lifecycle == Lifecycle.PER_CLASS ? Optional.of(ExecutionMode.SAME_THREAD) : Optional.empty();
+		return Optional.ofNullable(this.defaultChildExecutionMode);
+	}
+
+	public void setDefaultChildExecutionMode(ExecutionMode defaultChildExecutionMode) {
+		this.defaultChildExecutionMode = defaultChildExecutionMode;
 	}
 
 	@Override
