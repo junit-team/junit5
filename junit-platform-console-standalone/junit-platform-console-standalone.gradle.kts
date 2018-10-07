@@ -84,28 +84,30 @@ val shadowJar by tasks.getting(ShadowJar::class) {
 
 jar.dependsOn(shadowJar)
 
-val standaloneExec by tasks.creating(JavaExec::class) {
-	dependsOn(shadowJar, "testClasses")
-	isIgnoreExitValue = true
-	workingDir("$buildDir/libs")
-	jvmArgs("-ea")
-	systemProperty("java.util.logging.config.file", "$buildDir/resources/test/logging.properties")
-	main = "-jar"
-	args = listOf(
-		shadowJar.archiveName,
-		"--scan-classpath",
-		"--include-classname", "standalone.*",
-		"--classpath", "$buildDir/classes/java/test",
-		"--details", "tree"
-	)
-	standardOutput = ByteArrayOutputStream()
-	errorOutput = ByteArrayOutputStream()
-}
-
 val standaloneCheck by tasks.creating {
-	dependsOn(standaloneExec)
+	dependsOn(shadowJar, "testClasses")
 	doLast {
-		val text = standaloneExec.errorOutput.toString() + standaloneExec.standardOutput.toString()
+		val out = ByteArrayOutputStream()
+		val err = ByteArrayOutputStream()
+
+		javaexec {
+			workingDir("$buildDir/libs")
+			isIgnoreExitValue = true
+			jvmArgs("-ea")
+			systemProperty("java.util.logging.config.file", "$buildDir/resources/test/logging.properties")
+			main = "-jar"
+			args = listOf(
+					shadowJar.archiveName,
+					"--scan-classpath",
+					"--include-classname", "standalone.*",
+					"--classpath", "$buildDir/classes/java/test",
+					"--details", "tree"
+			)
+			standardOutput = out
+			errorOutput = err
+		}
+		val text = "$err$out"
+
 		// engines -- output depends on default logging configuration
 		assertThat(text).contains(
 				"junit-jupiter (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: $jupiterVersion",
