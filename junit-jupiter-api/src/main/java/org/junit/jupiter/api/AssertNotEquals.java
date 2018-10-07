@@ -11,6 +11,7 @@
 package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
+import static org.junit.jupiter.api.AssertionUtils.doublesAreEqual;
 import static org.junit.jupiter.api.AssertionUtils.fail;
 import static org.junit.jupiter.api.AssertionUtils.floatsAreEqual;
 import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
@@ -138,6 +139,38 @@ class AssertNotEquals {
 
 	static void assertNotEquals(float unexpected, float actual, float delta, Supplier<String> messageSupplier) {
 		if (floatsAreEqual(unexpected, actual, delta)) {
+			failEqual(actual, nullSafeGet(messageSupplier));
+		}
+	}
+
+	static void assertNotEquals(double unexpected, double actual) {
+		assertNotEquals(unexpected, actual, (String) null);
+	}
+
+	static void assertNotEquals(double unexpected, double actual, String message) {
+		if (doublesAreEqual(unexpected, actual)) {
+			failEqual(actual, message);
+		}
+	}
+
+	static void assertNotEquals(double unexpected, double actual, Supplier<String> messageSupplier) {
+		if (doublesAreEqual(unexpected, actual)) {
+			failEqual(actual, nullSafeGet(messageSupplier));
+		}
+	}
+
+	static void assertNotEquals(double unexpected, double actual, double delta) {
+		assertNotEquals(unexpected, actual, delta, (String) null);
+	}
+
+	static void assertNotEquals(double unexpected, double actual, double delta, String message) {
+		if (doublesAreEqual(unexpected, actual, delta)) {
+			failEqual(actual, message);
+		}
+	}
+
+	static void assertNotEquals(double unexpected, double actual, double delta, Supplier<String> messageSupplier) {
+		if (doublesAreEqual(unexpected, actual, delta)) {
 			failEqual(actual, nullSafeGet(messageSupplier));
 		}
 	}

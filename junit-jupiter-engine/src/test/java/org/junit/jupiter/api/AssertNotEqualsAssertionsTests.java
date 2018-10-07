@@ -423,6 +423,128 @@ class AssertNotEqualsAssertionsTests {
 
 	}
 
+	@Nested
+	class AssertNotEqualsDoubleWithoutDelta {
+
+		@Test
+		void assertNotEqualsDouble() {
+			double unexpected = 1.0d;
+			double actual = 2.0d;
+			assertNotEquals(unexpected, actual);
+			assertNotEquals(unexpected, actual, "message");
+			assertNotEquals(unexpected, actual, () -> "message");
+		}
+
+		@Test
+		void assertNotEqualsForTwoNaNDouble() {
+			try {
+				assertNotEquals(Double.NaN, Double.NaN);
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageEquals(ex, "expected: not equal but was: <NaN>");
+			}
+		}
+
+		@Test
+		void withEqualValues() {
+			double unexpected = 1.0d;
+			double actual = 1.0d;
+			try {
+				assertNotEquals(unexpected, actual);
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageEquals(ex, "expected: not equal but was: <1.0>");
+			}
+		}
+
+		@Test
+		void withEqualValuesWithMessage() {
+			double unexpected = 1.0d;
+			double actual = 1.0d;
+			try {
+				assertNotEquals(unexpected, actual, "custom message");
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageStartsWith(ex, "custom message");
+				assertMessageEndsWith(ex, "expected: not equal but was: <1.0>");
+			}
+		}
+
+		@Test
+		void withEqualValuesWithMessageProvider() {
+			double unexpected = 1.0d;
+			double actual = 1.0d;
+			try {
+				assertNotEquals(unexpected, actual, () -> "custom message from provider");
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageStartsWith(ex, "custom message from provider");
+				assertMessageEndsWith(ex, "expected: not equal but was: <1.0>");
+			}
+		}
+
+	}
+
+	@Nested
+	class AssertNotEqualsDoubleWithDelta {
+
+		@Test
+		void assertNotEqualsDouble() {
+			assertNotEquals(1.0d, 1.5f, 0.4f);
+			assertNotEquals(1.0d, 1.5f, 0.4f, "message");
+			assertNotEquals(1.0d, 1.5f, 0.4f, () -> "message");
+		}
+
+		@Test
+		void withEqualValues() {
+			double unexpected = 1.0d;
+			double actual = 1.5f;
+			double delta = 0.5f;
+			try {
+				assertNotEquals(unexpected, actual, delta);
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageEquals(ex, "expected: not equal but was: <1.5>");
+			}
+		}
+
+		@Test
+		void withEqualValuesWithMessage() {
+			double unexpected = 1.0d;
+			double actual = 1.5f;
+			double delta = 0.5f;
+			try {
+				assertNotEquals(unexpected, actual, delta, "custom message");
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageStartsWith(ex, "custom message");
+				assertMessageEndsWith(ex, "expected: not equal but was: <1.5>");
+			}
+		}
+
+		@Test
+		void withEqualValuesWithMessageProvider() {
+			double unexpected = 1.0d;
+			double actual = 1.5f;
+			double delta = 0.5f;
+			try {
+				assertNotEquals(unexpected, actual, delta, () -> "custom message from provider");
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageStartsWith(ex, "custom message from provider");
+				assertMessageEndsWith(ex, "expected: not equal but was: <1.5>");
+			}
+		}
+
+	}
+
 	@Test
 	void assertNotEqualsWithNullVsObject() {
 		assertNotEquals(null, "foo");
