@@ -27,6 +27,53 @@ import org.opentest4j.AssertionFailedError;
 class AssertNotEqualsAssertionsTests {
 
 	@Nested
+	class AssertNotEqualsBoolean {
+
+		@Test
+		void assertNotEqualsBoolean() {
+			assertNotEquals(true, false);
+			assertNotEquals(true, false, "message");
+			assertNotEquals(true, false, () -> "message");
+		}
+
+		@Test
+		void withEqualValues() {
+			try {
+				assertNotEquals(true, true);
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageEquals(ex, "expected: not equal but was: <true>");
+			}
+		}
+
+		@Test
+		void withEqualValuesWithMessage() {
+			try {
+				assertNotEquals(true, true, "custom message");
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageStartsWith(ex, "custom message");
+				assertMessageEndsWith(ex, "expected: not equal but was: <true>");
+			}
+		}
+
+		@Test
+		void withEqualValuesWithMessageProvider() {
+			try {
+				assertNotEquals(true, true, () -> "custom message from provider");
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageStartsWith(ex, "custom message from provider");
+				assertMessageEndsWith(ex, "expected: not equal but was: <true>");
+			}
+		}
+
+	}
+
+	@Nested
 	class AssertNotEqualsShort {
 
 		@Test
@@ -76,108 +123,6 @@ class AssertNotEqualsAssertionsTests {
 			catch (AssertionFailedError ex) {
 				assertMessageStartsWith(ex, "custom message from provider");
 				assertMessageEndsWith(ex, "expected: not equal but was: <1>");
-			}
-		}
-
-	}
-
-	@Nested
-	class AssertNotEqualsBoolean {
-
-		@Test
-		void assertNotEqualsBoolean() {
-			assertNotEquals(true, false);
-			assertNotEquals(true, false, "message");
-			assertNotEquals(true, false, () -> "message");
-		}
-
-		@Test
-		void withEqualValues() {
-			try {
-				assertNotEquals(true, true);
-				expectAssertionFailedError();
-			}
-			catch (AssertionFailedError ex) {
-				assertMessageEquals(ex, "expected: not equal but was: <true>");
-			}
-		}
-
-		@Test
-		void withEqualValuesWithMessage() {
-			try {
-				assertNotEquals(true, true, "custom message");
-				expectAssertionFailedError();
-			}
-			catch (AssertionFailedError ex) {
-				assertMessageStartsWith(ex, "custom message");
-				assertMessageEndsWith(ex, "expected: not equal but was: <true>");
-			}
-		}
-
-		@Test
-		void withEqualValuesWithMessageProvider() {
-			try {
-				assertNotEquals(true, true, () -> "custom message from provider");
-				expectAssertionFailedError();
-			}
-			catch (AssertionFailedError ex) {
-				assertMessageStartsWith(ex, "custom message from provider");
-				assertMessageEndsWith(ex, "expected: not equal but was: <true>");
-			}
-		}
-
-	}
-
-	@Nested
-	class AssertNotEqualsChar {
-
-		@Test
-		void assertNotEqualsChar() {
-			char unexpected = 'a';
-			char actual = 'b';
-			assertNotEquals(unexpected, actual);
-			assertNotEquals(unexpected, actual, "message");
-			assertNotEquals(unexpected, actual, () -> "message");
-		}
-
-		@Test
-		void withEqualValues() {
-			char unexpected = 'a';
-			char actual = 'a';
-			try {
-				assertNotEquals(unexpected, actual);
-				expectAssertionFailedError();
-			}
-			catch (AssertionFailedError ex) {
-				assertMessageEquals(ex, "expected: not equal but was: <a>");
-			}
-		}
-
-		@Test
-		void withEqualValuesWithMessage() {
-			char unexpected = 'a';
-			char actual = 'a';
-			try {
-				assertNotEquals(unexpected, actual, "custom message");
-				expectAssertionFailedError();
-			}
-			catch (AssertionFailedError ex) {
-				assertMessageStartsWith(ex, "custom message");
-				assertMessageEndsWith(ex, "expected: not equal but was: <a>");
-			}
-		}
-
-		@Test
-		void withEqualValuesWithMessageProvider() {
-			char unexpected = 'a';
-			char actual = 'a';
-			try {
-				assertNotEquals(unexpected, actual, () -> "custom message from provider");
-				expectAssertionFailedError();
-			}
-			catch (AssertionFailedError ex) {
-				assertMessageStartsWith(ex, "custom message from provider");
-				assertMessageEndsWith(ex, "expected: not equal but was: <a>");
 			}
 		}
 
@@ -343,6 +288,61 @@ class AssertNotEqualsAssertionsTests {
 			catch (AssertionFailedError ex) {
 				assertMessageStartsWith(ex, "custom message from provider");
 				assertMessageEndsWith(ex, "expected: not equal but was: <1>");
+			}
+		}
+
+	}
+
+	@Nested
+	class AssertNotEqualsChar {
+
+		@Test
+		void assertNotEqualsChar() {
+			char unexpected = 'a';
+			char actual = 'b';
+			assertNotEquals(unexpected, actual);
+			assertNotEquals(unexpected, actual, "message");
+			assertNotEquals(unexpected, actual, () -> "message");
+		}
+
+		@Test
+		void withEqualValues() {
+			char unexpected = 'a';
+			char actual = 'a';
+			try {
+				assertNotEquals(unexpected, actual);
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageEquals(ex, "expected: not equal but was: <a>");
+			}
+		}
+
+		@Test
+		void withEqualValuesWithMessage() {
+			char unexpected = 'a';
+			char actual = 'a';
+			try {
+				assertNotEquals(unexpected, actual, "custom message");
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageStartsWith(ex, "custom message");
+				assertMessageEndsWith(ex, "expected: not equal but was: <a>");
+			}
+		}
+
+		@Test
+		void withEqualValuesWithMessageProvider() {
+			char unexpected = 'a';
+			char actual = 'a';
+			try {
+				assertNotEquals(unexpected, actual, () -> "custom message from provider");
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageStartsWith(ex, "custom message from provider");
+				assertMessageEndsWith(ex, "expected: not equal but was: <a>");
 			}
 		}
 
@@ -592,56 +592,61 @@ class AssertNotEqualsAssertionsTests {
 
 	}
 
-	@Test
-	void assertNotEqualsWithNullVsObject() {
-		assertNotEquals(null, "foo");
-	}
+	@Nested
+	class AssertNotEqualsObject {
 
-	@Test
-	void assertNotEqualsWithObjectVsNull() {
-		assertNotEquals("foo", null);
-	}
-
-	@Test
-	void assertNotEqualsWithDifferentObjects() {
-		assertNotEquals(new Object(), new Object());
-		assertNotEquals(new Object(), new Object(), "message");
-		assertNotEquals(new Object(), new Object(), () -> "message");
-	}
-
-	@Test
-	void assertNotEqualsWithNullVsObjectAndMessageSupplier() {
-		assertNotEquals(null, "foo", () -> "test");
-	}
-
-	@Test
-	void assertNotEqualsWithEquivalentStringsAndMessage() {
-		try {
-			assertNotEquals(new String("foo"), new String("foo"), "test");
-			expectAssertionFailedError();
+		@Test
+		void assertNotEqualsWithNullVsObject() {
+			assertNotEquals(null, "foo");
 		}
-		catch (AssertionFailedError ex) {
-			assertMessageStartsWith(ex, "test");
-			assertMessageEndsWith(ex, "expected: not equal but was: <foo>");
-		}
-	}
 
-	@Test
-	void assertNotEqualsWithEquivalentStringsAndMessageSupplier() {
-		try {
-			assertNotEquals(new String("foo"), new String("foo"), () -> "test");
-			expectAssertionFailedError();
+		@Test
+		void assertNotEqualsWithObjectVsNull() {
+			assertNotEquals("foo", null);
 		}
-		catch (AssertionFailedError ex) {
-			assertMessageStartsWith(ex, "test");
-			assertMessageEndsWith(ex, "expected: not equal but was: <foo>");
-		}
-	}
 
-	@Test
-	void assertNotEqualsInvokesEqualsMethodForIdenticalObjects() {
-		Object obj = new EqualsThrowsExceptionClass();
-		assertThrows(NumberFormatException.class, () -> assertNotEquals(obj, obj));
+		@Test
+		void assertNotEqualsWithDifferentObjects() {
+			assertNotEquals(new Object(), new Object());
+			assertNotEquals(new Object(), new Object(), "message");
+			assertNotEquals(new Object(), new Object(), () -> "message");
+		}
+
+		@Test
+		void assertNotEqualsWithNullVsObjectAndMessageSupplier() {
+			assertNotEquals(null, "foo", () -> "test");
+		}
+
+		@Test
+		void assertNotEqualsWithEquivalentStringsAndMessage() {
+			try {
+				assertNotEquals(new String("foo"), new String("foo"), "test");
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageStartsWith(ex, "test");
+				assertMessageEndsWith(ex, "expected: not equal but was: <foo>");
+			}
+		}
+
+		@Test
+		void assertNotEqualsWithEquivalentStringsAndMessageSupplier() {
+			try {
+				assertNotEquals(new String("foo"), new String("foo"), () -> "test");
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageStartsWith(ex, "test");
+				assertMessageEndsWith(ex, "expected: not equal but was: <foo>");
+			}
+		}
+
+		@Test
+		void assertNotEqualsInvokesEqualsMethodForIdenticalObjects() {
+			Object obj = new EqualsThrowsExceptionClass();
+			assertThrows(NumberFormatException.class, () -> assertNotEquals(obj, obj));
+		}
+
 	}
 
 	private static class EqualsThrowsExceptionClass {

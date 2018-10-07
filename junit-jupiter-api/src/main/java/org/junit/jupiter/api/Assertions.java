@@ -970,29 +970,6 @@ public class Assertions {
 	/**
 	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
 	 */
-	public static void assertNotEquals(short unexpected, short actual) {
-		AssertNotEquals.assertNotEquals(unexpected, actual);
-	}
-
-	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
-	 * <p>Fails with the supplied failure {@code message}.
-	 */
-	public static void assertNotEquals(short unexpected, short actual, String message) {
-		AssertNotEquals.assertNotEquals(unexpected, actual, message);
-	}
-
-	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
-	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
-	 */
-	public static void assertNotEquals(short unexpected, short actual, Supplier<String> messageSupplier) {
-		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
-	}
-
-	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
-	 */
 	public static void assertNotEquals(boolean unexpected, boolean actual) {
 		AssertNotEquals.assertNotEquals(unexpected, actual);
 	}
@@ -1010,6 +987,29 @@ public class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertNotEquals(boolean unexpected, boolean actual, Supplier<String> messageSupplier) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
+	 */
+	public static void assertNotEquals(short unexpected, short actual) {
+		AssertNotEquals.assertNotEquals(unexpected, actual);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
+	 * <p>Fails with the supplied failure {@code message}.
+	 */
+	public static void assertNotEquals(short unexpected, short actual, String message) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, message);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
+	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 */
+	public static void assertNotEquals(short unexpected, short actual, Supplier<String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -1079,6 +1079,29 @@ public class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
 	public static void assertNotEquals(long unexpected, long actual, Supplier<String> messageSupplier) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
+	 */
+	public static void assertNotEquals(char unexpected, char actual) {
+		AssertNotEquals.assertNotEquals(unexpected, actual);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
+	 * <p>Fails with the supplied failure {@code message}.
+	 */
+	public static void assertNotEquals(char unexpected, char actual, String message) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, message);
+	}
+
+	/**
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
+	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 */
+	public static void assertNotEquals(char unexpected, char actual, Supplier<String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -1189,29 +1212,6 @@ public class Assertions {
 	public static void assertNotEquals(double unexpected, double actual, double delta,
 			Supplier<String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, delta, messageSupplier);
-	}
-
-	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
-	 */
-	public static void assertNotEquals(char unexpected, char actual) {
-		AssertNotEquals.assertNotEquals(unexpected, actual);
-	}
-
-	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
-	 * <p>Fails with the supplied failure {@code message}.
-	 */
-	public static void assertNotEquals(char unexpected, char actual, String message) {
-		AssertNotEquals.assertNotEquals(unexpected, actual, message);
-	}
-
-	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} are not equal.
-	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
-	 */
-	public static void assertNotEquals(char unexpected, char actual, Supplier<String> messageSupplier) {
-		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
 	/**
