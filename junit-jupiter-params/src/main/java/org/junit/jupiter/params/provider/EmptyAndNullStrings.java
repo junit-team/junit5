@@ -1,0 +1,53 @@
+/*
+ * Copyright 2015-2018 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v20.html
+ */
+
+package org.junit.jupiter.params.provider;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import org.apiguardian.api.API;
+
+/**
+ * {@code EmptyStringSource} is an {@link ArgumentsSource} which provides the
+ * following values :
+ *
+ * <ul>
+ * 	<li>The null string</li>
+ * 	<li>The empty string</li>
+ * 	<li>The blank string</li>
+ * </ul>
+ *
+ * <p>Additional blank strings of larger size can be provided via the
+{@link #blankMaxSize} attribute.
+ *
+ * <p>The supplied values will be provided as arguments to the annotated
+ * {@code @ParameterizedTest} method.
+ *
+ * <p>It is often useful to have the same test operate on all of these values.
+ *
+ * @since 5.0
+ * @see org.junit.jupiter.params.provider.ArgumentsSource
+ * @see org.junit.jupiter.params.ParameterizedTest
+ */
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@API(status = EXPERIMENTAL, since = "5.4")
+@ArgumentsSource(EmptyAndNullStringsProvider.class)
+public @interface EmptyAndNullStrings {
+
+	String[] blankValues() default " ";
+}
