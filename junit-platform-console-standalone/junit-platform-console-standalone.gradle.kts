@@ -150,4 +150,3 @@ val standaloneCheck by tasks.creating {
 
 tasks["check"].dependsOn(standaloneCheck)
 tasks["test"].enabled = false // prevent supposed-to-fail integration tests from failing the build
-tasks["japicc"].enabled = false
