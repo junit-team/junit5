@@ -385,6 +385,7 @@ b22ad8680d08ac5a3add3f4c5d94c104  junit-platform-runner/src/main/java/org/junit/
 b2438df0df22b5559cf1959c2f351dc8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestTemplateInvocationContext.java
 b281644b4a0544e5d590861555fd81d2  junit-platform-engine/src/main/java/org/junit/platform/engine/TestEngine.java
 b2deb6b2dae1d2a8ef35298c49654c1a  junit-platform-console/src/main/java/org/junit/platform/console/tasks/VerboseTreePrintingListener.java
+b3dad0ff688f136af3b722d9bb68b89a  documentation/documentation.gradle.kts
 b53f687e678badbc99647d546004fa40  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestFactory.java
 b5adccde111b810ff2351c5555070a5f  documentation/src/test/java/example/JUnit4ClassDemo.java
 b659d6afa2ba4637865ed4a0d4311b5b  documentation/src/docs/asciidoc/user-guide/contributors.adoc
