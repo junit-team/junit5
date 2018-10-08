@@ -5,10 +5,6 @@ plugins {
 apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 tasks.named<Test>("test") {
-	// Tests in `AutomaticModuleNameTests` depend on all and these jars. #894
-	dependsOn(
-		project(":junit-jupiter-migrationsupport").tasks.named("jar")
-	)
 	useJUnitPlatform {
 		excludeTags("exclude")
 	}
