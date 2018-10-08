@@ -12,10 +12,13 @@ package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
+import java.lang.module.ModuleFinder;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
@@ -35,15 +38,13 @@ class JarDescribeModuleTests {
 	@ParameterizedTest
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
 	void describeModule(String module) throws Exception {
-		var version = Helper.version(module);
-		var archive = module + '-' + version + ".jar";
-		var path = Paths.get("..", module, "build", "libs", archive);
+		var modulePath = modulePath(module);
 		var result = Request.builder() //
 				.setTool(new Jar()) //
 				.setProject("jar-describe-module") //
 				.setProjectToWorkspaceCopyFileFilter(file -> file.getName().startsWith(module)) //
 				.setWorkspace("jar-describe-module/" + module) //
-				.addArguments("--describe-module", "--file", path) //
+				.addArguments("--describe-module", "--file", modulePath) //
 				.build() //
 				.run();
 
@@ -58,6 +59,23 @@ class JarDescribeModuleTests {
 		}
 		var expectedLines = Files.lines(expected).map(Helper::replaceVersionPlaceholders).collect(Collectors.toList());
 		assertLinesMatch(expectedLines, result.getOutputLines("out"));
+	}
+
+	@ParameterizedTest
+	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
+	void packageNamesStartWithNameOfTheModule(String module) {
+		var modulePath = modulePath(module);
+		var moduleDescriptor = ModuleFinder.of(modulePath).findAll().iterator().next().descriptor();
+		var moduleName = moduleDescriptor.name();
+		for (var packageName : moduleDescriptor.packages()) {
+			assertTrue(packageName.startsWith(moduleName));
+		}
+	}
+
+	private static Path modulePath(String module) {
+		var version = Helper.version(module);
+		var archive = module + '-' + version + ".jar";
+		return Paths.get("..", module, "build", "libs", archive);
 	}
 
 }

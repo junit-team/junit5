@@ -4,7 +4,7 @@ plugins {
 	id("com.github.johnrengelman.shadow")
 }
 
-apply(from = "$rootDir/gradle/testing.gradle")
+apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 description = "JUnit Jupiter Params"
 

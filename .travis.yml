@@ -1,8 +1,5 @@
 language: java
 
-sudo: false
-dist: trusty
-
 # Specify which branches/tags that we do not want to be built: r5.0.0-M5
 branches:
   except:
@@ -15,14 +12,8 @@ before_cache:
 # Cache only relevant directories
 cache:
   directories:
-    - $HOME/.gradle/caches/jars-3
     - $HOME/.gradle/caches/modules-2
     - $HOME/.gradle/wrapper/dists
-
-before_install:
-# https://github.com/travis-ci/travis-ci/issues/8408
-# Also interferes with platform-tooling-support-tests expectations
-  - unset _JAVA_OPTIONS
 
 install:
   - ./gradlew --version # Display Gradle, Groovy, JVM and other versions
