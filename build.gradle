@@ -203,7 +203,7 @@ subprojects { subproj ->
 
 	if (subproj.name in mavenizedProjects) {
 
-		apply from: "$rootDir/gradle/publishing.gradle"
+		apply from: "$rootDir/gradle/publishing.gradle.kts"
 
 		javadoc {
 			options {
