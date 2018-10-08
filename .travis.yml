@@ -16,11 +16,6 @@ cache:
     - $HOME/.gradle/caches/modules-2
     - $HOME/.gradle/wrapper/dists
 
-before_install:
-# https://github.com/travis-ci/travis-ci/issues/8408
-# Also interferes with platform-tooling-support-tests expectations
-  - unset _JAVA_OPTIONS
-
 install:
   - ./gradlew --version # Display Gradle, Groovy, JVM and other versions
 
