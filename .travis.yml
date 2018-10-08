@@ -12,7 +12,6 @@ before_cache:
 # Cache only relevant directories
 cache:
   directories:
-    - $HOME/.gradle/caches/jars-3
     - $HOME/.gradle/caches/modules-2
     - $HOME/.gradle/wrapper/dists
 
