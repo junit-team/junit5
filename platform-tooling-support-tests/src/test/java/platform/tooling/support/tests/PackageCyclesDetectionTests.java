@@ -26,14 +26,17 @@ import platform.tooling.support.Helper;
 /**
  * @since 1.3
  */
-class JdepsTests {
+class PackageCyclesDetectionTests {
 
 	@ParameterizedTest
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
-	void modules(String module) {
+	void moduleDoesNotContainCyclicPackageReferences(String module) {
 		var jar = Helper.createJarPath(module);
 		var result = new CyclesDetector(jar).run(Configuration.of());
 
+		// TODO Only retain the 'default' case by removing the cyclic package references
+		//      where possible and configure shadowed packages to be ignored by the detector.
+		//      See https://github.com/junit-team/junit5/issues/1626
 		switch (module) {
 			case "junit-jupiter-api":
 				assertEquals(1, result.getExitCode(), "result=" + result);
