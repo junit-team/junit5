@@ -10,7 +10,7 @@ readonly github_pages_url='https://raw.githubusercontent.com/junit-team/junit5/g
 #
 echo "Generating checksum file ${current}..."
 mkdir --parents "${checksum_directory}"
-md5sum documentation/documentation.gradle > "${current}"
+md5sum documentation/documentation.gradle.kts > "${current}"
 md5sum $(find documentation/src -type f) >> "${current}"
 # skip module junit-bom because it doesn't contain relevant documentation
 md5sum $(find junit-jupiter-api -wholename '**/src/main/java/*.java') >> "${current}"
