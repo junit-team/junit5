@@ -329,6 +329,7 @@ class AssertEqualsAssertionsTests {
 		assertEquals(0.56f, 0.6f, 0.05f);
 		assertEquals(0.01f, 0.011f, 0.002f);
 		assertEquals(Float.NaN, Float.NaN, 0.5f);
+		assertEquals(0.1f, 0.1f, 0.0f);
 	}
 
 	@Test
@@ -442,6 +443,7 @@ class AssertEqualsAssertionsTests {
 		assertEquals(0.42d, 0.24d, 0.19d);
 		assertEquals(0.02d, 0.011d, 0.01d);
 		assertEquals(Double.NaN, Double.NaN, 0.2d);
+		assertEquals(0.001d, 0.001d, 0.0d);
 	}
 
 	@Test
