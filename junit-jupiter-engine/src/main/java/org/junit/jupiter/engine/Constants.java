@@ -156,6 +156,22 @@ public final class Constants {
 	public static final String PARALLEL_CONFIG_CUSTOM_CLASS_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
 			+ CONFIG_CUSTOM_CLASS_PROPERTY_NAME;
 
+	/**
+	 * Property name used to specify the default script engine.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = EXPERIMENTAL, since = "5.4")
+	public static final String DEFAULT_SCRIPT_ENGINE_PROPERTY_NAME = "junit.jupiter.script.engine.default";
+
+	/**
+	 * Default script engine is {@code Nashorn}.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = EXPERIMENTAL, since = "5.4")
+	public static final String DEFAULT_SCRIPT_ENGINE = "Nashorn";
+
 	private Constants() {
 		/* no-op */
 	}

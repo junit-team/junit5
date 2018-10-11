@@ -24,6 +24,7 @@ import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.script.Script;
 import org.junit.platform.commons.util.BlacklistedExceptions;
 
@@ -65,8 +66,8 @@ class ScriptExecutionCondition implements ExecutionCondition {
 		AnnotatedElement annotatedElement = element.get();
 
 		// Always try to create script instances.
-		Script disabledScript = createDisabledIfScriptOrNull(annotatedElement);
-		Script enabledScript = createEnabledIfScriptOrNull(annotatedElement);
+		Script disabledScript = createDisabledIfScriptOrNull(context, annotatedElement);
+		Script enabledScript = createEnabledIfScriptOrNull(context, annotatedElement);
 
 		// If no scripts are created, no annotation of interest is attached to the underlying element.
 		if (disabledScript == null && enabledScript == null) {
@@ -86,28 +87,35 @@ class ScriptExecutionCondition implements ExecutionCondition {
 		return evaluator.evaluate(context, scripts);
 	}
 
-	private Script createDisabledIfScriptOrNull(AnnotatedElement annotatedElement) {
+	private Script createDisabledIfScriptOrNull(ExtensionContext context, AnnotatedElement annotatedElement) {
 		Optional<DisabledIf> disabled = findAnnotation(annotatedElement, DisabledIf.class);
 		if (!disabled.isPresent()) {
 			return null;
 		}
 		DisabledIf annotation = disabled.get();
-		String source = createSource(annotation.value());
-		return new Script(annotation, annotation.engine(), source, annotation.reason());
+		String engine = createEngine(context, annotation.engine());
+		String source = String.join(System.lineSeparator(), annotation.value());
+		return new Script(annotation, engine, source, annotation.reason());
 	}
 
-	private Script createEnabledIfScriptOrNull(AnnotatedElement annotatedElement) {
+	private Script createEnabledIfScriptOrNull(ExtensionContext context, AnnotatedElement annotatedElement) {
 		Optional<EnabledIf> enabled = findAnnotation(annotatedElement, EnabledIf.class);
 		if (!enabled.isPresent()) {
 			return null;
 		}
 		EnabledIf annotation = enabled.get();
-		String source = createSource(annotation.value());
-		return new Script(annotation, annotation.engine(), source, annotation.reason());
+		String engine = createEngine(context, annotation.engine());
+		String source = String.join(System.lineSeparator(), annotation.value());
+		return new Script(annotation, engine, source, annotation.reason());
 	}
 
-	private String createSource(String[] lines) {
-		return String.join(System.lineSeparator(), lines);
+	private String createEngine(ExtensionContext context, String annotatedEngine) {
+		if (!annotatedEngine.trim().isEmpty()) {
+			return annotatedEngine;
+		}
+		String key = Constants.DEFAULT_SCRIPT_ENGINE_PROPERTY_NAME;
+		String defaultValue = Constants.DEFAULT_SCRIPT_ENGINE;
+		return context.getConfigurationParameter(key).orElse(defaultValue);
 	}
 
 	/**
