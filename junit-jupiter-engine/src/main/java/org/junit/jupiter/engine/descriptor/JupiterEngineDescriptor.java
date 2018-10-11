@@ -28,6 +28,8 @@ import org.junit.platform.engine.support.hierarchical.Node;
 @API(status = INTERNAL, since = "5.0")
 public class JupiterEngineDescriptor extends EngineDescriptor implements Node<JupiterEngineExecutionContext> {
 
+	public static final String ENGINE_ID = "junit-jupiter";
+
 	public JupiterEngineDescriptor(UniqueId uniqueId) {
 		super(uniqueId, "JUnit Jupiter");
 	}

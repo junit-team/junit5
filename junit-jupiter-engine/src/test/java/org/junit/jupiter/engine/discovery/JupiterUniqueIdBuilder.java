@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.discovery;
 
-import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.UniqueId;
 
@@ -49,7 +49,7 @@ public class JupiterUniqueIdBuilder {
 	}
 
 	public static UniqueId engineId() {
-		return UniqueId.forEngine(JupiterTestEngine.ENGINE_ID);
+		return UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
 	}
 
 }

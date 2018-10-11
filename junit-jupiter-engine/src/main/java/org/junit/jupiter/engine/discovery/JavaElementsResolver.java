@@ -33,9 +33,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.Filterable;
+import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsInnerClass;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -167,7 +167,7 @@ class JavaElementsResolver {
 		UniqueId uniqueId = selector.getUniqueId();
 
 		// Ignore Unique IDs from other test engines.
-		if (JupiterTestEngine.ENGINE_ID.equals(uniqueId.getEngineId().orElse(null))) {
+		if (JupiterEngineDescriptor.ENGINE_ID.equals(uniqueId.getEngineId().orElse(null))) {
 			try {
 				Deque<TestDescriptor> resolvedDescriptors = resolveAllSegments(uniqueId);
 				handleResolvedDescriptorsForUniqueId(uniqueId, resolvedDescriptors);

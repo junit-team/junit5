@@ -18,7 +18,6 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
-import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
 import org.junit.platform.commons.util.ModuleUtils;
@@ -61,7 +60,7 @@ class JupiterIntegrationTests {
 		ModuleSelector selector = DiscoverySelectors.selectModule(getClass().getModule().getName());
 		assertEquals(getClass().getModule().getName(), selector.getModuleName());
 
-		EngineDescriptor engine = new JupiterEngineDescriptor(UniqueId.forEngine(JupiterTestEngine.ENGINE_ID));
+		EngineDescriptor engine = new JupiterEngineDescriptor(UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID));
 		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver();
 
 		resolver.resolveSelectors(request().selectors(selector).build(), engine);
