@@ -11,7 +11,6 @@
 package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.sormuras.bartholdy.Configuration;
 import de.sormuras.bartholdy.tool.CyclesDetector;
@@ -29,18 +28,22 @@ class PackageCyclesDetectionTests {
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
 	void moduleDoesNotContainCyclicPackageReferences(String module) {
 		var jar = Helper.createJarPath(module);
-		var result = new CyclesDetector(jar).run(Configuration.of());
-
-		// TODO Configure shadowed packages to be ignored by the detector.
-		//      See https://github.com/junit-team/junit5/issues/1626
-		if ("junit-jupiter-params".equals(module)) {
-			assertEquals(1, result.getExitCode(), "result=" + result);
-			assertTrue(result.getOutputLines("cycles").stream().allMatch(
-				line -> line.contains("org.junit.jupiter.params.shadow.com.univocity.parsers.")));
-			return;
-		}
-
+		var result = new CyclesDetector(jar, this::ignore).run(Configuration.of());
 		assertEquals(0, result.getExitCode(), "result=" + result);
+	}
+
+	private boolean ignore(String source, String target) {
+		if (source.equals(target)) {
+			return true;
+		}
+		if (source.startsWith("org.junit.jupiter.params.shadow.com.univocity.parsers.")) {
+			return true;
+		}
+		//noinspection RedundantIfStatement
+		if (!target.startsWith("org.junit.")) {
+			return true;
+		}
+		return false;
 	}
 
 }
