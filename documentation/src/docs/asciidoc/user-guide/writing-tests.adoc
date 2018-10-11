@@ -1061,6 +1061,7 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_e
 ----
 
 `String` instances are currently implicitly converted to the following target types.
+Integral types support decimal, hexadecimal and octal `String` literals.
 
 [[writing-tests-parameterized-tests-argument-conversion-implicit-table]]
 [cols="10,90"]
@@ -1070,7 +1071,7 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_e
 | `boolean`/`Boolean`        | `"true"`                                 -> `true`
 | `byte`/`Byte`              | `"1"`                                    -> `(byte) 1`
 | `char`/`Character`         | `"o"`                                    -> `'o'`
-| `short`/`Short`            | `"1"`                                    -> `(short) 1`
+| `short`/`Short`            | `"0xF"`                                  -> `(short) 15`
 | `int`/`Integer`            | `"1"`                                    -> `1`
 | `long`/`Long`              | `"1"`                                    -> `1L`
 | `float`/`Float`            | `"1.0"`                                  -> `1.0f`

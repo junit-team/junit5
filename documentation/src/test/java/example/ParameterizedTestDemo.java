@@ -176,7 +176,7 @@ class ParameterizedTestDemo {
 
 	// tag::CsvSource_example[]
 	@ParameterizedTest
-	@CsvSource({ "foo, 1", "bar, 2", "'baz, qux', 3" })
+	@CsvSource({ "foo, 1", "bar, 2", "'baz, qux', 0xF1" })
 	void testWithCsvSource(String first, int second) {
 		assertNotNull(first);
 		assertNotEquals(0, second);
