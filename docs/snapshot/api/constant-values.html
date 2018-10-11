@@ -268,9 +268,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody>
 </table>
 </li>
+</ul>
+<ul class="blockList">
 <li class="blockList">
 <table class="constantsSummary">
-<caption><span>org.junit.jupiter.engine.<a href="org/junit/jupiter/engine/JupiterTestEngine.html" title="class in org.junit.jupiter.engine">JupiterTestEngine</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>org.junit.jupiter.engine.descriptor.<a href="org/junit/jupiter/engine/descriptor/JupiterEngineDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">JupiterEngineDescriptor</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Constant Field</th>
@@ -278,17 +280,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><a id="org.junit.jupiter.engine.JupiterTestEngine.ENGINE_ID">
+<td class="colFirst"><a id="org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor.ENGINE_ID">
 <!--   -->
 </a><code>public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><code><a href="org/junit/jupiter/engine/JupiterTestEngine.html#ENGINE_ID">ENGINE_ID</a></code></th>
+<th class="colSecond" scope="row"><code><a href="org/junit/jupiter/engine/descriptor/JupiterEngineDescriptor.html#ENGINE_ID">ENGINE_ID</a></code></th>
 <td class="colLast"><code>"junit-jupiter"</code></td>
 </tr>
 </tbody>
 </table>
 </li>
-</ul>
-<ul class="blockList">
 <li class="blockList">
 <table class="constantsSummary">
 <caption><span>org.junit.jupiter.engine.descriptor.<a href="org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestFactoryTestDescriptor</a></span><span class="tabEnd">&nbsp;</span></caption>
@@ -317,6 +317,25 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 <li class="blockList">
 <table class="constantsSummary">
+<caption><span>org.junit.jupiter.engine.descriptor.<a href="org/junit/jupiter/engine/descriptor/TestInstanceLifecycleUtils.html" title="class in org.junit.jupiter.engine.descriptor">TestInstanceLifecycleUtils</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Constant Field</th>
+<th class="colLast" scope="col">Value</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><a id="org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME">
+<!--   -->
+</a><code>public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><a href="org/junit/jupiter/engine/descriptor/TestInstanceLifecycleUtils.html#DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME">DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME</a></code></th>
+<td class="colLast"><code>"junit.jupiter.testinstance.lifecycle.default"</code></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList">
+<table class="constantsSummary">
 <caption><span>org.junit.jupiter.engine.descriptor.<a href="org/junit/jupiter/engine/descriptor/TestTemplateInvocationTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestTemplateInvocationTestDescriptor</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
@@ -330,6 +349,55 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a><code>public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><a href="org/junit/jupiter/engine/descriptor/TestTemplateInvocationTestDescriptor.html#SEGMENT_TYPE">SEGMENT_TYPE</a></code></th>
 <td class="colLast"><code>"test-template-invocation"</code></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList">
+<table class="constantsSummary">
+<caption><span>org.junit.jupiter.engine.execution.<a href="org/junit/jupiter/engine/execution/ConditionEvaluator.html" title="class in org.junit.jupiter.engine.execution">ConditionEvaluator</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Constant Field</th>
+<th class="colLast" scope="col">Value</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><a id="org.junit.jupiter.engine.execution.ConditionEvaluator.DEACTIVATE_ALL_CONDITIONS_PATTERN">
+<!--   -->
+</a><code>public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><a href="org/junit/jupiter/engine/execution/ConditionEvaluator.html#DEACTIVATE_ALL_CONDITIONS_PATTERN">DEACTIVATE_ALL_CONDITIONS_PATTERN</a></code></th>
+<td class="colLast"><code>"*"</code></td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a id="org.junit.jupiter.engine.execution.ConditionEvaluator.DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME">
+<!--   -->
+</a><code>public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><a href="org/junit/jupiter/engine/execution/ConditionEvaluator.html#DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME">DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME</a></code></th>
+<td class="colLast"><code>"junit.jupiter.conditions.deactivate"</code></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList">
+<table class="constantsSummary">
+<caption><span>org.junit.jupiter.engine.extension.<a href="org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Constant Field</th>
+<th class="colLast" scope="col">Value</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><a id="org.junit.jupiter.engine.extension.ExtensionRegistry.EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME">
+<!--   -->
+</a><code>public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><a href="org/junit/jupiter/engine/extension/ExtensionRegistry.html#EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME">EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME</a></code></th>
+<td class="colLast"><code>"junit.jupiter.extensions.autodetection.enabled"</code></td>
 </tr>
 </tbody>
 </table>
