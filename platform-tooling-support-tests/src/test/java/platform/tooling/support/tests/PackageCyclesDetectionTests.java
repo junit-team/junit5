@@ -38,26 +38,29 @@ class PackageCyclesDetectionTests {
 		//      where possible and configure shadowed packages to be ignored by the detector.
 		//      See https://github.com/junit-team/junit5/issues/1626
 		switch (module) {
-			case "junit-jupiter-api":
-				assertEquals(1, result.getExitCode(), "result=" + result);
-				assertLinesMatch(List.of(
-					"org.junit.jupiter.api.extension.ExtensionContext -> org.junit.jupiter.api.TestInstance",
-					"org.junit.jupiter.api.extension.ExtensionContext -> org.junit.jupiter.api.TestInstance$Lifecycle"),
-					result.getOutputLines("err"));
-				break;
 			case "junit-jupiter-engine":
 				assertEquals(1, result.getExitCode(), "result=" + result);
 				assertLinesMatch(List.of(
-					"org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils -> org.junit.jupiter.engine.Constants",
-					"org.junit.jupiter.engine.discovery.JavaElementsResolver -> org.junit.jupiter.engine.JupiterTestEngine",
-					"org.junit.jupiter.engine.execution.ConditionEvaluator -> org.junit.jupiter.engine.Constants",
-					"org.junit.jupiter.engine.extension.ExtensionRegistry -> org.junit.jupiter.engine.Constants"),
-					result.getOutputLines("err"));
+					"Adding edge 'org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils -> org.junit.jupiter.engine.Constants' failed."
+							+ " Cycle detected: Anti-edge: org.junit.jupiter.engine.descriptor <-> org.junit.jupiter.engine",
+
+					"Adding edge 'org.junit.jupiter.engine.discovery.JavaElementsResolver -> org.junit.jupiter.engine.JupiterTestEngine' failed."
+							+ " Cycle detected: Anti-edge: org.junit.jupiter.engine.discovery <-> org.junit.jupiter.engine",
+
+					"Adding edge 'org.junit.jupiter.engine.execution.ConditionEvaluator -> org.junit.jupiter.engine.Constants' failed."
+							+ " Cycle detected: Anti-edge: org.junit.jupiter.engine.execution <-> org.junit.jupiter.engine",
+
+					"Adding edge 'org.junit.jupiter.engine.extension.ExtensionRegistry -> org.junit.jupiter.engine.Constants' failed."
+							+ " Cycle detected: From org.junit.jupiter.engine.extension"
+							+ " over [org.junit.jupiter.engine, org.junit.jupiter.engine.descriptor]"
+							+ " and org.junit.jupiter.engine.execution"
+							+ " back to org.junit.jupiter.engine.extension"),
+					result.getOutputLines("cycles"));
 				break;
 			case "junit-jupiter-params":
 				assertEquals(1, result.getExitCode(), "result=" + result);
-				assertTrue(result.getOutputLines("err").stream().allMatch(
-					line -> line.startsWith("org.junit.jupiter.params.shadow.com.univocity.parsers.")));
+				assertTrue(result.getOutputLines("cycles").stream().allMatch(
+					line -> line.contains("org.junit.jupiter.params.shadow.com.univocity.parsers.")));
 				break;
 			default:
 				assertEquals(0, result.getExitCode(), "result=" + result);
