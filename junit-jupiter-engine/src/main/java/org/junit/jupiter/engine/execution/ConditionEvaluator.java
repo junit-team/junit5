@@ -12,8 +12,6 @@ package org.junit.jupiter.engine.execution;
 
 import static java.lang.String.format;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.jupiter.engine.Constants.DEACTIVATE_ALL_CONDITIONS_PATTERN;
-import static org.junit.jupiter.engine.Constants.DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME;
 
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -23,7 +21,6 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -38,6 +35,10 @@ import org.junit.platform.engine.ConfigurationParameters;
  */
 @API(status = INTERNAL, since = "5.0")
 public class ConditionEvaluator {
+
+	public static final String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = "junit.jupiter.conditions.deactivate";
+
+	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = "*";
 
 	private static final Logger logger = LoggerFactory.getLogger(ConditionEvaluator.class);
 
@@ -113,7 +114,7 @@ public class ConditionEvaluator {
 	}
 
 	/**
-	 * See {@link Constants#DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME} for
+	 * See {@link org.junit.jupiter.engine.Constants#DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME} for
 	 * details on the pattern matching syntax.
 	 */
 	private String convertToRegEx(String pattern) {

@@ -10,8 +10,6 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;
-
 import java.util.Optional;
 
 import org.junit.jupiter.api.TestInstance;
@@ -29,7 +27,9 @@ import org.junit.platform.engine.ConfigurationParameters;
  * @see TestInstance
  * @see TestInstance.Lifecycle
  */
-final class TestInstanceLifecycleUtils {
+public final class TestInstanceLifecycleUtils {
+
+	public static final String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = "junit.jupiter.testinstance.lifecycle.default";
 
 	private static final Logger logger = LoggerFactory.getLogger(TestInstanceLifecycleUtils.class);
 
