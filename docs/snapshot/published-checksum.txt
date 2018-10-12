@@ -22,7 +22,6 @@
 0c76ee122fbc2b3bf8e85863d575d481  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/ClassExtensionContext.java
 0c86cd355bc9241deb3dd12f84cccf1b  junit-platform-commons/src/main/java/org/junit/platform/commons/package-info.java
 0d03e45bc86e3cdfff772b13a6175ddb  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/UriSource.java
-0d44b980b3daffaa19a92e76047a13a8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestInstanceLifecycleUtils.java
 0d8e4ea75f8a9d6c67e896e88c1c4024  documentation/src/test/resources/junit-platform.properties
 0e0cfb9fb5e71631ed2fc7084bd4ecd3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledOnOsCondition.java
 0e0e79987dcef27ec9f9dc1d4e9c4f72  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/BeforeTestExecutionCallback.java
@@ -73,6 +72,7 @@
 2c6fa7b80a8050099b86356a1c791816  documentation/src/test/java/example/AssumptionsDemo.java
 2cc275cd3dd21ea044b6372e8ee0fe4f  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
 2d02719038b13d91ae5314d4a8db464b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExecutionCondition.java
+2d2e4f57601632a3774739cc4277a71d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestInstanceLifecycleUtils.java
 2ee24cfc33409d41bbb650dec6e4016b  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfiguration.java
 2ee45f71a7bd0af441621e620973adb4  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeTags.java
 2f6c53349ee30bd5b0ac609dcd27fa35  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/package-info.java
