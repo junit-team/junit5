@@ -39,7 +39,7 @@ script:
 stages:
   - test
   - name: deploy
-    if: (branch = master) AND (NOT type IN (pull_request)) AND (fork = false)
+    if: repo = junit-team/junit5 AND branch = master AND type = push
 
 jobs:
   include:
