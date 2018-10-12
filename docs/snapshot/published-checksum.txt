@@ -520,8 +520,8 @@ ef3b688543dc6c7c80e8febacaeacf5e  junit-platform-commons/src/main/java/org/junit
 ef957401be2e33ec04296eb4cbc0783d  junit-platform-commons/src/main/java/org/junit/platform/commons/support/AnnotationSupport.java
 f012f93a6db563a6fa14e09d4e8a6aef  junit-vintage-engine/src/main/java/org/junit/vintage/engine/support/UniqueIdStringifier.java
 f0257ac91339654aec46e144c43d7922  documentation/src/test/java/example/timing/TimingExtension.java
+f049f59e0faf16a11c7105b9bc8d7bd1  documentation/src/docs/asciidoc/docinfos/index-docinfo.html
 f08ec93048fdd5b2fdcde96b48b1d90c  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/TestExecutionSummary.java
-f0ae6d7d453deeae829c41deea265cea  documentation/src/docs/asciidoc/docinfos/index-docinfo.html
 f0b2ca619d96206c214dbbb9c31563e6  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestNameFormatter.java
 f0ecb644bfeb5f79864a3ecbbda38e28  documentation/src/docs/asciidoc/user-guide/advanced-topics.adoc
 f13717dbd77fa7d75ce96105aae25d5a  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageTestDescriptor.java
