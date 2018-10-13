@@ -3161,7 +3161,7 @@ qualified method name</em> as demonstrated in the following example.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@CsvSource</span>({ <span class="string"><span class="delimiter">&quot;</span><span class="content">foo, 1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar, 2</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">'baz, qux', 3</span><span class="delimiter">&quot;</span></span> })
+<span class="annotation">@CsvSource</span>({ <span class="string"><span class="delimiter">&quot;</span><span class="content">foo, 1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar, 2</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">'baz, qux', 0xF1</span><span class="delimiter">&quot;</span></span> })
 <span class="type">void</span> testWithCsvSource(<span class="predefined-type">String</span> first, <span class="type">int</span> second) {
     assertNotNull(first);
     assertNotEquals(<span class="integer">0</span>, second);
@@ -3313,7 +3313,9 @@ automatically converted into the corresponding <code>TimeUnit</code> enum consta
 </div>
 </div>
 <div class="paragraph">
-<p><code>String</code> instances are currently implicitly converted to the following target types.</p>
+<p><code>String</code> instances are currently implicitly converted to the following target types.
+Integral types (<code>byte</code>, <code>short</code>, <code>int</code>, <code>long</code> and their boxed counterparts)
+support decimal, hexadecimal and octal <code>String</code> literals.</p>
 </div>
 <table id="writing-tests-parameterized-tests-argument-conversion-implicit-table" class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -3333,7 +3335,7 @@ automatically converted into the corresponding <code>TimeUnit</code> enum consta
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>byte</code>/<code>Byte</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"1"</code>                                    &#8594; <code>(byte) 1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"15"</code>, <code>"0xF"</code> or <code>"017"</code>               &#8594; <code>(byte) 15</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>char</code>/<code>Character</code></p></td>
@@ -3341,15 +3343,15 @@ automatically converted into the corresponding <code>TimeUnit</code> enum consta
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>short</code>/<code>Short</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"1"</code>                                    &#8594; <code>(short) 1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"15"</code>, <code>"0xF"</code> or <code>"017"</code>               &#8594; <code>(short) 15</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code>/<code>Integer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"1"</code>                                    &#8594; <code>1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"15"</code>, <code>"0xF"</code> or <code>"017"</code>               &#8594; <code>15</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>long</code>/<code>Long</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"1"</code>                                    &#8594; <code>1L</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"15"</code>, <code>"0xF"</code> or <code>"017"</code>               &#8594; <code>15L</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code>/<code>Float</code></p></td>
@@ -6994,7 +6996,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-10-12 10:17:27 UTC
+Last updated 2018-10-13 16:29:20 UTC
 </div>
 </div>
 </body>
