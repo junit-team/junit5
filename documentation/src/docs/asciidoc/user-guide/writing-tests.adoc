@@ -1061,7 +1061,8 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_e
 ----
 
 `String` instances are currently implicitly converted to the following target types.
-Integral types support decimal, hexadecimal and octal `String` literals.
+Integral types (`byte`, `short`, `int`, `long` and their boxed counterparts)
+support decimal, hexadecimal and octal `String` literals.
 
 [[writing-tests-parameterized-tests-argument-conversion-implicit-table]]
 [cols="10,90"]
@@ -1069,11 +1070,11 @@ Integral types support decimal, hexadecimal and octal `String` literals.
 | Target Type | Example
 
 | `boolean`/`Boolean`        | `"true"`                                 -> `true`
-| `byte`/`Byte`              | `"1"`                                    -> `(byte) 1`
+| `byte`/`Byte`              | `"15"`, `"0xF"` or `017`                 -> `(byte) 15`
 | `char`/`Character`         | `"o"`                                    -> `'o'`
-| `short`/`Short`            | `"0xF"`                                  -> `(short) 15`
-| `int`/`Integer`            | `"1"`                                    -> `1`
-| `long`/`Long`              | `"1"`                                    -> `1L`
+| `short`/`Short`            | `"15"`, `"0xF"` or `017`                 -> `(short) 15`
+| `int`/`Integer`            | `"15"`, `"0xF"` or `017`                 -> `15`
+| `long`/`Long`              | `"15"`, `"0xF"` or `017`                 -> `15L`
 | `float`/`Float`            | `"1.0"`                                  -> `1.0f`
 | `double`/`Double`          | `"1.0"`                                  -> `1.0d`
 | `Enum` subclass            | `"SECONDS"`                              -> `TimeUnit.SECONDS`

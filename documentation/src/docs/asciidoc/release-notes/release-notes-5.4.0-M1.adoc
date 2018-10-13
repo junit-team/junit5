@@ -48,7 +48,7 @@ repository on GitHub.
 ==== New Features and Improvements
 
 * Support converting integral types in hex and octal in parameterized test
-  arguments resolvers.
+  arguments resolvers (e.g. `"0xff"` into `255`).
 
 
 [[release-notes-5.4.0-M1-junit-vintage]]
