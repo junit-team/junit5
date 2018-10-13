@@ -17,6 +17,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayName;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
+import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.READ;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.READ_WRITE;
 
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collections;
@@ -30,6 +33,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.GlobalResourceLock;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
@@ -142,13 +146,19 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		throw new JUnitException("Unknown ExecutionMode: " + mode);
 	}
 
-	protected Set<ExclusiveResource> getExclusiveResourcesFromAnnotation(AnnotatedElement element) {
-		// @formatter:off
-		return findRepeatableAnnotations(element, ResourceLock.class).stream()
-				.map(resource -> new ExclusiveResource(resource.value(), toLockMode(resource.mode())))
-				.collect(toSet());
-		// @formatter:on
-	}
+    private static final String GLOBAL_RESOURCE_LOCK_KEY = "global resource lock key which is hopefully always uniq";
+
+    protected Set<ExclusiveResource> getExclusiveResourcesFromAnnotation(AnnotatedElement element) {
+        Set<ExclusiveResource> resources = findRepeatableAnnotations(element, ResourceLock.class)
+                .stream()
+                .map(resource -> new ExclusiveResource(resource.value(), toLockMode(resource.mode())))
+                .collect(toSet());
+
+        boolean hasGlobalLock = isAnnotated(element, GlobalResourceLock.class);
+        resources.add(new ExclusiveResource(GLOBAL_RESOURCE_LOCK_KEY, hasGlobalLock ? READ_WRITE : READ));
+
+        return resources;
+    }
 
 	private static LockMode toLockMode(ResourceAccessMode mode) {
 		switch (mode) {
