@@ -87,6 +87,26 @@ class DefaultArgumentConverterTests {
 	}
 
 	@Test
+	@SuppressWarnings("OctalInteger") // We test parsing octal integers here as well as hex.
+	void convertsEncodedStringsToIntegralTypes() {
+		assertConverts("0x1f", byte.class, (byte) 0x1F);
+		assertConverts("-0x1F", byte.class, (byte) -0x1F);
+		assertConverts("010", byte.class, (byte) 010);
+
+		assertConverts("0x1f00", short.class, (short) 0x1F00);
+		assertConverts("-0x1F00", short.class, (short) -0x1F00);
+		assertConverts("01000", short.class, (short) 01000);
+
+		assertConverts("0x1f000000", int.class, 0x1F000000);
+		assertConverts("-0x1F000000", int.class, -0x1F000000);
+		assertConverts("010000000", int.class, 010000000);
+
+		assertConverts("0x1f000000000", long.class, 0x1F000000000L);
+		assertConverts("-0x1F000000000", long.class, -0x1F000000000L);
+		assertConverts("0100000000000", long.class, 0100000000000L);
+	}
+
+	@Test
 	void convertsStringsToEnumConstants() {
 		assertConverts("DAYS", TimeUnit.class, TimeUnit.DAYS);
 	}
