@@ -1070,11 +1070,11 @@ support decimal, hexadecimal and octal `String` literals.
 | Target Type | Example
 
 | `boolean`/`Boolean`        | `"true"`                                 -> `true`
-| `byte`/`Byte`              | `"15"`, `"0xF"` or `017`                 -> `(byte) 15`
+| `byte`/`Byte`              | `"15"`, `"0xF"` or `"017"`               -> `(byte) 15`
 | `char`/`Character`         | `"o"`                                    -> `'o'`
-| `short`/`Short`            | `"15"`, `"0xF"` or `017`                 -> `(short) 15`
-| `int`/`Integer`            | `"15"`, `"0xF"` or `017`                 -> `15`
-| `long`/`Long`              | `"15"`, `"0xF"` or `017`                 -> `15L`
+| `short`/`Short`            | `"15"`, `"0xF"` or `"017"`               -> `(short) 15`
+| `int`/`Integer`            | `"15"`, `"0xF"` or `"017"`               -> `15`
+| `long`/`Long`              | `"15"`, `"0xF"` or `"017"`               -> `15L`
 | `float`/`Float`            | `"1.0"`                                  -> `1.0f`
 | `double`/`Double`          | `"1.0"`                                  -> `1.0d`
 | `Enum` subclass            | `"SECONDS"`                              -> `TimeUnit.SECONDS`
