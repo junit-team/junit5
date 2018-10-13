@@ -33,6 +33,7 @@ dependencies {
 tasks.named<Test>("test") {
 	// Opt-in via system property: '-Dplatform.tooling.support.tests.enabled=true'
 	enabled = System.getProperty("platform.tooling.support.tests.enabled")?.toBoolean() ?: false
+	maxParallelForks = 4
 
 	// The following if-block is necessary since Gradle will otherwise
 	// always publish all mavenizedProjects even if this "test" task
