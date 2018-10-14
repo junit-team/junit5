@@ -601,9 +601,10 @@ repository on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The JUnit Platform Surefire Provider (<code>junit-platform-surefire-provider</code>) has been discontinued
-and is no longer released as part of JUnit 5. Please use Maven Surefire’s native support for
-running tests on the JUnit Platform (requires Maven Surefire 2.22.0 or higher) instead.</p>
+<p>The JUnit Platform Surefire Provider (<code>junit-platform-surefire-provider</code>) has been
+discontinued and is no longer released as part of JUnit 5. Please use Maven Surefire’s
+native support for running tests on the JUnit Platform instead (requires Maven Surefire
+2.22.0 or higher).</p>
 </li>
 </ul>
 </div>
@@ -618,8 +619,8 @@ a test mid-flight due to a failed assumption&#8201;&#8212;&#8201;for example, vi
 <code>org.junit.Assume</code> utility class.</p>
 </li>
 <li>
-<p>In addition to returning streams, <code>@TestFactory</code>-annotated methods may return a single
-<code>DynamicNode</code>, i.e. a <code>DynamicTest</code> or a <code>DynamicContainer</code>, instance.</p>
+<p>In addition to returning streams, <code>@TestFactory</code>-annotated methods may now return a
+single <code>DynamicNode</code>&#8201;&#8212;&#8201;for example, a <code>DynamicTest</code> or a <code>DynamicContainer</code>.</p>
 </li>
 <li>
 <p>New <code>DisplayNameGenerator</code> interface and <code>@DisplayNameGeneration</code> annotation that allow
@@ -636,14 +637,17 @@ declarative configuration of a pre-defined or custom display name generator.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>Assertions.assertAll()</code> is now thread-safe, i.e. it can be used with <em>parallel</em> <code>Streams</code>.</p>
+<p><code>Assertions.assertAll()</code> is now thread-safe&#8201;&#8212;&#8201;for example, it can now be used with a
+<em>parallel</em> <code>Stream</code>.</p>
 </li>
 <li>
-<p><code>OS.SOLARIS</code> is now also detected for when <code>os.name</code> reports <code>SunOs</code>.</p>
+<p>The <code>OS.SOLARIS</code> enum constant used with <code>@EnabledOnOs</code> and <code>@DisabledOnOs</code> is now also
+detected as the current operating system if the <code>os.name</code> JVM system property contains
+<code>"SunOs"</code>.</p>
 </li>
 <li>
 <p><code>Assertions.assertEquals()</code> variants that compare floating point numbers using a delta
-now allow passing a delta of zero.</p>
+now support a <em>delta</em> of zero.</p>
 </li>
 </ul>
 </div>
@@ -663,8 +667,8 @@ now allow passing a delta of zero.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Support converting integral types in hex and octal in parameterized test
-arguments resolvers (e.g. <code>"0xff"</code> into <code>255</code>).</p>
+<p>Implicit conversion from hexadecimal and octal string representations to integral types
+in <code>@ParameterizedTest</code> arguments&#8201;&#8212;&#8201;for example, conversion from <code>"0xff"</code> to <code>255</code>.</p>
 </li>
 </ul>
 </div>
@@ -817,7 +821,7 @@ well as various minor improvements and bug fixes.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-10-13 16:29:20 UTC
+Last updated 2018-10-14 20:29:46 UTC
 </div>
 </div>
 </body>

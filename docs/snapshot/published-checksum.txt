@@ -154,6 +154,7 @@
 50d596a0ae9b3535363a457c6c3f55ae  documentation/src/test/java/example/TestReporterDemo.java
 50ea7239684a369158e6b00b4e4a99cc  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtendWith.java
 51853e5d289beb6f939d65a5b2ef89d5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/BeforeAllCallback.java
+518be51185a336b5fbca3c56faa73e3a  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 51a61d4a973acc69af5b7ba0786b4e2b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnJreCondition.java
 5225ee7427d0e00c859d4bf9b8b11a24  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/TestInstanceProvider.java
 522845eb742b2db631cc98134870070e  junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncherExecutionResult.java
@@ -244,7 +245,6 @@
 72644f52223074511b043c56ac9e2ad0  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeUtils.java
 726f7fe001f3bbf102436b59a1f13300  junit-platform-testkit/src/main/java/org/junit/platform/testkit/Execution.java
 729a3a7ddea6f68bcb43eb1d2aae650b  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.java
-72ad93e84ce22f580dace634a1835578  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 73071a38ea461d0de51e6160be11c636  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestFactoryMethod.java
 73295adf1f07c09132397ffd9cf3123b  documentation/src/test/java/example/DynamicTestsDemo.java
 734fe9bee220261b8256f17bd65d55b9  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/package-info.java
