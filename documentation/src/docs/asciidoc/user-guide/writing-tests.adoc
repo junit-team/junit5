@@ -1060,9 +1060,10 @@ automatically converted into the corresponding `TimeUnit` enum constant.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_conversion_example]
 ----
 
-`String` instances are currently implicitly converted to the following target types.
-Integral types (`byte`, `short`, `int`, `long` and their boxed counterparts)
-support decimal, hexadecimal and octal `String` literals.
+`String` instances are implicitly converted to the following target types.
+
+NOTE: Decimal, hexadecimal, and octal `String` literals will be converted to their
+integral types: `byte`, `short`, `int`, `long`, and their boxed counterparts.
 
 [[writing-tests-parameterized-tests-argument-conversion-implicit-table]]
 [cols="10,90"]
@@ -1070,11 +1071,11 @@ support decimal, hexadecimal and octal `String` literals.
 | Target Type | Example
 
 | `boolean`/`Boolean`        | `"true"`                                 -> `true`
-| `byte`/`Byte`              | `"15"`, `"0xF"` or `"017"`               -> `(byte) 15`
+| `byte`/`Byte`              | `"15"`, `"0xF"`, or `"017"`              -> `(byte) 15`
 | `char`/`Character`         | `"o"`                                    -> `'o'`
-| `short`/`Short`            | `"15"`, `"0xF"` or `"017"`               -> `(short) 15`
-| `int`/`Integer`            | `"15"`, `"0xF"` or `"017"`               -> `15`
-| `long`/`Long`              | `"15"`, `"0xF"` or `"017"`               -> `15L`
+| `short`/`Short`            | `"15"`, `"0xF"`, or `"017"`              -> `(short) 15`
+| `int`/`Integer`            | `"15"`, `"0xF"`, or `"017"`              -> `15`
+| `long`/`Long`              | `"15"`, `"0xF"`, or `"017"`              -> `15L`
 | `float`/`Float`            | `"1.0"`                                  -> `1.0f`
 | `double`/`Double`          | `"1.0"`                                  -> `1.0d`
 | `Enum` subclass            | `"SECONDS"`                              -> `TimeUnit.SECONDS`
@@ -1312,8 +1313,8 @@ Technically speaking, a `@TestFactory` method must return a single `DynamicNode`
 Instantiable subclasses of `DynamicNode` are `DynamicContainer` and `DynamicTest`.
 `DynamicContainer` instances are composed of a _display name_ and a list of dynamic child
 nodes, enabling the creation of arbitrarily nested hierarchies of dynamic nodes.
-`DynamicTest` instances will be executed lazily, enabling dynamic and even non-deterministic
-generation of test cases.
+`DynamicTest` instances will be executed lazily, enabling dynamic and even
+non-deterministic generation of test cases.
 
 Any `Stream` returned by a `@TestFactory` will be properly closed by calling
 `stream.close()`, making it safe to use a resource such as `Files.lines()`.

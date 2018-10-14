@@ -39,6 +39,8 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 
 /**
+ * Unit tests for {@link DefaultArgumentConverter}.
+ *
  * @since 5.0
  */
 class DefaultArgumentConverterTests {
@@ -86,6 +88,9 @@ class DefaultArgumentConverterTests {
 		assertConverts("42.23", double.class, 42.23);
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	@Test
 	@SuppressWarnings("OctalInteger") // We test parsing octal integers here as well as hex.
 	void convertsEncodedStringsToIntegralTypes() {
