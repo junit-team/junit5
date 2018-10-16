@@ -541,16 +541,16 @@ class AssertNotEqualsAssertionsTests {
 
 		@Test
 		void assertNotEqualsDouble() {
-			assertNotEquals(1.0d, 1.5f, 0.4f);
-			assertNotEquals(1.0d, 1.5f, 0.4f, "message");
-			assertNotEquals(1.0d, 1.5f, 0.4f, () -> "message");
+			assertNotEquals(1.0d, 1.5d, 0.4d);
+			assertNotEquals(1.0d, 1.5d, 0.4d, "message");
+			assertNotEquals(1.0d, 1.5d, 0.4d, () -> "message");
 		}
 
 		@Test
 		void withEqualValues() {
 			double unexpected = 1.0d;
-			double actual = 1.5f;
-			double delta = 0.5f;
+			double actual = 1.5d;
+			double delta = 0.5d;
 			try {
 				assertNotEquals(unexpected, actual, delta);
 				expectAssertionFailedError();
@@ -563,8 +563,8 @@ class AssertNotEqualsAssertionsTests {
 		@Test
 		void withEqualValuesWithMessage() {
 			double unexpected = 1.0d;
-			double actual = 1.5f;
-			double delta = 0.5f;
+			double actual = 1.5d;
+			double delta = 0.5d;
 			try {
 				assertNotEquals(unexpected, actual, delta, "custom message");
 				expectAssertionFailedError();
@@ -578,8 +578,8 @@ class AssertNotEqualsAssertionsTests {
 		@Test
 		void withEqualValuesWithMessageProvider() {
 			double unexpected = 1.0d;
-			double actual = 1.5f;
-			double delta = 0.5f;
+			double actual = 1.5d;
+			double delta = 0.5d;
 			try {
 				assertNotEquals(unexpected, actual, delta, () -> "custom message from provider");
 				expectAssertionFailedError();
