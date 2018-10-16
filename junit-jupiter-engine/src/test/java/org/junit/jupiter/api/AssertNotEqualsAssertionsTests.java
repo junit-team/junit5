@@ -372,6 +372,28 @@ class AssertNotEqualsAssertionsTests {
 		}
 
 		@Test
+		void assertNotEqualsForPositiveInfinityFloat() {
+			try {
+				assertNotEquals(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageEquals(ex, "expected: not equal but was: <Infinity>");
+			}
+		}
+
+		@Test
+		void assertNotEqualsForNegativeInfinityFloat() {
+			try {
+				assertNotEquals(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
+				expectAssertionFailedError();
+			}
+			catch (AssertionFailedError ex) {
+				assertMessageEquals(ex, "expected: not equal but was: <-Infinity>");
+			}
+		}
+
+		@Test
 		void withEqualValues() {
 			float unexpected = 1.0f;
 			float actual = 1.0f;
