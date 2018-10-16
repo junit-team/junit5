@@ -31,144 +31,225 @@ class AssertNotEquals {
 		/* no-op */
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(byte unexpected, byte actual) {
 		assertNotEquals(unexpected, actual, (String) null);
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(byte unexpected, byte actual, String message) {
 		if (unexpected == actual) {
 			failEqual(actual, message);
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(byte unexpected, byte actual, Supplier<String> messageSupplier) {
 		if (unexpected == actual) {
 			failEqual(actual, nullSafeGet(messageSupplier));
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(short unexpected, short actual) {
 		assertNotEquals(unexpected, actual, (String) null);
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(short unexpected, short actual, String message) {
 		if (unexpected == actual) {
 			failEqual(actual, message);
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(short unexpected, short actual, Supplier<String> messageSupplier) {
 		if (unexpected == actual) {
 			failEqual(actual, nullSafeGet(messageSupplier));
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(char unexpected, char actual) {
 		assertNotEquals(unexpected, actual, (String) null);
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(char unexpected, char actual, String message) {
 		if (unexpected == actual) {
 			failEqual(actual, message);
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(char unexpected, char actual, Supplier<String> messageSupplier) {
 		if (unexpected == actual) {
 			failEqual(actual, nullSafeGet(messageSupplier));
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(int unexpected, int actual) {
 		assertNotEquals(unexpected, actual, (String) null);
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(int unexpected, int actual, String message) {
 		if (unexpected == actual) {
 			failEqual(actual, message);
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(int unexpected, int actual, Supplier<String> messageSupplier) {
 		if (unexpected == actual) {
 			failEqual(actual, nullSafeGet(messageSupplier));
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(long unexpected, long actual) {
 		assertNotEquals(unexpected, actual, (String) null);
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(long unexpected, long actual, String message) {
 		if (unexpected == actual) {
 			failEqual(actual, message);
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(long unexpected, long actual, Supplier<String> messageSupplier) {
 		if (unexpected == actual) {
 			failEqual(actual, nullSafeGet(messageSupplier));
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(float unexpected, float actual) {
 		assertNotEquals(unexpected, actual, (String) null);
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(float unexpected, float actual, String message) {
 		if (floatsAreEqual(unexpected, actual)) {
 			failEqual(actual, message);
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(float unexpected, float actual, Supplier<String> messageSupplier) {
 		if (floatsAreEqual(unexpected, actual)) {
 			failEqual(actual, nullSafeGet(messageSupplier));
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(float unexpected, float actual, float delta) {
 		assertNotEquals(unexpected, actual, delta, (String) null);
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(float unexpected, float actual, float delta, String message) {
 		if (floatsAreEqual(unexpected, actual, delta)) {
 			failEqual(actual, message);
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(float unexpected, float actual, float delta, Supplier<String> messageSupplier) {
 		if (floatsAreEqual(unexpected, actual, delta)) {
 			failEqual(actual, nullSafeGet(messageSupplier));
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(double unexpected, double actual) {
 		assertNotEquals(unexpected, actual, (String) null);
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(double unexpected, double actual, String message) {
 		if (doublesAreEqual(unexpected, actual)) {
 			failEqual(actual, message);
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(double unexpected, double actual, Supplier<String> messageSupplier) {
 		if (doublesAreEqual(unexpected, actual)) {
 			failEqual(actual, nullSafeGet(messageSupplier));
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(double unexpected, double actual, double delta) {
 		assertNotEquals(unexpected, actual, delta, (String) null);
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(double unexpected, double actual, double delta, String message) {
 		if (doublesAreEqual(unexpected, actual, delta)) {
 			failEqual(actual, message);
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	static void assertNotEquals(double unexpected, double actual, double delta, Supplier<String> messageSupplier) {
 		if (doublesAreEqual(unexpected, actual, delta)) {
 			failEqual(actual, nullSafeGet(messageSupplier));
