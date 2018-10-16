@@ -11,8 +11,6 @@
 package org.junit.jupiter.engine;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_PREFIX;
-import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 
 import java.util.Optional;
 
@@ -40,11 +38,9 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 @API(status = INTERNAL, since = "5.0")
 public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngineExecutionContext> {
 
-	public static final String ENGINE_ID = "junit-jupiter";
-
 	@Override
 	public String getId() {
-		return ENGINE_ID;
+		return JupiterEngineDescriptor.ENGINE_ID;
 	}
 
 	/**
@@ -73,9 +69,9 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 	@Override
 	protected HierarchicalTestExecutorService createExecutorService(ExecutionRequest request) {
 		ConfigurationParameters config = request.getConfigurationParameters();
-		if (config.getBoolean(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME).orElse(false)) {
+		if (config.getBoolean(Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME).orElse(false)) {
 			return new ForkJoinPoolHierarchicalTestExecutorService(
-				new PrefixedConfigurationParameters(config, PARALLEL_CONFIG_PREFIX));
+				new PrefixedConfigurationParameters(config, Constants.PARALLEL_CONFIG_PREFIX));
 		}
 		return super.createExecutorService(request);
 	}

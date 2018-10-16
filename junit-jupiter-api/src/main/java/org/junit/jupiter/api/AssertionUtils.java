@@ -142,13 +142,13 @@ class AssertionUtils {
 	}
 
 	static void assertValidDelta(float delta) {
-		if (Float.isNaN(delta) || delta <= 0.0) {
+		if (Float.isNaN(delta) || delta < 0.0) {
 			failIllegalDelta(String.valueOf(delta));
 		}
 	}
 
 	static void assertValidDelta(double delta) {
-		if (Double.isNaN(delta) || delta <= 0.0) {
+		if (Double.isNaN(delta) || delta < 0.0) {
 			failIllegalDelta(String.valueOf(delta));
 		}
 	}

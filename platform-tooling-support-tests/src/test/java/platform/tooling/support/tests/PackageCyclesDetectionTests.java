@@ -11,10 +11,6 @@
 package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertLinesMatch;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.List;
 
 import de.sormuras.bartholdy.Configuration;
 import de.sormuras.bartholdy.tool.CyclesDetector;
@@ -32,37 +28,22 @@ class PackageCyclesDetectionTests {
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
 	void moduleDoesNotContainCyclicPackageReferences(String module) {
 		var jar = Helper.createJarPath(module);
-		var result = new CyclesDetector(jar).run(Configuration.of());
+		var result = new CyclesDetector(jar, this::ignore).run(Configuration.of());
+		assertEquals(0, result.getExitCode(), "result=" + result);
+	}
 
-		// TODO Only retain the 'default' case by removing the cyclic package references
-		//      where possible and configure shadowed packages to be ignored by the detector.
-		//      See https://github.com/junit-team/junit5/issues/1626
-		switch (module) {
-			case "junit-jupiter-api":
-				assertEquals(1, result.getExitCode(), "result=" + result);
-				assertLinesMatch(List.of(
-					"org.junit.jupiter.api.extension.ExtensionContext -> org.junit.jupiter.api.TestInstance",
-					"org.junit.jupiter.api.extension.ExtensionContext -> org.junit.jupiter.api.TestInstance$Lifecycle"),
-					result.getOutputLines("err"));
-				break;
-			case "junit-jupiter-engine":
-				assertEquals(1, result.getExitCode(), "result=" + result);
-				assertLinesMatch(List.of(
-					"org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils -> org.junit.jupiter.engine.Constants",
-					"org.junit.jupiter.engine.discovery.JavaElementsResolver -> org.junit.jupiter.engine.JupiterTestEngine",
-					"org.junit.jupiter.engine.execution.ConditionEvaluator -> org.junit.jupiter.engine.Constants",
-					"org.junit.jupiter.engine.extension.ExtensionRegistry -> org.junit.jupiter.engine.Constants"),
-					result.getOutputLines("err"));
-				break;
-			case "junit-jupiter-params":
-				assertEquals(1, result.getExitCode(), "result=" + result);
-				assertTrue(result.getOutputLines("err").stream().allMatch(
-					line -> line.startsWith("org.junit.jupiter.params.shadow.com.univocity.parsers.")));
-				break;
-			default:
-				assertEquals(0, result.getExitCode(), "result=" + result);
+	private boolean ignore(String source, String target) {
+		if (source.equals(target)) {
+			return true;
 		}
-
+		if (source.startsWith("org.junit.jupiter.params.shadow.com.univocity.parsers.")) {
+			return true;
+		}
+		//noinspection RedundantIfStatement
+		if (!target.startsWith("org.junit.")) {
+			return true;
+		}
+		return false;
 	}
 
 }

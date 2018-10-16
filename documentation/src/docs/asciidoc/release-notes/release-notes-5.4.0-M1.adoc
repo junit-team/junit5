@@ -19,27 +19,34 @@ repository on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* The JUnit Platform Surefire Provider (`junit-platform-surefire-provider`) has been discontinued
-  and is no longer released as part of JUnit 5. Please use Maven Surefire’s native support for
-  running tests on the JUnit Platform (requires Maven Surefire 2.22.0 or higher) instead.
+* The JUnit Platform Surefire Provider (`junit-platform-surefire-provider`) has been
+  discontinued and is no longer released as part of JUnit 5. Please use Maven Surefire’s
+  native support for running tests on the JUnit Platform instead (requires Maven Surefire
+  2.22.0 or higher).
 
 ==== New Features and Improvements
 
 * JUnit 4's `AssumptionViolatedException` is now supported in JUnit Jupiter for aborting
   a test mid-flight due to a failed assumption -- for example, via JUnit 4's
   `org.junit.Assume` utility class.
-* In addition to returning streams, `@TestFactory`-annotated methods may return a single
-  `DynamicNode`, i.e. a `DynamicTest` or a `DynamicContainer`, instance.
+* In addition to returning streams, `@TestFactory`-annotated methods may now return a
+  single `DynamicNode` -- for example, a `DynamicTest` or a `DynamicContainer`.
 * New `DisplayNameGenerator` interface and `@DisplayNameGeneration` annotation that allow
   declarative configuration of a pre-defined or custom display name generator.
+
 
 [[release-notes-5.4.0-M1-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
 
-* `Assertions.assertAll()` is now thread-safe, i.e. it can be used with _parallel_ `Streams`.
-* `OS.SOLARIS` is now also detected for when `os.name` reports `SunOs`.
+* `Assertions.assertAll()` is now thread-safe -- for example, it can now be used with a
+  _parallel_ `Stream`.
+* The `OS.SOLARIS` enum constant used with `@EnabledOnOs` and `@DisabledOnOs` is now also
+  detected as the current operating system if the `os.name` JVM system property contains
+  `"SunOs"`.
+* `Assertions.assertEquals()` variants that compare floating point numbers using a delta
+  now support a _delta_ of zero.
 
 ==== Deprecations and Breaking Changes
 
@@ -47,7 +54,8 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Implicit conversion from hexadecimal and octal string representations to integral types
+  in `@ParameterizedTest` arguments -- for example, conversion from `"0xff"` to `255`.
 
 
 [[release-notes-5.4.0-M1-junit-vintage]]
