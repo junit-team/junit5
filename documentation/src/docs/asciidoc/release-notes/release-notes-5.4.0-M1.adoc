@@ -47,7 +47,7 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* `Assertions.assertNotEquals()` for primitive data types - byte, short, char, int, long, float and double.
 
 
 [[release-notes-5.4.0-M1-junit-vintage]]
