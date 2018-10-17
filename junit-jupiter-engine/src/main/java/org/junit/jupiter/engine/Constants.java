@@ -18,6 +18,9 @@ import static org.junit.platform.engine.support.hierarchical.DefaultParallelExec
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_STRATEGY_PROPERTY_NAME;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils;
+import org.junit.jupiter.engine.execution.ConditionEvaluator;
+import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigurationStrategy;
 
 /**
@@ -59,7 +62,7 @@ public final class Constants {
 	 * @see #DEACTIVATE_ALL_CONDITIONS_PATTERN
 	 * @see org.junit.jupiter.api.extension.ExecutionCondition
 	 */
-	public static final String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = "junit.jupiter.conditions.deactivate";
+	public static final String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = ConditionEvaluator.DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME;
 
 	/**
 	 * Wildcard pattern which signals that all conditions should be deactivated: {@value}
@@ -67,7 +70,7 @@ public final class Constants {
 	 * @see #DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME
 	 * @see org.junit.jupiter.api.extension.ExecutionCondition
 	 */
-	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = "*";
+	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = ConditionEvaluator.DEACTIVATE_ALL_CONDITIONS_PATTERN;
 
 	/**
 	 * Property name used to enable auto-detection and registration of extensions via
@@ -75,7 +78,7 @@ public final class Constants {
 	 *
 	 * <p>The default behavior is not to perform auto-detection.
 	 */
-	public static final String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.enabled";
+	public static final String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = ExtensionRegistry.EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the default test instance lifecycle mode: {@value}
@@ -90,7 +93,7 @@ public final class Constants {
 	 *
 	 * @see org.junit.jupiter.api.TestInstance
 	 */
-	public static final String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = "junit.jupiter.testinstance.lifecycle.default";
+	public static final String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = TestInstanceLifecycleUtils.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;
 
 	/**
 	 * Property name used to enable parallel test execution: {@value}

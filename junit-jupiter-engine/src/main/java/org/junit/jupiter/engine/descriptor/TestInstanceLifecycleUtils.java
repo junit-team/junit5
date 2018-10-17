@@ -10,10 +10,11 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Optional;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.platform.commons.logging.Logger;
@@ -29,7 +30,10 @@ import org.junit.platform.engine.ConfigurationParameters;
  * @see TestInstance
  * @see TestInstance.Lifecycle
  */
-final class TestInstanceLifecycleUtils {
+@API(status = INTERNAL, since = "5.0")
+public final class TestInstanceLifecycleUtils {
+
+	public static final String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = "junit.jupiter.testinstance.lifecycle.default";
 
 	private static final Logger logger = LoggerFactory.getLogger(TestInstanceLifecycleUtils.class);
 

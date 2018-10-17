@@ -174,14 +174,20 @@ class ParameterizedTestDemo {
 	// end::multi_arg_MethodSource_example[]
 	// @formatter:on
 
+	// @formatter:off
 	// tag::CsvSource_example[]
 	@ParameterizedTest
-	@CsvSource({ "foo, 1", "bar, 2", "'baz, qux', 3" })
+	@CsvSource({
+		"apple,         1",
+		"banana,        2",
+		"'lemon, lime', 0xF1"
+	})
 	void testWithCsvSource(String first, int second) {
 		assertNotNull(first);
 		assertNotEquals(0, second);
 	}
 	// end::CsvSource_example[]
+	// @formatter:on
 
 	// tag::CsvFileSource_example[]
 	@ParameterizedTest

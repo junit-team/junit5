@@ -145,10 +145,10 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 				Preconditions.condition(source.length() == 1, () -> "String must have length of 1: " + source);
 				return source.charAt(0);
 			});
-			converters.put(Byte.class, Byte::valueOf);
-			converters.put(Short.class, Short::valueOf);
-			converters.put(Integer.class, Integer::valueOf);
-			converters.put(Long.class, Long::valueOf);
+			converters.put(Byte.class, Byte::decode);
+			converters.put(Short.class, Short::decode);
+			converters.put(Integer.class, Integer::decode);
+			converters.put(Long.class, Long::decode);
 			converters.put(Float.class, Float::valueOf);
 			converters.put(Double.class, Double::valueOf);
 			CONVERTERS = unmodifiableMap(converters);

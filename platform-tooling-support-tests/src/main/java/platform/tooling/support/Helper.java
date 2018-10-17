@@ -80,9 +80,13 @@ public class Helper {
 		}
 	}
 
-	public static JarFile createJarFile(String module) {
+	public static Path createJarPath(String module) {
 		var archive = module + '-' + version(module) + ".jar";
-		var path = Paths.get("..", module, "build", "libs", archive);
+		return Paths.get("..", module, "build", "libs", archive);
+	}
+
+	public static JarFile createJarFile(String module) {
+		var path = createJarPath(module);
 		try {
 			return new JarFile(path.toFile());
 		}

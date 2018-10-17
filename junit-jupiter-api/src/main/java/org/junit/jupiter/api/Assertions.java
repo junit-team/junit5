@@ -415,7 +415,7 @@ public class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given {@code delta}.
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given non-negative {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
 	 * {@link Float#compare(float, float)}.</p>
 	 */
@@ -424,7 +424,7 @@ public class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given {@code delta}.
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given non-negative {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
 	 * {@link Float#compare(float, float)}.</p>
 	 */
@@ -433,7 +433,7 @@ public class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given {@code delta}.
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given non-negative {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
 	 * {@link Float#compare(float, float)}.</p>
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
@@ -471,7 +471,7 @@ public class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given {@code delta}.
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given non-negative {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.</p>
 	 */
@@ -480,7 +480,7 @@ public class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given {@code delta}.
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given non-negative {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.</p>
 	 */
@@ -489,7 +489,7 @@ public class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given {@code delta}.
+	 * <em>Asserts</em> that {@code expected} and {@code actual} are equal within the given non-negative {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.</p>
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
@@ -718,7 +718,7 @@ public class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} float arrays are equal within the given {@code delta}.
+	 * <em>Asserts</em> that {@code expected} and {@code actual} float arrays are equal within the given non-negative {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
 	 * {@link Float#compare(float, float)}.</p>
 	 */
@@ -727,7 +727,7 @@ public class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} float arrays are equal within the given {@code delta}.
+	 * <em>Asserts</em> that {@code expected} and {@code actual} float arrays are equal within the given non-negative {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
 	 * {@link Float#compare(float, float)}.</p>
 	 * <p>Fails with the supplied failure {@code message}.
@@ -737,7 +737,7 @@ public class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} float arrays are equal within the given {@code delta}.
+	 * <em>Asserts</em> that {@code expected} and {@code actual} float arrays are equal within the given non-negative {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
 	 * {@link Float#compare(float, float)}.</p>
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
@@ -777,7 +777,7 @@ public class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} double arrays are equal within the given {@code delta}.
+	 * <em>Asserts</em> that {@code expected} and {@code actual} double arrays are equal within the given non-negative {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.</p>
 	 */
@@ -786,7 +786,7 @@ public class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} double arrays are equal within the given {@code delta}.
+	 * <em>Asserts</em> that {@code expected} and {@code actual} double arrays are equal within the given non-negative {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.</p>
 	 * <p>Fails with the supplied failure {@code message}.
@@ -796,7 +796,7 @@ public class Assertions {
 	}
 
 	/**
-	 * <em>Asserts</em> that {@code expected} and {@code actual} double arrays are equal within the given {@code delta}.
+	 * <em>Asserts</em> that {@code expected} and {@code actual} double arrays are equal within the given non-negative {@code delta}.
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.</p>
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.

@@ -14,7 +14,6 @@ import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.jupiter.engine.Constants.EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +27,6 @@ import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.Extension;
-import org.junit.jupiter.engine.Constants;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassLoaderUtils;
@@ -50,6 +48,8 @@ import org.junit.platform.engine.ConfigurationParameters;
 @API(status = INTERNAL, since = "5.0")
 public class ExtensionRegistry {
 
+	public static final String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.enabled";
+
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionRegistry.class);
 
 	private static final List<Extension> DEFAULT_EXTENSIONS = Collections.unmodifiableList(Arrays.asList(//
@@ -63,7 +63,7 @@ public class ExtensionRegistry {
 	 * Factory for creating and populating a new root registry with the default
 	 * extensions.
 	 *
-	 * <p>If the {@link Constants#EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME}
+	 * <p>If the {@link org.junit.jupiter.engine.Constants#EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME}
 	 * configuration parameter has been set to {@code true}, extensions will be
 	 * auto-detected using Java's {@link ServiceLoader} mechanism and automatically
 	 * registered after the default extensions.

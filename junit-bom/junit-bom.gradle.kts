@@ -1,6 +1,6 @@
 description = "${rootProject.description} (Bill of Materials)"
 
-apply(from = "$rootDir/gradle/publishing.gradle")
+apply(from = "$rootDir/gradle/publishing.gradle.kts")
 
 the<PublishingExtension>().publications.named<MavenPublication>("maven") {
 	pom {
