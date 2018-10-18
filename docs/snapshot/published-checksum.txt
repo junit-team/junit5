@@ -27,10 +27,12 @@
 0e0e79987dcef27ec9f9dc1d4e9c4f72  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/BeforeTestExecutionCallback.java
 0ecf238f6b5ac456f69163c528f4b52d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java
 0ed97f559995e32766a4405e1fe3cf4d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/TokenWith.java
+0f65e5cf7bde8a109b067dc6164f3528  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNotEquals.java
 0fa3bd61410444b5f7b8731b83e72d60  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnJre.java
 105d9e4b87226ac563af50df51a3ff70  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestIdentifier.java
 11cb748ddb7df02e0af8de08c2aca999  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingConsumer.java
 1222e5d9a1ded9b30a69bcd10c767abb  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ValueSource.java
+1347a592c60fa94e8c59c63be5a62af6  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java
 1384f3f23118d58dd8cf1f43249e559f  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LogRecordListener.java
 13c76a7853cbb65c8d2f2330aac9495d  documentation/src/docs/asciidoc/user-guide/api-evolution.adoc
 13c84ca004aedf3a0418ddd63fb903e3  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/UniqueIdSelectorResolver.java
@@ -154,10 +156,10 @@
 50d596a0ae9b3535363a457c6c3f55ae  documentation/src/test/java/example/TestReporterDemo.java
 50ea7239684a369158e6b00b4e4a99cc  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtendWith.java
 51853e5d289beb6f939d65a5b2ef89d5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/BeforeAllCallback.java
-518be51185a336b5fbca3c56faa73e3a  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 51a61d4a973acc69af5b7ba0786b4e2b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnJreCondition.java
 5225ee7427d0e00c859d4bf9b8b11a24  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/TestInstanceProvider.java
 522845eb742b2db631cc98134870070e  junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncherExecutionResult.java
+526e9ecf2115e4870014a6318e748de7  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 5298a308b48f584aff392a58aab310e5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ConditionEvaluationResult.java
 52f37095ea56b90845ff3e62a4713097  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestMethod.java
 5318b327143fcea3f2d8ae43a2e214fe  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsInnerClass.java
@@ -192,7 +194,6 @@
 5cd548da9c4072f4c9eabc3cd937c7c6  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/VintageDiscoverer.java
 5d0cd881cad145f67eb009795cd9ad46  junit-vintage-engine/src/main/java/org/junit/vintage/engine/support/UniqueIdReader.java
 5e11d5de1773cdeecae38cb471a4f778  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicNode.java
-5e3f2a942d958563b284f93d388be5cd  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java
 5f01a7b613df765a1d0d73b4772fc42d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertEquals.java
 5f3c697ebcd0442a8efbce5d34dad6ed  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayNameGenerator.java
 60f96e25d25a51142183a855a6aa0e86  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.java
@@ -334,7 +335,6 @@
 9bd3519b187fe3535f19006ef39b9a95  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Operator.java
 9cbf34aab806acefd6a6a12637eb85c3  junit-platform-engine/src/main/java/org/junit/platform/engine/TestSource.java
 9dc91026328a4f7e28f9652d5c5557a4  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/RunnerTestDescriptorAwareFilter.java
-9e63cea30f4d1b38d84eedac011914b0  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNotEquals.java
 9f6a618caf103a2d0cbdcf31644e1cad  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/DefaultParameterContext.java
 a04d618180054b036515748d0db9bb12  documentation/src/test/kotlin/example/AssertionsKotlinDemo.kt
 a07e490554343de891de01d8fccfb233  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/Node.java
