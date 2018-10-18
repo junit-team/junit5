@@ -26,7 +26,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.ExecutionsResult;
+import org.junit.platform.testkit.ExecutionResults;
 
 /**
  * Integration tests that verify support for {@link TestInstancePostProcessor}.
@@ -46,10 +46,10 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 	void instancePostProcessorsInNestedClasses() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(OuterTestCase.class)).build();
 
-		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
+		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(2, executionsResult.getTestStartedCount(), "# tests started");
-		assertEquals(2, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(2, executionResults.getTestStartedCount(), "# tests started");
+		assertEquals(2, executionResults.getTestSuccessfulCount(), "# tests succeeded");
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
@@ -76,10 +76,10 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(TestCaseWithTestSpecificTestInstancePostProcessor.class)).build();
 
-		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
+		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, executionResults.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded");
 
 		assertThat(callSequence).containsExactly(
 			"fooPostProcessTestInstance:TestCaseWithTestSpecificTestInstancePostProcessor", "beforeEachMethod", "test");

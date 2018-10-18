@@ -30,7 +30,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.ExecutionsResult;
+import org.junit.platform.testkit.ExecutionResults;
 
 /**
  * Integration tests that verify support for {@link BeforeAll}, {@link AfterAll},
@@ -174,10 +174,10 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 
 		callSequence.clear();
 		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
-		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
+		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(testsStarted, executionsResult.getTestStartedCount(), "# tests started");
-		assertEquals(testsSuccessful, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(testsStarted, executionResults.getTestStartedCount(), "# tests started");
+		assertEquals(testsSuccessful, executionResults.getTestSuccessfulCount(), "# tests succeeded");
 
 		assertEquals(asList(expectedCalls), callSequence, () -> "wrong call sequence for " + testClass.getName());
 	}

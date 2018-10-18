@@ -26,7 +26,7 @@ import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition.SystemProperty;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.ExecutionsResult;
+import org.junit.platform.testkit.ExecutionResults;
 
 /**
  * Integration tests that verify support for the {@link ExecutionCondition}
@@ -54,21 +54,21 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	void conditionWorksOnContainer() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(TestCaseWithExecutionConditionOnClass.class)).build();
-		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
+		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(1, executionsResult.getContainerSkippedCount(), "# container skipped");
-		assertEquals(0, executionsResult.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getContainerSkippedCount(), "# container skipped");
+		assertEquals(0, executionResults.getTestStartedCount(), "# tests started");
 	}
 
 	@Test
 	void conditionWorksOnTest() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(TestCaseWithExecutionConditionOnMethods.class)).build();
-		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
+		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(2, executionsResult.getTestStartedCount(), "# tests started");
-		assertEquals(2, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(3, executionsResult.getTestSkippedCount(), "# tests skipped");
+		assertEquals(2, executionResults.getTestStartedCount(), "# tests started");
+		assertEquals(2, executionResults.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(3, executionResults.getTestSkippedCount(), "# tests skipped");
 	}
 
 	@Test
@@ -118,12 +118,12 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 				.build();
 		// @formatter:on
 
-		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
+		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(0, executionsResult.getContainerSkippedCount(), "# containers skipped");
-		assertEquals(2, executionsResult.getContainerStartedCount(), "# containers started");
-		assertEquals(testStartedCount, executionsResult.getTestStartedCount(), "# tests started");
-		assertEquals(testFailedCount, executionsResult.getTestFailedCount(), "# tests failed");
+		assertEquals(0, executionResults.getContainerSkippedCount(), "# containers skipped");
+		assertEquals(2, executionResults.getContainerStartedCount(), "# containers started");
+		assertEquals(testStartedCount, executionResults.getTestStartedCount(), "# tests started");
+		assertEquals(testFailedCount, executionResults.getTestFailedCount(), "# tests failed");
 	}
 
 	private void assertExecutionConditionOverride(String deactivatePattern, int started, int succeeded, int failed) {
@@ -134,11 +134,11 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 				.build();
 		// @formatter:on
 
-		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
+		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(started, executionsResult.getTestStartedCount(), "# tests started");
-		assertEquals(succeeded, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(failed, executionsResult.getTestFailedCount(), "# tests failed");
+		assertEquals(started, executionResults.getTestStartedCount(), "# tests started");
+		assertEquals(succeeded, executionResults.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(failed, executionResults.getTestFailedCount(), "# tests failed");
 	}
 
 	// -------------------------------------------------------------------

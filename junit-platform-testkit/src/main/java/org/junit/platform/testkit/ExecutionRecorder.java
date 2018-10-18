@@ -22,33 +22,33 @@ import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
  * {@link EngineExecutionListener} that records data from every event that occurs during the engine
- * execution lifecycle and provides functionality for retrieving execution state via {@link ExecutionsResult}.
+ * execution lifecycle and provides functionality for retrieving execution state via {@link ExecutionResults}.
  *
  * @see ExecutionEvent
- * @see ExecutionsResult
+ * @see ExecutionResults
  * @since 1.4.0
  */
 @API(status = API.Status.EXPERIMENTAL, since = "1.4.0")
 public class ExecutionRecorder implements EngineExecutionListener {
 
-	private ExecutionsResult.Builder graphBuilder;
+	private ExecutionResults.Builder graphBuilder;
 
 	public ExecutionRecorder() {
-		this.graphBuilder = ExecutionsResult.builder();
+		this.graphBuilder = ExecutionResults.builder();
 	}
 
 	/**
 	 * Execute tests via a {@link EngineDiscoveryRequest} using the provided {@link TestEngine},
-	 * then return the recorded {@link ExecutionsResult} to the caller.
+	 * then return the recorded {@link ExecutionResults} to the caller.
 	 *
 	 * @param testEngine the {@link TestEngine} to use when running the discovered tests
 	 * @param discoveryRequest the {@link EngineDiscoveryRequest} to use to discover tests to execute
-	 * @return the recorded {@link ExecutionsResult} of the executed tests
+	 * @return the recorded {@link ExecutionResults} of the executed tests
 	 */
-	public static ExecutionsResult execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest) {
+	public static ExecutionResults execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest) {
 		ExecutionRecorder executionReporter = new ExecutionRecorder();
 		execute(testEngine, discoveryRequest, executionReporter);
-		return executionReporter.getExecutionsResult();
+		return executionReporter.getExecutionResults();
 	}
 
 	public static void execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest,
@@ -114,11 +114,11 @@ public class ExecutionRecorder implements EngineExecutionListener {
 	}
 
 	/**
-	 * Gets the state of the engine's execution in the form of a {@link ExecutionsResult}.
+	 * Get the state of the engine's execution in the form of {@link ExecutionResults}.
 	 *
-	 * @return the {@link ExecutionsResult} containing all current state information from the engine
+	 * @return the {@code ExecutionResults} containing all current state information
 	 */
-	public ExecutionsResult getExecutionsResult() {
+	public ExecutionResults getExecutionResults() {
 		return graphBuilder.build();
 	}
 

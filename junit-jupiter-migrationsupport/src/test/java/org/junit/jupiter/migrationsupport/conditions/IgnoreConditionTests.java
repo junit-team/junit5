@@ -26,12 +26,8 @@ import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.platform.engine.ExecutionRequest;
-import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.UniqueId;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.ExecutionRecorder;
-import org.junit.platform.testkit.ExecutionsResult;
+import org.junit.platform.testkit.ExecutionResults;
 
 /**
  * Integration tests for JUnit 4's {@link Ignore @Ignore} support in JUnit
@@ -45,10 +41,10 @@ class IgnoreConditionTests {
 	@Test
 	void ignoredTestClassWithDefaultMessage() {
 		Class<?> testClass = IgnoredClassWithDefaultMessageTestCase.class;
-		ExecutionsResult executionsResult = executeTestsForClass(testClass).getExecutionsResult();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		// @formatter:off
-		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(), //
+		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()),
 			event(container(testClass), skippedWithReason(testClass + " is disabled via @org.junit.Ignore")),
 			event(engine(), finishedSuccessfully())
@@ -59,10 +55,10 @@ class IgnoreConditionTests {
 	@Test
 	void ignoredTestClassWithCustomMessage() {
 		Class<?> testClass = IgnoredClassWithCustomMessageTestCase.class;
-		ExecutionsResult executionsResult = executeTestsForClass(testClass).getExecutionsResult();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		// @formatter:off
-		assertRecordedExecutionEventsContainsExactly(executionsResult.getExecutionEvents(),
+		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(),
 			event(engine(), started()),
 			event(container(testClass), skippedWithReason("Ignored Class")),
 			event(engine(), finishedSuccessfully())
@@ -72,13 +68,13 @@ class IgnoreConditionTests {
 
 	@Test
 	void ignoredAndNotIgnoredTestMethods() {
-		ExecutionsResult executionsResult = executeTestsForClass(IgnoredMethodsTestCase.class).getExecutionsResult();
+		ExecutionResults executionResults = executeTestsForClass(IgnoredMethodsTestCase.class);
 
 		// TODO Add debug support to ExecutionRecorder.
-		// executionsResult.getTestEvents().forEach(System.out::println);
+		// executionResults.getTestEvents().forEach(System.out::println);
 
 		// @formatter:off
-		assertRecordedExecutionEventsContainsExactly(executionsResult.getTestEvents(),
+		assertRecordedExecutionEventsContainsExactly(executionResults.getTestEvents(),
 			event(test("ignoredWithCustomMessage"), skippedWithReason("Ignored Method")),
 			event(test("notIgnored"), started()),
 			event(test("notIgnored"), finishedSuccessfully()),
@@ -88,24 +84,8 @@ class IgnoreConditionTests {
 		// @formatter:on
 	}
 
-	// -------------------------------------------------------------------------
-
-	// Copied from AbstractJupiterTestEngineTests.
-	private final JupiterTestEngine engine = new JupiterTestEngine();
-
-	// Copied from AbstractJupiterTestEngineTests and modified.
-	// TODO Consider opening up AbstractJupiterTestEngineTests again, since it is no longer visible in other projects.
-	private ExecutionRecorder executeTestsForClass(Class<?> testClass) {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
-		TestDescriptor testDescriptor = discoverTests(request);
-		ExecutionRecorder executionRecorder = new ExecutionRecorder();
-		engine.execute(new ExecutionRequest(testDescriptor, executionRecorder, request.getConfigurationParameters()));
-		return executionRecorder;
-	}
-
-	// Copied from AbstractJupiterTestEngineTests.
-	private TestDescriptor discoverTests(LauncherDiscoveryRequest request) {
-		return engine.discover(request, UniqueId.forEngine(engine.getId()));
+	private ExecutionResults executeTestsForClass(Class<?> testClass) {
+		return ExecutionRecorder.execute(new JupiterTestEngine(), request().selectors(selectClass(testClass)).build());
 	}
 
 	// -------------------------------------------------------------------------

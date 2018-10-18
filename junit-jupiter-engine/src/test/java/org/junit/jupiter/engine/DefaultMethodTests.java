@@ -29,7 +29,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.engine.execution.injection.sample.DoubleParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.LongParameterResolver;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.ExecutionsResult;
+import org.junit.platform.testkit.ExecutionResults;
 
 /**
  * Integration tests that verify support for selecting and executing default
@@ -58,16 +58,16 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	void executeTestCaseWithDefaultMethodFromInterfaceSelectedByFullyQualifedMethodName() {
 		String fqmn = TestCaseWithDefaultMethod.class.getName() + "#test";
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(fqmn)).build();
-		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
+		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
 		// @formatter:off
 		assertAll(
 				() -> assertTrue(beforeAllInvoked, "@BeforeAll static method invoked from interface"),
 				() -> assertTrue(afterAllInvoked, "@AfterAll static method invoked from interface"),
 				() -> assertTrue(defaultMethodInvoked, "default @Test method invoked from interface"),
-				() -> assertEquals(1, executionsResult.getTestStartedCount(), "# tests started"),
-				() -> assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded"),
-				() -> assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed")
+				() -> assertEquals(1, executionResults.getTestStartedCount(), "# tests started"),
+				() -> assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded"),
+				() -> assertEquals(0, executionResults.getTestFailedCount(), "# tests failed")
 		);
 		// @formatter:on
 	}
@@ -76,7 +76,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	void executeTestCaseWithDefaultMethodFromGenericInterfaceSelectedByFullyQualifedMethodName() {
 		String fqmn = GenericTestCaseWithDefaultMethod.class.getName() + "#test(" + Long.class.getName() + ")";
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(fqmn)).build();
-		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
+		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
 		// @formatter:off
 		assertAll(
@@ -84,9 +84,9 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 				() -> assertTrue(afterAllInvoked, "@AfterAll default method invoked from interface"),
 				() -> assertTrue(defaultMethodInvoked, "default @Test method invoked from interface"),
 				() -> assertFalse(localMethodInvoked, "local @Test method should not have been invoked from class"),
-				() -> assertEquals(1, executionsResult.getTestStartedCount(), "# tests started"),
-				() -> assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded"),
-				() -> assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed")
+				() -> assertEquals(1, executionResults.getTestStartedCount(), "# tests started"),
+				() -> assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded"),
+				() -> assertEquals(0, executionResults.getTestFailedCount(), "# tests failed")
 		);
 		// @formatter:on
 	}
@@ -96,7 +96,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 
 		String fqmn = GenericTestCaseWithDefaultMethod.class.getName() + "#test(" + Double.class.getName() + ")";
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(fqmn)).build();
-		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
+		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
 		// @formatter:off
 		assertAll(
@@ -104,9 +104,9 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 				() -> assertTrue(afterAllInvoked, "@AfterAll default method invoked from interface"),
 				() -> assertFalse(defaultMethodInvoked, "default @Test method should not have been invoked from interface"),
 				() -> assertTrue(localMethodInvoked, "local @Test method invoked from class"),
-				() -> assertEquals(1, executionsResult.getTestStartedCount(), "# tests started"),
-				() -> assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded"),
-				() -> assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed")
+				() -> assertEquals(1, executionResults.getTestStartedCount(), "# tests started"),
+				() -> assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded"),
+				() -> assertEquals(0, executionResults.getTestFailedCount(), "# tests failed")
 		);
 		// @formatter:on
 	}
@@ -115,7 +115,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	void executeTestCaseWithOverloadedMethodNextToGenericDefaultMethodSelectedByClass() {
 		Class<?> clazz = GenericTestCaseWithDefaultMethod.class;
 		LauncherDiscoveryRequest request = request().selectors(selectClass(clazz)).build();
-		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
+		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
 		// @formatter:off
 		assertAll(
@@ -123,9 +123,9 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 				() -> assertTrue(afterAllInvoked, "@AfterAll default method invoked from interface"),
 				() -> assertTrue(defaultMethodInvoked, "default @Test method invoked from interface"),
 				() -> assertTrue(localMethodInvoked, "local @Test method invoked from class"),
-				() -> assertEquals(2, executionsResult.getTestStartedCount(), "# tests started"),
-				() -> assertEquals(2, executionsResult.getTestSuccessfulCount(), "# tests succeeded"),
-				() -> assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed")
+				() -> assertEquals(2, executionResults.getTestStartedCount(), "# tests started"),
+				() -> assertEquals(2, executionResults.getTestSuccessfulCount(), "# tests succeeded"),
+				() -> assertEquals(0, executionResults.getTestFailedCount(), "# tests failed")
 		);
 		// @formatter:on
 	}
@@ -134,7 +134,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	void executeTestCaseWithOverriddenGenericDefaultMethodSelectedByClass() {
 		Class<?> clazz = GenericTestCaseWithOverriddenDefaultMethod.class;
 		LauncherDiscoveryRequest request = request().selectors(selectClass(clazz)).build();
-		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
+		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
 		// @formatter:off
 		assertAll(
@@ -147,9 +147,9 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 				// 3 instead of 2, that means that the overriding method gets invoked
 				// twice: once as itself and a second time "as" the default method which
 				// should not have been "discovered" since it is overridden.
-				() -> assertEquals(2, executionsResult.getTestStartedCount(), "# tests started"),
-				() -> assertEquals(2, executionsResult.getTestSuccessfulCount(), "# tests succeeded"),
-				() -> assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed")
+				() -> assertEquals(2, executionResults.getTestStartedCount(), "# tests started"),
+				() -> assertEquals(2, executionResults.getTestSuccessfulCount(), "# tests succeeded"),
+				() -> assertEquals(0, executionResults.getTestFailedCount(), "# tests failed")
 		);
 		// @formatter:on
 	}
