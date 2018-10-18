@@ -10,6 +10,9 @@
 
 package org.junit.platform.testkit;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -17,8 +20,9 @@ import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 
 /**
- * @since 1.0
+ * @since 1.4
  */
+@API(status = EXPERIMENTAL, since = "1.4")
 public class TestEngineStub implements TestEngine {
 
 	private final String id;

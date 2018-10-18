@@ -10,6 +10,7 @@
 
 package org.junit.platform.testkit;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.commons.util.Preconditions.notNull;
 
@@ -27,10 +28,10 @@ import org.junit.platform.engine.reporting.ReportEntry;
 /**
  * Represents a single event fired during execution of the testing lifecycle.
  *
+ * @since 1.4
  * @see ExecutionEvent.Type
- * @since 1.4.0
  */
-@API(status = API.Status.EXPERIMENTAL, since = "1.4.0")
+@API(status = EXPERIMENTAL, since = "1.4")
 public class ExecutionEvent {
 
 	private static final Supplier<IllegalArgumentException> EXCEPTION_NO_PAYLOAD = () -> new IllegalArgumentException(

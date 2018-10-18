@@ -10,6 +10,8 @@
 
 package org.junit.platform.testkit;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import org.apiguardian.api.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -26,16 +28,12 @@ import org.junit.platform.engine.reporting.ReportEntry;
  *
  * @see ExecutionEvent
  * @see ExecutionResults
- * @since 1.4.0
+ * @since 1.4
  */
-@API(status = API.Status.EXPERIMENTAL, since = "1.4.0")
+@API(status = EXPERIMENTAL, since = "1.4")
 public class ExecutionRecorder implements EngineExecutionListener {
 
-	private ExecutionResults.Builder graphBuilder;
-
-	public ExecutionRecorder() {
-		this.graphBuilder = ExecutionResults.builder();
-	}
+	private final ExecutionResults.Builder resultsBuilder = ExecutionResults.builder();
 
 	/**
 	 * Execute tests via a {@link EngineDiscoveryRequest} using the provided {@link TestEngine},
@@ -66,7 +64,7 @@ public class ExecutionRecorder implements EngineExecutionListener {
 	 */
 	@Override
 	public void dynamicTestRegistered(TestDescriptor testDescriptor) {
-		graphBuilder.addEvent(ExecutionEvent.dynamicTestRegistered(testDescriptor));
+		resultsBuilder.addEvents(ExecutionEvent.dynamicTestRegistered(testDescriptor));
 	}
 
 	/**
@@ -77,7 +75,7 @@ public class ExecutionRecorder implements EngineExecutionListener {
 	 */
 	@Override
 	public void executionSkipped(TestDescriptor testDescriptor, String reason) {
-		graphBuilder.addEvent(ExecutionEvent.executionSkipped(testDescriptor, reason));
+		resultsBuilder.addEvents(ExecutionEvent.executionSkipped(testDescriptor, reason));
 	}
 
 	/**
@@ -87,7 +85,7 @@ public class ExecutionRecorder implements EngineExecutionListener {
 	 */
 	@Override
 	public void executionStarted(TestDescriptor testDescriptor) {
-		graphBuilder.addEvent(ExecutionEvent.executionStarted(testDescriptor));
+		resultsBuilder.addEvents(ExecutionEvent.executionStarted(testDescriptor));
 	}
 
 	/**
@@ -99,7 +97,7 @@ public class ExecutionRecorder implements EngineExecutionListener {
 	 */
 	@Override
 	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
-		graphBuilder.addEvent(ExecutionEvent.executionFinished(testDescriptor, testExecutionResult));
+		resultsBuilder.addEvents(ExecutionEvent.executionFinished(testDescriptor, testExecutionResult));
 	}
 
 	/**
@@ -110,7 +108,7 @@ public class ExecutionRecorder implements EngineExecutionListener {
 	 */
 	@Override
 	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
-		graphBuilder.addEvent(ExecutionEvent.reportingEntryPublished(testDescriptor, entry));
+		resultsBuilder.addEvents(ExecutionEvent.reportingEntryPublished(testDescriptor, entry));
 	}
 
 	/**
@@ -119,7 +117,7 @@ public class ExecutionRecorder implements EngineExecutionListener {
 	 * @return the {@code ExecutionResults} containing all current state information
 	 */
 	public ExecutionResults getExecutionResults() {
-		return graphBuilder.build();
+		return resultsBuilder.build();
 	}
 
 }

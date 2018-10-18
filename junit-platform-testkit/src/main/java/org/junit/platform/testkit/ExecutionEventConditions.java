@@ -11,6 +11,7 @@
 package org.junit.platform.testkit;
 
 import static java.util.function.Predicate.isEqual;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
@@ -26,6 +27,7 @@ import static org.junit.platform.testkit.ExecutionEvent.byType;
 import java.util.List;
 import java.util.function.Predicate;
 
+import org.apiguardian.api.API;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
 import org.assertj.core.api.SoftAssertions;
@@ -39,8 +41,9 @@ import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 /**
  * Collection of AssertJ conditions for {@link ExecutionEvent}s.
  *
- * @since 1.0
+ * @since 1.4
  */
+@API(status = EXPERIMENTAL, since = "1.4")
 public class ExecutionEventConditions {
 
 	private ExecutionEventConditions() {

@@ -12,12 +12,12 @@ package org.junit.platform.testkit;
 
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.commons.util.Preconditions.notNull;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +36,7 @@ import org.junit.platform.engine.TestExecutionResult;
  *
  * @since 1.4
  */
-@API(status = API.Status.EXPERIMENTAL, since = "1.4")
+@API(status = EXPERIMENTAL, since = "1.4")
 public class ExecutionResults {
 
 	private final List<ExecutionEvent> events;
@@ -518,22 +518,22 @@ public class ExecutionResults {
 				ExecutionEvent.byTestDescriptor(notNull(predicate, "TestDescriptor Predicate cannot be null"))));
 	}
 
-	public static class Builder {
-
-		private static final String NULL_INPUT_ERROR = "Provided ExecutionEvents cannot be null";
+	static class Builder {
 
 		private final List<ExecutionEvent> events = new CopyOnWriteArrayList<>();
 
 		/**
-		 * Adds one or more {@link ExecutionEvent}s to be used when creating a new {@link ExecutionResults}.
+		 * Add one or more {@link ExecutionEvent}s to be used when creating the
+		 * {@link ExecutionResults}.
 		 *
-		 * @param event the {@link ExecutionEvent} to add, cannot be null
-		 * @param events any other {@link ExecutionEvent} to add, cannot be null
-		 * @return the {@link Builder}, for method chaining
+		 * @param events the {@code ExecutionEvents} to add; never {@code null}
+		 * @return this {@code Builder} for method chaining
 		 */
-		public Builder addEvent(ExecutionEvent event, ExecutionEvent... events) {
-			this.events.add(notNull(event, NULL_INPUT_ERROR));
-			this.events.addAll(Arrays.asList(notNull(events, NULL_INPUT_ERROR)));
+		Builder addEvents(ExecutionEvent... events) {
+			Preconditions.notNull(events, "ExecutionEvent array must not be null");
+			Preconditions.containsNoNullElements(events, "ExecutionEvent array must not contain null elements");
+			Collections.addAll(this.events, events);
+
 			return this;
 		}
 
@@ -542,8 +542,8 @@ public class ExecutionResults {
 		 *
 		 * @return the newly created {@link ExecutionResults}
 		 */
-		public ExecutionResults build() {
-			return new ExecutionResults(Collections.unmodifiableList(events));
+		ExecutionResults build() {
+			return new ExecutionResults(Collections.unmodifiableList(this.events));
 		}
 	}
 

@@ -10,12 +10,16 @@
 
 package org.junit.platform.testkit;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 
 /**
- * @since 1.0
+ * @since 1.4
  */
+@API(status = EXPERIMENTAL, since = "1.4")
 public class TestDescriptorStub extends AbstractTestDescriptor {
 
 	public TestDescriptorStub(UniqueId uniqueId, String displayName) {
@@ -26,4 +30,5 @@ public class TestDescriptorStub extends AbstractTestDescriptor {
 	public Type getType() {
 		return getChildren().isEmpty() ? Type.TEST : Type.CONTAINER;
 	}
+
 }
