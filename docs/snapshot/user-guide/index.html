@@ -574,39 +574,39 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests-parallel-execution">3.17. Parallel Execution</a></li>
 </ul>
 </li>
-<li><a href="#running-tests">4. Running Tests</a>
+<li><a href="#migrating-from-junit4">4. Migrating from JUnit 4</a>
 <ul class="sectlevel2">
-<li><a href="#running-tests-ide">4.1. IDE Support</a></li>
-<li><a href="#running-tests-build">4.2. Build Support</a></li>
-<li><a href="#running-tests-console-launcher">4.3. Console Launcher</a></li>
-<li><a href="#running-tests-junit-platform-runner">4.4. Using JUnit 4 to run the JUnit Platform</a></li>
-<li><a href="#running-tests-config-params">4.5. Configuration Parameters</a></li>
-<li><a href="#running-tests-tag-expressions">4.6. Tag Expressions</a></li>
-<li><a href="#running-tests-capturing-output">4.7. Capturing Standard Output/Error</a></li>
+<li><a href="#migrating-from-junit4-running">4.1. Running JUnit 4 Tests on the JUnit Platform</a></li>
+<li><a href="#migrating-from-junit4-tips">4.2. Migration Tips</a></li>
+<li><a href="#migrating-from-junit4-rule-support">4.3. Limited JUnit 4 Rule Support</a></li>
+<li><a href="#migrating-from-junit4-ignore-annotation-support">4.4. JUnit 4 @Ignore Support</a></li>
 </ul>
 </li>
-<li><a href="#extensions">5. Extension Model</a>
+<li><a href="#running-tests">5. Running Tests</a>
 <ul class="sectlevel2">
-<li><a href="#extensions-overview">5.1. Overview</a></li>
-<li><a href="#extensions-registration">5.2. Registering Extensions</a></li>
-<li><a href="#extensions-conditions">5.3. Conditional Test Execution</a></li>
-<li><a href="#extensions-test-instance-factories">5.4. Test Instance Factories</a></li>
-<li><a href="#extensions-test-instance-post-processing">5.5. Test Instance Post-processing</a></li>
-<li><a href="#extensions-parameter-resolution">5.6. Parameter Resolution</a></li>
-<li><a href="#extensions-lifecycle-callbacks">5.7. Test Lifecycle Callbacks</a></li>
-<li><a href="#extensions-exception-handling">5.8. Exception Handling</a></li>
-<li><a href="#extensions-test-templates">5.9. Providing Invocation Contexts for Test Templates</a></li>
-<li><a href="#extensions-keeping-state">5.10. Keeping State in Extensions</a></li>
-<li><a href="#extensions-supported-utilities">5.11. Supported Utilities in Extensions</a></li>
-<li><a href="#extensions-execution-order">5.12. Relative Execution Order of User Code and Extensions</a></li>
+<li><a href="#running-tests-ide">5.1. IDE Support</a></li>
+<li><a href="#running-tests-build">5.2. Build Support</a></li>
+<li><a href="#running-tests-console-launcher">5.3. Console Launcher</a></li>
+<li><a href="#running-tests-junit-platform-runner">5.4. Using JUnit 4 to run the JUnit Platform</a></li>
+<li><a href="#running-tests-config-params">5.5. Configuration Parameters</a></li>
+<li><a href="#running-tests-tag-expressions">5.6. Tag Expressions</a></li>
+<li><a href="#running-tests-capturing-output">5.7. Capturing Standard Output/Error</a></li>
 </ul>
 </li>
-<li><a href="#migrating-from-junit4">6. Migrating from JUnit 4</a>
+<li><a href="#extensions">6. Extension Model</a>
 <ul class="sectlevel2">
-<li><a href="#migrating-from-junit4-running">6.1. Running JUnit 4 Tests on the JUnit Platform</a></li>
-<li><a href="#migrating-from-junit4-tips">6.2. Migration Tips</a></li>
-<li><a href="#migrating-from-junit4-rule-support">6.3. Limited JUnit 4 Rule Support</a></li>
-<li><a href="#migrating-from-junit4-ignore-annotation-support">6.4. JUnit 4 @Ignore Support</a></li>
+<li><a href="#extensions-overview">6.1. Overview</a></li>
+<li><a href="#extensions-registration">6.2. Registering Extensions</a></li>
+<li><a href="#extensions-conditions">6.3. Conditional Test Execution</a></li>
+<li><a href="#extensions-test-instance-factories">6.4. Test Instance Factories</a></li>
+<li><a href="#extensions-test-instance-post-processing">6.5. Test Instance Post-processing</a></li>
+<li><a href="#extensions-parameter-resolution">6.6. Parameter Resolution</a></li>
+<li><a href="#extensions-lifecycle-callbacks">6.7. Test Lifecycle Callbacks</a></li>
+<li><a href="#extensions-exception-handling">6.8. Exception Handling</a></li>
+<li><a href="#extensions-test-templates">6.9. Providing Invocation Contexts for Test Templates</a></li>
+<li><a href="#extensions-keeping-state">6.10. Keeping State in Extensions</a></li>
+<li><a href="#extensions-supported-utilities">6.11. Supported Utilities in Extensions</a></li>
+<li><a href="#extensions-execution-order">6.12. Relative Execution Order of User Code and Extensions</a></li>
 </ul>
 </li>
 <li><a href="#advanced-topics">7. Advanced Topics</a>
@@ -4222,12 +4222,236 @@ to the same shared resource is running.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="running-tests"><a class="anchor" href="#running-tests"></a>4. Running Tests</h2>
+<h2 id="migrating-from-junit4"><a class="anchor" href="#migrating-from-junit4"></a>4. Migrating from JUnit 4</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Although the JUnit Jupiter programming model and extension model will not support JUnit 4
+features such as <code>Rules</code> and <code>Runners</code> natively, it is not expected that source code
+maintainers will need to update all of their existing tests, test extensions, and custom
+build test infrastructure to migrate to JUnit Jupiter.</p>
+</div>
+<div class="paragraph">
+<p>Instead, JUnit provides a gentle migration path via a <em>JUnit Vintage test engine</em> which
+allows existing tests based on JUnit 3 and JUnit 4 to be executed using the JUnit
+Platform infrastructure. Since all classes and annotations specific to JUnit Jupiter
+reside under a new <code>org.junit.jupiter</code> base package, having both JUnit 4 and JUnit
+Jupiter in the classpath does not lead to any conflicts. It is therefore safe to maintain
+existing JUnit 4 tests alongside JUnit Jupiter tests. Furthermore, since the JUnit team
+will continue to provide maintenance and bug fix releases for the JUnit 4.x baseline,
+developers have plenty of time to migrate to JUnit Jupiter on their own schedule.</p>
+</div>
+<div class="sect2">
+<h3 id="migrating-from-junit4-running"><a class="anchor" href="#migrating-from-junit4-running"></a>4.1. Running JUnit 4 Tests on the JUnit Platform</h3>
+<div class="paragraph">
+<p>Just make sure that the <code>junit-vintage-engine</code> artifact is in your test runtime path. In
+that case JUnit 3 and JUnit 4 tests will automatically be picked up by the JUnit Platform
+launcher.</p>
+</div>
+<div class="paragraph">
+<p>See the example projects in the <a href="https://github.com/junit-team/junit5-samples"><code>junit5-samples</code></a> repository to
+find out how this is done with Gradle and Maven.</p>
+</div>
+<div class="sect3">
+<h4 id="migrating-from-junit4-categories-support"><a class="anchor" href="#migrating-from-junit4-categories-support"></a>4.1.1. Categories Support</h4>
+<div class="paragraph">
+<p>For test classes or methods that are annotated with <code>@Category</code>, the <em>JUnit Vintage test
+engine</em> exposes the category&#8217;s fully qualified class name as a tag of the corresponding
+test identifier. For example, if a test method is annotated with
+<code>@Category(Example.class)</code>, it will be tagged with <code>"com.acme.Example"</code>. Similar to the
+<code>Categories</code> runner in JUnit 4, this information can be used to filter the discovered
+tests before executing them (see <a href="#running-tests">Running Tests</a> for details).</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="migrating-from-junit4-tips"><a class="anchor" href="#migrating-from-junit4-tips"></a>4.2. Migration Tips</h3>
+<div class="paragraph">
+<p>The following are topics that you should be aware of when migrating existing JUnit 4
+tests to JUnit Jupiter.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Annotations reside in the <code>org.junit.jupiter.api</code> package.</p>
+</li>
+<li>
+<p>Assertions reside in <code>org.junit.jupiter.api.Assertions</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Note that you may continue to use assertion methods from <code>org.junit.Assert</code> or any
+other assertion library such as <a href="http://joel-costigliola.github.io/assertj/">AssertJ</a>, <a href="http://hamcrest.org/JavaHamcrest/">Hamcrest</a>, <a href="http://google.github.io/truth/">Truth</a>, etc.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Assumptions reside in <code>org.junit.jupiter.api.Assumptions</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Note that JUnit Jupiter 5.4 and later versions support methods from JUnit 4&#8217;s
+<code>org.junit.Assume</code> class for assumptions. Specifically, JUnit Jupiter supports JUnit
+4&#8217;s <code>AssumptionViolatedException</code> to signal that a test should be aborted instead of
+marked as a failure.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>@Before</code> and <code>@After</code> no longer exist; use <code>@BeforeEach</code> and <code>@AfterEach</code> instead.</p>
+</li>
+<li>
+<p><code>@BeforeClass</code> and <code>@AfterClass</code> no longer exist; use <code>@BeforeAll</code> and <code>@AfterAll</code>
+instead.</p>
+</li>
+<li>
+<p><code>@Ignore</code> no longer exists: use <code>@Disabled</code> or one of the other built-in
+<a href="#writing-tests-conditional-execution">execution conditions</a> instead</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See also <a href="#migrating-from-junit4-ignore-annotation-support">JUnit 4 @Ignore Support</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>@Category</code> no longer exists; use <code>@Tag</code> instead.</p>
+</li>
+<li>
+<p><code>@RunWith</code> no longer exists; superseded by <code>@ExtendWith</code>.</p>
+</li>
+<li>
+<p><code>@Rule</code> and <code>@ClassRule</code> no longer exist; superseded by <code>@ExtendWith</code> and
+<code>@RegisterExtension</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>See also <a href="#migrating-from-junit4-rule-support">Limited JUnit 4 Rule Support</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="migrating-from-junit4-rule-support"><a class="anchor" href="#migrating-from-junit4-rule-support"></a>4.3. Limited JUnit 4 Rule Support</h3>
+<div class="paragraph">
+<p>As stated above, JUnit Jupiter does not and will not support JUnit 4 rules natively. The
+JUnit team realizes, however, that many organizations, especially large ones, are likely
+to have large JUnit 4 code bases that make use of custom rules. To serve these
+organizations and enable a gradual migration path the JUnit team has decided to support a
+selection of JUnit 4 rules verbatim within JUnit Jupiter. This support is based on
+adapters and is limited to those rules that are semantically compatible to the JUnit
+Jupiter extension model, i.e. those that do not completely change the overall execution
+flow of the test.</p>
+</div>
+<div class="paragraph">
+<p>The <code>junit-jupiter-migrationsupport</code> module from JUnit Jupiter currently supports the
+following three <code>Rule</code> types including subclasses of these types:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>org.junit.rules.ExternalResource</code> (including <code>org.junit.rules.TemporaryFolder</code>)</p>
+</li>
+<li>
+<p><code>org.junit.rules.Verifier</code> (including <code>org.junit.rules.ErrorCollector</code>)</p>
+</li>
+<li>
+<p><code>org.junit.rules.ExpectedException</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As in JUnit 4, Rule-annotated fields as well as methods are supported. By using these
+class-level extensions on a test class such <code>Rule</code> implementations in legacy code bases
+can be <em>left unchanged</em> including the JUnit 4 rule import statements.</p>
+</div>
+<div class="paragraph">
+<p>This limited form of <code>Rule</code> support can be switched on by the class-level annotation
+<code><a href="../api/org/junit/jupiter/migrationsupport/EnableRuleMigrationSupport.html">@EnableRuleMigrationSupport</a></code>. This annotation is a <em>composed annotation</em> which enables
+all rule migration support extensions: <code>VerifierSupport</code>, <code>ExternalResourceSupport</code>, and
+<code>ExpectedExceptionSupport</code>. You may alternatively choose to annotate your test class with
+<code>@EnableJUnit4MigrationSupport</code> which registers migration support for rules <em>and</em> JUnit
+4&#8217;s <code>@Ignore</code> annotation (see <a href="#migrating-from-junit4-ignore-annotation-support">JUnit 4 @Ignore Support</a>).</p>
+</div>
+<div class="paragraph">
+<p>However, if you intend to develop a new extension for JUnit 5 please use the new
+extension model of JUnit Jupiter instead of the rule-based model of JUnit 4.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+JUnit 4 <code>Rule</code> support in JUnit Jupiter is currently an <em>experimental</em> feature.
+Consult the table in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for detail.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="migrating-from-junit4-ignore-annotation-support"><a class="anchor" href="#migrating-from-junit4-ignore-annotation-support"></a>4.4. JUnit 4 @Ignore Support</h3>
+<div class="paragraph">
+<p>In order to provide a smooth migration path from JUnit 4 to JUnit Jupiter, the
+<code>junit-jupiter-migrationsupport</code> module provides support for JUnit 4&#8217;s <code>@Ignore</code>
+annotation analogous to Jupiter&#8217;s <code><a href="../api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>To use <code>@Ignore</code> with JUnit Jupiter based tests, configure a <em>test</em> dependency on the
+<code>junit-jupiter-migrationsupport</code> module in your build and then annotate your test class
+with <code>@ExtendWith(IgnoreCondition.class)</code> or <code><a href="../api/org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.html">@EnableJUnit4MigrationSupport</a></code> (which
+automatically registers the <code>IgnoreCondition</code> along with
+<a href="#migrating-from-junit4-rule-support">Limited JUnit 4 Rule Support</a>). The <code>IgnoreCondition</code> is an
+<code><a href="../api/org/junit/jupiter/api/extension/ExecutionCondition.html">ExecutionCondition</a></code> that disables test classes or test methods that are annotated with
+<code>@Ignore</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">// @ExtendWith(IgnoreCondition.class)</span>
+<span class="annotation">@EnableJUnit4MigrationSupport</span>
+<span class="type">class</span> <span class="class">IgnoredTestsDemo</span> {
+
+    <span class="annotation">@Ignore</span>
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> testWillBeIgnored() {
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> testWillBeExecuted() {
+    }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+JUnit 4 <code>@Ignore</code> support in JUnit Jupiter is currently an <em>experimental</em>
+feature. Consult the table in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for detail.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running-tests"><a class="anchor" href="#running-tests"></a>5. Running Tests</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="running-tests-ide"><a class="anchor" href="#running-tests-ide"></a>4.1. IDE Support</h3>
+<h3 id="running-tests-ide"><a class="anchor" href="#running-tests-ide"></a>5.1. IDE Support</h3>
 <div class="sect3">
-<h4 id="running-tests-ide-intellij-idea"><a class="anchor" href="#running-tests-ide-intellij-idea"></a>4.1.1. IntelliJ IDEA</h4>
+<h4 id="running-tests-ide-intellij-idea"><a class="anchor" href="#running-tests-ide-intellij-idea"></a>5.1.1. IntelliJ IDEA</h4>
 <div class="paragraph">
 <p>IntelliJ IDEA supports running tests on the JUnit Platform since version 2016.2. For
 details please see the
@@ -4292,7 +4516,7 @@ testRuntime(<span class="string"><span class="delimiter">&quot;</span><span clas
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-ide-eclipse"><a class="anchor" href="#running-tests-ide-eclipse"></a>4.1.2. Eclipse</h4>
+<h4 id="running-tests-ide-eclipse"><a class="anchor" href="#running-tests-ide-eclipse"></a>5.1.2. Eclipse</h4>
 <div class="paragraph">
 <p>Eclipse IDE offers support for the JUnit Platform since the Eclipse Oxygen.1a (4.7.1a)
 release.</p>
@@ -4305,7 +4529,7 @@ for JUnit 5</em> section of the
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-ide-other"><a class="anchor" href="#running-tests-ide-other"></a>4.1.3. Other IDEs</h4>
+<h4 id="running-tests-ide-other"><a class="anchor" href="#running-tests-ide-other"></a>5.1.3. Other IDEs</h4>
 <div class="paragraph">
 <p>At the time of this writing, there is no direct support for running tests on the JUnit
 Platform within IDEs other than IntelliJ IDEA and Eclipse. However, the JUnit team
@@ -4316,9 +4540,9 @@ tests with a <a href="#running-tests-junit-platform-runner">JUnit 4 based Runner
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-build"><a class="anchor" href="#running-tests-build"></a>4.2. Build Support</h3>
+<h3 id="running-tests-build"><a class="anchor" href="#running-tests-build"></a>5.2. Build Support</h3>
 <div class="sect3">
-<h4 id="running-tests-build-gradle"><a class="anchor" href="#running-tests-build-gradle"></a>4.2.1. Gradle</h4>
+<h4 id="running-tests-build-gradle"><a class="anchor" href="#running-tests-build-gradle"></a>5.2.1. Gradle</h4>
 <div class="paragraph">
 <p>Starting with <a href="https://docs.gradle.org/4.6/release-notes.html">version 4.6</a>, Gradle provides
 <a href="https://docs.gradle.org/current/userguide/java_testing.html#using_junit5">native support</a>
@@ -4455,7 +4679,7 @@ additional dependency to the runtime classpath.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-build-maven"><a class="anchor" href="#running-tests-build-maven"></a>4.2.2. Maven</h4>
+<h4 id="running-tests-build-maven"><a class="anchor" href="#running-tests-build-maven"></a>5.2.2. Maven</h4>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -4681,7 +4905,7 @@ below) or via the <code>junit-platform.properties</code> file.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-build-ant"><a class="anchor" href="#running-tests-build-ant"></a>4.2.3. Ant</h4>
+<h4 id="running-tests-build-ant"><a class="anchor" href="#running-tests-build-ant"></a>5.2.3. Ant</h4>
 <div class="paragraph">
 <p>Starting with version <code>1.10.3</code> of <a href="https://ant.apache.org/">Ant</a>, a new
 <a href="https://ant.apache.org/manual/Tasks/junitlauncher.html"><code>junitlauncher</code></a> task has
@@ -4780,7 +5004,7 @@ documentation for the
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-console-launcher"><a class="anchor" href="#running-tests-console-launcher"></a>4.3. Console Launcher</h3>
+<h3 id="running-tests-console-launcher"><a class="anchor" href="#running-tests-console-launcher"></a>5.3. Console Launcher</h3>
 <div class="paragraph">
 <p>The <code><a href="../api/org/junit/platform/console/ConsoleLauncher.html">ConsoleLauncher</a></code> is a command-line Java application that lets you launch the JUnit
 Platform from the console. For example, it can be used to run JUnit Vintage and JUnit
@@ -4845,7 +5069,7 @@ is <code>0</code>.
 </table>
 </div>
 <div class="sect3">
-<h4 id="running-tests-console-launcher-options"><a class="anchor" href="#running-tests-console-launcher-options"></a>4.3.1. Options</h4>
+<h4 id="running-tests-console-launcher-options"><a class="anchor" href="#running-tests-console-launcher-options"></a>5.3.1. Options</h4>
 <div class="listingblock">
 <div class="content">
 <pre>Usage: ConsoleLauncher [-h] [--disable-ansi-colors] [--fail-if-no-tests] [--scan-modules]
@@ -4922,7 +5146,7 @@ Launches the JUnit Platform from the console.
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-console-launcher-argument-files"><a class="anchor" href="#running-tests-console-launcher-argument-files"></a>4.3.2. Argument Files (@-files)</h4>
+<h4 id="running-tests-console-launcher-argument-files"><a class="anchor" href="#running-tests-console-launcher-argument-files"></a>5.3.2. Argument Files (@-files)</h4>
 <div class="paragraph">
 <p>On some platforms you may run into system limitations on the length of a command line
 when creating a command line with lots of options or with long arguments.</p>
@@ -4957,7 +5181,7 @@ subject to expansion.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-junit-platform-runner"><a class="anchor" href="#running-tests-junit-platform-runner"></a>4.4. Using JUnit 4 to run the JUnit Platform</h3>
+<h3 id="running-tests-junit-platform-runner"><a class="anchor" href="#running-tests-junit-platform-runner"></a>5.4. Using JUnit 4 to run the JUnit Platform</h3>
 <div class="paragraph">
 <p>The <code>JUnitPlatform</code> runner is a JUnit 4 based <code>Runner</code> which enables you to run any test
 whose programming model is supported on the JUnit Platform in a JUnit 4 environment&#8201;&#8212;&#8201;for example, a JUnit Jupiter test class.</p>
@@ -4982,7 +5206,7 @@ time being the <code>JUnitPlatform</code> runner is an easy way to get started.
 </table>
 </div>
 <div class="sect3">
-<h4 id="running-tests-junit-platform-runner-setup"><a class="anchor" href="#running-tests-junit-platform-runner-setup"></a>4.4.1. Setup</h4>
+<h4 id="running-tests-junit-platform-runner-setup"><a class="anchor" href="#running-tests-junit-platform-runner-setup"></a>5.4.1. Setup</h4>
 <div class="paragraph">
 <p>You need the following artifacts and their dependencies on the classpath. See
 <a href="#dependency-metadata">Dependency Metadata</a> for details regarding group IDs, artifact IDs, and versions.</p>
@@ -5030,7 +5254,7 @@ time being the <code>JUnitPlatform</code> runner is an easy way to get started.
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-junit-platform-runner-technical-names"><a class="anchor" href="#running-tests-junit-platform-runner-technical-names"></a>4.4.2. Display Names vs. Technical Names</h4>
+<h4 id="running-tests-junit-platform-runner-technical-names"><a class="anchor" href="#running-tests-junit-platform-runner-technical-names"></a>5.4.2. Display Names vs. Technical Names</h4>
 <div class="paragraph">
 <p>To define a custom <em>display name</em> for the class run via <code>@RunWith(JUnitPlatform.class)</code>
 simply annotate the class with <code>@SuiteDisplayName</code> and provide a custom value.</p>
@@ -5050,7 +5274,7 @@ configured via <code>@SuiteDisplayName</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-junit-platform-runner-single-test"><a class="anchor" href="#running-tests-junit-platform-runner-single-test"></a>4.4.3. Single Test Class</h4>
+<h4 id="running-tests-junit-platform-runner-single-test"><a class="anchor" href="#running-tests-junit-platform-runner-single-test"></a>5.4.3. Single Test Class</h4>
 <div class="paragraph">
 <p>One way to use the <code>JUnitPlatform</code> runner is to annotate a test class with
 <code>@RunWith(JUnitPlatform.class)</code> directly. Please note that the test methods in the
@@ -5084,7 +5308,7 @@ otherwise, some IDEs and build tools might not recognize it as a JUnit 4 test cl
 </div>
 </div>
 <div class="sect3">
-<h4 id="running-tests-junit-platform-runner-test-suite"><a class="anchor" href="#running-tests-junit-platform-runner-test-suite"></a>4.4.4. Test Suite</h4>
+<h4 id="running-tests-junit-platform-runner-test-suite"><a class="anchor" href="#running-tests-junit-platform-runner-test-suite"></a>5.4.4. Test Suite</h4>
 <div class="paragraph">
 <p>If you have multiple test classes you can create a test suite as can be seen in the
 following example.</p>
@@ -5127,7 +5351,7 @@ details.
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-config-params"><a class="anchor" href="#running-tests-config-params"></a>4.5. Configuration Parameters</h3>
+<h3 id="running-tests-config-params"><a class="anchor" href="#running-tests-config-params"></a>5.5. Configuration Parameters</h3>
 <div class="paragraph">
 <p>In addition to instructing the platform which test classes and test engines to include,
 which packages to scan, etc., it is sometimes necessary to provide additional custom
@@ -5203,7 +5427,7 @@ those supplied via the configuration file.
 </div>
 </div>
 <div class="sect2">
-<h3 id="running-tests-tag-expressions"><a class="anchor" href="#running-tests-tag-expressions"></a>4.6. Tag Expressions</h3>
+<h3 id="running-tests-tag-expressions"><a class="anchor" href="#running-tests-tag-expressions"></a>5.6. Tag Expressions</h3>
 <div class="paragraph">
 <p>Tag expressions are boolean expressions with the operators <code>!</code>, <code>&amp;</code> and <code>|</code>. In addition,
 <code>(</code> and <code>)</code> can be used to adjust for operator precedence.</p>
@@ -5282,7 +5506,7 @@ useful.</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="running-tests-capturing-output"><a class="anchor" href="#running-tests-capturing-output"></a>4.7. Capturing Standard Output/Error</h3>
+<h3 id="running-tests-capturing-output"><a class="anchor" href="#running-tests-capturing-output"></a>5.7. Capturing Standard Output/Error</h3>
 <div class="paragraph">
 <p>Since version 1.3, the JUnit Platform provides opt-in support for capturing output
 printed to <code>System.out</code> and <code>System.err</code>. To enable it, simply set the
@@ -5322,10 +5546,10 @@ it a try and provide feedback to the JUnit team so they can improve and eventual
 </div>
 </div>
 <div class="sect1">
-<h2 id="extensions"><a class="anchor" href="#extensions"></a>5. Extension Model</h2>
+<h2 id="extensions"><a class="anchor" href="#extensions"></a>6. Extension Model</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="extensions-overview"><a class="anchor" href="#extensions-overview"></a>5.1. Overview</h3>
+<h3 id="extensions-overview"><a class="anchor" href="#extensions-overview"></a>6.1. Overview</h3>
 <div class="paragraph">
 <p>In contrast to the competing <code>Runner</code>, <code>TestRule</code>, and <code>MethodRule</code> extension points in
 JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concept: the
@@ -5333,7 +5557,7 @@ JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concep
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-registration"><a class="anchor" href="#extensions-registration"></a>5.2. Registering Extensions</h3>
+<h3 id="extensions-registration"><a class="anchor" href="#extensions-registration"></a>6.2. Registering Extensions</h3>
 <div class="paragraph">
 <p>Extensions can be registered <em>declaratively</em> via
 <a href="#extensions-registration-declarative"><code>@ExtendWith</code></a>, <em>programmatically</em> via
@@ -5341,7 +5565,7 @@ JUnit 4, the JUnit Jupiter extension model consists of a single, coherent concep
 Java&#8217;s <a href="#extensions-registration-automatic"><code>ServiceLoader</code></a> mechanism.</p>
 </div>
 <div class="sect3">
-<h4 id="extensions-registration-declarative"><a class="anchor" href="#extensions-registration-declarative"></a>5.2.1. Declarative Extension Registration</h4>
+<h4 id="extensions-registration-declarative"><a class="anchor" href="#extensions-registration-declarative"></a>6.2.1. Declarative Extension Registration</h4>
 <div class="paragraph">
 <p>Developers can register one or more extensions <em>declaratively</em> by annotating a test
 interface, test class, test method, or custom <em><a href="#writing-tests-meta-annotations">composed
@@ -5414,7 +5638,7 @@ both <code>MyFirstTests</code> and <code>MySecondTests</code> will be extended b
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-registration-programmatic"><a class="anchor" href="#extensions-registration-programmatic"></a>5.2.2. Programmatic Extension Registration</h4>
+<h4 id="extensions-registration-programmatic"><a class="anchor" href="#extensions-registration-programmatic"></a>6.2.2. Programmatic Extension Registration</h4>
 <div class="paragraph">
 <p>Developers can register extensions <em>programmatically</em> by annotating fields in test
 classes with <code><a href="../api/org/junit/jupiter/api/extension/RegisterExtension.html">@RegisterExtension</a></code>.</p>
@@ -5564,7 +5788,7 @@ instance of the extension via the <code>docs</code> field if necessary.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-registration-automatic"><a class="anchor" href="#extensions-registration-automatic"></a>5.2.3. Automatic Extension Registration</h4>
+<h4 id="extensions-registration-automatic"><a class="anchor" href="#extensions-registration-automatic"></a>6.2.3. Automatic Extension Registration</h4>
 <div class="paragraph">
 <p>In addition to <a href="#extensions-registration-declarative">declarative extension registration</a>
 and <a href="#extensions-registration-programmatic">programmatic extension registration</a> support
@@ -5601,7 +5825,7 @@ support for <code>TestInfo</code>, <code>TestReporter</code>, etc.).</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-registration-inheritance"><a class="anchor" href="#extensions-registration-inheritance"></a>5.2.4. Extension Inheritance</h4>
+<h4 id="extensions-registration-inheritance"><a class="anchor" href="#extensions-registration-inheritance"></a>6.2.4. Extension Inheritance</h4>
 <div class="paragraph">
 <p>Registered extensions are inherited within test class hierarchies with top-down
 semantics. Similarly, extensions registered at the class-level are inherited at the
@@ -5612,7 +5836,7 @@ register a duplicate extension implementation will be ignored.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-conditions"><a class="anchor" href="#extensions-conditions"></a>5.3. Conditional Test Execution</h3>
+<h3 id="extensions-conditions"><a class="anchor" href="#extensions-conditions"></a>6.3. Conditional Test Execution</h3>
 <div class="paragraph">
 <p><code><a href="../api/org/junit/jupiter/api/extension/ExecutionCondition.html">ExecutionCondition</a></code> defines the <code>Extension</code> API for programmatic, <em>conditional test
 execution</em>.</p>
@@ -5635,7 +5859,7 @@ short-circuiting boolean OR operator.</p>
 <p>See the source code of <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java">DisabledCondition</a></code> and <code><a href="../api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> for concrete examples.</p>
 </div>
 <div class="sect3">
-<h4 id="extensions-conditions-deactivation"><a class="anchor" href="#extensions-conditions-deactivation"></a>5.3.1. Deactivating Conditions</h4>
+<h4 id="extensions-conditions-deactivation"><a class="anchor" href="#extensions-conditions-deactivation"></a>6.3.1. Deactivating Conditions</h4>
 <div class="paragraph">
 <p>Sometimes it can be useful to run a test suite <em>without</em> certain conditions being active.
 For example, you may wish to run tests even if they are annotated with <code>@Disabled</code> in
@@ -5692,7 +5916,7 @@ of its subpackages.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-test-instance-factories"><a class="anchor" href="#extensions-test-instance-factories"></a>5.4. Test Instance Factories</h3>
+<h3 id="extensions-test-instance-factories"><a class="anchor" href="#extensions-test-instance-factories"></a>6.4. Test Instance Factories</h3>
 <div class="paragraph">
 <p><code><a href="../api/org/junit/jupiter/api/extension/TestInstanceFactory.html">TestInstanceFactory</a></code> defines the API for <code>Extensions</code> that wish to <em>create</em> test class
 instances.</p>
@@ -5731,7 +5955,7 @@ registered for any specific test class.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-test-instance-post-processing"><a class="anchor" href="#extensions-test-instance-post-processing"></a>5.5. Test Instance Post-processing</h3>
+<h3 id="extensions-test-instance-post-processing"><a class="anchor" href="#extensions-test-instance-post-processing"></a>6.5. Test Instance Post-processing</h3>
 <div class="paragraph">
 <p><code><a href="../api/org/junit/jupiter/api/extension/TestInstancePostProcessor.html">TestInstancePostProcessor</a></code> defines the API for <code>Extensions</code> that wish to <em>post
 process</em> test instances.</p>
@@ -5746,7 +5970,7 @@ initialization methods on the test instance, etc.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-parameter-resolution"><a class="anchor" href="#extensions-parameter-resolution"></a>5.6. Parameter Resolution</h3>
+<h3 id="extensions-parameter-resolution"><a class="anchor" href="#extensions-parameter-resolution"></a>6.6. Parameter Resolution</h3>
 <div class="paragraph">
 <p><code><a href="../api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code> defines the <code>Extension</code> API for dynamically resolving parameters at
 runtime.</p>
@@ -5799,7 +6023,7 @@ those provided in <code>java.lang.reflect.Parameter</code> in order to avoid thi
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-lifecycle-callbacks"><a class="anchor" href="#extensions-lifecycle-callbacks"></a>5.7. Test Lifecycle Callbacks</h3>
+<h3 id="extensions-lifecycle-callbacks"><a class="anchor" href="#extensions-lifecycle-callbacks"></a>6.7. Test Lifecycle Callbacks</h3>
 <div class="paragraph">
 <p>The following interfaces define the APIs for extending tests at various points in the
 test execution lifecycle. Consult the following sections for examples and the Javadoc for
@@ -5851,7 +6075,7 @@ concrete example.
 </table>
 </div>
 <div class="sect3">
-<h4 id="extensions-lifecycle-callbacks-before-after-execution"><a class="anchor" href="#extensions-lifecycle-callbacks-before-after-execution"></a>5.7.1. Before and After Test Execution Callbacks</h4>
+<h4 id="extensions-lifecycle-callbacks-before-after-execution"><a class="anchor" href="#extensions-lifecycle-callbacks-before-after-execution"></a>6.7.1. Before and After Test Execution Callbacks</h4>
 <div class="paragraph">
 <p><code><a href="../api/org/junit/jupiter/api/extension/BeforeTestExecutionCallback.html">BeforeTestExecutionCallback</a></code> and <code><a href="../api/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html">AfterTestExecutionCallback</a></code> define the APIs for
 <code>Extensions</code> that wish to add behavior that will be executed <em>immediately before</em> and
@@ -5939,7 +6163,7 @@ INFO: Method [sleep50ms] took 53 ms.</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-exception-handling"><a class="anchor" href="#extensions-exception-handling"></a>5.8. Exception Handling</h3>
+<h3 id="extensions-exception-handling"><a class="anchor" href="#extensions-exception-handling"></a>6.8. Exception Handling</h3>
 <div class="paragraph">
 <p><code><a href="../api/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.html">TestExecutionExceptionHandler</a></code> defines the API for <code>Extensions</code> that wish to handle
 exceptions thrown during test execution.</p>
@@ -5967,7 +6191,7 @@ but rethrow any other type of exception.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-test-templates"><a class="anchor" href="#extensions-test-templates"></a>5.9. Providing Invocation Contexts for Test Templates</h3>
+<h3 id="extensions-test-templates"><a class="anchor" href="#extensions-test-templates"></a>6.9. Providing Invocation Contexts for Test Templates</h3>
 <div class="paragraph">
 <p>A <code><a href="../api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method can only be executed when at least one
 <code><a href="../api/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html">TestTemplateInvocationContextProvider</a></code> is registered. Each such provider is responsible
@@ -6051,7 +6275,7 @@ functionality.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-keeping-state"><a class="anchor" href="#extensions-keeping-state"></a>5.10. Keeping State in Extensions</h3>
+<h3 id="extensions-keeping-state"><a class="anchor" href="#extensions-keeping-state"></a>6.10. Keeping State in Extensions</h3>
 <div class="paragraph">
 <p>Usually, an extension is instantiated only once. So the question becomes relevant: How do
 you keep the state from one invocation of an extension to the next? The
@@ -6082,7 +6306,7 @@ an invocation of their <code>close()</code> method.
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-supported-utilities"><a class="anchor" href="#extensions-supported-utilities"></a>5.11. Supported Utilities in Extensions</h3>
+<h3 id="extensions-supported-utilities"><a class="anchor" href="#extensions-supported-utilities"></a>6.11. Supported Utilities in Extensions</h3>
 <div class="paragraph">
 <p>The <code>junit-platform-commons</code> artifact exposes a package named
 <code><a href="../api/org/junit/platform/commons/support/package-summary.html">org.junit.platform.commons.support</a></code> that contains <em>maintained</em> utility methods for working
@@ -6091,7 +6315,7 @@ with annotations, classes, reflection, and classpath scanning tasks. <code>TestE
 the behavior of the JUnit Platform.</p>
 </div>
 <div class="sect3">
-<h4 id="extensions-supported-utilities-annotations"><a class="anchor" href="#extensions-supported-utilities-annotations"></a>5.11.1. Annotation Support</h4>
+<h4 id="extensions-supported-utilities-annotations"><a class="anchor" href="#extensions-supported-utilities-annotations"></a>6.11.1. Annotation Support</h4>
 <div class="paragraph">
 <p><code>AnnotationSupport</code> provides static utility methods that operate on annotated elements
 (e.g., packages, annotations, classes, interfaces, constructors, methods, and fields).
@@ -6103,14 +6327,14 @@ interfaces and within class hierarchies to find annotations. Consult the Javadoc
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-supported-utilities-classes"><a class="anchor" href="#extensions-supported-utilities-classes"></a>5.11.2. Class Support</h4>
+<h4 id="extensions-supported-utilities-classes"><a class="anchor" href="#extensions-supported-utilities-classes"></a>6.11.2. Class Support</h4>
 <div class="paragraph">
 <p><code>ClassSupport</code> provides static utility methods for working with classes (i.e., instances
 of <code>java.lang.Class</code>). Consult the Javadoc for <code><a href="../api/org/junit/platform/commons/support/ClassSupport.html">ClassSupport</a></code> for further details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-supported-utilities-reflection"><a class="anchor" href="#extensions-supported-utilities-reflection"></a>5.11.3. Reflection Support</h4>
+<h4 id="extensions-supported-utilities-reflection"><a class="anchor" href="#extensions-supported-utilities-reflection"></a>6.11.3. Reflection Support</h4>
 <div class="paragraph">
 <p><code>ReflectionSupport</code> provides static utility methods that augment the standard JDK
 reflection and class-loading mechanisms. These include methods to scan the classpath in
@@ -6122,7 +6346,7 @@ details.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-execution-order"><a class="anchor" href="#extensions-execution-order"></a>5.12. Relative Execution Order of User Code and Extensions</h3>
+<h3 id="extensions-execution-order"><a class="anchor" href="#extensions-execution-order"></a>6.12. Relative Execution Order of User Code and Extensions</h3>
 <div class="paragraph">
 <p>When executing a test class that contains one or more test methods, a number of extension
 callbacks are called in addition to the user-provided test and lifecycle methods. The
@@ -6224,230 +6448,6 @@ and will be repeated for every test method in the test class.</p>
 steps are optional depending on the presence of user code or extension support for the
 corresponding lifecycle callback. For further details on the various lifecycle callbacks
 please consult the respective Javadoc for each annotation and extension.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="migrating-from-junit4"><a class="anchor" href="#migrating-from-junit4"></a>6. Migrating from JUnit 4</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Although the JUnit Jupiter programming model and extension model will not support JUnit 4
-features such as <code>Rules</code> and <code>Runners</code> natively, it is not expected that source code
-maintainers will need to update all of their existing tests, test extensions, and custom
-build test infrastructure to migrate to JUnit Jupiter.</p>
-</div>
-<div class="paragraph">
-<p>Instead, JUnit provides a gentle migration path via a <em>JUnit Vintage test engine</em> which
-allows existing tests based on JUnit 3 and JUnit 4 to be executed using the JUnit
-Platform infrastructure. Since all classes and annotations specific to JUnit Jupiter
-reside under a new <code>org.junit.jupiter</code> base package, having both JUnit 4 and JUnit
-Jupiter in the classpath does not lead to any conflicts. It is therefore safe to maintain
-existing JUnit 4 tests alongside JUnit Jupiter tests. Furthermore, since the JUnit team
-will continue to provide maintenance and bug fix releases for the JUnit 4.x baseline,
-developers have plenty of time to migrate to JUnit Jupiter on their own schedule.</p>
-</div>
-<div class="sect2">
-<h3 id="migrating-from-junit4-running"><a class="anchor" href="#migrating-from-junit4-running"></a>6.1. Running JUnit 4 Tests on the JUnit Platform</h3>
-<div class="paragraph">
-<p>Just make sure that the <code>junit-vintage-engine</code> artifact is in your test runtime path. In
-that case JUnit 3 and JUnit 4 tests will automatically be picked up by the JUnit Platform
-launcher.</p>
-</div>
-<div class="paragraph">
-<p>See the example projects in the <a href="https://github.com/junit-team/junit5-samples"><code>junit5-samples</code></a> repository to
-find out how this is done with Gradle and Maven.</p>
-</div>
-<div class="sect3">
-<h4 id="migrating-from-junit4-categories-support"><a class="anchor" href="#migrating-from-junit4-categories-support"></a>6.1.1. Categories Support</h4>
-<div class="paragraph">
-<p>For test classes or methods that are annotated with <code>@Category</code>, the <em>JUnit Vintage test
-engine</em> exposes the category&#8217;s fully qualified class name as a tag of the corresponding
-test identifier. For example, if a test method is annotated with
-<code>@Category(Example.class)</code>, it will be tagged with <code>"com.acme.Example"</code>. Similar to the
-<code>Categories</code> runner in JUnit 4, this information can be used to filter the discovered
-tests before executing them (see <a href="#running-tests">Running Tests</a> for details).</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="migrating-from-junit4-tips"><a class="anchor" href="#migrating-from-junit4-tips"></a>6.2. Migration Tips</h3>
-<div class="paragraph">
-<p>The following are topics that you should be aware of when migrating existing JUnit 4
-tests to JUnit Jupiter.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Annotations reside in the <code>org.junit.jupiter.api</code> package.</p>
-</li>
-<li>
-<p>Assertions reside in <code>org.junit.jupiter.api.Assertions</code>.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Note that you may continue to use assertion methods from <code>org.junit.Assert</code> or any
-other assertion library such as <a href="http://joel-costigliola.github.io/assertj/">AssertJ</a>, <a href="http://hamcrest.org/JavaHamcrest/">Hamcrest</a>, <a href="http://google.github.io/truth/">Truth</a>, etc.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Assumptions reside in <code>org.junit.jupiter.api.Assumptions</code>.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Note that JUnit Jupiter 5.4 and later versions support methods from JUnit 4&#8217;s
-<code>org.junit.Assume</code> class for assumptions. Specifically, JUnit Jupiter supports JUnit
-4&#8217;s <code>AssumptionViolatedException</code> to signal that a test should be aborted instead of
-marked as a failure.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><code>@Before</code> and <code>@After</code> no longer exist; use <code>@BeforeEach</code> and <code>@AfterEach</code> instead.</p>
-</li>
-<li>
-<p><code>@BeforeClass</code> and <code>@AfterClass</code> no longer exist; use <code>@BeforeAll</code> and <code>@AfterAll</code>
-instead.</p>
-</li>
-<li>
-<p><code>@Ignore</code> no longer exists: use <code>@Disabled</code> or one of the other built-in
-<a href="#writing-tests-conditional-execution">execution conditions</a> instead</p>
-<div class="ulist">
-<ul>
-<li>
-<p>See also <a href="#migrating-from-junit4-ignore-annotation-support">JUnit 4 @Ignore Support</a>.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><code>@Category</code> no longer exists; use <code>@Tag</code> instead.</p>
-</li>
-<li>
-<p><code>@RunWith</code> no longer exists; superseded by <code>@ExtendWith</code>.</p>
-</li>
-<li>
-<p><code>@Rule</code> and <code>@ClassRule</code> no longer exist; superseded by <code>@ExtendWith</code> and
-<code>@RegisterExtension</code></p>
-<div class="ulist">
-<ul>
-<li>
-<p>See also <a href="#migrating-from-junit4-rule-support">Limited JUnit 4 Rule Support</a>.</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="migrating-from-junit4-rule-support"><a class="anchor" href="#migrating-from-junit4-rule-support"></a>6.3. Limited JUnit 4 Rule Support</h3>
-<div class="paragraph">
-<p>As stated above, JUnit Jupiter does not and will not support JUnit 4 rules natively. The
-JUnit team realizes, however, that many organizations, especially large ones, are likely
-to have large JUnit 4 code bases that make use of custom rules. To serve these
-organizations and enable a gradual migration path the JUnit team has decided to support a
-selection of JUnit 4 rules verbatim within JUnit Jupiter. This support is based on
-adapters and is limited to those rules that are semantically compatible to the JUnit
-Jupiter extension model, i.e. those that do not completely change the overall execution
-flow of the test.</p>
-</div>
-<div class="paragraph">
-<p>The <code>junit-jupiter-migrationsupport</code> module from JUnit Jupiter currently supports the
-following three <code>Rule</code> types including subclasses of these types:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>org.junit.rules.ExternalResource</code> (including <code>org.junit.rules.TemporaryFolder</code>)</p>
-</li>
-<li>
-<p><code>org.junit.rules.Verifier</code> (including <code>org.junit.rules.ErrorCollector</code>)</p>
-</li>
-<li>
-<p><code>org.junit.rules.ExpectedException</code></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>As in JUnit 4, Rule-annotated fields as well as methods are supported. By using these
-class-level extensions on a test class such <code>Rule</code> implementations in legacy code bases
-can be <em>left unchanged</em> including the JUnit 4 rule import statements.</p>
-</div>
-<div class="paragraph">
-<p>This limited form of <code>Rule</code> support can be switched on by the class-level annotation
-<code><a href="../api/org/junit/jupiter/migrationsupport/EnableRuleMigrationSupport.html">@EnableRuleMigrationSupport</a></code>. This annotation is a <em>composed annotation</em> which enables
-all rule migration support extensions: <code>VerifierSupport</code>, <code>ExternalResourceSupport</code>, and
-<code>ExpectedExceptionSupport</code>. You may alternatively choose to annotate your test class with
-<code>@EnableJUnit4MigrationSupport</code> which registers migration support for rules <em>and</em> JUnit
-4&#8217;s <code>@Ignore</code> annotation (see <a href="#migrating-from-junit4-ignore-annotation-support">JUnit 4 @Ignore Support</a>).</p>
-</div>
-<div class="paragraph">
-<p>However, if you intend to develop a new extension for JUnit 5 please use the new
-extension model of JUnit Jupiter instead of the rule-based model of JUnit 4.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-JUnit 4 <code>Rule</code> support in JUnit Jupiter is currently an <em>experimental</em> feature.
-Consult the table in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for detail.
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="migrating-from-junit4-ignore-annotation-support"><a class="anchor" href="#migrating-from-junit4-ignore-annotation-support"></a>6.4. JUnit 4 @Ignore Support</h3>
-<div class="paragraph">
-<p>In order to provide a smooth migration path from JUnit 4 to JUnit Jupiter, the
-<code>junit-jupiter-migrationsupport</code> module provides support for JUnit 4&#8217;s <code>@Ignore</code>
-annotation analogous to Jupiter&#8217;s <code><a href="../api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> annotation.</p>
-</div>
-<div class="paragraph">
-<p>To use <code>@Ignore</code> with JUnit Jupiter based tests, configure a <em>test</em> dependency on the
-<code>junit-jupiter-migrationsupport</code> module in your build and then annotate your test class
-with <code>@ExtendWith(IgnoreCondition.class)</code> or <code><a href="../api/org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.html">@EnableJUnit4MigrationSupport</a></code> (which
-automatically registers the <code>IgnoreCondition</code> along with
-<a href="#migrating-from-junit4-rule-support">Limited JUnit 4 Rule Support</a>). The <code>IgnoreCondition</code> is an
-<code><a href="../api/org/junit/jupiter/api/extension/ExecutionCondition.html">ExecutionCondition</a></code> that disables test classes or test methods that are annotated with
-<code>@Ignore</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">// @ExtendWith(IgnoreCondition.class)</span>
-<span class="annotation">@EnableJUnit4MigrationSupport</span>
-<span class="type">class</span> <span class="class">IgnoredTestsDemo</span> {
-
-    <span class="annotation">@Ignore</span>
-    <span class="annotation">@Test</span>
-    <span class="type">void</span> testWillBeIgnored() {
-    }
-
-    <span class="annotation">@Test</span>
-    <span class="type">void</span> testWillBeExecuted() {
-    }
-}</code></pre>
-</div>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-JUnit 4 <code>@Ignore</code> support in JUnit Jupiter is currently an <em>experimental</em>
-feature. Consult the table in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for detail.
-</td>
-</tr>
-</table>
 </div>
 </div>
 </div>
@@ -7105,7 +7105,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-10-18 22:06:02 UTC
+Last updated 2018-10-18 22:13:16 UTC
 </div>
 </div>
 </body>
