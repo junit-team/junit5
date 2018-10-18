@@ -58,6 +58,7 @@ repository on GitHub.
   types: `char`, `byte`, `short`, `int`, `long`, `float`, and `double`.
 * Implicit conversion from hexadecimal and octal string representations to integral types
   in `@ParameterizedTest` arguments -- for example, conversion from `"0xff"` to `255`.
+* `Assertions.assertNotEquals()` for primitive data types - byte, short, char, int, long, float and double.
 
 
 [[release-notes-5.4.0-M1-junit-vintage]]
