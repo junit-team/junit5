@@ -334,13 +334,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionsResult.</span><code><span class="memberNameLink"><a href="../ExecutionsResult.html#getTestEvents()">getTestEvents</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionsResult.</span><code><span class="memberNameLink"><a href="../ExecutionsResult.html#getTestEvents(org.junit.platform.testkit.ExecutionEvent.Type)">getTestEvents</a></span>&#8203;(<a href="../ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit">ExecutionEvent.Type</a>&nbsp;type)</code></th>
 <td class="colLast">
 <div class="block">Gets the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of <a href="../ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of the provided <a href="../ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> where
  the <a href="../ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a test (in other words: <a href="../../engine/TestDescriptor.html#isTest()"><code>TestDescriptor.isTest()</code></a> ()} ()} == <code>true</code>).</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionsResult.</span><code><span class="memberNameLink"><a href="../ExecutionsResult.html#getTestEventsFinished(org.junit.platform.engine.TestExecutionResult.Status)">getTestEventsFinished</a></span>&#8203;(<a href="../../engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine">TestExecutionResult.Status</a>&nbsp;status)</code></th>
 <td class="colLast">
@@ -348,14 +353,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  with the provided <a href="../../engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine"><code>TestExecutionResult.Status</code></a> and the <a href="../ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a test (in other words: <a href="../../engine/TestDescriptor.html#isTest()"><code>TestDescriptor.isTest()</code></a> ()} == <code>true</code>).</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static org.assertj.core.api.Condition&lt;<a href="../ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionEventConditions.</span><code><span class="memberNameLink"><a href="../ExecutionEventConditions.html#nestedContainer(java.lang.Class)">nestedContainer</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static org.assertj.core.api.Condition&lt;<a href="../ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionEventConditions.</span><code><span class="memberNameLink"><a href="../ExecutionEventConditions.html#reason(java.lang.String)">reason</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;expectedReason)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static org.assertj.core.api.Condition&lt;<a href="../ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionEventConditions.</span><code><span class="memberNameLink"><a href="../ExecutionEventConditions.html#reason(java.util.function.Predicate)">reason</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;predicate)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -370,31 +380,36 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static org.assertj.core.api.Condition&lt;<a href="../ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionEventConditions.</span><code><span class="memberNameLink"><a href="../ExecutionEventConditions.html#started()">started</a></span>()</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionEventConditions.</span><code><span class="memberNameLink"><a href="../ExecutionEventConditions.html#skippedWithReason(java.util.function.Predicate)">skippedWithReason</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;predicate)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static org.assertj.core.api.Condition&lt;<a href="../ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionEventConditions.</span><code><span class="memberNameLink"><a href="../ExecutionEventConditions.html#test()">test</a></span>()</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionEventConditions.</span><code><span class="memberNameLink"><a href="../ExecutionEventConditions.html#started()">started</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static org.assertj.core.api.Condition&lt;<a href="../ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionEventConditions.</span><code><span class="memberNameLink"><a href="../ExecutionEventConditions.html#test(java.lang.String)">test</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;uniqueIdSubstring)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionEventConditions.</span><code><span class="memberNameLink"><a href="../ExecutionEventConditions.html#test()">test</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>static org.assertj.core.api.Condition&lt;<a href="../ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionEventConditions.</span><code><span class="memberNameLink"><a href="../ExecutionEventConditions.html#test(java.lang.String)">test</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;uniqueIdSubstring)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static org.assertj.core.api.Condition&lt;<a href="../ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionEventConditions.</span><code><span class="memberNameLink"><a href="../ExecutionEventConditions.html#test(java.lang.String,java.lang.String)">test</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;uniqueIdSubstring,
     <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;displayName)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static org.assertj.core.api.Condition&lt;<a href="../ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionEventConditions.</span><code><span class="memberNameLink"><a href="../ExecutionEventConditions.html#type(org.junit.platform.testkit.ExecutionEvent.Type)">type</a></span>&#8203;(<a href="../ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit">ExecutionEvent.Type</a>&nbsp;expectedType)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static org.assertj.core.api.Condition&lt;<a href="../ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionEventConditions.</span><code><span class="memberNameLink"><a href="../ExecutionEventConditions.html#uniqueIdSubstring(java.lang.String)">uniqueIdSubstring</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;uniqueIdSubstring)</code></th>
 <td class="colLast">&nbsp;</td>

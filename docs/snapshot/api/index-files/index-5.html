@@ -134,6 +134,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  test method is only <em>enabled</em> on one or more specified
  <a href="../org/junit/jupiter/api/condition/EnabledOnOs.html#value()">operating systems</a>.</div>
 </dd>
+<dt><a href="../org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.html" title="annotation in org.junit.jupiter.migrationsupport"><span class="typeNameLink">EnableJUnit4MigrationSupport</span></a> - Annotation Type in <a href="../org/junit/jupiter/migrationsupport/package-summary.html">org.junit.jupiter.migrationsupport</a></dt>
+<dd>
+<div class="block"><code>EnableJUnit4MigrationSupport</code> is a class-level annotation that
+ enables all JUnit 4 migration support within JUnit Jupiter.</div>
+</dd>
 <dt><a href="../org/junit/jupiter/migrationsupport/rules/EnableRuleMigrationSupport.html" title="annotation in org.junit.jupiter.migrationsupport.rules"><span class="typeNameLink">EnableRuleMigrationSupport</span></a> - Annotation Type in <a href="../org/junit/jupiter/migrationsupport/rules/package-summary.html">org.junit.jupiter.migrationsupport.rules</a></dt>
 <dd>
 <div class="block">This class-level annotation enables native JUnit 4 rule support
@@ -291,6 +296,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/ExecutionCondition.html#evaluateExecutionCondition(org.junit.jupiter.api.extension.ExtensionContext)">evaluateExecutionCondition(ExtensionContext)</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/ExecutionCondition.html" title="interface in org.junit.jupiter.api.extension">ExecutionCondition</a></dt>
 <dd>
 <div class="block">Evaluate this condition for the supplied <a href="../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/migrationsupport/conditions/IgnoreCondition.html#evaluateExecutionCondition(org.junit.jupiter.api.extension.ExtensionContext)">evaluateExecutionCondition(ExtensionContext)</a></span> - Method in class org.junit.jupiter.migrationsupport.conditions.<a href="../org/junit/jupiter/migrationsupport/conditions/IgnoreCondition.html" title="class in org.junit.jupiter.migrationsupport.conditions">IgnoreCondition</a></dt>
+<dd>
+<div class="block">Containers/tests are disabled if <code>@Ignore</code> is present on
+ the test class or method.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEventConditions.html#event(org.assertj.core.api.Condition...)">event(Condition&lt;? super ExecutionEvent&gt;...)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEventConditions.html" title="class in org.junit.platform.testkit">ExecutionEventConditions</a></dt>
 <dd>&nbsp;</dd>

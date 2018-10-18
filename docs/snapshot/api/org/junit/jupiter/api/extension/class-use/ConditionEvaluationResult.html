@@ -119,6 +119,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Internal classes for test execution within the JUnit Jupiter test engine.</div>
 </td>
 </tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="#org.junit.jupiter.migrationsupport.conditions">org.junit.jupiter.migrationsupport.conditions</a></th>
+<td class="colLast">
+<div class="block">Extensions which provide support for conditional test execution features of
+ JUnit 4 (e.g., the <code>@Ignore</code> annotation) within JUnit
+ Jupiter.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </li>
@@ -183,6 +191,31 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">
 <div class="block">Evaluate all <a href="../ExecutionCondition.html" title="interface in org.junit.jupiter.api.extension"><code>ExecutionCondition</code></a> extensions registered for the
  supplied <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="org.junit.jupiter.migrationsupport.conditions">
+<!--   -->
+</a>
+<h3>Uses of <a href="../ConditionEvaluationResult.html" title="class in org.junit.jupiter.api.extension">ConditionEvaluationResult</a> in <a href="../../../migrationsupport/conditions/package-summary.html">org.junit.jupiter.migrationsupport.conditions</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../../migrationsupport/conditions/package-summary.html">org.junit.jupiter.migrationsupport.conditions</a> that return <a href="../ConditionEvaluationResult.html" title="class in org.junit.jupiter.api.extension">ConditionEvaluationResult</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../ConditionEvaluationResult.html" title="class in org.junit.jupiter.api.extension">ConditionEvaluationResult</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">IgnoreCondition.</span><code><span class="memberNameLink"><a href="../../../migrationsupport/conditions/IgnoreCondition.html#evaluateExecutionCondition(org.junit.jupiter.api.extension.ExtensionContext)">evaluateExecutionCondition</a></span>&#8203;(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></th>
+<td class="colLast">
+<div class="block">Containers/tests are disabled if <code>@Ignore</code> is present on
+ the test class or method.</div>
 </td>
 </tr>
 </tbody>

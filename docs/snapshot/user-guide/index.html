@@ -606,6 +606,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#migrating-from-junit4-running">6.1. Running JUnit 4 Tests on the JUnit Platform</a></li>
 <li><a href="#migrating-from-junit4-tips">6.2. Migration Tips</a></li>
 <li><a href="#migrating-from-junit4-rule-support">6.3. Limited JUnit 4 Rule Support</a></li>
+<li><a href="#migrating-from-junit4-ignore-annotation-support">6.4. JUnit 4 @Ignore Support</a></li>
 </ul>
 </li>
 <li><a href="#advanced-topics">7. Advanced Topics</a>
@@ -6260,9 +6261,9 @@ find out how this is done with Gradle and Maven.</p>
 <div class="sect3">
 <h4 id="migrating-from-junit4-categories-support"><a class="anchor" href="#migrating-from-junit4-categories-support"></a>6.1.1. Categories Support</h4>
 <div class="paragraph">
-<p>For test classes or methods that are annotated with <code>@Category</code>, the
-<em>JUnit Vintage test engine</em> exposes the category&#8217;s fully qualified class name as a tag
-of the corresponding test identifier. For example, if a test method is annotated with
+<p>For test classes or methods that are annotated with <code>@Category</code>, the <em>JUnit Vintage test
+engine</em> exposes the category&#8217;s fully qualified class name as a tag of the corresponding
+test identifier. For example, if a test method is annotated with
 <code>@Category(Example.class)</code>, it will be tagged with <code>"com.acme.Example"</code>. Similar to the
 <code>Categories</code> runner in JUnit 4, this information can be used to filter the discovered
 tests before executing them (see <a href="#running-tests">Running Tests</a> for details).</p>
@@ -6313,7 +6314,14 @@ instead.</p>
 </li>
 <li>
 <p><code>@Ignore</code> no longer exists: use <code>@Disabled</code> or one of the other built-in
-<a href="#writing-tests-conditional-execution">execution conditions</a> instead.</p>
+<a href="#writing-tests-conditional-execution">execution conditions</a> instead</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See also <a href="#migrating-from-junit4-ignore-annotation-support">JUnit 4 @Ignore Support</a>.</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p><code>@Category</code> no longer exists; use <code>@Tag</code> instead.</p>
@@ -6323,7 +6331,14 @@ instead.</p>
 </li>
 <li>
 <p><code>@Rule</code> and <code>@ClassRule</code> no longer exist; superseded by <code>@ExtendWith</code> and
-<code>@RegisterExtension</code>; see the following section for partial rule support.</p>
+<code>@RegisterExtension</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>See also <a href="#migrating-from-junit4-rule-support">Limited JUnit 4 Rule Support</a>.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -6342,7 +6357,7 @@ flow of the test.</p>
 </div>
 <div class="paragraph">
 <p>The <code>junit-jupiter-migrationsupport</code> module from JUnit Jupiter currently supports the
-following three <code>Rule</code> types including subclasses of those types:</p>
+following three <code>Rule</code> types including subclasses of these types:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -6364,9 +6379,11 @@ can be <em>left unchanged</em> including the JUnit 4 rule import statements.</p>
 </div>
 <div class="paragraph">
 <p>This limited form of <code>Rule</code> support can be switched on by the class-level annotation
-<code>org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport</code>. This annotation is
-a <em>composed annotation</em> which enables all migration support extensions:
-<code>VerifierSupport</code>, <code>ExternalResourceSupport</code>, and <code>ExpectedExceptionSupport</code>.</p>
+<code><a href="../api/org/junit/jupiter/migrationsupport/EnableRuleMigrationSupport.html">@EnableRuleMigrationSupport</a></code>. This annotation is a <em>composed annotation</em> which enables
+all rule migration support extensions: <code>VerifierSupport</code>, <code>ExternalResourceSupport</code>, and
+<code>ExpectedExceptionSupport</code>. You may alternatively choose to annotate your test class with
+<code>@EnableJUnit4MigrationSupport</code> which registers migration support for rules <em>and</em> JUnit
+4&#8217;s <code>@Ignore</code> annotation (see <a href="#migrating-from-junit4-ignore-annotation-support">JUnit 4 @Ignore Support</a>).</p>
 </div>
 <div class="paragraph">
 <p>However, if you intend to develop a new extension for JUnit 5 please use the new
@@ -6381,6 +6398,53 @@ extension model of JUnit Jupiter instead of the rule-based model of JUnit 4.</p>
 <td class="content">
 JUnit 4 <code>Rule</code> support in JUnit Jupiter is currently an <em>experimental</em> feature.
 Consult the table in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for detail.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="migrating-from-junit4-ignore-annotation-support"><a class="anchor" href="#migrating-from-junit4-ignore-annotation-support"></a>6.4. JUnit 4 @Ignore Support</h3>
+<div class="paragraph">
+<p>In order to provide a smooth migration path from JUnit 4 to JUnit Jupiter, the
+<code>junit-jupiter-migrationsupport</code> module provides support for JUnit 4&#8217;s <code>@Ignore</code>
+annotation analogous to Jupiter&#8217;s <code><a href="../api/org/junit/jupiter/api/Disabled.html">@Disabled</a></code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>To use <code>@Ignore</code> with JUnit Jupiter based tests, configure a <em>test</em> dependency on the
+<code>junit-jupiter-migrationsupport</code> module in your build and then annotate your test class
+with <code>@ExtendWith(IgnoreCondition.class)</code> or <code><a href="../api/org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.html">@EnableJUnit4MigrationSupport</a></code> (which
+automatically registers the <code>IgnoreCondition</code> along with
+<a href="#migrating-from-junit4-rule-support">Limited JUnit 4 Rule Support</a>). The <code>IgnoreCondition</code> is an
+<code><a href="../api/org/junit/jupiter/api/extension/ExecutionCondition.html">ExecutionCondition</a></code> that disables test classes or test methods that are annotated with
+<code>@Ignore</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">// @ExtendWith(IgnoreCondition.class)</span>
+<span class="annotation">@EnableJUnit4MigrationSupport</span>
+<span class="type">class</span> <span class="class">IgnoredTestsDemo</span> {
+
+    <span class="annotation">@Ignore</span>
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> testWillBeIgnored() {
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> testWillBeExecuted() {
+    }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+JUnit 4 <code>@Ignore</code> support in JUnit Jupiter is currently an <em>experimental</em>
+feature. Consult the table in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for detail.
 </td>
 </tr>
 </table>
@@ -6779,6 +6843,36 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.3</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.migrationsupport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EnableJUnit4MigrationSupport</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.migrationsupport.conditions</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IgnoreCondition</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.migrationsupport.rules</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EnableRuleMigrationSupport</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.migrationsupport.rules</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ExpectedExceptionSupport</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.migrationsupport.rules</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ExternalResourceSupport</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.migrationsupport.rules</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VerifierSupport</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.0</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ParameterizedTest</code> <em>(annotation)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.0</code></p></td>
@@ -7011,7 +7105,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-10-18 09:14:21 UTC
+Last updated 2018-10-18 21:08:46 UTC
 </div>
 </div>
 </body>
