@@ -87,13 +87,16 @@ public class ExecutionResults {
 	}
 
 	/**
-	 * Creates a new {@link ExecutionResults.Builder} for generating new {@link ExecutionResults} objects.
+	 * Create a new {@link ExecutionResults.Builder} for generating new
+	 * {@link ExecutionResults}.
 	 *
-	 * @return the newly created {@link ExecutionResults.Builder}
+	 * @return the newly created builder
 	 */
-	public static Builder builder() {
+	static Builder builder() {
 		return new Builder();
 	}
+
+	// --- ALL Execution Events ------------------------------------------------
 
 	/**
 	 * Gets all {@link ExecutionEvent}s contained in this {@link ExecutionResults}.
@@ -157,6 +160,8 @@ public class ExecutionResults {
 		return getExecutionEventsFinished(status).size();
 	}
 
+	// --- Dynamic Test Execution Events ---------------------------------------
+
 	/**
 	 * Gets the count of {@link ExecutionEvent}s of the type {@link ExecutionEvent.Type#DYNAMIC_TEST_REGISTERED}.
 	 *
@@ -165,6 +170,8 @@ public class ExecutionResults {
 	public int getDynamicTestRegisteredCount() {
 		return getExecutionEvents(ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED).size();
 	}
+
+	// --- Test Execution Events -----------------------------------------------
 
 	public List<ExecutionEvent> getTestEvents() {
 		return getExecutionEvents().stream()//
@@ -248,6 +255,8 @@ public class ExecutionResults {
 	public List<ExecutionEvent> getFailedTestFinishedEvents() {
 		return testEventsFinished(TestExecutionResult.Status.FAILED).collect(toList());
 	}
+
+	// --- Container Execution Events ------------------------------------------
 
 	/**
 	 * Gets the {@link List} of {@link ExecutionEvent}s of the provided {@link ExecutionEvent.Type} where
@@ -347,8 +356,10 @@ public class ExecutionResults {
 		return getContainerEventsFinishedCount(TestExecutionResult.Status.ABORTED);
 	}
 
+	// --- ??? Execution Events -----------------------------------------------
+
 	/**
-	 * Gets all Test {@link Execution}s contained in this {@link ExecutionResults}.
+	 * Gets all {@link Execution}s contained in this {@link ExecutionResults}.
 	 *
 	 * @return the complete {@link List} of {@link Execution}s
 	 */
@@ -357,7 +368,7 @@ public class ExecutionResults {
 	}
 
 	/**
-	 * Gets the count of all Test {@link Execution}s contained in this {@link ExecutionResults}.
+	 * Gets the count of all {@link Execution}s contained in this {@link ExecutionResults}.
 	 *
 	 * @return the count of all Test {@link Execution}s
 	 */
@@ -478,6 +489,8 @@ public class ExecutionResults {
 		return getTestFinishedCount(TestExecutionResult.Status.ABORTED);
 	}
 
+	// --- ??? Execution Events -----------------------------------------------
+
 	/**
 	 * Gets the count of {@link ExecutionEvent.Type#REPORTING_ENTRY_PUBLISHED} for this {@link ExecutionResults}.
 	 *
@@ -517,6 +530,8 @@ public class ExecutionResults {
 			ExecutionEvent.byType(notNull(type, "ExecutionEvent.Type cannot be null")).and(
 				ExecutionEvent.byTestDescriptor(notNull(predicate, "TestDescriptor Predicate cannot be null"))));
 	}
+
+	// -------------------------------------------------------------------------
 
 	static class Builder {
 
