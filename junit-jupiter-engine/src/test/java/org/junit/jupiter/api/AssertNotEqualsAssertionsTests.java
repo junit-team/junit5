@@ -66,15 +66,15 @@ class AssertNotEqualsAssertionsTests {
 		}
 
 		@Test
-		void withEqualValuesWithMessageProvider() {
+		void withEqualValuesWithMessageSupplier() {
 			byte unexpected = 1;
 			byte actual = 1;
 			try {
-				assertNotEquals(unexpected, actual, () -> "custom message from provider");
+				assertNotEquals(unexpected, actual, () -> "custom message from supplier");
 				expectAssertionFailedError();
 			}
 			catch (AssertionFailedError ex) {
-				assertMessageStartsWith(ex, "custom message from provider");
+				assertMessageStartsWith(ex, "custom message from supplier");
 				assertMessageEndsWith(ex, "expected: not equal but was: <1>");
 			}
 		}
@@ -121,15 +121,15 @@ class AssertNotEqualsAssertionsTests {
 		}
 
 		@Test
-		void withEqualValuesWithMessageProvider() {
+		void withEqualValuesWithMessageSupplier() {
 			short unexpected = 1;
 			short actual = 1;
 			try {
-				assertNotEquals(unexpected, actual, () -> "custom message from provider");
+				assertNotEquals(unexpected, actual, () -> "custom message from supplier");
 				expectAssertionFailedError();
 			}
 			catch (AssertionFailedError ex) {
-				assertMessageStartsWith(ex, "custom message from provider");
+				assertMessageStartsWith(ex, "custom message from supplier");
 				assertMessageEndsWith(ex, "expected: not equal but was: <1>");
 			}
 		}
@@ -176,15 +176,15 @@ class AssertNotEqualsAssertionsTests {
 		}
 
 		@Test
-		void withEqualValuesWithMessageProvider() {
+		void withEqualValuesWithMessageSupplier() {
 			char unexpected = 'a';
 			char actual = 'a';
 			try {
-				assertNotEquals(unexpected, actual, () -> "custom message from provider");
+				assertNotEquals(unexpected, actual, () -> "custom message from supplier");
 				expectAssertionFailedError();
 			}
 			catch (AssertionFailedError ex) {
-				assertMessageStartsWith(ex, "custom message from provider");
+				assertMessageStartsWith(ex, "custom message from supplier");
 				assertMessageEndsWith(ex, "expected: not equal but was: <a>");
 			}
 		}
@@ -231,15 +231,15 @@ class AssertNotEqualsAssertionsTests {
 		}
 
 		@Test
-		void withEqualValuesWithMessageProvider() {
+		void withEqualValuesWithMessageSupplier() {
 			int unexpected = 1;
 			int actual = 1;
 			try {
-				assertNotEquals(unexpected, actual, () -> "custom message from provider");
+				assertNotEquals(unexpected, actual, () -> "custom message from supplier");
 				expectAssertionFailedError();
 			}
 			catch (AssertionFailedError ex) {
-				assertMessageStartsWith(ex, "custom message from provider");
+				assertMessageStartsWith(ex, "custom message from supplier");
 				assertMessageEndsWith(ex, "expected: not equal but was: <1>");
 			}
 		}
@@ -286,15 +286,15 @@ class AssertNotEqualsAssertionsTests {
 		}
 
 		@Test
-		void withEqualValuesWithMessageProvider() {
+		void withEqualValuesWithMessageSupplier() {
 			long unexpected = 1L;
 			long actual = 1L;
 			try {
-				assertNotEquals(unexpected, actual, () -> "custom message from provider");
+				assertNotEquals(unexpected, actual, () -> "custom message from supplier");
 				expectAssertionFailedError();
 			}
 			catch (AssertionFailedError ex) {
-				assertMessageStartsWith(ex, "custom message from provider");
+				assertMessageStartsWith(ex, "custom message from supplier");
 				assertMessageEndsWith(ex, "expected: not equal but was: <1>");
 			}
 		}
@@ -374,15 +374,15 @@ class AssertNotEqualsAssertionsTests {
 		}
 
 		@Test
-		void withEqualValuesWithMessageProvider() {
+		void withEqualValuesWithMessageSupplier() {
 			float unexpected = 1.0f;
 			float actual = 1.0f;
 			try {
-				assertNotEquals(unexpected, actual, () -> "custom message from provider");
+				assertNotEquals(unexpected, actual, () -> "custom message from supplier");
 				expectAssertionFailedError();
 			}
 			catch (AssertionFailedError ex) {
-				assertMessageStartsWith(ex, "custom message from provider");
+				assertMessageStartsWith(ex, "custom message from supplier");
 				assertMessageEndsWith(ex, "expected: not equal but was: <1.0>");
 			}
 		}
@@ -429,16 +429,16 @@ class AssertNotEqualsAssertionsTests {
 		}
 
 		@Test
-		void withEqualValuesWithMessageProvider() {
+		void withEqualValuesWithMessageSupplier() {
 			float unexpected = 1.0f;
 			float actual = 1.5f;
 			float delta = 0.5f;
 			try {
-				assertNotEquals(unexpected, actual, delta, () -> "custom message from provider");
+				assertNotEquals(unexpected, actual, delta, () -> "custom message from supplier");
 				expectAssertionFailedError();
 			}
 			catch (AssertionFailedError ex) {
-				assertMessageStartsWith(ex, "custom message from provider");
+				assertMessageStartsWith(ex, "custom message from supplier");
 				assertMessageEndsWith(ex, "expected: not equal but was: <1.5>");
 			}
 		}
@@ -496,15 +496,15 @@ class AssertNotEqualsAssertionsTests {
 		}
 
 		@Test
-		void withEqualValuesWithMessageProvider() {
+		void withEqualValuesWithMessageSupplier() {
 			double unexpected = 1.0d;
 			double actual = 1.0d;
 			try {
-				assertNotEquals(unexpected, actual, () -> "custom message from provider");
+				assertNotEquals(unexpected, actual, () -> "custom message from supplier");
 				expectAssertionFailedError();
 			}
 			catch (AssertionFailedError ex) {
-				assertMessageStartsWith(ex, "custom message from provider");
+				assertMessageStartsWith(ex, "custom message from supplier");
 				assertMessageEndsWith(ex, "expected: not equal but was: <1.0>");
 			}
 		}
@@ -551,16 +551,16 @@ class AssertNotEqualsAssertionsTests {
 		}
 
 		@Test
-		void withEqualValuesWithMessageProvider() {
+		void withEqualValuesWithMessageSupplier() {
 			double unexpected = 1.0d;
 			double actual = 1.5d;
 			double delta = 0.5d;
 			try {
-				assertNotEquals(unexpected, actual, delta, () -> "custom message from provider");
+				assertNotEquals(unexpected, actual, delta, () -> "custom message from supplier");
 				expectAssertionFailedError();
 			}
 			catch (AssertionFailedError ex) {
-				assertMessageStartsWith(ex, "custom message from provider");
+				assertMessageStartsWith(ex, "custom message from supplier");
 				assertMessageEndsWith(ex, "expected: not equal but was: <1.5>");
 			}
 		}

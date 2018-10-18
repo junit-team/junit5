@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 
 /**
  * {@code AssertNotEquals} is a collection of utility methods that support asserting
- * inequality on objects in tests.
+ * inequality in objects and primitive values in tests.
  *
  * @since 5.0
  */
@@ -76,31 +76,6 @@ class AssertNotEquals {
 	 * @since 5.4
 	 */
 	static void assertNotEquals(short unexpected, short actual, Supplier<String> messageSupplier) {
-		if (unexpected == actual) {
-			failEqual(actual, nullSafeGet(messageSupplier));
-		}
-	}
-
-	/**
-	 * @since 5.4
-	 */
-	static void assertNotEquals(char unexpected, char actual) {
-		assertNotEquals(unexpected, actual, (String) null);
-	}
-
-	/**
-	 * @since 5.4
-	 */
-	static void assertNotEquals(char unexpected, char actual, String message) {
-		if (unexpected == actual) {
-			failEqual(actual, message);
-		}
-	}
-
-	/**
-	 * @since 5.4
-	 */
-	static void assertNotEquals(char unexpected, char actual, Supplier<String> messageSupplier) {
 		if (unexpected == actual) {
 			failEqual(actual, nullSafeGet(messageSupplier));
 		}
@@ -252,6 +227,31 @@ class AssertNotEquals {
 	 */
 	static void assertNotEquals(double unexpected, double actual, double delta, Supplier<String> messageSupplier) {
 		if (doublesAreEqual(unexpected, actual, delta)) {
+			failEqual(actual, nullSafeGet(messageSupplier));
+		}
+	}
+
+	/**
+	 * @since 5.4
+	 */
+	static void assertNotEquals(char unexpected, char actual) {
+		assertNotEquals(unexpected, actual, (String) null);
+	}
+
+	/**
+	 * @since 5.4
+	 */
+	static void assertNotEquals(char unexpected, char actual, String message) {
+		if (unexpected == actual) {
+			failEqual(actual, message);
+		}
+	}
+
+	/**
+	 * @since 5.4
+	 */
+	static void assertNotEquals(char unexpected, char actual, Supplier<String> messageSupplier) {
+		if (unexpected == actual) {
 			failEqual(actual, nullSafeGet(messageSupplier));
 		}
 	}
