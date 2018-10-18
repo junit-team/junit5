@@ -20,11 +20,11 @@ include::overview.adoc[]
 
 include::writing-tests.adoc[]
 
+include::migration-from-junit4.adoc[]
+
 include::running-tests.adoc[]
 
 include::extensions.adoc[]
-
-include::migration-from-junit4.adoc[]
 
 include::advanced-topics.adoc[]
 
