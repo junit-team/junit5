@@ -178,6 +178,23 @@ class AssertLinesMatchAssertionsTests {
 	}
 
 	@Test
+	void assertLinesMatchUsingFastForwardMarkerWithExtraExpectLineFails() {
+		List<String> expected = Arrays.asList("first line", ">> fails, because final line is missing >>", "last line",
+			"not present");
+		List<String> actual = Arrays.asList("first line", "first skipped", "second skipped", "last line");
+		Error error = assertThrows(AssertionFailedError.class, () -> assertLinesMatch(expected, actual));
+		List<String> expectedErrorMessageLines = Arrays.asList( //
+			"expected line #4:`not present` doesn't match ==> expected: <first line", //
+			">> fails, because final line is missing >>", //
+			"last line", //
+			"not present> but was: <first line", //
+			"first skipped", //
+			"second skipped", //
+			"last line>");
+		assertLinesMatch(expectedErrorMessageLines, Arrays.asList(error.getMessage().split("\\R")));
+	}
+
+	@Test
 	void assertLinesMatchIsFastForwardLine() {
 		assertAll("valid fast-forward lines", //
 			() -> assertTrue(isFastForwardLine(">>>>")), () -> assertTrue(isFastForwardLine(">> >>")),
