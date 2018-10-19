@@ -21,7 +21,7 @@ import org.junit.jupiter.engine.execution.injection.sample.PrimitiveArrayParamet
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.testkit.ExecutionEvent;
-import org.junit.platform.testkit.ExecutionsResult;
+import org.junit.platform.testkit.ExecutionResults;
 
 /**
  * Integration tests for {@link UniqueId#parse(String)} for methods
@@ -36,15 +36,15 @@ class UniqueIdParsingForArrayParameterIntegrationTests extends AbstractJupiterTe
 
 	@Test
 	void executeTestsForPrimitiveArrayMethodInjectionCases() {
-		ExecutionsResult executionsResult = executeTestsForClass(
-			PrimitiveArrayMethodInjectionTestCase.class).getExecutionsResult();
+		ExecutionResults executionResults = executeTestsForClass(
+			PrimitiveArrayMethodInjectionTestCase.class).getExecutionResults();
 
-		assertEquals(1, executionsResult.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionsResult.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionResults.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionResults.getTestFailedCount(), "# tests failed");
 
 		// @formatter:off
-		UniqueId uniqueId = executionsResult.getExecutionEvents().stream()
+		UniqueId uniqueId = executionResults.getExecutionEvents().stream()
 				.map(ExecutionEvent::getTestDescriptor)
 				.distinct()
 				.skip(2)

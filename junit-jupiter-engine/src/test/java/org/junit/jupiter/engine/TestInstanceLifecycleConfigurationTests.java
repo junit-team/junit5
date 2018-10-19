@@ -33,7 +33,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.launcher.Launcher;
-import org.junit.platform.testkit.ExecutionsResult;
+import org.junit.platform.testkit.ExecutionResults;
 
 /**
  * Integration tests for {@link TestInstance @TestInstance} lifecycle
@@ -126,19 +126,19 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 			int failedContainers, int tests, String... methods) {
 
 		// @formatter:off
-		ExecutionsResult executionsResult = executeTests(
+		ExecutionResults executionResults = executeTests(
 			request()
 				.selectors(selectClass(testClass))
 				.configurationParameters(configParams)
 				.build()
-		).getExecutionsResult();
+		).getExecutionResults();
 
 		assertAll(
-			() -> assertEquals(containers, executionsResult.getContainerStartedCount(), "# containers started"),
-			() -> assertEquals(containers, executionsResult.getContainerFinishedCount(), "# containers finished"),
-			() -> assertEquals(failedContainers, executionsResult.getContainerFailedCount(), "# containers failed"),
-			() -> assertEquals(tests, executionsResult.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(tests, executionsResult.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(containers, executionResults.getContainerStartedCount(), "# containers started"),
+			() -> assertEquals(containers, executionResults.getContainerFinishedCount(), "# containers finished"),
+			() -> assertEquals(failedContainers, executionResults.getContainerFailedCount(), "# containers failed"),
+			() -> assertEquals(tests, executionResults.getTestStartedCount(), "# tests started"),
+			() -> assertEquals(tests, executionResults.getTestSuccessfulCount(), "# tests succeeded"),
 			() -> assertEquals(Arrays.asList(methods), methodsInvoked)
 		);
 		// @formatter:on

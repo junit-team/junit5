@@ -34,7 +34,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.ExecutionRecorder;
-import org.junit.platform.testkit.ExecutionsResult;
+import org.junit.platform.testkit.ExecutionResults;
 import org.junit.rules.ExpectedException;
 
 /**
@@ -46,17 +46,17 @@ class ExpectedExceptionSupportTests {
 
 	@Test
 	void expectedExceptionIsProcessedCorrectly() {
-		ExecutionsResult executionsResult = executeTestsForClass(ExpectedExceptionTestCase.class).getExecutionsResult();
+		ExecutionResults executionResults = executeTestsForClass(ExpectedExceptionTestCase.class).getExecutionResults();
 
-		assertEquals(4, executionsResult.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
-		assertEquals(3, executionsResult.getTestFailedCount(), "# tests failed");
+		assertEquals(4, executionResults.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionResults.getTestAbortedCount(), "# tests aborted");
+		assertEquals(3, executionResults.getTestFailedCount(), "# tests failed");
 
-		assertThat(executionsResult.getSuccessfulTestFinishedEvents()).have(
+		assertThat(executionResults.getSuccessfulTestFinishedEvents()).have(
 			event(test("correctExceptionExpectedThrown"), finishedSuccessfully()));
 
-		assertThat(executionsResult.getFailedTestFinishedEvents())//
+		assertThat(executionResults.getFailedTestFinishedEvents())//
 				.haveExactly(1, //
 					event(test("noExceptionExpectedButThrown"), //
 						finishedWithFailure(message("no exception expected")))) //
@@ -72,18 +72,18 @@ class ExpectedExceptionSupportTests {
 
 	@Test
 	void expectedExceptionSupportWithoutExpectedExceptionRule() {
-		ExecutionsResult executionsResult = executeTestsForClass(
-			ExpectedExceptionSupportWithoutExpectedExceptionRuleTestCase.class).getExecutionsResult();
+		ExecutionResults executionResults = executeTestsForClass(
+			ExpectedExceptionSupportWithoutExpectedExceptionRuleTestCase.class).getExecutionResults();
 
-		assertEquals(2, executionsResult.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionsResult.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionsResult.getTestAbortedCount(), "# tests aborted");
-		assertEquals(1, executionsResult.getTestFailedCount(), "# tests failed");
+		assertEquals(2, executionResults.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionResults.getTestAbortedCount(), "# tests aborted");
+		assertEquals(1, executionResults.getTestFailedCount(), "# tests failed");
 
-		assertThat(executionsResult.getSuccessfulTestFinishedEvents()).have(
+		assertThat(executionResults.getSuccessfulTestFinishedEvents()).have(
 			event(test("success"), finishedSuccessfully()));
 
-		assertThat(executionsResult.getFailedTestFinishedEvents())//
+		assertThat(executionResults.getFailedTestFinishedEvents())//
 				.haveExactly(1, event(test("failure"), //
 					finishedWithFailure(message("must fail"))));
 	}

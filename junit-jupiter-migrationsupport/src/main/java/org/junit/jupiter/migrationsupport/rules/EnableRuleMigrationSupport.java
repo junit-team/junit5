@@ -35,6 +35,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @see ExternalResourceSupport
  * @see VerifierSupport
  * @see ExpectedExceptionSupport
+ * @see org.junit.jupiter.migrationsupport.EnableJUnit4MigrationSupport
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

@@ -12,12 +12,12 @@ package org.junit.platform.testkit;
 
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.commons.util.Preconditions.notNull;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -27,32 +27,36 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 
 /**
  * Represents the entirety of multiple test or container execution runs.
  *
- * @since 1.4.0
+ * @since 1.4
  */
-@API(status = API.Status.EXPERIMENTAL, since = "1.4.0")
-public class ExecutionsResult {
+@API(status = EXPERIMENTAL, since = "1.4")
+public class ExecutionResults {
 
-	private List<ExecutionEvent> events;
-	private List<Execution> executions;
+	private final List<ExecutionEvent> events;
+	private final List<Execution> executions;
 
 	/**
-	 * Construct an {@link ExecutionsResult} given a {@link List} of recorded {@link ExecutionEvent}s.
+	 * Construct an {@link ExecutionResults} given a {@link List} of recorded {@link ExecutionEvent}s.
 	 *
 	 * @param events the {@link List} of {@link ExecutionEvent}s to use when creating the execution graph, cannot be null.
 	 */
-	private ExecutionsResult(List<ExecutionEvent> events) {
-		this.events = notNull(events, "ExecutionsResult cannot have null input ExecutionEvents");
-		// Cache test executions by reading from the full list of events
-		this.executions = readTestExecutions(events);
+	private ExecutionResults(List<ExecutionEvent> events) {
+		Preconditions.notNull(events, "ExecutionEvent list must not be null");
+		Preconditions.containsNoNullElements(events, "ExecutionEvent list must not contain null elements");
+
+		this.events = events;
+		// Cache executions by reading from the full list of events
+		this.executions = readExecutions(events);
 	}
 
-	private static List<Execution> readTestExecutions(List<ExecutionEvent> executionEvents) {
+	private static List<Execution> readExecutions(List<ExecutionEvent> executionEvents) {
 		List<Execution> executions = new ArrayList<>();
 		Map<TestDescriptor, Instant> executionStarts = new HashMap<>();
 		for (ExecutionEvent executionEvent : executionEvents) {
@@ -83,16 +87,19 @@ public class ExecutionsResult {
 	}
 
 	/**
-	 * Creates a new {@link ExecutionsResult.Builder} for generating new {@link ExecutionsResult} objects.
+	 * Create a new {@link ExecutionResults.Builder} for generating new
+	 * {@link ExecutionResults}.
 	 *
-	 * @return the newly created {@link ExecutionsResult.Builder}
+	 * @return the newly created builder
 	 */
-	public static Builder builder() {
+	static Builder builder() {
 		return new Builder();
 	}
 
+	// --- ALL Execution Events ------------------------------------------------
+
 	/**
-	 * Gets all {@link ExecutionEvent}s contained in this {@link ExecutionsResult}.
+	 * Gets all {@link ExecutionEvent}s contained in this {@link ExecutionResults}.
 	 *
 	 * @return the complete {@link List} of {@link ExecutionEvent}s
 	 */
@@ -101,7 +108,7 @@ public class ExecutionsResult {
 	}
 
 	/**
-	 * Gets the count of {@link ExecutionEvent}s contained in this {@link ExecutionsResult}.
+	 * Gets the count of {@link ExecutionEvent}s contained in this {@link ExecutionResults}.
 	 *
 	 * @return the count of {@link ExecutionEvent}s
 	 */
@@ -153,6 +160,8 @@ public class ExecutionsResult {
 		return getExecutionEventsFinished(status).size();
 	}
 
+	// --- Dynamic Test Execution Events ---------------------------------------
+
 	/**
 	 * Gets the count of {@link ExecutionEvent}s of the type {@link ExecutionEvent.Type#DYNAMIC_TEST_REGISTERED}.
 	 *
@@ -160,6 +169,14 @@ public class ExecutionsResult {
 	 */
 	public int getDynamicTestRegisteredCount() {
 		return getExecutionEvents(ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED).size();
+	}
+
+	// --- Test Execution Events -----------------------------------------------
+
+	public List<ExecutionEvent> getTestEvents() {
+		return getExecutionEvents().stream()//
+				.filter(ExecutionEvent.byTestDescriptor(TestDescriptor::isTest))//
+				.collect(toList());
 	}
 
 	/**
@@ -238,6 +255,8 @@ public class ExecutionsResult {
 	public List<ExecutionEvent> getFailedTestFinishedEvents() {
 		return testEventsFinished(TestExecutionResult.Status.FAILED).collect(toList());
 	}
+
+	// --- Container Execution Events ------------------------------------------
 
 	/**
 	 * Gets the {@link List} of {@link ExecutionEvent}s of the provided {@link ExecutionEvent.Type} where
@@ -337,8 +356,10 @@ public class ExecutionsResult {
 		return getContainerEventsFinishedCount(TestExecutionResult.Status.ABORTED);
 	}
 
+	// --- ??? Execution Events -----------------------------------------------
+
 	/**
-	 * Gets all Test {@link Execution}s contained in this {@link ExecutionsResult}.
+	 * Gets all {@link Execution}s contained in this {@link ExecutionResults}.
 	 *
 	 * @return the complete {@link List} of {@link Execution}s
 	 */
@@ -347,7 +368,7 @@ public class ExecutionsResult {
 	}
 
 	/**
-	 * Gets the count of all Test {@link Execution}s contained in this {@link ExecutionsResult}.
+	 * Gets the count of all {@link Execution}s contained in this {@link ExecutionResults}.
 	 *
 	 * @return the count of all Test {@link Execution}s
 	 */
@@ -468,8 +489,10 @@ public class ExecutionsResult {
 		return getTestFinishedCount(TestExecutionResult.Status.ABORTED);
 	}
 
+	// --- ??? Execution Events -----------------------------------------------
+
 	/**
-	 * Gets the count of {@link ExecutionEvent.Type#REPORTING_ENTRY_PUBLISHED} for this {@link ExecutionsResult}.
+	 * Gets the count of {@link ExecutionEvent.Type#REPORTING_ENTRY_PUBLISHED} for this {@link ExecutionResults}.
 	 *
 	 * @return the count of {@link ExecutionEvent.Type#REPORTING_ENTRY_PUBLISHED}
 	 */
@@ -508,32 +531,34 @@ public class ExecutionsResult {
 				ExecutionEvent.byTestDescriptor(notNull(predicate, "TestDescriptor Predicate cannot be null"))));
 	}
 
-	public static class Builder {
+	// -------------------------------------------------------------------------
 
-		private static final String NULL_INPUT_ERROR = "Provided ExecutionEvents cannot be null";
+	static class Builder {
 
 		private final List<ExecutionEvent> events = new CopyOnWriteArrayList<>();
 
 		/**
-		 * Adds one or more {@link ExecutionEvent}s to be used when creating a new {@link ExecutionsResult}.
+		 * Add one or more {@link ExecutionEvent}s to be used when creating the
+		 * {@link ExecutionResults}.
 		 *
-		 * @param event the {@link ExecutionEvent} to add, cannot be null
-		 * @param events any other {@link ExecutionEvent} to add, cannot be null
-		 * @return the {@link Builder}, for method chaining
+		 * @param events the {@code ExecutionEvents} to add; never {@code null}
+		 * @return this {@code Builder} for method chaining
 		 */
-		public Builder addEvent(ExecutionEvent event, ExecutionEvent... events) {
-			this.events.add(notNull(event, NULL_INPUT_ERROR));
-			this.events.addAll(Arrays.asList(notNull(events, NULL_INPUT_ERROR)));
+		Builder addEvents(ExecutionEvent... events) {
+			Preconditions.notNull(events, "ExecutionEvent array must not be null");
+			Preconditions.containsNoNullElements(events, "ExecutionEvent array must not contain null elements");
+			Collections.addAll(this.events, events);
+
 			return this;
 		}
 
 		/**
-		 * Constructs a new {@link ExecutionsResult} from this {@link Builder}.
+		 * Constructs a new {@link ExecutionResults} from this {@link Builder}.
 		 *
-		 * @return the newly created {@link ExecutionsResult}
+		 * @return the newly created {@link ExecutionResults}
 		 */
-		public ExecutionsResult build() {
-			return new ExecutionsResult(Collections.unmodifiableList(events));
+		ExecutionResults build() {
+			return new ExecutionResults(Collections.unmodifiableList(this.events));
 		}
 	}
 

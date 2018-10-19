@@ -45,6 +45,7 @@ dependencies {
 	implementation(project(":junit-jupiter-api"))
 
 	testImplementation(project(":junit-jupiter-params"))
+	testImplementation(project(":junit-jupiter-migrationsupport"))
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(":junit-platform-launcher"))
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")

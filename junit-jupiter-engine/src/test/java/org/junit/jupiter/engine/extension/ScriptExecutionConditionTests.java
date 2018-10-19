@@ -40,7 +40,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.ExecutionsResult;
+import org.junit.platform.testkit.ExecutionResults;
 import org.mockito.Mockito;
 
 /**
@@ -53,15 +53,15 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void executeSimpleTestCases() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(SimpleTestCases.class)).build();
-		ExecutionsResult executionsResult = executeTests(request).getExecutionsResult();
+		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
 		assertAll("Summary of simple test cases run", //
-			() -> assertEquals(3, executionsResult.getTestStartedCount(), "# tests started"), //
-			() -> assertEquals(1, executionsResult.getTestSkippedCount(), "# tests skipped"), //
-			() -> assertEquals(1, executionsResult.getTestFailedCount(), "# tests started") //
+			() -> assertEquals(3, executionResults.getTestStartedCount(), "# tests started"), //
+			() -> assertEquals(1, executionResults.getTestSkippedCount(), "# tests skipped"), //
+			() -> assertEquals(1, executionResults.getTestFailedCount(), "# tests started") //
 		);
 
-		assertRecordedExecutionEventsContainsExactly(executionsResult.getFailedTestFinishedEvents(), //
+		assertRecordedExecutionEventsContainsExactly(executionResults.getFailedTestFinishedEvents(), //
 			event(test("syntaxError"), //
 				finishedWithFailure( //
 					allOf( //

@@ -26,7 +26,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.bridge.NumberTestGroup.ByteTestCase;
 import org.junit.jupiter.engine.bridge.NumberTestGroup.ShortTestCase;
-import org.junit.platform.testkit.ExecutionsResult;
+import org.junit.platform.testkit.ExecutionResults;
 
 /**
  * @since 5.0
@@ -96,8 +96,8 @@ class BridgeMethodTests extends AbstractJupiterTestEngineTests {
 
 	private String execute(int expectedTestFinishedCount, Class<?> testClass) {
 		sequence.clear();
-		ExecutionsResult executionsResult = executeTestsForClass(testClass).getExecutionsResult();
-		assertEquals(expectedTestFinishedCount, executionsResult.getTestStartedCount());
+		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		assertEquals(expectedTestFinishedCount, executionResults.getTestStartedCount());
 		return sequence.toString();
 	}
 

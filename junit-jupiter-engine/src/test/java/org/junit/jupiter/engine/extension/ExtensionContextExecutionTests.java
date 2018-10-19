@@ -26,7 +26,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.platform.testkit.ExecutionsResult;
+import org.junit.platform.testkit.ExecutionResults;
 
 class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 
@@ -65,10 +65,10 @@ class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 	void twoTestClassesCanShareStateViaEngineExtensionContext() {
 		Parent.counter.set(0);
 
-		ExecutionsResult executionsResult = executeTests(
-			request().selectors(selectClass(A.class), selectClass(B.class)).build()).getExecutionsResult();
+		ExecutionResults executionResults = executeTests(
+			request().selectors(selectClass(A.class), selectClass(B.class)).build()).getExecutionResults();
 
-		assertThat(executionsResult.getTestStartedCount()).isEqualTo(2);
+		assertThat(executionResults.getTestStartedCount()).isEqualTo(2);
 		assertThat(Parent.counter).hasValue(1);
 	}
 

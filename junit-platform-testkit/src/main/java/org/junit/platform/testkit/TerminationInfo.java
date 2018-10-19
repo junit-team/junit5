@@ -10,6 +10,8 @@
 
 package org.junit.platform.testkit;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -20,9 +22,9 @@ import org.junit.platform.engine.TestExecutionResult;
  * Union type that allows propagation of terminated test state, supporting both the reason {@link String}
  * if the test was skipped, or the {@link org.junit.platform.engine.TestExecutionResult} if the test was finished.
  *
- * @since 1.4.0
+ * @since 1.4
  */
-@API(status = API.Status.EXPERIMENTAL, since = "1.4.0")
+@API(status = EXPERIMENTAL, since = "1.4")
 public class TerminationInfo {
 
 	private static final Supplier<UnsupportedOperationException> NOT_EXECUTION_RESULT = () -> new UnsupportedOperationException(

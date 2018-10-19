@@ -11,10 +11,12 @@
 package org.junit.platform.testkit;
 
 import static java.util.function.Predicate.isEqual;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 
 import java.util.function.Predicate;
 
+import org.apiguardian.api.API;
 import org.assertj.core.api.Condition;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
@@ -22,8 +24,9 @@ import org.junit.platform.engine.TestExecutionResult.Status;
 /**
  * Collection of AssertJ conditions for {@link TestExecutionResult}.
  *
- * @since 1.0
+ * @since 1.4
  */
+@API(status = EXPERIMENTAL, since = "1.4")
 public class TestExecutionResultConditions {
 
 	private TestExecutionResultConditions() {

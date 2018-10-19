@@ -10,6 +10,8 @@
 
 package org.junit.platform.testkit;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.time.Duration;
 import java.time.Instant;
 
@@ -21,9 +23,9 @@ import org.junit.platform.engine.TestExecutionResult;
  * Encapsulates metadata around the execution of a single Test,
  * this includes metadata of whether or not the Test was skipped.
  *
- * @since 1.4.0
+ * @since 1.4
  */
-@API(status = API.Status.EXPERIMENTAL, since = "1.4.0")
+@API(status = EXPERIMENTAL, since = "1.4")
 public class Execution {
 
 	private final TestDescriptor descriptor;
