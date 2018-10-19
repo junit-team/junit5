@@ -10,11 +10,11 @@
 
 package example;
 
+// tag::user_guide[]
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.migrationsupport.EnableJUnit4MigrationSupport;
 
-// tag::user_guide[]
 // @ExtendWith(IgnoreCondition.class)
 @EnableJUnit4MigrationSupport
 class IgnoredTestsDemo {
