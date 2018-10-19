@@ -167,7 +167,7 @@ class AssertLinesMatch {
 			return true;
 		}
 		try {
-			return actualLine.matches(expectedLine);
+			return (actualLine != null) && actualLine.matches(expectedLine);
 		}
 		catch (PatternSyntaxException ignore) {
 			return false;
