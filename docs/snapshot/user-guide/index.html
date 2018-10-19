@@ -4414,7 +4414,11 @@ automatically registers the <code>IgnoreCondition</code> along with
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="comment">// @ExtendWith(IgnoreCondition.class)</span>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">org.junit.Ignore</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.migrationsupport.EnableJUnit4MigrationSupport</span>;
+
+<span class="comment">// @ExtendWith(IgnoreCondition.class)</span>
 <span class="annotation">@EnableJUnit4MigrationSupport</span>
 <span class="type">class</span> <span class="class">IgnoredTestsDemo</span> {
 
@@ -7105,7 +7109,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-10-18 22:22:59 UTC
+Last updated 2018-10-19 17:37:07 UTC
 </div>
 </div>
 </body>
