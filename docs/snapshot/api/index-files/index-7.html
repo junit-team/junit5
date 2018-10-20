@@ -333,11 +333,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Get the <a href="../org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine"><code>ConfigurationParameters</code></a> that the engine may use to
  influence test execution.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getContainerAbortedCount()">getContainerAbortedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the count of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code>
- and <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#ABORTED"><code>TestExecutionResult.Status.ABORTED</code></a> where the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a container (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a> ()} == <code>true</code>).</div>
-</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getContainerEvents(org.junit.platform.testkit.ExecutionEvent.Type)">getContainerEvents(ExecutionEvent.Type)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
 <dd>
 <div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of the provided <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> where
@@ -348,59 +343,64 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Get the count of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of the provided <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> where
  the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a container (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a> ()} == <code>true</code>).</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getContainerEventsFinished(org.junit.platform.engine.TestExecutionResult.Status)">getContainerEventsFinished(TestExecutionResult.Status)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code>
- with the provided <a href="../org/junit/platform/engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine"><code>TestExecutionResult.Status</code></a> and the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a container (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a> ()} == <code>true</code>).</div>
-</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getContainerEventsFinishedCount(org.junit.platform.engine.TestExecutionResult.Status)">getContainerEventsFinishedCount(TestExecutionResult.Status)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the count of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code>
- with the provided <a href="../org/junit/platform/engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine"><code>TestExecutionResult.Status</code></a> and the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a container (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a> ()} == <code>true</code>).</div>
-</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getContainerFailedCount()">getContainerFailedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the count of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code>
- and <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#FAILED"><code>TestExecutionResult.Status.FAILED</code></a> where the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a container (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a> ()} == <code>true</code>).</div>
-</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getContainerFinishedCount()">getContainerFinishedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the count of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code>
- and the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a container (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a> ()} == <code>true</code>).</div>
-</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html#getContainersAbortedCount()">getContainersAbortedCount()</a></span> - Method in interface org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></dt>
 <dd>
 <div class="block">Get the number of containers aborted.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getContainersAbortedCount()">getContainersAbortedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the count of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code>
+ and <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#ABORTED"><code>TestExecutionResult.Status.ABORTED</code></a> where the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a container (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a> ()} == <code>true</code>).</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html#getContainersFailedCount()">getContainersFailedCount()</a></span> - Method in interface org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></dt>
 <dd>
 <div class="block">Get the number of containers that failed.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getContainersFailedCount()">getContainersFailedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the count of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code>
+ and <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#FAILED"><code>TestExecutionResult.Status.FAILED</code></a> where the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a container (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a> ()} == <code>true</code>).</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getContainersFinishedCount()">getContainersFinishedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the count of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code>
+ and the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a container (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a> ()} == <code>true</code>).</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getContainersFinishedCount(org.junit.platform.engine.TestExecutionResult.Status)">getContainersFinishedCount(TestExecutionResult.Status)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the count of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code>
+ with the provided <a href="../org/junit/platform/engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine"><code>TestExecutionResult.Status</code></a> and the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a container (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a> ()} == <code>true</code>).</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getContainersFinishedEvents(org.junit.platform.engine.TestExecutionResult.Status)">getContainersFinishedEvents(TestExecutionResult.Status)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code>
+ with the provided <a href="../org/junit/platform/engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine"><code>TestExecutionResult.Status</code></a> and the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a container (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a> ()} == <code>true</code>).</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html#getContainersFoundCount()">getContainersFoundCount()</a></span> - Method in interface org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></dt>
 <dd>
 <div class="block">Get the number of containers found.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getContainerSkippedCount()">getContainerSkippedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the count of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of the type being <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html#SKIPPED"><code>ExecutionEvent.Type.SKIPPED</code></a> where
- the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a container (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a> ()} == <code>true</code>).</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html#getContainersSkippedCount()">getContainersSkippedCount()</a></span> - Method in interface org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></dt>
 <dd>
 <div class="block">Get the number of containers skipped.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getContainersSkippedCount()">getContainersSkippedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the count of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of the type being <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html#SKIPPED"><code>ExecutionEvent.Type.SKIPPED</code></a> where
+ the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a container (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a> ()} == <code>true</code>).</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html#getContainersStartedCount()">getContainersStartedCount()</a></span> - Method in interface org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></dt>
 <dd>
 <div class="block">Get the number of containers started.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html#getContainersSucceededCount()">getContainersSucceededCount()</a></span> - Method in interface org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></dt>
-<dd>
-<div class="block">Get the number of containers that succeeded.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getContainerStartedCount()">getContainerStartedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getContainersStartedCount()">getContainersStartedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
 <dd>
 <div class="block">Get the count of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>STARTED</code>
  for a container (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a> ()} == <code>true</code>).</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html#getContainersSucceededCount()">getContainersSucceededCount()</a></span> - Method in interface org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></dt>
+<dd>
+<div class="block">Get the number of containers that succeeded.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/ParallelExecutionConfiguration.html#getCorePoolSize()">getCorePoolSize()</a></span> - Method in interface org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/ParallelExecutionConfiguration.html" title="interface in org.junit.platform.engine.support.hierarchical">ParallelExecutionConfiguration</a></dt>
 <dd>
@@ -491,7 +491,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.html#getDynamicDescendantFilter()">getDynamicDescendantFilter()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestTemplateTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getDynamicTestRegisteredCount()">getDynamicTestRegisteredCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getDynamicTestRegistrationCount()">getDynamicTestRegistrationCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
 <dd>
 <div class="block">Get the count of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of the type <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html#DYNAMIC_TEST_REGISTERED"><code>ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED</code></a>.</div>
 </dd>
@@ -622,10 +622,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Get all <code>Extensions</code> of the specified type that are present
  in this registry or one of its ancestors.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getFailedTestFinishedEvents()">getFailedTestFinishedEvents()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code> for an <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> that was for a test and completed with the status of <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#FAILED"><code>TestExecutionResult.Status.FAILED</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html#getFailures()">getFailures()</a></span> - Method in interface org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></dt>
 <dd>
@@ -946,7 +942,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Get the reason that execution of the context should be skipped,
  if available.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getReportingEntryPublishedCount()">getReportingEntryPublishedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getReportingEntryPublicationCount()">getReportingEntryPublicationCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
 <dd>
 <div class="block">Get the count of <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html#REPORTING_ENTRY_PUBLISHED"><code>ExecutionEvent.Type.REPORTING_ENTRY_PUBLISHED</code></a> events
  for this <code>ExecutionResults</code>.</div>
@@ -1025,10 +1021,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/params/aggregator/DefaultArgumentsAccessor.html#getShort(int)">getShort(int)</a></span> - Method in class org.junit.jupiter.params.aggregator.<a href="../org/junit/jupiter/params/aggregator/DefaultArgumentsAccessor.html" title="class in org.junit.jupiter.params.aggregator">DefaultArgumentsAccessor</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getSkippedTestEvents()">getSkippedTestEvents()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>SKIPPED</code> and the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a test (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isTest()"><code>TestDescriptor.isTest()</code></a> ()} == <code>true</code>).</div>
-</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/TerminationInfo.html#getSkipReason()">getSkipReason()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/TerminationInfo.html" title="class in org.junit.platform.testkit">TerminationInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/script/Script.html#getSource()">getSource()</a></span> - Method in class org.junit.jupiter.engine.script.<a href="../org/junit/jupiter/engine/script/Script.html" title="class in org.junit.jupiter.engine.script">Script</a></dt>
@@ -1069,10 +1061,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/params/aggregator/DefaultArgumentsAccessor.html#getString(int)">getString(int)</a></span> - Method in class org.junit.jupiter.params.aggregator.<a href="../org/junit/jupiter/params/aggregator/DefaultArgumentsAccessor.html" title="class in org.junit.jupiter.params.aggregator">DefaultArgumentsAccessor</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getSuccessfulTestFinishedEvents()">getSuccessfulTestFinishedEvents()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code> for an <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> that was for a test and completed with the status of <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#SUCCESSFUL"><code>TestExecutionResult.Status.SUCCESSFUL</code></a>.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/SummaryGeneratingListener.html#getSummary()">getSummary()</a></span> - Method in class org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/SummaryGeneratingListener.html" title="class in org.junit.platform.launcher.listeners">SummaryGeneratingListener</a></dt>
 <dd>
 <div class="block">Get the summary generated by this listener.</div>
@@ -1114,10 +1102,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Get the <a href="../org/junit/platform/testkit/TerminationInfo.html" title="class in org.junit.platform.testkit"><code>TerminationInfo</code></a> for this <code>Execution</code>.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestAbortedCount()">getTestAbortedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the count of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were finished / completed, filtering on only those that finished with the status of <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#ABORTED"><code>TestExecutionResult.Status.ABORTED</code></a>.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/ExtensionContext.html#getTestClass()">getTestClass()</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a></dt>
 <dd>
 <div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a> associated with the current test or container,
@@ -1139,10 +1123,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/MethodExtensionContext.html#getTestClass()">getTestClass()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/MethodExtensionContext.html" title="class in org.junit.jupiter.engine.descriptor">MethodExtensionContext</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestCount()">getTestCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the count of all Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s contained in this <a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a>.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Execution.html#getTestDescriptor()">getTestDescriptor()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit">Execution</a></dt>
 <dd>
 <div class="block">Get the <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> for this <code>Execution</code>.</div>
@@ -1164,42 +1144,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Get the count of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of the provided <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> where
  the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a test (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isTest()"><code>TestDescriptor.isTest()</code></a> ()} ()} == <code>true</code>).</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestEventsFinished(org.junit.platform.engine.TestExecutionResult.Status)">getTestEventsFinished(TestExecutionResult.Status)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestExecutions()">getTestExecutions()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
 <dd>
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code>
- with the provided <a href="../org/junit/platform/engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine"><code>TestExecutionResult.Status</code></a> and the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a test (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isTest()"><code>TestDescriptor.isTest()</code></a> ()} == <code>true</code>).</div>
+<div class="block">Get all Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s contained in this <a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a>.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestEventsFinishedCount(org.junit.platform.engine.TestExecutionResult.Status)">getTestEventsFinishedCount(TestExecutionResult.Status)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestExecutionsCount()">getTestExecutionsCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
 <dd>
-<div class="block">Get the count of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code>
- with the provided <a href="../org/junit/platform/engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine"><code>TestExecutionResult.Status</code></a> and the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a test (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isTest()"><code>TestDescriptor.isTest()</code></a> ()} == <code>true</code>).</div>
+<div class="block">Get the count of all Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s contained in this <a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/console/ConsoleLauncherExecutionResult.html#getTestExecutionSummary()">getTestExecutionSummary()</a></span> - Method in class org.junit.platform.console.<a href="../org/junit/platform/console/ConsoleLauncherExecutionResult.html" title="class in org.junit.platform.console">ConsoleLauncherExecutionResult</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestFailedCount()">getTestFailedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the count of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were finished / completed, filtering on only those that finished with the status of <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#FAILED"><code>TestExecutionResult.Status.FAILED</code></a>.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestFinished()">getTestFinished()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were finished / completed, which includes tests that were
- <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#SUCCESSFUL"><code>TestExecutionResult.Status.SUCCESSFUL</code></a>, <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#FAILED"><code>TestExecutionResult.Status.FAILED</code></a> or <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#ABORTED"><code>TestExecutionResult.Status.ABORTED</code></a>.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestFinished(org.junit.platform.engine.TestExecutionResult.Status)">getTestFinished(TestExecutionResult.Status)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were finished / completed, filtering on the provided
- <a href="../org/junit/platform/engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine"><code>TestExecutionResult.Status</code></a>.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestFinishedCount()">getTestFinishedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the count of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were finished / completed, which includes tests that were
- <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#SUCCESSFUL"><code>TestExecutionResult.Status.SUCCESSFUL</code></a>, <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#FAILED"><code>TestExecutionResult.Status.FAILED</code></a> or <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#ABORTED"><code>TestExecutionResult.Status.ABORTED</code></a>.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestFinishedCount(org.junit.platform.engine.TestExecutionResult.Status)">getTestFinishedCount(TestExecutionResult.Status)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the count of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were finished / completed, filtering on the provided
- <a href="../org/junit/platform/engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine"><code>TestExecutionResult.Status</code></a>.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.Failure.html#getTestIdentifier()">getTestIdentifier()</a></span> - Method in interface org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.Failure.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary.Failure</a></dt>
 <dd>
 <div class="block">Get the identifier of the failed test or container.</div>
@@ -1250,29 +1204,54 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedMember.html#getTestRule()">getTestRule()</a></span> - Method in interface org.junit.jupiter.migrationsupport.rules.member.<a href="../org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedMember.html" title="interface in org.junit.jupiter.migrationsupport.rules.member">TestRuleAnnotatedMember</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTests()">getTests()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get all Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s contained in this <a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a>.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html#getTestsAbortedCount()">getTestsAbortedCount()</a></span> - Method in interface org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></dt>
 <dd>
 <div class="block">Get the number of tests aborted.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestsAbortedCount()">getTestsAbortedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the count of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were finished / completed, filtering on only those that finished with the status of <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#ABORTED"><code>TestExecutionResult.Status.ABORTED</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html#getTestsFailedCount()">getTestsFailedCount()</a></span> - Method in interface org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></dt>
 <dd>
 <div class="block">Get the number of tests that failed.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestsFailedCount()">getTestsFailedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the count of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were finished / completed, filtering on only those that finished with the status of <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#FAILED"><code>TestExecutionResult.Status.FAILED</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestsFailedEvents()">getTestsFailedEvents()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code> for an <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> that was for a test and completed with the status of <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#FAILED"><code>TestExecutionResult.Status.FAILED</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestsFinishedCount()">getTestsFinishedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the count of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were finished / completed, which includes tests that were
+ <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#SUCCESSFUL"><code>TestExecutionResult.Status.SUCCESSFUL</code></a>, <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#FAILED"><code>TestExecutionResult.Status.FAILED</code></a> or <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#ABORTED"><code>TestExecutionResult.Status.ABORTED</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestsFinishedCount(org.junit.platform.engine.TestExecutionResult.Status)">getTestsFinishedCount(TestExecutionResult.Status)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the count of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were finished / completed, filtering on the provided
+ <a href="../org/junit/platform/engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine"><code>TestExecutionResult.Status</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestsFinishedEvents(org.junit.platform.engine.TestExecutionResult.Status)">getTestsFinishedEvents(TestExecutionResult.Status)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code>
+ with the provided <a href="../org/junit/platform/engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine"><code>TestExecutionResult.Status</code></a> and the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a test (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isTest()"><code>TestDescriptor.isTest()</code></a> ()} == <code>true</code>).</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestsFinishedExecutions()">getTestsFinishedExecutions()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were finished / completed, which includes tests that were
+ <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#SUCCESSFUL"><code>TestExecutionResult.Status.SUCCESSFUL</code></a>, <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#FAILED"><code>TestExecutionResult.Status.FAILED</code></a> or <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#ABORTED"><code>TestExecutionResult.Status.ABORTED</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestsFinishedExecutions(org.junit.platform.engine.TestExecutionResult.Status)">getTestsFinishedExecutions(TestExecutionResult.Status)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were finished / completed, filtering on the provided
+ <a href="../org/junit/platform/engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine"><code>TestExecutionResult.Status</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html#getTestsFoundCount()">getTestsFoundCount()</a></span> - Method in interface org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></dt>
 <dd>
 <div class="block">Get the number of tests found.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestSkipped()">getTestSkipped()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were skipped.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestSkippedCount()">getTestSkippedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the count of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were skipped.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/DynamicNode.html#getTestSourceUri()">getTestSourceUri()</a></span> - Method in class org.junit.jupiter.api.<a href="../org/junit/jupiter/api/DynamicNode.html" title="class in org.junit.jupiter.api">DynamicNode</a></dt>
 <dd>
@@ -1282,25 +1261,41 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Get the number of tests skipped.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestsSkippedCount()">getTestsSkippedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the count of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were skipped.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestsSkippedEvents()">getTestsSkippedEvents()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>SKIPPED</code> and the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> was for a test (in other words: <a href="../org/junit/platform/engine/TestDescriptor.html#isTest()"><code>TestDescriptor.isTest()</code></a> ()} == <code>true</code>).</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestsSkippedExecutions()">getTestsSkippedExecutions()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were skipped.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html#getTestsStartedCount()">getTestsStartedCount()</a></span> - Method in interface org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></dt>
 <dd>
 <div class="block">Get the number of tests started.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestsStartedCount()">getTestsStartedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the count of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were started.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestsStartedExecutions()">getTestsStartedExecutions()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were started.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html#getTestsSucceededCount()">getTestsSucceededCount()</a></span> - Method in interface org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></dt>
 <dd>
 <div class="block">Get the number of tests that succeeded.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestStarted()">getTestStarted()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were started.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestStartedCount()">getTestStartedCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
-<dd>
-<div class="block">Get the count of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were started.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestSuccessfulCount()">getTestSuccessfulCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestsSuccessfulCount()">getTestsSuccessfulCount()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
 <dd>
 <div class="block">Get the count of Test <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were finished / completed, filtering on only those that finished with the status of <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#SUCCESSFUL"><code>TestExecutionResult.Status.SUCCESSFUL</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#getTestsSuccessfulEvents()">getTestsSuccessfulEvents()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s of where the <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> is <code>FINISHED</code> for an <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> that was for a test and completed with the status of <a href="../org/junit/platform/engine/TestExecutionResult.Status.html#SUCCESSFUL"><code>TestExecutionResult.Status.SUCCESSFUL</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/console/options/CommandLineOptions.html#getTheme()">getTheme()</a></span> - Method in class org.junit.platform.console.options.<a href="../org/junit/platform/console/options/CommandLineOptions.html" title="class in org.junit.platform.console.options">CommandLineOptions</a></dt>
 <dd>&nbsp;</dd>
