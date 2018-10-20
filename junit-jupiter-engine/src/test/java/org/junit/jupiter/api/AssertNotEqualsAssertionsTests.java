@@ -624,6 +624,139 @@ class AssertNotEqualsAssertionsTests {
 
 	}
 
+	// -------------------------------------------------------------------------
+
+	@Nested
+	class MixedBoxedAndUnboxedPrimitivesTests {
+
+		@Test
+		void bytes() {
+			byte primitive = (byte) 42;
+			Byte wrapper = Byte.valueOf("99");
+
+			assertNotEquals(primitive, wrapper);
+			assertNotEquals(primitive, wrapper, "message");
+			assertNotEquals(primitive, wrapper, () -> "message");
+
+			assertNotEquals(wrapper, primitive);
+			assertNotEquals(wrapper, primitive, "message");
+			assertNotEquals(wrapper, primitive, () -> "message");
+		}
+
+		@Test
+		void shorts() {
+			short primitive = (short) 42;
+			Short wrapper = Short.valueOf("99");
+
+			assertNotEquals(primitive, wrapper);
+			assertNotEquals(primitive, wrapper, "message");
+			assertNotEquals(primitive, wrapper, () -> "message");
+
+			assertNotEquals(wrapper, primitive);
+			assertNotEquals(wrapper, primitive, "message");
+			assertNotEquals(wrapper, primitive, () -> "message");
+		}
+
+		@Test
+		void integers() {
+			int primitive = 42;
+			Integer wrapper = Integer.valueOf("99");
+
+			assertNotEquals(primitive, wrapper);
+			assertNotEquals(primitive, wrapper, "message");
+			assertNotEquals(primitive, wrapper, () -> "message");
+
+			assertNotEquals(wrapper, primitive);
+			assertNotEquals(wrapper, primitive, "message");
+			assertNotEquals(wrapper, primitive, () -> "message");
+		}
+
+		@Test
+		void longs() {
+			long primitive = 42L;
+			Long wrapper = Long.valueOf("99");
+
+			assertNotEquals(primitive, wrapper);
+			assertNotEquals(primitive, wrapper, "message");
+			assertNotEquals(primitive, wrapper, () -> "message");
+
+			assertNotEquals(wrapper, primitive);
+			assertNotEquals(wrapper, primitive, "message");
+			assertNotEquals(wrapper, primitive, () -> "message");
+		}
+
+		@Test
+		void floats() {
+			float primitive = 42.0f;
+			Float wrapper = Float.valueOf("99.0");
+
+			assertNotEquals(primitive, wrapper);
+			assertNotEquals(primitive, wrapper, 0.0f);
+			assertNotEquals(primitive, wrapper, "message");
+			assertNotEquals(primitive, wrapper, 0.0f, "message");
+			assertNotEquals(primitive, wrapper, () -> "message");
+			assertNotEquals(primitive, wrapper, 0.0f, () -> "message");
+
+			assertNotEquals(wrapper, primitive);
+			assertNotEquals(wrapper, primitive, 0.0f);
+			assertNotEquals(wrapper, primitive, "message");
+			assertNotEquals(wrapper, primitive, 0.0f, "message");
+			assertNotEquals(wrapper, primitive, () -> "message");
+			assertNotEquals(wrapper, primitive, 0.0f, () -> "message");
+		}
+
+		@Test
+		void doubles() {
+			double primitive = 42.0d;
+			Double wrapper = Double.valueOf("99.0");
+
+			assertNotEquals(primitive, wrapper);
+			assertNotEquals(primitive, wrapper, 0.0d);
+			assertNotEquals(primitive, wrapper, "message");
+			assertNotEquals(primitive, wrapper, 0.0d, "message");
+			assertNotEquals(primitive, wrapper, () -> "message");
+			assertNotEquals(primitive, wrapper, 0.0d, () -> "message");
+
+			assertNotEquals(wrapper, primitive);
+			assertNotEquals(wrapper, primitive, 0.0d);
+			assertNotEquals(wrapper, primitive, "message");
+			assertNotEquals(wrapper, primitive, 0.0d, "message");
+			assertNotEquals(wrapper, primitive, () -> "message");
+			assertNotEquals(wrapper, primitive, 0.0d, () -> "message");
+		}
+
+		@Test
+		void booleans() {
+			boolean primitive = true;
+			Boolean wrapper = Boolean.valueOf("false");
+
+			assertNotEquals(primitive, wrapper);
+			assertNotEquals(primitive, wrapper, "message");
+			assertNotEquals(primitive, wrapper, () -> "message");
+
+			assertNotEquals(wrapper, primitive);
+			assertNotEquals(wrapper, primitive, "message");
+			assertNotEquals(wrapper, primitive, () -> "message");
+		}
+
+		@Test
+		void chars() {
+			char primitive = 'a';
+			Character wrapper = Character.valueOf('z');
+
+			assertNotEquals(primitive, wrapper);
+			assertNotEquals(primitive, wrapper, "message");
+			assertNotEquals(primitive, wrapper, () -> "message");
+
+			assertNotEquals(wrapper, primitive);
+			assertNotEquals(wrapper, primitive, "message");
+			assertNotEquals(wrapper, primitive, () -> "message");
+		}
+
+	}
+
+	// -------------------------------------------------------------------------
+
 	private static class EqualsThrowsExceptionClass {
 
 		@Override

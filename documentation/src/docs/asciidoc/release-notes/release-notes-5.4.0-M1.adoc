@@ -58,7 +58,8 @@ repository on GitHub.
   values, allowing statements such as `assertEquals(42, Integer.valueOf("42"))` to
   compile.
 * New `Assertions.assertNotEquals()` variants that accept the following primitive data
-  types: `char`, `byte`, `short`, `int`, `long`, `float`, and `double`.
+  types: `char`, `byte`, `short`, `int`, `long`, `float`, and `double`. Mixed boxed and
+  unboxed primitive values are also supported.
 * Implicit conversion from hexadecimal and octal string representations to integral types
   in `@ParameterizedTest` arguments -- for example, conversion from `"0xff"` to `255`.
 * JUnit 4's `@Ignore` annotation is now supported for disabling test classes and test
