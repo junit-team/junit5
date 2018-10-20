@@ -10,9 +10,6 @@
 
 package org.junit.platform.fakes;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -22,7 +19,6 @@ import org.junit.platform.engine.UniqueId;
 /**
  * @since 1.4
  */
-@API(status = EXPERIMENTAL, since = "1.4")
 public class TestEngineSpy implements TestEngine {
 
 	public static final String ID = TestEngineSpy.class.getSimpleName();
