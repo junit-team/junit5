@@ -664,14 +664,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code><a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Execution.</span><code><span class="memberNameLink"><a href="../../testkit/Execution.html#getTestDescriptor()">getTestDescriptor</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Gets the <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> for this <a href="../../testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>.</div>
+<div class="block">Get the <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> for this <code>Execution</code>.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionEvent.</span><code><span class="memberNameLink"><a href="../../testkit/ExecutionEvent.html#getTestDescriptor()">getTestDescriptor</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Gets the <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> of this <a href="../../testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>, which represents what test or container this
+<div class="block">Get the <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> of this <a href="../../testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>, which represents what test or container this
  <a href="../../testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> is for.</div>
 </td>
 </tr>
@@ -696,7 +696,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionRecorder.</span><code><span class="memberNameLink"><a href="../../testkit/ExecutionRecorder.html#dynamicTestRegistered(org.junit.platform.engine.TestDescriptor)">dynamicTestRegistered</a></span>&#8203;(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</code></th>
 <td class="colLast">
-<div class="block">Records an <a href="../../testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> where a dynamic test was registered.</div>
+<div class="block">Record an <a href="../../testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a dynamically registered test.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -712,7 +712,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionRecorder.</span><code><span class="memberNameLink"><a href="../../testkit/ExecutionRecorder.html#executionFinished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">executionFinished</a></span>&#8203;(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
                  <a href="../TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;testExecutionResult)</code></th>
 <td class="colLast">
-<div class="block">Records an <a href="../../testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a test (via a <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>) that completed
+<div class="block">Record an <a href="../../testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a container or test that completed
  with the provided <a href="../TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>.</div>
 </td>
 </tr>
@@ -729,7 +729,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionRecorder.</span><code><span class="memberNameLink"><a href="../../testkit/ExecutionRecorder.html#executionSkipped(org.junit.platform.engine.TestDescriptor,java.lang.String)">executionSkipped</a></span>&#8203;(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
                 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;reason)</code></th>
 <td class="colLast">
-<div class="block">Records an <a href="../../testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a test (via a <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>) that was skipped.</div>
+<div class="block">Record an <a href="../../testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a container or test that was skipped.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -743,7 +743,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionRecorder.</span><code><span class="memberNameLink"><a href="../../testkit/ExecutionRecorder.html#executionStarted(org.junit.platform.engine.TestDescriptor)">executionStarted</a></span>&#8203;(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</code></th>
 <td class="colLast">
-<div class="block">Records an <a href="../../testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a test (via a <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>) that started.</div>
+<div class="block">Record an <a href="../../testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a container or test that started.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -753,7 +753,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
         <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;endInstant,
         <a href="../TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;executionResult)</code></th>
 <td class="colLast">
-<div class="block">Constructs a new instance of an <a href="../../testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a> that finished with the provided <a href="../TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>.</div>
+<div class="block">Construct a new instance of an <code>Execution</code> that finished with the
+ provided <a href="../TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -769,7 +770,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionRecorder.</span><code><span class="memberNameLink"><a href="../../testkit/ExecutionRecorder.html#reportingEntryPublished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.reporting.ReportEntry)">reportingEntryPublished</a></span>&#8203;(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
                        <a href="../reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting">ReportEntry</a>&nbsp;entry)</code></th>
 <td class="colLast">
-<div class="block">Records an <a href="../../testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> where a <a href="../reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting"><code>ReportEntry</code></a> was published.</div>
+<div class="block">Record an <a href="../../testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a published <a href="../reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting"><code>ReportEntry</code></a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -779,8 +780,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
        <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;endInstant,
        <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;skipReason)</code></th>
 <td class="colLast">
-<div class="block">Constructs a new instance of an <a href="../../testkit/Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a> that was skipped with the provided
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>String</code></a> <code>skipReason</code>.</div>
+<div class="block">Construct a new instance of an <code>Execution</code> that was skipped with the provided
+ <code>skipReason</code>.</div>
 </td>
 </tr>
 </tbody>

@@ -137,7 +137,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
 public class <span class="typeNameLabel">ExecutionEvent</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
-<div class="block">Represents a single event fired during execution of the testing lifecycle.</div>
+<div class="block"><a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> represents a single event fired during execution of
+ a test plan on the JUnit Platform.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.4</dd>
@@ -247,28 +248,28 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPayload()">getPayload</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Gets the <code>payload</code> in it's <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a> container.</div>
+<div class="block">Get the <code>payload</code> in an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a> container.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPayload(java.lang.Class)">getPayload</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;payloadClass)</code></th>
 <td class="colLast">
-<div class="block">Gets the <code>payload</code> of expected type <code>T</code>, in it's <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a> container.</div>
+<div class="block">Get the <code>payload</code> of expected type <code>T</code>, in an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a> container.</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPayloadAs(java.lang.Class)">getPayloadAs</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;payloadClass)</code></th>
 <td class="colLast">
-<div class="block">Gets the <code>payload</code> of expected type <code>T</code>.</div>
+<div class="block">Get the <code>payload</code> of expected type <code>T</code>.</div>
 </td>
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestDescriptor()">getTestDescriptor</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Gets the <a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> of this <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>, which represents what test or container this
+<div class="block">Get the <a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> of this <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>, which represents what test or container this
  <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> is for.</div>
 </td>
 </tr>
@@ -276,14 +277,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTimestamp()">getTimestamp</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Gets the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> of when this <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> occurred.</div>
+<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> when this <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> occurred.</div>
 </td>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit">ExecutionEvent.Type</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getType()">getType</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Gets the <a href="ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> of this <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>.</div>
+<div class="block">Get the <a href="ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> of this <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>.</div>
 </td>
 </tr>
 <tr id="i13" class="rowColor">
@@ -470,7 +471,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>getType</h4>
 <pre class="methodSignature">public&nbsp;<a href="ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit">ExecutionEvent.Type</a>&nbsp;getType()</pre>
-<div class="block">Gets the <a href="ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> of this <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>.</div>
+<div class="block">Get the <a href="ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a> of this <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the <a href="ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><code>ExecutionEvent.Type</code></a></dd>
@@ -484,7 +485,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>getTestDescriptor</h4>
 <pre class="methodSignature">public&nbsp;<a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;getTestDescriptor()</pre>
-<div class="block">Gets the <a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> of this <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>, which represents what test or container this
+<div class="block">Get the <a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> of this <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>, which represents what test or container this
  <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> is for.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -499,10 +500,10 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>getTimestamp</h4>
 <pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;getTimestamp()</pre>
-<div class="block">Gets the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> of when this <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> occurred.</div>
+<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> when this <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> occurred.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> of when this <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> occurred</dd>
+<dd>the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> when this <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> occurred</dd>
 </dl>
 </li>
 </ul>
@@ -513,7 +514,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>getPayload</h4>
 <pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;getPayload()</pre>
-<div class="block">Gets the <code>payload</code> in it's <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a> container.</div>
+<div class="block">Get the <code>payload</code> in an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a> container.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a> containing the <code>payload</code></dd>
@@ -527,11 +528,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>getPayload</h4>
 <pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;T&gt;&nbsp;getPayload&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;payloadClass)</pre>
-<div class="block">Gets the <code>payload</code> of expected type <code>T</code>, in it's <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a> container.
+<div class="block">Get the <code>payload</code> of expected type <code>T</code>, in an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a> container.
 
  <p>This is a convenience method meant for callers who know the expected type of the <code>payload</code> and
  don't want to cast it manually. This means that if the expected type <code>T</code> of the <code>payload</code> is
- different than the actual type, then an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true#empty()" title="class or interface in java.util" class="externalLink"><code>Optional.empty()</code></a> will be returned.</p></div>
+ different than the actual type, then an <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true#empty()" title="class or interface in java.util" class="externalLink"><code>Optional.empty()</code></a> will be returned.</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>T</code> - the input type of the <code>payload</code></dd>
@@ -549,10 +550,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>getPayloadAs</h4>
 <pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;T&nbsp;getPayloadAs&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;payloadClass)</pre>
-<div class="block">Gets the <code>payload</code> of expected type <code>T</code>.
+<div class="block">Get the <code>payload</code> of expected type <code>T</code>.
+
  <p>This is a convenience method meant for callers who know that the <code>payload</code> is present and also know
  the actual type of the <code>payload</code>.  This means that if the expected type <code>T</code> of the <code>payload</code>
- is different than the actual type <b>OR</b> the <code>payload</code> isn't present, then an <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>IllegalArgumentException</code></a> will be thrown</p></div>
+ is different than the actual type <b>OR</b> the <code>payload</code> isn't present, then an <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>IllegalArgumentException</code></a> will be thrown.</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>T</code> - the input type of the <code>payload</code></dd>

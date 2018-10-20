@@ -130,14 +130,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="class-use/Execution.html#org.junit.platform.testkit">Execution</a></th>
 <td class="colLast">
-<div class="block">Encapsulates metadata around the execution of a single Test,
- this includes metadata of whether or not the Test was skipped.</div>
+<div class="block"><code>Execution</code> encapsulates metadata for the execution of a single
+ <a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <th class="colFirst" scope="row"><a href="class-use/ExecutionEvent.html#org.junit.platform.testkit">ExecutionEvent</a></th>
 <td class="colLast">
-<div class="block">Represents a single event fired during execution of the testing lifecycle.</div>
+<div class="block"><a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> represents a single event fired during execution of
+ a test plan on the JUnit Platform.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -155,8 +156,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="class-use/TerminationInfo.html#org.junit.platform.testkit">TerminationInfo</a></th>
 <td class="colLast">
-<div class="block">Union type that allows propagation of terminated test state, supporting both the reason <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>String</code></a>
- if the test was skipped, or the <a href="../engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a> if the test was finished.</div>
+<div class="block"><code>TerminationInfo</code> is a union type that allows propagation of terminated
+ container/test state, supporting either the <em>reason</em> if the container/test
+ was skipped or the <a href="../engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a> if the container/test was executed.</div>
 </td>
 </tr>
 </tbody>

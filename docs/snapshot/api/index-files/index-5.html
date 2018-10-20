@@ -459,8 +459,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionRecorder.html#execute(org.junit.platform.engine.TestEngine,org.junit.platform.engine.EngineDiscoveryRequest)">execute(TestEngine, EngineDiscoveryRequest)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionRecorder.html" title="class in org.junit.platform.testkit">ExecutionRecorder</a></dt>
 <dd>
-<div class="block">Execute tests via a <a href="../org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><code>EngineDiscoveryRequest</code></a> using the provided <a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>,
- then return the recorded <a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a> to the caller.</div>
+<div class="block">Execute tests via an <a href="../org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><code>EngineDiscoveryRequest</code></a> using the provided <a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionRecorder.html#execute(org.junit.platform.engine.TestEngine,org.junit.platform.engine.EngineDiscoveryRequest,org.junit.platform.engine.EngineExecutionListener)">execute(TestEngine, EngineDiscoveryRequest, EngineExecutionListener)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionRecorder.html" title="class in org.junit.platform.testkit">ExecutionRecorder</a></dt>
 <dd>&nbsp;</dd>
@@ -492,8 +491,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit"><span class="typeNameLink">Execution</span></a> - Class in <a href="../org/junit/platform/testkit/package-summary.html">org.junit.platform.testkit</a></dt>
 <dd>
-<div class="block">Encapsulates metadata around the execution of a single Test,
- this includes metadata of whether or not the Test was skipped.</div>
+<div class="block"><code>Execution</code> encapsulates metadata for the execution of a single
+ <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>.</div>
 </dd>
 <dt><a href="../org/junit/jupiter/api/parallel/Execution.html" title="annotation in org.junit.jupiter.api.parallel"><span class="typeNameLink">Execution</span></a> - Annotation Type in <a href="../org/junit/jupiter/api/parallel/package-summary.html">org.junit.jupiter.api.parallel</a></dt>
 <dd>
@@ -507,7 +506,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><span class="typeNameLink">ExecutionEvent</span></a> - Class in <a href="../org/junit/platform/testkit/package-summary.html">org.junit.platform.testkit</a></dt>
 <dd>
-<div class="block">Represents a single event fired during execution of the testing lifecycle.</div>
+<div class="block"><a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> represents a single event fired during execution of
+ a test plan on the JUnit Platform.</div>
 </dd>
 <dt><a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><span class="typeNameLink">ExecutionEvent.Type</span></a> - Enum in <a href="../org/junit/platform/testkit/package-summary.html">org.junit.platform.testkit</a></dt>
 <dd>
@@ -528,7 +528,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionRecorder.html#executionFinished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">executionFinished(TestDescriptor, TestExecutionResult)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionRecorder.html" title="class in org.junit.platform.testkit">ExecutionRecorder</a></dt>
 <dd>
-<div class="block">Records an <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a test (via a <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>) that completed
+<div class="block">Record an <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a container or test that completed
  with the provided <a href="../org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/LoggingListener.html#executionFinished(org.junit.platform.launcher.TestIdentifier,org.junit.platform.engine.TestExecutionResult)">executionFinished(TestIdentifier, TestExecutionResult)</a></span> - Method in class org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/LoggingListener.html" title="class in org.junit.platform.launcher.listeners">LoggingListener</a></dt>
@@ -546,8 +546,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><a href="../org/junit/platform/testkit/ExecutionRecorder.html" title="class in org.junit.platform.testkit"><span class="typeNameLink">ExecutionRecorder</span></a> - Class in <a href="../org/junit/platform/testkit/package-summary.html">org.junit.platform.testkit</a></dt>
 <dd>
-<div class="block"><a href="../org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine"><code>EngineExecutionListener</code></a> that records data from every event that occurs during the engine
- execution lifecycle and provides functionality for retrieving execution state via <a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a>.</div>
+<div class="block"><a href="../org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine"><code>EngineExecutionListener</code></a> that records data from every event that
+ occurs during the engine execution lifecycle and provides functionality
+ for retrieving execution state via <a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionRecorder.html#%3Cinit%3E()">ExecutionRecorder()</a></span> - Constructor for class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionRecorder.html" title="class in org.junit.platform.testkit">ExecutionRecorder</a></dt>
 <dd>&nbsp;</dd>
@@ -573,7 +574,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionRecorder.html#executionSkipped(org.junit.platform.engine.TestDescriptor,java.lang.String)">executionSkipped(TestDescriptor, String)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionRecorder.html" title="class in org.junit.platform.testkit">ExecutionRecorder</a></dt>
 <dd>
-<div class="block">Records an <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a test (via a <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>) that was skipped.</div>
+<div class="block">Record an <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a container or test that was skipped.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/LoggingListener.html#executionSkipped(org.junit.platform.launcher.TestIdentifier,java.lang.String)">executionSkipped(TestIdentifier, String)</a></span> - Method in class org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/LoggingListener.html" title="class in org.junit.platform.launcher.listeners">LoggingListener</a></dt>
 <dd>&nbsp;</dd>
@@ -595,7 +596,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionRecorder.html#executionStarted(org.junit.platform.engine.TestDescriptor)">executionStarted(TestDescriptor)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionRecorder.html" title="class in org.junit.platform.testkit">ExecutionRecorder</a></dt>
 <dd>
-<div class="block">Records an <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a test (via a <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>) that started.</div>
+<div class="block">Record an <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a container or test that started.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/listeners/LoggingListener.html#executionStarted(org.junit.platform.launcher.TestIdentifier)">executionStarted(TestIdentifier)</a></span> - Method in class org.junit.platform.launcher.listeners.<a href="../org/junit/platform/launcher/listeners/LoggingListener.html" title="class in org.junit.platform.launcher.listeners">LoggingListener</a></dt>
 <dd>&nbsp;</dd>

@@ -137,8 +137,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
 public class <span class="typeNameLabel">Execution</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
-<div class="block">Encapsulates metadata around the execution of a single Test,
- this includes metadata of whether or not the Test was skipped.</div>
+<div class="block"><code>Execution</code> encapsulates metadata for the execution of a single
+ <a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.4</dd>
@@ -170,42 +170,43 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
         <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;endInstant,
         <a href="../engine/TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;executionResult)</code></th>
 <td class="colLast">
-<div class="block">Constructs a new instance of an <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a> that finished with the provided <a href="../engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>.</div>
+<div class="block">Construct a new instance of an <code>Execution</code> that finished with the
+ provided <a href="../engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html?is-external=true" title="class or interface in java.time" class="externalLink">Duration</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDuration()">getDuration</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Gets the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Duration</code></a> of this <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>.</div>
+<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Duration</code></a> of this <code>Execution</code>.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEndInstant()">getEndInstant</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Gets the end <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> of this <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>.</div>
+<div class="block">Get the end <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> of this <code>Execution</code>.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getStartInstant()">getStartInstant</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Gets the start <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> of this <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>.</div>
+<div class="block">Get the start <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> of this <code>Execution</code>.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="TerminationInfo.html" title="class in org.junit.platform.testkit">TerminationInfo</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTerminationInfo()">getTerminationInfo</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Gets the <a href="TerminationInfo.html" title="class in org.junit.platform.testkit"><code>TerminationInfo</code></a> for this <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>.</div>
+<div class="block">Get the <a href="TerminationInfo.html" title="class in org.junit.platform.testkit"><code>TerminationInfo</code></a> for this <code>Execution</code>.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestDescriptor()">getTestDescriptor</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Gets the <a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> for this <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>.</div>
+<div class="block">Get the <a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> for this <code>Execution</code>.</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
@@ -215,8 +216,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
        <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;endInstant,
        <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;skipReason)</code></th>
 <td class="colLast">
-<div class="block">Constructs a new instance of an <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a> that was skipped with the provided
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>String</code></a> <code>skipReason</code>.</div>
+<div class="block">Construct a new instance of an <code>Execution</code> that was skipped with the provided
+ <code>skipReason</code>.</div>
 </td>
 </tr>
 </table>
@@ -253,15 +254,16 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
                                  <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;startInstant,
                                  <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;endInstant,
                                  <a href="../engine/TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;executionResult)</pre>
-<div class="block">Constructs a new instance of an <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a> that finished with the provided <a href="../engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>.</div>
+<div class="block">Construct a new instance of an <code>Execution</code> that finished with the
+ provided <a href="../engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>descriptor</code> - the <a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> that finished</dd>
-<dd><code>startInstant</code> - the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> that the <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a> started</dd>
-<dd><code>endInstant</code> - the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> that the <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a> completed</dd>
-<dd><code>executionResult</code> - the <a href="../engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a> of the finished test</dd>
+<dd><code>descriptor</code> - the <code>TestDescriptor</code> that finished</dd>
+<dd><code>startInstant</code> - the <code>Instant</code> that the <code>Execution</code> started</dd>
+<dd><code>endInstant</code> - the <code>Instant</code> that the <code>Execution</code> completed</dd>
+<dd><code>executionResult</code> - the <code>TestExecutionResult</code> of the finished test</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the newly constructed <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a> instance</dd>
+<dd>the newly constructed <code>Execution</code> instance</dd>
 </dl>
 </li>
 </ul>
@@ -275,16 +277,16 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;startInstant,
                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;endInstant,
                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;skipReason)</pre>
-<div class="block">Constructs a new instance of an <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a> that was skipped with the provided
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>String</code></a> <code>skipReason</code>.</div>
+<div class="block">Construct a new instance of an <code>Execution</code> that was skipped with the provided
+ <code>skipReason</code>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>descriptor</code> - the <a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> that finished</dd>
-<dd><code>startInstant</code> - the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> that the <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a> started</dd>
-<dd><code>endInstant</code> - the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> that the <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a> completed</dd>
-<dd><code>skipReason</code> - the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>String</code></a> reason for the test being skipped</dd>
+<dd><code>descriptor</code> - the <code>TestDescriptor</code> that finished</dd>
+<dd><code>startInstant</code> - the <code>Instant</code> that the <code>Execution</code> started</dd>
+<dd><code>endInstant</code> - the <code>Instant</code> that the <code>Execution</code> completed</dd>
+<dd><code>skipReason</code> - the <code>String</code> reason for the test being skipped</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the newly constructed <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a> instance</dd>
+<dd>the newly constructed <code>Execution</code> instance</dd>
 </dl>
 </li>
 </ul>
@@ -295,10 +297,10 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>getTestDescriptor</h4>
 <pre class="methodSignature">public&nbsp;<a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;getTestDescriptor()</pre>
-<div class="block">Gets the <a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> for this <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>.</div>
+<div class="block">Get the <a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> for this <code>Execution</code>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the <a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> for this <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a></dd>
+<dd>the <code>TestDescriptor</code> for this <code>Execution</code></dd>
 </dl>
 </li>
 </ul>
@@ -309,10 +311,10 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>getStartInstant</h4>
 <pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;getStartInstant()</pre>
-<div class="block">Gets the start <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> of this <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>.</div>
+<div class="block">Get the start <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> of this <code>Execution</code>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the start <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> of this <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>.</dd>
+<dd>the start <code>Instant</code> of this <code>Execution</code></dd>
 </dl>
 </li>
 </ul>
@@ -323,10 +325,10 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>getEndInstant</h4>
 <pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;getEndInstant()</pre>
-<div class="block">Gets the end <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> of this <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>.</div>
+<div class="block">Get the end <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> of this <code>Execution</code>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the end <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> of this <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>.</dd>
+<dd>the end <code>Instant</code> of this <code>Execution</code></dd>
 </dl>
 </li>
 </ul>
@@ -337,10 +339,10 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>getDuration</h4>
 <pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html?is-external=true" title="class or interface in java.time" class="externalLink">Duration</a>&nbsp;getDuration()</pre>
-<div class="block">Gets the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Duration</code></a> of this <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>.</div>
+<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Duration</code></a> of this <code>Execution</code>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Duration</code></a> of this <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>.</dd>
+<dd>the <code>Duration</code> of this <code>Execution</code></dd>
 </dl>
 </li>
 </ul>
@@ -351,10 +353,10 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>getTerminationInfo</h4>
 <pre class="methodSignature">public&nbsp;<a href="TerminationInfo.html" title="class in org.junit.platform.testkit">TerminationInfo</a>&nbsp;getTerminationInfo()</pre>
-<div class="block">Gets the <a href="TerminationInfo.html" title="class in org.junit.platform.testkit"><code>TerminationInfo</code></a> for this <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>.</div>
+<div class="block">Get the <a href="TerminationInfo.html" title="class in org.junit.platform.testkit"><code>TerminationInfo</code></a> for this <code>Execution</code>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the <a href="TerminationInfo.html" title="class in org.junit.platform.testkit"><code>TerminationInfo</code></a> for this <a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>.</dd>
+<dd>the <code>TerminationInfo</code> for this <code>Execution</code></dd>
 </dl>
 </li>
 </ul>

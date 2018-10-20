@@ -875,8 +875,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr id="i109" class="rowColor">
 <td class="colFirst"><a href="org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit">Execution</a></td>
 <th class="colLast" scope="row">
-<div class="block">Encapsulates metadata around the execution of a single Test,
- this includes metadata of whether or not the Test was skipped.</div>
+<div class="block"><code>Execution</code> encapsulates metadata for the execution of a single
+ <a href="org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>.</div>
 </th>
 </tr>
 <tr id="i110" class="altColor">
@@ -889,7 +889,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr id="i111" class="rowColor">
 <td class="colFirst"><a href="org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a></td>
 <th class="colLast" scope="row">
-<div class="block">Represents a single event fired during execution of the testing lifecycle.</div>
+<div class="block"><a href="org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> represents a single event fired during execution of
+ a test plan on the JUnit Platform.</div>
 </th>
 </tr>
 <tr id="i112" class="altColor">
@@ -913,8 +914,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr id="i115" class="rowColor">
 <td class="colFirst"><a href="org/junit/platform/testkit/ExecutionRecorder.html" title="class in org.junit.platform.testkit">ExecutionRecorder</a></td>
 <th class="colLast" scope="row">
-<div class="block"><a href="org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine"><code>EngineExecutionListener</code></a> that records data from every event that occurs during the engine
- execution lifecycle and provides functionality for retrieving execution state via <a href="org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a>.</div>
+<div class="block"><a href="org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine"><code>EngineExecutionListener</code></a> that records data from every event that
+ occurs during the engine execution lifecycle and provides functionality
+ for retrieving execution state via <a href="org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a>.</div>
 </th>
 </tr>
 <tr id="i116" class="altColor">
@@ -1779,8 +1781,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr id="i248" class="altColor">
 <td class="colFirst"><a href="org/junit/platform/testkit/TerminationInfo.html" title="class in org.junit.platform.testkit">TerminationInfo</a></td>
 <th class="colLast" scope="row">
-<div class="block">Union type that allows propagation of terminated test state, supporting both the reason <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>String</code></a>
- if the test was skipped, or the <a href="org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a> if the test was finished.</div>
+<div class="block"><code>TerminationInfo</code> is a union type that allows propagation of terminated
+ container/test state, supporting either the <em>reason</em> if the container/test
+ was skipped or the <a href="org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a> if the container/test was executed.</div>
 </th>
 </tr>
 <tr id="i249" class="rowColor">

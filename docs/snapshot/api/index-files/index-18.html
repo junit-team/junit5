@@ -129,8 +129,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><a href="../org/junit/platform/testkit/TerminationInfo.html" title="class in org.junit.platform.testkit"><span class="typeNameLink">TerminationInfo</span></a> - Class in <a href="../org/junit/platform/testkit/package-summary.html">org.junit.platform.testkit</a></dt>
 <dd>
-<div class="block">Union type that allows propagation of terminated test state, supporting both the reason <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>String</code></a>
- if the test was skipped, or the <a href="../org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a> if the test was finished.</div>
+<div class="block"><code>TerminationInfo</code> is a union type that allows propagation of terminated
+ container/test state, supporting either the <em>reason</em> if the container/test
+ was skipped or the <a href="../org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a> if the container/test was executed.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEventConditions.html#test()">test()</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEventConditions.html" title="class in org.junit.platform.testkit">ExecutionEventConditions</a></dt>
 <dd>&nbsp;</dd>
