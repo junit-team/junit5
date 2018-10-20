@@ -588,6 +588,139 @@ class AssertEqualsAssertionsTests {
 		}
 	}
 
+	// -------------------------------------------------------------------------
+
+	@Nested
+	class MixedBoxedAndUnboxedPrimitivesTests {
+
+		@Test
+		void bytes() {
+			byte primitive = (byte) 42;
+			Byte wrapper = Byte.valueOf("42");
+
+			assertEquals(primitive, wrapper);
+			assertEquals(primitive, wrapper, "message");
+			assertEquals(primitive, wrapper, () -> "message");
+
+			assertEquals(wrapper, primitive);
+			assertEquals(wrapper, primitive, "message");
+			assertEquals(wrapper, primitive, () -> "message");
+		}
+
+		@Test
+		void shorts() {
+			short primitive = (short) 42;
+			Short wrapper = Short.valueOf("42");
+
+			assertEquals(primitive, wrapper);
+			assertEquals(primitive, wrapper, "message");
+			assertEquals(primitive, wrapper, () -> "message");
+
+			assertEquals(wrapper, primitive);
+			assertEquals(wrapper, primitive, "message");
+			assertEquals(wrapper, primitive, () -> "message");
+		}
+
+		@Test
+		void integers() {
+			int primitive = 42;
+			Integer wrapper = Integer.valueOf("42");
+
+			assertEquals(primitive, wrapper);
+			assertEquals(primitive, wrapper, "message");
+			assertEquals(primitive, wrapper, () -> "message");
+
+			assertEquals(wrapper, primitive);
+			assertEquals(wrapper, primitive, "message");
+			assertEquals(wrapper, primitive, () -> "message");
+		}
+
+		@Test
+		void longs() {
+			long primitive = 42L;
+			Long wrapper = Long.valueOf("42");
+
+			assertEquals(primitive, wrapper);
+			assertEquals(primitive, wrapper, "message");
+			assertEquals(primitive, wrapper, () -> "message");
+
+			assertEquals(wrapper, primitive);
+			assertEquals(wrapper, primitive, "message");
+			assertEquals(wrapper, primitive, () -> "message");
+		}
+
+		@Test
+		void floats() {
+			float primitive = 42.0f;
+			Float wrapper = Float.valueOf("42.0");
+
+			assertEquals(primitive, wrapper);
+			assertEquals(primitive, wrapper, 0.0f);
+			assertEquals(primitive, wrapper, "message");
+			assertEquals(primitive, wrapper, 0.0f, "message");
+			assertEquals(primitive, wrapper, () -> "message");
+			assertEquals(primitive, wrapper, 0.0f, () -> "message");
+
+			assertEquals(wrapper, primitive);
+			assertEquals(wrapper, primitive, 0.0f);
+			assertEquals(wrapper, primitive, "message");
+			assertEquals(wrapper, primitive, 0.0f, "message");
+			assertEquals(wrapper, primitive, () -> "message");
+			assertEquals(wrapper, primitive, 0.0f, () -> "message");
+		}
+
+		@Test
+		void doubles() {
+			double primitive = 42.0d;
+			Double wrapper = Double.valueOf("42.0");
+
+			assertEquals(primitive, wrapper);
+			assertEquals(primitive, wrapper, 0.0d);
+			assertEquals(primitive, wrapper, "message");
+			assertEquals(primitive, wrapper, 0.0d, "message");
+			assertEquals(primitive, wrapper, () -> "message");
+			assertEquals(primitive, wrapper, 0.0d, () -> "message");
+
+			assertEquals(wrapper, primitive);
+			assertEquals(wrapper, primitive, 0.0d);
+			assertEquals(wrapper, primitive, "message");
+			assertEquals(wrapper, primitive, 0.0d, "message");
+			assertEquals(wrapper, primitive, () -> "message");
+			assertEquals(wrapper, primitive, 0.0d, () -> "message");
+		}
+
+		@Test
+		void booleans() {
+			boolean primitive = true;
+			Boolean wrapper = Boolean.valueOf("true");
+
+			assertEquals(primitive, wrapper);
+			assertEquals(primitive, wrapper, "message");
+			assertEquals(primitive, wrapper, () -> "message");
+
+			assertEquals(wrapper, primitive);
+			assertEquals(wrapper, primitive, "message");
+			assertEquals(wrapper, primitive, () -> "message");
+		}
+
+		@Test
+		void chars() {
+			char primitive = 'a';
+			Character wrapper = Character.valueOf('a');
+
+			assertEquals(primitive, wrapper);
+			assertEquals(primitive, wrapper, "message");
+			assertEquals(primitive, wrapper, () -> "message");
+
+			assertEquals(wrapper, primitive);
+			assertEquals(wrapper, primitive, "message");
+			assertEquals(wrapper, primitive, () -> "message");
+		}
+
+	}
+
+	// -------------------------------------------------------------------------
+
 	private static class EqualsThrowsException {
 
 		@Override

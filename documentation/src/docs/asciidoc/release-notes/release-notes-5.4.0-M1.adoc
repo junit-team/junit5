@@ -54,6 +54,9 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
+* New `Assertions.assertEquals()` variants that accept mixed boxed and unboxed primitive
+  values, allowing statements such as `assertEquals(42, Integer.valueOf("42"))` to
+  compile.
 * New `Assertions.assertNotEquals()` variants that accept the following primitive data
   types: `char`, `byte`, `short`, `int`, `long`, `float`, and `double`.
 * Implicit conversion from hexadecimal and octal string representations to integral types
