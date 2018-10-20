@@ -20,8 +20,8 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 
 /**
- * Encapsulates metadata around the execution of a single Test,
- * this includes metadata of whether or not the Test was skipped.
+ * {@code Execution} encapsulates metadata for the execution of a single
+ * {@link TestDescriptor}.
  *
  * @since 1.4
  */
@@ -31,90 +31,94 @@ public class Execution {
 	private final TestDescriptor descriptor;
 	private final Instant startInstant;
 	private final Instant endInstant;
-	private final TerminationInfo termination;
 	private final Duration duration;
+	private final TerminationInfo termination;
 
 	private Execution(TestDescriptor descriptor, Instant startInstant, Instant endInstant,
 			TerminationInfo termination) {
+
 		this.descriptor = descriptor;
 		this.startInstant = startInstant;
 		this.endInstant = endInstant;
-		this.termination = termination;
 		this.duration = Duration.between(startInstant, endInstant);
+		this.termination = termination;
 	}
 
 	/**
-	 * Constructs a new instance of an {@link Execution} that finished with the provided {@link TestExecutionResult}.
+	 * Construct a new instance of an {@code Execution} that finished with the
+	 * provided {@link TestExecutionResult}.
 	 *
-	 * @param descriptor the {@link TestDescriptor} that finished
-	 * @param startInstant the {@link Instant} that the {@link Execution} started
-	 * @param endInstant the {@link Instant} that the {@link Execution} completed
-	 * @param executionResult the {@link TestExecutionResult} of the finished test
-	 * @return the newly constructed {@link Execution} instance
+	 * @param descriptor the {@code TestDescriptor} that finished
+	 * @param startInstant the {@code Instant} that the {@code Execution} started
+	 * @param endInstant the {@code Instant} that the {@code Execution} completed
+	 * @param executionResult the {@code TestExecutionResult} of the finished test
+	 * @return the newly constructed {@code Execution} instance
 	 */
 	public static Execution finished(TestDescriptor descriptor, Instant startInstant, Instant endInstant,
 			TestExecutionResult executionResult) {
+
 		return new Execution(descriptor, startInstant, endInstant, TerminationInfo.executed(executionResult));
 	}
 
 	/**
-	 * Constructs a new instance of an {@link Execution} that was skipped with the provided
-	 * {@link String} {@code skipReason}.
+	 * Construct a new instance of an {@code Execution} that was skipped with the provided
+	 * {@code skipReason}.
 	 *
-	 * @param descriptor the {@link TestDescriptor} that finished
-	 * @param startInstant the {@link Instant} that the {@link Execution} started
-	 * @param endInstant the {@link Instant} that the {@link Execution} completed
-	 * @param skipReason the {@link String} reason for the test being skipped
-	 * @return the newly constructed {@link Execution} instance
+	 * @param descriptor the {@code TestDescriptor} that finished
+	 * @param startInstant the {@code Instant} that the {@code Execution} started
+	 * @param endInstant the {@code Instant} that the {@code Execution} completed
+	 * @param skipReason the {@code String} reason for the test being skipped
+	 * @return the newly constructed {@code Execution} instance
 	 */
 	public static Execution skipped(TestDescriptor descriptor, Instant startInstant, Instant endInstant,
 			String skipReason) {
+
 		return new Execution(descriptor, startInstant, endInstant, TerminationInfo.skipped(skipReason));
 	}
 
 	/**
-	 * Gets the {@link TestDescriptor} for this {@link Execution}.
+	 * Get the {@link TestDescriptor} for this {@code Execution}.
 	 *
-	 * @return the {@link TestDescriptor} for this {@link Execution}
+	 * @return the {@code TestDescriptor} for this {@code Execution}
 	 */
 	public TestDescriptor getTestDescriptor() {
-		return descriptor;
+		return this.descriptor;
 	}
 
 	/**
-	 * Gets the start {@link Instant} of this {@link Execution}.
+	 * Get the start {@link Instant} of this {@code Execution}.
 	 *
-	 * @return the start {@link Instant} of this {@link Execution}.
+	 * @return the start {@code Instant} of this {@code Execution}
 	 */
 	public Instant getStartInstant() {
-		return startInstant;
+		return this.startInstant;
 	}
 
 	/**
-	 * Gets the end {@link Instant} of this {@link Execution}.
+	 * Get the end {@link Instant} of this {@code Execution}.
 	 *
-	 * @return the end {@link Instant} of this {@link Execution}.
+	 * @return the end {@code Instant} of this {@code Execution}
 	 */
 	public Instant getEndInstant() {
-		return endInstant;
+		return this.endInstant;
 	}
 
 	/**
-	 * Gets the {@link Duration} of this {@link Execution}.
+	 * Get the {@link Duration} of this {@code Execution}.
 	 *
-	 * @return the {@link Duration} of this {@link Execution}.
+	 * @return the {@code Duration} of this {@code Execution}
 	 */
 	public Duration getDuration() {
-		return duration;
+		return this.duration;
 	}
 
 	/**
-	 * Gets the {@link TerminationInfo} for this {@link Execution}.
+	 * Get the {@link TerminationInfo} for this {@code Execution}.
 	 *
-	 * @return the {@link TerminationInfo} for this {@link Execution}.
+	 * @return the {@code TerminationInfo} for this {@code Execution}
 	 */
 	public TerminationInfo getTerminationInfo() {
-		return termination;
+		return this.termination;
 	}
 
 }

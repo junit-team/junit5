@@ -12,33 +12,31 @@ package org.junit.platform.testkit;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import java.util.Optional;
-import java.util.function.Supplier;
-
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestExecutionResult;
 
 /**
- * Union type that allows propagation of terminated test state, supporting both the reason {@link String}
- * if the test was skipped, or the {@link org.junit.platform.engine.TestExecutionResult} if the test was finished.
+ * {@code TerminationInfo} is a union type that allows propagation of terminated
+ * container/test state, supporting either the <em>reason</em> if the container/test
+ * was skipped or the {@link TestExecutionResult} if the container/test was executed.
  *
  * @since 1.4
  */
 @API(status = EXPERIMENTAL, since = "1.4")
 public class TerminationInfo {
 
-	private static final Supplier<UnsupportedOperationException> NOT_EXECUTION_RESULT = () -> new UnsupportedOperationException(
-		"No execution result contained, this is a skip reason.");
-
-	private static final Supplier<UnsupportedOperationException> NOT_SKIP_REASON = () -> new UnsupportedOperationException(
-		"No skip reason contained, this is an execution result.");
-
-	private String maybeSkipReason;
-	private TestExecutionResult maybeExecutionResult;
+	private final String skipReason;
+	private final TestExecutionResult executionResult;
 
 	private TerminationInfo(String skipReason, TestExecutionResult executionResult) {
-		this.maybeSkipReason = skipReason;
-		this.maybeExecutionResult = executionResult;
+		boolean skipped = (skipReason != null);
+		boolean executed = (executionResult != null);
+		Preconditions.condition((skipped ^ executed),
+			"Either a skip reason or TestExecutionResult must be provided but not both");
+
+		this.skipReason = skipReason;
+		this.executionResult = executionResult;
 	}
 
 	public static TerminationInfo skipped(String skipReason) {
@@ -50,19 +48,27 @@ public class TerminationInfo {
 	}
 
 	public boolean isSkipReason() {
-		return Optional.ofNullable(maybeSkipReason).isPresent();
+		return this.skipReason != null;
 	}
 
 	public boolean isExecutionResult() {
-		return Optional.ofNullable(maybeExecutionResult).isPresent();
+		return this.executionResult != null;
 	}
 
 	public String getSkipReason() {
-		return Optional.ofNullable(maybeSkipReason).orElseThrow(NOT_SKIP_REASON);
+		if (isSkipReason()) {
+			return this.skipReason;
+		}
+		// else
+		throw new UnsupportedOperationException("No skip reason contained in this TerminationInfo");
 	}
 
 	public TestExecutionResult getExecutionResult() {
-		return Optional.ofNullable(maybeExecutionResult).orElseThrow(NOT_EXECUTION_RESULT);
+		if (isExecutionResult()) {
+			return this.executionResult;
+		}
+		// else
+		throw new UnsupportedOperationException("No TestExecutionResult contained in this TerminationInfo");
 	}
 
 }
