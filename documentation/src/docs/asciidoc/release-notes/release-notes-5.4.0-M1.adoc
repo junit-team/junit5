@@ -47,6 +47,10 @@ repository on GitHub.
   `"SunOs"`.
 * `Assertions.assertEquals()` variants that compare floating point numbers using a delta
   now support a _delta_ of zero.
+* `Assertions.assertLinesMatch()` no longer throws NullPointerException after evaluating
+  a FastForward match if there are more expected lines after the FastForward match then
+  remain in the actual results. This only manifested itself if the expected list size
+  was equal to or larger than the actual list size.
 
 ==== Deprecations and Breaking Changes
 
