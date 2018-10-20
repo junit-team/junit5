@@ -38,10 +38,10 @@ class ReportingTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(2, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(2, executionResults.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionResults.getTestFailedCount(), "# tests failed");
-		assertEquals(7, executionResults.getReportingEntryPublishedCount(), "# report entries published");
+		assertEquals(2, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(2, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionResults.getTestsFailedCount(), "# tests failed");
+		assertEquals(7, executionResults.getReportingEntryPublicationCount(), "# report entries published");
 	}
 
 	static class MyReportingTestCase {

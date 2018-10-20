@@ -62,12 +62,12 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(3, executionResults.getContainerStartedCount(), "# containers started"),
-			() -> assertEquals(1, executionResults.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(0, executionResults.getTestFailedCount(), "# tests failed"),
-			() -> assertEquals(3, executionResults.getContainerFinishedCount(), "# containers finished"),
-			() -> assertEquals(1, executionResults.getContainerFailedCount(), "# containers failed")
+			() -> assertEquals(3, executionResults.getContainersStartedCount(), "# containers started"),
+			() -> assertEquals(1, executionResults.getTestsStartedCount(), "# tests started"),
+			() -> assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(0, executionResults.getTestsFailedCount(), "# tests failed"),
+			() -> assertEquals(3, executionResults.getContainersFinishedCount(), "# containers finished"),
+			() -> assertEquals(1, executionResults.getContainersFailedCount(), "# containers failed")
 		);
 		// @formatter:on
 	}

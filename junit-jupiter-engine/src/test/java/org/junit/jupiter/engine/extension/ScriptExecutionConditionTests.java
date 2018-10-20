@@ -56,12 +56,12 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
 		assertAll("Summary of simple test cases run", //
-			() -> assertEquals(3, executionResults.getTestStartedCount(), "# tests started"), //
-			() -> assertEquals(1, executionResults.getTestSkippedCount(), "# tests skipped"), //
-			() -> assertEquals(1, executionResults.getTestFailedCount(), "# tests started") //
+			() -> assertEquals(3, executionResults.getTestsStartedCount(), "# tests started"), //
+			() -> assertEquals(1, executionResults.getTestsSkippedCount(), "# tests skipped"), //
+			() -> assertEquals(1, executionResults.getTestsFailedCount(), "# tests started") //
 		);
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getFailedTestFinishedEvents(), //
+		assertRecordedExecutionEventsContainsExactly(executionResults.getTestsFailedEvents(), //
 			event(test("syntaxError"), //
 				finishedWithFailure( //
 					allOf( //

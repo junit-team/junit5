@@ -31,8 +31,8 @@ class FailedAssumptionsTests extends AbstractJupiterTestEngineTests {
 		ExecutionResults executionResults = executeTestsForClass(
 			TestAbortedExceptionInBeforeAllTestCase.class).getExecutionResults();
 
-		assertEquals(1, executionResults.getContainerAbortedCount(), "# containers aborted");
-		assertEquals(0, executionResults.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getContainersAbortedCount(), "# containers aborted");
+		assertEquals(0, executionResults.getTestsStartedCount(), "# tests started");
 	}
 
 	@Test
@@ -40,8 +40,8 @@ class FailedAssumptionsTests extends AbstractJupiterTestEngineTests {
 		ExecutionResults executionResults = executeTestsForClass(
 			AssumptionViolatedExceptionInBeforeAllTestCase.class).getExecutionResults();
 
-		assertEquals(1, executionResults.getContainerAbortedCount(), "# containers aborted");
-		assertEquals(0, executionResults.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getContainersAbortedCount(), "# containers aborted");
+		assertEquals(0, executionResults.getTestsStartedCount(), "# tests started");
 	}
 
 	// -------------------------------------------------------------------

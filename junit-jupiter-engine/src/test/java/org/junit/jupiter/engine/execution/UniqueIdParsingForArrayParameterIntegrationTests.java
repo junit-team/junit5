@@ -39,9 +39,9 @@ class UniqueIdParsingForArrayParameterIntegrationTests extends AbstractJupiterTe
 		ExecutionResults executionResults = executeTestsForClass(
 			PrimitiveArrayMethodInjectionTestCase.class).getExecutionResults();
 
-		assertEquals(1, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionResults.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionResults.getTestsFailedCount(), "# tests failed");
 
 		// @formatter:off
 		UniqueId uniqueId = executionResults.getExecutionEvents().stream()

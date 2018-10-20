@@ -109,12 +109,12 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
 		assertAll( //
-			() -> assertEquals(3, executionResults.getContainerStartedCount(), "# container started"),
-			() -> assertEquals(2, executionResults.getDynamicTestRegisteredCount(), "# dynamic registered"),
-			() -> assertEquals(2, executionResults.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(1, executionResults.getTestFailedCount(), "# tests failed"),
-			() -> assertEquals(3, executionResults.getContainerFinishedCount(), "# container finished"));
+			() -> assertEquals(3, executionResults.getContainersStartedCount(), "# container started"),
+			() -> assertEquals(2, executionResults.getDynamicTestRegistrationCount(), "# dynamic registered"),
+			() -> assertEquals(2, executionResults.getTestsStartedCount(), "# tests started"),
+			() -> assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed"),
+			() -> assertEquals(3, executionResults.getContainersFinishedCount(), "# container finished"));
 	}
 
 	@Test
@@ -125,12 +125,12 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
 		assertAll( //
-			() -> assertEquals(3, executionResults.getContainerStartedCount(), "# container started"),
-			() -> assertEquals(2, executionResults.getDynamicTestRegisteredCount(), "# dynamic registered"),
-			() -> assertEquals(2, executionResults.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(1, executionResults.getTestFailedCount(), "# tests failed"),
-			() -> assertEquals(3, executionResults.getContainerFinishedCount(), "# container finished"));
+			() -> assertEquals(3, executionResults.getContainersStartedCount(), "# container started"),
+			() -> assertEquals(2, executionResults.getDynamicTestRegistrationCount(), "# dynamic registered"),
+			() -> assertEquals(2, executionResults.getTestsStartedCount(), "# tests started"),
+			() -> assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed"),
+			() -> assertEquals(3, executionResults.getContainersFinishedCount(), "# container finished"));
 	}
 
 	@Test
@@ -142,12 +142,12 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 		// @TestFactory methods are counted as both container and test
 		assertAll( //
-			() -> assertEquals(3, executionResults.getContainerStartedCount(), "# container started"),
-			() -> assertEquals(2, executionResults.getDynamicTestRegisteredCount(), "# dynamic registered"),
-			() -> assertEquals(2, executionResults.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(1, executionResults.getTestFailedCount(), "# tests failed"),
-			() -> assertEquals(3, executionResults.getContainerFinishedCount(), "# container finished"));
+			() -> assertEquals(3, executionResults.getContainersStartedCount(), "# container started"),
+			() -> assertEquals(2, executionResults.getDynamicTestRegistrationCount(), "# dynamic registered"),
+			() -> assertEquals(2, executionResults.getTestsStartedCount(), "# tests started"),
+			() -> assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed"),
+			() -> assertEquals(3, executionResults.getContainersFinishedCount(), "# container finished"));
 	}
 
 	@Test
@@ -194,12 +194,12 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 			event(engine(), finishedSuccessfully()));
 
 		assertAll( //
-			() -> assertEquals(4, executionResults.getContainerStartedCount(), "# container started"),
-			() -> assertEquals(3, executionResults.getDynamicTestRegisteredCount(), "# dynamic tests registered"),
-			() -> assertEquals(2, executionResults.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(1, executionResults.getTestFailedCount(), "# tests failed"),
-			() -> assertEquals(4, executionResults.getContainerFinishedCount(), "# container finished"));
+			() -> assertEquals(4, executionResults.getContainersStartedCount(), "# container started"),
+			() -> assertEquals(3, executionResults.getDynamicTestRegistrationCount(), "# dynamic tests registered"),
+			() -> assertEquals(2, executionResults.getTestsStartedCount(), "# tests started"),
+			() -> assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed"),
+			() -> assertEquals(4, executionResults.getContainersFinishedCount(), "# container finished"));
 	}
 
 	@Test
@@ -286,12 +286,12 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 			event(engine(), finishedSuccessfully()));
 
 		assertAll( //
-			() -> assertEquals(5, executionResults.getContainerStartedCount(), "# container started"),
-			() -> assertEquals(4, executionResults.getDynamicTestRegisteredCount(), "# dynamic tests registered"),
-			() -> assertEquals(2, executionResults.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(1, executionResults.getTestFailedCount(), "# tests failed"),
-			() -> assertEquals(5, executionResults.getContainerFinishedCount(), "# container finished"));
+			() -> assertEquals(5, executionResults.getContainersStartedCount(), "# container started"),
+			() -> assertEquals(4, executionResults.getDynamicTestRegistrationCount(), "# dynamic tests registered"),
+			() -> assertEquals(2, executionResults.getTestsStartedCount(), "# tests started"),
+			() -> assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed"),
+			() -> assertEquals(5, executionResults.getContainersFinishedCount(), "# container finished"));
 	}
 
 	@Test
@@ -339,12 +339,12 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 			event(engine(), finishedSuccessfully()));
 
 		assertAll( //
-			() -> assertEquals(4, executionResults.getContainerStartedCount(), "# container started"),
-			() -> assertEquals(3, executionResults.getDynamicTestRegisteredCount(), "# dynamic tests registered"),
-			() -> assertEquals(2, executionResults.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(1, executionResults.getTestFailedCount(), "# tests failed"),
-			() -> assertEquals(4, executionResults.getContainerFinishedCount(), "# container finished"));
+			() -> assertEquals(4, executionResults.getContainersStartedCount(), "# container started"),
+			() -> assertEquals(3, executionResults.getDynamicTestRegistrationCount(), "# dynamic tests registered"),
+			() -> assertEquals(2, executionResults.getTestsStartedCount(), "# tests started"),
+			() -> assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed"),
+			() -> assertEquals(4, executionResults.getContainersFinishedCount(), "# container finished"));
 	}
 
 	@Test

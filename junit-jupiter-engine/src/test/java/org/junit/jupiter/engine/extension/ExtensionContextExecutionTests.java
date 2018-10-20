@@ -68,7 +68,7 @@ class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 		ExecutionResults executionResults = executeTests(
 			request().selectors(selectClass(A.class), selectClass(B.class)).build()).getExecutionResults();
 
-		assertThat(executionResults.getTestStartedCount()).isEqualTo(2);
+		assertThat(executionResults.getTestsStartedCount()).isEqualTo(2);
 		assertThat(Parent.counter).hasValue(1);
 	}
 

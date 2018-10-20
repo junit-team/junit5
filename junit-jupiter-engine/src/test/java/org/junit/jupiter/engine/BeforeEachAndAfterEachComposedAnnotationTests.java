@@ -38,8 +38,8 @@ class BeforeEachAndAfterEachComposedAnnotationTests extends AbstractJupiterTestE
 	void beforeEachAndAfterEachAsMetaAnnotations() {
 		ExecutionResults executionResults = executeTestsForClass(TestCase.class).getExecutionResults();
 
-		assertEquals(1, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
 		assertEquals(asList("beforeEach", "test", "afterEach"), methodsInvoked);
 	}
 

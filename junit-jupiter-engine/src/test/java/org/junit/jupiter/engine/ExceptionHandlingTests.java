@@ -63,10 +63,10 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(1, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionResults.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getFailedTestFinishedEvents(), //
+		assertRecordedExecutionEventsContainsExactly(executionResults.getTestsFailedEvents(), //
 			event(test("failingTest"),
 				finishedWithFailure(allOf(isA(AssertionFailedError.class), message("always fails")))));
 	}
@@ -78,10 +78,10 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(1, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionResults.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getFailedTestFinishedEvents(), //
+		assertRecordedExecutionEventsContainsExactly(executionResults.getTestsFailedEvents(), //
 			event(test("testWithUncheckedException"),
 				finishedWithFailure(allOf(isA(RuntimeException.class), message("unchecked")))));
 	}
@@ -93,10 +93,10 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(1, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionResults.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getFailedTestFinishedEvents(), //
+		assertRecordedExecutionEventsContainsExactly(executionResults.getTestsFailedEvents(), //
 			event(test("testWithCheckedException"),
 				finishedWithFailure(allOf(isA(IOException.class), message("checked")))));
 	}
@@ -110,10 +110,10 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(1, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionResults.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getFailedTestFinishedEvents(),
+		assertRecordedExecutionEventsContainsExactly(executionResults.getTestsFailedEvents(),
 			event(test("succeedingTest"), finishedWithFailure(allOf(isA(IOException.class), message("checked")))));
 	}
 
@@ -126,10 +126,10 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(1, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionResults.getTestFailedCount(), "# tests failed");
+		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getFailedTestFinishedEvents(),
+		assertRecordedExecutionEventsContainsExactly(executionResults.getTestsFailedEvents(),
 			event(test("succeedingTest"), finishedWithFailure(allOf(isA(IOException.class), message("checked")))));
 	}
 

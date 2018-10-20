@@ -166,8 +166,8 @@ public class ExecutionResults {
 	 *
 	 * @return the count of {@link ExecutionEvent.Type#REPORTING_ENTRY_PUBLISHED}
 	 */
-	public int getReportingEntryPublishedCount() {
-		return getTestEvents(ExecutionEvent.Type.REPORTING_ENTRY_PUBLISHED).size();
+	public int getReportingEntryPublicationCount() {
+		return getExecutionEvents(ExecutionEvent.Type.REPORTING_ENTRY_PUBLISHED).size();
 	}
 
 	// --- Dynamic Test Execution Events ---------------------------------------
@@ -177,7 +177,7 @@ public class ExecutionResults {
 	 *
 	 * @return the count of {@link ExecutionEvent}s that occurred of type {@link ExecutionEvent.Type#DYNAMIC_TEST_REGISTERED}
 	 */
-	public int getDynamicTestRegisteredCount() {
+	public int getDynamicTestRegistrationCount() {
 		return getExecutionEvents(ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED).size();
 	}
 
@@ -213,7 +213,7 @@ public class ExecutionResults {
 	 *
 	 * @return the count of {@link ExecutionEvent}s that occurred for a container of type {@link ExecutionEvent.Type#SKIPPED}
 	 */
-	public int getContainerSkippedCount() {
+	public int getContainersSkippedCount() {
 		return getContainerEventsCount(ExecutionEvent.Type.SKIPPED);
 	}
 
@@ -225,7 +225,7 @@ public class ExecutionResults {
 	 *
 	 * @return the count of {@link ExecutionEvent}s that occurred for a container of the provided type
 	 */
-	public int getContainerStartedCount() {
+	public int getContainersStartedCount() {
 		return getContainerEventsCount(ExecutionEvent.Type.STARTED);
 	}
 
@@ -236,8 +236,23 @@ public class ExecutionResults {
 	 * @param status the provided {@link TestExecutionResult.Status} to filter, cannot be null
 	 * @return the {@link List} of {@link ExecutionEvent}s that occurred for a container of the provided type
 	 */
-	public List<ExecutionEvent> getContainerEventsFinished(TestExecutionResult.Status status) {
-		return containerEventsFinished(status).collect(toList());
+	public List<ExecutionEvent> getContainersFinishedEvents(TestExecutionResult.Status status) {
+		Preconditions.notNull(status, "TestExecutionResult.Status cannot be null");
+
+		return containerEventsByType(ExecutionEvent.Type.FINISHED)//
+				.filter(ExecutionEvent.byPayload(TestExecutionResult.class,
+					where(TestExecutionResult::getStatus, isEqual(status))))//
+				.collect(toList());
+	}
+
+	/**
+	 * Get the count of {@link ExecutionEvent}s of where the {@link ExecutionEvent.Type} is {@code FINISHED}
+	 * and the {@link ExecutionEvent} was for a container (in other words: {@link TestDescriptor#isContainer()} ()} == {@code true}).
+	 *
+	 * @return the count of {@link ExecutionEvent}s that occurred for a container that finished.
+	 */
+	public int getContainersFinishedCount() {
+		return getContainerEventsCount(ExecutionEvent.Type.FINISHED);
 	}
 
 	/**
@@ -247,18 +262,8 @@ public class ExecutionResults {
 	 * @param status the provided {@link TestExecutionResult.Status} to filter, cannot be null
 	 * @return the count of {@link ExecutionEvent}s that occurred for a container of the provided type
 	 */
-	public int getContainerEventsFinishedCount(TestExecutionResult.Status status) {
-		return getContainerEventsFinished(status).size();
-	}
-
-	/**
-	 * Get the count of {@link ExecutionEvent}s of where the {@link ExecutionEvent.Type} is {@code FINISHED}
-	 * and the {@link ExecutionEvent} was for a container (in other words: {@link TestDescriptor#isContainer()} ()} == {@code true}).
-	 *
-	 * @return the count of {@link ExecutionEvent}s that occurred for a container that finished.
-	 */
-	public int getContainerFinishedCount() {
-		return getContainerEventsCount(ExecutionEvent.Type.FINISHED);
+	public int getContainersFinishedCount(TestExecutionResult.Status status) {
+		return getContainersFinishedEvents(status).size();
 	}
 
 	/**
@@ -267,8 +272,8 @@ public class ExecutionResults {
 	 *
 	 * @return the count of {@link ExecutionEvent}s that occurred for a container that finished with a FAILED status.
 	 */
-	public int getContainerFailedCount() {
-		return getContainerEventsFinishedCount(TestExecutionResult.Status.FAILED);
+	public int getContainersFailedCount() {
+		return getContainersFinishedCount(TestExecutionResult.Status.FAILED);
 	}
 
 	/**
@@ -277,8 +282,12 @@ public class ExecutionResults {
 	 *
 	 * @return the count of {@link ExecutionEvent}s that occurred for a container that finished with an ABORTED status.
 	 */
-	public int getContainerAbortedCount() {
-		return getContainerEventsFinishedCount(TestExecutionResult.Status.ABORTED);
+	public int getContainersAbortedCount() {
+		return getContainersFinishedCount(TestExecutionResult.Status.ABORTED);
+	}
+
+	private Stream<ExecutionEvent> containerEventsByType(ExecutionEvent.Type type) {
+		return eventsByTypeAndTestDescriptor(type, TestDescriptor::isContainer);
 	}
 
 	// --- Test Execution Events -----------------------------------------------
@@ -312,36 +321,30 @@ public class ExecutionResults {
 	}
 
 	/**
-	 * Get the {@link List} of {@link ExecutionEvent}s of where the {@link ExecutionEvent.Type} is {@code FINISHED}
-	 * with the provided {@link TestExecutionResult.Status} and the {@link ExecutionEvent} was for a test (in other words: {@link TestDescriptor#isTest()} ()} == {@code true}).
-	 *
-	 * @param status the provided {@link TestExecutionResult.Status} to filter, cannot be null
-	 * @return the {@link List} of {@link ExecutionEvent}s that occurred for a test of the provided type
-	 */
-	public List<ExecutionEvent> getTestEventsFinished(TestExecutionResult.Status status) {
-		return testEventsFinished(status).collect(toList());
-	}
-
-	/**
-	 * Get the count of {@link ExecutionEvent}s of where the {@link ExecutionEvent.Type} is {@code FINISHED}
-	 * with the provided {@link TestExecutionResult.Status} and the {@link ExecutionEvent} was for a test (in other words: {@link TestDescriptor#isTest()} ()} == {@code true}).
-	 *
-	 * @param status the provided {@link TestExecutionResult.Status} to filter, cannot be null
-	 * @return the count of {@link ExecutionEvent}s that occurred for a test of the provided type
-	 */
-	public int getTestEventsFinishedCount(TestExecutionResult.Status status) {
-		return getTestEventsFinished(status).size();
-	}
-
-	/**
 	 * Get the {@link List} of {@link ExecutionEvent}s of where the {@link ExecutionEvent.Type} is {@code SKIPPED} and the {@link ExecutionEvent} was for a test (in other words: {@link TestDescriptor#isTest()} ()} == {@code true}).
 	 *
 	 * <p>NOTE: This is the same as calling {@link #getTestEvents(ExecutionEvent.Type)} with the input {@link ExecutionEvent.Type#SKIPPED}.
 	 *
 	 * @return the {@link List} of {@link ExecutionEvent}s that occurred for a test of type {@link ExecutionEvent.Type#SKIPPED}
 	 */
-	public List<ExecutionEvent> getSkippedTestEvents() {
+	public List<ExecutionEvent> getTestsSkippedEvents() {
 		return getTestEvents(ExecutionEvent.Type.SKIPPED);
+	}
+
+	/**
+	 * Get the {@link List} of {@link ExecutionEvent}s of where the {@link ExecutionEvent.Type} is {@code FINISHED}
+	 * with the provided {@link TestExecutionResult.Status} and the {@link ExecutionEvent} was for a test (in other words: {@link TestDescriptor#isTest()} ()} == {@code true}).
+	 *
+	 * @param status the provided {@link TestExecutionResult.Status} to filter, cannot be null
+	 * @return the {@link List} of {@link ExecutionEvent}s that occurred for a test of the provided type
+	 */
+	public List<ExecutionEvent> getTestsFinishedEvents(TestExecutionResult.Status status) {
+		Preconditions.notNull(status, "TestExecutionResult.Status cannot be null");
+
+		return testEventsByType(ExecutionEvent.Type.FINISHED)//
+				.filter(ExecutionEvent.byPayload(TestExecutionResult.class,
+					where(TestExecutionResult::getStatus, isEqual(status))))//
+				.collect(toList());
 	}
 
 	/**
@@ -351,8 +354,8 @@ public class ExecutionResults {
 	 *
 	 * @return the {@link List} of {@link ExecutionEvent}s that occurred for a test with the finished status of {@link TestExecutionResult.Status#SUCCESSFUL}
 	 */
-	public List<ExecutionEvent> getSuccessfulTestFinishedEvents() {
-		return testEventsFinished(TestExecutionResult.Status.SUCCESSFUL).collect(toList());
+	public List<ExecutionEvent> getTestsSuccessfulEvents() {
+		return getTestsFinishedEvents(TestExecutionResult.Status.SUCCESSFUL);
 	}
 
 	/**
@@ -362,8 +365,12 @@ public class ExecutionResults {
 	 *
 	 * @return the {@link List} of {@link ExecutionEvent}s that occurred for a test with the finished status of {@link TestExecutionResult.Status#FAILED}
 	 */
-	public List<ExecutionEvent> getFailedTestFinishedEvents() {
-		return testEventsFinished(TestExecutionResult.Status.FAILED).collect(toList());
+	public List<ExecutionEvent> getTestsFailedEvents() {
+		return getTestsFinishedEvents(TestExecutionResult.Status.FAILED);
+	}
+
+	private Stream<ExecutionEvent> testEventsByType(ExecutionEvent.Type type) {
+		return eventsByTypeAndTestDescriptor(type, TestDescriptor::isTest);
 	}
 
 	// --- Test Executions -----------------------------------------------------
@@ -373,7 +380,7 @@ public class ExecutionResults {
 	 *
 	 * @return the complete {@link List} of {@link Execution}s
 	 */
-	public List<Execution> getTests() {
+	public List<Execution> getTestExecutions() {
 		return this.testExecutions;
 	}
 
@@ -382,8 +389,8 @@ public class ExecutionResults {
 	 *
 	 * @return the count of all Test {@link Execution}s
 	 */
-	public int getTestCount() {
-		return getTests().size();
+	public int getTestExecutionsCount() {
+		return getTestExecutions().size();
 	}
 
 	/**
@@ -391,7 +398,7 @@ public class ExecutionResults {
 	 *
 	 * @return the {@link List} of Test {@link Execution}s that were skipped.
 	 */
-	public List<Execution> getTestSkipped() {
+	public List<Execution> getTestsSkippedExecutions() {
 		return testExecutionsByTerminationInfo(TerminationInfo::isSkipReason).collect(toList());
 	}
 
@@ -400,8 +407,8 @@ public class ExecutionResults {
 	 *
 	 * @return the count of Test {@link Execution}s that were skipped.
 	 */
-	public int getTestSkippedCount() {
-		return getTestSkipped().size();
+	public int getTestsSkippedCount() {
+		return getTestsSkippedExecutions().size();
 	}
 
 	/**
@@ -409,7 +416,7 @@ public class ExecutionResults {
 	 *
 	 * @return the {@link List} of Test {@link Execution}s that were started
 	 */
-	public List<Execution> getTestStarted() {
+	public List<Execution> getTestsStartedExecutions() {
 		return testExecutionsByTerminationInfo(info -> !info.isSkipReason()).collect(toList());
 	}
 
@@ -418,8 +425,8 @@ public class ExecutionResults {
 	 *
 	 * @return the count of Test {@link Execution}s that were started
 	 */
-	public int getTestStartedCount() {
-		return getTestStarted().size();
+	public int getTestsStartedCount() {
+		return getTestsStartedExecutions().size();
 	}
 
 	/**
@@ -428,7 +435,7 @@ public class ExecutionResults {
 	 *
 	 * @return the {@link List} of Test {@link Execution}s that were finished
 	 */
-	public List<Execution> getTestFinished() {
+	public List<Execution> getTestsFinishedExecutions() {
 		return testExecutionsByTerminationInfo(TerminationInfo::isExecutionResult).collect(toList());
 	}
 
@@ -438,8 +445,8 @@ public class ExecutionResults {
 	 *
 	 * @return the count of Test {@link Execution}s that were finished
 	 */
-	public int getTestFinishedCount() {
-		return getTestFinished().size();
+	public int getTestsFinishedCount() {
+		return getTestsFinishedExecutions().size();
 	}
 
 	/**
@@ -449,7 +456,7 @@ public class ExecutionResults {
 	 * @param status the {@link TestExecutionResult.Status} to filter finished {@link TestExecutionResult}s on, cannot be null
 	 * @return the {@link List} of Test {@link Execution}s that finished with the provided {@link TestExecutionResult.Status}
 	 */
-	public List<Execution> getTestFinished(TestExecutionResult.Status status) {
+	public List<Execution> getTestsFinishedExecutions(TestExecutionResult.Status status) {
 		return testExecutionsByTerminationInfo(TerminationInfo::isExecutionResult).filter(
 			execution -> execution.getTerminationInfo().getExecutionResult().getStatus().equals(
 				notNull(status, "TestExecutionResult.Status cannot be null"))).collect(toList());
@@ -462,56 +469,48 @@ public class ExecutionResults {
 	 * @param status the {@link TestExecutionResult.Status} to filter finished {@link TestExecutionResult}s on, cannot be null
 	 * @return the count of Test {@link Execution}s that finished with the provided {@link TestExecutionResult.Status}
 	 */
-	public int getTestFinishedCount(TestExecutionResult.Status status) {
-		return getTestFinished(status).size();
+	public int getTestsFinishedCount(TestExecutionResult.Status status) {
+		return getTestsFinishedExecutions(status).size();
 	}
 
 	/**
 	 * Get the count of Test {@link Execution}s that were finished / completed, filtering on only those that finished with the status of {@link TestExecutionResult.Status#SUCCESSFUL}.
 	 *
-	 * <p>NOTE: This is the same as calling {@link #getTestFinishedCount(TestExecutionResult.Status)} with the input of {@link TestExecutionResult.Status#SUCCESSFUL}.
+	 * <p>NOTE: This is the same as calling {@link #getTestsFinishedCount(TestExecutionResult.Status)} with the input of {@link TestExecutionResult.Status#SUCCESSFUL}.
 	 *
 	 * @return the count of Test {@link Execution}s that finished with the status of {@link TestExecutionResult.Status#SUCCESSFUL}.
 	 */
-	public int getTestSuccessfulCount() {
-		return getTestFinishedCount(TestExecutionResult.Status.SUCCESSFUL);
+	public int getTestsSuccessfulCount() {
+		return getTestsFinishedCount(TestExecutionResult.Status.SUCCESSFUL);
 	}
 
 	/**
 	 * Get the count of Test {@link Execution}s that were finished / completed, filtering on only those that finished with the status of {@link TestExecutionResult.Status#FAILED}.
 	 *
-	 * <p>NOTE: This is the same as calling {@link #getTestFinishedCount(TestExecutionResult.Status)} with the input of {@link TestExecutionResult.Status#FAILED}.
+	 * <p>NOTE: This is the same as calling {@link #getTestsFinishedCount(TestExecutionResult.Status)} with the input of {@link TestExecutionResult.Status#FAILED}.
 	 *
 	 * @return the count of Test {@link Execution}s that finished with the status of {@link TestExecutionResult.Status#FAILED}.
 	 */
-	public int getTestFailedCount() {
-		return getTestFinishedCount(TestExecutionResult.Status.FAILED);
+	public int getTestsFailedCount() {
+		return getTestsFinishedCount(TestExecutionResult.Status.FAILED);
 	}
 
 	/**
 	 * Get the count of Test {@link Execution}s that were finished / completed, filtering on only those that finished with the status of {@link TestExecutionResult.Status#ABORTED}.
 	 *
-	 * <p>NOTE: This is the same as calling {@link #getTestFinishedCount(TestExecutionResult.Status)} with the input of {@link TestExecutionResult.Status#ABORTED}.
+	 * <p>NOTE: This is the same as calling {@link #getTestsFinishedCount(TestExecutionResult.Status)} with the input of {@link TestExecutionResult.Status#ABORTED}.
 	 *
 	 * @return the count of Test {@link Execution}s that finished with the status of {@link TestExecutionResult.Status#ABORTED}.
 	 */
-	public int getTestAbortedCount() {
-		return getTestFinishedCount(TestExecutionResult.Status.ABORTED);
+	public int getTestsAbortedCount() {
+		return getTestsFinishedCount(TestExecutionResult.Status.ABORTED);
 	}
 
 	private Stream<Execution> testExecutionsByTerminationInfo(Predicate<TerminationInfo> predicate) {
 		return this.testExecutions.stream().filter(execution -> predicate.test(execution.getTerminationInfo()));
 	}
 
-	// --- Internal Helpers ----------------------------------------------------
-
-	private Stream<ExecutionEvent> containerEventsByType(ExecutionEvent.Type type) {
-		return eventsByTypeAndTestDescriptor(type, TestDescriptor::isContainer);
-	}
-
-	private Stream<ExecutionEvent> testEventsByType(ExecutionEvent.Type type) {
-		return eventsByTypeAndTestDescriptor(type, TestDescriptor::isTest);
-	}
+	// -------------------------------------------------------------------------
 
 	private Stream<ExecutionEvent> eventsByTypeAndTestDescriptor(ExecutionEvent.Type type,
 			Predicate<? super TestDescriptor> predicate) {
@@ -520,23 +519,8 @@ public class ExecutionResults {
 		Preconditions.notNull(predicate, "TestDescriptor Predicate cannot be null");
 
 		return getExecutionEvents().stream()//
-				.filter(ExecutionEvent.byType(type).and(ExecutionEvent.byTestDescriptor(predicate)));
-	}
-
-	private Stream<ExecutionEvent> containerEventsFinished(TestExecutionResult.Status status) {
-		Preconditions.notNull(status, "TestExecutionResult.Status cannot be null");
-
-		return containerEventsByType(ExecutionEvent.Type.FINISHED)//
-				.filter(ExecutionEvent.byPayload(TestExecutionResult.class,
-					where(TestExecutionResult::getStatus, isEqual(status))));
-	}
-
-	private Stream<ExecutionEvent> testEventsFinished(TestExecutionResult.Status status) {
-		Preconditions.notNull(status, "TestExecutionResult.Status cannot be null");
-
-		return testEventsByType(ExecutionEvent.Type.FINISHED)//
-				.filter(ExecutionEvent.byPayload(TestExecutionResult.class,
-					where(TestExecutionResult::getStatus, isEqual(status))));
+				.filter(ExecutionEvent.byType(type))//
+				.filter(ExecutionEvent.byTestDescriptor(predicate));
 	}
 
 }

@@ -532,10 +532,10 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(containers, executionResults.getContainerStartedCount(), "# containers started"),
-			() -> assertEquals(containers, executionResults.getContainerFinishedCount(), "# containers finished"),
-			() -> assertEquals(tests, executionResults.getTestStartedCount(), "# tests started"),
-			() -> assertEquals(tests, executionResults.getTestSuccessfulCount(), "# tests succeeded"),
+			() -> assertEquals(containers, executionResults.getContainersStartedCount(), "# containers started"),
+			() -> assertEquals(containers, executionResults.getContainersFinishedCount(), "# containers finished"),
+			() -> assertEquals(tests, executionResults.getTestsStartedCount(), "# tests started"),
+			() -> assertEquals(tests, executionResults.getTestsSuccessfulCount(), "# tests succeeded"),
 			() -> assertThat(instanceCount).describedAs("instance count").contains(instanceCountEntries),
 			() -> assertEquals(allMethods, beforeAllCount, "@BeforeAll count"),
 			() -> assertEquals(allMethods, afterAllCount, "@AfterAll count"),

@@ -48,8 +48,8 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(2, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(2, executionResults.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(2, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(2, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
@@ -78,8 +78,8 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(1, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
 
 		assertThat(callSequence).containsExactly(
 			"fooPostProcessTestInstance:TestCaseWithTestSpecificTestInstancePostProcessor", "beforeEachMethod", "test");

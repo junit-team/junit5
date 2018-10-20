@@ -48,15 +48,15 @@ class ExpectedExceptionSupportTests {
 	void expectedExceptionIsProcessedCorrectly() {
 		ExecutionResults executionResults = executeTestsForClass(ExpectedExceptionTestCase.class).getExecutionResults();
 
-		assertEquals(4, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionResults.getTestAbortedCount(), "# tests aborted");
-		assertEquals(3, executionResults.getTestFailedCount(), "# tests failed");
+		assertEquals(4, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionResults.getTestsAbortedCount(), "# tests aborted");
+		assertEquals(3, executionResults.getTestsFailedCount(), "# tests failed");
 
-		assertThat(executionResults.getSuccessfulTestFinishedEvents()).have(
+		assertThat(executionResults.getTestsSuccessfulEvents()).have(
 			event(test("correctExceptionExpectedThrown"), finishedSuccessfully()));
 
-		assertThat(executionResults.getFailedTestFinishedEvents())//
+		assertThat(executionResults.getTestsFailedEvents())//
 				.haveExactly(1, //
 					event(test("noExceptionExpectedButThrown"), //
 						finishedWithFailure(message("no exception expected")))) //
@@ -75,15 +75,14 @@ class ExpectedExceptionSupportTests {
 		ExecutionResults executionResults = executeTestsForClass(
 			ExpectedExceptionSupportWithoutExpectedExceptionRuleTestCase.class).getExecutionResults();
 
-		assertEquals(2, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionResults.getTestAbortedCount(), "# tests aborted");
-		assertEquals(1, executionResults.getTestFailedCount(), "# tests failed");
+		assertEquals(2, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
+		assertEquals(0, executionResults.getTestsAbortedCount(), "# tests aborted");
+		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
 
-		assertThat(executionResults.getSuccessfulTestFinishedEvents()).have(
-			event(test("success"), finishedSuccessfully()));
+		assertThat(executionResults.getTestsSuccessfulEvents()).have(event(test("success"), finishedSuccessfully()));
 
-		assertThat(executionResults.getFailedTestFinishedEvents())//
+		assertThat(executionResults.getTestsFailedEvents())//
 				.haveExactly(1, event(test("failure"), //
 					finishedWithFailure(message("must fail"))));
 	}

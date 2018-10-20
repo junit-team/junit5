@@ -32,8 +32,8 @@ class DisabledTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(DisabledTestClassTestCase.class)).build();
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(1, executionResults.getContainerSkippedCount(), "# container skipped");
-		assertEquals(0, executionResults.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getContainersSkippedCount(), "# container skipped");
+		assertEquals(0, executionResults.getTestsStartedCount(), "# tests started");
 	}
 
 	@Test
@@ -41,12 +41,12 @@ class DisabledTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(DisabledTestMethodsTestCase.class)).build();
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(1, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, executionResults.getTestSkippedCount(), "# tests skipped");
+		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, executionResults.getTestsSkippedCount(), "# tests skipped");
 
 		String method = DisabledTestMethodsTestCase.class.getDeclaredMethod("disabledTest").toString();
-		String reason = executionResults.getSkippedTestEvents().get(0).getPayload(String.class).get();
+		String reason = executionResults.getTestsSkippedEvents().get(0).getPayload(String.class).get();
 		assertEquals(method + " is @Disabled", reason);
 	}
 

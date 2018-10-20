@@ -42,12 +42,12 @@ class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(2, executionResults1.getTestStartedCount(), "# tests started"),
-				() -> assertEquals(2, executionResults1.getTestSuccessfulCount(), "# tests succeeded"),
-				() -> assertEquals(0, executionResults1.getTestFailedCount(), "# tests failed"));
+				() -> assertEquals(2, executionResults1.getTestsStartedCount(), "# tests started"),
+				() -> assertEquals(2, executionResults1.getTestsSuccessfulCount(), "# tests succeeded"),
+				() -> assertEquals(0, executionResults1.getTestsFailedCount(), "# tests failed"));
 		// @formatter:on
 
-		Optional<ExecutionEvent> first = executionResults1.getSuccessfulTestFinishedEvents().stream().filter(
+		Optional<ExecutionEvent> first = executionResults1.getTestsSuccessfulEvents().stream().filter(
 			event -> event.getTestDescriptor().getUniqueId().toString().contains(TestInfo.class.getName())).findFirst();
 		assertTrue(first.isPresent());
 		TestIdentifier testIdentifier = TestIdentifier.from(first.get().getTestDescriptor());
@@ -58,12 +58,12 @@ class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(1, executionResults2.getTestStartedCount(), "# tests started"),
-				() -> assertEquals(1, executionResults2.getTestSuccessfulCount(), "# tests succeeded"),
-				() -> assertEquals(0, executionResults2.getTestFailedCount(), "# tests failed"));
+				() -> assertEquals(1, executionResults2.getTestsStartedCount(), "# tests started"),
+				() -> assertEquals(1, executionResults2.getTestsSuccessfulCount(), "# tests succeeded"),
+				() -> assertEquals(0, executionResults2.getTestsFailedCount(), "# tests failed"));
 		// @formatter:on
 
-		first = executionResults2.getSuccessfulTestFinishedEvents().stream().filter(
+		first = executionResults2.getTestsSuccessfulEvents().stream().filter(
 			event -> event.getTestDescriptor().getUniqueId().toString().contains(TestInfo.class.getName())).findFirst();
 		assertTrue(first.isPresent());
 	}
@@ -76,12 +76,12 @@ class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(1, executionResults.getTestStartedCount(), "# tests started"),
-				() -> assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded"),
-				() -> assertEquals(0, executionResults.getTestFailedCount(), "# tests failed"));
+				() -> assertEquals(1, executionResults.getTestsStartedCount(), "# tests started"),
+				() -> assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded"),
+				() -> assertEquals(0, executionResults.getTestsFailedCount(), "# tests failed"));
 		// @formatter:on
 
-		Optional<ExecutionEvent> first = executionResults.getSuccessfulTestFinishedEvents().stream().filter(
+		Optional<ExecutionEvent> first = executionResults.getTestsSuccessfulEvents().stream().filter(
 			event -> event.getTestDescriptor().getUniqueId().toString().contains(TestInfo.class.getName())).findFirst();
 		assertTrue(first.isPresent());
 	}

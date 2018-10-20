@@ -56,8 +56,8 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 			selectClass(TestCaseWithExecutionConditionOnClass.class)).build();
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(1, executionResults.getContainerSkippedCount(), "# container skipped");
-		assertEquals(0, executionResults.getTestStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getContainersSkippedCount(), "# container skipped");
+		assertEquals(0, executionResults.getTestsStartedCount(), "# tests started");
 	}
 
 	@Test
@@ -66,9 +66,9 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 			selectClass(TestCaseWithExecutionConditionOnMethods.class)).build();
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(2, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(2, executionResults.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(3, executionResults.getTestSkippedCount(), "# tests skipped");
+		assertEquals(2, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(2, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
+		assertEquals(3, executionResults.getTestsSkippedCount(), "# tests skipped");
 	}
 
 	@Test
@@ -120,10 +120,10 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(0, executionResults.getContainerSkippedCount(), "# containers skipped");
-		assertEquals(2, executionResults.getContainerStartedCount(), "# containers started");
-		assertEquals(testStartedCount, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(testFailedCount, executionResults.getTestFailedCount(), "# tests failed");
+		assertEquals(0, executionResults.getContainersSkippedCount(), "# containers skipped");
+		assertEquals(2, executionResults.getContainersStartedCount(), "# containers started");
+		assertEquals(testStartedCount, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(testFailedCount, executionResults.getTestsFailedCount(), "# tests failed");
 	}
 
 	private void assertExecutionConditionOverride(String deactivatePattern, int started, int succeeded, int failed) {
@@ -136,9 +136,9 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request).getExecutionResults();
 
-		assertEquals(started, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(succeeded, executionResults.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(failed, executionResults.getTestFailedCount(), "# tests failed");
+		assertEquals(started, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(succeeded, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
+		assertEquals(failed, executionResults.getTestsFailedCount(), "# tests failed");
 	}
 
 	// -------------------------------------------------------------------

@@ -43,12 +43,12 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 	void nestedTestsAreExecuted() {
 		ExecutionResults executionResults = executeTestsForClass(TestCaseWithNesting.class).getExecutionResults();
 
-		assertEquals(3, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(2, executionResults.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, executionResults.getTestFailedCount(), "# tests failed");
+		assertEquals(3, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(2, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
 
-		assertEquals(3, executionResults.getContainerStartedCount(), "# containers started");
-		assertEquals(3, executionResults.getContainerFinishedCount(), "# containers finished");
+		assertEquals(3, executionResults.getContainersStartedCount(), "# containers started");
+		assertEquals(3, executionResults.getContainersFinishedCount(), "# containers finished");
 	}
 
 	@Test
@@ -62,12 +62,12 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 	void doublyNestedTestsAreExecuted() {
 		ExecutionResults executionResults = executeTestsForClass(TestCaseWithDoubleNesting.class).getExecutionResults();
 
-		assertEquals(5, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(3, executionResults.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(2, executionResults.getTestFailedCount(), "# tests failed");
+		assertEquals(5, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(3, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
+		assertEquals(2, executionResults.getTestsFailedCount(), "# tests failed");
 
-		assertEquals(4, executionResults.getContainerStartedCount(), "# containers started");
-		assertEquals(4, executionResults.getContainerFinishedCount(), "# containers finished");
+		assertEquals(4, executionResults.getContainersStartedCount(), "# containers started");
+		assertEquals(4, executionResults.getContainersFinishedCount(), "# containers finished");
 
 		assertAll("before each counts", //
 			() -> assertEquals(5, TestCaseWithDoubleNesting.beforeTopCount),
@@ -86,12 +86,12 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 		ExecutionResults executionResults = executeTestsForClass(
 			TestCaseWithInheritedNested.class).getExecutionResults();
 
-		assertEquals(2, executionResults.getTestStartedCount(), "# tests started");
-		assertEquals(1, executionResults.getTestSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, executionResults.getTestFailedCount(), "# tests failed");
+		assertEquals(2, executionResults.getTestsStartedCount(), "# tests started");
+		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
+		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
 
-		assertEquals(3, executionResults.getContainerStartedCount(), "# containers started");
-		assertEquals(3, executionResults.getContainerFinishedCount(), "# containers finished");
+		assertEquals(3, executionResults.getContainersStartedCount(), "# containers started");
+		assertEquals(3, executionResults.getContainersFinishedCount(), "# containers finished");
 	}
 
 	// -------------------------------------------------------------------
