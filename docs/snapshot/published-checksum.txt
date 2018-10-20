@@ -51,6 +51,7 @@
 1c0ad99ffb048c21e4a855e695678008  documentation/documentation.gradle.kts
 1d5d321dae8c30c3e316ebe58f87e5da  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ResourceAccessMode.java
 1dd8c475c3ad90107a13058c1dd93a41  junit-platform-commons/src/main/java/org/junit/platform/commons/annotation/Testable.java
+1de27015cec6169b36210d97ee87a4fb  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 1e0e62c3f17efef6283926d0edbccfb1  documentation/src/test/java/example/JUnit4Tests.java
 1e513e029b7d04a83416e92559084b0d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/JRE.java
 1eb00f7d08d35798b26c8b75345f62fe  documentation/src/test/java/example/ParameterizedTestDemo.java
@@ -362,6 +363,7 @@ a86409a5f8bd82f7f7846c882c80b5fe  junit-jupiter-engine/src/main/java/org/junit/j
 a8785d97de7bce2e41ccd0a357ff9b68  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNotEquals.java
 a89e016632dfa264b8dfae45d37fb1ab  junit-platform-engine/src/main/java/org/junit/platform/engine/DiscoveryFilter.java
 a99d783b55833322b9e8bb8ad7293fb7  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.java
+aa0240c483d1da44bc7337a3a9e30f6f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertLinesMatch.java
 aa0901304be137e7e1229f8fb909d6c5  junit-platform-testkit/src/main/java/org/junit/platform/testkit/TestEngineSpy.java
 aa191609162148f04221a039286ee7b4  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludePackages.java
 aa1d1b1aa24e8341434d477c76bef3c8  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/MethodSource.java
@@ -406,7 +408,6 @@ bd3529611b07bd5936478efdf0c28018  junit-platform-engine/src/main/java/org/junit/
 bd453a9c87d7f9f9dcf9faad47725a7e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/Extensions.java
 bd762e56e14d78be176f6fc76c7c4a2a  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/Arguments.java
 bd8a21ec3bc28db4793857ceacf96b87  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.java
-bdd829d41c57111922b53168fff03684  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 be6d1eb6c50048aef89a1f5bb8276540  documentation/src/test/java/example/DisplayNameGeneratorDemo.java
 bea3a0bd55527b19c5b8a7f04d57718c  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/DefensiveAllDefaultPossibilitiesBuilder.java
 bf864f35fd9d022bdae695a7d1656e06  junit-platform-testkit/src/main/java/org/junit/platform/testkit/ExecutionEvent.java
@@ -504,7 +505,6 @@ e60e63146d61c070b3ad09fa756faf2b  junit-jupiter-engine/src/main/java/org/junit/j
 e61811b4f3d7d1c5555c8816c0b2569f  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ReflectionSupport.java
 e632c802bb0164abe00859bdcf1e2d9e  documentation/src/test/java/example/JUnit4SuiteDemo.java
 e746a262225af23c31645910bcc4fa7a  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ParseResult.java
-e7ebe05e6edd8d48867462c42f265028  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertLinesMatch.java
 e9349878017538eef5b1a11fc41af8b2  junit-platform-engine/src/main/java/org/junit/platform/engine/DiscoverySelector.java
 e94395c926ad1f44a08173cbe88ba344  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/Logger.java
 e9aebf4b789cf474cd55b7dddd210c04  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeEngines.java
