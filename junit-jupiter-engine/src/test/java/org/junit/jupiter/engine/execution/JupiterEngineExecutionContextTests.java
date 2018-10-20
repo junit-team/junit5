@@ -10,18 +10,23 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.withSettings;
 
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.jupiter.engine.descriptor.ClassExtensionContext;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.UniqueId;
@@ -92,25 +97,23 @@ class JupiterEngineExecutionContextTests {
 	}
 
 	@Test
-	void closeAttemptExceptionWillBeThrownDownTheCallStack() throws Exception {
+	@TrackLogRecords
+	void closeAttemptExceptionWillBeThrownDownTheCallStack(LogRecordListener logRecordListener) throws Exception {
 		ExtensionContext failingExtensionContext = mock(ExtensionContext.class,
 			withSettings().extraInterfaces(AutoCloseable.class));
 		Exception expectedException = new Exception("test message");
 		doThrow(expectedException).when(((AutoCloseable) failingExtensionContext)).close();
 
-		// @formatter:off
-		JupiterEngineExecutionContext newContext = originalContext.extend()
-				.withExtensionContext(failingExtensionContext)
+		JupiterEngineExecutionContext newContext = originalContext.extend() //
+				.withExtensionContext(failingExtensionContext) //
 				.build();
-		// @formatter:on
-		try {
-			newContext.close();
-			fail("`close()` method did not raised an exception");
-		}
-		catch (Exception actual) {
-			assertSame(expectedException, actual);
-			assertEquals("test message", actual.getMessage());
-		}
+
+		Exception actualException = assertThrows(Exception.class, newContext::close);
+
+		assertSame(expectedException, actualException);
+		assertThat(logRecordListener.stream(JupiterEngineExecutionContext.class, Level.SEVERE)) //
+				.extracting(LogRecord::getMessage) //
+				.containsOnly("Caught exception while closing extension context: " + failingExtensionContext);
 	}
 
 }
