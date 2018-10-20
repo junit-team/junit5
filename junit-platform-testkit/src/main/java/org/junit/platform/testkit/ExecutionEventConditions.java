@@ -119,12 +119,12 @@ public class ExecutionEventConditions {
 		return new Condition<>(
 			byTestDescriptor(
 				where(TestDescriptor::getUniqueId, uniqueId -> uniqueId.getSegments().stream().anyMatch(predicate))),
-			"descriptor with uniqueId substring \"%s\"", uniqueIdSubstring);
+			"descriptor with uniqueId substring '%s'", uniqueIdSubstring);
 	}
 
 	public static Condition<ExecutionEvent> displayName(String displayName) {
 		return new Condition<>(byTestDescriptor(where(TestDescriptor::getDisplayName, isEqual(displayName))),
-			"descriptor with display name \"%s\"", displayName);
+			"descriptor with display name '%s'", displayName);
 	}
 
 	public static Condition<ExecutionEvent> skippedWithReason(String expectedReason) {
@@ -149,6 +149,7 @@ public class ExecutionEventConditions {
 
 	private static Condition<ExecutionEvent> finishedWithCause(Status expectedStatus,
 			Condition<? super Throwable> causeCondition) {
+
 		return finished(Assertions.allOf(TestExecutionResultConditions.status(expectedStatus),
 			TestExecutionResultConditions.cause(causeCondition)));
 	}
@@ -180,7 +181,7 @@ public class ExecutionEventConditions {
 	}
 
 	public static Condition<ExecutionEvent> reason(Predicate<String> predicate) {
-		return new Condition<>(byPayload(String.class, predicate), "event with reason predicate '%s'", predicate);
+		return new Condition<>(byPayload(String.class, predicate), "event with custom reason predicate");
 	}
 
 }
