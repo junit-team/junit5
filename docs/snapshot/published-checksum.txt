@@ -86,12 +86,10 @@
 328aad238291ec76ce9c454ba095f047  junit-platform-runner/src/main/java/org/junit/platform/runner/package-info.java
 3391b12990addce3af12e76233e6d2eb  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/ArgumentConversionException.java
 33e4c235c215767fb7863dad9ca9e44e  documentation/src/test/java/example/DisabledTestsDemo.java
-33fdcf31fbf8ace921049f4315b1f6cc  junit-platform-testkit/src/main/java/org/junit/platform/testkit/TestEngineStub.java
 3498c73341807b380c79d7bd131bb6a1  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicTest.java
 34e64839160ceaf4589b745db89f6d6c  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/RunListenerAdapter.java
 34f73cd8d99f0a333192517f89323d58  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/BeforeEachMethodAdapter.java
 3505ddbd274b0c252c27ac3965f36aaf  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/TestClassRequestResolver.java
-35816acf0b05abeca6273acfb05d2207  junit-platform-testkit/src/main/java/org/junit/platform/testkit/package-info.java
 358d818948d3cfe6c3ba96c6f07624ab  junit-platform-commons/src/main/java/org/junit/platform/commons/util/BlacklistedExceptions.java
 36c3996946a5cb5ed1fe4baca9857c31  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingSupplier.java
 36d0b591a4fad2d5c41de29c1a1b0337  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/JupiterTestEngine.java
@@ -364,13 +362,13 @@ a8785d97de7bce2e41ccd0a357ff9b68  junit-jupiter-api/src/main/java/org/junit/jupi
 a89e016632dfa264b8dfae45d37fb1ab  junit-platform-engine/src/main/java/org/junit/platform/engine/DiscoveryFilter.java
 a99d783b55833322b9e8bb8ad7293fb7  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.java
 aa0240c483d1da44bc7337a3a9e30f6f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertLinesMatch.java
-aa0901304be137e7e1229f8fb909d6c5  junit-platform-testkit/src/main/java/org/junit/platform/testkit/TestEngineSpy.java
 aa191609162148f04221a039286ee7b4  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludePackages.java
 aa1d1b1aa24e8341434d477c76bef3c8  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/MethodSource.java
 aa8fabf1606dce52dcd51e2c83e5d6dd  documentation/src/docs/asciidoc/user-guide/images/extensions_lifecycle.png
 aac3b3499e2997bb4bfc6150dd547268  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Parser.java
 aaeb843aef53257d7d0c6e770a4f3dda  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/OrFilter.java
 ab1b5a0b5b49dd94d8384b365a413214  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ConditionEvaluationException.java
+ab266a64031f2ed66415089290335a25  junit-platform-testkit/src/main/java/org/junit/platform/testkit/package-info.java
 ab5b13cb57b7fb2fedd4dd1beeab39f5  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeTestTask.java
 ab83ef64ae475dffa6ef688db027c5e0  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/package-info.java
 aba84db132f7a3acf7e927f74154c099  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfSystemProperty.java
@@ -394,7 +392,6 @@ b22ad8680d08ac5a3add3f4c5d94c104  junit-platform-runner/src/main/java/org/junit/
 b2438df0df22b5559cf1959c2f351dc8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestTemplateInvocationContext.java
 b281644b4a0544e5d590861555fd81d2  junit-platform-engine/src/main/java/org/junit/platform/engine/TestEngine.java
 b2deb6b2dae1d2a8ef35298c49654c1a  junit-platform-console/src/main/java/org/junit/platform/console/tasks/VerboseTreePrintingListener.java
-b3acb9f6609d4856233617064718a487  junit-platform-testkit/src/main/java/org/junit/platform/testkit/TestDescriptorStub.java
 b53f687e678badbc99647d546004fa40  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestFactory.java
 b5adccde111b810ff2351c5555070a5f  documentation/src/test/java/example/JUnit4ClassDemo.java
 b659d6afa2ba4637865ed4a0d4311b5b  documentation/src/docs/asciidoc/user-guide/contributors.adoc
