@@ -40,25 +40,27 @@ public class ExecutionRecorder implements EngineExecutionListener {
 	private final List<ExecutionEvent> events = new CopyOnWriteArrayList<>();
 
 	/**
-	 * Execute tests via an {@link EngineDiscoveryRequest} using the provided {@link TestEngine}.
+	 * Execute tests for a given {@link EngineDiscoveryRequest} using the
+	 * provided {@link TestEngine}.
 	 *
-	 * @param testEngine the {@link TestEngine} to use when running the discovered tests
-	 * @param discoveryRequest the {@link EngineDiscoveryRequest} to use to discover tests to execute
-	 * @return the recorded {@link ExecutionResults}
+	 * @param testEngine the {@code TestEngine} to use
+	 * @param discoveryRequest the {@code EngineDiscoveryRequest} to use
+	 * @return the recorded {@code ExecutionResults}
 	 */
 	public static ExecutionResults execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest) {
-		ExecutionRecorder executionReporter = new ExecutionRecorder();
-		execute(testEngine, discoveryRequest, executionReporter);
-		return executionReporter.getExecutionResults();
+		ExecutionRecorder executionRecorder = new ExecutionRecorder();
+		execute(testEngine, discoveryRequest, executionRecorder);
+		return executionRecorder.getExecutionResults();
 	}
 
-	public static void execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest,
+	private static void execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest,
 			EngineExecutionListener listener) {
 
-		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest,
-			UniqueId.forEngine(testEngine.getId()));
-		testEngine.execute(
-			new ExecutionRequest(engineTestDescriptor, listener, discoveryRequest.getConfigurationParameters()));
+		UniqueId engineUniqueId = UniqueId.forEngine(testEngine.getId());
+		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest, engineUniqueId);
+		ExecutionRequest request = new ExecutionRequest(engineTestDescriptor, listener,
+			discoveryRequest.getConfigurationParameters());
+		testEngine.execute(request);
 	}
 
 	/**
@@ -108,7 +110,7 @@ public class ExecutionRecorder implements EngineExecutionListener {
 	 * Record an {@link ExecutionEvent} for a published {@link ReportEntry}.
 	 *
 	 * @param testDescriptor the descriptor of the test or container to which the entry belongs
-	 * @param entry a {@link ReportEntry} instance to be published
+	 * @param entry a {@code ReportEntry} instance to be published
 	 */
 	@Override
 	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
