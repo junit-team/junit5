@@ -18,8 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.testkit.ExecutionEventConditions.event;
 import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
@@ -39,7 +37,6 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.ExecutionResults;
 import org.mockito.Mockito;
 
@@ -52,8 +49,7 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeSimpleTestCases() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(SimpleTestCases.class)).build();
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(SimpleTestCases.class);
 
 		assertAll("Summary of simple test cases run", //
 			() -> assertEquals(3, executionResults.getTestsStartedCount(), "# tests started"), //

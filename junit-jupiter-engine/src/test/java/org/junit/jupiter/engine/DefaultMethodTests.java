@@ -58,7 +58,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	void executeTestCaseWithDefaultMethodFromInterfaceSelectedByFullyQualifedMethodName() {
 		String fqmn = TestCaseWithDefaultMethod.class.getName() + "#test";
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(fqmn)).build();
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(request);
 
 		// @formatter:off
 		assertAll(
@@ -76,7 +76,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	void executeTestCaseWithDefaultMethodFromGenericInterfaceSelectedByFullyQualifedMethodName() {
 		String fqmn = GenericTestCaseWithDefaultMethod.class.getName() + "#test(" + Long.class.getName() + ")";
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(fqmn)).build();
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(request);
 
 		// @formatter:off
 		assertAll(
@@ -96,7 +96,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 
 		String fqmn = GenericTestCaseWithDefaultMethod.class.getName() + "#test(" + Double.class.getName() + ")";
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(fqmn)).build();
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(request);
 
 		// @formatter:off
 		assertAll(
@@ -115,7 +115,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	void executeTestCaseWithOverloadedMethodNextToGenericDefaultMethodSelectedByClass() {
 		Class<?> clazz = GenericTestCaseWithDefaultMethod.class;
 		LauncherDiscoveryRequest request = request().selectors(selectClass(clazz)).build();
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(request);
 
 		// @formatter:off
 		assertAll(
@@ -134,7 +134,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 	void executeTestCaseWithOverriddenGenericDefaultMethodSelectedByClass() {
 		Class<?> clazz = GenericTestCaseWithOverriddenDefaultMethod.class;
 		LauncherDiscoveryRequest request = request().selectors(selectClass(clazz)).build();
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(request);
 
 		// @formatter:off
 		assertAll(

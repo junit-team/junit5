@@ -52,9 +52,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void conditionWorksOnContainer() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectClass(TestCaseWithExecutionConditionOnClass.class)).build();
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(TestCaseWithExecutionConditionOnClass.class);
 
 		assertEquals(1, executionResults.getContainersSkippedCount(), "# container skipped");
 		assertEquals(0, executionResults.getTestsStartedCount(), "# tests started");
@@ -64,7 +62,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	void conditionWorksOnTest() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(TestCaseWithExecutionConditionOnMethods.class)).build();
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(request);
 
 		assertEquals(2, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(2, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -118,7 +116,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 				.build();
 		// @formatter:on
 
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(request);
 
 		assertEquals(0, executionResults.getContainersSkippedCount(), "# containers skipped");
 		assertEquals(2, executionResults.getContainersStartedCount(), "# containers started");
@@ -134,7 +132,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 				.build();
 		// @formatter:on
 
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(request);
 
 		assertEquals(started, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(succeeded, executionResults.getTestsSuccessfulCount(), "# tests succeeded");

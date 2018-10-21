@@ -528,7 +528,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	private void performAssertions(Class<?> testClass, int containers, int tests,
 			Map.Entry<Class<?>, Integer>[] instanceCountEntries, int allMethods, int eachMethods) {
 
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		// @formatter:off
 		assertAll(

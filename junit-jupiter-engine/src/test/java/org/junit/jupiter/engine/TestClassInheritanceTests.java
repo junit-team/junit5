@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.ExecutionResults;
 
 /**
@@ -49,7 +47,7 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeAllTestsInClass() {
-		ExecutionResults executionResults = executeTestsForClass(LocalTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(LocalTestCase.class);
 
 		assertEquals(6, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(3, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -65,10 +63,7 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeSingleTest() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(LocalTestCase.class, "alwaysPasses")).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectMethod(LocalTestCase.class, "alwaysPasses"));
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -79,9 +74,7 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestDeclaredInSuperClass() {
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(LocalTestCase.class, "superTest")).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectMethod(LocalTestCase.class, "superTest"));
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -98,10 +91,8 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestWithExceptionThrownInAfterMethod() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(LocalTestCase.class, "throwExceptionInAfterMethod")).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(
+			selectMethod(LocalTestCase.class, "throwExceptionInAfterMethod"));
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(0, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -112,7 +103,7 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void beforeAndAfterMethodsInTestClassHierarchy() {
-		ExecutionResults executionResults = executeTestsForClass(TestCase3.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(TestCase3.class);
 
 		// @formatter:off
 		assertAll(

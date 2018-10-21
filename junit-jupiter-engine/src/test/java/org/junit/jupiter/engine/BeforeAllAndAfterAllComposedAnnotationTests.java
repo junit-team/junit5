@@ -36,7 +36,7 @@ class BeforeAllAndAfterAllComposedAnnotationTests extends AbstractJupiterTestEng
 
 	@Test
 	void beforeAllAndAfterAllAsMetaAnnotations() {
-		ExecutionResults executionResults = executeTestsForClass(TestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(TestCase.class);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");

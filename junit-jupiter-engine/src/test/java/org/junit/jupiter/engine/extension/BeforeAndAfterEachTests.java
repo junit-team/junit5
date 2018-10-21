@@ -13,8 +13,6 @@ package org.junit.jupiter.engine.extension;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +28,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.ExecutionResults;
 
 /**
@@ -56,9 +53,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void beforeEachAndAfterEachCallbacks() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(OuterTestCase.class)).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(OuterTestCase.class);
 
 		assertEquals(2, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(2, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -97,9 +92,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void beforeEachAndAfterEachCallbacksDeclaredOnSuperclassAndSubclass() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(ChildTestCase.class)).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(ChildTestCase.class);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -120,9 +113,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void beforeEachAndAfterEachCallbacksDeclaredOnInterfaceAndClass() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(TestInterfaceTestCase.class)).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(TestInterfaceTestCase.class);
 
 		assertEquals(2, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(2, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -153,10 +144,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void beforeEachCallbackThrowsAnException() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectClass(ExceptionInBeforeEachCallbackTestCase.class)).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(ExceptionInBeforeEachCallbackTestCase.class);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(0, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -182,10 +170,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void afterEachCallbackThrowsAnException() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectClass(ExceptionInAfterEachCallbackTestCase.class)).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(ExceptionInAfterEachCallbackTestCase.class);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(0, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -211,10 +196,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void beforeEachMethodThrowsAnException() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectClass(ExceptionInBeforeEachMethodTestCase.class)).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(ExceptionInBeforeEachMethodTestCase.class);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(0, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -256,10 +238,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void afterEachMethodThrowsAnException() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectClass(ExceptionInAfterEachMethodTestCase.class)).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(ExceptionInAfterEachMethodTestCase.class);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(0, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -282,10 +261,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testMethodThrowsAnException() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectClass(ExceptionInTestMethodTestCase.class)).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(ExceptionInTestMethodTestCase.class);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(0, executionResults.getTestsSuccessfulCount(), "# tests succeeded");

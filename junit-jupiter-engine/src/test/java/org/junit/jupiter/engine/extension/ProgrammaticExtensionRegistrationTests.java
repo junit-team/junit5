@@ -76,7 +76,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	}
 
 	private void assertOneTestSucceeded(Class<?> testClass) {
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 		assertAll(//
 			() -> assertEquals(1, executionResults.getTestsStartedCount(), "# tests started"), //
 			() -> assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded"), //

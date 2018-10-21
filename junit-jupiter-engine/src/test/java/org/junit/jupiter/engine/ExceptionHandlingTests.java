@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.testkit.ExecutionEventConditions.container;
 import static org.junit.platform.testkit.ExecutionEventConditions.engine;
@@ -30,7 +29,6 @@ import static org.junit.platform.testkit.TestExecutionResultConditions.message;
 import static org.junit.platform.testkit.TestExecutionResultConditions.suppressed;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.junit.jupiter.api.AfterAll;
@@ -44,7 +42,6 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.ExecutionResults;
 import org.opentest4j.AssertionFailedError;
 import org.opentest4j.TestAbortedException;
@@ -57,11 +54,8 @@ import org.opentest4j.TestAbortedException;
 class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	void failureInTestMethodIsRegistered() throws NoSuchMethodException {
-		Method method = FailureTestCase.class.getDeclaredMethod("failingTest");
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+	void failureInTestMethodIsRegistered() {
+		ExecutionResults executionResults = executeTests(selectMethod(FailureTestCase.class, "failingTest"));
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
@@ -72,11 +66,9 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void uncheckedExceptionInTestMethodIsRegistered() throws NoSuchMethodException {
-		Method method = FailureTestCase.class.getDeclaredMethod("testWithUncheckedException");
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+	void uncheckedExceptionInTestMethodIsRegistered() {
+		ExecutionResults executionResults = executeTests(
+			selectMethod(FailureTestCase.class, "testWithUncheckedException"));
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
@@ -87,11 +79,9 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void checkedExceptionInTestMethodIsRegistered() throws NoSuchMethodException {
-		Method method = FailureTestCase.class.getDeclaredMethod("testWithCheckedException");
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+	void checkedExceptionInTestMethodIsRegistered() {
+		ExecutionResults executionResults = executeTests(
+			selectMethod(FailureTestCase.class, "testWithCheckedException"));
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
@@ -102,13 +92,10 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void checkedExceptionInBeforeEachIsRegistered() throws NoSuchMethodException {
-		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
-
+	void checkedExceptionInBeforeEachIsRegistered() {
 		FailureTestCase.exceptionToThrowInBeforeEach = Optional.of(new IOException("checked"));
 
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectMethod(FailureTestCase.class, "succeedingTest"));
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
@@ -118,13 +105,10 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void checkedExceptionInAfterEachIsRegistered() throws NoSuchMethodException {
-		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
-
+	void checkedExceptionInAfterEachIsRegistered() {
 		FailureTestCase.exceptionToThrowInAfterEach = Optional.of(new IOException("checked"));
 
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectMethod(FailureTestCase.class, "succeedingTest"));
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
@@ -134,14 +118,12 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void checkedExceptionInAfterEachIsSuppressedByExceptionInTest() throws NoSuchMethodException {
+	void checkedExceptionInAfterEachIsSuppressedByExceptionInTest() {
 		Class<?> testClass = FailureTestCase.class;
-		Method method = testClass.getDeclaredMethod("testWithUncheckedException");
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(testClass, method)).build();
 
 		FailureTestCase.exceptionToThrowInAfterEach = Optional.of(new IOException("checked"));
 
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectMethod(testClass, "testWithUncheckedException"));
 
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -157,13 +139,10 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void exceptionInAfterEachTakesPrecedenceOverFailedAssumptionInTest() throws NoSuchMethodException {
-		Method method = FailureTestCase.class.getDeclaredMethod("abortedTest");
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
-
+	void exceptionInAfterEachTakesPrecedenceOverFailedAssumptionInTest() {
 		FailureTestCase.exceptionToThrowInAfterEach = Optional.of(new IOException("checked"));
 
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectMethod(FailureTestCase.class, "abortedTest"));
 
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -179,14 +158,12 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void checkedExceptionInBeforeAllIsRegistered() throws NoSuchMethodException {
+	void checkedExceptionInBeforeAllIsRegistered() {
 		Class<?> testClass = FailureTestCase.class;
-		Method method = testClass.getDeclaredMethod("succeedingTest");
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(testClass, method)).build();
 
 		FailureTestCase.exceptionToThrowInBeforeAll = Optional.of(new IOException("checked"));
 
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectMethod(testClass, "succeedingTest"));
 
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -196,14 +173,12 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void checkedExceptionInAfterAllIsRegistered() throws NoSuchMethodException {
+	void checkedExceptionInAfterAllIsRegistered() {
 		Class<?> testClass = FailureTestCase.class;
-		Method method = testClass.getDeclaredMethod("succeedingTest");
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(testClass, method)).build();
 
 		FailureTestCase.exceptionToThrowInAfterAll = Optional.of(new IOException("checked"));
 
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectMethod(testClass, "succeedingTest"));
 
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -217,7 +192,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void exceptionInAfterAllCallbackDoesNotHideExceptionInBeforeAllCallback() {
 		Class<?> testClass = TestCaseWithThrowingBeforeAllAndAfterAllCallbacks.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
@@ -230,7 +205,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void exceptionsInConstructorAndAfterAllCallbackAreReportedWhenTestInstancePerMethodIsUsed() {
 		Class<?> testClass = TestCaseWithInvalidConstructorAndThrowingAfterAllCallbackAndPerMethodLifecycle.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
@@ -243,7 +218,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void exceptionInConstructorPreventsExecutionOfAfterAllCallbacksWhenTestInstancePerClassIsUsed() {
 		Class<?> testClass = TestCaseWithInvalidConstructorAndThrowingAfterAllCallbackAndPerClassLifecycle.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
@@ -252,14 +227,11 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void failureInAfterAllTakesPrecedenceOverTestAbortedExceptionInBeforeAll() throws NoSuchMethodException {
-		Method method = FailureTestCase.class.getDeclaredMethod("succeedingTest");
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(FailureTestCase.class, method)).build();
-
+	void failureInAfterAllTakesPrecedenceOverTestAbortedExceptionInBeforeAll() {
 		FailureTestCase.exceptionToThrowInBeforeAll = Optional.of(new TestAbortedException("aborted"));
 		FailureTestCase.exceptionToThrowInAfterAll = Optional.of(new IOException("checked"));
 
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectMethod(FailureTestCase.class, "succeedingTest"));
 
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -289,26 +261,30 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 		@BeforeAll
 		static void beforeAll() throws Throwable {
-			if (exceptionToThrowInBeforeAll.isPresent())
+			if (exceptionToThrowInBeforeAll.isPresent()) {
 				throw exceptionToThrowInBeforeAll.get();
+			}
 		}
 
 		@AfterAll
 		static void afterAll() throws Throwable {
-			if (exceptionToThrowInAfterAll.isPresent())
+			if (exceptionToThrowInAfterAll.isPresent()) {
 				throw exceptionToThrowInAfterAll.get();
+			}
 		}
 
 		@BeforeEach
 		void beforeEach() throws Throwable {
-			if (exceptionToThrowInBeforeEach.isPresent())
+			if (exceptionToThrowInBeforeEach.isPresent()) {
 				throw exceptionToThrowInBeforeEach.get();
+			}
 		}
 
 		@AfterEach
 		void afterEach() throws Throwable {
-			if (exceptionToThrowInAfterEach.isPresent())
+			if (exceptionToThrowInAfterEach.isPresent()) {
 				throw exceptionToThrowInAfterEach.get();
+			}
 		}
 
 		@Test

@@ -96,7 +96,7 @@ class BridgeMethodTests extends AbstractJupiterTestEngineTests {
 
 	private String execute(int expectedTestFinishedCount, Class<?> testClass) {
 		sequence.clear();
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 		assertEquals(expectedTestFinishedCount, executionResults.getTestsStartedCount());
 		return sequence.toString();
 	}

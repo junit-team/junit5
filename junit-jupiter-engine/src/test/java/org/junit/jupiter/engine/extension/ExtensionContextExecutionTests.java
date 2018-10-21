@@ -12,7 +12,6 @@ package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -65,8 +64,7 @@ class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 	void twoTestClassesCanShareStateViaEngineExtensionContext() {
 		Parent.counter.set(0);
 
-		ExecutionResults executionResults = executeTests(
-			request().selectors(selectClass(A.class), selectClass(B.class)).build()).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectClass(A.class), selectClass(B.class));
 
 		assertThat(executionResults.getTestsStartedCount()).isEqualTo(2);
 		assertThat(Parent.counter).hasValue(1);

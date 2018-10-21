@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.testkit.ExecutionEventConditions.event;
 import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
@@ -65,8 +64,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void constructorInjection() {
-		ExecutionResults executionResults = executeTestsForClass(
-			ConstructorInjectionTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(ConstructorInjectionTestCase.class);
 
 		assertEquals(2, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(2, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -77,8 +75,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void constructorInjectionWithAnnotatedParameter() {
-		ExecutionResults executionResults = executeTestsForClass(
-			AnnotatedParameterConstructorInjectionTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(AnnotatedParameterConstructorInjectionTestCase.class);
 
 		assertEquals(2, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(2, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -89,7 +86,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestsForMethodInjectionCases() {
-		ExecutionResults executionResults = executeTestsForClass(MethodInjectionTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(MethodInjectionTestCase.class);
 
 		assertEquals(7, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(6, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -100,8 +97,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestsForNullValuedMethodInjectionCases() {
-		ExecutionResults executionResults = executeTestsForClass(
-			NullMethodInjectionTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(NullMethodInjectionTestCase.class);
 
 		assertEquals(2, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -123,8 +119,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestsForPrimitiveIntegerMethodInjectionCases() {
-		ExecutionResults executionResults = executeTestsForClass(
-			PrimitiveIntegerMethodInjectionTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(PrimitiveIntegerMethodInjectionTestCase.class);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -133,8 +128,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestsForPrimitiveArrayMethodInjectionCases() {
-		ExecutionResults executionResults = executeTestsForClass(
-			PrimitiveArrayMethodInjectionTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(PrimitiveArrayMethodInjectionTestCase.class);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -144,7 +138,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void executeTestsForPotentiallyIncompatibleTypeMethodInjectionCases() {
 		ExecutionResults executionResults = executeTestsForClass(
-			PotentiallyIncompatibleTypeMethodInjectionTestCase.class).getExecutionResults();
+			PotentiallyIncompatibleTypeMethodInjectionTestCase.class);
 
 		assertEquals(3, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(2, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -166,8 +160,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestsForMethodInjectionInBeforeAndAfterEachMethods() {
-		ExecutionResults executionResults = executeTestsForClass(
-			BeforeAndAfterMethodInjectionTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(BeforeAndAfterMethodInjectionTestCase.class);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -178,8 +171,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestsForMethodInjectionInBeforeAndAfterAllMethods() {
-		ExecutionResults executionResults = executeTestsForClass(
-			BeforeAndAfterAllMethodInjectionTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(BeforeAndAfterAllMethodInjectionTestCase.class);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -190,8 +182,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestsForMethodWithExtendWithAnnotation() {
-		ExecutionResults executionResults = executeTestsForClass(
-			ExtendWithOnMethodTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(ExtendWithOnMethodTestCase.class);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -202,7 +193,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestsForParameterizedTypesSelectingByClass() {
-		assertEventsForParameterizedTypes(executeTestsForClass(ParameterizedTypeTestCase.class).getExecutionResults());
+		assertEventsForParameterizedTypes(executeTestsForClass(ParameterizedTypeTestCase.class));
 	}
 
 	@Test
@@ -210,8 +201,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		String fqmn = ReflectionUtils.getFullyQualifiedMethodName(ParameterizedTypeTestCase.class, "testMapOfStrings",
 			Map.class);
 
-		assertEventsForParameterizedTypes(
-			executeTests(request().selectors(selectMethod(fqmn)).build()).getExecutionResults());
+		assertEventsForParameterizedTypes(executeTests(selectMethod(fqmn)));
 	}
 
 	@Disabled("Disabled until a decision has been made regarding #956")
@@ -222,8 +212,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		String fqmn = String.format("%s#%s(%s)", ParameterizedTypeTestCase.class.getName(), "testMapOfStrings",
 			genericParameterTypeName);
 
-		assertEventsForParameterizedTypes(
-			executeTests(request().selectors(selectMethod(fqmn)).build()).getExecutionResults());
+		assertEventsForParameterizedTypes(executeTests(selectMethod(fqmn)));
 	}
 
 	private void assertEventsForParameterizedTypes(ExecutionResults executionResults) {

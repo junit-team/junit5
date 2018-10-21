@@ -13,14 +13,12 @@ package org.junit.jupiter.engine;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.ExecutionResults;
 
 /**
@@ -55,10 +53,8 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 	}
 
 	private void assertExecutionResults(Class<?> invalidTestClass) {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCase.class),
-			selectClass(invalidTestClass)).build();
 
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectClass(TestCase.class), selectClass(invalidTestClass));
 
 		// @formatter:off
 		assertAll(

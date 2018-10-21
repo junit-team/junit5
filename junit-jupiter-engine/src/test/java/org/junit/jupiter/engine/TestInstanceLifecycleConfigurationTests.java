@@ -131,7 +131,7 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 				.selectors(selectClass(testClass))
 				.configurationParameters(configParams)
 				.build()
-		).getExecutionResults();
+		);
 
 		assertAll(
 			() -> assertEquals(containers, executionResults.getContainersStartedCount(), "# containers started"),

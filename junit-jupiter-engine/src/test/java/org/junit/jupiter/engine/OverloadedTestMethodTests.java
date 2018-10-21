@@ -13,16 +13,13 @@ package org.junit.jupiter.engine;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.testkit.ExecutionEvent;
 import org.junit.platform.testkit.ExecutionResults;
@@ -37,8 +34,7 @@ class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestCaseWithOverloadedMethodsAndThenRerunOnlyOneOfTheMethodsSelectedByUniqueId() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCase.class)).build();
-		ExecutionResults executionResults1 = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults1 = executeTestsForClass(TestCase.class);
 
 		// @formatter:off
 		assertAll(
@@ -53,8 +49,7 @@ class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 		TestIdentifier testIdentifier = TestIdentifier.from(first.get().getTestDescriptor());
 		String uniqueId = testIdentifier.getUniqueId();
 
-		request = request().selectors(selectUniqueId(uniqueId)).build();
-		ExecutionResults executionResults2 = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults2 = executeTests(selectUniqueId(uniqueId));
 
 		// @formatter:off
 		assertAll(
@@ -71,8 +66,7 @@ class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void executeTestCaseWithOverloadedMethodsWithSingleMethodThatAcceptsArgumentsSelectedByFullyQualifedMethodName() {
 		String fqmn = TestCase.class.getName() + "#test(" + TestInfo.class.getName() + ")";
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(fqmn)).build();
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectMethod(fqmn));
 
 		// @formatter:off
 		assertAll(

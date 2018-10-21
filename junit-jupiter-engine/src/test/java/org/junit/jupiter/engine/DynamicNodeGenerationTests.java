@@ -81,10 +81,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicTestsAreExecutedFromStream() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(MyDynamicTestCase.class, "dynamicStream")).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectMethod(MyDynamicTestCase.class, "dynamicStream"));
 
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -103,10 +100,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicTestsAreExecutedFromCollection() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(MyDynamicTestCase.class, "dynamicCollection")).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectMethod(MyDynamicTestCase.class, "dynamicCollection"));
 
 		assertAll( //
 			() -> assertEquals(3, executionResults.getContainersStartedCount(), "# container started"),
@@ -119,10 +113,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicTestsAreExecutedFromIterator() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(MyDynamicTestCase.class, "dynamicIterator")).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectMethod(MyDynamicTestCase.class, "dynamicIterator"));
 
 		assertAll( //
 			() -> assertEquals(3, executionResults.getContainersStartedCount(), "# container started"),
@@ -135,10 +126,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicTestsAreExecutedFromIterable() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(MyDynamicTestCase.class, "dynamicIterable")).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectMethod(MyDynamicTestCase.class, "dynamicIterable"));
 
 		// @TestFactory methods are counted as both container and test
 		assertAll( //
@@ -155,7 +143,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 		UniqueId uniqueId = discoverUniqueId(MyDynamicTestCase.class, "dynamicStream") //
 				.append(DYNAMIC_TEST_SEGMENT_TYPE, "#2");
 
-		ExecutionResults executionResults = executeTests(selectUniqueId(uniqueId)).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectUniqueId(uniqueId));
 
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -171,10 +159,8 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicContainersAreExecutedFromIterable() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(MyDynamicTestCase.class, "dynamicContainerWithIterable")).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(
+			selectMethod(MyDynamicTestCase.class, "dynamicContainerWithIterable"));
 
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -209,7 +195,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 				.append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#1") //
 				.append(DYNAMIC_TEST_SEGMENT_TYPE, "#2");
 
-		ExecutionResults executionResults = executeTests(selectUniqueId(uniqueId)).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectUniqueId(uniqueId));
 
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -235,7 +221,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 				.append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#2") //
 				.append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#1");
 
-		ExecutionResults executionResults = executeTests(selectUniqueId(uniqueId)).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectUniqueId(uniqueId));
 
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -260,10 +246,8 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void nestedDynamicContainersAreExecuted() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(MyDynamicTestCase.class, "nestedDynamicContainers")).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(
+			selectMethod(MyDynamicTestCase.class, "nestedDynamicContainers"));
 
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -296,10 +280,8 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void legacyReportingNames() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(MyDynamicTestCase.class, "nestedDynamicContainers")).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(
+			selectMethod(MyDynamicTestCase.class, "nestedDynamicContainers"));
 
 		// @formatter:off
 		Stream<String> legacyReportingNames = executionResults.getExecutionEvents().stream()
@@ -314,10 +296,8 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicContainersAreExecutedFromExceptionThrowingStream() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(MyDynamicTestCase.class, "dynamicContainerWithExceptionThrowingStream")).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(
+			selectMethod(MyDynamicTestCase.class, "dynamicContainerWithExceptionThrowingStream"));
 
 		assertTrue(MyDynamicTestCase.exceptionThrowingStreamClosed.get(), "stream should be closed");
 
@@ -349,10 +329,8 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicContainersChildrenMustNotBeNull() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(MyDynamicTestCase.class, "dynamicContainerWithNullChildren")).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(
+			selectMethod(MyDynamicTestCase.class, "dynamicContainerWithNullChildren"));
 
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -369,10 +347,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testFactoryMethodsMayReturnSingleDynamicContainer() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(MyDynamicTestCase.class, "singleContainer")).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectMethod(MyDynamicTestCase.class, "singleContainer"));
 
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
@@ -394,10 +369,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testFactoryMethodsMayReturnSingleDynamicTest() {
-		LauncherDiscoveryRequest request = request().selectors(
-			selectMethod(MyDynamicTestCase.class, "singleTest")).build();
-
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(selectMethod(MyDynamicTestCase.class, "singleTest"));
 
 		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //

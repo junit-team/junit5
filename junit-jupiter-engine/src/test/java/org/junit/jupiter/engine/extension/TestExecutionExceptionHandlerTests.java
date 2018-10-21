@@ -39,7 +39,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.ExecutionRecorder;
+import org.junit.platform.testkit.ExecutionResults;
 
 /**
  * Integration tests that verify support for {@link TestExecutionExceptionHandler}.
@@ -63,11 +63,11 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 	void exceptionHandlerRethrowsException() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testRethrow")).build();
 
-		ExecutionRecorder executionRecorder = executeTests(request);
+		ExecutionResults executionResults = executeTests(request);
 
 		assertTrue(RethrowException.handleExceptionCalled, "TestExecutionExceptionHandler should have been called");
 
-		assertRecordedExecutionEventsContainsExactly(executionRecorder.getExecutionResults().getExecutionEvents(), //
+		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testRethrow"), started()), //
@@ -80,11 +80,11 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 	void exceptionHandlerSwallowsException() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSwallow")).build();
 
-		ExecutionRecorder executionRecorder = executeTests(request);
+		ExecutionResults executionResults = executeTests(request);
 
 		assertTrue(SwallowException.handleExceptionCalled, "TestExecutionExceptionHandler should have been called");
 
-		assertRecordedExecutionEventsContainsExactly(executionRecorder.getExecutionResults().getExecutionEvents(), //
+		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testSwallow"), started()), //
@@ -97,11 +97,11 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 	void exceptionHandlerConvertsException() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testConvert")).build();
 
-		ExecutionRecorder executionRecorder = executeTests(request);
+		ExecutionResults executionResults = executeTests(request);
 
 		assertTrue(ConvertException.handleExceptionCalled, "TestExecutionExceptionHandler should have been called");
 
-		assertRecordedExecutionEventsContainsExactly(executionRecorder.getExecutionResults().getExecutionEvents(), //
+		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testConvert"), started()), //
@@ -114,14 +114,14 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 	void severalHandlersAreCalledInOrder() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSeveral")).build();
 
-		ExecutionRecorder executionRecorder = executeTests(request);
+		ExecutionResults executionResults = executeTests(request);
 
 		assertTrue(ConvertException.handleExceptionCalled, "ConvertException should have been called");
 		assertTrue(RethrowException.handleExceptionCalled, "RethrowException should have been called");
 		assertTrue(SwallowException.handleExceptionCalled, "SwallowException should have been called");
 		assertFalse(ShouldNotBeCalled.handleExceptionCalled, "ShouldNotBeCalled should not have been called");
 
-		assertRecordedExecutionEventsContainsExactly(executionRecorder.getExecutionResults().getExecutionEvents(), //
+		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
 			event(engine(), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testSeveral"), started()), //

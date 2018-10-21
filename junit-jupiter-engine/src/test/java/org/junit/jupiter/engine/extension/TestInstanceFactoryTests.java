@@ -67,7 +67,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void multipleFactoriesRegisteredOnSingleTestClass() {
 		Class<?> testClass = MultipleFactoriesRegisteredOnSingleTestCase.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		assertEquals(0, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(0, executionResults.getTestsFailedCount(), "# tests aborted");
@@ -86,7 +86,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void multipleFactoriesRegisteredWithinTestClassHierarchy() {
 		Class<?> testClass = MultipleFactoriesRegisteredWithinClassHierarchyTestCase.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		assertEquals(0, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(0, executionResults.getTestsFailedCount(), "# tests aborted");
@@ -106,7 +106,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	void multipleFactoriesRegisteredWithinNestedClassStructure() {
 		Class<?> outerClass = MultipleFactoriesRegisteredWithinNestedClassStructureTestCase.class;
 		Class<?> nestedClass = MultipleFactoriesRegisteredWithinNestedClassStructureTestCase.InnerTestCase.class;
-		ExecutionResults executionResults = executeTestsForClass(outerClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(outerClass);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -129,7 +129,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void nullTestInstanceFactoryWithPerMethodLifecycle() {
 		Class<?> testClass = NullTestInstanceFactoryTestCase.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsFailedCount(), "# tests aborted");
@@ -150,7 +150,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void nullTestInstanceFactoryWithPerClassLifecycle() {
 		Class<?> testClass = PerClassLifecycleNullTestInstanceFactoryTestCase.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		assertEquals(0, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(0, executionResults.getTestsFailedCount(), "# tests aborted");
@@ -169,7 +169,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void bogusTestInstanceFactoryWithPerMethodLifecycle() {
 		Class<?> testClass = BogusTestInstanceFactoryTestCase.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsFailedCount(), "# tests aborted");
@@ -190,7 +190,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void bogusTestInstanceFactoryWithPerClassLifecycle() {
 		Class<?> testClass = PerClassLifecycleBogusTestInstanceFactoryTestCase.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		assertEquals(0, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(0, executionResults.getTestsFailedCount(), "# tests aborted");
@@ -209,7 +209,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void explosiveTestInstanceFactoryWithPerMethodLifecycle() {
 		Class<?> testClass = ExplosiveTestInstanceFactoryTestCase.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsFailedCount(), "# tests aborted");
@@ -229,7 +229,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void explosiveTestInstanceFactoryWithPerClassLifecycle() {
 		Class<?> testClass = PerClassLifecycleExplosiveTestInstanceFactoryTestCase.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		assertEquals(0, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(0, executionResults.getTestsFailedCount(), "# tests aborted");
@@ -247,7 +247,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void proxyTestInstanceFactoryFailsDueToUseOfDifferentClassLoader() {
 		Class<?> testClass = ProxiedTestCase.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		assertEquals(0, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(0, executionResults.getTestsFailedCount(), "# tests aborted");
@@ -271,7 +271,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void instanceFactoryOnTopLevelTestClass() {
-		ExecutionResults executionResults = executeTestsForClass(ParentTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(ParentTestCase.class);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -286,7 +286,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void inheritedFactoryInTestClassHierarchy() {
-		ExecutionResults executionResults = executeTestsForClass(InheritedFactoryTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(InheritedFactoryTestCase.class);
 
 		assertEquals(2, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(2, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -303,7 +303,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void instanceFactoriesInNestedClassStructureAreInherited() {
-		ExecutionResults executionResults = executeTestsForClass(OuterTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(OuterTestCase.class);
 
 		assertEquals(3, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(3, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -331,8 +331,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void instanceFactoryRegisteredViaTestInterface() {
-		ExecutionResults executionResults = executeTestsForClass(
-			FactoryFromInterfaceTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(FactoryFromInterfaceTestCase.class);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -347,7 +346,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void instanceFactoryRegisteredAsLambdaExpression() {
-		ExecutionResults executionResults = executeTestsForClass(LambdaFactoryTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(LambdaFactoryTestCase.class);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -362,7 +361,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void instanceFactoryWithPerClassLifecycle() {
-		ExecutionResults executionResults = executeTestsForClass(PerClassLifecycleTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(PerClassLifecycleTestCase.class);
 
 		assertEquals(1, PerClassLifecycleTestCase.counter.get());
 

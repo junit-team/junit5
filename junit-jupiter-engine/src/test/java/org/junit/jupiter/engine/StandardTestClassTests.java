@@ -54,7 +54,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(FirstOfTwoTestCases.class),
 			selectClass(SecondOfTwoTestCases.class)).build();
 
-		ExecutionResults executionResults = executeTests(request).getExecutionResults();
+		ExecutionResults executionResults = executeTests(request);
 
 		assertEquals(6, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(5, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -66,7 +66,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void allTestsInClassAreRunWithBeforeEachAndAfterEachMethods() {
-		ExecutionResults executionResults = executeTestsForClass(MyStandardTestCase.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(MyStandardTestCase.class);
 
 		assertEquals(2, executionResults.getContainersStartedCount(), "# containers started");
 		assertEquals(2, executionResults.getContainersFinishedCount(), "# containers finished");
@@ -83,7 +83,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testsFailWhenBeforeEachFails() {
-		ExecutionResults executionResults = executeTestsForClass(TestCaseWithFailingBefore.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(TestCaseWithFailingBefore.class);
 
 		assertEquals(2, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(0, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
@@ -97,7 +97,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testsFailWhenAfterEachFails() {
-		ExecutionResults executionResults = executeTestsForClass(TestCaseWithFailingAfter.class).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(TestCaseWithFailingAfter.class);
 
 		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
 		assertEquals(0, executionResults.getTestsSuccessfulCount(), "# tests succeeded");

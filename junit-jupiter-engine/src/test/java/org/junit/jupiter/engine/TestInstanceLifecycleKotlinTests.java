@@ -37,7 +37,7 @@ class TestInstanceLifecycleKotlinTests extends AbstractJupiterTestEngineTests {
 		Class<?> testClass = InstancePerClassKotlinTestCase.class;
 		InstancePerClassKotlinTestCase.TEST_INSTANCES.clear();
 
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		assertThat(executionResults.getTestsFinishedCount()).isEqualTo(2);
 		assertThat(InstancePerClassKotlinTestCase.TEST_INSTANCES.keySet()).hasSize(1);
@@ -54,7 +54,7 @@ class TestInstanceLifecycleKotlinTests extends AbstractJupiterTestEngineTests {
 		Class<?> testClass = InstancePerMethodKotlinTestCase.class;
 		InstancePerMethodKotlinTestCase.TEST_INSTANCES.clear();
 
-		ExecutionResults executionResults = executeTestsForClass(testClass).getExecutionResults();
+		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		assertThat(executionResults.getTestsFinishedCount()).isEqualTo(2);
 		List<Object> instances = new ArrayList<>(InstancePerMethodKotlinTestCase.TEST_INSTANCES.keySet());
