@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.AssertLinesMatch.isFastForwardLine;
 import static org.junit.jupiter.api.AssertLinesMatch.parseFastForwardLimit;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
@@ -94,6 +95,17 @@ class AssertLinesMatchAssertionsTests {
 		assertThrows(PreconditionViolationException.class, () -> assertLinesMatch(null, null));
 		assertThrows(PreconditionViolationException.class, () -> assertLinesMatch(null, Collections.emptyList()));
 		assertThrows(PreconditionViolationException.class, () -> assertLinesMatch(Collections.emptyList(), null));
+	}
+
+	@Test
+	void assertLinesMatchWithNullElementsFails() {
+		var list = List.of("1", "2", "3");
+		var withNullElement = Arrays.asList("1", null, "3"); // List.of() doesn't permit null values.
+		assertDoesNotThrow(() -> assertLinesMatch(withNullElement, withNullElement));
+		var e1 = assertThrows(PreconditionViolationException.class, () -> assertLinesMatch(withNullElement, list));
+		assertEquals("expected line must not be null", e1.getMessage());
+		var e2 = assertThrows(PreconditionViolationException.class, () -> assertLinesMatch(list, withNullElement));
+		assertEquals("actual line must not be null", e2.getMessage());
 	}
 
 	@Test
@@ -184,7 +196,7 @@ class AssertLinesMatchAssertionsTests {
 		List<String> actual = Arrays.asList("first line", "first skipped", "second skipped", "last line");
 		Error error = assertThrows(AssertionFailedError.class, () -> assertLinesMatch(expected, actual));
 		List<String> expectedErrorMessageLines = Arrays.asList( //
-			"expected line #4:`not present` doesn't match ==> expected: <first line", //
+			"expected line #4:`not present` not found - actual lines depleted ==> expected: <first line", //
 			">> fails, because final line is missing >>", //
 			"last line", //
 			"not present> but was: <first line", //
