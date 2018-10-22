@@ -13,7 +13,6 @@ package org.junit.jupiter.migrationsupport.conditions;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-import static org.junit.platform.testkit.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.testkit.ExecutionEventConditions.container;
 import static org.junit.platform.testkit.ExecutionEventConditions.engine;
 import static org.junit.platform.testkit.ExecutionEventConditions.event;
@@ -26,6 +25,7 @@ import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.platform.testkit.Events;
 import org.junit.platform.testkit.ExecutionRecorder;
 import org.junit.platform.testkit.ExecutionResults;
 
@@ -41,10 +41,9 @@ class IgnoreConditionTests {
 	@Test
 	void ignoredTestClassWithDefaultMessage() {
 		Class<?> testClass = IgnoredClassWithDefaultMessageTestCase.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		// @formatter:off
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executeTestsForClass(testClass).all().assertEventsMatchExactly(
 			event(engine(), started()),
 			event(container(testClass), skippedWithReason(testClass + " is disabled via @org.junit.Ignore")),
 			event(engine(), finishedSuccessfully())
@@ -55,10 +54,9 @@ class IgnoreConditionTests {
 	@Test
 	void ignoredTestClassWithCustomMessage() {
 		Class<?> testClass = IgnoredClassWithCustomMessageTestCase.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass);
 
 		// @formatter:off
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(),
+		executeTestsForClass(testClass).all().assertEventsMatchExactly(
 			event(engine(), started()),
 			event(container(testClass), skippedWithReason("Ignored Class")),
 			event(engine(), finishedSuccessfully())
@@ -69,12 +67,30 @@ class IgnoreConditionTests {
 	@Test
 	void ignoredAndNotIgnoredTestMethods() {
 		ExecutionResults executionResults = executeTestsForClass(IgnoredMethodsTestCase.class);
+		Events containers = executionResults.containers();
+		Events tests = executionResults.tests();
 
-		// TODO Add debug support to ExecutionRecorder.
-		// executionResults.getTestEvents().forEach(System.out::println);
+		executionResults.all().debug();
+		// executionResults.all().debug(System.err);
+
+		containers.debug();
+
+		// tests.debug(System.err);
+		// tests.debug();
+		// tests.skipped().debug();
+		// tests.started().debug();
+		// tests.succeeded().debug();
+
+		// executionResults.all().executions().debug();
+		// containers.executions().debug();
+		// tests.executions().debug();
+
+		executionResults.all().executions().assertThatExecutions().hasSize(5);
+		containers.executions().assertThatExecutions().hasSize(2);
+		tests.executions().assertThatExecutions().hasSize(3);
 
 		// @formatter:off
-		assertRecordedExecutionEventsContainsExactly(executionResults.getTestEvents(),
+		tests.debug().assertEventsMatchExactly(
 			event(test("ignoredWithCustomMessage"), skippedWithReason("Ignored Method")),
 			event(test("notIgnored"), started()),
 			event(test("notIgnored"), finishedSuccessfully()),

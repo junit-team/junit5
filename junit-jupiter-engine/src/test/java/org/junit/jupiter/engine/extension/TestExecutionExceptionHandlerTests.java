@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-import static org.junit.platform.testkit.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.testkit.ExecutionEventConditions.container;
 import static org.junit.platform.testkit.ExecutionEventConditions.engine;
 import static org.junit.platform.testkit.ExecutionEventConditions.event;
@@ -67,7 +66,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 
 		assertTrue(RethrowException.handleExceptionCalled, "TestExecutionExceptionHandler should have been called");
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testRethrow"), started()), //
@@ -84,7 +83,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 
 		assertTrue(SwallowException.handleExceptionCalled, "TestExecutionExceptionHandler should have been called");
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testSwallow"), started()), //
@@ -101,7 +100,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 
 		assertTrue(ConvertException.handleExceptionCalled, "TestExecutionExceptionHandler should have been called");
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testConvert"), started()), //
@@ -121,7 +120,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 		assertTrue(SwallowException.handleExceptionCalled, "SwallowException should have been called");
 		assertFalse(ShouldNotBeCalled.handleExceptionCalled, "ShouldNotBeCalled should not have been called");
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testSeveral"), started()), //

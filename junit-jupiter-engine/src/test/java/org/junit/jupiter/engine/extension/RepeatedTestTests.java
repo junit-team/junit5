@@ -28,9 +28,8 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.testkit.Events;
 import org.junit.platform.testkit.ExecutionRecorder;
-import org.junit.platform.testkit.ExecutionResults;
 
 /**
  * Integration tests for {@link RepeatedTest @RepeatedTest} and supporting
@@ -128,38 +127,35 @@ class RepeatedTestTests {
 
 	@RepeatedTest(1)
 	void failsContainerOnEmptyPattern() {
-		ExecutionResults executionResults = execute(selectMethod(TestCase.class, "testWithEmptyPattern"));
-		assertThat(executionResults.getExecutionEvents()) //
+		executeTest("testWithEmptyPattern").assertThatEvents() //
 				.haveExactly(1, event(container(), displayName("testWithEmptyPattern()"), //
 					finishedWithFailure(message(value -> value.contains("must be declared with a non-empty name")))));
 	}
 
 	@RepeatedTest(1)
 	void failsContainerOnBlankPattern() {
-		ExecutionResults executionResults = execute(selectMethod(TestCase.class, "testWithBlankPattern"));
-		assertThat(executionResults.getExecutionEvents()) //
+		executeTest("testWithBlankPattern").assertThatEvents() //
 				.haveExactly(1, event(container(), displayName("testWithBlankPattern()"), //
 					finishedWithFailure(message(value -> value.contains("must be declared with a non-empty name")))));
 	}
 
 	@RepeatedTest(1)
 	void failsContainerOnNegativeRepeatCount() {
-		ExecutionResults executionResults = execute(selectMethod(TestCase.class, "negativeRepeatCount"));
-		assertThat(executionResults.getExecutionEvents()) //
+		executeTest("negativeRepeatCount").assertThatEvents() //
 				.haveExactly(1, event(container(), displayName("negativeRepeatCount()"), //
 					finishedWithFailure(message(value -> value.contains("must be declared with a positive 'value'")))));
 	}
 
 	@RepeatedTest(1)
 	void failsContainerOnZeroRepeatCount() {
-		ExecutionResults executionResults = execute(selectMethod(TestCase.class, "zeroRepeatCount"));
-		assertThat(executionResults.getExecutionEvents()) //
+		executeTest("zeroRepeatCount").assertThatEvents() //
 				.haveExactly(1, event(container(), displayName("zeroRepeatCount()"), //
 					finishedWithFailure(message(value -> value.contains("must be declared with a positive 'value'")))));
 	}
 
-	private ExecutionResults execute(DiscoverySelector... selectors) {
-		return ExecutionRecorder.execute(new JupiterTestEngine(), request().selectors(selectors).build());
+	private Events executeTest(String methodName) {
+		return ExecutionRecorder.execute(new JupiterTestEngine(),
+			request().selectors(selectMethod(TestCase.class, methodName)).build()).all();
 	}
 
 	static class TestCase {

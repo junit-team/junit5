@@ -30,6 +30,7 @@ import org.junit.platform.engine.TestExecutionResult.Status;
 public class TestExecutionResultConditions {
 
 	private TestExecutionResultConditions() {
+		/* no-op */
 	}
 
 	public static Condition<TestExecutionResult> status(Status expectedStatus) {
@@ -54,7 +55,6 @@ public class TestExecutionResultConditions {
 		return new Condition<>(
 			throwable -> throwable.getSuppressed().length > index && checked.matches(throwable.getSuppressed()[index]),
 			"suppressed at index %d matches %s", index, checked);
-
 	}
 
 	public static Condition<TestExecutionResult> cause(Condition<? super Throwable> condition) {

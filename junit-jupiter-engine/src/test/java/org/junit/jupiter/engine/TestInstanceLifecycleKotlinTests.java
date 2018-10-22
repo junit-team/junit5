@@ -39,7 +39,7 @@ class TestInstanceLifecycleKotlinTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTestsForClass(testClass);
 
-		assertThat(executionResults.getTestsFinishedCount()).isEqualTo(2);
+		assertThat(executionResults.tests().finished().count()).isEqualTo(2);
 		assertThat(InstancePerClassKotlinTestCase.TEST_INSTANCES.keySet()).hasSize(1);
 		assertThat(getOnlyElement(InstancePerClassKotlinTestCase.TEST_INSTANCES.values())) //
 				.containsEntry("beforeAll", 1) //
@@ -56,7 +56,7 @@ class TestInstanceLifecycleKotlinTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTestsForClass(testClass);
 
-		assertThat(executionResults.getTestsFinishedCount()).isEqualTo(2);
+		assertThat(executionResults.tests().finished().count()).isEqualTo(2);
 		List<Object> instances = new ArrayList<>(InstancePerMethodKotlinTestCase.TEST_INSTANCES.keySet());
 		assertThat(instances) //
 				.hasSize(3) //

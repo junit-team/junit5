@@ -173,8 +173,8 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTestsForClass(testClass);
 
-		assertEquals(testsStarted, executionResults.getTestsStartedCount(), "# tests started");
-		assertEquals(testsSuccessful, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
+		assertEquals(testsStarted, executionResults.tests().started().count(), "# tests started");
+		assertEquals(testsSuccessful, executionResults.tests().succeeded().count(), "# tests succeeded");
 
 		assertEquals(asList(expectedCalls), callSequence, () -> "wrong call sequence for " + testClass.getName());
 	}

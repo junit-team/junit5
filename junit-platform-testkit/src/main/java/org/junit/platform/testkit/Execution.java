@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 
@@ -28,52 +29,57 @@ import org.junit.platform.engine.TestExecutionResult;
 @API(status = EXPERIMENTAL, since = "1.4")
 public class Execution {
 
-	private final TestDescriptor descriptor;
+	// --- Factories -----------------------------------------------------------
+
+	/**
+	 * Create a new instance of an {@code Execution} that finished with the
+	 * provided {@link TestExecutionResult}.
+	 *
+	 * @param testDescriptor the {@code TestDescriptor} that finished
+	 * @param startInstant the {@code Instant} that the {@code Execution} started
+	 * @param endInstant the {@code Instant} that the {@code Execution} completed
+	 * @param executionResult the {@code TestExecutionResult} of the finished
+	 * {@code TestDescriptor}
+	 * @return the newly created {@code Execution} instance
+	 */
+	public static Execution finished(TestDescriptor testDescriptor, Instant startInstant, Instant endInstant,
+			TestExecutionResult executionResult) {
+
+		return new Execution(testDescriptor, startInstant, endInstant, TerminationInfo.executed(executionResult));
+	}
+
+	/**
+	 * Create a new instance of an {@code Execution} that was skipped with the provided
+	 * {@code skipReason}.
+	 *
+	 * @param testDescriptor the {@code TestDescriptor} that finished
+	 * @param startInstant the {@code Instant} that the {@code Execution} started
+	 * @param endInstant the {@code Instant} that the {@code Execution} completed
+	 * @param skipReason the reason the {@code TestDescriptor} was skipped
+	 * @return the newly created {@code Execution} instance
+	 */
+	public static Execution skipped(TestDescriptor testDescriptor, Instant startInstant, Instant endInstant,
+			String skipReason) {
+
+		return new Execution(testDescriptor, startInstant, endInstant, TerminationInfo.skipped(skipReason));
+	}
+
+	// -------------------------------------------------------------------------
+
+	private final TestDescriptor testDescriptor;
 	private final Instant startInstant;
 	private final Instant endInstant;
 	private final Duration duration;
-	private final TerminationInfo termination;
+	private final TerminationInfo terminationInfo;
 
-	private Execution(TestDescriptor descriptor, Instant startInstant, Instant endInstant,
-			TerminationInfo termination) {
+	private Execution(TestDescriptor testDescriptor, Instant startInstant, Instant endInstant,
+			TerminationInfo terminationInfo) {
 
-		this.descriptor = descriptor;
+		this.testDescriptor = testDescriptor;
 		this.startInstant = startInstant;
 		this.endInstant = endInstant;
 		this.duration = Duration.between(startInstant, endInstant);
-		this.termination = termination;
-	}
-
-	/**
-	 * Construct a new instance of an {@code Execution} that finished with the
-	 * provided {@link TestExecutionResult}.
-	 *
-	 * @param descriptor the {@code TestDescriptor} that finished
-	 * @param startInstant the {@code Instant} that the {@code Execution} started
-	 * @param endInstant the {@code Instant} that the {@code Execution} completed
-	 * @param executionResult the {@code TestExecutionResult} of the finished test
-	 * @return the newly constructed {@code Execution} instance
-	 */
-	public static Execution finished(TestDescriptor descriptor, Instant startInstant, Instant endInstant,
-			TestExecutionResult executionResult) {
-
-		return new Execution(descriptor, startInstant, endInstant, TerminationInfo.executed(executionResult));
-	}
-
-	/**
-	 * Construct a new instance of an {@code Execution} that was skipped with the provided
-	 * {@code skipReason}.
-	 *
-	 * @param descriptor the {@code TestDescriptor} that finished
-	 * @param startInstant the {@code Instant} that the {@code Execution} started
-	 * @param endInstant the {@code Instant} that the {@code Execution} completed
-	 * @param skipReason the {@code String} reason for the test being skipped
-	 * @return the newly constructed {@code Execution} instance
-	 */
-	public static Execution skipped(TestDescriptor descriptor, Instant startInstant, Instant endInstant,
-			String skipReason) {
-
-		return new Execution(descriptor, startInstant, endInstant, TerminationInfo.skipped(skipReason));
+		this.terminationInfo = terminationInfo;
 	}
 
 	/**
@@ -82,7 +88,7 @@ public class Execution {
 	 * @return the {@code TestDescriptor} for this {@code Execution}
 	 */
 	public TestDescriptor getTestDescriptor() {
-		return this.descriptor;
+		return this.testDescriptor;
 	}
 
 	/**
@@ -118,7 +124,20 @@ public class Execution {
 	 * @return the {@code TerminationInfo} for this {@code Execution}
 	 */
 	public TerminationInfo getTerminationInfo() {
-		return this.termination;
+		return this.terminationInfo;
+	}
+
+	@Override
+	public String toString() {
+		// @formatter:off
+		return new ToStringBuilder(this)
+				.append("testDescriptor", this.testDescriptor)
+				.append("startInstant", this.startInstant)
+				.append("endInstant", this.endInstant)
+				.append("duration", this.duration)
+				.append("terminationInfo", this.terminationInfo)
+				.toString();
+		// @formatter:on
 	}
 
 }

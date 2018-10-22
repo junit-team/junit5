@@ -22,6 +22,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.Events;
 import org.junit.platform.testkit.ExecutionResults;
 import org.opentest4j.TestAbortedException;
 
@@ -55,26 +56,30 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 			selectClass(SecondOfTwoTestCases.class)).build();
 
 		ExecutionResults executionResults = executeTests(request);
+		Events containers = executionResults.containers();
+		Events tests = executionResults.tests();
 
-		assertEquals(6, executionResults.getTestsStartedCount(), "# tests started");
-		assertEquals(5, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
+		assertEquals(6, tests.started().count(), "# tests started");
+		assertEquals(5, tests.succeeded().count(), "# tests succeeded");
+		assertEquals(1, tests.failed().count(), "# tests failed");
 
-		assertEquals(3, executionResults.getContainersStartedCount(), "# containers started");
-		assertEquals(3, executionResults.getContainersFinishedCount(), "# containers finished");
+		assertEquals(3, containers.started().count(), "# containers started");
+		assertEquals(3, containers.finished().count(), "# containers finished");
 	}
 
 	@Test
 	void allTestsInClassAreRunWithBeforeEachAndAfterEachMethods() {
 		ExecutionResults executionResults = executeTestsForClass(MyStandardTestCase.class);
+		Events containers = executionResults.containers();
+		Events tests = executionResults.tests();
 
-		assertEquals(2, executionResults.getContainersStartedCount(), "# containers started");
-		assertEquals(2, executionResults.getContainersFinishedCount(), "# containers finished");
+		assertEquals(2, containers.started().count(), "# containers started");
+		assertEquals(2, containers.finished().count(), "# containers finished");
 
-		assertEquals(6, executionResults.getTestsStartedCount(), "# tests started");
-		assertEquals(2, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
-		assertEquals(3, executionResults.getTestsAbortedCount(), "# tests aborted");
-		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
+		assertEquals(6, tests.started().count(), "# tests started");
+		assertEquals(2, tests.succeeded().count(), "# tests succeeded");
+		assertEquals(3, tests.aborted().count(), "# tests aborted");
+		assertEquals(1, tests.failed().count(), "# tests failed");
 
 		assertEquals(6, MyStandardTestCase.countBefore1, "# before1 calls");
 		assertEquals(6, MyStandardTestCase.countBefore2, "# before2 calls");
@@ -84,13 +89,15 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void testsFailWhenBeforeEachFails() {
 		ExecutionResults executionResults = executeTestsForClass(TestCaseWithFailingBefore.class);
+		Events containers = executionResults.containers();
+		Events tests = executionResults.tests();
 
-		assertEquals(2, executionResults.getTestsStartedCount(), "# tests started");
-		assertEquals(0, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
-		assertEquals(2, executionResults.getTestsFailedCount(), "# tests failed");
+		assertEquals(2, tests.started().count(), "# tests started");
+		assertEquals(0, tests.succeeded().count(), "# tests succeeded");
+		assertEquals(2, tests.failed().count(), "# tests failed");
 
-		assertEquals(2, executionResults.getContainersStartedCount(), "# containers started");
-		assertEquals(2, executionResults.getContainersFinishedCount(), "# containers finished");
+		assertEquals(2, containers.started().count(), "# containers started");
+		assertEquals(2, containers.finished().count(), "# containers finished");
 
 		assertEquals(2, TestCaseWithFailingBefore.countBefore, "# before each calls");
 	}
@@ -98,13 +105,15 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void testsFailWhenAfterEachFails() {
 		ExecutionResults executionResults = executeTestsForClass(TestCaseWithFailingAfter.class);
+		Events containers = executionResults.containers();
+		Events tests = executionResults.tests();
 
-		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
-		assertEquals(0, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
+		assertEquals(1, tests.started().count(), "# tests started");
+		assertEquals(0, tests.succeeded().count(), "# tests succeeded");
+		assertEquals(1, tests.failed().count(), "# tests failed");
 
-		assertEquals(2, executionResults.getContainersStartedCount(), "# containers started");
-		assertEquals(2, executionResults.getContainersFinishedCount(), "# containers finished");
+		assertEquals(2, containers.started().count(), "# containers started");
+		assertEquals(2, containers.finished().count(), "# containers finished");
 
 		assertTrue(TestCaseWithFailingAfter.testExecuted, "test executed?");
 	}

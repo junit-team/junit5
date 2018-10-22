@@ -19,6 +19,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.testkit.Events;
 import org.junit.platform.testkit.ExecutionResults;
 
 /**
@@ -53,17 +54,18 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 	}
 
 	private void assertExecutionResults(Class<?> invalidTestClass) {
-
 		ExecutionResults executionResults = executeTests(selectClass(TestCase.class), selectClass(invalidTestClass));
+		Events containers = executionResults.containers();
+		Events tests = executionResults.tests();
 
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(3, executionResults.getContainersStartedCount(), "# containers started"),
-			() -> assertEquals(1, executionResults.getTestsStartedCount(), "# tests started"),
-			() -> assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded"),
-			() -> assertEquals(0, executionResults.getTestsFailedCount(), "# tests failed"),
-			() -> assertEquals(3, executionResults.getContainersFinishedCount(), "# containers finished"),
-			() -> assertEquals(1, executionResults.getContainersFailedCount(), "# containers failed")
+			() -> assertEquals(3, containers.started().count(), "# containers started"),
+			() -> assertEquals(1, tests.started().count(), "# tests started"),
+			() -> assertEquals(1, tests.succeeded().count(), "# tests succeeded"),
+			() -> assertEquals(0, tests.failed().count(), "# tests failed"),
+			() -> assertEquals(3, containers.finished().count(), "# containers finished"),
+			() -> assertEquals(1, containers.failed().count(), "# containers failed")
 		);
 		// @formatter:on
 	}

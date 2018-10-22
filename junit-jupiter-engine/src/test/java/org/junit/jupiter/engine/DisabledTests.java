@@ -10,11 +10,13 @@
 
 package org.junit.jupiter.engine;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.testkit.Events;
 import org.junit.platform.testkit.ExecutionResults;
 
 /**
@@ -26,22 +28,35 @@ class DisabledTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestsWithDisabledTestClass() {
-		ExecutionResults executionResults = executeTestsForClass(DisabledTestClassTestCase.class);
+		ExecutionResults results = executeTestsForClass(DisabledTestClassTestCase.class);
 
-		assertEquals(1, executionResults.getContainersSkippedCount(), "# container skipped");
-		assertEquals(0, executionResults.getTestsStartedCount(), "# tests started");
+		results.containers().assertStatistics(stats -> stats.skipped(1));
+		results.tests().assertStatistics(stats -> stats.started(0));
 	}
 
 	@Test
 	void executeTestsWithDisabledTestMethods() throws Exception {
-		ExecutionResults executionResults = executeTestsForClass(DisabledTestMethodsTestCase.class);
+		Events tests = executeTestsForClass(DisabledTestMethodsTestCase.class).tests();
 
-		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
-		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
-		assertEquals(1, executionResults.getTestsSkippedCount(), "# tests skipped");
+		// MANUAL APPROACH for asserting statistics
+		//
+		// @formatter:off
+		assertAll(
+			() -> assertEquals(1, tests.started().count(), "# tests started"),
+			() -> assertEquals(1, tests.skipped().count(), "# tests skipped"),
+			() -> assertEquals(1, tests.finished().count(), "# tests finished"),
+			() -> assertEquals(0, tests.aborted().count(), "# tests aborted"),
+			() -> assertEquals(1, tests.succeeded().count(), "# tests succeeded"),
+			() -> assertEquals(0, tests.failed().count(), "# tests failed")
+		);
+		// @formatter:on
+
+		// BUILT-IN APPROACH for asserting statistics
+		//
+		tests.assertStatistics(stats -> stats.skipped(1).started(1).finished(1).aborted(0).succeeded(1).failed(0));
 
 		String method = DisabledTestMethodsTestCase.class.getDeclaredMethod("disabledTest").toString();
-		String reason = executionResults.getTestsSkippedEvents().get(0).getPayload(String.class).get();
+		String reason = tests.skipped().map(e -> e.getRequiredPayload(String.class)).findFirst().orElse(null);
 		assertEquals(method + " is @Disabled", reason);
 	}
 

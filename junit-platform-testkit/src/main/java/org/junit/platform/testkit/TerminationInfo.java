@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestExecutionResult;
 
 /**
@@ -22,53 +23,125 @@ import org.junit.platform.engine.TestExecutionResult;
  * was skipped or the {@link TestExecutionResult} if the container/test was executed.
  *
  * @since 1.4
+ * @see Execution#getTerminationInfo()
  */
 @API(status = EXPERIMENTAL, since = "1.4")
 public class TerminationInfo {
 
+	// --- Factories -----------------------------------------------------------
+
+	/**
+	 * Create a <em>skipped</em> {@code TerminationInfo} instance for the
+	 * supplied reason.
+	 *
+	 * @param reason the reason the execution was skipped; may be {@code null}
+	 * @return the created {@code TerminationInfo}; never {@code null}
+	 * @see #executed(TestExecutionResult)
+	 */
+	public static TerminationInfo skipped(String reason) {
+		return new TerminationInfo(true, reason, null);
+	}
+
+	/**
+	 * Create an <em>executed</em> {@code TerminationInfo} instance for the
+	 * supplied {@link TestExecutionResult}.
+	 *
+	 * @param testExecutionResult the result of the execution; never {@code null}
+	 * @return the created {@code TerminationInfo}; never {@code null}
+	 * @see #skipped(String)
+	 */
+	public static TerminationInfo executed(TestExecutionResult testExecutionResult) {
+		Preconditions.notNull(testExecutionResult, "TestExecutionResult must not be null");
+		return new TerminationInfo(false, null, testExecutionResult);
+	}
+
+	// -------------------------------------------------------------------------
+
+	private final boolean skipped;
 	private final String skipReason;
-	private final TestExecutionResult executionResult;
+	private final TestExecutionResult testExecutionResult;
 
-	private TerminationInfo(String skipReason, TestExecutionResult executionResult) {
-		boolean skipped = (skipReason != null);
-		boolean executed = (executionResult != null);
+	private TerminationInfo(boolean skipped, String skipReason, TestExecutionResult testExecutionResult) {
+		boolean executed = (testExecutionResult != null);
 		Preconditions.condition((skipped ^ executed),
-			"Either a skip reason or TestExecutionResult must be provided but not both");
+			"TerminationInfo must represent either a skipped execution or a TestExecutionResult but not both");
 
+		this.skipped = skipped;
 		this.skipReason = skipReason;
-		this.executionResult = executionResult;
+		this.testExecutionResult = testExecutionResult;
 	}
 
-	public static TerminationInfo skipped(String skipReason) {
-		return new TerminationInfo(skipReason, null);
+	/**
+	 * Determine if this {@code TerminationInfo} represents a skipped execution.
+	 *
+	 * @return {@code true} if this this {@code TerminationInfo} represents a
+	 * skipped execution
+	 */
+	public boolean skipped() {
+		return this.skipped;
 	}
 
-	public static TerminationInfo executed(TestExecutionResult executionResult) {
-		return new TerminationInfo(null, executionResult);
+	/**
+	 * Determine if this {@code TerminationInfo} does not represent a skipped
+	 * execution.
+	 *
+	 * @return {@code true} if this this {@code TerminationInfo} does not
+	 * represent a skipped execution
+	 */
+	public boolean notSkipped() {
+		return !skipped();
 	}
 
-	public boolean isSkipReason() {
-		return this.skipReason != null;
+	/**
+	 * Determine if this {@code TerminationInfo} represents a completed execution.
+	 *
+	 * @return {@code true} if this this {@code TerminationInfo} represents a
+	 * completed execution
+	 */
+	public boolean executed() {
+		return (this.testExecutionResult != null);
 	}
 
-	public boolean isExecutionResult() {
-		return this.executionResult != null;
-	}
-
-	public String getSkipReason() {
-		if (isSkipReason()) {
+	/**
+	 * Get the reason the execution was skipped.
+	 *
+	 * @return the reason the execution was skipped
+	 * @throws UnsupportedOperationException if this {@code TerminationInfo}
+	 * does not represent a skipped execution
+	 */
+	public String getSkipReason() throws UnsupportedOperationException {
+		if (skipped()) {
 			return this.skipReason;
 		}
 		// else
 		throw new UnsupportedOperationException("No skip reason contained in this TerminationInfo");
 	}
 
-	public TestExecutionResult getExecutionResult() {
-		if (isExecutionResult()) {
-			return this.executionResult;
+	/**
+	 * Get the {@link TestExecutionResult} for the completed execution.
+	 *
+	 * @return the result of the completed execution
+	 * @throws UnsupportedOperationException if this {@code TerminationInfo}
+	 * does not represent a completed execution
+	 */
+	public TestExecutionResult getExecutionResult() throws UnsupportedOperationException {
+		if (executed()) {
+			return this.testExecutionResult;
 		}
 		// else
 		throw new UnsupportedOperationException("No TestExecutionResult contained in this TerminationInfo");
+	}
+
+	@Override
+	public String toString() {
+		ToStringBuilder builder = new ToStringBuilder(this);
+		if (skipped()) {
+			builder.append("skipped", skipped()).append("reason", this.skipReason);
+		}
+		else {
+			builder.append("executed", executed()).append("result", this.testExecutionResult);
+		}
+		return builder.toString();
 	}
 
 }

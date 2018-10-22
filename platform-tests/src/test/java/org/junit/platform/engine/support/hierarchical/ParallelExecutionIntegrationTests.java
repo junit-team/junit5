@@ -22,7 +22,7 @@ import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELI
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-import static org.junit.platform.testkit.ExecutionEvent.Type.REPORTING_ENTRY_PUBLISHED;
+import static org.junit.platform.testkit.EventType.REPORTING_ENTRY_PUBLISHED;
 import static org.junit.platform.testkit.ExecutionEventConditions.event;
 import static org.junit.platform.testkit.ExecutionEventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
@@ -467,7 +467,7 @@ class ParallelExecutionIntegrationTests {
 				.configurationParameter(PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, String.valueOf(parallelism))
 				.build();
 		// @formatter:on
-		return ExecutionRecorder.execute(new JupiterTestEngine(), discoveryRequest).getExecutionEvents();
+		return ExecutionRecorder.execute(new JupiterTestEngine(), discoveryRequest).all().list();
 	}
 
 	static class ThreadReporter implements AfterTestExecutionCallback {

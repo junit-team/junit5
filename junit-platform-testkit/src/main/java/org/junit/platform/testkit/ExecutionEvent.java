@@ -25,190 +25,227 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
- * {@link ExecutionEvent} represents a single event fired during execution of
+ * {@code ExecutionEvent} represents a single event fired during execution of
  * a test plan on the JUnit Platform.
  *
  * @since 1.4
- * @see ExecutionEvent.Type
+ * @see EventType
  */
 @API(status = EXPERIMENTAL, since = "1.4")
 public class ExecutionEvent {
 
-	private final Instant timestamp = Instant.now();
-	private final Type type;
-	private final TestDescriptor testDescriptor;
-	private final Object payload;
+	// --- Factories -----------------------------------------------------------
 
 	/**
-	 * Constructs a new {@link ExecutionEvent} with the provided parameters.
+	 * Create an {@code ExecutionEvent} for a reporting entry published for the
+	 * supplied {@link TestDescriptor} and {@link ReportEntry}.
 	 *
-	 * @param type the {@link ExecutionEvent.Type} of the {@link ExecutionEvent} to create, cannot be null
-	 * @param testDescriptor the {@link TestDescriptor} of the {@link ExecutionEvent} to create, cannot be null
-	 * @param payload the generic {@link Object} payload that the {@link ExecutionEvent} contains, may be null
-	 */
-	private ExecutionEvent(ExecutionEvent.Type type, TestDescriptor testDescriptor, Object payload) {
-		this.type = Preconditions.notNull(type, "ExecutionEvent must have a Type");
-		this.testDescriptor = Preconditions.notNull(testDescriptor, "ExecutionEvent must have a TestDescriptor");
-		this.payload = payload;
-	}
-
-	/**
-	 * Construct a new {@link ExecutionEvent} of type: {@link ExecutionEvent.Type#REPORTING_ENTRY_PUBLISHED}.
-	 *
-	 * @param testDescriptor the {@link TestDescriptor} of the {@link ExecutionEvent} to create, cannot be null
-	 * @param entry the {@link ReportEntry} that was published, cannot be null
-	 * @return the newly created {@link ExecutionEvent}
+	 * @param testDescriptor the {@code TestDescriptor} associated with the event;
+	 * never {@code null}
+	 * @param entry the {@code ReportEntry} that was published; never {@code null}
+	 * @return the newly created {@code ExecutionEvent}
+	 * @see EventType#REPORTING_ENTRY_PUBLISHED
 	 */
 	public static ExecutionEvent reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
-		Preconditions.notNull(entry, "ExecutionEvent of type REPORTING_ENTRY_PUBLISHED cannot have a null ReportEntry");
-		return new ExecutionEvent(Type.REPORTING_ENTRY_PUBLISHED, testDescriptor, entry);
+		Preconditions.notNull(entry, "ReportEntry must not be null");
+		return new ExecutionEvent(EventType.REPORTING_ENTRY_PUBLISHED, testDescriptor, entry);
 	}
 
 	/**
-	 * Construct a new {@link ExecutionEvent} of type: {@link ExecutionEvent.Type#DYNAMIC_TEST_REGISTERED}.
+	 * Create an {@code ExecutionEvent} for the dynamic registration of the
+	 * supplied {@link TestDescriptor}.
 	 *
-	 * @param testDescriptor the {@link TestDescriptor} of the {@link ExecutionEvent} to create, cannot be null
-	 * @return the newly created {@link ExecutionEvent}
+	 * @param testDescriptor the {@code TestDescriptor} associated with the event;
+	 * never {@code null}
+	 * @return the newly created {@code ExecutionEvent}
+	 * @see EventType#DYNAMIC_TEST_REGISTERED
 	 */
 	public static ExecutionEvent dynamicTestRegistered(TestDescriptor testDescriptor) {
-		return new ExecutionEvent(Type.DYNAMIC_TEST_REGISTERED, testDescriptor, null);
+		return new ExecutionEvent(EventType.DYNAMIC_TEST_REGISTERED, testDescriptor, null);
 	}
 
 	/**
-	 * Construct a new {@link ExecutionEvent} of type: {@link ExecutionEvent.Type#SKIPPED}.
+	 * Create a <em>skipped</em> {@code ExecutionEvent} for the supplied
+	 * {@link TestDescriptor} and {@code reason}.
 	 *
-	 * @param testDescriptor the {@link TestDescriptor} of the {@link ExecutionEvent} to create, cannot be null
-	 * @param reason the reason {@link String} for why the execution was skipped, cannot be null but may be empty
-	 * @return the newly created {@link ExecutionEvent}
+	 * @param testDescriptor the {@code TestDescriptor} associated with the event;
+	 * never {@code null}
+	 * @param reason the reason the execution was skipped; may be {@code null}
+	 * @return the newly created {@code ExecutionEvent}
+	 * @see EventType#SKIPPED
 	 */
 	public static ExecutionEvent executionSkipped(TestDescriptor testDescriptor, String reason) {
-		Preconditions.notNull(reason, "ExecutionEvent of type SKIPPED, cannot have a null reason");
-		return new ExecutionEvent(Type.SKIPPED, testDescriptor, reason);
+		return new ExecutionEvent(EventType.SKIPPED, testDescriptor, reason);
 	}
 
 	/**
-	 * Construct a new {@link ExecutionEvent} of type: {@link ExecutionEvent.Type#STARTED}.
+	 * Create a <em>started</em> {@code ExecutionEvent} for the supplied
+	 * {@link TestDescriptor}.
 	 *
-	 * @param testDescriptor the {@link TestDescriptor} of the {@link ExecutionEvent} to create, cannot be null
-	 * @return the newly created {@link ExecutionEvent}
+	 * @param testDescriptor the {@code TestDescriptor} associated with the
+	 * event; never {@code null}
+	 * @return the newly created {@code ExecutionEvent}
+	 * @see EventType#STARTED
 	 */
 	public static ExecutionEvent executionStarted(TestDescriptor testDescriptor) {
-		return new ExecutionEvent(Type.STARTED, testDescriptor, null);
+		return new ExecutionEvent(EventType.STARTED, testDescriptor, null);
 	}
 
 	/**
-	 * Construct a new {@link ExecutionEvent} of type: {@link ExecutionEvent.Type#FINISHED}.
+	 * Create a <em>finished</em> {@code ExecutionEvent} for the supplied
+	 * {@link TestDescriptor} and {@link TestExecutionResult}.
 	 *
-	 * @param testDescriptor the {@link TestDescriptor} of the {@link ExecutionEvent} to create, cannot be null
-	 * @param result the {@link TestExecutionResult} of the test finishing, cannot be null
-	 * @return the newly created {@link ExecutionEvent}
+	 * @param testDescriptor the {@code TestDescriptor} associated with the
+	 * event; never {@code null}
+	 * @param result the {@code TestExecutionResult} for the supplied
+	 * {@code TestDescriptor}; never {@code null}
+	 * @return the newly created {@code ExecutionEvent}
+	 * @see EventType#FINISHED
 	 */
 	public static ExecutionEvent executionFinished(TestDescriptor testDescriptor, TestExecutionResult result) {
 		Preconditions.notNull(result, "ExecutionEvent of type FINISHED cannot have a null TestExecutionResult");
-		return new ExecutionEvent(Type.FINISHED, testDescriptor, result);
+		return new ExecutionEvent(EventType.FINISHED, testDescriptor, result);
+	}
+
+	// --- Predicates ----------------------------------------------------------
+
+	/**
+	 * Create a {@link Predicate} for {@linkplain ExecutionEvent execution events}
+	 * whose payload types match the supplied {@code payloadType} and whose payloads
+	 * match the supplied {@code payloadPredicate}.
+	 *
+	 * @param payloadType the required payload type
+	 * @param payloadPredicate a {@code Predicate} to match against payloads
+	 * @return the resulting {@code Predicate}
+	 */
+	public static <T> Predicate<ExecutionEvent> byPayload(Class<T> payloadType, Predicate<? super T> payloadPredicate) {
+		return event -> event.getPayload(payloadType).filter(payloadPredicate).isPresent();
 	}
 
 	/**
-	 * Create a composite {@link Predicate} filter for {@link ExecutionEvent}s by {@code payloadClass} matching the
-	 * provided {@link Predicate}.
+	 * Create a {@link Predicate} for {@linkplain ExecutionEvent execution events}
+	 * whose {@linkplain EventType event types} match the supplied {@code type}.
 	 *
-	 * @param payloadClass the expected payload {@link Class}
-	 * @param predicate the {@link Predicate} to match on type {@code T}
-	 * @param <T> the input expected payload class type
-	 * @return the newly created composite {@link Predicate}
+	 * @param type the type to match against
+	 * @return the resulting {@code Predicate}
 	 */
-	public static <T> Predicate<ExecutionEvent> byPayload(Class<T> payloadClass, Predicate<? super T> predicate) {
-		return event -> event.getPayload(payloadClass).filter(predicate).isPresent();
-	}
-
-	/**
-	 * Create a {@link Predicate} filter for {@link ExecutionEvent}s by {@link ExecutionEvent.Type}.
-	 *
-	 * @param type the {@link ExecutionEvent.Type} to filter
-	 * @return the newly created {@link Predicate}
-	 */
-	public static Predicate<ExecutionEvent> byType(ExecutionEvent.Type type) {
+	public static Predicate<ExecutionEvent> byType(EventType type) {
 		return event -> event.type.equals(type);
 	}
 
 	/**
-	 * Create a composite {@link Predicate} filter combining the provided {@link TestDescriptor} {@link Predicate},
-	 * to any {@link ExecutionEvent}.
+	 * Create a {@link Predicate} for {@linkplain ExecutionEvent execution events}
+	 * whose {@link TestDescriptor TestDescriptors} match the supplied
+	 * {@code testDescriptorPredicate}.
 	 *
-	 * @param predicate the {@link Predicate} for {@link TestDescriptor}
-	 * @return the composite {@link Predicate}
+	 * @param testDescriptorPredicate a {@code Predicate} to match against test
+	 * descriptors
+	 * @return the resulting {@link Predicate}
 	 */
-	public static Predicate<ExecutionEvent> byTestDescriptor(Predicate<? super TestDescriptor> predicate) {
-		return where(ExecutionEvent::getTestDescriptor, predicate);
+	public static Predicate<ExecutionEvent> byTestDescriptor(
+			Predicate<? super TestDescriptor> testDescriptorPredicate) {
+
+		return where(ExecutionEvent::getTestDescriptor, testDescriptorPredicate);
+	}
+
+	// -------------------------------------------------------------------------
+
+	private final Instant timestamp = Instant.now();
+	private final EventType type;
+	private final TestDescriptor testDescriptor;
+	private final Object payload;
+
+	/**
+	 * Construct an {@code ExecutionEvent} with the supplied arguments.
+	 *
+	 * @param type the type of the event; never {@code null}
+	 * @param testDescriptor the {@code TestDescriptor} associated with the event;
+	 * never {@code null}
+	 * @param payload the generic payload associated with the event; may be {@code null}
+	 */
+	private ExecutionEvent(EventType type, TestDescriptor testDescriptor, Object payload) {
+		this.type = Preconditions.notNull(type, "EventType must not be null");
+		this.testDescriptor = Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
+		this.payload = payload;
 	}
 
 	/**
-	 * Get the {@link ExecutionEvent.Type} of this {@link ExecutionEvent}.
+	 * Get the type of this {@code ExecutionEvent}.
 	 *
-	 * @return the {@link ExecutionEvent.Type}
+	 * @return the event type; never {@code null}
+	 * @see EventType
 	 */
-	public ExecutionEvent.Type getType() {
+	public EventType getType() {
 		return this.type;
 	}
 
 	/**
-	 * Get the {@link TestDescriptor} of this {@link ExecutionEvent}, which represents what test or container this
-	 * {@link ExecutionEvent} is for.
+	 * Get the {@link TestDescriptor} associated with this {@code ExecutionEvent}.
 	 *
-	 * @return the {@link TestDescriptor}
+	 * @return the {@code TestDescriptor}; never {@code null}
 	 */
 	public TestDescriptor getTestDescriptor() {
 		return this.testDescriptor;
 	}
 
 	/**
-	 * Get the {@link Instant} when this {@link ExecutionEvent} occurred.
+	 * Get the {@link Instant} when this {@code ExecutionEvent} occurred.
 	 *
-	 * @return the {@link Instant} when this {@link ExecutionEvent} occurred
+	 * @return the {@code Instant} when this {@code ExecutionEvent} occurred;
+	 * never {@code null}
 	 */
 	public Instant getTimestamp() {
 		return this.timestamp;
 	}
 
 	/**
-	 * Get the {@code payload} in an {@link Optional} container.
+	 * Get the payload, if available.
 	 *
-	 * @return the {@link Optional} containing the {@code payload}
+	 * @return an {@code Optional} containing the payload; never {@code null}
+	 * but potentially empty
+	 * @see #getPayload(Class)
+	 * @see #getRequiredPayload(Class)
 	 */
 	public Optional<Object> getPayload() {
 		return Optional.ofNullable(this.payload);
 	}
 
 	/**
-	 * Get the {@code payload} of expected type {@code T}, in an {@link Optional} container.
+	 * Get the payload of the expected type, if available.
 	 *
-	 * <p>This is a convenience method meant for callers who know the expected type of the {@code payload} and
-	 * don't want to cast it manually. This means that if the expected type {@code T} of the {@code payload} is
-	 * different than the actual type, then an {@link Optional#empty()} will be returned.
+	 * <p>This is a convenience method that automatically casts the payload to
+	 * the expected type. If the payload is not present or is not of the expected
+	 * type, this method will return {@link Optional#empty()}.
 	 *
-	 * @param payloadClass the expected {@link Class} type of the {@code payload}
-	 * @param <T> the input type of the {@code payload}
-	 * @return the {@link Optional} containing the expected payload type
+	 * @param payloadType the expected payload type; never {@code null}
+	 * @return an {@code Optional} containing the payload; never {@code null}
+	 * but potentially empty
+	 * @see #getPayload()
+	 * @see #getRequiredPayload(Class)
 	 */
-	public <T> Optional<T> getPayload(Class<T> payloadClass) {
-		return getPayload().filter(payloadClass::isInstance).map(payloadClass::cast);
+	public <T> Optional<T> getPayload(Class<T> payloadType) {
+		Preconditions.notNull(payloadType, "Payload type must not be null");
+		return getPayload().filter(payloadType::isInstance).map(payloadType::cast);
 	}
 
 	/**
-	 * Get the {@code payload} of expected type {@code T}.
+	 * Get the payload of the required type.
 	 *
-	 * <p>This is a convenience method meant for callers who know that the {@code payload} is present and also know
-	 * the actual type of the {@code payload}.  This means that if the expected type {@code T} of the {@code payload}
-	 * is different than the actual type <b>OR</b> the {@code payload} isn't present, then an {@link IllegalArgumentException} will be thrown.
+	 * <p>This is a convenience method that automatically casts the payload to
+	 * the required type. If the payload is not present or is not of the expected
+	 * type, this method will throw an {@link IllegalArgumentException}.
 	 *
-	 * @param payloadClass the expected {@link Class} type of the {@code payload}
-	 * @param <T> the input type of the {@code payload}
-	 * @return the {@code payload} of type {@code T}
-	 * @throws IllegalArgumentException if the expected payload is of a different type, or isn't present
+	 * @param payloadType the required payload type; never {@code null}
+	 * @return the payload
+	 * @throws IllegalArgumentException if the payload is of a different type
+	 * or is not present
+	 * @see #getPayload()
+	 * @see #getPayload(Class)
 	 */
-	public <T> T getPayloadAs(Class<T> payloadClass) {
-		return getPayload(payloadClass).orElseThrow(() -> new IllegalArgumentException(
-			"Cannot access payload from ExecutionEvent when no payload is present."));
+	public <T> T getRequiredPayload(Class<T> payloadType) throws IllegalArgumentException {
+		return getPayload(payloadType).orElseThrow(//
+			() -> new IllegalArgumentException(
+				"ExecutionEvent does not contain a payload of type " + payloadType.getName()));
 	}
 
 	@Override
@@ -221,48 +258,6 @@ public class ExecutionEvent {
 				.append("payload", this.payload)
 				.toString();
 		// @formatter:on
-	}
-
-	/**
-	 * Enumeration of the different possible {@link ExecutionEvent} types.
-	 */
-	public enum Type {
-
-		/**
-		 * Called when a new, dynamic {@link TestDescriptor} has been registered.
-		 *
-		 * @see org.junit.platform.engine.EngineExecutionListener#dynamicTestRegistered(TestDescriptor)
-		 */
-		DYNAMIC_TEST_REGISTERED,
-
-		/**
-		 * Called when the execution of a leaf or subtree of the test tree has been skipped.
-		 *
-		 * @see org.junit.platform.engine.EngineExecutionListener#executionSkipped(TestDescriptor, String)
-		 */
-		SKIPPED,
-
-		/**
-		 * Called when the execution of a leaf or subtree of the test tree is about to be started.
-		 *
-		 * @see org.junit.platform.engine.EngineExecutionListener#executionStarted(TestDescriptor)
-		 */
-		STARTED,
-
-		/**
-		 * Called when the execution of a leaf or subtree of the test tree has finished, regardless of the outcome.
-		 *
-		 * @see org.junit.platform.engine.EngineExecutionListener#executionFinished(TestDescriptor, TestExecutionResult)
-		 */
-		FINISHED,
-
-		/**
-		 * Called when any {@link TestDescriptor} publishes additional information (i.e., test context or test data).
-		 *
-		 * @see org.junit.platform.engine.EngineExecutionListener#reportingEntryPublished(TestDescriptor, ReportEntry)
-		 */
-		REPORTING_ENTRY_PUBLISHED;
-
 	}
 
 }

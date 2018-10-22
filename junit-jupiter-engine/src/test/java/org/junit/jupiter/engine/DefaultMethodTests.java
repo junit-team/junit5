@@ -65,9 +65,9 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 				() -> assertTrue(beforeAllInvoked, "@BeforeAll static method invoked from interface"),
 				() -> assertTrue(afterAllInvoked, "@AfterAll static method invoked from interface"),
 				() -> assertTrue(defaultMethodInvoked, "default @Test method invoked from interface"),
-				() -> assertEquals(1, executionResults.getTestsStartedCount(), "# tests started"),
-				() -> assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded"),
-				() -> assertEquals(0, executionResults.getTestsFailedCount(), "# tests failed")
+				() -> assertEquals(1, executionResults.tests().started().count(), "# tests started"),
+				() -> assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded"),
+				() -> assertEquals(0, executionResults.tests().failed().count(), "# tests failed")
 		);
 		// @formatter:on
 	}
@@ -84,9 +84,9 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 				() -> assertTrue(afterAllInvoked, "@AfterAll default method invoked from interface"),
 				() -> assertTrue(defaultMethodInvoked, "default @Test method invoked from interface"),
 				() -> assertFalse(localMethodInvoked, "local @Test method should not have been invoked from class"),
-				() -> assertEquals(1, executionResults.getTestsStartedCount(), "# tests started"),
-				() -> assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded"),
-				() -> assertEquals(0, executionResults.getTestsFailedCount(), "# tests failed")
+				() -> assertEquals(1, executionResults.tests().started().count(), "# tests started"),
+				() -> assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded"),
+				() -> assertEquals(0, executionResults.tests().failed().count(), "# tests failed")
 		);
 		// @formatter:on
 	}
@@ -104,9 +104,9 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 				() -> assertTrue(afterAllInvoked, "@AfterAll default method invoked from interface"),
 				() -> assertFalse(defaultMethodInvoked, "default @Test method should not have been invoked from interface"),
 				() -> assertTrue(localMethodInvoked, "local @Test method invoked from class"),
-				() -> assertEquals(1, executionResults.getTestsStartedCount(), "# tests started"),
-				() -> assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded"),
-				() -> assertEquals(0, executionResults.getTestsFailedCount(), "# tests failed")
+				() -> assertEquals(1, executionResults.tests().started().count(), "# tests started"),
+				() -> assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded"),
+				() -> assertEquals(0, executionResults.tests().failed().count(), "# tests failed")
 		);
 		// @formatter:on
 	}
@@ -123,9 +123,9 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 				() -> assertTrue(afterAllInvoked, "@AfterAll default method invoked from interface"),
 				() -> assertTrue(defaultMethodInvoked, "default @Test method invoked from interface"),
 				() -> assertTrue(localMethodInvoked, "local @Test method invoked from class"),
-				() -> assertEquals(2, executionResults.getTestsStartedCount(), "# tests started"),
-				() -> assertEquals(2, executionResults.getTestsSuccessfulCount(), "# tests succeeded"),
-				() -> assertEquals(0, executionResults.getTestsFailedCount(), "# tests failed")
+				() -> assertEquals(2, executionResults.tests().started().count(), "# tests started"),
+				() -> assertEquals(2, executionResults.tests().succeeded().count(), "# tests succeeded"),
+				() -> assertEquals(0, executionResults.tests().failed().count(), "# tests failed")
 		);
 		// @formatter:on
 	}
@@ -147,9 +147,9 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 				// 3 instead of 2, that means that the overriding method gets invoked
 				// twice: once as itself and a second time "as" the default method which
 				// should not have been "discovered" since it is overridden.
-				() -> assertEquals(2, executionResults.getTestsStartedCount(), "# tests started"),
-				() -> assertEquals(2, executionResults.getTestsSuccessfulCount(), "# tests succeeded"),
-				() -> assertEquals(0, executionResults.getTestsFailedCount(), "# tests failed")
+				() -> assertEquals(2, executionResults.tests().started().count(), "# tests started"),
+				() -> assertEquals(2, executionResults.tests().succeeded().count(), "# tests succeeded"),
+				() -> assertEquals(0, executionResults.tests().failed().count(), "# tests failed")
 		);
 		// @formatter:on
 	}

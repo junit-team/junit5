@@ -11,8 +11,6 @@
 package org.junit.jupiter.migrationsupport.rules;
 
 import static org.assertj.core.api.Assertions.allOf;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -33,8 +31,8 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.Events;
 import org.junit.platform.testkit.ExecutionRecorder;
-import org.junit.platform.testkit.ExecutionResults;
 import org.junit.rules.ExpectedException;
 
 /**
@@ -46,17 +44,14 @@ class ExpectedExceptionSupportTests {
 
 	@Test
 	void expectedExceptionIsProcessedCorrectly() {
-		ExecutionResults executionResults = executeTestsForClass(ExpectedExceptionTestCase.class).getExecutionResults();
+		Events tests = executeTestsForClass(ExpectedExceptionTestCase.class);
 
-		assertEquals(4, executionResults.getTestsStartedCount(), "# tests started");
-		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionResults.getTestsAbortedCount(), "# tests aborted");
-		assertEquals(3, executionResults.getTestsFailedCount(), "# tests failed");
+		tests.assertStatistics(stats -> stats.started(4).succeeded(1).aborted(0).failed(3));
 
-		assertThat(executionResults.getTestsSuccessfulEvents()).have(
+		tests.succeeded().assertThatEvents().have(
 			event(test("correctExceptionExpectedThrown"), finishedSuccessfully()));
 
-		assertThat(executionResults.getTestsFailedEvents())//
+		tests.failed().assertThatEvents()//
 				.haveExactly(1, //
 					event(test("noExceptionExpectedButThrown"), //
 						finishedWithFailure(message("no exception expected")))) //
@@ -72,28 +67,24 @@ class ExpectedExceptionSupportTests {
 
 	@Test
 	void expectedExceptionSupportWithoutExpectedExceptionRule() {
-		ExecutionResults executionResults = executeTestsForClass(
-			ExpectedExceptionSupportWithoutExpectedExceptionRuleTestCase.class).getExecutionResults();
+		Class<?> testClass = ExpectedExceptionSupportWithoutExpectedExceptionRuleTestCase.class;
+		Events tests = executeTestsForClass(testClass);
 
-		assertEquals(2, executionResults.getTestsStartedCount(), "# tests started");
-		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionResults.getTestsAbortedCount(), "# tests aborted");
-		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
+		tests.assertStatistics(stats -> stats.started(2).succeeded(1).aborted(0).failed(1));
 
-		assertThat(executionResults.getTestsSuccessfulEvents()).have(event(test("success"), finishedSuccessfully()));
+		tests.succeeded().assertThatEvents().have(event(test("success"), finishedSuccessfully()));
 
-		assertThat(executionResults.getTestsFailedEvents())//
-				.haveExactly(1, event(test("failure"), //
-					finishedWithFailure(message("must fail"))));
+		tests.failed().assertThatEvents()//
+				.haveExactly(1, event(test("failure"), finishedWithFailure(message("must fail"))));
 	}
 
-	private ExecutionRecorder executeTestsForClass(Class<?> testClass) {
+	private Events executeTestsForClass(Class<?> testClass) {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
 		JupiterTestEngine engine = new JupiterTestEngine();
 		TestDescriptor testDescriptor = engine.discover(request, UniqueId.forEngine(engine.getId()));
 		ExecutionRecorder executionRecorder = new ExecutionRecorder();
 		engine.execute(new ExecutionRequest(testDescriptor, executionRecorder, request.getConfigurationParameters()));
-		return executionRecorder;
+		return executionRecorder.getExecutionResults().tests();
 	}
 
 	@ExtendWith(ExpectedExceptionSupport.class)

@@ -36,10 +36,10 @@ class LauncherBasedEnableRuleMigrationSupportTests {
 		ExecutionResults executionResults = executeTestsForClass(
 			EnableRuleMigrationSupportWithBothRuleTypesTestCase.class).getExecutionResults();
 
-		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
-		assertEquals(1, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionResults.getTestsAbortedCount(), "# tests aborted");
-		assertEquals(0, executionResults.getTestsFailedCount(), "# tests failed");
+		assertEquals(1, executionResults.tests().started().count(), "# tests started");
+		assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded");
+		assertEquals(0, executionResults.tests().aborted().count(), "# tests aborted");
+		assertEquals(0, executionResults.tests().failed().count(), "# tests failed");
 
 		assertEquals(true, EnableRuleMigrationSupportWithBothRuleTypesTestCase.afterOfRule1WasExecuted,
 			"after of rule 1 executed?");
@@ -54,10 +54,10 @@ class LauncherBasedEnableRuleMigrationSupportTests {
 		ExecutionResults executionResults = executeTestsForClass(
 			VerifierSupportForErrorCollectorTestCase.class).getExecutionResults();
 
-		assertEquals(1, executionResults.getTestsStartedCount(), "# tests started");
-		assertEquals(0, executionResults.getTestsSuccessfulCount(), "# tests succeeded");
-		assertEquals(0, executionResults.getTestsAbortedCount(), "# tests aborted");
-		assertEquals(1, executionResults.getTestsFailedCount(), "# tests failed");
+		assertEquals(1, executionResults.tests().started().count(), "# tests started");
+		assertEquals(0, executionResults.tests().succeeded().count(), "# tests succeeded");
+		assertEquals(0, executionResults.tests().aborted().count(), "# tests aborted");
+		assertEquals(1, executionResults.tests().failed().count(), "# tests failed");
 
 		assertEquals(true, VerifierSupportForErrorCollectorTestCase.survivedBothErrors, "after of rule 1 executed?");
 	}

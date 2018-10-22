@@ -12,13 +12,11 @@ package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.platform.testkit.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.testkit.ExecutionEventConditions.event;
 import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.ExecutionEventConditions.test;
@@ -37,7 +35,7 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.Events;
 import org.mockito.Mockito;
 
 /**
@@ -49,15 +47,11 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeSimpleTestCases() {
-		ExecutionResults executionResults = executeTestsForClass(SimpleTestCases.class);
+		Events tests = executeTestsForClass(SimpleTestCases.class).tests();
 
-		assertAll("Summary of simple test cases run", //
-			() -> assertEquals(3, executionResults.getTestsStartedCount(), "# tests started"), //
-			() -> assertEquals(1, executionResults.getTestsSkippedCount(), "# tests skipped"), //
-			() -> assertEquals(1, executionResults.getTestsFailedCount(), "# tests started") //
-		);
+		tests.assertStatistics(stats -> stats.started(3).skipped(1).failed(1));
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getTestsFailedEvents(), //
+		tests.failed().assertEventsMatchExactly( //
 			event(test("syntaxError"), //
 				finishedWithFailure( //
 					allOf( //

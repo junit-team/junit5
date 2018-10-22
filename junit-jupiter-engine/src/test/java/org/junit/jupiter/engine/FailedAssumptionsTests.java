@@ -10,8 +10,6 @@
 
 package org.junit.jupiter.engine;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.Assume;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
@@ -28,18 +26,18 @@ class FailedAssumptionsTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testAbortedExceptionInBeforeAll() {
-		ExecutionResults executionResults = executeTestsForClass(TestAbortedExceptionInBeforeAllTestCase.class);
+		ExecutionResults results = executeTestsForClass(TestAbortedExceptionInBeforeAllTestCase.class);
 
-		assertEquals(1, executionResults.getContainersAbortedCount(), "# containers aborted");
-		assertEquals(0, executionResults.getTestsStartedCount(), "# tests started");
+		results.containers().assertStatistics(stats -> stats.aborted(1));
+		results.tests().assertStatistics(stats -> stats.started(0));
 	}
 
 	@Test
 	void assumptionViolatedExceptionInBeforeAll() {
-		ExecutionResults executionResults = executeTestsForClass(AssumptionViolatedExceptionInBeforeAllTestCase.class);
+		ExecutionResults results = executeTestsForClass(AssumptionViolatedExceptionInBeforeAllTestCase.class);
 
-		assertEquals(1, executionResults.getContainersAbortedCount(), "# containers aborted");
-		assertEquals(0, executionResults.getTestsStartedCount(), "# tests started");
+		results.containers().assertStatistics(stats -> stats.aborted(1));
+		results.tests().assertStatistics(stats -> stats.started(0));
 	}
 
 	// -------------------------------------------------------------------

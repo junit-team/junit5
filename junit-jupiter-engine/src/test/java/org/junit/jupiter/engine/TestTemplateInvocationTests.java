@@ -20,7 +20,6 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-import static org.junit.platform.testkit.ExecutionEventConditions.assertRecordedExecutionEventsContainsExactly;
 import static org.junit.platform.testkit.ExecutionEventConditions.container;
 import static org.junit.platform.testkit.ExecutionEventConditions.displayName;
 import static org.junit.platform.testkit.ExecutionEventConditions.dynamicTestRegistered;
@@ -70,6 +69,7 @@ import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.Events;
 import org.junit.platform.testkit.ExecutionEvent;
 import org.junit.platform.testkit.ExecutionResults;
 import org.opentest4j.AssertionFailedError;
@@ -86,7 +86,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request);
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithSingleRegisteredExtension"), started()), //
 				event(dynamicTestRegistered("test-template-invocation:#1")), //
@@ -130,7 +130,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request);
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithTwoRegisteredExtensions"), started()), //
 				event(dynamicTestRegistered("test-template-invocation:#1"), displayName("[1]")), //
@@ -149,11 +149,16 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithTwoRegisteredExtensions")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		ExecutionResults results = executeTests(request);
+		Events events = results.all();
+
+		events.assertStatistics(stats -> stats.dynamicallyRegistered(2));
+		//  events.dynamicallyRegistered().debug();
+		//  results.tests().dynamicallyRegistered().debug();
+		//  results.containers().dynamicallyRegistered().debug();
 
 		// @formatter:off
-		Stream<String> legacyReportingNames = executionResults.getExecutionEvents().stream()
-				.filter(ExecutionEvent.byType(ExecutionEvent.Type.DYNAMIC_TEST_REGISTERED))
+		Stream<String> legacyReportingNames = events.dynamicallyRegistered()
 				.map(ExecutionEvent::getTestDescriptor)
 				.map(TestDescriptor::getLegacyReportingName);
 		// @formatter:off
@@ -168,7 +173,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request);
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithTwoInvocationsFromSingleExtension"), started()), //
 				event(dynamicTestRegistered("test-template-invocation:#1"), displayName("[1]")), //
@@ -190,7 +195,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(selectUniqueId(uniqueId));
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithTwoInvocationsFromSingleExtension"), started()), //
 				event(dynamicTestRegistered("test-template-invocation:#2"), displayName("[2]")), //
@@ -207,7 +212,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request);
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithDisabledInvocations"), started()), //
 				event(dynamicTestRegistered("test-template-invocation:#1")), //
@@ -222,7 +227,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request);
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("disabledTemplate"), skippedWithReason("always disabled"))));
 	}
@@ -234,7 +239,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request);
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithCustomizedDisplayNames"), started()), //
 				event(dynamicTestRegistered("test-template-invocation:#1"),
@@ -252,7 +257,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request);
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithDynamicParameterResolver"), started()), //
 				event(dynamicTestRegistered("test-template-invocation:#1"), displayName("[1] foo")), //
@@ -271,7 +276,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request);
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("template"), started()), //
 				event(dynamicTestRegistered("test-template-invocation:#1"), displayName("[1] foo")), //
@@ -290,7 +295,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request);
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithDynamicTestInstancePostProcessor"), started()), //
 				event(dynamicTestRegistered("test-template-invocation:#1")), //
@@ -332,7 +337,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request);
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithWrongParameterType"), started()), //
 				event(container("templateWithWrongParameterType"), finishedWithFailure(message(s -> s.startsWith(
@@ -346,7 +351,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		ExecutionResults executionResults = executeTests(request);
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithSupportingProviderButNoInvocations"), started()), //
 				event(container("templateWithSupportingProviderButNoInvocations"), finishedWithFailure(
@@ -363,7 +368,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		assertThat(InvocationContextProviderWithCloseableStream.streamClosed.get()).describedAs(
 			"streamClosed").isTrue();
 
-		assertRecordedExecutionEventsContainsExactly(executionResults.getExecutionEvents(), //
+		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithCloseableStream"), started()), //
 				event(dynamicTestRegistered("test-template-invocation:#1")), //
@@ -374,7 +379,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 	private TestDescriptor findTestDescriptor(ExecutionResults executionResults, Condition<ExecutionEvent> condition) {
 		// @formatter:off
-		return executionResults.getExecutionEvents().stream()
+		return executionResults.all()
 				.filter(condition::matches)
 				.findAny()
 				.map(ExecutionEvent::getTestDescriptor)
