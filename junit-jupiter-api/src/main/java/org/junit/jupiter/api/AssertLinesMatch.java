@@ -58,6 +58,7 @@ class AssertLinesMatch {
 			if (IntStream.range(0, expectedSize).allMatch(i -> matches(expectedLines.get(i), actualLines.get(i)))) {
 				return;
 			}
+			// else fall-through to "with fast-forward" matching
 		}
 
 		assertLinesMatchWithFastForward(expectedLines, actualLines);
@@ -69,8 +70,14 @@ class AssertLinesMatch {
 
 		main: while (!expectedDeque.isEmpty()) {
 			String expectedLine = expectedDeque.pop();
-			String actualLine = actualDeque.peek();
+			int expectedLineNumber = expectedLines.size() - expectedDeque.size(); // 1-based line number
+			// trivial case: no more actual lines available
+			if (actualDeque.isEmpty()) {
+				fail(expectedLines, actualLines, "expected line #%d:`%s` not found - actual lines depleted",
+					expectedLineNumber, snippet(expectedLine));
+			}
 
+			String actualLine = actualDeque.peek();
 			// trivial case: take the fast path when they simply match
 			if (matches(expectedLine, actualLine)) {
 				actualDeque.pop();
@@ -115,8 +122,8 @@ class AssertLinesMatch {
 				}
 			}
 
-			int number = expectedLines.size() - expectedDeque.size(); // 1-based line number
-			fail(expectedLines, actualLines, "expected line #%d:`%s` doesn't match", number, snippet(expectedLine));
+			fail(expectedLines, actualLines, "expected line #%d:`%s` doesn't match", expectedLineNumber,
+				snippet(expectedLine));
 		}
 
 		// after math
@@ -163,11 +170,13 @@ class AssertLinesMatch {
 	}
 
 	static boolean matches(String expectedLine, String actualLine) {
+		notNull(expectedLine, "expected line must not be null");
+		notNull(actualLine, "actual line must not be null");
 		if (expectedLine.equals(actualLine)) {
 			return true;
 		}
 		try {
-			return (actualLine != null) && actualLine.matches(expectedLine);
+			return actualLine.matches(expectedLine);
 		}
 		catch (PatternSyntaxException ignore) {
 			return false;
