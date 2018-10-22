@@ -495,6 +495,14 @@ class, and to find and invoke methods. Some of these methods traverse class hier
 to locate matching methods. Consult the Javadoc for `{ReflectionSupport}` for further
 details.
 
+[[extensions-supported-utilities-modifier]]
+==== Modifier Support
+
+`ModifierSupport` provides static utility methods for working with member and class
+modifiers (i.e., is a member declared `public` or `private`?). Consult the Javadoc for
+`{ModifierSupport}` for further details.
+
+
 [[extensions-execution-order]]
 === Relative Execution Order of User Code and Extensions
 
