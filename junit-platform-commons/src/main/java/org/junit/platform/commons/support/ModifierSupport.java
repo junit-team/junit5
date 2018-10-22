@@ -19,12 +19,13 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
- * Common modifier support.
+ * This class provides static utility methods for working with member and class
+ * modifiers (i.e., is a member declared {@code public} or {@code private}?).
  *
  * @since 1.4
  * @see java.lang.reflect.Modifier
  */
-@API(status = MAINTAINED, since = "1.4.0")
+@API(status = MAINTAINED, since = "1.4")
 public final class ModifierSupport {
 
 	/**
