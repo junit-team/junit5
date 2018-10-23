@@ -33,7 +33,8 @@ repository on GitHub.
   single `DynamicNode` -- for example, a `DynamicTest` or a `DynamicContainer`.
 * New `DisplayNameGenerator` interface and `@DisplayNameGeneration` annotation that allow
   declarative configuration of a pre-defined or custom display name generator.
-
+* New `ModifierSupport` class providing an API for extension and test engine authors to
+  inspect modifiers of classes and members.
 
 [[release-notes-5.4.0-M1-junit-jupiter]]
 === JUnit Jupiter
