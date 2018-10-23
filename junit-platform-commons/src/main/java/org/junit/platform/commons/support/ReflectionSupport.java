@@ -23,7 +23,13 @@ import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
- * Common reflection and classpath scanning support.
+ * {@code ReflectionSupport} provides static utility methods for common
+ * reflection tasks &mdash; for example, scanning for classes in the class-path
+ * or module-path, loading classes, finding methods, invoking methods, etc.
+ *
+ * <p>{@link org.junit.platform.engine.TestEngine TestEngine} and extension
+ * authors are encouraged to use these supported methods in order to align with
+ * the behavior of the JUnit Platform.
  *
  * @since 1.0
  * @see AnnotationSupport

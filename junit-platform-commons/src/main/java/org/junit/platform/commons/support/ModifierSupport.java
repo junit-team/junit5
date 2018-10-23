@@ -19,10 +19,14 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
- * This class provides static utility methods for working with class and member
- * {@linkplain java.lang.reflect.Modifier modifiers} &mdash; for example, to
- * determine if a class or member is declared as {@code public}, {@code private},
- * {@code abstract}, {@code static}, etc.
+ * {@code ModifierSupport} provides static utility methods for working with
+ * class and member {@linkplain java.lang.reflect.Modifier modifiers} &mdash;
+ * for example, to determine if a class or member is declared as
+ * {@code public}, {@code private}, {@code abstract}, {@code static}, etc.
+ *
+ * <p>{@link org.junit.platform.engine.TestEngine TestEngine} and extension
+ * authors are encouraged to use these supported methods in order to align with
+ * the behavior of the JUnit Platform.
  *
  * @since 1.4
  * @see java.lang.reflect.Modifier

@@ -18,7 +18,14 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ClassUtils;
 
 /**
- * Common class support.
+ * {@code ClassSupport} provides static utility methods for common tasks
+ * regarding {@linkplain Class classes} &mdash; for example, generating a
+ * comma-separated list of fully qualified class names for a set of supplied
+ * classes.
+ *
+ * <p>{@link org.junit.platform.engine.TestEngine TestEngine} and extension
+ * authors are encouraged to use these supported methods in order to align with
+ * the behavior of the JUnit Platform.
  *
  * @since 1.1
  * @see AnnotationSupport

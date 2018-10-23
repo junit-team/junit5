@@ -24,7 +24,15 @@ import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
- * Common annotation support.
+ * {@code AnnotationSupport} provides static utility methods for common tasks
+ * regarding annotations &mdash; for example, checking if a class, method, or
+ * field is annotated with a particular annotation; finding annotations on a
+ * given class, method, or, field; finding fields or methods annotated with
+ * a particular annotation, etc.
+ *
+ * <p>{@link org.junit.platform.engine.TestEngine TestEngine} and extension
+ * authors are encouraged to use these supported methods in order to align with
+ * the behavior of the JUnit Platform.
  *
  * @since 1.0
  * @see ClassSupport
