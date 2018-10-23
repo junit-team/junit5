@@ -65,6 +65,7 @@
 26b672a8b01c69148e533acb116b9a34  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/ElementResolver.java
 26c96616501733badaa544c27e156cca  junit-platform-console/src/main/java/org/junit/platform/console/options/CommandLineOptionsParser.java
 275e0685d1da810f52ccf152c3746254  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNotNull.java
+2977cf14c8f7155ac39809fb1e365391  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 2aa828d318414d249bb5f4166db22563  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestableMethod.java
 2b963925ddef935fe62c2a1fead699be  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/package-info.java
 2ba206e4ab4fc1429e9d6b05f85bc5ff  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/package-info.java
@@ -562,5 +563,4 @@ feffce9e18e5c2c3c63a62df58cd1029  junit-jupiter-params/src/main/java/org/junit/j
 ff01ace695ed172ed9b66bcf856d5a9e  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/EngineExecutionContext.java
 ff8b37a256a3da14c429ac3f36f9ba25  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/AbstractClassNameFilter.java
 ff9c4016b693b2c6b64839791ee1fd66  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Operators.java
-ffbb8001c2735336410367cc17bfc986  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 ffdf23a6d0cf694a7b457ff1aeb80d03  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ArgumentsSource.java
