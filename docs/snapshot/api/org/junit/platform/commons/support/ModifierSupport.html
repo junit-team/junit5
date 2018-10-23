@@ -137,10 +137,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
 public final class <span class="typeNameLabel">ModifierSupport</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
-<div class="block">This class provides static utility methods for working with class and member
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Modifier.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">modifiers</a> &mdash; for example, to
- determine if a class or member is declared as <code>public</code>, <code>private</code>,
- <code>abstract</code>, <code>static</code>, etc.</div>
+<div class="block"><code>ModifierSupport</code> provides static utility methods for working with
+ class and member <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Modifier.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">modifiers</a> &mdash;
+ for example, to determine if a class or member is declared as
+ <code>public</code>, <code>private</code>, <code>abstract</code>, <code>static</code>, etc.
+
+ <p><a href="../../engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> and extension
+ authors are encouraged to use these supported methods in order to align with
+ the behavior of the JUnit Platform.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.4</dd>
