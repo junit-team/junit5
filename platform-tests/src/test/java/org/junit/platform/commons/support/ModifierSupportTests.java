@@ -10,14 +10,22 @@
 
 package org.junit.platform.commons.support;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Unit tests for {@link ModifierSupport}.
@@ -27,79 +35,111 @@ import org.junit.platform.commons.util.PreconditionViolationException;
 class ModifierSupportTests {
 
 	@Test
-	void isPublic() throws Exception {
+	void isPublicPreconditions() throws Exception {
 		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isPublic((Class<?>) null));
 		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isPublic((Member) null));
+	}
 
-		assertTrue(ModifierSupport.isPublic(PublicClass.class));
-		assertTrue(ModifierSupport.isPublic(PublicClass.class.getMethod("publicMethod")));
+	@Classes
+	void isPublicDelegates(Class<?> clazz) throws Exception {
+		assertEquals(ReflectionUtils.isPublic(clazz), ModifierSupport.isPublic(clazz));
+	}
 
-		assertFalse(ModifierSupport.isPublic(PrivateClass.class));
-		assertFalse(ModifierSupport.isPublic(PrivateClass.class.getDeclaredMethod("privateMethod")));
-		assertFalse(ModifierSupport.isPublic(ProtectedClass.class));
-		assertFalse(ModifierSupport.isPublic(ProtectedClass.class.getDeclaredMethod("protectedMethod")));
-		assertFalse(ModifierSupport.isPublic(PackageVisibleClass.class));
-		assertFalse(ModifierSupport.isPublic(PackageVisibleClass.class.getDeclaredMethod("packageVisibleMethod")));
+	@Methods
+	void isPublicDelegates(Method method) throws Exception {
+		assertEquals(ReflectionUtils.isPublic(method), ModifierSupport.isPublic(method));
 	}
 
 	@Test
-	void isPrivate() throws Exception {
+	void isPrivatePreconditions() throws Exception {
 		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isPrivate((Class<?>) null));
 		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isPrivate((Member) null));
+	}
 
-		assertTrue(ModifierSupport.isPrivate(PrivateClass.class));
-		assertTrue(ModifierSupport.isPrivate(PrivateClass.class.getDeclaredMethod("privateMethod")));
+	@Classes
+	void isPrivateDelegates(Class<?> clazz) throws Exception {
+		assertEquals(ReflectionUtils.isPrivate(clazz), ModifierSupport.isPrivate(clazz));
+	}
 
-		assertFalse(ModifierSupport.isPrivate(PublicClass.class));
-		assertFalse(ModifierSupport.isPrivate(PublicClass.class.getMethod("publicMethod")));
-		assertFalse(ModifierSupport.isPrivate(ProtectedClass.class));
-		assertFalse(ModifierSupport.isPrivate(ProtectedClass.class.getDeclaredMethod("protectedMethod")));
-		assertFalse(ModifierSupport.isPrivate(PackageVisibleClass.class));
-		assertFalse(ModifierSupport.isPrivate(PackageVisibleClass.class.getDeclaredMethod("packageVisibleMethod")));
+	@Methods
+	void isPrivateDelegates(Method method) throws Exception {
+		assertEquals(ReflectionUtils.isPrivate(method), ModifierSupport.isPrivate(method));
 	}
 
 	@Test
-	void isNotPrivate() throws Exception {
+	void isNotPrivatePreconditions() throws Exception {
 		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isNotPrivate(null));
+	}
 
-		assertTrue(ModifierSupport.isNotPrivate(PublicClass.class.getDeclaredMethod("publicMethod")));
-		assertTrue(ModifierSupport.isNotPrivate(ProtectedClass.class.getDeclaredMethod("protectedMethod")));
-		assertTrue(ModifierSupport.isNotPrivate(PackageVisibleClass.class.getDeclaredMethod("packageVisibleMethod")));
+	//	@Classes
+	//	void isNotPrivateDelegates(Class<?> clazz) throws Exception {
+	//		assertEquals(ReflectionUtils.isNotPrivate(clazz), ModifierSupport.isNotPrivate(clazz));
+	//	}
 
-		assertFalse(ModifierSupport.isNotPrivate(PrivateClass.class.getDeclaredMethod("privateMethod")));
+	@Methods
+	void isNotPrivateDelegates(Method method) throws Exception {
+		assertEquals(ReflectionUtils.isNotPrivate(method), ModifierSupport.isNotPrivate(method));
 	}
 
 	@Test
-	void isAbstract() throws Exception {
+	void isAbstractPreconditions() throws Exception {
 		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isAbstract((Class<?>) null));
 		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isAbstract((Member) null));
+	}
 
-		assertTrue(ModifierSupport.isAbstract(AbstractClass.class));
-		assertTrue(ModifierSupport.isAbstract(AbstractClass.class.getDeclaredMethod("abstractMethod")));
+	@Classes
+	void isAbstractDelegates(Class<?> clazz) throws Exception {
+		assertEquals(ReflectionUtils.isAbstract(clazz), ModifierSupport.isAbstract(clazz));
+	}
 
-		assertFalse(ModifierSupport.isAbstract(PublicClass.class));
-		assertFalse(ModifierSupport.isAbstract(PublicClass.class.getDeclaredMethod("publicMethod")));
+	@Methods
+	void isAbstractDelegates(Method method) throws Exception {
+		assertEquals(ReflectionUtils.isAbstract(method), ModifierSupport.isAbstract(method));
 	}
 
 	@Test
-	void isStatic() throws Exception {
+	void isStaticPreconditions() throws Exception {
 		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isStatic((Class<?>) null));
 		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isStatic((Member) null));
+	}
 
-		assertTrue(ModifierSupport.isStatic(StaticClass.class));
-		assertTrue(ModifierSupport.isStatic(StaticClass.class.getDeclaredMethod("staticMethod")));
+	@Classes
+	void isStaticDelegates(Class<?> clazz) throws Exception {
+		assertEquals(ReflectionUtils.isStatic(clazz), ModifierSupport.isStatic(clazz));
+	}
 
-		assertFalse(ModifierSupport.isStatic(PublicClass.class));
-		assertFalse(ModifierSupport.isStatic(PublicClass.class.getDeclaredMethod("publicMethod")));
+	@Methods
+	void isStaticDelegates(Method method) throws Exception {
+		assertEquals(ReflectionUtils.isStatic(method), ModifierSupport.isStatic(method));
 	}
 
 	@Test
-	void isNotStatic() throws Exception {
+	void isNotStaticPreconditions() throws Exception {
 		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isNotStatic(null));
+	}
 
-		assertTrue(ModifierSupport.isNotStatic(PublicClass.class.getDeclaredMethod("publicMethod")));
+	//	@Classes
+	//	void isNotStaticDelegates(Class<?> clazz) throws Exception {
+	//		assertEquals(ReflectionUtils.isNotStatic(clazz), ModifierSupport.isNotStatic(clazz));
+	//	}
 
-		assertFalse(ModifierSupport.isNotStatic(StaticClass.class.getDeclaredMethod("staticMethod")));
+	@Methods
+	void isNotStaticDelegates(Method method) throws Exception {
+		assertEquals(ReflectionUtils.isNotStatic(method), ModifierSupport.isNotStatic(method));
+	}
+
+	static Stream<Class<?>> classes() {
+		return Stream.of(PublicClass.class, PrivateClass.class, ProtectedClass.class, PackageVisibleClass.class,
+			AbstractClass.class, StaticClass.class);
+	}
+
+	static Stream<Method> methods() throws Exception {
+		return Stream.of(PublicClass.class.getMethod("publicMethod"),
+			PrivateClass.class.getDeclaredMethod("privateMethod"),
+			ProtectedClass.class.getDeclaredMethod("protectedMethod"),
+			PackageVisibleClass.class.getDeclaredMethod("packageVisibleMethod"),
+			AbstractClass.class.getDeclaredMethod("abstractMethod"),
+			StaticClass.class.getDeclaredMethod("staticMethod"));
 	}
 
 	// -------------------------------------------------------------------------
@@ -141,6 +181,22 @@ class ModifierSupportTests {
 
 		static void staticMethod() {
 		}
+	}
+
+	// -------------------------------------------------------------------------
+
+	@Target(ElementType.METHOD)
+	@Retention(RetentionPolicy.RUNTIME)
+	@ParameterizedTest
+	@MethodSource("classes")
+	@interface Classes {
+	}
+
+	@Target(ElementType.METHOD)
+	@Retention(RetentionPolicy.RUNTIME)
+	@ParameterizedTest
+	@MethodSource("methods")
+	@interface Methods {
 	}
 
 }
