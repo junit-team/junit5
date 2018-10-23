@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -130,20 +131,6 @@ class ModifierSupportTests {
 		assertEquals(ReflectionUtils.isNotStatic(method), ModifierSupport.isNotStatic(method));
 	}
 
-	static Stream<Class<?>> classes() {
-		return Stream.of(PublicClass.class, PrivateClass.class, ProtectedClass.class, PackageVisibleClass.class,
-			AbstractClass.class, StaticClass.class);
-	}
-
-	static Stream<Method> methods() throws Exception {
-		return Stream.of(PublicClass.class.getMethod("publicMethod"),
-			PrivateClass.class.getDeclaredMethod("privateMethod"),
-			ProtectedClass.class.getDeclaredMethod("protectedMethod"),
-			PackageVisibleClass.class.getDeclaredMethod("packageVisibleMethod"),
-			AbstractClass.class.getDeclaredMethod("abstractMethod"),
-			StaticClass.class.getDeclaredMethod("staticMethod"));
-	}
-
 	// -------------------------------------------------------------------------
 
 	// Intentionally non-static
@@ -190,7 +177,8 @@ class ModifierSupportTests {
 	@Target(ElementType.METHOD)
 	@Retention(RetentionPolicy.RUNTIME)
 	@ParameterizedTest
-	@MethodSource("classes")
+	@ValueSource(classes = { PublicClass.class, PrivateClass.class, ProtectedClass.class, PackageVisibleClass.class,
+			AbstractClass.class, StaticClass.class })
 	@interface Classes {
 	}
 
@@ -199,6 +187,16 @@ class ModifierSupportTests {
 	@ParameterizedTest
 	@MethodSource("methods")
 	@interface Methods {
+	}
+
+	static Stream<Method> methods() throws Exception {
+		return Stream.of(//
+			PublicClass.class.getMethod("publicMethod"), //
+			PrivateClass.class.getDeclaredMethod("privateMethod"),
+			ProtectedClass.class.getDeclaredMethod("protectedMethod"),
+			PackageVisibleClass.class.getDeclaredMethod("packageVisibleMethod"),
+			AbstractClass.class.getDeclaredMethod("abstractMethod"),
+			StaticClass.class.getDeclaredMethod("staticMethod"));
 	}
 
 }
