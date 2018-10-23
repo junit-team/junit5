@@ -22,6 +22,7 @@ import org.junit.platform.commons.util.ClassUtils;
  *
  * @since 1.1
  * @see AnnotationSupport
+ * @see ModifierSupport
  * @see ReflectionSupport
  */
 @API(status = MAINTAINED, since = "1.1")

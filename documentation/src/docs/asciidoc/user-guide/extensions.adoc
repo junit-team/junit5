@@ -499,8 +499,9 @@ details.
 ==== Modifier Support
 
 `ModifierSupport` provides static utility methods for working with member and class
-modifiers (i.e., is a member declared `public` or `private`?). Consult the Javadoc for
-`{ModifierSupport}` for further details.
+modifiers -- for example, to determine if a member is declared as `public`, `private`,
+`abstract`, `static`, etc. Consult the Javadoc for `{ModifierSupport}` for further
+details.
 
 
 [[extensions-execution-order]]

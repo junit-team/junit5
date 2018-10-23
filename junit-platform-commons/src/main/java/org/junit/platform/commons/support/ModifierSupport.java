@@ -19,11 +19,16 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
- * This class provides static utility methods for working with member and class
- * modifiers (i.e., is a member declared {@code public} or {@code private}?).
+ * This class provides static utility methods for working with class and member
+ * {@linkplain java.lang.reflect.Modifier modifiers} &mdash; for example, to
+ * determine if a class or member is declared as {@code public}, {@code private},
+ * {@code abstract}, {@code static}, etc.
  *
  * @since 1.4
  * @see java.lang.reflect.Modifier
+ * @see AnnotationSupport
+ * @see ClassSupport
+ * @see ReflectionSupport
  */
 @API(status = MAINTAINED, since = "1.4")
 public final class ModifierSupport {
@@ -156,4 +161,5 @@ public final class ModifierSupport {
 		Preconditions.notNull(member, "Member must not be null");
 		return ReflectionUtils.isNotStatic(member);
 	}
+
 }

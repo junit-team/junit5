@@ -28,6 +28,9 @@ class ModifierSupportTests {
 
 	@Test
 	void isPublic() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isPublic((Class<?>) null));
+		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isPublic((Member) null));
+
 		assertTrue(ModifierSupport.isPublic(PublicClass.class));
 		assertTrue(ModifierSupport.isPublic(PublicClass.class.getMethod("publicMethod")));
 
@@ -37,13 +40,13 @@ class ModifierSupportTests {
 		assertFalse(ModifierSupport.isPublic(ProtectedClass.class.getDeclaredMethod("protectedMethod")));
 		assertFalse(ModifierSupport.isPublic(PackageVisibleClass.class));
 		assertFalse(ModifierSupport.isPublic(PackageVisibleClass.class.getDeclaredMethod("packageVisibleMethod")));
-
-		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isPublic((Class<?>) null));
-		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isPublic((Member) null));
 	}
 
 	@Test
 	void isPrivate() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isPrivate((Class<?>) null));
+		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isPrivate((Member) null));
+
 		assertTrue(ModifierSupport.isPrivate(PrivateClass.class));
 		assertTrue(ModifierSupport.isPrivate(PrivateClass.class.getDeclaredMethod("privateMethod")));
 
@@ -53,53 +56,50 @@ class ModifierSupportTests {
 		assertFalse(ModifierSupport.isPrivate(ProtectedClass.class.getDeclaredMethod("protectedMethod")));
 		assertFalse(ModifierSupport.isPrivate(PackageVisibleClass.class));
 		assertFalse(ModifierSupport.isPrivate(PackageVisibleClass.class.getDeclaredMethod("packageVisibleMethod")));
-
-		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isPrivate((Class<?>) null));
-		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isPrivate((Member) null));
 	}
 
 	@Test
 	void isNotPrivate() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isNotPrivate(null));
+
 		assertTrue(ModifierSupport.isNotPrivate(PublicClass.class.getDeclaredMethod("publicMethod")));
 		assertTrue(ModifierSupport.isNotPrivate(ProtectedClass.class.getDeclaredMethod("protectedMethod")));
 		assertTrue(ModifierSupport.isNotPrivate(PackageVisibleClass.class.getDeclaredMethod("packageVisibleMethod")));
 
 		assertFalse(ModifierSupport.isNotPrivate(PrivateClass.class.getDeclaredMethod("privateMethod")));
-
-		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isNotPrivate(null));
 	}
 
 	@Test
 	void isAbstract() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isAbstract((Class<?>) null));
+		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isAbstract((Member) null));
+
 		assertTrue(ModifierSupport.isAbstract(AbstractClass.class));
 		assertTrue(ModifierSupport.isAbstract(AbstractClass.class.getDeclaredMethod("abstractMethod")));
 
 		assertFalse(ModifierSupport.isAbstract(PublicClass.class));
 		assertFalse(ModifierSupport.isAbstract(PublicClass.class.getDeclaredMethod("publicMethod")));
-
-		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isAbstract((Class<?>) null));
-		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isAbstract((Member) null));
 	}
 
 	@Test
 	void isStatic() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isStatic((Class<?>) null));
+		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isStatic((Member) null));
+
 		assertTrue(ModifierSupport.isStatic(StaticClass.class));
 		assertTrue(ModifierSupport.isStatic(StaticClass.class.getDeclaredMethod("staticMethod")));
 
 		assertFalse(ModifierSupport.isStatic(PublicClass.class));
 		assertFalse(ModifierSupport.isStatic(PublicClass.class.getDeclaredMethod("publicMethod")));
-
-		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isStatic((Class<?>) null));
-		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isStatic((Member) null));
 	}
 
 	@Test
 	void isNotStatic() throws Exception {
+		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isNotStatic(null));
+
 		assertTrue(ModifierSupport.isNotStatic(PublicClass.class.getDeclaredMethod("publicMethod")));
 
 		assertFalse(ModifierSupport.isNotStatic(StaticClass.class.getDeclaredMethod("staticMethod")));
-
-		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isNotStatic(null));
 	}
 
 	// -------------------------------------------------------------------------

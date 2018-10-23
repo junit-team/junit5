@@ -28,6 +28,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * @since 1.0
  * @see ClassSupport
+ * @see ModifierSupport
  * @see ReflectionSupport
  */
 @API(status = MAINTAINED, since = "1.0")

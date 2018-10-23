@@ -28,6 +28,8 @@ repository on GitHub.
 
 * New `ModifierSupport` class providing an API for extension and test engine authors to
   inspect modifiers of classes and members.
+  - See the <<../user-guide/index.adoc#extensions-supported-utilities-modifier, User
+    Guide>> for details.
 
 
 [[release-notes-5.4.0-M1-junit-jupiter]]
