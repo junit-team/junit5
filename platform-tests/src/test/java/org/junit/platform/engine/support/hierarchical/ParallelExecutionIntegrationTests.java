@@ -115,21 +115,20 @@ class ParallelExecutionIntegrationTests {
 
 	@Test
 	void customContextClassLoader() {
-		var thread = Thread.currentThread();
-		ClassLoader old = thread.getContextClassLoader();
-		ClassLoader tccl = new URLClassLoader("(-:", new URL[0], ClassLoader.getSystemClassLoader());
+		var currentThread = Thread.currentThread();
+		var currentLoader = currentThread.getContextClassLoader();
+		var smilingLoader = new URLClassLoader("(-:", new URL[0], ClassLoader.getSystemClassLoader());
+		currentThread.setContextClassLoader(smilingLoader);
 		try {
-			thread.setContextClassLoader(tccl);
-			List<ExecutionEvent> executionEvents = execute(3, SuccessfulWithMethodLockTestCase.class);
+			var executionEvents = execute(3, SuccessfulWithMethodLockTestCase.class);
 
 			assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
 			assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(3);
 			assertThat(ThreadReporter.getLoaderNames(executionEvents)).containsExactly("(-:");
 		}
 		finally {
-			thread.setContextClassLoader(old);
+			currentThread.setContextClassLoader(currentLoader);
 		}
-
 	}
 
 	@RepeatedTest(10)
@@ -451,7 +450,7 @@ class ParallelExecutionIntegrationTests {
 			// @formatter:off
 			return executionEvents.stream()
 					.filter(type(REPORTING_ENTRY_PUBLISHED)::matches)
-					.map(event -> event.getPayload(ReportEntry.class).orElse(null))
+					.map(event -> event.getPayload(ReportEntry.class).orElseThrow())
 					.map(ReportEntry::getKeyValuePairs)
 					.filter(keyValuePairs -> keyValuePairs.containsKey(key))
 					.map(keyValuePairs -> keyValuePairs.get(key))
