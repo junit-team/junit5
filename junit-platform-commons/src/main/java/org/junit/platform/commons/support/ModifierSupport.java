@@ -28,6 +28,10 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(status = MAINTAINED, since = "1.4")
 public final class ModifierSupport {
 
+	private ModifierSupport() {
+		/* no-op */
+	}
+
 	/**
 	 * Returns {@code true} if the given class is declared {@code public}, {@code false} otherwise.
 	 *
