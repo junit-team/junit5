@@ -90,10 +90,31 @@ public final class ModifierSupport {
 	}
 
 	/**
+	 * Determine if the supplied class is not {@code private}.
+	 *
+	 * <p>In other words this method will return {@code true} for classes
+	 * declared as {@code public}, {@code protected}, or
+	 * <em>package private</em> and {@code false} for classes declared as
+	 * {@code private}.
+	 *
+	 * @param clazz the class to check; never {@code null}
+	 * @return {@code true} if the class is not {@code private}
+	 * @see java.lang.reflect.Modifier#isPublic(int)
+	 * @see java.lang.reflect.Modifier#isProtected(int)
+	 * @see java.lang.reflect.Modifier#isPrivate(int)
+	 */
+	public static boolean isNotPrivate(Class<?> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		return ReflectionUtils.isNotPrivate(clazz);
+	}
+
+	/**
 	 * Determine if the supplied member is not {@code private}.
 	 *
-	 * <p>In other words this method will return true for members declared {@code public}, {@code protected} or
-	 * {@code package private} and {@code false} for members declared {@code private}.</p>
+	 * <p>In other words this method will return {@code true} for members
+	 * declared as {@code public}, {@code protected}, or
+	 * <em>package private</em> and {@code false} for members declared as
+	 * {@code private}.
 	 *
 	 * @param member the member to check; never {@code null}
 	 * @return {@code true} if the member is not {@code private}
@@ -152,6 +173,18 @@ public final class ModifierSupport {
 	public static boolean isStatic(Member member) {
 		Preconditions.notNull(member, "Member must not be null");
 		return ReflectionUtils.isStatic(member);
+	}
+
+	/**
+	 * Determine if the supplied class is not {@code static}.
+	 *
+	 * @param clazz the class to check; never {@code null}
+	 * @return {@code true} if the class is not {@code static}
+	 * @see java.lang.reflect.Modifier#isStatic(int)
+	 */
+	public static boolean isNotStatic(Class<?> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		return ReflectionUtils.isNotStatic(clazz);
 	}
 
 	/**

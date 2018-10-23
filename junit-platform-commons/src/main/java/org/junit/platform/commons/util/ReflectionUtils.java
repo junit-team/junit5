@@ -228,6 +228,10 @@ public final class ReflectionUtils {
 		return Modifier.isPrivate(member.getModifiers());
 	}
 
+	public static boolean isNotPrivate(Class<?> clazz) {
+		return !isPrivate(clazz);
+	}
+
 	public static boolean isNotPrivate(Member member) {
 		return !isPrivate(member);
 	}
@@ -242,6 +246,10 @@ public final class ReflectionUtils {
 
 	public static boolean isStatic(Class<?> clazz) {
 		return Modifier.isStatic(clazz.getModifiers());
+	}
+
+	public static boolean isNotStatic(Class<?> clazz) {
+		return !isStatic(clazz);
 	}
 
 	public static boolean isStatic(Member member) {

@@ -68,13 +68,14 @@ class ModifierSupportTests {
 
 	@Test
 	void isNotPrivatePreconditions() throws Exception {
-		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isNotPrivate(null));
+		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isNotPrivate((Class<?>) null));
+		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isNotPrivate((Member) null));
 	}
 
-	//	@Classes
-	//	void isNotPrivateDelegates(Class<?> clazz) throws Exception {
-	//		assertEquals(ReflectionUtils.isNotPrivate(clazz), ModifierSupport.isNotPrivate(clazz));
-	//	}
+	@Classes
+	void isNotPrivateDelegates(Class<?> clazz) throws Exception {
+		assertEquals(ReflectionUtils.isNotPrivate(clazz), ModifierSupport.isNotPrivate(clazz));
+	}
 
 	@Methods
 	void isNotPrivateDelegates(Method method) throws Exception {
@@ -115,13 +116,14 @@ class ModifierSupportTests {
 
 	@Test
 	void isNotStaticPreconditions() throws Exception {
-		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isNotStatic(null));
+		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isNotStatic((Class<?>) null));
+		assertThrows(PreconditionViolationException.class, () -> ModifierSupport.isNotStatic((Member) null));
 	}
 
-	//	@Classes
-	//	void isNotStaticDelegates(Class<?> clazz) throws Exception {
-	//		assertEquals(ReflectionUtils.isNotStatic(clazz), ModifierSupport.isNotStatic(clazz));
-	//	}
+	@Classes
+	void isNotStaticDelegates(Class<?> clazz) throws Exception {
+		assertEquals(ReflectionUtils.isNotStatic(clazz), ModifierSupport.isNotStatic(clazz));
+	}
 
 	@Methods
 	void isNotStaticDelegates(Method method) throws Exception {

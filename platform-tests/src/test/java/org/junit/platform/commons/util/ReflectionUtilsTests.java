@@ -98,11 +98,11 @@ class ReflectionUtilsTests {
 
 	@Test
 	void isNotPrivate() throws Exception {
-		// assertTrue(ReflectionUtils.isNotPrivate(PublicClass.class));
+		assertTrue(ReflectionUtils.isNotPrivate(PublicClass.class));
 		assertTrue(ReflectionUtils.isNotPrivate(PublicClass.class.getDeclaredMethod("publicMethod")));
-		// assertTrue(ReflectionUtils.isNotPrivate(ProtectedClass.class);
+		assertTrue(ReflectionUtils.isNotPrivate(ProtectedClass.class));
 		assertTrue(ReflectionUtils.isNotPrivate(ProtectedClass.class.getDeclaredMethod("protectedMethod")));
-		// assertTrue(ReflectionUtils.isNotPrivate(PackageVisibleClass.class);
+		assertTrue(ReflectionUtils.isNotPrivate(PackageVisibleClass.class));
 		assertTrue(ReflectionUtils.isNotPrivate(PackageVisibleClass.class.getDeclaredMethod("packageVisibleMethod")));
 
 		assertFalse(ReflectionUtils.isNotPrivate(PrivateClass.class.getDeclaredMethod("privateMethod")));
@@ -128,9 +128,10 @@ class ReflectionUtilsTests {
 
 	@Test
 	void isNotStatic() throws Exception {
-		// assertTrue(ReflectionUtils.isNotStatic(PublicClass.class));
+		assertTrue(ReflectionUtils.isNotStatic(PublicClass.class));
 		assertTrue(ReflectionUtils.isNotStatic(PublicClass.class.getDeclaredMethod("publicMethod")));
 
+		assertFalse(ReflectionUtils.isNotStatic(StaticClass.class));
 		assertFalse(ReflectionUtils.isNotStatic(StaticClass.class.getDeclaredMethod("staticMethod")));
 	}
 
