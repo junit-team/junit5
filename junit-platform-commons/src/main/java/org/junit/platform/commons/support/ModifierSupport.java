@@ -33,10 +33,10 @@ public final class ModifierSupport {
 	}
 
 	/**
-	 * Returns {@code true} if the given class is declared {@code public}, {@code false} otherwise.
+	 * Determine if the supplied class is {@code public}.
 	 *
 	 * @param clazz the class to check; never {@code null}
-	 * @return true if the class is public, false otherwise
+	 * @return {@code true} if the class is {@code public}
 	 * @see java.lang.reflect.Modifier#isPublic(int)
 	 */
 	public static boolean isPublic(Class<?> clazz) {
@@ -45,10 +45,10 @@ public final class ModifierSupport {
 	}
 
 	/**
-	 * Returns {@code true} if the given member is declared {@code public}, {@code false} otherwise.
+	 * Determine if the supplied member is {@code public}.
 	 *
 	 * @param member the member to check; never {@code null}
-	 * @return true if the class is public, false otherwise
+	 * @return {@code true} if the member is {@code public}
 	 * @see java.lang.reflect.Modifier#isPublic(int)
 	 */
 	public static boolean isPublic(Member member) {
@@ -57,10 +57,10 @@ public final class ModifierSupport {
 	}
 
 	/**
-	 * Returns {@code true} if the given class is declared {@code private}, {@code false} otherwise.
+	 * Determine if the supplied class is {@code private}.
 	 *
 	 * @param clazz the class to check; never {@code null}
-	 * @return true if the class is private, false otherwise
+	 * @return {@code true} if the class is {@code private}
 	 * @see java.lang.reflect.Modifier#isPrivate(int)
 	 */
 	public static boolean isPrivate(Class<?> clazz) {
@@ -69,10 +69,10 @@ public final class ModifierSupport {
 	}
 
 	/**
-	 * Returns {@code true} if the given member is declared {@code private}, {@code false} otherwise.
+	 * Determine if the supplied member is {@code private}.
 	 *
 	 * @param member the member to check; never {@code null}
-	 * @return true if the class is private, false otherwise
+	 * @return {@code true} if the member is {@code private}
 	 * @see java.lang.reflect.Modifier#isPrivate(int)
 	 */
 	public static boolean isPrivate(Member member) {
@@ -81,13 +81,13 @@ public final class ModifierSupport {
 	}
 
 	/**
-	 * Returns {@code true} if the given member is not declared {@code private}, {@code false} otherwise.
+	 * Determine if the supplied member is not {@code private}.
 	 *
-	 * <p>In other words this method will return true for members declared public, protected or package private and
-	 * false for members declared private.</p>
+	 * <p>In other words this method will return true for members declared {@code public}, {@code protected} or
+	 * {@code package private} and {@code false} for members declared {@code private}.</p>
 	 *
 	 * @param member the member to check; never {@code null}
-	 * @return true if the member is not private, false otherwise
+	 * @return {@code true} if the member is not {@code private}
 	 * @see java.lang.reflect.Modifier#isPublic(int)
 	 * @see java.lang.reflect.Modifier#isProtected(int)
 	 * @see java.lang.reflect.Modifier#isPrivate(int)
@@ -98,10 +98,10 @@ public final class ModifierSupport {
 	}
 
 	/**
-	 * Returns {@code true} if the given class is declared {@code abstract}, {@code false} otherwise.
+	 * Determine if the supplied class is {@code abstract}.
 	 *
 	 * @param clazz the class to check; never {@code null}
-	 * @return true if the class is abstract, false otherwise
+	 * @return {@code true} if the class is {@code abstract}
 	 * @see java.lang.reflect.Modifier#isAbstract(int)
 	 */
 	public static boolean isAbstract(Class<?> clazz) {
@@ -110,10 +110,10 @@ public final class ModifierSupport {
 	}
 
 	/**
-	 * Returns {@code true} if the given member is declared {@code abstract}, {@code false} otherwise.
+	 * Determine if the supplied member is {@code abstract}.
 	 *
 	 * @param member the class to check; never {@code null}
-	 * @return true if the member is abstract, false otherwise
+	 * @return {@code true} if the member is {@code abstract}
 	 * @see java.lang.reflect.Modifier#isAbstract(int)
 	 */
 	public static boolean isAbstract(Member member) {
@@ -122,10 +122,10 @@ public final class ModifierSupport {
 	}
 
 	/**
-	 * Returns {@code true} if the given class is declared {@code static}, {@code false} otherwise.
+	 * Determine if the supplied class is {@code static}.
 	 *
 	 * @param clazz the class to check; never {@code null}
-	 * @return true if the class is static, false otherwise
+	 * @return {@code true} if the class is {@code static}
 	 * @see java.lang.reflect.Modifier#isStatic(int)
 	 */
 	public static boolean isStatic(Class<?> clazz) {
@@ -134,10 +134,10 @@ public final class ModifierSupport {
 	}
 
 	/**
-	 * Returns {@code true} if the given member is declared {@code static}, {@code false} otherwise.
+	 * Determine if the supplied member is {@code static}.
 	 *
 	 * @param member the member to check; never {@code null}
-	 * @return true if the member is static, false otherwise
+	 * @return {@code true} if the member is {@code static}
 	 * @see java.lang.reflect.Modifier#isStatic(int)
 	 */
 	public static boolean isStatic(Member member) {
@@ -146,10 +146,10 @@ public final class ModifierSupport {
 	}
 
 	/**
-	 * Returns {@code true} if the given member is not declared {@code static}, {@code false} otherwise.
+	 * Determine if the supplied member is not {@code static}.
 	 *
 	 * @param member the member to check; never {@code null}
-	 * @return true if the member is not static, false otherwise
+	 * @return {@code true} if the member is not {@code static}
 	 * @see java.lang.reflect.Modifier#isStatic(int)
 	 */
 	public static boolean isNotStatic(Member member) {
