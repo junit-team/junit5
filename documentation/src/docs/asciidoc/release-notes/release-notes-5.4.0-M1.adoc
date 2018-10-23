@@ -26,15 +26,9 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
-* JUnit 4's `AssumptionViolatedException` is now supported in JUnit Jupiter for aborting
-  a test mid-flight due to a failed assumption -- for example, via JUnit 4's
-  `org.junit.Assume` utility class.
-* In addition to returning streams, `@TestFactory`-annotated methods may now return a
-  single `DynamicNode` -- for example, a `DynamicTest` or a `DynamicContainer`.
-* New `DisplayNameGenerator` interface and `@DisplayNameGeneration` annotation that allow
-  declarative configuration of a pre-defined or custom display name generator.
 * New `ModifierSupport` class providing an API for extension and test engine authors to
   inspect modifiers of classes and members.
+
 
 [[release-notes-5.4.0-M1-junit-jupiter]]
 === JUnit Jupiter
@@ -65,8 +59,15 @@ repository on GitHub.
 * New `Assertions.assertNotEquals()` variants that accept the following primitive data
   types: `char`, `byte`, `short`, `int`, `long`, `float`, and `double`. Mixed boxed and
   unboxed primitive values are also supported.
+* JUnit 4's `AssumptionViolatedException` is now supported in JUnit Jupiter for aborting
+  a test mid-flight due to a failed assumption -- for example, via JUnit 4's
+  `org.junit.Assume` utility class.
+* In addition to returning streams, `@TestFactory`-annotated methods may now return a
+  single `DynamicNode` -- for example, a `DynamicTest` or a `DynamicContainer`.
 * Implicit conversion from hexadecimal and octal string representations to integral types
   in `@ParameterizedTest` arguments -- for example, conversion from `"0xff"` to `255`.
+* New `DisplayNameGenerator` interface and `@DisplayNameGeneration` annotation that allow
+  declarative configuration of a pre-defined or custom display name generator.
 * JUnit 4's `@Ignore` annotation is now supported for disabling test classes and test
   methods via the `junit-jupiter-migrationsupport` module.
   - See the <<../user-guide/index.adoc#migrating-from-junit4-ignore-annotation-support,
