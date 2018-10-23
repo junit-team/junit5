@@ -124,7 +124,7 @@ class ParallelExecutionIntegrationTests {
 
 			assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
 			assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(3);
-			assertThat(ThreadReporter.getLoaderNames(executionEvents).collect(toList())).containsExactly("(-:");
+			assertThat(ThreadReporter.getLoaderNames(executionEvents)).containsExactly("(-:");
 		}
 		finally {
 			thread.setContextClassLoader(old);
