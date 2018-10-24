@@ -190,7 +190,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
 		WorkerThread(ForkJoinPool pool, ClassLoader contextClassLoader) {
 			super(pool);
-			super.setContextClassLoader(contextClassLoader);
+			setContextClassLoader(contextClassLoader);
 		}
 	}
 
