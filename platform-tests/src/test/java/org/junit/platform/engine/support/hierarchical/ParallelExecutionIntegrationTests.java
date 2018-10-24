@@ -30,6 +30,8 @@ import static org.junit.platform.testkit.ExecutionEventConditions.started;
 import static org.junit.platform.testkit.ExecutionEventConditions.test;
 import static org.junit.platform.testkit.ExecutionEventConditions.type;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -76,8 +78,8 @@ class ParallelExecutionIntegrationTests {
 
 		assertThat(startedTimestamps).hasSize(3);
 		assertThat(finishedTimestamps).hasSize(3);
-		assertThat(startedTimestamps).allMatch(startTimestamp -> finishedTimestamps.stream().allMatch(
-			finishedTimestamp -> !finishedTimestamp.isBefore(startTimestamp)));
+		assertThat(startedTimestamps).allMatch(startTimestamp -> finishedTimestamps.stream().noneMatch(
+			finishedTimestamp -> finishedTimestamp.isBefore(startTimestamp)));
 		assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(3);
 	}
 
@@ -109,6 +111,24 @@ class ParallelExecutionIntegrationTests {
 
 		assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
 		assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(1);
+	}
+
+	@Test
+	void customContextClassLoader() {
+		var currentThread = Thread.currentThread();
+		var currentLoader = currentThread.getContextClassLoader();
+		var smilingLoader = new URLClassLoader("(-:", new URL[0], ClassLoader.getSystemClassLoader());
+		currentThread.setContextClassLoader(smilingLoader);
+		try {
+			var executionEvents = execute(3, SuccessfulWithMethodLockTestCase.class);
+
+			assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
+			assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(3);
+			assertThat(ThreadReporter.getLoaderNames(executionEvents)).containsExactly("(-:");
+		}
+		finally {
+			currentThread.setContextClassLoader(currentLoader);
+		}
 	}
 
 	@RepeatedTest(10)
@@ -150,17 +170,17 @@ class ParallelExecutionIntegrationTests {
 		}
 
 		@Test
-		void firstTest(TestReporter reporter) throws Exception {
+		void firstTest() throws Exception {
 			incrementAndBlock(sharedResource, countDownLatch);
 		}
 
 		@Test
-		void secondTest(TestReporter reporter) throws Exception {
+		void secondTest() throws Exception {
 			incrementAndBlock(sharedResource, countDownLatch);
 		}
 
 		@Test
-		void thirdTest(TestReporter reporter) throws Exception {
+		void thirdTest() throws Exception {
 			incrementAndBlock(sharedResource, countDownLatch);
 		}
 	}
@@ -178,17 +198,17 @@ class ParallelExecutionIntegrationTests {
 		}
 
 		@Test
-		void firstTest(TestReporter reporter) throws Exception {
+		void firstTest() throws Exception {
 			incrementBlockAndCheck(sharedResource, countDownLatch);
 		}
 
 		@Test
-		void secondTest(TestReporter reporter) throws Exception {
+		void secondTest() throws Exception {
 			incrementBlockAndCheck(sharedResource, countDownLatch);
 		}
 
 		@Test
-		void thirdTest(TestReporter reporter) throws Exception {
+		void thirdTest() throws Exception {
 			incrementBlockAndCheck(sharedResource, countDownLatch);
 		}
 	}
@@ -207,19 +227,19 @@ class ParallelExecutionIntegrationTests {
 
 		@Test
 		@ResourceLock("sharedResource")
-		void firstTest(TestReporter reporter) throws Exception {
+		void firstTest() throws Exception {
 			incrementBlockAndCheck(sharedResource, countDownLatch);
 		}
 
 		@Test
 		@ResourceLock("sharedResource")
-		void secondTest(TestReporter reporter) throws Exception {
+		void secondTest() throws Exception {
 			incrementBlockAndCheck(sharedResource, countDownLatch);
 		}
 
 		@Test
 		@ResourceLock("sharedResource")
-		void thirdTest(TestReporter reporter) throws Exception {
+		void thirdTest() throws Exception {
 			incrementBlockAndCheck(sharedResource, countDownLatch);
 		}
 	}
@@ -261,7 +281,7 @@ class ParallelExecutionIntegrationTests {
 			CountDownLatch countDownLatch = new CountDownLatch(3);
 			return IntStream.range(0, 3).mapToObj(i -> dynamicTest("test " + i, () -> {
 				incrementBlockAndCheck(sharedResource, countDownLatch);
-				testReporter.publishEntry(ThreadReporter.KEY, Thread.currentThread().getName());
+				testReporter.publishEntry("thread", Thread.currentThread().getName());
 			}));
 		}
 	}
@@ -418,16 +438,22 @@ class ParallelExecutionIntegrationTests {
 
 	static class ThreadReporter implements AfterTestExecutionCallback {
 
-		public static final String KEY = "thread";
+		private static Stream<String> getLoaderNames(List<ExecutionEvent> executionEvents) {
+			return getValues(executionEvents, "loader");
+		}
 
 		private static Stream<String> getThreadNames(List<ExecutionEvent> executionEvents) {
+			return getValues(executionEvents, "thread");
+		}
+
+		private static Stream<String> getValues(List<ExecutionEvent> executionEvents, String key) {
 			// @formatter:off
 			return executionEvents.stream()
 					.filter(type(REPORTING_ENTRY_PUBLISHED)::matches)
-					.map(event -> event.getPayload(ReportEntry.class).orElse(null))
+					.map(event -> event.getPayload(ReportEntry.class).orElseThrow())
 					.map(ReportEntry::getKeyValuePairs)
-					.filter(keyValuePairs -> keyValuePairs.containsKey(KEY))
-					.map(keyValuePairs -> keyValuePairs.get("thread"))
+					.filter(keyValuePairs -> keyValuePairs.containsKey(key))
+					.map(keyValuePairs -> keyValuePairs.get(key))
 					.distinct();
 			// @formatter:on
 		}
@@ -435,6 +461,7 @@ class ParallelExecutionIntegrationTests {
 		@Override
 		public void afterTestExecution(ExtensionContext context) {
 			context.publishReportEntry("thread", Thread.currentThread().getName());
+			context.publishReportEntry("loader", Thread.currentThread().getContextClassLoader().getName());
 		}
 	}
 
