@@ -23,7 +23,7 @@ object Versions {
     val slf4j = "1.7.25"
 
     // Plugins
-    val buildScanPlugin = "1.16"
+    val buildScanPlugin = "2.0.1"
     val gitPublishPlugin = "1.0.1"
     val jmhPlugin = "0.4.7"
     val shadowPlugin = "4.0.1"

@@ -54,5 +54,3 @@ rootProject.children.forEach { project ->
 		"${project.buildFile} must exist"
 	}
 }
-
-enableFeaturePreview("STABLE_PUBLISHING")

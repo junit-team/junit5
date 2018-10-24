@@ -49,7 +49,7 @@ val shadowJar by tasks.getting(ShadowJar::class) {
 	}
 
 	classifier = ""
-	configurations = listOf(project.configurations.shadowed)
+	configurations = listOf(project.configurations["shadowed"])
 
 	// https://github.com/junit-team/junit5/issues/761
 	// prevent duplicates, add 3rd-party licenses explicitly
