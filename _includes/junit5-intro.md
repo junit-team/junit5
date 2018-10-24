@@ -20,3 +20,4 @@ You're invited to follow our ongoing work, review it, and give feedback. This sh
 - Jose Luis De la Cruz Morales
 - Gabriel Yoran
 - Stefan Gwihs
+- Gregory Zuckerman
