@@ -11,7 +11,6 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import static java.util.concurrent.ForkJoinPool.defaultForkJoinWorkerThreadFactory;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.CONCURRENT;
 
@@ -23,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.ForkJoinTask;
+import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.concurrent.Future;
 import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.TimeUnit;
@@ -64,18 +64,19 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.getStrategy(
 			configurationParameters);
 		ParallelExecutionConfiguration configuration = strategy.createConfiguration(configurationParameters);
+		ForkJoinWorkerThreadFactory threadFactory = new WorkerThreadFactory();
 		try {
 			// Try to use constructor available in Java >= 9
 			Constructor<ForkJoinPool> constructor = ForkJoinPool.class.getDeclaredConstructor(Integer.TYPE,
 				ForkJoinWorkerThreadFactory.class, UncaughtExceptionHandler.class, Boolean.TYPE, Integer.TYPE,
 				Integer.TYPE, Integer.TYPE, Predicate.class, Long.TYPE, TimeUnit.class);
-			return constructor.newInstance(configuration.getParallelism(), defaultForkJoinWorkerThreadFactory, null,
-				false, configuration.getCorePoolSize(), configuration.getMaxPoolSize(),
-				configuration.getMinimumRunnable(), null, configuration.getKeepAliveSeconds(), TimeUnit.SECONDS);
+			return constructor.newInstance(configuration.getParallelism(), threadFactory, null, false,
+				configuration.getCorePoolSize(), configuration.getMaxPoolSize(), configuration.getMinimumRunnable(),
+				null, configuration.getKeepAliveSeconds(), TimeUnit.SECONDS);
 		}
 		catch (Exception e) {
 			// Fallback for Java 8
-			return new ForkJoinPool(configuration.getParallelism());
+			return new ForkJoinPool(configuration.getParallelism(), threadFactory, null, false);
 		}
 	}
 
@@ -173,6 +174,24 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			}
 		}
 
+	}
+
+	static class WorkerThreadFactory implements ForkJoinPool.ForkJoinWorkerThreadFactory {
+
+		private final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+
+		@Override
+		public ForkJoinWorkerThread newThread(ForkJoinPool pool) {
+			return new WorkerThread(pool, contextClassLoader);
+		}
+	}
+
+	static class WorkerThread extends ForkJoinWorkerThread {
+
+		WorkerThread(ForkJoinPool pool, ClassLoader contextClassLoader) {
+			super(pool);
+			setContextClassLoader(contextClassLoader);
+		}
 	}
 
 }
