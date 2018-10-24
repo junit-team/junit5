@@ -21,6 +21,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.extension.ScriptExecutionCondition;
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigurationStrategy;
 
 /**
@@ -162,7 +163,7 @@ public final class Constants {
 	 * @since 5.4
 	 */
 	@API(status = EXPERIMENTAL, since = "5.4")
-	public static final String DEFAULT_SCRIPT_ENGINE_PROPERTY_NAME = "junit.jupiter.script.engine.default";
+	public static final String DEFAULT_SCRIPT_ENGINE_PROPERTY_NAME = ScriptExecutionCondition.DEFAULT_SCRIPT_ENGINE_PROPERTY_NAME;
 
 	/**
 	 * Default script engine is {@code Nashorn}.
@@ -170,7 +171,7 @@ public final class Constants {
 	 * @since 5.4
 	 */
 	@API(status = EXPERIMENTAL, since = "5.4")
-	public static final String DEFAULT_SCRIPT_ENGINE = "Nashorn";
+	public static final String DEFAULT_SCRIPT_ENGINE = ScriptExecutionCondition.DEFAULT_SCRIPT_ENGINE;
 
 	private Constants() {
 		/* no-op */

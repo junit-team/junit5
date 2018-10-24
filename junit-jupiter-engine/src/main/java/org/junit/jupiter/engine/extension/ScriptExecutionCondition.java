@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
@@ -18,13 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.script.Script;
 import org.junit.platform.commons.util.BlacklistedExceptions;
 
@@ -36,7 +37,12 @@ import org.junit.platform.commons.util.BlacklistedExceptions;
  * @see EnabledIf
  * @see #evaluateExecutionCondition(ExtensionContext)
  */
-class ScriptExecutionCondition implements ExecutionCondition {
+@API(status = INTERNAL, since = "5.1")
+public class ScriptExecutionCondition implements ExecutionCondition {
+
+	public static final String DEFAULT_SCRIPT_ENGINE_PROPERTY_NAME = "junit.jupiter.script.engine.default";
+
+	public static final String DEFAULT_SCRIPT_ENGINE = "Nashorn";
 
 	private static final ConditionEvaluationResult ENABLED_NO_ELEMENT = enabled("AnnotatedElement not present");
 
@@ -113,9 +119,7 @@ class ScriptExecutionCondition implements ExecutionCondition {
 		if (!annotatedEngine.trim().isEmpty()) {
 			return annotatedEngine;
 		}
-		String key = Constants.DEFAULT_SCRIPT_ENGINE_PROPERTY_NAME;
-		String defaultValue = Constants.DEFAULT_SCRIPT_ENGINE;
-		return context.getConfigurationParameter(key).orElse(defaultValue);
+		return context.getConfigurationParameter(DEFAULT_SCRIPT_ENGINE_PROPERTY_NAME).orElse(DEFAULT_SCRIPT_ENGINE);
 	}
 
 	/**
