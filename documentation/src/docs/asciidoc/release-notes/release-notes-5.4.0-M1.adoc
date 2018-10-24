@@ -52,6 +52,9 @@ repository on GitHub.
   class loader (_TCCL_) that was set when creating the underlying executor service.
   This resolves `ClassNotFoundException` issues that only occur in parallel execution
   mode and a custom thread context class loader is in place.
+* When executing tests in parallel, lifecycle methods and callbacks called after a
+  `@TestFactory` method are now always executed after the dynamic tests returned by the
+  method.
 
 ==== Deprecations and Breaking Changes
 
