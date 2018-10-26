@@ -6,6 +6,7 @@ This includes focusing on Java 8 and above, as well as enabling many different s
 
 JUnit 5 is the result of [JUnit Lambda](http://junit.org/junit4/junit-lambda.html) and its [crowdfunding campaign on Indiegogo](http://junit.org/junit4/junit-lambda-campaign.html).
 
+
 ### Resources
 
 You're invited to follow our ongoing work, review it, and give feedback. This short list of links will get you started:
@@ -14,15 +15,23 @@ You're invited to follow our ongoing work, review it, and give feedback. This sh
 - [Javadoc]({{ site.baseurl }}/docs/current/api)
 - [GitHub Repository](https://github.com/junit-team/junit5/) with all the code and issues
 
-## Gold Sponsor
+## Sponsoring
+
+We ask you – our users – to [support us](https://steadyhq.com/en/junit) so we can keep up the pace.
+We will continue our work on JUnit regardless of how many donations we receive.
+However, your support would enable us to do so with greater focus and not only on weekends or in our spare time.
+For example, we want to meet regularly and work colocated for a few days in order to get things done faster in face-to-face design and coding sessions.
+Your donations will help to make that a reality!
+
+**Thank you!**
 
 <p align="center">
   <a href="https://www.societegenerale.com/en/digital-and-innovation/tech-culture-it">
-    <img src="assets/img/sponsor-gold-Societe-Generale.png" width="240" title="Société Générale">
+    <img src="assets/img/sponsor-gold-Societe-Generale.png" title="Société Générale">
   </a>
 </p>
 
-## Backers
+### Backers
 
 - Sebastian Esser
 - Jose Luis De la Cruz Morales
