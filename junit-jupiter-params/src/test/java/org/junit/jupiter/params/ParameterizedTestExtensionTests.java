@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.engine.execution.ExtensionValuesStore;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
@@ -205,6 +206,11 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public java.util.Optional<Object> getTestInstance() {
+				return Optional.empty();
+			}
+
+			@Override
+			public Optional<TestInstances> getTestInstances() {
 				return Optional.empty();
 			}
 

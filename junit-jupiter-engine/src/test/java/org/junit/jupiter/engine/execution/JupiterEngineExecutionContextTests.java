@@ -59,16 +59,16 @@ class JupiterEngineExecutionContextTests {
 		ClassExtensionContext extensionContext = new ClassExtensionContext(null, null, classTestDescriptor,
 			configuration, null);
 		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configuration);
-		TestInstanceProvider testInstanceProvider = mock(TestInstanceProvider.class);
+		TestInstancesProvider testInstancesProvider = mock(TestInstancesProvider.class);
 		JupiterEngineExecutionContext newContext = originalContext.extend() //
 				.withExtensionContext(extensionContext) //
 				.withExtensionRegistry(extensionRegistry) //
-				.withTestInstanceProvider(testInstanceProvider) //
+				.withTestInstancesProvider(testInstancesProvider) //
 				.build();
 
 		assertSame(extensionContext, newContext.getExtensionContext());
 		assertSame(extensionRegistry, newContext.getExtensionRegistry());
-		assertSame(testInstanceProvider, newContext.getTestInstanceProvider());
+		assertSame(testInstancesProvider, newContext.getTestInstancesProvider());
 	}
 
 	@Test
@@ -78,14 +78,14 @@ class JupiterEngineExecutionContextTests {
 		ClassExtensionContext extensionContext = new ClassExtensionContext(null, null, classTestDescriptor,
 			configuration, null);
 		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configuration);
-		TestInstanceProvider testInstanceProvider = mock(TestInstanceProvider.class);
+		TestInstancesProvider testInstancesProvider = mock(TestInstancesProvider.class);
 		ClassExtensionContext newExtensionContext = new ClassExtensionContext(extensionContext, null,
 			classTestDescriptor, configuration, null);
 
 		JupiterEngineExecutionContext newContext = originalContext.extend() //
 				.withExtensionContext(extensionContext) //
 				.withExtensionRegistry(extensionRegistry) //
-				.withTestInstanceProvider(testInstanceProvider) //
+				.withTestInstancesProvider(testInstancesProvider) //
 				.build() //
 				.extend() //
 				.withExtensionContext(newExtensionContext) //
@@ -93,7 +93,7 @@ class JupiterEngineExecutionContextTests {
 
 		assertSame(newExtensionContext, newContext.getExtensionContext());
 		assertSame(extensionRegistry, newContext.getExtensionRegistry());
-		assertSame(testInstanceProvider, newContext.getTestInstanceProvider());
+		assertSame(testInstancesProvider, newContext.getTestInstancesProvider());
 	}
 
 	@Test

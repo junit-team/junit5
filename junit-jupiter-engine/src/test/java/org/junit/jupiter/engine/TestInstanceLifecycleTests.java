@@ -51,9 +51,10 @@ import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.jupiter.engine.execution.DefaultTestInstances;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
@@ -66,7 +67,7 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
 class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 	private static final Map<Class<?>, List<Lifecycle>> lifecyclesMap = new LinkedHashMap<>();
-	private static final Map<String, Object> instanceMap = new LinkedHashMap<>();
+	private static final Map<String, TestInstances> instanceMap = new LinkedHashMap<>();
 	private static final List<String> testsInvoked = new ArrayList<>();
 	private static final Map<Class<?>, Integer> instanceCount = new LinkedHashMap<>();
 
@@ -136,21 +137,21 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertNull(instanceMap.get(beforeAllCallbackKey));
 		assertNull(instanceMap.get(afterAllCallbackKey));
 
-		Object instance = instanceMap.get(beforeEachCallbackKey1);
-		assertNotNull(instance);
-		assertSame(instance, instanceMap.get(afterEachCallbackKey1));
-		assertSame(instance, instanceMap.get(testExecutionConditionKey1));
+		TestInstances testInstances = instanceMap.get(beforeEachCallbackKey1);
+		assertNotNull(testInstances.getInnermost());
+		assertSame(testInstances, instanceMap.get(afterEachCallbackKey1));
+		assertSame(testInstances, instanceMap.get(testExecutionConditionKey1));
 
-		instance = instanceMap.get(beforeEachCallbackKey2);
-		assertNotNull(instance);
-		assertSame(instance, instanceMap.get(afterEachCallbackKey2));
-		assertSame(instance, instanceMap.get(testExecutionConditionKey2));
+		testInstances = instanceMap.get(beforeEachCallbackKey2);
+		assertNotNull(testInstances.getInnermost());
+		assertSame(testInstances, instanceMap.get(afterEachCallbackKey2));
+		assertSame(testInstances, instanceMap.get(testExecutionConditionKey2));
 
-		instance = instanceMap.get(beforeEachCallbackKey3);
-		assertNotNull(instance);
-		assertSame(instance, instanceMap.get(afterEachCallbackKey3));
-		assertSame(instance, instanceMap.get(testExecutionConditionKey3));
-		assertSame(instance, instanceMap.get(postProcessTestInstanceKey));
+		testInstances = instanceMap.get(beforeEachCallbackKey3);
+		assertNotNull(testInstances.getInnermost());
+		assertSame(testInstances, instanceMap.get(afterEachCallbackKey3));
+		assertSame(testInstances, instanceMap.get(testExecutionConditionKey3));
+		assertSame(testInstances.getInnermost(), instanceMap.get(postProcessTestInstanceKey).getInnermost());
 
 		assertThat(lifecyclesMap.keySet()).containsExactly(testClass);
 		assertThat(lifecyclesMap.get(testClass).stream()).allMatch(Lifecycle.PER_METHOD::equals);
@@ -209,19 +210,19 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		);
 		// @formatter:on
 
-		Object instance = instanceMap.get(beforeAllCallbackKey);
-		assertNotNull(instance);
-		assertSame(instance, instanceMap.get(afterAllCallbackKey));
-		assertSame(instance, instanceMap.get(testExecutionConditionKey1));
-		assertSame(instance, instanceMap.get(beforeEachCallbackKey1));
-		assertSame(instance, instanceMap.get(afterEachCallbackKey1));
-		assertSame(instance, instanceMap.get(testExecutionConditionKey2));
-		assertSame(instance, instanceMap.get(beforeEachCallbackKey2));
-		assertSame(instance, instanceMap.get(afterEachCallbackKey2));
-		assertSame(instance, instanceMap.get(testExecutionConditionKey3));
-		assertSame(instance, instanceMap.get(beforeEachCallbackKey3));
-		assertSame(instance, instanceMap.get(afterEachCallbackKey3));
-		assertSame(instance, instanceMap.get(postProcessTestInstanceKey));
+		TestInstances testInstances = instanceMap.get(beforeAllCallbackKey);
+		assertNotNull(testInstances.getInnermost());
+		assertSame(testInstances, instanceMap.get(afterAllCallbackKey));
+		assertSame(testInstances, instanceMap.get(testExecutionConditionKey1));
+		assertSame(testInstances, instanceMap.get(beforeEachCallbackKey1));
+		assertSame(testInstances, instanceMap.get(afterEachCallbackKey1));
+		assertSame(testInstances, instanceMap.get(testExecutionConditionKey2));
+		assertSame(testInstances, instanceMap.get(beforeEachCallbackKey2));
+		assertSame(testInstances, instanceMap.get(afterEachCallbackKey2));
+		assertSame(testInstances, instanceMap.get(testExecutionConditionKey3));
+		assertSame(testInstances, instanceMap.get(beforeEachCallbackKey3));
+		assertSame(testInstances, instanceMap.get(afterEachCallbackKey3));
+		assertSame(testInstances.getInnermost(), instanceMap.get(postProcessTestInstanceKey).getInnermost());
 		assertNull(instanceMap.get(containerExecutionConditionKey));
 
 		assertThat(lifecyclesMap.keySet()).containsExactly(testClass);
@@ -295,41 +296,47 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertNull(instanceMap.get(nestedBeforeAllCallbackKey));
 		assertNull(instanceMap.get(nestedAfterAllCallbackKey));
 
-		Object instance = instanceMap.get(beforeEachCallbackKey);
-		assertNotNull(instance);
-		assertSame(instance, instanceMap.get(afterEachCallbackKey));
-		assertSame(instance, instanceMap.get(outerTestExecutionConditionKey));
+		TestInstances outerInstances = instanceMap.get(beforeEachCallbackKey);
+		assertNotNull(outerInstances.getInnermost());
+		assertSame(outerInstances, instanceMap.get(afterEachCallbackKey));
+		assertSame(outerInstances, instanceMap.get(outerTestExecutionConditionKey));
 
-		Object nestedInstance1 = instanceMap.get(nestedBeforeEachCallbackKey1);
-		assertNotNull(nestedInstance1);
-		assertNotSame(instance, nestedInstance1);
-		assertSame(nestedInstance1, instanceMap.get(nestedAfterEachCallbackKey1));
-		assertSame(nestedInstance1, instanceMap.get(nestedExecutionConditionKey1));
+		TestInstances nestedInstances1 = instanceMap.get(nestedBeforeEachCallbackKey1);
+		assertNotNull(nestedInstances1.getInnermost());
+		assertNotSame(outerInstances.getInnermost(), nestedInstances1.getInnermost());
+		assertSame(nestedInstances1, instanceMap.get(nestedAfterEachCallbackKey1));
+		assertSame(nestedInstances1, instanceMap.get(nestedExecutionConditionKey1));
 
-		Object nestedInstance2 = instanceMap.get(nestedBeforeEachCallbackKey2);
-		assertNotNull(nestedInstance2);
-		assertNotSame(instance, nestedInstance2);
-		assertNotSame(nestedInstance1, nestedInstance2);
-		assertSame(nestedInstance2, instanceMap.get(nestedAfterEachCallbackKey2));
-		assertSame(nestedInstance2, instanceMap.get(nestedExecutionConditionKey2));
+		TestInstances nestedInstances2 = instanceMap.get(nestedBeforeEachCallbackKey2);
+		assertNotNull(nestedInstances2.getInnermost());
+		assertNotSame(outerInstances.getInnermost(), nestedInstances2.getInnermost());
+		assertNotSame(nestedInstances1.getInnermost(), nestedInstances2.getInnermost());
+		assertSame(nestedInstances2, instanceMap.get(nestedAfterEachCallbackKey2));
+		assertSame(nestedInstances2, instanceMap.get(nestedExecutionConditionKey2));
 
-		Object nestedInstance3 = instanceMap.get(nestedPostProcessTestInstanceKey);
-		assertNotNull(nestedInstance3);
-		assertNotSame(instance, nestedInstance3);
-		assertNotSame(nestedInstance1, nestedInstance3);
-		assertSame(nestedInstance3, instanceMap.get(nestedAfterEachCallbackKey3));
-		assertSame(nestedInstance3, instanceMap.get(nestedExecutionConditionKey3));
+		TestInstances nestedInstances3 = instanceMap.get(nestedPostProcessTestInstanceKey);
+		assertNotNull(nestedInstances3.getInnermost());
+		assertNotSame(outerInstances.getInnermost(), nestedInstances3.getInnermost());
+		assertNotSame(nestedInstances1.getInnermost(), nestedInstances3.getInnermost());
+		assertSame(nestedInstances3.getInnermost(), instanceMap.get(nestedAfterEachCallbackKey3).getInnermost());
+		assertSame(nestedInstances3.getInnermost(), instanceMap.get(nestedExecutionConditionKey3).getInnermost());
 
-		Object outerInstance1 = ReflectionUtils.getOutermostInstance(nestedInstance1, testClass).get();
-		Object outerInstance2 = ReflectionUtils.getOutermostInstance(nestedInstance2, testClass).get();
-		Object outerInstance3 = ReflectionUtils.getOutermostInstance(nestedInstance3, testClass).get();
+		Object outerInstance1 = instanceMap.get(nestedExecutionConditionKey1).find(testClass).get();
+		Object outerInstance2 = instanceMap.get(nestedExecutionConditionKey2).find(testClass).get();
+		Object outerInstance3 = instanceMap.get(nestedExecutionConditionKey3).find(testClass).get();
 		assertNotSame(outerInstance1, outerInstance2);
 		assertNotSame(outerInstance1, outerInstance3);
+		assertThat(instanceMap.get(nestedExecutionConditionKey1).getAll()).containsExactly(outerInstance1,
+			nestedInstances1.getInnermost());
+		assertThat(instanceMap.get(nestedExecutionConditionKey2).getAll()).containsExactly(outerInstance2,
+			nestedInstances2.getInnermost());
+		assertThat(instanceMap.get(nestedExecutionConditionKey3).getAll()).containsExactly(outerInstance3,
+			nestedInstances3.getInnermost());
 
 		// The last tracked instance stored under postProcessTestInstanceKey
 		// is only created in order to instantiate the nested test class for
 		// test2().
-		assertSame(outerInstance3, instanceMap.get(postProcessTestInstanceKey));
+		assertSame(outerInstance3, instanceMap.get(postProcessTestInstanceKey).getInnermost());
 
 		assertThat(lifecyclesMap.keySet()).containsExactly(testClass, nestedTestClass);
 		assertThat(lifecyclesMap.get(testClass).stream()).allMatch(Lifecycle.PER_METHOD::equals);
@@ -396,33 +403,51 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		);
 		// @formatter:on
 
-		Object instance = instanceMap.get(postProcessTestInstanceKey);
+		Object instance = instanceMap.get(postProcessTestInstanceKey).getInnermost();
 		assertNotNull(instance);
 		assertNull(instanceMap.get(containerExecutionConditionKey));
-		assertSame(instance, instanceMap.get(beforeAllCallbackKey));
-		assertSame(instance, instanceMap.get(afterAllCallbackKey));
-		assertSame(instance, instanceMap.get(outerTestExecutionConditionKey));
-		assertSame(instance, instanceMap.get(beforeEachCallbackKey));
-		assertSame(instance, instanceMap.get(afterEachCallbackKey));
+		assertSame(instance, instanceMap.get(beforeAllCallbackKey).getInnermost());
+		assertSame(instance, instanceMap.get(afterAllCallbackKey).getInnermost());
+		assertSame(instance, instanceMap.get(outerTestExecutionConditionKey).getInnermost());
+		assertSame(instance, instanceMap.get(beforeEachCallbackKey).getInnermost());
+		assertSame(instance, instanceMap.get(afterEachCallbackKey).getInnermost());
 
-		Object nestedInstance = instanceMap.get(nestedPostProcessTestInstanceKey);
+		Object nestedInstance = instanceMap.get(nestedPostProcessTestInstanceKey).getInnermost();
 		assertNotNull(nestedInstance);
 		assertNotSame(instance, nestedInstance);
 		assertNull(instanceMap.get(nestedContainerExecutionConditionKey));
-		assertSame(nestedInstance, instanceMap.get(nestedBeforeAllCallbackKey));
-		assertSame(nestedInstance, instanceMap.get(nestedAfterAllCallbackKey));
-		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey1));
-		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey1));
-		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey1));
-		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey2));
-		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey2));
-		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey2));
-		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey3));
-		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey3));
-		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey3));
+		assertSame(nestedInstance, instanceMap.get(nestedBeforeAllCallbackKey).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedAfterAllCallbackKey).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey1).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey1).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey1).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey2).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey2).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey2).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey3).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey3).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey3).getInnermost());
 
-		Object outerInstance = ReflectionUtils.getOutermostInstance(nestedInstance, testClass).get();
-		assertSame(outerInstance, instanceMap.get(postProcessTestInstanceKey));
+		Object outerInstance = instanceMap.get(nestedExecutionConditionKey1).find(testClass).get();
+		assertSame(outerInstance, instanceMap.get(postProcessTestInstanceKey).getInnermost());
+		assertThat(instanceMap.get(nestedExecutionConditionKey1).getAll()).containsExactly(outerInstance,
+			nestedInstance);
+		assertThat(instanceMap.get(nestedBeforeEachCallbackKey1).getAll()).containsExactly(outerInstance,
+			nestedInstance);
+		assertThat(instanceMap.get(nestedAfterEachCallbackKey1).getAll()).containsExactly(outerInstance,
+			nestedInstance);
+		assertThat(instanceMap.get(nestedExecutionConditionKey2).getAll()).containsExactly(outerInstance,
+			nestedInstance);
+		assertThat(instanceMap.get(nestedBeforeEachCallbackKey2).getAll()).containsExactly(outerInstance,
+			nestedInstance);
+		assertThat(instanceMap.get(nestedAfterEachCallbackKey2).getAll()).containsExactly(outerInstance,
+			nestedInstance);
+		assertThat(instanceMap.get(nestedExecutionConditionKey3).getAll()).containsExactly(outerInstance,
+			nestedInstance);
+		assertThat(instanceMap.get(nestedBeforeEachCallbackKey3).getAll()).containsExactly(outerInstance,
+			nestedInstance);
+		assertThat(instanceMap.get(nestedAfterEachCallbackKey3).getAll()).containsExactly(outerInstance,
+			nestedInstance);
 
 		assertThat(lifecyclesMap.keySet()).containsExactly(testClass, nestedTestClass);
 		assertThat(lifecyclesMap.get(testClass).stream()).allMatch(Lifecycle.PER_CLASS::equals);
@@ -493,32 +518,49 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertNull(instanceMap.get(beforeAllCallbackKey));
 		assertNull(instanceMap.get(afterAllCallbackKey));
 
-		Object instance = instanceMap.get(beforeEachCallbackKey);
-		assertSame(instance, instanceMap.get(afterEachCallbackKey));
-		assertSame(instance, instanceMap.get(outerTestExecutionConditionKey));
+		TestInstances outerInstances = instanceMap.get(beforeEachCallbackKey);
+		assertSame(outerInstances, instanceMap.get(afterEachCallbackKey));
+		assertSame(outerInstances, instanceMap.get(outerTestExecutionConditionKey));
 
-		Object nestedInstance = instanceMap.get(nestedPostProcessTestInstanceKey);
+		Object nestedInstance = instanceMap.get(nestedPostProcessTestInstanceKey).getInnermost();
 		assertNotNull(nestedInstance);
-		assertNotSame(instance, nestedInstance);
+		assertNotSame(outerInstances.getInnermost(), nestedInstance);
 		assertNull(instanceMap.get(nestedContainerExecutionConditionKey));
-		assertSame(nestedInstance, instanceMap.get(nestedBeforeAllCallbackKey));
-		assertSame(nestedInstance, instanceMap.get(nestedAfterAllCallbackKey));
-		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey1));
-		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey1));
-		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey1));
-		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey2));
-		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey2));
-		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey2));
-		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey3));
-		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey3));
-		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey3));
+		assertSame(nestedInstance, instanceMap.get(nestedBeforeAllCallbackKey).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedAfterAllCallbackKey).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey1).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey1).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey1).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey2).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey2).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey2).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedExecutionConditionKey3).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedBeforeEachCallbackKey3).getInnermost());
+		assertSame(nestedInstance, instanceMap.get(nestedAfterEachCallbackKey3).getInnermost());
 
 		// The last tracked instance stored under postProcessTestInstanceKey
 		// is only created in order to instantiate the nested test class.
-		Object outerInstance = ReflectionUtils.getOutermostInstance(nestedInstance, testClass).get();
-		assertEquals(instance.getClass(), outerInstance.getClass());
-		assertNotSame(instance, outerInstance);
-		assertSame(outerInstance, instanceMap.get(postProcessTestInstanceKey));
+		Object outerInstance = instanceMap.get(nestedExecutionConditionKey1).find(testClass).get();
+		assertEquals(outerInstances.getInnermost().getClass(), outerInstance.getClass());
+		assertNotSame(outerInstances.getInnermost(), outerInstance);
+		assertThat(instanceMap.get(nestedExecutionConditionKey1).getAll()).containsExactly(outerInstance,
+			nestedInstance);
+		assertThat(instanceMap.get(nestedBeforeEachCallbackKey1).getAll()).containsExactly(outerInstance,
+			nestedInstance);
+		assertThat(instanceMap.get(nestedAfterEachCallbackKey1).getAll()).containsExactly(outerInstance,
+			nestedInstance);
+		assertThat(instanceMap.get(nestedExecutionConditionKey2).getAll()).containsExactly(outerInstance,
+			nestedInstance);
+		assertThat(instanceMap.get(nestedBeforeEachCallbackKey2).getAll()).containsExactly(outerInstance,
+			nestedInstance);
+		assertThat(instanceMap.get(nestedAfterEachCallbackKey2).getAll()).containsExactly(outerInstance,
+			nestedInstance);
+		assertThat(instanceMap.get(nestedExecutionConditionKey3).getAll()).containsExactly(outerInstance,
+			nestedInstance);
+		assertThat(instanceMap.get(nestedBeforeEachCallbackKey3).getAll()).containsExactly(outerInstance,
+			nestedInstance);
+		assertThat(instanceMap.get(nestedAfterEachCallbackKey3).getAll()).containsExactly(outerInstance,
+			nestedInstance);
 
 		assertThat(lifecyclesMap.keySet()).containsExactly(testClass, nestedTestClass);
 		assertThat(lifecyclesMap.get(testClass).stream()).allMatch(Lifecycle.PER_METHOD::equals);
@@ -688,7 +730,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		void outerTest() {
-			assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())));
+			assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermost());
 		}
 
 		@AfterAll
@@ -713,19 +755,19 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 			@Test
 			void test1(TestInfo testInfo) {
-				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())));
+				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermost());
 				testsInvoked.add(testInfo.getTestMethod().get().getName());
 			}
 
 			@Test
 			void test2(TestInfo testInfo) {
-				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())));
+				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermost());
 				testsInvoked.add(testInfo.getTestMethod().get().getName());
 			}
 
 			@SingletonTest
 			void singletonTest(TestInfo testInfo) {
-				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())));
+				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermost());
 				testsInvoked.add(testInfo.getTestMethod().get().getName());
 			}
 
@@ -752,7 +794,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		void outerTest() {
-			assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())));
+			assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermost());
 		}
 
 		@AfterAll
@@ -782,19 +824,19 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 			@Test
 			void test1(TestInfo testInfo) {
-				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())));
+				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermost());
 				testsInvoked.add(testInfo.getTestMethod().get().getName());
 			}
 
 			@Test
 			void test2(TestInfo testInfo) {
-				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())));
+				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermost());
 				testsInvoked.add(testInfo.getTestMethod().get().getName());
 			}
 
 			@SingletonTest
 			void singletonTest(TestInfo testInfo) {
-				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())));
+				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermost());
 				testsInvoked.add(testInfo.getTestMethod().get().getName());
 			}
 
@@ -827,7 +869,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		void outerTest() {
-			assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())));
+			assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermost());
 		}
 
 		@AfterEach
@@ -856,19 +898,19 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 			@Test
 			void test1(TestInfo testInfo) {
-				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())));
+				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermost());
 				testsInvoked.add(testInfo.getTestMethod().get().getName());
 			}
 
 			@Test
 			void test2(TestInfo testInfo) {
-				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())));
+				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermost());
 				testsInvoked.add(testInfo.getTestMethod().get().getName());
 			}
 
 			@SingletonTest
 			void singletonTest(TestInfo testInfo) {
-				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())));
+				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermost());
 				testsInvoked.add(testInfo.getTestMethod().get().getName());
 			}
 
@@ -900,7 +942,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 				assertThat(instanceCount.getOrDefault(context.getRequiredTestClass(), 0)).isEqualTo(0);
 			}
 			instanceMap.put(executionConditionKey(context.getRequiredTestClass(), testMethod),
-				context.getTestInstance().orElse(null));
+				context.getTestInstances().orElse(null));
 
 			return ConditionEvaluationResult.enabled("enigma");
 		}
@@ -910,21 +952,22 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			trackLifecycle(context);
 			assertThat(context.getTestInstance()).isNotPresent();
 			assertNotNull(testInstance);
-			instanceMap.put(postProcessTestInstanceKey(context.getRequiredTestClass()), testInstance);
+			instanceMap.put(postProcessTestInstanceKey(context.getRequiredTestClass()),
+				DefaultTestInstances.of(testInstance));
 		}
 
 		@Override
 		public void beforeAll(ExtensionContext context) {
 			trackLifecycle(context);
 			instanceMap.put(beforeAllCallbackKey(context.getRequiredTestClass()),
-				context.getTestInstance().orElse(null));
+				context.getTestInstances().orElse(null));
 		}
 
 		@Override
 		public void afterAll(ExtensionContext context) {
 			trackLifecycle(context);
 			instanceMap.put(afterAllCallbackKey(context.getRequiredTestClass()),
-				context.getTestInstance().orElse(null));
+				context.getTestInstances().orElse(null));
 		}
 
 		@Override
@@ -932,7 +975,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			trackLifecycle(context);
 			instanceMap.put(
 				beforeEachCallbackKey(context.getRequiredTestClass(), context.getRequiredTestMethod().getName()),
-				context.getRequiredTestInstance());
+				context.getRequiredTestInstances());
 		}
 
 		@Override
@@ -940,7 +983,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			trackLifecycle(context);
 			instanceMap.put(
 				afterEachCallbackKey(context.getRequiredTestClass(), context.getRequiredTestMethod().getName()),
-				context.getRequiredTestInstance());
+				context.getRequiredTestInstances());
 		}
 
 		@Override
@@ -953,7 +996,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
 			trackLifecycle(context);
 			instanceMap.put(testTemplateKey(context.getRequiredTestClass(), context.getRequiredTestMethod().getName()),
-				context.getTestInstance().orElse(null));
+				context.getTestInstances().orElse(null));
 
 			return Stream.of(new TestTemplateInvocationContext() {
 			});

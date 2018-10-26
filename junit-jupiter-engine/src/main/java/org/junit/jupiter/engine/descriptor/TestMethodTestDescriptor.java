@@ -27,6 +27,7 @@ import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
@@ -82,11 +83,11 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
 		ExtensionRegistry registry = populateNewExtensionRegistry(context);
-		Object testInstance = context.getTestInstanceProvider().getTestInstance(Optional.of(registry));
+		TestInstances testInstances = context.getTestInstancesProvider().getTestInstances(Optional.of(registry));
 
 		ThrowableCollector throwableCollector = createThrowableCollector();
 		ExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, context.getConfiguration(), testInstance, throwableCollector);
+			context.getExecutionListener(), this, context.getConfiguration(), testInstances, throwableCollector);
 
 		// @formatter:off
 		return context.extend()

@@ -19,6 +19,7 @@ import java.util.Optional;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
@@ -29,17 +30,17 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 @API(status = INTERNAL, since = "5.0")
 public final class MethodExtensionContext extends AbstractExtensionContext<TestMethodTestDescriptor> {
 
-	private final Object testInstance;
+	private final TestInstances testInstances;
 
 	private final ThrowableCollector throwableCollector;
 
 	public MethodExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			TestMethodTestDescriptor testDescriptor, JupiterConfiguration configuration, Object testInstance,
+			TestMethodTestDescriptor testDescriptor, JupiterConfiguration configuration, TestInstances testInstances,
 			ThrowableCollector throwableCollector) {
 
 		super(parent, engineExecutionListener, testDescriptor, configuration);
 
-		this.testInstance = testInstance;
+		this.testInstances = testInstances;
 		this.throwableCollector = throwableCollector;
 	}
 
@@ -60,7 +61,12 @@ public final class MethodExtensionContext extends AbstractExtensionContext<TestM
 
 	@Override
 	public Optional<Object> getTestInstance() {
-		return Optional.of(this.testInstance);
+		return Optional.of(this.testInstances.getInnermost());
+	}
+
+	@Override
+	public Optional<TestInstances> getTestInstances() {
+		return Optional.of(this.testInstances);
 	}
 
 	@Override
