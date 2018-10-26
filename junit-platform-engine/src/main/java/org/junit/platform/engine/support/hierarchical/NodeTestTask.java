@@ -165,7 +165,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 					future.get();
 				}
 				catch (ExecutionException e) {
-					ExceptionUtils.throwAsUncheckedException(e);
+					ExceptionUtils.throwAsUncheckedException(e.getCause());
 				}
 			}
 		}
