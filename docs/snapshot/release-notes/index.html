@@ -655,10 +655,10 @@ match than remain in the actual results. This bug only manifested itself if the
 expected list size was equal to or greater than the actual list size.</p>
 </li>
 <li>
-<p>Threads created for running tests in parallel now use the same thread context
-class loader (<em>TCCL</em>) that was set when creating the underlying executor service.
-This resolves <code>ClassNotFoundException</code> issues that only occur in parallel execution
-mode and a custom thread context class loader is in place.</p>
+<p>Threads created for running tests in parallel now use the same thread context class
+loader (<em>TCCL</em>) that was set when creating the underlying executor service. This
+resolves <code>ClassNotFoundException</code> issues that only occur in parallel execution mode
+when a custom <em>TCCL</em> is in place.</p>
 </li>
 </ul>
 </div>
@@ -866,7 +866,7 @@ well as various minor improvements and bug fixes.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-10-24 10:00:22 UTC
+Last updated 2018-10-26 14:36:50 UTC
 </div>
 </div>
 </body>

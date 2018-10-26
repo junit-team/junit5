@@ -152,6 +152,7 @@
 4db83f5e1c4a1b741d7783dbef86cb79  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerRequest.java
 4dd101700f237bb24e4dd7ae0ea864c5  documentation/src/docs/asciidoc/user-guide/launcher-api.adoc
 4eb491bf2aa69aacd0ecb2a9c6638de7  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstanceFactoryContext.java
+4edfe28f3ca2453d55094813e4cee916  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 504572baedabdcd6c8132182030c114a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/RepeatedTest.java
 50a0c8b2047127a3d62bf79530a45175  documentation/src/test/kotlin/example/registration/KotlinWebServerDemo.kt
 50c5fbdff9ed7ca51dbebfbd9e542377  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfSystemPropertyCondition.java
@@ -440,7 +441,6 @@ cc660aae3f06140206ac6508df0cab87  junit-jupiter-api/src/main/java/org/junit/jupi
 cc82647f4c62bcd57244e29d04c99812  documentation/src/test/java/org/junit/api/tools/ApiReport.java
 cd9be65f3b95c1e7a5de731c0af6b716  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/OpenTest4JAwareThrowableCollector.java
 ce161e48ef204f72adc6c6f33351ec64  junit-platform-console/src/main/java/org/junit/platform/console/tasks/XmlReportWriter.java
-ce4af2b318ada8bff1ca9c85224c7034  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 ce81daf96749147c5c60280e1e787d14  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Nested.java
 cee414c7457ca099203c2ac3c4b228ed  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfSystemPropertyCondition.java
 cf0b475c2486c9bf8d8ce333e3633018  junit-platform-engine/src/main/java/org/junit/platform/engine/TestTag.java
