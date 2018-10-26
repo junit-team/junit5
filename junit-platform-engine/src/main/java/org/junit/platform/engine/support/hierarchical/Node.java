@@ -243,6 +243,17 @@ public interface Node<C extends EngineExecutionContext> {
 		 */
 		void execute(TestDescriptor testDescriptor);
 
+		/**
+		 * Block until all dynamic test descriptors submitted to this executor
+		 * are finished.
+		 *
+		 * <p>This method is useful if the node needs to perform actions in its
+		 * {@link #execute(EngineExecutionContext, DynamicTestExecutor)} method
+		 * after all its dynamic children have finished.
+		 *
+		 * @throws InterruptedException if interrupted while waiting
+		 */
+		void awaitFinished() throws InterruptedException;
 	}
 
 	/**

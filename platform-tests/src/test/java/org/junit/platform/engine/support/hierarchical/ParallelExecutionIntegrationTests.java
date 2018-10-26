@@ -35,6 +35,8 @@ import java.net.URLClassLoader;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
@@ -146,6 +148,15 @@ class ParallelExecutionIntegrationTests {
 
 		assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(6);
 		assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(1);
+	}
+
+	@Test
+	void afterHooksAreCalledAfterConcurrentDynamicTestsAreFinished() {
+		List<ExecutionEvent> executionEvents = execute(3, ConcurrentDynamicTestCase.class);
+
+		assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(1);
+		Map<String, Instant> events = ConcurrentDynamicTestCase.events;
+		assertThat(events.get("afterEach")).isAfterOrEqualTo(events.get("dynamicTestFinished"));
 	}
 
 	private List<Instant> getTimestampsFor(List<ExecutionEvent> executionEvents, Condition<ExecutionEvent> condition) {
@@ -407,6 +418,29 @@ class ParallelExecutionIntegrationTests {
 				assertTrue(B.tryLock());
 				assertTrue(A.tryLock());
 			}
+		}
+	}
+
+	@Execution(CONCURRENT)
+	static class ConcurrentDynamicTestCase {
+		static Map<String, Instant> events;
+
+		@BeforeAll
+		static void beforeAll() {
+			events = new ConcurrentHashMap<>();
+		}
+
+		@AfterEach
+		void afterEach() {
+			events.put("afterEach", Instant.now());
+		}
+
+		@TestFactory
+		DynamicTest testFactory() {
+			return dynamicTest("slow", () -> {
+				Thread.sleep(100);
+				events.put("dynamicTestFinished", Instant.now());
+			});
 		}
 	}
 
