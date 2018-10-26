@@ -14,7 +14,15 @@ You're invited to follow our ongoing work, review it, and give feedback. This sh
 - [Javadoc]({{ site.baseurl }}/docs/current/api)
 - [GitHub Repository](https://github.com/junit-team/junit5/) with all the code and issues
 
-## Sponsors and Backers
+## Gold Sponsor
+
+<p align="center">
+  <a href="https://www.societegenerale.com/en/digital-and-innovation/tech-culture-it">
+    <img src="assets/img/sponsor-gold-Societe-Generale.png" width="240" title="Société Générale">
+  </a>
+</p>
+
+## Backers
 
 - Sebastian Esser
 - Jose Luis De la Cruz Morales
