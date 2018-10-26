@@ -48,10 +48,10 @@ repository on GitHub.
   evaluating a fast-forward match if there are more expected lines after the fast-forward
   match than remain in the actual results. This bug only manifested itself if the
   expected list size was equal to or greater than the actual list size.
-* Threads created for running tests in parallel now use the same thread context
-  class loader (_TCCL_) that was set when creating the underlying executor service.
-  This resolves `ClassNotFoundException` issues that only occur in parallel execution
-  mode and a custom thread context class loader is in place.
+* Threads created for running tests in parallel now use the same thread context class
+  loader (_TCCL_) that was set when creating the underlying executor service. This
+  resolves `ClassNotFoundException` issues that only occur in parallel execution mode
+  when a custom _TCCL_ is in place.
 * When executing tests in parallel, lifecycle methods and callbacks called after a
   `@TestFactory` method are now always executed after the dynamic tests returned by the
   method.
