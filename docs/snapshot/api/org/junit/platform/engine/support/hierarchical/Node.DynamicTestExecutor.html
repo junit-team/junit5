@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6};
+var data = {"i0":6,"i1":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -164,6 +164,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#awaitFinished()">awaitFinished</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Block until all dynamic test descriptors submitted to this executor
+ are finished.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#execute(org.junit.platform.engine.TestDescriptor)">execute</a></span>&#8203;(<a href="../../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</code></th>
 <td class="colLast">
 <div class="block">Submit a dynamic test descriptor for immediate execution.</div>
@@ -189,7 +197,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <a id="execute(org.junit.platform.engine.TestDescriptor)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>execute</h4>
 <pre class="methodSignature">void&nbsp;execute&#8203;(<a href="../../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</pre>
@@ -197,6 +205,26 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>testDescriptor</code> - the test descriptor to be executed</dd>
+</dl>
+</li>
+</ul>
+<a id="awaitFinished()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>awaitFinished</h4>
+<pre class="methodSignature">void&nbsp;awaitFinished()
+            throws <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang" class="externalLink">InterruptedException</a></pre>
+<div class="block">Block until all dynamic test descriptors submitted to this executor
+ are finished.
+
+ <p>This method is useful if the node needs to perform actions in its
+ <a href="Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)"><code>Node.execute(EngineExecutionContext, DynamicTestExecutor)</code></a> method
+ after all its dynamic children have finished.</div>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang" class="externalLink">InterruptedException</a></code> - if interrupted while waiting</dd>
 </dl>
 </li>
 </ul>
