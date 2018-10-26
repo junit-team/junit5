@@ -100,6 +100,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 			catch (ClassCastException ex) {
 				throw invalidReturnTypeException(ex);
 			}
+			dynamicTestExecutor.awaitFinished();
 		});
 	}
 
