@@ -73,13 +73,15 @@ footer {
 /* Sponsor card styles
 -------------------------------------------------- */
 .card {
+    width: 240px;
+    height: 340px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
-    width: 200px;
     border-radius: 5px;
-    background-image: linear-gradient(to bottom right, GoldenRod , Gold);
     text-align: center;
     font-size: small;
+    background-color: gold; /* For browsers that do not support gradients */
+    background-image: linear-gradient(to bottom right, goldenrod, god); /* Standard syntax (must be last) */
 }
 
 .card:hover {
