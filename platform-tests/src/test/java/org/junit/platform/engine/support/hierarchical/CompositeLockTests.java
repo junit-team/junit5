@@ -11,20 +11,17 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.InOrder;
 
 /**
@@ -35,41 +32,36 @@ class CompositeLockTests {
 	@Test
 	@SuppressWarnings("resource")
 	void acquiresAllLocksInOrder() throws Exception {
-		ReentrantLock lock1 = spy(new ReentrantLock());
-		ReentrantLock lock2 = spy(new ReentrantLock());
+		Lock lock1 = mock(Lock.class);
+		Lock lock2 = mock(Lock.class);
 
 		new CompositeLock(asList(lock1, lock2)).acquire();
 
 		InOrder inOrder = inOrder(lock1, lock2);
 		inOrder.verify(lock1).lockInterruptibly();
 		inOrder.verify(lock2).lockInterruptibly();
-		assertTrue(lock1.isLocked());
-		assertTrue(lock2.isLocked());
 	}
 
 	@Test
 	@SuppressWarnings("resource")
 	void releasesAllLocksInReverseOrder() throws Exception {
-		ReentrantLock lock1 = spy(new ReentrantLock());
-		ReentrantLock lock2 = spy(new ReentrantLock());
+		Lock lock1 = mock(Lock.class);
+		Lock lock2 = mock(Lock.class);
 
 		new CompositeLock(asList(lock1, lock2)).acquire().close();
 
 		InOrder inOrder = inOrder(lock1, lock2);
 		inOrder.verify(lock2).unlock();
 		inOrder.verify(lock1).unlock();
-		assertFalse(lock1.isLocked());
-		assertFalse(lock2.isLocked());
 	}
 
 	@Test
 	@SuppressWarnings("resource")
 	void releasesLocksInReverseOrderWhenInterruptedDuringAcquire() throws Exception {
 		CountDownLatch firstTwoLocksWereLocked = new CountDownLatch(2);
-		Lock firstLock = mockLock("firstLock", firstTwoLocksWereLocked);
-		Lock secondLock = mockLock("secondLock", firstTwoLocksWereLocked);
-		Lock unavailableLock = spy(new ReentrantLock());
-		unavailableLock.lock();
+		Lock firstLock = mockLock("firstLock", firstTwoLocksWereLocked::countDown);
+		Lock secondLock = mockLock("secondLock", firstTwoLocksWereLocked::countDown);
+		Lock unavailableLock = mockLock("unavailableLock", new CountDownLatch(1)::await);
 
 		Thread thread = new Thread(() -> {
 			try {
@@ -90,10 +82,10 @@ class CompositeLockTests {
 		verify(unavailableLock, never()).unlock();
 	}
 
-	private Lock mockLock(String name, CountDownLatch countDownWhenLocked) throws InterruptedException {
+	private Lock mockLock(String name, Executable lockAction) throws InterruptedException {
 		Lock lock = mock(Lock.class, name);
 		doAnswer(invocation -> {
-			countDownWhenLocked.countDown();
+			lockAction.execute();
 			return null;
 		}).when(lock).lockInterruptibly();
 		return lock;
