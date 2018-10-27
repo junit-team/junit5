@@ -25,19 +25,20 @@ Your donations will help to make that a reality!
 
 **Thank you!**
 
-<p align="center">
+<div align="center">
   <div class="card" onclick="location.href='https://www.societegenerale.com/en/digital-and-innovation/tech-culture-it';">
     <p>
       <img src="assets/img/sponsor-logo-SocieteGenerale.png.png" alt="SOCIETE GENERALE">
     </p>
     <p>
       <h3>SOCIETE GENERALE</h3>
-      <p>Use, Contribute and Attract: learn about the three components of Societe Generale's open source strategy.</p>
+      Use, Contribute and Attract:<br>learn about the three components<br>of Societe Generale's<br>open source strategy.
+
       <h4>G O L D&nbsp;&nbsp;S P O N S O R</h4>
-      <p>Since October 2018</p>
+      Since October 2018
     </p>
   </div>
-</p>
+</div>
 
 ### Backers
 
