@@ -39,6 +39,10 @@ repository on GitHub.
 
 * `Assertions.assertAll()` is now thread-safe -- for example, it can now be used with a
   _parallel_ `Stream`.
+* Exceptions thrown in `Assertions.assertAll()` are now additionally tracked as
+  _suppressed exceptions_ in the resulting `MultipleFailuresError`. Consequently, the
+  stack traces for such exceptions are now visible as _Suppressed_ at the end of the
+  stack trace for the invocation of `assertAll()`.
 * The `OS.SOLARIS` enum constant used with `@EnabledOnOs` and `@DisabledOnOs` is now also
   detected as the current operating system if the `os.name` JVM system property contains
   `"SunOs"`.

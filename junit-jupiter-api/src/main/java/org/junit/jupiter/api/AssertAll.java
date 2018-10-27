@@ -77,7 +77,9 @@ class AssertAll {
 				.collect(Collectors.toList());
 
 		if (!failures.isEmpty()) {
-			throw new MultipleFailuresError(heading, failures);
+			MultipleFailuresError multipleFailuresError = new MultipleFailuresError(heading, failures);
+			failures.forEach(multipleFailuresError::addSuppressed);
+			throw multipleFailuresError;
 		}
 	}
 

@@ -2325,13 +2325,15 @@ public class Assertions {
 	 * <p>If any supplied {@link Executable} throws an exception (i.e., a {@link Throwable}
 	 * or any subclass thereof), all remaining {@code executables} will still be executed,
 	 * and all exceptions will be aggregated and reported in a {@link MultipleFailuresError}.
-	 * However, if an {@code executable} throws a <em>blacklisted</em> exception &mdash; for
-	 * example, an {@link OutOfMemoryError} &mdash; execution will halt immediately, and the
-	 * blacklisted exception will be rethrown <em>as is</em> but <em>masked</em> as an
-	 * unchecked exception.
+	 * In addition, all aggregated exceptions will be added as {@linkplain
+	 * Throwable#addSuppressed(Throwable) suppressed exceptions} to the
+	 * {@code MultipleFailuresError}. However, if an {@code executable} throws a
+	 * <em>blacklisted</em> exception &mdash; for example, an {@link OutOfMemoryError}
+	 * &mdash; execution will halt immediately, and the blacklisted exception will be
+	 * rethrown <em>as is</em> but <em>masked</em> as an unchecked exception.
 	 *
 	 * <p>The supplied {@code heading} will be included in the message string for the
-	 * {@link MultipleFailuresError}.
+	 * {@code MultipleFailuresError}.
 	 *
 	 * @see #assertAll(Executable...)
 	 * @see #assertAll(String, Executable...)
