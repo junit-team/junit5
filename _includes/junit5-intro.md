@@ -34,8 +34,7 @@ Your donations will help to make that a reality!
       <h3>SOCIETE GENERALE</h3>
       <p>
         Use, Contribute and Attract:<br>
-        learn about the three components<br>
-        of Societe Generale's<br>
+        learn about Societe Generale's<br>
         open source strategy.
       </p>
     </div>
