@@ -28,7 +28,7 @@ Your donations will help to make that a reality!
 <div align="center">
   <div class="card" onclick="location.href='https://www.societegenerale.com/en/digital-and-innovation/tech-culture-it';">
     <div class="card-image">
-      <img src="assets/img/sponsor-logo-SocieteGenerale.png.png" alt="SOCIETE GENERALE">
+      <img src="assets/img/sponsor-logo-SocieteGenerale.png" alt="SOCIETE GENERALE">
     </div>
     <div class="card-center">
       <h3>SOCIETE GENERALE</h3>
