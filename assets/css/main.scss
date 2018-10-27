@@ -77,7 +77,9 @@ footer {
     transition: 0.3s;
     width: 200px;
     border-radius: 5px;
+    background-image: linear-gradient(to bottom right, GoldenRod , Gold);
     text-align: center;
+    font-size: small;
 }
 
 .card:hover {
