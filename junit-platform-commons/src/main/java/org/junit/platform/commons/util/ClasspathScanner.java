@@ -26,12 +26,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 
@@ -59,10 +59,10 @@ class ClasspathScanner {
 
 	private final Supplier<ClassLoader> classLoaderSupplier;
 
-	private final BiFunction<String, ClassLoader, Optional<Class<?>>> loadClass;
+	private final BiFunction<String, ClassLoader, Try<Class<?>>> loadClass;
 
 	ClasspathScanner(Supplier<ClassLoader> classLoaderSupplier,
-			BiFunction<String, ClassLoader, Optional<Class<?>>> loadClass) {
+			BiFunction<String, ClassLoader, Try<Class<?>>> loadClass) {
 
 		this.classLoaderSupplier = classLoaderSupplier;
 		this.loadClass = loadClass;
@@ -132,6 +132,7 @@ class ClasspathScanner {
 				try {
 					// @formatter:off
 					loadClass.apply(fullyQualifiedClassName, getClassLoader())
+							.toOptional()
 							.filter(classFilter) // Always use ".filter(classFilter)" to include future predicates.
 							.ifPresent(classConsumer);
 					// @formatter:on

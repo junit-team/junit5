@@ -71,11 +71,12 @@ class UniqueIdSelectorResolver implements DiscoverySelectorResolver {
 	}
 
 	private Optional<Class<?>> loadTestClass(String className, UniqueId uniqueId) {
-		Optional<Class<?>> testClass = ReflectionUtils.loadClass(className);
-		if (!testClass.isPresent()) {
-			logger.warn(() -> format("Unresolvable Unique ID (%s): Unknown class %s", uniqueId, className));
-		}
-		return testClass;
+		// @formatter:off
+		return ReflectionUtils.tryToLoadClass(className)
+				.ifFailure(cause -> logger.warn(cause, () ->
+						format("Unresolvable Unique ID (%s): Unknown class %s", uniqueId, className)))
+				.toOptional();
+		// @formatter:on
 	}
 
 	private Optional<String> determineTestClassName(UniqueId uniqueId) {

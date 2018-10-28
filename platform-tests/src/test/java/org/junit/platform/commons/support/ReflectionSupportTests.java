@@ -37,11 +37,21 @@ class ReflectionSupportTests {
 	private final Predicate<String> allNames = name -> true;
 	private final Predicate<Method> allMethods = name -> true;
 
+	@SuppressWarnings("deprecation")
 	@Test
 	void loadClassDelegates() {
 		assertEquals(ReflectionUtils.loadClass("-"), ReflectionSupport.loadClass("-"));
 		assertEquals(ReflectionUtils.loadClass("A"), ReflectionSupport.loadClass("A"));
 		assertEquals(ReflectionUtils.loadClass("java.io.Bits"), ReflectionSupport.loadClass("java.io.Bits"));
+	}
+
+	@Test
+	void tryToLoadClassDelegates() {
+		assertEquals(ReflectionUtils.tryToLoadClass("-").toOptional(),
+			ReflectionSupport.tryToLoadClass("-").toOptional());
+		assertEquals(ReflectionUtils.tryToLoadClass("A").toOptional(),
+			ReflectionSupport.tryToLoadClass("A").toOptional());
+		assertEquals(ReflectionUtils.tryToLoadClass("java.io.Bits"), ReflectionSupport.tryToLoadClass("java.io.Bits"));
 	}
 
 	@TestFactory

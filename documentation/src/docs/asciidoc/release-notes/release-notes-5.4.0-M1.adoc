@@ -30,6 +30,9 @@ repository on GitHub.
   inspect modifiers of classes and members.
   - See the <<../user-guide/index.adoc#extensions-supported-utilities-modifier, User
     Guide>> for details.
+* Exceptions reported due to failed reflective operations such as loading a class, reading
+  a field's value, or looking up a method by name now include the original exception as
+  their cause to make it easier to debug underlying issues.
 
 
 [[release-notes-5.4.0-M1-junit-jupiter]]

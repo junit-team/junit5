@@ -15,7 +15,7 @@ import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedField
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
 import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
-import static org.junit.platform.commons.util.ReflectionUtils.readFieldValue;
+import static org.junit.platform.commons.util.ReflectionUtils.tryToReadFieldValue;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -90,7 +90,7 @@ final class ExtensionUtils {
 		Predicate<Field> predicate = (instance == null) ? isStaticExtension : isNonStaticExtension;
 
 		findAnnotatedFields(clazz, RegisterExtension.class, predicate).forEach(field -> {
-			readFieldValue(field, instance).ifPresent(value -> {
+			tryToReadFieldValue(field, instance).ifSuccess(value -> {
 				Extension extension = (Extension) value;
 				registry.registerExtension(extension, field);
 			});
