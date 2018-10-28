@@ -119,9 +119,9 @@ class DisabledIfTests {
 	}
 
 	@Test
-	@DisabledIf(engine = "groovy", value = { "System.properties['jsr'] = '233'", "'233' != System.properties['jsr']" })
-	void groovy() {
-		assertEquals("233", System.getProperty("jsr"));
+	@DisabledIf(engine = "java", value = { "System.getProperties().put(0xCAFE, 233);", "return false;" })
+	void java() {
+		assertEquals(233, System.getProperties().get(0xCAFE));
 	}
 
 	@Test
