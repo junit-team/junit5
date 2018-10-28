@@ -78,22 +78,18 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 		@Override
 		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
 			String className = configurationParameters.get(CONFIG_CUSTOM_CLASS_PROPERTY_NAME).orElseThrow(
-				() -> new JUnitException(
-					String.format("Configuration parameter '%s' must be set", CONFIG_CUSTOM_CLASS_PROPERTY_NAME)));
-
-			Class<?> strategyClass = ReflectionUtils.loadClass(className).orElseThrow(() -> new JUnitException(
-				String.format("Could not load class '%s' specified via configuration parameter '%s'", className,
-					CONFIG_CUSTOM_CLASS_PROPERTY_NAME)));
-
-			Preconditions.condition(ParallelExecutionConfigurationStrategy.class.isAssignableFrom(strategyClass),
-				() -> String.format("Class '%s' specified via configuration parameter '%s' does not implement %s",
-					strategyClass.getName(), CONFIG_CUSTOM_CLASS_PROPERTY_NAME,
-					ParallelExecutionConfigurationStrategy.class.getName()));
-
-			ParallelExecutionConfigurationStrategy strategy = (ParallelExecutionConfigurationStrategy) ReflectionUtils.newInstance(
-				strategyClass);
-
-			return strategy.createConfiguration(configurationParameters);
+				() -> new JUnitException(CONFIG_CUSTOM_CLASS_PROPERTY_NAME + " must be set"));
+			return ReflectionUtils.tryToLoadClass(className) //
+					.andThenTry(strategyClass -> {
+						Preconditions.condition(
+							ParallelExecutionConfigurationStrategy.class.isAssignableFrom(strategyClass),
+							CONFIG_CUSTOM_CLASS_PROPERTY_NAME + " does not implement "
+									+ ParallelExecutionConfigurationStrategy.class);
+						return (ParallelExecutionConfigurationStrategy) ReflectionUtils.newInstance(strategyClass);
+					}) //
+					.andThenTry(strategy -> strategy.createConfiguration(configurationParameters)) //
+					.getOrThrow(cause -> new JUnitException(
+						"Could not create configuration for strategy class: " + className, cause));
 		}
 	};
 

@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.support;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.lang.reflect.Method;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -56,9 +58,33 @@ public final class ReflectionSupport {
 	 * @param name the name of the class to load; never {@code null} or blank
 	 * @return an {@code Optional} containing the loaded class; never {@code null}
 	 * but potentially empty if no such class could be loaded
+	 * @deprecated Please use {@link #tryToLoadClass(String)} instead.
 	 */
+	@API(status = DEPRECATED, since = "1.4")
+	@Deprecated
 	public static Optional<Class<?>> loadClass(String name) {
 		return ReflectionUtils.loadClass(name);
+	}
+
+	/**
+	 * Try to load a class by its <em>primitive name</em> or <em>fully qualified name</em>,
+	 * using the default {@link ClassLoader}.
+	 *
+	 * <p>Class names for arrays may be specified using either the JVM's internal
+	 * String representation (e.g., {@code [[I} for {@code int[][]},
+	 * {@code [Lava.lang.String;} for {@code java.lang.String[]}, etc.) or
+	 * <em>source code syntax</em> (e.g., {@code int[][]}, {@code java.lang.String[]},
+	 * etc.).
+	 *
+	 * @param name the name of the class to load; never {@code null} or blank
+	 * @return a successful {@code Try} containing the loaded class or a failed
+	 * {@code Try} containing the exception if no such class could be loaded;
+	 * never {@code null}
+	 * @since 1.4
+	 */
+	@API(status = MAINTAINED, since = "1.4")
+	public static Try<Class<?>> tryToLoadClass(String name) {
+		return ReflectionUtils.tryToLoadClass(name);
 	}
 
 	/**

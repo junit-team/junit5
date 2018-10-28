@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.runner.Description.createTestDescription;
 
 import java.io.Serializable;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
@@ -50,14 +51,11 @@ class UniqueIdReaderTests {
 
 		assertEquals(description.getDisplayName(), uniqueId);
 
-		// @formatter:off
-		assertThat(listener.stream(UniqueIdReader.class, Level.WARNING)
-			.map(LogRecord::getMessage)
-			.filter(m -> m.equals("Could not read unique ID for Description; using display name instead: "
-					+ description.getDisplayName()))
-			.count()
-		).isEqualTo(1);
-		// @formatter:on
+		Optional<LogRecord> logRecord = listener.stream(UniqueIdReader.class, Level.WARNING).findFirst();
+		assertThat(logRecord).isPresent();
+		assertThat(logRecord.get().getMessage()).isEqualTo(
+			"Could not read unique ID for Description; using display name instead: " + description.getDisplayName());
+		assertThat(logRecord.get().getThrown()).isInstanceOf(NoSuchFieldException.class);
 	}
 
 }

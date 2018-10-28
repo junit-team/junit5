@@ -251,9 +251,9 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 		private static Class<?> toClass(String type) {
 			//@formatter:off
 			return ReflectionUtils
-					.loadClass(type)
-					.orElseThrow(() -> new ArgumentConversionException(
-							"Failed to convert String \"" + type + "\" to type " + Class.class.getName()));
+					.tryToLoadClass(type)
+					.getOrThrow(cause -> new ArgumentConversionException(
+							"Failed to convert String \"" + type + "\" to type " + Class.class.getName(), cause));
 			//@formatter:on
 		}
 
