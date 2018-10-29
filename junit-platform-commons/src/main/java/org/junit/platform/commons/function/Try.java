@@ -104,27 +104,27 @@ public abstract class Try<V> {
 	/**
 	 * If this {@code Try} is a success, apply the supplied transformer to its
 	 * value and return a new successful or failed {@code Try} depending on the
-	 * action's outcome; if it's a failure, do nothing.
+	 * transformer's outcome; if this {@code Try} is a failure, do nothing.
 	 *
-	 * @param action the action to try; must not be {@code null}
+	 * @param transformer the transformer to try; must not be {@code null}
 	 * @return a succeeded or failed {@code Try}; never {@code null}
 	 */
-	public abstract <U> Try<U> andThenTry(Transformer<V, U> action);
+	public abstract <U> Try<U> andThenTry(Transformer<V, U> transformer);
 
 	/**
-	 * If this {@code Try} is a success, apply the supplied action to its value
-	 * and return a new successful or failed {@code Try} depending on the
-	 * action's outcome; if it's a failure, do nothing.
+	 * If this {@code Try} is a success, apply the supplied function to its
+	 * value and return the resulting {@code Try}; if this {@code Try} is a
+	 * failure, do nothing.
 	 *
-	 * @param action the action to apply; must not be {@code null}
+	 * @param function the function to apply; must not be {@code null}
 	 * @return a succeeded or failed {@code Try}; never {@code null}
 	 */
-	public abstract <U> Try<U> andThen(Function<V, Try<U>> action);
+	public abstract <U> Try<U> andThen(Function<V, Try<U>> function);
 
 	/**
 	 * If this {@code Try} is a failure, call the supplied action and return a
 	 * new successful or failed {@code Try} depending on the action's outcome;
-	 * if it's a success, do nothing.
+	 * if this {@code Try} is a success, do nothing.
 	 *
 	 * @param action the action to try; must not be {@code null}
 	 * @return a succeeded or failed {@code Try}; never {@code null}
@@ -132,31 +132,32 @@ public abstract class Try<V> {
 	public abstract Try<V> orElseTry(Callable<V> action);
 
 	/**
-	 * If this {@code Try} is a failure, call the supplied action and return a
-	 * new successful or failed {@code Try} depending on the action's outcome;
-	 * if it's a success, do nothing.
+	 * If this {@code Try} is a failure, call the supplied supplier and return
+	 * the resulting {@code Try}; if this {@code Try} is a success, do nothing.
 	 *
-	 * @param action the action to apply; must not be {@code null}
+	 * @param supplier the supplier to call; must not be {@code null}
 	 * @return a succeeded or failed {@code Try}; never {@code null}
 	 */
-	public abstract Try<V> orElse(Supplier<Try<V>> action);
+	public abstract Try<V> orElse(Supplier<Try<V>> supplier);
 
 	/**
-	 * If this {@code Try} is a success, get the contained value; if it's a
-	 * failure, throw the contained exception.
+	 * If this {@code Try} is a success, get the contained value; if this
+	 * {@code Try} is a failure, throw the contained exception.
 	 *
 	 * @return the contained value, if available; potentially {@code null}
+	 * @throws Exception if this {@code Try} is a failure
 	 */
 	public abstract V get() throws Exception;
 
 	/**
-	 * If this {@code Try} is a success, get the contained value; if it's a
-	 * failure, call the supplied {@link Function} with the contained exception
-	 * and throw the resulting {@link Exception}.
+	 * If this {@code Try} is a success, get the contained value; if this
+	 * {@code Try} is a failure, call the supplied {@link Function} with the
+	 * contained exception and throw the resulting {@link Exception}.
 	 *
 	 * @param exceptionTransformer the transformer to be called with the
 	 * contained exception, if available; must not be {@code null}
 	 * @return the contained value, if available
+	 * @throws E if this {@code Try} is a failure
 	 */
 	public abstract <E extends Exception> V getOrThrow(Function<? super Exception, E> exceptionTransformer) throws E;
 
@@ -182,21 +183,27 @@ public abstract class Try<V> {
 
 	/**
 	 * If this {@code Try} is a failure, return an empty {@link Optional}; if
-	 * it's a success, wrap the contained value using
+	 * this {@code Try} is a success, wrap the contained value using
 	 * {@link Optional#ofNullable(Object)}.
 	 *
-	 * @return an empty or present {@link Optional}; never {@code null}
+	 * @return an {@link Optional}; never {@code null} but potentially
+	 * <em>empty</em>
 	 */
 	public abstract Optional<V> toOptional();
 
 	/**
 	 * A transformer for values of type {@code S} to type {@code T}.
+	 *
+	 * <p>The {@code Transformer} interface is similar to {@link Function},
+	 * except that a {@code Transformer} may throw an exception.
 	 */
 	@FunctionalInterface
 	public interface Transformer<S, T> {
 
 		/**
 		 * Apply this transformer to the supplied value.
+		 *
+		 * @throws Exception if the transformation fails
 		 */
 		T apply(S value) throws Exception;
 
@@ -212,23 +219,25 @@ public abstract class Try<V> {
 
 		@Override
 		public <U> Try<U> andThenTry(Transformer<V, U> transformer) {
-			Try.checkNotNull(transformer, "transformer");
+			checkNotNull(transformer, "transformer");
 			return Try.call(() -> transformer.apply(this.value));
 		}
 
 		@Override
-		public <U> Try<U> andThen(Function<V, Try<U>> action) {
-			Try.checkNotNull(action, "action");
-			return Try.of(() -> action.apply(this.value));
+		public <U> Try<U> andThen(Function<V, Try<U>> function) {
+			checkNotNull(function, "function");
+			return Try.of(() -> function.apply(this.value));
 		}
 
 		@Override
 		public Try<V> orElseTry(Callable<V> action) {
+			// don't call action because this Try is a success
 			return this;
 		}
 
 		@Override
-		public Try<V> orElse(Supplier<Try<V>> action) {
+		public Try<V> orElse(Supplier<Try<V>> supplier) {
+			// don't call supplier because this Try is a success
 			return this;
 		}
 
@@ -239,18 +248,20 @@ public abstract class Try<V> {
 
 		@Override
 		public <E extends Exception> V getOrThrow(Function<? super Exception, E> exceptionTransformer) {
+			// don't call exceptionTransformer because this Try is a success
 			return this.value;
 		}
 
 		@Override
 		public Try<V> ifSuccess(Consumer<V> valueConsumer) {
-			Try.checkNotNull(valueConsumer, "valueConsumer");
+			checkNotNull(valueConsumer, "valueConsumer");
 			valueConsumer.accept(this.value);
 			return this;
 		}
 
 		@Override
 		public Try<V> ifFailure(Consumer<Exception> causeConsumer) {
+			// don't call causeConsumer because this Try was a success
 			return this;
 		}
 
@@ -286,11 +297,13 @@ public abstract class Try<V> {
 
 		@Override
 		public <U> Try<U> andThenTry(Transformer<V, U> transformer) {
+			// don't call transformer because this Try is a failure
 			return uncheckedCast();
 		}
 
 		@Override
-		public <U> Try<U> andThen(Function<V, Try<U>> action) {
+		public <U> Try<U> andThen(Function<V, Try<U>> function) {
+			// don't call function because this Try is a failure
 			return uncheckedCast();
 		}
 
@@ -301,14 +314,14 @@ public abstract class Try<V> {
 
 		@Override
 		public Try<V> orElseTry(Callable<V> action) {
-			Try.checkNotNull(action, "action");
+			checkNotNull(action, "action");
 			return Try.call(action);
 		}
 
 		@Override
-		public Try<V> orElse(Supplier<Try<V>> action) {
-			Try.checkNotNull(action, "action");
-			return Try.of(action::get);
+		public Try<V> orElse(Supplier<Try<V>> supplier) {
+			checkNotNull(supplier, "supplier");
+			return Try.of(supplier::get);
 		}
 
 		@Override
@@ -318,18 +331,19 @@ public abstract class Try<V> {
 
 		@Override
 		public <E extends Exception> V getOrThrow(Function<? super Exception, E> exceptionTransformer) throws E {
-			Try.checkNotNull(exceptionTransformer, "exceptionTransformer");
+			checkNotNull(exceptionTransformer, "exceptionTransformer");
 			throw exceptionTransformer.apply(this.cause);
 		}
 
 		@Override
 		public Try<V> ifSuccess(Consumer<V> valueConsumer) {
+			// don't call valueConsumer because this Try is a failure
 			return this;
 		}
 
 		@Override
 		public Try<V> ifFailure(Consumer<Exception> causeConsumer) {
-			Try.checkNotNull(causeConsumer, "causeConsumer");
+			checkNotNull(causeConsumer, "causeConsumer");
 			causeConsumer.accept(this.cause);
 			return this;
 		}
