@@ -520,7 +520,7 @@ public final class ReflectionUtils {
 	 * @param field the field to read; never {@code null}
 	 * @see #readFieldValue(Field, Object)
 	 * @see #readFieldValue(Class, String, Object)
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	@API(status = INTERNAL, since = "1.4")
 	public static Try<Object> tryToReadFieldValue(Field field) {
