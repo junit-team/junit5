@@ -559,7 +559,7 @@ public final class ReflectionUtils {
 	 * be {@code null} for a static field
 	 * @see #readFieldValue(Field)
 	 * @see #readFieldValue(Class, String, Object)
-	 * @since 1.3
+	 * @since 1.4
 	 */
 	@API(status = INTERNAL, since = "1.4")
 	public static Try<Object> tryToReadFieldValue(Field field, Object instance) {
