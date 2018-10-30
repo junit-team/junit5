@@ -59,6 +59,7 @@ repository on GitHub.
 * When executing tests in parallel, lifecycle methods and callbacks called after a
   `@TestFactory` method are now always executed after the dynamic tests returned by the
   method.
+* New `JAVA_12` constant in `JRE` usable in `@EnabledOnJre` and `@DisabledOnJre`.
 
 ==== Deprecations and Breaking Changes
 

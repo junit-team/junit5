@@ -33,6 +33,7 @@ import org.junit.platform.commons.util.StringUtils;
  * @see #JAVA_9
  * @see #JAVA_10
  * @see #JAVA_11
+ * @see #JAVA_12
  * @see #OTHER
  * @see EnabledOnJre
  * @see DisabledOnJre
@@ -61,8 +62,16 @@ public enum JRE {
 	JAVA_11,
 
 	/**
+	 * Java 12.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	JAVA_12,
+
+	/**
 	 * A JRE version other than {@link #JAVA_8}, {@link #JAVA_9},
-	 * {@link #JAVA_10}, or {@link #JAVA_11}.
+	 * {@link #JAVA_10}, {@link #JAVA_11}, or {@link #JAVA_12}.
 	 */
 	OTHER;
 
@@ -98,6 +107,8 @@ public enum JRE {
 					return JAVA_10;
 				case 11:
 					return JAVA_11;
+				case 12:
+					return JAVA_12;
 				default:
 					return OTHER;
 			}
