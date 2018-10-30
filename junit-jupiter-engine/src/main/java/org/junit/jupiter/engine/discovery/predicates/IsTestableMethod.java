@@ -27,16 +27,22 @@ abstract class IsTestableMethod implements Predicate<Method> {
 
 	private final Class<? extends Annotation> annotationType;
 	private final boolean mustReturnVoid;
+	private final boolean mustBeNonStatic;
 
 	IsTestableMethod(Class<? extends Annotation> annotationType, boolean mustReturnVoid) {
+		this(annotationType, mustReturnVoid, true);
+	}
+
+	IsTestableMethod(Class<? extends Annotation> annotationType, boolean mustReturnVoid, boolean mustBeNonStatic) {
 		this.annotationType = annotationType;
 		this.mustReturnVoid = mustReturnVoid;
+		this.mustBeNonStatic = mustBeNonStatic;
 	}
 
 	@Override
 	public boolean test(Method candidate) {
 		// Please do not collapse the following into a single statement.
-		if (isStatic(candidate)) {
+		if (this.mustBeNonStatic && isStatic(candidate)) {
 			return false;
 		}
 		if (isPrivate(candidate)) {

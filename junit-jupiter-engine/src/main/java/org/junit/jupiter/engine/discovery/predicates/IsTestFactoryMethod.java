@@ -27,7 +27,7 @@ import org.junit.jupiter.api.TestFactory;
 public class IsTestFactoryMethod extends IsTestableMethod {
 
 	public IsTestFactoryMethod() {
-		super(TestFactory.class, false);
+		super(TestFactory.class, false, false);
 	}
 
 }

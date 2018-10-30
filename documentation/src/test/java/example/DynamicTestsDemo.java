@@ -199,5 +199,10 @@ class DynamicTestsDemo {
 		// @formatter:on
 		// tag::user_guide[]
 	}
+
+	@TestFactory
+	static DynamicNode dynamicNodeFromStaticMethod() {
+		return dynamicTest("static factory", () -> assertFalse(false));
+	}
 }
 // end::user_guide[]
