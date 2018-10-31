@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava10;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava11;
+import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava12;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava8;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava9;
 
@@ -106,12 +107,21 @@ class EnabledOnJreConditionTests extends AbstractExecutionConditionTests {
 	}
 
 	/**
+	 * @see EnabledOnJreIntegrationTests#java12()
+	 */
+	@Test
+	void java12() {
+		evaluateCondition();
+		assertEnabledOnCurrentJreIf(onJava12());
+	}
+
+	/**
 	 * @see EnabledOnJreIntegrationTests#other()
 	 */
 	@Test
 	void other() {
 		evaluateCondition();
-		assertEnabledOnCurrentJreIf(!(onJava8() || onJava9() || onJava10() || onJava11()));
+		assertEnabledOnCurrentJreIf(!(onJava8() || onJava9() || onJava10() || onJava11() || onJava12()));
 	}
 
 	private void assertEnabledOnCurrentJreIf(boolean condition) {
