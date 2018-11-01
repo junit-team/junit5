@@ -8,7 +8,6 @@ tasks.named<Test>("test") {
 	useJUnitPlatform {
 		excludeTags("exclude")
 	}
-	jvmArgs = listOf("-Xmx1g")
 }
 
 dependencies {
