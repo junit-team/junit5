@@ -43,6 +43,7 @@ repository on GitHub.
   _suppressed exceptions_ in the resulting `MultipleFailuresError`. Consequently, the
   stack traces for such exceptions are now visible as _Suppressed_ at the end of the
   stack trace for the invocation of `assertAll()`.
+* New `JRE.JAVA_12` enum constant for use with `@EnabledOnJre` and `@DisabledOnJre`.
 * The `OS.SOLARIS` enum constant used with `@EnabledOnOs` and `@DisabledOnOs` is now also
   detected as the current operating system if the `os.name` JVM system property contains
   `"SunOs"`.
@@ -59,7 +60,6 @@ repository on GitHub.
 * When executing tests in parallel, lifecycle methods and callbacks called after a
   `@TestFactory` method are now always executed after the dynamic tests returned by the
   method.
-* New `JAVA_12` constant in `JRE` usable in `@EnabledOnJre` and `@DisabledOnJre`.
 
 ==== Deprecations and Breaking Changes
 
