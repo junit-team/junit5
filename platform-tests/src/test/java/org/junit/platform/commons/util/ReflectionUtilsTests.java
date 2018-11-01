@@ -815,6 +815,21 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
+	void getSuperClassesPrecondition() {
+		RuntimeException exception = assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getSuperClasses(null));
+		assertThat(exception).hasMessage("Class must not be null");
+	}
+
+	@Test
+	void getSuperClasses() {
+		assertThat(ReflectionUtils.getSuperClasses(Object.class)).isEmpty();
+
+		assertThat(ReflectionUtils.getSuperClasses(String.class)).contains(String.class);
+		assertThat(ReflectionUtils.getSuperClasses(Integer.class)).contains(Number.class);
+		assertThat(ReflectionUtils.getSuperClasses(NullPointerException.class)).contains(RuntimeException.class, Exception.class);
+	}
+
+	@Test
 	void findMethodsPreconditions() {
 		// @formatter:off
 		assertThrows(PreconditionViolationException.class, () -> findMethods(null, null));

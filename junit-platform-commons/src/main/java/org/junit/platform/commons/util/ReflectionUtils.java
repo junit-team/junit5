@@ -1008,24 +1008,56 @@ public final class ReflectionUtils {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "Predicate must not be null");
 
-		for (Class<?> current = clazz; current != null && current != Object.class; current = current.getSuperclass()) {
+		List<Class> classes = getSuperClasses(clazz);
+		for (Class current : classes) {
 			// Search for match in current type
 			List<Method> methods = current.isInterface() ? getMethods(current) : getDeclaredMethods(current, BOTTOM_UP);
-			for (Method method : methods) {
-				if (predicate.test(method)) {
-					return Optional.of(method);
-				}
+			Optional<Method> matchingMethod = searchForMatchingMethod(methods, predicate);
+			if (matchingMethod.isPresent()) {
+				return matchingMethod;
 			}
 
 			// Search for match in interfaces implemented by current type
-			for (Class<?> ifc : current.getInterfaces()) {
-				Optional<Method> optional = findMethod(ifc, predicate);
-				if (optional.isPresent()) {
-					return optional;
-				}
+			matchingMethod = searchForMatchingMethodInInterfaces(current, predicate);
+			if (matchingMethod.isPresent()) {
+				return matchingMethod;
 			}
 		}
+		return Optional.empty();
+	}
 
+	public static List<Class> getSuperClasses(Class<?> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
+
+		List<Class> classes = new ArrayList<>();
+		for (Class<?> current = clazz; current != null && current != Object.class; current = current.getSuperclass()) {
+			classes.add(current);
+		}
+		return classes;
+	}
+
+	private static Optional<Method> searchForMatchingMethod(List<Method> methods, Predicate<Method> predicate) {
+		Preconditions.notNull(methods, "Method list must not be null");
+		Preconditions.notNull(predicate, "Predicate must not be null");
+
+		for (Method method : methods) {
+			if (predicate.test(method)) {
+				return Optional.of(method);
+			}
+		}
+		return Optional.empty();
+	}
+
+	private static Optional<Method> searchForMatchingMethodInInterfaces(Class clazz, Predicate<Method> predicate) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(predicate, "Predicate must not be null");
+
+		for (Class<?> ifc : clazz.getInterfaces()) {
+			Optional<Method> optional = findMethod(ifc, predicate);
+			if (optional.isPresent()) {
+				return optional;
+			}
+		}
 		return Optional.empty();
 	}
 
