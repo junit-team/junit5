@@ -50,6 +50,24 @@ public class Resources {
 	 */
 	public static final String SYSTEM_ERR = "java.lang.System.err";
 
+	/**
+	 * Represents the locale.
+	 *
+	 * @since 5.4
+	 * @see java.util.Locale#setDefault(java.util.Locale)
+	 */
+	@API(status = EXPERIMENTAL, since = "5.4")
+	public static final String LOCALE = "java.util.Locale.default";
+
+	/**
+	 * Represents the time zone.
+	 *
+	 * @since 5.4
+	 * @see java.util.TimeZone#setDefault(java.util.TimeZone)
+	 */
+	@API(status = EXPERIMENTAL, since = "5.4")
+	public static final String TIME_ZONE = "java.util.TimeZone.default";
+
 	private Resources() {
 		/* no-op */
 	}
