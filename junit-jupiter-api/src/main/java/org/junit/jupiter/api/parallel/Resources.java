@@ -12,9 +12,6 @@ package org.junit.jupiter.api.parallel;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import java.io.PrintStream;
-import java.util.Properties;
-
 import org.apiguardian.api.API;
 
 /**
@@ -30,7 +27,7 @@ public class Resources {
 	 * Represents Java's system properties.
 	 *
 	 * @see System#getProperties()
-	 * @see System#setProperties(Properties)
+	 * @see System#setProperties(java.util.Properties)
 	 */
 	public static final String SYSTEM_PROPERTIES = "java.lang.System.properties";
 
@@ -38,7 +35,7 @@ public class Resources {
 	 * Represents the standard output stream of the current process.
 	 *
 	 * @see System#out
-	 * @see System#setOut(PrintStream)
+	 * @see System#setOut(java.io.PrintStream)
 	 */
 	public static final String SYSTEM_OUT = "java.lang.System.out";
 
@@ -46,12 +43,29 @@ public class Resources {
 	 * Represents the standard error stream of the current process.
 	 *
 	 * @see System#err
-	 * @see System#setErr(PrintStream)
+	 * @see System#setErr(java.io.PrintStream)
 	 */
 	public static final String SYSTEM_ERR = "java.lang.System.err";
+
+	/**
+	 * Represents the locale.
+	 *
+	 * @since 5.4
+	 * @see java.util.Locale#setDefault(java.util.Locale)
+	 */
+	@API(status = EXPERIMENTAL, since = "5.4")
+	public static final String LOCALE = "java.util.Locale.default";
+
+	/**
+	 * Represents the time zone.
+	 *
+	 * @since 5.4
+	 * @see java.util.TimeZone#setDefault(java.util.TimeZone)
+	 */
+	@API(status = EXPERIMENTAL, since = "5.4")
+	public static final String TIME_ZONE = "java.util.TimeZone.default";
 
 	private Resources() {
 		/* no-op */
 	}
-
 }
