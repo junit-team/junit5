@@ -134,23 +134,23 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../Execution.html" title="class in org.junit.platform.testkit">Execution</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Execution.</span><code><span class="memberNameLink"><a href="../Execution.html#finished(org.junit.platform.engine.TestDescriptor,java.time.Instant,java.time.Instant,org.junit.platform.engine.TestExecutionResult)">finished</a></span>&#8203;(<a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Execution.</span><code><span class="memberNameLink"><a href="../Execution.html#finished(org.junit.platform.engine.TestDescriptor,java.time.Instant,java.time.Instant,org.junit.platform.engine.TestExecutionResult)">finished</a></span>&#8203;(<a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
         <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;startInstant,
         <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;endInstant,
         <a href="../../engine/TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;executionResult)</code></th>
 <td class="colLast">
-<div class="block">Construct a new instance of an <code>Execution</code> that finished with the
+<div class="block">Create a new instance of an <code>Execution</code> that finished with the
  provided <a href="../../engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Execution.html" title="class in org.junit.platform.testkit">Execution</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Execution.</span><code><span class="memberNameLink"><a href="../Execution.html#skipped(org.junit.platform.engine.TestDescriptor,java.time.Instant,java.time.Instant,java.lang.String)">skipped</a></span>&#8203;(<a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Execution.</span><code><span class="memberNameLink"><a href="../Execution.html#skipped(org.junit.platform.engine.TestDescriptor,java.time.Instant,java.time.Instant,java.lang.String)">skipped</a></span>&#8203;(<a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
        <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;startInstant,
        <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;endInstant,
        <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;skipReason)</code></th>
 <td class="colLast">
-<div class="block">Construct a new instance of an <code>Execution</code> that was skipped with the provided
+<div class="block">Create a new instance of an <code>Execution</code> that was skipped with the provided
  <code>skipReason</code>.</div>
 </td>
 </tr>
@@ -165,40 +165,55 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../Execution.html" title="class in org.junit.platform.testkit">Execution</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionResults.</span><code><span class="memberNameLink"><a href="../ExecutionResults.html#getTestExecutions()">getTestExecutions</a></span>()</code></th>
+<td class="colFirst"><code>org.assertj.core.api.ListAssert&lt;<a href="../Execution.html" title="class in org.junit.platform.testkit">Execution</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Executions.</span><code><span class="memberNameLink"><a href="../Executions.html#assertThatExecutions()">assertThatExecutions</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get all Test <a href="../Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s contained in this <a href="../ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a>.</div>
+<div class="block">Shortcut for <code>org.assertj.core.api.Assertions.assertThat(executions.list())</code>.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../Execution.html" title="class in org.junit.platform.testkit">Execution</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionResults.</span><code><span class="memberNameLink"><a href="../ExecutionResults.html#getTestsFinishedExecutions()">getTestsFinishedExecutions</a></span>()</code></th>
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="../Execution.html" title="class in org.junit.platform.testkit">Execution</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Executions.</span><code><span class="memberNameLink"><a href="../Executions.html#filter(java.util.function.Predicate)">filter</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;? super <a href="../Execution.html" title="class in org.junit.platform.testkit">Execution</a>&gt;&nbsp;predicate)</code></th>
 <td class="colLast">
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of Test <a href="../Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were finished / completed, which includes tests that were
- <a href="../../engine/TestExecutionResult.Status.html#SUCCESSFUL"><code>TestExecutionResult.Status.SUCCESSFUL</code></a>, <a href="../../engine/TestExecutionResult.Status.html#FAILED"><code>TestExecutionResult.Status.FAILED</code></a> or <a href="../../engine/TestExecutionResult.Status.html#ABORTED"><code>TestExecutionResult.Status.ABORTED</code></a>.</div>
+<div class="block">Shortcut for <code>executions.stream().filter(predicate)</code>.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../Execution.html" title="class in org.junit.platform.testkit">Execution</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionResults.</span><code><span class="memberNameLink"><a href="../ExecutionResults.html#getTestsFinishedExecutions(org.junit.platform.engine.TestExecutionResult.Status)">getTestsFinishedExecutions</a></span>&#8203;(<a href="../../engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine">TestExecutionResult.Status</a>&nbsp;status)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Executions.</span><code><span class="memberNameLink"><a href="../Executions.html#list()">list</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of Test <a href="../Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were finished / completed, filtering on the provided
- <a href="../../engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine"><code>TestExecutionResult.Status</code></a>.</div>
+<div class="block">Get the <a href="../Execution.html" title="class in org.junit.platform.testkit">executions</a> as a <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../Execution.html" title="class in org.junit.platform.testkit">Execution</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionResults.</span><code><span class="memberNameLink"><a href="../ExecutionResults.html#getTestsSkippedExecutions()">getTestsSkippedExecutions</a></span>()</code></th>
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="../Execution.html" title="class in org.junit.platform.testkit">Execution</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Executions.</span><code><span class="memberNameLink"><a href="../Executions.html#stream()">stream</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of Test <a href="../Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were skipped.</div>
+<div class="block">Get the <a href="../Execution.html" title="class in org.junit.platform.testkit">executions</a> as a <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink"><code>Stream</code></a>.</div>
 </td>
 </tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Method parameters in <a href="../package-summary.html">org.junit.platform.testkit</a> with type arguments of type <a href="../Execution.html" title="class in org.junit.platform.testkit">Execution</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
 <tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../Execution.html" title="class in org.junit.platform.testkit">Execution</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExecutionResults.</span><code><span class="memberNameLink"><a href="../ExecutionResults.html#getTestsStartedExecutions()">getTestsStartedExecutions</a></span>()</code></th>
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="../Execution.html" title="class in org.junit.platform.testkit">Execution</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Executions.</span><code><span class="memberNameLink"><a href="../Executions.html#filter(java.util.function.Predicate)">filter</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;? super <a href="../Execution.html" title="class in org.junit.platform.testkit">Execution</a>&gt;&nbsp;predicate)</code></th>
 <td class="colLast">
-<div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a> of Test <a href="../Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a>s that were started.</div>
+<div class="block">Shortcut for <code>executions.stream().filter(predicate)</code>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;R&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;R&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Executions.</span><code><span class="memberNameLink"><a href="../Executions.html#map(java.util.function.Function)">map</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;? super <a href="../Execution.html" title="class in org.junit.platform.testkit">Execution</a>,&#8203;? extends R&gt;&nbsp;mapper)</code></th>
+<td class="colLast">
+<div class="block">Shortcut for <code>executions.stream().map(mapper)</code>.</div>
 </td>
 </tr>
 </tbody>

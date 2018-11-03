@@ -232,9 +232,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/reporting/ReportEntry.html#%3Cinit%3E()">ReportEntry()</a></span> - Constructor for class org.junit.platform.engine.reporting.<a href="../org/junit/platform/engine/reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting">ReportEntry</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEvent.Type.html#REPORTING_ENTRY_PUBLISHED">REPORTING_ENTRY_PUBLISHED</a></span> - org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit">ExecutionEvent.Type</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/EventType.html#REPORTING_ENTRY_PUBLISHED">REPORTING_ENTRY_PUBLISHED</a></span> - org.junit.platform.testkit.<a href="../org/junit/platform/testkit/EventType.html" title="enum in org.junit.platform.testkit">EventType</a></dt>
 <dd>
-<div class="block">Called when any <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> publishes additional information (i.e., test context or test data).</div>
+<div class="block">Called when a <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> publishes a reporting entry.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Events.html#reportingEntryPublished()">reportingEntryPublished()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Events.html" title="class in org.junit.platform.testkit">Events</a></dt>
+<dd>
+<div class="block">Get the reporting entry publication <a href="../org/junit/platform/testkit/Events.html" title="class in org.junit.platform.testkit"><code>Events</code></a> contained in this
+ <code>Events</code> object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/EventStatistics.html#reportingEntryPublished(long)">reportingEntryPublished(long)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/EventStatistics.html" title="class in org.junit.platform.testkit">EventStatistics</a></dt>
+<dd>
+<div class="block">Specify the number of expected <em>reporting entry publication</em> events.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/EngineExecutionListener.html#reportingEntryPublished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.reporting.ReportEntry)">reportingEntryPublished(TestDescriptor, ReportEntry)</a></span> - Method in interface org.junit.platform.engine.<a href="../org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a></dt>
 <dd>
@@ -248,7 +257,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEvent.html#reportingEntryPublished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.reporting.ReportEntry)">reportingEntryPublished(TestDescriptor, ReportEntry)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a></dt>
 <dd>
-<div class="block">Construct a new <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> of type: <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html#REPORTING_ENTRY_PUBLISHED"><code>ExecutionEvent.Type.REPORTING_ENTRY_PUBLISHED</code></a>.</div>
+<div class="block">Create an <code>ExecutionEvent</code> for a reporting entry published for the
+ supplied <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> and <a href="../org/junit/platform/engine/reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting"><code>ReportEntry</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionRecorder.html#reportingEntryPublished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.reporting.ReportEntry)">reportingEntryPublished(TestDescriptor, ReportEntry)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionRecorder.html" title="class in org.junit.platform.testkit">ExecutionRecorder</a></dt>
 <dd>

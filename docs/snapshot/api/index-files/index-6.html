@@ -123,6 +123,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/console/options/Theme.html#failed()">failed()</a></span> - Method in enum org.junit.platform.console.options.<a href="../org/junit/platform/console/options/Theme.html" title="enum in org.junit.platform.console.options">Theme</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Events.html#failed()">failed()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Events.html" title="class in org.junit.platform.testkit">Events</a></dt>
+<dd>
+<div class="block">Get the failed <a href="../org/junit/platform/testkit/Events.html" title="class in org.junit.platform.testkit"><code>Events</code></a> contained in this <code>Events</code> object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Executions.html#failed()">failed()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Executions.html" title="class in org.junit.platform.testkit">Executions</a></dt>
+<dd>
+<div class="block">Get the failed <a href="../org/junit/platform/testkit/Executions.html" title="class in org.junit.platform.testkit"><code>Executions</code></a> contained in this <code>Executions</code> object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/EventStatistics.html#failed(long)">failed(long)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/EventStatistics.html" title="class in org.junit.platform.testkit">EventStatistics</a></dt>
+<dd>
+<div class="block">Specify the number of expected <em>failed</em> events.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/TestExecutionResult.html#failed(java.lang.Throwable)">failed(Throwable)</a></span> - Static method in class org.junit.platform.engine.<a href="../org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a></dt>
 <dd>
 <div class="block">Obtain a <code>TestExecutionResult</code> for a <em>failed</em> execution
@@ -153,6 +165,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><a href="../org/junit/platform/engine/support/descriptor/FileSystemSource.html" title="interface in org.junit.platform.engine.support.descriptor"><span class="typeNameLink">FileSystemSource</span></a> - Interface in <a href="../org/junit/platform/engine/support/descriptor/package-summary.html">org.junit.platform.engine.support.descriptor</a></dt>
 <dd>
 <div class="block">File system based <a href="../org/junit/platform/engine/TestSource.html" title="interface in org.junit.platform.engine"><code>TestSource</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Executions.html#filter(java.util.function.Predicate)">filter(Predicate&lt;? super Execution&gt;)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Executions.html" title="class in org.junit.platform.testkit">Executions</a></dt>
+<dd>
+<div class="block">Shortcut for <code>executions.stream().filter(predicate)</code>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Events.html#filter(java.util.function.Predicate)">filter(Predicate&lt;? super ExecutionEvent&gt;)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Events.html" title="class in org.junit.platform.testkit">Events</a></dt>
+<dd>
+<div class="block">Shortcut for <code>events.stream().filter(predicate)</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/runner/JUnitPlatform.html#filter(org.junit.runner.manipulation.Filter)">filter(Filter)</a></span> - Method in class org.junit.platform.runner.<a href="../org/junit/platform/runner/JUnitPlatform.html" title="class in org.junit.platform.runner">JUnitPlatform</a></dt>
 <dd>&nbsp;</dd>
@@ -331,16 +351,29 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/AnnotationUtils.html#findRepeatableAnnotations(java.lang.reflect.AnnotatedElement,java.lang.Class)">findRepeatableAnnotations(AnnotatedElement, Class&lt;A&gt;)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/AnnotationUtils.html" title="class in org.junit.platform.commons.util">AnnotationUtils</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Events.html#finished()">finished()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Events.html" title="class in org.junit.platform.testkit">Events</a></dt>
+<dd>
+<div class="block">Get the finished <a href="../org/junit/platform/testkit/Events.html" title="class in org.junit.platform.testkit"><code>Events</code></a> contained in this <code>Events</code> object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Executions.html#finished()">finished()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Executions.html" title="class in org.junit.platform.testkit">Executions</a></dt>
+<dd>
+<div class="block">Get the finished <a href="../org/junit/platform/testkit/Executions.html" title="class in org.junit.platform.testkit"><code>Executions</code></a> contained in this <code>Executions</code> object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/EventStatistics.html#finished(long)">finished(long)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/EventStatistics.html" title="class in org.junit.platform.testkit">EventStatistics</a></dt>
+<dd>
+<div class="block">Specify the number of expected <em>finished</em> events.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEventConditions.html#finished(org.assertj.core.api.Condition)">finished(Condition&lt;TestExecutionResult&gt;)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEventConditions.html" title="class in org.junit.platform.testkit">ExecutionEventConditions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Execution.html#finished(org.junit.platform.engine.TestDescriptor,java.time.Instant,java.time.Instant,org.junit.platform.engine.TestExecutionResult)">finished(TestDescriptor, Instant, Instant, TestExecutionResult)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit">Execution</a></dt>
 <dd>
-<div class="block">Construct a new instance of an <code>Execution</code> that finished with the
+<div class="block">Create a new instance of an <code>Execution</code> that finished with the
  provided <a href="../org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEvent.Type.html#FINISHED">FINISHED</a></span> - org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit">ExecutionEvent.Type</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/EventType.html#FINISHED">FINISHED</a></span> - org.junit.platform.testkit.<a href="../org/junit/platform/testkit/EventType.html" title="enum in org.junit.platform.testkit">EventType</a></dt>
 <dd>
-<div class="block">Called when the execution of a leaf or subtree of the test tree has finished, regardless of the outcome.</div>
+<div class="block">Called when the execution of a leaf or subtree of the test tree has
+ finished, regardless of the outcome.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEventConditions.html#finishedSuccessfully()">finishedSuccessfully()</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEventConditions.html" title="class in org.junit.platform.testkit">ExecutionEventConditions</a></dt>
 <dd>&nbsp;</dd>

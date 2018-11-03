@@ -101,6 +101,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/console/options/Theme.html#aborted()">aborted()</a></span> - Method in enum org.junit.platform.console.options.<a href="../org/junit/platform/console/options/Theme.html" title="enum in org.junit.platform.console.options">Theme</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Events.html#aborted()">aborted()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Events.html" title="class in org.junit.platform.testkit">Events</a></dt>
+<dd>
+<div class="block">Get the aborted <a href="../org/junit/platform/testkit/Events.html" title="class in org.junit.platform.testkit"><code>Events</code></a> contained in this <code>Events</code> object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Executions.html#aborted()">aborted()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Executions.html" title="class in org.junit.platform.testkit">Executions</a></dt>
+<dd>
+<div class="block">Get the aborted <a href="../org/junit/platform/testkit/Executions.html" title="class in org.junit.platform.testkit"><code>Executions</code></a> contained in this <code>Executions</code> object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/EventStatistics.html#aborted(long)">aborted(long)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/EventStatistics.html" title="class in org.junit.platform.testkit">EventStatistics</a></dt>
+<dd>
+<div class="block">Specify the number of expected <em>aborted</em> events.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/TestExecutionResult.html#aborted(java.lang.Throwable)">aborted(Throwable)</a></span> - Static method in class org.junit.platform.engine.<a href="../org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a></dt>
 <dd>
 <div class="block">Obtain a <code>TestExecutionResult</code> for an <em>aborted</em> execution
@@ -255,6 +267,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/condition/OS.html#AIX">AIX</a></span> - org.junit.jupiter.api.condition.<a href="../org/junit/jupiter/api/condition/OS.html" title="enum in org.junit.jupiter.api.condition">OS</a></dt>
 <dd>
 <div class="block">IBM AIX operating system.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionResults.html#all()">all()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></dt>
+<dd>
+<div class="block">Get all recorded events.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.html#allow(org.junit.platform.engine.UniqueId)">allow(UniqueId)</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.html" title="class in org.junit.jupiter.engine.descriptor">DynamicDescendantFilter</a></dt>
 <dd>&nbsp;</dd>
@@ -875,6 +891,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block"><em>Assert</em> that <code>expected</code> and <code>actual</code> are equal.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Events.html#assertEventsMatchExactly(org.assertj.core.api.Condition...)">assertEventsMatchExactly(Condition&lt;? super ExecutionEvent&gt;...)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Events.html" title="class in org.junit.platform.testkit">Events</a></dt>
+<dd>
+<div class="block">Assert that all <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit">execution events</a> contained in
+ this <code>Events</code> object exactly match the provided conditions.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/Assertions.html#assertFalse(boolean)">assertFalse(boolean)</a></span> - Static method in class org.junit.jupiter.api.<a href="../org/junit/jupiter/api/Assertions.html" title="class in org.junit.jupiter.api">Assertions</a></dt>
 <dd>
 <div class="block"><em>Assert</em> that the supplied <code>condition</code> is <code>false</code>.</div>
@@ -1259,8 +1280,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Assert that the supplied package name is valid in terms of Java syntax.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEventConditions.html#assertRecordedExecutionEventsContainsExactly(java.util.List,org.assertj.core.api.Condition...)">assertRecordedExecutionEventsContainsExactly(List&lt;ExecutionEvent&gt;, Condition&lt;? super ExecutionEvent&gt;...)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEventConditions.html" title="class in org.junit.platform.testkit">ExecutionEventConditions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/Assertions.html#assertSame(java.lang.Object,java.lang.Object)">assertSame(Object, Object)</a></span> - Static method in class org.junit.jupiter.api.<a href="../org/junit/jupiter/api/Assertions.html" title="class in org.junit.jupiter.api">Assertions</a></dt>
 <dd>
 <div class="block"><em>Assert</em> that <code>expected</code> and <code>actual</code> refer to the same object.</div>
@@ -1272,6 +1291,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/Assertions.html#assertSame(java.lang.Object,java.lang.Object,java.util.function.Supplier)">assertSame(Object, Object, Supplier&lt;String&gt;)</a></span> - Static method in class org.junit.jupiter.api.<a href="../org/junit/jupiter/api/Assertions.html" title="class in org.junit.jupiter.api">Assertions</a></dt>
 <dd>
 <div class="block"><em>Assert</em> that <code>expected</code> and <code>actual</code> refer to the same object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Events.html#assertStatistics(java.util.function.Consumer)">assertStatistics(Consumer&lt;EventStatistics&gt;)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Events.html" title="class in org.junit.platform.testkit">Events</a></dt>
+<dd>
+<div class="block">Assert statistics for the <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit">execution events</a>
+ contained in this <code>Events</code> object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Events.html#assertThatEvents()">assertThatEvents()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Events.html" title="class in org.junit.platform.testkit">Events</a></dt>
+<dd>
+<div class="block">Shortcut for <code>org.assertj.core.api.Assertions.assertThat(events.list())</code>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Executions.html#assertThatExecutions()">assertThatExecutions()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Executions.html" title="class in org.junit.platform.testkit">Executions</a></dt>
+<dd>
+<div class="block">Shortcut for <code>org.assertj.core.api.Assertions.assertThat(executions.list())</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/Assertions.html#assertThrows(java.lang.Class,org.junit.jupiter.api.function.Executable)">assertThrows(Class&lt;T&gt;, Executable)</a></span> - Static method in class org.junit.jupiter.api.<a href="../org/junit/jupiter/api/Assertions.html" title="class in org.junit.jupiter.api">Assertions</a></dt>
 <dd>

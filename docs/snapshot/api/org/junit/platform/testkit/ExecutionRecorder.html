@@ -142,15 +142,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 public class <span class="typeNameLabel">ExecutionRecorder</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
 implements <a href="../engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a></pre>
-<div class="block"><a href="../engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine"><code>EngineExecutionListener</code></a> that records data from every event that
- occurs during the engine execution lifecycle and provides functionality
- for retrieving execution state via <a href="ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a>.</div>
+<div class="block"><code>ExecutionRecorder</code> is an <a href="../engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine"><code>EngineExecutionListener</code></a> that records
+ data from every event that occurs during the engine execution lifecycle and
+ provides functionality for retrieving execution state via
+ <a href="ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a>.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.4</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>, 
-<a href="ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a></dd>
+<dd><a href="ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a>, 
+<a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>, 
+<a href="Execution.html" title="class in org.junit.platform.testkit"><code>Execution</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -197,7 +199,8 @@ implements <a href="../engine/EngineExecutionListener.html" title="interface in 
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dynamicTestRegistered(org.junit.platform.engine.TestDescriptor)">dynamicTestRegistered</a></span>&#8203;(<a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</code></th>
 <td class="colLast">
-<div class="block">Record an <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a dynamically registered test.</div>
+<div class="block">Record an <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a dynamically registered container
+ or test.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -317,12 +320,14 @@ implements <a href="../engine/EngineExecutionListener.html" title="interface in 
 <li class="blockList">
 <h4>dynamicTestRegistered</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;dynamicTestRegistered&#8203;(<a href="../engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</pre>
-<div class="block">Record an <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a dynamically registered test.</div>
+<div class="block">Record an <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> for a dynamically registered container
+ or test.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../engine/EngineExecutionListener.html#dynamicTestRegistered(org.junit.platform.engine.TestDescriptor)">dynamicTestRegistered</a></code>&nbsp;in interface&nbsp;<code><a href="../engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>testDescriptor</code> - the descriptor of the dynamically registered test</dd>
+<dd><code>testDescriptor</code> - the descriptor of the newly registered test
+ or container</dd>
 </dl>
 </li>
 </ul>
@@ -340,7 +345,8 @@ implements <a href="../engine/EngineExecutionListener.html" title="interface in 
 <dd><code><a href="../engine/EngineExecutionListener.html#executionSkipped(org.junit.platform.engine.TestDescriptor,java.lang.String)">executionSkipped</a></code>&nbsp;in interface&nbsp;<code><a href="../engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>testDescriptor</code> - the descriptor of the skipped test or container</dd>
-<dd><code>reason</code> - a human-readable message describing why the execution was skipped</dd>
+<dd><code>reason</code> - a human-readable message describing why the execution
+ has been skipped</dd>
 </dl>
 </li>
 </ul>
@@ -375,7 +381,8 @@ implements <a href="../engine/EngineExecutionListener.html" title="interface in 
 <dd><code><a href="../engine/EngineExecutionListener.html#executionFinished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">executionFinished</a></code>&nbsp;in interface&nbsp;<code><a href="../engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>testDescriptor</code> - the descriptor of the finished test or container</dd>
-<dd><code>testExecutionResult</code> - the (unaggregated) result of the execution</dd>
+<dd><code>testExecutionResult</code> - the (unaggregated) result of the execution for
+ the supplied <code>TestDescriptor</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a></dd>
 </dl>
@@ -394,7 +401,8 @@ implements <a href="../engine/EngineExecutionListener.html" title="interface in 
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../engine/EngineExecutionListener.html#reportingEntryPublished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.reporting.ReportEntry)">reportingEntryPublished</a></code>&nbsp;in interface&nbsp;<code><a href="../engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>testDescriptor</code> - the descriptor of the test or container to which the entry belongs</dd>
+<dd><code>testDescriptor</code> - the descriptor of the test or container to which
+ the reporting entry belongs</dd>
 <dd><code>entry</code> - a <code>ReportEntry</code> instance to be published</dd>
 </dl>
 </li>

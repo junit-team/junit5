@@ -304,6 +304,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEventConditions.html#event(org.assertj.core.api.Condition...)">event(Condition&lt;? super ExecutionEvent&gt;...)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEventConditions.html" title="class in org.junit.platform.testkit">ExecutionEventConditions</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="../org/junit/platform/testkit/Events.html" title="class in org.junit.platform.testkit"><span class="typeNameLink">Events</span></a> - Class in <a href="../org/junit/platform/testkit/package-summary.html">org.junit.platform.testkit</a></dt>
+<dd>
+<div class="block"><code>Events</code> is a facade that provides a fluent API for working with
+ <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit">execution events</a>.</div>
+</dd>
+<dt><a href="../org/junit/platform/testkit/EventStatistics.html" title="class in org.junit.platform.testkit"><span class="typeNameLink">EventStatistics</span></a> - Class in <a href="../org/junit/platform/testkit/package-summary.html">org.junit.platform.testkit</a></dt>
+<dd>
+<div class="block"><code>EventStatistics</code> provides a fluent API for asserting statistics
+ for <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit">execution events</a>.</div>
+</dd>
+<dt><a href="../org/junit/platform/testkit/EventType.html" title="enum in org.junit.platform.testkit"><span class="typeNameLink">EventType</span></a> - Enum in <a href="../org/junit/platform/testkit/package-summary.html">org.junit.platform.testkit</a></dt>
+<dd>
+<div class="block">Enumeration of the different possible <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> types.</div>
+</dd>
 <dt><a href="../org/junit/platform/commons/util/ExceptionUtils.html" title="class in org.junit.platform.commons.util"><span class="typeNameLink">ExceptionUtils</span></a> - Class in <a href="../org/junit/platform/commons/util/package-summary.html">org.junit.platform.commons.util</a></dt>
 <dd>
 <div class="block">Collection of utilities for working with exceptions.</div>
@@ -476,8 +490,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  <a href="../org/junit/platform/commons/util/ExceptionUtils.html#throwAsUncheckedException(java.lang.Throwable)">mask</a> any
  exception thrown as an unchecked exception.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/TerminationInfo.html#executed()">executed()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/TerminationInfo.html" title="class in org.junit.platform.testkit">TerminationInfo</a></dt>
+<dd>
+<div class="block">Determine if this <code>TerminationInfo</code> represents a completed execution.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/TerminationInfo.html#executed(org.junit.platform.engine.TestExecutionResult)">executed(TestExecutionResult)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/TerminationInfo.html" title="class in org.junit.platform.testkit">TerminationInfo</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Create an <em>executed</em> <code>TerminationInfo</code> instance for the
+ supplied <a href="../org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/migrationsupport/rules/adapter/AbstractTestRuleAdapter.html#executeMethod(java.lang.String)">executeMethod(String)</a></span> - Method in class org.junit.jupiter.migrationsupport.rules.adapter.<a href="../org/junit/jupiter/migrationsupport/rules/adapter/AbstractTestRuleAdapter.html" title="class in org.junit.jupiter.migrationsupport.rules.adapter">AbstractTestRuleAdapter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/migrationsupport/rules/adapter/AbstractTestRuleAdapter.html#executeMethod(java.lang.String,java.lang.Class%5B%5D,java.lang.Object...)">executeMethod(String, Class&lt;?&gt;[], Object...)</a></span> - Method in class org.junit.jupiter.migrationsupport.rules.adapter.<a href="../org/junit/jupiter/migrationsupport/rules/adapter/AbstractTestRuleAdapter.html" title="class in org.junit.jupiter.migrationsupport.rules.adapter">AbstractTestRuleAdapter</a></dt>
@@ -505,16 +526,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><span class="typeNameLink">ExecutionEvent</span></a> - Class in <a href="../org/junit/platform/testkit/package-summary.html">org.junit.platform.testkit</a></dt>
 <dd>
-<div class="block"><a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> represents a single event fired during execution of
+<div class="block"><code>ExecutionEvent</code> represents a single event fired during execution of
  a test plan on the JUnit Platform.</div>
-</dd>
-<dt><a href="../org/junit/platform/testkit/ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit"><span class="typeNameLink">ExecutionEvent.Type</span></a> - Enum in <a href="../org/junit/platform/testkit/package-summary.html">org.junit.platform.testkit</a></dt>
-<dd>
-<div class="block">Enumeration of the different possible <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> types.</div>
 </dd>
 <dt><a href="../org/junit/platform/testkit/ExecutionEventConditions.html" title="class in org.junit.platform.testkit"><span class="typeNameLink">ExecutionEventConditions</span></a> - Class in <a href="../org/junit/platform/testkit/package-summary.html">org.junit.platform.testkit</a></dt>
 <dd>
-<div class="block">Collection of AssertJ conditions for <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s.</div>
+<div class="block">Collection of AssertJ conditions for <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/EngineExecutionListener.html#executionFinished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">executionFinished(TestDescriptor, TestExecutionResult)</a></span> - Method in interface org.junit.platform.engine.<a href="../org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a></dt>
 <dd>
@@ -523,7 +540,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEvent.html#executionFinished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">executionFinished(TestDescriptor, TestExecutionResult)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a></dt>
 <dd>
-<div class="block">Construct a new <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> of type: <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html#FINISHED"><code>ExecutionEvent.Type.FINISHED</code></a>.</div>
+<div class="block">Create a <em>finished</em> <code>ExecutionEvent</code> for the supplied
+ <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> and <a href="../org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionRecorder.html#executionFinished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">executionFinished(TestDescriptor, TestExecutionResult)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionRecorder.html" title="class in org.junit.platform.testkit">ExecutionRecorder</a></dt>
 <dd>
@@ -545,9 +563,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><a href="../org/junit/platform/testkit/ExecutionRecorder.html" title="class in org.junit.platform.testkit"><span class="typeNameLink">ExecutionRecorder</span></a> - Class in <a href="../org/junit/platform/testkit/package-summary.html">org.junit.platform.testkit</a></dt>
 <dd>
-<div class="block"><a href="../org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine"><code>EngineExecutionListener</code></a> that records data from every event that
- occurs during the engine execution lifecycle and provides functionality
- for retrieving execution state via <a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a>.</div>
+<div class="block"><code>ExecutionRecorder</code> is an <a href="../org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine"><code>EngineExecutionListener</code></a> that records
+ data from every event that occurs during the engine execution lifecycle and
+ provides functionality for retrieving execution state via
+ <a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionRecorder.html#%3Cinit%3E()">ExecutionRecorder()</a></span> - Constructor for class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionRecorder.html" title="class in org.junit.platform.testkit">ExecutionRecorder</a></dt>
 <dd>&nbsp;</dd>
@@ -560,7 +579,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><a href="../org/junit/platform/testkit/ExecutionResults.html" title="class in org.junit.platform.testkit"><span class="typeNameLink">ExecutionResults</span></a> - Class in <a href="../org/junit/platform/testkit/package-summary.html">org.junit.platform.testkit</a></dt>
 <dd>
-<div class="block">Represents the entirety of multiple test or container execution runs.</div>
+<div class="block"><code>ExecutionResults</code> provides a fluent API for processing the results of
+ executing a test plan on the JUnit Platform for a given
+ <a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/Events.html#executions()">executions()</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/Events.html" title="class in org.junit.platform.testkit">Events</a></dt>
+<dd>
+<div class="block">Get the <a href="../org/junit/platform/testkit/Executions.html" title="class in org.junit.platform.testkit"><code>Executions</code></a> for the current set of
+ <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit">execution events</a>.</div>
+</dd>
+<dt><a href="../org/junit/platform/testkit/Executions.html" title="class in org.junit.platform.testkit"><span class="typeNameLink">Executions</span></a> - Class in <a href="../org/junit/platform/testkit/package-summary.html">org.junit.platform.testkit</a></dt>
+<dd>
+<div class="block"><code>Executions</code> is a facade that provides a fluent API for working with
+ <a href="../org/junit/platform/testkit/Execution.html" title="class in org.junit.platform.testkit">executions</a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/EngineExecutionListener.html#executionSkipped(org.junit.platform.engine.TestDescriptor,java.lang.String)">executionSkipped(TestDescriptor, String)</a></span> - Method in interface org.junit.platform.engine.<a href="../org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a></dt>
 <dd>
@@ -569,7 +600,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEvent.html#executionSkipped(org.junit.platform.engine.TestDescriptor,java.lang.String)">executionSkipped(TestDescriptor, String)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a></dt>
 <dd>
-<div class="block">Construct a new <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> of type: <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html#SKIPPED"><code>ExecutionEvent.Type.SKIPPED</code></a>.</div>
+<div class="block">Create a <em>skipped</em> <code>ExecutionEvent</code> for the supplied
+ <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> and <code>reason</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionRecorder.html#executionSkipped(org.junit.platform.engine.TestDescriptor,java.lang.String)">executionSkipped(TestDescriptor, String)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionRecorder.html" title="class in org.junit.platform.testkit">ExecutionRecorder</a></dt>
 <dd>
@@ -591,7 +623,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionEvent.html#executionStarted(org.junit.platform.engine.TestDescriptor)">executionStarted(TestDescriptor)</a></span> - Static method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a></dt>
 <dd>
-<div class="block">Construct a new <a href="../org/junit/platform/testkit/ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> of type: <a href="../org/junit/platform/testkit/ExecutionEvent.Type.html#STARTED"><code>ExecutionEvent.Type.STARTED</code></a>.</div>
+<div class="block">Create a <em>started</em> <code>ExecutionEvent</code> for the supplied
+ <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/ExecutionRecorder.html#executionStarted(org.junit.platform.engine.TestDescriptor)">executionStarted(TestDescriptor)</a></span> - Method in class org.junit.platform.testkit.<a href="../org/junit/platform/testkit/ExecutionRecorder.html" title="class in org.junit.platform.testkit">ExecutionRecorder</a></dt>
 <dd>

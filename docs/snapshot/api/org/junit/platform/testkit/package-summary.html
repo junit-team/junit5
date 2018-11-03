@@ -114,6 +114,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
+<th class="colFirst" scope="row"><a href="Events.html" title="class in org.junit.platform.testkit">Events</a></th>
+<td class="colLast">
+<div class="block"><code>Events</code> is a facade that provides a fluent API for working with
+ <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit">execution events</a>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="EventStatistics.html" title="class in org.junit.platform.testkit">EventStatistics</a></th>
+<td class="colLast">
+<div class="block"><code>EventStatistics</code> provides a fluent API for asserting statistics
+ for <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit">execution events</a>.</div>
+</td>
+</tr>
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="Execution.html" title="class in org.junit.platform.testkit">Execution</a></th>
 <td class="colLast">
 <div class="block"><code>Execution</code> encapsulates metadata for the execution of a single
@@ -123,31 +137,41 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="rowColor">
 <th class="colFirst" scope="row"><a href="ExecutionEvent.html" title="class in org.junit.platform.testkit">ExecutionEvent</a></th>
 <td class="colLast">
-<div class="block"><a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> represents a single event fired during execution of
+<div class="block"><code>ExecutionEvent</code> represents a single event fired during execution of
  a test plan on the JUnit Platform.</div>
 </td>
 </tr>
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="ExecutionEventConditions.html" title="class in org.junit.platform.testkit">ExecutionEventConditions</a></th>
 <td class="colLast">
-<div class="block">Collection of AssertJ conditions for <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>s.</div>
+<div class="block">Collection of AssertJ conditions for <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <th class="colFirst" scope="row"><a href="ExecutionRecorder.html" title="class in org.junit.platform.testkit">ExecutionRecorder</a></th>
 <td class="colLast">
-<div class="block"><a href="../engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine"><code>EngineExecutionListener</code></a> that records data from every event that
- occurs during the engine execution lifecycle and provides functionality
- for retrieving execution state via <a href="ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a>.</div>
+<div class="block"><code>ExecutionRecorder</code> is an <a href="../engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine"><code>EngineExecutionListener</code></a> that records
+ data from every event that occurs during the engine execution lifecycle and
+ provides functionality for retrieving execution state via
+ <a href="ExecutionResults.html" title="class in org.junit.platform.testkit"><code>ExecutionResults</code></a>.</div>
 </td>
 </tr>
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="ExecutionResults.html" title="class in org.junit.platform.testkit">ExecutionResults</a></th>
 <td class="colLast">
-<div class="block">Represents the entirety of multiple test or container execution runs.</div>
+<div class="block"><code>ExecutionResults</code> provides a fluent API for processing the results of
+ executing a test plan on the JUnit Platform for a given
+ <a href="../engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
+<th class="colFirst" scope="row"><a href="Executions.html" title="class in org.junit.platform.testkit">Executions</a></th>
+<td class="colLast">
+<div class="block"><code>Executions</code> is a facade that provides a fluent API for working with
+ <a href="Execution.html" title="class in org.junit.platform.testkit">executions</a>.</div>
+</td>
+</tr>
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="TerminationInfo.html" title="class in org.junit.platform.testkit">TerminationInfo</a></th>
 <td class="colLast">
 <div class="block"><code>TerminationInfo</code> is a union type that allows propagation of terminated
@@ -155,7 +179,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  was skipped or the <a href="../engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a> if the container/test was executed.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="TestExecutionResultConditions.html" title="class in org.junit.platform.testkit">TestExecutionResultConditions</a></th>
 <td class="colLast">
 <div class="block">Collection of AssertJ conditions for <a href="../engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>.</div>
@@ -173,7 +197,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="ExecutionEvent.Type.html" title="enum in org.junit.platform.testkit">ExecutionEvent.Type</a></th>
+<th class="colFirst" scope="row"><a href="EventType.html" title="enum in org.junit.platform.testkit">EventType</a></th>
 <td class="colLast">
 <div class="block">Enumeration of the different possible <a href="ExecutionEvent.html" title="class in org.junit.platform.testkit"><code>ExecutionEvent</code></a> types.</div>
 </td>
