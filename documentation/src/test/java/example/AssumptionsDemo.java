@@ -12,9 +12,12 @@ package example;
 
 // @formatter:off
 // tag::user_guide[]
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.jupiter.api.Assumptions.assumingThat;
+
+import example.util.Calculator;
 
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +41,7 @@ class AssumptionsDemo {
 		assumingThat("CI".equals(System.getenv("ENV")),
 			() -> {
 				// perform these assertions only on the CI server
-				assertEquals(2, 2);
+				assertEquals(2, Calculator.divide(4, 2));
 			});
 
 		// perform these assertions in all environments
