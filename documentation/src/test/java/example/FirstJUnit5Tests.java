@@ -11,7 +11,10 @@
 package example;
 
 // tag::user_guide[]
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import example.util.Calculator;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +22,7 @@ class FirstJUnit5Tests {
 
 	@Test
 	void myFirstTest() {
-		assertEquals(2, 1 + 1);
+		assertEquals(2, Calculator.add(1, 1));
 	}
 
 }
