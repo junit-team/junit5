@@ -21,7 +21,7 @@ class TestInterfaceDemo implements TestLifecycleLogger,
 
 	@Test
 	void isEqualValue() {
-		assertEquals(1, 1, "is always equal");
+		assertEquals(1, "a".length(), "is always equal");
 	}
 
 }
