@@ -80,6 +80,9 @@ repository on GitHub.
   single `DynamicNode` -- for example, a `DynamicTest` or a `DynamicContainer`.
 * Implicit conversion from hexadecimal and octal string representations to integral types
   in `@ParameterizedTest` arguments -- for example, conversion from `"0xff"` to `255`.
+* New `LOCALE` and `TIME_ZONE` constants in `org.junit.jupiter.api.parallel.Resources`
+  for use with `@ResourceLock` to synchronize test execution regarding the default
+  `Locale` and default `TimeZone`, respectively.
 * New `DisplayNameGenerator` interface and `@DisplayNameGeneration` annotation that allow
   declarative configuration of a pre-defined or custom display name generator.
 * JUnit 4's `@Ignore` annotation is now supported for disabling test classes and test

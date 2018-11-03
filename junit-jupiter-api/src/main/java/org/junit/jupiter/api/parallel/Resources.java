@@ -48,7 +48,7 @@ public class Resources {
 	public static final String SYSTEM_ERR = "java.lang.System.err";
 
 	/**
-	 * Represents the locale.
+	 * Represents the default locale for the current instance of the JVM.
 	 *
 	 * @since 5.4
 	 * @see java.util.Locale#setDefault(java.util.Locale)
@@ -57,7 +57,7 @@ public class Resources {
 	public static final String LOCALE = "java.util.Locale.default";
 
 	/**
-	 * Represents the time zone.
+	 * Represents the default time zone for the current instance of the JVM.
 	 *
 	 * @since 5.4
 	 * @see java.util.TimeZone#setDefault(java.util.TimeZone)
@@ -68,4 +68,5 @@ public class Resources {
 	private Resources() {
 		/* no-op */
 	}
+
 }
