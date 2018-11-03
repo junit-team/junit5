@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.testkit.Events;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.engine.Events;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests that verify support for {@link Disabled @Disabled} in the {@link JupiterTestEngine}.

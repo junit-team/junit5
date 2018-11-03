@@ -25,7 +25,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests for test class hierarchy support in the {@link JupiterTestEngine}.

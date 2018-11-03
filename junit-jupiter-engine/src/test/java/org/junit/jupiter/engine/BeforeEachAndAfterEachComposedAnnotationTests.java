@@ -21,7 +21,7 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests that verify support for {@link BeforeEach} and {@link AfterEach}

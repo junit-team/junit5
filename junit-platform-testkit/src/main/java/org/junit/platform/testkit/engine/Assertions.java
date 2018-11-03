@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.testkit;
+package org.junit.platform.testkit.engine;
 
 import java.util.List;
 import java.util.Objects;

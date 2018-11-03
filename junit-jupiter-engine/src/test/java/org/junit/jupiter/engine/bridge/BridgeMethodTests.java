@@ -26,7 +26,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.bridge.NumberTestGroup.ByteTestCase;
 import org.junit.jupiter.engine.bridge.NumberTestGroup.ShortTestCase;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * @since 5.0

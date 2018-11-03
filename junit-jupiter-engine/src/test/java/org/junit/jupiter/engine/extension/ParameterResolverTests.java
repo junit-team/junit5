@@ -17,11 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.testkit.ExecutionEventConditions.event;
-import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.testkit.ExecutionEventConditions.test;
-import static org.junit.platform.testkit.TestExecutionResultConditions.isA;
-import static org.junit.platform.testkit.TestExecutionResultConditions.message;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.event;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.test;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -51,8 +51,8 @@ import org.junit.jupiter.engine.execution.injection.sample.NumberParameterResolv
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveArrayParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveIntegerParameterResolver;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.testkit.Events;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.engine.Events;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests that verify support for {@link ParameterResolver}

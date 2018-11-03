@@ -22,8 +22,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.Events;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.engine.Events;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests that verify support for {@linkplain Nested nested contexts}

@@ -26,7 +26,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests that verify support for {@link TestInstancePostProcessor}.

@@ -25,7 +25,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 

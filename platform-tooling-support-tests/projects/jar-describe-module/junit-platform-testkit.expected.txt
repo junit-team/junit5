@@ -2,4 +2,4 @@
 
 org.junit.platform.testkit@${platformVersion} automatic
 requires java.base mandated
-contains org.junit.platform.testkit
+contains org.junit.platform.testkit.engine

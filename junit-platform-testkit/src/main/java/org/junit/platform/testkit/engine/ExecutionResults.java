@@ -8,10 +8,10 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.testkit;
+package org.junit.platform.testkit.engine;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-import static org.junit.platform.testkit.ExecutionEvent.byTestDescriptor;
+import static org.junit.platform.testkit.engine.ExecutionEvent.byTestDescriptor;
 
 import java.util.List;
 import java.util.function.Predicate;

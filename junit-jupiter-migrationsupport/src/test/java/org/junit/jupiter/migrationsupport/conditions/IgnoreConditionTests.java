@@ -13,21 +13,21 @@ package org.junit.jupiter.migrationsupport.conditions;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-import static org.junit.platform.testkit.ExecutionEventConditions.container;
-import static org.junit.platform.testkit.ExecutionEventConditions.engine;
-import static org.junit.platform.testkit.ExecutionEventConditions.event;
-import static org.junit.platform.testkit.ExecutionEventConditions.finishedSuccessfully;
-import static org.junit.platform.testkit.ExecutionEventConditions.skippedWithReason;
-import static org.junit.platform.testkit.ExecutionEventConditions.started;
-import static org.junit.platform.testkit.ExecutionEventConditions.test;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.container;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.engine;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.event;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.skippedWithReason;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.started;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.test;
 
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.platform.testkit.Events;
-import org.junit.platform.testkit.ExecutionRecorder;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.engine.Events;
+import org.junit.platform.testkit.engine.ExecutionRecorder;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests for JUnit 4's {@link Ignore @Ignore} support in JUnit

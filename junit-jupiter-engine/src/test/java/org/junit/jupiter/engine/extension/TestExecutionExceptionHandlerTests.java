@@ -16,15 +16,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-import static org.junit.platform.testkit.ExecutionEventConditions.container;
-import static org.junit.platform.testkit.ExecutionEventConditions.engine;
-import static org.junit.platform.testkit.ExecutionEventConditions.event;
-import static org.junit.platform.testkit.ExecutionEventConditions.finishedSuccessfully;
-import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.testkit.ExecutionEventConditions.started;
-import static org.junit.platform.testkit.ExecutionEventConditions.test;
-import static org.junit.platform.testkit.TestExecutionResultConditions.isA;
-import static org.junit.platform.testkit.TestExecutionResultConditions.message;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.container;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.engine;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.event;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.started;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.test;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests that verify support for {@link TestExecutionExceptionHandler}.

@@ -22,13 +22,13 @@ import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELI
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-import static org.junit.platform.testkit.EventType.REPORTING_ENTRY_PUBLISHED;
-import static org.junit.platform.testkit.ExecutionEventConditions.event;
-import static org.junit.platform.testkit.ExecutionEventConditions.finishedSuccessfully;
-import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.testkit.ExecutionEventConditions.started;
-import static org.junit.platform.testkit.ExecutionEventConditions.test;
-import static org.junit.platform.testkit.ExecutionEventConditions.type;
+import static org.junit.platform.testkit.engine.EventType.REPORTING_ENTRY_PUBLISHED;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.event;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.started;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.test;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.type;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -61,8 +61,8 @@ import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.ExecutionEvent;
-import org.junit.platform.testkit.ExecutionRecorder;
+import org.junit.platform.testkit.engine.ExecutionEvent;
+import org.junit.platform.testkit.engine.ExecutionRecorder;
 
 /**
  * @since 1.3

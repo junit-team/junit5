@@ -18,7 +18,7 @@ import static org.junit.jupiter.engine.kotlin.ArbitraryNamingKotlinTestCase.METH
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.kotlin.ArbitraryNamingKotlinTestCase;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests for JVM languages that allow special characters

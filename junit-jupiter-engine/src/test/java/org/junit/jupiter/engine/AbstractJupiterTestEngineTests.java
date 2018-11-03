@@ -22,8 +22,8 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.ExecutionRecorder;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.engine.ExecutionRecorder;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Abstract base class for tests involving the {@link JupiterTestEngine}.

@@ -15,16 +15,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
-import static org.junit.platform.testkit.ExecutionEventConditions.container;
-import static org.junit.platform.testkit.ExecutionEventConditions.engine;
-import static org.junit.platform.testkit.ExecutionEventConditions.event;
-import static org.junit.platform.testkit.ExecutionEventConditions.finishedSuccessfully;
-import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.testkit.ExecutionEventConditions.nestedContainer;
-import static org.junit.platform.testkit.ExecutionEventConditions.started;
-import static org.junit.platform.testkit.ExecutionEventConditions.test;
-import static org.junit.platform.testkit.TestExecutionResultConditions.isA;
-import static org.junit.platform.testkit.TestExecutionResultConditions.message;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.container;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.engine;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.event;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.finishedSuccessfully;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.nestedContainer;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.started;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.test;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -47,7 +47,7 @@ import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
 import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests that verify support for {@link TestInstanceFactory}.

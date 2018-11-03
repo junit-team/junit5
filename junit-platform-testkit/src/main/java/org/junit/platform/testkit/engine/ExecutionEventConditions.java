@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.testkit;
+package org.junit.platform.testkit.engine;
 
 import static java.util.function.Predicate.isEqual;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
@@ -16,13 +16,13 @@ import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 import static org.junit.platform.engine.TestExecutionResult.Status.SUCCESSFUL;
-import static org.junit.platform.testkit.EventType.DYNAMIC_TEST_REGISTERED;
-import static org.junit.platform.testkit.EventType.FINISHED;
-import static org.junit.platform.testkit.EventType.SKIPPED;
-import static org.junit.platform.testkit.EventType.STARTED;
-import static org.junit.platform.testkit.ExecutionEvent.byPayload;
-import static org.junit.platform.testkit.ExecutionEvent.byTestDescriptor;
-import static org.junit.platform.testkit.ExecutionEvent.byType;
+import static org.junit.platform.testkit.engine.EventType.DYNAMIC_TEST_REGISTERED;
+import static org.junit.platform.testkit.engine.EventType.FINISHED;
+import static org.junit.platform.testkit.engine.EventType.SKIPPED;
+import static org.junit.platform.testkit.engine.EventType.STARTED;
+import static org.junit.platform.testkit.engine.ExecutionEvent.byPayload;
+import static org.junit.platform.testkit.engine.ExecutionEvent.byTestDescriptor;
+import static org.junit.platform.testkit.engine.ExecutionEvent.byType;
 
 import java.util.function.Predicate;
 

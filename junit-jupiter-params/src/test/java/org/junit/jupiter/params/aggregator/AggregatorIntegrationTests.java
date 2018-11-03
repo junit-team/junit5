@@ -20,11 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-import static org.junit.platform.testkit.ExecutionEventConditions.event;
-import static org.junit.platform.testkit.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.testkit.ExecutionEventConditions.test;
-import static org.junit.platform.testkit.TestExecutionResultConditions.isA;
-import static org.junit.platform.testkit.TestExecutionResultConditions.message;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.event;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.ExecutionEventConditions.test;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -49,8 +49,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.testkit.ExecutionEvent;
-import org.junit.platform.testkit.ExecutionRecorder;
+import org.junit.platform.testkit.engine.ExecutionEvent;
+import org.junit.platform.testkit.engine.ExecutionRecorder;
 
 /**
  * Integration tests for {@link ArgumentsAccessor}, {@link AggregateWith},

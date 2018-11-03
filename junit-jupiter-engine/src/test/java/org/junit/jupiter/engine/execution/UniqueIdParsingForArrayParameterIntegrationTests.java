@@ -20,8 +20,8 @@ import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveArrayParameterResolver;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.testkit.ExecutionEvent;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.engine.ExecutionEvent;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests for {@link UniqueId#parse(String)} for methods

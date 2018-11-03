@@ -8,16 +8,16 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.testkit;
+package org.junit.platform.testkit.engine;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-import static org.junit.platform.testkit.Assertions.assertEquals;
+import static org.junit.platform.testkit.engine.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apiguardian.api.API;
-import org.junit.platform.testkit.Assertions.Executable;
+import org.junit.platform.testkit.engine.Assertions.Executable;
 
 /**
  * {@code EventStatistics} provides a fluent API for asserting statistics

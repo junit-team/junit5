@@ -19,8 +19,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.platform.launcher.TestIdentifier;
-import org.junit.platform.testkit.Events;
-import org.junit.platform.testkit.ExecutionEvent;
+import org.junit.platform.testkit.engine.Events;
+import org.junit.platform.testkit.engine.ExecutionEvent;
 
 /**
  * Integration tests for support of overloaded test methods in conjunction with

@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.engine.kotlin.InstancePerClassKotlinTestCase;
 import org.junit.jupiter.engine.kotlin.InstancePerMethodKotlinTestCase;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Kotlin-specific integration tests for {@link TestInstance @TestInstance}

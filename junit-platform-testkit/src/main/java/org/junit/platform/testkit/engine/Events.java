@@ -8,14 +8,14 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.testkit;
+package org.junit.platform.testkit.engine;
 
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.commons.util.FunctionUtils.where;
-import static org.junit.platform.testkit.ExecutionEvent.byPayload;
-import static org.junit.platform.testkit.ExecutionEvent.byType;
+import static org.junit.platform.testkit.engine.ExecutionEvent.byPayload;
+import static org.junit.platform.testkit.engine.ExecutionEvent.byType;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;

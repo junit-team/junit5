@@ -32,7 +32,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.launcher.Launcher;
-import org.junit.platform.testkit.ExecutionResults;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests for {@link TestInstance @TestInstance} lifecycle
