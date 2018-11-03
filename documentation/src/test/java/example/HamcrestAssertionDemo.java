@@ -26,7 +26,7 @@ class HamcrestAssertionDemo {
 
 	@Test
 	void assertWithHamcrestMatcher() {
-		assertThat(2 + 1, is(equalTo(calculator.subtract(4, 1))));
+		assertThat(3, is(equalTo(calculator.subtract(4, 1))));
 	}
 
 }
