@@ -28,14 +28,16 @@ import org.junit.jupiter.api.Test;
 
 class AssertionsDemo {
 
+	private final Calculator calculator = new Calculator();
+
 	// end::user_guide[]
 	Person person = new Person("John", "Doe");
 
 	// tag::user_guide[]
 	@Test
 	void standardAssertions() {
-		assertEquals(2, Calculator.add(1, 1));
-		assertEquals(4, Calculator.multiply(2, 2), "The optional assertion message is now the last parameter.");
+		assertEquals(2, calculator.add(1, 1));
+		assertEquals(4, calculator.multiply(2, 2), "The optional assertion message is now the last parameter.");
 		assertTrue('a' < 'b', () -> "Assertion messages can be lazily evaluated -- "
 				+ "to avoid constructing complex messages unnecessarily.");
 	}

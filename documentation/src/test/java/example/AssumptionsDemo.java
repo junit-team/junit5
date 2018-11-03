@@ -23,6 +23,8 @@ import org.junit.jupiter.api.Test;
 
 class AssumptionsDemo {
 
+	private final Calculator calculator = new Calculator();
+
 	@Test
 	void testOnlyOnCiServer() {
 		assumeTrue("CI".equals(System.getenv("ENV")));
@@ -41,7 +43,7 @@ class AssumptionsDemo {
 		assumingThat("CI".equals(System.getenv("ENV")),
 			() -> {
 				// perform these assertions only on the CI server
-				assertEquals(2, Calculator.divide(4, 2));
+				assertEquals(2, calculator.divide(4, 2));
 			});
 
 		// perform these assertions in all environments

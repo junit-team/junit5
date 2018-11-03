@@ -20,9 +20,11 @@ import org.junit.jupiter.api.Test;
 
 class FirstJUnit5Tests {
 
+	private final Calculator calculator = new Calculator();
+
 	@Test
 	void myFirstTest() {
-		assertEquals(2, Calculator.add(1, 1));
+		assertEquals(2, calculator.add(1, 1));
 	}
 
 }

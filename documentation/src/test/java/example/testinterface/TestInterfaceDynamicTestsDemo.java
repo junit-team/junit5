@@ -25,6 +25,8 @@ import org.junit.jupiter.api.TestFactory;
 //tag::user_guide[]
 interface TestInterfaceDynamicTestsDemo {
 
+	Calculator calculator = new Calculator();
+
 	@TestFactory
 	default Collection<DynamicTest> dynamicTestsFromCollection() {
 		// end::user_guide[]
@@ -32,7 +34,7 @@ interface TestInterfaceDynamicTestsDemo {
 		// tag::user_guide[]
 		return Arrays.asList(
 			dynamicTest("1st dynamic test in test interface", () -> assertTrue(true)),
-			dynamicTest("2nd dynamic test in test interface", () -> assertEquals(4, Calculator.multiply(2, 2)))
+			dynamicTest("2nd dynamic test in test interface", () -> assertEquals(4, calculator.multiply(2, 2)))
 		);
 		// end::user_guide[]
 		// @formatter:on

@@ -22,9 +22,11 @@ import org.junit.jupiter.api.Test;
 
 class HamcrestAssertionDemo {
 
+	private final Calculator calculator = new Calculator();
+
 	@Test
 	void assertWithHamcrestMatcher() {
-		assertThat(2 + 1, is(equalTo(Calculator.subtract(4, 1))));
+		assertThat(2 + 1, is(equalTo(calculator.subtract(4, 1))));
 	}
 
 }
