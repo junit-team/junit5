@@ -76,6 +76,59 @@ class MethodArgumentsProviderTests {
 		assertThat(arguments).containsExactly(array(1), array(2));
 	}
 
+	/**
+	 * @since 5.4
+	 */
+	@Test
+	void providesArgumentsUsingStreamOfIntArrays() {
+		var arguments = provideArguments("intArrayStreamProvider");
+
+		assertThat(arguments).containsExactly( //
+			array(new int[] { 1, 2 }), //
+			array(new int[] { 3, 4 }) //
+		);
+	}
+
+	/**
+	 * @since 5.4
+	 */
+	@Test
+	void providesArgumentsUsingStreamOfTwoDimensionalIntArrays() {
+		var arguments = provideArguments("twoDimensionalIntArrayStreamProvider");
+
+		assertThat(arguments).containsExactly( //
+			array((Object) new int[][] { { 1, 2 }, { 2, 3 } }), //
+			array((Object) new int[][] { { 4, 5 }, { 5, 6 } }) //
+		);
+	}
+
+	@Test
+	void providesArgumentsUsingStreamOfObjectArrays() {
+		var arguments = provideArguments("objectArrayStreamProvider");
+
+		assertThat(arguments).containsExactly(array("foo", 42), array("bar", 23));
+	}
+
+	/**
+	 * @since 5.4
+	 */
+	@Test
+	void providesArgumentsUsingStreamOfTwoDimensionalObjectArrays() {
+		var arguments = provideArguments("twoDimensionalObjectArrayStreamProvider");
+
+		assertThat(arguments).containsExactly( //
+			array((Object) array(array("a", 1), array("b", 2))), //
+			array((Object) array(array("c", 3), array("d", 4))) //
+		);
+	}
+
+	@Test
+	void providesArgumentsUsingStreamOfArguments() {
+		var arguments = provideArguments("argumentsStreamProvider");
+
+		assertThat(arguments).containsExactly(array("foo", 42), array("bar", 23));
+	}
+
 	@Test
 	void providesArgumentsUsingIterable() {
 		var arguments = provideArguments("stringIterableProvider");
@@ -95,20 +148,6 @@ class MethodArgumentsProviderTests {
 		var arguments = provideArguments("stringStreamProvider", "stringIterableProvider");
 
 		assertThat(arguments).containsExactly(array("foo"), array("bar"), array("foo"), array("bar"));
-	}
-
-	@Test
-	void providesArgumentsUsingStreamOfObjectArrays() {
-		var arguments = provideArguments("objectArrayStreamProvider");
-
-		assertThat(arguments).containsExactly(array("foo", 42), array("bar", 23));
-	}
-
-	@Test
-	void providesArgumentsUsingStreamOfArguments() {
-		var arguments = provideArguments("argumentsStreamProvider");
-
-		assertThat(arguments).containsExactly(array("foo", 42), array("bar", 23));
 	}
 
 	@Test
@@ -379,8 +418,20 @@ class MethodArgumentsProviderTests {
 			return IntStream.of(1, 2);
 		}
 
+		static Stream<int[]> intArrayStreamProvider() {
+			return Stream.of(new int[] { 1, 2 }, new int[] { 3, 4 });
+		}
+
+		static Stream<int[][]> twoDimensionalIntArrayStreamProvider() {
+			return Stream.of(new int[][] { { 1, 2 }, { 2, 3 } }, new int[][] { { 4, 5 }, { 5, 6 } });
+		}
+
 		static Stream<Object[]> objectArrayStreamProvider() {
 			return Stream.of(new Object[] { "foo", 42 }, new Object[] { "bar", 23 });
+		}
+
+		static Stream<Object[][]> twoDimensionalObjectArrayStreamProvider() {
+			return Stream.of(new Object[][] { { "a", 1 }, { "b", 2 } }, new Object[][] { { "c", 3 }, { "d", 4 } });
 		}
 
 		static Stream<Arguments> argumentsStreamProvider() {
