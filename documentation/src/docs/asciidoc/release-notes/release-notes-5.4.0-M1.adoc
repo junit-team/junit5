@@ -56,6 +56,11 @@ repository on GitHub.
   evaluating a fast-forward match if there are more expected lines after the fast-forward
   match than remain in the actual results. This bug only manifested itself if the
   expected list size was equal to or greater than the actual list size.
+* Multidimensional arrays may now be supplied to `@ParameterizedTest` methods from
+  factory methods configured via `@MethodSource`.
+  - For example, a factory method with the signature `static Stream<int[][]> factory()`
+    can be used as the `@MethodSource` for a `@ParameterizedTest` with the signature
+    `void test(int[][])`.
 * Threads created for running tests in parallel now use the same thread context class
   loader (_TCCL_) that was set when creating the underlying executor service. This
   resolves `ClassNotFoundException` issues that only occur in parallel execution mode
