@@ -11,6 +11,7 @@
 package example;
 
 //tag::user_guide[]
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -33,7 +34,12 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 
+import example.util.Calculator;
+import example.util.StringUtils;
+
 class DynamicTestsDemo {
+
+	private final Calculator calculator = new Calculator();
 
 	// end::user_guide[]
 	@Tag("exclude")
@@ -50,8 +56,8 @@ class DynamicTestsDemo {
 		// @formatter:off
 		// tag::user_guide[]
 		return Arrays.asList(
-			dynamicTest("1st dynamic test", () -> assertTrue(true)),
-			dynamicTest("2nd dynamic test", () -> assertEquals(4, 2 * 2))
+			dynamicTest("1st dynamic test", () -> assertTrue(StringUtils.isPalindrome("madam"))),
+			dynamicTest("2nd dynamic test", () -> assertEquals(4, calculator.multiply(2, 2)))
 		);
 		// end::user_guide[]
 		// @formatter:on
@@ -64,8 +70,8 @@ class DynamicTestsDemo {
 		// @formatter:off
 		// tag::user_guide[]
 		return Arrays.asList(
-			dynamicTest("3rd dynamic test", () -> assertTrue(true)),
-			dynamicTest("4th dynamic test", () -> assertEquals(4, 2 * 2))
+			dynamicTest("3rd dynamic test", () -> assertTrue(StringUtils.isPalindrome("madam"))),
+			dynamicTest("4th dynamic test", () -> assertEquals(4, calculator.multiply(2, 2)))
 		);
 		// end::user_guide[]
 		// @formatter:on
@@ -78,8 +84,8 @@ class DynamicTestsDemo {
 		// @formatter:off
 		// tag::user_guide[]
 		return Arrays.asList(
-			dynamicTest("5th dynamic test", () -> assertTrue(true)),
-			dynamicTest("6th dynamic test", () -> assertEquals(4, 2 * 2))
+			dynamicTest("5th dynamic test", () -> assertTrue(StringUtils.isPalindrome("madam"))),
+			dynamicTest("6th dynamic test", () -> assertEquals(4, calculator.multiply(2, 2)))
 		).iterator();
 		// end::user_guide[]
 		// @formatter:on
@@ -92,8 +98,8 @@ class DynamicTestsDemo {
 		// @formatter:off
 		// tag::user_guide[]
 		return new DynamicTest[] {
-			dynamicTest("7th dynamic test", () -> assertTrue(true)),
-			dynamicTest("8th dynamic test", () -> assertEquals(4, 2 * 2))
+			dynamicTest("7th dynamic test", () -> assertTrue(StringUtils.isPalindrome("madam"))),
+			dynamicTest("8th dynamic test", () -> assertEquals(4, calculator.multiply(2, 2)))
 		};
 		// end::user_guide[]
 		// @formatter:on
@@ -192,8 +198,8 @@ class DynamicTestsDemo {
 		// @formatter:off
 		// tag::user_guide[]
 		return dynamicContainer("single dynamic container", Stream.of(
-			dynamicTest("foo", () -> assertTrue(true)),
-			dynamicTest("bar", () -> assertFalse(false))
+			dynamicTest("foo", () -> assertTrue(StringUtils.isPalindrome("madam"))),
+			dynamicTest("bar", () -> assertFalse(StringUtils.isPalindrome("test")))
 		));
 		// end::user_guide[]
 		// @formatter:on
