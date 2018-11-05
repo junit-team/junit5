@@ -315,7 +315,9 @@ class VintageTestEngineExecutionTests {
 	void reportsExecutionEventsAroundLifecycleMethods() {
 		Class<?> testClass = PlainJUnit4TestCaseWithLifecycleMethods.class;
 		PlainJUnit4TestCaseWithLifecycleMethods.EVENTS.clear();
+
 		EngineExecutionListener listener = new EngineExecutionListener() {
+
 			@Override
 			public void executionStarted(TestDescriptor testDescriptor) {
 				PlainJUnit4TestCaseWithLifecycleMethods.EVENTS.add(
