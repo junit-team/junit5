@@ -27,38 +27,36 @@ import org.junit.platform.engine.reporting.ReportEntry;
 public enum EventType {
 
 	/**
-	 * Called when a {@link TestDescriptor} has been dynamically registered.
+	 * Signals that a {@link TestDescriptor} has been dynamically registered.
 	 *
 	 * @see org.junit.platform.engine.EngineExecutionListener#dynamicTestRegistered(TestDescriptor)
 	 */
 	DYNAMIC_TEST_REGISTERED,
 
 	/**
-	 * Called when the execution of a leaf or subtree of the test tree has been
-	 * skipped.
+	 * Signals that the execution of a {@link TestDescriptor} has been skipped.
 	 *
 	 * @see org.junit.platform.engine.EngineExecutionListener#executionSkipped(TestDescriptor, String)
 	 */
 	SKIPPED,
 
 	/**
-	 * Called when the execution of a leaf or subtree of the test tree is about
-	 * to be started.
+	 * Signals that the execution of a {@link TestDescriptor} has started.
 	 *
 	 * @see org.junit.platform.engine.EngineExecutionListener#executionStarted(TestDescriptor)
 	 */
 	STARTED,
 
 	/**
-	 * Called when the execution of a leaf or subtree of the test tree has
-	 * finished, regardless of the outcome.
+	 * Signals that the execution of a {@link TestDescriptor} has finished,
+	 * regardless of the outcome.
 	 *
 	 * @see org.junit.platform.engine.EngineExecutionListener#executionFinished(TestDescriptor, TestExecutionResult)
 	 */
 	FINISHED,
 
 	/**
-	 * Called when a {@link TestDescriptor} publishes a reporting entry.
+	 * Signals that a {@link TestDescriptor} published a reporting entry.
 	 *
 	 * @see org.junit.platform.engine.EngineExecutionListener#reportingEntryPublished(TestDescriptor, ReportEntry)
 	 */
