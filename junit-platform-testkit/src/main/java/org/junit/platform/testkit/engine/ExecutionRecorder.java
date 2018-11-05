@@ -43,6 +43,13 @@ public class ExecutionRecorder implements EngineExecutionListener {
 	 * Execute tests for a given {@link EngineDiscoveryRequest} using the
 	 * provided {@link TestEngine}.
 	 *
+	 * <p>Note that {@link org.junit.platform.launcher.LauncherDiscoveryRequest}
+	 * from the {@code junit-platform-launcher} module is a subtype of
+	 * {@code EngineDiscoveryRequest}. It is therefore quite convenient to make
+	 * use of the DSL provided in
+	 * {@link org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder}
+	 * to build an appropriate discovery request to supply to this method.
+	 *
 	 * @param testEngine the {@code TestEngine} to use
 	 * @param discoveryRequest the {@code EngineDiscoveryRequest} to use
 	 * @return the recorded {@code ExecutionResults}

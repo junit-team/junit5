@@ -44,6 +44,7 @@ import org.junit.platform.engine.EngineDiscoveryRequest;
  * </ul>
  *
  * @since 1.0
+ * @see org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder
  * @see EngineDiscoveryRequest
  * @see EngineFilter
  * @see ConfigurationParameters
