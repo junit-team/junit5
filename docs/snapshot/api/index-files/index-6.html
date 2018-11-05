@@ -166,13 +166,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">File system based <a href="../org/junit/platform/engine/TestSource.html" title="interface in org.junit.platform.engine"><code>TestSource</code></a>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/Events.html#filter(java.util.function.Predicate)">filter(Predicate&lt;? super Event&gt;)</a></span> - Method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/Events.html" title="class in org.junit.platform.testkit.engine">Events</a></dt>
+<dd>
+<div class="block">Shortcut for <code>events.stream().filter(predicate)</code>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/Executions.html#filter(java.util.function.Predicate)">filter(Predicate&lt;? super Execution&gt;)</a></span> - Method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/Executions.html" title="class in org.junit.platform.testkit.engine">Executions</a></dt>
 <dd>
 <div class="block">Shortcut for <code>executions.stream().filter(predicate)</code>.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/Events.html#filter(java.util.function.Predicate)">filter(Predicate&lt;? super ExecutionEvent&gt;)</a></span> - Method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/Events.html" title="class in org.junit.platform.testkit.engine">Events</a></dt>
-<dd>
-<div class="block">Shortcut for <code>events.stream().filter(predicate)</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/runner/JUnitPlatform.html#filter(org.junit.runner.manipulation.Filter)">filter(Filter)</a></span> - Method in class org.junit.platform.runner.<a href="../org/junit/platform/runner/JUnitPlatform.html" title="class in org.junit.platform.runner">JUnitPlatform</a></dt>
 <dd>&nbsp;</dd>
@@ -363,7 +363,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Specify the number of expected <em>finished</em> events.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/ExecutionEventConditions.html#finished(org.assertj.core.api.Condition)">finished(Condition&lt;TestExecutionResult&gt;)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/ExecutionEventConditions.html" title="class in org.junit.platform.testkit.engine">ExecutionEventConditions</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/EventConditions.html#finished(org.assertj.core.api.Condition)">finished(Condition&lt;TestExecutionResult&gt;)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/Execution.html#finished(org.junit.platform.engine.TestDescriptor,java.time.Instant,java.time.Instant,org.junit.platform.engine.TestExecutionResult)">finished(TestDescriptor, Instant, Instant, TestExecutionResult)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/Execution.html" title="class in org.junit.platform.testkit.engine">Execution</a></dt>
 <dd>
@@ -375,11 +375,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Called when the execution of a leaf or subtree of the test tree has
  finished, regardless of the outcome.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/ExecutionEventConditions.html#finishedSuccessfully()">finishedSuccessfully()</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/ExecutionEventConditions.html" title="class in org.junit.platform.testkit.engine">ExecutionEventConditions</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/EventConditions.html#finishedSuccessfully()">finishedSuccessfully()</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/ExecutionEventConditions.html#finishedWithFailure()">finishedWithFailure()</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/ExecutionEventConditions.html" title="class in org.junit.platform.testkit.engine">ExecutionEventConditions</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/EventConditions.html#finishedWithFailure()">finishedWithFailure()</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/ExecutionEventConditions.html#finishedWithFailure(org.assertj.core.api.Condition)">finishedWithFailure(Condition&lt;? super Throwable&gt;)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/ExecutionEventConditions.html" title="class in org.junit.platform.testkit.engine">ExecutionEventConditions</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/EventConditions.html#finishedWithFailure(org.assertj.core.api.Condition)">finishedWithFailure(Condition&lt;? super Throwable&gt;)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html#FIXED">FIXED</a></span> - org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.html" title="enum in org.junit.platform.engine.support.hierarchical">DefaultParallelExecutionConfigurationStrategy</a></dt>
 <dd>
