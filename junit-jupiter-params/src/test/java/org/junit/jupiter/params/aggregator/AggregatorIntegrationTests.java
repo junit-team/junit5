@@ -20,9 +20,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.event;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.test;
+import static org.junit.platform.testkit.engine.EventConditions.event;
+import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
@@ -49,7 +49,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.testkit.engine.ExecutionEvent;
+import org.junit.platform.testkit.engine.Event;
 import org.junit.platform.testkit.engine.ExecutionRecorder;
 
 /**
@@ -171,9 +171,9 @@ public class AggregatorIntegrationTests {
 
 	@Test
 	void reportsExceptionForErroneousAggregator() {
-		List<ExecutionEvent> executionEvents = execute(
+		List<Event> events = execute(
 			selectMethod(ErroneousTestCases.class, "testWithErroneousAggregator", Object.class.getName()));
-		assertThat(executionEvents) //
+		assertThat(events) //
 				.haveExactly(1, event(test(), finishedWithFailure(allOf(isA(ParameterResolutionException.class), //
 					message("Error aggregating arguments for parameter at index 0: something went horribly wrong")))));
 	}
@@ -198,7 +198,7 @@ public class AggregatorIntegrationTests {
 		assertEquals(30318, address.zipCode);
 	}
 
-	private List<ExecutionEvent> execute(DiscoverySelector... selectors) {
+	private List<Event> execute(DiscoverySelector... selectors) {
 		return ExecutionRecorder.execute(new JupiterTestEngine(), request().selectors(selectors).build()).all().list();
 	}
 

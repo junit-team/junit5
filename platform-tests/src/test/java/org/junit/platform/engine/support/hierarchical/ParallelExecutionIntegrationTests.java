@@ -22,13 +22,13 @@ import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELI
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.testkit.engine.EventConditions.event;
+import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
+import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.EventConditions.started;
+import static org.junit.platform.testkit.engine.EventConditions.test;
+import static org.junit.platform.testkit.engine.EventConditions.type;
 import static org.junit.platform.testkit.engine.EventType.REPORTING_ENTRY_PUBLISHED;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.event;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.finishedSuccessfully;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.started;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.test;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.type;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -61,7 +61,7 @@ import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.engine.ExecutionEvent;
+import org.junit.platform.testkit.engine.Event;
 import org.junit.platform.testkit.engine.ExecutionRecorder;
 
 /**
@@ -71,10 +71,10 @@ class ParallelExecutionIntegrationTests {
 
 	@Test
 	void successfulParallelTest(TestReporter reporter) {
-		List<ExecutionEvent> executionEvents = execute(3, SuccessfulParallelTestCase.class);
+		List<Event> events = execute(3, SuccessfulParallelTestCase.class);
 
-		List<Instant> startedTimestamps = getTimestampsFor(executionEvents, event(test(), started()));
-		List<Instant> finishedTimestamps = getTimestampsFor(executionEvents, event(test(), finishedSuccessfully()));
+		List<Instant> startedTimestamps = getTimestampsFor(events, event(test(), started()));
+		List<Instant> finishedTimestamps = getTimestampsFor(events, event(test(), finishedSuccessfully()));
 		reporter.publishEntry("startedTimestamps", startedTimestamps.toString());
 		reporter.publishEntry("finishedTimestamps", finishedTimestamps.toString());
 
@@ -82,37 +82,37 @@ class ParallelExecutionIntegrationTests {
 		assertThat(finishedTimestamps).hasSize(3);
 		assertThat(startedTimestamps).allMatch(startTimestamp -> finishedTimestamps.stream().noneMatch(
 			finishedTimestamp -> finishedTimestamp.isBefore(startTimestamp)));
-		assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(3);
+		assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
 	}
 
 	@Test
 	void failingTestWithoutLock() {
-		List<ExecutionEvent> executionEvents = execute(3, FailingWithoutLockTestCase.class);
-		assertThat(executionEvents.stream().filter(event(test(), finishedWithFailure())::matches)).hasSize(2);
+		List<Event> events = execute(3, FailingWithoutLockTestCase.class);
+		assertThat(events.stream().filter(event(test(), finishedWithFailure())::matches)).hasSize(2);
 	}
 
 	@Test
 	void successfulTestWithMethodLock() {
-		List<ExecutionEvent> executionEvents = execute(3, SuccessfulWithMethodLockTestCase.class);
+		List<Event> events = execute(3, SuccessfulWithMethodLockTestCase.class);
 
-		assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
-		assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(3);
+		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
+		assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
 	}
 
 	@Test
 	void successfulTestWithClassLock() {
-		List<ExecutionEvent> executionEvents = execute(3, SuccessfulWithClassLockTestCase.class);
+		List<Event> events = execute(3, SuccessfulWithClassLockTestCase.class);
 
-		assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
-		assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(1);
+		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
+		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
 	}
 
 	@Test
 	void testCaseWithFactory() {
-		List<ExecutionEvent> executionEvents = execute(3, TestCaseWithTestFactory.class);
+		List<Event> events = execute(3, TestCaseWithTestFactory.class);
 
-		assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
-		assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(1);
+		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
+		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
 	}
 
 	@Test
@@ -122,11 +122,11 @@ class ParallelExecutionIntegrationTests {
 		var smilingLoader = new URLClassLoader("(-:", new URL[0], ClassLoader.getSystemClassLoader());
 		currentThread.setContextClassLoader(smilingLoader);
 		try {
-			var executionEvents = execute(3, SuccessfulWithMethodLockTestCase.class);
+			var events = execute(3, SuccessfulWithMethodLockTestCase.class);
 
-			assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
-			assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(3);
-			assertThat(ThreadReporter.getLoaderNames(executionEvents)).containsExactly("(-:");
+			assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
+			assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
+			assertThat(ThreadReporter.getLoaderNames(events)).containsExactly("(-:");
 		}
 		finally {
 			currentThread.setContextClassLoader(currentLoader);
@@ -135,35 +135,34 @@ class ParallelExecutionIntegrationTests {
 
 	@RepeatedTest(10)
 	void mixingClassAndMethodLevelLocks() {
-		List<ExecutionEvent> executionEvents = execute(4, TestCaseWithSortedLocks.class,
-			TestCaseWithUnsortedLocks.class);
+		List<Event> events = execute(4, TestCaseWithSortedLocks.class, TestCaseWithUnsortedLocks.class);
 
-		assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(6);
-		assertThat(ThreadReporter.getThreadNames(executionEvents).count()).isLessThanOrEqualTo(2);
+		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(6);
+		assertThat(ThreadReporter.getThreadNames(events).count()).isLessThanOrEqualTo(2);
 	}
 
 	@RepeatedTest(10)
 	void locksOnNestedTests() {
-		List<ExecutionEvent> executionEvents = execute(3, TestCaseWithNestedLocks.class);
+		List<Event> events = execute(3, TestCaseWithNestedLocks.class);
 
-		assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(6);
-		assertThat(ThreadReporter.getThreadNames(executionEvents)).hasSize(1);
+		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(6);
+		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
 	}
 
 	@Test
 	void afterHooksAreCalledAfterConcurrentDynamicTestsAreFinished() {
-		List<ExecutionEvent> executionEvents = execute(3, ConcurrentDynamicTestCase.class);
+		List<Event> events = execute(3, ConcurrentDynamicTestCase.class);
 
-		assertThat(executionEvents.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(1);
-		Map<String, Instant> events = ConcurrentDynamicTestCase.events;
-		assertThat(events.get("afterEach")).isAfterOrEqualTo(events.get("dynamicTestFinished"));
+		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(1);
+		Map<String, Instant> timestampedEvents = ConcurrentDynamicTestCase.events;
+		assertThat(timestampedEvents.get("afterEach")).isAfterOrEqualTo(timestampedEvents.get("dynamicTestFinished"));
 	}
 
-	private List<Instant> getTimestampsFor(List<ExecutionEvent> executionEvents, Condition<ExecutionEvent> condition) {
+	private List<Instant> getTimestampsFor(List<Event> events, Condition<Event> condition) {
 		// @formatter:off
-		return executionEvents.stream()
+		return events.stream()
 				.filter(condition::matches)
-				.map(ExecutionEvent::getTimestamp)
+				.map(Event::getTimestamp)
 				.collect(toList());
 		// @formatter:on
 	}
@@ -458,7 +457,7 @@ class ParallelExecutionIntegrationTests {
 		return value;
 	}
 
-	private List<ExecutionEvent> execute(int parallelism, Class<?>... testClasses) {
+	private List<Event> execute(int parallelism, Class<?>... testClasses) {
 		// @formatter:off
 		LauncherDiscoveryRequest discoveryRequest = request()
 				.selectors(Arrays.stream(testClasses).map(DiscoverySelectors::selectClass).collect(toList()))
@@ -472,17 +471,17 @@ class ParallelExecutionIntegrationTests {
 
 	static class ThreadReporter implements AfterTestExecutionCallback {
 
-		private static Stream<String> getLoaderNames(List<ExecutionEvent> executionEvents) {
-			return getValues(executionEvents, "loader");
+		private static Stream<String> getLoaderNames(List<Event> events) {
+			return getValues(events, "loader");
 		}
 
-		private static Stream<String> getThreadNames(List<ExecutionEvent> executionEvents) {
-			return getValues(executionEvents, "thread");
+		private static Stream<String> getThreadNames(List<Event> events) {
+			return getValues(events, "thread");
 		}
 
-		private static Stream<String> getValues(List<ExecutionEvent> executionEvents, String key) {
+		private static Stream<String> getValues(List<Event> events, String key) {
 			// @formatter:off
-			return executionEvents.stream()
+			return events.stream()
 					.filter(type(REPORTING_ENTRY_PUBLISHED)::matches)
 					.map(event -> event.getPayload(ReportEntry.class).orElseThrow())
 					.map(ReportEntry::getKeyValuePairs)

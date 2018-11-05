@@ -20,16 +20,16 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.container;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.displayName;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.dynamicTestRegistered;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.engine;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.event;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.finishedSuccessfully;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.skippedWithReason;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.started;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.test;
+import static org.junit.platform.testkit.engine.EventConditions.container;
+import static org.junit.platform.testkit.engine.EventConditions.displayName;
+import static org.junit.platform.testkit.engine.EventConditions.dynamicTestRegistered;
+import static org.junit.platform.testkit.engine.EventConditions.engine;
+import static org.junit.platform.testkit.engine.EventConditions.event;
+import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
+import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.EventConditions.skippedWithReason;
+import static org.junit.platform.testkit.engine.EventConditions.started;
+import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.lang.reflect.Field;
@@ -69,8 +69,8 @@ import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.engine.Event;
 import org.junit.platform.testkit.engine.Events;
-import org.junit.platform.testkit.engine.ExecutionEvent;
 import org.junit.platform.testkit.engine.ExecutionResults;
 import org.opentest4j.AssertionFailedError;
 
@@ -159,7 +159,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 		// @formatter:off
 		Stream<String> legacyReportingNames = events.dynamicallyRegistered()
-				.map(ExecutionEvent::getTestDescriptor)
+				.map(Event::getTestDescriptor)
 				.map(TestDescriptor::getLegacyReportingName);
 		// @formatter:off
 		assertThat(legacyReportingNames).containsExactly("templateWithTwoRegisteredExtensions()[1]",
@@ -377,22 +377,22 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 				event(container("templateWithCloseableStream"), finishedSuccessfully())));
 	}
 
-	private TestDescriptor findTestDescriptor(ExecutionResults executionResults, Condition<ExecutionEvent> condition) {
+	private TestDescriptor findTestDescriptor(ExecutionResults executionResults, Condition<Event> condition) {
 		// @formatter:off
 		return executionResults.all()
 				.filter(condition::matches)
 				.findAny()
-				.map(ExecutionEvent::getTestDescriptor)
-				.orElseThrow(() -> new AssertionFailedError("Could not find execution event for condition: " + condition));
+				.map(Event::getTestDescriptor)
+				.orElseThrow(() -> new AssertionFailedError("Could not find event for condition: " + condition));
 		// @formatter:on
 	}
 
 	@SafeVarargs
 	@SuppressWarnings({ "unchecked", "varargs", "rawtypes" })
-	private final Condition<? super ExecutionEvent>[] wrappedInContainerEvents(Class<MyTestTemplateTestCase> clazz,
-			Condition<? super ExecutionEvent>... wrappedConditions) {
+	private final Condition<? super Event>[] wrappedInContainerEvents(Class<MyTestTemplateTestCase> clazz,
+			Condition<? super Event>... wrappedConditions) {
 
-		List<Condition<? super ExecutionEvent>> conditions = new ArrayList<>();
+		List<Condition<? super Event>> conditions = new ArrayList<>();
 		conditions.add(event(engine(), started()));
 		conditions.add(event(container(clazz), started()));
 		conditions.addAll(asList(wrappedConditions));

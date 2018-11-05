@@ -20,7 +20,7 @@ import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveArrayParameterResolver;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.testkit.engine.ExecutionEvent;
+import org.junit.platform.testkit.engine.Event;
 import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
@@ -44,7 +44,7 @@ class UniqueIdParsingForArrayParameterIntegrationTests extends AbstractJupiterTe
 
 		// @formatter:off
 		UniqueId uniqueId = executionResults.all()
-				.map(ExecutionEvent::getTestDescriptor)
+				.map(Event::getTestDescriptor)
 				.distinct()
 				.skip(2)
 				.map(TestDescriptor::getUniqueId)

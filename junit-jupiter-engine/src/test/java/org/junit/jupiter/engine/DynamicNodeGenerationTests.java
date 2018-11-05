@@ -24,15 +24,15 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.container;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.displayName;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.dynamicTestRegistered;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.engine;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.event;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.finishedSuccessfully;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.finishedWithFailure;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.started;
-import static org.junit.platform.testkit.engine.ExecutionEventConditions.test;
+import static org.junit.platform.testkit.engine.EventConditions.container;
+import static org.junit.platform.testkit.engine.EventConditions.displayName;
+import static org.junit.platform.testkit.engine.EventConditions.dynamicTestRegistered;
+import static org.junit.platform.testkit.engine.EventConditions.engine;
+import static org.junit.platform.testkit.engine.EventConditions.event;
+import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
+import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.EventConditions.started;
+import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
@@ -51,8 +51,8 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.engine.Event;
 import org.junit.platform.testkit.engine.Events;
-import org.junit.platform.testkit.engine.ExecutionEvent;
 import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
@@ -298,7 +298,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 		// @formatter:off
 		Stream<String> legacyReportingNames = dynamicRegistrations
-				.map(ExecutionEvent::getTestDescriptor)
+				.map(Event::getTestDescriptor)
 				.map(TestDescriptor::getLegacyReportingName);
 		assertThat(legacyReportingNames)
 				.containsExactly("nestedDynamicContainers()[1]", "nestedDynamicContainers()[1][1]",

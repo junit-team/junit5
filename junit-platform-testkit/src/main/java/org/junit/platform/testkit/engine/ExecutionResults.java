@@ -11,7 +11,7 @@
 package org.junit.platform.testkit.engine;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-import static org.junit.platform.testkit.engine.ExecutionEvent.byTestDescriptor;
+import static org.junit.platform.testkit.engine.Event.byTestDescriptor;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -43,14 +43,14 @@ public class ExecutionResults {
 
 	/**
 	 * Construct {@link ExecutionResults} from the supplied list of recorded
-	 * {@linkplain ExecutionEvent execution events}.
+	 * {@linkplain Event events}.
 	 *
-	 * @param events the list of execution events; never {@code null} or
+	 * @param events the list of events; never {@code null} or
 	 * containing {@code null} elements
 	 */
-	ExecutionResults(List<ExecutionEvent> events) {
-		Preconditions.notNull(events, "ExecutionEvent list must not be null");
-		Preconditions.containsNoNullElements(events, "ExecutionEvent list must not contain null elements");
+	ExecutionResults(List<Event> events) {
+		Preconditions.notNull(events, "Event list must not be null");
+		Preconditions.containsNoNullElements(events, "Event list must not contain null elements");
 
 		this.allEvents = new Events(events, "All");
 		this.testEvents = new Events(filterEvents(events, TestDescriptor::isTest), "Test");
@@ -87,8 +87,7 @@ public class ExecutionResults {
 	/**
 	 * Filter the supplied list of events using the supplied predicate.
 	 */
-	private static Stream<ExecutionEvent> filterEvents(List<ExecutionEvent> events,
-			Predicate<? super TestDescriptor> predicate) {
+	private static Stream<Event> filterEvents(List<Event> events, Predicate<? super TestDescriptor> predicate) {
 
 		return events.stream().filter(byTestDescriptor(predicate));
 	}

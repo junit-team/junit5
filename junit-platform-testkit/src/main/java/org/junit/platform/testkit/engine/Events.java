@@ -14,8 +14,8 @@ import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.commons.util.FunctionUtils.where;
-import static org.junit.platform.testkit.engine.ExecutionEvent.byPayload;
-import static org.junit.platform.testkit.engine.ExecutionEvent.byType;
+import static org.junit.platform.testkit.engine.Event.byPayload;
+import static org.junit.platform.testkit.engine.Event.byType;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -39,23 +39,23 @@ import org.junit.platform.engine.TestExecutionResult.Status;
 
 /**
  * {@code Events} is a facade that provides a fluent API for working with
- * {@linkplain ExecutionEvent execution events}.
+ * {@linkplain Event events}.
  *
  * @since 1.4
  */
 @API(status = EXPERIMENTAL, since = "1.4")
 public final class Events {
 
-	private final List<ExecutionEvent> events;
+	private final List<Event> events;
 	private final String category;
 
-	Events(Stream<ExecutionEvent> events, String category) {
-		this(Preconditions.notNull(events, "ExecutionEvent stream must not be null").collect(toList()), category);
+	Events(Stream<Event> events, String category) {
+		this(Preconditions.notNull(events, "Event stream must not be null").collect(toList()), category);
 	}
 
-	Events(List<ExecutionEvent> events, String category) {
-		Preconditions.notNull(events, "ExecutionEvent list must not be null");
-		Preconditions.containsNoNullElements(events, "ExecutionEvent list must not contain null elements");
+	Events(List<Event> events, String category) {
+		Preconditions.notNull(events, "Event list must not be null");
+		Preconditions.containsNoNullElements(events, "Event list must not contain null elements");
 
 		this.events = Collections.unmodifiableList(events);
 		this.category = category;
@@ -68,22 +68,22 @@ public final class Events {
 	// --- Accessors -----------------------------------------------------------
 
 	/**
-	 * Get the {@linkplain ExecutionEvent execution events} as a {@link List}.
+	 * Get the {@linkplain Event events} as a {@link List}.
 	 *
-	 * @return the list of execution events; never {@code null}
+	 * @return the list of events; never {@code null}
 	 * @see #stream()
 	 */
-	public List<ExecutionEvent> list() {
+	public List<Event> list() {
 		return this.events;
 	}
 
 	/**
-	 * Get the {@linkplain ExecutionEvent execution events} as a {@link Stream}.
+	 * Get the {@linkplain Event events} as a {@link Stream}.
 	 *
-	 * @return the stream of execution events; never {@code null}
+	 * @return the stream of events; never {@code null}
 	 * @see #list()
 	 */
-	public Stream<ExecutionEvent> stream() {
+	public Stream<Event> stream() {
 		return this.events.stream();
 	}
 
@@ -93,7 +93,7 @@ public final class Events {
 	 * @see #stream()
 	 * @see Stream#map(Function)
 	 */
-	public <R> Stream<R> map(Function<? super ExecutionEvent, ? extends R> mapper) {
+	public <R> Stream<R> map(Function<? super Event, ? extends R> mapper) {
 		Preconditions.notNull(mapper, "Mapping function must not be null");
 		return stream().map(mapper);
 	}
@@ -104,14 +104,13 @@ public final class Events {
 	 * @see #stream()
 	 * @see Stream#filter(Predicate)
 	 */
-	public Stream<ExecutionEvent> filter(Predicate<? super ExecutionEvent> predicate) {
+	public Stream<Event> filter(Predicate<? super Event> predicate) {
 		Preconditions.notNull(predicate, "Filter predicate must not be null");
 		return stream().filter(predicate);
 	}
 
 	/**
-	 * Get the {@link Executions} for the current set of
-	 * {@linkplain ExecutionEvent execution events}.
+	 * Get the {@link Executions} for the current set of {@linkplain Event events}.
 	 *
 	 * @return an instance of {@code Executions} for the current set of events;
 	 * never {@code null}
@@ -123,8 +122,8 @@ public final class Events {
 	// --- Statistics ----------------------------------------------------------
 
 	/**
-	 * Get the number of {@linkplain ExecutionEvent execution events} contained
-	 * in this {@code Events} object.
+	 * Get the number of {@linkplain Event events} contained in this {@code Events}
+	 * object.
 	 */
 	public long count() {
 		return this.events.size();
@@ -210,8 +209,8 @@ public final class Events {
 	// --- Assertions ----------------------------------------------------------
 
 	/**
-	 * Assert statistics for the {@linkplain ExecutionEvent execution events}
-	 * contained in this {@code Events} object.
+	 * Assert statistics for the {@linkplain Event events} contained in this
+	 * {@code Events} object.
 	 *
 	 * <h4>Example</h4>
 	 *
@@ -226,10 +225,10 @@ public final class Events {
 	}
 
 	/**
-	 * Assert that all {@linkplain ExecutionEvent execution events} contained in
-	 * this {@code Events} object exactly match the provided conditions.
+	 * Assert that all {@linkplain Event events} contained in this {@code Events}
+	 * object exactly match the provided conditions.
 	 *
-	 * <p>Conditions can be imported statically from {@link ExecutionEventConditions}
+	 * <p>Conditions can be imported statically from {@link EventConditions}
 	 * and {@link TestExecutionResultConditions}.
 	 *
 	 * <h4>Example</h4>
@@ -242,23 +241,23 @@ public final class Events {
 	 * </pre>
 	 *
 	 * @param conditions the conditions to match against
-	 * @see ExecutionEventConditions
+	 * @see EventConditions
 	 * @see TestExecutionResultConditions
 	 */
 	@SafeVarargs
-	public final void assertEventsMatchExactly(Condition<? super ExecutionEvent>... conditions) {
-		assertExecutionEventsMatchExactly(this.events, conditions);
+	public final void assertEventsMatchExactly(Condition<? super Event>... conditions) {
+		assertEventsMatchExactly(this.events, conditions);
 	}
 
 	/**
 	 * Shortcut for {@code org.assertj.core.api.Assertions.assertThat(events.list())}.
 	 *
-	 * @return an instance of {@link ListAssert} for execution events; never
+	 * @return an instance of {@link ListAssert} for events; never
 	 * {@code null}
 	 * @see org.assertj.core.api.Assertions#assertThat(List)
 	 * @see org.assertj.core.api.ListAssert
 	 */
-	public ListAssert<ExecutionEvent> assertThatEvents() {
+	public ListAssert<Event> assertThatEvents() {
 		return org.assertj.core.api.Assertions.assertThat(list());
 	}
 
@@ -302,26 +301,25 @@ public final class Events {
 
 	// --- Internals -----------------------------------------------------------
 
-	private Stream<ExecutionEvent> eventsByType(EventType type) {
+	private Stream<Event> eventsByType(EventType type) {
 		Preconditions.notNull(type, "EventType must not be null");
 		return stream().filter(byType(type));
 	}
 
-	private Stream<ExecutionEvent> finishedEventsByStatus(Status status) {
+	private Stream<Event> finishedEventsByStatus(Status status) {
 		Preconditions.notNull(status, "Status must not be null");
 		return eventsByType(EventType.FINISHED)//
 				.filter(byPayload(TestExecutionResult.class, where(TestExecutionResult::getStatus, isEqual(status))));
 	}
 
 	@SafeVarargs
-	private static void assertExecutionEventsMatchExactly(List<ExecutionEvent> executionEvents,
-			Condition<? super ExecutionEvent>... conditions) {
+	private static void assertEventsMatchExactly(List<Event> events, Condition<? super Event>... conditions) {
 
-		Assertions.assertThat(executionEvents).hasSize(conditions.length);
+		Assertions.assertThat(events).hasSize(conditions.length);
 
 		SoftAssertions softly = new SoftAssertions();
 		for (int i = 0; i < conditions.length; i++) {
-			softly.assertThat(executionEvents).has(conditions[i], Index.atIndex(i));
+			softly.assertThat(events).has(conditions[i], Index.atIndex(i));
 		}
 		softly.assertAll();
 	}

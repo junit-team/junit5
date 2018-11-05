@@ -32,7 +32,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * {@link ExecutionResults}.
  *
  * @see ExecutionResults
- * @see ExecutionEvent
+ * @see Event
  * @see Execution
  * @since 1.4
  */
@@ -72,48 +72,48 @@ public class ExecutionRecorder implements EngineExecutionListener {
 
 	// -------------------------------------------------------------------------
 
-	private final List<ExecutionEvent> events = new CopyOnWriteArrayList<>();
+	private final List<Event> events = new CopyOnWriteArrayList<>();
 
 	/**
-	 * Record an {@link ExecutionEvent} for a dynamically registered container
+	 * Record an {@link Event} for a dynamically registered container
 	 * or test.
 	 */
 	@Override
 	public void dynamicTestRegistered(TestDescriptor testDescriptor) {
-		this.events.add(ExecutionEvent.dynamicTestRegistered(testDescriptor));
+		this.events.add(Event.dynamicTestRegistered(testDescriptor));
 	}
 
 	/**
-	 * Record an {@link ExecutionEvent} for a container or test that was skipped.
+	 * Record an {@link Event} for a container or test that was skipped.
 	 */
 	@Override
 	public void executionSkipped(TestDescriptor testDescriptor, String reason) {
-		this.events.add(ExecutionEvent.executionSkipped(testDescriptor, reason));
+		this.events.add(Event.executionSkipped(testDescriptor, reason));
 	}
 
 	/**
-	 * Record an {@link ExecutionEvent} for a container or test that started.
+	 * Record an {@link Event} for a container or test that started.
 	 */
 	@Override
 	public void executionStarted(TestDescriptor testDescriptor) {
-		this.events.add(ExecutionEvent.executionStarted(testDescriptor));
+		this.events.add(Event.executionStarted(testDescriptor));
 	}
 
 	/**
-	 * Record an {@link ExecutionEvent} for a container or test that completed
+	 * Record an {@link Event} for a container or test that completed
 	 * with the provided {@link TestExecutionResult}.
 	 */
 	@Override
 	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
-		this.events.add(ExecutionEvent.executionFinished(testDescriptor, testExecutionResult));
+		this.events.add(Event.executionFinished(testDescriptor, testExecutionResult));
 	}
 
 	/**
-	 * Record an {@link ExecutionEvent} for a published {@link ReportEntry}.
+	 * Record an {@link Event} for a published {@link ReportEntry}.
 	 */
 	@Override
 	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
-		this.events.add(ExecutionEvent.reportingEntryPublished(testDescriptor, entry));
+		this.events.add(Event.reportingEntryPublished(testDescriptor, entry));
 	}
 
 	/**

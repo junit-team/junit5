@@ -52,9 +52,9 @@ public final class Executions {
 		this.category = category;
 	}
 
-	Executions(List<ExecutionEvent> events, String category) {
-		Preconditions.notNull(events, "ExecutionEvent list must not be null");
-		Preconditions.containsNoNullElements(events, "ExecutionEvent list must not contain null elements");
+	Executions(List<Event> events, String category) {
+		Preconditions.notNull(events, "Event list must not be null");
+		Preconditions.containsNoNullElements(events, "Event list must not contain null elements");
 
 		this.executions = createExecutions(events);
 		this.category = category;
@@ -240,31 +240,31 @@ public final class Executions {
 	/**
 	 * Create executions from the supplied list of events.
 	 */
-	private static List<Execution> createExecutions(List<ExecutionEvent> executionEvents) {
+	private static List<Execution> createExecutions(List<Event> events) {
 		List<Execution> executions = new ArrayList<>();
 		Map<TestDescriptor, Instant> executionStarts = new HashMap<>();
 
-		for (ExecutionEvent executionEvent : executionEvents) {
-			switch (executionEvent.getType()) {
+		for (Event event : events) {
+			switch (event.getType()) {
 				case STARTED: {
-					executionStarts.put(executionEvent.getTestDescriptor(), executionEvent.getTimestamp());
+					executionStarts.put(event.getTestDescriptor(), event.getTimestamp());
 					break;
 				}
 				case SKIPPED: {
-					Instant startInstant = executionStarts.get(executionEvent.getTestDescriptor());
-					Execution skippedEvent = Execution.skipped(executionEvent.getTestDescriptor(),
-						startInstant != null ? startInstant : executionEvent.getTimestamp(),
-						executionEvent.getTimestamp(), executionEvent.getRequiredPayload(String.class));
+					Instant startInstant = executionStarts.get(event.getTestDescriptor());
+					Execution skippedEvent = Execution.skipped(event.getTestDescriptor(),
+						startInstant != null ? startInstant : event.getTimestamp(), event.getTimestamp(),
+						event.getRequiredPayload(String.class));
 					executions.add(skippedEvent);
-					executionStarts.remove(executionEvent.getTestDescriptor());
+					executionStarts.remove(event.getTestDescriptor());
 					break;
 				}
 				case FINISHED: {
-					Execution finishedEvent = Execution.finished(executionEvent.getTestDescriptor(),
-						executionStarts.get(executionEvent.getTestDescriptor()), executionEvent.getTimestamp(),
-						executionEvent.getRequiredPayload(TestExecutionResult.class));
+					Execution finishedEvent = Execution.finished(event.getTestDescriptor(),
+						executionStarts.get(event.getTestDescriptor()), event.getTimestamp(),
+						event.getRequiredPayload(TestExecutionResult.class));
 					executions.add(finishedEvent);
-					executionStarts.remove(executionEvent.getTestDescriptor());
+					executionStarts.remove(event.getTestDescriptor());
 					break;
 				}
 				default: {

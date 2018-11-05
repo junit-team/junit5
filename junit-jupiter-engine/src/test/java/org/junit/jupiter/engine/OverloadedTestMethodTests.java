@@ -19,8 +19,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.testkit.engine.Event;
 import org.junit.platform.testkit.engine.Events;
-import org.junit.platform.testkit.engine.ExecutionEvent;
 
 /**
  * Integration tests for support of overloaded test methods in conjunction with
@@ -36,7 +36,7 @@ class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 
 		tests.assertStatistics(stats -> stats.started(2).succeeded(2).failed(0));
 
-		Optional<ExecutionEvent> first = tests.succeeded().filter(
+		Optional<Event> first = tests.succeeded().filter(
 			event -> event.getTestDescriptor().getUniqueId().toString().contains(TestInfo.class.getName())).findFirst();
 		assertTrue(first.isPresent());
 		TestIdentifier testIdentifier = TestIdentifier.from(first.get().getTestDescriptor());
@@ -58,7 +58,7 @@ class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 
 		tests.assertStatistics(stats -> stats.started(1).succeeded(1).failed(0));
 
-		Optional<ExecutionEvent> first = tests.succeeded().stream().filter(
+		Optional<Event> first = tests.succeeded().stream().filter(
 			event -> event.getTestDescriptor().getUniqueId().toString().contains(TestInfo.class.getName())).findFirst();
 		assertTrue(first.isPresent());
 	}

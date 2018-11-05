@@ -18,10 +18,10 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
- * Enumeration of the different possible {@link ExecutionEvent} types.
+ * Enumeration of the different possible {@link Event} types.
  *
  * @since 1.4
- * @see ExecutionEvent
+ * @see Event
  */
 @API(status = EXPERIMENTAL, since = "1.4")
 public enum EventType {

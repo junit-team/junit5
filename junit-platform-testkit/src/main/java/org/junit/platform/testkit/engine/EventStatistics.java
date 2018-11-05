@@ -21,7 +21,7 @@ import org.junit.platform.testkit.engine.Assertions.Executable;
 
 /**
  * {@code EventStatistics} provides a fluent API for asserting statistics
- * for {@linkplain ExecutionEvent execution events}.
+ * for {@linkplain Event events}.
  *
  * <p>{@code EventStatistics} is used in conjunction with
  * {@link Events#assertStatistics(java.util.function.Consumer)} as in the
@@ -30,7 +30,7 @@ import org.junit.platform.testkit.engine.Assertions.Executable;
  * <p>{@code events.assertStatistics(stats -> stats.started(1).succeeded(1).failed(0));}
  *
  * @since 1.4
- * @see ExecutionEvent
+ * @see Event
  * @see Events
  */
 @API(status = EXPERIMENTAL, since = "1.4")
