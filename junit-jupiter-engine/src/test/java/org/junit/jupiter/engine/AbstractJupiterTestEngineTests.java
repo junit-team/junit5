@@ -18,7 +18,6 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import java.util.Set;
 
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -43,10 +42,7 @@ public abstract class AbstractJupiterTestEngineTests {
 	}
 
 	protected ExecutionResults executeTests(LauncherDiscoveryRequest request) {
-		TestDescriptor testDescriptor = discoverTests(request);
-		ExecutionRecorder executionRecorder = new ExecutionRecorder();
-		engine.execute(new ExecutionRequest(testDescriptor, executionRecorder, request.getConfigurationParameters()));
-		return executionRecorder.getExecutionResults();
+		return ExecutionRecorder.execute(this.engine, request);
 	}
 
 	protected TestDescriptor discoverTests(DiscoverySelector... selectors) {
