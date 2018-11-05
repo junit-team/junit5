@@ -27,10 +27,6 @@ import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.platform.engine.ExecutionRequest;
-import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.UniqueId;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.engine.Events;
 import org.junit.platform.testkit.engine.ExecutionRecorder;
 import org.junit.rules.ExpectedException;
@@ -79,12 +75,8 @@ class ExpectedExceptionSupportTests {
 	}
 
 	private Events executeTestsForClass(Class<?> testClass) {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
-		JupiterTestEngine engine = new JupiterTestEngine();
-		TestDescriptor testDescriptor = engine.discover(request, UniqueId.forEngine(engine.getId()));
-		ExecutionRecorder executionRecorder = new ExecutionRecorder();
-		engine.execute(new ExecutionRequest(testDescriptor, executionRecorder, request.getConfigurationParameters()));
-		return executionRecorder.getExecutionResults().tests();
+		return ExecutionRecorder.execute(new JupiterTestEngine(),
+			request().selectors(selectClass(testClass)).build()).tests();
 	}
 
 	@ExtendWith(ExpectedExceptionSupport.class)

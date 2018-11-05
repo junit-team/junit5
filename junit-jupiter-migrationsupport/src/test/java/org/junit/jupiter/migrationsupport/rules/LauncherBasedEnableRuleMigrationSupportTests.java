@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -19,12 +18,8 @@ import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.platform.engine.ExecutionRequest;
-import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.UniqueId;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.engine.Events;
 import org.junit.platform.testkit.engine.ExecutionRecorder;
-import org.junit.platform.testkit.engine.ExecutionResults;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Verifier;
@@ -33,50 +28,30 @@ class LauncherBasedEnableRuleMigrationSupportTests {
 
 	@Test
 	void enableRuleMigrationSupportAnnotationWorksForBothRuleTypes() {
-		ExecutionResults executionResults = executeTestsForClass(
-			EnableRuleMigrationSupportWithBothRuleTypesTestCase.class).getExecutionResults();
+		Events tests = executeTestsForClass(EnableRuleMigrationSupportWithBothRuleTypesTestCase.class);
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded");
-		assertEquals(0, executionResults.tests().aborted().count(), "# tests aborted");
-		assertEquals(0, executionResults.tests().failed().count(), "# tests failed");
+		tests.assertStatistics(stats -> stats.started(1).succeeded(1).aborted(0).failed(0));
 
-		assertEquals(true, EnableRuleMigrationSupportWithBothRuleTypesTestCase.afterOfRule1WasExecuted,
+		assertTrue(EnableRuleMigrationSupportWithBothRuleTypesTestCase.afterOfRule1WasExecuted,
 			"after of rule 1 executed?");
-		assertEquals(true, EnableRuleMigrationSupportWithBothRuleTypesTestCase.beforeOfRule2WasExecuted,
+		assertTrue(EnableRuleMigrationSupportWithBothRuleTypesTestCase.beforeOfRule2WasExecuted,
 			"before of rule 2 executed?");
-		assertEquals(true, EnableRuleMigrationSupportWithBothRuleTypesTestCase.afterOfRule2WasExecuted,
+		assertTrue(EnableRuleMigrationSupportWithBothRuleTypesTestCase.afterOfRule2WasExecuted,
 			"before of rule 2 executed?");
 	}
 
 	@Test
 	void verifierSupportForErrorCollectorFieldFailsTheTest() {
-		ExecutionResults executionResults = executeTestsForClass(
-			VerifierSupportForErrorCollectorTestCase.class).getExecutionResults();
+		Events tests = executeTestsForClass(VerifierSupportForErrorCollectorTestCase.class);
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(0, executionResults.tests().succeeded().count(), "# tests succeeded");
-		assertEquals(0, executionResults.tests().aborted().count(), "# tests aborted");
-		assertEquals(1, executionResults.tests().failed().count(), "# tests failed");
+		tests.assertStatistics(stats -> stats.started(1).succeeded(0).aborted(0).failed(1));
 
-		assertEquals(true, VerifierSupportForErrorCollectorTestCase.survivedBothErrors, "after of rule 1 executed?");
+		assertTrue(VerifierSupportForErrorCollectorTestCase.survivedBothErrors, "after of rule 1 executed?");
 	}
 
-	private final JupiterTestEngine engine = new JupiterTestEngine();
-
-	private ExecutionRecorder executeTestsForClass(Class<?> testClass) {
-		return executeTests(request().selectors(selectClass(testClass)).build());
-	}
-
-	private ExecutionRecorder executeTests(LauncherDiscoveryRequest request) {
-		TestDescriptor testDescriptor = discoverTests(request);
-		ExecutionRecorder eventRecorder = new ExecutionRecorder();
-		engine.execute(new ExecutionRequest(testDescriptor, eventRecorder, request.getConfigurationParameters()));
-		return eventRecorder;
-	}
-
-	private TestDescriptor discoverTests(LauncherDiscoveryRequest request) {
-		return engine.discover(request, UniqueId.forEngine(engine.getId()));
+	private Events executeTestsForClass(Class<?> testClass) {
+		return ExecutionRecorder.execute(new JupiterTestEngine(),
+			request().selectors(selectClass(testClass)).build()).tests();
 	}
 
 	@EnableRuleMigrationSupport
