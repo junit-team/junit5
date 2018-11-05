@@ -41,8 +41,8 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Events;
-import org.junit.platform.testkit.engine.ExecutionRecorder;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
@@ -552,7 +552,7 @@ class VintageTestEngineExecutionTests {
 	}
 
 	private static Events execute(Class<?> testClass) {
-		return ExecutionRecorder.execute(new VintageTestEngine(), request(testClass)).all();
+		return EngineTestKit.execute(new VintageTestEngine(), request(testClass)).all();
 	}
 
 	private static void execute(Class<?> testClass, EngineExecutionListener listener) {

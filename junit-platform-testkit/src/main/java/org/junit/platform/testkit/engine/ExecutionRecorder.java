@@ -10,19 +10,12 @@
 
 package org.junit.platform.testkit.engine;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apiguardian.api.API;
-import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
-import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
-import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
@@ -31,46 +24,12 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * provides functionality for retrieving execution state via
  * {@link ExecutionResults}.
  *
+ * @since 1.4
  * @see ExecutionResults
  * @see Event
  * @see Execution
- * @since 1.4
  */
-@API(status = EXPERIMENTAL, since = "1.4")
-public class ExecutionRecorder implements EngineExecutionListener {
-
-	/**
-	 * Execute tests for a given {@link EngineDiscoveryRequest} using the
-	 * provided {@link TestEngine}.
-	 *
-	 * <p>Note that {@link org.junit.platform.launcher.LauncherDiscoveryRequest}
-	 * from the {@code junit-platform-launcher} module is a subtype of
-	 * {@code EngineDiscoveryRequest}. It is therefore quite convenient to make
-	 * use of the DSL provided in
-	 * {@link org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder}
-	 * to build an appropriate discovery request to supply to this method.
-	 *
-	 * @param testEngine the {@code TestEngine} to use
-	 * @param discoveryRequest the {@code EngineDiscoveryRequest} to use
-	 * @return the recorded {@code ExecutionResults}
-	 */
-	public static ExecutionResults execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest) {
-		ExecutionRecorder executionRecorder = new ExecutionRecorder();
-		execute(testEngine, discoveryRequest, executionRecorder);
-		return executionRecorder.getExecutionResults();
-	}
-
-	private static void execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest,
-			EngineExecutionListener listener) {
-
-		UniqueId engineUniqueId = UniqueId.forEngine(testEngine.getId());
-		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest, engineUniqueId);
-		ExecutionRequest request = new ExecutionRequest(engineTestDescriptor, listener,
-			discoveryRequest.getConfigurationParameters());
-		testEngine.execute(request);
-	}
-
-	// -------------------------------------------------------------------------
+class ExecutionRecorder implements EngineExecutionListener {
 
 	private final List<Event> events = new CopyOnWriteArrayList<>();
 

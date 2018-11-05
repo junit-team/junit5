@@ -28,8 +28,8 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Events;
-import org.junit.platform.testkit.engine.ExecutionRecorder;
 
 /**
  * Integration tests for {@link RepeatedTest @RepeatedTest} and supporting
@@ -154,7 +154,7 @@ class RepeatedTestTests {
 	}
 
 	private Events executeTest(String methodName) {
-		return ExecutionRecorder.execute(new JupiterTestEngine(),
+		return EngineTestKit.execute(new JupiterTestEngine(),
 			request().selectors(selectMethod(TestCase.class, methodName)).build()).all();
 	}
 

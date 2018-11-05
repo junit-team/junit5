@@ -18,8 +18,8 @@ import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Events;
-import org.junit.platform.testkit.engine.ExecutionRecorder;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Verifier;
@@ -50,7 +50,7 @@ class LauncherBasedEnableRuleMigrationSupportTests {
 	}
 
 	private Events executeTestsForClass(Class<?> testClass) {
-		return ExecutionRecorder.execute(new JupiterTestEngine(),
+		return EngineTestKit.execute(new JupiterTestEngine(),
 			request().selectors(selectClass(testClass)).build()).tests();
 	}
 

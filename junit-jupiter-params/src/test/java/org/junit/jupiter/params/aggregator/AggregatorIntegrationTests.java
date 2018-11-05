@@ -49,8 +49,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Event;
-import org.junit.platform.testkit.engine.ExecutionRecorder;
 
 /**
  * Integration tests for {@link ArgumentsAccessor}, {@link AggregateWith},
@@ -199,7 +199,7 @@ public class AggregatorIntegrationTests {
 	}
 
 	private List<Event> execute(DiscoverySelector... selectors) {
-		return ExecutionRecorder.execute(new JupiterTestEngine(), request().selectors(selectors).build()).all().list();
+		return EngineTestKit.execute(new JupiterTestEngine(), request().selectors(selectors).build()).all().list();
 	}
 
 	// -------------------------------------------------------------------------

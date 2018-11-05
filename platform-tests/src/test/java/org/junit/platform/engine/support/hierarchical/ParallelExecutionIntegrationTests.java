@@ -61,8 +61,8 @@ import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Event;
-import org.junit.platform.testkit.engine.ExecutionRecorder;
 
 /**
  * @since 1.3
@@ -466,7 +466,7 @@ class ParallelExecutionIntegrationTests {
 				.configurationParameter(PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, String.valueOf(parallelism))
 				.build();
 		// @formatter:on
-		return ExecutionRecorder.execute(new JupiterTestEngine(), discoveryRequest).all().list();
+		return EngineTestKit.execute(new JupiterTestEngine(), discoveryRequest).all().list();
 	}
 
 	static class ThreadReporter implements AfterTestExecutionCallback {

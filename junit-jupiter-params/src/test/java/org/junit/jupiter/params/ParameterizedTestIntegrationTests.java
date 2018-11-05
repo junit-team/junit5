@@ -56,8 +56,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Event;
-import org.junit.platform.testkit.engine.ExecutionRecorder;
 import org.opentest4j.TestAbortedException;
 
 /**
@@ -256,7 +256,7 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	private List<Event> execute(DiscoverySelector... selectors) {
-		return ExecutionRecorder.execute(new JupiterTestEngine(), request().selectors(selectors).build()).all().list();
+		return EngineTestKit.execute(new JupiterTestEngine(), request().selectors(selectors).build()).all().list();
 	}
 
 	static class TestCase {
