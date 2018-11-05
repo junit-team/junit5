@@ -24,7 +24,6 @@ import static org.junit.platform.testkit.engine.EventConditions.test;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Events;
 import org.junit.platform.testkit.engine.ExecutionResults;
@@ -101,7 +100,7 @@ class IgnoreConditionTests {
 	}
 
 	private ExecutionResults executeTestsForClass(Class<?> testClass) {
-		return EngineTestKit.execute(new JupiterTestEngine(), request().selectors(selectClass(testClass)).build());
+		return EngineTestKit.execute("junit-jupiter", request().selectors(selectClass(testClass)).build());
 	}
 
 	// -------------------------------------------------------------------------

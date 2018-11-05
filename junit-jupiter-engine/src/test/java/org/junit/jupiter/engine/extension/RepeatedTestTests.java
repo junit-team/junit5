@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.extension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
 import static org.junit.platform.testkit.engine.EventConditions.event;
@@ -27,8 +26,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.TestInfo;
-import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.platform.testkit.engine.EngineTestKit;
+import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.testkit.engine.Events;
 
 /**
@@ -37,7 +35,7 @@ import org.junit.platform.testkit.engine.Events;
  *
  * @since 5.0
  */
-class RepeatedTestTests {
+class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 
 	private static int fortyTwo = 0;
 
@@ -154,8 +152,7 @@ class RepeatedTestTests {
 	}
 
 	private Events executeTest(String methodName) {
-		return EngineTestKit.execute(new JupiterTestEngine(),
-			request().selectors(selectMethod(TestCase.class, methodName)).build()).all();
+		return executeTests(selectMethod(TestCase.class, methodName)).all();
 	}
 
 	static class TestCase {

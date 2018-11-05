@@ -40,7 +40,6 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.parallel.ResourceLock;
-import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ArgumentConverter;
@@ -199,7 +198,7 @@ public class AggregatorIntegrationTests {
 	}
 
 	private List<Event> execute(DiscoverySelector... selectors) {
-		return EngineTestKit.execute(new JupiterTestEngine(), request().selectors(selectors).build()).all().list();
+		return EngineTestKit.execute("junit-jupiter", request().selectors(selectors).build()).all().list();
 	}
 
 	// -------------------------------------------------------------------------

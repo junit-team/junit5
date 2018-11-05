@@ -43,7 +43,6 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
@@ -256,7 +255,7 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	private List<Event> execute(DiscoverySelector... selectors) {
-		return EngineTestKit.execute(new JupiterTestEngine(), request().selectors(selectors).build()).all().list();
+		return EngineTestKit.execute("junit-jupiter", request().selectors(selectors).build()).all().list();
 	}
 
 	static class TestCase {
