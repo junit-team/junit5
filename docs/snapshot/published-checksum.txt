@@ -99,7 +99,6 @@
 358d818948d3cfe6c3ba96c6f07624ab  junit-platform-commons/src/main/java/org/junit/platform/commons/util/BlacklistedExceptions.java
 36c3996946a5cb5ed1fe4baca9857c31  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingSupplier.java
 36d0b591a4fad2d5c41de29c1a1b0337  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/JupiterTestEngine.java
-380b49e6a402a145439faf97be99fc8e  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EngineTestKit.java
 386ece4858b64381bffc4218bb101735  documentation/src/test/java/example/CustomTestEngine.java
 391883f779338e18c79d8a77c8bb07db  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ResourceLocks.java
 39ef1f14931c0e3596a7418efa8e5082  junit-platform-commons/src/main/java/org/junit/platform/commons/util/CloseablePath.java
@@ -358,6 +357,7 @@ a3c9258dd74fe2ce918ce43900806d50  junit-jupiter-engine/src/main/java/org/junit/j
 a3dbb51fdad33db6771c29b2c80f67da  junit-platform-engine/src/main/java/org/junit/platform/engine/package-info.java
 a51444ede15212e2797e42cb668f0d2c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnOs.java
 a56e272a43f32e7c8ebbcc1e7630f178  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java
+a68f07b8bcafb72fd981857d087257e4  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EngineTestKit.java
 a6d46ac4a7ec39174b20a149a1ae9cc5  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClasspathScanner.java
 a7140c916d4bba2601beacd065dc4987  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestTemplate.java
 a725e1dd93c4123a5e3da676bebf38c8  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/ClassSelectorResolver.java
