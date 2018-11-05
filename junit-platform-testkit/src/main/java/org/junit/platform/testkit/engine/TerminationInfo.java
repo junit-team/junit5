@@ -136,10 +136,10 @@ public class TerminationInfo {
 	public String toString() {
 		ToStringBuilder builder = new ToStringBuilder(this);
 		if (skipped()) {
-			builder.append("skipped", skipped()).append("reason", this.skipReason);
+			builder.append("skipped", true).append("reason", this.skipReason);
 		}
 		else {
-			builder.append("executed", executed()).append("result", this.testExecutionResult);
+			builder.append("executed", true).append("result", this.testExecutionResult);
 		}
 		return builder.toString();
 	}

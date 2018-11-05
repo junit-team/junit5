@@ -36,7 +36,7 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 
 /**
- * Collection of AssertJ conditions for {@link Event}.
+ * Collection of AssertJ {@linkplain Condition conditions} for {@link Event}.
  *
  * @since 1.4
  */

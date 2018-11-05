@@ -143,7 +143,6 @@ public class Event {
 	 * @return the resulting {@link Predicate}
 	 */
 	public static Predicate<Event> byTestDescriptor(Predicate<? super TestDescriptor> testDescriptorPredicate) {
-
 		return where(Event::getTestDescriptor, testDescriptorPredicate);
 	}
 

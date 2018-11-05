@@ -22,7 +22,8 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
 
 /**
- * Collection of AssertJ conditions for {@link TestExecutionResult}.
+ * Collection of AssertJ {@linkplain Condition conditions} for
+ * {@link TestExecutionResult}.
  *
  * @since 1.4
  */

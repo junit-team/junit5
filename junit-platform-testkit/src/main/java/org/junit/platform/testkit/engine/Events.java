@@ -314,7 +314,6 @@ public final class Events {
 
 	@SafeVarargs
 	private static void assertEventsMatchExactly(List<Event> events, Condition<? super Event>... conditions) {
-
 		Assertions.assertThat(events).hasSize(conditions.length);
 
 		SoftAssertions softly = new SoftAssertions();

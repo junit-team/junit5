@@ -88,7 +88,6 @@ public class ExecutionResults {
 	 * Filter the supplied list of events using the supplied predicate.
 	 */
 	private static Stream<Event> filterEvents(List<Event> events, Predicate<? super TestDescriptor> predicate) {
-
 		return events.stream().filter(byTestDescriptor(predicate));
 	}
 
