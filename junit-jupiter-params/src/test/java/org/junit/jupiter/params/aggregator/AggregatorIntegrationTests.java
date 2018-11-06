@@ -31,6 +31,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -49,7 +50,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.testkit.engine.EngineTestKit;
-import org.junit.platform.testkit.engine.Event;
+import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests for {@link ArgumentsAccessor}, {@link AggregateWith},
@@ -60,13 +61,19 @@ import org.junit.platform.testkit.engine.Event;
 public class AggregatorIntegrationTests {
 
 	@ParameterizedTest
-	@CsvSource({ "Jane, Doe, 1980-04-16, F, red", "Jack, Smith, 2000-11-22, M, blue" })
+	@CsvSource({ //
+			"Jane, Doe, 1980-04-16, F, red", //
+			"Jack, Smith, 2000-11-22, M, blue" //
+	})
 	void personAggregator(@AggregateWith(PersonAggregator.class) Person person) {
 		testPersonAggregator(person);
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "Jane, Doe, 1980-04-16, F, red", "Jack, Smith, 2000-11-22, M, blue" })
+	@CsvSource({ //
+			"Jane, Doe, 1980-04-16, F, red", //
+			"Jack, Smith, 2000-11-22, M, blue" //
+	})
 	void personAggregatorRegisteredViaCustomAnnotation(@CsvToPerson Person person) {
 		testPersonAggregator(person);
 	}
@@ -170,9 +177,10 @@ public class AggregatorIntegrationTests {
 
 	@Test
 	void reportsExceptionForErroneousAggregator() {
-		List<Event> events = execute(
+		var results = execute(
 			selectMethod(ErroneousTestCases.class, "testWithErroneousAggregator", Object.class.getName()));
-		assertThat(events) //
+
+		results.tests().assertThatEvents()//
 				.haveExactly(1, event(test(), finishedWithFailure(allOf(isA(ParameterResolutionException.class), //
 					message("Error aggregating arguments for parameter at index 0: something went horribly wrong")))));
 	}
@@ -197,8 +205,8 @@ public class AggregatorIntegrationTests {
 		assertEquals(30318, address.zipCode);
 	}
 
-	private List<Event> execute(DiscoverySelector... selectors) {
-		return EngineTestKit.execute("junit-jupiter", request().selectors(selectors).build()).all().list();
+	private ExecutionResults execute(DiscoverySelector... selectors) {
+		return EngineTestKit.execute("junit-jupiter", request().selectors(selectors).build());
 	}
 
 	// -------------------------------------------------------------------------
@@ -334,22 +342,28 @@ public class AggregatorIntegrationTests {
 	@ResourceLock("InstanceCountingConverter.instanceCount")
 	void aggregatorIsInstantiatedOnlyOnce() {
 		InstanceCountingAggregator.instanceCount = 0;
+		CountingTestCase.output.clear();
 
 		execute(selectMethod(CountingTestCase.class, "testWithCountingConverterAggregator",
 			int.class.getName() + "," + Object.class.getName()));
 
 		assertThat(InstanceCountingAggregator.instanceCount).isEqualTo(1);
+		assertThat(CountingTestCase.output)//
+				.containsExactly("noisy test(1, enigma)", "noisy test(2, enigma)", "noisy test(3, enigma)");
 	}
 
 	@Test
 	@ResourceLock("InstanceCountingConverter.instanceCount")
 	void converterIsInstantiatedOnlyOnce() {
 		InstanceCountingConverter.instanceCount = 0;
+		CountingTestCase.output.clear();
 
 		execute(selectMethod(CountingTestCase.class, "testWithCountingConverterAggregator",
 			int.class.getName() + "," + Object.class.getName()));
 
 		assertThat(InstanceCountingConverter.instanceCount).isEqualTo(1);
+		assertThat(CountingTestCase.output)//
+				.containsExactly("noisy test(1, enigma)", "noisy test(2, enigma)", "noisy test(3, enigma)");
 	}
 
 	static class InstanceCountingConverter implements ArgumentConverter {
@@ -375,16 +389,21 @@ public class AggregatorIntegrationTests {
 		@Override
 		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
 				throws ArgumentsAggregationException {
-			return null;
+			return "enigma";
 		}
 	}
 
 	static class CountingTestCase {
+
+		static final List<String> output = new ArrayList<>();
+
 		@ParameterizedTest
 		@ValueSource(ints = { 1, 2, 3 })
 		void testWithCountingConverterAggregator(@ConvertWith(InstanceCountingConverter.class) int i,
 				@AggregateWith(InstanceCountingAggregator.class) Object o) {
-			System.out.println("noisy test(" + i + ", " + o + ")");
+
+			output.add("noisy test(" + i + ", " + o + ")");
 		}
 	}
+
 }
