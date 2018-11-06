@@ -37,7 +37,6 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -1044,61 +1043,65 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void getFieldValuesForInstanceWithNullParameters() {
+	void getFieldValuesWithNullParameters() {
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getFieldValues(null, new Object()));
 		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.getFieldValuesForInstance(null, new Object()));
+			() -> ReflectionUtils.getFieldValues(new ArrayList<>(), null));
 		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.getFieldValuesForInstance(new ArrayList<>(), null));
-		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.getFieldValuesForInstance(new ArrayList<>(), new Object(), null));
+			() -> ReflectionUtils.getFieldValues(new ArrayList<>(), new Object(), null));
 	}
 
 	@Test
-	void getFieldValuesForInstance() {
+	void getFieldValues() {
 		ClassWithFields classWithFields = new ClassWithFields();
 		classWithFields.stringField = "string";
 		classWithFields.integerField = 10;
 		classWithFields.doubleField = 11.0;
-		List<Field> fields = Arrays.asList(classWithFields.getClass().getFields());
+		classWithFields.privateStringField = "privatestring";
+		List<Field> fields = ReflectionUtils.findFields(ClassWithFields.class, f -> true, TOP_DOWN);
 
-		List<Object> fieldValuesForInstance = ReflectionUtils.getFieldValuesForInstance(fields, classWithFields);
-		assertEquals(3, fieldValuesForInstance.size());
+		List<Object> fieldValuesForInstance = ReflectionUtils.getFieldValues(fields, classWithFields);
+		assertEquals(4, fieldValuesForInstance.size());
 
-		assertTrue(fieldValuesForInstance.get(0) instanceof Integer);
-		assertEquals(classWithFields.integerField, (int) fieldValuesForInstance.get(0));
+		assertTrue(fieldValuesForInstance.get(0) instanceof String);
+		assertEquals(classWithFields.privateStringField, fieldValuesForInstance.get(0).toString());
 
-		assertTrue(fieldValuesForInstance.get(1) instanceof String);
-		assertEquals(classWithFields.stringField, fieldValuesForInstance.get(1).toString());
+		assertTrue(fieldValuesForInstance.get(1) instanceof Double);
+		assertEquals(classWithFields.doubleField, (double) fieldValuesForInstance.get(1));
 
-		assertTrue(fieldValuesForInstance.get(2) instanceof Double);
-		assertEquals(classWithFields.doubleField, (double) fieldValuesForInstance.get(2));
+		assertTrue(fieldValuesForInstance.get(2) instanceof String);
+		assertEquals(classWithFields.stringField, fieldValuesForInstance.get(2).toString());
+
+		assertTrue(fieldValuesForInstance.get(3) instanceof Integer);
+		assertEquals(classWithFields.integerField, (int) fieldValuesForInstance.get(3));
+
 	}
 
 	@Test
-	void getFieldValuesOfTypeForInstance() {
+	void getFieldValuesOfType() {
 		ClassWithFields classWithFields = new ClassWithFields();
 		classWithFields.stringField = "string";
 		classWithFields.integerField = 10;
 		classWithFields.doubleField = 11.0;
+		classWithFields.privateStringField = "privatestring";
 
 		List<Field> stringFields = ReflectionUtils.findFields(ClassWithFields.class,
 			f -> f.getType().isAssignableFrom(String.class), TOP_DOWN);
-		List<String> stringFieldValues = ReflectionUtils.getFieldValuesForInstance(stringFields, classWithFields,
-			String.class);
-		assertEquals(1, stringFieldValues.size());
-		assertEquals(classWithFields.stringField, stringFieldValues.get(0));
+		List<String> stringFieldValues = ReflectionUtils.getFieldValues(stringFields, classWithFields, String.class);
+		assertEquals(2, stringFieldValues.size());
+		assertEquals(classWithFields.privateStringField, stringFieldValues.get(0));
+		assertEquals(classWithFields.stringField, stringFieldValues.get(1));
 
 		List<Field> integerFields = ReflectionUtils.findFields(ClassWithFields.class,
 			f -> f.getType().isAssignableFrom(int.class), TOP_DOWN);
-		List<Integer> integerFieldValues = ReflectionUtils.getFieldValuesForInstance(integerFields, classWithFields,
+		List<Integer> integerFieldValues = ReflectionUtils.getFieldValues(integerFields, classWithFields,
 			Integer.class);
 		assertEquals(1, integerFieldValues.size());
 		assertEquals(classWithFields.integerField, integerFieldValues.get(0).intValue());
 
 		List<Field> doubleFields = ReflectionUtils.findFields(ClassWithFields.class,
 			f -> f.getType().isAssignableFrom(double.class), TOP_DOWN);
-		List<Double> doubleFieldValues = ReflectionUtils.getFieldValuesForInstance(doubleFields, classWithFields,
-			Double.class);
+		List<Double> doubleFieldValues = ReflectionUtils.getFieldValues(doubleFields, classWithFields, Double.class);
 		assertEquals(1, doubleFieldValues.size());
 		assertEquals(classWithFields.doubleField, doubleFieldValues.get(0).doubleValue());
 	}
@@ -1497,6 +1500,9 @@ class ReflectionUtilsTests {
 		public String stringField;
 
 		public double doubleField;
+
+		private String privateStringField;
+
 	}
 
 	@SuppressWarnings("unused")

@@ -100,10 +100,10 @@ class AnnotationSupportTests {
 
 	@Test
 	void findPublicAnnotatedFieldsDelegates() {
-		assertEquals(AnnotationUtils.findPublicAnnotatedFields(Probe.class, FieldMarker.class),
-			AnnotationSupport.findPublicAnnotatedFields(Probe.class, FieldMarker.class));
-		assertEquals(AnnotationUtils.findPublicAnnotatedFields(Probe.class, Override.class),
-			AnnotationSupport.findPublicAnnotatedFields(Probe.class, Override.class));
+		assertEquals(AnnotationUtils.findAnnotatedFields(Probe.class, FieldMarker.class, f -> true),
+			AnnotationSupport.findAnnotatedFields(Probe.class, FieldMarker.class));
+		assertEquals(AnnotationUtils.findAnnotatedFields(Probe.class, Override.class, f -> true),
+			AnnotationSupport.findAnnotatedFields(Probe.class, Override.class));
 		assertEquals(AnnotationUtils.findPublicAnnotatedFields(Probe.class, String.class, FieldMarker.class),
 			AnnotationSupport.findPublicAnnotatedFields(Probe.class, String.class, FieldMarker.class));
 		assertEquals(AnnotationUtils.findPublicAnnotatedFields(Probe.class, Throwable.class, Override.class),

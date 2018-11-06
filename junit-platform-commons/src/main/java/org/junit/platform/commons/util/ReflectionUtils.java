@@ -1060,29 +1060,31 @@ public final class ReflectionUtils {
 	/**
 	 * Get the values of the specified fields on the given instance.
 	 *
-	 * @param fields list of fields on a class; never {@code null}
+	 * @param fields list of fields on a class(static or nonstatic); never {@code null}
 	 * @param object instance of a class; never {@code null}
-	 * @return an immutable list of values of the specified fields on the given instance
+	 * @return an immutable list of values of the specified fields on the given instance; never {@code null} but
+	 * can contain null values
 	 */
-	public static List<Object> getFieldValuesForInstance(List<Field> fields, Object object) {
-		return getFieldValuesForInstance(fields, object, Object.class);
+	public static List<Object> getFieldValues(List<Field> fields, Object object) {
+		return getFieldValues(fields, object, Object.class);
 	}
 
 	/**
 	 * Get the values of the specified fields of specified type on the given instance.
 	 *
-	 * @param fields list of fields on a class; never {@code null}
+	 * @param fields list of fields on a class(static or nonstatic); never {@code null}
 	 * @param object instance of a class; never {@code null}
 	 * @param fieldType the type of all fields from fields; never {@code null}
-	 * @return an immutable list of values of the specified fields on the given instance
+	 * @return an immutable list of values of the specified fields on the given instance; never {@code null} but
+	 * can contain null values
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> List<T> getFieldValuesForInstance(List<Field> fields, Object object, Class<T> fieldType) {
+	public static <T> List<T> getFieldValues(List<Field> fields, Object object, Class<T> fieldType) {
 		Preconditions.notNull(fields, "Fields must not be null");
 		Preconditions.notNull(object, "Object must not be null");
 		Preconditions.notNull(fieldType, "Field type must not be null");
 
-		return fields.stream().map(f -> {
+		return fields.stream().map(ReflectionUtils::makeAccessible).map(f -> {
 			try {
 				return (T) f.get(object);
 			}
