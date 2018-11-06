@@ -52,7 +52,6 @@
 1937dc156b18317ae90a0b0b78fa93a3  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeClassNamePatterns.java
 199e7cbfc991a9e0feab52b3555aeb46  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/ArgumentsAccessor.java
 1b06a80d0122830edbb658204bf289aa  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/ExecutionResults.java
-1b38f120634f3b6e337df284456028b8  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EventType.java
 1be44bda1b6a495f9bfdf5ea91553dec  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/TestMethodResolver.java
 1c0ad99ffb048c21e4a855e695678008  documentation/documentation.gradle.kts
 1d5d321dae8c30c3e316ebe58f87e5da  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ResourceAccessMode.java
@@ -257,6 +256,7 @@
 75c2506a9faca09ed84ff7155834c9a6  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/MethodSelectorResolver.java
 75e1f7cb58eccbbd22d15acd0885d1b4  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SuiteDisplayName.java
 75e9f5830c3e9fa1ddd0d27143e5d936  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/NestedTestsResolver.java
+76500837a1859487a7c815f1b5bf6da2  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EventType.java
 76603e1458026b6c7f6f3e888850153b  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EnumSource.java
 7758b0ad9e535b0dd0d10ed935491201  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/MethodSelector.java
 7781c6534261d0306a14d3ea2ba14014  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicContainerTestDescriptor.java

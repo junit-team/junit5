@@ -175,34 +175,32 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html?i
 <tr class="altColor">
 <th class="colFirst" scope="row"><code><span class="memberNameLink"><a href="#DYNAMIC_TEST_REGISTERED">DYNAMIC_TEST_REGISTERED</a></span></code></th>
 <td class="colLast">
-<div class="block">Called when a <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has been dynamically registered.</div>
+<div class="block">Signals that a <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has been dynamically registered.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <th class="colFirst" scope="row"><code><span class="memberNameLink"><a href="#FINISHED">FINISHED</a></span></code></th>
 <td class="colLast">
-<div class="block">Called when the execution of a leaf or subtree of the test tree has
- finished, regardless of the outcome.</div>
+<div class="block">Signals that the execution of a <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has finished,
+ regardless of the outcome.</div>
 </td>
 </tr>
 <tr class="altColor">
 <th class="colFirst" scope="row"><code><span class="memberNameLink"><a href="#REPORTING_ENTRY_PUBLISHED">REPORTING_ENTRY_PUBLISHED</a></span></code></th>
 <td class="colLast">
-<div class="block">Called when a <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> publishes a reporting entry.</div>
+<div class="block">Signals that a <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> published a reporting entry.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <th class="colFirst" scope="row"><code><span class="memberNameLink"><a href="#SKIPPED">SKIPPED</a></span></code></th>
 <td class="colLast">
-<div class="block">Called when the execution of a leaf or subtree of the test tree has been
- skipped.</div>
+<div class="block">Signals that the execution of a <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has been skipped.</div>
 </td>
 </tr>
 <tr class="altColor">
 <th class="colFirst" scope="row"><code><span class="memberNameLink"><a href="#STARTED">STARTED</a></span></code></th>
 <td class="colLast">
-<div class="block">Called when the execution of a leaf or subtree of the test tree is about
- to be started.</div>
+<div class="block">Signals that the execution of a <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has started.</div>
 </td>
 </tr>
 </table>
@@ -276,7 +274,7 @@ the order they are declared.</div>
 <li class="blockList">
 <h4>DYNAMIC_TEST_REGISTERED</h4>
 <pre>public static final&nbsp;<a href="EventType.html" title="enum in org.junit.platform.testkit.engine">EventType</a> DYNAMIC_TEST_REGISTERED</pre>
-<div class="block">Called when a <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has been dynamically registered.</div>
+<div class="block">Signals that a <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has been dynamically registered.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../engine/EngineExecutionListener.html#dynamicTestRegistered(org.junit.platform.engine.TestDescriptor)"><code>EngineExecutionListener.dynamicTestRegistered(TestDescriptor)</code></a></dd>
@@ -290,8 +288,7 @@ the order they are declared.</div>
 <li class="blockList">
 <h4>SKIPPED</h4>
 <pre>public static final&nbsp;<a href="EventType.html" title="enum in org.junit.platform.testkit.engine">EventType</a> SKIPPED</pre>
-<div class="block">Called when the execution of a leaf or subtree of the test tree has been
- skipped.</div>
+<div class="block">Signals that the execution of a <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has been skipped.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../engine/EngineExecutionListener.html#executionSkipped(org.junit.platform.engine.TestDescriptor,java.lang.String)"><code>EngineExecutionListener.executionSkipped(TestDescriptor, String)</code></a></dd>
@@ -305,8 +302,7 @@ the order they are declared.</div>
 <li class="blockList">
 <h4>STARTED</h4>
 <pre>public static final&nbsp;<a href="EventType.html" title="enum in org.junit.platform.testkit.engine">EventType</a> STARTED</pre>
-<div class="block">Called when the execution of a leaf or subtree of the test tree is about
- to be started.</div>
+<div class="block">Signals that the execution of a <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has started.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../engine/EngineExecutionListener.html#executionStarted(org.junit.platform.engine.TestDescriptor)"><code>EngineExecutionListener.executionStarted(TestDescriptor)</code></a></dd>
@@ -320,8 +316,8 @@ the order they are declared.</div>
 <li class="blockList">
 <h4>FINISHED</h4>
 <pre>public static final&nbsp;<a href="EventType.html" title="enum in org.junit.platform.testkit.engine">EventType</a> FINISHED</pre>
-<div class="block">Called when the execution of a leaf or subtree of the test tree has
- finished, regardless of the outcome.</div>
+<div class="block">Signals that the execution of a <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has finished,
+ regardless of the outcome.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../engine/EngineExecutionListener.html#executionFinished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)"><code>EngineExecutionListener.executionFinished(TestDescriptor, TestExecutionResult)</code></a></dd>
@@ -335,7 +331,7 @@ the order they are declared.</div>
 <li class="blockList">
 <h4>REPORTING_ENTRY_PUBLISHED</h4>
 <pre>public static final&nbsp;<a href="EventType.html" title="enum in org.junit.platform.testkit.engine">EventType</a> REPORTING_ENTRY_PUBLISHED</pre>
-<div class="block">Called when a <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> publishes a reporting entry.</div>
+<div class="block">Signals that a <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> published a reporting entry.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../engine/EngineExecutionListener.html#reportingEntryPublished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.reporting.ReportEntry)"><code>EngineExecutionListener.reportingEntryPublished(TestDescriptor, ReportEntry)</code></a></dd>
