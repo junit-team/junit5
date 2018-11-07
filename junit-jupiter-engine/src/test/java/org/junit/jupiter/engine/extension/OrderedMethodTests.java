@@ -31,8 +31,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.platform.commons.util.ClassUtils;
 
 /**
  * Integration tests that verify support for custom test method execution order
@@ -53,11 +55,23 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void alphanumeric() {
+		Class<?> testClass = AlphanumericTestCase.class;
+
+		// The name of the base class MUST start with a letter alphanumerically
+		// greater than "A" so that BaseTestCase comes after AlphanumericTestCase
+		// if methods are sorted by class name for the fallback ordering if two
+		// methods have the same name but different parameter lists. Note, however,
+		// that Alphanumeric actually does not order methods like that, but we want
+		// this check to remain in place to ensure that the ordering does not rely
+		// on the class names.
+		assertThat(testClass.getSuperclass().getName()).isGreaterThan(testClass.getName());
+
 		var tests = executeTestsForClass(AlphanumericTestCase.class).tests();
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
-		assertThat(callSequence).containsExactly("$", "AAA", "ZZ_Top", "___", "a1", "a2", "b", "zzz");
+		assertThat(callSequence).containsExactly("$()", "AAA()", "AAA(org.junit.jupiter.api.TestInfo)",
+			"AAA(org.junit.jupiter.api.TestReporter)", "ZZ_Top()", "___()", "a1()", "a2()", "b()", "c()", "zzz()");
 	}
 
 	@Test
@@ -98,12 +112,28 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 
 	// -------------------------------------------------------------------------
 
+	static class BaseTestCase {
+
+		@Test
+		void AAA() {
+		}
+
+		@Test
+		void c() {
+		}
+
+	}
+
 	@TestMethodOrder(Alphanumeric.class)
-	static class AlphanumericTestCase {
+	static class AlphanumericTestCase extends BaseTestCase {
 
 		@BeforeEach
 		void trackInvocations(TestInfo testInfo) {
-			callSequence.add(testInfo.getTestMethod().get().getName());
+			var method = testInfo.getTestMethod().get();
+			var signature = String.format("%s(%s)", method.getName(),
+				ClassUtils.nullSafeToString(method.getParameterTypes()));
+
+			callSequence.add(signature);
 		}
 
 		@TestFactory
@@ -121,7 +151,11 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Test
-		void AAA() {
+		void AAA(TestReporter testReporter) {
+		}
+
+		@Test
+		void AAA(TestInfo testInfo) {
 		}
 
 		@Test

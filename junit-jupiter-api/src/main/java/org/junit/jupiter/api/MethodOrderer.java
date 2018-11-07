@@ -20,6 +20,7 @@ import java.util.List;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.platform.commons.util.ClassUtils;
 
 /**
  * @since 5.4
@@ -57,8 +58,8 @@ public interface MethodOrderer {
 	 * {@code MethodOrderer} that sorts methods alphanumerically based on their
 	 * names using {@link String#compareTo(String)}.
 	 *
-	 * <p>If two methods have the same name, {@link Method#toString()} will be
-	 * used as a fallback for comparing them.
+	 * <p>If two methods have the same name, the combinations of their names and
+	 * formal parameter lists will be used as a fallback for comparing them.
 	 */
 	class Alphanumeric implements MethodOrderer {
 
@@ -72,9 +73,19 @@ public interface MethodOrderer {
 			Method method2 = descriptor2.getTestMethod();
 
 			int result = method1.getName().compareTo(method2.getName());
-			// TODO Fallback to (name + formal argument list) instead of toString().
-			return (result != 0) ? result : method1.toString().compareTo(method2.toString());
+			if (result != 0) {
+				return result;
+			}
+
+			// else
+			return signature(method1).compareTo(signature(method2));
 		};
+
+		private static String signature(Method method) {
+			// We intentionally do not use ReflectionUtils.getFullyQualifiedMethodName()
+			// here since we want to ignore the class name.
+			return String.format("%s(%s)", method.getName(), ClassUtils.nullSafeToString(method.getParameterTypes()));
+		}
 	}
 
 	/**
