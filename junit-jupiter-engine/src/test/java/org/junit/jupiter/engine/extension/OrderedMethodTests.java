@@ -15,12 +15,16 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.MethodOrderer.Random;
@@ -34,7 +38,10 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.jupiter.engine.TrackLogRecords;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ClassUtils;
+import org.mockito.Mockito;
 
 /**
  * Integration tests that verify support for custom test method execution order
@@ -108,6 +115,48 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 
 		// We assume that at least 3 out of 10 are different...
 		assertThat(uniqueSequences.size()).isGreaterThanOrEqualTo(3);
+	}
+
+	@Test
+	@TrackLogRecords
+	void misbehavingMethodOrdererThatAddsElements(LogRecordListener listener) {
+		Class<?> testClass = MisbehavingByAddingTestCase.class;
+
+		executeTestsForClass(testClass).tests().assertStatistics(stats -> stats.succeeded(2));
+
+		assertThat(callSequence).containsExactlyInAnyOrder("test1()", "test2()");
+
+		String expectedMessage = "MethodOrderer [" + MisbehavingByAdding.class.getName()
+				+ "] added 2 MethodDescriptor(s) for test class [" + testClass.getName() + "] which will be ignored.";
+
+		assertExpectedLogMessage(listener, expectedMessage);
+	}
+
+	@Test
+	@TrackLogRecords
+	void misbehavingMethodOrdererThatRemovesElements(LogRecordListener listener) {
+		Class<?> testClass = MisbehavingByRemovingTestCase.class;
+
+		executeTestsForClass(testClass).tests().assertStatistics(stats -> stats.succeeded(3));
+
+		assertThat(callSequence).containsExactlyInAnyOrder("test1()", "test2()", "test3()");
+
+		String expectedMessage = "MethodOrderer [" + MisbehavingByRemoving.class.getName()
+				+ "] removed 2 MethodDescriptor(s) for test class [" + testClass.getName()
+				+ "] which will be retained with arbitrary ordering.";
+
+		assertExpectedLogMessage(listener, expectedMessage);
+	}
+
+	private void assertExpectedLogMessage(LogRecordListener listener, String expectedMessage) {
+		// @formatter:off
+		assertThat(listener.stream()
+			.filter(logRecord -> logRecord.getLevel() == Level.WARNING)
+			.map(LogRecord::getMessage)
+			.filter(expectedMessage::equals)
+			.count()
+		).isEqualTo(1);
+		// @formatter:on
 	}
 
 	// -------------------------------------------------------------------------
@@ -257,6 +306,68 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 
 		@RepeatedTest(1)
 		void test5() {
+		}
+	}
+
+	@TestMethodOrder(MisbehavingByAdding.class)
+	static class MisbehavingByAddingTestCase {
+
+		@BeforeEach
+		void trackInvocations(TestInfo testInfo) {
+			callSequence.add(testInfo.getDisplayName());
+		}
+
+		@Test
+		void test1() {
+		}
+
+		@Test
+		void test2() {
+		}
+	}
+
+	@TestMethodOrder(MisbehavingByRemoving.class)
+	static class MisbehavingByRemovingTestCase {
+
+		@BeforeEach
+		void trackInvocations(TestInfo testInfo) {
+			callSequence.add(testInfo.getDisplayName());
+		}
+
+		@Test
+		void test1() {
+		}
+
+		@Test
+		void test2() {
+		}
+
+		@Test
+		void test3() {
+		}
+	}
+
+	static class MisbehavingByAdding implements MethodOrderer {
+
+		@Override
+		public void orderMethods(List<? extends MethodDescriptor> methodDescriptors) {
+			methodDescriptors.add(mock(MethodDescriptor.class));
+			methodDescriptors.add(mock(MethodDescriptor.class));
+		}
+
+		@SuppressWarnings("unchecked")
+		static <T> T mock(Class<? super T> type) {
+			return (T) Mockito.mock(type);
+		}
+
+	}
+
+	static class MisbehavingByRemoving implements MethodOrderer {
+
+		@Override
+		public void orderMethods(List<? extends MethodDescriptor> methodDescriptors) {
+			methodDescriptors.remove(0);
+			methodDescriptors.remove(0);
 		}
 	}
 

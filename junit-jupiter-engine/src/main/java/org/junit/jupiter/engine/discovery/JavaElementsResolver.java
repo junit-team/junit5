@@ -303,9 +303,26 @@ class JavaElementsResolver {
 							.map(DefaultMethodDescriptor::new)//
 							.collect(toCollection(ArrayList::new));
 
+					// Make a local copy for later validation
+					Set<DefaultMethodDescriptor> originalMethodDescriptors = new LinkedHashSet<>(methodDescriptors);
+
 					methodOrderer.orderMethods(methodDescriptors);
 
+					int difference = methodDescriptors.size() - originalMethodDescriptors.size();
+
+					if (difference > 0) {
+						logger.warn(() -> String.format(
+							"MethodOrderer [%s] added %s MethodDescriptor(s) for test class [%s] which will be ignored.",
+							methodOrderer.getClass().getName(), difference, testClass.getName()));
+					}
+					else if (difference < 0) {
+						logger.warn(() -> String.format(
+							"MethodOrderer [%s] removed %s MethodDescriptor(s) for test class [%s] which will be retained with arbitrary ordering.",
+							methodOrderer.getClass().getName(), -difference, testClass.getName()));
+					}
+
 					Set<TestDescriptor> sortedTestDescriptors = methodDescriptors.stream()//
+							.filter(originalMethodDescriptors::contains)//
 							.map(DefaultMethodDescriptor::getTestDescriptor)//
 							.collect(toCollection(LinkedHashSet::new));
 
