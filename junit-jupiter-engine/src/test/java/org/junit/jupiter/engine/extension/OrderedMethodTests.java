@@ -11,7 +11,6 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import java.util.HashSet;
@@ -34,7 +33,6 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.platform.testkit.ExecutionResults;
 
 /**
  * Integration tests that verify support for custom test method execution order
@@ -55,10 +53,10 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void alphanumeric() {
-		ExecutionResults executionResults = executeTestsForClass(AlphanumericTestCase.class);
+		var tests = executeTestsForClass(AlphanumericTestCase.class).tests();
 
-		assertEquals(callSequence.size(), executionResults.getTestsStartedCount(), "# tests started");
-		assertEquals(callSequence.size(), executionResults.getTestsSuccessfulCount(), "# tests succeeded");
+		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
 		assertThat(callSequence).containsExactly("$", "AAA", "ZZ_Top", "___", "a1", "a2", "b", "zzz");
 	}
 
@@ -73,10 +71,10 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private void assertOrderAnnotationSupport(Class<?> testClass) {
-		ExecutionResults executionResults = executeTestsForClass(testClass);
+		var tests = executeTestsForClass(testClass).tests();
 
-		assertEquals(callSequence.size(), executionResults.getTestsStartedCount(), "# tests started");
-		assertEquals(callSequence.size(), executionResults.getTestsSuccessfulCount(), "# tests succeeded");
+		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
 		assertThat(callSequence).containsExactly("test1", "test2", "test3", "test4", "test5", "test6");
 	}
 
@@ -87,11 +85,11 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 		for (int i = 0; i < 10; i++) {
 			callSequence.clear();
 
-			ExecutionResults executionResults = executeTestsForClass(RandomTestCase.class);
-			uniqueSequences.add(callSequence.stream().collect(Collectors.joining(",")));
+			var tests = executeTestsForClass(RandomTestCase.class).tests();
 
-			assertEquals(callSequence.size(), executionResults.getTestsStartedCount(), "# tests started");
-			assertEquals(callSequence.size(), executionResults.getTestsSuccessfulCount(), "# tests succeeded");
+			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+			uniqueSequences.add(callSequence.stream().collect(Collectors.joining(",")));
 		}
 
 		// We assume that at least 3 out of 10 are different...
