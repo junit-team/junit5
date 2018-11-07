@@ -12,7 +12,11 @@ package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -36,11 +40,13 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.TestReporter;
-import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ClassUtils;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.engine.EngineTestKit;
+import org.junit.platform.testkit.engine.Events;
 import org.mockito.Mockito;
 
 /**
@@ -49,15 +55,15 @@ import org.mockito.Mockito;
  *
  * @since 5.4
  */
-class OrderedMethodTests extends AbstractJupiterTestEngineTests {
+class OrderedMethodTests {
 
-	// TODO Test concurrent execution.
-
-	private static final Set<String> callSequence = new LinkedHashSet<>();
+	private static final Set<String> callSequence = Collections.synchronizedSet(new LinkedHashSet<>());
+	private static final Set<String> threadNames = Collections.synchronizedSet(new LinkedHashSet<>());
 
 	@BeforeEach
 	void clearCallSequence() {
 		callSequence.clear();
+		threadNames.clear();
 	}
 
 	@Test
@@ -73,12 +79,13 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 		// on the class names.
 		assertThat(testClass.getSuperclass().getName()).isGreaterThan(testClass.getName());
 
-		var tests = executeTestsForClass(AlphanumericTestCase.class).tests();
+		var tests = executeTestsInParallel(AlphanumericTestCase.class);
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
 		assertThat(callSequence).containsExactly("$()", "AAA()", "AAA(org.junit.jupiter.api.TestInfo)",
 			"AAA(org.junit.jupiter.api.TestReporter)", "ZZ_Top()", "___()", "a1()", "a2()", "b()", "c()", "zzz()");
+		assertThat(threadNames).hasSize(1);
 	}
 
 	@Test
@@ -92,11 +99,12 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private void assertOrderAnnotationSupport(Class<?> testClass) {
-		var tests = executeTestsForClass(testClass).tests();
+		var tests = executeTestsInParallel(testClass);
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
 		assertThat(callSequence).containsExactly("test1", "test2", "test3", "test4", "test5", "test6");
+		assertThat(threadNames).hasSize(1);
 	}
 
 	@Test
@@ -106,7 +114,7 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 		for (int i = 0; i < 10; i++) {
 			callSequence.clear();
 
-			var tests = executeTestsForClass(RandomTestCase.class).tests();
+			var tests = executeTestsInParallel(RandomTestCase.class);
 
 			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -115,6 +123,8 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 
 		// We assume that at least 3 out of 10 are different...
 		assertThat(uniqueSequences.size()).isGreaterThanOrEqualTo(3);
+		// and that at least 2 different threads were used...
+		assertThat(threadNames).size().isGreaterThanOrEqualTo(2);
 	}
 
 	@Test
@@ -122,7 +132,7 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 	void misbehavingMethodOrdererThatAddsElements(LogRecordListener listener) {
 		Class<?> testClass = MisbehavingByAddingTestCase.class;
 
-		executeTestsForClass(testClass).tests().assertStatistics(stats -> stats.succeeded(2));
+		executeTestsInParallel(testClass).assertStatistics(stats -> stats.succeeded(2));
 
 		assertThat(callSequence).containsExactlyInAnyOrder("test1()", "test2()");
 
@@ -137,7 +147,7 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 	void misbehavingMethodOrdererThatRemovesElements(LogRecordListener listener) {
 		Class<?> testClass = MisbehavingByRemovingTestCase.class;
 
-		executeTestsForClass(testClass).tests().assertStatistics(stats -> stats.succeeded(3));
+		executeTestsInParallel(testClass).assertStatistics(stats -> stats.succeeded(3));
 
 		assertThat(callSequence).containsExactlyInAnyOrder("test1()", "test2()", "test3()");
 
@@ -157,6 +167,17 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 			.count()
 		).isEqualTo(1);
 		// @formatter:on
+	}
+
+	private Events executeTestsInParallel(Class<?> testClass) {
+		// @formatter:off
+		LauncherDiscoveryRequest discoveryRequest = request()
+				.selectors(selectClass(testClass))
+				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true")
+				.build();
+		// @formatter:on
+
+		return EngineTestKit.execute("junit-jupiter", discoveryRequest).tests();
 	}
 
 	// -------------------------------------------------------------------------
@@ -183,6 +204,7 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 				ClassUtils.nullSafeToString(method.getParameterTypes()));
 
 			callSequence.add(signature);
+			threadNames.add(Thread.currentThread().getName());
 		}
 
 		@TestFactory
@@ -230,6 +252,7 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 		@BeforeEach
 		void trackInvocations(TestInfo testInfo) {
 			callSequence.add(testInfo.getDisplayName());
+			threadNames.add(Thread.currentThread().getName());
 		}
 
 		@Test
@@ -284,6 +307,7 @@ class OrderedMethodTests extends AbstractJupiterTestEngineTests {
 		@BeforeEach
 		void trackInvocations(TestInfo testInfo) {
 			callSequence.add(testInfo.getDisplayName());
+			threadNames.add(Thread.currentThread().getName());
 		}
 
 		@Test
