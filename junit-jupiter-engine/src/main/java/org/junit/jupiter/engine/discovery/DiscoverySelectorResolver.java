@@ -73,13 +73,15 @@ public class DiscoverySelectorResolver {
 
 	private JavaElementsResolver createJavaElementsResolver(ConfigurationParameters configurationParameters,
 			TestDescriptor engineDescriptor, ClassFilter classFilter) {
+
 		Set<ElementResolver> resolvers = new LinkedHashSet<>();
 		resolvers.add(new TestContainerResolver(configurationParameters));
 		resolvers.add(new NestedTestsResolver(configurationParameters));
 		resolvers.add(new TestMethodResolver());
 		resolvers.add(new TestFactoryMethodResolver());
 		resolvers.add(new TestTemplateMethodResolver());
-		return new JavaElementsResolver(engineDescriptor, classFilter, resolvers);
+
+		return new JavaElementsResolver(engineDescriptor, configurationParameters, classFilter, resolvers);
 	}
 
 }

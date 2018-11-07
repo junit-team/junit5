@@ -47,6 +47,7 @@ import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassFilter;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.UniqueId.Segment;
@@ -81,11 +82,15 @@ class JavaElementsResolver {
 	private static final IsInnerClass isInnerClass = new IsInnerClass();
 
 	private final TestDescriptor engineDescriptor;
+	private final ConfigurationParameters configurationParameters;
 	private final ClassFilter classFilter;
 	private final Set<ElementResolver> resolvers;
 
-	JavaElementsResolver(TestDescriptor engineDescriptor, ClassFilter classFilter, Set<ElementResolver> resolvers) {
+	JavaElementsResolver(TestDescriptor engineDescriptor, ConfigurationParameters configurationParameters,
+			ClassFilter classFilter, Set<ElementResolver> resolvers) {
+
 		this.engineDescriptor = engineDescriptor;
+		this.configurationParameters = configurationParameters;
 		this.classFilter = classFilter;
 		this.resolvers = resolvers;
 	}
@@ -306,7 +311,8 @@ class JavaElementsResolver {
 					// Make a local copy for later validation
 					Set<DefaultMethodDescriptor> originalMethodDescriptors = new LinkedHashSet<>(methodDescriptors);
 
-					methodOrderer.orderMethods(methodDescriptors);
+					methodOrderer.orderMethods(
+						new DefaultMethodOrdererContext(methodDescriptors, testClass, this.configurationParameters));
 
 					int difference = methodDescriptors.size() - originalMethodDescriptors.size();
 

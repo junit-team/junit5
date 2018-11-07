@@ -12,23 +12,25 @@ package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ClassUtils;
 
 /**
  * @since 5.4
+ * @see MethodOrdererContext
  */
 @API(status = EXPERIMENTAL, since = "5.4")
 public interface MethodOrderer {
 
-	void orderMethods(List<? extends MethodDescriptor> methodDescriptors);
+	void orderMethods(MethodOrdererContext context);
 
 	/**
 	 * Get the <em>default</em> {@link ExecutionMode} for the annotated class.
@@ -48,9 +50,55 @@ public interface MethodOrderer {
 
 	interface MethodDescriptor {
 
-		Class<?> getTestClass();
+		/**
+		 * Get the method for this descriptor.
+		 *
+		 * @return the method; never {@code null}
+		 */
+		Method getMethod();
 
-		Method getTestMethod();
+		/**
+		 * Determine if an annotation of {@code annotationType} is either
+		 * <em>present</em> or <em>meta-present</em> on the {@link Method} for
+		 * this descriptor.
+		 *
+		 * @param annotationType the annotation type to search for; never {@code null}
+		 * @return {@code true} if the annotation is present or meta-present
+		 * @see #findAnnotation(Class)
+		 * @see #findRepeatableAnnotations(Class)
+		 */
+		boolean isAnnotated(Class<? extends Annotation> annotationType);
+
+		/**
+		 * Find the first annotation of {@code annotationType} that is either
+		 * <em>present</em> or <em>meta-present</em> on the {@link Method} for
+		 * this descriptor.
+		 *
+		 * @param <A> the annotation type
+		 * @param annotationType the annotation type to search for; never {@code null}
+		 * @return an {@code Optional} containing the annotation; never {@code null} but
+		 * potentially empty
+		 * @see #isAnnotated(Class)
+		 * @see #findRepeatableAnnotations(Class)
+		 */
+		<A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType);
+
+		/**
+		 * Find all <em>repeatable</em> {@linkplain Annotation annotations} of
+		 * {@code annotationType} that are either <em>present</em> or
+		 * <em>meta-present</em> on the {@link Method} for this descriptor.
+		 *
+		 * @param <A> the annotation type
+		 * @param annotationType the repeatable annotation type to search for; never
+		 * {@code null}
+		 * @return the list of all such annotations found; neither {@code null} nor
+		 * mutable, but potentially empty
+		 * @since 5.1.1
+		 * @see #isAnnotated(Class)
+		 * @see #findAnnotation(Class)
+		 * @see java.lang.annotation.Repeatable
+		 */
+		<A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType);
 
 	}
 
@@ -65,13 +113,13 @@ public interface MethodOrderer {
 	class Alphanumeric implements MethodOrderer {
 
 		@Override
-		public void orderMethods(List<? extends MethodDescriptor> methodDescriptors) {
-			methodDescriptors.sort(comparator);
+		public void orderMethods(MethodOrdererContext context) {
+			context.getMethodDescriptors().sort(comparator);
 		}
 
 		private static final Comparator<MethodDescriptor> comparator = (descriptor1, descriptor2) -> {
-			Method method1 = descriptor1.getTestMethod();
-			Method method2 = descriptor2.getTestMethod();
+			Method method1 = descriptor1.getMethod();
+			Method method2 = descriptor2.getMethod();
 
 			int result = method1.getName().compareTo(method2.getName());
 			if (result != 0) {
@@ -97,18 +145,15 @@ public interface MethodOrderer {
 	class OrderAnnotation implements MethodOrderer {
 
 		@Override
-		public void orderMethods(List<? extends MethodDescriptor> methodDescriptors) {
-			methodDescriptors.sort(comparator);
+		public void orderMethods(MethodOrdererContext context) {
+			context.getMethodDescriptors().sort(comparator);
 		}
 
-		private static final Comparator<MethodDescriptor> comparator = (descriptor1, descriptor2) -> {
-			return Integer.compare(getOrder(descriptor1), getOrder(descriptor2));
-		};
+		private static final Comparator<MethodDescriptor> comparator = //
+			(descriptor1, descriptor2) -> Integer.compare(getOrder(descriptor1), getOrder(descriptor2));
 
 		private static Integer getOrder(MethodDescriptor descriptor) {
-			return AnnotationUtils.findAnnotation(descriptor.getTestMethod(), Order.class)//
-					.map(Order::value)//
-					.orElse(Integer.MAX_VALUE);
+			return descriptor.findAnnotation(Order.class).map(Order::value).orElse(Integer.MAX_VALUE);
 		}
 	}
 
@@ -121,8 +166,12 @@ public interface MethodOrderer {
 	class Random implements MethodOrderer {
 
 		@Override
-		public void orderMethods(List<? extends MethodDescriptor> methodDescriptors) {
-			Collections.shuffle(methodDescriptors);
+		public void orderMethods(MethodOrdererContext context) {
+			long seed = context.getConfigurationParameter("junit.jupiter.execution.order.random.seed")//
+					.map(Long::valueOf)//
+					.orElse(System.nanoTime());
+
+			Collections.shuffle(context.getMethodDescriptors(), new java.util.Random(seed));
 		}
 
 		/**

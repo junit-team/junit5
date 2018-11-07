@@ -19,7 +19,6 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -32,6 +31,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.MethodOrderer.Random;
+import org.junit.jupiter.api.MethodOrdererContext;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.RepeatedTest;
@@ -374,9 +374,9 @@ class OrderedMethodTests {
 	static class MisbehavingByAdding implements MethodOrderer {
 
 		@Override
-		public void orderMethods(List<? extends MethodDescriptor> methodDescriptors) {
-			methodDescriptors.add(mock(MethodDescriptor.class));
-			methodDescriptors.add(mock(MethodDescriptor.class));
+		public void orderMethods(MethodOrdererContext context) {
+			context.getMethodDescriptors().add(mock(MethodDescriptor.class));
+			context.getMethodDescriptors().add(mock(MethodDescriptor.class));
 		}
 
 		@SuppressWarnings("unchecked")
@@ -389,9 +389,9 @@ class OrderedMethodTests {
 	static class MisbehavingByRemoving implements MethodOrderer {
 
 		@Override
-		public void orderMethods(List<? extends MethodDescriptor> methodDescriptors) {
-			methodDescriptors.remove(0);
-			methodDescriptors.remove(0);
+		public void orderMethods(MethodOrdererContext context) {
+			context.getMethodDescriptors().remove(0);
+			context.getMethodDescriptors().remove(0);
 		}
 	}
 

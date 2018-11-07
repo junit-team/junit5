@@ -10,13 +10,21 @@
 
 package org.junit.jupiter.engine.discovery;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.MethodOrderer.MethodDescriptor;
 import org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor;
+import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
+ * Default implementation of {@link MethodDescriptor}, backed by
+ * a {@link MethodBasedTestDescriptor}.
+ *
  * @since 5.4
  */
 class DefaultMethodDescriptor implements MethodDescriptor {
@@ -27,28 +35,36 @@ class DefaultMethodDescriptor implements MethodDescriptor {
 		this.testDescriptor = testDescriptor;
 	}
 
-	public MethodBasedTestDescriptor getTestDescriptor() {
+	MethodBasedTestDescriptor getTestDescriptor() {
 		return testDescriptor;
 	}
 
 	@Override
-	public final Class<?> getTestClass() {
-		return this.testDescriptor.getTestClass();
-	}
-
-	@Override
-	public final Method getTestMethod() {
+	public final Method getMethod() {
 		return this.testDescriptor.getTestMethod();
 	}
 
 	@Override
+	public boolean isAnnotated(Class<? extends Annotation> annotationType) {
+		Preconditions.notNull(annotationType, "annotationType must not be null");
+		return AnnotationUtils.isAnnotated(getMethod(), annotationType);
+	}
+
+	@Override
+	public <A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType) {
+		Preconditions.notNull(annotationType, "annotationType must not be null");
+		return AnnotationUtils.findAnnotation(getMethod(), annotationType);
+	}
+
+	@Override
+	public <A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType) {
+		Preconditions.notNull(annotationType, "annotationType must not be null");
+		return AnnotationUtils.findRepeatableAnnotations(getMethod(), annotationType);
+	}
+
+	@Override
 	public String toString() {
-		// @formatter:off
-		return new ToStringBuilder(this)
-				.append("testClass", getTestClass().getName())
-				.append("testMethod", getTestMethod().toGenericString())
-				.toString();
-		// @formatter:on
+		return new ToStringBuilder(this).append("method", getMethod().toGenericString()).toString();
 	}
 
 }
