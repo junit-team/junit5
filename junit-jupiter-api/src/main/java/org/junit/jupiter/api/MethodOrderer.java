@@ -58,8 +58,9 @@ public interface MethodOrderer {
 	 * {@code MethodOrderer} that sorts methods alphanumerically based on their
 	 * names using {@link String#compareTo(String)}.
 	 *
-	 * <p>If two methods have the same name, the combinations of their names and
-	 * formal parameter lists will be used as a fallback for comparing them.
+	 * <p>If two methods have the same name, a {@code String} representation of
+	 * their formal parameter lists will be used as a fallback for comparing the
+	 * methods.
 	 */
 	class Alphanumeric implements MethodOrderer {
 
@@ -78,13 +79,11 @@ public interface MethodOrderer {
 			}
 
 			// else
-			return signature(method1).compareTo(signature(method2));
+			return parameterList(method1).compareTo(parameterList(method2));
 		};
 
-		private static String signature(Method method) {
-			// We intentionally do not use ReflectionUtils.getFullyQualifiedMethodName()
-			// here since we want to ignore the class name.
-			return String.format("%s(%s)", method.getName(), ClassUtils.nullSafeToString(method.getParameterTypes()));
+		private static String parameterList(Method method) {
+			return ClassUtils.nullSafeToString(method.getParameterTypes());
 		}
 	}
 
