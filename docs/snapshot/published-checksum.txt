@@ -34,7 +34,6 @@
 105d9e4b87226ac563af50df51a3ff70  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestIdentifier.java
 11cb748ddb7df02e0af8de08c2aca999  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingConsumer.java
 1222e5d9a1ded9b30a69bcd10c767abb  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ValueSource.java
-1384f3f23118d58dd8cf1f43249e559f  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LogRecordListener.java
 13c76a7853cbb65c8d2f2330aac9495d  documentation/src/docs/asciidoc/user-guide/api-evolution.adoc
 13c84ca004aedf3a0418ddd63fb903e3  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/UniqueIdSelectorResolver.java
 14b0964d557e7a254bff02d75cadfed7  documentation/src/test/java/example/RepeatedTestsDemo.java
@@ -57,6 +56,7 @@
 1d5d321dae8c30c3e316ebe58f87e5da  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ResourceAccessMode.java
 1dd8c475c3ad90107a13058c1dd93a41  junit-platform-commons/src/main/java/org/junit/platform/commons/annotation/Testable.java
 1e0e62c3f17efef6283926d0edbccfb1  documentation/src/test/java/example/JUnit4Tests.java
+1ea4159a98ad9184aac3536719311669  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LogRecordListener.java
 1eb00f7d08d35798b26c8b75345f62fe  documentation/src/test/java/example/ParameterizedTestDemo.java
 1f0fab51c248b28ca2b293cd874938b3  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/ArgumentsAggregator.java
 1f76043ff5e024d38ae0981af80a339b  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/PackageNameFilter.java
