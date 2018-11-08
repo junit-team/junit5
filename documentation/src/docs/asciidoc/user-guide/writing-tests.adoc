@@ -24,8 +24,9 @@ module.
 | `@ParameterizedTest`     | Denotes that a method is a <<writing-tests-parameterized-tests, parameterized test>>. Such methods are _inherited_ unless they are _overridden_.
 | `@RepeatedTest`          | Denotes that a method is a test template for a <<writing-tests-repeated-tests, repeated test>>. Such methods are _inherited_ unless they are _overridden_.
 | `@TestFactory`           | Denotes that a method is a test factory for <<writing-tests-dynamic-tests, dynamic tests>>. Such methods are _inherited_ unless they are _overridden_.
-| `@TestInstance`          | Used to configure the <<writing-tests-test-instance-lifecycle, test instance lifecycle>> for the annotated test class. Such annotations are _inherited_.
 | `@TestTemplate`          | Denotes that a method is a <<writing-tests-test-templates, template for test cases>> designed to be invoked multiple times depending on the number of invocation contexts returned by the registered <<extensions-test-templates, providers>>. Such methods are _inherited_ unless they are _overridden_.
+| `@TestMethodOrder`       | Used to configure the <<writing-tests-test-execution-order, test method execution order>> for the annotated test class; similar to JUnit 4's `@FixMethodOrder`. Such annotations are _inherited_.
+| `@TestInstance`          | Used to configure the <<writing-tests-test-instance-lifecycle, test instance lifecycle>> for the annotated test class. Such annotations are _inherited_.
 | `@DisplayName`           | Declares a custom display name for the test class or test method. Such annotations are not _inherited_.
 | `@DisplayNameGeneration` | Declares a custom display name generator for the test class. Such annotations are _inherited_.
 | `@BeforeEach`            | Denotes that the annotated method should be executed _before_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@Before`. Such methods are _inherited_ unless they are _overridden_.
@@ -361,6 +362,43 @@ characters have been removed.
 [source,java,indent=0]
 ----
 include::{testDir}/example/TaggingDemo.java[tags=user_guide]
+----
+
+[[writing-tests-test-execution-order]]
+=== Test Execution Order
+
+By default, test methods will be ordered using a default algorithm that is deterministic
+but intentionally nonobvious. This ensures that subsequent runs of a test suite execute
+test methods in the same order, thereby allowing for repeatable builds.
+
+NOTE: In this context, a _test method_ is any instance method that is directly or
+meta-annotated with `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or
+`@TestTemplate`.
+
+Although true _unit tests_ typically should not rely on the order in which they are
+executed, there are times when it is necessary to enforce a specific test method
+execution order -- for example, when writing _integration tests_ or _functional tests_
+where the sequence of the tests is important, especially in conjunction
+`@TestInstance(Lifecycle.PER_CLASS)`.
+
+To control the order in which test methods are executed, annotate your test class or test
+interface with `{TestMethodOrder}` and specify the desired `{MethodOrderer}`
+implementation. You can implement your own custom `MethodOrderer` or use one of the
+following built-in `MethodOrderer` implementations.
+
+* `{Alphanumeric}`: sorts test methods _alphanumerically_ based on their names and formal
+  parameter lists.
+* `{OrderAnnotation}`: sorts test methods _numerically_ based on values specified via the
+  `{Order}` annotation.
+* `{Random}`: orders test methods _pseudo-randomly_ and supports configuration of a
+  custom _seed_.
+
+The following example demonstrates how to guarantee that test methods are executed in the
+order specified via the `@Order` annotation.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/OrderedTestsDemo.java[tags=user_guide]
 ----
 
 [[writing-tests-test-instance-lifecycle]]
