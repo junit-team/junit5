@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -36,12 +36,9 @@ class MultipleTestableAnnotationsTests extends AbstractJupiterTestEngineTests {
 		discoverTests(request().selectors(selectClass(TestCase.class)).build());
 
 		// @formatter:off
-		assertThat(listener.stream()
-			.filter(logRecord -> logRecord.getLevel() == Level.WARNING)
+		assertTrue(listener.stream(Level.WARNING)
 			.map(LogRecord::getMessage)
-			.filter(m -> m.matches("Possible configuration error: method .+ resulted in multiple TestDescriptors .+"))
-			.count()
-		).isEqualTo(1);
+			.anyMatch(m -> m.matches("Possible configuration error: method .+ resulted in multiple TestDescriptors .+")));
 		// @formatter:on
 	}
 

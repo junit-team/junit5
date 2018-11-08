@@ -50,9 +50,39 @@ public class LogRecordListener {
 	 * {@code LogRecord} should not be updated by the client application. Thus,
 	 * the {@code LogRecords} in the returned stream should only be inspected for
 	 * testing purposes and not modified in any way.
+	 *
+	 * @see #stream(Level)
+	 * @see #stream(Class)
+	 * @see #stream(Class, Level)
 	 */
 	public Stream<LogRecord> stream() {
 		return this.logRecords.get().stream();
+	}
+
+	/**
+	 * Get a stream of {@link LogRecord log records} that have been
+	 * {@linkplain #logRecordSubmitted submitted} to this listener by the current
+	 * thread at the given log level.
+	 *
+	 * <p>As stated in the Javadoc for {@code LogRecord}, a submitted
+	 * {@code LogRecord} should not be updated by the client application. Thus,
+	 * the {@code LogRecords} in the returned stream should only be inspected for
+	 * testing purposes and not modified in any way.
+	 *
+	 * @param level the log level for which to get the log records; never {@code null}
+	 * @since 1.4
+	 * @see #stream()
+	 * @see #stream(Class)
+	 * @see #stream(Class, Level)
+	 */
+	public Stream<LogRecord> stream(Level level) {
+		// NOTE: we cannot use org.junit.platform.commons.util.Preconditions here
+		// since that would introduce a package cycle.
+		if (level == null) {
+			throw new JUnitException("Level must not be null");
+		}
+
+		return stream().filter(logRecord -> logRecord.getLevel() == level);
 	}
 
 	/**
@@ -66,6 +96,9 @@ public class LogRecordListener {
 	 * testing purposes and not modified in any way.
 	 *
 	 * @param clazz the class for which to get the log records; never {@code null}
+	 * @see #stream()
+	 * @see #stream(Level)
+	 * @see #stream(Class, Level)
 	 */
 	public Stream<LogRecord> stream(Class<?> clazz) {
 		// NOTE: we cannot use org.junit.platform.commons.util.Preconditions here
@@ -90,6 +123,9 @@ public class LogRecordListener {
 	 *
 	 * @param clazz the class for which to get the log records; never {@code null}
 	 * @param level the log level for which to get the log records; never {@code null}
+	 * @see #stream()
+	 * @see #stream(Level)
+	 * @see #stream(Class)
 	 */
 	public Stream<LogRecord> stream(Class<?> clazz, Level level) {
 		// NOTE: we cannot use org.junit.platform.commons.util.Preconditions here
