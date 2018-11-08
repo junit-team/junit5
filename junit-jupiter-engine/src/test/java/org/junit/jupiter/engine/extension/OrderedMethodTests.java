@@ -11,7 +11,9 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.junit.jupiter.api.MethodOrderer.Random.RANDOM_SEED_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -19,6 +21,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -130,6 +133,50 @@ class OrderedMethodTests {
 
 	@Test
 	@TrackLogRecords
+	void randomWithBogusSeed(LogRecordListener listener) {
+		String seed = "explode";
+		String expectedMessage = "Failed to convert configuration parameter [" + Random.RANDOM_SEED_PROPERTY_NAME
+				+ "] with value [" + seed + "] to a long. Using System.nanoTime() as fallback.";
+
+		Set<String> uniqueSequences = new HashSet<>();
+
+		for (int i = 0; i < 10; i++) {
+			callSequence.clear();
+			listener.clear();
+
+			var tests = executeTestsWithRandomSeed(RandomTestCase.class, seed);
+
+			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+			uniqueSequences.add(callSequence.stream().collect(Collectors.joining(",")));
+
+			// @formatter:off
+			assertTrue(listener.stream(Random.class, Level.WARNING)
+				.map(LogRecord::getMessage)
+				.anyMatch(expectedMessage::equals));
+			// @formatter:on
+		}
+
+		// We assume that at least 3 out of 10 are different...
+		assertThat(uniqueSequences.size()).isGreaterThanOrEqualTo(3);
+	}
+
+	@Test
+	void randomWithCustomSeed() {
+		for (int i = 0; i < 10; i++) {
+			callSequence.clear();
+
+			var tests = executeTestsWithRandomSeed(RandomTestCase.class, "42");
+
+			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+			// With a custom seed, the "randomness" must be the same for every iteration.
+			assertThat(callSequence).containsExactly("test2()", "test3()", "test4()", "repetition 1 of 1", "test1()");
+		}
+	}
+
+	@Test
+	@TrackLogRecords
 	void misbehavingMethodOrdererThatAddsElements(LogRecordListener listener) {
 		Class<?> testClass = MisbehavingByAddingTestCase.class;
 
@@ -161,20 +208,25 @@ class OrderedMethodTests {
 
 	private void assertExpectedLogMessage(LogRecordListener listener, String expectedMessage) {
 		// @formatter:off
-		assertThat(listener.stream()
-			.filter(logRecord -> logRecord.getLevel() == Level.WARNING)
+		assertTrue(listener.stream(Level.WARNING)
 			.map(LogRecord::getMessage)
-			.filter(expectedMessage::equals)
-			.count()
-		).isEqualTo(1);
+			.anyMatch(expectedMessage::equals));
 		// @formatter:on
 	}
 
 	private Events executeTestsInParallel(Class<?> testClass) {
+		return executeTests(testClass, Collections.singletonMap(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true"));
+	}
+
+	private Events executeTestsWithRandomSeed(Class<?> testClass, String seed) {
+		return executeTests(testClass, Collections.singletonMap(RANDOM_SEED_PROPERTY_NAME, seed));
+	}
+
+	private Events executeTests(Class<?> testClass, Map<String, String> configurationParameters) {
 		// @formatter:off
 		LauncherDiscoveryRequest discoveryRequest = request()
 				.selectors(selectClass(testClass))
-				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true")
+				.configurationParameters(configurationParameters)
 				.build();
 		// @formatter:on
 

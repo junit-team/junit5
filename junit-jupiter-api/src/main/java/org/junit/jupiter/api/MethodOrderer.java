@@ -15,9 +15,12 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassUtils;
 
 /**
@@ -108,11 +111,42 @@ public interface MethodOrderer {
 	 */
 	class Random implements MethodOrderer {
 
+		private static final Logger logger = LoggerFactory.getLogger(Random.class);
+
+		/**
+		 * Property name used to set the random seed used by this
+		 * {@code MethodOrderer}: {@value}
+		 *
+		 * <h3>Supported Values</h3>
+		 *
+		 * <p>Supported values include any string that can be converted to a
+		 * {@link Long} via {@link Long#valueOf(String)}.
+		 *
+		 * <p>If not specified, {@link System#nanoTime()} will be used.
+		 */
+		public static final String RANDOM_SEED_PROPERTY_NAME = "junit.jupiter.execution.order.random.seed";
+
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
-			long seed = context.getConfigurationParameter("junit.jupiter.execution.order.random.seed")//
-					.map(Long::valueOf)//
-					.orElse(System.nanoTime());
+			Long seed = null;
+
+			Optional<String> configurationParameter = context.getConfigurationParameter(RANDOM_SEED_PROPERTY_NAME);
+			if (configurationParameter.isPresent()) {
+				String value = configurationParameter.get();
+				try {
+					seed = Long.valueOf(value);
+				}
+				catch (NumberFormatException ex) {
+					logger.warn(ex,
+						() -> String.format("Failed to convert configuration parameter [%s] with value [%s] to a long. "
+								+ "Using System.nanoTime() as fallback.",
+							RANDOM_SEED_PROPERTY_NAME, value));
+				}
+			}
+
+			if (seed == null) {
+				seed = System.nanoTime();
+			}
 
 			Collections.shuffle(context.getMethodDescriptors(), new java.util.Random(seed));
 		}
