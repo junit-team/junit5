@@ -22,7 +22,44 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
+ * {@code @TestMethodOrder} is a type-level annotation that is used to configure
+ * a {@link #value MethodOrderer} for the <em>test methods</em> of the annotated
+ * test class or test interface.
+ *
+ * <p>In this context, the term "test method" refers to any method annotated with
+ * {@code @Test}, {@code @RepeatedTest}, {@code @ParameterizedTest},
+ * {@code @TestFactory}, or {@code @TestTemplate}.
+ *
+ * <p>If {@code @TestMethodOrder} is not explicitly declared on a test class,
+ * inherited from a parent class, or declared on a test interface implemented by
+ * a test class, test methods will be ordered using a default algorithm that is
+ * deterministic but intentionally nonobvious.
+ *
+ * <h4>Example Usage</h4>
+ *
+ * <p>The following demonstrates how to guarantee that test methods are executed
+ * in the order specified via the {@link Order @Order} annotation.
+ *
+ * <pre class="code">
+ * {@literal @}TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+ * class OrderedTests {
+ *
+ *     {@literal @}Test
+ *     {@literal @}Order(1)
+ *     void nullValues() {}
+ *
+ *     {@literal @}Test
+ *     {@literal @}Order(2)
+ *     void emptyValues() {}
+ *
+ *     {@literal @}Test
+ *     {@literal @}Order(3)
+ *     void validValues() {}
+ * }
+ * </pre>
+ *
  * @since 5.4
+ * @see MethodOrderer
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -31,6 +68,14 @@ import org.apiguardian.api.API;
 @API(status = EXPERIMENTAL, since = "5.4")
 public @interface TestMethodOrder {
 
+	/**
+	 * The {@link MethodOrderer} to use.
+	 *
+	 * @see MethodOrderer
+	 * @see MethodOrderer.Alphanumeric
+	 * @see MethodOrderer.OrderAnnotation
+	 * @see MethodOrderer.Random
+	 */
 	Class<? extends MethodOrderer> value();
 
 }
