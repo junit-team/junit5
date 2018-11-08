@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.MethodOrderer.MethodDescriptor;
 
 /**
  * {@code MethodOrdererContext} encapsulates the <em>context</em> in which

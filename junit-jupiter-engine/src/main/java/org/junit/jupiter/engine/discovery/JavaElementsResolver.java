@@ -299,7 +299,6 @@ class JavaElementsResolver {
 				.ifPresent(methodOrderer -> {
 
 					ExecutionMode defaultExecutionMode = toExecutionMode(methodOrderer.getDefaultExecutionMode());
-					// TODO Decide if we should set the default ExecutionMode for the class or individual methods.
 					classTestDescriptor.setDefaultChildExecutionMode(defaultExecutionMode);
 
 					List<DefaultMethodDescriptor> methodDescriptors = classTestDescriptor.getChildren().stream()//

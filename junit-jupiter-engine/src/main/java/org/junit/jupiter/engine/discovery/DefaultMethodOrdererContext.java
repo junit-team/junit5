@@ -13,7 +13,7 @@ package org.junit.jupiter.engine.discovery;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.MethodOrderer.MethodDescriptor;
+import org.junit.jupiter.api.MethodDescriptor;
 import org.junit.jupiter.api.MethodOrdererContext;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.ConfigurationParameters;
