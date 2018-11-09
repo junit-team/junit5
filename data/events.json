@@ -508,5 +508,15 @@
     "speakers": [
       "marcphilipp"
     ]
+  },
+  {
+    "title": "News from JUnit 5.x: From Revolution to Continuous Evolution",
+    "event": "JavaLand",
+    "date": "2019-03-19",
+    "location": "Brühl, Germany",
+    "link": "https://programm.javaland.eu/2019/#/scheduledEvent/569927",
+    "speakers": [
+      "marcphilipp"
+    ]
   }
 ]
