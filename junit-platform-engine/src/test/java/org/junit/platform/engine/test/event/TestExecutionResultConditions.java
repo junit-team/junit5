@@ -51,6 +51,10 @@ public class TestExecutionResultConditions {
 
 	}
 
+	public static Condition<Throwable> hasCause(Condition<Throwable> checked) {
+		return new Condition<>(throwable -> checked.matches(throwable.getCause()), "cause matches %s", checked);
+	}
+
 	public static Condition<TestExecutionResult> cause(Condition<? super Throwable> condition) {
 		return new Condition<>(where(TestExecutionResult::getThrowable, throwable -> {
 			return throwable.isPresent() && condition.matches(throwable.get());
