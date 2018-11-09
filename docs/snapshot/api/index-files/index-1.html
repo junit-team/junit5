@@ -278,6 +278,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/MethodOrderer.Alphanumeric.html#%3Cinit%3E()">Alphanumeric()</a></span> - Constructor for class org.junit.jupiter.api.<a href="../org/junit/jupiter/api/MethodOrderer.Alphanumeric.html" title="class in org.junit.jupiter.api">MethodOrderer.Alphanumeric</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/function/Try.html#andThen(java.util.function.Function)">andThen(Function&lt;V, Try&lt;U&gt;&gt;)</a></span> - Method in class org.junit.platform.commons.function.<a href="../org/junit/platform/commons/function/Try.html" title="class in org.junit.platform.commons.function">Try</a></dt>
+<dd>
+<div class="block">If this <code>Try</code> is a success, apply the supplied function to its
+ value and return the resulting <code>Try</code>; if this <code>Try</code> is a
+ failure, do nothing.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/function/Try.html#andThenTry(org.junit.platform.commons.function.Try.Transformer)">andThenTry(Try.Transformer&lt;V, U&gt;)</a></span> - Method in class org.junit.platform.commons.function.<a href="../org/junit/platform/commons/function/Try.html" title="class in org.junit.platform.commons.function">Try</a></dt>
+<dd>
+<div class="block">If this <code>Try</code> is a success, apply the supplied transformer to its
+ value and return a new successful or failed <code>Try</code> depending on the
+ transformer's outcome; if this <code>Try</code> is a failure, do nothing.</div>
+</dd>
 <dt><a href="../org/junit/jupiter/params/support/AnnotationConsumer.html" title="interface in org.junit.jupiter.params.support"><span class="typeNameLink">AnnotationConsumer</span></a>&lt;<a href="../org/junit/jupiter/params/support/AnnotationConsumer.html" title="type parameter in AnnotationConsumer">A</a> extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt; - Interface in <a href="../org/junit/jupiter/params/support/package-summary.html">org.junit.jupiter.params.support</a></dt>
 <dd>
 <div class="block"><code>AnnotationConsumer</code> is a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterface.html?is-external=true" title="class or interface in java.lang" class="externalLink">functional
@@ -319,6 +331,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/vintage/engine/support/UniqueIdReader.html#apply(org.junit.runner.Description)">apply(Description)</a></span> - Method in class org.junit.vintage.engine.support.<a href="../org/junit/vintage/engine/support/UniqueIdReader.html" title="class in org.junit.vintage.engine.support">UniqueIdReader</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/function/Try.Transformer.html#apply(S)">apply(S)</a></span> - Method in interface org.junit.platform.commons.function.<a href="../org/junit/platform/commons/function/Try.Transformer.html" title="interface in org.junit.platform.commons.function">Try.Transformer</a></dt>
+<dd>
+<div class="block">Apply this transformer to the supplied value.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/Filter.html#apply(T)">apply(T)</a></span> - Method in interface org.junit.platform.engine.<a href="../org/junit/platform/engine/Filter.html" title="interface in org.junit.platform.engine">Filter</a></dt>
 <dd>
 <div class="block">Apply this filter to the supplied object.</div>

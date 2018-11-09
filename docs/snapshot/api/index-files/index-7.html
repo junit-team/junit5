@@ -134,6 +134,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Get the arguments used for an invocation of the
  <code>@ParameterizedTest</code> method.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/function/Try.html#get()">get()</a></span> - Method in class org.junit.platform.commons.function.<a href="../org/junit/platform/commons/function/Try.html" title="class in org.junit.platform.commons.function">Try</a></dt>
+<dd>
+<div class="block">If this <code>Try</code> is a success, get the contained value; if this
+ <code>Try</code> is a failure, throw the contained exception.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/params/aggregator/ArgumentsAccessor.html#get(int)">get(int)</a></span> - Method in interface org.junit.jupiter.params.aggregator.<a href="../org/junit/jupiter/params/aggregator/ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator">ArgumentsAccessor</a></dt>
 <dd>
 <div class="block">Get the value of the argument at the given index as an <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Object</code></a>.</div>
@@ -786,6 +791,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/execution/NamespaceAwareStore.html#getOrComputeIfAbsent(K,java.util.function.Function,java.lang.Class)">getOrComputeIfAbsent(K, Function&lt;K, V&gt;, Class&lt;V&gt;)</a></span> - Method in class org.junit.jupiter.engine.execution.<a href="../org/junit/jupiter/engine/execution/NamespaceAwareStore.html" title="class in org.junit.jupiter.engine.execution">NamespaceAwareStore</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/function/Try.html#getOrThrow(java.util.function.Function)">getOrThrow(Function&lt;? super Exception, E&gt;)</a></span> - Method in class org.junit.platform.commons.function.<a href="../org/junit/platform/commons/function/Try.html" title="class in org.junit.platform.commons.function">Try</a></dt>
+<dd>
+<div class="block">If this <code>Try</code> is a success, get the contained value; if this
+ <code>Try</code> is a failure, call the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink"><code>Function</code></a> with the
+ contained exception and throw the resulting <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Exception</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/TestInstanceFactoryContext.html#getOuterInstance()">getOuterInstance()</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/TestInstanceFactoryContext.html" title="interface in org.junit.jupiter.api.extension">TestInstanceFactoryContext</a></dt>
 <dd>
 <div class="block">Get the instance of the outer class, if available.</div>

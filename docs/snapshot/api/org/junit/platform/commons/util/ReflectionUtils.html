@@ -27,8 +27,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9,"i29":9,"i30":9,"i31":9,"i32":9,"i33":9,"i34":9,"i35":9,"i36":9,"i37":9,"i38":9,"i39":9,"i40":9,"i41":9,"i42":9,"i43":9,"i44":9,"i45":9};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9,"i24":9,"i25":9,"i26":9,"i27":9,"i28":9,"i29":9,"i30":9,"i31":9,"i32":9,"i33":9,"i34":9,"i35":9,"i36":41,"i37":41,"i38":9,"i39":9,"i40":9,"i41":9,"i42":41,"i43":41,"i44":41,"i45":9,"i46":9,"i47":9,"i48":9,"i49":9,"i50":9,"i51":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -193,7 +193,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -444,15 +444,21 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <tr id="i36" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#loadClass(java.lang.String)">loadClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">Please use <a href="#tryToLoadClass(java.lang.String)"><code>tryToLoadClass(String)</code></a> instead.</div>
+</div>
+</td>
 </tr>
 <tr id="i37" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#loadClass(java.lang.String,java.lang.ClassLoader)">loadClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink">ClassLoader</a>&nbsp;classLoader)</code></th>
 <td class="colLast">
-<div class="block">Load a class by its <em>primitive name</em> or <em>fully qualified name</em>,
- using the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>ClassLoader</code></a>.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">Please use <a href="#tryToLoadClass(java.lang.String,java.lang.ClassLoader)"><code>tryToLoadClass(String, ClassLoader)</code></a>
+ instead.</div>
+</div>
 </td>
 </tr>
 <tr id="i38" class="altColor">
@@ -489,14 +495,19 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
               <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldName,
               T&nbsp;instance)</code></th>
 <td class="colLast">
-<div class="block">Read the value of a potentially inaccessible or nonexistent field.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">Please use <a href="#tryToReadFieldValue(java.lang.Class,java.lang.String,T)"><code>tryToReadFieldValue(Class, String, Object)</code></a>
+ instead.</div>
+</div>
 </td>
 </tr>
 <tr id="i43" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readFieldValue(java.lang.reflect.Field)">readFieldValue</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field)</code></th>
 <td class="colLast">
-<div class="block">Read the value of a potentially inaccessible static field.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">Please use <a href="#tryToReadFieldValue(java.lang.reflect.Field)"><code>tryToReadFieldValue(Field)</code></a> instead.</div>
+</div>
 </td>
 </tr>
 <tr id="i44" class="altColor">
@@ -504,13 +515,64 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readFieldValue(java.lang.reflect.Field,T)">readFieldValue</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field,
               T&nbsp;instance)</code></th>
 <td class="colLast">
-<div class="block">Read the value of a potentially inaccessible field.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">Please use <a href="#tryToReadFieldValue(java.lang.reflect.Field,java.lang.Object)"><code>tryToReadFieldValue(Field, Object)</code></a>
+ instead.</div>
+</div>
 </td>
 </tr>
 <tr id="i45" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#returnsVoid(java.lang.reflect.Method)">returnsVoid</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;method)</code></th>
 <td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i46" class="altColor">
+<td class="colFirst"><code>static <a href="../function/Try.html" title="class in org.junit.platform.commons.function">Try</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tryToGetMethod(java.lang.Class,java.lang.String,java.lang.Class...)">tryToGetMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName,
+              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;...&nbsp;parameterTypes)</code></th>
+<td class="colLast">
+<div class="block">Try to get the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> in the specified class with the specified
+ name and parameter types.</div>
+</td>
+</tr>
+<tr id="i47" class="rowColor">
+<td class="colFirst"><code>static <a href="../function/Try.html" title="class in org.junit.platform.commons.function">Try</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tryToLoadClass(java.lang.String)">tryToLoadClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i48" class="altColor">
+<td class="colFirst"><code>static <a href="../function/Try.html" title="class in org.junit.platform.commons.function">Try</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tryToLoadClass(java.lang.String,java.lang.ClassLoader)">tryToLoadClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink">ClassLoader</a>&nbsp;classLoader)</code></th>
+<td class="colLast">
+<div class="block">Try to load a class by its <em>primitive name</em> or <em>fully qualified
+ name</em>, using the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>ClassLoader</code></a>.</div>
+</td>
+</tr>
+<tr id="i49" class="rowColor">
+<td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="../function/Try.html" title="class in org.junit.platform.commons.function">Try</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tryToReadFieldValue(java.lang.Class,java.lang.String,T)">tryToReadFieldValue</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz,
+                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldName,
+                   T&nbsp;instance)</code></th>
+<td class="colLast">
+<div class="block">Try to read the value of a potentially inaccessible or nonexistent field.</div>
+</td>
+</tr>
+<tr id="i50" class="altColor">
+<td class="colFirst"><code>static <a href="../function/Try.html" title="class in org.junit.platform.commons.function">Try</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tryToReadFieldValue(java.lang.reflect.Field)">tryToReadFieldValue</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field)</code></th>
+<td class="colLast">
+<div class="block">Try to read the value of a potentially inaccessible static field.</div>
+</td>
+</tr>
+<tr id="i51" class="rowColor">
+<td class="colFirst"><code>static <a href="../function/Try.html" title="class in org.junit.platform.commons.function">Try</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tryToReadFieldValue(java.lang.reflect.Field,java.lang.Object)">tryToReadFieldValue</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field,
+                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;instance)</code></th>
+<td class="colLast">
+<div class="block">Try to read the value of a potentially inaccessible field.</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -790,9 +852,16 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>readFieldValue</h4>
-<pre class="methodSignature">public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;readFieldValue&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz,
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#DEPRECATED" title="class or interface in org.apiguardian.api" class="externalLink">DEPRECATED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>
+public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;readFieldValue&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz,
                                                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldName,
                                                   T&nbsp;instance)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">Please use <a href="#tryToReadFieldValue(java.lang.Class,java.lang.String,T)"><code>tryToReadFieldValue(Class, String, Object)</code></a>
+ instead.</div>
+</div>
 <div class="block">Read the value of a potentially inaccessible or nonexistent field.
 
  <p>If the field does not exist, an exception occurs while reading it, or
@@ -810,13 +879,51 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </dl>
 </li>
 </ul>
+<a id="tryToReadFieldValue(java.lang.Class,java.lang.String,java.lang.Object)">
+<!--   -->
+</a><a id="tryToReadFieldValue(java.lang.Class,java.lang.String,T)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>tryToReadFieldValue</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#INTERNAL" title="class or interface in org.apiguardian.api" class="externalLink">INTERNAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
+public static&nbsp;&lt;T&gt;&nbsp;<a href="../function/Try.html" title="class in org.junit.platform.commons.function">Try</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;tryToReadFieldValue&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz,
+                                                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldName,
+                                                  T&nbsp;instance)</pre>
+<div class="block">Try to read the value of a potentially inaccessible or nonexistent field.
+
+ <p>If the field does not exist, an exception occurs while reading it, or
+ the value of the field is <code>null</code>, an failed <a href="../function/Try.html" title="class in org.junit.platform.commons.function"><code>Try</code></a> is
+ returned that contains the corresponding exception.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>clazz</code> - the class where the field is declared; never <code>null</code></dd>
+<dd><code>fieldName</code> - the name of the field; never <code>null</code> or empty</dd>
+<dd><code>instance</code> - the instance from where the value is to be read; may
+ be <code>null</code> for a static field</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.4</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#readFieldValue(java.lang.reflect.Field)"><code>readFieldValue(Field)</code></a>, 
+<a href="#readFieldValue(java.lang.reflect.Field,T)"><code>readFieldValue(Field, Object)</code></a></dd>
+</dl>
+</li>
+</ul>
 <a id="readFieldValue(java.lang.reflect.Field)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>readFieldValue</h4>
-<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;readFieldValue&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field)</pre>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#DEPRECATED" title="class or interface in org.apiguardian.api" class="externalLink">DEPRECATED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>
+public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;readFieldValue&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">Please use <a href="#tryToReadFieldValue(java.lang.reflect.Field)"><code>tryToReadFieldValue(Field)</code></a> instead.</div>
+</div>
 <div class="block">Read the value of a potentially inaccessible static field.
 
  <p>If an exception occurs while reading the field or if the value of the
@@ -824,6 +931,31 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>field</code> - the field to read; never <code>null</code></dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#readFieldValue(java.lang.reflect.Field,T)"><code>readFieldValue(Field, Object)</code></a>, 
+<a href="#readFieldValue(java.lang.Class,java.lang.String,T)"><code>readFieldValue(Class, String, Object)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="tryToReadFieldValue(java.lang.reflect.Field)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>tryToReadFieldValue</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#INTERNAL" title="class or interface in org.apiguardian.api" class="externalLink">INTERNAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
+public static&nbsp;<a href="../function/Try.html" title="class in org.junit.platform.commons.function">Try</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;tryToReadFieldValue&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field)</pre>
+<div class="block">Try to read the value of a potentially inaccessible static field.
+
+ <p>If an exception occurs while reading the field or if the value of the
+ field is <code>null</code>, an failed <a href="../function/Try.html" title="class in org.junit.platform.commons.function"><code>Try</code></a> is returned that contains
+ the corresponding exception.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>field</code> - the field to read; never <code>null</code></dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.4</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="#readFieldValue(java.lang.reflect.Field,T)"><code>readFieldValue(Field, Object)</code></a>, 
 <a href="#readFieldValue(java.lang.Class,java.lang.String,T)"><code>readFieldValue(Class, String, Object)</code></a></dd>
@@ -838,8 +970,15 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>readFieldValue</h4>
-<pre class="methodSignature">public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;readFieldValue&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field,
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#DEPRECATED" title="class or interface in org.apiguardian.api" class="externalLink">DEPRECATED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>
+public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;readFieldValue&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field,
                                                   T&nbsp;instance)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">Please use <a href="#tryToReadFieldValue(java.lang.reflect.Field,java.lang.Object)"><code>tryToReadFieldValue(Field, Object)</code></a>
+ instead.</div>
+</div>
 <div class="block">Read the value of a potentially inaccessible field.
 
  <p>If an exception occurs while reading the field or if the value of the
@@ -849,6 +988,34 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>field</code> - the field to read; never <code>null</code></dd>
 <dd><code>instance</code> - the instance from which the value is to be read; may
  be <code>null</code> for a static field</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#readFieldValue(java.lang.reflect.Field)"><code>readFieldValue(Field)</code></a>, 
+<a href="#readFieldValue(java.lang.Class,java.lang.String,T)"><code>readFieldValue(Class, String, Object)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="tryToReadFieldValue(java.lang.reflect.Field,java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>tryToReadFieldValue</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#INTERNAL" title="class or interface in org.apiguardian.api" class="externalLink">INTERNAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
+public static&nbsp;<a href="../function/Try.html" title="class in org.junit.platform.commons.function">Try</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;tryToReadFieldValue&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field,
+                                              <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;instance)</pre>
+<div class="block">Try to read the value of a potentially inaccessible field.
+
+ <p>If an exception occurs while reading the field or if the value of the
+ field is <code>null</code>, a failed <a href="../function/Try.html" title="class in org.junit.platform.commons.function"><code>Try</code></a> is returned that contains the
+ corresponding exception.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>field</code> - the field to read; never <code>null</code></dd>
+<dd><code>instance</code> - the instance from which the value is to be read; may
+ be <code>null</code> for a static field</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.4</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="#readFieldValue(java.lang.reflect.Field)"><code>readFieldValue(Field)</code></a>, 
 <a href="#readFieldValue(java.lang.Class,java.lang.String,T)"><code>readFieldValue(Class, String, Object)</code></a></dd>
@@ -876,10 +1043,33 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>loadClass</h4>
-<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;loadClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#DEPRECATED" title="class or interface in org.apiguardian.api" class="externalLink">DEPRECATED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>
+public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;loadClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">Please use <a href="#tryToLoadClass(java.lang.String)"><code>tryToLoadClass(String)</code></a> instead.</div>
+</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../support/ReflectionSupport.html#loadClass(java.lang.String)"><code>ReflectionSupport.loadClass(String)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="tryToLoadClass(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>tryToLoadClass</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#INTERNAL" title="class or interface in org.apiguardian.api" class="externalLink">INTERNAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
+public static&nbsp;<a href="../function/Try.html" title="class in org.junit.platform.commons.function">Try</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;tryToLoadClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.4</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../support/ReflectionSupport.html#tryToLoadClass(java.lang.String)"><code>ReflectionSupport.tryToLoadClass(String)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -889,8 +1079,15 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>loadClass</h4>
-<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;loadClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#DEPRECATED" title="class or interface in org.apiguardian.api" class="externalLink">DEPRECATED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>
+public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;loadClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                                            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink">ClassLoader</a>&nbsp;classLoader)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">Please use <a href="#tryToLoadClass(java.lang.String,java.lang.ClassLoader)"><code>tryToLoadClass(String, ClassLoader)</code></a>
+ instead.</div>
+</div>
 <div class="block">Load a class by its <em>primitive name</em> or <em>fully qualified name</em>,
  using the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>ClassLoader</code></a>.
 
@@ -902,6 +1099,32 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>classLoader</code> - the <code>ClassLoader</code> to use; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="#loadClass(java.lang.String)"><code>loadClass(String)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="tryToLoadClass(java.lang.String,java.lang.ClassLoader)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>tryToLoadClass</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#INTERNAL" title="class or interface in org.apiguardian.api" class="externalLink">INTERNAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
+public static&nbsp;<a href="../function/Try.html" title="class in org.junit.platform.commons.function">Try</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;tryToLoadClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+                                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink">ClassLoader</a>&nbsp;classLoader)</pre>
+<div class="block">Try to load a class by its <em>primitive name</em> or <em>fully qualified
+ name</em>, using the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>ClassLoader</code></a>.
+
+ <p>See <a href="../support/ReflectionSupport.html#tryToLoadClass(java.lang.String)"><code>ReflectionSupport.tryToLoadClass(String)</code></a>
+ for details on support for class names for arrays.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>name</code> - the name of the class to load; never <code>null</code> or blank</dd>
+<dd><code>classLoader</code> - the <code>ClassLoader</code> to use; never <code>null</code></dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.4</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#tryToLoadClass(java.lang.String)"><code>tryToLoadClass(String)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1173,6 +1396,37 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="#findMethod(java.lang.Class,java.lang.String,java.lang.String)"><code>findMethod(Class, String, String)</code></a>, 
 <a href="#findMethod(java.lang.Class,java.lang.String,java.lang.Class...)"><code>findMethod(Class, String, Class...)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="tryToGetMethod(java.lang.Class,java.lang.String,java.lang.Class...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>tryToGetMethod</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#INTERNAL" title="class or interface in org.apiguardian.api" class="externalLink">INTERNAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
+public static&nbsp;<a href="../function/Try.html" title="class in org.junit.platform.commons.function">Try</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;&nbsp;tryToGetMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+                                         <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;methodName,
+                                         <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;...&nbsp;parameterTypes)</pre>
+<div class="block">Try to get the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> in the specified class with the specified
+ name and parameter types.
+
+ <p>This method delegates to <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true#getMethod(java.lang.String,java.lang.Class...)" title="class or interface in java.lang" class="externalLink"><code>Class.getMethod(String, Class...)</code></a> but
+ catches any exception thrown.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>clazz</code> - the class in which to search for the method; never <code>null</code></dd>
+<dd><code>methodName</code> - the name of the method to get; never <code>null</code> or blank</dd>
+<dd><code>parameterTypes</code> - the parameter types of the method; may be <code>null</code>
+ or empty</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a successful <a href="../function/Try.html" title="class in org.junit.platform.commons.function"><code>Try</code></a> containing the method or a failed
+ <a href="../function/Try.html" title="class in org.junit.platform.commons.function"><code>Try</code></a> containing the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/NoSuchMethodException.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>NoSuchMethodException</code></a> thrown by
+ <code>Class#getMethod()</code>; never <code>null</code></dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.4</dd>
 </dl>
 </li>
 </ul>

@@ -148,6 +148,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Order the methods encapsulated in the supplied
  <a href="../org/junit/jupiter/api/MethodOrdererContext.html" title="interface in org.junit.jupiter.api"><code>MethodOrdererContext</code></a> pseudo-randomly.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/function/Try.html#orElse(java.util.function.Supplier)">orElse(Supplier&lt;Try&lt;V&gt;&gt;)</a></span> - Method in class org.junit.platform.commons.function.<a href="../org/junit/platform/commons/function/Try.html" title="class in org.junit.platform.commons.function">Try</a></dt>
+<dd>
+<div class="block">If this <code>Try</code> is a failure, call the supplied supplier and return
+ the resulting <code>Try</code>; if this <code>Try</code> is a success, do nothing.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/function/Try.html#orElseTry(java.util.concurrent.Callable)">orElseTry(Callable&lt;V&gt;)</a></span> - Method in class org.junit.platform.commons.function.<a href="../org/junit/platform/commons/function/Try.html" title="class in org.junit.platform.commons.function">Try</a></dt>
+<dd>
+<div class="block">If this <code>Try</code> is a failure, call the supplied action and return a
+ new successful or failed <code>Try</code> depending on the action's outcome;
+ if this <code>Try</code> is a success, do nothing.</div>
+</dd>
 <dt><a href="../org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a> - package org.junit.jupiter.api</dt>
 <dd>
 <div class="block">JUnit Jupiter API for writing tests.</div>
@@ -260,6 +271,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><a href="../org/junit/platform/commons/annotation/package-summary.html">org.junit.platform.commons.annotation</a> - package org.junit.platform.commons.annotation</dt>
 <dd>
 <div class="block">Common annotations for the JUnit Platform.</div>
+</dd>
+<dt><a href="../org/junit/platform/commons/function/package-summary.html">org.junit.platform.commons.function</a> - package org.junit.platform.commons.function</dt>
+<dd>
+<div class="block">Maintained functional interfaces and support classes.</div>
 </dd>
 <dt><a href="../org/junit/platform/commons/logging/package-summary.html">org.junit.platform.commons.logging</a> - package org.junit.platform.commons.logging</dt>
 <dd>

@@ -431,6 +431,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/params/aggregator/DefaultArgumentsAccessor.html#toList()">toList()</a></span> - Method in class org.junit.jupiter.params.aggregator.<a href="../org/junit/jupiter/params/aggregator/DefaultArgumentsAccessor.html" title="class in org.junit.jupiter.params.aggregator">DefaultArgumentsAccessor</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/function/Try.html#toOptional()">toOptional()</a></span> - Method in class org.junit.platform.commons.function.<a href="../org/junit/platform/commons/function/Try.html" title="class in org.junit.platform.commons.function">Try</a></dt>
+<dd>
+<div class="block">If this <code>Try</code> is a failure, return an empty <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a>; if
+ this <code>Try</code> is a success, wrap the contained value using
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true#ofNullable(T)" title="class or interface in java.util" class="externalLink"><code>Optional.ofNullable(Object)</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/support/HierarchyTraversalMode.html#TOP_DOWN">TOP_DOWN</a></span> - org.junit.platform.commons.support.<a href="../org/junit/platform/commons/support/HierarchyTraversalMode.html" title="enum in org.junit.platform.commons.support">HierarchyTraversalMode</a></dt>
 <dd>
 <div class="block">Traverse the hierarchy using top-down semantics.</div>
@@ -568,10 +574,48 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Test plan execution details are rendered as a simple tree.</div>
 </dd>
+<dt><a href="../org/junit/platform/commons/function/Try.html" title="class in org.junit.platform.commons.function"><span class="typeNameLink">Try</span></a>&lt;<a href="../org/junit/platform/commons/function/Try.html" title="type parameter in Try">V</a>&gt; - Class in <a href="../org/junit/platform/commons/function/package-summary.html">org.junit.platform.commons.function</a></dt>
+<dd>
+<div class="block">A container object which may either contain a nullable value in case of
+ <em>success</em> or an exception in case of <em>failure</em>.</div>
+</dd>
+<dt><a href="../org/junit/platform/commons/function/Try.Transformer.html" title="interface in org.junit.platform.commons.function"><span class="typeNameLink">Try.Transformer</span></a>&lt;<a href="../org/junit/platform/commons/function/Try.Transformer.html" title="type parameter in Try.Transformer">S</a>,&#8203;<a href="../org/junit/platform/commons/function/Try.Transformer.html" title="type parameter in Try.Transformer">T</a>&gt; - Interface in <a href="../org/junit/platform/commons/function/package-summary.html">org.junit.platform.commons.function</a></dt>
+<dd>
+<div class="block">A transformer for values of type <code>S</code> to type <code>T</code>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/vintage/engine/descriptor/RunnerTestDescriptor.html#tryToExcludeFromRunner(org.junit.runner.Description)">tryToExcludeFromRunner(Description)</a></span> - Method in class org.junit.vintage.engine.descriptor.<a href="../org/junit/vintage/engine/descriptor/RunnerTestDescriptor.html" title="class in org.junit.vintage.engine.descriptor">RunnerTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/vintage/engine/descriptor/VintageTestDescriptor.html#tryToExcludeFromRunner(org.junit.runner.Description)">tryToExcludeFromRunner(Description)</a></span> - Method in class org.junit.vintage.engine.descriptor.<a href="../org/junit/vintage/engine/descriptor/VintageTestDescriptor.html" title="class in org.junit.vintage.engine.descriptor">VintageTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/ReflectionUtils.html#tryToGetMethod(java.lang.Class,java.lang.String,java.lang.Class...)">tryToGetMethod(Class&lt;?&gt;, String, Class&lt;?&gt;...)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
+<dd>
+<div class="block">Try to get the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> in the specified class with the specified
+ name and parameter types.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/support/ReflectionSupport.html#tryToLoadClass(java.lang.String)">tryToLoadClass(String)</a></span> - Static method in class org.junit.platform.commons.support.<a href="../org/junit/platform/commons/support/ReflectionSupport.html" title="class in org.junit.platform.commons.support">ReflectionSupport</a></dt>
+<dd>
+<div class="block">Try to load a class by its <em>primitive name</em> or <em>fully qualified name</em>,
+ using the default <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>ClassLoader</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/ReflectionUtils.html#tryToLoadClass(java.lang.String)">tryToLoadClass(String)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/ReflectionUtils.html#tryToLoadClass(java.lang.String,java.lang.ClassLoader)">tryToLoadClass(String, ClassLoader)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
+<dd>
+<div class="block">Try to load a class by its <em>primitive name</em> or <em>fully qualified
+ name</em>, using the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>ClassLoader</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/ReflectionUtils.html#tryToReadFieldValue(java.lang.Class,java.lang.String,T)">tryToReadFieldValue(Class&lt;T&gt;, String, T)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
+<dd>
+<div class="block">Try to read the value of a potentially inaccessible or nonexistent field.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/ReflectionUtils.html#tryToReadFieldValue(java.lang.reflect.Field)">tryToReadFieldValue(Field)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
+<dd>
+<div class="block">Try to read the value of a potentially inaccessible static field.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/ReflectionUtils.html#tryToReadFieldValue(java.lang.reflect.Field,java.lang.Object)">tryToReadFieldValue(Field, Object)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
+<dd>
+<div class="block">Try to read the value of a potentially inaccessible field.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/EventConditions.html#type(org.junit.platform.testkit.engine.EventType)">type(EventType)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></dt>
 <dd>&nbsp;</dd>
 </dl>
