@@ -29,7 +29,7 @@ class PackageCyclesDetectionTests {
 	void moduleDoesNotContainCyclicPackageReferences(String module) {
 		var jar = Helper.createJarPath(module);
 		var result = new CyclesDetector(jar, this::ignore).run(Configuration.of());
-		assertEquals(0, result.getExitCode(), "result=" + result);
+		assertEquals(0, result.getExitCode(), "cycles=" + result.getOutputLines("cycles"));
 	}
 
 	private boolean ignore(String source, String target) {

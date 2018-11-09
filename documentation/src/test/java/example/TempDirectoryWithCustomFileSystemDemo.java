@@ -23,36 +23,37 @@ import com.google.common.jimfs.Jimfs;
 
 import example.util.ListWriter;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.Extension;
-import org.junit.jupiter.api.extension.RegisterExtension;
-import org.junit.jupiter.api.support.io.TempDirectory;
-import org.junit.jupiter.api.support.io.TempDirectory.TempDir;
+import org.junit.jupiter.api.extension.ResourceSupplier;
+import org.junit.jupiter.api.extension.ResourceSupplier.New;
 
 //@formatter:off
 // tag::user_guide[]
 class TempDirectoryWithCustomFileSystemDemo {
 
-	private static FileSystem fileSystem;
+	static class Jim implements ResourceSupplier<Path> {
 
-	@BeforeAll
-	static void createFileSystem() {
-		fileSystem = Jimfs.newFileSystem(Configuration.unix());
+		private final FileSystem jim;
+		private final Path path;
+
+		public Jim() {
+			this.jim = Jimfs.newFileSystem(Configuration.unix());
+			this.path = jim.getPath("/");
+		}
+
+		@Override
+		public Path get() {
+			return path;
+		}
+
+		@Override
+		public void close() throws IOException {
+			jim.close();
+		}
 	}
-
-	@AfterAll
-	static void closeFileSystem() throws Exception {
-		fileSystem.close();
-	}
-
-	@RegisterExtension
-	Extension tempDirectory =
-		TempDirectory.createInCustomDirectory(() -> fileSystem.getPath("/"));
 
 	@Test
-	void writesItemsToFile(@TempDir Path tempDir) throws IOException {
+	void writesItemsToFile(@New(Jim.class) Path tempDir) throws IOException {
 		Path file = tempDir.resolve("test.txt");
 
 		new ListWriter(file).write("a", "b", "c");
