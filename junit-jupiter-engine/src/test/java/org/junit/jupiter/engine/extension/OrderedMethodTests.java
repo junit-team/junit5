@@ -126,7 +126,7 @@ class OrderedMethodTests {
 		}
 
 		// We assume that at least 3 out of 10 are different...
-		assertThat(uniqueSequences.size()).isGreaterThanOrEqualTo(3);
+		assertThat(uniqueSequences).size().isGreaterThanOrEqualTo(3);
 		// and that at least 2 different threads were used...
 		assertThat(threadNames).size().isGreaterThanOrEqualTo(2);
 	}
@@ -158,7 +158,7 @@ class OrderedMethodTests {
 		}
 
 		// We assume that at least 3 out of 10 are different...
-		assertThat(uniqueSequences.size()).isGreaterThanOrEqualTo(3);
+		assertThat(uniqueSequences).size().isGreaterThanOrEqualTo(3);
 	}
 
 	@Test
