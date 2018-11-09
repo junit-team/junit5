@@ -196,6 +196,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Listener to be notified of test execution events by
  <a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine">test engines</a>.</div>
 </dd>
+<dt><a href="../org/junit/platform/testkit/engine/EngineExecutionResults.html" title="class in org.junit.platform.testkit.engine"><span class="typeNameLink">EngineExecutionResults</span></a> - Class in <a href="../org/junit/platform/testkit/engine/package-summary.html">org.junit.platform.testkit.engine</a></dt>
+<dd>
+<div class="block"><code>EngineExecutionResults</code> provides a fluent API for processing the
+ results of executing a test plan on the JUnit Platform for a given
+ <a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>.</div>
+</dd>
 <dt><a href="../org/junit/platform/launcher/EngineFilter.html" title="class in org.junit.platform.launcher"><span class="typeNameLink">EngineFilter</span></a> - Class in <a href="../org/junit/platform/launcher/package-summary.html">org.junit.platform.launcher</a></dt>
 <dd>
 <div class="block">An <code>EngineFilter</code> is applied to all <a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a>
@@ -205,7 +211,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block"><code>EngineTestKit</code> provides support for executing a test plan for a given
  <a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> and then accessing the results via
- <a href="../org/junit/platform/testkit/engine/ExecutionResults.html" title="class in org.junit.platform.testkit.engine">a fluent API</a> to verify the expected results.</div>
+ <a href="../org/junit/platform/testkit/engine/EngineExecutionResults.html" title="class in org.junit.platform.testkit.engine">a fluent API</a> to verify the expected results.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/console/options/Theme.html#entry()">entry()</a></span> - Method in enum org.junit.platform.console.options.<a href="../org/junit/platform/console/options/Theme.html" title="enum in org.junit.platform.console.options">Theme</a></dt>
 <dd>&nbsp;</dd>
@@ -574,12 +580,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/ExecutionRequest.html#%3Cinit%3E(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.EngineExecutionListener,org.junit.platform.engine.ConfigurationParameters)">ExecutionRequest(TestDescriptor, EngineExecutionListener, ConfigurationParameters)</a></span> - Constructor for class org.junit.platform.engine.<a href="../org/junit/platform/engine/ExecutionRequest.html" title="class in org.junit.platform.engine">ExecutionRequest</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="../org/junit/platform/testkit/engine/ExecutionResults.html" title="class in org.junit.platform.testkit.engine"><span class="typeNameLink">ExecutionResults</span></a> - Class in <a href="../org/junit/platform/testkit/engine/package-summary.html">org.junit.platform.testkit.engine</a></dt>
-<dd>
-<div class="block"><code>ExecutionResults</code> provides a fluent API for processing the results of
- executing a test plan on the JUnit Platform for a given
- <a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/Events.html#executions()">executions()</a></span> - Method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/Events.html" title="class in org.junit.platform.testkit.engine">Events</a></dt>
 <dd>
 <div class="block">Get the <a href="../org/junit/platform/testkit/engine/Executions.html" title="class in org.junit.platform.testkit.engine"><code>Executions</code></a> for the current set of <a href="../org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine">events</a>.</div>

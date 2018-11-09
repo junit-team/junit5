@@ -139,14 +139,14 @@ public final class <span class="typeNameLabel">EngineTestKit</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
 <div class="block"><code>EngineTestKit</code> provides support for executing a test plan for a given
  <a href="../../engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> and then accessing the results via
- <a href="ExecutionResults.html" title="class in org.junit.platform.testkit.engine">a fluent API</a> to verify the expected results.</div>
+ <a href="EngineExecutionResults.html" title="class in org.junit.platform.testkit.engine">a fluent API</a> to verify the expected results.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.4</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="#execute(java.lang.String,org.junit.platform.engine.EngineDiscoveryRequest)"><code>execute(String, EngineDiscoveryRequest)</code></a>, 
 <a href="#execute(org.junit.platform.engine.TestEngine,org.junit.platform.engine.EngineDiscoveryRequest)"><code>execute(TestEngine, EngineDiscoveryRequest)</code></a>, 
-<a href="ExecutionResults.html" title="class in org.junit.platform.testkit.engine"><code>ExecutionResults</code></a></dd>
+<a href="EngineExecutionResults.html" title="class in org.junit.platform.testkit.engine"><code>EngineExecutionResults</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -169,7 +169,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>static <a href="ExecutionResults.html" title="class in org.junit.platform.testkit.engine">ExecutionResults</a></code></td>
+<td class="colFirst"><code>static <a href="EngineExecutionResults.html" title="class in org.junit.platform.testkit.engine">EngineExecutionResults</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#execute(java.lang.String,org.junit.platform.engine.EngineDiscoveryRequest)">execute</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;engineId,
        <a href="../../engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine">EngineDiscoveryRequest</a>&nbsp;discoveryRequest)</code></th>
 <td class="colLast">
@@ -178,7 +178,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>static <a href="ExecutionResults.html" title="class in org.junit.platform.testkit.engine">ExecutionResults</a></code></td>
+<td class="colFirst"><code>static <a href="EngineExecutionResults.html" title="class in org.junit.platform.testkit.engine">EngineExecutionResults</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#execute(org.junit.platform.engine.TestEngine,org.junit.platform.engine.EngineDiscoveryRequest)">execute</a></span>&#8203;(<a href="../../engine/TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>&nbsp;testEngine,
        <a href="../../engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine">EngineDiscoveryRequest</a>&nbsp;discoveryRequest)</code></th>
 <td class="colLast">
@@ -216,9 +216,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>execute</h4>
-<pre class="methodSignature">public static&nbsp;<a href="ExecutionResults.html" title="class in org.junit.platform.testkit.engine">ExecutionResults</a>&nbsp;execute&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;engineId,
-                                       <a href="../../engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine">EngineDiscoveryRequest</a>&nbsp;discoveryRequest)
-                                throws <a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
+<pre class="methodSignature">public static&nbsp;<a href="EngineExecutionResults.html" title="class in org.junit.platform.testkit.engine">EngineExecutionResults</a>&nbsp;execute&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;engineId,
+                                             <a href="../../engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine">EngineDiscoveryRequest</a>&nbsp;discoveryRequest)
+                                      throws <a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
 <div class="block">Execute tests for a given <a href="../../engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><code>EngineDiscoveryRequest</code></a> using the
  <a href="../../engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> with the provided ID.
 
@@ -238,7 +238,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <code>null</code> or <em>blank</em></dd>
 <dd><code>discoveryRequest</code> - the <code>EngineDiscoveryRequest</code> to use</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the recorded <code>ExecutionResults</code></dd>
+<dd>the results of the execution</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - for invalid arguments or if the
  <code>TestEngine</code> with the supplied ID cannot be loaded</dd>
@@ -253,9 +253,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockListLast">
 <li class="blockList">
 <h4>execute</h4>
-<pre class="methodSignature">public static&nbsp;<a href="ExecutionResults.html" title="class in org.junit.platform.testkit.engine">ExecutionResults</a>&nbsp;execute&#8203;(<a href="../../engine/TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>&nbsp;testEngine,
-                                       <a href="../../engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine">EngineDiscoveryRequest</a>&nbsp;discoveryRequest)
-                                throws <a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
+<pre class="methodSignature">public static&nbsp;<a href="EngineExecutionResults.html" title="class in org.junit.platform.testkit.engine">EngineExecutionResults</a>&nbsp;execute&#8203;(<a href="../../engine/TestEngine.html" title="interface in org.junit.platform.engine">TestEngine</a>&nbsp;testEngine,
+                                             <a href="../../engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine">EngineDiscoveryRequest</a>&nbsp;discoveryRequest)
+                                      throws <a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
 <div class="block">Execute tests for a given <a href="../../engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><code>EngineDiscoveryRequest</code></a> using the
  provided <a href="../../engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>.
 
@@ -271,7 +271,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>discoveryRequest</code> - the <code>EngineDiscoveryRequest</code> to use; must
  not be <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the recorded <code>ExecutionResults</code></dd>
+<dd>the recorded <code>EngineExecutionResults</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - for invalid arguments</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
