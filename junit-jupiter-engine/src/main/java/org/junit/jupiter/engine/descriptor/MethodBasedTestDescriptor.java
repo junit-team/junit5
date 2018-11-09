@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayNameForMethod;
 
 import java.lang.reflect.Method;
@@ -17,6 +18,7 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
@@ -27,8 +29,11 @@ import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 
 /**
  * Base class for {@link TestDescriptor TestDescriptors} based on Java methods.
+ *
+ * @since 5.0
  */
-abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
+@API(status = INTERNAL, since = "5.0")
+public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 
 	private final Class<?> testClass;
 
@@ -64,6 +69,7 @@ abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 		return getExclusiveResourcesFromAnnotation(getTestMethod());
 	}
 
+	@Override
 	protected Optional<ExecutionMode> getExplicitExecutionMode() {
 		return getExecutionModeFromAnnotation(getTestMethod());
 	}

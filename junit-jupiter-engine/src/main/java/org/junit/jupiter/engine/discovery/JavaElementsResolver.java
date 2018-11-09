@@ -11,8 +11,11 @@
 package org.junit.jupiter.engine.discovery;
 
 import static java.lang.String.format;
+import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static org.junit.jupiter.engine.descriptor.JupiterTestDescriptor.toExecutionMode;
+import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllClassesInClasspathRoot;
@@ -23,6 +26,7 @@ import static org.junit.platform.commons.util.ReflectionUtils.findNestedClasses;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
@@ -33,14 +37,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.Filterable;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
+import org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsInnerClass;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassFilter;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.UniqueId.Segment;
@@ -50,6 +57,7 @@ import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
+import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 
 /**
  * <h3>NOTES TO DEVELOPERS</h3>
@@ -74,11 +82,15 @@ class JavaElementsResolver {
 	private static final IsInnerClass isInnerClass = new IsInnerClass();
 
 	private final TestDescriptor engineDescriptor;
+	private final ConfigurationParameters configurationParameters;
 	private final ClassFilter classFilter;
 	private final Set<ElementResolver> resolvers;
 
-	JavaElementsResolver(TestDescriptor engineDescriptor, ClassFilter classFilter, Set<ElementResolver> resolvers) {
+	JavaElementsResolver(TestDescriptor engineDescriptor, ConfigurationParameters configurationParameters,
+			ClassFilter classFilter, Set<ElementResolver> resolvers) {
+
 		this.engineDescriptor = engineDescriptor;
+		this.configurationParameters = configurationParameters;
 		this.classFilter = classFilter;
 		this.resolvers = resolvers;
 	}
@@ -268,10 +280,63 @@ class JavaElementsResolver {
 
 	private void resolveChildren(TestDescriptor descriptor) {
 		if (descriptor instanceof ClassTestDescriptor) {
-			Class<?> testClass = ((ClassTestDescriptor) descriptor).getTestClass();
-			resolveContainedMethods(descriptor, testClass);
-			resolveContainedNestedClasses(descriptor, testClass);
+			ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) descriptor;
+			Class<?> testClass = classTestDescriptor.getTestClass();
+
+			resolveContainedMethods(classTestDescriptor, testClass);
+			orderContainedMethods(classTestDescriptor, testClass);
+			resolveContainedNestedClasses(classTestDescriptor, testClass);
 		}
+	}
+
+	/**
+	 * @since 5.4
+	 */
+	private void orderContainedMethods(ClassTestDescriptor classTestDescriptor, Class<?> testClass) {
+		findAnnotation(testClass, TestMethodOrder.class)//
+				.map(TestMethodOrder::value)//
+				.map(ReflectionUtils::newInstance)//
+				.ifPresent(methodOrderer -> {
+
+					List<DefaultMethodDescriptor> methodDescriptors = classTestDescriptor.getChildren().stream()//
+							.filter(MethodBasedTestDescriptor.class::isInstance)//
+							.map(MethodBasedTestDescriptor.class::cast)//
+							.map(DefaultMethodDescriptor::new)//
+							.collect(toCollection(ArrayList::new));
+
+					// Make a local copy for later validation
+					Set<DefaultMethodDescriptor> originalMethodDescriptors = new LinkedHashSet<>(methodDescriptors);
+
+					methodOrderer.orderMethods(
+						new DefaultMethodOrdererContext(methodDescriptors, testClass, this.configurationParameters));
+
+					int difference = methodDescriptors.size() - originalMethodDescriptors.size();
+
+					if (difference > 0) {
+						logger.warn(() -> String.format(
+							"MethodOrderer [%s] added %s MethodDescriptor(s) for test class [%s] which will be ignored.",
+							methodOrderer.getClass().getName(), difference, testClass.getName()));
+					}
+					else if (difference < 0) {
+						logger.warn(() -> String.format(
+							"MethodOrderer [%s] removed %s MethodDescriptor(s) for test class [%s] which will be retained with arbitrary ordering.",
+							methodOrderer.getClass().getName(), -difference, testClass.getName()));
+					}
+
+					Set<TestDescriptor> sortedTestDescriptors = methodDescriptors.stream()//
+							.filter(originalMethodDescriptors::contains)//
+							.map(DefaultMethodDescriptor::getTestDescriptor)//
+							.collect(toCollection(LinkedHashSet::new));
+
+					// Currently no way to removeAll or addAll children at once.
+					sortedTestDescriptors.forEach(classTestDescriptor::removeChild);
+					sortedTestDescriptors.forEach(classTestDescriptor::addChild);
+
+					// Note: MethodOrderer#getDefaultExecutionMode() is guaranteed
+					// to be invoked after MethodOrderer#orderMethods().
+					ExecutionMode defaultExecutionMode = toExecutionMode(methodOrderer.getDefaultExecutionMode());
+					classTestDescriptor.setDefaultChildExecutionMode(defaultExecutionMode);
+				});
 	}
 
 	private void resolveContainedNestedClasses(TestDescriptor containerDescriptor, Class<?> clazz) {
