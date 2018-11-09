@@ -222,6 +222,9 @@ public interface MethodOrderer {
 				try {
 					seed = Long.valueOf(value);
 					this.usingCustomSeed = true;
+					logger.config(
+						() -> String.format("Using custom seed for configuration parameter [%s] with value [%s].",
+							RANDOM_SEED_PROPERTY_NAME, value));
 				}
 				catch (NumberFormatException ex) {
 					logger.warn(ex,

@@ -162,16 +162,28 @@ class OrderedMethodTests {
 	}
 
 	@Test
-	void randomWithCustomSeed() {
+	@TrackLogRecords
+	void randomWithCustomSeed(LogRecordListener listener) {
+		String seed = "42";
+		String expectedMessage = "Using custom seed for configuration parameter [" + Random.RANDOM_SEED_PROPERTY_NAME
+				+ "] with value [" + seed + "].";
+
 		for (int i = 0; i < 10; i++) {
 			callSequence.clear();
+			listener.clear();
 
-			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, "42");
+			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed);
 
 			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
 			// With a custom seed, the "randomness" must be the same for every iteration.
 			assertThat(callSequence).containsExactly("test2()", "test3()", "test4()", "repetition 1 of 1", "test1()");
+
+			// @formatter:off
+			assertTrue(listener.stream(Random.class, Level.CONFIG)
+				.map(LogRecord::getMessage)
+				.anyMatch(expectedMessage::equals));
+			// @formatter:on
 		}
 	}
 
