@@ -69,9 +69,9 @@ import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Event;
 import org.junit.platform.testkit.engine.Events;
-import org.junit.platform.testkit.engine.ExecutionResults;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -84,7 +84,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithSingleRegisteredExtension")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
@@ -101,7 +101,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithSingleRegisteredExtension")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		TestDescriptor templateMethodDescriptor = findTestDescriptor(executionResults,
 			container("templateWithSingleRegisteredExtension"));
@@ -128,7 +128,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithTwoRegisteredExtensions")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
@@ -149,7 +149,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithTwoRegisteredExtensions")).build();
 
-		ExecutionResults results = executeTests(request);
+		EngineExecutionResults results = executeTests(request);
 		Events events = results.all();
 
 		events.assertStatistics(stats -> stats.dynamicallyRegistered(2));
@@ -171,7 +171,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithTwoInvocationsFromSingleExtension")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
@@ -193,7 +193,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 			"templateWithTwoInvocationsFromSingleExtension") //
 					.append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 
-		ExecutionResults executionResults = executeTests(selectUniqueId(uniqueId));
+		EngineExecutionResults executionResults = executeTests(selectUniqueId(uniqueId));
 
 		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
@@ -210,7 +210,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithDisabledInvocations")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
@@ -225,7 +225,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "disabledTemplate")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
@@ -237,7 +237,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithCustomizedDisplayNames")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
@@ -255,7 +255,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(MyTestTemplateTestCase.class,
 			"templateWithDynamicParameterResolver", "java.lang.String")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
@@ -274,7 +274,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCaseWithConstructor.class, "template", "java.lang.String")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
@@ -293,7 +293,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithDynamicTestInstancePostProcessor")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
@@ -335,7 +335,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithWrongParameterType", int.class.getName())).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
@@ -349,7 +349,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithSupportingProviderButNoInvocations")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		executionResults.all().assertEventsMatchExactly( //
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
@@ -363,7 +363,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCase.class, "templateWithCloseableStream")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		assertThat(InvocationContextProviderWithCloseableStream.streamClosed.get()).describedAs(
 			"streamClosed").isTrue();
@@ -377,7 +377,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 				event(container("templateWithCloseableStream"), finishedSuccessfully())));
 	}
 
-	private TestDescriptor findTestDescriptor(ExecutionResults executionResults, Condition<Event> condition) {
+	private TestDescriptor findTestDescriptor(EngineExecutionResults executionResults, Condition<Event> condition) {
 		// @formatter:off
 		return executionResults.all()
 				.filter(condition::matches)

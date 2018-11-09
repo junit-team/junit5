@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.engine.kotlin.InstancePerClassKotlinTestCase;
 import org.junit.jupiter.engine.kotlin.InstancePerMethodKotlinTestCase;
-import org.junit.platform.testkit.engine.ExecutionResults;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
  * Kotlin-specific integration tests for {@link TestInstance @TestInstance}
@@ -37,7 +37,7 @@ class TestInstanceLifecycleKotlinTests extends AbstractJupiterTestEngineTests {
 		Class<?> testClass = InstancePerClassKotlinTestCase.class;
 		InstancePerClassKotlinTestCase.TEST_INSTANCES.clear();
 
-		ExecutionResults executionResults = executeTestsForClass(testClass);
+		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 
 		assertThat(executionResults.tests().finished().count()).isEqualTo(2);
 		assertThat(InstancePerClassKotlinTestCase.TEST_INSTANCES.keySet()).hasSize(1);
@@ -54,7 +54,7 @@ class TestInstanceLifecycleKotlinTests extends AbstractJupiterTestEngineTests {
 		Class<?> testClass = InstancePerMethodKotlinTestCase.class;
 		InstancePerMethodKotlinTestCase.TEST_INSTANCES.clear();
 
-		ExecutionResults executionResults = executeTestsForClass(testClass);
+		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 
 		assertThat(executionResults.tests().finished().count()).isEqualTo(2);
 		List<Object> instances = new ArrayList<>(InstancePerMethodKotlinTestCase.TEST_INSTANCES.keySet());

@@ -38,7 +38,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.engine.ExecutionResults;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
  * Integration tests that verify support for {@link TestExecutionExceptionHandler}.
@@ -62,7 +62,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 	void exceptionHandlerRethrowsException() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testRethrow")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		assertTrue(RethrowException.handleExceptionCalled, "TestExecutionExceptionHandler should have been called");
 
@@ -79,7 +79,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 	void exceptionHandlerSwallowsException() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSwallow")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		assertTrue(SwallowException.handleExceptionCalled, "TestExecutionExceptionHandler should have been called");
 
@@ -96,7 +96,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 	void exceptionHandlerConvertsException() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testConvert")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		assertTrue(ConvertException.handleExceptionCalled, "TestExecutionExceptionHandler should have been called");
 
@@ -113,7 +113,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 	void severalHandlersAreCalledInOrder() {
 		LauncherDiscoveryRequest request = request().selectors(selectMethod(ATestCase.class, "testSeveral")).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		assertTrue(ConvertException.handleExceptionCalled, "ConvertException should have been called");
 		assertTrue(RethrowException.handleExceptionCalled, "RethrowException should have been called");

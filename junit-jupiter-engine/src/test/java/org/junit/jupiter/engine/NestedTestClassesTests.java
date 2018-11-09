@@ -22,8 +22,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
-import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests that verify support for {@linkplain Nested nested contexts}
@@ -42,7 +42,7 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void nestedTestsAreExecuted() {
-		ExecutionResults executionResults = executeTestsForClass(TestCaseWithNesting.class);
+		EngineExecutionResults executionResults = executeTestsForClass(TestCaseWithNesting.class);
 		Events containers = executionResults.containers();
 		Events tests = executionResults.tests();
 
@@ -63,7 +63,7 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void doublyNestedTestsAreExecuted() {
-		ExecutionResults executionResults = executeTestsForClass(TestCaseWithDoubleNesting.class);
+		EngineExecutionResults executionResults = executeTestsForClass(TestCaseWithDoubleNesting.class);
 		Events containers = executionResults.containers();
 		Events tests = executionResults.tests();
 
@@ -88,7 +88,7 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void inheritedNestedTestsAreExecuted() {
-		ExecutionResults executionResults = executeTestsForClass(TestCaseWithInheritedNested.class);
+		EngineExecutionResults executionResults = executeTestsForClass(TestCaseWithInheritedNested.class);
 		Events containers = executionResults.containers();
 		Events tests = executionResults.tests();
 

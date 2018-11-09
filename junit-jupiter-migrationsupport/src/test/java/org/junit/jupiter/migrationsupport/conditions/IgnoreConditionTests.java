@@ -24,9 +24,9 @@ import static org.junit.platform.testkit.engine.EventConditions.test;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Events;
-import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests for JUnit 4's {@link Ignore @Ignore} support in JUnit
@@ -65,7 +65,7 @@ class IgnoreConditionTests {
 
 	@Test
 	void ignoredAndNotIgnoredTestMethods() {
-		ExecutionResults executionResults = executeTestsForClass(IgnoredMethodsTestCase.class);
+		EngineExecutionResults executionResults = executeTestsForClass(IgnoredMethodsTestCase.class);
 		Events containers = executionResults.containers();
 		Events tests = executionResults.tests();
 
@@ -100,7 +100,7 @@ class IgnoreConditionTests {
 		// @formatter:on
 	}
 
-	private ExecutionResults executeTestsForClass(Class<?> testClass) {
+	private EngineExecutionResults executeTestsForClass(Class<?> testClass) {
 		return EngineTestKit.execute("junit-jupiter", request().selectors(selectClass(testClass)).build());
 	}
 

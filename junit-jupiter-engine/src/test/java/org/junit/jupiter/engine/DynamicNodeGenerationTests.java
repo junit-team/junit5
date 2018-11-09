@@ -51,9 +51,9 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Event;
 import org.junit.platform.testkit.engine.Events;
-import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests for {@link TestFactory @TestFactory}, {@link DynamicTest},
@@ -80,7 +80,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicTestsAreExecutedFromStream() {
-		ExecutionResults executionResults = executeTests(selectMethod(MyDynamicTestCase.class, "dynamicStream"));
+		EngineExecutionResults executionResults = executeTests(selectMethod(MyDynamicTestCase.class, "dynamicStream"));
 
 		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -99,7 +99,8 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicTestsAreExecutedFromCollection() {
-		ExecutionResults executionResults = executeTests(selectMethod(MyDynamicTestCase.class, "dynamicCollection"));
+		EngineExecutionResults executionResults = executeTests(
+			selectMethod(MyDynamicTestCase.class, "dynamicCollection"));
 		Events containers = executionResults.containers();
 		Events tests = executionResults.tests();
 
@@ -114,7 +115,8 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicTestsAreExecutedFromIterator() {
-		ExecutionResults executionResults = executeTests(selectMethod(MyDynamicTestCase.class, "dynamicIterator"));
+		EngineExecutionResults executionResults = executeTests(
+			selectMethod(MyDynamicTestCase.class, "dynamicIterator"));
 		Events containers = executionResults.containers();
 		Events tests = executionResults.tests();
 
@@ -129,7 +131,8 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicTestsAreExecutedFromIterable() {
-		ExecutionResults executionResults = executeTests(selectMethod(MyDynamicTestCase.class, "dynamicIterable"));
+		EngineExecutionResults executionResults = executeTests(
+			selectMethod(MyDynamicTestCase.class, "dynamicIterable"));
 		Events containers = executionResults.containers();
 		Events tests = executionResults.tests();
 
@@ -148,7 +151,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 		UniqueId uniqueId = discoverUniqueId(MyDynamicTestCase.class, "dynamicStream") //
 				.append(DYNAMIC_TEST_SEGMENT_TYPE, "#2");
 
-		ExecutionResults executionResults = executeTests(selectUniqueId(uniqueId));
+		EngineExecutionResults executionResults = executeTests(selectUniqueId(uniqueId));
 
 		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -164,7 +167,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicContainersAreExecutedFromIterable() {
-		ExecutionResults executionResults = executeTests(
+		EngineExecutionResults executionResults = executeTests(
 			selectMethod(MyDynamicTestCase.class, "dynamicContainerWithIterable"));
 
 		executionResults.all().assertEventsMatchExactly( //
@@ -204,7 +207,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 				.append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#1") //
 				.append(DYNAMIC_TEST_SEGMENT_TYPE, "#2");
 
-		ExecutionResults executionResults = executeTests(selectUniqueId(uniqueId));
+		EngineExecutionResults executionResults = executeTests(selectUniqueId(uniqueId));
 
 		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -230,7 +233,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 				.append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#2") //
 				.append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#1");
 
-		ExecutionResults executionResults = executeTests(selectUniqueId(uniqueId));
+		EngineExecutionResults executionResults = executeTests(selectUniqueId(uniqueId));
 
 		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -255,7 +258,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void nestedDynamicContainersAreExecuted() {
-		ExecutionResults executionResults = executeTests(
+		EngineExecutionResults executionResults = executeTests(
 			selectMethod(MyDynamicTestCase.class, "nestedDynamicContainers"));
 
 		executionResults.all().assertEventsMatchExactly( //
@@ -308,7 +311,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicContainersAreExecutedFromExceptionThrowingStream() {
-		ExecutionResults executionResults = executeTests(
+		EngineExecutionResults executionResults = executeTests(
 			selectMethod(MyDynamicTestCase.class, "dynamicContainerWithExceptionThrowingStream"));
 
 		assertTrue(MyDynamicTestCase.exceptionThrowingStreamClosed.get(), "stream should be closed");
@@ -345,7 +348,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void dynamicContainersChildrenMustNotBeNull() {
-		ExecutionResults executionResults = executeTests(
+		EngineExecutionResults executionResults = executeTests(
 			selectMethod(MyDynamicTestCase.class, "dynamicContainerWithNullChildren"));
 
 		executionResults.all().assertEventsMatchExactly( //
@@ -363,7 +366,8 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testFactoryMethodsMayReturnSingleDynamicContainer() {
-		ExecutionResults executionResults = executeTests(selectMethod(MyDynamicTestCase.class, "singleContainer"));
+		EngineExecutionResults executionResults = executeTests(
+			selectMethod(MyDynamicTestCase.class, "singleContainer"));
 
 		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -385,7 +389,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testFactoryMethodsMayReturnSingleDynamicTest() {
-		ExecutionResults executionResults = executeTests(selectMethod(MyDynamicTestCase.class, "singleTest"));
+		EngineExecutionResults executionResults = executeTests(selectMethod(MyDynamicTestCase.class, "singleTest"));
 
 		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //

@@ -32,7 +32,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.launcher.Launcher;
-import org.junit.platform.testkit.engine.ExecutionResults;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
  * Integration tests for {@link TestInstance @TestInstance} lifecycle
@@ -125,7 +125,7 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 			int numFailedContainers, int numTests, String... methods) {
 
 		// @formatter:off
-		ExecutionResults executionResults = executeTests(
+		EngineExecutionResults executionResults = executeTests(
 			request()
 				.selectors(selectClass(testClass))
 				.configurationParameters(configParams)

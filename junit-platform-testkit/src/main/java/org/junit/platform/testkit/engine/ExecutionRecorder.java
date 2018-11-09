@@ -22,10 +22,10 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * {@code ExecutionRecorder} is an {@link EngineExecutionListener} that records
  * data from every event that occurs during the engine execution lifecycle and
  * provides functionality for retrieving execution state via
- * {@link ExecutionResults}.
+ * {@link EngineExecutionResults}.
  *
  * @since 1.4
- * @see ExecutionResults
+ * @see EngineExecutionResults
  * @see Event
  * @see Execution
  */
@@ -76,12 +76,12 @@ class ExecutionRecorder implements EngineExecutionListener {
 	}
 
 	/**
-	 * Get the state of the engine's execution in the form of {@link ExecutionResults}.
+	 * Get the state of the engine's execution in the form of {@link EngineExecutionResults}.
 	 *
-	 * @return the {@code ExecutionResults} containing all current state information
+	 * @return the {@code EngineExecutionResults} containing all current state information
 	 */
-	public ExecutionResults getExecutionResults() {
-		return new ExecutionResults(this.events);
+	public EngineExecutionResults getExecutionResults() {
+		return new EngineExecutionResults(this.events);
 	}
 
 }

@@ -22,8 +22,8 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 
 /**
- * {@code ExecutionResults} provides a fluent API for processing the results of
- * executing a test plan on the JUnit Platform for a given
+ * {@code EngineExecutionResults} provides a fluent API for processing the
+ * results of executing a test plan on the JUnit Platform for a given
  * {@link org.junit.platform.engine.TestEngine TestEngine}.
  *
  * @since 1.4
@@ -35,20 +35,20 @@ import org.junit.platform.engine.TestDescriptor;
  * @see Executions
  */
 @API(status = EXPERIMENTAL, since = "1.4")
-public class ExecutionResults {
+public class EngineExecutionResults {
 
 	private final Events allEvents;
 	private final Events testEvents;
 	private final Events containerEvents;
 
 	/**
-	 * Construct {@link ExecutionResults} from the supplied list of recorded
+	 * Construct {@link EngineExecutionResults} from the supplied list of recorded
 	 * {@linkplain Event events}.
 	 *
 	 * @param events the list of events; never {@code null} or
 	 * containing {@code null} elements
 	 */
-	ExecutionResults(List<Event> events) {
+	EngineExecutionResults(List<Event> events) {
 		Preconditions.notNull(events, "Event list must not be null");
 		Preconditions.containsNoNullElements(events, "Event list must not contain null elements");
 

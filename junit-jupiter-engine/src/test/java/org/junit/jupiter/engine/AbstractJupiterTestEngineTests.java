@@ -21,8 +21,8 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
-import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Abstract base class for tests involving the {@link JupiterTestEngine}.
@@ -33,15 +33,15 @@ public abstract class AbstractJupiterTestEngineTests {
 
 	private final JupiterTestEngine engine = new JupiterTestEngine();
 
-	protected ExecutionResults executeTestsForClass(Class<?> testClass) {
+	protected EngineExecutionResults executeTestsForClass(Class<?> testClass) {
 		return executeTests(selectClass(testClass));
 	}
 
-	protected ExecutionResults executeTests(DiscoverySelector... selectors) {
+	protected EngineExecutionResults executeTests(DiscoverySelector... selectors) {
 		return executeTests(request().selectors(selectors).build());
 	}
 
-	protected ExecutionResults executeTests(LauncherDiscoveryRequest request) {
+	protected EngineExecutionResults executeTests(LauncherDiscoveryRequest request) {
 		return EngineTestKit.execute(this.engine, request);
 	}
 

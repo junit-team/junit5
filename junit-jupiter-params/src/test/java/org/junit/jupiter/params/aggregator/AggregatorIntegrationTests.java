@@ -49,8 +49,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
-import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests for {@link ArgumentsAccessor}, {@link AggregateWith},
@@ -205,7 +205,7 @@ public class AggregatorIntegrationTests {
 		assertEquals(30318, address.zipCode);
 	}
 
-	private ExecutionResults execute(DiscoverySelector... selectors) {
+	private EngineExecutionResults execute(DiscoverySelector... selectors) {
 		return EngineTestKit.execute("junit-jupiter", request().selectors(selectors).build());
 	}
 

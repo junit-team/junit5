@@ -19,8 +19,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
-import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests that very proper handling of invalid configuration for
@@ -54,7 +54,8 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 	}
 
 	private void assertExecutionResults(Class<?> invalidTestClass) {
-		ExecutionResults executionResults = executeTests(selectClass(TestCase.class), selectClass(invalidTestClass));
+		EngineExecutionResults executionResults = executeTests(selectClass(TestCase.class),
+			selectClass(invalidTestClass));
 		Events containers = executionResults.containers();
 		Events tests = executionResults.tests();
 

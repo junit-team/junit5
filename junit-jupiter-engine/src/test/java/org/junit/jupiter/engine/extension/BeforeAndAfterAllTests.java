@@ -27,7 +27,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.platform.testkit.engine.ExecutionResults;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
  * Integration tests that verify support for {@link BeforeAll}, {@link AfterAll},
@@ -171,7 +171,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 
 		callSequence.clear();
 
-		ExecutionResults executionResults = executeTestsForClass(testClass);
+		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 
 		assertEquals(testsStarted, executionResults.tests().started().count(), "# tests started");
 		assertEquals(testsSuccessful, executionResults.tests().succeeded().count(), "# tests succeeded");

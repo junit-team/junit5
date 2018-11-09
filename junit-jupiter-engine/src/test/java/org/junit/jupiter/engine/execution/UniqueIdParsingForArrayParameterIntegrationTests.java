@@ -20,8 +20,8 @@ import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveArrayParameterResolver;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Event;
-import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests for {@link UniqueId#parse(String)} for methods
@@ -36,7 +36,7 @@ class UniqueIdParsingForArrayParameterIntegrationTests extends AbstractJupiterTe
 
 	@Test
 	void executeTestsForPrimitiveArrayMethodInjectionCases() {
-		ExecutionResults executionResults = executeTestsForClass(PrimitiveArrayMethodInjectionTestCase.class);
+		EngineExecutionResults executionResults = executeTestsForClass(PrimitiveArrayMethodInjectionTestCase.class);
 
 		assertEquals(1, executionResults.tests().started().count(), "# tests started");
 		assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded");

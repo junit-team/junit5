@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
-import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests that verify support for {@link Disabled @Disabled} in the {@link JupiterTestEngine}.
@@ -28,7 +28,7 @@ class DisabledTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestsWithDisabledTestClass() {
-		ExecutionResults results = executeTestsForClass(DisabledTestClassTestCase.class);
+		EngineExecutionResults results = executeTestsForClass(DisabledTestClassTestCase.class);
 
 		results.containers().assertStatistics(stats -> stats.skipped(1));
 		results.tests().assertStatistics(stats -> stats.started(0));

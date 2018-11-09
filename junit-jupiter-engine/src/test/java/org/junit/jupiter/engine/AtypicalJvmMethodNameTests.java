@@ -18,7 +18,7 @@ import static org.junit.jupiter.engine.kotlin.ArbitraryNamingKotlinTestCase.METH
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.kotlin.ArbitraryNamingKotlinTestCase;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.testkit.engine.ExecutionResults;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
  * Integration tests for JVM languages that allow special characters
@@ -31,7 +31,7 @@ class AtypicalJvmMethodNameTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void kotlinTestWithMethodNameContainingSpecialCharacters() {
-		ExecutionResults executionResults = executeTestsForClass(ArbitraryNamingKotlinTestCase.class);
+		EngineExecutionResults executionResults = executeTestsForClass(ArbitraryNamingKotlinTestCase.class);
 		assertThat(executionResults.tests().started().count()).isEqualTo(2);
 
 		TestDescriptor testDescriptor1 = executionResults.tests().succeeded().list().get(0).getTestDescriptor();

@@ -14,7 +14,7 @@ import org.junit.Assume;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.testkit.engine.ExecutionResults;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
  * Integration tests that verify support for failed assumptions in the
@@ -26,7 +26,7 @@ class FailedAssumptionsTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testAbortedExceptionInBeforeAll() {
-		ExecutionResults results = executeTestsForClass(TestAbortedExceptionInBeforeAllTestCase.class);
+		EngineExecutionResults results = executeTestsForClass(TestAbortedExceptionInBeforeAllTestCase.class);
 
 		results.containers().assertStatistics(stats -> stats.aborted(1));
 		results.tests().assertStatistics(stats -> stats.started(0));
@@ -34,7 +34,7 @@ class FailedAssumptionsTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void assumptionViolatedExceptionInBeforeAll() {
-		ExecutionResults results = executeTestsForClass(AssumptionViolatedExceptionInBeforeAllTestCase.class);
+		EngineExecutionResults results = executeTestsForClass(AssumptionViolatedExceptionInBeforeAllTestCase.class);
 
 		results.containers().assertStatistics(stats -> stats.aborted(1));
 		results.tests().assertStatistics(stats -> stats.started(0));

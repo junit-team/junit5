@@ -40,8 +40,8 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
-import org.junit.platform.testkit.engine.ExecutionResults;
 import org.opentest4j.AssertionFailedError;
 import org.opentest4j.TestAbortedException;
 
@@ -54,7 +54,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void failureInTestMethodIsRegistered() {
-		ExecutionResults executionResults = executeTests(selectMethod(FailureTestCase.class, "failingTest"));
+		EngineExecutionResults executionResults = executeTests(selectMethod(FailureTestCase.class, "failingTest"));
 		Events tests = executionResults.tests();
 
 		tests.assertStatistics(stats -> stats.started(1).failed(1));
@@ -66,7 +66,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void uncheckedExceptionInTestMethodIsRegistered() {
-		ExecutionResults executionResults = executeTests(
+		EngineExecutionResults executionResults = executeTests(
 			selectMethod(FailureTestCase.class, "testWithUncheckedException"));
 		Events tests = executionResults.tests();
 
@@ -79,7 +79,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void checkedExceptionInTestMethodIsRegistered() {
-		ExecutionResults executionResults = executeTests(
+		EngineExecutionResults executionResults = executeTests(
 			selectMethod(FailureTestCase.class, "testWithCheckedException"));
 		Events tests = executionResults.tests();
 
@@ -94,7 +94,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	void checkedExceptionInBeforeEachIsRegistered() {
 		FailureTestCase.exceptionToThrowInBeforeEach = Optional.of(new IOException("checked"));
 
-		ExecutionResults executionResults = executeTests(selectMethod(FailureTestCase.class, "succeedingTest"));
+		EngineExecutionResults executionResults = executeTests(selectMethod(FailureTestCase.class, "succeedingTest"));
 		Events tests = executionResults.tests();
 
 		tests.assertStatistics(stats -> stats.started(1).failed(1));
@@ -107,7 +107,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	void checkedExceptionInAfterEachIsRegistered() {
 		FailureTestCase.exceptionToThrowInAfterEach = Optional.of(new IOException("checked"));
 
-		ExecutionResults executionResults = executeTests(selectMethod(FailureTestCase.class, "succeedingTest"));
+		EngineExecutionResults executionResults = executeTests(selectMethod(FailureTestCase.class, "succeedingTest"));
 		Events tests = executionResults.tests();
 
 		tests.assertStatistics(stats -> stats.started(1).failed(1));
@@ -122,7 +122,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 		FailureTestCase.exceptionToThrowInAfterEach = Optional.of(new IOException("checked"));
 
-		ExecutionResults executionResults = executeTests(selectMethod(testClass, "testWithUncheckedException"));
+		EngineExecutionResults executionResults = executeTests(selectMethod(testClass, "testWithUncheckedException"));
 
 		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -141,7 +141,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	void exceptionInAfterEachTakesPrecedenceOverFailedAssumptionInTest() {
 		FailureTestCase.exceptionToThrowInAfterEach = Optional.of(new IOException("checked"));
 
-		ExecutionResults executionResults = executeTests(selectMethod(FailureTestCase.class, "abortedTest"));
+		EngineExecutionResults executionResults = executeTests(selectMethod(FailureTestCase.class, "abortedTest"));
 
 		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -162,7 +162,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 		FailureTestCase.exceptionToThrowInBeforeAll = Optional.of(new IOException("checked"));
 
-		ExecutionResults executionResults = executeTests(selectMethod(testClass, "succeedingTest"));
+		EngineExecutionResults executionResults = executeTests(selectMethod(testClass, "succeedingTest"));
 
 		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -177,7 +177,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 		FailureTestCase.exceptionToThrowInAfterAll = Optional.of(new IOException("checked"));
 
-		ExecutionResults executionResults = executeTests(selectMethod(testClass, "succeedingTest"));
+		EngineExecutionResults executionResults = executeTests(selectMethod(testClass, "succeedingTest"));
 
 		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -191,7 +191,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void exceptionInAfterAllCallbackDoesNotHideExceptionInBeforeAllCallback() {
 		Class<?> testClass = TestCaseWithThrowingBeforeAllAndAfterAllCallbacks.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass);
+		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
@@ -204,7 +204,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void exceptionsInConstructorAndAfterAllCallbackAreReportedWhenTestInstancePerMethodIsUsed() {
 		Class<?> testClass = TestCaseWithInvalidConstructorAndThrowingAfterAllCallbackAndPerMethodLifecycle.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass);
+		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
@@ -217,7 +217,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void exceptionInConstructorPreventsExecutionOfAfterAllCallbacksWhenTestInstancePerClassIsUsed() {
 		Class<?> testClass = TestCaseWithInvalidConstructorAndThrowingAfterAllCallbackAndPerClassLifecycle.class;
-		ExecutionResults executionResults = executeTestsForClass(testClass);
+		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
@@ -230,7 +230,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 		FailureTestCase.exceptionToThrowInBeforeAll = Optional.of(new TestAbortedException("aborted"));
 		FailureTestCase.exceptionToThrowInAfterAll = Optional.of(new IOException("checked"));
 
-		ExecutionResults executionResults = executeTests(selectMethod(FailureTestCase.class, "succeedingTest"));
+		EngineExecutionResults executionResults = executeTests(selectMethod(FailureTestCase.class, "succeedingTest"));
 
 		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //

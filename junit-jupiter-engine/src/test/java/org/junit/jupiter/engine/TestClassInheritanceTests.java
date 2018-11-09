@@ -25,7 +25,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.testkit.engine.ExecutionResults;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
  * Integration tests for test class hierarchy support in the {@link JupiterTestEngine}.
@@ -47,7 +47,7 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeAllTestsInClass() {
-		ExecutionResults executionResults = executeTestsForClass(LocalTestCase.class);
+		EngineExecutionResults executionResults = executeTestsForClass(LocalTestCase.class);
 
 		assertEquals(6, executionResults.tests().started().count(), "# tests started");
 		assertEquals(3, executionResults.tests().succeeded().count(), "# tests succeeded");
@@ -63,7 +63,7 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeSingleTest() {
-		ExecutionResults executionResults = executeTests(selectMethod(LocalTestCase.class, "alwaysPasses"));
+		EngineExecutionResults executionResults = executeTests(selectMethod(LocalTestCase.class, "alwaysPasses"));
 
 		assertEquals(1, executionResults.tests().started().count(), "# tests started");
 		assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded");
@@ -74,7 +74,7 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestDeclaredInSuperClass() {
-		ExecutionResults executionResults = executeTests(selectMethod(LocalTestCase.class, "superTest"));
+		EngineExecutionResults executionResults = executeTests(selectMethod(LocalTestCase.class, "superTest"));
 
 		assertEquals(1, executionResults.tests().started().count(), "# tests started");
 		assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded");
@@ -91,7 +91,7 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestWithExceptionThrownInAfterMethod() {
-		ExecutionResults executionResults = executeTests(
+		EngineExecutionResults executionResults = executeTests(
 			selectMethod(LocalTestCase.class, "throwExceptionInAfterMethod"));
 
 		assertEquals(1, executionResults.tests().started().count(), "# tests started");
@@ -103,7 +103,7 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void beforeAndAfterMethodsInTestClassHierarchy() {
-		ExecutionResults executionResults = executeTestsForClass(TestCase3.class);
+		EngineExecutionResults executionResults = executeTestsForClass(TestCase3.class);
 
 		// @formatter:off
 		assertAll(

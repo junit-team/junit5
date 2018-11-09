@@ -54,7 +54,7 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.testkit.engine.ExecutionResults;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
  * Integration tests for {@link TestInstance @TestInstance} lifecycle support.
@@ -528,7 +528,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	private void performAssertions(Class<?> testClass, int numContainers, int numTests,
 			Map.Entry<Class<?>, Integer>[] instanceCountEntries, int allMethods, int eachMethods) {
 
-		ExecutionResults executionResults = executeTestsForClass(testClass);
+		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 
 		executionResults.containers().assertStatistics(stats -> stats.started(numContainers).finished(numContainers));
 		executionResults.tests().assertStatistics(stats -> stats.started(numTests).finished(numTests));

@@ -37,12 +37,12 @@ import org.junit.platform.engine.UniqueId;
 /**
  * {@code EngineTestKit} provides support for executing a test plan for a given
  * {@link TestEngine} and then accessing the results via
- * {@linkplain ExecutionResults a fluent API} to verify the expected results.
+ * {@linkplain EngineExecutionResults a fluent API} to verify the expected results.
  *
  * @since 1.4
  * @see #execute(String, EngineDiscoveryRequest)
  * @see #execute(TestEngine, EngineDiscoveryRequest)
- * @see ExecutionResults
+ * @see EngineExecutionResults
  */
 @API(status = EXPERIMENTAL, since = "1.4")
 public final class EngineTestKit {
@@ -67,12 +67,12 @@ public final class EngineTestKit {
 	 * @param engineId the ID of the {@code TestEngine} to use; must not be
 	 * {@code null} or <em>blank</em>
 	 * @param discoveryRequest the {@code EngineDiscoveryRequest} to use
-	 * @return the recorded {@code ExecutionResults}
+	 * @return the results of the execution
 	 * @throws PreconditionViolationException for invalid arguments or if the
 	 * {@code TestEngine} with the supplied ID cannot be loaded
 	 * @see #execute(TestEngine, EngineDiscoveryRequest)
 	 */
-	public static ExecutionResults execute(String engineId, EngineDiscoveryRequest discoveryRequest)
+	public static EngineExecutionResults execute(String engineId, EngineDiscoveryRequest discoveryRequest)
 			throws PreconditionViolationException {
 
 		Preconditions.notBlank(engineId, "TestEngine ID must not be null or blank");
@@ -94,11 +94,11 @@ public final class EngineTestKit {
 	 * @param testEngine the {@code TestEngine} to use; must not be {@code null}
 	 * @param discoveryRequest the {@code EngineDiscoveryRequest} to use; must
 	 * not be {@code null}
-	 * @return the recorded {@code ExecutionResults}
+	 * @return the recorded {@code EngineExecutionResults}
 	 * @throws PreconditionViolationException for invalid arguments
 	 * @see #execute(String, EngineDiscoveryRequest)
 	 */
-	public static ExecutionResults execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest)
+	public static EngineExecutionResults execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest)
 			throws PreconditionViolationException {
 
 		Preconditions.notNull(testEngine, "TestEngine must not be null");

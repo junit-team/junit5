@@ -26,7 +26,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.engine.ExecutionResults;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
  * Integration tests that verify support for {@link TestInstancePostProcessor}.
@@ -46,7 +46,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 	void instancePostProcessorsInNestedClasses() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(OuterTestCase.class)).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		assertEquals(2, executionResults.tests().started().count(), "# tests started");
 		assertEquals(2, executionResults.tests().succeeded().count(), "# tests succeeded");
@@ -76,7 +76,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectClass(TestCaseWithTestSpecificTestInstancePostProcessor.class)).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 
 		assertEquals(1, executionResults.tests().started().count(), "# tests started");
 		assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded");

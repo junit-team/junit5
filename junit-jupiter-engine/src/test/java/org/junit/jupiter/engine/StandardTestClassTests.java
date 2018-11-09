@@ -22,8 +22,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
-import org.junit.platform.testkit.engine.ExecutionResults;
 import org.opentest4j.TestAbortedException;
 
 /**
@@ -55,7 +55,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(FirstOfTwoTestCases.class),
 			selectClass(SecondOfTwoTestCases.class)).build();
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 		Events containers = executionResults.containers();
 		Events tests = executionResults.tests();
 
@@ -69,7 +69,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void allTestsInClassAreRunWithBeforeEachAndAfterEachMethods() {
-		ExecutionResults executionResults = executeTestsForClass(MyStandardTestCase.class);
+		EngineExecutionResults executionResults = executeTestsForClass(MyStandardTestCase.class);
 		Events containers = executionResults.containers();
 		Events tests = executionResults.tests();
 
@@ -88,7 +88,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testsFailWhenBeforeEachFails() {
-		ExecutionResults executionResults = executeTestsForClass(TestCaseWithFailingBefore.class);
+		EngineExecutionResults executionResults = executeTestsForClass(TestCaseWithFailingBefore.class);
 		Events containers = executionResults.containers();
 		Events tests = executionResults.tests();
 
@@ -104,7 +104,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testsFailWhenAfterEachFails() {
-		ExecutionResults executionResults = executeTestsForClass(TestCaseWithFailingAfter.class);
+		EngineExecutionResults executionResults = executeTestsForClass(TestCaseWithFailingAfter.class);
 		Events containers = executionResults.containers();
 		Events tests = executionResults.tests();
 

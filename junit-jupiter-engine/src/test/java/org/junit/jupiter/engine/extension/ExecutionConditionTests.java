@@ -25,8 +25,8 @@ import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition.SystemProperty;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
-import org.junit.platform.testkit.engine.ExecutionResults;
 
 /**
  * Integration tests that verify support for the {@link ExecutionCondition}
@@ -52,7 +52,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void conditionWorksOnContainer() {
-		ExecutionResults executionResults = executeTestsForClass(TestCaseWithExecutionConditionOnClass.class);
+		EngineExecutionResults executionResults = executeTestsForClass(TestCaseWithExecutionConditionOnClass.class);
 
 		executionResults.containers().assertStatistics(stats -> stats.skipped(1));
 		executionResults.tests().assertStatistics(stats -> stats.started(0));
@@ -112,7 +112,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 				.build();
 		// @formatter:on
 
-		ExecutionResults executionResults = executeTests(request);
+		EngineExecutionResults executionResults = executeTests(request);
 		Events containers = executionResults.containers();
 		Events tests = executionResults.tests();
 

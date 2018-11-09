@@ -30,7 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.platform.testkit.engine.ExecutionResults;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
  * Integration tests that verify support for {@link BeforeTestExecutionCallback},
@@ -54,7 +54,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 
 	@Test
 	void beforeAndAfterTestExecutionCallbacks() {
-		ExecutionResults executionResults = executeTestsForClass(OuterTestCase.class);
+		EngineExecutionResults executionResults = executeTestsForClass(OuterTestCase.class);
 
 		assertEquals(2, executionResults.tests().started().count(), "# tests started");
 		assertEquals(2, executionResults.tests().succeeded().count(), "# tests succeeded");
@@ -93,7 +93,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 
 	@Test
 	void beforeAndAfterTestExecutionCallbacksDeclaredOnSuperclassAndSubclass() {
-		ExecutionResults executionResults = executeTestsForClass(ChildTestCase.class);
+		EngineExecutionResults executionResults = executeTestsForClass(ChildTestCase.class);
 
 		assertEquals(1, executionResults.tests().started().count(), "# tests started");
 		assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded");
@@ -114,7 +114,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 
 	@Test
 	void beforeAndAfterTestExecutionCallbacksDeclaredOnInterfaceAndClass() {
-		ExecutionResults executionResults = executeTestsForClass(TestInterfaceTestCase.class);
+		EngineExecutionResults executionResults = executeTestsForClass(TestInterfaceTestCase.class);
 
 		assertEquals(2, executionResults.tests().started().count(), "# tests started");
 		assertEquals(2, executionResults.tests().succeeded().count(), "# tests succeeded");
@@ -145,7 +145,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 
 	@Test
 	void beforeEachMethodThrowsAnException() {
-		ExecutionResults executionResults = executeTestsForClass(ExceptionInBeforeEachMethodTestCase.class);
+		EngineExecutionResults executionResults = executeTestsForClass(ExceptionInBeforeEachMethodTestCase.class);
 
 		assertEquals(1, executionResults.tests().started().count(), "# tests started");
 		assertEquals(0, executionResults.tests().succeeded().count(), "# tests succeeded");
@@ -169,7 +169,8 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 
 	@Test
 	void beforeTestExecutionCallbackThrowsAnException() {
-		ExecutionResults executionResults = executeTestsForClass(ExceptionInBeforeTestExecutionCallbackTestCase.class);
+		EngineExecutionResults executionResults = executeTestsForClass(
+			ExceptionInBeforeTestExecutionCallbackTestCase.class);
 
 		assertEquals(1, executionResults.tests().started().count(), "# tests started");
 		assertEquals(0, executionResults.tests().succeeded().count(), "# tests succeeded");
@@ -197,7 +198,8 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 
 	@Test
 	void afterTestExecutionCallbackThrowsAnException() {
-		ExecutionResults executionResults = executeTestsForClass(ExceptionInAfterTestExecutionCallbackTestCase.class);
+		EngineExecutionResults executionResults = executeTestsForClass(
+			ExceptionInAfterTestExecutionCallbackTestCase.class);
 
 		assertEquals(1, executionResults.tests().started().count(), "# tests started");
 		assertEquals(0, executionResults.tests().succeeded().count(), "# tests succeeded");
@@ -225,7 +227,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 
 	@Test
 	void testMethodThrowsAnException() {
-		ExecutionResults executionResults = executeTestsForClass(ExceptionInTestMethodTestCase.class);
+		EngineExecutionResults executionResults = executeTestsForClass(ExceptionInTestMethodTestCase.class);
 
 		assertEquals(1, executionResults.tests().started().count(), "# tests started");
 		assertEquals(0, executionResults.tests().succeeded().count(), "# tests succeeded");
