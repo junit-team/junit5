@@ -77,6 +77,11 @@ public interface MethodOrderer {
 	 * Get the <em>default</em> {@link ExecutionMode} for the test class
 	 * configured with this {@link MethodOrderer}.
 	 *
+	 * <p>This method is guaranteed to be invoked after
+	 * {@link #orderMethods(MethodOrdererContext)} which allows implementations
+	 * of this method to determine the appropriate return value programmatically,
+	 * potentially based on actions that were taken in {@code orderMethods()}.
+	 *
 	 * <p>Defaults to {@link ExecutionMode#SAME_THREAD SAME_THREAD}, since
 	 * ordered methods are typically sorted in a fashion that would conflict
 	 * with concurrent execution.
@@ -201,6 +206,8 @@ public interface MethodOrderer {
 		 */
 		public static final String RANDOM_SEED_PROPERTY_NAME = "junit.jupiter.execution.order.random.seed";
 
+		private boolean usingCustomSeed = false;
+
 		/**
 		 * Order the methods encapsulated in the supplied
 		 * {@link MethodOrdererContext} pseudo-randomly.
@@ -214,6 +221,7 @@ public interface MethodOrderer {
 				String value = configurationParameter.get();
 				try {
 					seed = Long.valueOf(value);
+					this.usingCustomSeed = true;
 				}
 				catch (NumberFormatException ex) {
 					logger.warn(ex,
@@ -233,12 +241,19 @@ public interface MethodOrderer {
 		/**
 		 * Get the <em>default</em> {@link ExecutionMode} for the test class.
 		 *
-		 * @return {@link ExecutionMode#CONCURRENT CONCURRENT} to allow concurrent
-		 * execution of randomly ordered methods by default
+		 * <p>If a custom seed has been specified, this method returns
+		 * {@link ExecutionMode#SAME_THREAD SAME_THREAD} in order to ensure that
+		 * the results are repeatable across executions of the test plan.
+		 * Otherwise, this method returns {@link ExecutionMode#CONCURRENT
+		 * CONCURRENT} to allow concurrent execution of randomly ordered methods
+		 * by default.
+		 *
+		 * @return {@code SAME_THREAD} if a custom seed has been configured;
+		 * otherwise, {@code CONCURRENT}
 		 */
 		@Override
 		public ExecutionMode getDefaultExecutionMode() {
-			return ExecutionMode.CONCURRENT;
+			return this.usingCustomSeed ? ExecutionMode.SAME_THREAD : ExecutionMode.CONCURRENT;
 		}
 	}
 

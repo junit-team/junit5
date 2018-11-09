@@ -144,7 +144,7 @@ class OrderedMethodTests {
 			callSequence.clear();
 			listener.clear();
 
-			var tests = executeTestsWithRandomSeed(RandomTestCase.class, seed);
+			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed);
 
 			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -166,7 +166,7 @@ class OrderedMethodTests {
 		for (int i = 0; i < 10; i++) {
 			callSequence.clear();
 
-			var tests = executeTestsWithRandomSeed(RandomTestCase.class, "42");
+			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, "42");
 
 			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -218,8 +218,13 @@ class OrderedMethodTests {
 		return executeTests(testClass, Collections.singletonMap(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true"));
 	}
 
-	private Events executeTestsWithRandomSeed(Class<?> testClass, String seed) {
-		return executeTests(testClass, Collections.singletonMap(RANDOM_SEED_PROPERTY_NAME, seed));
+	private Events executeTestsInParallelWithRandomSeed(Class<?> testClass, String seed) {
+		var configurationParameters = Map.of(//
+			PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true", //
+			RANDOM_SEED_PROPERTY_NAME, seed //
+		);
+
+		return executeTests(testClass, configurationParameters);
 	}
 
 	private Events executeTests(Class<?> testClass, Map<String, String> configurationParameters) {

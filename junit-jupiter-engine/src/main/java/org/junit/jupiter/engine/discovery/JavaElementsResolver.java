@@ -298,9 +298,6 @@ class JavaElementsResolver {
 				.map(ReflectionUtils::newInstance)//
 				.ifPresent(methodOrderer -> {
 
-					ExecutionMode defaultExecutionMode = toExecutionMode(methodOrderer.getDefaultExecutionMode());
-					classTestDescriptor.setDefaultChildExecutionMode(defaultExecutionMode);
-
 					List<DefaultMethodDescriptor> methodDescriptors = classTestDescriptor.getChildren().stream()//
 							.filter(MethodBasedTestDescriptor.class::isInstance)//
 							.map(MethodBasedTestDescriptor.class::cast)//
@@ -334,6 +331,11 @@ class JavaElementsResolver {
 					// Currently no way to removeAll or addAll children at once.
 					sortedTestDescriptors.forEach(classTestDescriptor::removeChild);
 					sortedTestDescriptors.forEach(classTestDescriptor::addChild);
+
+					// Note: MethodOrderer#getDefaultExecutionMode() is guaranteed
+					// to be invoked after MethodOrderer#orderMethods().
+					ExecutionMode defaultExecutionMode = toExecutionMode(methodOrderer.getDefaultExecutionMode());
+					classTestDescriptor.setDefaultChildExecutionMode(defaultExecutionMode);
 				});
 	}
 
