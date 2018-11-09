@@ -63,6 +63,8 @@ repository on GitHub.
 * When executing tests in parallel, lifecycle methods and callbacks called after a
   `@TestFactory` method are now always executed after the dynamic tests returned by the
   method.
+* Exceptions thrown during initialization of static `@RegisterExtension` fields now cause
+  the test class to fail instead of being silently swallowed.
 
 ==== Deprecations and Breaking Changes
 

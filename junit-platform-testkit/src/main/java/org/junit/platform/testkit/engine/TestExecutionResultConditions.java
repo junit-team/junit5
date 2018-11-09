@@ -58,6 +58,10 @@ public class TestExecutionResultConditions {
 			"suppressed at index %d matches %s", index, checked);
 	}
 
+	public static Condition<Throwable> hasCause(Condition<Throwable> checked) {
+		return new Condition<>(throwable -> checked.matches(throwable.getCause()), "cause matches %s", checked);
+	}
+
 	public static Condition<TestExecutionResult> cause(Condition<? super Throwable> condition) {
 		return new Condition<>(where(TestExecutionResult::getThrowable,
 			throwable -> throwable.isPresent() && condition.matches(throwable.get())), "cause where %s", condition);
