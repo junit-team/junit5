@@ -213,6 +213,7 @@ subprojects { subproj ->
 				use = true
 				addBooleanOption('Xdoclint:html,syntax', true)
 				addBooleanOption('html5', true)
+				addBooleanOption('-no-module-directories', true)
 				addMultilineStringsOption('tag').value = [
 					'apiNote:a:API Note:',
 					'implNote:a:Implementation Note:'
@@ -390,6 +391,7 @@ configure(rootProject) {
 			splitIndex = true
 			addBooleanOption('Xdoclint:none', true)
 			addBooleanOption('html5', true)
+			addBooleanOption('-no-module-directories', true)
 			addMultilineStringsOption('tag').value = [
 				'apiNote:a:API Note:',
 				'implNote:a:Implementation Note:'
