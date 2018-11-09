@@ -99,9 +99,9 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 		assertClassFails(ExplosiveErrorTestCase.class, allOf(isA(Error.class), message("boom")));
 	}
 
-	private void assertClassFails(Class<?> testClass, Condition<Throwable> boom) {
+	private void assertClassFails(Class<?> testClass, Condition<Throwable> causeCondition) {
 		EngineExecutionResults executionResults = executeTestsForClass(testClass);
-		executionResults.containers().assertThatEvents().haveExactly(1, finishedWithFailure(boom));
+		executionResults.containers().assertThatEvents().haveExactly(1, finishedWithFailure(causeCondition));
 	}
 
 	private void assertOneTestSucceeded(Class<?> testClass) {
