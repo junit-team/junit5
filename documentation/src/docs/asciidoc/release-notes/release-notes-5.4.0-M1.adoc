@@ -83,6 +83,10 @@ repository on GitHub.
 * New `LOCALE` and `TIME_ZONE` constants in `org.junit.jupiter.api.parallel.Resources`
   for use with `@ResourceLock` to synchronize test execution regarding the default
   `Locale` and default `TimeZone`, respectively.
+* New `MethodOrderer` API for ordering the sequence of tests with built-in support for
+  _alphanumeric_, `@Order` annotation based, and _random_ ordering of test methods.
+  - See <<../user-guide/index.adoc#writing-tests-test-execution-order, Test Execution
+    Order>> in the User Guide for details.
 * New `DisplayNameGenerator` interface and `@DisplayNameGeneration` annotation that allow
   declarative configuration of a pre-defined or custom display name generator.
 * JUnit 4's `@Ignore` annotation is now supported for disabling test classes and test
