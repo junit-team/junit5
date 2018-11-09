@@ -563,15 +563,16 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests-disabling">3.6. Disabling Tests</a></li>
 <li><a href="#writing-tests-conditional-execution">3.7. Conditional Test Execution</a></li>
 <li><a href="#writing-tests-tagging-and-filtering">3.8. Tagging and Filtering</a></li>
-<li><a href="#writing-tests-test-instance-lifecycle">3.9. Test Instance Lifecycle</a></li>
-<li><a href="#writing-tests-nested">3.10. Nested Tests</a></li>
-<li><a href="#writing-tests-dependency-injection">3.11. Dependency Injection for Constructors and Methods</a></li>
-<li><a href="#writing-tests-test-interfaces-and-default-methods">3.12. Test Interfaces and Default Methods</a></li>
-<li><a href="#writing-tests-repeated-tests">3.13. Repeated Tests</a></li>
-<li><a href="#writing-tests-parameterized-tests">3.14. Parameterized Tests</a></li>
-<li><a href="#writing-tests-test-templates">3.15. Test Templates</a></li>
-<li><a href="#writing-tests-dynamic-tests">3.16. Dynamic Tests</a></li>
-<li><a href="#writing-tests-parallel-execution">3.17. Parallel Execution</a></li>
+<li><a href="#writing-tests-test-execution-order">3.9. Test Execution Order</a></li>
+<li><a href="#writing-tests-test-instance-lifecycle">3.10. Test Instance Lifecycle</a></li>
+<li><a href="#writing-tests-nested">3.11. Nested Tests</a></li>
+<li><a href="#writing-tests-dependency-injection">3.12. Dependency Injection for Constructors and Methods</a></li>
+<li><a href="#writing-tests-test-interfaces-and-default-methods">3.13. Test Interfaces and Default Methods</a></li>
+<li><a href="#writing-tests-repeated-tests">3.14. Repeated Tests</a></li>
+<li><a href="#writing-tests-parameterized-tests">3.15. Parameterized Tests</a></li>
+<li><a href="#writing-tests-test-templates">3.16. Test Templates</a></li>
+<li><a href="#writing-tests-dynamic-tests">3.17. Dynamic Tests</a></li>
+<li><a href="#writing-tests-parallel-execution">3.18. Parallel Execution</a></li>
 </ul>
 </li>
 <li><a href="#migrating-from-junit4">4. Migrating from JUnit 4</a>
@@ -983,12 +984,16 @@ module.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a test factory for <a href="#writing-tests-dynamic-tests">dynamic tests</a>. Such methods are <em>inherited</em> unless they are <em>overridden</em>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TestInstance</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Used to configure the <a href="#writing-tests-test-instance-lifecycle">test instance lifecycle</a> for the annotated test class. Such annotations are <em>inherited</em>.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TestTemplate</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Denotes that a method is a <a href="#writing-tests-test-templates">template for test cases</a> designed to be invoked multiple times depending on the number of invocation contexts returned by the registered <a href="#extensions-test-templates">providers</a>. Such methods are <em>inherited</em> unless they are <em>overridden</em>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TestMethodOrder</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to configure the <a href="#writing-tests-test-execution-order">test method execution order</a> for the annotated test class; similar to JUnit 4&#8217;s <code>@FixMethodOrder</code>. Such annotations are <em>inherited</em>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TestInstance</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to configure the <a href="#writing-tests-test-instance-lifecycle">test instance lifecycle</a> for the annotated test class. Such annotations are <em>inherited</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@DisplayName</code></p></td>
@@ -2002,7 +2007,89 @@ characters have been removed.
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-test-instance-lifecycle"><a class="anchor" href="#writing-tests-test-instance-lifecycle"></a>3.9. Test Instance Lifecycle</h3>
+<h3 id="writing-tests-test-execution-order"><a class="anchor" href="#writing-tests-test-execution-order"></a>3.9. Test Execution Order</h3>
+<div class="paragraph">
+<p>By default, test methods will be ordered using a default algorithm that is deterministic
+but intentionally nonobvious. This ensures that subsequent runs of a test suite execute
+test methods in the same order, thereby allowing for repeatable builds.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In this context, a <em>test method</em> is any instance method that is directly or
+meta-annotated with <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, <code>@TestFactory</code>, or
+<code>@TestTemplate</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Although true <em>unit tests</em> typically should not rely on the order in which they are
+executed, there are times when it is necessary to enforce a specific test method
+execution order&#8201;&#8212;&#8201;for example, when writing <em>integration tests</em> or <em>functional tests</em>
+where the sequence of the tests is important, especially in conjunction
+<code>@TestInstance(Lifecycle.PER_CLASS)</code>.</p>
+</div>
+<div class="paragraph">
+<p>To control the order in which test methods are executed, annotate your test class or test
+interface with <code><a href="../api/org/junit/jupiter/api/TestMethodOrder.html">@TestMethodOrder</a></code> and specify the desired <code><a href="../api/org/junit/jupiter/api/MethodOrderer.html">MethodOrderer</a></code>
+implementation. You can implement your own custom <code>MethodOrderer</code> or use one of the
+following built-in <code>MethodOrderer</code> implementations.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code><a href="../api/org/junit/jupiter/api/MethodOrderer.Alphanumeric.html">Alphanumeric</a></code>: sorts test methods <em>alphanumerically</em> based on their names and formal
+parameter lists.</p>
+</li>
+<li>
+<p><code><a href="../api/org/junit/jupiter/api/MethodOrderer.OrderAnnotation.html">OrderAnnotation</a></code>: sorts test methods <em>numerically</em> based on values specified via the
+<code><a href="../api/org/junit/jupiter/api/Order.html">@Order</a></code> annotation.</p>
+</li>
+<li>
+<p><code><a href="../api/org/junit/jupiter/api/MethodOrderer.Random.html">Random</a></code>: orders test methods <em>pseudo-randomly</em> and supports configuration of a
+custom <em>seed</em>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following example demonstrates how to guarantee that test methods are executed in the
+order specified via the <code>@Order</code> annotation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.MethodOrderer.OrderAnnotation</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Order</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.TestMethodOrder</span>;
+
+<span class="annotation">@TestMethodOrder</span>(OrderAnnotation.class)
+<span class="type">class</span> <span class="class">OrderedTestsDemo</span> {
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@Order</span>(<span class="integer">1</span>)
+    <span class="type">void</span> nullValues() {
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@Order</span>(<span class="integer">2</span>)
+    <span class="type">void</span> emptyValues() {
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@Order</span>(<span class="integer">3</span>)
+    <span class="type">void</span> validValues() {
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="writing-tests-test-instance-lifecycle"><a class="anchor" href="#writing-tests-test-instance-lifecycle"></a>3.10. Test Instance Lifecycle</h3>
 <div class="paragraph">
 <p>In order to allow individual test methods to be executed in isolation and to avoid
 unexpected side effects due to mutable test instance state, JUnit creates a new instance
@@ -2044,7 +2131,7 @@ easier to implement <code>@BeforeAll</code> and <code>@AfterAll</code> methods b
 test instance lifecycle mode.</p>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-test-instance-lifecycle-changing-default"><a class="anchor" href="#writing-tests-test-instance-lifecycle-changing-default"></a>3.9.1. Changing the Default Test Instance Lifecycle</h4>
+<h4 id="writing-tests-test-instance-lifecycle-changing-default"><a class="anchor" href="#writing-tests-test-instance-lifecycle-changing-default"></a>3.10.1. Changing the Default Test Instance Lifecycle</h4>
 <div class="paragraph">
 <p>If a test class or test interface is not annotated with <code>@TestInstance</code>, JUnit Jupiter
 will use a <em>default</em> lifecycle mode. The standard <em>default</em> mode is <code>PER_METHOD</code>;
@@ -2097,7 +2184,7 @@ configuration file instead of via a JVM system property.
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-nested"><a class="anchor" href="#writing-tests-nested"></a>3.10. Nested Tests</h3>
+<h3 id="writing-tests-nested"><a class="anchor" href="#writing-tests-nested"></a>3.11. Nested Tests</h3>
 <div class="paragraph">
 <p>Nested tests give the test writer more capabilities to express the relationship among
 several group of tests. Here&#8217;s an elaborate example.</p>
@@ -2211,7 +2298,7 @@ test class with <code>@TestInstance(Lifecycle.PER_CLASS)</code> (see
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-dependency-injection"><a class="anchor" href="#writing-tests-dependency-injection"></a>3.11. Dependency Injection for Constructors and Methods</h3>
+<h3 id="writing-tests-dependency-injection"><a class="anchor" href="#writing-tests-dependency-injection"></a>3.12. Dependency Injection for Constructors and Methods</h3>
 <div class="paragraph">
 <p>In all prior JUnit versions, test constructors or methods were not allowed to have
 parameters (at least not with the standard <code>Runner</code> implementations). As one of the major
@@ -2379,7 +2466,7 @@ methods.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-test-interfaces-and-default-methods"><a class="anchor" href="#writing-tests-test-interfaces-and-default-methods"></a>3.12. Test Interfaces and Default Methods</h3>
+<h3 id="writing-tests-test-interfaces-and-default-methods"><a class="anchor" href="#writing-tests-test-interfaces-and-default-methods"></a>3.13. Test Interfaces and Default Methods</h3>
 <div class="paragraph">
 <p>JUnit Jupiter allows <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, <code>@TestFactory</code>,
 <code>@TestTemplate</code>, <code>@BeforeEach</code>, and <code>@AfterEach</code> to be declared on interface <code>default</code>
@@ -2609,7 +2696,7 @@ The above tests are merely meant as examples and therefore not complete.
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-repeated-tests"><a class="anchor" href="#writing-tests-repeated-tests"></a>3.13. Repeated Tests</h3>
+<h3 id="writing-tests-repeated-tests"><a class="anchor" href="#writing-tests-repeated-tests"></a>3.14. Repeated Tests</h3>
 <div class="paragraph">
 <p>JUnit Jupiter provides the ability to repeat a test a specified number of times simply by
 annotating a method with <code>@RepeatedTest</code> and specifying the total number of repetitions
@@ -2664,7 +2751,7 @@ repetitions programmatically, a developer can choose to have an instance of
 <code>RepetitionInfo</code> injected into a <code>@RepeatedTest</code>, <code>@BeforeEach</code>, or <code>@AfterEach</code> method.</p>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-repeated-tests-examples"><a class="anchor" href="#writing-tests-repeated-tests-examples"></a>3.13.1. Repeated Test Examples</h4>
+<h4 id="writing-tests-repeated-tests-examples"><a class="anchor" href="#writing-tests-repeated-tests-examples"></a>3.14.1. Repeated Test Examples</h4>
 <div class="paragraph">
 <p>The <code>RepeatedTestsDemo</code> class at the end of this section demonstrates several examples of
 repeated tests.</p>
@@ -2817,7 +2904,7 @@ INFO: About to execute repetition 5 of 5 for repeatedTestInGerman</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-parameterized-tests"><a class="anchor" href="#writing-tests-parameterized-tests"></a>3.14. Parameterized Tests</h3>
+<h3 id="writing-tests-parameterized-tests"><a class="anchor" href="#writing-tests-parameterized-tests"></a>3.15. Parameterized Tests</h3>
 <div class="paragraph">
 <p>Parameterized tests make it possible to run a test multiple times with different
 arguments. They are declared just like regular <code>@Test</code> methods but use the
@@ -2865,14 +2952,14 @@ in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for details.
 </table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-setup"><a class="anchor" href="#writing-tests-parameterized-tests-setup"></a>3.14.1. Required Setup</h4>
+<h4 id="writing-tests-parameterized-tests-setup"><a class="anchor" href="#writing-tests-parameterized-tests-setup"></a>3.15.1. Required Setup</h4>
 <div class="paragraph">
 <p>In order to use parameterized tests you need to add a dependency on the
 <code>junit-jupiter-params</code> artifact. Please refer to <a href="#dependency-metadata">Dependency Metadata</a> for details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-consuming-arguments"><a class="anchor" href="#writing-tests-parameterized-tests-consuming-arguments"></a>3.14.2. Consuming Arguments</h4>
+<h4 id="writing-tests-parameterized-tests-consuming-arguments"><a class="anchor" href="#writing-tests-parameterized-tests-consuming-arguments"></a>3.15.2. Consuming Arguments</h4>
 <div class="paragraph">
 <p>Parameterized test methods typically <em>consume</em> arguments directly from the configured
 source (see <a href="#writing-tests-parameterized-tests-sources">Sources of Arguments</a>) following a one-to-one
@@ -2906,7 +2993,7 @@ parameterized method at the same index in the method&#8217;s formal parameter li
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-sources"><a class="anchor" href="#writing-tests-parameterized-tests-sources"></a>3.14.3. Sources of Arguments</h4>
+<h4 id="writing-tests-parameterized-tests-sources"><a class="anchor" href="#writing-tests-parameterized-tests-sources"></a>3.15.3. Sources of Arguments</h4>
 <div class="paragraph">
 <p>Out of the box, JUnit Jupiter provides quite a few <em>source</em> annotations. Each of the
 following subsections provides a brief overview and an example for each of them. Please
@@ -3284,7 +3371,7 @@ class or as a <code>static</code> nested class.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-argument-conversion"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion"></a>3.14.4. Argument Conversion</h4>
+<h4 id="writing-tests-parameterized-tests-argument-conversion"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion"></a>3.15.4. Argument Conversion</h4>
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-argument-conversion-widening"><a class="anchor" href="#writing-tests-parameterized-tests-argument-conversion-widening"></a>Widening Conversion</h5>
 <div class="paragraph">
@@ -3594,7 +3681,7 @@ composed annotation <code>JavaTimeConversionPattern</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-argument-aggregation"><a class="anchor" href="#writing-tests-parameterized-tests-argument-aggregation"></a>3.14.5. Argument Aggregation</h4>
+<h4 id="writing-tests-parameterized-tests-argument-aggregation"><a class="anchor" href="#writing-tests-parameterized-tests-argument-aggregation"></a>3.15.5. Argument Aggregation</h4>
 <div class="paragraph">
 <p>By default, each <em>argument</em> provided to a <code>@ParameterizedTest</code> method corresponds to a
 single method parameter. Consequently, argument sources which are expected to supply a
@@ -3705,7 +3792,7 @@ action with a custom <code>@CsvToPerson</code> annotation.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-display-names"><a class="anchor" href="#writing-tests-parameterized-tests-display-names"></a>3.14.6. Customizing Display Names</h4>
+<h4 id="writing-tests-parameterized-tests-display-names"><a class="anchor" href="#writing-tests-parameterized-tests-display-names"></a>3.15.6. Customizing Display Names</h4>
 <div class="paragraph">
 <p>By default, the display name of a parameterized test invocation contains the invocation
 index and the <code>String</code> representation of all arguments for that specific invocation.
@@ -3763,7 +3850,7 @@ However, you can customize invocation display names via the <code>name</code> at
 </table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parameterized-tests-lifecycle-interop"><a class="anchor" href="#writing-tests-parameterized-tests-lifecycle-interop"></a>3.14.7. Lifecycle and Interoperability</h4>
+<h4 id="writing-tests-parameterized-tests-lifecycle-interop"><a class="anchor" href="#writing-tests-parameterized-tests-lifecycle-interop"></a>3.15.7. Lifecycle and Interoperability</h4>
 <div class="paragraph">
 <p>Each invocation of a parameterized test has the same lifecycle as a regular <code>@Test</code>
 method. For example, <code>@BeforeEach</code> methods will be executed before each invocation.
@@ -3800,7 +3887,7 @@ lifecycle methods (e.g. <code>@BeforeEach</code>) and test class constructors.</
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-test-templates"><a class="anchor" href="#writing-tests-test-templates"></a>3.15. Test Templates</h3>
+<h3 id="writing-tests-test-templates"><a class="anchor" href="#writing-tests-test-templates"></a>3.16. Test Templates</h3>
 <div class="paragraph">
 <p>A <code><a href="../api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method is not a regular test case but rather a template for test
 cases. As such, it is designed to be invoked multiple times depending on the number of
@@ -3812,7 +3899,7 @@ method with full support for the same lifecycle callbacks and extensions. Please
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-dynamic-tests"><a class="anchor" href="#writing-tests-dynamic-tests"></a>3.16. Dynamic Tests</h3>
+<h3 id="writing-tests-dynamic-tests"><a class="anchor" href="#writing-tests-dynamic-tests"></a>3.17. Dynamic Tests</h3>
 <div class="paragraph">
 <p>The standard <code>@Test</code> annotation in JUnit Jupiter described in
 <a href="#writing-tests-annotations">Annotations</a> is very similar to the <code>@Test</code> annotation in JUnit 4. Both
@@ -3890,7 +3977,7 @@ Dynamic tests are currently an <em>experimental</em> feature. Consult the table 
 </table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-dynamic-tests-examples"><a class="anchor" href="#writing-tests-dynamic-tests-examples"></a>3.16.1. Dynamic Test Examples</h4>
+<h4 id="writing-tests-dynamic-tests-examples"><a class="anchor" href="#writing-tests-dynamic-tests-examples"></a>3.17.1. Dynamic Test Examples</h4>
 <div class="paragraph">
 <p>The following <code>DynamicTestsDemo</code> class demonstrates several examples of test factories
 and dynamic tests.</p>
@@ -4058,7 +4145,7 @@ expressiveness and power of dynamic tests.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-parallel-execution"><a class="anchor" href="#writing-tests-parallel-execution"></a>3.17. Parallel Execution</h3>
+<h3 id="writing-tests-parallel-execution"><a class="anchor" href="#writing-tests-parallel-execution"></a>3.18. Parallel Execution</h3>
 <div class="paragraph">
 <p>By default, JUnit Jupiter tests are run sequentially in a single thread. Running tests in
 parallel&#8201;&#8212;&#8201;for example, to speed up execution&#8201;&#8212;&#8201;is available as an opt-in feature since
@@ -4089,7 +4176,7 @@ eventually <a href="#api-evolution">promote</a> this feature.
 </table>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parallel-execution-config"><a class="anchor" href="#writing-tests-parallel-execution-config"></a>3.17.1. Configuration</h4>
+<h4 id="writing-tests-parallel-execution-config"><a class="anchor" href="#writing-tests-parallel-execution-config"></a>3.18.1. Configuration</h4>
 <div class="paragraph">
 <p>Properties such as the desired parallelism and the maximum pool size can be configured
 using a <code><a href="../api/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.html">ParallelExecutionConfigurationStrategy</a></code>. The JUnit Platform provides two
@@ -4128,7 +4215,7 @@ number of available processors/cores.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parallel-execution-synchronization"><a class="anchor" href="#writing-tests-parallel-execution-synchronization"></a>3.17.2. Synchronization</h4>
+<h4 id="writing-tests-parallel-execution-synchronization"><a class="anchor" href="#writing-tests-parallel-execution-synchronization"></a>3.18.2. Synchronization</h4>
 <div class="paragraph">
 <p>In the <code>org.junit.jupiter.api.parallel</code> package, JUnit Jupiter provides two
 annotation-based declarative mechanisms to change the execution mode and allow for
@@ -6796,6 +6883,31 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MethodDescriptor</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MethodOrderer</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MethodOrdererContext</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Order</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TestMethodOrder</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.condition</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DisabledIf</code> <em>(annotation)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.1</code></p></td>
@@ -7118,7 +7230,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-11-08 14:11:19 UTC
+Last updated 2018-11-09 16:42:40 UTC
 </div>
 </div>
 </body>

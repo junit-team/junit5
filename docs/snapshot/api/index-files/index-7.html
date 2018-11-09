@@ -28,7 +28,7 @@
     }
 //-->
 var pathtoroot = "../";
-var useModuleDirectories = true;
+var useModuleDirectories = false;
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -320,6 +320,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Get the configuration parameter stored under the specified <code>key</code>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/MethodOrdererContext.html#getConfigurationParameter(java.lang.String)">getConfigurationParameter(String)</a></span> - Method in interface org.junit.jupiter.api.<a href="../org/junit/jupiter/api/MethodOrdererContext.html" title="interface in org.junit.jupiter.api">MethodOrdererContext</a></dt>
+<dd>
+<div class="block">Get the configuration parameter stored under the specified <code>key</code>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html#getConfigurationParameters()">getConfigurationParameters()</a></span> - Method in class org.junit.jupiter.engine.execution.<a href="../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/console/options/CommandLineOptions.html#getConfigurationParameters()">getConfigurationParameters()</a></span> - Method in class org.junit.platform.console.options.<a href="../org/junit/platform/console/options/CommandLineOptions.html" title="class in org.junit.platform.console.options">CommandLineOptions</a></dt>
@@ -384,6 +388,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/ClassLoaderUtils.html#getDefaultClassLoader()">getDefaultClassLoader()</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/ClassLoaderUtils.html" title="class in org.junit.platform.commons.util">ClassLoaderUtils</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/MethodOrderer.html#getDefaultExecutionMode()">getDefaultExecutionMode()</a></span> - Method in interface org.junit.jupiter.api.<a href="../org/junit/jupiter/api/MethodOrderer.html" title="interface in org.junit.jupiter.api">MethodOrderer</a></dt>
+<dd>
+<div class="block">Get the <em>default</em> <a href="../org/junit/jupiter/api/parallel/ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel"><code>ExecutionMode</code></a> for the test class
+ configured with this <a href="../org/junit/jupiter/api/MethodOrderer.html" title="interface in org.junit.jupiter.api"><code>MethodOrderer</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/MethodOrderer.Random.html#getDefaultExecutionMode()">getDefaultExecutionMode()</a></span> - Method in class org.junit.jupiter.api.<a href="../org/junit/jupiter/api/MethodOrderer.Random.html" title="class in org.junit.jupiter.api">MethodOrderer.Random</a></dt>
+<dd>
+<div class="block">Get the <em>default</em> <a href="../org/junit/jupiter/api/parallel/ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel"><code>ExecutionMode</code></a> for the test class.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/TestDescriptor.html#getDescendants()">getDescendants()</a></span> - Method in interface org.junit.platform.engine.<a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a></dt>
 <dd>
 <div class="block">Get the immutable set of all <em>descendants</em> of this descriptor.</div>
@@ -490,6 +503,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#getExclusiveResources()">getExclusiveResources()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html#getExclusiveResources()">getExclusiveResources()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">MethodBasedTestDescriptor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/Node.html#getExclusiveResources()">getExclusiveResources()</a></span> - Method in interface org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical">Node</a></dt>
 <dd>
 <div class="block">Get the set of <a href="../org/junit/platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">exclusive resources</a>
@@ -536,6 +551,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#getExplicitExecutionMode()">getExplicitExecutionMode()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html#getExplicitExecutionMode()">getExplicitExecutionMode()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">JupiterTestDescriptor</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html#getExplicitExecutionMode()">getExplicitExecutionMode()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">MethodBasedTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html#getExtensionContext()">getExtensionContext()</a></span> - Method in class org.junit.jupiter.engine.execution.<a href="../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></dt>
 <dd>&nbsp;</dd>
@@ -655,6 +672,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#getLegacyReportingName()">getLegacyReportingName()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html#getLegacyReportingName()">getLegacyReportingName()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">MethodBasedTestDescriptor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/TestTemplateInvocationTestDescriptor.html#getLegacyReportingName()">getLegacyReportingName()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/TestTemplateInvocationTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestTemplateInvocationTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/TestDescriptor.html#getLegacyReportingName()">getLegacyReportingName()</a></span> - Method in interface org.junit.platform.engine.<a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a></dt>
@@ -695,6 +714,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/ParallelExecutionConfiguration.html#getMaxPoolSize()">getMaxPoolSize()</a></span> - Method in interface org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/ParallelExecutionConfiguration.html" title="interface in org.junit.platform.engine.support.hierarchical">ParallelExecutionConfiguration</a></dt>
 <dd>
 <div class="block">Get the maximum thread pool size to be used.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/MethodDescriptor.html#getMethod()">getMethod()</a></span> - Method in interface org.junit.jupiter.api.<a href="../org/junit/jupiter/api/MethodDescriptor.html" title="interface in org.junit.jupiter.api">MethodDescriptor</a></dt>
+<dd>
+<div class="block">Get the method for this descriptor.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/MethodOrdererContext.html#getMethodDescriptors()">getMethodDescriptors()</a></span> - Method in interface org.junit.jupiter.api.<a href="../org/junit/jupiter/api/MethodOrdererContext.html" title="interface in org.junit.jupiter.api">MethodOrdererContext</a></dt>
+<dd>
+<div class="block">Get the list of <a href="../org/junit/jupiter/api/MethodDescriptor.html" title="interface in org.junit.jupiter.api">method descriptors</a> to
+ order.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/discovery/MethodSelector.html#getMethodName()">getMethodName()</a></span> - Method in class org.junit.platform.engine.discovery.<a href="../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a></dt>
 <dd>
@@ -995,6 +1023,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#getTags()">getTags()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html#getTags()">getTags()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">MethodBasedTestDescriptor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/NestedClassTestDescriptor.html#getTags()">getTags()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/NestedClassTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">NestedClassTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/descriptor/AbstractTestDescriptor.html#getTags()">getTags()</a></span> - Method in class org.junit.platform.engine.support.descriptor.<a href="../org/junit/platform/engine/support/descriptor/AbstractTestDescriptor.html" title="class in org.junit.platform.engine.support.descriptor">AbstractTestDescriptor</a></dt>
@@ -1031,6 +1061,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Get the test class for this context.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/MethodOrdererContext.html#getTestClass()">getTestClass()</a></span> - Method in interface org.junit.jupiter.api.<a href="../org/junit/jupiter/api/MethodOrdererContext.html" title="interface in org.junit.jupiter.api">MethodOrdererContext</a></dt>
+<dd>
+<div class="block">Get the test class for this context.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/TestInfo.html#getTestClass()">getTestClass()</a></span> - Method in interface org.junit.jupiter.api.<a href="../org/junit/jupiter/api/TestInfo.html" title="interface in org.junit.jupiter.api">TestInfo</a></dt>
 <dd>
 <div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a> associated with the current test or container, if available.</div>
@@ -1040,6 +1074,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#getTestClass()">getTestClass()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/JupiterEngineExtensionContext.html#getTestClass()">getTestClass()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/JupiterEngineExtensionContext.html" title="class in org.junit.jupiter.engine.descriptor">JupiterEngineExtensionContext</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html#getTestClass()">getTestClass()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">MethodBasedTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/MethodExtensionContext.html#getTestClass()">getTestClass()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/MethodExtensionContext.html" title="class in org.junit.jupiter.engine.descriptor">MethodExtensionContext</a></dt>
 <dd>&nbsp;</dd>
@@ -1098,6 +1134,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/ClassExtensionContext.html#getTestMethod()">getTestMethod()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/ClassExtensionContext.html" title="class in org.junit.jupiter.engine.descriptor">ClassExtensionContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/JupiterEngineExtensionContext.html#getTestMethod()">getTestMethod()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/JupiterEngineExtensionContext.html" title="class in org.junit.jupiter.engine.descriptor">JupiterEngineExtensionContext</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html#getTestMethod()">getTestMethod()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">MethodBasedTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/MethodExtensionContext.html#getTestMethod()">getTestMethod()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/MethodExtensionContext.html" title="class in org.junit.jupiter.engine.descriptor">MethodExtensionContext</a></dt>
 <dd>&nbsp;</dd>

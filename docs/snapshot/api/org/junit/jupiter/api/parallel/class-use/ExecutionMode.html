@@ -28,7 +28,7 @@
     }
 //-->
 var pathtoroot = "../../../../../../";
-var useModuleDirectories = true;
+var useModuleDirectories = false;
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -108,9 +108,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
+<th class="colFirst" scope="row"><a href="#org.junit.jupiter.api">org.junit.jupiter.api</a></th>
+<td class="colLast">
+<div class="block">JUnit Jupiter API for writing tests.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#org.junit.jupiter.api.parallel">org.junit.jupiter.api.parallel</a></th>
 <td class="colLast">
 <div class="block">JUnit Jupiter API for influencing parallel test execution.</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="#org.junit.jupiter.engine.descriptor">org.junit.jupiter.engine.descriptor</a></th>
+<td class="colLast">
+<div class="block">Test descriptors used within the JUnit Jupiter test engine.</div>
 </td>
 </tr>
 </tbody>
@@ -118,6 +130,38 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 <li class="blockList">
 <ul class="blockList">
+<li class="blockList">
+<section role="region"><a id="org.junit.jupiter.api">
+<!--   -->
+</a>
+<h3>Uses of <a href="../ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel">ExecutionMode</a> in <a href="../../package-summary.html">org.junit.jupiter.api</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../package-summary.html">org.junit.jupiter.api</a> that return <a href="../ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel">ExecutionMode</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>default <a href="../ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel">ExecutionMode</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">MethodOrderer.</span><code><span class="memberNameLink"><a href="../../MethodOrderer.html#getDefaultExecutionMode()">getDefaultExecutionMode</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Get the <em>default</em> <a href="../ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel"><code>ExecutionMode</code></a> for the test class
+ configured with this <a href="../../MethodOrderer.html" title="interface in org.junit.jupiter.api"><code>MethodOrderer</code></a>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel">ExecutionMode</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">MethodOrderer.Random.</span><code><span class="memberNameLink"><a href="../../MethodOrderer.Random.html#getDefaultExecutionMode()">getDefaultExecutionMode</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Get the <em>default</em> <a href="../ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel"><code>ExecutionMode</code></a> for the test class.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
 <li class="blockList">
 <section role="region"><a id="org.junit.jupiter.api.parallel">
 <!--   -->
@@ -152,6 +196,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns an array containing the constants of this enum type, in
 the order they are declared.</div>
 </td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="org.junit.jupiter.engine.descriptor">
+<!--   -->
+</a>
+<h3>Uses of <a href="../ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel">ExecutionMode</a> in <a href="../../../engine/descriptor/package-summary.html">org.junit.jupiter.engine.descriptor</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../../engine/descriptor/package-summary.html">org.junit.jupiter.engine.descriptor</a> with parameters of type <a href="../ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel">ExecutionMode</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">JupiterTestDescriptor.</span><code><span class="memberNameLink"><a href="../../../engine/descriptor/JupiterTestDescriptor.html#toExecutionMode(org.junit.jupiter.api.parallel.ExecutionMode)">toExecutionMode</a></span>&#8203;(<a href="../ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel">ExecutionMode</a>&nbsp;mode)</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>

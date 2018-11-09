@@ -28,7 +28,7 @@
     }
 //-->
 var pathtoroot = "../../../../";
-var useModuleDirectories = true;
+var useModuleDirectories = false;
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -120,6 +120,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="circle">org.junit.jupiter.api.<a href="DynamicTest.html" title="class in org.junit.jupiter.api"><span class="typeNameLink">DynamicTest</span></a></li>
 </ul>
 </li>
+<li class="circle">org.junit.jupiter.api.<a href="MethodOrderer.Alphanumeric.html" title="class in org.junit.jupiter.api"><span class="typeNameLink">MethodOrderer.Alphanumeric</span></a> (implements org.junit.jupiter.api.<a href="MethodOrderer.html" title="interface in org.junit.jupiter.api">MethodOrderer</a>)</li>
+<li class="circle">org.junit.jupiter.api.<a href="MethodOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api"><span class="typeNameLink">MethodOrderer.OrderAnnotation</span></a> (implements org.junit.jupiter.api.<a href="MethodOrderer.html" title="interface in org.junit.jupiter.api">MethodOrderer</a>)</li>
+<li class="circle">org.junit.jupiter.api.<a href="MethodOrderer.Random.html" title="class in org.junit.jupiter.api"><span class="typeNameLink">MethodOrderer.Random</span></a> (implements org.junit.jupiter.api.<a href="MethodOrderer.html" title="interface in org.junit.jupiter.api">MethodOrderer</a>)</li>
 </ul>
 </li>
 </ul>
@@ -128,6 +131,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h2 title="Interface Hierarchy">Interface Hierarchy</h2>
 <ul>
 <li class="circle">org.junit.jupiter.api.<a href="DisplayNameGenerator.html" title="interface in org.junit.jupiter.api"><span class="typeNameLink">DisplayNameGenerator</span></a></li>
+<li class="circle">org.junit.jupiter.api.<a href="MethodDescriptor.html" title="interface in org.junit.jupiter.api"><span class="typeNameLink">MethodDescriptor</span></a></li>
+<li class="circle">org.junit.jupiter.api.<a href="MethodOrderer.html" title="interface in org.junit.jupiter.api"><span class="typeNameLink">MethodOrderer</span></a></li>
+<li class="circle">org.junit.jupiter.api.<a href="MethodOrdererContext.html" title="interface in org.junit.jupiter.api"><span class="typeNameLink">MethodOrdererContext</span></a></li>
 <li class="circle">org.junit.jupiter.api.<a href="RepetitionInfo.html" title="interface in org.junit.jupiter.api"><span class="typeNameLink">RepetitionInfo</span></a></li>
 <li class="circle">org.junit.jupiter.api.<a href="TestInfo.html" title="interface in org.junit.jupiter.api"><span class="typeNameLink">TestInfo</span></a></li>
 <li class="circle">org.junit.jupiter.api.<a href="TestReporter.html" title="interface in org.junit.jupiter.api"><span class="typeNameLink">TestReporter</span></a></li>
@@ -144,12 +150,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="circle">org.junit.jupiter.api.<a href="DisplayName.html" title="annotation in org.junit.jupiter.api"><span class="typeNameLink">DisplayName</span></a> (implements java.lang.annotation.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>)</li>
 <li class="circle">org.junit.jupiter.api.<a href="DisplayNameGeneration.html" title="annotation in org.junit.jupiter.api"><span class="typeNameLink">DisplayNameGeneration</span></a> (implements java.lang.annotation.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>)</li>
 <li class="circle">org.junit.jupiter.api.<a href="Nested.html" title="annotation in org.junit.jupiter.api"><span class="typeNameLink">Nested</span></a> (implements java.lang.annotation.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>)</li>
+<li class="circle">org.junit.jupiter.api.<a href="Order.html" title="annotation in org.junit.jupiter.api"><span class="typeNameLink">Order</span></a> (implements java.lang.annotation.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>)</li>
 <li class="circle">org.junit.jupiter.api.<a href="RepeatedTest.html" title="annotation in org.junit.jupiter.api"><span class="typeNameLink">RepeatedTest</span></a> (implements java.lang.annotation.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>)</li>
 <li class="circle">org.junit.jupiter.api.<a href="Tag.html" title="annotation in org.junit.jupiter.api"><span class="typeNameLink">Tag</span></a> (implements java.lang.annotation.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>)</li>
 <li class="circle">org.junit.jupiter.api.<a href="Tags.html" title="annotation in org.junit.jupiter.api"><span class="typeNameLink">Tags</span></a> (implements java.lang.annotation.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>)</li>
 <li class="circle">org.junit.jupiter.api.<a href="Test.html" title="annotation in org.junit.jupiter.api"><span class="typeNameLink">Test</span></a> (implements java.lang.annotation.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>)</li>
 <li class="circle">org.junit.jupiter.api.<a href="TestFactory.html" title="annotation in org.junit.jupiter.api"><span class="typeNameLink">TestFactory</span></a> (implements java.lang.annotation.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>)</li>
 <li class="circle">org.junit.jupiter.api.<a href="TestInstance.html" title="annotation in org.junit.jupiter.api"><span class="typeNameLink">TestInstance</span></a> (implements java.lang.annotation.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>)</li>
+<li class="circle">org.junit.jupiter.api.<a href="TestMethodOrder.html" title="annotation in org.junit.jupiter.api"><span class="typeNameLink">TestMethodOrder</span></a> (implements java.lang.annotation.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>)</li>
 <li class="circle">org.junit.jupiter.api.<a href="TestTemplate.html" title="annotation in org.junit.jupiter.api"><span class="typeNameLink">TestTemplate</span></a> (implements java.lang.annotation.<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>)</li>
 </ul>
 </section>

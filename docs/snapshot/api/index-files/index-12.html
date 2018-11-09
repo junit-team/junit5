@@ -28,7 +28,7 @@
     }
 //-->
 var pathtoroot = "../";
-var useModuleDirectories = true;
+var useModuleDirectories = false;
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -165,10 +165,43 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/TestExecutionResultConditions.html#message(java.util.function.Predicate)">message(Predicate&lt;String&gt;)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/TestExecutionResultConditions.html" title="class in org.junit.platform.testkit.engine">TestExecutionResultConditions</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor"><span class="typeNameLink">MethodBasedTestDescriptor</span></a> - Class in <a href="../org/junit/jupiter/engine/descriptor/package-summary.html">org.junit.jupiter.engine.descriptor</a></dt>
+<dd>
+<div class="block">Base class for <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptors</code></a> based on Java methods.</div>
+</dd>
+<dt><a href="../org/junit/jupiter/api/MethodDescriptor.html" title="interface in org.junit.jupiter.api"><span class="typeNameLink">MethodDescriptor</span></a> - Interface in <a href="../org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a></dt>
+<dd>
+<div class="block"><a href="../org/junit/jupiter/api/MethodDescriptor.html" title="interface in org.junit.jupiter.api"><code>MethodDescriptor</code></a> encapsulates functionality for a given <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a>.</div>
+</dd>
 <dt><a href="../org/junit/jupiter/engine/descriptor/MethodExtensionContext.html" title="class in org.junit.jupiter.engine.descriptor"><span class="typeNameLink">MethodExtensionContext</span></a> - Class in <a href="../org/junit/jupiter/engine/descriptor/package-summary.html">org.junit.jupiter.engine.descriptor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/MethodExtensionContext.html#%3Cinit%3E(org.junit.jupiter.api.extension.ExtensionContext,org.junit.platform.engine.EngineExecutionListener,org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor,org.junit.platform.engine.ConfigurationParameters,java.lang.Object,org.junit.platform.engine.support.hierarchical.ThrowableCollector)">MethodExtensionContext(ExtensionContext, EngineExecutionListener, TestMethodTestDescriptor, ConfigurationParameters, Object, ThrowableCollector)</a></span> - Constructor for class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/MethodExtensionContext.html" title="class in org.junit.jupiter.engine.descriptor">MethodExtensionContext</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="../org/junit/jupiter/api/MethodOrderer.html" title="interface in org.junit.jupiter.api"><span class="typeNameLink">MethodOrderer</span></a> - Interface in <a href="../org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a></dt>
+<dd>
+<div class="block"><code>MethodOrderer</code> defines the API for ordering the <em>test methods</em>
+ in a given test class.</div>
+</dd>
+<dt><a href="../org/junit/jupiter/api/MethodOrderer.Alphanumeric.html" title="class in org.junit.jupiter.api"><span class="typeNameLink">MethodOrderer.Alphanumeric</span></a> - Class in <a href="../org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a></dt>
+<dd>
+<div class="block"><code>MethodOrderer</code> that sorts methods alphanumerically based on their
+ names using <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true#compareTo(java.lang.String)" title="class or interface in java.lang" class="externalLink"><code>String.compareTo(String)</code></a>.</div>
+</dd>
+<dt><a href="../org/junit/jupiter/api/MethodOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api"><span class="typeNameLink">MethodOrderer.OrderAnnotation</span></a> - Class in <a href="../org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a></dt>
+<dd>
+<div class="block"><code>MethodOrderer</code> that sorts methods based on the <a href="../org/junit/jupiter/api/Order.html" title="annotation in org.junit.jupiter.api"><code>@Order</code></a>
+ annotation.</div>
+</dd>
+<dt><a href="../org/junit/jupiter/api/MethodOrderer.Random.html" title="class in org.junit.jupiter.api"><span class="typeNameLink">MethodOrderer.Random</span></a> - Class in <a href="../org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a></dt>
+<dd>
+<div class="block"><code>MethodOrderer</code> that orders methods pseudo-randomly and allows for
+ concurrent execution by default.</div>
+</dd>
+<dt><a href="../org/junit/jupiter/api/MethodOrdererContext.html" title="interface in org.junit.jupiter.api"><span class="typeNameLink">MethodOrdererContext</span></a> - Interface in <a href="../org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a></dt>
+<dd>
+<div class="block"><code>MethodOrdererContext</code> encapsulates the <em>context</em> in which
+ a <a href="../org/junit/jupiter/api/MethodOrderer.html" title="interface in org.junit.jupiter.api"><code>MethodOrderer</code></a> will be invoked.</div>
+</dd>
 <dt><a href="../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery"><span class="typeNameLink">MethodSelector</span></a> - Class in <a href="../org/junit/platform/engine/discovery/package-summary.html">org.junit.platform.engine.discovery</a></dt>
 <dd>
 <div class="block">A <a href="../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> or a combination of
