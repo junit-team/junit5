@@ -391,8 +391,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Find all classes for the given module name.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>moduleName</code> - name of the module to scan</dd>
-<dd><code>filter</code> - class filter to apply</dd>
+<dd><code>moduleName</code> - the name of the module to scan; never <code>null</code> or
+ <em>empty</em></dd>
+<dd><code>filter</code> - the class filter to apply; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>an immutable list of all such classes found; never <code>null</code>
  but potentially empty</dd>

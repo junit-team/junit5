@@ -386,7 +386,8 @@ public static&nbsp;<a href="../function/Try.html" title="class in org.junit.plat
  beginning with the root of the classpath.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>root</code> - the URI for the classpath root in which to scan</dd>
+<dd><code>root</code> - the URI for the classpath root in which to scan; never
+ <code>null</code></dd>
 <dd><code>classFilter</code> - the class type filter; never <code>null</code></dd>
 <dd><code>classNameFilter</code> - the class name filter; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -416,7 +417,8 @@ public static&nbsp;<a href="../function/Try.html" title="class in org.junit.plat
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>basePackageName</code> - the name of the base package in which to start
- scanning</dd>
+ scanning; must not be <code>null</code> and must be valid in terms of Java
+ syntax</dd>
 <dd><code>classFilter</code> - the class type filter; never <code>null</code></dd>
 <dd><code>classNameFilter</code> - the class name filter; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -445,7 +447,8 @@ public static&nbsp;<a href="../function/Try.html" title="class in org.junit.plat
  packages contained in the module.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>moduleName</code> - the name of the module to scan</dd>
+<dd><code>moduleName</code> - the name of the module to scan; never <code>null</code> or
+ <em>empty</em></dd>
 <dd><code>classFilter</code> - the class type filter; never <code>null</code></dd>
 <dd><code>classNameFilter</code> - the class name filter; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -477,9 +480,10 @@ public static&nbsp;<a href="../function/Try.html" title="class in org.junit.plat
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>clazz</code> - the class to instantiate; never <code>null</code></dd>
-<dd><code>args</code> - the arguments to pass to the constructor none of which may be <code>null</code></dd>
+<dd><code>args</code> - the arguments to pass to the constructor, none of which may
+ be <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new instance</dd>
+<dd>the new instance; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../util/ExceptionUtils.html#throwAsUncheckedException(java.lang.Throwable)"><code>ExceptionUtils.throwAsUncheckedException(Throwable)</code></a></dd>
 </dl>
