@@ -8,16 +8,16 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console.tasks;
+package org.junit.platform.reporting.xml;
 
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
-import static org.junit.platform.console.tasks.XmlReportAssertions.assertValidAccordingToJenkinsSchema;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.platform.launcher.LauncherConstants.STDERR_REPORT_ENTRY_KEY;
 import static org.junit.platform.launcher.LauncherConstants.STDOUT_REPORT_ENTRY_KEY;
+import static org.junit.platform.reporting.xml.XmlReportAssertions.assertValidAccordingToJenkinsSchema;
 
 import java.io.StringWriter;
 import java.time.Clock;

@@ -15,6 +15,7 @@ This repository is the home of the next generation of JUnit, _JUnit 5_.
 - [User Guide]
 - [Javadoc]
 - [Release Notes]
+- [Samples]
 
 ## Contributing
 
@@ -89,6 +90,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
   - `junit-platform-console-standalone` (*N/A*)
   - `junit-platform-engine` (`org.junit.platform.engine`)
   - `junit-platform-launcher` (`org.junit.platform.launcher`)
+  - `junit-platform-reporting` (`org.junit.platform.reporting`)
   - `junit-platform-runner` (`org.junit.platform.runner`)
   - `junit-platform-suite-api` (`org.junit.platform.suite.api`)
   - `junit-platform-testkit` (`org.junit.platform.testkit`)
@@ -127,10 +129,9 @@ This allows test module authors to require well-known JUnit module names as
 can be seen in the following example:
 
 ```
-open module foo.bar {
+open module test.mylib {
+  requires mylib;
   requires org.junit.jupiter.api;
-  requires org.junit.platform.commons;
-  requires org.opentest4j;
 }
 ```
 
@@ -149,3 +150,4 @@ as it is not intended to be used as a module.
 [Release Notes]: https://junit.org/junit5/docs/current/release-notes/
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
 [User Guide]: https://junit.org/junit5/docs/current/user-guide/
+[Samples]: https://github.com/junit-team/junit5-samples

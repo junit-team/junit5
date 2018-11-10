@@ -1,0 +1,5 @@
+>> 1 line header: No module descriptor found. Derived automatic module. >>
+
+org.junit.platform.reporting@${platformVersion} automatic
+requires java.base mandated
+contains org.junit.platform.reporting.xml

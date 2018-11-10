@@ -110,6 +110,19 @@ declared within the
 `/META-INF/services/org.junit.platform.launcher.TestExecutionListener` file is loaded and
 registered automatically.
 
+[[launcher-api-listeners-reporting]]
+==== JUnit Platform Reporting
+
+The  `junit-platform-reporting` artifact contains default reporting listener
+implementations -- typically used by IDEs and build tools. The package
+`org.junit.platform.reporting.xml` contains a single implementation for now:
+
+* `{XmlReportsWritingListener}` writes a separate XML report for each root in the
+  `{TestPlan}`. Note that the generated XML format is compatible with the de facto
+  standard for JUnit 4 based test reports that was made popular by the Ant build
+  system. The `{XmlReportsWritingListener}` is used by the
+  <<running-tests-console-launcher>> as well.
+
 [[launcher-api-launcher-config]]
 ==== Configuring the Launcher
 

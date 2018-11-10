@@ -15,6 +15,10 @@ import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNa
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 
+import java.io.PrintWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -23,6 +27,7 @@ import org.junit.platform.launcher.core.LauncherConfig;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+import org.junit.platform.reporting.xml.XmlReportsWritingListener;
 // end::imports[]
 
 /**
@@ -79,12 +84,15 @@ class UsingTheLauncherDemo {
 
 	@org.junit.jupiter.api.Test
 	void launcherConfig() {
+		Path reportsDir = Paths.get("target", "xml-reports");
+		PrintWriter out = new PrintWriter(System.out);
 		// @formatter:off
 		// tag::launcherConfig[]
 		LauncherConfig launcherConfig = LauncherConfig.builder()
 			.enableTestEngineAutoRegistration(false)
 			.enableTestExecutionListenerAutoRegistration(false)
 			.addTestEngines(new CustomTestEngine())
+			.addTestExecutionListeners(new XmlReportsWritingListener(reportsDir, out))
 			.addTestExecutionListeners(new CustomTestExecutionListener())
 			.build();
 

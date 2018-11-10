@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console.tasks;
+package org.junit.platform.reporting.xml;
 
 import java.time.Clock;
 import java.time.Duration;
@@ -25,11 +25,11 @@ final class IncrementingClock extends Clock {
 
 	private int counter;
 
-	public IncrementingClock(int start, Duration duration) {
+	IncrementingClock(int start, Duration duration) {
 		this(start, duration, ZoneId.systemDefault());
 	}
 
-	public IncrementingClock(int start, Duration duration, ZoneId zone) {
+	private IncrementingClock(int start, Duration duration, ZoneId zone) {
 		this.counter = start;
 		this.duration = duration;
 		this.zone = zone;

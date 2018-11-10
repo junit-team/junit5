@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console.tasks;
+package org.junit.platform.reporting.xml;
 
 import static java.util.Collections.emptyList;
 import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
@@ -31,7 +31,7 @@ import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 /**
- * @since 1.0
+ * @since 1.4
  */
 class XmlReportData {
 
@@ -136,10 +136,6 @@ class XmlReportData {
 			current = this.testPlan.getParent(current.get());
 		}
 		return Optional.empty();
-	}
-
-	static boolean isFailure(Optional<Throwable> throwable) {
-		return throwable.isPresent() && throwable.get() instanceof AssertionError;
 	}
 
 }
