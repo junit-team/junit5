@@ -11,7 +11,6 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.allOf;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
@@ -84,19 +83,36 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 
 	@Test
 	void propagatesCheckedExceptionThrownDuringInitializationOfStaticField() {
-		assertClassFails(ExplosiveCheckedExceptionTestCase.class,
+		assertClassFails(ClassLevelExplosiveCheckedExceptionTestCase.class,
 			allOf(isA(ExceptionInInitializerError.class), hasCause(allOf(isA(Exception.class), message("boom")))));
 	}
 
 	@Test
 	void propagatesUncheckedExceptionThrownDuringInitializationOfStaticField() {
-		assertClassFails(ExplosiveUncheckedExceptionTestCase.class, allOf(isA(ExceptionInInitializerError.class),
-			hasCause(allOf(isA(RuntimeException.class), message("boom")))));
+		assertClassFails(ClassLevelExplosiveUncheckedExceptionTestCase.class, allOf(
+			isA(ExceptionInInitializerError.class), hasCause(allOf(isA(RuntimeException.class), message("boom")))));
 	}
 
 	@Test
 	void propagatesErrorThrownDuringInitializationOfStaticField() {
-		assertClassFails(ExplosiveErrorTestCase.class, allOf(isA(Error.class), message("boom")));
+		assertClassFails(ClassLevelExplosiveErrorTestCase.class, allOf(isA(Error.class), message("boom")));
+	}
+
+	@Test
+	void propagatesCheckedExceptionThrownDuringInitializationOfInstanceField() {
+		assertTestFails(InstanceLevelExplosiveCheckedExceptionTestCase.class,
+			allOf(isA(Exception.class), message("boom")));
+	}
+
+	@Test
+	void propagatesUncheckedExceptionThrownDuringInitializationOfInstanceField() {
+		assertTestFails(InstanceLevelExplosiveUncheckedExceptionTestCase.class,
+			allOf(isA(RuntimeException.class), message("boom")));
+	}
+
+	@Test
+	void propagatesErrorThrownDuringInitializationOfInstanceField() {
+		assertTestFails(InstanceLevelExplosiveErrorTestCase.class, allOf(isA(Error.class), message("boom")));
 	}
 
 	private void assertClassFails(Class<?> testClass, Condition<Throwable> causeCondition) {
@@ -104,15 +120,13 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 		executionResults.containers().assertThatEvents().haveExactly(1, finishedWithFailure(causeCondition));
 	}
 
+	private void assertTestFails(Class<?> testClass, Condition<Throwable> causeCondition) {
+		executeTestsForClass(testClass).tests().assertThatEvents().haveExactly(1, finishedWithFailure(causeCondition));
+	}
+
 	private void assertOneTestSucceeded(Class<?> testClass) {
-		EngineExecutionResults executionResults = executeTestsForClass(testClass);
-		assertAll(//
-			() -> assertEquals(1, executionResults.tests().started().count(), "# tests started"), //
-			() -> assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded"), //
-			() -> assertEquals(0, executionResults.tests().skipped().count(), "# tests skipped"), //
-			() -> assertEquals(0, executionResults.tests().aborted().count(), "# tests aborted"), //
-			() -> assertEquals(0, executionResults.tests().failed().count(), "# tests failed")//
-		);
+		executeTestsForClass(testClass).tests().assertStatistics(
+			stats -> stats.started(1).succeeded(1).skipped(0).aborted(0).failed(0));
 	}
 
 	// -------------------------------------------------------------------
@@ -306,24 +320,45 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 
 	}
 
-	static class ExplosiveCheckedExceptionTestCase extends AbstractTestCase {
+	static class ClassLevelExplosiveCheckedExceptionTestCase extends AbstractTestCase {
 
 		@RegisterExtension
 		static Extension field = new ExplosiveExtension(new Exception("boom"));
 
 	}
 
-	static class ExplosiveUncheckedExceptionTestCase extends AbstractTestCase {
+	static class ClassLevelExplosiveUncheckedExceptionTestCase extends AbstractTestCase {
 
 		@RegisterExtension
 		static Extension field = new ExplosiveExtension(new RuntimeException("boom"));
 
 	}
 
-	static class ExplosiveErrorTestCase extends AbstractTestCase {
+	static class ClassLevelExplosiveErrorTestCase extends AbstractTestCase {
 
 		@RegisterExtension
 		static Extension field = new ExplosiveExtension(new Error("boom"));
+
+	}
+
+	static class InstanceLevelExplosiveCheckedExceptionTestCase extends AbstractTestCase {
+
+		@RegisterExtension
+		Extension field = new ExplosiveExtension(new Exception("boom"));
+
+	}
+
+	static class InstanceLevelExplosiveUncheckedExceptionTestCase extends AbstractTestCase {
+
+		@RegisterExtension
+		Extension field = new ExplosiveExtension(new RuntimeException("boom"));
+
+	}
+
+	static class InstanceLevelExplosiveErrorTestCase extends AbstractTestCase {
+
+		@RegisterExtension
+		Extension field = new ExplosiveExtension(new Error("boom"));
 
 	}
 
