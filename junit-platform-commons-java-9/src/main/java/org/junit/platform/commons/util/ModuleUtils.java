@@ -100,8 +100,9 @@ public class ModuleUtils {
 	/**
 	 * Find all classes for the given module name.
 	 *
-	 * @param moduleName the name of the module to scan
-	 * @param filter the class filter to apply
+	 * @param moduleName the name of the module to scan; never {@code null} or
+	 * <em>empty</em>
+	 * @param filter the class filter to apply; never {@code null}
 	 * @return an immutable list of all such classes found; never {@code null}
 	 * but potentially empty
 	 */

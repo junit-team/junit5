@@ -61,7 +61,7 @@ public final class ClassSupport {
 	 * a class reference is {@code null} in which case it will be mapped to
 	 * {@code "null"}.
 	 *
-	 * @param mapper the mapper to use
+	 * @param mapper the mapper to use; never {@code null}
 	 * @param classes the classes to map
 	 * @return a comma-separated list of mapped values, or an empty string if
 	 * the supplied class array is {@code null} or empty

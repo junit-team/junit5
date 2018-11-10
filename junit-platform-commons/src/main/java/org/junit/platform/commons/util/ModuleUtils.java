@@ -88,13 +88,18 @@ public class ModuleUtils {
 	/**
 	 * Find all classes for the given module name.
 	 *
-	 * @param moduleName name of the module to scan
-	 * @param filter class filter to apply
+	 * @param moduleName the name of the module to scan; never {@code null} or
+	 * <em>empty</em>
+	 * @param filter the class filter to apply; never {@code null}
 	 * @return an immutable list of all such classes found; never {@code null}
 	 * but potentially empty
 	 */
 	public static List<Class<?>> findAllClassesInModule(String moduleName, ClassFilter filter) {
+		Preconditions.notBlank(moduleName, "Module name must not be null or empty");
+		Preconditions.notNull(filter, "Class filter must not be null");
+
 		logger.config(() -> "Basic version of findAllClassesInModule() always returns an empty list!");
 		return emptyList();
 	}
+
 }

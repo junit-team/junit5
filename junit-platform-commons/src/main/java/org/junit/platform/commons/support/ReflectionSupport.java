@@ -22,6 +22,7 @@ import java.util.function.Predicate;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -96,7 +97,8 @@ public final class ReflectionSupport {
 	 * <p>The classpath scanning algorithm searches recursively in subpackages
 	 * beginning with the root of the classpath.
 	 *
-	 * @param root the URI for the classpath root in which to scan
+	 * @param root the URI for the classpath root in which to scan; never
+	 * {@code null}
 	 * @param classFilter the class type filter; never {@code null}
 	 * @param classNameFilter the class name filter; never {@code null}
 	 * @return an immutable list of all such classes found; never {@code null}
@@ -106,6 +108,7 @@ public final class ReflectionSupport {
 	 */
 	public static List<Class<?>> findAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
+
 		return ReflectionUtils.findAllClassesInClasspathRoot(root, classFilter, classNameFilter);
 	}
 
@@ -118,7 +121,8 @@ public final class ReflectionSupport {
 	 * beginning within the supplied base package.
 	 *
 	 * @param basePackageName the name of the base package in which to start
-	 * scanning
+	 * scanning; must not be {@code null} and must be valid in terms of Java
+	 * syntax
 	 * @param classFilter the class type filter; never {@code null}
 	 * @param classNameFilter the class name filter; never {@code null}
 	 * @return an immutable list of all such classes found; never {@code null}
@@ -128,6 +132,7 @@ public final class ReflectionSupport {
 	 */
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
+
 		return ReflectionUtils.findAllClassesInPackage(basePackageName, classFilter, classNameFilter);
 	}
 
@@ -139,7 +144,8 @@ public final class ReflectionSupport {
 	 * <p>The module-path scanning algorithm searches recursively in all
 	 * packages contained in the module.
 	 *
-	 * @param moduleName the name of the module to scan
+	 * @param moduleName the name of the module to scan; never {@code null} or
+	 * <em>empty</em>
 	 * @param classFilter the class type filter; never {@code null}
 	 * @param classNameFilter the class name filter; never {@code null}
 	 * @return an immutable list of all such classes found; never {@code null}
@@ -150,6 +156,7 @@ public final class ReflectionSupport {
 	 */
 	public static List<Class<?>> findAllClassesInModule(String moduleName, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
+
 		return ReflectionUtils.findAllClassesInModule(moduleName, classFilter, classNameFilter);
 	}
 
@@ -163,8 +170,9 @@ public final class ReflectionSupport {
 	 * as an unchecked exception.
 	 *
 	 * @param clazz the class to instantiate; never {@code null}
-	 * @param args the arguments to pass to the constructor none of which may be {@code null}
-	 * @return the new instance
+	 * @param args the arguments to pass to the constructor, none of which may
+	 * be {@code null}
+	 * @return the new instance; never {@code null}
 	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
 	public static <T> T newInstance(Class<T> clazz, Object... args) {
@@ -247,6 +255,8 @@ public final class ReflectionSupport {
 	 */
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate,
 			HierarchyTraversalMode traversalMode) {
+
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		return ReflectionUtils.findMethods(clazz, predicate,
 			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));

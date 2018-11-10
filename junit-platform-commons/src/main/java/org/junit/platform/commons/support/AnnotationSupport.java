@@ -51,6 +51,10 @@ public final class AnnotationSupport {
 	 * <em>present</em> or <em>meta-present</em> on the supplied optional
 	 * {@code element}.
 	 *
+	 * @param element an {@link Optional} containing the element on which to
+	 * search for the annotation; may be {@code null} or <em>empty</em>
+	 * @param annotationType the annotation type to search for; never {@code null}
+	 * @return {@code true} if the annotation is present or meta-present
 	 * @since 1.3
 	 * @see #isAnnotated(AnnotatedElement, Class)
 	 * @see #findAnnotation(Optional, Class)
@@ -66,6 +70,10 @@ public final class AnnotationSupport {
 	 * <em>present</em> or <em>meta-present</em> on the supplied
 	 * {@code element}.
 	 *
+	 * @param element the element on which to search for the annotation; may be
+	 * {@code null}
+	 * @param annotationType the annotation type to search for; never {@code null}
+	 * @return {@code true} if the annotation is present or meta-present
 	 * @see #isAnnotated(Optional, Class)
 	 * @see #findAnnotation(AnnotatedElement, Class)
 	 */
@@ -78,6 +86,12 @@ public final class AnnotationSupport {
 	 * <em>present</em> or <em>meta-present</em> on the supplied optional
 	 * {@code element}.
 	 *
+	 * @param <A> the annotation type
+	 * @param element an {@link Optional} containing the element on which to
+	 * search for the annotation; may be {@code null} or <em>empty</em>
+	 * @param annotationType the annotation type to search for; never {@code null}
+	 * @return an {@code Optional} containing the annotation; never {@code null} but
+	 * potentially empty
 	 * @see #findAnnotation(AnnotatedElement, Class)
 	 */
 	public static <A extends Annotation> Optional<A> findAnnotation(Optional<? extends AnnotatedElement> element,
@@ -96,6 +110,10 @@ public final class AnnotationSupport {
 	 * additionally search on interfaces implemented by the class before
 	 * finding an annotation that is <em>indirectly present</em> on the class.
 	 *
+	 * @param <A> the annotation type
+	 * @param element the element on which to search for the annotation; may be
+	 * {@code null}
+	 * @param annotationType the annotation type to search for; never {@code null}
 	 * @return an {@code Optional} containing the annotation; never {@code null} but
 	 * potentially empty
 	 */
@@ -130,7 +148,8 @@ public final class AnnotationSupport {
 	 * <p>If the supplied {@code element} is {@code null}, this method simply
 	 * returns an empty list.
 	 *
-	 * @param element the element to search on, potentially {@code null}
+	 * @param <A> the annotation type
+	 * @param element the element to search on; may be {@code null}
 	 * @param annotationType the repeatable annotation type to search for; never {@code null}
 	 * @return the list of all such annotations found; neither {@code null} nor mutable
 	 * @see java.lang.annotation.Repeatable

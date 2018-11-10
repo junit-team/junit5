@@ -78,6 +78,10 @@ public final class AnnotationUtils {
 	 * <em>present</em> or <em>meta-present</em> on the supplied
 	 * {@code element}.
 	 *
+	 * @param element the element on which to search for the annotation; may be
+	 * {@code null}
+	 * @param annotationType the annotation type to search for; never {@code null}
+	 * @return {@code true} if the annotation is present or meta-present
 	 * @see #findAnnotation(AnnotatedElement, Class)
 	 * @see org.junit.platform.commons.support.AnnotationSupport#isAnnotated(AnnotatedElement, Class)
 	 */
@@ -95,15 +99,14 @@ public final class AnnotationUtils {
 			return Optional.empty();
 		}
 
-		boolean inherited = annotationType.isAnnotationPresent(Inherited.class);
-
-		return findAnnotation(element.get(), annotationType, inherited, new HashSet<>());
+		return findAnnotation(element.get(), annotationType);
 	}
 
 	/**
 	 * @see org.junit.platform.commons.support.AnnotationSupport#findAnnotation(AnnotatedElement, Class)
 	 */
 	public static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType) {
+		Preconditions.notNull(annotationType, "annotationType must not be null");
 		boolean inherited = annotationType.isAnnotationPresent(Inherited.class);
 		return findAnnotation(element, annotationType, inherited, new HashSet<>());
 	}
