@@ -178,8 +178,8 @@ class ReflectionUtilsTests {
 		// @formatter:on
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
+	@SuppressWarnings("deprecation")
 	void readFieldValueOfNonexistentStaticField() {
 		assertThat(readFieldValue(MyClass.class, "doesNotExist", null)).isNotPresent();
 		assertThat(readFieldValue(MySubClass.class, "staticField", null)).isNotPresent();
@@ -192,8 +192,8 @@ class ReflectionUtilsTests {
 			() -> tryToReadFieldValue(MySubClass.class, "staticField", null).get());
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
+	@SuppressWarnings("deprecation")
 	void readFieldValueOfNonexistentInstanceField() {
 		assertThat(readFieldValue(MyClass.class, "doesNotExist", new MyClass(42))).isNotPresent();
 		assertThat(readFieldValue(MyClass.class, "doesNotExist", new MySubClass(42))).isNotPresent();
@@ -207,8 +207,8 @@ class ReflectionUtilsTests {
 			() -> tryToReadFieldValue(MyClass.class, "doesNotExist", new MySubClass(42)).get());
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
+	@SuppressWarnings("deprecation")
 	void readFieldValueOfExistingStaticField() throws Exception {
 		assertThat(readFieldValue(MyClass.class, "staticField", null)).contains(42);
 
@@ -226,8 +226,8 @@ class ReflectionUtilsTests {
 		assertThat(tryToReadFieldValue(field, null).get()).isEqualTo(42);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
+	@SuppressWarnings("deprecation")
 	void readFieldValueOfExistingInstanceField() throws Exception {
 		MyClass instance = new MyClass(42);
 		assertThat(readFieldValue(MyClass.class, "instanceField", instance)).contains(42);
@@ -418,8 +418,8 @@ class ReflectionUtilsTests {
 			() -> ReflectionUtils.tryToLoadClass(getClass().getName(), null));
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
+	@SuppressWarnings("deprecation")
 	void loadClassWhenClassNotFoundException() {
 		assertThat(ReflectionUtils.loadClass("foo.bar.EnigmaClassThatDoesNotExist")).isEmpty();
 	}
@@ -430,8 +430,8 @@ class ReflectionUtilsTests {
 			() -> ReflectionUtils.tryToLoadClass("foo.bar.EnigmaClassThatDoesNotExist").get());
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
+	@SuppressWarnings("deprecation")
 	void loadClass() {
 		Optional<Class<?>> optional = ReflectionUtils.loadClass(Integer.class.getName());
 		assertThat(optional).contains(Integer.class);
