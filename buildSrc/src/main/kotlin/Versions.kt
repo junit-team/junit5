@@ -12,7 +12,7 @@ object Versions {
     val univocity = "2.7.6"
 
     // Test Dependencies
-    val archunit = "0.9.1"
+    val archunit = "0.9.2"
     val assertJ = "3.11.1"
     val bartholdy = "0.1.1"
     val classgraph = "4.2.2"
