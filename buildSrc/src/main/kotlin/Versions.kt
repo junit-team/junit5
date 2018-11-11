@@ -15,7 +15,7 @@ object Versions {
     val archunit = "0.9.2"
     val assertJ = "3.11.1"
     val bartholdy = "0.2.1"
-    val classgraph = "4.2.2"
+    val classgraph = "4.4.12"
     val commonsIo = "2.6"
     val javaCompilerScriptEngine = "0.1.2"
     val log4j = "2.11.1"
