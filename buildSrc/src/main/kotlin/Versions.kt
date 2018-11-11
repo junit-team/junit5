@@ -2,7 +2,7 @@ object Versions {
 
     // Languages
     val jvmTarget = "8"
-    val kotlin = "1.2.71"
+    val kotlin = "1.3.0"
 
     // Dependencies
     val apiGuardian = "1.0.0"
