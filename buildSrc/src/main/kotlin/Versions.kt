@@ -28,7 +28,7 @@ object Versions {
     val jmhPlugin = "0.4.7"
     val shadowPlugin = "4.0.2"
     val spotlessPlugin = "3.15.0"
-    val versioningPlugin = "2.7.1"
+    val versioningPlugin = "2.8.2"
     val versionsPlugin = "0.20.0"
 
     // Asciidoctor
