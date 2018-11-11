@@ -26,7 +26,7 @@ object Versions {
     val buildScanPlugin = "1.16"
     val gitPublishPlugin = "1.0.1"
     val jmhPlugin = "0.4.7"
-    val shadowPlugin = "4.0.1"
+    val shadowPlugin = "4.0.2"
     val spotlessPlugin = "3.15.0"
     val versioningPlugin = "2.7.1"
     val versionsPlugin = "0.20.0"
