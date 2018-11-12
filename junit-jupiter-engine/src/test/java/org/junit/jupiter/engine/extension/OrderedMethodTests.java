@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.api.MethodOrderer.Random.RANDOM_SEED_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -48,7 +47,6 @@ import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ClassUtils;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Events;
 import org.mockito.Mockito;
@@ -227,7 +225,14 @@ class OrderedMethodTests {
 	}
 
 	private Events executeTestsInParallel(Class<?> testClass) {
-		return executeTests(testClass, Collections.singletonMap(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true"));
+		// @formatter:off
+		return EngineTestKit
+				.engine("junit-jupiter")
+				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true")
+				.selectors(selectClass(testClass))
+				.execute()
+				.tests();
+		// @formatter:on
 	}
 
 	private Events executeTestsInParallelWithRandomSeed(Class<?> testClass, String seed) {
@@ -236,18 +241,14 @@ class OrderedMethodTests {
 			RANDOM_SEED_PROPERTY_NAME, seed //
 		);
 
-		return executeTests(testClass, configurationParameters);
-	}
-
-	private Events executeTests(Class<?> testClass, Map<String, String> configurationParameters) {
 		// @formatter:off
-		LauncherDiscoveryRequest discoveryRequest = request()
-				.selectors(selectClass(testClass))
+		return EngineTestKit
+				.engine("junit-jupiter")
 				.configurationParameters(configurationParameters)
-				.build();
+				.selectors(selectClass(testClass))
+				.execute()
+				.tests();
 		// @formatter:on
-
-		return EngineTestKit.execute("junit-jupiter", discoveryRequest).tests();
 	}
 
 	// -------------------------------------------------------------------------
