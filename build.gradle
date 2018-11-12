@@ -102,7 +102,7 @@ allprojects { subproj ->
 	compileJava {
 		options.encoding = 'UTF-8'
 
-		// See: https://docs.oracle.com/javase/10/tools/javac.htm
+		// See: https://docs.oracle.com/en/java/javase/11/tools/javac.html
 		options.compilerArgs += [
 			'-Xlint', // Enables all recommended warnings.
 			'-Werror' // Terminates compilation when warnings occur.
@@ -111,10 +111,10 @@ allprojects { subproj ->
 
 	compileTestJava {
 		options.encoding = 'UTF-8'
-		sourceCompatibility = 10
-		targetCompatibility = 10
+		sourceCompatibility = 11
+		targetCompatibility = 11
 
-		// See: https://docs.oracle.com/javase/10/tools/javac.htm
+		// See: https://docs.oracle.com/en/java/javase/11/tools/javac.html
 		options.compilerArgs += [
 			'-Xlint',     // Enables all recommended warnings.
 			'-Xlint:-overrides', // Disables "method overrides" warnings.
