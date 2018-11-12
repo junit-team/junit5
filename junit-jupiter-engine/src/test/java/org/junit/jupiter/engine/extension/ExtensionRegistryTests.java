@@ -92,14 +92,14 @@ class ExtensionRegistryTests {
 	}
 
 	@Test
-	void registerExtensionByImplementingClassWithConstructorParameter(){
+	void registerExtensionByImplementingClassWithConstructorParameter() {
 		registry.registerExtension(ExtensionWithConstructor.class, MyAnnotatedClass.class);
 		assertSame(MyAnnotatedClass.class,
-				registry.getExtensions(ExtensionWithConstructor.class).get(0).annotatedElement);
+			registry.getExtensions(ExtensionWithConstructor.class).get(0).annotatedElement);
 	}
 
 	@Test
-	void registerExtensionByImplementingClassWithNullConstructorParameter(){
+	void registerExtensionByImplementingClassWithNullConstructorParameter() {
 		registry.registerExtension(ExtensionWithConstructor.class, null);
 		assertNull(registry.getExtensions(ExtensionWithConstructor.class).get(0).annotatedElement);
 	}
@@ -223,7 +223,7 @@ class ExtensionRegistryTests {
 
 		private final AnnotatedElement annotatedElement;
 
-		ExtensionWithConstructor(AnnotatedElement annotatedElement){
+		ExtensionWithConstructor(AnnotatedElement annotatedElement) {
 			this.annotatedElement = annotatedElement;
 		}
 
@@ -232,5 +232,6 @@ class ExtensionRegistryTests {
 		}
 	}
 
-	static class MyAnnotatedClass{}
+	static class MyAnnotatedClass {
+	}
 }

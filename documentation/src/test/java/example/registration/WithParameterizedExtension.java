@@ -1,12 +1,22 @@
-package example.registration;
+/*
+ * Copyright 2015-2018 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v20.html
+ */
 
-import org.junit.jupiter.api.extension.ExtendWith;
+package example.registration;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+import org.junit.jupiter.api.extension.ExtendWith;
+
 @Retention(RetentionPolicy.RUNTIME)
 @ExtendWith(ParameterizedExtension.class)
 public @interface WithParameterizedExtension {
-    String value();
+	String value();
 }
