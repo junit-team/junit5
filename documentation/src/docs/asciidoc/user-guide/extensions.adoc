@@ -74,6 +74,15 @@ in which they are declared in the source code. For example, the execution of tes
 both `MyFirstTests` and `MySecondTests` will be extended by the `FooExtension` and
 `BarExtension`, **in exactly that order**.
 
+===== Configuring declaratively registered extension using annotations
+
+During registration process, extension is instantiated via its default constructor.
+
+However, if extension has a constructor with `AnnotatedElement` parameter, it will be called
+and the respective `@ExtendWith`-annotated element will be passed to it.
+
+This allows to extract other annotations on the element and configure the extension.
+
 [[extensions-registration-programmatic]]
 ==== Programmatic Extension Registration
 

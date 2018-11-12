@@ -15,12 +15,15 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryFrom;
 import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryWithDefaultExtensions;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -71,26 +74,39 @@ class ExtensionRegistryTests {
 
 	@Test
 	void registerExtensionByImplementingClass() {
-		registry.registerExtension(MyExtension.class);
+		registry.registerExtension(MyExtension.class, null);
 
 		assertExtensionRegistered(registry, MyExtension.class);
 
-		registry.registerExtension(MyExtension.class);
-		registry.registerExtension(MyExtension.class);
-		registry.registerExtension(MyExtension.class);
+		registry.registerExtension(MyExtension.class, null);
+		registry.registerExtension(MyExtension.class, null);
+		registry.registerExtension(MyExtension.class, null);
 
 		assertEquals(1, registry.getExtensions(MyExtension.class).size());
 		assertExtensionRegistered(registry, MyExtension.class);
 		assertEquals(1, countExtensions(registry, MyExtensionApi.class));
 
-		registry.registerExtension(YourExtension.class);
+		registry.registerExtension(YourExtension.class, null);
 		assertExtensionRegistered(registry, YourExtension.class);
 		assertEquals(2, countExtensions(registry, MyExtensionApi.class));
 	}
 
 	@Test
+	void registerExtensionByImplementingClassWithConstructorParameter(){
+		registry.registerExtension(ExtensionWithConstructor.class, MyAnnotatedClass.class);
+		assertSame(MyAnnotatedClass.class,
+				registry.getExtensions(ExtensionWithConstructor.class).get(0).annotatedElement);
+	}
+
+	@Test
+	void registerExtensionByImplementingClassWithNullConstructorParameter(){
+		registry.registerExtension(ExtensionWithConstructor.class, null);
+		assertNull(registry.getExtensions(ExtensionWithConstructor.class).get(0).annotatedElement);
+	}
+
+	@Test
 	void registerExtensionThatImplementsMultipleExtensionApis() {
-		registry.registerExtension(MultipleExtension.class);
+		registry.registerExtension(MultipleExtension.class, null);
 
 		assertExtensionRegistered(registry, MultipleExtension.class);
 
@@ -101,14 +117,14 @@ class ExtensionRegistryTests {
 	@Test
 	void extensionsAreInheritedFromParent() {
 		ExtensionRegistry parent = registry;
-		parent.registerExtension(MyExtension.class);
+		parent.registerExtension(MyExtension.class, null);
 
-		ExtensionRegistry child = createRegistryFrom(parent, singletonList(YourExtension.class));
+		ExtensionRegistry child = createRegistryFrom(parent, null, singletonList(YourExtension.class));
 		assertExtensionRegistered(child, MyExtension.class);
 		assertExtensionRegistered(child, YourExtension.class);
 		assertEquals(2, countExtensions(child, MyExtensionApi.class));
 
-		ExtensionRegistry grandChild = createRegistryFrom(child, emptyList());
+		ExtensionRegistry grandChild = createRegistryFrom(child, null, emptyList());
 		assertExtensionRegistered(grandChild, MyExtension.class);
 		assertExtensionRegistered(grandChild, YourExtension.class);
 		assertEquals(2, countExtensions(grandChild, MyExtensionApi.class));
@@ -117,15 +133,15 @@ class ExtensionRegistryTests {
 	@Test
 	void registeringSameExtensionImplementationInParentAndChildDoesNotResultInDuplicate() {
 		ExtensionRegistry parent = registry;
-		parent.registerExtension(MyExtension.class);
+		parent.registerExtension(MyExtension.class, null);
 		assertEquals(1, countExtensions(parent, MyExtensionApi.class));
 
-		ExtensionRegistry child = createRegistryFrom(parent, asList(MyExtension.class, YourExtension.class));
+		ExtensionRegistry child = createRegistryFrom(parent, null, asList(MyExtension.class, YourExtension.class));
 		assertExtensionRegistered(child, MyExtension.class);
 		assertExtensionRegistered(child, YourExtension.class);
 		assertEquals(2, countExtensions(child, MyExtensionApi.class));
 
-		ExtensionRegistry grandChild = createRegistryFrom(child, asList(MyExtension.class, YourExtension.class));
+		ExtensionRegistry grandChild = createRegistryFrom(child, null, asList(MyExtension.class, YourExtension.class));
 		assertExtensionRegistered(grandChild, MyExtension.class);
 		assertExtensionRegistered(grandChild, YourExtension.class);
 		assertEquals(2, countExtensions(grandChild, MyExtensionApi.class));
@@ -133,7 +149,7 @@ class ExtensionRegistryTests {
 
 	@Test
 	void canStreamOverRegisteredExtension() {
-		registry.registerExtension(MyExtension.class);
+		registry.registerExtension(MyExtension.class, null);
 
 		AtomicBoolean hasRun = new AtomicBoolean(false);
 
@@ -203,4 +219,18 @@ class ExtensionRegistryTests {
 		}
 	}
 
+	static class ExtensionWithConstructor implements MyExtensionApi {
+
+		private final AnnotatedElement annotatedElement;
+
+		ExtensionWithConstructor(AnnotatedElement annotatedElement){
+			this.annotatedElement = annotatedElement;
+		}
+
+		@Override
+		public void doNothing(String test) {
+		}
+	}
+
+	static class MyAnnotatedClass{}
 }

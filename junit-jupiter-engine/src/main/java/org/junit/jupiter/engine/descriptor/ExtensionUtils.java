@@ -71,7 +71,7 @@ final class ExtensionUtils {
 				.collect(toList());
 		// @formatter:on
 
-		return ExtensionRegistry.createRegistryFrom(parentRegistry, extensionTypes);
+		return ExtensionRegistry.createRegistryFrom(parentRegistry, annotatedElement, extensionTypes);
 	}
 
 	/**
