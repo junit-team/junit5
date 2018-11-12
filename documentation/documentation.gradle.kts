@@ -19,6 +19,17 @@ plugins {
 	id("org.asciidoctor.convert")
 }
 
+afterEvaluate {
+	tasks.withType<JavaCompile> {
+		val javaVersion = JavaVersion.VERSION_1_8
+		sourceCompatibility = javaVersion.toString()
+		targetCompatibility = javaVersion.toString()
+		options.encoding = "UTF-8"
+		options.compilerArgs.add("-parameters")
+		options.compilerArgs.addAll(listOf("--release", javaVersion.majorVersion))
+	}
+}
+
 val consoleLauncherTest by tasks.creating(JavaExec::class) {
 	dependsOn("testClasses")
 	val reportsDir = file("$buildDir/test-results")
@@ -33,6 +44,7 @@ val consoleLauncherTest by tasks.creating(JavaExec::class) {
 	args("--reports-dir", reportsDir)
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
 }
+
 tasks.named<Test>("test") {
 	dependsOn(consoleLauncherTest)
 	exclude("**/*")

@@ -68,7 +68,7 @@ class DisplayNameGeneratorDemo {
 
 		@Override
 		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
-			var name = testClass.getSimpleName() + ' ' + testMethod.getName();
+			String name = testClass.getSimpleName() + ' ' + testMethod.getName();
 			return name.replace('_', ' ') + '.';
 		}
 

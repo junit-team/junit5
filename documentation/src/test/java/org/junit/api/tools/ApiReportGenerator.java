@@ -53,7 +53,7 @@ class ApiReportGenerator {
 		// reportWriter.printDeclarationInfo(writer, EnumSet.allOf(Usage.class));
 
 		// Print report only for a specific Status constant, defaults to EXPERIMENTAL
-		var status = Status.EXPERIMENTAL;
+		Status status = Status.EXPERIMENTAL;
 		if (args.length == 1) {
 			status = Status.valueOf(args[0]);
 		}

@@ -10,6 +10,7 @@
 
 package example;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
@@ -33,17 +34,11 @@ class TestReporterDemo {
 
 	@Test
 	void reportMultipleKeyValuePairs(TestReporter testReporter) {
-		// end::user_guide[]
-		// @formatter:off
-		// tag::user_guide[]
-		testReporter.publishEntry(
-			Map.of(
-				"user name", "dk38",
-				"award year", "1974"
-			));
-		// end::user_guide[]
-		// @formatter:on
-		// tag::user_guide[]
+		Map<String, String> values = new HashMap<>();
+		values.put("user name", "dk38");
+		values.put("award year", "1974");
+
+		testReporter.publishEntry(values);
 	}
 
 }
