@@ -1,6 +1,6 @@
 description = "JUnit Platform Commons"
 
-tasks.named<Jar>("jar") {
+tasks.jar {
 	manifest {
 		attributes(
 			"Automatic-Module-Name" to "org.junit.platform.commons"

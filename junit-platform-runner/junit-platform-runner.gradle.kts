@@ -6,7 +6,7 @@ dependencies {
 	api("junit:junit:${Versions.junit4}")
 }
 
-tasks.named<Jar>("jar") {
+tasks.jar {
 	manifest {
 		attributes(
 			"Automatic-Module-Name" to "org.junit.platform.runner"

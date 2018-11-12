@@ -6,7 +6,7 @@ dependencies {
 	compileOnly("org.jetbrains.kotlin:kotlin-stdlib")
 }
 
-tasks.named<Jar>("jar") {
+tasks.jar {
 	manifest {
 		attributes(
 			"Automatic-Module-Name" to "org.junit.jupiter.api"

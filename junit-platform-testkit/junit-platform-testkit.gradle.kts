@@ -6,7 +6,7 @@ dependencies {
 	api("org.assertj:assertj-core:${Versions.assertJ}")
 }
 
-tasks.named<Jar>("jar") {
+tasks.jar {
 	manifest {
 		attributes(
 			"Automatic-Module-Name" to "org.junit.platform.testkit"

@@ -2,7 +2,7 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 description = "JUnit Jupiter Engine"
 
-tasks.named<Jar>("jar") {
+tasks.jar {
 	manifest {
 		attributes(
 			"Automatic-Module-Name" to "org.junit.jupiter.engine"

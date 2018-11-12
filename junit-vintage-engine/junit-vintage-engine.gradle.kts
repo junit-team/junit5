@@ -13,7 +13,7 @@ dependencies {
 	testImplementation(project(":junit-platform-testkit"))
 }
 
-tasks.named<Jar>("jar") {
+tasks.jar {
 	manifest {
 		attributes(
 			"Automatic-Module-Name" to "org.junit.vintage.engine"

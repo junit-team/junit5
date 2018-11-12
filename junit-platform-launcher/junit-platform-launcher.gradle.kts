@@ -4,7 +4,7 @@ dependencies {
 	api(project(":junit-platform-engine"))
 }
 
-tasks.named<Jar>("jar") {
+tasks.jar {
 	manifest {
 		attributes(
 			"Automatic-Module-Name" to "org.junit.platform.launcher"

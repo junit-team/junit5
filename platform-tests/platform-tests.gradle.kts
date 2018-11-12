@@ -4,13 +4,6 @@ plugins {
 
 apply(from = "$rootDir/gradle/testing.gradle.kts")
 
-tasks.named<Test>("test") {
-	useJUnitPlatform {
-		excludeTags("exclude")
-	}
-	jvmArgs = listOf("-Xmx1g")
-}
-
 dependencies {
 	// --- Things we are testing --------------------------------------------------
 	testImplementation(project(":junit-platform-commons"))
@@ -49,8 +42,16 @@ jmh {
 	iterations = 5
 }
 
-tasks.named<Checkstyle>("checkstyleJmh") { // use same style rules as defined for tests
-	configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
+tasks {
+	test {
+		useJUnitPlatform {
+			excludeTags("exclude")
+		}
+		jvmArgs = listOf("-Xmx1g")
+	}
+	checkstyleJmh { // use same style rules as defined for tests
+		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
+	}
 }
 
 eclipse {
