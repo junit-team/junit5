@@ -11,6 +11,7 @@
 package org.junit.platform.engine.support.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -20,15 +21,29 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+/**
+ * Unit tests for {@link PrefixedConfigurationParameters}.
+ *
+ * @since 1.3
+ */
 @ExtendWith(MockitoExtension.class)
 class PrefixedConfigurationParametersTests {
 
 	@Mock
 	private ConfigurationParameters delegate;
+
+	@Test
+	void preconditions() {
+		assertThrows(PreconditionViolationException.class, () -> new PrefixedConfigurationParameters(null, "example."));
+		assertThrows(PreconditionViolationException.class, () -> new PrefixedConfigurationParameters(delegate, null));
+		assertThrows(PreconditionViolationException.class, () -> new PrefixedConfigurationParameters(delegate, ""));
+		assertThrows(PreconditionViolationException.class, () -> new PrefixedConfigurationParameters(delegate, "    "));
+	}
 
 	@Test
 	void delegatesGetCalls() {
@@ -70,4 +85,5 @@ class PrefixedConfigurationParametersTests {
 
 		verify(delegate).size();
 	}
+
 }

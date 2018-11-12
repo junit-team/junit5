@@ -37,11 +37,12 @@ public class PrefixedConfigurationParameters implements ConfigurationParameters 
 	 *
 	 * @param delegate the {@link ConfigurationParameters} to delegate to; never
 	 * {@code null}
-	 * @param prefix the prefix to apply to all queries; never {@code null}
+	 * @param prefix the prefix to apply to all queries; never {@code null} or
+	 * blank
 	 */
 	public PrefixedConfigurationParameters(ConfigurationParameters delegate, String prefix) {
 		this.delegate = Preconditions.notNull(delegate, "delegate must not be null");
-		this.prefix = Preconditions.notNull(prefix, "prefix must not be null");
+		this.prefix = Preconditions.notBlank(prefix, "prefix must not be null or blank");
 	}
 
 	@Override
