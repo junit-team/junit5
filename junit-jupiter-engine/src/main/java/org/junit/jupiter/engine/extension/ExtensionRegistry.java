@@ -216,6 +216,7 @@ public class ExtensionRegistry {
 	 * @param annotatedElement the {@code AnnotatedElement} that provided the list of extension types
 	 *                         with its annotations. Will be passed to the constructor of extension
 	 */
+	@SuppressWarnings("unchecked")
 	void registerExtension(Class<? extends Extension> extensionType, AnnotatedElement annotatedElement) {
 		if (!isAlreadyRegistered(extensionType)) {
 			List<Constructor<?>> parameterizedConstructors = ReflectionUtils.findConstructors(extensionType,
