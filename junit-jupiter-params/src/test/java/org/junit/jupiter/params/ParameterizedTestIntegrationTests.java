@@ -28,8 +28,11 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.is
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -40,6 +43,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.extension.ArgumentsProcessor;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -190,6 +195,32 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
+	void executesArgumentsProcessorCallbackWhenUsingExtension() {
+		execute(selectClass(ArgumentsProcessorTestCase.class));
+
+        verifyCallbackArgumentsMatchTestMethodArguments(ArgumentsProcessorExtension.callbackArguments, ArgumentsProcessorTestCase.testMethodArguments);
+    }
+
+    @Test
+	void argumentsProcessorCallbackCannotAlterMethodArgumentsPriorToCallOfTestMethod() {
+        execute(selectClass(ArgumentsProcessorMutatorTestCase.class));
+
+        verifyCallbackArgumentsMatchTestMethodArguments(ArgumentsProcessorMutatorExtension.callbackArguments, ArgumentsProcessorMutatorTestCase.testMethodArguments);
+	}
+
+    private void verifyCallbackArgumentsMatchTestMethodArguments(Map<String, Object[]> allCallbackArguments, Map<String, Object[]> allTestMethodArguments) {
+        assertThat(allCallbackArguments).hasSize(allTestMethodArguments.size());
+        for (String methodName : allCallbackArguments.keySet()) {
+            Object[] callbackArguments = allCallbackArguments.get(methodName);
+            Object[] testMethodArguments = allTestMethodArguments.get(methodName);
+
+            assertThat(testMethodArguments)
+                    .overridingErrorMessage(String.format("Method [%s] : arguments passed to test do not match arguments passed to callback", methodName))
+                    .containsSequence(callbackArguments);
+        }
+    }
+
+	@Test
 	void executesLifecycleMethods() {
 		// reset static collections
 		LifecycleTestCase.lifecycleEvents.clear();
@@ -328,6 +359,57 @@ class ParameterizedTestIntegrationTests {
 			fail("this should never be called");
 		}
 
+	}
+
+	@ExtendWith(ArgumentsProcessorExtension.class)
+	static class ArgumentsProcessorTestCase {
+
+		private static Map<String, Object[]> testMethodArguments = new HashMap<>();
+
+		@ParameterizedTest
+		@ValueSource(strings = { "book 1", "book 2" })
+		void testWithTwoSingleStrings(String argument) {
+			testMethodArguments.put("testWithTwoSingleStrings", new Object[] { argument });
+			fail(argument);
+		}
+
+		@Test
+		void testWithNoParameters() {
+			testMethodArguments.put("testWithNoParameters", new Object[0]);
+		}
+	}
+
+	@ExtendWith(ArgumentsProcessorMutatorExtension.class)
+	static class ArgumentsProcessorMutatorTestCase {
+
+		private static Map<String, Object[]> testMethodArguments = new HashMap<>();
+
+		@ParameterizedTest
+		@CsvSource({ "foo, 23", "bar, 42" })
+		void testWithTwoArguments(String argument, int i) {
+			testMethodArguments.put("testWithTwoArguments", new Object[] { argument, i });
+			fail(argument);
+		}
+	}
+
+	static class ArgumentsProcessorMutatorExtension implements ArgumentsProcessor {
+		private static Map<String, Object[]> callbackArguments = new HashMap<>();
+
+		@Override
+		public void processArguments(ExtensionContext context, Object[] arguments) {
+			callbackArguments.put(context.getRequiredTestMethod().getName(),
+				Arrays.copyOf(arguments, arguments.length));
+			arguments[0] = "this assignment should be ignored";
+		}
+	}
+
+	static class ArgumentsProcessorExtension implements ArgumentsProcessor {
+		private static Map<String, Object[]> callbackArguments = new HashMap<>();
+
+		@Override
+		public void processArguments(ExtensionContext context, Object[] arguments) {
+			callbackArguments.put(context.getRequiredTestMethod().getName(), arguments);
+		}
 	}
 
 	static class UnusedParametersTestCase {
@@ -475,5 +557,4 @@ class ParameterizedTestIntegrationTests {
 		}
 
 	}
-
 }

@@ -126,6 +126,15 @@ class ExecutableInvokerTests {
 	}
 
 	@Test
+	void invokeWithSpecifiedParameters() {
+		testMethodWith("multipleParameters", String.class, Integer.class, Double.class);
+
+		invokeMethodWithArguments("0", 1, 2.0);
+
+		verify(instance).multipleParameters("0", 1, 2.0);
+	}
+
+	@Test
 	void onlyConsiderParameterResolversThatSupportAParticularParameter() {
 		testMethodWithASingleStringParameter();
 		thereIsAParameterResolverThatDoesNotSupportThisParameter();
@@ -302,6 +311,10 @@ class ExecutableInvokerTests {
 
 	private void invokeMethod() {
 		newInvoker().invoke(this.method, this.instance, this.extensionContext, this.extensionRegistry);
+	}
+
+	private void invokeMethodWithArguments(Object... arguments) {
+		newInvoker().invoke(this.method, this.instance, arguments);
 	}
 
 	// -------------------------------------------------------------------------

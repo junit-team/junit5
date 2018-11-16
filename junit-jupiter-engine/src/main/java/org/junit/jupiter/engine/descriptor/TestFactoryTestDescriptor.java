@@ -78,13 +78,13 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	// --- Node ----------------------------------------------------------------
 
 	@Override
-	protected void invokeTestMethod(JupiterEngineExecutionContext context, DynamicTestExecutor dynamicTestExecutor) {
+	protected void invokeTestMethod(JupiterEngineExecutionContext context, DynamicTestExecutor dynamicTestExecutor,
+			Object... arguments) {
 		ExtensionContext extensionContext = context.getExtensionContext();
 
 		context.getThrowableCollector().execute(() -> {
 			Object instance = extensionContext.getRequiredTestInstance();
-			Object testFactoryMethodResult = executableInvoker.invoke(getTestMethod(), instance, extensionContext,
-				context.getExtensionRegistry());
+			Object testFactoryMethodResult = executableInvoker.invoke(getTestMethod(), instance, arguments);
 			TestSource defaultTestSource = getSource().orElseThrow(
 				() -> new JUnitException("Illegal state: TestSource must be present"));
 			try (Stream<DynamicNode> dynamicNodeStream = toDynamicNodeStream(testFactoryMethodResult)) {
