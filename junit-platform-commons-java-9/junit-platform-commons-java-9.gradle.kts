@@ -37,6 +37,11 @@ val compileTestJava by tasks.getting(JavaCompile::class)
 val generateIntegrationTestsJar by tasks.creating(Jar::class) {
 	dependsOn(compileTestJava)
 	archiveName = "junit-commons-integration-tests.jar"
+	manifest {
+		attributes(
+				"Automatic-Module-Name" to "integration"
+		)
+	}
 	from(compileTestJava.destinationDir)
 	include("integration/**/*")
 }
@@ -78,7 +83,7 @@ val testScanModulePath by tasks.creating {
 						"successfulTest",
 				"JUnit Jupiter",
 					"JupiterIntegrationTests",
-						"version()",
+						"javaPlatformModuleSystemIsAvailable()",
 						"moduleIsNamed()",
 						"packageName()",
 						"javaScriptingModuleIsAvailable()")
@@ -133,7 +138,7 @@ val testNoJavaScripting by tasks.creating {
 				"--add-modules", "org.opentest4j",
 				"--add-modules", "org.apiguardian.api",
 				// local module containing tests
-				"--add-modules", "junit.commons.integration.tests"
+				"--add-modules", "integration"
 			)
 			// console launcher with arguments
 			main = "--module"
@@ -145,7 +150,7 @@ val testNoJavaScripting by tasks.creating {
 		assertThat(text).contains(
 				"JUnit Jupiter",
 					"JupiterIntegrationTests",
-						"version()",
+						"javaPlatformModuleSystemIsAvailable()",
 						"moduleIsNamed()",
 						"packageName()",
 						"javaScriptingModuleIsAvailable()",

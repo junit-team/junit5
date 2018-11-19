@@ -10,7 +10,6 @@
 
 package org.junit.platform.commons.util;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,8 +28,8 @@ import org.junit.jupiter.api.Test;
 class ModuleUtilsTests {
 
 	@Test
-	void version() {
-		assertEquals("9", ModuleUtils.VERSION);
+	void javaPlatformModuleSystemIsAvailable() {
+		assertTrue(ModuleUtils.isJavaPlatformModuleSystemAvailable());
 	}
 
 	@Test

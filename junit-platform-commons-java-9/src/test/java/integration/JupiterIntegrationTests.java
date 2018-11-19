@@ -38,8 +38,8 @@ import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 class JupiterIntegrationTests {
 
 	@Test
-	void version() {
-		assertEquals("9", ModuleUtils.VERSION);
+	void javaPlatformModuleSystemIsAvailable() {
+		assertTrue(ModuleUtils.isJavaPlatformModuleSystemAvailable());
 	}
 
 	@Test
@@ -50,7 +50,7 @@ class JupiterIntegrationTests {
 	@Test
 	void moduleIsNamed() {
 		assumeTrue(getClass().getModule().isNamed(), "not running on the module-path");
-		assertTrue(getClass().getModule().isNamed());
+		assertEquals("integration", getClass().getModule().getName());
 	}
 
 	@Test
