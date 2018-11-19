@@ -39,7 +39,6 @@
 1222e5d9a1ded9b30a69bcd10c767abb  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ValueSource.java
 13c76a7853cbb65c8d2f2330aac9495d  documentation/src/docs/asciidoc/user-guide/api-evolution.adoc
 14b0964d557e7a254bff02d75cadfed7  documentation/src/test/java/example/RepeatedTestsDemo.java
-15385d70eb0adec0c9740f3b6b83f1c6  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ModuleUtils.java
 154a5bc0203a65e63a77b37d18047344  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Execution.java
 158b92187743566e70c7893a2127c54d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertThrows.java
 15fe0632a688367932398838923e5dae  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/DiscoveryFilterApplier.java
@@ -460,6 +459,7 @@ cee414c7457ca099203c2ac3c4b228ed  junit-jupiter-api/src/main/java/org/junit/jupi
 cf0b475c2486c9bf8d8ce333e3633018  junit-platform-engine/src/main/java/org/junit/platform/engine/TestTag.java
 cf100585a9071d17057c3c32f4d5ef7c  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeClassNamePatterns.java
 cf78045d2fa82db6f6de759f56a27d07  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/LegacyReportingUtils.java
+d0fd9d6786030195bee8127acb417227  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ModuleUtils.java
 d1ab7eedb6800a6aac9ff86a4c1c4013  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/package-info.java
 d2767e8891990ed19bcbc753d68be5dd  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherConfig.java
 d2c2fc3d17d0d4fa70e66f7ca1368f4a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/AbstractTestDescriptor.java
