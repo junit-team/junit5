@@ -23,7 +23,9 @@ No changes
 
 * `Assertions.assertAll()` is now thread-safe -- for example, it can now be used with a
   _parallel_ `Stream`.
-* `OS.SOLARIS` is now also detected for when `os.name` reports `SunOs`.
+* The `OS.SOLARIS` enum constant used with `@EnabledOnOs` and `@DisabledOnOs` is now also
+  detected as the current operating system if the `os.name` JVM system property contains
+  `"SunOs"`.
 * `Assertions.assertLinesMatch()` no longer throws a `NullPointerException` after
   evaluating a fast-forward match if there are more expected lines after the fast-forward
   match than remain in the actual results. This bug only manifested itself if the
