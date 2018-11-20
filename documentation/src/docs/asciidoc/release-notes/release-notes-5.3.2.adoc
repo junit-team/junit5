@@ -50,4 +50,3 @@ No changes
 === JUnit Vintage
 
 No changes
-
