@@ -234,7 +234,16 @@ class ReflectionUtilsTests {
 
 		Field field = MyClass.class.getDeclaredField("instanceField");
 		assertThat(readFieldValue(field, instance)).contains(42);
-		assertThat(readFieldValue(field, null)).isNotPresent();
+	}
+
+	@Test
+	@SuppressWarnings("deprecation")
+	void attemptToReadFieldValueOfExistingInstanceFieldAsStaticField() throws Exception {
+		Field field = MyClass.class.getDeclaredField("instanceField");
+		Exception exception = assertThrows(PreconditionViolationException.class, () -> readFieldValue(field, null));
+		assertThat(exception)//
+				.hasMessageStartingWith("Cannot read non-static field")//
+				.hasMessageEndingWith("on a null instance.");
 	}
 
 	@Test
