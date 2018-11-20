@@ -450,9 +450,8 @@ public final class ReflectionUtils {
 	/**
 	 * Read the value of a potentially inaccessible or nonexistent field.
 	 *
-	 * <p>If the field does not exist, an exception occurs while reading it, or
-	 * the value of the field is {@code null}, an empty {@link Optional} is
-	 * returned.
+	 * <p>If the field does not exist or the value of the field is {@code null},
+	 * an empty {@link Optional} will be returned.
 	 *
 	 * @param clazz the class where the field is declared; never {@code null}
 	 * @param fieldName the name of the field; never {@code null} or empty
@@ -477,10 +476,12 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Read the value of a potentially inaccessible static field.
+	 * Read the value of the supplied static field, making it accessible if
+	 * necessary and {@linkplain ExceptionUtils#throwAsUncheckedException masking}
+	 * any checked exception as an unchecked exception.
 	 *
-	 * <p>If an exception occurs while reading the field or if the value of the
-	 * field is {@code null}, an empty {@link Optional} is returned.
+	 * <p>If the value of the field is {@code null}, an empty {@link Optional}
+	 * will be returned.
 	 *
 	 * @param field the field to read; never {@code null}
 	 * @see #readFieldValue(Field, Object)
@@ -491,10 +492,12 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Read the value of a potentially inaccessible field.
+	 * Read the value of the supplied field, making it accessible if necessary
+	 * and {@linkplain ExceptionUtils#throwAsUncheckedException masking} any
+	 * checked exception as an unchecked exception.
 	 *
-	 * <p>If an exception occurs while reading the field or if the value of the
-	 * field is {@code null}, an empty {@link Optional} is returned.
+	 * <p>If the value of the field is {@code null}, an empty {@link Optional}
+	 * will be returned.
 	 *
 	 * @param field the field to read; never {@code null}
 	 * @param instance the instance from which the value is to be read; may
@@ -504,14 +507,16 @@ public final class ReflectionUtils {
 	 */
 	public static <T> Optional<Object> readFieldValue(Field field, T instance) {
 		Preconditions.notNull(field, "Field must not be null");
+		Preconditions.condition((instance != null || isStatic(field)),
+			() -> String.format("Cannot read non-static field [%s] on a null instance.", field));
 
 		try {
 			makeAccessible(field);
-			return Optional.ofNullable(field.get(instance));
+			Object value = field.get(instance);
+			return Optional.ofNullable(value);
 		}
 		catch (Throwable t) {
-			BlacklistedExceptions.rethrowIfBlacklisted(t);
-			return Optional.empty();
+			throw ExceptionUtils.throwAsUncheckedException(t);
 		}
 	}
 
