@@ -1,4 +1,4 @@
-apply plugin: 'maven-publish'
+apply plugin: 'de.marcphilipp.nexus-publish'
 apply plugin: 'signing'
 
 def isSnapshot = project.version.contains('SNAPSHOT')
@@ -67,17 +67,6 @@ publishing {
 						email = 'sormuras@gmail.com'
 					}
 				}
-			}
-		}
-	}
-	repositories {
-		maven {
-			def stagingRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-			def snapshotRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
-			url isSnapshot ? snapshotRepoUrl : stagingRepoUrl
-			credentials {
-				username = rootProject.findProperty('ossrhUsername') ?: ''
-				password = rootProject.findProperty('ossrhPassword') ?: ''
 			}
 		}
 	}
