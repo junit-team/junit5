@@ -2,7 +2,7 @@
 
 org.junit.jupiter.engine@${jupiterVersion} automatic
 requires java.base mandated
-provides org.junit.platform.engine.TestEngine with org.junit.jupiter.engine.jupitertestengine
+provides org.junit.platform.engine.TestEngine with org.junit.jupiter.engine.JupiterTestEngine
 contains org.junit.jupiter.engine
 contains org.junit.jupiter.engine.descriptor
 contains org.junit.jupiter.engine.discovery
