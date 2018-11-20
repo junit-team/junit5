@@ -15,8 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
 
@@ -24,6 +23,8 @@ import de.sormuras.bartholdy.tool.Java;
 import de.sormuras.bartholdy.tool.Maven;
 
 import org.junit.jupiter.api.Test;
+
+import platform.tooling.support.Helper;
 import platform.tooling.support.Request;
 
 /**
@@ -33,29 +34,28 @@ class JavaVersionsTests {
 
 	@Test
 	void java_8() {
-		// TODO Find better way to a JDK installation: env var, ~/.m2/toolchains.xml,...
-		var java8Home = Paths.get("C:\\Dev\\Java\\jdk1.8.0_144");
-		assumeTrue(Files.isDirectory(java8Home), "Java 8 home not found: " + java8Home);
-		var actualLines = execute("8", java8Home.toString());
+		var java8Home = Helper.getJavaHome("8");
+		assumeTrue(java8Home.isPresent(), "Java 8 installation directory not found!");
+		var actualLines = execute("8", java8Home.get());
 
 		assertTrue(actualLines.contains("[WARNING] Tests run: 2, Failures: 0, Errors: 0, Skipped: 1"));
 	}
 
 	@Test
 	void java_default() {
-		var actualLines = execute("default", new Java().getHome().toString());
+		var actualLines = execute("default", new Java().getHome());
 
 		assertTrue(actualLines.contains("[WARNING] Tests run: 2, Failures: 0, Errors: 0, Skipped: 1"));
 	}
 
-	List<String> execute(String version, String javaHome) {
+	List<String> execute(String version, Path javaHome) {
 		var result = Request.builder() //
-				.setTool(Maven.install("3.6.0", Paths.get("build", "test-tools"))) //
+				.setTool(Maven.install("3.6.0", Path.of("build", "test-tools"))) //
 				.setProject("java-versions") //
 				.setWorkspace("java-versions-" + version) //
 				.addArguments("--debug", "verify") //
 				.setTimeout(Duration.ofMinutes(2)) //
-				.putEnvironment("JAVA_HOME", javaHome) //
+				.putEnvironment("JAVA_HOME", javaHome.toString()) //
 				.build().run();
 		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 		assertEquals(0, result.getExitCode(), result.toString());

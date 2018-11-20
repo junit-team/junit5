@@ -16,12 +16,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Supplier;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPathFactory;
 
 /**
  * @since 1.3
@@ -85,7 +91,7 @@ public class Helper {
 		return Paths.get("..", module, "build", "libs", archive);
 	}
 
-	public static JarFile createJarFile(String module) {
+	static JarFile createJarFile(String module) {
 		var path = createJarPath(module);
 		try {
 			return new JarFile(path.toFile());
@@ -97,5 +103,54 @@ public class Helper {
 
 	public static List<JarFile> loadJarFiles() {
 		return loadModuleDirectoryNames().stream().map(Helper::createJarFile).collect(Collectors.toList());
+	}
+
+	public static Optional<Path> getJavaHome(String version) {
+		// First, try various system sources...
+		List<Supplier<String>> sources = List.of( //
+			() -> System.getProperty("java.home." + version), //
+			() -> System.getProperty("java." + version), //
+			() -> System.getProperty("jdk.home." + version), //
+			() -> System.getProperty("jdk." + version), //
+			() -> System.getenv("JAVA_HOME_" + version), //
+			() -> System.getenv("JAVA_" + version) //
+		);
+		var home = sources.stream().map(Supplier::get).filter(Objects::nonNull).findFirst();
+		if (home.isPresent()) {
+			return Optional.of(Path.of(home.get()));
+		}
+		// Try to inspect Maven Toolchains configuration file...
+		var jdkHome = getJdkHomeFromMavenToolchains(version);
+		if (jdkHome.isPresent()) {
+			return jdkHome;
+		}
+		// Still here? Return an empty optional.
+		return Optional.empty();
+	}
+
+	// https://maven.apache.org/guides/mini/guide-using-toolchains.html
+	static Optional<Path> getJdkHomeFromMavenToolchains(String version) {
+		var mavenToolChains = Path.of(System.getProperty("user.home"), ".m2", "toolchains.xml");
+		if (!Files.isRegularFile(mavenToolChains)) {
+			return Optional.empty();
+		}
+		try {
+			var builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			var document = builder.parse(mavenToolChains.toFile());
+			var xpath = XPathFactory.newInstance().newXPath();
+			var jdkHome = xpath.evaluate("//toolchains" //
+					+ "/toolchain[descendant::type[text()='jdk']]" //
+					+ "/provides[descendant::version[text()='" + version + "']]" //
+					+ "/.." //
+					+ "/configuration/jdkHome",
+				document);
+			if (!jdkHome.isBlank()) {
+				return Optional.of(Path.of(jdkHome));
+			}
+		}
+		catch (Exception e) {
+			// ignore
+		}
+		return Optional.empty();
 	}
 }
