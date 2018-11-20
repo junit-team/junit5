@@ -50,10 +50,10 @@ jobs:
     - stage: deploy
       name: "Publish snapshot artifacts"
       env:
-        # ORG_GRADLE_PROJECT_ossrhUsername
-        - secure: KB6nXD6SU+g7jNB+JnmOy9aOx21tazy+j2SbFj6UTayfEWfD3E7nw8AxQLRy9XWVaUQZGk+F8UWvHMX/5qhfqS3eXsdqGY3BaDM6QB8O3kMIZjO2I1JxmLoEBXqzWPFo0qfdexm78FhU3LCqzwofl4eCkwCErjF0483MfUOe54Q=
-        # ORG_GRADLE_PROJECT_ossrhPassword
-        - secure: haIyH2wZSfmnH/oKJ0J1pMBl1wsYMhc26iOPunaMELKUgPCBC4+y5qYJBcG3/G9gy3qYYi3GdFLvHVkqxlAABTC5lcNyBqsU20SzKD6HNyf4rv7Dtv+x1GjI7Yz50zAaJyPnoQBdboMdevPTfczcCAf6mRvA5nmEZc1D1fbbGA8=
+        # ORG_GRADLE_PROJECT_nexusUsername
+        - secure: X7cGNpY3N5NcR42xlFlpETIcaXKi1rwlLWxhC+TesvZ88OOdnU/B5pwKib64r17uf8WXJpuZTIq+RH5drd5bxQkakMrXiNvKtRVUECEMl7JWF6ZVEJzFBKcmdN98p6gv8UTTBx1VHx8E6mBe/WbFCFdM6TMzz1jp7J87dXyoiac=
+        # ORG_GRADLE_PROJECT_nexusPassword
+        - secure: KMyXza/904SRPsHEO4vvS8vEA1dOeXJXgxROIJ2e5Gy2rMxFwn6x43YZiwi8eiSXoL+u7T6TQJbQpCGVTCiUXfJGb2aTu8yRK12MDzjWHnyE4tfYy1aNdB75TnlY/YrThDmjTDVMEfPZf3oLlB7zsrk5t9PfgHUEiPJ4Rsz1g04=
       script: ./gradlew --scan publish -x check
     - name: "Update snapshot documentation"
       addons:
