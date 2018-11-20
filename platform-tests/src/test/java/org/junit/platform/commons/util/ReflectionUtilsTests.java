@@ -253,7 +253,7 @@ class ReflectionUtilsTests {
 
 		Field field = MyClass.class.getDeclaredField("instanceField");
 		assertThat(tryToReadFieldValue(field, instance).get()).isEqualTo(42);
-		assertThrows(NullPointerException.class, () -> tryToReadFieldValue(field, null).get());
+		assertThrows(PreconditionViolationException.class, () -> tryToReadFieldValue(field, null).get());
 	}
 
 	@Test
