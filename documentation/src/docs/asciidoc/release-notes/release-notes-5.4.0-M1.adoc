@@ -46,12 +46,6 @@ repository on GitHub.
   _suppressed exceptions_ in the resulting `MultipleFailuresError`. Consequently, the
   stack traces for such exceptions are now visible as _Suppressed_ at the end of the
   stack trace for the invocation of `assertAll()`.
-* New `JRE.JAVA_12` enum constant for use with `@EnabledOnJre` and `@DisabledOnJre`.
-* The `OS.SOLARIS` enum constant used with `@EnabledOnOs` and `@DisabledOnOs` is now also
-  detected as the current operating system if the `os.name` JVM system property contains
-  `"SunOs"`.
-* `Assertions.assertEquals()` variants that compare floating point numbers using a delta
-  now support a _delta_ of zero.
 * `Assertions.assertLinesMatch()` no longer throws a `NullPointerException` after
   evaluating a fast-forward match if there are more expected lines after the fast-forward
   match than remain in the actual results. This bug only manifested itself if the
@@ -77,6 +71,8 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
+* `Assertions.assertEquals()` variants that compare floating point numbers using a delta
+  now support a _delta_ of zero.
 * New `Assertions.assertEquals()` variants that accept mixed boxed and unboxed primitive
   values, allowing statements such as `assertEquals(42, Integer.valueOf("42"))` to
   compile.
@@ -86,6 +82,10 @@ repository on GitHub.
 * JUnit 4's `AssumptionViolatedException` is now supported in JUnit Jupiter for aborting
   a test mid-flight due to a failed assumption -- for example, via JUnit 4's
   `org.junit.Assume` utility class.
+* New `JRE.JAVA_12` enum constant for use with `@EnabledOnJre` and `@DisabledOnJre`.
+* The `OS.SOLARIS` enum constant used with `@EnabledOnOs` and `@DisabledOnOs` is now also
+  detected as the current operating system if the `os.name` JVM system property contains
+  `"SunOs"`.
 * In addition to returning streams, `@TestFactory`-annotated methods may now return a
   single `DynamicNode` -- for example, a `DynamicTest` or a `DynamicContainer`.
 * Implicit conversion from hexadecimal and octal string representations to integral types
