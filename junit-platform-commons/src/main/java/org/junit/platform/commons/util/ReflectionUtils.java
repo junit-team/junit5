@@ -287,9 +287,9 @@ public final class ReflectionUtils {
 	 *
 	 * @param obj the object to test; potentially {@code null}
 	 * @return {@code true} if the object is a multidimensional array
-	 * @since 1.4
+	 * @since 1.3.2
 	 */
-	@API(status = INTERNAL, since = "1.4")
+	@API(status = INTERNAL, since = "1.3.2")
 	public static boolean isMultidimensionalArray(Object obj) {
 		return (obj != null && obj.getClass().isArray() && obj.getClass().getComponentType().isArray());
 	}
