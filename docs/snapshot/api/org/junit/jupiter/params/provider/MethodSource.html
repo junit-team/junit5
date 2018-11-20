@@ -130,7 +130,7 @@ public @interface <span class="memberNameLabel">MethodSource</span></pre>
  classes referenced by <em>fully qualified method name</em>.
 
  <p>Each factory method must generate a <em>stream</em> of <em>arguments</em>,
- and each set of arguments within the stream will be provided as the physical
+ and each set of "arguments" within the "stream" will be provided as the physical
  arguments for individual invocations of the annotated
  <a href="../ParameterizedTest.html" title="annotation in org.junit.jupiter.params"><code>@ParameterizedTest</code></a> method. Generally speaking this
  translates to a <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink"><code>Stream</code></a> of <a href="Arguments.html" title="interface in org.junit.jupiter.params.provider"><code>Arguments</code></a>
@@ -143,10 +143,26 @@ public @interface <span class="memberNameLabel">MethodSource</span></pre>
  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/IntStream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink"><code>IntStream</code></a>,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Collection</code></a>,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Iterator</code></a>,
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Iterable</code></a>, an array of objects, or an array of primitives. The
- "arguments" within the stream can be supplied as an instance of
- <a href="Arguments.html" title="interface in org.junit.jupiter.params.provider"><code>Arguments</code></a>, an array of objects (e.g., <code>Object[]</code>), or a single
- value if the parameterized test method accepts a single argument.
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Iterable</code></a>, an array of objects, or an array of primitives. Each set of
+ "arguments" within the "stream" can be supplied as an instance of
+ <a href="Arguments.html" title="interface in org.junit.jupiter.params.provider"><code>Arguments</code></a>, an array of objects (e.g., <code>Object[]</code>,
+ <code>String[]</code>, etc.), or a single <em>value</em> if the parameterized test
+ method accepts a single argument.
+
+ <p>Please note that a one-dimensional array of objects supplied as a set of
+ "arguments" will be handled differently than other types of arguments.
+ Specifically, all of the elements of a one-dimensional array of objects will
+ be passed as individual physical arguments to the <code>@ParameterizedTest</code>
+ method. This behavior can be seen in the table below for the
+ <code>static Stream&lt;Object[]&gt; factory()</code> method: the <code>@ParameterizedTest</code>
+ method accepts individual <code>String</code> and <code>int</code> arguments rather than
+ a single <code>Object[]</code> array. In contrast, any multidimensional array
+ supplied as a set of "arguments" will be passed as a single physical argument
+ to the <code>@ParameterizedTest</code> method without modification. This behavior
+ can be seen in the table below for the <code>static Stream&lt;int[][]&gt; factory()</code>
+ and <code>static Stream&lt;Object[][]&gt; factory()</code> methods: the
+ <code>@ParameterizedTest</code> methods for those factories accept individual
+ <code>int[][]</code> and <code>Object[][]</code> arguments, respectively.
 
  <h3>Examples</h3>
 
@@ -160,9 +176,14 @@ public @interface <span class="memberNameLabel">MethodSource</span></pre>
  <tr><td><code>void test(String)</code></td><td><code>static String[] factory()</code></td></tr>
  <tr><td><code>void test(String)</code></td><td><code>static List&lt;String&gt; factory()</code></td></tr>
  <tr><td><code>void test(String)</code></td><td><code>static Stream&lt;String&gt; factory()</code></td></tr>
+ <tr><td><code>void test(String, String)</code></td><td><code>static String[][] factory()</code></td></tr>
  <tr><td><code>void test(String, int)</code></td><td><code>static Object[][] factory()</code></td></tr>
  <tr><td><code>void test(String, int)</code></td><td><code>static Stream&lt;Object[]&gt; factory()</code></td></tr>
  <tr><td><code>void test(String, int)</code></td><td><code>static Stream&lt;Arguments&gt; factory()</code></td></tr>
+ <tr><td><code>void test(int[])</code></td><td><code>static int[][] factory()</code></td></tr>
+ <tr><td><code>void test(int[])</code></td><td><code>static Stream&lt;int[]&gt; factory()</code></td></tr>
+ <tr><td><code>void test(int[][])</code></td><td><code>static Stream&lt;int[][]&gt; factory()</code></td></tr>
+ <tr><td><code>void test(Object[][])</code></td><td><code>static Stream&lt;Object[][]&gt; factory()</code></td></tr>
  </table>
 
  <p>Factory methods within the test class must be <code>static</code> unless the
