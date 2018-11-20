@@ -17,6 +17,8 @@ include::../link-attributes.adoc[]
 
 include::release-notes-5.4.0-M1.adoc[]
 
+include::release-notes-5.3.2.adoc[]
+
 include::release-notes-5.3.1.adoc[]
 
 include::release-notes-5.3.0.adoc[]
