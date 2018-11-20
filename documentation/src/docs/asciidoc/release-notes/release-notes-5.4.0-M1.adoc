@@ -42,10 +42,6 @@ repository on GitHub.
 
 * `Assertions.assertAll()` is now thread-safe -- for example, it can now be used with a
   _parallel_ `Stream`.
-* Exceptions thrown in `Assertions.assertAll()` are now additionally tracked as
-  _suppressed exceptions_ in the resulting `MultipleFailuresError`. Consequently, the
-  stack traces for such exceptions are now visible as _Suppressed_ at the end of the
-  stack trace for the invocation of `assertAll()`.
 * `Assertions.assertLinesMatch()` no longer throws a `NullPointerException` after
   evaluating a fast-forward match if there are more expected lines after the fast-forward
   match than remain in the actual results. This bug only manifested itself if the
@@ -79,6 +75,10 @@ repository on GitHub.
 * New `Assertions.assertNotEquals()` variants that accept the following primitive data
   types: `char`, `byte`, `short`, `int`, `long`, `float`, and `double`. Mixed boxed and
   unboxed primitive values are also supported.
+* Exceptions thrown in `Assertions.assertAll()` are now additionally tracked as
+  _suppressed exceptions_ in the resulting `MultipleFailuresError`. Consequently, the
+  stack traces for such exceptions are now visible as _Suppressed_ at the end of the
+  stack trace for the invocation of `assertAll()`.
 * JUnit 4's `AssumptionViolatedException` is now supported in JUnit Jupiter for aborting
   a test mid-flight due to a failed assumption -- for example, via JUnit 4's
   `org.junit.Assume` utility class.
