@@ -15,7 +15,9 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The `ConsoleLauncher` configured with `--details verbose` no longer throws a
+  `MissingFormatArgumentException` exception if a test method display name
+  contains `String` format specifiers, like `%c`.
 
 ==== Deprecations and Breaking Changes
 
