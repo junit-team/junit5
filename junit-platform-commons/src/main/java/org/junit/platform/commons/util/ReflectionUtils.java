@@ -481,16 +481,15 @@ public final class ReflectionUtils {
 	/**
 	 * Try to read the value of a potentially inaccessible or nonexistent field.
 	 *
-	 * <p>If the field does not exist, an exception occurs while reading it, or
-	 * the value of the field is {@code null}, an failed {@link Try} is
-	 * returned that contains the corresponding exception.
+	 * <p>If the field does not exist or an exception occurs while reading it, a
+	 * failed {@link Try} is returned that contains the corresponding exception.
 	 *
 	 * @param clazz the class where the field is declared; never {@code null}
 	 * @param fieldName the name of the field; never {@code null} or empty
 	 * @param instance the instance from where the value is to be read; may
 	 * be {@code null} for a static field
-	 * @see #readFieldValue(Field)
-	 * @see #readFieldValue(Field, Object)
+	 * @see #tryToReadFieldValue(Field)
+	 * @see #tryToReadFieldValue(Field, Object)
 	 * @since 1.4
 	 */
 	@API(status = INTERNAL, since = "1.4")
@@ -526,13 +525,12 @@ public final class ReflectionUtils {
 	/**
 	 * Try to read the value of a potentially inaccessible static field.
 	 *
-	 * <p>If an exception occurs while reading the field or if the value of the
-	 * field is {@code null}, an failed {@link Try} is returned that contains
-	 * the corresponding exception.
+	 * <p>If an exception occurs while reading the field, a failed {@link Try}
+	 * is returned that contains the corresponding exception.
 	 *
 	 * @param field the field to read; never {@code null}
-	 * @see #readFieldValue(Field, Object)
-	 * @see #readFieldValue(Class, String, Object)
+	 * @see #tryToReadFieldValue(Field, Object)
+	 * @see #tryToReadFieldValue(Class, String, Object)
 	 * @since 1.4
 	 */
 	@API(status = INTERNAL, since = "1.4")
@@ -565,15 +563,14 @@ public final class ReflectionUtils {
 	/**
 	 * Try to read the value of a potentially inaccessible field.
 	 *
-	 * <p>If an exception occurs while reading the field or if the value of the
-	 * field is {@code null}, a failed {@link Try} is returned that contains the
-	 * corresponding exception.
+	 * <p>If an exception occurs while reading the field, a failed {@link Try}
+	 * is returned that contains the corresponding exception.
 	 *
 	 * @param field the field to read; never {@code null}
 	 * @param instance the instance from which the value is to be read; may
 	 * be {@code null} for a static field
-	 * @see #readFieldValue(Field)
-	 * @see #readFieldValue(Class, String, Object)
+	 * @see #tryToReadFieldValue(Field)
+	 * @see #tryToReadFieldValue(Class, String, Object)
 	 * @since 1.4
 	 */
 	@API(status = INTERNAL, since = "1.4")
