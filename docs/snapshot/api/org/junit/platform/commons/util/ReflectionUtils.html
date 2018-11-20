@@ -767,7 +767,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>isMultidimensionalArray</h4>
 <pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#INTERNAL" title="class or interface in org.apiguardian.api" class="externalLink">INTERNAL</a>,
-     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.3.2")
 public static&nbsp;boolean&nbsp;isMultidimensionalArray&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;obj)</pre>
 <div class="block">Determine if the supplied object is a multidimensional array.</div>
 <dl>
@@ -776,7 +776,7 @@ public static&nbsp;boolean&nbsp;isMultidimensionalArray&#8203;(<a href="https://
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd><code>true</code> if the object is a multidimensional array</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>1.4</dd>
+<dd>1.3.2</dd>
 </dl>
 </li>
 </ul>
@@ -891,9 +891,8 @@ public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs
 </div>
 <div class="block">Read the value of a potentially inaccessible or nonexistent field.
 
- <p>If the field does not exist, an exception occurs while reading it, or
- the value of the field is <code>null</code>, an empty <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a> is
- returned.</div>
+ <p>If the field does not exist or the value of the field is <code>null</code>,
+ an empty <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a> will be returned.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>clazz</code> - the class where the field is declared; never <code>null</code></dd>
@@ -921,9 +920,8 @@ public static&nbsp;&lt;T&gt;&nbsp;<a href="../function/Try.html" title="class in
                                                   T&nbsp;instance)</pre>
 <div class="block">Try to read the value of a potentially inaccessible or nonexistent field.
 
- <p>If the field does not exist, an exception occurs while reading it, or
- the value of the field is <code>null</code>, an failed <a href="../function/Try.html" title="class in org.junit.platform.commons.function"><code>Try</code></a> is
- returned that contains the corresponding exception.</div>
+ <p>If the field does not exist or an exception occurs while reading it, a
+ failed <a href="../function/Try.html" title="class in org.junit.platform.commons.function"><code>Try</code></a> is returned that contains the corresponding exception.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>clazz</code> - the class where the field is declared; never <code>null</code></dd>
@@ -933,8 +931,8 @@ public static&nbsp;&lt;T&gt;&nbsp;<a href="../function/Try.html" title="class in
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.4</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="#readFieldValue(java.lang.reflect.Field)"><code>readFieldValue(Field)</code></a>, 
-<a href="#readFieldValue(java.lang.reflect.Field,T)"><code>readFieldValue(Field, Object)</code></a></dd>
+<dd><a href="#tryToReadFieldValue(java.lang.reflect.Field)"><code>tryToReadFieldValue(Field)</code></a>, 
+<a href="#tryToReadFieldValue(java.lang.reflect.Field,java.lang.Object)"><code>tryToReadFieldValue(Field, Object)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -951,10 +949,12 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">Please use <a href="#tryToReadFieldValue(java.lang.reflect.Field)"><code>tryToReadFieldValue(Field)</code></a> instead.</div>
 </div>
-<div class="block">Read the value of a potentially inaccessible static field.
+<div class="block">Read the value of the supplied static field, making it accessible if
+ necessary and <a href="ExceptionUtils.html#throwAsUncheckedException(java.lang.Throwable)">masking</a>
+ any checked exception as an unchecked exception.
 
- <p>If an exception occurs while reading the field or if the value of the
- field is <code>null</code>, an empty <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a> is returned.</div>
+ <p>If the value of the field is <code>null</code>, an empty <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a>
+ will be returned.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>field</code> - the field to read; never <code>null</code></dd>
@@ -975,17 +975,16 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 public static&nbsp;<a href="../function/Try.html" title="class in org.junit.platform.commons.function">Try</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;tryToReadFieldValue&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&nbsp;field)</pre>
 <div class="block">Try to read the value of a potentially inaccessible static field.
 
- <p>If an exception occurs while reading the field or if the value of the
- field is <code>null</code>, an failed <a href="../function/Try.html" title="class in org.junit.platform.commons.function"><code>Try</code></a> is returned that contains
- the corresponding exception.</div>
+ <p>If an exception occurs while reading the field, a failed <a href="../function/Try.html" title="class in org.junit.platform.commons.function"><code>Try</code></a>
+ is returned that contains the corresponding exception.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>field</code> - the field to read; never <code>null</code></dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.4</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="#readFieldValue(java.lang.reflect.Field,T)"><code>readFieldValue(Field, Object)</code></a>, 
-<a href="#readFieldValue(java.lang.Class,java.lang.String,T)"><code>readFieldValue(Class, String, Object)</code></a></dd>
+<dd><a href="#tryToReadFieldValue(java.lang.reflect.Field,java.lang.Object)"><code>tryToReadFieldValue(Field, Object)</code></a>, 
+<a href="#tryToReadFieldValue(java.lang.Class,java.lang.String,T)"><code>tryToReadFieldValue(Class, String, Object)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1006,10 +1005,12 @@ public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs
 <div class="deprecationComment">Please use <a href="#tryToReadFieldValue(java.lang.reflect.Field,java.lang.Object)"><code>tryToReadFieldValue(Field, Object)</code></a>
  instead.</div>
 </div>
-<div class="block">Read the value of a potentially inaccessible field.
+<div class="block">Read the value of the supplied field, making it accessible if necessary
+ and <a href="ExceptionUtils.html#throwAsUncheckedException(java.lang.Throwable)">masking</a> any
+ checked exception as an unchecked exception.
 
- <p>If an exception occurs while reading the field or if the value of the
- field is <code>null</code>, an empty <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a> is returned.</div>
+ <p>If the value of the field is <code>null</code>, an empty <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a>
+ will be returned.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>field</code> - the field to read; never <code>null</code></dd>
@@ -1033,9 +1034,8 @@ public static&nbsp;<a href="../function/Try.html" title="class in org.junit.plat
                                               <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;instance)</pre>
 <div class="block">Try to read the value of a potentially inaccessible field.
 
- <p>If an exception occurs while reading the field or if the value of the
- field is <code>null</code>, a failed <a href="../function/Try.html" title="class in org.junit.platform.commons.function"><code>Try</code></a> is returned that contains the
- corresponding exception.</div>
+ <p>If an exception occurs while reading the field, a failed <a href="../function/Try.html" title="class in org.junit.platform.commons.function"><code>Try</code></a>
+ is returned that contains the corresponding exception.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>field</code> - the field to read; never <code>null</code></dd>
@@ -1044,8 +1044,8 @@ public static&nbsp;<a href="../function/Try.html" title="class in org.junit.plat
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.4</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="#readFieldValue(java.lang.reflect.Field)"><code>readFieldValue(Field)</code></a>, 
-<a href="#readFieldValue(java.lang.Class,java.lang.String,T)"><code>readFieldValue(Class, String, Object)</code></a></dd>
+<dd><a href="#tryToReadFieldValue(java.lang.reflect.Field)"><code>tryToReadFieldValue(Field)</code></a>, 
+<a href="#tryToReadFieldValue(java.lang.Class,java.lang.String,T)"><code>tryToReadFieldValue(Class, String, Object)</code></a></dd>
 </dl>
 </li>
 </ul>
