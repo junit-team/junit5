@@ -171,7 +171,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		/**
-		 * @since 5.4
+		 * @since 5.3.2
 		 */
 		@Test
 		void oneDimensionalPrimitiveArray() {
@@ -181,7 +181,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		/**
-		 * @since 5.4
+		 * @since 5.3.2
 		 */
 		@Test
 		void twoDimensionalPrimitiveArray() {
@@ -191,7 +191,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		/**
-		 * @since 5.4
+		 * @since 5.3.2
 		 */
 		@Test
 		void oneDimensionalObjectArray() {
@@ -202,7 +202,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		/**
-		 * @since 5.4
+		 * @since 5.3.2
 		 */
 		@Test
 		void oneDimensionalStringArray() {
@@ -219,7 +219,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		/**
-		 * @since 5.4
+		 * @since 5.3.2
 		 */
 		@Test
 		void twoDimensionalStringArray() {
@@ -229,7 +229,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		/**
-		 * @since 5.4
+		 * @since 5.3.2
 		 */
 		@Test
 		void streamOfOneDimensionalPrimitiveArrays() {
@@ -239,7 +239,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		/**
-		 * @since 5.4
+		 * @since 5.3.2
 		 */
 		@Test
 		void streamOfTwoDimensionalPrimitiveArrays() {
@@ -247,7 +247,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		/**
-		 * @since 5.4
+		 * @since 5.3.2
 		 */
 		@Test
 		void streamOfTwoDimensionalPrimitiveArraysWrappedInObjectArrays() {
@@ -255,7 +255,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		/**
-		 * @since 5.4
+		 * @since 5.3.2
 		 */
 		@Test
 		void streamOfTwoDimensionalPrimitiveArraysWrappedInArguments() {
@@ -269,7 +269,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		/**
-		 * @since 5.4
+		 * @since 5.3.2
 		 */
 		@Test
 		void streamOfOneDimensionalObjectArrays() {
@@ -279,7 +279,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		/**
-		 * @since 5.4
+		 * @since 5.3.2
 		 */
 		@Test
 		void streamOfTwoDimensionalObjectArrays() {

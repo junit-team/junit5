@@ -25,7 +25,7 @@ import org.junit.platform.fakes.TestDescriptorStub;
 import org.junit.platform.launcher.TestIdentifier;
 
 /**
- * @since 1.4
+ * @since 1.3.2
  */
 class VerboseTreeListenerTests {
 

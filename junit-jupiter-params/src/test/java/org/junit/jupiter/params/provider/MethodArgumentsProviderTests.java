@@ -77,7 +77,7 @@ class MethodArgumentsProviderTests {
 	}
 
 	/**
-	 * @since 5.4
+	 * @since 5.3.2
 	 */
 	@Test
 	void providesArgumentsUsingStreamOfIntArrays() {
@@ -90,7 +90,7 @@ class MethodArgumentsProviderTests {
 	}
 
 	/**
-	 * @since 5.4
+	 * @since 5.3.2
 	 */
 	@Test
 	void providesArgumentsUsingStreamOfTwoDimensionalIntArrays() {
@@ -110,7 +110,7 @@ class MethodArgumentsProviderTests {
 	}
 
 	/**
-	 * @since 5.4
+	 * @since 5.3.2
 	 */
 	@Test
 	void providesArgumentsUsingStreamOfTwoDimensionalObjectArrays() {
