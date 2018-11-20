@@ -1,8 +1,5 @@
 language: java
 
-sudo: false
-dist: trusty
-
 # Specify which branches/tags that we do not want to be built: r5.0.0-M5
 branches:
   except:
@@ -19,19 +16,10 @@ install:
 matrix:
   include:
     - os: linux
-      jdk: openjdk10
-    - os: linux
       jdk: openjdk11
-    - os: linux
-      jdk: openjdk-ea
-    - os: linux
-      jdk: openjdk10
       env: SCAN='--scan --stacktrace --warning-mode=all' JACOCO='-PenableJaCoCo' INSTALL='publishToMavenLocal'
     - os: osx
-      jdk: openjdk10
-  allow_failures:
-    - jdk: openjdk11
-    - jdk: openjdk-ea
+      jdk: openjdk11
 
 script:
 # Display Gradle, Groovy, JVM and other versions
