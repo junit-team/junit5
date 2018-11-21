@@ -120,6 +120,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  the <a href="../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>.</div>
 </td>
 </tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="#org.junit.platform.reporting.xml">org.junit.platform.reporting.xml</a></th>
+<td class="colLast">
+<div class="block">Support for generating a XML format that is compatible with the de facto
+ standard for JUnit 4 based test reports that was made popular by the
+ Ant build system.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </li>
@@ -383,6 +391,46 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Get the class name for the supplied <a href="../TestIdentifier.html" title="class in org.junit.platform.launcher"><code>TestIdentifier</code></a> using the
  supplied <a href="../TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a>.</div>
 </td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="org.junit.platform.reporting.xml">
+<!--   -->
+</a>
+<h3>Uses of <a href="../TestIdentifier.html" title="class in org.junit.platform.launcher">TestIdentifier</a> in <a href="../../reporting/xml/package-summary.html">org.junit.platform.reporting.xml</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../reporting/xml/package-summary.html">org.junit.platform.reporting.xml</a> with parameters of type <a href="../TestIdentifier.html" title="class in org.junit.platform.launcher">TestIdentifier</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">XmlReportsWritingListener.</span><code><span class="memberNameLink"><a href="../../reporting/xml/XmlReportsWritingListener.html#executionFinished(org.junit.platform.launcher.TestIdentifier,org.junit.platform.engine.TestExecutionResult)">executionFinished</a></span>&#8203;(<a href="../TestIdentifier.html" title="class in org.junit.platform.launcher">TestIdentifier</a>&nbsp;testIdentifier,
+                 <a href="../../engine/TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;result)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">XmlReportsWritingListener.</span><code><span class="memberNameLink"><a href="../../reporting/xml/XmlReportsWritingListener.html#executionSkipped(org.junit.platform.launcher.TestIdentifier,java.lang.String)">executionSkipped</a></span>&#8203;(<a href="../TestIdentifier.html" title="class in org.junit.platform.launcher">TestIdentifier</a>&nbsp;testIdentifier,
+                <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;reason)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">XmlReportsWritingListener.</span><code><span class="memberNameLink"><a href="../../reporting/xml/XmlReportsWritingListener.html#executionStarted(org.junit.platform.launcher.TestIdentifier)">executionStarted</a></span>&#8203;(<a href="../TestIdentifier.html" title="class in org.junit.platform.launcher">TestIdentifier</a>&nbsp;testIdentifier)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">XmlReportsWritingListener.</span><code><span class="memberNameLink"><a href="../../reporting/xml/XmlReportsWritingListener.html#reportingEntryPublished(org.junit.platform.launcher.TestIdentifier,org.junit.platform.engine.reporting.ReportEntry)">reportingEntryPublished</a></span>&#8203;(<a href="../TestIdentifier.html" title="class in org.junit.platform.launcher">TestIdentifier</a>&nbsp;testIdentifier,
+                       <a href="../../engine/reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting">ReportEntry</a>&nbsp;entry)</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>
