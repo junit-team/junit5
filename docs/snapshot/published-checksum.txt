@@ -410,6 +410,7 @@ b5adccde111b810ff2351c5555070a5f  documentation/src/test/java/example/JUnit4Clas
 b659d6afa2ba4637865ed4a0d4311b5b  documentation/src/docs/asciidoc/user-guide/contributors.adoc
 b7275d7540e0dede420b6c1caaf578ce  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateInvocationTestDescriptor.java
 b765d5a9da9e387de0feba55ccf08b36  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ReflectionSupport.java
+b9fe38826efbff5a75f6bf057cf39ce4  documentation/src/docs/asciidoc/release-notes/release-notes-5.3.2.adoc
 ba2e44c132b20574d2da9835fda35c38  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestPlan.java
 ba5344cacee9047b28ab7c46a311bc30  junit-platform-commons/src/main/java/org/junit/platform/commons/support/package-info.java
 bcecf4e882b45e1ac2ca5de1d8c63a36  junit-vintage-engine/src/main/java/org/junit/vintage/engine/VintageTestEngine.java
@@ -470,7 +471,6 @@ d53ccae8f9caec092b3d486674fe389a  documentation/src/test/java/example/UsingTheLa
 d5739281643a02ab648f60b30ef82e70  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/DiscoverySelectorResolver.java
 d599e25b822956b441364c9ccec364a4  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ConditionEvaluator.java
 d5c058411ef271c684e824ff1af6a581  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerTestDescriptor.java
-d62057ca41359f491bb35615fb3e7407  documentation/src/docs/asciidoc/release-notes/release-notes-5.3.2.adoc
 d65f2d29edb793c1842aa4ce54c491d0  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/UniqueIdFilter.java
 d722c1d813faa22fe1103abe99d702ca  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/DefaultLauncher.java
 d7719e0e05a08a033df5388df2ba2640  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ShuntingYard.java
