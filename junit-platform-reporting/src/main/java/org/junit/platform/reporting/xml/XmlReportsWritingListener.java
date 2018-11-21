@@ -8,7 +8,9 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console.tasks;
+package org.junit.platform.reporting.xml;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,6 +22,7 @@ import java.time.Clock;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.apiguardian.api.API;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -35,9 +38,10 @@ import org.junit.platform.launcher.TestPlan;
  * standard for JUnit 4 based test reports that was made popular by the
  * Ant build system.
  *
- * @since 1.0
+ * @since 1.4
  */
-class XmlReportsWritingListener implements TestExecutionListener {
+@API(status = EXPERIMENTAL)
+public class XmlReportsWritingListener implements TestExecutionListener {
 
 	private final Path reportsDir;
 	private final PrintWriter out;
@@ -45,7 +49,7 @@ class XmlReportsWritingListener implements TestExecutionListener {
 
 	private XmlReportData reportData;
 
-	XmlReportsWritingListener(Path reportsDir, PrintWriter out) {
+	public XmlReportsWritingListener(Path reportsDir, PrintWriter out) {
 		this(reportsDir, out, Clock.systemDefaultZone());
 	}
 

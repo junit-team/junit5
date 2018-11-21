@@ -18,6 +18,7 @@ plugins {
 description = "JUnit Platform Console Standalone"
 
 dependencies {
+	shadowed(project(":junit-platform-reporting"))
 	shadowed(project(":junit-platform-console"))
 	shadowed(project(":junit-jupiter-engine"))
 	shadowed(project(":junit-jupiter-params"))

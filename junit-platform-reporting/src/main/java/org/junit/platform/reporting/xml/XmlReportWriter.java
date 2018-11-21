@@ -8,14 +8,13 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console.tasks;
+package org.junit.platform.reporting.xml;
 
 import static java.text.MessageFormat.format;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
 import static org.junit.platform.commons.util.StringUtils.isNotBlank;
-import static org.junit.platform.console.tasks.XmlReportData.isFailure;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 import static org.junit.platform.launcher.LauncherConstants.STDERR_REPORT_ENTRY_KEY;
 import static org.junit.platform.launcher.LauncherConstants.STDOUT_REPORT_ENTRY_KEY;
@@ -48,7 +47,7 @@ import org.junit.platform.launcher.listeners.LegacyReportingUtils;
  * with the de facto standard for JUnit 4 based test reports that was made
  * popular by the Ant build system.
  *
- * @since 1.0
+ * @since 1.4
  */
 class XmlReportWriter {
 
@@ -180,7 +179,7 @@ class XmlReportWriter {
 		else {
 			Optional<TestExecutionResult> result = this.reportData.getResult(testIdentifier);
 			if (result.isPresent() && result.get().getStatus() == FAILED) {
-				writeErrorOrFailureElement(result.get().getThrowable(), writer);
+				writeErrorOrFailureElement(result.get(), writer);
 			}
 		}
 	}
@@ -197,11 +196,12 @@ class XmlReportWriter {
 		newLine(writer);
 	}
 
-	private void writeErrorOrFailureElement(Optional<Throwable> throwable, XMLStreamWriter writer)
+	private void writeErrorOrFailureElement(TestExecutionResult result, XMLStreamWriter writer)
 			throws XMLStreamException {
 
+		Optional<Throwable> throwable = result.getThrowable();
 		if (throwable.isPresent()) {
-			writer.writeStartElement(isFailure(throwable) ? "failure" : "error");
+			writer.writeStartElement(isFailure(result) ? "failure" : "error");
 			writeFailureAttributesAndContent(throwable.get(), writer);
 			writer.writeEndElement();
 		}
@@ -303,6 +303,11 @@ class XmlReportWriter {
 		xmlWriter.writeCharacters("\n");
 	}
 
+	private static boolean isFailure(TestExecutionResult result) {
+		Optional<Throwable> throwable = result.getThrowable();
+		return throwable.isPresent() && throwable.get() instanceof AssertionError;
+	}
+
 	private static class TestCounts {
 
 		static TestCounts from(XmlReportData reportData, List<TestIdentifier> tests) {
@@ -314,7 +319,7 @@ class XmlReportWriter {
 				else {
 					Optional<TestExecutionResult> result = reportData.getResult(test);
 					if (result.isPresent() && result.get().getStatus() == FAILED) {
-						if (isFailure(result.get().getThrowable())) {
+						if (isFailure(result.get())) {
 							counts.failures++;
 						}
 						else {
@@ -331,7 +336,7 @@ class XmlReportWriter {
 		private long failures;
 		private long errors;
 
-		public TestCounts(long total) {
+		TestCounts(long total) {
 			this.total = total;
 		}
 

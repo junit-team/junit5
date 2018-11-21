@@ -87,6 +87,9 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
   `junit-platform-launcher`::
     Public API for configuring and launching test plans -- typically used by IDEs and build tools.
     See <<launcher-api>> for details.
+  `junit-platform-reporting`::
+    Default reporting listener implementations -- typically used by IDEs and build tools.
+    See <<launcher-api-listeners-reporting>> for details.
   `junit-platform-runner`::
     Runner for executing tests and test suites on the JUnit Platform in a JUnit 4
     environment. See <<running-tests-junit-platform-runner>> for details.

@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console.tasks;
+package org.junit.platform.reporting.xml;
 
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;

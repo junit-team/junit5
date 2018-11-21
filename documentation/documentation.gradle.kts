@@ -60,6 +60,7 @@ dependencies {
 	testImplementation(project(":junit-jupiter-migrationsupport"))
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(":junit-platform-launcher"))
+	testImplementation(project(":junit-platform-reporting"))
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
 
 	// Required by :consoleLauncherTest and :generateConsoleLauncherOptions
