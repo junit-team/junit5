@@ -16,7 +16,9 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
@@ -26,15 +28,7 @@ import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 
-/**
- * Integration tests for {@link ModuleUtils} using JUnit Jupiter.
- *
- * <p>The integration tests are meant to be executed on the module-path by
- * running JUnit Platform {@link org.junit.platform.console.ConsoleLauncher}
- * with the {@code --scan-modules} option.
- *
- * @since 1.1
- */
+@TestMethodOrder(Alphanumeric.class)
 class JupiterIntegrationTests {
 
 	@Test

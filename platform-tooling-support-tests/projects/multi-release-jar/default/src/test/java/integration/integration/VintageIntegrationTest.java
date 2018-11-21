@@ -12,17 +12,11 @@ package integration;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
-/**
- * Integration tests for {@code ModuleUtils} using JUnit Vintage.
- *
- * <p>The integration tests are meant to be executed on the module-path by
- * running JUnit Platform {@link org.junit.platform.console.ConsoleLauncher}
- * with the {@code --scan-modules} option.
- *
- * @since 1.1
- */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class VintageIntegrationTest {
 
 	@Test

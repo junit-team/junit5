@@ -43,8 +43,8 @@ class MultiReleaseJarTests {
 			"|   '-- successfulTest [OK]", //
 			"'-- JUnit Jupiter [OK]", //
 			"  '-- JupiterIntegrationTests [OK]", //
-			"    +-- javaScriptingModuleIsAvailable() [OK]", //
 			"    +-- javaPlatformModuleSystemIsAvailable() [OK]", //
+			"    +-- javaScriptingModuleIsAvailable() [OK]", //
 			"    +-- moduleIsNamed() [OK]", //
 			"    +-- packageName() [OK]", //
 			"    '-- resolve() [OK]", //
@@ -81,6 +81,7 @@ class MultiReleaseJarTests {
 			"|   '-- successfulTest [OK]", //
 			"'-- JUnit Jupiter [OK]", //
 			"  '-- JupiterIntegrationTests [OK]", //
+			"    +-- javaPlatformModuleSystemIsAvailable() [OK]", //
 			"    \\Q+-- javaScriptingModuleIsAvailable() [X] Failed to evaluate condition" //
 					+ " [org.junit.jupiter.engine.extension.ScriptExecutionCondition]:" //
 					+ " Class `javax.script.ScriptEngine` is not loadable," //
@@ -90,7 +91,6 @@ class MultiReleaseJarTests {
 					+ " module system (aka Jigsaw or JPMS) you need to add the" //
 					+ " `java.scripting` module to the root modules via" //
 					+ " `--add-modules ...,java.scripting`\\E", //
-			"    +-- javaPlatformModuleSystemIsAvailable() [OK]", //
 			"    +-- moduleIsNamed() [OK]", //
 			"    +-- packageName() [OK]", //
 			"    '-- resolve() [OK]", //
