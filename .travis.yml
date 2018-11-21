@@ -39,7 +39,7 @@ script:
 stages:
   - test
   - name: deploy
-    if: repo = junit-team/junit5 AND branch = master AND type = push
+    if: repo = junit-team/junit5 AND (branch = master OR branch =~ /^releases\/\d+\.\d+\.x$/) AND type = push
 
 jobs:
   include:
@@ -56,6 +56,7 @@ jobs:
         - secure: KMyXza/904SRPsHEO4vvS8vEA1dOeXJXgxROIJ2e5Gy2rMxFwn6x43YZiwi8eiSXoL+u7T6TQJbQpCGVTCiUXfJGb2aTu8yRK12MDzjWHnyE4tfYy1aNdB75TnlY/YrThDmjTDVMEfPZf3oLlB7zsrk5t9PfgHUEiPJ4Rsz1g04=
       script: ./gradlew --scan publish -x check
     - name: "Update snapshot documentation"
+      if: branch = master
       addons:
         apt:
           packages:
