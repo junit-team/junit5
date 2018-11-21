@@ -37,10 +37,8 @@ class MultiReleaseJarTests {
 	@Test
 	void checkDefault() throws Exception {
 		var variant = "default";
-		var expectedLines = List.of(".", //
-			"+-- JUnit Vintage [OK]", //
-			"| '-- VintageIntegrationTest [OK]", //
-			"|   '-- successfulTest [OK]", //
+		var expectedLines = List.of( //
+			".", //
 			"'-- JUnit Jupiter [OK]", //
 			"  '-- JupiterIntegrationTests [OK]", //
 			"    +-- javaPlatformModuleSystemIsAvailable() [OK]", //
@@ -50,17 +48,17 @@ class MultiReleaseJarTests {
 			"    '-- resolve() [OK]", //
 			"", //
 			"Test run finished after \\d+ ms", //
-			"[         4 containers found      ]", //
+			"[         2 containers found      ]", //
 			"[         0 containers skipped    ]", //
-			"[         4 containers started    ]", //
+			"[         2 containers started    ]", //
 			"[         0 containers aborted    ]", //
-			"[         4 containers successful ]", //
+			"[         2 containers successful ]", //
 			"[         0 containers failed     ]", //
-			"[         6 tests found           ]", //
+			"[         5 tests found           ]", //
 			"[         0 tests skipped         ]", //
-			"[         6 tests started         ]", //
+			"[         5 tests started         ]", //
 			"[         0 tests aborted         ]", //
-			"[         6 tests successful      ]", //
+			"[         5 tests successful      ]", //
 			"[         0 tests failed          ]", //
 			"" //
 		);
@@ -75,10 +73,8 @@ class MultiReleaseJarTests {
 	@Test
 	void checkNoScripting() throws Exception {
 		var variant = "no-scripting";
-		var expectedLines = List.of(".", //
-			"+-- JUnit Vintage [OK]", //
-			"| '-- VintageIntegrationTest [OK]", //
-			"|   '-- successfulTest [OK]", //
+		var expectedLines = List.of( //
+			".", //
 			"'-- JUnit Jupiter [OK]", //
 			"  '-- JupiterIntegrationTests [OK]", //
 			"    +-- javaPlatformModuleSystemIsAvailable() [OK]", //
@@ -98,17 +94,17 @@ class MultiReleaseJarTests {
 			">> STACKTRACE >>", //
 			"", //
 			"Test run finished after \\d+ ms", //
-			"[         4 containers found      ]", //
+			"[         2 containers found      ]", //
 			"[         0 containers skipped    ]", //
-			"[         4 containers started    ]", //
+			"[         2 containers started    ]", //
 			"[         0 containers aborted    ]", //
-			"[         4 containers successful ]", //
+			"[         2 containers successful ]", //
 			"[         0 containers failed     ]", //
-			"[         6 tests found           ]", //
+			"[         5 tests found           ]", //
 			"[         0 tests skipped         ]", //
-			"[         6 tests started         ]", //
+			"[         5 tests started         ]", //
 			"[         0 tests aborted         ]", //
-			"[         5 tests successful      ]", //
+			"[         4 tests successful      ]", //
 			"[         1 tests failed          ]", //
 			"" //
 		);
