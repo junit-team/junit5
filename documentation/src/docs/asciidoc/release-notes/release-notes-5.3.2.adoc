@@ -15,9 +15,9 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* The `ConsoleLauncher` configured with `--details verbose` no longer throws a
-  `MissingFormatArgumentException` exception if a test method display name
-  contains `String` format specifiers, like `%c`.
+* When configured with `--details verbose`, the `ConsoleLauncher` no longer throws a
+  `MissingFormatArgumentException` if a test method display name contains `String` format
+  specifiers such as `%c`.
 
 
 [[release-notes-5.3.2-junit-jupiter]]
