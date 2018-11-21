@@ -120,14 +120,14 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 
 All published JAR artifacts contain an [Automatic-Module-Name] manifest attribute
 whose value is used as the name of the automatic module defined by that JAR file
-when it is placed on the module path. The names are listed above in the
-Dependency Metadata section.
+when it is placed on the module path. The automatic module names are listed above
+in the [Dependency Metadata](#dependency-metadata) section.
 
 This allows test module authors to require well-known JUnit module names as
-can be seen in the following example:
+can be seen in the following example.
 
-```
-open module foo.bar {
+```java
+open module com.example.test {
   requires org.junit.jupiter.api;
   requires org.junit.platform.commons;
   requires org.opentest4j;
