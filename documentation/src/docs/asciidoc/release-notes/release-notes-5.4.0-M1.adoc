@@ -43,31 +43,7 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* `Assertions.assertAll()` is now thread-safe -- for example, it can now be used with a
-  _parallel_ `Stream`.
-* Exceptions thrown in `Assertions.assertAll()` are now additionally tracked as
-  _suppressed exceptions_ in the resulting `MultipleFailuresError`. Consequently, the
-  stack traces for such exceptions are now visible as _Suppressed_ at the end of the
-  stack trace for the invocation of `assertAll()`.
-* New `JRE.JAVA_12` enum constant for use with `@EnabledOnJre` and `@DisabledOnJre`.
-* The `OS.SOLARIS` enum constant used with `@EnabledOnOs` and `@DisabledOnOs` is now also
-  detected as the current operating system if the `os.name` JVM system property contains
-  `"SunOs"`.
-* `Assertions.assertEquals()` variants that compare floating point numbers using a delta
-  now support a _delta_ of zero.
-* `Assertions.assertLinesMatch()` no longer throws a `NullPointerException` after
-  evaluating a fast-forward match if there are more expected lines after the fast-forward
-  match than remain in the actual results. This bug only manifested itself if the
-  expected list size was equal to or greater than the actual list size.
-* Threads created for running tests in parallel now use the same thread context class
-  loader (_TCCL_) that was set when creating the underlying executor service. This
-  resolves `ClassNotFoundException` issues that only occur in parallel execution mode
-  when a custom _TCCL_ is in place.
-* When executing tests in parallel, lifecycle methods and callbacks called after a
-  `@TestFactory` method are now always executed after the dynamic tests returned by the
-  method.
-* Exceptions thrown during initialization of static `@RegisterExtension` fields now cause
-  the test class to fail instead of being silently swallowed.
+* ❓
 
 ==== Deprecations and Breaking Changes
 
@@ -75,15 +51,22 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
+* `Assertions.assertEquals()` variants that compare floating point numbers using a delta
+  now support a _delta_ of zero.
 * New `Assertions.assertEquals()` variants that accept mixed boxed and unboxed primitive
   values, allowing statements such as `assertEquals(42, Integer.valueOf("42"))` to
   compile.
 * New `Assertions.assertNotEquals()` variants that accept the following primitive data
   types: `char`, `byte`, `short`, `int`, `long`, `float`, and `double`. Mixed boxed and
   unboxed primitive values are also supported.
+* Exceptions thrown in `Assertions.assertAll()` are now additionally tracked as
+  _suppressed exceptions_ in the resulting `MultipleFailuresError`. Consequently, the
+  stack traces for such exceptions are now visible as _Suppressed_ at the end of the
+  stack trace for the invocation of `assertAll()`.
 * JUnit 4's `AssumptionViolatedException` is now supported in JUnit Jupiter for aborting
   a test mid-flight due to a failed assumption -- for example, via JUnit 4's
   `org.junit.Assume` utility class.
+* New `JRE.JAVA_12` enum constant for use with `@EnabledOnJre` and `@DisabledOnJre`.
 * In addition to returning streams, `@TestFactory`-annotated methods may now return a
   single `DynamicNode` -- for example, a `DynamicTest` or a `DynamicContainer`.
 * Implicit conversion from hexadecimal and octal string representations to integral types

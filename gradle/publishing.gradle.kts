@@ -1,4 +1,4 @@
-apply(plugin = "maven-publish")
+apply(plugin = "de.marcphilipp.nexus-publish")
 apply(plugin = "signing")
 
 val isSnapshot = project.version.toString().contains("SNAPSHOT")
@@ -67,17 +67,6 @@ configure<PublishingExtension> {
 						email.set("sormuras@gmail.com")
 					}
 				}
-			}
-		}
-	}
-	repositories {
-		maven {
-			val stagingRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-			val snapshotRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-			url = if (isSnapshot) snapshotRepoUrl else stagingRepoUrl
-			credentials {
-				username = rootProject.findProperty("ossrhUsername") as String? ?: ""
-				password = rootProject.findProperty("ossrhPassword") as String? ?: ""
 			}
 		}
 	}

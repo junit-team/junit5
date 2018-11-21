@@ -53,7 +53,7 @@ build scan for JUnit 5 can be viewed [here](https://scans.gradle.com/s/bl3pw4mrb
 
 ## Building from Source
 
-You need [JDK-10] to build JUnit 5.
+You need [JDK 11] to build JUnit 5.
 
 All modules can be _built_ with the [Gradle Wrapper] using the following command.
 
@@ -83,7 +83,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Platform
 
 - **Group ID**: `org.junit.platform`
-- **Version**: `1.3.1` or `1.4.0-SNAPSHOT`
+- **Version**: `1.3.1`, `1.3.2-SNAPSHOT`, or `1.4.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
   - `junit-platform-commons` (`org.junit.platform.commons`)
   - `junit-platform-console` (`org.junit.platform.console`)
@@ -98,7 +98,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Jupiter
 
 - **Group ID**: `org.junit.jupiter`
-- **Version**: `5.3.1` or `5.4.0-SNAPSHOT`
+- **Version**: `5.3.1`, `5.3.2-SNAPSHOT`, or `5.4.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
   - `junit-jupiter-api` (`org.junit.jupiter.api`)
   - `junit-jupiter-engine` (`org.junit.jupiter.engine`)
@@ -108,7 +108,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 ### JUnit Vintage
 
 - **Group ID**: `org.junit.vintage`
-- **Version**: `5.3.1` or `5.4.0-SNAPSHOT`
+- **Version**: `5.3.1`, `5.3.2-SNAPSHOT`, or `5.4.0-SNAPSHOT`
 - **Artifact ID** and **Automatic-Module-Name**:
   - `junit-vintage-engine` (`org.junit.vintage.engine`)
 
@@ -116,17 +116,18 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 
 - **Group ID**: `org.junit`
 - **Artifact ID** `junit-bom`
-- **Version**: `5.3.1` or `5.4.0-SNAPSHOT`
+- **Version**: `5.3.1`, `5.3.2-SNAPSHOT`, or `5.4.0-SNAPSHOT`
 
 ## Java Module Names
 
 All published JAR artifacts contain an [Automatic-Module-Name] manifest attribute
 whose value is used as the name of the automatic module defined by that JAR file
-when it is placed on the module path. The names are listed above in the
-Dependency Metadata section.
+when it is placed on the module path. The automatic module names are listed above
+in the [Dependency Metadata](#dependency-metadata) section.
 
 This allows test module authors to require well-known JUnit module names as
-can be seen in the following example:
+can be seen in the following example.
+
 
 ```
 open module test.mylib {
@@ -146,7 +147,7 @@ as it is not intended to be used as a module.
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: http://www.eclemma.org/jacoco/
 [Javadoc]: https://junit.org/junit5/docs/current/api/
-[JDK-10]: http://jdk.java.net/10/
+[JDK 11]: https://jdk.java.net/11/
 [Release Notes]: https://junit.org/junit5/docs/current/release-notes/
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
 [User Guide]: https://junit.org/junit5/docs/current/user-guide/

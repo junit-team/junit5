@@ -14,10 +14,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class HelperTests {
 
@@ -48,6 +54,19 @@ class HelperTests {
 
 		Error error = assertThrows(AssertionError.class, () -> Helper.version("foo"));
 		assertEquals("module name is unknown: foo", error.getMessage());
+	}
+
+	@Test
+	void nonExistingJdkVersionYieldsAnEmptyOptional() {
+		assertEquals(Optional.empty(), Helper.getJdkHomeFromMavenToolchains("does not exist"));
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = { 8, 9, 10, 11, 12, 13 })
+	void checkMavenToolchainsPointingValidJdkInstallations(int version) {
+		var home = Helper.getJdkHomeFromMavenToolchains("" + version);
+		assumeTrue(home.isPresent(), "No 'jdk' element found in Maven toolchain for: " + version);
+		assertTrue(Files.isDirectory(home.get()));
 	}
 
 }

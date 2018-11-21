@@ -2,12 +2,11 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 afterEvaluate {
 	tasks.withType<JavaCompile> {
-		val javaVersion = JavaVersion.VERSION_1_10
-		sourceCompatibility = javaVersion.toString()
-		targetCompatibility = javaVersion.toString()
+		sourceCompatibility = "11"
+		targetCompatibility = "11"
 		options.encoding = "UTF-8"
 		options.compilerArgs.add("-parameters")
-		options.compilerArgs.addAll(listOf("--release", javaVersion.majorVersion))
+		options.compilerArgs.addAll(listOf("--release", "11"))
 	}
 }
 
@@ -44,6 +43,12 @@ tasks.named<Test>("test") {
 				.map { name -> rootProject.project(name) }
 				.map { project -> project.tasks.named(MavenPublishPlugin.PUBLISH_LOCAL_LIFECYCLE_TASK_NAME)}
 				.forEach { dependsOn(it) }
+		// Pass "java.home.N" system properties from sources like "~/.gradle/gradle.properties".
+		// Values will be picked up by: platform.tooling.support.Helper::getJavaHome
+		for (N in 8..99) {
+			val home = project.properties["java.home.$N"]
+			if (home != null) systemProperty("java.home.$N", home)
+		}
 		// TODO Enabling parallel execution fails due to Gradle"s listener not being thread-safe:
 		//   Received a completed event for test with unknown id "10.5".
 		//   Registered test ids: "[:platform-tooling-support-tests:test, 10.1]"

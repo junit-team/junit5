@@ -1,0 +1,56 @@
+[[release-notes-5.3.2]]
+== 5.3.2
+
+*Date of Release:* November 25, 2018
+
+*Scope:* Bug fixes since 5.3.1
+
+For a complete list of all _closed_ issues and pull requests for this release, consult
+the link:{junit5-repo}+/milestone/31?closed=1+[5.3.2] milestone page in the JUnit
+repository on GitHub.
+
+
+[[release-notes-5.3.2-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* When configured with `--details verbose`, the `ConsoleLauncher` no longer throws a
+  `MissingFormatArgumentException` if a test method display name contains `String` format
+  specifiers such as `%c`.
+
+
+[[release-notes-5.3.2-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* `Assertions.assertAll()` is now thread-safe -- for example, it can now be used with a
+  _parallel_ `Stream`.
+* The `OS.SOLARIS` enum constant used with `@EnabledOnOs` and `@DisabledOnOs` is now also
+  detected as the current operating system if the `os.name` JVM system property contains
+  `"SunOs"`.
+* `Assertions.assertLinesMatch()` no longer throws a `NullPointerException` after
+  evaluating a fast-forward match if there are more expected lines after the fast-forward
+  match than remain in the actual results. This bug only manifested itself if the
+  expected list size was equal to or greater than the actual list size.
+* Multidimensional arrays may now be supplied to `@ParameterizedTest` methods from
+  factory methods configured via `@MethodSource`.
+  - For example, a factory method with the signature `static Stream<int[][]> factory()`
+    can be used as the `@MethodSource` for a `@ParameterizedTest` with the signature
+    `void test(int[][])`.
+* Threads created for running tests in parallel now use the same thread context class
+  loader (_TCCL_) that was set when creating the underlying executor service. This
+  resolves `ClassNotFoundException` issues that only occur in parallel execution mode
+  when a custom _TCCL_ is in place.
+* When executing tests in parallel, lifecycle methods and callbacks called after a
+  `@TestFactory` method are now always executed after the dynamic tests returned by the
+  method.
+* Exceptions thrown during initialization of static `@RegisterExtension` fields now cause
+  the test class to fail instead of being silently swallowed.
+
+
+[[release-notes-5.3.2-junit-vintage]]
+=== JUnit Vintage
+
+No changes
