@@ -10,11 +10,9 @@
 
 package org.junit.platform.commons.support;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.platform.commons.util.ReflectionUtils;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.platform.commons.support.PreconditionViolationChecker.assertPreconditionViolationException;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -22,8 +20,12 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.stream.Stream;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.commons.support.PreconditionViolationChecker.assertPreconditionViolationException;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Unit tests for {@link ModifierSupport}.

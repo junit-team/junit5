@@ -26,4 +26,9 @@ class PreconditionViolationChecker {
 		assertEquals(name + " must not be null", exception.getMessage());
 	}
 
+	static void assertPreconditionViolationExceptionForString(String name, Executable executable) {
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class, executable);
+		assertEquals(name + " must not be null or blank", exception.getMessage());
+	}
+
 }
