@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -193,6 +194,7 @@ public final class AnnotationSupport {
 	 */
 	public static List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType,
 			HierarchyTraversalMode traversalMode) {
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		return AnnotationUtils.findAnnotatedMethods(clazz, annotationType,
 			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));

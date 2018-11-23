@@ -25,7 +25,7 @@ import org.junit.platform.commons.util.ClassUtils;
 class ClassSupportTests {
 
 	@Test
-	void nullSafeToString_argument1IsValidated() {
+	void nullSafeToStringPreconditions() {
 		Function<? super Class<?>, ? extends String> mapper = null;
 		assertPreconditionViolationException("Mapping function",
 			() -> ClassSupport.nullSafeToString(mapper, String.class, List.class));

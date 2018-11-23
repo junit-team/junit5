@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.commons.support.PreconditionViolationChecker.assertPreconditionViolationException;
-import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -35,14 +34,14 @@ import org.junit.platform.commons.util.ReflectionUtils;
 class AnnotationSupportTests {
 
 	@Test
-	void isAnnotated_argument2IsValidated() {
+	void isAnnotatedPreconditions() {
 		Optional<Class<Probe>> optional = Optional.of(Probe.class);
 		assertPreconditionViolationException("annotationType", () -> AnnotationSupport.isAnnotated(optional, null));
 		assertPreconditionViolationException("annotationType", () -> AnnotationSupport.isAnnotated(Probe.class, null));
 	}
 
 	@Test
-	void findAnnotation_argument2IsValidated() {
+	void findAnnotationPreconditions() {
 		Optional<Class<Probe>> optional = Optional.of(Probe.class);
 		assertPreconditionViolationException("annotationType", () -> AnnotationSupport.findAnnotation(optional, null));
 		assertPreconditionViolationException("annotationType",
@@ -50,69 +49,29 @@ class AnnotationSupportTests {
 	}
 
 	@Test
-	void findRepeatableAnnotations_argument2IsValidated() {
+	void findRepeatableAnnotationsPreconditions() {
 		assertPreconditionViolationException("annotationType",
 			() -> AnnotationSupport.findRepeatableAnnotations(Probe.class, null));
 	}
 
 	@Test
-	void findPublicAnnotatedFields_argument1IsValidated() {
+	void findPublicAnnotatedFieldsPreconditions() {
 		assertPreconditionViolationException("Class",
-			() -> AnnotationUtils.findPublicAnnotatedFields(null, String.class, FieldMarker.class));
-	}
-
-	@Test
-	void findPublicAnnotatedFields_argument2IsValidated() {
+			() -> AnnotationSupport.findPublicAnnotatedFields(null, String.class, FieldMarker.class));
 		assertPreconditionViolationException("fieldType",
-			() -> AnnotationUtils.findPublicAnnotatedFields(Probe.class, null, FieldMarker.class));
-	}
-
-	@Test
-	void findPublicAnnotatedFields_argument3IsValidated() {
+			() -> AnnotationSupport.findPublicAnnotatedFields(Probe.class, null, FieldMarker.class));
 		assertPreconditionViolationException("annotationType",
-			() -> AnnotationUtils.findPublicAnnotatedFields(Probe.class, String.class, null));
+			() -> AnnotationSupport.findPublicAnnotatedFields(Probe.class, String.class, null));
 	}
 
 	@Test
-	void findAnnotatedFields_argument1IsValidated() {
+	void findAnnotatedMethodsPreconditions() {
 		assertPreconditionViolationException("Class",
-			() -> AnnotationUtils.findAnnotatedFields(null, Tag.class, arg -> true));
-		assertPreconditionViolationException("Class",
-			() -> AnnotationUtils.findAnnotatedFields(null, Tag.class, arg -> true, TOP_DOWN));
-	}
-
-	@Test
-	void findAnnotatedFields_argument2IsValidated() {
+			() -> AnnotationSupport.findAnnotatedMethods(null, Tag.class, HierarchyTraversalMode.TOP_DOWN));
 		assertPreconditionViolationException("annotationType",
-			() -> AnnotationUtils.findAnnotatedFields(Probe.class, null, arg -> true));
-		assertPreconditionViolationException("annotationType",
-			() -> AnnotationUtils.findAnnotatedFields(Probe.class, null, arg -> true, TOP_DOWN));
-	}
-
-	@Test
-	void findAnnotatedFields_argument3IsValidated() {
-		assertPreconditionViolationException("Predicate",
-			() -> AnnotationUtils.findAnnotatedFields(Probe.class, Tag.class, null));
-		assertPreconditionViolationException("Predicate",
-			() -> AnnotationUtils.findAnnotatedFields(Probe.class, Tag.class, null, TOP_DOWN));
-	}
-
-	@Test
-	void findAnnotatedMethods_argument1IsValidated() {
-		assertPreconditionViolationException("Class",
-			() -> AnnotationUtils.findAnnotatedMethods(null, Tag.class, TOP_DOWN));
-	}
-
-	@Test
-	void findAnnotatedMethods_argument2IsValidated() {
-		assertPreconditionViolationException("annotationType",
-			() -> AnnotationUtils.findAnnotatedMethods(Probe.class, null, TOP_DOWN));
-	}
-
-	@Test
-	void findAnnotatedMethods_argument3IsValidated() {
+			() -> AnnotationSupport.findAnnotatedMethods(Probe.class, null, HierarchyTraversalMode.TOP_DOWN));
 		assertPreconditionViolationException("HierarchyTraversalMode",
-			() -> AnnotationUtils.findAnnotatedMethods(Probe.class, Tag.class, null));
+			() -> AnnotationSupport.findAnnotatedMethods(Probe.class, Tag.class, null));
 	}
 
 	@Test
