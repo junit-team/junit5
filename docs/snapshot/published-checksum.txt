@@ -119,7 +119,6 @@
 3f870a6708488da235702b203e784514  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ValueArgumentsProvider.java
 3fee6b6fc940d52cfb8b9ff8bd98f68b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/JRE.java
 4000f08d559378835df7779d2297cfd0  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertIterableEquals.java
-41c72b14ffd4401ca8f7eb7c4066d86a  documentation/src/test/java/example/testinterface/TestInterfaceDynamicTestsDemo.java
 41d0d0830a29d416ed94af021995f372  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.java
 4255f3a9e3d7f3945c3cc043c8b186b0  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/package-info.java
 425f3b521e2b6238d2d53c08acd2a8de  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ExtensionValuesStore.java
@@ -334,6 +333,7 @@
 9529e7e9fc264725ec982660ba8b4fb6  junit-platform-commons/src/main/java/org/junit/platform/commons/util/Preconditions.java
 95547fabebd67476325d08b1b9d1b5e7  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/TestContainerResolver.java
 9558c7905b820f74f8c45b402b2a2cda  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/SummaryGeneratingListener.java
+969754dd33160d0ba09c002c584b8e5a  documentation/src/test/java/example/testinterface/TestInterfaceDynamicTestsDemo.java
 96d1433f622c108651f4fec697614040  documentation/src/test/java/example/defaultmethods/StringTests.java
 977c1459bb9ea6c102a45436151852ff  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/package-info.java
 97b3a4d1449151df52c97ca763845162  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
