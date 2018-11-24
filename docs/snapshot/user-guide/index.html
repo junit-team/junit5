@@ -938,13 +938,17 @@ scripts (e.g., <code>build.gradle</code>, <code>pom.xml</code>, etc.) in the pro
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
 
+<span class="keyword">import</span> <span class="include">example.util.Calculator</span>;
+
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
 
 <span class="type">class</span> <span class="class">FirstJUnit5Tests</span> {
 
+    <span class="directive">private</span> <span class="directive">final</span> Calculator calculator = <span class="keyword">new</span> Calculator();
+
     <span class="annotation">@Test</span>
     <span class="type">void</span> myFirstTest() {
-        assertEquals(<span class="integer">2</span>, <span class="integer">1</span> + <span class="integer">1</span>);
+        assertEquals(<span class="integer">2</span>, calculator.add(<span class="integer">1</span>, <span class="integer">1</span>));
     }
 
 }</code></pre>
@@ -1292,14 +1296,18 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTimeoutPreemptively</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>;
 
+<span class="keyword">import</span> <span class="include">example.util.Calculator</span>;
+
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
 
 <span class="type">class</span> <span class="class">AssertionsDemo</span> {
 
+    <span class="directive">private</span> <span class="directive">final</span> Calculator calculator = <span class="keyword">new</span> Calculator();
+
     <span class="annotation">@Test</span>
     <span class="type">void</span> standardAssertions() {
-        assertEquals(<span class="integer">2</span>, <span class="integer">2</span>);
-        assertEquals(<span class="integer">4</span>, <span class="integer">4</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">The optional assertion message is now the last parameter.</span><span class="delimiter">&quot;</span></span>);
+        assertEquals(<span class="integer">2</span>, calculator.add(<span class="integer">1</span>, <span class="integer">1</span>));
+        assertEquals(<span class="integer">4</span>, calculator.multiply(<span class="integer">2</span>, <span class="integer">2</span>), <span class="string"><span class="delimiter">&quot;</span><span class="content">The optional assertion message is now the last parameter.</span><span class="delimiter">&quot;</span></span>);
         assertTrue(<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span> &lt; <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>, () -&gt; <span class="string"><span class="delimiter">&quot;</span><span class="content">Assertion messages can be lazily evaluated -- </span><span class="delimiter">&quot;</span></span>
                 + <span class="string"><span class="delimiter">&quot;</span><span class="content">to avoid constructing complex messages unnecessarily.</span><span class="delimiter">&quot;</span></span>);
     }
@@ -1488,13 +1496,17 @@ then use them in tests like in the <code>assertWithHamcrestMatcher()</code> meth
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.hamcrest.CoreMatchers.is</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.hamcrest.MatcherAssert.assertThat</span>;
 
+<span class="keyword">import</span> <span class="include">example.util.Calculator</span>;
+
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
 
 <span class="type">class</span> <span class="class">HamcrestAssertionDemo</span> {
 
+    <span class="directive">private</span> <span class="directive">final</span> Calculator calculator = <span class="keyword">new</span> Calculator();
+
     <span class="annotation">@Test</span>
     <span class="type">void</span> assertWithHamcrestMatcher() {
-        assertThat(<span class="integer">2</span> + <span class="integer">1</span>, is(equalTo(<span class="integer">3</span>)));
+        assertThat(<span class="integer">3</span>, is(equalTo(calculator.subtract(<span class="integer">4</span>, <span class="integer">1</span>))));
     }
 
 }</code></pre>
@@ -1520,9 +1532,13 @@ method references. All JUnit Jupiter assumptions are static methods in the
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assumptions.assumeTrue</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assumptions.assumingThat</span>;
 
+<span class="keyword">import</span> <span class="include">example.util.Calculator</span>;
+
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
 
 <span class="type">class</span> <span class="class">AssumptionsDemo</span> {
+
+    <span class="directive">private</span> <span class="directive">final</span> Calculator calculator = <span class="keyword">new</span> Calculator();
 
     <span class="annotation">@Test</span>
     <span class="type">void</span> testOnlyOnCiServer() {
@@ -1542,7 +1558,7 @@ method references. All JUnit Jupiter assumptions are static methods in the
         assumingThat(<span class="string"><span class="delimiter">&quot;</span><span class="content">CI</span><span class="delimiter">&quot;</span></span>.equals(<span class="predefined-type">System</span>.getenv(<span class="string"><span class="delimiter">&quot;</span><span class="content">ENV</span><span class="delimiter">&quot;</span></span>)),
             () -&gt; {
                 <span class="comment">// perform these assertions only on the CI server</span>
-                assertEquals(<span class="integer">2</span>, <span class="integer">2</span>);
+                assertEquals(<span class="integer">2</span>, calculator.divide(<span class="integer">4</span>, <span class="integer">2</span>));
             });
 
         <span class="comment">// perform these assertions in all environments</span>
@@ -2516,11 +2532,13 @@ annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code> (see
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="type">interface</span> <span class="class">TestInterfaceDynamicTestsDemo</span> {
 
+    Calculator calculator = <span class="keyword">new</span> Calculator();
+
     <span class="annotation">@TestFactory</span>
     <span class="keyword">default</span> <span class="predefined-type">Collection</span>&lt;DynamicTest&gt; dynamicTestsFromCollection() {
         <span class="keyword">return</span> <span class="predefined-type">Arrays</span>.asList(
             dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">1st dynamic test in test interface</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(<span class="predefined-constant">true</span>)),
-            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">2nd dynamic test in test interface</span><span class="delimiter">&quot;</span></span>, () -&gt; assertEquals(<span class="integer">4</span>, <span class="integer">2</span> * <span class="integer">2</span>))
+            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">2nd dynamic test in test interface</span><span class="delimiter">&quot;</span></span>, () -&gt; assertEquals(<span class="integer">4</span>, calculator.multiply(<span class="integer">2</span>, <span class="integer">2</span>)))
         );
     }
 
@@ -2551,7 +2569,7 @@ implement the interface automatically inherit its tags and extensions. See
 
     <span class="annotation">@Test</span>
     <span class="type">void</span> isEqualValue() {
-        assertEquals(<span class="integer">1</span>, <span class="integer">1</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">is always equal</span><span class="delimiter">&quot;</span></span>);
+        assertEquals(<span class="integer">1</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span>.length(), <span class="string"><span class="delimiter">&quot;</span><span class="content">is always equal</span><span class="delimiter">&quot;</span></span>);
     }
 
 }</code></pre>
@@ -2926,7 +2944,7 @@ annotation to specify a <code>String</code> array as the source of arguments.</p
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
 <span class="annotation">@ValueSource</span>(strings = { <span class="string"><span class="delimiter">&quot;</span><span class="content">racecar</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">radar</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">able was I ere I saw elba</span><span class="delimiter">&quot;</span></span> })
 <span class="type">void</span> palindromes(<span class="predefined-type">String</span> candidate) {
-    assertTrue(isPalindrome(candidate));
+    assertTrue(StringUtils.isPalindrome(candidate));
 }</code></pre>
 </div>
 </div>
@@ -4029,6 +4047,9 @@ expressiveness and power of dynamic tests.</p>
 <span class="keyword">import</span> <span class="include">java.util.stream.IntStream</span>;
 <span class="keyword">import</span> <span class="include">java.util.stream.Stream</span>;
 
+<span class="keyword">import</span> <span class="include">example.util.Calculator</span>;
+<span class="keyword">import</span> <span class="include">example.util.StringUtils</span>;
+
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.DynamicNode</span>;
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.DynamicTest</span>;
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Tag</span>;
@@ -4036,6 +4057,8 @@ expressiveness and power of dynamic tests.</p>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.function.ThrowingConsumer</span>;
 
 <span class="type">class</span> <span class="class">DynamicTestsDemo</span> {
+
+    <span class="directive">private</span> <span class="directive">final</span> Calculator calculator = <span class="keyword">new</span> Calculator();
 
     <span class="comment">// This will result in a JUnitException!</span>
     <span class="annotation">@TestFactory</span>
@@ -4046,32 +4069,32 @@ expressiveness and power of dynamic tests.</p>
     <span class="annotation">@TestFactory</span>
     <span class="predefined-type">Collection</span>&lt;DynamicTest&gt; dynamicTestsFromCollection() {
         <span class="keyword">return</span> <span class="predefined-type">Arrays</span>.asList(
-            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">1st dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(<span class="predefined-constant">true</span>)),
-            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">2nd dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertEquals(<span class="integer">4</span>, <span class="integer">2</span> * <span class="integer">2</span>))
+            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">1st dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(StringUtils.isPalindrome(<span class="string"><span class="delimiter">&quot;</span><span class="content">madam</span><span class="delimiter">&quot;</span></span>))),
+            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">2nd dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertEquals(<span class="integer">4</span>, calculator.multiply(<span class="integer">2</span>, <span class="integer">2</span>)))
         );
     }
 
     <span class="annotation">@TestFactory</span>
     <span class="predefined-type">Iterable</span>&lt;DynamicTest&gt; dynamicTestsFromIterable() {
         <span class="keyword">return</span> <span class="predefined-type">Arrays</span>.asList(
-            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">3rd dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(<span class="predefined-constant">true</span>)),
-            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">4th dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertEquals(<span class="integer">4</span>, <span class="integer">2</span> * <span class="integer">2</span>))
+            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">3rd dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(StringUtils.isPalindrome(<span class="string"><span class="delimiter">&quot;</span><span class="content">madam</span><span class="delimiter">&quot;</span></span>))),
+            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">4th dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertEquals(<span class="integer">4</span>, calculator.multiply(<span class="integer">2</span>, <span class="integer">2</span>)))
         );
     }
 
     <span class="annotation">@TestFactory</span>
     <span class="predefined-type">Iterator</span>&lt;DynamicTest&gt; dynamicTestsFromIterator() {
         <span class="keyword">return</span> <span class="predefined-type">Arrays</span>.asList(
-            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">5th dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(<span class="predefined-constant">true</span>)),
-            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">6th dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertEquals(<span class="integer">4</span>, <span class="integer">2</span> * <span class="integer">2</span>))
+            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">5th dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(StringUtils.isPalindrome(<span class="string"><span class="delimiter">&quot;</span><span class="content">madam</span><span class="delimiter">&quot;</span></span>))),
+            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">6th dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertEquals(<span class="integer">4</span>, calculator.multiply(<span class="integer">2</span>, <span class="integer">2</span>)))
         ).iterator();
     }
 
     <span class="annotation">@TestFactory</span>
     DynamicTest<span class="type">[]</span> dynamicTestsFromArray() {
         <span class="keyword">return</span> <span class="keyword">new</span> DynamicTest<span class="type">[]</span> {
-            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">7th dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(<span class="predefined-constant">true</span>)),
-            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">8th dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertEquals(<span class="integer">4</span>, <span class="integer">2</span> * <span class="integer">2</span>))
+            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">7th dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(StringUtils.isPalindrome(<span class="string"><span class="delimiter">&quot;</span><span class="content">madam</span><span class="delimiter">&quot;</span></span>))),
+            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">8th dynamic test</span><span class="delimiter">&quot;</span></span>, () -&gt; assertEquals(<span class="integer">4</span>, calculator.multiply(<span class="integer">2</span>, <span class="integer">2</span>)))
         };
     }
 
@@ -4140,8 +4163,8 @@ expressiveness and power of dynamic tests.</p>
     <span class="annotation">@TestFactory</span>
     DynamicNode dynamicNodeSingleContainer() {
         <span class="keyword">return</span> dynamicContainer(<span class="string"><span class="delimiter">&quot;</span><span class="content">single dynamic container</span><span class="delimiter">&quot;</span></span>, Stream.of(
-            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(<span class="predefined-constant">true</span>)),
-            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>, () -&gt; assertFalse(<span class="predefined-constant">false</span>))
+            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(StringUtils.isPalindrome(<span class="string"><span class="delimiter">&quot;</span><span class="content">madam</span><span class="delimiter">&quot;</span></span>))),
+            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>, () -&gt; assertFalse(StringUtils.isPalindrome(<span class="string"><span class="delimiter">&quot;</span><span class="content">test</span><span class="delimiter">&quot;</span></span>)))
         ));
     }
 }</code></pre>
@@ -7280,7 +7303,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-11-24 14:59:15 UTC
+Last updated 2018-11-24 15:12:57 UTC
 </div>
 </div>
 </body>
