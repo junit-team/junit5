@@ -179,6 +179,7 @@ package org.junit.platform {
     [junit-platform-console] as console
     [junit-platform-engine] as engine
     [junit-platform-launcher] as launcher
+    [junit-platform-reporting] as reporting
     [junit-platform-runner] as runner
     [junit-platform-suite-api] as suite_api
 }
@@ -211,11 +212,14 @@ jupiter_migration_support ..> jupiter_api
 jupiter_migration_support ..> junit4
 
 console ..> launcher
+console ..> reporting
 
 launcher ..> engine
 
 engine ..> opentest4j
 engine ..> commons
+
+reporting ..> launcher
 
 runner ..> launcher
 runner ..> suite_api
