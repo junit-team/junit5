@@ -751,8 +751,8 @@ See <a href="#launcher-api">JUnit Platform Launcher API</a> for details.</p>
 </dd>
 <dt class="hdlist1"><code>junit-platform-reporting</code></dt>
 <dd>
-<p>Default reporting listener implementations&#8201;&#8212;&#8201;typically used by IDEs and build tools.
-See <a href="#launcher-api-listeners-reporting">JUnit Platform Reporting</a> for details.</p>
+<p><code>TestExecutionListener</code> implementations that generate test reports&#8201;&#8212;&#8201;typically used
+by IDEs and build tools. See <a href="#launcher-api-listeners-reporting">JUnit Platform Reporting</a> for details.</p>
 </dd>
 <dt class="hdlist1"><code>junit-platform-runner</code></dt>
 <dd>
@@ -6609,7 +6609,7 @@ through to identify test classes and test methods in the past.</p>
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.core.LauncherFactory</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.listeners.SummaryGeneratingListener</span>;
-<span class="keyword">import</span> <span class="include">org.junit.platform.reporting.xml.XmlReportsWritingListener</span>;</code></pre>
+<span class="keyword">import</span> <span class="include">org.junit.platform.reporting.legacy.xml.XmlReportsWritingListener</span>;</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -6763,18 +6763,19 @@ registered automatically.</p>
 <div class="sect3">
 <h4 id="launcher-api-listeners-reporting"><a class="anchor" href="#launcher-api-listeners-reporting"></a>7.1.5. JUnit Platform Reporting</h4>
 <div class="paragraph">
-<p>The  <code>junit-platform-reporting</code> artifact contains default reporting listener
-implementations&#8201;&#8212;&#8201;typically used by IDEs and build tools. The package
-<code>org.junit.platform.reporting.xml</code> contains a single implementation for now:</p>
+<p>The <code>junit-platform-reporting</code> artifact contains <code><a href="../api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code>
+implementations that generate test reports. These listeners are typically used by IDEs
+and build tools. The package <code>org.junit.platform.reporting.legacy.xml</code> currently contains
+the following implementation.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p><code><a href="../api/org/junit/platform/reporting/XmlReportsWritingListener.html">XmlReportsWritingListener</a></code> writes a separate XML report for each root in the
 <code><a href="../api/org/junit/platform/launcher/TestPlan.html">TestPlan</a></code>. Note that the generated XML format is compatible with the de facto
-standard for JUnit 4 based test reports that was made popular by the Ant build
-system. The <code><a href="../api/org/junit/platform/reporting/XmlReportsWritingListener.html">XmlReportsWritingListener</a></code> is used by the
-<a href="#running-tests-console-launcher">Console Launcher</a> as well.</p>
+standard for JUnit 4 based test reports that was made popular by the Ant build system.
+The <code><a href="../api/org/junit/platform/reporting/XmlReportsWritingListener.html">XmlReportsWritingListener</a></code> is used by the <a href="#running-tests-console-launcher">Console Launcher</a> as
+well.</p>
 </li>
 </ul>
 </div>
@@ -7198,9 +7199,9 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.reporting.xml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.reporting.legacy.xml</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>XmlReportsWritingListener</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">``</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.4</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -7265,7 +7266,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-11-24 12:57:36 UTC
+Last updated 2018-11-24 13:56:53 UTC
 </div>
 </div>
 </body>
