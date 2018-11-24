@@ -59,8 +59,8 @@ include::{testDir}/example/UsingTheLauncherDemo.java[tags=execution]
 ----
 
 There is no return value for the `execute()` method, but you can easily use a listener to
-aggregate the final results in an object of your own. For an example see the
-`{SummaryGeneratingListener}`.
+aggregate the final results in an object of your own. For examples see the
+`{SummaryGeneratingListener}` and `{XmlReportsWritingListener}`.
 
 [[launcher-api-engines-custom]]
 ==== Plugging in your own Test Engine
@@ -123,6 +123,10 @@ the following implementation.
   standard for JUnit 4 based test reports that was made popular by the Ant build system.
   The `{XmlReportsWritingListener}` is used by the <<running-tests-console-launcher>> as
   well.
+
+NOTE: The `{junit-platform-launcher}` module also contains `{TestExecutionListener}`
+implementations that can be used for reporting purposes. See `{LoggingListener}` and
+`{SummaryGeneratingListener}` for details.
 
 [[launcher-api-launcher-config]]
 ==== Configuring the Launcher
