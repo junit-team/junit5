@@ -10,8 +10,7 @@
 
 package example;
 
-//tag::user_guide[]
-
+// tag::user_guide[]
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -26,8 +25,8 @@ class HamcrestAssertionDemo {
 
 	@Test
 	void assertWithHamcrestMatcher() {
-		assertThat(3, is(equalTo(calculator.subtract(4, 1))));
+		assertThat(calculator.subtract(4, 1), is(equalTo(3)));
 	}
 
 }
-//end::user_guide[]
+// end::user_guide[]
