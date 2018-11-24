@@ -725,14 +725,14 @@ has been compiled with previous versions of the JDK.</p>
 <dl>
 <dt class="hdlist1"><code>junit-platform-commons</code></dt>
 <dd>
-<p>Internal common library/utilities of JUnit. These utilities are intended solely for usage within
-the JUnit framework itself. <em>Any usage by external parties is not supported.</em> Use at your own
-risk!</p>
+<p>Common APIs and support utilities for the JUnit Platform. Any API annotated with
+<code>@API(status = INTERNAL)</code> is intended solely for usage within the JUnit framework
+itself. <em>Any usage of internal APIs by external parties is not supported!</em></p>
 </dd>
 <dt class="hdlist1"><code>junit-platform-console</code></dt>
 <dd>
-<p>Support for discovering and executing tests on the JUnit Platform from the console. See
-<a href="#running-tests-console-launcher">Console Launcher</a> for details.</p>
+<p>Support for discovering and executing tests on the JUnit Platform from the console.
+See <a href="#running-tests-console-launcher">Console Launcher</a> for details.</p>
 </dd>
 <dt class="hdlist1"><code>junit-platform-console-standalone</code></dt>
 <dd>
@@ -746,8 +746,8 @@ directory. See <a href="#running-tests-console-launcher">Console Launcher</a> fo
 </dd>
 <dt class="hdlist1"><code>junit-platform-launcher</code></dt>
 <dd>
-<p>Public API for configuring and launching test plans&#8201;&#8212;&#8201;typically used by IDEs and build tools.
-See <a href="#launcher-api">JUnit Platform Launcher API</a> for details.</p>
+<p>Public API for configuring and launching test plans&#8201;&#8212;&#8201;typically used by IDEs and
+build tools. See <a href="#launcher-api">JUnit Platform Launcher API</a> for details.</p>
 </dd>
 <dt class="hdlist1"><code>junit-platform-reporting</code></dt>
 <dd>
@@ -762,8 +762,8 @@ environment. See <a href="#running-tests-junit-platform-runner">Using JUnit 4 to
 <dt class="hdlist1"><code>junit-platform-suite-api</code></dt>
 <dd>
 <p>Annotations for configuring test suites on the JUnit Platform. Supported by the
-<a href="#running-tests-junit-platform-runner">JUnitPlatform runner</a> and possibly by third-party
-<code>TestEngine</code> implementations.</p>
+<a href="#running-tests-junit-platform-runner">JUnitPlatform runner</a> and possibly by
+third-party <code>TestEngine</code> implementations.</p>
 </dd>
 </dl>
 </div>
@@ -824,8 +824,8 @@ only required for running selected JUnit 4 rules.</p>
 <dl>
 <dt class="hdlist1"><code>junit-vintage-engine</code></dt>
 <dd>
-<p>JUnit Vintage test engine implementation that allows to run vintage JUnit tests, i.e. tests
-written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.</p>
+<p>JUnit Vintage test engine implementation that allows to run vintage JUnit tests, i.e.
+tests written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.</p>
 </dd>
 </dl>
 </div>
@@ -7280,7 +7280,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-11-24 14:24:26 UTC
+Last updated 2018-11-24 14:44:35 UTC
 </div>
 </div>
 </body>
