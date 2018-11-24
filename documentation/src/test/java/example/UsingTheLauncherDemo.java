@@ -27,6 +27,7 @@ import org.junit.platform.launcher.core.LauncherConfig;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.junit.platform.reporting.legacy.xml.LegacyXmlReportGeneratingListener;
 // end::imports[]
 
@@ -58,6 +59,7 @@ class UsingTheLauncherDemo {
 	}
 
 	@org.junit.jupiter.api.Test
+	@SuppressWarnings("unused")
 	void execution() {
 		// @formatter:off
 		// tag::execution[]
@@ -74,10 +76,14 @@ class UsingTheLauncherDemo {
 		Launcher launcher = LauncherFactory.create();
 
 		// Register a listener of your choice
-		TestExecutionListener listener = new SummaryGeneratingListener();
+		SummaryGeneratingListener listener = new SummaryGeneratingListener();
 		launcher.registerTestExecutionListeners(listener);
 
 		launcher.execute(request);
+
+		TestExecutionSummary summary = listener.getSummary();
+		// Do something with the TestExecutionSummary.
+
 		// end::execution[]
 		// @formatter:on
 	}
