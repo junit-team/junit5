@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package example;
+package example.domain;
 
 import java.time.LocalDate;
 

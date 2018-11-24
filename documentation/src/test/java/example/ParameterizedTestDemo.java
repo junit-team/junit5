@@ -31,7 +31,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import example.Person.Gender;
+import example.domain.Person;
+import example.domain.Person.Gender;
 import example.util.StringUtils;
 
 import org.junit.jupiter.api.AfterEach;

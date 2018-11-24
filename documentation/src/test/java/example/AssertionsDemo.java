@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import example.domain.Person;
 import example.util.Calculator;
 
 import org.junit.jupiter.api.Test;
