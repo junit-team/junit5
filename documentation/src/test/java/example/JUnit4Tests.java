@@ -15,7 +15,8 @@ import org.junit.Test;
 public class JUnit4Tests {
 
 	@Test
-	public void standardJUnit4Test() throws Exception {
-		/* no-op */
+	public void standardJUnit4Test() {
+		// perform assertions
 	}
+
 }

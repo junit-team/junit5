@@ -4,7 +4,7 @@
 [source,java,indent=0]
 .A first test case
 ----
-include::{testDir}/example/FirstJUnit5Tests.java[tags=user_guide]
+include::{testDir}/example/MyFirstJUnitJupiterTests.java[tags=user_guide]
 ----
 
 [[writing-tests-annotations]]
