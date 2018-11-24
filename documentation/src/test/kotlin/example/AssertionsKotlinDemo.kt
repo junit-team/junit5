@@ -10,6 +10,8 @@
 package example
 
 // tag::user_guide[]
+import example.domain.Person
+
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
