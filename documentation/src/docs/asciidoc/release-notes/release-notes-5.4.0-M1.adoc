@@ -3,7 +3,9 @@
 
 *Date of Release:* ❓
 
-*Scope:* ❓
+*Scope:* XML report generating listener, Test Kit for testing engines and extensions,
+display name generator API, test execution order API, JUnit 4 `@Ignore` migration
+support, improved diagnostics and error reporting.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult
 the link:{junit5-repo}+/milestone/29?closed=1+[5.4.0-M1] milestone page in the JUnit
