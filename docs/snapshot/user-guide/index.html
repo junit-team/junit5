@@ -6609,7 +6609,7 @@ through to identify test classes and test methods in the past.</p>
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.core.LauncherFactory</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.listeners.SummaryGeneratingListener</span>;
-<span class="keyword">import</span> <span class="include">org.junit.platform.reporting.legacy.xml.XmlReportsWritingListener</span>;</code></pre>
+<span class="keyword">import</span> <span class="include">org.junit.platform.reporting.legacy.xml.LegacyXmlReportGeneratingListener</span>;</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -6674,7 +6674,7 @@ launcher.execute(request);</code></pre>
 <div class="paragraph">
 <p>There is no return value for the <code>execute()</code> method, but you can easily use a listener to
 aggregate the final results in an object of your own. For examples see the
-<code><a href="../api/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html">SummaryGeneratingListener</a></code> and <code><a href="../api/org/junit/platform/reporting/XmlReportsWritingListener.html">XmlReportsWritingListener</a></code>.</p>
+<code><a href="../api/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html">SummaryGeneratingListener</a></code> and <code><a href="../api/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html">LegacyXmlReportGeneratingListener</a></code>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -6771,11 +6771,11 @@ the following implementation.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="../api/org/junit/platform/reporting/XmlReportsWritingListener.html">XmlReportsWritingListener</a></code> writes a separate XML report for each root in the
-<code><a href="../api/org/junit/platform/launcher/TestPlan.html">TestPlan</a></code>. Note that the generated XML format is compatible with the de facto
+<p><code><a href="../api/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html">LegacyXmlReportGeneratingListener</a></code> generates a separate XML report for each root in
+the <code><a href="../api/org/junit/platform/launcher/TestPlan.html">TestPlan</a></code>. Note that the generated XML format is compatible with the de facto
 standard for JUnit 4 based test reports that was made popular by the Ant build system.
-The <code><a href="../api/org/junit/platform/reporting/XmlReportsWritingListener.html">XmlReportsWritingListener</a></code> is used by the <a href="#running-tests-console-launcher">Console Launcher</a> as
-well.</p>
+The <code>LegacyXmlReportGeneratingListener</code> is used by the
+<a href="#running-tests-console-launcher">Console Launcher</a> as well.</p>
 </li>
 </ul>
 </div>
@@ -6809,7 +6809,7 @@ the following example.</p>
     .enableTestEngineAutoRegistration(<span class="predefined-constant">false</span>)
     .enableTestExecutionListenerAutoRegistration(<span class="predefined-constant">false</span>)
     .addTestEngines(<span class="keyword">new</span> CustomTestEngine())
-    .addTestExecutionListeners(<span class="keyword">new</span> XmlReportsWritingListener(reportsDir, out))
+    .addTestExecutionListeners(<span class="keyword">new</span> LegacyXmlReportGeneratingListener(reportsDir, out))
     .addTestExecutionListeners(<span class="keyword">new</span> CustomTestExecutionListener())
     .build();
 
@@ -7214,7 +7214,7 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.reporting.legacy.xml</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>XmlReportsWritingListener</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LegacyXmlReportGeneratingListener</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.4</code></p></td>
 </tr>
 </tbody>
@@ -7280,7 +7280,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-11-24 14:20:56 UTC
+Last updated 2018-11-24 14:24:26 UTC
 </div>
 </div>
 </body>
