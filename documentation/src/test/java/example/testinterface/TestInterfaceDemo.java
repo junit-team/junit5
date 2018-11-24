@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 // @formatter:off
-//tag::user_guide[]
+// tag::user_guide[]
 class TestInterfaceDemo implements TestLifecycleLogger,
 		TimeExecutionLogger, TestInterfaceDynamicTestsDemo {
 
@@ -25,5 +25,5 @@ class TestInterfaceDemo implements TestLifecycleLogger,
 	}
 
 }
-//end::user_guide[]
+// end::user_guide[]
 // @formatter:on

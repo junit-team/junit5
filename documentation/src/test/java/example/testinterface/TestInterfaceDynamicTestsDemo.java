@@ -10,36 +10,25 @@
 
 package example.testinterface;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static example.util.StringUtils.isPalindrome;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-import java.util.Arrays;
-import java.util.Collection;
-
-import example.util.Calculator;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
-//tag::user_guide[]
+// @formatter:off
+// tag::user_guide[]
 interface TestInterfaceDynamicTestsDemo {
 
-	Calculator calculator = new Calculator();
-
-	@TestFactory
-	default Collection<DynamicTest> dynamicTestsFromCollection() {
-		// end::user_guide[]
-		// @formatter:off
-		// tag::user_guide[]
-		return Arrays.asList(
-			dynamicTest("1st dynamic test in test interface", () -> assertTrue(true)),
-			dynamicTest("2nd dynamic test in test interface", () -> assertEquals(4, calculator.multiply(2, 2)))
-		);
-		// end::user_guide[]
-		// @formatter:on
-		// tag::user_guide[]
-	}
+    @TestFactory
+    default Stream<DynamicTest> dynamicTestsForPalindromes() {
+        return Stream.of("racecar", "radar", "mom", "dad")
+            .map(text -> dynamicTest(text, () -> assertTrue(isPalindrome(text))));
+        }
 
 }
-//end::user_guide[]
+// end::user_guide[]
+// @formatter:on

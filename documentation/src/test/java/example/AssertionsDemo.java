@@ -38,7 +38,8 @@ class AssertionsDemo {
 	@Test
 	void standardAssertions() {
 		assertEquals(2, calculator.add(1, 1));
-		assertEquals(4, calculator.multiply(2, 2), "The optional assertion message is now the last parameter.");
+		assertEquals(4, calculator.multiply(2, 2),
+				"The optional failure message is now the last parameter");
 		assertTrue('a' < 'b', () -> "Assertion messages can be lazily evaluated -- "
 				+ "to avoid constructing complex messages unnecessarily.");
 	}

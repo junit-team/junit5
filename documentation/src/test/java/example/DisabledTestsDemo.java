@@ -24,5 +24,6 @@ class DisabledTestsDemo {
 	@Test
 	void testWillBeExecuted() {
 	}
+
 }
 // end::user_guide[]

@@ -16,8 +16,10 @@ import org.junit.jupiter.api.Test;
 
 @Disabled
 class DisabledClassDemo {
+
 	@Test
 	void testWillBeSkipped() {
 	}
+
 }
 // end::user_guide[]

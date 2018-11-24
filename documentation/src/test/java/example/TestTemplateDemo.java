@@ -36,15 +36,20 @@ class TestTemplateDemo {
 
 	// end::user_guide[]
 	static
+	// @formatter:off
 	// tag::user_guide[]
-	public class MyTestTemplateInvocationContextProvider implements TestTemplateInvocationContextProvider {
+	public class MyTestTemplateInvocationContextProvider
+			implements TestTemplateInvocationContextProvider {
+
 		@Override
 		public boolean supportsTestTemplate(ExtensionContext context) {
 			return true;
 		}
 
 		@Override
-		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
+		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
+				ExtensionContext context) {
+
 			return Stream.of(invocationContext("foo"), invocationContext("bar"));
 		}
 
@@ -75,4 +80,6 @@ class TestTemplateDemo {
 		}
 	}
 	// end::user_guide[]
+	// @formatter:on
+
 }
