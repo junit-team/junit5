@@ -11,6 +11,7 @@
 package example.util;
 
 public class StringUtils {
+
 	public static boolean isPalindrome(String candidate) {
 		int length = candidate.length();
 		for (int i = 0; i < length / 2; i++) {
@@ -20,4 +21,5 @@ public class StringUtils {
 		}
 		return true;
 	}
+
 }
