@@ -17,9 +17,9 @@ import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.util.PreconditionViolationException;
 
 /**
- * @since 5.4
+ * @since 1.4
  */
-class PreconditionViolationChecker {
+class PreconditionAssertions {
 
 	static void assertPreconditionViolationException(String name, Executable executable) {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class, executable);

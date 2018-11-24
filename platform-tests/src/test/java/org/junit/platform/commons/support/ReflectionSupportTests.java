@@ -13,8 +13,8 @@ package org.junit.platform.commons.support;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.platform.commons.support.PreconditionViolationChecker.assertPreconditionViolationException;
-import static org.junit.platform.commons.support.PreconditionViolationChecker.assertPreconditionViolationExceptionForString;
+import static org.junit.platform.commons.support.PreconditionAssertions.assertPreconditionViolationException;
+import static org.junit.platform.commons.support.PreconditionAssertions.assertPreconditionViolationExceptionForString;
 
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -38,16 +38,16 @@ class ReflectionSupportTests {
 	private final Predicate<String> allNames = name -> true;
 	private final Predicate<Method> allMethods = name -> true;
 
-	@SuppressWarnings("deprecation")
 	@Test
+	@SuppressWarnings("deprecation")
 	void loadClassDelegates() {
 		assertEquals(ReflectionUtils.loadClass("-"), ReflectionSupport.loadClass("-"));
 		assertEquals(ReflectionUtils.loadClass("A"), ReflectionSupport.loadClass("A"));
 		assertEquals(ReflectionUtils.loadClass("java.io.Bits"), ReflectionSupport.loadClass("java.io.Bits"));
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
+	@SuppressWarnings("deprecation")
 	void loadClassPreconditions() {
 		assertPreconditionViolationExceptionForString("Class name", () -> ReflectionSupport.loadClass(null));
 		assertPreconditionViolationExceptionForString("Class name", () -> ReflectionSupport.loadClass(""));

@@ -194,6 +194,7 @@ public final class AnnotationSupport {
 	 */
 	public static List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationType,
 			HierarchyTraversalMode traversalMode) {
+
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		return AnnotationUtils.findAnnotatedMethods(clazz, annotationType,

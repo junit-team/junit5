@@ -13,7 +13,7 @@ package org.junit.platform.commons.support;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.platform.commons.support.PreconditionViolationChecker.assertPreconditionViolationException;
+import static org.junit.platform.commons.support.PreconditionAssertions.assertPreconditionViolationException;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -157,10 +157,10 @@ class AnnotationSupportTests {
 	static class Probe {
 
 		@FieldMarker
-		public static String publicStaticAnnotatedField = "static";
+		public static String publicAnnotatedStaticField = "static";
 
 		@FieldMarker
-		public String publicNormalAnnotatedField = "normal";
+		public String publicAnnotatedInstanceField = "instance";
 
 		@Tag("method-tag")
 		void aMethod() {

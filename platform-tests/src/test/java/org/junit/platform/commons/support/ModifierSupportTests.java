@@ -11,7 +11,7 @@
 package org.junit.platform.commons.support;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.commons.support.PreconditionViolationChecker.assertPreconditionViolationException;
+import static org.junit.platform.commons.support.PreconditionAssertions.assertPreconditionViolationException;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
