@@ -23,11 +23,11 @@ import org.junit.jupiter.api.TestFactory;
 // tag::user_guide[]
 interface TestInterfaceDynamicTestsDemo {
 
-    @TestFactory
-    default Stream<DynamicTest> dynamicTestsForPalindromes() {
-        return Stream.of("racecar", "radar", "mom", "dad")
-            .map(text -> dynamicTest(text, () -> assertTrue(isPalindrome(text))));
-        }
+	@TestFactory
+	default Stream<DynamicTest> dynamicTestsForPalindromes() {
+		return Stream.of("racecar", "radar", "mom", "dad")
+			.map(text -> dynamicTest(text, () -> assertTrue(isPalindrome(text))));
+	}
 
 }
 // end::user_guide[]
