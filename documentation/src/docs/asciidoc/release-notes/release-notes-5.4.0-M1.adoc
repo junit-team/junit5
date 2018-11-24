@@ -26,9 +26,11 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
-* New `junit-platform-reporting` artifact containing the `XmlReportsWritingListener` that
-  generates a XML report in format compatible with the de facto standard for JUnit 4
-  based test reports that was made popular by the Ant build system.
+* New `junit-platform-reporting` artifact containing an `XmlReportsWritingListener` that
+  generates XML reports using a format which is compatible with the de facto standard for
+  JUnit 4 based test reports that was made popular by the Ant build system.
+  - See the <<../user-guide/index.adoc#launcher-api-listeners-reporting, JUnit Platform
+    Reporting>> in the User Guide for details.
 * New `ModifierSupport` class providing an API for extension and test engine authors to
   inspect modifiers of classes and members.
   - See the <<../user-guide/index.adoc#extensions-supported-utilities-modifier, User
