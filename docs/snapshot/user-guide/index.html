@@ -942,12 +942,12 @@ scripts (e.g., <code>build.gradle</code>, <code>pom.xml</code>, etc.) in the pro
 
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
 
-<span class="type">class</span> <span class="class">FirstJUnit5Tests</span> {
+<span class="type">class</span> <span class="class">MyFirstJUnitJupiterTests</span> {
 
     <span class="directive">private</span> <span class="directive">final</span> Calculator calculator = <span class="keyword">new</span> Calculator();
 
     <span class="annotation">@Test</span>
-    <span class="type">void</span> myFirstTest() {
+    <span class="type">void</span> addition() {
         assertEquals(<span class="integer">2</span>, calculator.add(<span class="integer">1</span>, <span class="integer">1</span>));
     }
 
@@ -1296,6 +1296,7 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTimeoutPreemptively</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>;
 
+<span class="keyword">import</span> <span class="include">example.domain.Person</span>;
 <span class="keyword">import</span> <span class="include">example.util.Calculator</span>;
 
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
@@ -1307,7 +1308,8 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
     <span class="annotation">@Test</span>
     <span class="type">void</span> standardAssertions() {
         assertEquals(<span class="integer">2</span>, calculator.add(<span class="integer">1</span>, <span class="integer">1</span>));
-        assertEquals(<span class="integer">4</span>, calculator.multiply(<span class="integer">2</span>, <span class="integer">2</span>), <span class="string"><span class="delimiter">&quot;</span><span class="content">The optional assertion message is now the last parameter.</span><span class="delimiter">&quot;</span></span>);
+        assertEquals(<span class="integer">4</span>, calculator.multiply(<span class="integer">2</span>, <span class="integer">2</span>),
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">The optional failure message is now the last parameter</span><span class="delimiter">&quot;</span></span>);
         assertTrue(<span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span> &lt; <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span>, () -&gt; <span class="string"><span class="delimiter">&quot;</span><span class="content">Assertion messages can be lazily evaluated -- </span><span class="delimiter">&quot;</span></span>
                 + <span class="string"><span class="delimiter">&quot;</span><span class="content">to avoid constructing complex messages unnecessarily.</span><span class="delimiter">&quot;</span></span>);
     }
@@ -1418,7 +1420,9 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">import</span> <span class="include">example.domain.Person</span>
+
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.assertAll</span>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>
@@ -1506,7 +1510,7 @@ then use them in tests like in the <code>assertWithHamcrestMatcher()</code> meth
 
     <span class="annotation">@Test</span>
     <span class="type">void</span> assertWithHamcrestMatcher() {
-        assertThat(<span class="integer">3</span>, is(equalTo(calculator.subtract(<span class="integer">4</span>, <span class="integer">1</span>))));
+        assertThat(calculator.subtract(<span class="integer">4</span>, <span class="integer">1</span>), is(equalTo(<span class="integer">3</span>)));
     }
 
 }</code></pre>
@@ -1601,9 +1605,11 @@ annotation, via one of the annotations discussed in
 
 <span class="annotation">@Disabled</span>
 <span class="type">class</span> <span class="class">DisabledClassDemo</span> {
+
     <span class="annotation">@Test</span>
     <span class="type">void</span> testWillBeSkipped() {
     }
+
 }</code></pre>
 </div>
 </div>
@@ -1625,6 +1631,7 @@ annotation, via one of the annotations discussed in
     <span class="annotation">@Test</span>
     <span class="type">void</span> testWillBeExecuted() {
     }
+
 }</code></pre>
 </div>
 </div>
@@ -2094,17 +2101,21 @@ order specified via the <code>@Order</code> annotation.</p>
     <span class="annotation">@Test</span>
     <span class="annotation">@Order</span>(<span class="integer">1</span>)
     <span class="type">void</span> nullValues() {
+        <span class="comment">// perform assertions against null values</span>
     }
 
     <span class="annotation">@Test</span>
     <span class="annotation">@Order</span>(<span class="integer">2</span>)
     <span class="type">void</span> emptyValues() {
+        <span class="comment">// perform assertions against empty values</span>
     }
 
     <span class="annotation">@Test</span>
     <span class="annotation">@Order</span>(<span class="integer">3</span>)
     <span class="type">void</span> validValues() {
+        <span class="comment">// perform assertions against valid values</span>
     }
+
 }</code></pre>
 </div>
 </div>
@@ -2532,15 +2543,11 @@ annotated with <code>@TestInstance(Lifecycle.PER_CLASS)</code> (see
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="type">interface</span> <span class="class">TestInterfaceDynamicTestsDemo</span> {
 
-    Calculator calculator = <span class="keyword">new</span> Calculator();
-
     <span class="annotation">@TestFactory</span>
-    <span class="keyword">default</span> <span class="predefined-type">Collection</span>&lt;DynamicTest&gt; dynamicTestsFromCollection() {
-        <span class="keyword">return</span> <span class="predefined-type">Arrays</span>.asList(
-            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">1st dynamic test in test interface</span><span class="delimiter">&quot;</span></span>, () -&gt; assertTrue(<span class="predefined-constant">true</span>)),
-            dynamicTest(<span class="string"><span class="delimiter">&quot;</span><span class="content">2nd dynamic test in test interface</span><span class="delimiter">&quot;</span></span>, () -&gt; assertEquals(<span class="integer">4</span>, calculator.multiply(<span class="integer">2</span>, <span class="integer">2</span>)))
-        );
-    }
+    <span class="keyword">default</span> Stream&lt;DynamicTest&gt; dynamicTestsForPalindromes() {
+        <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">racecar</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">radar</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">mom</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">dad</span><span class="delimiter">&quot;</span></span>)
+            .map(text -&gt; dynamicTest(text, () -&gt; assertTrue(isPalindrome(text))));
+        }
 
 }</code></pre>
 </div>
@@ -6331,14 +6338,18 @@ implement a <code><a href="../api/org/junit/jupiter/api/extension/TestTemplateIn
     assertEquals(<span class="integer">3</span>, parameter.length());
 }
 
-<span class="directive">public</span> <span class="type">class</span> <span class="class">MyTestTemplateInvocationContextProvider</span> <span class="directive">implements</span> TestTemplateInvocationContextProvider {
+<span class="directive">public</span> <span class="type">class</span> <span class="class">MyTestTemplateInvocationContextProvider</span>
+        <span class="directive">implements</span> TestTemplateInvocationContextProvider {
+
     <span class="annotation">@Override</span>
     <span class="directive">public</span> <span class="type">boolean</span> supportsTestTemplate(ExtensionContext context) {
         <span class="keyword">return</span> <span class="predefined-constant">true</span>;
     }
 
     <span class="annotation">@Override</span>
-    <span class="directive">public</span> Stream&lt;TestTemplateInvocationContext&gt; provideTestTemplateInvocationContexts(ExtensionContext context) {
+    <span class="directive">public</span> Stream&lt;TestTemplateInvocationContext&gt; provideTestTemplateInvocationContexts(
+            ExtensionContext context) {
+
         <span class="keyword">return</span> Stream.of(invocationContext(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>), invocationContext(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>));
     }
 
@@ -6632,6 +6643,7 @@ through to identify test classes and test methods in the past.</p>
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.core.LauncherFactory</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.launcher.listeners.SummaryGeneratingListener</span>;
+<span class="keyword">import</span> <span class="include">org.junit.platform.launcher.listeners.TestExecutionSummary</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.reporting.legacy.xml.LegacyXmlReportGeneratingListener</span>;</code></pre>
 </div>
 </div>
@@ -6688,10 +6700,13 @@ following example.</p>
 Launcher launcher = LauncherFactory.create();
 
 <span class="comment">// Register a listener of your choice</span>
-TestExecutionListener listener = <span class="keyword">new</span> SummaryGeneratingListener();
+SummaryGeneratingListener listener = <span class="keyword">new</span> SummaryGeneratingListener();
 launcher.registerTestExecutionListeners(listener);
 
-launcher.execute(request);</code></pre>
+launcher.execute(request);
+
+TestExecutionSummary summary = listener.getSummary();
+<span class="comment">// Do something with the TestExecutionSummary.</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7303,7 +7318,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-11-24 15:12:57 UTC
+Last updated 2018-11-24 16:20:48 UTC
 </div>
 </div>
 </body>
