@@ -72,12 +72,12 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
 * *Version*: `{platform-version}`
 * *Artifact IDs*:
   `junit-platform-commons`::
-    Internal common library/utilities of JUnit. These utilities are intended solely for usage within
-    the JUnit framework itself. _Any usage by external parties is not supported._ Use at your own
-    risk!
+    Common APIs and support utilities for the JUnit Platform. Any API annotated with
+    `@API(status = INTERNAL)` is intended solely for usage within the JUnit framework
+    itself. _Any usage of internal APIs by external parties is not supported!_
   `junit-platform-console`::
-    Support for discovering and executing tests on the JUnit Platform from the console. See
-    <<running-tests-console-launcher>> for details.
+    Support for discovering and executing tests on the JUnit Platform from the console.
+    See <<running-tests-console-launcher>> for details.
   `junit-platform-console-standalone`::
     An executable JAR with all dependencies included is provided at Maven Central under the
     https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone[junit-platform-console-standalone]
@@ -85,8 +85,8 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
   `junit-platform-engine`::
     Public API for test engines. See <<launcher-api-engines-custom>> for details.
   `junit-platform-launcher`::
-    Public API for configuring and launching test plans -- typically used by IDEs and build tools.
-    See <<launcher-api>> for details.
+    Public API for configuring and launching test plans -- typically used by IDEs and
+    build tools. See <<launcher-api>> for details.
   `junit-platform-reporting`::
     `TestExecutionListener` implementations that generate test reports -- typically used
     by IDEs and build tools. See <<launcher-api-listeners-reporting>> for details.
@@ -95,8 +95,8 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
     environment. See <<running-tests-junit-platform-runner>> for details.
   `junit-platform-suite-api`::
     Annotations for configuring test suites on the JUnit Platform. Supported by the
-    <<running-tests-junit-platform-runner,JUnitPlatform runner>> and possibly by third-party
-    `TestEngine` implementations.
+    <<running-tests-junit-platform-runner,JUnitPlatform runner>> and possibly by
+    third-party `TestEngine` implementations.
 
 [[dependency-metadata-junit-jupiter]]
 ==== JUnit Jupiter
@@ -121,8 +121,8 @@ Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
 * *Version*: `{vintage-version}`
 * *Artifact ID*:
   `junit-vintage-engine`::
-    JUnit Vintage test engine implementation that allows to run vintage JUnit tests, i.e. tests
-    written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.
+    JUnit Vintage test engine implementation that allows to run vintage JUnit tests, i.e.
+    tests written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.
 
 [[dependency-metadata-junit-bom]]
 ==== Bill of Materials (BOM)

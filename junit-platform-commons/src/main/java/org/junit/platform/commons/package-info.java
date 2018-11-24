@@ -1,11 +1,11 @@
 /**
- * Internal common library of JUnit.
+ * Common APIs and support utilities for the JUnit Platform.
  *
  * <h3>DISCLAIMER</h3>
  *
- * <p>These utilities are intended solely for usage within the JUnit framework
- * itself. <strong>Any usage by external parties is not supported.</strong>
- * Use at your own risk!
+ * <p>Any API annotated with {@code @API(status = INTERNAL)} is intended solely
+ * for usage within the JUnit framework itself. <strong>Any usage of internal
+ * APIs by external parties is not supported!</strong>
  */
 
 package org.junit.platform.commons;
