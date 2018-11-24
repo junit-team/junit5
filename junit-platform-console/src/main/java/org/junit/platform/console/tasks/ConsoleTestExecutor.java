@@ -33,7 +33,7 @@ import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
-import org.junit.platform.reporting.xml.XmlReportsWritingListener;
+import org.junit.platform.reporting.legacy.xml.XmlReportsWritingListener;
 
 /**
  * @since 1.0
