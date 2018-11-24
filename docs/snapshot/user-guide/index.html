@@ -6673,8 +6673,8 @@ launcher.execute(request);</code></pre>
 </div>
 <div class="paragraph">
 <p>There is no return value for the <code>execute()</code> method, but you can easily use a listener to
-aggregate the final results in an object of your own. For an example see the
-<code><a href="../api/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html">SummaryGeneratingListener</a></code>.</p>
+aggregate the final results in an object of your own. For examples see the
+<code><a href="../api/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html">SummaryGeneratingListener</a></code> and <code><a href="../api/org/junit/platform/reporting/XmlReportsWritingListener.html">XmlReportsWritingListener</a></code>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -6778,6 +6778,20 @@ The <code><a href="../api/org/junit/platform/reporting/XmlReportsWritingListener
 well.</p>
 </li>
 </ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code><a href="../api/org/junit/platform/launcher/package-summary.html">junit-platform-launcher</a></code> module also contains <code><a href="../api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code>
+implementations that can be used for reporting purposes. See <code><a href="../api/org/junit/platform/launcher/listeners/LoggingListener.html">LoggingListener</a></code> and
+<code><a href="../api/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html">SummaryGeneratingListener</a></code> for details.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect3">
@@ -7266,7 +7280,7 @@ declarations.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-11-24 14:04:30 UTC
+Last updated 2018-11-24 14:20:56 UTC
 </div>
 </div>
 </body>
