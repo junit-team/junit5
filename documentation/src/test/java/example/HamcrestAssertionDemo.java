@@ -11,17 +11,22 @@
 package example;
 
 //tag::user_guide[]
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import example.util.Calculator;
 
 import org.junit.jupiter.api.Test;
 
 class HamcrestAssertionDemo {
 
+	private final Calculator calculator = new Calculator();
+
 	@Test
 	void assertWithHamcrestMatcher() {
-		assertThat(2 + 1, is(equalTo(3)));
+		assertThat(3, is(equalTo(calculator.subtract(4, 1))));
 	}
 
 }

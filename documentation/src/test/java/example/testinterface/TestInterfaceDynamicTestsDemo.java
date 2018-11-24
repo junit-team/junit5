@@ -17,11 +17,15 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import java.util.Arrays;
 import java.util.Collection;
 
+import example.util.Calculator;
+
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
 //tag::user_guide[]
 interface TestInterfaceDynamicTestsDemo {
+
+	Calculator calculator = new Calculator();
 
 	@TestFactory
 	default Collection<DynamicTest> dynamicTestsFromCollection() {
@@ -30,7 +34,7 @@ interface TestInterfaceDynamicTestsDemo {
 		// tag::user_guide[]
 		return Arrays.asList(
 			dynamicTest("1st dynamic test in test interface", () -> assertTrue(true)),
-			dynamicTest("2nd dynamic test in test interface", () -> assertEquals(4, 2 * 2))
+			dynamicTest("2nd dynamic test in test interface", () -> assertEquals(4, calculator.multiply(2, 2)))
 		);
 		// end::user_guide[]
 		// @formatter:on
