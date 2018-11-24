@@ -60,7 +60,7 @@ include::{testDir}/example/UsingTheLauncherDemo.java[tags=execution]
 
 There is no return value for the `execute()` method, but you can easily use a listener to
 aggregate the final results in an object of your own. For examples see the
-`{SummaryGeneratingListener}` and `{XmlReportsWritingListener}`.
+`{SummaryGeneratingListener}` and `{LegacyXmlReportGeneratingListener}`.
 
 [[launcher-api-engines-custom]]
 ==== Plugging in your own Test Engine
@@ -118,11 +118,11 @@ implementations that generate test reports. These listeners are typically used b
 and build tools. The package `org.junit.platform.reporting.legacy.xml` currently contains
 the following implementation.
 
-* `{XmlReportsWritingListener}` writes a separate XML report for each root in the
-  `{TestPlan}`. Note that the generated XML format is compatible with the de facto
+* `{LegacyXmlReportGeneratingListener}` generates a separate XML report for each root in
+  the `{TestPlan}`. Note that the generated XML format is compatible with the de facto
   standard for JUnit 4 based test reports that was made popular by the Ant build system.
-  The `{XmlReportsWritingListener}` is used by the <<running-tests-console-launcher>> as
-  well.
+  The `LegacyXmlReportGeneratingListener` is used by the
+  <<running-tests-console-launcher>> as well.
 
 NOTE: The `{junit-platform-launcher}` module also contains `{TestExecutionListener}`
 implementations that can be used for reporting purposes. See `{LoggingListener}` and

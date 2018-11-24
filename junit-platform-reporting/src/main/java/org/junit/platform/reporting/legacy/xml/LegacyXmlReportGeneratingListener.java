@@ -31,17 +31,20 @@ import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 /**
- * {@link TestExecutionListener} that writes a separate XML report for each
- * root in the {@link TestPlan}.
+ * {@code LegacyXmlReportGeneratingListener} is a {@link TestExecutionListener} that
+ * generates a separate XML report for each {@linkplain TestPlan#getRoots() root}
+ * in the {@link TestPlan}.
  *
- * <p>Note that the generated XML format is compatible with the de facto
- * standard for JUnit 4 based test reports that was made popular by the
+ * <p>Note that the generated XML format is compatible with the <em>legacy</em>
+ * de facto standard for JUnit 4 based test reports that was made popular by the
  * Ant build system.
  *
  * @since 1.4
+ * @see org.junit.platform.launcher.listeners.LoggingListener
+ * @see org.junit.platform.launcher.listeners.SummaryGeneratingListener
  */
 @API(status = EXPERIMENTAL, since = "1.4")
-public class XmlReportsWritingListener implements TestExecutionListener {
+public class LegacyXmlReportGeneratingListener implements TestExecutionListener {
 
 	private final Path reportsDir;
 	private final PrintWriter out;
@@ -49,16 +52,16 @@ public class XmlReportsWritingListener implements TestExecutionListener {
 
 	private XmlReportData reportData;
 
-	public XmlReportsWritingListener(Path reportsDir, PrintWriter out) {
+	public LegacyXmlReportGeneratingListener(Path reportsDir, PrintWriter out) {
 		this(reportsDir, out, Clock.systemDefaultZone());
 	}
 
 	// For tests only
-	XmlReportsWritingListener(String reportsDir, PrintWriter out, Clock clock) {
+	LegacyXmlReportGeneratingListener(String reportsDir, PrintWriter out, Clock clock) {
 		this(Paths.get(reportsDir), out, clock);
 	}
 
-	private XmlReportsWritingListener(Path reportsDir, PrintWriter out, Clock clock) {
+	private LegacyXmlReportGeneratingListener(Path reportsDir, PrintWriter out, Clock clock) {
 		this.reportsDir = reportsDir;
 		this.out = out;
 		this.clock = clock;

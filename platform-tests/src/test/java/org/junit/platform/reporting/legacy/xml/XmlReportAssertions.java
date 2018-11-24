@@ -46,7 +46,7 @@ class XmlReportAssertions {
 		private final Schema schema;
 
 		CachedSchema(String resourcePath) {
-			URL schemaFile = XmlReportsWritingListener.class.getResource(resourcePath);
+			URL schemaFile = LegacyXmlReportGeneratingListener.class.getResource(resourcePath);
 			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			try {
 				this.schema = schemaFactory.newSchema(schemaFile);

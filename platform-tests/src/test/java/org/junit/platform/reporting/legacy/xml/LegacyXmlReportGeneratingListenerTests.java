@@ -58,10 +58,12 @@ import org.junit.platform.launcher.TestPlan;
 import org.opentest4j.AssertionFailedError;
 
 /**
+ * Tests for {@link LegacyXmlReportGeneratingListener}.
+ *
  * @since 1.0
  */
 @ExtendWith(TempDirectory.class)
-class XmlReportsWritingListenerTests {
+class LegacyXmlReportGeneratingListenerTests {
 
 	@Test
 	void writesFileForSingleSucceedingTest(@Root Path tempDirectory) throws Exception {
@@ -342,7 +344,8 @@ class XmlReportsWritingListenerTests {
 		Files.write(reportsDir, singleton("content"));
 
 		StringWriter out = new StringWriter();
-		XmlReportsWritingListener listener = new XmlReportsWritingListener(reportsDir, new PrintWriter(out));
+		LegacyXmlReportGeneratingListener listener = new LegacyXmlReportGeneratingListener(reportsDir,
+			new PrintWriter(out));
 
 		listener.testPlanExecutionStarted(TestPlan.from(emptySet()));
 
@@ -358,7 +361,8 @@ class XmlReportsWritingListenerTests {
 		Files.createDirectories(xmlFile);
 
 		StringWriter out = new StringWriter();
-		XmlReportsWritingListener listener = new XmlReportsWritingListener(tempDirectory, new PrintWriter(out));
+		LegacyXmlReportGeneratingListener listener = new LegacyXmlReportGeneratingListener(tempDirectory,
+			new PrintWriter(out));
 
 		listener.testPlanExecutionStarted(TestPlan.from(singleton(engineDescriptor)));
 		listener.executionFinished(TestIdentifier.from(engineDescriptor), successful());
@@ -373,7 +377,8 @@ class XmlReportsWritingListenerTests {
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
 
 		StringWriter out = new StringWriter();
-		XmlReportsWritingListener listener = new XmlReportsWritingListener(tempDirectory, new PrintWriter(out));
+		LegacyXmlReportGeneratingListener listener = new LegacyXmlReportGeneratingListener(tempDirectory,
+			new PrintWriter(out));
 
 		listener.testPlanExecutionStarted(testPlan);
 		TestIdentifier testIdentifier = testPlan.getTestIdentifier("[child:test]");
@@ -412,7 +417,8 @@ class XmlReportsWritingListenerTests {
 
 	private void executeTests(TestEngine engine, Path tempDirectory, Clock clock) {
 		PrintWriter out = new PrintWriter(new StringWriter());
-		XmlReportsWritingListener reportListener = new XmlReportsWritingListener(tempDirectory.toString(), out, clock);
+		LegacyXmlReportGeneratingListener reportListener = new LegacyXmlReportGeneratingListener(
+			tempDirectory.toString(), out, clock);
 		Launcher launcher = createLauncher(engine);
 		launcher.registerTestExecutionListeners(reportListener);
 		launcher.execute(request().selectors(selectUniqueId(UniqueId.forEngine(engine.getId()))).build(),
