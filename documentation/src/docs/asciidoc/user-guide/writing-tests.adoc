@@ -611,31 +611,14 @@ include::{testDir}/example/testinterface/TestInterfaceDemo.java[tags=user_guide]
 Running the `TestInterfaceDemo` results in output similar to the following:
 
 ....
-:junitPlatformTest
 INFO  example.TestLifecycleLogger - Before all tests
-INFO  example.TestLifecycleLogger - About to execute [dynamicTestsFromCollection()]
-INFO  example.TimingExtension - Method [dynamicTestsFromCollection] took 13 ms.
-INFO  example.TestLifecycleLogger - Finished executing [dynamicTestsFromCollection()]
+INFO  example.TestLifecycleLogger - About to execute [dynamicTestsForPalindromes()]
+INFO  example.TimingExtension - Method [dynamicTestsForPalindromes] took 19 ms.
+INFO  example.TestLifecycleLogger - Finished executing [dynamicTestsForPalindromes()]
 INFO  example.TestLifecycleLogger - About to execute [isEqualValue()]
 INFO  example.TimingExtension - Method [isEqualValue] took 1 ms.
 INFO  example.TestLifecycleLogger - Finished executing [isEqualValue()]
 INFO  example.TestLifecycleLogger - After all tests
-
-Test run finished after 190 ms
-[         3 containers found      ]
-[         0 containers skipped    ]
-[         3 containers started    ]
-[         0 containers aborted    ]
-[         3 containers successful ]
-[         0 containers failed     ]
-[         3 tests found           ]
-[         0 tests skipped         ]
-[         3 tests started         ]
-[         0 tests aborted         ]
-[         3 tests successful      ]
-[         0 tests failed          ]
-
-BUILD SUCCESSFUL
 ....
 
 Another possible application of this feature is to write tests for interface contracts.
