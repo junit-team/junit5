@@ -207,6 +207,13 @@ And here's a test class that contains a `@Disabled` test method.
 include::{testDir}/example/DisabledTestsDemo.java[tags=user_guide]
 ----
 
+NOTE: `@Disabled` may be declared without providing a _reason_; however, the JUnit team
+recommends that developers provide a short explanation for why a test class or test
+method has been disabled. Consequently, the above examples both show the use of a reason
+-- for example, `@Disabled("Disabled until bug #42 has been resolved")`. Some development
+teams even require the presence of issue tracking numbers in the _reason_ for automated
+traceability, etc.
+
 [[writing-tests-conditional-execution]]
 === Conditional Test Execution
 
