@@ -20,45 +20,35 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
+// @formatter:off
 // tag::user_guide[]
 @TestInstance(Lifecycle.PER_CLASS)
 interface TestLifecycleLogger {
 
-	static final Logger LOG = Logger.getLogger(TestLifecycleLogger.class.getName());
+	static final Logger logger = Logger.getLogger(TestLifecycleLogger.class.getName());
 
 	@BeforeAll
 	default void beforeAllTests() {
-		LOG.info("Before all tests");
+		logger.info("Before all tests");
 	}
 
 	@AfterAll
 	default void afterAllTests() {
-		LOG.info("After all tests");
+		logger.info("After all tests");
 	}
 
 	@BeforeEach
 	default void beforeEachTest(TestInfo testInfo) {
-		// end::user_guide[]
-		// @formatter:off
-		// tag::user_guide[]
-		LOG.info(() -> String.format("About to execute [%s]",
+		logger.info(() -> String.format("About to execute [%s]",
 			testInfo.getDisplayName()));
-		// end::user_guide[]
-		// @formatter:on
-		// tag::user_guide[]
 	}
 
 	@AfterEach
 	default void afterEachTest(TestInfo testInfo) {
-		// end::user_guide[]
-		// @formatter:off
-		// tag::user_guide[]
-		LOG.info(() -> String.format("Finished executing [%s]",
+		logger.info(() -> String.format("Finished executing [%s]",
 			testInfo.getDisplayName()));
-		// end::user_guide[]
-		// @formatter:on
-		// tag::user_guide[]
 	}
 
 }
 // end::user_guide[]
+// @formatter:on

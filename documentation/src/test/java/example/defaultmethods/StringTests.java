@@ -15,17 +15,17 @@ class StringTests implements ComparableContract<String>, EqualsContract<String> 
 
 	@Override
 	public String createValue() {
-		return "foo";
+		return "banana";
 	}
 
 	@Override
 	public String createSmallerValue() {
-		return "bar"; // 'b' < 'f' in "foo"
+		return "apple"; // 'a' < 'b' in "banana"
 	}
 
 	@Override
 	public String createNotEqualValue() {
-		return "baz";
+		return "cherry";
 	}
 
 }

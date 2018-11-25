@@ -27,6 +27,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
  *
  * @since 5.0
  */
+// @formatter:off
 // tag::user_guide[]
 public class TimingExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
@@ -45,7 +46,8 @@ public class TimingExtension implements BeforeTestExecutionCallback, AfterTestEx
 		long startTime = getStore(context).remove(START_TIME, long.class);
 		long duration = System.currentTimeMillis() - startTime;
 
-		logger.info(() -> String.format("Method [%s] took %s ms.", testMethod.getName(), duration));
+		logger.info(() ->
+			String.format("Method [%s] took %s ms.", testMethod.getName(), duration));
 	}
 
 	private Store getStore(ExtensionContext context) {
@@ -54,3 +56,4 @@ public class TimingExtension implements BeforeTestExecutionCallback, AfterTestEx
 
 }
 // end::user_guide[]
+// @formatter:on

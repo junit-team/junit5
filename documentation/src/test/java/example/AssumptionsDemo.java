@@ -47,7 +47,7 @@ class AssumptionsDemo {
 			});
 
 		// perform these assertions in all environments
-		assertEquals("a string", "a string");
+		assertEquals(42, calculator.multiply(6, 7));
 	}
 
 }

@@ -623,12 +623,12 @@ configured via `@SuiteDisplayName`.
 One way to use the `JUnitPlatform` runner is to annotate a test class with
 `@RunWith(JUnitPlatform.class)` directly. Please note that the test methods in the
 following example are annotated with `org.junit.jupiter.api.Test` (JUnit Jupiter), not
-`org.junit.Test` (JUnit Vintage). Moreover, in this case the test class must be `public`;
+`org.junit.Test` (JUnit 4). Moreover, in this case the test class must be `public`;
 otherwise, some IDEs and build tools might not recognize it as a JUnit 4 test class.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/JUnit4ClassDemo.java[tags=user_guide]
+include::{testDir}/example/JUnitPlatformClassDemo.java[tags=user_guide]
 ----
 
 [[running-tests-junit-platform-runner-test-suite]]
@@ -639,18 +639,23 @@ following example.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/JUnit4SuiteDemo.java[tags=user_guide]
+include::{testDir}/example/JUnitPlatformSuiteDemo.java[tags=user_guide]
 ----
 
-The `JUnit4SuiteDemo` will discover and run all tests in the `example` package
-and its subpackages. By default, it will only include test classes whose names
-either begin with `Test` or end with `Test` or `Tests`.
+The `JUnitPlatformSuiteDemo` will discover and run all tests in the `example` package and
+its subpackages. By default, it will only include test classes whose names either begin
+with `Test` or end with `Test` or `Tests`.
 
 .Additional Configuration Options
 NOTE: There are more configuration options for discovering and filtering tests than just
 `@SelectPackages`. Please consult the
 {javadoc-root}/org/junit/platform/suite/api/package-summary.html[Javadoc] for further
 details.
+
+WARNING: Test classes and suites annotated with `@RunWith(JUnitPlatform.class)`
+**cannot** be executed directly on the JUnit Platform (or as a "JUnit 5" test as
+documented in some IDEs). Such classes and suites can only be executed using JUnit 4
+infrastructure.
 
 [[running-tests-config-params]]
 === Configuration Parameters

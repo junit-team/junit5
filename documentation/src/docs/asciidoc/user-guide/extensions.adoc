@@ -51,7 +51,7 @@ Multiple extensions can be registered together like this:
 
 [source,java,indent=0]
 ----
-@ExtendWith({ FooExtension.class, BarExtension.class })
+@ExtendWith({ DatabaseExtension.class, WebServerExtension.class })
 class MyFirstTests {
 	// ...
 }
@@ -61,8 +61,8 @@ As an alternative, multiple extensions can be registered separately like this:
 
 [source,java,indent=0]
 ----
-@ExtendWith(FooExtension.class)
-@ExtendWith(BarExtension.class)
+@ExtendWith(DatabaseExtension.class)
+@ExtendWith(WebServerExtension.class)
 class MySecondTests {
 	// ...
 }
@@ -71,8 +71,8 @@ class MySecondTests {
 .Extension Registration Order
 NOTE: Extensions registered declaratively via `@ExtendWith` will be executed in the order
 in which they are declared in the source code. For example, the execution of tests in
-both `MyFirstTests` and `MySecondTests` will be extended by the `FooExtension` and
-`BarExtension`, **in exactly that order**.
+both `MyFirstTests` and `MySecondTests` will be extended by the `DatabaseExtension` and
+`WebServerExtension`, **in exactly that order**.
 
 [[extensions-registration-programmatic]]
 ==== Programmatic Extension Registration

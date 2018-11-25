@@ -31,10 +31,8 @@ class AssertionsDemo {
 
 	private final Calculator calculator = new Calculator();
 
-	// end::user_guide[]
-	Person person = new Person("John", "Doe");
+	private final Person person = new Person("Jane", "Doe");
 
-	// tag::user_guide[]
 	@Test
 	void standardAssertions() {
 		assertEquals(2, calculator.add(1, 1));
@@ -49,7 +47,7 @@ class AssertionsDemo {
 		// In a grouped assertion all assertions are executed, and any
 		// failures will be reported together.
 		assertAll("person",
-			() -> assertEquals("John", person.getFirstName()),
+			() -> assertEquals("Jane", person.getFirstName()),
 			() -> assertEquals("Doe", person.getLastName())
 		);
 	}
@@ -66,7 +64,7 @@ class AssertionsDemo {
 				// Executed only if the previous assertion is valid.
 				assertAll("first name",
 					() -> assertTrue(firstName.startsWith("J")),
-					() -> assertTrue(firstName.endsWith("n"))
+					() -> assertTrue(firstName.endsWith("e"))
 				);
 			},
 			() -> {
