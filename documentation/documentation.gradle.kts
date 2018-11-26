@@ -22,26 +22,6 @@ plugins {
 extra["mainJavaVersion"] = JavaVersion.VERSION_1_8
 extra["testJavaVersion"] = JavaVersion.VERSION_1_8
 
-val consoleLauncherTest by tasks.creating(JavaExec::class) {
-	dependsOn("testClasses")
-	val reportsDir = file("$buildDir/test-results")
-	outputs.dir(reportsDir)
-	classpath(sourceSets["test"].runtimeClasspath)
-	main = "org.junit.platform.console.ConsoleLauncher"
-	args("--scan-classpath")
-	args("--details", "tree")
-	args("--include-classname", ".*Tests")
-	args("--include-classname", ".*Demo")
-	args("--exclude-tag", "exclude")
-	args("--reports-dir", reportsDir)
-	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
-}
-
-tasks.named<Test>("test") {
-	dependsOn(consoleLauncherTest)
-	exclude("**/*")
-}
-
 dependencies {
 	"asciidoctor"("org.jruby:jruby-complete:${Versions.jruby}")
 
@@ -77,83 +57,120 @@ val consoleLauncherOptionsFile = File(generatedAsciiDocPath, "console-launcher-o
 val experimentalApisTableFile = File(generatedAsciiDocPath, "experimental-apis-table.txt")
 val deprecatedApisTableFile = File(generatedAsciiDocPath, "deprecated-apis-table.txt")
 
-fun createJavaExecTaskWithOutputFile(taskName: String, outputFile: File, mainClass: String, mainArgs: List<String> = listOf()) {
-	tasks.create<JavaExec>(taskName) {
-		outputs.file(outputFile)
+tasks {
+
+	val consoleLauncherTest by registering(JavaExec::class) {
+		dependsOn("testClasses")
+		val reportsDir = file("$buildDir/test-results")
+		outputs.dir(reportsDir)
 		classpath = sourceSets["test"].runtimeClasspath
-		main = mainClass
-		args = mainArgs
+		main = "org.junit.platform.console.ConsoleLauncher"
+		args("--scan-classpath")
+		args("--details", "tree")
+		args("--include-classname", ".*Tests")
+		args("--include-classname", ".*Demo")
+		args("--exclude-tag", "exclude")
+		args("--reports-dir", reportsDir)
+		systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
+	}
+
+	test {
+		dependsOn(consoleLauncherTest)
+		exclude("**/*")
+	}
+
+	val generateConsoleLauncherOptions by registering(JavaExec::class) {
+		classpath = sourceSets["test"].runtimeClasspath
+		main = "org.junit.platform.console.ConsoleLauncher"
+		args("--help")
+		redirectOutput(this, consoleLauncherOptionsFile)
+	}
+
+	val generateExperimentalApisTable by registering(JavaExec::class) {
+		classpath = sourceSets["test"].runtimeClasspath
+		main = "org.junit.api.tools.ApiReportGenerator"
+		args("EXPERIMENTAL")
+		redirectOutput(this, experimentalApisTableFile)
+	}
+
+	val generateDeprecatedApisTable by registering(JavaExec::class) {
+		classpath = sourceSets["test"].runtimeClasspath
+		main = "org.junit.api.tools.ApiReportGenerator"
+		args("DEPRECATED")
+		redirectOutput(this, deprecatedApisTableFile)
+	}
+
+	asciidoctor {
+		dependsOn(generateConsoleLauncherOptions, generateExperimentalApisTable, generateDeprecatedApisTable)
+
+		// enable the Asciidoctor Diagram extension
+		requires("asciidoctor-diagram")
+
+		separateOutputDirs = false
+		sources(delegateClosureOf<PatternSet> {
+			include("**/index.adoc")
+		})
+		resources(delegateClosureOf<CopySpec> {
+			from(sourceDir) {
+				include("**/images/**")
+			}
+		})
+
+		backends("html5")
+
+		// does currently not work on Java 11, see https://github.com/junit-team/junit5/issues/1608
+		val enableAsciidoctorPdfBackend = JavaVersion.current() < JavaVersion.VERSION_11
+
+		if (enableAsciidoctorPdfBackend) {
+			backends("pdf")
+			attributes(mapOf("linkToPdf" to enableAsciidoctorPdfBackend.toString()))
+		}
+
+		attributes(mapOf(
+				"jupiter-version" to version,
+				"platform-version" to project.properties["platformVersion"],
+				"vintage-version" to project.properties["vintageVersion"],
+				"bom-version" to version,
+				"junit4-version" to Versions.junit4,
+				"apiguardian-version" to Versions.apiGuardian,
+				"ota4j-version" to Versions.ota4j,
+				"surefire-version" to  Versions.surefire,
+				"release-branch" to project.properties["releaseBranch"],
+				"docs-version" to project.properties["docsVersion"],
+				"revnumber" to version,
+				"consoleLauncherOptionsFile" to consoleLauncherOptionsFile,
+				"experimentalApisTableFile" to experimentalApisTableFile,
+				"deprecatedApisTableFile" to deprecatedApisTableFile,
+				"outdir" to outputDir.absolutePath,
+				"source-highlighter" to "coderay@", // TODO switch to "rouge" once supported by the html5 backend and on MS Windows
+				"tabsize" to "4",
+				"toc" to "left",
+				"icons" to "font",
+				"sectanchors" to true,
+				"idprefix" to "",
+				"idseparator" to "-"
+		))
+
+		sourceSets["test"].apply {
+			attributes(mapOf(
+					"testDir" to java.srcDirs.first(),
+					"testResourcesDir" to resources.srcDirs.first()
+			))
+			withConvention(KotlinSourceSet::class) {
+				attributes(mapOf("kotlinTestDir" to kotlin.srcDirs.first()))
+			}
+		}
+	}
+}
+
+fun redirectOutput(task: JavaExec, outputFile: File) {
+	task.apply {
+		outputs.file(outputFile)
 		val byteStream = ByteArrayOutputStream()
 		standardOutput = byteStream
 		doLast {
 			Files.createDirectories(outputFile.parentFile.toPath())
 			Files.write(outputFile.toPath(), byteStream.toByteArray())
-		}
-	}
-}
-
-createJavaExecTaskWithOutputFile("generateConsoleLauncherOptions", consoleLauncherOptionsFile, "org.junit.platform.console.ConsoleLauncher", listOf("--help"))
-
-createJavaExecTaskWithOutputFile("generateExperimentalApisTable", experimentalApisTableFile, "org.junit.api.tools.ApiReportGenerator", listOf("EXPERIMENTAL"))
-createJavaExecTaskWithOutputFile("generateDeprecatedApisTable", deprecatedApisTableFile, "org.junit.api.tools.ApiReportGenerator", listOf("DEPRECATED"))
-
-// does currently not work on Java 11, see https://github.com/junit-team/junit5/issues/1608
-val enableAsciidoctorPdfBackend = JavaVersion.current() < JavaVersion.VERSION_11
-
-tasks.named<AsciidoctorTask>("asciidoctor") {
-	dependsOn("generateConsoleLauncherOptions", "generateExperimentalApisTable", "generateDeprecatedApisTable")
-
-	// enable the Asciidoctor Diagram extension
-	requires("asciidoctor-diagram")
-
-	separateOutputDirs = false
-	sources(delegateClosureOf<PatternSet> {
-		include("**/index.adoc")
-	})
-	resources(delegateClosureOf<CopySpec> {
-		from(sourceDir) {
-			include("**/images/**")
-		}
-	})
-
-	backends("html5")
-	if (enableAsciidoctorPdfBackend) {
-		backends("pdf")
-		attributes(mapOf("linkToPdf" to enableAsciidoctorPdfBackend.toString()))
-	}
-
-	attributes(mapOf(
-			"jupiter-version" to version,
-			"platform-version" to project.properties["platformVersion"],
-			"vintage-version" to project.properties["vintageVersion"],
-			"bom-version" to version,
-			"junit4-version" to Versions.junit4,
-			"apiguardian-version" to Versions.apiGuardian,
-			"ota4j-version" to Versions.ota4j,
-			"surefire-version" to  Versions.surefire,
-			"release-branch" to project.properties["releaseBranch"],
-			"docs-version" to project.properties["docsVersion"],
-			"revnumber" to version,
-			"consoleLauncherOptionsFile" to consoleLauncherOptionsFile,
-			"experimentalApisTableFile" to experimentalApisTableFile,
-			"deprecatedApisTableFile" to deprecatedApisTableFile,
-			"outdir" to outputDir.absolutePath,
-			"source-highlighter" to "coderay@", // TODO switch to "rouge" once supported by the html5 backend and on MS Windows
-			"tabsize" to "4",
-			"toc" to "left",
-			"icons" to "font",
-			"sectanchors" to true,
-			"idprefix" to "",
-			"idseparator" to "-"
-	))
-
-	sourceSets["test"].apply {
-		attributes(mapOf(
-				"testDir" to java.srcDirs.first(),
-				"testResourcesDir" to resources.srcDirs.first()
-		))
-		withConvention(KotlinSourceSet::class) {
-			attributes(mapOf("kotlinTestDir" to kotlin.srcDirs.first()))
 		}
 	}
 }
