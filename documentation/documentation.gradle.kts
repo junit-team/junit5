@@ -1,4 +1,3 @@
-import org.asciidoctor.gradle.AsciidoctorTask
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import java.io.ByteArrayOutputStream
 import java.nio.file.Files
