@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.daemon.common.configureDaemonJVMOptions
-
 apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 afterEvaluate {
