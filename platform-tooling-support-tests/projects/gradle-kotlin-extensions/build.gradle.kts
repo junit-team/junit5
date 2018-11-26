@@ -25,7 +25,7 @@ dependencies {
 
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
-		jvmTarget = Versions.jvmTarget
+		jvmTarget = "1.8"
 	}
 }
 
