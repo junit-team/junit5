@@ -23,7 +23,7 @@ extra["mainJavaVersion"] = JavaVersion.VERSION_1_8
 extra["testJavaVersion"] = JavaVersion.VERSION_1_8
 
 dependencies {
-	"asciidoctor"("org.jruby:jruby-complete:${Versions.jruby}")
+	asciidoctor("org.jruby:jruby-complete:${Versions.jruby}")
 
 	// Jupiter API is used in src/main/java
 	implementation(project(":junit-jupiter-api"))
@@ -60,7 +60,7 @@ val deprecatedApisTableFile = File(generatedAsciiDocPath, "deprecated-apis-table
 tasks {
 
 	val consoleLauncherTest by registering(JavaExec::class) {
-		dependsOn("testClasses")
+		dependsOn(testClasses)
 		val reportsDir = file("$buildDir/test-results")
 		outputs.dir(reportsDir)
 		classpath = sourceSets["test"].runtimeClasspath
