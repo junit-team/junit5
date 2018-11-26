@@ -1,6 +1,6 @@
 apply(from = "$rootDir/gradle/testing.gradle.kts")
 
-extra["javacRelease"] = 11
+extra["mainJavaVersion"] = JavaVersion.VERSION_11
 
 dependencies {
 	implementation("de.sormuras:bartholdy:${Versions.bartholdy}") {

@@ -1,7 +1,9 @@
+import org.gradle.api.JavaVersion
+
 object Versions {
 
     // Languages
-    val jvmTarget = "8"
+    val jvmTarget = JavaVersion.VERSION_1_8
     val kotlin = "1.3.10"
 
     // Dependencies

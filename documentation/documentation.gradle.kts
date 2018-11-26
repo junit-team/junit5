@@ -19,16 +19,8 @@ plugins {
 	id("org.asciidoctor.convert")
 }
 
-afterEvaluate {
-	tasks.withType<JavaCompile> {
-		val javaVersion = JavaVersion.VERSION_1_8
-		sourceCompatibility = javaVersion.toString()
-		targetCompatibility = javaVersion.toString()
-		options.encoding = "UTF-8"
-		options.compilerArgs.add("-parameters")
-		options.compilerArgs.addAll(listOf("--release", javaVersion.majorVersion))
-	}
-}
+extra["mainJavaVersion"] = JavaVersion.VERSION_1_8
+extra["testJavaVersion"] = JavaVersion.VERSION_1_8
 
 val consoleLauncherTest by tasks.creating(JavaExec::class) {
 	dependsOn("testClasses")

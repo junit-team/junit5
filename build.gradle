@@ -111,38 +111,38 @@ allprojects { subproj ->
 		]
 	}
 
-	compileTestJava {
-		options.encoding = 'UTF-8'
-		sourceCompatibility = 11
-		targetCompatibility = 11
-
-		// See: https://docs.oracle.com/en/java/javase/11/tools/javac.html
-		options.compilerArgs += [
-			'-Xlint',     // Enables all recommended warnings.
-			'-Xlint:-overrides', // Disables "method overrides" warnings.
-			'-parameters' // Generates metadata for reflection on method parameters.
-		]
-	}
-
-	// Declare "javacRelease" as a global property to make it overridable by
-	// a sub-project.
-	ext.javacRelease = Versions.jvmTarget
+	// Declare "mainJavaVersion" and "testJavaVersion" as a global properties
+	//  so they can be overridden by subprojects
+	ext.mainJavaVersion = Versions.jvmTarget
+	ext.testJavaVersion = JavaVersion.VERSION_11
 
 	subproj.afterEvaluate { evaluatedProject ->
-		evaluatedProject.tasks.getByName('compileJava') {
-			sourceCompatibility = javacRelease
-			targetCompatibility = javacRelease // needed by asm
+		compileJava {
+			sourceCompatibility = mainJavaVersion.majorVersion
+			targetCompatibility = mainJavaVersion.majorVersion // needed by asm
 			// --release release
 			// Compiles against the public, supported and documented API for a specific VM version.
 			// Supported release targets are 6, 7, 8, 9, 10, and 11.
 			// Note that if --release is added then -target and -source are ignored.
-			options.compilerArgs += ['--release', javacRelease]
+			options.compilerArgs += ['--release', mainJavaVersion.majorVersion]
+		}
+		compileTestJava {
+			options.encoding = 'UTF-8'
+			sourceCompatibility = testJavaVersion.majorVersion
+			targetCompatibility = testJavaVersion.majorVersion
+
+			// See: https://docs.oracle.com/en/java/javase/11/tools/javac.html
+			options.compilerArgs += [
+					'-Xlint',     // Enables all recommended warnings.
+					'-Xlint:-overrides', // Disables "method overrides" warnings.
+					'-parameters' // Generates metadata for reflection on method parameters.
+			]
 		}
 	}
 
 	tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
 		kotlinOptions {
-			jvmTarget = "1.${Versions.jvmTarget}"
+			jvmTarget = Versions.jvmTarget
 			apiVersion = '1.1'
 			languageVersion = '1.1'
 		}

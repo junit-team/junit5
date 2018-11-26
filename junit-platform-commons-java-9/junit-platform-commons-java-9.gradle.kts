@@ -9,4 +9,4 @@ dependencies {
 }
 
 // Compiles against the public, supported and documented Java 9 API.
-extra["javacRelease"] = 9
+extra["mainJavaVersion"] = JavaVersion.VERSION_1_9
