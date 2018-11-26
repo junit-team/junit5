@@ -118,11 +118,9 @@ tasks {
 		backends("html5")
 
 		// does currently not work on Java 11, see https://github.com/junit-team/junit5/issues/1608
-		val enableAsciidoctorPdfBackend = JavaVersion.current() < JavaVersion.VERSION_11
-
-		if (enableAsciidoctorPdfBackend) {
+		if (JavaVersion.current() < JavaVersion.VERSION_11) {
 			backends("pdf")
-			attributes(mapOf("linkToPdf" to enableAsciidoctorPdfBackend.toString()))
+			attributes(mapOf("linkToPdf" to "true"))
 		}
 
 		attributes(mapOf(
