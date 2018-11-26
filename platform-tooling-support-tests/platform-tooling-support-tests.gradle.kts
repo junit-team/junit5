@@ -1,16 +1,6 @@
 apply(from = "$rootDir/gradle/testing.gradle.kts")
 
-afterEvaluate {
-	java {
-		sourceCompatibility = JavaVersion.VERSION_11
-		targetCompatibility = JavaVersion.VERSION_11
-	}
-	tasks.withType<JavaCompile> {
-		options.encoding = "UTF-8"
-		options.compilerArgs.add("-parameters")
-		options.compilerArgs.addAll(listOf("--release", java.targetCompatibility.majorVersion))
-	}
-}
+extra["javacRelease"] = 11
 
 dependencies {
 	implementation("de.sormuras:bartholdy:${Versions.bartholdy}") {
