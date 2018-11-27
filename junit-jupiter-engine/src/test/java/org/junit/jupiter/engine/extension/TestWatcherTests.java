@@ -36,14 +36,14 @@ import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.LogRecordListener;
-import org.junit.platform.engine.test.event.ExecutionEventRecorder;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void testWatcherValidityIncludingNestedTest() {
-		ExecutionEventRecorder recorder = executeTestsForClass(TestWatcherValidityTestCase.class);
-		assertEquals(0, recorder.getContainerFailedCount());
+		EngineExecutionResults engineExecutionResults = executeTestsForClass(TestWatcherValidityTestCase.class);
+		assertEquals(0, engineExecutionResults.containers().failed().count());
 	}
 
 	@Test
@@ -51,7 +51,8 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	void testWatcherExceptionsAreLoggedAndSwallowedTest(LogRecordListener logRecordListener) {
 
 		List<String> testWatcherMethodNames = getTestWatcherMethodNames();
-		ExecutionEventRecorder recorder = executeTestsForClass(TestWatcherSimpleExceptionHandlingTestCase.class);
+		EngineExecutionResults engineExecutionResults = executeTestsForClass(
+			TestWatcherSimpleExceptionHandlingTestCase.class);
 
 		assertAll(
 			() -> assertEquals(8,
@@ -61,7 +62,8 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 							&& testWatcherMethodNames.contains(
 								listener.getThrown().getStackTrace()[0].getMethodName())).count(),
 				"Thrown exceptions were not logged properly."),
-			() -> assertEquals(2, recorder.getTestFailedCount(), "Thrown exceptions were not successfully caught."));
+			() -> assertEquals(2, engineExecutionResults.tests().failed().count(),
+				"Thrown exceptions were not successfully caught."));
 	}
 
 	static List<String> getTestWatcherMethodNames() {
