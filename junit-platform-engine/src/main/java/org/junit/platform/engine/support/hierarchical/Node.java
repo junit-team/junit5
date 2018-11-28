@@ -127,8 +127,9 @@ public interface Node<C extends EngineExecutionContext> {
 	 *  @param context the execution context
 	 *  @param descriptor  the skipped test {@link TestDescriptor}
 	 *  @param result the cause of skipped execution
-	 * @since 5.4
+	 * @since 1.4
 	 */
+	@API(status = MAINTAINED, since = "1.4", consumers = "org.junit.platform.engine.support.hierarchical")
 	default void nodeSkipped(C context, TestDescriptor descriptor, SkipResult result) {
 	}
 
@@ -138,8 +139,9 @@ public interface Node<C extends EngineExecutionContext> {
 	 * @param context the execution context
 	 * @param descriptor the skipped test's {@link TestDescriptor}
 	 * @param result the {@link TestExecutionResult} resulting from the execution of {@code descriptor}
-	 * @since 5.4
+	 * @since 1.4
 	 */
+	@API(status = MAINTAINED, since = "1.4", consumers = "org.junit.platform.engine.support.hierarchical")
 	default void nodeFinished(C context, TestDescriptor descriptor, TestExecutionResult result) {
 	}
 
