@@ -48,195 +48,30 @@ the platform.
 JUnit 5 requires Java 8 (or higher) at runtime. However, you can still test code that
 has been compiled with previous versions of the JDK.
 
-
 [[overview-getting-help]]
 === Getting Help
 
 Ask JUnit 5 related questions on {StackOverflow} or chat with us on {Gitter}.
 
-[[installation]]
-== Installation
+[[overview-getting-started]]
+=== Getting Started
 
-Artifacts for final releases and milestones are deployed to Maven Central.
+To find out what artifacts are available for download and inclusion in your project,
+refer to <<dependency-metadata>> for details on the available artifacts and their
+versions.
 
-Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
+NOTE: Artifacts for final releases and milestones are deployed to Maven Central, and
+snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
 {snapshot-repo}/org/junit/[/org/junit].
 
-[[dependency-metadata]]
-=== Dependency Metadata
+To find out what features are available and how to use them, read the corresponding
+sections of this User Guide, organized by topic.
 
-[[dependency-metadata-junit-platform]]
-==== JUnit Platform
-
-* *Group ID*: `org.junit.platform`
-* *Version*: `{platform-version}`
-* *Artifact IDs*:
-  `junit-platform-commons`::
-    Common APIs and support utilities for the JUnit Platform. Any API annotated with
-    `@API(status = INTERNAL)` is intended solely for usage within the JUnit framework
-    itself. _Any usage of internal APIs by external parties is not supported!_
-  `junit-platform-console`::
-    Support for discovering and executing tests on the JUnit Platform from the console.
-    See <<running-tests-console-launcher>> for details.
-  `junit-platform-console-standalone`::
-    An executable JAR with all dependencies included is provided at Maven Central under the
-    https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone[junit-platform-console-standalone]
-    directory. See <<running-tests-console-launcher>> for details.
-  `junit-platform-engine`::
-    Public API for test engines. See <<launcher-api-engines-custom>> for details.
-  `junit-platform-launcher`::
-    Public API for configuring and launching test plans -- typically used by IDEs and
-    build tools. See <<launcher-api>> for details.
-  `junit-platform-reporting`::
-    `TestExecutionListener` implementations that generate test reports -- typically used
-    by IDEs and build tools. See <<launcher-api-listeners-reporting>> for details.
-  `junit-platform-runner`::
-    Runner for executing tests and test suites on the JUnit Platform in a JUnit 4
-    environment. See <<running-tests-junit-platform-runner>> for details.
-  `junit-platform-suite-api`::
-    Annotations for configuring test suites on the JUnit Platform. Supported by the
-    <<running-tests-junit-platform-runner,JUnitPlatform runner>> and possibly by
-    third-party `TestEngine` implementations.
-
-[[dependency-metadata-junit-jupiter]]
-==== JUnit Jupiter
-
-* *Group ID*: `org.junit.jupiter`
-* *Version*: `{jupiter-version}`
-* *Artifact IDs*:
-  `junit-jupiter-api`::
-    JUnit Jupiter API for <<writing-tests,writing tests>> and <<extensions,extensions>>.
-  `junit-jupiter-engine`::
-    JUnit Jupiter test engine implementation, only required at runtime.
-  `junit-jupiter-params`::
-    Support for <<writing-tests-parameterized-tests,parameterized tests>> in JUnit Jupiter.
-  `junit-jupiter-migrationsupport`::
-    Migration support from JUnit 4 to JUnit Jupiter,
-    only required for running selected JUnit 4 rules.
-
-[[dependency-metadata-junit-vintage]]
-==== JUnit Vintage
-
-* *Group ID*: `org.junit.vintage`
-* *Version*: `{vintage-version}`
-* *Artifact ID*:
-  `junit-vintage-engine`::
-    JUnit Vintage test engine implementation that allows to run vintage JUnit tests, i.e.
-    tests written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.
-
-[[dependency-metadata-junit-bom]]
-==== Bill of Materials (BOM)
-
-The _Bill of Materials_ POM provided under the following Maven coordinates can be used to
-ease dependency management when referencing multiple of the above artifacts using
-https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Importing_Dependencies[Maven]
-or https://docs.gradle.org/current/userguide/managing_transitive_dependencies.html#sec:bom_import[Gradle].
-
-* *Group ID*: `org.junit`
-* *Artifact ID*: `junit-bom`
-* *Version*: `{bom-version}`
-
-[[dependency-metadata-dependencies]]
-==== Dependencies
-
-All of the above artifacts have a dependency in their published Maven POMs on
-the following _@API Guardian_ JAR.
-
-* *Group ID*: `org.apiguardian`
-* *Artifact ID*: `apiguardian-api`
-* *Version*: `{apiguardian-version}`
-
-In addition, most of the above artifacts have a direct or transitive dependency to the
-following _OpenTest4J_ JAR.
-
-* *Group ID*: `org.opentest4j`
-* *Artifact ID*: `opentest4j`
-* *Version*: `{ota4j-version}`
-
-[[dependency-diagram]]
-=== Dependency Diagram
-
-[plantuml, component-diagram, svg]
-----
-skinparam {
-    defaultFontName Open Sans
-}
-
-package org.junit.jupiter {
-    [junit-jupiter-api] as jupiter_api
-    [junit-jupiter-engine] as jupiter_engine
-    [junit-jupiter-params] as jupiter_params
-    [junit-jupiter-migrationsupport] as jupiter_migration_support
-}
-
-package org.junit.vintage {
-    [junit-vintage-engine] as vintage_engine
-    [junit:junit] as junit4
-}
-
-package org.junit.platform {
-    [junit-platform-commons] as commons
-    [junit-platform-console] as console
-    [junit-platform-engine] as engine
-    [junit-platform-launcher] as launcher
-    [junit-platform-reporting] as reporting
-    [junit-platform-runner] as runner
-    [junit-platform-suite-api] as suite_api
-}
-
-package org.opentest4j {
-    [opentest4j]
-}
-
-package org.apiguardian {
-    [apiguardian-api] as apiguardian
-    note bottom of apiguardian #white
-        All artifacts except
-        opentest4j and junit:junit
-        have a dependency on this
-        artifact. The edges have
-        been omitted from this
-        diagram for the sake of
-        readability.
-    endnote
-}
-
-jupiter_api ..> opentest4j
-jupiter_api ..> commons
-
-jupiter_engine ..> engine
-jupiter_engine ..> jupiter_api
-
-jupiter_params ..> jupiter_api
-jupiter_migration_support ..> jupiter_api
-jupiter_migration_support ..> junit4
-
-console ..> launcher
-console ..> reporting
-
-launcher ..> engine
-
-engine ..> opentest4j
-engine ..> commons
-
-reporting ..> launcher
-
-runner ..> launcher
-runner ..> suite_api
-runner ..> junit4
-
-suite_api ..> commons
-
-vintage_engine ..> engine
-vintage_engine ..> junit4
-----
-
-[[dependency-metadata-junit-jupiter-samples]]
-=== JUnit Jupiter Sample Projects
-
-The {junit5-samples-repo}[`junit5-samples`] repository hosts a collection of sample
-projects based on JUnit Jupiter and JUnit Vintage. You'll find the respective build
-scripts (e.g., `build.gradle`, `pom.xml`, etc.) in the projects below.
+To see complete, working examples of projects that you can copy and experiment with, the
+{junit5-samples-repo}[`junit5-samples`] repository is a good place to start. The
+`junit5-samples` repository hosts a collection of sample projects based on JUnit Jupiter
+and JUnit Vintage. You'll find the respective build scripts (e.g., `build.gradle`,
+`pom.xml`, etc.) in the projects below.
 
 * For Gradle and Java, check out the `{junit5-jupiter-starter-gradle}` project.
 * For Gradle and Kotlin, check out the `{junit5-jupiter-starter-gradle-kotlin}` project.

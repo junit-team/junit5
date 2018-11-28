@@ -36,3 +36,5 @@ include::contributors.adoc[]
 == Release Notes
 
 The release notes are available <<../release-notes/index.adoc#release-notes,here>>.
+
+include::appendix.adoc[]
