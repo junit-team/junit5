@@ -18,12 +18,9 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import de.sormuras.bartholdy.Tool;
-import de.sormuras.bartholdy.tool.Gradle;
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnJre;
-import org.junit.jupiter.api.condition.JRE;
 import platform.tooling.support.Request;
 
 /**
@@ -34,12 +31,6 @@ class GradleMissingEngineTests {
 	@Test
 	void gradle_wrapper() {
 		test(new GradleWrapper(Paths.get("..")), "wrapper");
-	}
-
-	@Test
-	@EnabledOnJre(JRE.JAVA_11)
-	void gradle_4_10_2() {
-		test(Gradle.install("4.10.2", Paths.get("build", "test-tools")), "4.10.2");
 	}
 
 	private void test(Tool gradle, String version) {
