@@ -189,20 +189,6 @@ subprojects { subproj ->
 		}
 	}
 
-	// Remove junit-jupiter-api's runtimeOnly dependency on
-	// junit-jupiter-engine and junit-platform-engine.
-	// See https://github.com/junit-team/junit5/issues/1669
-	eclipse.classpath.file.whenMerged { classpath ->
-		if (project.name == 'junit-jupiter-api') {
-			classpath.entries.findAll {
-				it.kind == 'src' &&
-				(it.path.contains('junit-jupiter-engine') || it.path.contains('junit-platform-engine'))
-			}.each {
-				classpath.entries.remove(it)
-			}
-		}
-	}
-
 	idea {
 		module {
 			scopes.PROVIDED.plus += [ configurations.shadowed ]

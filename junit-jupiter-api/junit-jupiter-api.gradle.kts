@@ -1,3 +1,6 @@
+import org.gradle.plugins.ide.eclipse.model.Classpath
+import org.gradle.plugins.ide.eclipse.model.ProjectDependency
+
 description = "JUnit Jupiter API"
 
 dependencies {
@@ -14,3 +17,12 @@ tasks.jar {
 		)
 	}
 }
+
+// Remove runtimeOnly dependency on junit-jupiter-engine and junit-platform-engine.
+// See https://github.com/junit-team/junit5/issues/1669
+eclipse.classpath.file.whenMerged(delegateClosureOf<Classpath> {
+	entries.removeAll {
+		it is ProjectDependency &&
+				(it.path.contains("junit-jupiter-engine") || it.path.contains("junit-platform-engine"))
+	}
+})
