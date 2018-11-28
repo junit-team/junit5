@@ -477,12 +477,3 @@ configure(rootProject) {
 		}
 	}
 }
-
-wrapper {
-	gradleVersion = '5.0'
-	/*
-	* Reasoning for using BIN:
-	* https://github.com/junit-team/junit5/pull/1012#discussion_r132061924
-	*/
-	distributionType = Wrapper.DistributionType.BIN
-}
