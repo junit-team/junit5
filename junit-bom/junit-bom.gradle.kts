@@ -14,10 +14,9 @@ the<PublishingExtension>().publications.named<MavenPublication>("maven") {
 						.forEach { removeChild(it) }
 				appendChild(ownerDocument.createElement("dependencyManagement")).apply {
 					appendChild(ownerDocument.createElement("dependencies")).apply {
-						val mavenizedProjects = rootProject.extra["mavenizedProjects"] as List<String>
+						val mavenizedProjects: List<Project> by rootProject.extra
 						mavenizedProjects.sorted()
-								.filter { name -> name != "junit-platform-console-standalone" }
-								.map { name -> rootProject.project(name) }
+								.filter { it != project(":junit-platform-console-standalone") }
 								.forEach { project ->
 									appendChild(ownerDocument.createElement("dependency")).apply {
 										appendChild(ownerDocument.createElement("groupId")).textContent = project.group as String

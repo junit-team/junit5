@@ -30,9 +30,9 @@ configure<PublishingExtension> {
 				}
 				licenses {
 					license {
-						val license = rootProject.extra["license"] as Map<String, String>
-						name.set(license["name"])
-						url.set(license["url"])
+						val license: License by rootProject.extra
+						name.set(license.name)
+						url.set(license.url.toString())
 					}
 				}
 				developers {
