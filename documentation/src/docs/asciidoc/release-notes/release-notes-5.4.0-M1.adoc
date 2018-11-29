@@ -5,7 +5,8 @@
 
 *Scope:* XML report generating listener, Test Kit for testing engines and extensions,
 display name generator API, test execution order API, JUnit 4 `@Ignore` migration
-support, improved diagnostics and error reporting.
+support, improved diagnostics and error reporting, discontinuation of the
+`junit-platform-surefire-provider`.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult
 the link:{junit5-repo}+/milestone/29?closed=1+[5.4.0-M1] milestone page in the JUnit
@@ -21,10 +22,11 @@ repository on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* The JUnit Platform Surefire Provider (`junit-platform-surefire-provider`) has been
-  discontinued and is no longer released as part of JUnit 5. Please use Maven Surefire’s
-  native support for running tests on the JUnit Platform instead (requires Maven Surefire
-  2.22.0 or higher).
+* The JUnit Platform Maven Surefire Provider (`junit-platform-surefire-provider`) has
+  been discontinued and is no longer released as part of JUnit 5. Please use
+  <<../user-guide/index.adoc#running-tests-build-maven, Maven Surefire’s native support>>
+  for running tests on the JUnit Platform instead (requires Maven Surefire 2.22.0 or
+  higher).
 
 ==== New Features and Improvements
 
