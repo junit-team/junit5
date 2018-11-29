@@ -73,6 +73,10 @@ public class Request {
 	}
 
 	public Result run() {
+		return run(true);
+	}
+
+	public Result run(boolean cleanWorkspace) {
 		try {
 			// sanity check
 			if (!Files.isDirectory(projects)) {
@@ -83,12 +87,14 @@ public class Request {
 			Files.createDirectories(toolPath);
 			Files.createDirectories(WORKSPACE);
 
-			// prepare workspace
 			var workspace = WORKSPACE.resolve(getWorkspace());
-			FileUtils.deleteQuietly(workspace.toFile());
-			var project = projects.resolve(getProject());
-			if (Files.isDirectory(project)) {
-				FileUtils.copyDirectory(project.toFile(), workspace.toFile(), getCopyProjectToWorkspaceFileFilter());
+			if (cleanWorkspace) {
+				FileUtils.deleteQuietly(workspace.toFile());
+				var project = projects.resolve(getProject());
+				if (Files.isDirectory(project)) {
+					var filter = getCopyProjectToWorkspaceFileFilter();
+					FileUtils.copyDirectory(project.toFile(), workspace.toFile(), filter);
+				}
 			}
 
 			var configuration = Configuration.builder();
