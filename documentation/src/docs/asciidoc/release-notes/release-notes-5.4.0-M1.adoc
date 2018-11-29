@@ -18,7 +18,8 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The `junit-platform-suite-api` artifact no longer has an unnecessary direct dependency
+  on `junit-platform-commons`.
 
 ==== Deprecations and Breaking Changes
 

@@ -164,8 +164,6 @@ runner ..> launcher
 runner ..> suite_api
 runner ..> junit4
 
-suite_api ..> commons
-
 vintage_engine ..> engine
 vintage_engine ..> junit4
 ----
