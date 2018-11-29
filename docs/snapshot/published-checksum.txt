@@ -13,6 +13,7 @@
 06d982b8075dd94ec6e166c5d53649ce  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ModifierSupport.java
 0815d8a0c13c9701a3600a14cc6471fb  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/JavaElementsResolver.java
 0878c4ebc6b060a2f328f7b7248810f2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java
+08a0160674b05ee4f2b35e720755ad60  documentation/src/docs/asciidoc/user-guide/overview.adoc
 09af82238565deb864ae25a17a2b2596  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/MutableTestExecutionSummary.java
 0a302208d938ae01316facd38d09ce23  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/Node.java
 0a4df5461c31a0d3b3b83edb07d9fcc8  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/FilePosition.java
@@ -108,7 +109,6 @@
 3b17cb0c6494f4a3e2dd39d2e7fb9978  documentation/src/test/java/example/ExternalMethodSourceDemo.java
 3b80297fe790dc9fbf8aced08c86411b  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestExecutionListener.java
 3b8ebde7a98048bdd781e3d682a90920  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathResourceSelector.java
-3b94b764f358a33d8ef32cf92cb38a97  documentation/src/docs/asciidoc/user-guide/overview.adoc
 3bb967836894b05445648a0558dba9a7  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepeatedTestDisplayNameFormatter.java
 3bcb730e3d8702b1181464ffff231bbb  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherFactory.java
 3c19b6d23df0233840f61f38466cdc07  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTest.java
