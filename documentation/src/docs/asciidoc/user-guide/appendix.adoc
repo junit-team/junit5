@@ -4,6 +4,10 @@
 [[dependency-metadata]]
 === Dependency Metadata
 
+Artifacts for final releases and milestones are deployed to {Maven_Central}, and
+snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
+{snapshot-repo}/org/junit/[/org/junit].
+
 [[dependency-metadata-junit-platform]]
 ==== JUnit Platform
 
