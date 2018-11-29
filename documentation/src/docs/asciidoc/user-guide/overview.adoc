@@ -30,10 +30,12 @@ The **JUnit Platform** serves as a foundation for <<launcher-api,launching testi
 frameworks>> on the JVM. It also defines the `{TestEngine}` API for developing a testing
 framework that runs on the platform. Furthermore, the platform provides a
 <<running-tests-console-launcher,Console Launcher>> to launch the platform from the
-command line and build plugins for <<running-tests-build-gradle,Gradle>> and
-<<running-tests-build-maven,Maven>> as well as a
-<<running-tests-junit-platform-runner,JUnit 4 based Runner>> for running any `TestEngine`
-on the platform.
+command line and a <<running-tests-junit-platform-runner,JUnit 4 based Runner>> for
+running any `TestEngine` on the platform in a JUnit 4 based environment. First-class
+support for the JUnit Platform also exists in popular IDEs (see
+<<running-tests-ide-intellij-idea>> and <<running-tests-ide-eclipse>>) and build tools
+(see <<running-tests-build-gradle>>, <<running-tests-build-maven>>, and
+<<running-tests-build-ant>>).
 
 **JUnit Jupiter** is the combination of the new <<writing-tests,programming model>> and
 <<extensions,extension model>> for writing tests and extensions in JUnit 5. The Jupiter
