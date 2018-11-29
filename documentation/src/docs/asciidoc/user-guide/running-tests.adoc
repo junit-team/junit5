@@ -488,10 +488,10 @@ Platform from the console. For example, it can be used to run JUnit Vintage and 
 Jupiter tests and print test execution results to the console.
 
 An executable `junit-platform-console-standalone-{platform-version}.jar` with all
-dependencies included is published in the central Maven repository under the
+dependencies included is published in the {Maven_Central} repository under the
 https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone[junit-platform-console-standalone]
-directory. You can https://docs.oracle.com/javase/tutorial/deployment/jar/run.html[run] the
-standalone `ConsoleLauncher` as shown below.
+directory. You can https://docs.oracle.com/javase/tutorial/deployment/jar/run.html[run]
+the standalone `ConsoleLauncher` as shown below.
 
 `java -jar junit-platform-console-standalone-{platform-version}.jar <<<running-tests-console-launcher-options>>>`
 
@@ -592,8 +592,10 @@ You need the following artifacts and their dependencies on the classpath. See
 
 * `junit-platform-runner` in _test_ scope: location of the `JUnitPlatform` runner
 * `junit-{junit4-version}.jar` in _test_ scope: to run tests using JUnit 4
-* `junit-jupiter-api` in _test_ scope: API for writing tests using JUnit Jupiter, including `@Test`, etc.
-* `junit-jupiter-engine` in _test runtime_ scope: implementation of the `TestEngine` API for JUnit Jupiter
+* `junit-jupiter-api` in _test_ scope: API for writing tests using JUnit Jupiter,
+  including `@Test`, etc.
+* `junit-jupiter-engine` in _test runtime_ scope: implementation of the `TestEngine` API
+  for JUnit Jupiter
 
 ===== Transitive Dependencies
 

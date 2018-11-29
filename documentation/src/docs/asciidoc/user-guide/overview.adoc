@@ -62,7 +62,7 @@ To find out what artifacts are available for download and inclusion in your proj
 refer to <<dependency-metadata>> for details on the available artifacts and their
 versions.
 
-NOTE: Artifacts for final releases and milestones are deployed to Maven Central, and
+NOTE: Artifacts for final releases and milestones are deployed to {Maven_Central}, and
 snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
 {snapshot-repo}/org/junit/[/org/junit].
 
