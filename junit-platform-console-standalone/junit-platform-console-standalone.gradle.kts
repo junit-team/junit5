@@ -1,14 +1,3 @@
-import org.assertj.core.api.Assertions.assertThat
-import java.io.ByteArrayOutputStream
-
-buildscript {
-	dependencies {
-		classpath("org.assertj:assertj-core:${Versions.assertJ}") {
-			because("the standaloneCheck task needs to check the generated output")
-		}
-	}
-}
-
 plugins {
 	`java-library`
 	id("com.github.johnrengelman.shadow")
@@ -22,10 +11,6 @@ dependencies {
 	shadowed(project(":junit-jupiter-engine"))
 	shadowed(project(":junit-jupiter-params"))
 	shadowed(project(":junit-vintage-engine"))
-
-	testCompileOnly(project(":junit-jupiter-api"))
-	testCompileOnly(project(":junit-jupiter-params"))
-	testCompileOnly("junit:junit:${Versions.junit4}")
 }
 
 val jupiterVersion = rootProject.version
@@ -81,74 +66,5 @@ tasks {
 					"Multi-Release" to true
 			))
 		}
-	}
-	val standaloneCheck by registering {
-		dependsOn(shadowJar, testClasses)
-		doLast {
-			val out = ByteArrayOutputStream()
-			val err = ByteArrayOutputStream()
-
-			javaexec {
-				workingDir("$buildDir/libs")
-				isIgnoreExitValue = true
-				jvmArgs("-ea")
-				systemProperty("java.util.logging.config.file", "$buildDir/resources/test/logging.properties")
-				main = "-jar"
-				args = listOf(
-						shadowJar.get().archiveName,
-						"--scan-classpath",
-						"--include-classname", "standalone.*",
-						"--classpath", "$buildDir/classes/java/test",
-						"--details", "tree"
-				)
-				standardOutput = out
-				errorOutput = err
-			}
-			val text = "$err$out"
-
-			// engines -- output depends on default logging configuration
-			assertThat(text).contains(
-					"junit-jupiter (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: $jupiterVersion",
-					"junit-vintage (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: $vintageVersion")
-			// tree node names
-			assertThat(text).contains(
-					"JUnit Jupiter",
-					"JupiterIntegration",
-					"abort()", "Assumption failed: integration-test-abort",
-					"successful()",
-					"disabled()", "integration-test-disabled",
-					"fail()", "integration-test-fail",
-					"JupiterParamsIntegration",
-					"[1] argument=test",
-					"JUnit Vintage",
-					"VintageIntegration",
-					"ignored", "integr4tion test",
-					"f4il", "f4iled",
-					"succ3ssful")
-			// summary
-			assertThat(text).contains("Test run finished after")
-			// container summary
-			assertThat(text).containsSubsequence(
-					"6 containers found",
-					"0 containers skipped",
-					"6 containers started",
-					"0 containers aborted",
-					"6 containers successful",
-					"0 containers failed")
-			// tests summary
-			assertThat(text).containsSubsequence(
-					"8 tests found",
-					"2 tests skipped",
-					"6 tests started",
-					"1 tests aborted",
-					"3 tests successful",
-					"2 tests failed")
-		}
-	}
-	check {
-		dependsOn(standaloneCheck)
-	}
-	test {
-		enabled = false // prevent supposed-to-fail integration tests from failing the build
 	}
 }

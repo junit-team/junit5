@@ -1,0 +1,4 @@
+.+ org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry loadTestEngines
+.+ Discovered TestEngines with IDs. .junit-jupiter .+ junit-vintage .+
+.+ org.junit.platform.launcher.core.ServiceLoaderTestExecutionListenerRegistry loadListeners
+.+ Loaded TestExecutionListener instances: ..
