@@ -17,12 +17,10 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.List;
 
 import de.sormuras.bartholdy.Result;
-import de.sormuras.bartholdy.tool.Maven;
 
 import org.junit.jupiter.api.Test;
 import platform.tooling.support.Request;
@@ -31,8 +29,6 @@ import platform.tooling.support.Request;
  * @since 1.4
  */
 class MultiReleaseJarTests {
-
-	private static final Maven mvn = Maven.install("3.6.0", Paths.get("build", "test-tools"));
 
 	@Test
 	void checkDefault() throws Exception {
@@ -117,7 +113,7 @@ class MultiReleaseJarTests {
 
 	private Result mvn(String variant, List<String> expectedLines) throws Exception {
 		var result = Request.builder() //
-				.setTool(mvn) //
+				.setTool(Request.maven()) //
 				.setProject("multi-release-jar") //
 				.addArguments("--show-version", "--errors", "--file", variant, "test") //
 				.setTimeout(Duration.ofMinutes(2)) //

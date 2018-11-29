@@ -14,10 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
-import java.nio.file.Paths;
 import java.time.Duration;
-
-import de.sormuras.bartholdy.tool.Maven;
 
 import org.junit.jupiter.api.Test;
 import platform.tooling.support.Request;
@@ -28,9 +25,9 @@ import platform.tooling.support.Request;
 class MavenStarterTests {
 
 	@Test
-	void maven_3_6_0() {
+	void verifyMavenStarterProject() {
 		var result = Request.builder() //
-				.setTool(Maven.install("3.6.0", Paths.get("build", "test-tools"))) //
+				.setTool(Request.maven()) //
 				.setProject("maven-starter") //
 				.addArguments("--debug", "verify") //
 				.setTimeout(Duration.ofMinutes(2)) //

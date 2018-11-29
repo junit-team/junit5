@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 import de.sormuras.bartholdy.Configuration;
 import de.sormuras.bartholdy.Result;
 import de.sormuras.bartholdy.Tool;
+import de.sormuras.bartholdy.tool.Maven;
 
 import org.apache.commons.io.FileUtils;
 
@@ -32,12 +33,18 @@ import org.apache.commons.io.FileUtils;
  */
 public class Request {
 
-	private static final Path projects = Paths.get("projects");
-	private static final Path toolPath = Paths.get("build", "test-tools");
+	private static final Path PROJECTS = Paths.get("projects");
+	private static final Path TOOLS = Paths.get("build", "test-tools");
 	public static final Path WORKSPACE = Paths.get("build", "test-workspace");
+
+	private static final String MAVEN_VERSION = "3.6.0";
 
 	public static Builder builder() {
 		return new Builder();
+	}
+
+	public static Maven maven() {
+		return Maven.install(MAVEN_VERSION, TOOLS);
 	}
 
 	private Tool tool;
@@ -79,18 +86,18 @@ public class Request {
 	public Result run(boolean cleanWorkspace) {
 		try {
 			// sanity check
-			if (!Files.isDirectory(projects)) {
+			if (!Files.isDirectory(PROJECTS)) {
 				var cwd = Paths.get(".").normalize().toAbsolutePath();
-				throw new IllegalStateException("Directory " + projects + " not found in: " + cwd);
+				throw new IllegalStateException("Directory " + PROJECTS + " not found in: " + cwd);
 			}
 
-			Files.createDirectories(toolPath);
+			Files.createDirectories(TOOLS);
 			Files.createDirectories(WORKSPACE);
 
 			var workspace = WORKSPACE.resolve(getWorkspace());
 			if (cleanWorkspace) {
 				FileUtils.deleteQuietly(workspace.toFile());
-				var project = projects.resolve(getProject());
+				var project = PROJECTS.resolve(getProject());
 				if (Files.isDirectory(project)) {
 					var filter = getCopyProjectToWorkspaceFileFilter();
 					FileUtils.copyDirectory(project.toFile(), workspace.toFile(), filter);

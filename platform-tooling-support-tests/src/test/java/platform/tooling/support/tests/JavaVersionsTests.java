@@ -20,7 +20,6 @@ import java.time.Duration;
 import java.util.List;
 
 import de.sormuras.bartholdy.tool.Java;
-import de.sormuras.bartholdy.tool.Maven;
 
 import org.junit.jupiter.api.Test;
 
@@ -50,7 +49,7 @@ class JavaVersionsTests {
 
 	List<String> execute(String version, Path javaHome) {
 		var result = Request.builder() //
-				.setTool(Maven.install("3.6.0", Path.of("build", "test-tools"))) //
+				.setTool(Request.maven()) //
 				.setProject("java-versions") //
 				.setWorkspace("java-versions-" + version) //
 				.addArguments("--debug", "verify") //
