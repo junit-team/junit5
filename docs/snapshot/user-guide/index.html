@@ -567,6 +567,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests-test-templates">2.16. Test Templates</a></li>
 <li><a href="#writing-tests-dynamic-tests">2.17. Dynamic Tests</a></li>
 <li><a href="#writing-tests-parallel-execution">2.18. Parallel Execution</a></li>
+<li><a href="#writing-tests-built-in-extensions">2.19. Built-in Extensions</a></li>
 </ul>
 </li>
 <li><a href="#migrating-from-junit4">3. Migrating from JUnit 4</a>
@@ -4154,6 +4155,82 @@ to the same shared resource is running.</p>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="writing-tests-built-in-extensions"><a class="anchor" href="#writing-tests-built-in-extensions"></a>2.19. Built-in Extensions</h3>
+<div class="paragraph">
+<p>While the JUnit team encourages reusable extensions to be packaged and maintained in
+separate libraries, the JUnit Jupiter API artifact includes a few user-facing extension
+implementations that are considered so generally useful that users shouldn&#8217;t have to add
+another dependency.</p>
+</div>
+<div class="sect3">
+<h4 id="writing-tests-built-in-extensions-TempDirectory"><a class="anchor" href="#writing-tests-built-in-extensions-TempDirectory"></a>2.19.1. The TempDirectory Extension</h4>
+<div class="paragraph">
+<p>The <code>TempDirectory</code> extension can be used to create and clean up a temporary directory for
+an individual test or all tests in a test class. To use it, simply register the extension
+and add a parameter of type <code>java.nio.file.Path</code> annotated with <code>@TempDir</code> to your test,
+lifecycle method, or test class constructor.</p>
+</div>
+<div class="paragraph">
+<p>For example, the following test registers the extension for a single test method, creates
+and writes a file to the temporary directory, and checks its content.</p>
+</div>
+<div class="listingblock">
+<div class="title">A test method that requires a temporary directory</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Test</span>
+<span class="annotation">@ExtendWith</span>(TempDirectory.class)
+<span class="type">void</span> writesItemsToFile(<span class="annotation">@TempDir</span> Path tempDir) <span class="directive">throws</span> <span class="exception">IOException</span> {
+    Path file = tempDir.resolve(<span class="string"><span class="delimiter">&quot;</span><span class="content">test.txt</span><span class="delimiter">&quot;</span></span>);
+
+    <span class="keyword">new</span> ListWriter(file).write(<span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">b</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">c</span><span class="delimiter">&quot;</span></span>);
+
+    assertEquals(singletonList(<span class="string"><span class="delimiter">&quot;</span><span class="content">a,b,c</span><span class="delimiter">&quot;</span></span>), Files.readAllLines(file));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In addition to the default file system, the extension can be used with any <code>FileSystem</code>
+implementation, e.g. <a href="https://github.com/google/jimfs">Jimfs</a>. In order to use a custom file
+system, simply register the extension programmatically and pass a provider of a custom
+parent directory of type <code>Path</code>. The following example uses the Jimfs <code>FileSystem</code> and
+passes a custom <code>tmp</code> parent directory to the <code>createInCustomDirectory</code> static factory
+method.</p>
+</div>
+<div class="listingblock">
+<div class="title">A test class that sets up the TempDirectory extension to use a custom file system</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">TempDirectoryWithCustomFileSystemDemo</span> {
+
+    <span class="directive">private</span> <span class="directive">static</span> FileSystem fileSystem;
+
+    <span class="annotation">@BeforeAll</span>
+    <span class="directive">static</span> <span class="type">void</span> createFileSystem() {
+        fileSystem = Jimfs.newFileSystem(<span class="predefined-type">Configuration</span>.unix());
+    }
+
+    <span class="annotation">@AfterAll</span>
+    <span class="directive">static</span> <span class="type">void</span> closeFileSystem() <span class="directive">throws</span> <span class="exception">Exception</span> {
+        fileSystem.close();
+    }
+
+    <span class="annotation">@RegisterExtension</span>
+    Extension tempDirectory = TempDirectory.createInCustomDirectory(() -&gt; fileSystem.getPath(<span class="string"><span class="delimiter">&quot;</span><span class="content">/</span><span class="delimiter">&quot;</span></span>));
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> writesItemsToFile(<span class="annotation">@TempDir</span> Path tempDir) <span class="directive">throws</span> <span class="exception">IOException</span> {
+        Path file = tempDir.resolve(<span class="string"><span class="delimiter">&quot;</span><span class="content">test.txt</span><span class="delimiter">&quot;</span></span>);
+
+        <span class="keyword">new</span> ListWriter(file).write(<span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">b</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">c</span><span class="delimiter">&quot;</span></span>);
+
+        assertEquals(singletonList(<span class="string"><span class="delimiter">&quot;</span><span class="content">a,b,c</span><span class="delimiter">&quot;</span></span>), Files.readAllLines(file));
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -6884,6 +6961,11 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.3</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.support.io</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TempDirectory</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.migrationsupport</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>EnableJUnit4MigrationSupport</code> <em>(annotation)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
@@ -7361,7 +7443,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-11-30 18:30:28 UTC
+Last updated 2018-11-30 22:53:04 UTC
 </div>
 </div>
 </body>
