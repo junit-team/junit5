@@ -10,6 +10,7 @@
 
 package example;
 
+// tag::user_guide[]
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-// tag::user_guide[]
 class DisplayNameGeneratorDemo {
 
 	@Nested
