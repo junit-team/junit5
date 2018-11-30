@@ -1517,7 +1517,7 @@ and add a parameter of type `java.nio.file.Path` annotated with `@TempDir` to yo
 lifecycle method, or test class constructor.
 
 For example, the following test registers the extension for a single test method, creates
-and writes a file to the temporary directory and checks its content.
+and writes a file to the temporary directory, and checks its content.
 
 [source,java,indent=0]
 .A test method that requires a temporary directory
