@@ -54,6 +54,7 @@
 1d5d321dae8c30c3e316ebe58f87e5da  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ResourceAccessMode.java
 1dd8c475c3ad90107a13058c1dd93a41  junit-platform-commons/src/main/java/org/junit/platform/commons/annotation/Testable.java
 1ea4159a98ad9184aac3536719311669  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LogRecordListener.java
+1ebea619cb0532c0c82a3f53cefac58e  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 1f0fab51c248b28ca2b293cd874938b3  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/ArgumentsAggregator.java
 1f76043ff5e024d38ae0981af80a339b  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/PackageNameFilter.java
 20a5e4d649fda50d55fc8a2092fff4dd  junit-platform-console/src/main/java/org/junit/platform/console/options/Theme.java
@@ -98,6 +99,7 @@
 358d818948d3cfe6c3ba96c6f07624ab  junit-platform-commons/src/main/java/org/junit/platform/commons/util/BlacklistedExceptions.java
 36c3996946a5cb5ed1fe4baca9857c31  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingSupplier.java
 36d0b591a4fad2d5c41de29c1a1b0337  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/JupiterTestEngine.java
+3762defef75ada0bb4ede535fca86413  documentation/src/docs/asciidoc/user-guide/appendix.adoc
 386ece4858b64381bffc4218bb101735  documentation/src/test/java/example/CustomTestEngine.java
 390154b9fb98829726f77b36f1645147  documentation/src/docs/asciidoc/link-attributes.adoc
 391883f779338e18c79d8a77c8bb07db  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ResourceLocks.java
@@ -383,7 +385,6 @@ ab1b5a0b5b49dd94d8384b365a413214  junit-jupiter-engine/src/main/java/org/junit/j
 ab83ef64ae475dffa6ef688db027c5e0  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/package-info.java
 aba84db132f7a3acf7e927f74154c099  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfSystemProperty.java
 abdec69e0d6b393dc21acb1b80c47c79  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathRootSelector.java
-abe6591ec176f0e0bc9175b8babdace3  documentation/src/docs/asciidoc/user-guide/appendix.adoc
 ac3f3b9c5478d6550a6a4fceef07a153  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/RunnerDecorator.java
 ad53d908fc15ae208623bfd9fb1a650c  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/ClasspathResourceSource.java
 adcc3c83bea4dff7de607fcdb9e49c7a  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/UniqueIdSelectorResolver.java
@@ -424,7 +425,6 @@ bff1a2240666655b4152e3a2fafec04a  junit-jupiter-migrationsupport/src/main/java/o
 c02613f9cc2bb9379800af3a6b10aa09  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.java
 c0a04008c8f21760598e9d47c350c18d  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectPackages.java
 c0b5f61dc113db14e2fbe5d2da73bbe8  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/package-info.java
-c0ddb9da802bfb1dd5988e7903404c4b  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 c145cb64966bd8c516f2437dc7427f6e  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/ModuleNameSelectorResolver.java
 c1dce8d7d5de8586edf51ebb8306d5d2  documentation/src/test/java/example/defaultmethods/Testable.java
 c27e3f8d6eacbb0a814b0260144291d6  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsNestedTestClass.java
