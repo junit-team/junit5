@@ -4,14 +4,12 @@
 02dea89e074264ff836fb6ee5297860e  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepetitionInfoParameterResolver.java
 032d9ab575e2892ab835bf1e6629fb0f  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/ArgumentConverter.java
 03c8eb4c4a16aab3f0b31a479987fc77  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterEachCallback.java
-0465bafc3e4a0931a4ad9bdc845cd7c7  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeTestTask.java
 0546618ae827699ae13cb2934c41b63e  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/PackageSource.java
 05727869f38b9ea8b64c8d6678050887  documentation/src/test/java/example/SharedResourcesDemo.java
 0592ea1bea66d4c9d94db34749e9e9ec  junit-platform-commons/src/main/java/org/junit/platform/commons/support/HierarchyTraversalMode.java
 06329c8badd67567880f9e630e11734f  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/PackageNameSelectorResolver.java
 06666f021163b98b13639b571d79907c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/MethodSource.java
 06d982b8075dd94ec6e166c5d53649ce  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ModifierSupport.java
-06e3d3a7bf56606fc0353eee9e9865eb  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 0815d8a0c13c9701a3600a14cc6471fb  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/JavaElementsResolver.java
 0878c4ebc6b060a2f328f7b7248810f2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java
 09af82238565deb864ae25a17a2b2596  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/MutableTestExecutionSummary.java
@@ -114,6 +112,7 @@
 3bcb730e3d8702b1181464ffff231bbb  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherFactory.java
 3c19b6d23df0233840f61f38466cdc07  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTest.java
 3c298108511b073dc934aa83f842a648  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Stack.java
+3c7977562f0a80bbedb87ebddc71e544  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeTestTask.java
 3ca1dbe934d8a3e75af2fbff74d08773  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/package-info.java
 3ca40d334a95780a277f324052bc0424  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvFileSource.java
 3cd1022ff47209dbb8e46fc2387b5b57  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreePrintingListener.java
@@ -489,6 +488,7 @@ db2e98900785b50b6a69ea0f9c58461d  junit-platform-console/src/main/java/org/junit
 db3513030987ecfb84fde3893cd02601  documentation/src/test/java/example/testinterface/TestInterfaceDemo.java
 db52e52e7246321e4dfba1cf19fb90cf  junit-jupiter-params/src/main/java/org/junit/jupiter/params/support/AnnotationConsumerInitializer.java
 db570ec1abefa4c0cc3043c26940eb2d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/package-info.java
+dbb0997e83c46c196f6859c45e80d9d2  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 dc26873f09592368c9e43cf9d9ec99c2  junit-platform-engine/src/main/java/org/junit/platform/engine/support/filter/ClasspathScanningSupport.java
 dc532b08f728f06d0ca7dca036a61297  junit-platform-console/src/main/java/org/junit/platform/console/tasks/Color.java
 dca6da471ddade4325725706788f060b  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/package-info.java
