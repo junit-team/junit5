@@ -47,7 +47,7 @@ repository on GitHub.
   `LegacyXmlReportGeneratingListener` that generates XML reports using a format which is
   compatible with the de facto standard for JUnit 4 based test reports that was made
   popular by the Ant build system.
-  - See the <<../user-guide/index.adoc#launcher-api-listeners-reporting, JUnit Platform
+  - See <<../user-guide/index.adoc#launcher-api-listeners-reporting, JUnit Platform
     Reporting>> in the User Guide for details.
 * New `ModifierSupport` class providing an API for extension and test engine authors to
   inspect modifiers of classes and members.
@@ -100,6 +100,8 @@ repository on GitHub.
     Order>> in the User Guide for details.
 * New `DisplayNameGenerator` interface and `@DisplayNameGeneration` annotation that allow
   declarative configuration of a pre-defined or custom display name generator.
+  - See <<../user-guide/index.adoc#writing-tests-display-name-generator, Display Name
+    Generators>> in the User Guide for details.
 * JUnit 4's `@Ignore` annotation is now supported for disabling test classes and test
   methods via the `junit-jupiter-migrationsupport` module.
   - See the <<../user-guide/index.adoc#migrating-from-junit4-ignore-annotation-support,
