@@ -4,7 +4,7 @@
 The goal is to create an up-to-date foundation for developer-side testing on the JVM.
 This includes focusing on Java 8 and above, as well as enabling many different styles of testing.
 
-JUnit 5 is the result of [JUnit Lambda](http://junit.org/junit4/junit-lambda.html) and its [crowdfunding campaign on Indiegogo](http://junit.org/junit4/junit-lambda-campaign.html).
+JUnit 5 is the result of [JUnit Lambda](https://junit.org/junit4/junit-lambda.html) and its [crowdfunding campaign on Indiegogo](https://junit.org/junit4/junit-lambda-campaign.html).
 
 
 ### Resources
