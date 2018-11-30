@@ -17,7 +17,7 @@ task prepareDocsForUploadToGhPages(type: Copy) {
 	from("$buildDir/docs") {
 		include 'javadoc/**'
 		filesMatching("**/*.html") {
-			def favicon = '<link rel="icon" type="image/png" href="http://junit.org/junit5/assets/img/junit5-logo.png">'
+			def favicon = '<link rel="icon" type="image/png" href="https://junit.org/junit5/assets/img/junit5-logo.png">'
 			filter { line ->
 				line.startsWith("<head>") ? line.replace("<head>", "<head>$favicon") : line
 			}
