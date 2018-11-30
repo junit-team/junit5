@@ -47,6 +47,10 @@ snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
 * *Group ID*: `org.junit.jupiter`
 * *Version*: `{jupiter-version}`
 * *Artifact IDs*:
+  `junit-jupiter`::
+    JUnit Jupiter aggregator module that only provides dependencies to `junit-jupiter-api`,
+    `junit-jupiter-params` and `junit-jupiter-engine` for convenient inclusion in dependency
+    management configurations.
   `junit-jupiter-api`::
     JUnit Jupiter API for <<writing-tests,writing tests>> and <<extensions,extensions>>.
   `junit-jupiter-engine`::
@@ -106,6 +110,7 @@ skinparam {
 }
 
 package org.junit.jupiter {
+    [junit-jupiter] as jupiter
     [junit-jupiter-api] as jupiter_api
     [junit-jupiter-engine] as jupiter_engine
     [junit-jupiter-params] as jupiter_params
@@ -143,6 +148,10 @@ package org.apiguardian {
         readability.
     endnote
 }
+
+jupiter ..> jupiter_api
+jupiter ..> jupiter_params
+jupiter ..> jupiter_engine
 
 jupiter_api ..> opentest4j
 jupiter_api ..> commons

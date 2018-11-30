@@ -71,6 +71,10 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
+* New `org.junit.jupiter:junit-jupiter` module that aggregates all required dependencies
+  to ease getting started with JUnit Jupiter. It contains the compile/api dependencies to
+  `junit-jupiter-api` and `junit-jupiter-params` and also the runtime dependency to
+  `junit-jupiter-engine`.
 * `Assertions.assertEquals()` variants that compare floating point numbers using a delta
   now support a _delta_ of zero.
 * New `Assertions.assertEquals()` variants that accept mixed boxed and unboxed primitive

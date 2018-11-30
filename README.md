@@ -100,6 +100,7 @@ See also <http://repo1.maven.org/maven2/org/junit/> for releases and <https://os
 - **Group ID**: `org.junit.jupiter`
 - **Version**: `5.3.2` or `5.4.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
+  - `junit-jupiter` (`org.junit.jupiter`)
   - `junit-jupiter-api` (`org.junit.jupiter.api`)
   - `junit-jupiter-engine` (`org.junit.jupiter.engine`)
   - `junit-jupiter-migrationsupport` (`org.junit.jupiter.migrationsupport`)
