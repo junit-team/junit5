@@ -13,6 +13,7 @@ package org.junit.jupiter.api.support.io;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.io.IOException;
 import java.lang.annotation.Documented;
@@ -29,6 +30,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.Callable;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -75,11 +77,12 @@ import org.junit.jupiter.api.extension.ParameterResolver;
  * with any third-party {@code FileSystem} implementation, e.g.
  * <a href="https://github.com/google/jimfs">Jimfs</a>.
  *
- * @since 0.1
+ * @since 5.4
  * @see TempDir
  * @see ParentDirProvider
  * @see Files#createTempDirectory
  */
+@API(status = EXPERIMENTAL, since = "5.4")
 public class TempDirectory implements ParameterResolver {
 
 	/**
