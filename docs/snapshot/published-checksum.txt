@@ -158,6 +158,7 @@
 4db83f5e1c4a1b741d7783dbef86cb79  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerRequest.java
 4eb491bf2aa69aacd0ecb2a9c6638de7  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstanceFactoryContext.java
 4efcadbbafd6f6a8e3c84126a9e5cfbb  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestMethodOrder.java
+4fd625980b113f0104f666a4d2fe6447  documentation/src/test/java/example/DisplayNameGeneratorDemo.java
 504572baedabdcd6c8132182030c114a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/RepeatedTest.java
 50a0c8b2047127a3d62bf79530a45175  documentation/src/test/kotlin/example/registration/KotlinWebServerDemo.kt
 50b48abb49efa05caf529889413311e1  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClassSelector.java
@@ -281,7 +282,6 @@
 79c689d8e38d54a7e18f3b8c32ee4cc5  documentation/src/test/java/example/testinterface/TimeExecutionLogger.java
 79cbdd390c50882824dd0b212d68f689  documentation/src/test/java/org/junit/api/tools/AsciidocApiReportWriter.java
 79cfcb13b85ed9a6dd0b73631c2bc57c  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassFilter.java
-7a898e9fca780be59351b09a9d1d19d2  documentation/src/test/java/example/DisplayNameGeneratorDemo.java
 7ac342ef1e4b3ec4ece5d3cd688f439a  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/TerminationInfo.java
 7c45a350e04db267187d92bac1612a9f  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/package-info.java
 7da106646b6f7eaf6b168f23fd473402  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/RunnerExecutor.java
