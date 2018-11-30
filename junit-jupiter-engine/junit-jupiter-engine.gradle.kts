@@ -31,4 +31,7 @@ dependencies {
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(":junit-platform-testkit"))
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
+	testImplementation("com.google.jimfs:jimfs:${Versions.jimfs}") {
+		because("used to test TempDirectory extension")
+	}
 }

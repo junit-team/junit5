@@ -40,8 +40,8 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.extensions.TempDirectory;
-import org.junit.jupiter.extensions.TempDirectory.Root;
+import org.junit.jupiter.api.support.io.TempDirectory;
+import org.junit.jupiter.api.support.io.TempDirectory.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -575,7 +575,7 @@ class DiscoverySelectorsTests {
 
 	@Test
 	@ExtendWith(TempDirectory.class)
-	void selectClasspathRootsWithExistingDirectory(@Root Path tempDir) {
+	void selectClasspathRootsWithExistingDirectory(@TempDir Path tempDir) {
 		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(tempDir));
 
 		assertThat(selectors).extracting(ClasspathRootSelector::getClasspathRoot).containsExactly(tempDir.toUri());

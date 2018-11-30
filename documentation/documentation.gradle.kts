@@ -33,6 +33,9 @@ dependencies {
 	testImplementation(project(":junit-platform-launcher"))
 	testImplementation(project(":junit-platform-reporting"))
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
+	testImplementation("com.google.jimfs:jimfs:${Versions.jimfs}") {
+		because("used to demo TempDirectory extension")
+	}
 
 	// Required by :consoleLauncherTest and :generateConsoleLauncherOptions
 	testRuntimeOnly(project(":junit-platform-console"))

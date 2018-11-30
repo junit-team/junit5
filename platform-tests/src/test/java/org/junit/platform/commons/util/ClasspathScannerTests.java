@@ -35,9 +35,9 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.support.io.TempDirectory;
+import org.junit.jupiter.api.support.io.TempDirectory.TempDir;
 import org.junit.jupiter.engine.TrackLogRecords;
-import org.junit.jupiter.extensions.TempDirectory;
-import org.junit.jupiter.extensions.TempDirectory.Root;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.LogRecordListener;
 
@@ -269,7 +269,7 @@ class ClasspathScannerTests {
 
 	@Test
 	@ExtendWith(TempDirectory.class)
-	void doesNotLoopInfinitelyWithCircularSymlinks(@Root Path tempDir) throws Exception {
+	void doesNotLoopInfinitelyWithCircularSymlinks(@TempDir Path tempDir) throws Exception {
 
 		// Abort if running on Microsoft Windows since we are testing symbolic links
 		assumeFalse(System.getProperty("os.name").toLowerCase().contains("win"));

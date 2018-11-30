@@ -48,9 +48,9 @@ import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.support.io.TempDirectory;
+import org.junit.jupiter.api.support.io.TempDirectory.TempDir;
 import org.junit.jupiter.engine.TrackLogRecords;
-import org.junit.jupiter.extensions.TempDirectory;
-import org.junit.jupiter.extensions.TempDirectory.Root;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested1;
@@ -609,7 +609,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	@ExtendWith(TempDirectory.class)
-	void getAllClasspathRootDirectories(@Root Path tempDirectory) throws Exception {
+	void getAllClasspathRootDirectories(@TempDir Path tempDirectory) throws Exception {
 		Path root1 = tempDirectory.resolve("root1").toAbsolutePath();
 		Path root2 = tempDirectory.resolve("root2").toAbsolutePath();
 		String testClassPath = root1 + File.pathSeparator + root2;

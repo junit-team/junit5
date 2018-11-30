@@ -75,6 +75,8 @@ repository on GitHub.
   to ease getting started with JUnit Jupiter. It contains the compile/api dependencies to
   `junit-jupiter-api` and `junit-jupiter-params` and also the runtime dependency to
   `junit-jupiter-engine`.
+* New `TempDirectory` extension (formerly part of JUnit Pioneer) that allows to write test
+  that require a temporary directory in a `java.nio.file.FileSystem`.
 * `Assertions.assertEquals()` variants that compare floating point numbers using a delta
   now support a _delta_ of zero.
 * New `Assertions.assertEquals()` variants that accept mixed boxed and unboxed primitive

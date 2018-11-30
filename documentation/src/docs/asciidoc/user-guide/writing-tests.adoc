@@ -1498,3 +1498,42 @@ to the same shared resource is running.
 ----
 include::{testDir}/example/SharedResourcesDemo.java[tags=user_guide]
 ----
+
+
+[[writing-tests-built-in-extensions]]
+=== Built-in Extensions
+
+While the JUnit team encourages reusable extensions to be packaged and maintained in
+separate libraries, the JUnit Jupiter API artifact includes a few user-facing extension
+implementations that are considered so generally useful that users shouldn't have to add
+another dependency.
+
+[[writing-tests-built-in-extensions-TempDirectory]]
+==== The TempDirectory Extension
+
+The `TempDirectory` extension can be used to create and clean up a temporary directory for
+an individual test or all tests in a test class. To use it, simply register the extension
+and add a parameter of type `java.nio.file.Path` annotated with `@TempDir` to your test,
+lifecycle method, or test class constructor.
+
+For example, the following test registers the extension for a single test method, creates
+and writes a file to the temporary directory and checks its content.
+
+[source,java,indent=0]
+.A test method that requires a temporary directory
+----
+include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide]
+----
+
+In addition to the default file system, the extension can be used with any `FileSystem`
+implementation, e.g. https://github.com/google/jimfs[Jimfs]. In order to use a custom file
+system, simply register the extension programmatically and pass a provider of a custom
+parent directory of type `Path`. The following example uses the Jimfs `FileSystem` and
+passes a custom `tmp` parent directory to the `createInCustomDirectory` static factory
+method.
+
+[source,java]
+.A test class that sets up the TempDirectory extension to use a custom file system
+----
+include::{testDir}/example/TempDirectoryWithCustomFileSystemDemo.java[tags=user_guide]
+----

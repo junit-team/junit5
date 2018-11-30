@@ -42,8 +42,8 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.extensions.TempDirectory;
-import org.junit.jupiter.extensions.TempDirectory.Root;
+import org.junit.jupiter.api.support.io.TempDirectory;
+import org.junit.jupiter.api.support.io.TempDirectory.TempDir;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -66,7 +66,7 @@ import org.opentest4j.AssertionFailedError;
 class LegacyXmlReportGeneratingListenerTests {
 
 	@Test
-	void writesFileForSingleSucceedingTest(@Root Path tempDirectory) throws Exception {
+	void writesFileForSingleSucceedingTest(@TempDir Path tempDirectory) throws Exception {
 		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("succeedingTest", "display<-->Name 😎", () -> {
 		});
@@ -98,7 +98,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesFileForSingleFailingTest(@Root Path tempDirectory) throws Exception {
+	void writesFileForSingleFailingTest(@TempDir Path tempDirectory) throws Exception {
 		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("failingTest", () -> fail("expected to <b>fail</b>"));
 
@@ -123,7 +123,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesFileForSingleErroneousTest(@Root Path tempDirectory) throws Exception {
+	void writesFileForSingleErroneousTest(@TempDir Path tempDirectory) throws Exception {
 		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("failingTest", () -> {
 			throw new RuntimeException("error occurred");
@@ -150,7 +150,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesFileForSingleSkippedTest(@Root Path tempDirectory) throws Exception {
+	void writesFileForSingleSkippedTest(@TempDir Path tempDirectory) throws Exception {
 		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		DemoHierarchicalTestDescriptor testDescriptor = engine.addTest("skippedTest", () -> fail("never called"));
 		testDescriptor.markSkipped("should be skipped");
@@ -175,7 +175,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesFileForSingleAbortedTest(@Root Path tempDirectory) throws Exception {
+	void writesFileForSingleAbortedTest(@TempDir Path tempDirectory) throws Exception {
 		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("abortedTest", () -> assumeFalse(true, "deliberately aborted"));
 
@@ -201,7 +201,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void measuresTimesInSeconds(@Root Path tempDirectory) throws Exception {
+	void measuresTimesInSeconds(@TempDir Path tempDirectory) throws Exception {
 		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("firstTest", () -> {
 		});
@@ -227,7 +227,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void testWithImmeasurableTimeIsOutputCorrectly(@Root Path tempDirectory) throws Exception {
+	void testWithImmeasurableTimeIsOutputCorrectly(@TempDir Path tempDirectory) throws Exception {
 		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> {
 		});
@@ -245,7 +245,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesFileForSkippedContainer(@Root Path tempDirectory) throws Exception {
+	void writesFileForSkippedContainer(@TempDir Path tempDirectory) throws Exception {
 		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> fail("never called"));
 		engine.getEngineDescriptor().markSkipped("should be skipped");
@@ -268,7 +268,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesFileForFailingContainer(@Root Path tempDirectory) throws Exception {
+	void writesFileForFailingContainer(@TempDir Path tempDirectory) throws Exception {
 		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> fail("never called"));
 		engine.getEngineDescriptor().setBeforeAllBehavior(() -> fail("failure before all tests"));
@@ -292,7 +292,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesSystemProperties(@Root Path tempDirectory) throws Exception {
+	void writesSystemProperties(@TempDir Path tempDirectory) throws Exception {
 		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> {
 		});
@@ -315,7 +315,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesHostNameAndTimestamp(@Root Path tempDirectory) throws Exception {
+	void writesHostNameAndTimestamp(@TempDir Path tempDirectory) throws Exception {
 		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
 		engine.addTest("test", () -> {
 		});
@@ -339,7 +339,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void printsExceptionWhenReportsDirCannotBeCreated(@Root Path tempDirectory) throws Exception {
+	void printsExceptionWhenReportsDirCannotBeCreated(@TempDir Path tempDirectory) throws Exception {
 		Path reportsDir = tempDirectory.resolve("dummy.txt");
 		Files.write(reportsDir, singleton("content"));
 
@@ -354,7 +354,7 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void printsExceptionWhenReportCouldNotBeWritten(@Root Path tempDirectory) throws Exception {
+	void printsExceptionWhenReportCouldNotBeWritten(@TempDir Path tempDirectory) throws Exception {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 
 		Path xmlFile = tempDirectory.resolve("TEST-engine.xml");
@@ -371,7 +371,8 @@ class LegacyXmlReportGeneratingListenerTests {
 	}
 
 	@Test
-	void writesReportEntriesToSystemOutElement(@Root Path tempDirectory, TestReporter testReporter) throws Exception {
+	void writesReportEntriesToSystemOutElement(@TempDir Path tempDirectory, TestReporter testReporter)
+			throws Exception {
 		EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		engineDescriptor.addChild(new TestDescriptorStub(UniqueId.root("child", "test"), "test"));
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));

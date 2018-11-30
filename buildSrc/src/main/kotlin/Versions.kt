@@ -20,6 +20,7 @@ object Versions {
     val classgraph = "4.4.12"
     val commonsIo = "2.6"
     val javaCompilerScriptEngine = "0.1.2"
+    val jimfs = "1.1"
     val log4j = "2.11.1"
     val mockito = "2.23.0"
     val slf4j = "1.7.25"
