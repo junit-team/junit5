@@ -20,6 +20,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
@@ -31,6 +33,8 @@ import org.junit.platform.engine.support.hierarchical.Node.SkipResult;
  * @since 1.3
  */
 class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
+
+	private static final Logger logger = LoggerFactory.getLogger(NodeTestTask.class);
 
 	private final NodeTestTaskContext taskContext;
 	private final TestDescriptor testDescriptor;
@@ -65,18 +69,33 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 	@Override
 	public void execute() {
-		throwableCollector = taskContext.getThrowableCollectorFactory().create();
-		prepare();
-		if (throwableCollector.isEmpty()) {
-			checkWhetherSkipped();
+		try {
+			throwableCollector = taskContext.getThrowableCollectorFactory().create();
+			prepare();
+			if (throwableCollector.isEmpty()) {
+				checkWhetherSkipped();
+			}
+			if (throwableCollector.isEmpty() && !skipResult.isSkipped()) {
+				executeRecursively();
+			}
+			if (context != null) {
+				cleanUp();
+			}
+			reportCompletion();
 		}
-		if (throwableCollector.isEmpty() && !skipResult.isSkipped()) {
-			executeRecursively();
+		finally {
+			// Ensure that the 'interrupted status' flag for the current thread
+			// is cleared for reuse of the thread in subsequent task executions.
+			// See https://github.com/junit-team/junit5/issues/1688
+			if (Thread.interrupted()) {
+				logger.debug(() -> String.format(
+					"Execution of TestDescriptor with display name [%s] "
+							+ "and unique ID [%s] failed to clear the 'interrupted status' flag for the "
+							+ "current thread. JUnit has cleared the flag, but you may wish to investigate "
+							+ "why the flag was not cleared by user code.",
+					this.testDescriptor.getDisplayName(), this.testDescriptor.getUniqueId()));
+			}
 		}
-		if (context != null) {
-			cleanUp();
-		}
-		reportCompletion();
 	}
 
 	private void prepare() {

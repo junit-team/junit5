@@ -20,6 +20,18 @@ repository on GitHub.
 
 * The `junit-platform-suite-api` artifact no longer has an unnecessary direct dependency
   on `junit-platform-commons`.
+* Containers and tests that interrupt the current thread no longer cause surprising
+  failures in subsequent tests that interact with the reused thread.
+  - This applies specifically to containers and tests executed via a
+    `HierarchicalTestExecutorService` -- for example, a `@Test` method in JUnit Jupiter
+    -- that interrupt the current thread -- for example, via
+    `Thread.currentThread().interrupt()` -- but fail to clear the _interrupted status_
+    flag for the current thread.
+  - The `TestTask` implementation used internally by `HierarchicalTestExecutorService`
+    implementations now automatically clears the _interrupted status_ for the current
+    thread after the execution of each container and test and logs a message at `DEBUG`
+    level (`FINE` in java.util.logging) if the _interrupted status_ is not cleared
+    properly by user code.
 
 ==== Deprecations and Breaking Changes
 

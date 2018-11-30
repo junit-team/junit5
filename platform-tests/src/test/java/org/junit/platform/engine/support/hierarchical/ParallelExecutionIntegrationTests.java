@@ -47,10 +47,12 @@ import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -157,6 +159,17 @@ class ParallelExecutionIntegrationTests {
 		assertThat(timestampedEvents.get("afterEach")).isAfterOrEqualTo(timestampedEvents.get("dynamicTestFinished"));
 	}
 
+	/**
+	 * @since 1.4
+	 * @see <a href="https://github.com/junit-team/junit5/issues/1688">gh-1688</a>
+	 */
+	@Test
+	void threadInterruptedByUserCode() {
+		List<Event> events = execute(3, InterruptedThreadTestCase.class);
+
+		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).size().isEqualTo(4);
+	}
+
 	private List<Instant> getTimestampsFor(List<Event> events, Condition<Event> condition) {
 		// @formatter:off
 		return events.stream()
@@ -165,6 +178,20 @@ class ParallelExecutionIntegrationTests {
 				.collect(toList());
 		// @formatter:on
 	}
+
+	private List<Event> execute(int parallelism, Class<?>... testClasses) {
+		// @formatter:off
+		LauncherDiscoveryRequest discoveryRequest = request()
+				.selectors(Arrays.stream(testClasses).map(DiscoverySelectors::selectClass).collect(toList()))
+				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, String.valueOf(true))
+				.configurationParameter(PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME, "fixed")
+				.configurationParameter(PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, String.valueOf(parallelism))
+				.build();
+		// @formatter:on
+		return EngineTestKit.execute("junit-jupiter", discoveryRequest).all().list();
+	}
+
+	// -------------------------------------------------------------------------
 
 	@ExtendWith(ThreadReporter.class)
 	static class SuccessfulParallelTestCase {
@@ -442,6 +469,31 @@ class ParallelExecutionIntegrationTests {
 		}
 	}
 
+	@TestMethodOrder(Alphanumeric.class)
+	static class InterruptedThreadTestCase {
+
+		@Test
+		void test1() {
+			Thread.currentThread().interrupt();
+		}
+
+		@Test
+		void test2() throws InterruptedException {
+			Thread.sleep(10);
+		}
+
+		@Test
+		void test3() {
+			Thread.currentThread().interrupt();
+		}
+
+		@Test
+		void test4() throws InterruptedException {
+			Thread.sleep(10);
+		}
+
+	}
+
 	private static void incrementBlockAndCheck(AtomicInteger sharedResource, CountDownLatch countDownLatch)
 			throws InterruptedException {
 		int value = incrementAndBlock(sharedResource, countDownLatch);
@@ -454,18 +506,6 @@ class ParallelExecutionIntegrationTests {
 		countDownLatch.countDown();
 		countDownLatch.await(1, SECONDS);
 		return value;
-	}
-
-	private List<Event> execute(int parallelism, Class<?>... testClasses) {
-		// @formatter:off
-		LauncherDiscoveryRequest discoveryRequest = request()
-				.selectors(Arrays.stream(testClasses).map(DiscoverySelectors::selectClass).collect(toList()))
-				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, String.valueOf(true))
-				.configurationParameter(PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME, "fixed")
-				.configurationParameter(PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, String.valueOf(parallelism))
-				.build();
-		// @formatter:on
-		return EngineTestKit.execute("junit-jupiter", discoveryRequest).all().list();
 	}
 
 	static class ThreadReporter implements AfterTestExecutionCallback {
