@@ -43,6 +43,7 @@ val platformProjects by extra(listOf(
 ))
 
 val jupiterProjects by extra(listOf(
+		project(":junit-jupiter"),
 		project(":junit-jupiter-api"),
 		project(":junit-jupiter-engine"),
 		project(":junit-jupiter-migrationsupport"),
