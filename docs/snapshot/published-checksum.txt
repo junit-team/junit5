@@ -190,7 +190,6 @@
 57e58df5da6cc987082bd4e3435e9595  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/TestFactoryMethodResolver.java
 580ac6c688b27a6f57f961367c01eb23  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ArgumentsSources.java
 58175796b4ee32207d049f3bf18c9354  junit-platform-commons/src/main/java/org/junit/platform/commons/support/AnnotationSupport.java
-594b52426cf801f7e19fa8aa1611d6e2  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 5a87a899775288930454ae9ae0a0e96c  documentation/src/test/java/example/timing/TimingExtensionTests.java
 5b143dbb7aceed36bbb3320761d77bff  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/package-info.java
 5b42b0ef3d28d441cd5d39cb8b05aa34  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstanceFactory.java
@@ -207,6 +206,7 @@
 5f01a7b613df765a1d0d73b4772fc42d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertEquals.java
 5f3c697ebcd0442a8efbce5d34dad6ed  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayNameGenerator.java
 5ff846c85eb5734602734985158e1f73  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/MethodSelector.java
+60907ad7e6d00e1d3b81467aa516b32e  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 60f96e25d25a51142183a855a6aa0e86  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.java
 6122cfb8c75b2dd10f426bf9c1db00e8  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeTags.java
 612f2ada1d688f2a20bf3f6cbba30137  documentation/src/test/java/example/TestTemplateDemo.java
