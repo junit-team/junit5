@@ -32,7 +32,6 @@
 0ed97f559995e32766a4405e1fe3cf4d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/TokenWith.java
 0fa3bd61410444b5f7b8731b83e72d60  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnJre.java
 105d9e4b87226ac563af50df51a3ff70  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestIdentifier.java
-10702346dec38612ca3d1cb35a0be73b  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 11cb748ddb7df02e0af8de08c2aca999  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingConsumer.java
 1222e5d9a1ded9b30a69bcd10c767abb  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ValueSource.java
 13c76a7853cbb65c8d2f2330aac9495d  documentation/src/docs/asciidoc/user-guide/api-evolution.adoc
@@ -227,6 +226,7 @@
 6966085cfb8595eb56a2a4c0c7855835  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedMethod.java
 699d8952bd3a43c9dc21a14cc131ab2c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Tag.java
 69b5ff19f23b3aeea342f9eb5a59c464  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/ExternalResourceSupport.java
+69bee4581757a45b586a58cfa3058daf  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 6a22d7cb9e21de8c25bc7a56019ec7ef  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ExclusiveResource.java
 6b14e8113f10ac9957ab085a71027b65  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayNameGeneration.java
 6b9ae58781d9a8b4eb9e25a1b5ed50bd  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ExceptionUtils.java
