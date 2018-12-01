@@ -424,10 +424,10 @@ is _disabled_ via a <<writing-tests-conditional-execution,condition>> (e.g., `@D
 `@DisabledOnOs`, etc.) even when the "per-method" test instance lifecycle mode is active.
 
 If you would prefer that JUnit Jupiter execute all test methods on the same test
-instance, simply annotate your test class with `@TestInstance(Lifecycle.PER_CLASS)`. When
-using this mode, a new test instance will be created once per test class. Thus, if your
-test methods rely on state stored in instance variables, you may need to reset that state
-in `@BeforeEach` or `@AfterEach` methods.
+instance, annotate your test class with `@TestInstance(Lifecycle.PER_CLASS)`. When using
+this mode, a new test instance will be created once per test class. Thus, if your test
+methods rely on state stored in instance variables, you may need to reset that state in
+`@BeforeEach` or `@AfterEach` methods.
 
 The "per-class" mode has some additional benefits over the default "per-method" mode.
 Specifically, with the "per-class" mode it becomes possible to declare `@BeforeAll` and
@@ -445,7 +445,7 @@ test instance lifecycle mode.
 If a test class or test interface is not annotated with `@TestInstance`, JUnit Jupiter
 will use a _default_ lifecycle mode. The standard _default_ mode is `PER_METHOD`;
 however, it is possible to change the _default_ for the execution of an entire test plan.
-To change the default test instance lifecycle mode, simply set the
+To change the default test instance lifecycle mode, set the
 `junit.jupiter.testinstance.lifecycle.default` _configuration parameter_ to the name of
 an enum constant defined in `TestInstance.Lifecycle`, ignoring case. This can be supplied
 as a JVM system property, as a _configuration parameter_ in the
@@ -663,7 +663,7 @@ NOTE: The above tests are merely meant as examples and therefore not complete.
 [[writing-tests-repeated-tests]]
 === Repeated Tests
 
-JUnit Jupiter provides the ability to repeat a test a specified number of times simply by
+JUnit Jupiter provides the ability to repeat a test a specified number of times by
 annotating a method with `@RepeatedTest` and specifying the total number of repetitions
 desired. Each invocation of a repeated test behaves like the execution of a regular
 `@Test` method with full support for the same lifecycle callbacks and extensions.
@@ -1221,8 +1221,8 @@ Apart from direct access to a `@ParameterizedTest` method's arguments using an
 `ArgumentsAccessor`, JUnit Jupiter also supports the usage of custom, reusable
 _aggregators_.
 
-To use a custom aggregator simply implement the `{ArgumentsAggregator}` interface and
-register it via the `@AggregateWith` annotation on a compatible parameter in the
+To use a custom aggregator, implement the `{ArgumentsAggregator}` interface and register
+it via the `@AggregateWith` annotation on a compatible parameter in the
 `@ParameterizedTest` method. The result of the aggregation will then be provided as an
 argument for the corresponding parameter when the parameterized test is invoked. Note
 that an implementation of `ArgumentsAggregator` must be declared as either a top-level
@@ -1518,13 +1518,13 @@ another dependency.
 [[writing-tests-built-in-extensions-TempDirectory]]
 ==== The TempDirectory Extension
 
-The `TempDirectory` extension can be used to create and clean up a temporary directory for
-an individual test or all tests in a test class. To use it, simply register the extension
-and add a parameter of type `java.nio.file.Path` annotated with `@TempDir` to your test,
-lifecycle method, or test class constructor.
+The `TempDirectory` extension can be used to create and clean up a temporary directory
+for an individual test or all tests in a test class. To use it, register the extension
+and add a parameter of type `java.nio.file.Path` annotated with `@TempDir` to your test
+method, lifecycle method, or test class constructor.
 
 For example, the following test registers the extension for a single test method, creates
-and writes a file to the temporary directory, and checks its content.
+and writes to a file in the temporary directory, and checks its content.
 
 [source,java,indent=0]
 .A test method that requires a temporary directory
@@ -1532,15 +1532,16 @@ and writes a file to the temporary directory, and checks its content.
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide]
 ----
 
-In addition to the default file system, the extension can be used with any `FileSystem`
-implementation, e.g. https://github.com/google/jimfs[Jimfs]. In order to use a custom file
-system, simply register the extension programmatically and pass a provider of a custom
-parent directory of type `Path`. The following example uses the Jimfs `FileSystem` and
-passes a custom `tmp` parent directory to the `createInCustomDirectory` static factory
-method.
+In addition to the default file system for the local operating system, the
+`TempDirectory` extension can also be used with any `FileSystem` implementation -- for
+example, https://github.com/google/jimfs[Jimfs]. In order to use a custom file system,
+register the extension _programmatically_ via `@RegisterExtension` and supply a provider
+of a custom parent directory of type `Path`. The following example uses the Jimfs
+`FileSystem` and passes a custom `tmp` parent directory to the
+`createInCustomDirectory()` static factory method.
 
 [source,java]
-.A test class that sets up the TempDirectory extension to use a custom file system
+.A test class that configures the TempDirectory extension to use a custom file system
 ----
 include::{testDir}/example/TempDirectoryWithCustomFileSystemDemo.java[tags=user_guide]
 ----
