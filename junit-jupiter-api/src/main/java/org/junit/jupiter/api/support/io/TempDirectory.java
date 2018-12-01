@@ -11,7 +11,6 @@
 package org.junit.jupiter.api.support.io;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
-import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
@@ -38,6 +37,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * {@code TempDirectory} is a JUnit Jupiter extension to create and clean up a
@@ -108,11 +108,13 @@ public final class TempDirectory implements ParameterResolver {
 	 */
 	@FunctionalInterface
 	public interface ParentDirProvider {
+
 		/**
 		 * Get the parent directory for all temporary directories created by the
 		 * {@link TempDirectory} extension this is used with.
 		 *
-		 * @return the parent directory for all temporary directories
+		 * @return the parent directory for all temporary directories; never
+		 * {@code null}
 		 */
 		Path get(ParameterContext parameterContext, ExtensionContext extensionContext) throws Exception;
 	}
@@ -140,7 +142,7 @@ public final class TempDirectory implements ParameterResolver {
 	private final TempDirProvider tempDirProvider;
 
 	private TempDirectory(TempDirProvider tempDirProvider) {
-		this.tempDirProvider = requireNonNull(tempDirProvider);
+		this.tempDirProvider = Preconditions.notNull(tempDirProvider, "TempDirProvider must not be null");
 	}
 
 	/**
@@ -151,13 +153,15 @@ public final class TempDirectory implements ParameterResolver {
 	 * <p>This constructor is used by the JUnit Jupiter Engine when the
 	 * extension is registered via
 	 * {@link org.junit.jupiter.api.extension.ExtendWith @ExtendWith}.
+	 *
+	 * @return a {@code TempDirectory} extension
 	 */
 	public TempDirectory() {
 		this((__, ___, dirPrefix) -> createDefaultTempDir(dirPrefix));
 	}
 
 	/**
-	 * Returns a {@code TempDirectory} extension that uses the default
+	 * Create a {@code TempDirectory} extension that uses the default
 	 * {@link java.nio.file.FileSystem FileSystem} and creates temporary
 	 * directories in the default location.
 	 *
@@ -173,7 +177,7 @@ public final class TempDirectory implements ParameterResolver {
 	}
 
 	/**
-	 * Returns a {@code TempDirectory} extension that uses the supplied
+	 * Create a {@code TempDirectory} extension that uses the supplied
 	 * {@link ParentDirProvider} to configure the parent directory for the
 	 * temporary directories created by this extension.
 	 *
@@ -182,9 +186,12 @@ public final class TempDirectory implements ParameterResolver {
 	 *
 	 * @param parentDirProvider used to configure the parent directory for the
 	 * temporary directories created by this extension
+	 *
+	 * @return a {@code TempDirectory} extension
 	 */
 	public static TempDirectory createInCustomDirectory(ParentDirProvider parentDirProvider) {
-		requireNonNull(parentDirProvider);
+		Preconditions.notNull(parentDirProvider, "ParentDirProvider must not be null");
+
 		// @formatter:off
 		return new TempDirectory((parameterContext, extensionContext, dirPrefix) ->
 				createCustomTempDir(parentDirProvider, parameterContext, extensionContext, dirPrefix));
@@ -203,7 +210,7 @@ public final class TempDirectory implements ParameterResolver {
 	 * temporary directories created by this extension
 	 */
 	public static TempDirectory createInCustomDirectory(Callable<Path> parentDirProvider) {
-		requireNonNull(parentDirProvider);
+		Preconditions.notNull(parentDirProvider, "parentDirProvider must not be null");
 		return createInCustomDirectory((parameterContext, extensionContext) -> parentDirProvider.call());
 	}
 
@@ -237,10 +244,11 @@ public final class TempDirectory implements ParameterResolver {
 
 	private static CloseablePath createCustomTempDir(ParentDirProvider parentDirProvider,
 			ParameterContext parameterContext, ExtensionContext extensionContext, String dirPrefix) {
+
 		Path parentDir;
 		try {
 			parentDir = parentDirProvider.get(parameterContext, extensionContext);
-			requireNonNull(parentDir);
+			Preconditions.notNull(parentDir, "ParentDirProvider returned null for the parent directory");
 		}
 		catch (Exception ex) {
 			throw new ParameterResolutionException("Failed to get parent directory from provider", ex);
@@ -332,4 +340,5 @@ public final class TempDirectory implements ParameterResolver {
 			}
 		}
 	}
+
 }
