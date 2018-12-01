@@ -226,7 +226,6 @@
 6966085cfb8595eb56a2a4c0c7855835  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedMethod.java
 699d8952bd3a43c9dc21a14cc131ab2c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Tag.java
 69b5ff19f23b3aeea342f9eb5a59c464  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/ExternalResourceSupport.java
-69bee4581757a45b586a58cfa3058daf  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 6a22d7cb9e21de8c25bc7a56019ec7ef  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ExclusiveResource.java
 6b14e8113f10ac9957ab085a71027b65  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayNameGeneration.java
 6b9ae58781d9a8b4eb9e25a1b5ed50bd  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ExceptionUtils.java
@@ -275,6 +274,7 @@
 786558f30639a7228fa0a984d6761e19  documentation/src/test/java/extensions/ExpectToFail.java
 78e3da888f3b7f7543f2b8297f60ebb8  documentation/src/main/java/example/registration/package-info.java
 79450c974d0e02853aa73d3266a8401d  documentation/src/test/resources/two-column.csv
+795fc06856059b9e4c622932f6f6150d  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 7978c5909291b221f41bb8a2fc8c8b7a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfSystemProperty.java
 79addd906c01aa6ba2a1edd18c6d6f36  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayName.java
 79c689d8e38d54a7e18f3b8c32ee4cc5  documentation/src/test/java/example/testinterface/TimeExecutionLogger.java
