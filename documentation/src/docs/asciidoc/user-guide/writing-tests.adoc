@@ -1455,6 +1455,13 @@ If no configuration strategy is set, JUnit Jupiter uses the `dynamic` configurat
 strategy with a factor of `1`. Consequently, the desired parallelism will be equal to the
 number of available processors/cores.
 
+NOTE: JUnit Jupiter does not guarantee that the number of concurrently executing tests
+will not exceed the configured parallelism. For example, when using one of the
+synchronization mechanisms described in the next section, the `ForkJoinPool` that is used
+behind the scenes may spawn additional threads to ensure execution continues with
+sufficient parallelism. Thus, if you require such guarantees in a test class, please use
+your own means of controlling concurrency.
+
 [[writing-tests-parallel-execution-synchronization]]
 ==== Synchronization
 
