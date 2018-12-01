@@ -4,8 +4,8 @@
 [[dependency-metadata]]
 === Dependency Metadata
 
-Artifacts for final releases and milestones are deployed to {Maven_Central}, and
-snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
+Artifacts for final releases and milestones are deployed to {Maven_Central}, and snapshot
+artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
 {snapshot-repo}/org/junit/[/org/junit].
 
 [[dependency-metadata-junit-platform]]
@@ -22,7 +22,7 @@ snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
     Support for discovering and executing tests on the JUnit Platform from the console.
     See <<running-tests-console-launcher>> for details.
   `junit-platform-console-standalone`::
-    An executable JAR with all dependencies included is provided in {Maven_Central} under the
+    An executable JAR with all dependencies included is provided in Maven Central under the
     https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone[junit-platform-console-standalone]
     directory. See <<running-tests-console-launcher>> for details.
   `junit-platform-engine`::
@@ -48,18 +48,18 @@ snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
 * *Version*: `{jupiter-version}`
 * *Artifact IDs*:
   `junit-jupiter`::
-    JUnit Jupiter aggregator module that only provides dependencies to `junit-jupiter-api`,
-    `junit-jupiter-params` and `junit-jupiter-engine` for convenient inclusion in dependency
-    management configurations.
+    JUnit Jupiter aggregator artifact that transitively pulls in dependencies on
+    `junit-jupiter-api`, `junit-jupiter-params`, and `junit-jupiter-engine` for
+    simplified dependency management in build tools such as Gradle and Maven.
   `junit-jupiter-api`::
     JUnit Jupiter API for <<writing-tests,writing tests>> and <<extensions,extensions>>.
   `junit-jupiter-engine`::
-    JUnit Jupiter test engine implementation, only required at runtime.
+    JUnit Jupiter test engine implementation; only required at runtime.
   `junit-jupiter-params`::
     Support for <<writing-tests-parameterized-tests,parameterized tests>> in JUnit Jupiter.
   `junit-jupiter-migrationsupport`::
-    Migration support from JUnit 4 to JUnit Jupiter,
-    only required for running selected JUnit 4 rules.
+    Support for migrating from JUnit 4 to JUnit Jupiter; only required for support for
+    JUnit 4's `@Ignore` annotation and for running selected JUnit 4 rules.
 
 [[dependency-metadata-junit-vintage]]
 ==== JUnit Vintage
@@ -68,8 +68,9 @@ snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots reposito
 * *Version*: `{vintage-version}`
 * *Artifact ID*:
   `junit-vintage-engine`::
-    JUnit Vintage test engine implementation that allows to run vintage JUnit tests, i.e.
-    tests written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.
+    JUnit Vintage test engine implementation that allows one to run _vintage_ JUnit tests
+    on the JUnit Platform. _Vintage_ tests include those written using JUnit 3 or JUnit 4
+    APIs or tests written using testing frameworks built on those APIs.
 
 [[dependency-metadata-junit-bom]]
 ==== Bill of Materials (BOM)
@@ -86,14 +87,14 @@ or https://docs.gradle.org/current/userguide/managing_transitive_dependencies.ht
 [[dependency-metadata-dependencies]]
 ==== Dependencies
 
-All of the above artifacts have a dependency in their published Maven POMs on
-the following _@API Guardian_ JAR.
+Most of the above artifacts have a dependency in their published Maven POMs on the
+following _@API Guardian_ JAR.
 
 * *Group ID*: `org.apiguardian`
 * *Artifact ID*: `apiguardian-api`
 * *Version*: `{apiguardian-version}`
 
-In addition, most of the above artifacts have a direct or transitive dependency to the
+In addition, most of the above artifacts have a direct or transitive dependency on the
 following _OpenTest4J_ JAR.
 
 * *Group ID*: `org.opentest4j`
