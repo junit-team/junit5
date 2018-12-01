@@ -1985,10 +1985,10 @@ is <em>disabled</em> via a <a href="#writing-tests-conditional-execution">condit
 </div>
 <div class="paragraph">
 <p>If you would prefer that JUnit Jupiter execute all test methods on the same test
-instance, simply annotate your test class with <code>@TestInstance(Lifecycle.PER_CLASS)</code>. When
-using this mode, a new test instance will be created once per test class. Thus, if your
-test methods rely on state stored in instance variables, you may need to reset that state
-in <code>@BeforeEach</code> or <code>@AfterEach</code> methods.</p>
+instance, annotate your test class with <code>@TestInstance(Lifecycle.PER_CLASS)</code>. When using
+this mode, a new test instance will be created once per test class. Thus, if your test
+methods rely on state stored in instance variables, you may need to reset that state in
+<code>@BeforeEach</code> or <code>@AfterEach</code> methods.</p>
 </div>
 <div class="paragraph">
 <p>The "per-class" mode has some additional benefits over the default "per-method" mode.
@@ -2008,7 +2008,7 @@ test instance lifecycle mode.</p>
 <p>If a test class or test interface is not annotated with <code>@TestInstance</code>, JUnit Jupiter
 will use a <em>default</em> lifecycle mode. The standard <em>default</em> mode is <code>PER_METHOD</code>;
 however, it is possible to change the <em>default</em> for the execution of an entire test plan.
-To change the default test instance lifecycle mode, simply set the
+To change the default test instance lifecycle mode, set the
 <code>junit.jupiter.testinstance.lifecycle.default</code> <em>configuration parameter</em> to the name of
 an enum constant defined in <code>TestInstance.Lifecycle</code>, ignoring case. This can be supplied
 as a JVM system property, as a <em>configuration parameter</em> in the
@@ -2551,7 +2551,7 @@ The above tests are merely meant as examples and therefore not complete.
 <div class="sect2">
 <h3 id="writing-tests-repeated-tests"><a class="anchor" href="#writing-tests-repeated-tests"></a>2.14. Repeated Tests</h3>
 <div class="paragraph">
-<p>JUnit Jupiter provides the ability to repeat a test a specified number of times simply by
+<p>JUnit Jupiter provides the ability to repeat a test a specified number of times by
 annotating a method with <code>@RepeatedTest</code> and specifying the total number of repetitions
 desired. Each invocation of a repeated test behaves like the execution of a regular
 <code>@Test</code> method with full support for the same lifecycle callbacks and extensions.</p>
@@ -3582,8 +3582,8 @@ test method. In addition, type conversion is supported as discussed in
 <em>aggregators</em>.</p>
 </div>
 <div class="paragraph">
-<p>To use a custom aggregator simply implement the <code><a href="../api/org/junit/jupiter/params/aggregator/ArgumentsAggregator.html">ArgumentsAggregator</a></code> interface and
-register it via the <code>@AggregateWith</code> annotation on a compatible parameter in the
+<p>To use a custom aggregator, implement the <code><a href="../api/org/junit/jupiter/params/aggregator/ArgumentsAggregator.html">ArgumentsAggregator</a></code> interface and register
+it via the <code>@AggregateWith</code> annotation on a compatible parameter in the
 <code>@ParameterizedTest</code> method. The result of the aggregation will then be provided as an
 argument for the corresponding parameter when the parameterized test is invoked. Note
 that an implementation of <code>ArgumentsAggregator</code> must be declared as either a top-level
@@ -4193,14 +4193,14 @@ another dependency.</p>
 <div class="sect3">
 <h4 id="writing-tests-built-in-extensions-TempDirectory"><a class="anchor" href="#writing-tests-built-in-extensions-TempDirectory"></a>2.19.1. The TempDirectory Extension</h4>
 <div class="paragraph">
-<p>The <code>TempDirectory</code> extension can be used to create and clean up a temporary directory for
-an individual test or all tests in a test class. To use it, simply register the extension
-and add a parameter of type <code>java.nio.file.Path</code> annotated with <code>@TempDir</code> to your test,
-lifecycle method, or test class constructor.</p>
+<p>The <code>TempDirectory</code> extension can be used to create and clean up a temporary directory
+for an individual test or all tests in a test class. To use it, register the extension
+and add a parameter of type <code>java.nio.file.Path</code> annotated with <code>@TempDir</code> to your test
+method, lifecycle method, or test class constructor.</p>
 </div>
 <div class="paragraph">
 <p>For example, the following test registers the extension for a single test method, creates
-and writes a file to the temporary directory, and checks its content.</p>
+and writes to a file in the temporary directory, and checks its content.</p>
 </div>
 <div class="listingblock">
 <div class="title">A test method that requires a temporary directory</div>
@@ -4217,15 +4217,16 @@ and writes a file to the temporary directory, and checks its content.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In addition to the default file system, the extension can be used with any <code>FileSystem</code>
-implementation, e.g. <a href="https://github.com/google/jimfs">Jimfs</a>. In order to use a custom file
-system, simply register the extension programmatically and pass a provider of a custom
-parent directory of type <code>Path</code>. The following example uses the Jimfs <code>FileSystem</code> and
-passes a custom <code>tmp</code> parent directory to the <code>createInCustomDirectory</code> static factory
-method.</p>
+<p>In addition to the default file system for the local operating system, the
+<code>TempDirectory</code> extension can also be used with any <code>FileSystem</code> implementation&#8201;&#8212;&#8201;for
+example, <a href="https://github.com/google/jimfs">Jimfs</a>. In order to use a custom file system,
+register the extension <em>programmatically</em> via <code>@RegisterExtension</code> and supply a provider
+of a custom parent directory of type <code>Path</code>. The following example uses the Jimfs
+<code>FileSystem</code> and passes a custom <code>tmp</code> parent directory to the
+<code>createInCustomDirectory()</code> static factory method.</p>
 </div>
 <div class="listingblock">
-<div class="title">A test class that sets up the TempDirectory extension to use a custom file system</div>
+<div class="title">A test class that configures the TempDirectory extension to use a custom file system</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">TempDirectoryWithCustomFileSystemDemo</span> {
 
@@ -7471,7 +7472,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-12-01 22:27:15 UTC
+Last updated 2018-12-01 22:39:28 UTC
 </div>
 </div>
 </body>
