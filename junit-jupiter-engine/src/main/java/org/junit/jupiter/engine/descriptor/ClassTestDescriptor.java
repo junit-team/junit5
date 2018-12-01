@@ -92,7 +92,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, Supplier<String> displayNameSupplier,
 			ConfigurationParameters configurationParameters) {
-		super(uniqueId, testClass, displayNameSupplier, ClassSource.from(testClass));
+		super(uniqueId, testClass, displayNameSupplier, ClassSource.from(testClass), configurationParameters);
 
 		this.testClass = testClass;
 		this.tags = getTags(testClass);

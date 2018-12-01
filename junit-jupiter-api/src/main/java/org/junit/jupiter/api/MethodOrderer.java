@@ -86,16 +86,21 @@ public interface MethodOrderer {
 	 * ordered methods are typically sorted in a fashion that would conflict
 	 * with concurrent execution.
 	 *
+	 * <p>In case the ordering does not conflict with concurrent execution,
+	 * implementations should return an empty {@link Optional} to signal that
+	 * the engine should decide which execution mode to use.
+	 *
 	 * <p>Can be overridden via an explicit
 	 * {@link org.junit.jupiter.api.parallel.Execution @Execution} declaration
 	 * on the test class or in concrete implementations of the
 	 * {@code MethodOrderer} API.
 	 *
-	 * @return the default {@code ExecutionMode}; never {@code null}
+	 * @return the default {@code ExecutionMode}; never {@code null} but
+	 * potentially empty
 	 * @see #orderMethods(MethodOrdererContext)
 	 */
-	default ExecutionMode getDefaultExecutionMode() {
-		return ExecutionMode.SAME_THREAD;
+	default Optional<ExecutionMode> getDefaultExecutionMode() {
+		return Optional.of(ExecutionMode.SAME_THREAD);
 	}
 
 	/**
@@ -255,8 +260,8 @@ public interface MethodOrderer {
 		 * otherwise, {@code CONCURRENT}
 		 */
 		@Override
-		public ExecutionMode getDefaultExecutionMode() {
-			return this.usingCustomSeed ? ExecutionMode.SAME_THREAD : ExecutionMode.CONCURRENT;
+		public Optional<ExecutionMode> getDefaultExecutionMode() {
+			return this.usingCustomSeed ? Optional.of(ExecutionMode.SAME_THREAD) : Optional.empty();
 		}
 	}
 

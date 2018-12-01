@@ -14,7 +14,6 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
-import static org.junit.jupiter.engine.descriptor.JupiterTestDescriptor.toExecutionMode;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
@@ -41,6 +40,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.Filterable;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
+import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
 import org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsInnerClass;
 import org.junit.platform.commons.logging.Logger;
@@ -57,7 +57,6 @@ import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
-import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 
 /**
  * <h3>NOTES TO DEVELOPERS</h3>
@@ -334,8 +333,9 @@ class JavaElementsResolver {
 
 					// Note: MethodOrderer#getDefaultExecutionMode() is guaranteed
 					// to be invoked after MethodOrderer#orderMethods().
-					ExecutionMode defaultExecutionMode = toExecutionMode(methodOrderer.getDefaultExecutionMode());
-					classTestDescriptor.setDefaultChildExecutionMode(defaultExecutionMode);
+					methodOrderer.getDefaultExecutionMode()//
+							.map(JupiterTestDescriptor::toExecutionMode)//
+							.ifPresent(classTestDescriptor::setDefaultChildExecutionMode);
 				});
 	}
 

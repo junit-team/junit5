@@ -20,6 +20,7 @@ import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
@@ -36,9 +37,10 @@ class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 	private final DynamicDescendantFilter dynamicDescendantFilter;
 
 	DynamicContainerTestDescriptor(UniqueId uniqueId, int index, DynamicContainer dynamicContainer,
-			TestSource testSource, DynamicDescendantFilter dynamicDescendantFilter) {
+			TestSource testSource, DynamicDescendantFilter dynamicDescendantFilter,
+			ConfigurationParameters configurationParameters) {
 
-		super(uniqueId, index, dynamicContainer, testSource);
+		super(uniqueId, index, dynamicContainer, testSource, configurationParameters);
 		this.dynamicContainer = dynamicContainer;
 		this.testSource = testSource;
 		this.dynamicDescendantFilter = dynamicDescendantFilter;
@@ -67,7 +69,8 @@ class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 	}
 
 	private Optional<JupiterTestDescriptor> toDynamicDescriptor(int index, DynamicNode childNode) {
-		return createDynamicDescriptor(this, childNode, index, testSource, dynamicDescendantFilter);
+		return createDynamicDescriptor(this, childNode, index, testSource, dynamicDescendantFilter,
+			configurationParameters);
 	}
 
 }

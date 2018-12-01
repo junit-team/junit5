@@ -21,6 +21,7 @@ import java.util.Set;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
@@ -44,12 +45,15 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 	 */
 	private final Set<TestTag> tags;
 
-	MethodBasedTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
-		this(uniqueId, determineDisplayNameForMethod(testClass, testMethod), testClass, testMethod);
+	MethodBasedTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod,
+			ConfigurationParameters configurationParameters) {
+		this(uniqueId, determineDisplayNameForMethod(testClass, testMethod), testClass, testMethod,
+			configurationParameters);
 	}
 
-	MethodBasedTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod) {
-		super(uniqueId, displayName, MethodSource.from(testClass, testMethod));
+	MethodBasedTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod,
+			ConfigurationParameters configurationParameters) {
+		super(uniqueId, displayName, MethodSource.from(testClass, testMethod), configurationParameters);
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
 		this.testMethod = testMethod;

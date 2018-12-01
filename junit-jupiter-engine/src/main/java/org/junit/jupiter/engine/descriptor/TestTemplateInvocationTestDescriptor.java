@@ -18,6 +18,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
@@ -36,8 +37,9 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 	private final int index;
 
 	TestTemplateInvocationTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod,
-			TestTemplateInvocationContext invocationContext, int index) {
-		super(uniqueId, invocationContext.getDisplayName(index), testClass, templateMethod);
+			TestTemplateInvocationContext invocationContext, int index,
+			ConfigurationParameters configurationParameters) {
+		super(uniqueId, invocationContext.getDisplayName(index), testClass, templateMethod, configurationParameters);
 		this.invocationContext = invocationContext;
 		this.index = index;
 	}

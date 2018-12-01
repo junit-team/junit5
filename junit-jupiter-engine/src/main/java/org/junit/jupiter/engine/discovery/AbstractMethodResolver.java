@@ -19,6 +19,7 @@ import java.util.function.Predicate;
 
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.platform.commons.util.ClassUtils;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
@@ -31,10 +32,13 @@ abstract class AbstractMethodResolver implements ElementResolver {
 
 	private final String segmentType;
 	private final Predicate<Method> methodPredicate;
+	private final ConfigurationParameters configurationParameters;
 
-	AbstractMethodResolver(String segmentType, Predicate<Method> methodPredicate) {
+	AbstractMethodResolver(String segmentType, Predicate<Method> methodPredicate,
+			ConfigurationParameters configurationParameters) {
 		this.segmentType = segmentType;
 		this.methodPredicate = methodPredicate;
+		this.configurationParameters = configurationParameters;
 	}
 
 	@Override
@@ -95,9 +99,10 @@ abstract class AbstractMethodResolver implements ElementResolver {
 	private TestDescriptor createTestDescriptor(TestDescriptor parent, Method method) {
 		UniqueId uniqueId = createUniqueId(method, parent);
 		Class<?> testClass = ((ClassTestDescriptor) parent).getTestClass();
-		return createTestDescriptor(uniqueId, testClass, method);
+		return createTestDescriptor(uniqueId, testClass, method, configurationParameters);
 	}
 
-	protected abstract TestDescriptor createTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method method);
+	protected abstract TestDescriptor createTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method method,
+			ConfigurationParameters configurationParameters);
 
 }

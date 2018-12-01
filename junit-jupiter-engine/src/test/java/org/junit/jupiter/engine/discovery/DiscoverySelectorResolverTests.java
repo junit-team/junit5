@@ -76,7 +76,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  */
 class DiscoverySelectorResolverTests {
 
-	private final JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(engineId());
+	private final JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(engineId(), null);
 	private final DiscoverySelectorResolver resolver = new DiscoverySelectorResolver();
 
 	@Test

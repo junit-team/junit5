@@ -63,7 +63,7 @@ class ExtensionContextTests {
 	@Test
 	void fromJupiterEngineDescriptor() {
 		JupiterEngineDescriptor engineTestDescriptor = new JupiterEngineDescriptor(
-			UniqueId.root("engine", "junit-jupiter"));
+			UniqueId.root("engine", "junit-jupiter"), configParams);
 
 		JupiterEngineExtensionContext engineContext = new JupiterEngineExtensionContext(null, engineTestDescriptor,
 			configParams);
@@ -142,7 +142,8 @@ class ExtensionContextTests {
 	void fromMethodTestDescriptor() {
 		TestMethodTestDescriptor methodTestDescriptor = methodDescriptor();
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
-		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(UniqueId.forEngine("junit-jupiter"));
+		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(UniqueId.forEngine("junit-jupiter"),
+			configParams);
 		engineDescriptor.addChild(classTestDescriptor);
 
 		Object testInstance = new OuterClass();
@@ -247,15 +248,15 @@ class ExtensionContextTests {
 		Optional<String> expected = Optional.of(key);
 
 		UniqueId engineUniqueId = UniqueId.parse("[engine:junit-jupiter]");
-		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(engineUniqueId);
+		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(engineUniqueId, configParams);
 
 		UniqueId classUniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
 		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(classUniqueId, getClass(), configParams);
 
 		Method method = getClass().getDeclaredMethod("configurationParameter");
 		UniqueId methodUniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]");
-		TestMethodTestDescriptor methodTestDescriptor = new TestMethodTestDescriptor(methodUniqueId, getClass(),
-			method);
+		TestMethodTestDescriptor methodTestDescriptor = new TestMethodTestDescriptor(methodUniqueId, getClass(), method,
+			configParams);
 
 		return Stream.of( //
 			(ExtensionContext) new JupiterEngineExtensionContext(null, engineDescriptor, echo), //
@@ -282,7 +283,7 @@ class ExtensionContextTests {
 	private TestMethodTestDescriptor methodDescriptor() {
 		try {
 			return new TestMethodTestDescriptor(UniqueId.root("method", "aMethod"), OuterClass.class,
-				OuterClass.class.getDeclaredMethod("aMethod"));
+				OuterClass.class.getDeclaredMethod("aMethod"), configParams);
 		}
 		catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);

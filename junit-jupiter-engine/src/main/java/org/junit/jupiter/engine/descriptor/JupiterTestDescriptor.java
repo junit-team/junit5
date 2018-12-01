@@ -38,6 +38,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
@@ -58,13 +59,17 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
+	protected final ConfigurationParameters configurationParameters;
+
 	JupiterTestDescriptor(UniqueId uniqueId, AnnotatedElement element, Supplier<String> displayNameSupplier,
-			TestSource source) {
-		this(uniqueId, determineDisplayName(element, displayNameSupplier), source);
+			TestSource source, ConfigurationParameters configurationParameters) {
+		this(uniqueId, determineDisplayName(element, displayNameSupplier), source, configurationParameters);
 	}
 
-	JupiterTestDescriptor(UniqueId uniqueId, String displayName, TestSource source) {
+	JupiterTestDescriptor(UniqueId uniqueId, String displayName, TestSource source,
+			ConfigurationParameters configurationParameters) {
 		super(uniqueId, displayName, source);
+		this.configurationParameters = configurationParameters;
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -113,7 +118,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 			}
 			parent = jupiterParent.getParent();
 		}
-		return ExecutionMode.CONCURRENT;
+		return toExecutionMode(ExecutionModeUtils.getDefaultExecutionMode(configurationParameters));
 	}
 
 	protected Optional<ExecutionMode> getExplicitExecutionMode() {

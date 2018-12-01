@@ -57,7 +57,7 @@ public abstract class TestDescriptorBuilder<T extends TestDescriptor> {
 
 		@Override
 		JupiterEngineDescriptor buildDescriptor() {
-			return new JupiterEngineDescriptor(UniqueId.forEngine("junit-jupiter"));
+			return new JupiterEngineDescriptor(UniqueId.forEngine("junit-jupiter"), configParams);
 		}
 	}
 

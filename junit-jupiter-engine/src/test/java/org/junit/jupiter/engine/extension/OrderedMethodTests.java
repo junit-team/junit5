@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.api.MethodOrderer.Random.RANDOM_SEED_PROPERTY_NAME;
+import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
@@ -229,6 +230,7 @@ class OrderedMethodTests {
 		return EngineTestKit
 				.engine("junit-jupiter")
 				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true")
+				.configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent")
 				.selectors(selectClass(testClass))
 				.execute()
 				.tests();

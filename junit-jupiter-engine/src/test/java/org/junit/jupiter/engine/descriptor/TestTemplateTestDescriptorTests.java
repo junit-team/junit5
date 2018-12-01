@@ -12,12 +12,14 @@ package org.junit.jupiter.engine.descriptor;
 
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 import java.util.Set;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestTemplate;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
@@ -38,7 +40,7 @@ class TestTemplateTestDescriptorTests {
 
 		TestTemplateTestDescriptor testDescriptor = new TestTemplateTestDescriptor(
 			parentUniqueId.append("tmp", "testTemplate()"), MyTestCase.class,
-			MyTestCase.class.getDeclaredMethod("testTemplate"));
+			MyTestCase.class.getDeclaredMethod("testTemplate"), mock(ConfigurationParameters.class));
 		parent.addChild(testDescriptor);
 
 		assertThat(testDescriptor.getTags()).containsExactlyInAnyOrder(TestTag.create("foo"), TestTag.create("bar"),

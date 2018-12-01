@@ -18,6 +18,7 @@ import static org.junit.platform.engine.support.hierarchical.DefaultParallelExec
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_STRATEGY_PROPERTY_NAME;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.engine.descriptor.ExecutionModeUtils;
 import org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
@@ -104,6 +105,26 @@ public final class Constants {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.3")
 	public static final String PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME = "junit.jupiter.execution.parallel.enabled";
+
+	/**
+	 * Property name used to set the default parallel test execution mode: {@value}
+	 *
+	 * <p>This setting is only effective if parallel execution is enabled.
+	 *
+	 * <h3>Supported Values</h3>
+	 *
+	 * <p>Supported values include names of enum constants defined in
+	 * {@link org.junit.jupiter.api.parallel.ExecutionMode}, ignoring case.
+	 *
+	 * <p>If not specified, the default is "same_thread" which corresponds to
+	 * {@code @Execution(ExecutionMode.SAME_THREAD)}.
+	 *
+	 * @see org.junit.jupiter.api.parallel.Execution
+	 * @see org.junit.jupiter.api.parallel.ExecutionMode
+	 * @since 5.4
+	 */
+	@API(status = EXPERIMENTAL, since = "5.4")
+	public static final String DEFAULT_PARALLEL_EXECUTION_MODE = ExecutionModeUtils.DEFAULT_EXECUTION_MODE_PROPERTY_NAME;
 
 	static final String PARALLEL_CONFIG_PREFIX = "junit.jupiter.execution.parallel.config.";
 

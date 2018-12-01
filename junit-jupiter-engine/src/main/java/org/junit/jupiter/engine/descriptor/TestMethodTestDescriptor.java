@@ -33,6 +33,7 @@ import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
@@ -61,12 +62,14 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
-	public TestMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
-		super(uniqueId, testClass, testMethod);
+	public TestMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod,
+			ConfigurationParameters configurationParameters) {
+		super(uniqueId, testClass, testMethod, configurationParameters);
 	}
 
-	TestMethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod) {
-		super(uniqueId, displayName, testClass, testMethod);
+	TestMethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod,
+			ConfigurationParameters configurationParameters) {
+		super(uniqueId, displayName, testClass, testMethod, configurationParameters);
 	}
 
 	@Override

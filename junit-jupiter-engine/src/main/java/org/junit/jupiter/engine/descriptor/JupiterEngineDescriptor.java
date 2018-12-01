@@ -11,12 +11,14 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.descriptor.JupiterTestDescriptor.toExecutionMode;
 import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryWithDefaultExtensions;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
@@ -29,9 +31,16 @@ import org.junit.platform.engine.support.hierarchical.Node;
 public class JupiterEngineDescriptor extends EngineDescriptor implements Node<JupiterEngineExecutionContext> {
 
 	public static final String ENGINE_ID = "junit-jupiter";
+	private final ConfigurationParameters configurationParameters;
 
-	public JupiterEngineDescriptor(UniqueId uniqueId) {
+	public JupiterEngineDescriptor(UniqueId uniqueId, ConfigurationParameters configurationParameters) {
 		super(uniqueId, "JUnit Jupiter");
+		this.configurationParameters = configurationParameters;
+	}
+
+	@Override
+	public ExecutionMode getExecutionMode() {
+		return toExecutionMode(ExecutionModeUtils.getDefaultExecutionMode(configurationParameters));
 	}
 
 	@Override
