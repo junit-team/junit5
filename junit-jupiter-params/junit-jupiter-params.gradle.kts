@@ -4,6 +4,9 @@ plugins {
 
 apply(from = "$rootDir/gradle/testing.gradle.kts")
 
+// TODO workaround for shadow plugin, should be fixed by 4.0.4
+extra["testJavaVersion"] = JavaVersion.VERSION_1_10
+
 description = "JUnit Jupiter Params"
 
 dependencies {
