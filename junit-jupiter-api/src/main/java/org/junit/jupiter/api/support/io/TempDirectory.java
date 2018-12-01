@@ -83,7 +83,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
  * @see Files#createTempDirectory
  */
 @API(status = EXPERIMENTAL, since = "5.4")
-public class TempDirectory implements ParameterResolver {
+public final class TempDirectory implements ParameterResolver {
 
 	/**
 	 * {@code TempDir} can be used to annotate a test or lifecycle method or
