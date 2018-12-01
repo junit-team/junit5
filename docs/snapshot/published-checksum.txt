@@ -99,7 +99,6 @@
 358d818948d3cfe6c3ba96c6f07624ab  junit-platform-commons/src/main/java/org/junit/platform/commons/util/BlacklistedExceptions.java
 36c3996946a5cb5ed1fe4baca9857c31  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingSupplier.java
 36d0b591a4fad2d5c41de29c1a1b0337  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/JupiterTestEngine.java
-3762defef75ada0bb4ede535fca86413  documentation/src/docs/asciidoc/user-guide/appendix.adoc
 386ece4858b64381bffc4218bb101735  documentation/src/test/java/example/CustomTestEngine.java
 390154b9fb98829726f77b36f1645147  documentation/src/docs/asciidoc/link-attributes.adoc
 391883f779338e18c79d8a77c8bb07db  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ResourceLocks.java
@@ -564,6 +563,7 @@ f580382cc969dd55b6f7ea605147063f  junit-jupiter-params/src/main/java/org/junit/j
 f5919de0da68f042c7d92f96abe28f6c  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
 f6951ab0a5722995c5aa01a0731cd6c8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertArrayEquals.java
 f71bb381f0a2608cbdf1c56568820d5f  junit-platform-engine/src/main/java/org/junit/platform/engine/EngineDiscoveryRequest.java
+f7c1bcc1692f1cd626e71de92d356c2c  documentation/src/docs/asciidoc/user-guide/appendix.adoc
 f82d84cba28c7526df0caba14007e1a2  junit-platform-console/src/main/java/org/junit/platform/console/tasks/CustomContextClassLoaderExecutor.java
 f8b1fe83410635b05008db4eb0adbf61  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/FallbackStringToObjectConverter.java
 f8bf638bc46ce2bbbc70c5fbcb608f0b  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/DefaultDiscoveryRequest.java

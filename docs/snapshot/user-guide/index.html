@@ -7262,8 +7262,8 @@ declarations.</p>
 <div class="sect2">
 <h3 id="dependency-metadata"><a class="anchor" href="#dependency-metadata"></a>10.1. Dependency Metadata</h3>
 <div class="paragraph">
-<p>Artifacts for final releases and milestones are deployed to <a href="https://search.maven.org/">Maven Central</a>, and
-snapshot artifacts are deployed to Sonatype&#8217;s <a href="https://oss.sonatype.org/content/repositories/snapshots">snapshots repository</a> under
+<p>Artifacts for final releases and milestones are deployed to <a href="https://search.maven.org/">Maven Central</a>, and snapshot
+artifacts are deployed to Sonatype&#8217;s <a href="https://oss.sonatype.org/content/repositories/snapshots">snapshots repository</a> under
 <a href="https://oss.sonatype.org/content/repositories/snapshots/org/junit/">/org/junit</a>.</p>
 </div>
 <div class="sect3">
@@ -7293,7 +7293,7 @@ See <a href="#running-tests-console-launcher">Console Launcher</a> for details.<
 </dd>
 <dt class="hdlist1"><code>junit-platform-console-standalone</code></dt>
 <dd>
-<p>An executable JAR with all dependencies included is provided in <a href="https://search.maven.org/">Maven Central</a> under the
+<p>An executable JAR with all dependencies included is provided in Maven Central under the
 <a href="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone">junit-platform-console-standalone</a>
 directory. See <a href="#running-tests-console-launcher">Console Launcher</a> for details.</p>
 </dd>
@@ -7344,9 +7344,9 @@ third-party <code>TestEngine</code> implementations.</p>
 <dl>
 <dt class="hdlist1"><code>junit-jupiter</code></dt>
 <dd>
-<p>JUnit Jupiter aggregator module that only provides dependencies to <code>junit-jupiter-api</code>,
-<code>junit-jupiter-params</code> and <code>junit-jupiter-engine</code> for convenient inclusion in dependency
-management configurations.</p>
+<p>JUnit Jupiter aggregator artifact that transitively pulls in dependencies on
+<code>junit-jupiter-api</code>, <code>junit-jupiter-params</code>, and <code>junit-jupiter-engine</code> for
+simplified dependency management in build tools such as Gradle and Maven.</p>
 </dd>
 <dt class="hdlist1"><code>junit-jupiter-api</code></dt>
 <dd>
@@ -7354,7 +7354,7 @@ management configurations.</p>
 </dd>
 <dt class="hdlist1"><code>junit-jupiter-engine</code></dt>
 <dd>
-<p>JUnit Jupiter test engine implementation, only required at runtime.</p>
+<p>JUnit Jupiter test engine implementation; only required at runtime.</p>
 </dd>
 <dt class="hdlist1"><code>junit-jupiter-params</code></dt>
 <dd>
@@ -7362,8 +7362,8 @@ management configurations.</p>
 </dd>
 <dt class="hdlist1"><code>junit-jupiter-migrationsupport</code></dt>
 <dd>
-<p>Migration support from JUnit 4 to JUnit Jupiter,
-only required for running selected JUnit 4 rules.</p>
+<p>Support for migrating from JUnit 4 to JUnit Jupiter; only required for support for
+JUnit 4&#8217;s <code>@Ignore</code> annotation and for running selected JUnit 4 rules.</p>
 </dd>
 </dl>
 </div>
@@ -7387,8 +7387,9 @@ only required for running selected JUnit 4 rules.</p>
 <dl>
 <dt class="hdlist1"><code>junit-vintage-engine</code></dt>
 <dd>
-<p>JUnit Vintage test engine implementation that allows to run vintage JUnit tests, i.e.
-tests written in the JUnit 3 or JUnit 4 style, on the new JUnit Platform.</p>
+<p>JUnit Vintage test engine implementation that allows one to run <em>vintage</em> JUnit tests
+on the JUnit Platform. <em>Vintage</em> tests include those written using JUnit 3 or JUnit 4
+APIs or tests written using testing frameworks built on those APIs.</p>
 </dd>
 </dl>
 </div>
@@ -7421,8 +7422,8 @@ or <a href="https://docs.gradle.org/current/userguide/managing_transitive_depend
 <div class="sect3">
 <h4 id="dependency-metadata-dependencies"><a class="anchor" href="#dependency-metadata-dependencies"></a>10.1.5. Dependencies</h4>
 <div class="paragraph">
-<p>All of the above artifacts have a dependency in their published Maven POMs on
-the following <em>@API Guardian</em> JAR.</p>
+<p>Most of the above artifacts have a dependency in their published Maven POMs on the
+following <em>@API Guardian</em> JAR.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -7438,7 +7439,7 @@ the following <em>@API Guardian</em> JAR.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>In addition, most of the above artifacts have a direct or transitive dependency to the
+<p>In addition, most of the above artifacts have a direct or transitive dependency on the
 following <em>OpenTest4J</em> JAR.</p>
 </div>
 <div class="ulist">
@@ -7470,7 +7471,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-12-01 18:04:37 UTC
+Last updated 2018-12-01 22:09:04 UTC
 </div>
 </div>
 </body>
