@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.engine.config.CachingJupiterConfiguration;
 import org.junit.jupiter.engine.config.DefaultJupiterConfiguration;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
@@ -62,8 +63,8 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		JupiterConfiguration configuration = new DefaultJupiterConfiguration(
-			discoveryRequest.getConfigurationParameters());
+		JupiterConfiguration configuration = new CachingJupiterConfiguration(
+			new DefaultJupiterConfiguration(discoveryRequest.getConfigurationParameters()));
 		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(uniqueId, configuration);
 		new DiscoverySelectorResolver().resolveSelectors(discoveryRequest, configuration, engineDescriptor);
 		return engineDescriptor;
