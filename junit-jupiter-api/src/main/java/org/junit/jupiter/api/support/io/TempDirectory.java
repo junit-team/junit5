@@ -153,8 +153,6 @@ public final class TempDirectory implements ParameterResolver {
 	 * <p>This constructor is used by the JUnit Jupiter Engine when the
 	 * extension is registered via
 	 * {@link org.junit.jupiter.api.extension.ExtendWith @ExtendWith}.
-	 *
-	 * @return a {@code TempDirectory} extension
 	 */
 	public TempDirectory() {
 		this((__, ___, dirPrefix) -> createDefaultTempDir(dirPrefix));
