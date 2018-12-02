@@ -85,9 +85,9 @@ class AssertionsDemo {
 	@Test
 	void exceptionTesting() {
 		Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-			throw new IllegalArgumentException("a message");
+			calculator.divide(1, 0);
 		});
-		assertEquals("a message", exception.getMessage());
+		assertEquals("Division by zero is not allowed!", exception.getMessage());
 	}
 
 	@Test
