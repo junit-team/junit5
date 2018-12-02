@@ -119,7 +119,7 @@ class ParameterizedTestDemo {
 	}
 
 	static Stream<String> stringProvider() {
-		return Stream.of("foo", "bar");
+		return Stream.of("apple", "banana");
 	}
 	// end::simple_MethodSource_example[]
 
@@ -131,7 +131,7 @@ class ParameterizedTestDemo {
 	}
 
 	static Stream<String> testWithSimpleMethodSourceHavingNoValue() {
-		return Stream.of("foo", "bar");
+		return Stream.of("apple", "banana");
 	}
 	// end::simple_MethodSource_without_value_example[]
 
@@ -159,8 +159,8 @@ class ParameterizedTestDemo {
 
 	static Stream<Arguments> stringIntAndListProvider() {
 		return Stream.of(
-			arguments("foo", 1, Arrays.asList("a", "b")),
-			arguments("bar", 2, Arrays.asList("x", "y"))
+			arguments("apple", 1, Arrays.asList("a", "b")),
+			arguments("banana", 2, Arrays.asList("x", "y"))
 		);
 	}
 	// end::multi_arg_MethodSource_example[]
@@ -204,7 +204,7 @@ class ParameterizedTestDemo {
 
 		@Override
 		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-			return Stream.of("foo", "bar").map(Arguments::of);
+			return Stream.of("apple", "banana").map(Arguments::of);
 		}
 	}
 	// end::ArgumentsProvider_example[]
@@ -216,7 +216,7 @@ class ParameterizedTestDemo {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = "foo")
+	@ValueSource(strings = "apple")
 	void testWithRegularParameterResolver(String argument, TestReporter testReporter) {
 		testReporter.publishEntry("argument", argument);
 	}
@@ -372,7 +372,7 @@ class ParameterizedTestDemo {
 	// tag::custom_display_names[]
 	@DisplayName("Display name of container")
 	@ParameterizedTest(name = "{index} ==> first=''{0}'', second={1}")
-	@CsvSource({ "foo, 1", "bar, 2", "'baz, qux', 3" })
+	@CsvSource({ "apple, 1", "banana, 2", "'lemon, lime', 3" })
 	void testWithCustomDisplayNames(String first, int second) {
 	}
 	// end::custom_display_names[]
