@@ -152,7 +152,7 @@ class ParameterizedTestDemo {
 	@ParameterizedTest
 	@MethodSource("stringIntAndListProvider")
 	void testWithMultiArgMethodSource(String str, int num, List<String> list) {
-		assertEquals(3, str.length());
+		assertEquals(5, str.length());
 		assertTrue(num >=1 && num <=2);
 		assertEquals(2, list.size());
 	}
@@ -160,7 +160,7 @@ class ParameterizedTestDemo {
 	static Stream<Arguments> stringIntAndListProvider() {
 		return Stream.of(
 			arguments("apple", 1, Arrays.asList("a", "b")),
-			arguments("banana", 2, Arrays.asList("x", "y"))
+			arguments("lemon", 2, Arrays.asList("x", "y"))
 		);
 	}
 	// end::multi_arg_MethodSource_example[]
