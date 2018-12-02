@@ -11,12 +11,10 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;
-import static org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils.getDefaultTestInstanceLifecycle;
 import static org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils.getTestInstanceLifecycle;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -31,6 +29,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.engine.config.DefaultJupiterConfiguration;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 
@@ -49,54 +48,20 @@ class TestInstanceLifecycleUtilsTests {
 	private static final String KEY = DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;
 
 	@Test
-	void getDefaultTestInstanceLifecyclePreconditions() {
-		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> getDefaultTestInstanceLifecycle(null));
-		assertThat(exception).hasMessage("ConfigurationParameters must not be null");
-	}
-
-	@Test
-	void getDefaultTestInstanceLifecycleWithNoConfigParamSet() {
-		Lifecycle lifecycle = getDefaultTestInstanceLifecycle(mock(ConfigurationParameters.class));
-		assertThat(lifecycle).isEqualTo(PER_METHOD);
-	}
-
-	@Test
-	void getDefaultTestInstanceLifecycleWithConfigParamSet() {
-		assertAll(//
-			() -> assertDefaultConfigParam(null, PER_METHOD), //
-			() -> assertDefaultConfigParam("", PER_METHOD), //
-			() -> assertDefaultConfigParam("bogus", PER_METHOD), //
-			() -> assertDefaultConfigParam(PER_METHOD.name(), PER_METHOD), //
-			() -> assertDefaultConfigParam(PER_METHOD.name().toLowerCase(), PER_METHOD), //
-			() -> assertDefaultConfigParam("  " + PER_METHOD.name() + "  ", PER_METHOD), //
-			() -> assertDefaultConfigParam(PER_CLASS.name(), PER_CLASS), //
-			() -> assertDefaultConfigParam(PER_CLASS.name().toLowerCase(), PER_CLASS), //
-			() -> assertDefaultConfigParam("  " + PER_CLASS.name() + "  ", Lifecycle.PER_CLASS) //
-		);
-	}
-
-	private void assertDefaultConfigParam(String configValue, Lifecycle expected) {
-		ConfigurationParameters configParams = mock(ConfigurationParameters.class);
-		when(configParams.get(KEY)).thenReturn(Optional.ofNullable(configValue));
-		Lifecycle lifecycle = getDefaultTestInstanceLifecycle(configParams);
-		assertThat(lifecycle).isEqualTo(expected);
-	}
-
-	@Test
 	void getTestInstanceLifecyclePreconditions() {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> getTestInstanceLifecycle(null, mock(ConfigurationParameters.class)));
+			() -> getTestInstanceLifecycle(null, new DefaultJupiterConfiguration(mock(ConfigurationParameters.class))));
 		assertThat(exception).hasMessage("testClass must not be null");
 
 		exception = assertThrows(PreconditionViolationException.class,
 			() -> getTestInstanceLifecycle(getClass(), null));
-		assertThat(exception).hasMessage("ConfigurationParameters must not be null");
+		assertThat(exception).hasMessage("configuration must not be null");
 	}
 
 	@Test
 	void getTestInstanceLifecycleWithNoConfigParamSet() {
-		Lifecycle lifecycle = getTestInstanceLifecycle(getClass(), mock(ConfigurationParameters.class));
+		Lifecycle lifecycle = getTestInstanceLifecycle(getClass(),
+			new DefaultJupiterConfiguration(mock(ConfigurationParameters.class)));
 		assertThat(lifecycle).isEqualTo(PER_METHOD);
 	}
 
@@ -104,7 +69,7 @@ class TestInstanceLifecycleUtilsTests {
 	void getTestInstanceLifecycleWithConfigParamSet() {
 		ConfigurationParameters configParams = mock(ConfigurationParameters.class);
 		when(configParams.get(KEY)).thenReturn(Optional.of(PER_CLASS.name().toLowerCase()));
-		Lifecycle lifecycle = getTestInstanceLifecycle(getClass(), configParams);
+		Lifecycle lifecycle = getTestInstanceLifecycle(getClass(), new DefaultJupiterConfiguration(configParams));
 		assertThat(lifecycle).isEqualTo(PER_CLASS);
 	}
 
@@ -112,21 +77,23 @@ class TestInstanceLifecycleUtilsTests {
 	void getTestInstanceLifecycleWithLocalConfigThatOverridesCustomDefaultSetViaConfigParam() {
 		ConfigurationParameters configParams = mock(ConfigurationParameters.class);
 		when(configParams.get(KEY)).thenReturn(Optional.of(PER_CLASS.name().toLowerCase()));
-		Lifecycle lifecycle = getTestInstanceLifecycle(TestCase.class, configParams);
+		Lifecycle lifecycle = getTestInstanceLifecycle(TestCase.class, new DefaultJupiterConfiguration(configParams));
 		assertThat(lifecycle).isEqualTo(PER_METHOD);
 	}
 
 	@Test
 	void getTestInstanceLifecycleFromMetaAnnotationWithNoConfigParamSet() {
 		Class<?> testClass = BaseMetaAnnotatedTestCase.class;
-		Lifecycle lifecycle = getTestInstanceLifecycle(testClass, mock(ConfigurationParameters.class));
+		Lifecycle lifecycle = getTestInstanceLifecycle(testClass,
+			new DefaultJupiterConfiguration(mock(ConfigurationParameters.class)));
 		assertThat(lifecycle).isEqualTo(PER_CLASS);
 	}
 
 	@Test
 	void getTestInstanceLifecycleFromSpecializedClassWithNoConfigParamSet() {
 		Class<?> testClass = SpecializedTestCase.class;
-		Lifecycle lifecycle = getTestInstanceLifecycle(testClass, mock(ConfigurationParameters.class));
+		Lifecycle lifecycle = getTestInstanceLifecycle(testClass,
+			new DefaultJupiterConfiguration(mock(ConfigurationParameters.class)));
 		assertThat(lifecycle).isEqualTo(PER_CLASS);
 	}
 

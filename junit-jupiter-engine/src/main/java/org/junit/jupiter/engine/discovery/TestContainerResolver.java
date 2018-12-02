@@ -15,10 +15,10 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsPotentialTestContainer;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
@@ -31,10 +31,10 @@ class TestContainerResolver implements ElementResolver {
 
 	static final String SEGMENT_TYPE = "class";
 
-	protected final ConfigurationParameters configurationParameters;
+	protected final JupiterConfiguration configuration;
 
-	public TestContainerResolver(ConfigurationParameters configurationParameters) {
-		this.configurationParameters = configurationParameters;
+	public TestContainerResolver(JupiterConfiguration configuration) {
+		this.configuration = configuration;
 	}
 
 	@Override
@@ -104,7 +104,7 @@ class TestContainerResolver implements ElementResolver {
 	}
 
 	protected TestDescriptor resolveClass(Class<?> testClass, UniqueId uniqueId) {
-		return new ClassTestDescriptor(uniqueId, testClass, this.configurationParameters);
+		return new ClassTestDescriptor(uniqueId, testClass, this.configuration);
 	}
 
 }

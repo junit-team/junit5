@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.engine.EngineExecutionListener;
 
 /**
@@ -28,9 +28,9 @@ import org.junit.platform.engine.EngineExecutionListener;
 public final class JupiterEngineExtensionContext extends AbstractExtensionContext<JupiterEngineDescriptor> {
 
 	public JupiterEngineExtensionContext(EngineExecutionListener engineExecutionListener,
-			JupiterEngineDescriptor testDescriptor, ConfigurationParameters configurationParameters) {
+			JupiterEngineDescriptor testDescriptor, JupiterConfiguration configuration) {
 
-		super(null, engineExecutionListener, testDescriptor, configurationParameters);
+		super(null, engineExecutionListener, testDescriptor, configuration);
 	}
 
 	@Override

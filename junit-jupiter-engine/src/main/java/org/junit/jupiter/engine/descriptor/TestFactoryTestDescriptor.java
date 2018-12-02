@@ -25,13 +25,13 @@ import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClasspathResourceSource;
@@ -54,8 +54,8 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
 
 	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod,
-			ConfigurationParameters configurationParameters) {
-		super(uniqueId, testClass, testMethod, configurationParameters);
+			JupiterConfiguration configuration) {
+		super(uniqueId, testClass, testMethod, configuration);
 	}
 
 	// --- Filterable ----------------------------------------------------------
@@ -95,7 +95,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 				while (iterator.hasNext()) {
 					DynamicNode dynamicNode = iterator.next();
 					Optional<JupiterTestDescriptor> descriptor = createDynamicDescriptor(this, dynamicNode, index++,
-						defaultTestSource, getDynamicDescendantFilter(), configurationParameters);
+						defaultTestSource, getDynamicDescendantFilter(), configuration);
 					descriptor.ifPresent(dynamicTestExecutor::execute);
 				}
 			}
@@ -128,7 +128,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 
 	static Optional<JupiterTestDescriptor> createDynamicDescriptor(JupiterTestDescriptor parent, DynamicNode node,
 			int index, TestSource defaultTestSource, DynamicDescendantFilter dynamicDescendantFilter,
-			ConfigurationParameters configurationParameters) {
+			JupiterConfiguration configuration) {
 
 		UniqueId uniqueId;
 		Supplier<JupiterTestDescriptor> descriptorCreator;
@@ -138,14 +138,13 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 		if (node instanceof DynamicTest) {
 			DynamicTest test = (DynamicTest) node;
 			uniqueId = parent.getUniqueId().append(DYNAMIC_TEST_SEGMENT_TYPE, "#" + index);
-			descriptorCreator = () -> new DynamicTestTestDescriptor(uniqueId, index, test, source,
-				configurationParameters);
+			descriptorCreator = () -> new DynamicTestTestDescriptor(uniqueId, index, test, source, configuration);
 		}
 		else {
 			DynamicContainer container = (DynamicContainer) node;
 			uniqueId = parent.getUniqueId().append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#" + index);
 			descriptorCreator = () -> new DynamicContainerTestDescriptor(uniqueId, index, container, source,
-				dynamicDescendantFilter, configurationParameters);
+				dynamicDescendantFilter, configuration);
 		}
 		if (dynamicDescendantFilter.test(uniqueId)) {
 			JupiterTestDescriptor descriptor = descriptorCreator.get();

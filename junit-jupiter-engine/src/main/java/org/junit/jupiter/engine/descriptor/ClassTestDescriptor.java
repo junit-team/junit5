@@ -43,6 +43,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestInstantiationException;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
@@ -53,7 +54,6 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
@@ -86,17 +86,17 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private List<Method> beforeAllMethods;
 	private List<Method> afterAllMethods;
 
-	public ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, ConfigurationParameters configurationParameters) {
-		this(uniqueId, testClass, createDisplayNameSupplierForClass(testClass), configurationParameters);
+	public ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, JupiterConfiguration configuration) {
+		this(uniqueId, testClass, createDisplayNameSupplierForClass(testClass), configuration);
 	}
 
 	ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, Supplier<String> displayNameSupplier,
-			ConfigurationParameters configurationParameters) {
-		super(uniqueId, testClass, displayNameSupplier, ClassSource.from(testClass), configurationParameters);
+			JupiterConfiguration configuration) {
+		super(uniqueId, testClass, displayNameSupplier, ClassSource.from(testClass), configuration);
 
 		this.testClass = testClass;
 		this.tags = getTags(testClass);
-		this.lifecycle = getTestInstanceLifecycle(testClass, configurationParameters);
+		this.lifecycle = getTestInstanceLifecycle(testClass, configuration);
 		this.defaultChildExecutionMode = (this.lifecycle == Lifecycle.PER_CLASS ? ExecutionMode.SAME_THREAD : null);
 	}
 
@@ -162,8 +162,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		ThrowableCollector throwableCollector = createThrowableCollector();
 		ClassExtensionContext extensionContext = new ClassExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, this.lifecycle, context.getConfigurationParameters(),
-			throwableCollector);
+			context.getExecutionListener(), this, this.lifecycle, context.getConfiguration(), throwableCollector);
 
 		this.beforeAllMethods = findBeforeAllMethods(this.testClass, this.lifecycle == Lifecycle.PER_METHOD);
 		this.afterAllMethods = findAfterAllMethods(this.testClass, this.lifecycle == Lifecycle.PER_METHOD);

@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine.descriptor;
+package org.junit.jupiter.engine.config;
 
 import java.util.Optional;
 
@@ -19,7 +19,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 
 class EnumConfigurationParameterConverter<T extends Enum<T>> {
 
-	private static final Logger logger = LoggerFactory.getLogger(TestInstanceLifecycleUtils.class);
+	private static final Logger logger = LoggerFactory.getLogger(EnumConfigurationParameterConverter.class);
 
 	private final Class<T> enumType;
 	private final String enumDisplayName;

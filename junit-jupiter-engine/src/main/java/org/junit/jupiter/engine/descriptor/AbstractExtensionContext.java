@@ -20,10 +20,10 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ExtensionValuesStore;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
@@ -38,19 +38,19 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	private final EngineExecutionListener engineExecutionListener;
 	private final T testDescriptor;
 	private final Set<String> tags;
-	private final ConfigurationParameters configurationParameters;
+	private final JupiterConfiguration configuration;
 	private final ExtensionValuesStore valuesStore;
 
 	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
-			ConfigurationParameters configurationParameters) {
+			JupiterConfiguration configuration) {
 
 		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
-		Preconditions.notNull(configurationParameters, "ConfigurationParameters must not be null");
+		Preconditions.notNull(configuration, "JupiterConfiguration must not be null");
 
 		this.parent = parent;
 		this.engineExecutionListener = engineExecutionListener;
 		this.testDescriptor = testDescriptor;
-		this.configurationParameters = configurationParameters;
+		this.configuration = configuration;
 		this.valuesStore = createStore(parent);
 
 		// @formatter:off
@@ -119,7 +119,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 
 	@Override
 	public Optional<String> getConfigurationParameter(String key) {
-		return this.configurationParameters.get(key);
+		return this.configuration.getRawConfigurationParameter(key);
 	}
 
 }

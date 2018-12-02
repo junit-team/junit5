@@ -23,11 +23,11 @@ import java.util.logging.LogRecord;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.TrackLogRecords;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.ClassExtensionContext;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.logging.LogRecordListener;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.UniqueId;
 
@@ -38,12 +38,12 @@ import org.junit.platform.engine.UniqueId;
  */
 class JupiterEngineExecutionContextTests {
 
-	private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
 
 	private final EngineExecutionListener engineExecutionListener = mock(EngineExecutionListener.class);
 
 	private final JupiterEngineExecutionContext originalContext = new JupiterEngineExecutionContext(
-		engineExecutionListener, configParams);
+		engineExecutionListener, configuration);
 
 	@Test
 	void executionListenerIsHandedOnWhenContextIsExtended() {
@@ -55,10 +55,10 @@ class JupiterEngineExecutionContextTests {
 	@Test
 	void extendWithAllAttributes() {
 		UniqueId uniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
-		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(uniqueId, getClass(), configParams);
+		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(uniqueId, getClass(), configuration);
 		ClassExtensionContext extensionContext = new ClassExtensionContext(null, null, classTestDescriptor,
-			configParams, null);
-		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configParams);
+			configuration, null);
+		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configuration);
 		TestInstanceProvider testInstanceProvider = mock(TestInstanceProvider.class);
 		JupiterEngineExecutionContext newContext = originalContext.extend() //
 				.withExtensionContext(extensionContext) //
@@ -74,13 +74,13 @@ class JupiterEngineExecutionContextTests {
 	@Test
 	void canOverrideAttributeWhenContextIsExtended() {
 		UniqueId uniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
-		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(uniqueId, getClass(), configParams);
+		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(uniqueId, getClass(), configuration);
 		ClassExtensionContext extensionContext = new ClassExtensionContext(null, null, classTestDescriptor,
-			configParams, null);
-		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configParams);
+			configuration, null);
+		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configuration);
 		TestInstanceProvider testInstanceProvider = mock(TestInstanceProvider.class);
 		ClassExtensionContext newExtensionContext = new ClassExtensionContext(extensionContext, null,
-			classTestDescriptor, configParams, null);
+			classTestDescriptor, configuration, null);
 
 		JupiterEngineExecutionContext newContext = originalContext.extend() //
 				.withExtensionContext(extensionContext) //

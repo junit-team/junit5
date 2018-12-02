@@ -20,6 +20,8 @@ import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.condition.EnabledIf;
+import org.junit.jupiter.engine.config.DefaultJupiterConfiguration;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
 import org.junit.platform.commons.util.ModuleUtils;
@@ -27,6 +29,7 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 @TestMethodOrder(Alphanumeric.class)
 class JupiterIntegrationTests {
@@ -54,10 +57,12 @@ class JupiterIntegrationTests {
 		ModuleSelector selector = DiscoverySelectors.selectModule(getClass().getModule().getName());
 		assertEquals(getClass().getModule().getName(), selector.getModuleName());
 
-		EngineDescriptor engine = new JupiterEngineDescriptor(UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID));
+		LauncherDiscoveryRequest request = request().selectors(selector).build();
+		JupiterConfiguration configuration = new DefaultJupiterConfiguration(request.getConfigurationParameters());
+		EngineDescriptor engine = new JupiterEngineDescriptor(UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID), configuration);
 		DiscoverySelectorResolver resolver = new DiscoverySelectorResolver();
 
-		resolver.resolveSelectors(request().selectors(selector).build(), engine);
+		resolver.resolveSelectors(request, configuration, engine);
 
 		assertEquals(1, engine.getChildren().size()); // JupiterIntegrationTests.class
 		assertEquals(5, getOnlyElement(engine.getChildren()).getChildren().size()); // 5 test methods

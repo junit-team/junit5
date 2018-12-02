@@ -18,10 +18,8 @@ import static org.junit.platform.engine.support.hierarchical.DefaultParallelExec
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_STRATEGY_PROPERTY_NAME;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.engine.descriptor.ExecutionModeUtils;
-import org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
-import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigurationStrategy;
 
 /**
@@ -63,7 +61,7 @@ public final class Constants {
 	 * @see #DEACTIVATE_ALL_CONDITIONS_PATTERN
 	 * @see org.junit.jupiter.api.extension.ExecutionCondition
 	 */
-	public static final String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = ConditionEvaluator.DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME;
+	public static final String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = JupiterConfiguration.DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME;
 
 	/**
 	 * Wildcard pattern which signals that all conditions should be deactivated: {@value}
@@ -79,7 +77,7 @@ public final class Constants {
 	 *
 	 * <p>The default behavior is not to perform auto-detection.
 	 */
-	public static final String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = ExtensionRegistry.EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME;
+	public static final String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = JupiterConfiguration.EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the default test instance lifecycle mode: {@value}
@@ -94,7 +92,7 @@ public final class Constants {
 	 *
 	 * @see org.junit.jupiter.api.TestInstance
 	 */
-	public static final String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = TestInstanceLifecycleUtils.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;
+	public static final String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;
 
 	/**
 	 * Property name used to enable parallel test execution: {@value}
@@ -104,7 +102,7 @@ public final class Constants {
 	 * @since 5.3
 	 */
 	@API(status = EXPERIMENTAL, since = "5.3")
-	public static final String PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME = "junit.jupiter.execution.parallel.enabled";
+	public static final String PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME = JupiterConfiguration.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the default parallel test execution mode: {@value}
@@ -124,7 +122,7 @@ public final class Constants {
 	 * @since 5.4
 	 */
 	@API(status = EXPERIMENTAL, since = "5.4")
-	public static final String DEFAULT_PARALLEL_EXECUTION_MODE = ExecutionModeUtils.DEFAULT_EXECUTION_MODE_PROPERTY_NAME;
+	public static final String DEFAULT_PARALLEL_EXECUTION_MODE = JupiterConfiguration.DEFAULT_EXECUTION_MODE_PROPERTY_NAME;
 
 	static final String PARALLEL_CONFIG_PREFIX = "junit.jupiter.execution.parallel.config.";
 

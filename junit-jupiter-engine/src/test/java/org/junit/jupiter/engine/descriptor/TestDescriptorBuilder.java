@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
@@ -25,7 +25,7 @@ import org.junit.platform.engine.UniqueId;
  */
 public abstract class TestDescriptorBuilder<T extends TestDescriptor> {
 
-	private static final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+	private static final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
 	final List<TestDescriptorBuilder<?>> children = new ArrayList<>();
 
 	public static JupiterEngineDescriptorBuilder engineDescriptor() {
@@ -57,7 +57,7 @@ public abstract class TestDescriptorBuilder<T extends TestDescriptor> {
 
 		@Override
 		JupiterEngineDescriptor buildDescriptor() {
-			return new JupiterEngineDescriptor(UniqueId.forEngine("junit-jupiter"), configParams);
+			return new JupiterEngineDescriptor(UniqueId.forEngine("junit-jupiter"), configuration);
 		}
 	}
 
@@ -73,7 +73,7 @@ public abstract class TestDescriptorBuilder<T extends TestDescriptor> {
 
 		@Override
 		ClassTestDescriptor buildDescriptor() {
-			return new ClassTestDescriptor(UniqueId.root("class", uniqueId), testClass, configParams);
+			return new ClassTestDescriptor(UniqueId.root("class", uniqueId), testClass, configuration);
 		}
 	}
 
@@ -85,7 +85,7 @@ public abstract class TestDescriptorBuilder<T extends TestDescriptor> {
 
 		@Override
 		NestedClassTestDescriptor buildDescriptor() {
-			return new NestedClassTestDescriptor(UniqueId.root("nested-class", uniqueId), testClass, configParams);
+			return new NestedClassTestDescriptor(UniqueId.root("nested-class", uniqueId), testClass, configuration);
 		}
 	}
 

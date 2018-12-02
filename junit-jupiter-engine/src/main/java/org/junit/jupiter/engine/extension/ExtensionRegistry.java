@@ -27,12 +27,12 @@ import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.engine.ConfigurationParameters;
 
 /**
  * An {@code ExtensionRegistry} holds all registered extensions (i.e.
@@ -47,8 +47,6 @@ import org.junit.platform.engine.ConfigurationParameters;
  */
 @API(status = INTERNAL, since = "5.0")
 public class ExtensionRegistry {
-
-	public static final String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.enabled";
 
 	private static final Logger logger = LoggerFactory.getLogger(ExtensionRegistry.class);
 
@@ -68,11 +66,11 @@ public class ExtensionRegistry {
 	 * auto-detected using Java's {@link ServiceLoader} mechanism and automatically
 	 * registered after the default extensions.
 	 *
-	 * @param configParams configuration parameters used to retrieve the extension
+	 * @param configuration configuration parameters used to retrieve the extension
 	 * auto-detection flag; never {@code null}
 	 * @return a new {@code ExtensionRegistry}; never {@code null}
 	 */
-	public static ExtensionRegistry createRegistryWithDefaultExtensions(ConfigurationParameters configParams) {
+	public static ExtensionRegistry createRegistryWithDefaultExtensions(JupiterConfiguration configuration) {
 		ExtensionRegistry extensionRegistry = new ExtensionRegistry(null);
 
 		// @formatter:off
@@ -83,7 +81,7 @@ public class ExtensionRegistry {
 
 		DEFAULT_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
 
-		if (configParams.getBoolean(EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME).orElse(Boolean.FALSE)) {
+		if (configuration.isExtensionAutoDetectionEnabled()) {
 			registerAutoDetectedExtensions(extensionRegistry);
 		}
 

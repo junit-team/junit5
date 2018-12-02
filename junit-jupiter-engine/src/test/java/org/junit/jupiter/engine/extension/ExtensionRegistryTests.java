@@ -22,7 +22,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.jupiter.api.Test;
@@ -31,8 +30,7 @@ import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
-import org.junit.jupiter.engine.Constants;
-import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 
 /**
  * Tests for the {@link ExtensionRegistry}.
@@ -41,9 +39,9 @@ import org.junit.platform.engine.ConfigurationParameters;
  */
 class ExtensionRegistryTests {
 
-	private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
 
-	private ExtensionRegistry registry = createRegistryWithDefaultExtensions(configParams);
+	private ExtensionRegistry registry = createRegistryWithDefaultExtensions(configuration);
 
 	@Test
 	void newRegistryWithoutParentHasDefaultExtensions() {
@@ -56,9 +54,8 @@ class ExtensionRegistryTests {
 	@Test
 	void newRegistryWithoutParentHasDefaultExtensionsPlusAutodetectedExtensionsLoadedViaServiceLoader() {
 
-		when(configParams.getBoolean(Constants.EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME)).thenReturn(
-			Optional.of(Boolean.TRUE));
-		registry = createRegistryWithDefaultExtensions(configParams);
+		when(configuration.isExtensionAutoDetectionEnabled()).thenReturn(true);
+		registry = createRegistryWithDefaultExtensions(configuration);
 
 		List<Extension> extensions = registry.getExtensions(Extension.class);
 

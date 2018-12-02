@@ -14,9 +14,9 @@ import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsTestMethod;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
@@ -37,14 +37,14 @@ class TestMethodResolver extends AbstractMethodResolver {
 
 	static final String SEGMENT_TYPE = "method";
 
-	TestMethodResolver(ConfigurationParameters configurationParameters) {
-		super(SEGMENT_TYPE, isTestMethod, configurationParameters);
+	TestMethodResolver(JupiterConfiguration configuration) {
+		super(SEGMENT_TYPE, isTestMethod, configuration);
 	}
 
 	@Override
 	protected TestDescriptor createTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method method,
-			ConfigurationParameters configurationParameters) {
-		return new TestMethodTestDescriptor(uniqueId, testClass, method, configurationParameters);
+			JupiterConfiguration configuration) {
+		return new TestMethodTestDescriptor(uniqueId, testClass, method, configuration);
 	}
 
 }

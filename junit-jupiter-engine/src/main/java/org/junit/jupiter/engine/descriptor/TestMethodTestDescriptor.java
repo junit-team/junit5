@@ -27,13 +27,13 @@ import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.util.ExceptionUtils;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
@@ -63,13 +63,13 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	public TestMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod,
-			ConfigurationParameters configurationParameters) {
-		super(uniqueId, testClass, testMethod, configurationParameters);
+			JupiterConfiguration configuration) {
+		super(uniqueId, testClass, testMethod, configuration);
 	}
 
 	TestMethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod,
-			ConfigurationParameters configurationParameters) {
-		super(uniqueId, displayName, testClass, testMethod, configurationParameters);
+			JupiterConfiguration configuration) {
+		super(uniqueId, displayName, testClass, testMethod, configuration);
 	}
 
 	@Override
@@ -86,8 +86,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 		ThrowableCollector throwableCollector = createThrowableCollector();
 		ExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, context.getConfigurationParameters(), testInstance,
-			throwableCollector);
+			context.getExecutionListener(), this, context.getConfiguration(), testInstance, throwableCollector);
 
 		// @formatter:off
 		return context.extend()

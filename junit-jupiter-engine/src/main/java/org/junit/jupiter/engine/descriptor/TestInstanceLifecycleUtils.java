@@ -14,12 +14,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.engine.ConfigurationParameters;
 
 /**
  * Collection of utilities for retrieving the test instance lifecycle mode.
@@ -31,29 +28,19 @@ import org.junit.platform.engine.ConfigurationParameters;
 @API(status = INTERNAL, since = "5.0")
 public final class TestInstanceLifecycleUtils {
 
-	public static final String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = "junit.jupiter.testinstance.lifecycle.default";
-
-	private static final Logger logger = LoggerFactory.getLogger(TestInstanceLifecycleUtils.class);
-
 	private TestInstanceLifecycleUtils() {
 		/* no-op */
 	}
 
-	static TestInstance.Lifecycle getTestInstanceLifecycle(Class<?> testClass, ConfigurationParameters configParams) {
+	static TestInstance.Lifecycle getTestInstanceLifecycle(Class<?> testClass, JupiterConfiguration configuration) {
 		Preconditions.notNull(testClass, "testClass must not be null");
-		Preconditions.notNull(configParams, "ConfigurationParameters must not be null");
+		Preconditions.notNull(configuration, "configuration must not be null");
 
 		// @formatter:off
 		return AnnotationUtils.findAnnotation(testClass, TestInstance.class)
 				.map(TestInstance::value)
-				.orElseGet(() -> getDefaultTestInstanceLifecycle(configParams));
+				.orElseGet(configuration::getDefaultTestInstanceLifecycle);
 		// @formatter:on
-	}
-
-	static TestInstance.Lifecycle getDefaultTestInstanceLifecycle(ConfigurationParameters configParams) {
-		EnumConfigurationParameterConverter<Lifecycle> converter = new EnumConfigurationParameterConverter<>(
-			Lifecycle.class, "test instance lifecycle mode");
-		return converter.get(configParams, DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME, Lifecycle.PER_METHOD);
 	}
 
 }

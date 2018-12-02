@@ -19,7 +19,7 @@ import java.util.Optional;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
@@ -38,21 +38,20 @@ public final class ClassExtensionContext extends AbstractExtensionContext<ClassT
 	/**
 	 * Create a new {@code ClassExtensionContext} with {@link Lifecycle#PER_METHOD}.
 	 *
-	 * @see #ClassExtensionContext(ExtensionContext, EngineExecutionListener, ClassTestDescriptor, Lifecycle, ConfigurationParameters, ThrowableCollector)
+	 * @see #ClassExtensionContext(ExtensionContext, EngineExecutionListener, ClassTestDescriptor, Lifecycle, JupiterConfiguration, ThrowableCollector)
 	 */
 	public ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			ClassTestDescriptor testDescriptor, ConfigurationParameters configurationParameters,
+			ClassTestDescriptor testDescriptor, JupiterConfiguration configuration,
 			ThrowableCollector throwableCollector) {
 
-		this(parent, engineExecutionListener, testDescriptor, Lifecycle.PER_METHOD, configurationParameters,
-			throwableCollector);
+		this(parent, engineExecutionListener, testDescriptor, Lifecycle.PER_METHOD, configuration, throwableCollector);
 	}
 
 	public ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			ClassTestDescriptor testDescriptor, Lifecycle lifecycle, ConfigurationParameters configurationParameters,
+			ClassTestDescriptor testDescriptor, Lifecycle lifecycle, JupiterConfiguration configuration,
 			ThrowableCollector throwableCollector) {
 
-		super(parent, engineExecutionListener, testDescriptor, configurationParameters);
+		super(parent, engineExecutionListener, testDescriptor, configuration);
 
 		this.lifecycle = lifecycle;
 		this.throwableCollector = throwableCollector;

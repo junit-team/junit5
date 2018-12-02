@@ -15,8 +15,8 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.MethodDescriptor;
 import org.junit.jupiter.api.MethodOrdererContext;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.util.ToStringBuilder;
-import org.junit.platform.engine.ConfigurationParameters;
 
 /**
  * Default implementation of {@link MethodOrdererContext}.
@@ -27,14 +27,14 @@ class DefaultMethodOrdererContext implements MethodOrdererContext {
 
 	private final Class<?> testClass;
 	private final List<? extends MethodDescriptor> methodDescriptors;
-	private final ConfigurationParameters configurationParameters;
+	private final JupiterConfiguration configuration;
 
 	DefaultMethodOrdererContext(List<? extends MethodDescriptor> methodDescriptors, Class<?> testClass,
-			ConfigurationParameters configurationParameters) {
+			JupiterConfiguration configuration) {
 
 		this.methodDescriptors = methodDescriptors;
 		this.testClass = testClass;
-		this.configurationParameters = configurationParameters;
+		this.configuration = configuration;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ class DefaultMethodOrdererContext implements MethodOrdererContext {
 
 	@Override
 	public Optional<String> getConfigurationParameter(String key) {
-		return this.configurationParameters.get(key);
+		return this.configuration.getRawConfigurationParameter(key);
 	}
 
 	@Override

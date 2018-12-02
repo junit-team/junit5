@@ -14,11 +14,11 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.support.hierarchical.EngineExecutionContext;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
@@ -38,8 +38,8 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 	private boolean beforeAllMethodsExecuted = false;
 
 	public JupiterEngineExecutionContext(EngineExecutionListener executionListener,
-			ConfigurationParameters configurationParameters) {
-		this(new State(executionListener, configurationParameters));
+			JupiterConfiguration configuration) {
+		this(new State(executionListener, configuration));
 	}
 
 	private JupiterEngineExecutionContext(State state) {
@@ -63,8 +63,8 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 		return this.state.executionListener;
 	}
 
-	public ConfigurationParameters getConfigurationParameters() {
-		return this.state.configurationParameters;
+	public JupiterConfiguration getConfiguration() {
+		return this.state.configuration;
 	}
 
 	public TestInstanceProvider getTestInstanceProvider() {
@@ -123,15 +123,15 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 	private static final class State implements Cloneable {
 
 		final EngineExecutionListener executionListener;
-		final ConfigurationParameters configurationParameters;
+		final JupiterConfiguration configuration;
 		TestInstanceProvider testInstanceProvider;
 		ExtensionRegistry extensionRegistry;
 		ExtensionContext extensionContext;
 		ThrowableCollector throwableCollector;
 
-		State(EngineExecutionListener executionListener, ConfigurationParameters configurationParameters) {
+		State(EngineExecutionListener executionListener, JupiterConfiguration configuration) {
 			this.executionListener = executionListener;
-			this.configurationParameters = configurationParameters;
+			this.configuration = configuration;
 		}
 
 		@Override

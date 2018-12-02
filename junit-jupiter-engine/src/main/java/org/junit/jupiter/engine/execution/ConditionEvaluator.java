@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.execution;
 import static java.lang.String.format;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,11 +22,11 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.StringUtils;
-import org.junit.platform.engine.ConfigurationParameters;
 
 /**
  * {@code ConditionEvaluator} evaluates {@link ExecutionCondition} extensions.
@@ -35,8 +36,6 @@ import org.junit.platform.engine.ConfigurationParameters;
  */
 @API(status = INTERNAL, since = "5.0")
 public class ConditionEvaluator {
-
-	public static final String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = "junit.jupiter.conditions.deactivate";
 
 	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = "*";
 
@@ -58,12 +57,12 @@ public class ConditionEvaluator {
 	 * or a default <em>enabled</em> {@code ConditionEvaluationResult} if no
 	 * disabled conditions are encountered
 	 */
-	public ConditionEvaluationResult evaluate(ExtensionRegistry extensionRegistry,
-			ConfigurationParameters configurationParameters, ExtensionContext context) {
+	public ConditionEvaluationResult evaluate(ExtensionRegistry extensionRegistry, JupiterConfiguration configuration,
+			ExtensionContext context) {
 
 		// @formatter:off
 		return extensionRegistry.stream(ExecutionCondition.class)
-				.filter(conditionIsActivated(configurationParameters))
+				.filter(conditionIsActivated(configuration))
 				.map(condition -> evaluate(condition, context))
 				.filter(ConditionEvaluationResult::isDisabled)
 				.findFirst()
@@ -92,25 +91,16 @@ public class ConditionEvaluator {
 			format("Failed to evaluate condition [%s]%s", conditionType.getName(), cause), ex);
 	}
 
-	private Predicate<Object> conditionIsActivated(ConfigurationParameters configurationParameters) {
-		String patternString = getDeactivatePatternString(configurationParameters);
-		if (patternString != null) {
-			if (DEACTIVATE_ALL_CONDITIONS_PATTERN.equals(patternString)) {
+	private Predicate<Object> conditionIsActivated(JupiterConfiguration configuration) {
+		Optional<String> patternString = configuration.getDeactivateExecutionConditionsPattern();
+		if (patternString.isPresent()) {
+			if (DEACTIVATE_ALL_CONDITIONS_PATTERN.equals(patternString.get())) {
 				return alwaysDeactivated;
 			}
-			Pattern pattern = Pattern.compile(convertToRegEx(patternString));
+			Pattern pattern = Pattern.compile(convertToRegEx(patternString.get()));
 			return condition -> !pattern.matcher(condition.getClass().getName()).matches();
 		}
 		return alwaysActivated;
-	}
-
-	private String getDeactivatePatternString(ConfigurationParameters configurationParameters) {
-		// @formatter:off
-		return configurationParameters.get(DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME)
-				.filter(StringUtils::isNotBlank)
-				.map(String::trim)
-				.orElse(null);
-		// @formatter:on
 	}
 
 	/**

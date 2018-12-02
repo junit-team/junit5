@@ -11,8 +11,8 @@
 package org.junit.jupiter.engine.descriptor;
 
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
@@ -27,8 +27,8 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 	private final DynamicTest dynamicTest;
 
 	DynamicTestTestDescriptor(UniqueId uniqueId, int index, DynamicTest dynamicTest, TestSource source,
-			ConfigurationParameters configurationParameters) {
-		super(uniqueId, index, dynamicTest, source, configurationParameters);
+			JupiterConfiguration configuration) {
+		super(uniqueId, index, dynamicTest, source, configuration);
 		this.dynamicTest = dynamicTest;
 	}
 

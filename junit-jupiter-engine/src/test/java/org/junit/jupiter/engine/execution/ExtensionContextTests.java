@@ -30,6 +30,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.engine.config.DefaultJupiterConfiguration;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.ClassExtensionContext;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
@@ -58,15 +60,15 @@ import org.mockito.Mockito;
  */
 class ExtensionContextTests {
 
-	private final ConfigurationParameters configParams = mock(ConfigurationParameters.class);
+	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
 
 	@Test
 	void fromJupiterEngineDescriptor() {
 		JupiterEngineDescriptor engineTestDescriptor = new JupiterEngineDescriptor(
-			UniqueId.root("engine", "junit-jupiter"), configParams);
+			UniqueId.root("engine", "junit-jupiter"), configuration);
 
 		JupiterEngineExtensionContext engineContext = new JupiterEngineExtensionContext(null, engineTestDescriptor,
-			configParams);
+			configuration);
 
 		// @formatter:off
 		assertAll("engineContext",
@@ -91,7 +93,7 @@ class ExtensionContextTests {
 		ClassTestDescriptor outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
 
 		ClassExtensionContext outerExtensionContext = new ClassExtensionContext(null, null, outerClassDescriptor,
-			configParams, null);
+			configuration, null);
 
 		// @formatter:off
 		assertAll("outerContext",
@@ -108,7 +110,7 @@ class ExtensionContextTests {
 		// @formatter:on
 
 		ClassExtensionContext nestedExtensionContext = new ClassExtensionContext(outerExtensionContext, null,
-			nestedClassDescriptor, configParams, null);
+			nestedClassDescriptor, configuration, null);
 		assertThat(nestedExtensionContext.getParent()).containsSame(outerExtensionContext);
 	}
 
@@ -121,18 +123,18 @@ class ExtensionContextTests {
 		outerClassDescriptor.addChild(methodTestDescriptor);
 
 		ClassExtensionContext outerExtensionContext = new ClassExtensionContext(null, null, outerClassDescriptor,
-			configParams, null);
+			configuration, null);
 
 		assertThat(outerExtensionContext.getTags()).containsExactly("outer-tag");
 		assertThat(outerExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 
 		ClassExtensionContext nestedExtensionContext = new ClassExtensionContext(outerExtensionContext, null,
-			nestedClassDescriptor, configParams, null);
+			nestedClassDescriptor, configuration, null);
 		assertThat(nestedExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "nested-tag");
 		assertThat(nestedExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 
 		MethodExtensionContext methodExtensionContext = new MethodExtensionContext(outerExtensionContext, null,
-			methodTestDescriptor, configParams, new OuterClass(), new OpenTest4JAwareThrowableCollector());
+			methodTestDescriptor, configuration, new OuterClass(), new OpenTest4JAwareThrowableCollector());
 		assertThat(methodExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "method-tag");
 		assertThat(methodExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 	}
@@ -143,18 +145,18 @@ class ExtensionContextTests {
 		TestMethodTestDescriptor methodTestDescriptor = methodDescriptor();
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
 		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(UniqueId.forEngine("junit-jupiter"),
-			configParams);
+			configuration);
 		engineDescriptor.addChild(classTestDescriptor);
 
 		Object testInstance = new OuterClass();
 		Method testMethod = methodTestDescriptor.getTestMethod();
 
 		JupiterEngineExtensionContext engineExtensionContext = new JupiterEngineExtensionContext(null, engineDescriptor,
-			configParams);
+			configuration);
 		ClassExtensionContext classExtensionContext = new ClassExtensionContext(engineExtensionContext, null,
-			classTestDescriptor, configParams, null);
+			classTestDescriptor, configuration, null);
 		MethodExtensionContext methodExtensionContext = new MethodExtensionContext(classExtensionContext, null,
-			methodTestDescriptor, configParams, testInstance, new OpenTest4JAwareThrowableCollector());
+			methodTestDescriptor, configuration, testInstance, new OpenTest4JAwareThrowableCollector());
 
 		// @formatter:off
 		assertAll("methodContext",
@@ -178,7 +180,7 @@ class ExtensionContextTests {
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(null);
 		EngineExecutionListener engineExecutionListener = Mockito.spy(EngineExecutionListener.class);
 		ExtensionContext extensionContext = new ClassExtensionContext(null, engineExecutionListener,
-			classTestDescriptor, configParams, null);
+			classTestDescriptor, configuration, null);
 
 		Map<String, String> map1 = Collections.singletonMap("key", "value");
 		Map<String, String> map2 = Collections.singletonMap("other key", "other value");
@@ -208,9 +210,10 @@ class ExtensionContextTests {
 	void usingStore() {
 		TestMethodTestDescriptor methodTestDescriptor = methodDescriptor();
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
-		ExtensionContext parentContext = new ClassExtensionContext(null, null, classTestDescriptor, configParams, null);
+		ExtensionContext parentContext = new ClassExtensionContext(null, null, classTestDescriptor, configuration,
+			null);
 		MethodExtensionContext childContext = new MethodExtensionContext(parentContext, null, methodTestDescriptor,
-			configParams, new OuterClass(), new OpenTest4JAwareThrowableCollector());
+			configuration, new OuterClass(), new OpenTest4JAwareThrowableCollector());
 
 		ExtensionContext.Store childStore = childContext.getStore(Namespace.GLOBAL);
 		ExtensionContext.Store parentStore = parentContext.getStore(Namespace.GLOBAL);
@@ -243,20 +246,20 @@ class ExtensionContextTests {
 
 	@TestFactory
 	Stream<DynamicTest> configurationParameter() throws Exception {
-		ConfigurationParameters echo = new EchoParameters();
+		JupiterConfiguration echo = new DefaultJupiterConfiguration(new EchoParameters());
 		String key = "123";
 		Optional<String> expected = Optional.of(key);
 
 		UniqueId engineUniqueId = UniqueId.parse("[engine:junit-jupiter]");
-		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(engineUniqueId, configParams);
+		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(engineUniqueId, configuration);
 
 		UniqueId classUniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
-		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(classUniqueId, getClass(), configParams);
+		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(classUniqueId, getClass(), configuration);
 
 		Method method = getClass().getDeclaredMethod("configurationParameter");
 		UniqueId methodUniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]");
 		TestMethodTestDescriptor methodTestDescriptor = new TestMethodTestDescriptor(methodUniqueId, getClass(), method,
-			configParams);
+			configuration);
 
 		return Stream.of( //
 			(ExtensionContext) new JupiterEngineExtensionContext(null, engineDescriptor, echo), //
@@ -268,12 +271,12 @@ class ExtensionContextTests {
 
 	private ClassTestDescriptor nestedClassDescriptor() {
 		return new NestedClassTestDescriptor(UniqueId.root("nested-class", "NestedClass"), OuterClass.NestedClass.class,
-			configParams);
+			configuration);
 	}
 
 	private ClassTestDescriptor outerClassDescriptor(TestDescriptor child) {
 		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(UniqueId.root("class", "OuterClass"),
-			OuterClass.class, configParams);
+			OuterClass.class, configuration);
 		if (child != null) {
 			classTestDescriptor.addChild(child);
 		}
@@ -283,7 +286,7 @@ class ExtensionContextTests {
 	private TestMethodTestDescriptor methodDescriptor() {
 		try {
 			return new TestMethodTestDescriptor(UniqueId.root("method", "aMethod"), OuterClass.class,
-				OuterClass.class.getDeclaredMethod("aMethod"), configParams);
+				OuterClass.class.getDeclaredMethod("aMethod"), configuration);
 		}
 		catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);

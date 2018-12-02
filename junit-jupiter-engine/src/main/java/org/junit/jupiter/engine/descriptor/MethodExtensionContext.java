@@ -19,7 +19,7 @@ import java.util.Optional;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
@@ -34,10 +34,10 @@ public final class MethodExtensionContext extends AbstractExtensionContext<TestM
 	private final ThrowableCollector throwableCollector;
 
 	public MethodExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			TestMethodTestDescriptor testDescriptor, ConfigurationParameters configurationParameters,
-			Object testInstance, ThrowableCollector throwableCollector) {
+			TestMethodTestDescriptor testDescriptor, JupiterConfiguration configuration, Object testInstance,
+			ThrowableCollector throwableCollector) {
 
-		super(parent, engineExecutionListener, testDescriptor, configurationParameters);
+		super(parent, engineExecutionListener, testDescriptor, configuration);
 
 		this.testInstance = testInstance;
 		this.throwableCollector = throwableCollector;

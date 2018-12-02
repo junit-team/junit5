@@ -10,10 +10,10 @@
 
 package org.junit.jupiter.engine.discovery;
 
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsNestedTestClass;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
@@ -26,8 +26,8 @@ class NestedTestsResolver extends TestContainerResolver {
 
 	static final String SEGMENT_TYPE = "nested-class";
 
-	public NestedTestsResolver(ConfigurationParameters configurationParameters) {
-		super(configurationParameters);
+	public NestedTestsResolver(JupiterConfiguration configuration) {
+		super(configuration);
 	}
 
 	@Override
@@ -57,7 +57,7 @@ class NestedTestsResolver extends TestContainerResolver {
 
 	@Override
 	protected TestDescriptor resolveClass(Class<?> testClass, UniqueId uniqueId) {
-		return new NestedClassTestDescriptor(uniqueId, testClass, this.configurationParameters);
+		return new NestedClassTestDescriptor(uniqueId, testClass, this.configuration);
 	}
 
 }

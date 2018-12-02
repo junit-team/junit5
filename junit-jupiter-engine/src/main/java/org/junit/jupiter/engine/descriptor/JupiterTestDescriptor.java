@@ -32,13 +32,13 @@ import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
-import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
@@ -59,17 +59,17 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
-	protected final ConfigurationParameters configurationParameters;
+	protected final JupiterConfiguration configuration;
 
 	JupiterTestDescriptor(UniqueId uniqueId, AnnotatedElement element, Supplier<String> displayNameSupplier,
-			TestSource source, ConfigurationParameters configurationParameters) {
-		this(uniqueId, determineDisplayName(element, displayNameSupplier), source, configurationParameters);
+			TestSource source, JupiterConfiguration configuration) {
+		this(uniqueId, determineDisplayName(element, displayNameSupplier), source, configuration);
 	}
 
 	JupiterTestDescriptor(UniqueId uniqueId, String displayName, TestSource source,
-			ConfigurationParameters configurationParameters) {
+			JupiterConfiguration configuration) {
 		super(uniqueId, displayName, source);
-		this.configurationParameters = configurationParameters;
+		this.configuration = configuration;
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -118,7 +118,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 			}
 			parent = jupiterParent.getParent();
 		}
-		return toExecutionMode(ExecutionModeUtils.getDefaultExecutionMode(configurationParameters));
+		return toExecutionMode(configuration.getDefaultExecutionMode());
 	}
 
 	protected Optional<ExecutionMode> getExplicitExecutionMode() {
@@ -168,7 +168,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	@Override
 	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
 		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluate(context.getExtensionRegistry(),
-			context.getConfigurationParameters(), context.getExtensionContext());
+			context.getConfiguration(), context.getExtensionContext());
 		return toSkipResult(evaluationResult);
 	}
 

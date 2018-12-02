@@ -16,7 +16,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.engine.EngineExecutionListener;
 
 /**
@@ -27,10 +27,9 @@ final class TestTemplateExtensionContext extends AbstractExtensionContext<TestTe
 	private final Object testInstance;
 
 	TestTemplateExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			TestTemplateTestDescriptor testDescriptor, ConfigurationParameters configurationParameters,
-			Object testInstance) {
+			TestTemplateTestDescriptor testDescriptor, JupiterConfiguration configuration, Object testInstance) {
 
-		super(parent, engineExecutionListener, testDescriptor, configurationParameters);
+		super(parent, engineExecutionListener, testDescriptor, configuration);
 		this.testInstance = testInstance;
 	}
 

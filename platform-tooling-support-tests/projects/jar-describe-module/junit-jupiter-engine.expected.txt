@@ -4,6 +4,7 @@ org.junit.jupiter.engine@${jupiterVersion} automatic
 requires java.base mandated
 provides org.junit.platform.engine.TestEngine with org.junit.jupiter.engine.[J|j]upiter[T|t]est[E|e]ngine
 contains org.junit.jupiter.engine
+contains org.junit.jupiter.engine.config
 contains org.junit.jupiter.engine.descriptor
 contains org.junit.jupiter.engine.discovery
 contains org.junit.jupiter.engine.discovery.predicates
