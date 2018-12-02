@@ -12,8 +12,6 @@ package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
-import java.util.Optional;
-
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -53,31 +51,9 @@ public final class TestInstanceLifecycleUtils {
 	}
 
 	static TestInstance.Lifecycle getDefaultTestInstanceLifecycle(ConfigurationParameters configParams) {
-		Preconditions.notNull(configParams, "ConfigurationParameters must not be null");
-		String propertyName = DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;
-
-		Optional<String> optional = configParams.get(propertyName);
-		String constantName = null;
-		if (optional.isPresent()) {
-			try {
-				constantName = optional.get().trim().toUpperCase();
-				Lifecycle lifecycle = TestInstance.Lifecycle.valueOf(constantName);
-				logger.info(() -> String.format(
-					"Using default test instance lifecycle mode '%s' set via the '%s' configuration parameter.",
-					lifecycle, propertyName));
-				return lifecycle;
-			}
-			catch (Exception ex) {
-				// local copy necessary for use in lambda expression
-				String constant = constantName;
-				logger.warn(() -> String.format(
-					"Invalid test instance lifecycle mode '%s' set via the '%s' configuration parameter. "
-							+ "Falling back to %s lifecycle semantics.",
-					constant, propertyName, Lifecycle.PER_METHOD.name()));
-			}
-		}
-
-		return Lifecycle.PER_METHOD;
+		EnumConfigurationParameterConverter<Lifecycle> converter = new EnumConfigurationParameterConverter<>(
+			Lifecycle.class, "test instance lifecycle mode");
+		return converter.get(configParams, DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME, Lifecycle.PER_METHOD);
 	}
 
 }
