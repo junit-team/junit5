@@ -18,9 +18,11 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 class CachingJupiterConfigurationTests {
@@ -51,13 +53,14 @@ class CachingJupiterConfigurationTests {
 	}
 
 	@Test
-	void cachesDeactivateExecutionConditionsPattern() {
-		when(delegate.getDeactivateExecutionConditionsPattern()).thenReturn(Optional.empty());
+	void cachesExecutionConditionFilter() {
+		Predicate<ExecutionCondition> predicate = executionCondition -> true;
+		when(delegate.getExecutionConditionFilter()).thenReturn(predicate);
 
-		assertThat(cache.getDeactivateExecutionConditionsPattern()).isEqualTo(Optional.empty());
-		assertThat(cache.getDeactivateExecutionConditionsPattern()).isEqualTo(Optional.empty());
+		assertThat(cache.getExecutionConditionFilter()).isSameAs(predicate);
+		assertThat(cache.getExecutionConditionFilter()).isSameAs(predicate);
 
-		verify(delegate, times(1)).getDeactivateExecutionConditionsPattern();
+		verify(delegate, times(1)).getExecutionConditionFilter();
 		verifyNoMoreInteractions(delegate);
 	}
 

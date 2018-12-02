@@ -13,9 +13,11 @@ package org.junit.jupiter.engine.config;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 @API(status = INTERNAL, since = "5.4")
@@ -26,6 +28,7 @@ public interface JupiterConfiguration {
 	String DEFAULT_EXECUTION_MODE_PROPERTY_NAME = "junit.jupiter.execution.parallel.mode.default";
 	String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.enabled";
 	String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = "junit.jupiter.testinstance.lifecycle.default";
+	String DEACTIVATE_ALL_CONDITIONS_PATTERN = ClassNamePatternParameterConverter.DEACTIVATE_ALL_PATTERN;
 
 	Optional<String> getRawConfigurationParameter(String key);
 
@@ -37,6 +40,6 @@ public interface JupiterConfiguration {
 
 	TestInstance.Lifecycle getDefaultTestInstanceLifecycle();
 
-	Optional<String> getDeactivateExecutionConditionsPattern();
+	Predicate<ExecutionCondition> getExecutionConditionFilter();
 
 }

@@ -13,12 +13,13 @@ package org.junit.jupiter.engine.config;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 
 @API(status = INTERNAL, since = "5.4")
@@ -62,11 +63,9 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
-	public Optional<String> getDeactivateExecutionConditionsPattern() {
-		// @formatter:off
-        return configurationParameters.get(DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME)
-                .filter(StringUtils::isNotBlank)
-                .map(String::trim);
-        // @formatter:on
+	public Predicate<ExecutionCondition> getExecutionConditionFilter() {
+		return new ClassNamePatternParameterConverter<ExecutionCondition>().get(configurationParameters,
+			DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME);
 	}
+
 }

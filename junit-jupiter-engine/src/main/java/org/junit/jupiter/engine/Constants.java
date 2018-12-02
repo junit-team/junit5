@@ -19,7 +19,6 @@ import static org.junit.platform.engine.support.hierarchical.DefaultParallelExec
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigurationStrategy;
 
 /**
@@ -69,7 +68,7 @@ public final class Constants {
 	 * @see #DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME
 	 * @see org.junit.jupiter.api.extension.ExecutionCondition
 	 */
-	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = ConditionEvaluator.DEACTIVATE_ALL_CONDITIONS_PATTERN;
+	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = JupiterConfiguration.DEACTIVATE_ALL_CONDITIONS_PATTERN;
 
 	/**
 	 * Property name used to enable auto-detection and registration of extensions via

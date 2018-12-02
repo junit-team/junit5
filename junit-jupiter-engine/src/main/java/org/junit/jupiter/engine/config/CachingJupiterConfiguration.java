@@ -14,9 +14,11 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 @API(status = INTERNAL, since = "5.4")
@@ -60,9 +62,9 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Optional<String> getDeactivateExecutionConditionsPattern() {
-		return (Optional<String>) cache.computeIfAbsent(DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME,
-			key -> delegate.getDeactivateExecutionConditionsPattern());
+	public Predicate<ExecutionCondition> getExecutionConditionFilter() {
+		return (Predicate<ExecutionCondition>) cache.computeIfAbsent(DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME,
+			key -> delegate.getExecutionConditionFilter());
 	}
 
 }
