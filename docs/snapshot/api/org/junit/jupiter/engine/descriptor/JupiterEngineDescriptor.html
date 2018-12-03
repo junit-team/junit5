@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -230,7 +230,8 @@ implements <a href="../../../platform/engine/support/hierarchical/Node.html" tit
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(org.junit.platform.engine.UniqueId)">JupiterEngineDescriptor</a></span>&#8203;(<a href="../../../platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(org.junit.platform.engine.UniqueId,org.junit.jupiter.engine.config.JupiterConfiguration)">JupiterEngineDescriptor</a></span>&#8203;(<a href="../../../platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId,
+                       <a href="../config/JupiterConfiguration.html" title="interface in org.junit.jupiter.engine.config">JupiterConfiguration</a>&nbsp;configuration)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -259,6 +260,19 @@ implements <a href="../../../platform/engine/support/hierarchical/Node.html" tit
 </td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="../config/JupiterConfiguration.html" title="interface in org.junit.jupiter.engine.config">JupiterConfiguration</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getConfiguration()">getConfiguration</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getExecutionMode()">getExecutionMode</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Get the preferred of <a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">execution mode</a> for
+ parallel execution of this node.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">prepare</a></span>&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">
@@ -292,7 +306,7 @@ implements <a href="../../../platform/engine/support/hierarchical/Node.html" tit
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;org.junit.platform.engine.support.hierarchical.<a href="../../../platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical">Node</a></h3>
-<code><a href="../../../platform/engine/support/hierarchical/Node.html#after(C)">after</a>, <a href="../../../platform/engine/support/hierarchical/Node.html#before(C)">before</a>, <a href="../../../platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execute</a>, <a href="../../../platform/engine/support/hierarchical/Node.html#getExclusiveResources()">getExclusiveResources</a>, <a href="../../../platform/engine/support/hierarchical/Node.html#getExecutionMode()">getExecutionMode</a>, <a href="../../../platform/engine/support/hierarchical/Node.html#shouldBeSkipped(C)">shouldBeSkipped</a></code></li>
+<code><a href="../../../platform/engine/support/hierarchical/Node.html#after(C)">after</a>, <a href="../../../platform/engine/support/hierarchical/Node.html#before(C)">before</a>, <a href="../../../platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execute</a>, <a href="../../../platform/engine/support/hierarchical/Node.html#getExclusiveResources()">getExclusiveResources</a>, <a href="../../../platform/engine/support/hierarchical/Node.html#shouldBeSkipped(C)">shouldBeSkipped</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.org.junit.platform.engine.TestDescriptor">
@@ -340,13 +354,14 @@ implements <a href="../../../platform/engine/support/hierarchical/Node.html" tit
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(org.junit.platform.engine.UniqueId)">
+<a id="&lt;init&gt;(org.junit.platform.engine.UniqueId,org.junit.jupiter.engine.config.JupiterConfiguration)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>JupiterEngineDescriptor</h4>
-<pre>public&nbsp;JupiterEngineDescriptor&#8203;(<a href="../../../platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId)</pre>
+<pre>public&nbsp;JupiterEngineDescriptor&#8203;(<a href="../../../platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId,
+                               <a href="../config/JupiterConfiguration.html" title="interface in org.junit.jupiter.engine.config">JupiterConfiguration</a>&nbsp;configuration)</pre>
 </li>
 </ul>
 </li>
@@ -359,6 +374,37 @@ implements <a href="../../../platform/engine/support/hierarchical/Node.html" tit
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="getConfiguration()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getConfiguration</h4>
+<pre class="methodSignature">public&nbsp;<a href="../config/JupiterConfiguration.html" title="interface in org.junit.jupiter.engine.config">JupiterConfiguration</a>&nbsp;getConfiguration()</pre>
+</li>
+</ul>
+<a id="getExecutionMode()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getExecutionMode</h4>
+<pre class="methodSignature">public&nbsp;<a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a>&nbsp;getExecutionMode()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../platform/engine/support/hierarchical/Node.html#getExecutionMode()">Node</a></code></span></div>
+<div class="block">Get the preferred of <a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">execution mode</a> for
+ parallel execution of this node.
+
+ <p>The default implementation returns <a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html#CONCURRENT"><code>Node.ExecutionMode.CONCURRENT</code></a>.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../platform/engine/support/hierarchical/Node.html#getExecutionMode()">getExecutionMode</a></code>&nbsp;in interface&nbsp;<code><a href="../../../platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical">Node</a>&lt;<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&gt;</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the preferred execution mode of this node; never <code>null</code></dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical"><code>Node.ExecutionMode</code></a></dd>
+</dl>
+</li>
+</ul>
 <a id="prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">
 <!--   -->
 </a>

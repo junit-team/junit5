@@ -218,8 +218,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../../../api/extension/ConditionEvaluationResult.html" title="class in org.junit.jupiter.api.extension">ConditionEvaluationResult</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ConditionEvaluator.</span><code><span class="memberNameLink"><a href="../../execution/ConditionEvaluator.html#evaluate(org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.platform.engine.ConfigurationParameters,org.junit.jupiter.api.extension.ExtensionContext)">evaluate</a></span>&#8203;(<a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry,
-        <a href="../../../../platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;configurationParameters,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ConditionEvaluator.</span><code><span class="memberNameLink"><a href="../../execution/ConditionEvaluator.html#evaluate(org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.config.JupiterConfiguration,org.junit.jupiter.api.extension.ExtensionContext)">evaluate</a></span>&#8203;(<a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry,
+        <a href="../../config/JupiterConfiguration.html" title="interface in org.junit.jupiter.engine.config">JupiterConfiguration</a>&nbsp;configuration,
         <a href="../../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></th>
 <td class="colLast">
 <div class="block">Evaluate all <a href="../../../api/extension/ExecutionCondition.html" title="interface in org.junit.jupiter.api.extension"><code>ExecutionCondition</code></a> extensions registered for the
@@ -326,7 +326,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExtensionRegistry.</span><code><span class="memberNameLink"><a href="../ExtensionRegistry.html#createRegistryWithDefaultExtensions(org.junit.platform.engine.ConfigurationParameters)">createRegistryWithDefaultExtensions</a></span>&#8203;(<a href="../../../../platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a>&nbsp;configParams)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExtensionRegistry.</span><code><span class="memberNameLink"><a href="../ExtensionRegistry.html#createRegistryWithDefaultExtensions(org.junit.jupiter.engine.config.JupiterConfiguration)">createRegistryWithDefaultExtensions</a></span>&#8203;(<a href="../../config/JupiterConfiguration.html" title="interface in org.junit.jupiter.engine.config">JupiterConfiguration</a>&nbsp;configuration)</code></th>
 <td class="colLast">
 <div class="block">Factory for creating and populating a new root registry with the default
  extensions.</div>

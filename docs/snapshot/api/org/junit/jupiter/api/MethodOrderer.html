@@ -220,7 +220,7 @@ public interface <span class="typeNameLabel">MethodOrderer</span></pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>default <a href="parallel/ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel">ExecutionMode</a></code></td>
+<td class="colFirst"><code>default <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="parallel/ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel">ExecutionMode</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDefaultExecutionMode()">getDefaultExecutionMode</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the <em>default</em> <a href="parallel/ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel"><code>ExecutionMode</code></a> for the test class
@@ -288,7 +288,7 @@ public interface <span class="typeNameLabel">MethodOrderer</span></pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getDefaultExecutionMode</h4>
-<pre class="methodSignature">default&nbsp;<a href="parallel/ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel">ExecutionMode</a>&nbsp;getDefaultExecutionMode()</pre>
+<pre class="methodSignature">default&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="parallel/ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel">ExecutionMode</a>&gt;&nbsp;getDefaultExecutionMode()</pre>
 <div class="block">Get the <em>default</em> <a href="parallel/ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel"><code>ExecutionMode</code></a> for the test class
  configured with this <a href="MethodOrderer.html" title="interface in org.junit.jupiter.api"><code>MethodOrderer</code></a>.
 
@@ -301,13 +301,18 @@ public interface <span class="typeNameLabel">MethodOrderer</span></pre>
  ordered methods are typically sorted in a fashion that would conflict
  with concurrent execution.
 
+ <p>In case the ordering does not conflict with concurrent execution,
+ implementations should return an empty <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Optional</code></a> to signal that
+ the engine should decide which execution mode to use.
+
  <p>Can be overridden via an explicit
  <a href="parallel/Execution.html" title="annotation in org.junit.jupiter.api.parallel"><code>@Execution</code></a> declaration
  on the test class or in concrete implementations of the
  <code>MethodOrderer</code> API.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the default <code>ExecutionMode</code>; never <code>null</code></dd>
+<dd>the default <code>ExecutionMode</code>; never <code>null</code> but
+ potentially empty</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="#orderMethods(org.junit.jupiter.api.MethodOrdererContext)"><code>orderMethods(MethodOrdererContext)</code></a></dd>
 </dl>

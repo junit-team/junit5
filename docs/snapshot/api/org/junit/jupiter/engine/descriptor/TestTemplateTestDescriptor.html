@@ -201,6 +201,13 @@ implements <a href="Filterable.html" title="interface in org.junit.jupiter.engin
 </a>
 <h3>Field Summary</h3>
 <ul class="blockList">
+<li class="blockList"><a id="fields.inherited.from.class.org.junit.jupiter.engine.descriptor.JupiterTestDescriptor">
+<!--   -->
+</a>
+<h3>Fields inherited from class&nbsp;org.junit.jupiter.engine.descriptor.<a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">JupiterTestDescriptor</a></h3>
+<code><a href="JupiterTestDescriptor.html#configuration">configuration</a></code></li>
+</ul>
+<ul class="blockList">
 <li class="blockList"><a id="fields.inherited.from.class.org.junit.platform.engine.support.descriptor.AbstractTestDescriptor">
 <!--   -->
 </a>
@@ -224,9 +231,10 @@ implements <a href="Filterable.html" title="interface in org.junit.jupiter.engin
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(org.junit.platform.engine.UniqueId,java.lang.Class,java.lang.reflect.Method)">TestTemplateTestDescriptor</a></span>&#8203;(<a href="../../../platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(org.junit.platform.engine.UniqueId,java.lang.Class,java.lang.reflect.Method,org.junit.jupiter.engine.config.JupiterConfiguration)">TestTemplateTestDescriptor</a></span>&#8203;(<a href="../../../platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId,
                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;testClass,
-                          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;templateMethod)</code></th>
+                          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;templateMethod,
+                          <a href="../config/JupiterConfiguration.html" title="interface in org.junit.jupiter.engine.config">JupiterConfiguration</a>&nbsp;configuration)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -340,7 +348,7 @@ implements <a href="Filterable.html" title="interface in org.junit.jupiter.engin
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(org.junit.platform.engine.UniqueId,java.lang.Class,java.lang.reflect.Method)">
+<a id="&lt;init&gt;(org.junit.platform.engine.UniqueId,java.lang.Class,java.lang.reflect.Method,org.junit.jupiter.engine.config.JupiterConfiguration)">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -348,7 +356,8 @@ implements <a href="Filterable.html" title="interface in org.junit.jupiter.engin
 <h4>TestTemplateTestDescriptor</h4>
 <pre>public&nbsp;TestTemplateTestDescriptor&#8203;(<a href="../../../platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId,
                                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;testClass,
-                                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;templateMethod)</pre>
+                                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;templateMethod,
+                                  <a href="../config/JupiterConfiguration.html" title="interface in org.junit.jupiter.engine.config">JupiterConfiguration</a>&nbsp;configuration)</pre>
 </li>
 </ul>
 </li>

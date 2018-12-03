@@ -5,6 +5,7 @@ org.junit.jupiter.api.function
 org.junit.jupiter.api.parallel
 org.junit.jupiter.api.support.io
 org.junit.jupiter.engine
+org.junit.jupiter.engine.config
 org.junit.jupiter.engine.descriptor
 org.junit.jupiter.engine.discovery
 org.junit.jupiter.engine.discovery.predicates

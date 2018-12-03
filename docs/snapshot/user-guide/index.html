@@ -4005,6 +4005,20 @@ expressiveness and power of dynamic tests.</p>
 </div>
 <div class="sect2">
 <h3 id="writing-tests-parallel-execution"><a class="anchor" href="#writing-tests-parallel-execution"></a>2.18. Parallel Execution</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">Parallel test execution is an experimental feature</div>
+You&#8217;re invited to give it a try and provide feedback to the JUnit team so they
+can improve and eventually <a href="#api-evolution">promote</a> this feature.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>By default, JUnit Jupiter tests are run sequentially in a single thread. Running tests in
 parallel&#8201;&#8212;&#8201;for example, to speed up execution&#8201;&#8212;&#8201;is available as an opt-in feature since
@@ -4014,25 +4028,53 @@ example, in <code>junit-platform.properties</code> (see <a href="#running-tests-
 options).</p>
 </div>
 <div class="paragraph">
-<p>Once enabled, the JUnit Jupiter engine will execute tests on all levels of the test tree
-fully in parallel according to the provided
-<a href="#writing-tests-parallel-execution-config">configuration</a> while observing the declarative
-<a href="#writing-tests-parallel-execution-synchronization">synchronization</a> mechanisms. Please
-note that the <a href="#running-tests-capturing-output">Capturing Standard Output/Error</a> feature needs to be enabled separately.</p>
+<p>Enabling this property is but the first step to execute tests in parallel. If enabled,
+test classes and methods are still executed sequentially by default. Whether or not a node
+in the test tree is executed concurrently is controlled by its execution mode. The
+following two modes are available:</p>
 </div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Parallel test execution is currently an <em>experimental</em> feature. You&#8217;re invited
-to give it a try and provide feedback to the JUnit team so they can improve and
-eventually <a href="#api-evolution">promote</a> this feature.
-</td>
-</tr>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>SAME_THREAD</code></dt>
+<dd>
+<p>Force execution in the same thread used by the parent. For example, when used on a test
+method, the test method will be executed in the same thread as any <code>@BeforeAll</code> or
+<code>@AfterAll</code> methods of the containing test class.</p>
+</dd>
+<dt class="hdlist1"><code>CONCURRENT</code></dt>
+<dd>
+<p>Execute concurrently unless a resource lock forces execution in the same thread.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>By default, nodes in the test tree use the <code>SAME_THREAD</code> execution mode. You can change
+the default by setting the <code>junit.jupiter.execution.parallel.mode.default</code> configuration
+parameter. Alternatively, you can use the <code><a href="../api/org/junit/jupiter/api/parallel/Execution.html">@Execution</a></code> annotation to change the execution
+mode for the annotated element and its subelements (if any) which allows to activate
+parallel execution for individual test classes, one by one.</p>
+</div>
+<div class="listingblock">
+<div class="title">Configuration parameters to execute all tests in parallel</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties">junit.jupiter.execution.parallel.enabled = true
+junit.jupiter.execution.parallel.mode.default = concurrent</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The default execution mode is applied to all nodes of the test tree with a few notable
+exceptions, namely test classes that use the <code>Lifecycle.PER_CLASS</code> mode or a
+<code><a href="../api/org/junit/jupiter/api/MethodOrderer.html">MethodOrderer</a></code> (expect for <code><a href="../api/org/junit/jupiter/api/MethodOrderer.Random.html">Random</a></code>). In the former case, test authors have to ensure
+that the test class is thread-safe; in the latter, concurrent execution might conflict
+with the configured execution order. Thus, in both cases, test methods in such test
+classes are only executed concurrently if the <code>@Execution(CONCURRENT)</code> annotation is
+present on the test class or method.</p>
+</div>
+<div class="paragraph">
+<p>All nodes of the test tree that with execution mode <code>CONCURRENT</code> will be executed fully in
+parallel according to the provided <a href="#writing-tests-parallel-execution-config">configuration</a> while observing the declarative
+<a href="#writing-tests-parallel-execution-synchronization">synchronization</a> mechanism. Please
+note that <a href="#running-tests-capturing-output">Capturing Standard Output/Error</a> needs to be enabled separately.</p>
 </div>
 <div class="sect3">
 <h4 id="writing-tests-parallel-execution-config"><a class="anchor" href="#writing-tests-parallel-execution-config"></a>2.18.1. Configuration</h4>
@@ -4079,6 +4121,7 @@ number of available processors/cores.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
+<div class="title">Parallelism does not imply maximum number of concurrent threads</div>
 JUnit Jupiter does not guarantee that the number of concurrently executing tests
 will not exceed the configured parallelism. For example, when using one of the
 synchronization mechanisms described in the next section, the <code>ForkJoinPool</code> that is used
@@ -4093,35 +4136,13 @@ your own means of controlling concurrency.
 <div class="sect3">
 <h4 id="writing-tests-parallel-execution-synchronization"><a class="anchor" href="#writing-tests-parallel-execution-synchronization"></a>2.18.2. Synchronization</h4>
 <div class="paragraph">
-<p>In the <code>org.junit.jupiter.api.parallel</code> package, JUnit Jupiter provides two
-annotation-based declarative mechanisms to change the execution mode and allow for
-synchronization when using shared resources in different tests.</p>
-</div>
-<div class="paragraph">
-<p>If parallel execution is enabled, all classes and methods are executed concurrently by
-default. You can change the execution mode for the annotated element and its subelements
-(if any) by using the <code><a href="../api/org/junit/jupiter/api/parallel/Execution.html">@Execution</a></code> annotation. The following two modes are available:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>SAME_THREAD</code></dt>
-<dd>
-<p>Force execution in the same thread used by the parent. For example, when used on a test
-method, the test method will be executed in the same thread as any <code>@BeforeAll</code> or
-<code>@AfterAll</code> methods of the containing test class.</p>
-</dd>
-<dt class="hdlist1"><code>CONCURRENT</code></dt>
-<dd>
-<p>Execute concurrently unless a resource lock forces execution in the same thread.</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>In addition, the <code><a href="../api/org/junit/jupiter/api/parallel/ResourceLock.html">@ResourceLock</a></code> annotation allows you to declare that a test class or
-method uses a specific shared resource that requires synchronized access to ensure
-reliable test execution. The shared resource is identified by a unique name which is a
-<code>String</code>. The name can be user-defined or one of the predefined constants in
-<code><a href="../api/org/junit/jupiter/api/parallel/Resources.html">Resources</a></code>: <code>SYSTEM_PROPERTIES</code>, <code>SYSTEM_OUT</code>, or <code>SYSTEM_ERR</code>.</p>
+<p>In addition to controlling the execution mode using the <code><a href="../api/org/junit/jupiter/api/parallel/Execution.html">@Execution</a></code> annotation, JUnit
+Jupiter provides another annotation-based declarative synchronization mechanism. The
+<code><a href="../api/org/junit/jupiter/api/parallel/ResourceLock.html">@ResourceLock</a></code> annotation allows you to declare that a test class or method uses a
+specific shared resource that requires synchronized access to ensure reliable test
+execution. The shared resource is identified by a unique name which is a <code>String</code>. The
+name can be user-defined or one of the predefined constants in <code><a href="../api/org/junit/jupiter/api/parallel/Resources.html">Resources</a></code>:
+<code>SYSTEM_PROPERTIES</code>, <code>SYSTEM_OUT</code>, or <code>SYSTEM_ERR</code>.</p>
 </div>
 <div class="paragraph">
 <p>If the tests in the following example were run in parallel <em>without</em> the use of
@@ -7472,7 +7493,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-12-02 03:40:25 UTC
+Last updated 2018-12-03 20:13:04 UTC
 </div>
 </div>
 </body>
