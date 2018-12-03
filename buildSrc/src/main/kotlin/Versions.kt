@@ -10,19 +10,19 @@ object Versions {
     val apiGuardian = "1.0.0"
     val junit4 = "4.12"
     val ota4j = "1.1.1"
-    val picocli = "3.7.0"
+    val picocli = "3.8.1"
     val univocity = "2.7.6"
 
     // Test Dependencies
-    val archunit = "0.9.2"
+    val archunit = "0.9.3"
     val assertJ = "3.11.1"
-    val bartholdy = "0.2.1"
-    val classgraph = "4.4.12"
+    val bartholdy = "0.2.3"
+    val classgraph = "4.6.1"
     val commonsIo = "2.6"
     val javaCompilerScriptEngine = "0.1.2"
     val jimfs = "1.1"
     val log4j = "2.11.1"
-    val mockito = "2.23.0"
+    val mockito = "2.23.4"
     val slf4j = "1.7.25"
 
     // Plugins
