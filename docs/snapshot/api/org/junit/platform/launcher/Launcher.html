@@ -134,28 +134,22 @@ public interface <span class="typeNameLabel">Launcher</span></pre>
 
  <p>Implementations of this interface are responsible for determining
  the set of test engines to delegate to at runtime and for ensuring that
- each test engine has an <a href="../engine/TestEngine.html#getId()">ID</a>
- that is unique among the registered test engines. For example, the
- default implementation returned by
- <a href="core/LauncherFactory.html#create()"><code>LauncherFactory.create()</code></a>
- dynamically discovers test engines via Java's
- <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>ServiceLoader</code></a> mechanism.
+ each test engine has an
+ <a href="../engine/TestEngine.html#getId()">ID</a> that is unique
+ among the registered test engines. For example, the default implementation
+ returned by <a href="core/LauncherFactory.html#create()"><code>LauncherFactory.create()</code></a>
+ dynamically discovers test engines via Java's <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>ServiceLoader</code></a> mechanism.
 
- <p>Discovery and execution of tests require a <a href="LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher"><code>LauncherDiscoveryRequest</code></a>
- which is passed to all registered engines. Each engine decides which tests
- it can discover and later execute according to the <a href="LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher"><code>LauncherDiscoveryRequest</code></a>.
-
- <p>Clients of this interface may optionally call <a href="#discover(org.junit.platform.launcher.LauncherDiscoveryRequest)"><code>discover(org.junit.platform.launcher.LauncherDiscoveryRequest)</code></a> prior to
- <a href="#execute(org.junit.platform.launcher.LauncherDiscoveryRequest,org.junit.platform.launcher.TestExecutionListener...)"><code>execute(org.junit.platform.launcher.LauncherDiscoveryRequest, org.junit.platform.launcher.TestExecutionListener...)</code></a> in order to inspect the <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> before executing
- it.
+ <p>Test discovery and execution require a <a href="LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher"><code>LauncherDiscoveryRequest</code></a>
+ that is passed to all registered engines. Each engine decides which tests it
+ can discover and execute according to the supplied request.
 
  <p>Prior to executing tests, clients of this interface should
  <a href="#registerTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">register</a> one or more
  <a href="TestExecutionListener.html" title="interface in org.junit.platform.launcher"><code>TestExecutionListener</code></a> instances in order to get feedback about the
  progress and results of test execution. Listeners will be notified of events
- in the order in which they were registered.  For example, the
- default implementation returned by
- <a href="core/LauncherFactory.html#create()"><code>LauncherFactory.create()</code></a>
+ in the order in which they were registered.  The default implementation
+ returned by <a href="core/LauncherFactory.html#create()"><code>LauncherFactory.create()</code></a>
  dynamically discovers test execution listeners via Java's
  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>ServiceLoader</code></a> mechanism.</div>
 <dl>
@@ -204,7 +198,9 @@ public interface <span class="typeNameLabel">Launcher</span></pre>
 <td class="colLast">
 <div class="block">Execute a <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> which is built according to the supplied
  <a href="LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher"><code>LauncherDiscoveryRequest</code></a> by querying all registered engines and
- collecting their results, and notify <a href="#registerTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">registered listeners</a> about the progress and results of the execution.</div>
+ collecting their results, and notify
+ <a href="#registerTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">registered listeners</a> about
+ the progress and results of the execution.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
@@ -258,9 +254,20 @@ public interface <span class="typeNameLabel">Launcher</span></pre>
  collecting their results.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>launcherDiscoveryRequest</code> - the launcher discovery request; never <code>null</code></dd>
+<dd><code>launcherDiscoveryRequest</code> - the launcher discovery request; never
+ <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a <code>TestPlan</code> that contains all resolved <a href="TestIdentifier.html" title="class in org.junit.platform.launcher">identifiers</a> from all registered engines</dd>
+<dt><span class="simpleTagLabel">API Note:</span></dt>
+<dd>This method should only be called to generate a preview of the
+ test tree when executing tests is not desired. First calling this method
+ to get access to the <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> and then <a href="#execute(org.junit.platform.launcher.LauncherDiscoveryRequest,org.junit.platform.launcher.TestExecutionListener...)"><code>execute(org.junit.platform.launcher.LauncherDiscoveryRequest, org.junit.platform.launcher.TestExecutionListener...)</code></a> causes
+ test discovery to be executed twice which may result in a significant
+ performance degradation. Instead, <a href="#execute(org.junit.platform.launcher.LauncherDiscoveryRequest,org.junit.platform.launcher.TestExecutionListener...)"><code>execute(org.junit.platform.launcher.LauncherDiscoveryRequest, org.junit.platform.launcher.TestExecutionListener...)</code></a> should be called
+ directly and a <a href="TestExecutionListener.html" title="interface in org.junit.platform.launcher"><code>TestExecutionListener</code></a> that overrides
+ <a href="TestExecutionListener.html#testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)"><code>TestExecutionListener.testPlanExecutionStarted(TestPlan)</code></a> should
+ be registered to get access to the test tree, for example to render it in
+ an IDE.</dd>
 </dl>
 </li>
 </ul>
@@ -274,7 +281,9 @@ public interface <span class="typeNameLabel">Launcher</span></pre>
              <a href="TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>...&nbsp;listeners)</pre>
 <div class="block">Execute a <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> which is built according to the supplied
  <a href="LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher"><code>LauncherDiscoveryRequest</code></a> by querying all registered engines and
- collecting their results, and notify <a href="#registerTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">registered listeners</a> about the progress and results of the execution.
+ collecting their results, and notify
+ <a href="#registerTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">registered listeners</a> about
+ the progress and results of the execution.
 
  <p>Supplied test execution listeners are registered in addition to already
  registered listeners but only for the supplied launcher discovery request.</div>
@@ -282,6 +291,11 @@ public interface <span class="typeNameLabel">Launcher</span></pre>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>launcherDiscoveryRequest</code> - the launcher discovery request; never <code>null</code></dd>
 <dd><code>listeners</code> - additional test execution listeners; never <code>null</code></dd>
+<dt><span class="simpleTagLabel">API Note:</span></dt>
+<dd>In order to get access to the test tree, for example to render
+ it in an IDE, register a <a href="TestExecutionListener.html" title="interface in org.junit.platform.launcher"><code>TestExecutionListener</code></a> that overrides
+ <a href="TestExecutionListener.html#testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)"><code>TestExecutionListener.testPlanExecutionStarted(TestPlan)</code></a> instead
+ of calling <a href="#discover(org.junit.platform.launcher.LauncherDiscoveryRequest)"><code>discover(org.junit.platform.launcher.LauncherDiscoveryRequest)</code></a> first.</dd>
 </dl>
 </li>
 </ul>

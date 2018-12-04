@@ -403,7 +403,6 @@ afb94e74d30e08656ea2c8ac75c4ae63  junit-jupiter-params/src/main/java/org/junit/j
 aff36429641b1f1aee4595a84a77f4a5  junit-platform-commons/src/main/java/org/junit/platform/commons/util/FunctionUtils.java
 b059dfaca8826f189ddf79f4f1bd899c  documentation/src/test/java/org/junit/api/tools/MarkdownApiReportWriter.java
 b099fb8c1913ac932319ff231f0d2302  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ExecutableInvoker.java
-b0e500405277ef676b58ba84519ba5bd  junit-platform-launcher/src/main/java/org/junit/platform/launcher/Launcher.java
 b0f0d49481587ef36cc17d204572d08b  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/IncludePackageNameFilter.java
 b1185a478d96d05894c5517d13e59f65  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Test.java
 b159a655ed6e66c25fe416267db53f73  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/script/package-info.java
@@ -462,6 +461,7 @@ cacb7c74b937e9639101f08a6b0552fd  junit-platform-testkit/src/main/java/org/junit
 cb0d49f434dbb5d73fdf4476ce16afbf  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolutionException.java
 cb88d91fffacc4fe44b9e78bbf48f0a7  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/ClassSource.java
 cc4cbbaf05adf883a9353b72d9526313  junit-platform-engine/src/main/java/org/junit/platform/engine/support/config/package-info.java
+cc55d2ccefa34464fedc3b0abe54cb20  junit-platform-launcher/src/main/java/org/junit/platform/launcher/Launcher.java
 cc660aae3f06140206ac6508df0cab87  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledOnJre.java
 cc82647f4c62bcd57244e29d04c99812  documentation/src/test/java/org/junit/api/tools/ApiReport.java
 cc8dfaceef7f7fd37cca5c9c859a0632  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EngineTestKit.java
