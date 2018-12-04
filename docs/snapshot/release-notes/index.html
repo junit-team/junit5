@@ -700,7 +700,12 @@ their cause to make it easier to debug underlying issues.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The default mode for parallel test execution has been changed from <code>CONCURRENT</code> to
+<code>SAME_THREAD</code> to allow for gradual opt-in by using the <code>@Execution</code> annotation on
+individual test classes or methods. You can invert this behavior by changing the default
+execution mode via the new <code>junit.jupiter.execution.parallel.mode.default</code>
+configuration parameter. Please refer to the
+<a href="../user-guide/index.html#writing-tests-parallel-execution">User Guide</a> for details.</p>
 </li>
 </ul>
 </div>
@@ -1053,7 +1058,7 @@ well as various minor improvements and bug fixes.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-12-03 20:13:04 UTC
+Last updated 2018-12-04 07:41:37 UTC
 </div>
 </div>
 </body>

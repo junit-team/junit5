@@ -276,7 +276,6 @@
 786558f30639a7228fa0a984d6761e19  documentation/src/test/java/extensions/ExpectToFail.java
 78e3da888f3b7f7543f2b8297f60ebb8  documentation/src/main/java/example/registration/package-info.java
 79450c974d0e02853aa73d3266a8401d  documentation/src/test/resources/two-column.csv
-795fc06856059b9e4c622932f6f6150d  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 7978c5909291b221f41bb8a2fc8c8b7a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfSystemProperty.java
 79addd906c01aa6ba2a1edd18c6d6f36  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayName.java
 79c689d8e38d54a7e18f3b8c32ee4cc5  documentation/src/test/java/example/testinterface/TimeExecutionLogger.java
@@ -531,6 +530,7 @@ e916dcfeb93ff21b4dfe2efba3cb99b7  junit-platform-commons/src/main/java/org/junit
 e9349878017538eef5b1a11fc41af8b2  junit-platform-engine/src/main/java/org/junit/platform/engine/DiscoverySelector.java
 e94395c926ad1f44a08173cbe88ba344  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/Logger.java
 e9aebf4b789cf474cd55b7dddd210c04  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeEngines.java
+ea0968b2796c169b5f4716d6472e1d42  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 ea0f3eaa0f017616d4690d1c22e0500e  junit-platform-console/src/main/java/org/junit/platform/console/tasks/ConsoleTestExecutor.java
 ea15560f6602cf4bc151f70f471bd361  documentation/src/test/java/example/Fast.java
 ea2117c8d8c4a8a5e96255175a933b7f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/BeforeEach.java
