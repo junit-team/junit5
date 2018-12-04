@@ -4064,7 +4064,7 @@ junit.jupiter.execution.parallel.mode.default = concurrent</code></pre>
 <div class="paragraph">
 <p>The default execution mode is applied to all nodes of the test tree with a few notable
 exceptions, namely test classes that use the <code>Lifecycle.PER_CLASS</code> mode or a
-<code><a href="../api/org/junit/jupiter/api/MethodOrderer.html">MethodOrderer</a></code> (expect for <code><a href="../api/org/junit/jupiter/api/MethodOrderer.Random.html">Random</a></code>). In the former case, test authors have to ensure
+<code><a href="../api/org/junit/jupiter/api/MethodOrderer.html">MethodOrderer</a></code> (except for <code><a href="../api/org/junit/jupiter/api/MethodOrderer.Random.html">Random</a></code>). In the former case, test authors have to ensure
 that the test class is thread-safe; in the latter, concurrent execution might conflict
 with the configured execution order. Thus, in both cases, test methods in such test
 classes are only executed concurrently if the <code>@Execution(CONCURRENT)</code> annotation is
@@ -7493,7 +7493,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-12-04 07:41:37 UTC
+Last updated 2018-12-04 13:24:40 UTC
 </div>
 </div>
 </body>
