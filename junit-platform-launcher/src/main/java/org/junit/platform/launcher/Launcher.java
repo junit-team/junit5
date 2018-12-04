@@ -21,28 +21,23 @@ import org.apiguardian.api.API;
  *
  * <p>Implementations of this interface are responsible for determining
  * the set of test engines to delegate to at runtime and for ensuring that
- * each test engine has an {@linkplain org.junit.platform.engine.TestEngine#getId ID}
- * that is unique among the registered test engines. For example, the
- * default implementation returned by
- * {@link org.junit.platform.launcher.core.LauncherFactory#create LauncherFactory.create()}
- * dynamically discovers test engines via Java's
- * {@link java.util.ServiceLoader ServiceLoader} mechanism.
+ * each test engine has an
+ * {@linkplain org.junit.platform.engine.TestEngine#getId ID} that is unique
+ * among the registered test engines. For example, the default implementation
+ * returned by {@link org.junit.platform.launcher.core.LauncherFactory#create}
+ * dynamically discovers test engines via Java's {@link java.util.ServiceLoader
+ * ServiceLoader} mechanism.
  *
- * <p>Discovery and execution of tests require a {@link LauncherDiscoveryRequest}
- * which is passed to all registered engines. Each engine decides which tests
- * it can discover and later execute according to the {@link LauncherDiscoveryRequest}.
- *
- * <p>Clients of this interface may optionally call {@link #discover} prior to
- * {@link #execute} in order to inspect the {@link TestPlan} before executing
- * it.
+ * <p>Test discovery and execution require a {@link LauncherDiscoveryRequest}
+ * that is passed to all registered engines. Each engine decides which tests it
+ * can discover and execute according to the supplied request.
  *
  * <p>Prior to executing tests, clients of this interface should
  * {@linkplain #registerTestExecutionListeners register} one or more
  * {@link TestExecutionListener} instances in order to get feedback about the
  * progress and results of test execution. Listeners will be notified of events
- * in the order in which they were registered.  For example, the
- * default implementation returned by
- * {@link org.junit.platform.launcher.core.LauncherFactory#create LauncherFactory.create()}
+ * in the order in which they were registered.  The default implementation
+ * returned by {@link org.junit.platform.launcher.core.LauncherFactory#create}
  * dynamically discovers test execution listeners via Java's
  * {@link java.util.ServiceLoader ServiceLoader} mechanism.
  *
@@ -69,7 +64,18 @@ public interface Launcher {
 	 * {@link LauncherDiscoveryRequest} by querying all registered engines and
 	 * collecting their results.
 	 *
-	 * @param launcherDiscoveryRequest the launcher discovery request; never {@code null}
+	 * @apiNote This method should only be called to generate a preview of the
+	 * test tree when executing tests is not desired. First calling this method
+	 * to get access to the {@link TestPlan} and then {@link #execute} causes
+	 * test discovery to be executed twice which may result in a significant
+	 * performance degradation. Instead, {@link #execute} should be called
+	 * directly and a {@link TestExecutionListener} that overrides
+	 * {@link TestExecutionListener#testPlanExecutionStarted(TestPlan)} should
+	 * be registered to get access to the test tree, for example to render it in
+	 * an IDE.
+	 *
+	 * @param launcherDiscoveryRequest the launcher discovery request; never
+	 * {@code null}
 	 * @return a {@code TestPlan} that contains all resolved {@linkplain
 	 * TestIdentifier identifiers} from all registered engines
 	 */
@@ -78,11 +84,17 @@ public interface Launcher {
 	/**
 	 * Execute a {@link TestPlan} which is built according to the supplied
 	 * {@link LauncherDiscoveryRequest} by querying all registered engines and
-	 * collecting their results, and notify {@linkplain #registerTestExecutionListeners
-	 * registered listeners} about the progress and results of the execution.
+	 * collecting their results, and notify
+	 * {@linkplain #registerTestExecutionListeners registered listeners} about
+	 * the progress and results of the execution.
 	 *
 	 * <p>Supplied test execution listeners are registered in addition to already
 	 * registered listeners but only for the supplied launcher discovery request.
+	 *
+	 * @apiNote In order to get access to the test tree, for example to render
+	 * it in an IDE, register a {@link TestExecutionListener} that overrides
+	 * {@link TestExecutionListener#testPlanExecutionStarted(TestPlan)} instead
+	 * of calling {@link #discover} first.
 	 *
 	 * @param launcherDiscoveryRequest the launcher discovery request; never {@code null}
 	 * @param listeners additional test execution listeners; never {@code null}
