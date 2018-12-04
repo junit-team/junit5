@@ -69,7 +69,12 @@ repository on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The default mode for parallel test execution has been changed from `CONCURRENT` to
+  `SAME_THREAD` to allow for gradual opt-in by using the `@Execution` annotation on
+  individual test classes or methods. You can invert this behavior by changing the default
+  execution mode via the new `junit.jupiter.execution.parallel.mode.default`
+  configuration parameter. Please refer to the
+  <<../user-guide/index.adoc#writing-tests-parallel-execution, User Guide>> for details.
 
 ==== New Features and Improvements
 
