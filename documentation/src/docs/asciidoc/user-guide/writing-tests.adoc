@@ -1448,7 +1448,7 @@ junit.jupiter.execution.parallel.mode.default = concurrent
 
 The default execution mode is applied to all nodes of the test tree with a few notable
 exceptions, namely test classes that use the `Lifecycle.PER_CLASS` mode or a
-`{MethodOrderer}` (expect for `{Random}`). In the former case, test authors have to ensure
+`{MethodOrderer}` (except for `{Random}`). In the former case, test authors have to ensure
 that the test class is thread-safe; in the latter, concurrent execution might conflict
 with the configured execution order. Thus, in both cases, test methods in such test
 classes are only executed concurrently if the `@Execution(CONCURRENT)` annotation is
