@@ -22,7 +22,7 @@ configure<PublishingExtension> {
 				name.set(provider {
 					project.description ?: "${project.group}:${project.name}"
 				})
-				url.set("http://junit.org/junit5/")
+				url.set("https://junit.org/junit5/")
 				scm {
 					connection.set("scm:git:git://github.com/junit-team/junit5.git")
 					developerConnection.set("scm:git:git://github.com/junit-team/junit5.git")
