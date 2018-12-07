@@ -96,10 +96,6 @@ allprojects {
 		maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
 	}
 
-	dependencies {
-		api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
-	}
-
 	tasks.compileJava {
 		options.encoding = "UTF-8"
 
@@ -211,6 +207,10 @@ subprojects {
 	if (project in mavenizedProjects) {
 
 		apply(from = "$rootDir/gradle/publishing.gradle.kts")
+
+		dependencies {
+			api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
+		}
 
 		tasks.javadoc {
 			options {
