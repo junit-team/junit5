@@ -22,7 +22,7 @@ the<PublishingExtension>().publications.named<MavenPublication>("maven") {
 tasks.withType<GenerateMavenPom> {
 	doLast {
 		val xml = destination.readText()
-		require (xml.indexOf("<dependencies>") == xml.lastIndexOf("<dependencies>")) {
+		require(xml.indexOf("<dependencies>") == xml.lastIndexOf("<dependencies>")) {
 			"BOM must contain exactly one <dependencies> element but contained multiple:\n$destination"
 		}
 		require(xml.contains("<dependencyManagement>")) {
