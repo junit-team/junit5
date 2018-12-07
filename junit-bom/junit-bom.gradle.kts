@@ -18,3 +18,15 @@ the<PublishingExtension>().publications.named<MavenPublication>("maven") {
 				"when referencing multiple JUnit artifacts using Gradle or Maven.")
 	}
 }
+
+tasks.withType<GenerateMavenPom> {
+	doLast {
+		val xml = destination.readText()
+		require (xml.indexOf("<dependencies>") == xml.lastIndexOf("<dependencies>")) {
+			"BOM must contain exactly one <dependencies> element but contained multiple:\n$destination"
+		}
+		require(xml.contains("<dependencyManagement>")) {
+			"BOM must contain a <dependencyManagement> element:\n$destination"
+		}
+	}
+}
