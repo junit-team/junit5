@@ -32,6 +32,9 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	private static final String DOUBLE_TAB = TAB + TAB;
 	private static final int MAX_STACKTRACE_LINES = 10;
 
+	private static final String CAUSED_BY = "Caused by: ";
+	private static final String SUPPRESSED = "Suppressed: ";
+
 	final AtomicLong containersFound = new AtomicLong();
 	final AtomicLong containersStarted = new AtomicLong();
 	final AtomicLong containersSkipped = new AtomicLong();
@@ -213,13 +216,46 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	}
 
 	private void printStackTrace(PrintWriter writer, Throwable throwable, int max) {
-		StackTraceElement[] elements = throwable.getStackTrace();
-		for (int i = 0; i < (elements.length > max ? max : elements.length); i++) {
-			writer.printf("%s   %s%n", DOUBLE_TAB, elements[i]);
+		if (throwable.getCause() != null
+				|| (throwable.getSuppressed() != null && throwable.getSuppressed().length > 0)) {
+			max = max / 2;
 		}
-		if (elements.length > max) {
-			writer.printf("%s   [...]%n", DOUBLE_TAB);
+		printStackTrace(writer, new StackTraceElement[] {}, throwable, "", DOUBLE_TAB + " ", max);
+		writer.flush();
+	}
+
+	private void printStackTrace(PrintWriter writer, StackTraceElement[] parentTrace, Throwable throwable,
+			String caption, String indentation, int max) {
+		StackTraceElement[] trace = throwable.getStackTrace();
+		if (parentTrace != null && parentTrace.length > 0) {
+			writer.printf("%s%s%s%n", indentation, caption, throwable);
 		}
+		int duplicates = numberOfCommonFrames(trace, parentTrace);
+		int numLines = (trace.length - duplicates > max) ? max : trace.length - duplicates;
+		for (int i = 0; i < numLines; i++) {
+			writer.printf("%s%s%s%n", indentation, TAB, trace[i]);
+		}
+		if (trace.length > max || duplicates != 0) {
+			writer.printf("%s%s%s%n", indentation, TAB, "[...]");
+		}
+
+		for (Throwable suppressed : throwable.getSuppressed()) {
+			printStackTrace(writer, trace, suppressed, SUPPRESSED, indentation + TAB, max);
+		}
+		if (throwable.getCause() != null) {
+			printStackTrace(writer, trace, throwable.getCause(), CAUSED_BY, indentation, max);
+		}
+	}
+
+	private int numberOfCommonFrames(StackTraceElement[] currentTrace, StackTraceElement[] parentTrace) {
+		int currentIndex = currentTrace.length - 1;
+		for (int parentIndex = parentTrace.length - 1; currentIndex >= 0
+				&& parentIndex >= 0; currentIndex--, parentIndex--) {
+			if (!currentTrace[currentIndex].equals(parentTrace[parentIndex])) {
+				break;
+			}
+		}
+		return currentTrace.length - 1 - currentIndex;
 	}
 
 	private static class DefaultFailure implements Failure {

@@ -151,7 +151,10 @@ class SummaryGenerationTests {
 
 	@Test
 	void reportingCorrectFailures() {
-		RuntimeException failedException = new RuntimeException("failed");
+		IllegalArgumentException iaeCausedBy = new IllegalArgumentException("Illegal Argument Exception");
+		RuntimeException failedException = new RuntimeException("Runtime Exception", iaeCausedBy);
+		NullPointerException npeSuppressed = new NullPointerException("Null Pointer Exception");
+		failedException.addSuppressed(npeSuppressed);
 
 		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.root("root", "2"), "failingTest") {
 
@@ -178,7 +181,9 @@ class SummaryGenerationTests {
 			() -> assertTrue(failuresString.contains("Failures (1)"), "test failures"), //
 			() -> assertTrue(failuresString.contains(Object.class.getName()), "source"), //
 			() -> assertTrue(failuresString.contains("failingTest"), "display name"), //
-			() -> assertTrue(failuresString.contains("=> " + failedException), "exception") //
+			() -> assertTrue(failuresString.contains("=> " + failedException), "main exception"), //
+			() -> assertTrue(failuresString.contains("Caused by: " + iaeCausedBy), "Caused by exception"), //
+			() -> assertTrue(failuresString.contains("Suppressed: " + npeSuppressed), "Suppressed exception") //
 		);
 	}
 
