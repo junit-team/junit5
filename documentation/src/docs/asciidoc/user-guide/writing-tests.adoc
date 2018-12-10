@@ -1420,10 +1420,10 @@ version 5.3. To enable parallel execution, set the
 example, in `junit-platform.properties` (see <<running-tests-config-params>> for other
 options).
 
-Enabling this property is but the first step to execute tests in parallel. If enabled,
-test classes and methods are still executed sequentially by default. Whether or not a node
-in the test tree is executed concurrently is controlled by its execution mode. The
-following two modes are available:
+Please note that enabling this property is only the first step required to execute tests
+in parallel. If enabled, test classes and methods will still be executed sequentially by
+default. Whether or not a node in the test tree is executed concurrently is controlled by
+its execution mode. The following two modes are available.
 
 `SAME_THREAD`::
   Force execution in the same thread used by the parent. For example, when used on a test
@@ -1435,9 +1435,9 @@ following two modes are available:
 
 By default, nodes in the test tree use the `SAME_THREAD` execution mode. You can change
 the default by setting the `junit.jupiter.execution.parallel.mode.default` configuration
-parameter. Alternatively, you can use the `{Execution}` annotation to change the execution
-mode for the annotated element and its subelements (if any) which allows to activate
-parallel execution for individual test classes, one by one.
+parameter. Alternatively, you can use the `{Execution}` annotation to change the
+execution mode for the annotated element and its subelements (if any) which allows you to
+activate parallel execution for individual test classes, one by one.
 
 [source,properties]
 .Configuration parameters to execute all tests in parallel
@@ -1448,17 +1448,18 @@ junit.jupiter.execution.parallel.mode.default = concurrent
 
 The default execution mode is applied to all nodes of the test tree with a few notable
 exceptions, namely test classes that use the `Lifecycle.PER_CLASS` mode or a
-`{MethodOrderer}` (except for `{Random}`). In the former case, test authors have to ensure
-that the test class is thread-safe; in the latter, concurrent execution might conflict
-with the configured execution order. Thus, in both cases, test methods in such test
-classes are only executed concurrently if the `@Execution(CONCURRENT)` annotation is
+`{MethodOrderer}` (except for `{Random}`). In the former case, test authors have to
+ensure that the test class is thread-safe; in the latter, concurrent execution might
+conflict with the configured execution order. Thus, in both cases, test methods in such
+test classes are only executed concurrently if the `@Execution(CONCURRENT)` annotation is
 present on the test class or method.
 
-All nodes of the test tree that with execution mode `CONCURRENT` will be executed fully in
-parallel according to the provided <<writing-tests-parallel-execution-config,
-configuration>> while observing the declarative
-<<writing-tests-parallel-execution-synchronization, synchronization>> mechanism. Please
-note that <<running-tests-capturing-output>> needs to be enabled separately.
+All nodes of the test tree that are configured with the `CONCURRENT` execution mode will
+be executed fully in parallel according to the provided
+<<writing-tests-parallel-execution-config, configuration>> while observing the
+declarative <<writing-tests-parallel-execution-synchronization, synchronization>>
+mechanism. Please note that <<running-tests-capturing-output>> needs to be enabled
+separately.
 
 [[writing-tests-parallel-execution-config]]
 ==== Configuration
@@ -1469,7 +1470,7 @@ implementations out of the box: `dynamic` and `fixed`. Alternatively, you may im
 `custom` strategy.
 
 To select a strategy, set the `junit.jupiter.execution.parallel.config.strategy`
-configuration parameter to one of the following options:
+configuration parameter to one of the following options.
 
 `dynamic`::
   Computes the desired parallelism based on the number of available processors/cores
@@ -1506,7 +1507,7 @@ Jupiter provides another annotation-based declarative synchronization mechanism.
 specific shared resource that requires synchronized access to ensure reliable test
 execution. The shared resource is identified by a unique name which is a `String`. The
 name can be user-defined or one of the predefined constants in `{Resources}`:
-`SYSTEM_PROPERTIES`, `SYSTEM_OUT`, or `SYSTEM_ERR`.
+`SYSTEM_PROPERTIES`, `SYSTEM_OUT`, `SYSTEM_ERR`, `LOCALE`, or `TIME_ZONE`.
 
 If the tests in the following example were run in parallel _without_ the use of
 {ResourceLock}, they would be _flaky_. Sometimes they would pass, and at other times they
