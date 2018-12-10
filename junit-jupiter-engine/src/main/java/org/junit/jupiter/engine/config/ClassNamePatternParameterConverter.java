@@ -23,17 +23,17 @@ class ClassNamePatternParameterConverter<T> {
 
 	Predicate<T> get(ConfigurationParameters configurationParameters, String key) {
 		// @formatter:off
-        return configurationParameters.get(key)
-                .filter(StringUtils::isNotBlank)
-                .map(String::trim)
-                .map(patternString -> {
-                    if (DEACTIVATE_ALL_PATTERN.equals(patternString)) {
-                        return alwaysDeactivated();
-                    }
-                    return matchesRegex(patternString);
-                })
-                .orElse(alwaysActivated());
-        // @formatter:on
+		return configurationParameters.get(key)
+				.filter(StringUtils::isNotBlank)
+				.map(String::trim)
+				.map(patternString -> {
+					if (DEACTIVATE_ALL_PATTERN.equals(patternString)) {
+						return alwaysDeactivated();
+					}
+					return matchesRegex(patternString);
+				})
+				.orElse(alwaysActivated());
+		// @formatter:on
 	}
 
 	private Predicate<T> matchesRegex(String patternString) {
