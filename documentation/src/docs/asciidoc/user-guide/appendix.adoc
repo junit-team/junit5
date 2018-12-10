@@ -40,6 +40,9 @@ artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
     Annotations for configuring test suites on the JUnit Platform. Supported by the
     <<running-tests-junit-platform-runner,JUnitPlatform runner>> and possibly by
     third-party `TestEngine` implementations.
+  `junit-platform-testkit`::
+     Provides support for executing a test plan for a given `TestEngine` and then
+     accessing the results via a fluent API to verify the expected results.
 
 [[dependency-metadata-junit-jupiter]]
 ==== JUnit Jupiter
@@ -131,6 +134,7 @@ package org.junit.platform {
     [junit-platform-reporting] as reporting
     [junit-platform-runner] as runner
     [junit-platform-suite-api] as suite_api
+    [junit-platform-testkit] as testkit
 }
 
 package org.opentest4j {
@@ -177,6 +181,9 @@ reporting ..> launcher
 runner ..> launcher
 runner ..> suite_api
 runner ..> junit4
+
+testkit ..> opentest4j
+testkit ..> launcher
 
 vintage_engine ..> engine
 vintage_engine ..> junit4
