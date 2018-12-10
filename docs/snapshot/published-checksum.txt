@@ -302,7 +302,6 @@
 8408f44c27245f89cdaa55e71d1bfb31  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertDoesNotThrow.java
 84397b8f4d6f30cd8fd0128a47203b60  documentation/src/docs/asciidoc/user-guide/index.adoc
 84cafa61acdc83ba0213c1df75806ecd  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/VerifierSupport.java
-853cab19e0a2ecd67dc9c6988f0e8240  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 855e13355685519e5fc57adcac2130ba  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/conditions/package-info.java
 85bbc67c76c1ecde610d9615e2d8d3f0  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/LockManager.java
 862e28f19a4512cd049cb3e44831767a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/Constants.java
@@ -558,6 +557,7 @@ f0cd164f49d6dd6605e84671f84aec52  junit-jupiter-engine/src/main/java/org/junit/j
 f0ecb644bfeb5f79864a3ecbbda38e28  documentation/src/docs/asciidoc/user-guide/advanced-topics.adoc
 f12dddde4058f12477f7f738aff75d95  documentation/src/test/java/example/DynamicTestsDemo.java
 f13717dbd77fa7d75ce96105aae25d5a  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageTestDescriptor.java
+f14d757fd793befbbe216813e797c51a  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 f1762a519ec6c0fc1ff8ba86ed0e5145  documentation/src/test/java/example/TestReporterDemo.java
 f1bf2dbc836072da61d73568717d7c1d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DisplayNameUtils.java
 f1e9ddba7d2dc362f6be979e451f3e59  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/DefaultJupiterConfiguration.java

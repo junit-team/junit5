@@ -4028,10 +4028,10 @@ example, in <code>junit-platform.properties</code> (see <a href="#running-tests-
 options).</p>
 </div>
 <div class="paragraph">
-<p>Enabling this property is but the first step to execute tests in parallel. If enabled,
-test classes and methods are still executed sequentially by default. Whether or not a node
-in the test tree is executed concurrently is controlled by its execution mode. The
-following two modes are available:</p>
+<p>Please note that enabling this property is only the first step required to execute tests
+in parallel. If enabled, test classes and methods will still be executed sequentially by
+default. Whether or not a node in the test tree is executed concurrently is controlled by
+its execution mode. The following two modes are available.</p>
 </div>
 <div class="dlist">
 <dl>
@@ -4050,9 +4050,9 @@ method, the test method will be executed in the same thread as any <code>@Before
 <div class="paragraph">
 <p>By default, nodes in the test tree use the <code>SAME_THREAD</code> execution mode. You can change
 the default by setting the <code>junit.jupiter.execution.parallel.mode.default</code> configuration
-parameter. Alternatively, you can use the <code><a href="../api/org/junit/jupiter/api/parallel/Execution.html">@Execution</a></code> annotation to change the execution
-mode for the annotated element and its subelements (if any) which allows to activate
-parallel execution for individual test classes, one by one.</p>
+parameter. Alternatively, you can use the <code><a href="../api/org/junit/jupiter/api/parallel/Execution.html">@Execution</a></code> annotation to change the
+execution mode for the annotated element and its subelements (if any) which allows you to
+activate parallel execution for individual test classes, one by one.</p>
 </div>
 <div class="listingblock">
 <div class="title">Configuration parameters to execute all tests in parallel</div>
@@ -4064,17 +4064,19 @@ junit.jupiter.execution.parallel.mode.default = concurrent</code></pre>
 <div class="paragraph">
 <p>The default execution mode is applied to all nodes of the test tree with a few notable
 exceptions, namely test classes that use the <code>Lifecycle.PER_CLASS</code> mode or a
-<code><a href="../api/org/junit/jupiter/api/MethodOrderer.html">MethodOrderer</a></code> (except for <code><a href="../api/org/junit/jupiter/api/MethodOrderer.Random.html">Random</a></code>). In the former case, test authors have to ensure
-that the test class is thread-safe; in the latter, concurrent execution might conflict
-with the configured execution order. Thus, in both cases, test methods in such test
-classes are only executed concurrently if the <code>@Execution(CONCURRENT)</code> annotation is
+<code><a href="../api/org/junit/jupiter/api/MethodOrderer.html">MethodOrderer</a></code> (except for <code><a href="../api/org/junit/jupiter/api/MethodOrderer.Random.html">Random</a></code>). In the former case, test authors have to
+ensure that the test class is thread-safe; in the latter, concurrent execution might
+conflict with the configured execution order. Thus, in both cases, test methods in such
+test classes are only executed concurrently if the <code>@Execution(CONCURRENT)</code> annotation is
 present on the test class or method.</p>
 </div>
 <div class="paragraph">
-<p>All nodes of the test tree that with execution mode <code>CONCURRENT</code> will be executed fully in
-parallel according to the provided <a href="#writing-tests-parallel-execution-config">configuration</a> while observing the declarative
-<a href="#writing-tests-parallel-execution-synchronization">synchronization</a> mechanism. Please
-note that <a href="#running-tests-capturing-output">Capturing Standard Output/Error</a> needs to be enabled separately.</p>
+<p>All nodes of the test tree that are configured with the <code>CONCURRENT</code> execution mode will
+be executed fully in parallel according to the provided
+<a href="#writing-tests-parallel-execution-config">configuration</a> while observing the
+declarative <a href="#writing-tests-parallel-execution-synchronization">synchronization</a>
+mechanism. Please note that <a href="#running-tests-capturing-output">Capturing Standard Output/Error</a> needs to be enabled
+separately.</p>
 </div>
 <div class="sect3">
 <h4 id="writing-tests-parallel-execution-config"><a class="anchor" href="#writing-tests-parallel-execution-config"></a>2.18.1. Configuration</h4>
@@ -4086,7 +4088,7 @@ implementations out of the box: <code>dynamic</code> and <code>fixed</code>. Alt
 </div>
 <div class="paragraph">
 <p>To select a strategy, set the <code>junit.jupiter.execution.parallel.config.strategy</code>
-configuration parameter to one of the following options:</p>
+configuration parameter to one of the following options.</p>
 </div>
 <div class="dlist">
 <dl>
@@ -4142,7 +4144,7 @@ Jupiter provides another annotation-based declarative synchronization mechanism.
 specific shared resource that requires synchronized access to ensure reliable test
 execution. The shared resource is identified by a unique name which is a <code>String</code>. The
 name can be user-defined or one of the predefined constants in <code><a href="../api/org/junit/jupiter/api/parallel/Resources.html">Resources</a></code>:
-<code>SYSTEM_PROPERTIES</code>, <code>SYSTEM_OUT</code>, or <code>SYSTEM_ERR</code>.</p>
+<code>SYSTEM_PROPERTIES</code>, <code>SYSTEM_OUT</code>, <code>SYSTEM_ERR</code>, <code>LOCALE</code>, or <code>TIME_ZONE</code>.</p>
 </div>
 <div class="paragraph">
 <p>If the tests in the following example were run in parallel <em>without</em> the use of
@@ -7498,7 +7500,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-12-10 08:54:45 UTC
+Last updated 2018-12-10 14:05:41 UTC
 </div>
 </div>
 </body>
