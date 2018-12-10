@@ -116,6 +116,7 @@
 3bb967836894b05445648a0558dba9a7  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepeatedTestDisplayNameFormatter.java
 3bcb730e3d8702b1181464ffff231bbb  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherFactory.java
 3bdbb6e3692997627f5336577e1c7251  documentation/src/main/java/example/util/ListWriter.java
+3c048d53dcee188eec73a463edc4cec9  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/ClassNamePatternParameterConverter.java
 3c19b6d23df0233840f61f38466cdc07  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTest.java
 3c298108511b073dc934aa83f842a648  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Stack.java
 3c7977562f0a80bbedb87ebddc71e544  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeTestTask.java
@@ -518,7 +519,6 @@ e1e4e6060b0db0e10a8e62988c726b5a  documentation/src/test/java/example/DisplayNam
 e27f28f18dc42c8bc7b8fc041528e2f6  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/Root.java
 e3da76c46e1883f576416a68f6b047c5  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsPotentialTestContainer.java
 e43fdb2f3631c727a9c2f32de63f3c3d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/NamespaceAwareStore.java
-e46d684756b69e8b52fc9c1313395833  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/ClassNamePatternParameterConverter.java
 e496ec3ddf5a3b44f66fef98a2a6feba  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertTrue.java
 e4e6cd80dd40a25fe453cdf32f38b6a6  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/package-info.java
 e55dc8ec6d26d9a04de6be0ed0eea0d0  documentation/src/test/java/example/registration/DocumentationDemo.java
