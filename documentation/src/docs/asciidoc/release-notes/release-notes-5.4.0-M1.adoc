@@ -51,6 +51,10 @@ repository on GitHub.
   popular by the Ant build system.
   - See <<../user-guide/index.adoc#launcher-api-listeners-reporting, JUnit Platform
     Reporting>> in the User Guide for details.
+* New `junit-platform-testkit` artifact containing a _Test Kit_ API for testing the
+  execution of a `{TestEngine}` running on the JUnit Platform.
+  - See <<../user-guide/index.adoc#testkit, JUnit Platform Test Kit>> in the User Guide
+    for details.
 * New `ModifierSupport` class providing an API for extension and test engine authors to
   inspect modifiers of classes and members.
   - See the <<../user-guide/index.adoc#extensions-supported-utilities-modifier, User

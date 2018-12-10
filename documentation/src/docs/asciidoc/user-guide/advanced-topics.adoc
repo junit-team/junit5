@@ -3,6 +3,8 @@
 
 include::launcher-api.adoc[]
 
+include::testkit.adoc[]
+
 ////
 [[modules]]
 === Modules
