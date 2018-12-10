@@ -13,6 +13,7 @@
 06329c8badd67567880f9e630e11734f  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/PackageNameSelectorResolver.java
 06666f021163b98b13639b571d79907c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/MethodSource.java
 06d982b8075dd94ec6e166c5d53649ce  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ModifierSupport.java
+0764a5f8bc178b0d5d7e1ee4297a3f51  documentation/src/docs/asciidoc/user-guide/appendix.adoc
 0878c4ebc6b060a2f328f7b7248810f2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java
 09971025eb5a14efb28b1cce89868eef  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/JupiterEngineExtensionContext.java
 09af82238565deb864ae25a17a2b2596  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/MutableTestExecutionSummary.java
@@ -569,7 +570,6 @@ f580382cc969dd55b6f7ea605147063f  junit-jupiter-params/src/main/java/org/junit/j
 f5919de0da68f042c7d92f96abe28f6c  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
 f6951ab0a5722995c5aa01a0731cd6c8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertArrayEquals.java
 f71bb381f0a2608cbdf1c56568820d5f  junit-platform-engine/src/main/java/org/junit/platform/engine/EngineDiscoveryRequest.java
-f7c1bcc1692f1cd626e71de92d356c2c  documentation/src/docs/asciidoc/user-guide/appendix.adoc
 f82d84cba28c7526df0caba14007e1a2  junit-platform-console/src/main/java/org/junit/platform/console/tasks/CustomContextClassLoaderExecutor.java
 f8b1fe83410635b05008db4eb0adbf61  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/FallbackStringToObjectConverter.java
 f8bf638bc46ce2bbbc70c5fbcb608f0b  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/DefaultDiscoveryRequest.java
