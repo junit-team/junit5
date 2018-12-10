@@ -20,19 +20,19 @@ import org.junit.platform.engine.ConfigurationParameters;
 /**
  * @since 5.4
  */
-class EnumConfigurationParameterConverter<T extends Enum<T>> {
+class EnumConfigurationParameterConverter<E extends Enum<E>> {
 
 	private static final Logger logger = LoggerFactory.getLogger(EnumConfigurationParameterConverter.class);
 
-	private final Class<T> enumType;
+	private final Class<E> enumType;
 	private final String enumDisplayName;
 
-	EnumConfigurationParameterConverter(Class<T> enumType, String enumDisplayName) {
+	EnumConfigurationParameterConverter(Class<E> enumType, String enumDisplayName) {
 		this.enumType = enumType;
 		this.enumDisplayName = enumDisplayName;
 	}
 
-	T get(ConfigurationParameters configParams, String key, T defaultValue) {
+	E get(ConfigurationParameters configParams, String key, E defaultValue) {
 		Preconditions.notNull(configParams, "ConfigurationParameters must not be null");
 
 		Optional<String> optional = configParams.get(key);
@@ -40,7 +40,7 @@ class EnumConfigurationParameterConverter<T extends Enum<T>> {
 		if (optional.isPresent()) {
 			try {
 				constantName = optional.get().trim().toUpperCase();
-				T value = Enum.valueOf(enumType, constantName);
+				E value = Enum.valueOf(enumType, constantName);
 				logger.info(() -> String.format("Using %s '%s' set via the '%s' configuration parameter.",
 					enumDisplayName, value, key));
 				return value;

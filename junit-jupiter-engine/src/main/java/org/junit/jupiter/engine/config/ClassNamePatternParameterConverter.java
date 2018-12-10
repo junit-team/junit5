@@ -20,36 +20,31 @@ import org.junit.platform.engine.ConfigurationParameters;
 /**
  * @since 5.4
  */
-class ClassNamePatternParameterConverter<T> {
+class ClassNamePatternParameterConverter {
+
+	private static final Predicate<?> alwaysActivated = object -> true;
+	private static final Predicate<?> alwaysDeactivated = object -> false;
 
 	static final String DEACTIVATE_ALL_PATTERN = "*";
 
-	Predicate<T> get(ConfigurationParameters configurationParameters, String key) {
+	Predicate<?> get(ConfigurationParameters configurationParameters, String key) {
 		// @formatter:off
 		return configurationParameters.get(key)
 				.filter(StringUtils::isNotBlank)
 				.map(String::trim)
 				.map(patternString -> {
 					if (DEACTIVATE_ALL_PATTERN.equals(patternString)) {
-						return alwaysDeactivated();
+						return alwaysDeactivated;
 					}
 					return matchesRegex(patternString);
 				})
-				.orElse(alwaysActivated());
+				.orElse(alwaysActivated);
 		// @formatter:on
 	}
 
-	private Predicate<T> matchesRegex(String patternString) {
+	private Predicate<?> matchesRegex(String patternString) {
 		Pattern pattern = Pattern.compile(convertToRegEx(patternString));
 		return object -> !pattern.matcher(object.getClass().getName()).matches();
-	}
-
-	private Predicate<T> alwaysActivated() {
-		return object -> true;
-	}
-
-	private Predicate<T> alwaysDeactivated() {
-		return object -> false;
 	}
 
 	/**

@@ -30,6 +30,12 @@ import org.junit.platform.engine.ConfigurationParameters;
 @API(status = INTERNAL, since = "5.4")
 public class DefaultJupiterConfiguration implements JupiterConfiguration {
 
+	private static final EnumConfigurationParameterConverter<ExecutionMode> executionModeConverter = //
+		new EnumConfigurationParameterConverter<>(ExecutionMode.class, "parallel execution mode");
+
+	private static final EnumConfigurationParameterConverter<Lifecycle> lifecycleConverter = //
+		new EnumConfigurationParameterConverter<>(Lifecycle.class, "test instance lifecycle mode");
+
 	private final ConfigurationParameters configurationParameters;
 
 	public DefaultJupiterConfiguration(ConfigurationParameters configurationParameters) {
@@ -54,22 +60,20 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 
 	@Override
 	public ExecutionMode getDefaultExecutionMode() {
-		EnumConfigurationParameterConverter<ExecutionMode> converter = new EnumConfigurationParameterConverter<>(
-			ExecutionMode.class, "parallel execution mode");
-		return converter.get(configurationParameters, DEFAULT_EXECUTION_MODE_PROPERTY_NAME, ExecutionMode.SAME_THREAD);
+		return executionModeConverter.get(configurationParameters, DEFAULT_EXECUTION_MODE_PROPERTY_NAME,
+			ExecutionMode.SAME_THREAD);
 	}
 
 	@Override
 	public Lifecycle getDefaultTestInstanceLifecycle() {
-		EnumConfigurationParameterConverter<Lifecycle> converter = new EnumConfigurationParameterConverter<>(
-			Lifecycle.class, "test instance lifecycle mode");
-		return converter.get(configurationParameters, DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME,
+		return lifecycleConverter.get(configurationParameters, DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME,
 			Lifecycle.PER_METHOD);
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Predicate<ExecutionCondition> getExecutionConditionFilter() {
-		return new ClassNamePatternParameterConverter<ExecutionCondition>().get(configurationParameters,
+		return (Predicate<ExecutionCondition>) new ClassNamePatternParameterConverter().get(configurationParameters,
 			DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME);
 	}
 
