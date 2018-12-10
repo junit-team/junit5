@@ -17,6 +17,9 @@ import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 
+/**
+ * @since 5.4
+ */
 class EnumConfigurationParameterConverter<T extends Enum<T>> {
 
 	private static final Logger logger = LoggerFactory.getLogger(EnumConfigurationParameterConverter.class);
@@ -54,4 +57,5 @@ class EnumConfigurationParameterConverter<T extends Enum<T>> {
 
 		return defaultValue;
 	}
+
 }

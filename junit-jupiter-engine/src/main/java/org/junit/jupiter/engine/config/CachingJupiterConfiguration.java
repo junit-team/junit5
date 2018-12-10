@@ -21,6 +21,11 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
+/**
+ * Caching implementation of the {@link JupiterConfiguration} API.
+ *
+ * @since 5.4
+ */
 @API(status = INTERNAL, since = "5.4")
 public class CachingJupiterConfiguration implements JupiterConfiguration {
 

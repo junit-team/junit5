@@ -17,6 +17,9 @@ import java.util.regex.Pattern;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 
+/**
+ * @since 5.4
+ */
 class ClassNamePatternParameterConverter<T> {
 
 	static final String DEACTIVATE_ALL_PATTERN = "*";

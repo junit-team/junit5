@@ -20,6 +20,9 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
+/**
+ * @since 5.4
+ */
 @API(status = INTERNAL, since = "5.4")
 public interface JupiterConfiguration {
 

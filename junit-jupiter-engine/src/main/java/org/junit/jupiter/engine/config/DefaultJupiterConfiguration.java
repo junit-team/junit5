@@ -22,6 +22,11 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 
+/**
+ * Default implementation of the {@link JupiterConfiguration} API.
+ *
+ * @since 5.4
+ */
 @API(status = INTERNAL, since = "5.4")
 public class DefaultJupiterConfiguration implements JupiterConfiguration {
 
