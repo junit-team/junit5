@@ -36,15 +36,15 @@ public class ExampleTestCase {
 	}
 
 	@Test
-	void failingTest() {
-		// The following throws an ArithmeticException: "/ by zero"
-		calculator.divide(1, 0);
-	}
-
-	@Test
 	void abortedTest() {
 		assumeTrue("abc".contains("Z"));
 		// aborted ...
+	}
+
+	@Test
+	void failingTest() {
+		// The following throws an ArithmeticException: "/ by zero"
+		calculator.divide(1, 0);
 	}
 
 }
