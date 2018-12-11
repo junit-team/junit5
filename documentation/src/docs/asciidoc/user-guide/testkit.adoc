@@ -11,11 +11,46 @@ support is limited to the execution of a single `TestEngine` (see <<testkit-engi
 The `{testkit-engine-package}` package provides support for executing a `{TestPlan}` for a
 given `{TestEngine}` running on the JUnit Platform and then accessing the results via a
 fluent API to verify the expected results. The key entry point into this API is the
-`{EngineTestKit}`.
+`{EngineTestKit}` which provides static factory methods named `engine()` and `execute()`.
+It is recommended that you select one of the `engine()` variants to benefit from the
+fluent API for building an `EngineDiscoveryRequest`.
 
-////
+NOTE: If you prefer to use the `LauncherDiscoveryRequestBuilder` from the `Launcher` API
+to build your `EngineDiscoveryRequest`, you must use one of the `execute()` variants in
+`EngineTestKit`.
+
+The following test class written using JUnit Jupiter will be used in subsequent examples.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ExampleTestCase.java[tags=user_guide]
+----
+
+For the sake of brevity, the following sections demonstrate how to test JUnit's own
+`JupiterTestEngine` whose unique engine ID is `"junit-jupiter"`. If you want to test your
+own `TestEngine` implementation, you need to use its unique engine ID. Alternatively, you
+may test your own `TestEngine` by supplying an instance of it to the
+`EngineTestKit.engine(TestEngine)` static factory method.
+
+[[testkit-engine-statistics]]
+==== Asserting Statistics
+
+One of the most common features of the Test Kit is the ability to assert statistics
+against events fired during the execution of a `TestPlan`. The following tests demonstrate
+how to assert statistics for _containers_ and _tests_ in the JUnit Jupiter `TestEngine`.
+
 [source,java,indent=0]
 ----
 include::{testDir}/example/testkit/EngineTestKitDemo.java[tags=user_guide]
 ----
-////
+<1> Select the JUnit Jupiter `TestEngine`.
+<2> Select the `ExampleTestCase` test class.
+<3> Execute the `TestPlan`.
+<4> Filter by _container_ events.
+<5> Assert statistics for _container_ events.
+<6> Filter by _test_ events.
+<7> Assert statistics for _test_ events.
+
+NOTE: In the `verifyJupiterContainerStats()` test method, the counts for the `started` and
+`succeeded` statistics are `2` since the `JupiterTestEngine` and the `ExampleTestCase`
+class are both considered containers.
