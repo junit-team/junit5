@@ -6867,32 +6867,39 @@ to build your <code>EngineDiscoveryRequest</code>, you must use one of the <code
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.fail</span>;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assumptions.assumeTrue</span>;
+
+<span class="keyword">import</span> <span class="include">example.util.Calculator</span>;
 
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Disabled</span>;
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
 
 <span class="directive">public</span> <span class="type">class</span> <span class="class">ExampleTestCase</span> {
 
+    <span class="directive">private</span> <span class="directive">final</span> Calculator calculator = <span class="keyword">new</span> Calculator();
+
     <span class="annotation">@Test</span>
     <span class="annotation">@Disabled</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">for demonstration purposes</span><span class="delimiter">&quot;</span></span>)
     <span class="type">void</span> skippedTest() {
+        <span class="comment">// skipped ...</span>
     }
 
     <span class="annotation">@Test</span>
     <span class="type">void</span> succeedingTest() {
-    }
-
-    <span class="annotation">@Test</span>
-    <span class="type">void</span> failingTest() {
-        fail(<span class="string"><span class="delimiter">&quot;</span><span class="content">a failing test</span><span class="delimiter">&quot;</span></span>);
+        assertEquals(<span class="integer">42</span>, calculator.multiply(<span class="integer">6</span>, <span class="integer">7</span>));
     }
 
     <span class="annotation">@Test</span>
     <span class="type">void</span> abortedTest() {
         assumeTrue(<span class="string"><span class="delimiter">&quot;</span><span class="content">abc</span><span class="delimiter">&quot;</span></span>.contains(<span class="string"><span class="delimiter">&quot;</span><span class="content">Z</span><span class="delimiter">&quot;</span></span>));
-        fail(<span class="string"><span class="delimiter">&quot;</span><span class="content">test should have been aborted</span><span class="delimiter">&quot;</span></span>);
+        <span class="comment">// aborted ...</span>
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> failingTest() {
+        <span class="comment">// The following throws an ArithmeticException: &quot;/ by zero&quot;</span>
+        calculator.divide(<span class="integer">1</span>, <span class="integer">0</span>);
     }
 
 }</code></pre>
@@ -7728,7 +7735,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-12-11 13:46:31 UTC
+Last updated 2018-12-11 14:23:43 UTC
 </div>
 </div>
 </body>
