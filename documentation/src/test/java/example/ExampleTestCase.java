@@ -15,10 +15,10 @@ package example;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+import example.util.Calculator;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import example.util.Calculator;
 
 public class ExampleTestCase {
 
