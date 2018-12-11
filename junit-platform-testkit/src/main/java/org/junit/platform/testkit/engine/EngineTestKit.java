@@ -257,6 +257,9 @@ public final class EngineTestKit {
 		/**
 		 * Add all of the supplied {@linkplain DiscoverySelector discovery selectors}.
 		 *
+		 * <p>Built-in discovery selectors can be created via the static factory
+		 * methods in {@link org.junit.platform.engine.discovery.DiscoverySelectors}.
+		 *
 		 * @param selectors the discovery selectors to add; never {@code null}
 		 * @return this builder for method chaining
 		 * @see #filters(DiscoveryFilter...)
@@ -271,6 +274,10 @@ public final class EngineTestKit {
 
 		/**
 		 * Add all of the supplied {@linkplain DiscoveryFilter discovery filters}.
+		 *
+		 * <p>Built-in discovery filters can be created via the static factory
+		 * methods in {@link org.junit.platform.engine.discovery.ClassNameFilter}
+		 * and {@link org.junit.platform.engine.discovery.PackageNameFilter}.
 		 *
 		 * @param filters the discovery filters to add; never {@code null}
 		 * @return this builder for method chaining
@@ -295,6 +302,7 @@ public final class EngineTestKit {
 		 * @see #filters(DiscoveryFilter...)
 		 * @see #configurationParameters(Map)
 		 * @see #execute()
+		 * @see org.junit.platform.engine.ConfigurationParameters
 		 */
 		public Builder configurationParameter(String key, String value) {
 			this.requestBuilder.configurationParameter(key, value);
@@ -302,7 +310,7 @@ public final class EngineTestKit {
 		}
 
 		/**
-		 * Add all of the supplied configuration parameters.
+		 * Add all of the supplied <em>configuration parameters</em>.
 		 *
 		 * @param configurationParameters the map of configuration parameters to add;
 		 * never {@code null}
@@ -311,6 +319,7 @@ public final class EngineTestKit {
 		 * @see #filters(DiscoveryFilter...)
 		 * @see #configurationParameter(String, String)
 		 * @see #execute()
+		 * @see org.junit.platform.engine.ConfigurationParameters
 		 */
 		public Builder configurationParameters(Map<String, String> configurationParameters) {
 			this.requestBuilder.configurationParameters(configurationParameters);
