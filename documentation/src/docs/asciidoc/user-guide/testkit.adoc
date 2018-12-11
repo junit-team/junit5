@@ -8,10 +8,10 @@ support is limited to the execution of a single `TestEngine` (see <<testkit-engi
 [[testkit-engine]]
 ==== Engine Test Kit
 
-The `org.junit.platform.testkit.engine` package provides support for executing a test plan
-for a given `{TestEngine}` running on the JUnit Platform and then accessing the results
-via a fluent API to verify the expected results. The key entry point into this API is the
-`EngineTestKit`.
+The `{testkit-engine-package}` package provides support for executing a `{TestPlan}` for a
+given `{TestEngine}` running on the JUnit Platform and then accessing the results via a
+fluent API to verify the expected results. The key entry point into this API is the
+`{EngineTestKit}`.
 
 ////
 [source,java,indent=0]
