@@ -21,7 +21,9 @@ import org.junit.platform.engine.DiscoveryFilter;
  * {@link DiscoveryFilter} that is applied to the name of a {@link Package}.
  *
  * @since 1.0
- * @see #includePackageNames
+ * @see #includePackageNames(String...)
+ * @see #excludePackageNames(String...)
+ * @see ClassNameFilter
  */
 @API(status = STABLE, since = "1.0")
 public interface PackageNameFilter extends DiscoveryFilter<String> {
@@ -37,6 +39,8 @@ public interface PackageNameFilter extends DiscoveryFilter<String> {
 	 * @param names package names that we be compared against fully qualified
 	 * package names; never {@code null}, empty, or containing {@code null}
 	 * @see Package#getName()
+	 * @see #includePackageNames(List)
+	 * @see #excludePackageNames(String...)
 	 */
 	static PackageNameFilter includePackageNames(String... names) {
 		return new IncludePackageNameFilter(names);
@@ -53,6 +57,8 @@ public interface PackageNameFilter extends DiscoveryFilter<String> {
 	 * @param names package names that we be compared against fully qualified
 	 * package names; never {@code null}, empty, or containing {@code null}
 	 * @see Package#getName()
+	 * @see #includePackageNames(String...)
+	 * @see #excludePackageNames(String...)
 	 */
 	static PackageNameFilter includePackageNames(List<String> names) {
 		return includePackageNames(names.toArray(new String[0]));
@@ -69,6 +75,8 @@ public interface PackageNameFilter extends DiscoveryFilter<String> {
 	 * @param names package names that we be compared against fully qualified
 	 * package names; never {@code null}, empty, or containing {@code null}
 	 * @see Package#getName()
+	 * @see #excludePackageNames(List)
+	 * @see #includePackageNames(String...)
 	 */
 	static PackageNameFilter excludePackageNames(String... names) {
 		return new ExcludePackageNameFilter(names);
@@ -85,6 +93,8 @@ public interface PackageNameFilter extends DiscoveryFilter<String> {
 	 * @param names package names that we be compared against fully qualified
 	 * package names; never {@code null}, empty, or containing {@code null}
 	 * @see Package#getName()
+	 * @see #excludePackageNames(String...)
+	 * @see #includePackageNames(String...)
 	 */
 	static PackageNameFilter excludePackageNames(List<String> names) {
 		return excludePackageNames(names.toArray(new String[0]));

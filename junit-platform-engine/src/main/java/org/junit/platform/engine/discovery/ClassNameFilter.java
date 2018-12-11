@@ -19,7 +19,9 @@ import org.junit.platform.engine.DiscoveryFilter;
  * {@link DiscoveryFilter} that is applied to the name of a {@link Class}.
  *
  * @since 1.0
- * @see #includeClassNamePatterns
+ * @see #includeClassNamePatterns(String...)
+ * @see #excludeClassNamePatterns(String...)
+ * @see PackageNameFilter
  */
 @API(status = STABLE, since = "1.0")
 public interface ClassNameFilter extends DiscoveryFilter<String> {
@@ -49,6 +51,7 @@ public interface ClassNameFilter extends DiscoveryFilter<String> {
 	 * @param patterns regular expressions to match against fully qualified
 	 * class names; never {@code null}, empty, or containing {@code null}
 	 * @see Class#getName()
+	 * @see #excludeClassNamePatterns(String...)
 	 */
 	static ClassNameFilter includeClassNamePatterns(String... patterns) {
 		return new IncludeClassNameFilter(patterns);
@@ -65,6 +68,7 @@ public interface ClassNameFilter extends DiscoveryFilter<String> {
 	 * @param patterns regular expressions to match against fully qualified
 	 * class names; never {@code null}, empty, or containing {@code null}
 	 * @see Class#getName()
+	 * @see #includeClassNamePatterns(String...)
 	 */
 	static ClassNameFilter excludeClassNamePatterns(String... patterns) {
 		return new ExcludeClassNameFilter(patterns);
