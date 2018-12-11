@@ -12,32 +12,39 @@ package example;
 
 // tag::user_guide[]
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import example.util.Calculator;
+
 public class ExampleTestCase {
+
+	private final Calculator calculator = new Calculator();
 
 	@Test
 	@Disabled("for demonstration purposes")
 	void skippedTest() {
+		// skipped ...
 	}
 
 	@Test
 	void succeedingTest() {
+		assertEquals(42, calculator.multiply(6, 7));
 	}
 
 	@Test
 	void failingTest() {
-		fail("a failing test");
+		// The following throws an ArithmeticException: "/ by zero"
+		calculator.divide(1, 0);
 	}
 
 	@Test
 	void abortedTest() {
 		assumeTrue("abc".contains("Z"));
-		fail("test should have been aborted");
+		// aborted ...
 	}
 
 }
