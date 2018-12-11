@@ -426,7 +426,6 @@ ba2e44c132b20574d2da9835fda35c38  junit-platform-launcher/src/main/java/org/juni
 ba5344cacee9047b28ab7c46a311bc30  junit-platform-commons/src/main/java/org/junit/platform/commons/support/package-info.java
 bb6d66d5dc15f7b22ea8e9db9cb8fe93  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.java
 bbc1eeb37c9099bbdc262ebfe32fa9fb  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.java
-bc787f65f15cd6efffa2a9111ffed127  documentation/src/docs/asciidoc/link-attributes.adoc
 bcecf4e882b45e1ac2ca5de1d8c63a36  junit-vintage-engine/src/main/java/org/junit/vintage/engine/VintageTestEngine.java
 bd0861a7cf8c8b2a16521f25fb2c1584  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedField.java
 bd3529611b07bd5936478efdf0c28018  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/EngineDescriptor.java
@@ -522,6 +521,7 @@ e0d7f8d6a2774e65d1edb4bc464eb623  junit-jupiter-api/src/main/java/org/junit/jupi
 e1e4e6060b0db0e10a8e62988c726b5a  documentation/src/test/java/example/DisplayNameDemo.java
 e27f28f18dc42c8bc7b8fc041528e2f6  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/Root.java
 e3da76c46e1883f576416a68f6b047c5  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsPotentialTestContainer.java
+e435d5f2c4969d2a230c5af351213556  documentation/src/docs/asciidoc/link-attributes.adoc
 e43fdb2f3631c727a9c2f32de63f3c3d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/NamespaceAwareStore.java
 e496ec3ddf5a3b44f66fef98a2a6feba  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertTrue.java
 e4e6cd80dd40a25fe453cdf32f38b6a6  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/package-info.java
