@@ -113,6 +113,7 @@
 3a8a646028a9712f1cd86abd011e6302  documentation/src/test/java/example/TestInfoDemo.java
 3a9226a988f43c72f03119cc32cbbfc3  junit-platform-engine/src/main/java/org/junit/platform/engine/EngineExecutionListener.java
 3acd95f7845b27dc7bfe55cfa5a9a332  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicNodeTestDescriptor.java
+3b0bbef17b4a62f40c2475b2e291bc7f  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/ExecutionRecorder.java
 3b17cb0c6494f4a3e2dd39d2e7fb9978  documentation/src/test/java/example/ExternalMethodSourceDemo.java
 3b80297fe790dc9fbf8aced08c86411b  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestExecutionListener.java
 3b8ebde7a98048bdd781e3d682a90920  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathResourceSelector.java
@@ -582,7 +583,6 @@ f94153d579f89eab0a979480a6a75e5a  documentation/src/main/java/example/util/Calcu
 f970013d69d23b0163abab4176207fb4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIf.java
 f9cebc3b1e61f67c4584abd8965e1d6c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/package-info.java
 fa35be3f0920fc29d4a7ede8975c5706  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assumptions.java
-fa8c1dab5965856d13cd5345a561b3b1  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/ExecutionRecorder.java
 fab77cffbb14d4479817d66d99844d06  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/Executable.java
 fb276bcb5e85d2999e195c167abbc22f  documentation/src/test/java/example/registration/WebServerDemo.java
 fbd9eae7d42f174dda6ae63c9a8e4bc4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AfterEach.java
