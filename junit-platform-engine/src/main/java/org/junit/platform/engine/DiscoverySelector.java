@@ -21,6 +21,7 @@ import org.apiguardian.api.API;
  *
  * @since 1.0
  * @see EngineDiscoveryRequest
+ * @see org.junit.platform.engine.discovery.DiscoverySelectors
  */
 @API(status = STABLE, since = "1.0")
 public interface DiscoverySelector {
