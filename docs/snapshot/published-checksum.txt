@@ -239,7 +239,6 @@
 6c3a4d0fcef834d9f803fd6739bfb5da  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestInstance.java
 6c71f5800447fb0215f3aa918c0df05c  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/TestRun.java
 6c7321da395ecb027e22ee2968e3647d  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ToStringBuilder.java
-6cd298c42764d70104a6850ea756d1e4  documentation/src/test/java/example/StandardTests.java
 6cd431f2a063da9375181802d60e6fcb  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DefaultTestInstanceFactoryContext.java
 6cf37d76e0babb5f2d71e9c6e9c7015c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/RegisterExtension.java
 6e95cfb474cd4077e66b25ec4ded2a5f  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/ClassExtensionContext.java
@@ -328,6 +327,7 @@
 90d7ca425d1c3b4f9ab44278df7cfe79  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/TestExecutionResultConditions.java
 9165b85430eeba08228c551306062f38  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/JavaTimeConversionPattern.java
 91f06abae6eb690ca11104aa733ea89a  junit-platform-commons/src/main/java/org/junit/platform/commons/util/package-info.java
+91f6f946ca6dcf86fe7117c67b8761e9  documentation/src/test/java/example/StandardTests.java
 921b1f4b60aef7a9a0e64665cf0fb8f5  documentation/src/main/java/example/registration/WebClient.java
 92305f3cc10455c1f523448e2b0aa91e  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/LifecycleMethodUtils.java
 925763e925d4b69b9d151d699169d3e4  junit-platform-launcher/src/main/java/org/junit/platform/launcher/EngineFilter.java

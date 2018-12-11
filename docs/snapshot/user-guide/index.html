@@ -914,6 +914,7 @@ is any top level or static member class that contains at least one test method.<
 <div class="title">A standard test class</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.fail</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assumptions.assumeTrue</span>;
 
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterAll</span>;
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterEach</span>;
@@ -945,6 +946,12 @@ is any top level or static member class that contains at least one test method.<
     <span class="annotation">@Disabled</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">for demonstration purposes</span><span class="delimiter">&quot;</span></span>)
     <span class="type">void</span> skippedTest() {
         <span class="comment">// not executed</span>
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> abortedTest() {
+        assumeTrue(<span class="string"><span class="delimiter">&quot;</span><span class="content">abc</span><span class="delimiter">&quot;</span></span>.contains(<span class="string"><span class="delimiter">&quot;</span><span class="content">Z</span><span class="delimiter">&quot;</span></span>));
+        fail(<span class="string"><span class="delimiter">&quot;</span><span class="content">test should have been aborted</span><span class="delimiter">&quot;</span></span>);
     }
 
     <span class="annotation">@AfterEach</span>
@@ -7573,7 +7580,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-12-11 12:09:21 UTC
+Last updated 2018-12-11 12:28:36 UTC
 </div>
 </div>
 </body>
