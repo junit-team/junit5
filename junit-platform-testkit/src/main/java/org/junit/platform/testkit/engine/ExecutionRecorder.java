@@ -80,7 +80,7 @@ class ExecutionRecorder implements EngineExecutionListener {
 	 *
 	 * @return the {@code EngineExecutionResults} containing all current state information
 	 */
-	public EngineExecutionResults getExecutionResults() {
+	EngineExecutionResults getExecutionResults() {
 		return new EngineExecutionResults(this.events);
 	}
 
