@@ -7116,6 +7116,57 @@ events, consult the Javadoc for <code><a href="../api/org/junit/platform/testkit
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>If we want to verify the type of exception thrown from the <code>failingTest()</code> method in
+<a href="#testkit-engine-ExampleTestCase"><code>ExampleTestCase</code></a>, we can do that as follows.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For details on what <em>conditions</em> are available for use with AssertJ assertions against
+events and execution results, consult the Javadoc for <code><a href="../api/org/junit/platform/testkit/engine/EventConditions.html">EventConditions</a></code> and
+<code><a href="../api/org/junit/platform/testkit/engine/TestExecutionResultConditions.html">TestExecutionResultConditions</a></code>, respectively.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Select the JUnit Jupiter <code>TestEngine</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Select the <a href="#testkit-engine-ExampleTestCase"><code>ExampleTestCase</code></a> test class.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Execute the <code>TestPlan</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Filter by <em>test</em> events.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Assert that the recorded <em>test</em> events contain exactly one failing test named
+<code>failingTest</code> with an exception of type <code>ArithmeticException</code> and an error message
+equal to <code>"/ by zero"</code>.</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 </div>
@@ -7850,7 +7901,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-12-12 18:02:45 UTC
+Last updated 2018-12-12 18:24:58 UTC
 </div>
 </div>
 </body>
