@@ -10,6 +10,9 @@
 
 package example.testkit;
 
+// @formatter:off
+// tag::user_guide[]
+
 import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.testkit.engine.EventConditions.event;
