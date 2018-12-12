@@ -6878,7 +6878,7 @@ to build your <code>EngineDiscoveryRequest</code>, you must use one of the <code
 <div class="paragraph">
 <p>The following test class written using JUnit Jupiter will be used in subsequent examples.</p>
 </div>
-<div class="listingblock">
+<div id="testkit-engine-ExampleTestCase" class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assumptions.assumeTrue</span>;
@@ -6931,7 +6931,8 @@ may test your own <code>TestEngine</code> by supplying an instance of it to the
 <div class="paragraph">
 <p>One of the most common features of the Test Kit is the ability to assert statistics
 against events fired during the execution of a <code>TestPlan</code>. The following tests demonstrate
-how to assert statistics for <em>containers</em> and <em>tests</em> in the JUnit Jupiter <code>TestEngine</code>.</p>
+how to assert statistics for <em>containers</em> and <em>tests</em> in the JUnit Jupiter <code>TestEngine</code>.
+For details on what statistics are available, consult the Javadoc for <code><a href="../api/org/junit/platform/testkit/engine/EventStatistics.html">EventStatistics</a></code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6942,7 +6943,7 @@ how to assert statistics for <em>containers</em> and <em>tests</em> in the JUnit
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
 <span class="keyword">import</span> <span class="include">org.junit.platform.testkit.engine.EngineTestKit</span>;
 
-<span class="type">class</span> <span class="class">EngineTestKitDemo</span> {
+<span class="type">class</span> <span class="class">EngineTestKitStatisticsDemo</span> {
 
     <span class="annotation">@Test</span>
     <span class="type">void</span> verifyJupiterContainerStats() {
@@ -6976,7 +6977,7 @@ how to assert statistics for <em>containers</em> and <em>tests</em> in the JUnit
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Select the <code>ExampleTestCase</code> test class.</td>
+<td>Select the <a href="#testkit-engine-ExampleTestCase"><code>ExampleTestCase</code></a> test class.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -7008,9 +7009,110 @@ how to assert statistics for <em>containers</em> and <em>tests</em> in the JUnit
 </td>
 <td class="content">
 In the <code>verifyJupiterContainerStats()</code> test method, the counts for the <code>started</code> and
-<code>succeeded</code> statistics are <code>2</code> since the <code>JupiterTestEngine</code> and the <code>ExampleTestCase</code>
-class are both considered containers.
+<code>succeeded</code> statistics are <code>2</code> since the <code>JupiterTestEngine</code> and the
+<a href="#testkit-engine-ExampleTestCase"><code>ExampleTestCase</code></a> class are both considered containers.
 </td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="testkit-engine-events"><a class="anchor" href="#testkit-engine-events"></a>6.2.3. Asserting Events</h4>
+<div class="paragraph">
+<p>If you find that <a href="#testkit-engine-statistics">asserting statistics</a> alone is insufficient
+for verifying the expected behavior of test execution, you can work directly with the
+recorded <code><a href="../api/org/junit/platform/testkit/engine/Event.html">Event</a></code> elements and perform assertions against them.</p>
+</div>
+<div class="paragraph">
+<p>For example, if we want to verify the reason that the <code>skippedTest()</code> method in
+<a href="#testkit-engine-ExampleTestCase"><code>ExampleTestCase</code></a> was skipped, we can do that as
+follows.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The <code>assertThatEvents()</code> method in the following example is a shortcut for
+<code>org.assertj.core.api.Assertions.assertThat(events.list())</code> from the <a href="https://joel-costigliola.github.io/assertj/">AssertJ</a> assertion
+library.</p>
+</div>
+<div class="paragraph">
+<p>For details on what <em>conditions</em> are available for use with AssertJ assertions against
+events, consult the Javadoc for <code><a href="../api/org/junit/platform/testkit/engine/EventConditions.html">EventConditions</a></code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.EventConditions.event</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.EventConditions.skippedWithReason</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.EventConditions.test</span>;
+
+<span class="keyword">import</span> <span class="include">example.ExampleTestCase</span>;
+
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="keyword">import</span> <span class="include">org.junit.platform.testkit.engine.EngineTestKit</span>;
+<span class="keyword">import</span> <span class="include">org.junit.platform.testkit.engine.Events</span>;
+
+<span class="type">class</span> <span class="class">EngineTestKitSkippedMethodDemo</span> {
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> verifyJupiterMethodWasSkipped() {
+        <span class="predefined-type">String</span> methodName = <span class="string"><span class="delimiter">&quot;</span><span class="content">skippedTest</span><span class="delimiter">&quot;</span></span>;
+
+        Events testEvents = EngineTestKit <i class="conum" data-value="5"></i><b>(5)</b>
+            .engine(<span class="string"><span class="delimiter">&quot;</span><span class="content">junit-jupiter</span><span class="delimiter">&quot;</span></span>) <i class="conum" data-value="1"></i><b>(1)</b>
+            .selectors(selectMethod(ExampleTestCase.class, methodName)) <i class="conum" data-value="2"></i><b>(2)</b>
+            .execute() <i class="conum" data-value="3"></i><b>(3)</b>
+            .tests(); <i class="conum" data-value="4"></i><b>(4)</b>
+
+        testEvents.assertStatistics(stats -&gt; stats.skipped(<span class="integer">1</span>)); <i class="conum" data-value="6"></i><b>(6)</b>
+
+        testEvents.assertThatEvents() <i class="conum" data-value="7"></i><b>(7)</b>
+            .haveExactly(<span class="integer">1</span>, event(test(methodName),
+                skippedWithReason(<span class="string"><span class="delimiter">&quot;</span><span class="content">for demonstration purposes</span><span class="delimiter">&quot;</span></span>)));
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Select the JUnit Jupiter <code>TestEngine</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Select the <code>skippedTest()</code> method in the <a href="#testkit-engine-ExampleTestCase"><code>ExampleTestCase</code></a> test class.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Execute the <code>TestPlan</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Filter by <em>test</em> events.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Save the <em>test</em> <code>Events</code> to a local variable.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Optionally assert the expected statistics.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>Assert that the recorded <em>test</em> events contain exactly one skipped test named
+<code>skippedTest</code> with <code>"for demonstration purposes"</code> as the <em>reason</em>.</td>
 </tr>
 </table>
 </div>
@@ -7748,7 +7850,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-12-11 15:36:58 UTC
+Last updated 2018-12-12 18:02:45 UTC
 </div>
 </div>
 </body>
