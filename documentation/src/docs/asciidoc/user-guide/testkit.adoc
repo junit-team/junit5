@@ -42,6 +42,7 @@ may test your own `TestEngine` by supplying an instance of it to the
 One of the most common features of the Test Kit is the ability to assert statistics
 against events fired during the execution of a `TestPlan`. The following tests demonstrate
 how to assert statistics for _containers_ and _tests_ in the JUnit Jupiter `TestEngine`.
+For details on what statistics are available, consult the Javadoc for `{EventStatistics}`.
 
 [source,java,indent=0]
 ----
