@@ -88,10 +88,32 @@ include::{testDir}/example/testkit/EngineTestKitSkippedMethodDemo.java[tags=user
 ----
 <1> Select the JUnit Jupiter `TestEngine`.
 <2> Select the `skippedTest()` method in the <<testkit-engine-ExampleTestCase,
-`ExampleTestCase`>> test class.
+    `ExampleTestCase`>> test class.
 <3> Execute the `TestPlan`.
 <4> Filter by _test_ events.
 <5> Save the _test_ `Events` to a local variable.
 <6> Optionally assert the expected statistics.
 <7> Assert that the recorded _test_ events contain exactly one skipped test named
-`skippedTest` with `"for demonstration purposes"` as the _reason_.
+    `skippedTest` with `"for demonstration purposes"` as the _reason_.
+
+If we want to verify the type of exception thrown from the `failingTest()` method in
+<<testkit-engine-ExampleTestCase, `ExampleTestCase`>>, we can do that as follows.
+
+[NOTE]
+====
+For details on what _conditions_ are available for use with AssertJ assertions against
+events and execution results, consult the Javadoc for `{EventConditions}` and
+`{TestExecutionResultConditions}`, respectively.
+====
+
+[source,java,indent=0]
+----
+include::{testDir}/example/testkit/EngineTestKitFailedMethodDemo.java[tags=user_guide]
+----
+<1> Select the JUnit Jupiter `TestEngine`.
+<2> Select the <<testkit-engine-ExampleTestCase, `ExampleTestCase`>> test class.
+<3> Execute the `TestPlan`.
+<4> Filter by _test_ events.
+<5> Assert that the recorded _test_ events contain exactly one failing test named
+    `failingTest` with an exception of type `ArithmeticException` and an error message
+    equal to `"/ by zero"`.
