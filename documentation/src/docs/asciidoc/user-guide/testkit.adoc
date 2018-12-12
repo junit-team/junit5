@@ -45,7 +45,7 @@ how to assert statistics for _containers_ and _tests_ in the JUnit Jupiter `Test
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/testkit/EngineTestKitDemo.java[tags=user_guide]
+include::{testDir}/example/testkit/EngineTestKitStatisticsDemo.java[tags=user_guide]
 ----
 <1> Select the JUnit Jupiter `TestEngine`.
 <2> Select the `ExampleTestCase` test class.

@@ -20,7 +20,7 @@ import example.ExampleTestCase;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.testkit.engine.EngineTestKit;
 
-class EngineTestKitDemo {
+class EngineTestKitStatisticsDemo {
 
 	@Test
 	void verifyJupiterContainerStats() {
