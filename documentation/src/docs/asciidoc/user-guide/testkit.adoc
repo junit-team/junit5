@@ -25,6 +25,7 @@ to build your `EngineDiscoveryRequest`, you must use one of the `execute()` vari
 
 The following test class written using JUnit Jupiter will be used in subsequent examples.
 
+[[testkit-engine-ExampleTestCase]]
 [source,java,indent=0]
 ----
 include::{testDir}/example/ExampleTestCase.java[tags=user_guide]
@@ -49,7 +50,7 @@ For details on what statistics are available, consult the Javadoc for `{EventSta
 include::{testDir}/example/testkit/EngineTestKitStatisticsDemo.java[tags=user_guide]
 ----
 <1> Select the JUnit Jupiter `TestEngine`.
-<2> Select the `ExampleTestCase` test class.
+<2> Select the <<testkit-engine-ExampleTestCase, `ExampleTestCase`>> test class.
 <3> Execute the `TestPlan`.
 <4> Filter by _container_ events.
 <5> Assert statistics for _container_ events.
@@ -57,5 +58,40 @@ include::{testDir}/example/testkit/EngineTestKitStatisticsDemo.java[tags=user_gu
 <7> Assert statistics for _test_ events.
 
 NOTE: In the `verifyJupiterContainerStats()` test method, the counts for the `started` and
-`succeeded` statistics are `2` since the `JupiterTestEngine` and the `ExampleTestCase`
-class are both considered containers.
+`succeeded` statistics are `2` since the `JupiterTestEngine` and the
+<<testkit-engine-ExampleTestCase, `ExampleTestCase`>> class are both considered containers.
+
+[[testkit-engine-events]]
+==== Asserting Events
+
+If you find that <<testkit-engine-statistics, asserting statistics>> alone is insufficient
+for verifying the expected behavior of test execution, you can work directly with the
+recorded `{Event}` elements and perform assertions against them.
+
+For example, if we want to verify the reason that the `skippedTest()` method in
+<<testkit-engine-ExampleTestCase, `ExampleTestCase`>> was skipped, we can do that as
+follows.
+
+[NOTE]
+====
+The `assertThatEvents()` method in the following example is a shortcut for
+`org.assertj.core.api.Assertions.assertThat(events.list())` from the {AssertJ} assertion
+library.
+
+For details on what _conditions_ are available for use with AssertJ assertions against
+events, consult the Javadoc for `{EventConditions}`.
+====
+
+[source,java,indent=0]
+----
+include::{testDir}/example/testkit/EngineTestKitSkippedMethodDemo.java[tags=user_guide]
+----
+<1> Select the JUnit Jupiter `TestEngine`.
+<2> Select the `skippedTest()` method in the <<testkit-engine-ExampleTestCase,
+`ExampleTestCase`>> test class.
+<3> Execute the `TestPlan`.
+<4> Filter by _test_ events.
+<5> Save the _test_ `Events` to a local variable.
+<6> Optionally assert the expected statistics.
+<7> Assert that the recorded _test_ events contain exactly one skipped test named
+`skippedTest` with `"for demonstration purposes"` as the _reason_.
