@@ -26,9 +26,10 @@ import org.junit.platform.engine.TestExecutionResult.Status;
  * {@link TestExecutionResult}.
  *
  * @since 1.4
+ * @see EventConditions
  */
 @API(status = EXPERIMENTAL, since = "1.4")
-public class TestExecutionResultConditions {
+public final class TestExecutionResultConditions {
 
 	private TestExecutionResultConditions() {
 		/* no-op */
@@ -39,32 +40,36 @@ public class TestExecutionResultConditions {
 			expectedStatus);
 	}
 
+	public static Condition<TestExecutionResult> cause(Condition<? super Throwable> condition) {
+		return new Condition<>(
+			where(TestExecutionResult::getThrowable,
+				throwable -> throwable.isPresent() && condition.matches(throwable.get())),
+			"cause matches %s", condition);
+	}
+
+	public static Condition<Throwable> nestedCause(Condition<Throwable> condition) {
+		return new Condition<>(throwable -> condition.matches(throwable.getCause()), "nested cause matches %s",
+			condition);
+	}
+
+	public static Condition<Throwable> suppressed(int index, Condition<Throwable> condition) {
+		return new Condition<>(
+			throwable -> throwable.getSuppressed().length > index
+					&& condition.matches(throwable.getSuppressed()[index]),
+			"suppressed exception at index %d matches %s", index, condition);
+	}
+
+	public static Condition<Throwable> isA(Class<? extends Throwable> expectedType) {
+		return new Condition<>(expectedType::isInstance, "instance of %s", expectedType.getName());
+	}
+
 	public static Condition<Throwable> message(String expectedMessage) {
-		return new Condition<>(where(Throwable::getMessage, isEqual(expectedMessage)), "message is \"%s\"",
+		return new Condition<>(where(Throwable::getMessage, isEqual(expectedMessage)), "message is '%s'",
 			expectedMessage);
 	}
 
-	public static Condition<Throwable> message(Predicate<String> predicate) {
-		return new Condition<>(where(Throwable::getMessage, predicate), "message is \"%s\"", predicate);
-	}
-
-	public static Condition<Throwable> isA(Class<? extends Throwable> expectedClass) {
-		return new Condition<>(expectedClass::isInstance, "instance of %s", expectedClass.getName());
-	}
-
-	public static Condition<Throwable> suppressed(int index, Condition<Throwable> checked) {
-		return new Condition<>(
-			throwable -> throwable.getSuppressed().length > index && checked.matches(throwable.getSuppressed()[index]),
-			"suppressed at index %d matches %s", index, checked);
-	}
-
-	public static Condition<Throwable> hasCause(Condition<Throwable> checked) {
-		return new Condition<>(throwable -> checked.matches(throwable.getCause()), "cause matches %s", checked);
-	}
-
-	public static Condition<TestExecutionResult> cause(Condition<? super Throwable> condition) {
-		return new Condition<>(where(TestExecutionResult::getThrowable,
-			throwable -> throwable.isPresent() && condition.matches(throwable.get())), "cause where %s", condition);
+	public static Condition<Throwable> message(Predicate<String> expectedMessagePredicate) {
+		return new Condition<>(where(Throwable::getMessage, expectedMessagePredicate), "message predicate");
 	}
 
 }

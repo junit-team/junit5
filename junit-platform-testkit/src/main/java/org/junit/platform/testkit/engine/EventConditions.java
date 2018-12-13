@@ -39,9 +39,10 @@ import org.junit.platform.engine.support.descriptor.EngineDescriptor;
  * Collection of AssertJ {@linkplain Condition conditions} for {@link Event}.
  *
  * @since 1.4
+ * @see TestExecutionResultConditions
  */
 @API(status = EXPERIMENTAL, since = "1.4")
-public class EventConditions {
+public final class EventConditions {
 
 	private EventConditions() {
 		/* no-op */
