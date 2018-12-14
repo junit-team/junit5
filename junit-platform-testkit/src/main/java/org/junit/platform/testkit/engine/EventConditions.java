@@ -136,6 +136,11 @@ public final class EventConditions {
 		return finishedWithCause(ABORTED, causeCondition);
 	}
 
+	@SafeVarargs
+	public static Condition<Event> abortedWithReason(Condition<Throwable>... conditions) {
+		return finishedWithCause(ABORTED, conditions);
+	}
+
 	public static Condition<Event> finishedWithFailure(Condition<? super Throwable> causeCondition) {
 		return finishedWithCause(FAILED, causeCondition);
 	}
