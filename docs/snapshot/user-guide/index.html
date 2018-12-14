@@ -7138,8 +7138,7 @@ events and execution results, consult the Javadoc for <code><a href="../api/org/
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.assertj.core.api.Assertions.allOf</span>;
-<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.engine.discovery.DiscoverySelectors.selectClass</span>;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.engine.discovery.DiscoverySelectors.selectClass</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.EventConditions.event</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.EventConditions.finishedWithFailure</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.EventConditions.test</span>;
@@ -7161,8 +7160,7 @@ events and execution results, consult the Javadoc for <code><a href="../api/org/
             .tests() <i class="conum" data-value="4"></i><b>(4)</b>
             .assertThatEvents().haveExactly(<span class="integer">1</span>, <i class="conum" data-value="5"></i><b>(5)</b>
                 event(test(<span class="string"><span class="delimiter">&quot;</span><span class="content">failingTest</span><span class="delimiter">&quot;</span></span>),
-                    finishedWithFailure(
-                        allOf(isA(<span class="exception">ArithmeticException</span>.class), message(<span class="string"><span class="delimiter">&quot;</span><span class="content">/ by zero</span><span class="delimiter">&quot;</span></span>)))));
+                    finishedWithFailure(isA(<span class="exception">ArithmeticException</span>.class), message(<span class="string"><span class="delimiter">&quot;</span><span class="content">/ by zero</span><span class="delimiter">&quot;</span></span>))));
     }
 
 }</code></pre>
@@ -7928,7 +7926,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-12-14 12:31:18 UTC
+Last updated 2018-12-14 12:56:38 UTC
 </div>
 </div>
 </body>
