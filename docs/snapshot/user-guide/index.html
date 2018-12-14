@@ -6886,30 +6886,38 @@ to build your <code>EngineDiscoveryRequest</code>, you must use one of the <code
 <span class="keyword">import</span> <span class="include">example.util.Calculator</span>;
 
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Disabled</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.MethodOrderer.OrderAnnotation</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Order</span>;
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.TestMethodOrder</span>;
 
+<span class="annotation">@TestMethodOrder</span>(OrderAnnotation.class)
 <span class="directive">public</span> <span class="type">class</span> <span class="class">ExampleTestCase</span> {
 
     <span class="directive">private</span> <span class="directive">final</span> Calculator calculator = <span class="keyword">new</span> Calculator();
 
     <span class="annotation">@Test</span>
     <span class="annotation">@Disabled</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">for demonstration purposes</span><span class="delimiter">&quot;</span></span>)
+    <span class="annotation">@Order</span>(<span class="integer">1</span>)
     <span class="type">void</span> skippedTest() {
         <span class="comment">// skipped ...</span>
     }
 
     <span class="annotation">@Test</span>
+    <span class="annotation">@Order</span>(<span class="integer">2</span>)
     <span class="type">void</span> succeedingTest() {
         assertEquals(<span class="integer">42</span>, calculator.multiply(<span class="integer">6</span>, <span class="integer">7</span>));
     }
 
     <span class="annotation">@Test</span>
+    <span class="annotation">@Order</span>(<span class="integer">3</span>)
     <span class="type">void</span> abortedTest() {
-        assumeTrue(<span class="string"><span class="delimiter">&quot;</span><span class="content">abc</span><span class="delimiter">&quot;</span></span>.contains(<span class="string"><span class="delimiter">&quot;</span><span class="content">Z</span><span class="delimiter">&quot;</span></span>));
+        assumeTrue(<span class="string"><span class="delimiter">&quot;</span><span class="content">abc</span><span class="delimiter">&quot;</span></span>.contains(<span class="string"><span class="delimiter">&quot;</span><span class="content">Z</span><span class="delimiter">&quot;</span></span>), <span class="string"><span class="delimiter">&quot;</span><span class="content">abc does not contain Z</span><span class="delimiter">&quot;</span></span>);
         <span class="comment">// aborted ...</span>
     }
 
     <span class="annotation">@Test</span>
+    <span class="annotation">@Order</span>(<span class="integer">4</span>)
     <span class="type">void</span> failingTest() {
         <span class="comment">// The following throws an ArithmeticException: &quot;/ by zero&quot;</span>
         calculator.divide(<span class="integer">1</span>, <span class="integer">0</span>);
@@ -7028,11 +7036,11 @@ recorded <code><a href="../api/org/junit/platform/testkit/engine/Event.html">Eve
 <a href="#testkit-engine-ExampleTestCase"><code>ExampleTestCase</code></a> was skipped, you can do that as
 follows.</p>
 </div>
-<div class="admonitionblock note">
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
 <div class="paragraph">
@@ -7120,11 +7128,11 @@ events, consult the Javadoc for <code><a href="../api/org/junit/platform/testkit
 <p>If you want to verify the type of exception thrown from the <code>failingTest()</code> method in
 <a href="#testkit-engine-ExampleTestCase"><code>ExampleTestCase</code></a>, you can do that as follows.</p>
 </div>
-<div class="admonitionblock note">
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
 <div class="paragraph">
@@ -7191,6 +7199,128 @@ events and execution results, consult the Javadoc for <code><a href="../api/org/
 equal to <code>"/ by zero"</code>.</td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>Although typically unnecessary, there are times when you need to verify <strong>all</strong> of the
+events fired during the execution of a <code>TestPlan</code>. The following test demonstrates how to
+achieve this via the <code>assertEventsMatchExactly()</code> method in the <code>EngineTestKit</code> API.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Since <code>assertEventsMatchExactly()</code> matches conditions exactly in the order in which the
+events were fired, <a href="#testkit-engine-ExampleTestCase"><code>ExampleTestCase</code></a> has been
+annotated with <code>@TestMethodOrder(OrderAnnotation.class)</code> and each test method has been
+annotated with <code>@Order(&#8230;&#8203;)</code>. This allows us to enforce the order in which the test
+methods are executed, which in turn allows our <code>verifyAllJupiterEvents()</code> test to be
+reliable.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.engine.discovery.DiscoverySelectors.selectClass</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.EventConditions.abortedWithReason</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.EventConditions.container</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.EventConditions.engine</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.EventConditions.event</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.EventConditions.finishedWithFailure</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.EventConditions.skippedWithReason</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.EventConditions.started</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.EventConditions.test</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.TestExecutionResultConditions.isA</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.TestExecutionResultConditions.message</span>;
+
+<span class="keyword">import</span> <span class="include">example.ExampleTestCase</span>;
+
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="keyword">import</span> <span class="include">org.junit.platform.testkit.engine.EngineTestKit</span>;
+<span class="keyword">import</span> <span class="include">org.opentest4j.TestAbortedException</span>;
+
+<span class="type">class</span> <span class="class">EngineTestKitAllEventsDemo</span> {
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> verifyAllJupiterEvents() {
+        EngineTestKit.engine(<span class="string"><span class="delimiter">&quot;</span><span class="content">junit-jupiter</span><span class="delimiter">&quot;</span></span>) <i class="conum" data-value="1"></i><b>(1)</b>
+            .selectors(selectClass(ExampleTestCase.class)) <i class="conum" data-value="2"></i><b>(2)</b>
+            .execute() <i class="conum" data-value="3"></i><b>(3)</b>
+            .all() <i class="conum" data-value="4"></i><b>(4)</b>
+            .debug() <i class="conum" data-value="5"></i><b>(5)</b>
+            .assertEventsMatchExactly( <i class="conum" data-value="6"></i><b>(6)</b>
+                event(engine(), started()),
+                event(container(ExampleTestCase.class), started()),
+                event(test(<span class="string"><span class="delimiter">&quot;</span><span class="content">skippedTest</span><span class="delimiter">&quot;</span></span>), skippedWithReason(<span class="string"><span class="delimiter">&quot;</span><span class="content">for demonstration purposes</span><span class="delimiter">&quot;</span></span>)),
+                event(test(<span class="string"><span class="delimiter">&quot;</span><span class="content">succeedingTest</span><span class="delimiter">&quot;</span></span>), started()),
+                event(test(<span class="string"><span class="delimiter">&quot;</span><span class="content">succeedingTest</span><span class="delimiter">&quot;</span></span>), finishedSuccessfully()),
+                event(test(<span class="string"><span class="delimiter">&quot;</span><span class="content">abortedTest</span><span class="delimiter">&quot;</span></span>), started()),
+                event(test(<span class="string"><span class="delimiter">&quot;</span><span class="content">abortedTest</span><span class="delimiter">&quot;</span></span>),
+                    abortedWithReason(isA(TestAbortedException.class),
+                        message(m -&gt; m.contains(<span class="string"><span class="delimiter">&quot;</span><span class="content">abc does not contain Z</span><span class="delimiter">&quot;</span></span>)))),
+                event(test(<span class="string"><span class="delimiter">&quot;</span><span class="content">failingTest</span><span class="delimiter">&quot;</span></span>), started()),
+                event(test(<span class="string"><span class="delimiter">&quot;</span><span class="content">failingTest</span><span class="delimiter">&quot;</span></span>),
+                    finishedWithFailure(isA(<span class="exception">ArithmeticException</span>.class), message(<span class="string"><span class="delimiter">&quot;</span><span class="content">/ by zero</span><span class="delimiter">&quot;</span></span>))),
+                event(container(ExampleTestCase.class), finishedSuccessfully()),
+                event(engine(), finishedSuccessfully()));
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Select the JUnit Jupiter <code>TestEngine</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Select the <a href="#testkit-engine-ExampleTestCase"><code>ExampleTestCase</code></a> test class.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Execute the <code>TestPlan</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Filter by <em>all</em> events.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Print all events to the standard output stream (<code>STD_OUT</code>) for debugging purposes.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Assert <em>all</em> events in exactly the order in which they were fired by the test engine.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>debug()</code> invocation from the preceding example results in output similar to the
+following.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight nowrap"><code>All Events:
+    Event [type = STARTED, testDescriptor = JupiterEngineDescriptor: [engine:junit-jupiter], timestamp = 2018-12-14T12:45:14.082280Z, payload = null]
+    Event [type = STARTED, testDescriptor = ClassTestDescriptor: [engine:junit-jupiter]/[class:example.ExampleTestCase], timestamp = 2018-12-14T12:45:14.089339Z, payload = null]
+    Event [type = SKIPPED, testDescriptor = TestMethodTestDescriptor: [engine:junit-jupiter]/[class:example.ExampleTestCase]/[method:skippedTest()], timestamp = 2018-12-14T12:45:14.094314Z, payload = 'for demonstration purposes']
+    Event [type = STARTED, testDescriptor = TestMethodTestDescriptor: [engine:junit-jupiter]/[class:example.ExampleTestCase]/[method:succeedingTest()], timestamp = 2018-12-14T12:45:14.095182Z, payload = null]
+    Event [type = FINISHED, testDescriptor = TestMethodTestDescriptor: [engine:junit-jupiter]/[class:example.ExampleTestCase]/[method:succeedingTest()], timestamp = 2018-12-14T12:45:14.104922Z, payload = TestExecutionResult [status = SUCCESSFUL, throwable = null]]
+    Event [type = STARTED, testDescriptor = TestMethodTestDescriptor: [engine:junit-jupiter]/[class:example.ExampleTestCase]/[method:abortedTest()], timestamp = 2018-12-14T12:45:14.106121Z, payload = null]
+    Event [type = FINISHED, testDescriptor = TestMethodTestDescriptor: [engine:junit-jupiter]/[class:example.ExampleTestCase]/[method:abortedTest()], timestamp = 2018-12-14T12:45:14.109956Z, payload = TestExecutionResult [status = ABORTED, throwable = org.opentest4j.TestAbortedException: Assumption failed: abc does not contain Z]]
+    Event [type = STARTED, testDescriptor = TestMethodTestDescriptor: [engine:junit-jupiter]/[class:example.ExampleTestCase]/[method:failingTest()], timestamp = 2018-12-14T12:45:14.110680Z, payload = null]
+    Event [type = FINISHED, testDescriptor = TestMethodTestDescriptor: [engine:junit-jupiter]/[class:example.ExampleTestCase]/[method:failingTest()], timestamp = 2018-12-14T12:45:14.111217Z, payload = TestExecutionResult [status = FAILED, throwable = java.lang.ArithmeticException: / by zero]]
+    Event [type = FINISHED, testDescriptor = ClassTestDescriptor: [engine:junit-jupiter]/[class:example.ExampleTestCase], timestamp = 2018-12-14T12:45:14.113731Z, payload = TestExecutionResult [status = SUCCESSFUL, throwable = null]]
+    Event [type = FINISHED, testDescriptor = JupiterEngineDescriptor: [engine:junit-jupiter], timestamp = 2018-12-14T12:45:14.113806Z, payload = TestExecutionResult [status = SUCCESSFUL, throwable = null]]</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -7926,7 +8056,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-12-14 13:07:07 UTC
+Last updated 2018-12-14 13:27:53 UTC
 </div>
 </div>
 </body>
