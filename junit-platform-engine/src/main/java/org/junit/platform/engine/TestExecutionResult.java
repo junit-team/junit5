@@ -22,17 +22,16 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
- * Result of executing a single test or container.
+ * {@code TestExecutionResult} encapsulates the result of executing a single test
+ * or container.
  *
- * <p>A {@code TestExecutionResult} consists of a mandatory {@link Status} and
- * an optional {@link Throwable}.
+ * <p>A {@code TestExecutionResult} consists of a mandatory
+ * {@link #getStatus() Status} and an optional {@link #getThrowable() Throwable}.
  *
  * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 public class TestExecutionResult {
-
-	private static final TestExecutionResult SUCCESSFUL_RESULT = new TestExecutionResult(SUCCESSFUL, null);
 
 	/**
 	 * Status of executing a single test or container.
@@ -52,42 +51,49 @@ public class TestExecutionResult {
 		ABORTED,
 
 		/**
-		 * Indicates that the execution of a test or container has
-		 * <em>failed</em>.
+		 * Indicates that the execution of a test or container <em>failed</em>.
 		 */
-		FAILED
+		FAILED;
+
 	}
 
-	private final Status status;
-	private final Throwable throwable;
+	private static final TestExecutionResult SUCCESSFUL_RESULT = new TestExecutionResult(SUCCESSFUL, null);
 
 	/**
-	 * Obtain a {@code TestExecutionResult} for a <em>successful</em> execution
+	 * Create a {@code TestExecutionResult} for a <em>successful</em> execution
 	 * of a test or container.
+	 * @return the {@code TestExecutionResult}; never {@code null}
 	 */
 	public static TestExecutionResult successful() {
 		return SUCCESSFUL_RESULT;
 	}
 
 	/**
-	 * Obtain a {@code TestExecutionResult} for an <em>aborted</em> execution
+	 * Create a {@code TestExecutionResult} for an <em>aborted</em> execution
 	 * of a test or container with the supplied {@link Throwable throwable}.
 	 *
-	 * @param throwable the throwable that caused the aborted execution; may be null
+	 * @param throwable the throwable that caused the aborted execution; may be
+	 * {@code null}
+	 * @return the {@code TestExecutionResult}; never {@code null}
 	 */
 	public static TestExecutionResult aborted(Throwable throwable) {
 		return new TestExecutionResult(ABORTED, throwable);
 	}
 
 	/**
-	 * Obtain a {@code TestExecutionResult} for a <em>failed</em> execution
+	 * Create a {@code TestExecutionResult} for a <em>failed</em> execution
 	 * of a test or container with the supplied {@link Throwable throwable}.
 	 *
-	 * @param throwable the throwable that caused the failed execution; may be null
+	 * @param throwable the throwable that caused the failed execution; may be
+	 * {@code null}
+	 * @return the {@code TestExecutionResult}; never {@code null}
 	 */
 	public static TestExecutionResult failed(Throwable throwable) {
 		return new TestExecutionResult(FAILED, throwable);
 	}
+
+	private final Status status;
+	private final Throwable throwable;
 
 	private TestExecutionResult(Status status, Throwable throwable) {
 		this.status = Preconditions.notNull(status, "Status must not be null");
@@ -95,7 +101,9 @@ public class TestExecutionResult {
 	}
 
 	/**
-	 * Get the status of this result.
+	 * Get the {@linkplain Status status} of this result.
+	 *
+	 * @return the status; never {@code null}
 	 */
 	public Status getStatus() {
 		return status;
@@ -103,6 +111,9 @@ public class TestExecutionResult {
 
 	/**
 	 * Get the throwable that caused this result, if available.
+	 *
+	 * @return an {@code Optional} containing the throwable; never {@code null}
+	 * but potentially empty
 	 */
 	public Optional<Throwable> getThrowable() {
 		return Optional.ofNullable(throwable);
