@@ -24,7 +24,7 @@ import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.suppressed;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.suppressedThrowable;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -132,7 +132,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 				finishedWithFailure(allOf( //
 					isA(RuntimeException.class), //
 					message("unchecked"), //
-					suppressed(0, allOf(isA(IOException.class), message("checked")))))), //
+					suppressedThrowable(0, allOf(isA(IOException.class), message("checked")))))), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -151,7 +151,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 				finishedWithFailure(allOf( //
 					isA(IOException.class), //
 					message("checked"), //
-					suppressed(0, allOf(isA(TestAbortedException.class)))))), //
+					suppressedThrowable(0, allOf(isA(TestAbortedException.class)))))), //
 			event(container(FailureTestCase.class), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -197,7 +197,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 			event(container(testClass), started()), //
 			event(container(testClass), finishedWithFailure(allOf( //
 				message("beforeAll callback"), //
-				suppressed(0, message("afterAll callback"))))), //
+				suppressedThrowable(0, message("afterAll callback"))))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -237,7 +237,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 			event(container(FailureTestCase.class), started()), //
 			event(container(FailureTestCase.class),
 				finishedWithFailure(allOf(isA(IOException.class), message("checked"),
-					suppressed(0, allOf(isA(TestAbortedException.class), message("aborted")))))), //
+					suppressedThrowable(0, allOf(isA(TestAbortedException.class), message("aborted")))))), //
 			event(engine(), finishedSuccessfully()));
 	}
 

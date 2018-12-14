@@ -140,7 +140,7 @@ public final class EventConditions {
 			Condition<? super Throwable> causeCondition) {
 
 		return finished(Assertions.allOf(TestExecutionResultConditions.status(expectedStatus),
-			TestExecutionResultConditions.cause(causeCondition)));
+			TestExecutionResultConditions.throwable(causeCondition)));
 	}
 
 	public static Condition<Event> finishedWithFailure() {

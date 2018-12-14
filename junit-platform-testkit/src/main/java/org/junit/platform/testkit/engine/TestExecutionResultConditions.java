@@ -40,23 +40,23 @@ public final class TestExecutionResultConditions {
 			expectedStatus);
 	}
 
-	public static Condition<TestExecutionResult> cause(Condition<? super Throwable> condition) {
+	public static Condition<TestExecutionResult> throwable(Condition<? super Throwable> condition) {
 		return new Condition<>(
 			where(TestExecutionResult::getThrowable,
 				throwable -> throwable.isPresent() && condition.matches(throwable.get())),
-			"cause matches %s", condition);
+			"throwable matches %s", condition);
 	}
 
-	public static Condition<Throwable> nestedCause(Condition<Throwable> condition) {
-		return new Condition<>(throwable -> condition.matches(throwable.getCause()), "nested cause matches %s",
+	public static Condition<Throwable> nestedThrowable(Condition<Throwable> condition) {
+		return new Condition<>(throwable -> condition.matches(throwable.getCause()), "nested throwable matches %s",
 			condition);
 	}
 
-	public static Condition<Throwable> suppressed(int index, Condition<Throwable> condition) {
+	public static Condition<Throwable> suppressedThrowable(int index, Condition<Throwable> condition) {
 		return new Condition<>(
 			throwable -> throwable.getSuppressed().length > index
 					&& condition.matches(throwable.getSuppressed()[index]),
-			"suppressed exception at index %d matches %s", index, condition);
+			"suppressed throwable at index %d matches %s", index, condition);
 	}
 
 	public static Condition<Throwable> isA(Class<? extends Throwable> expectedType) {
@@ -69,7 +69,7 @@ public final class TestExecutionResultConditions {
 	}
 
 	public static Condition<Throwable> message(Predicate<String> expectedMessagePredicate) {
-		return new Condition<>(where(Throwable::getMessage, expectedMessagePredicate), "message predicate");
+		return new Condition<>(where(Throwable::getMessage, expectedMessagePredicate), "message matches predicate");
 	}
 
 }

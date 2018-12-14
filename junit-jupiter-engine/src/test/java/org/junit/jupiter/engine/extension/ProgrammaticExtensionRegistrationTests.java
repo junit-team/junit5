@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.nestedCause;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.nestedThrowable;
 
 import java.lang.reflect.Field;
 import java.util.function.Predicate;
@@ -83,14 +83,15 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 
 	@Test
 	void propagatesCheckedExceptionThrownDuringInitializationOfStaticField() {
-		assertClassFails(ClassLevelExplosiveCheckedExceptionTestCase.class,
-			allOf(isA(ExceptionInInitializerError.class), nestedCause(allOf(isA(Exception.class), message("boom")))));
+		assertClassFails(ClassLevelExplosiveCheckedExceptionTestCase.class, allOf(
+			isA(ExceptionInInitializerError.class), nestedThrowable(allOf(isA(Exception.class), message("boom")))));
 	}
 
 	@Test
 	void propagatesUncheckedExceptionThrownDuringInitializationOfStaticField() {
-		assertClassFails(ClassLevelExplosiveUncheckedExceptionTestCase.class, allOf(
-			isA(ExceptionInInitializerError.class), nestedCause(allOf(isA(RuntimeException.class), message("boom")))));
+		assertClassFails(ClassLevelExplosiveUncheckedExceptionTestCase.class,
+			allOf(isA(ExceptionInInitializerError.class),
+				nestedThrowable(allOf(isA(RuntimeException.class), message("boom")))));
 	}
 
 	@Test
