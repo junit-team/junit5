@@ -68,8 +68,8 @@ If you find that <<testkit-engine-statistics, asserting statistics>> alone is in
 for verifying the expected behavior of test execution, you can work directly with the
 recorded `{Event}` elements and perform assertions against them.
 
-For example, if we want to verify the reason that the `skippedTest()` method in
-<<testkit-engine-ExampleTestCase, `ExampleTestCase`>> was skipped, we can do that as
+For example, if you want to verify the reason that the `skippedTest()` method in
+<<testkit-engine-ExampleTestCase, `ExampleTestCase`>> was skipped, you can do that as
 follows.
 
 [NOTE]
@@ -96,8 +96,8 @@ include::{testDir}/example/testkit/EngineTestKitSkippedMethodDemo.java[tags=user
 <7> Assert that the recorded _test_ events contain exactly one skipped test named
     `skippedTest` with `"for demonstration purposes"` as the _reason_.
 
-If we want to verify the type of exception thrown from the `failingTest()` method in
-<<testkit-engine-ExampleTestCase, `ExampleTestCase`>>, we can do that as follows.
+If you want to verify the type of exception thrown from the `failingTest()` method in
+<<testkit-engine-ExampleTestCase, `ExampleTestCase`>>, you can do that as follows.
 
 [NOTE]
 ====
