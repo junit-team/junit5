@@ -11,6 +11,7 @@
 package org.junit.platform.testkit.engine;
 
 import static java.util.function.Predicate.isEqual;
+import static java.util.stream.Collectors.toCollection;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
@@ -24,6 +25,9 @@ import static org.junit.platform.testkit.engine.EventType.FINISHED;
 import static org.junit.platform.testkit.engine.EventType.SKIPPED;
 import static org.junit.platform.testkit.engine.EventType.STARTED;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
@@ -134,6 +138,23 @@ public final class EventConditions {
 
 	public static Condition<Event> finishedWithFailure(Condition<? super Throwable> causeCondition) {
 		return finishedWithCause(FAILED, causeCondition);
+	}
+
+	@SafeVarargs
+	public static Condition<Event> finishedWithFailure(Condition<Throwable>... conditions) {
+		return finishedWithCause(FAILED, conditions);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static Condition<Event> finishedWithCause(Status expectedStatus, Condition<Throwable>... conditions) {
+
+		List<Condition<TestExecutionResult>> list = Arrays.stream(conditions)//
+				.map(TestExecutionResultConditions::throwable)//
+				.collect(toCollection(ArrayList::new));
+
+		list.add(0, TestExecutionResultConditions.status(expectedStatus));
+
+		return finished(Assertions.allOf(list));
 	}
 
 	private static Condition<Event> finishedWithCause(Status expectedStatus,

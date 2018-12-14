@@ -13,7 +13,6 @@ package example.testkit;
 // @formatter:off
 // tag::user_guide[]
 
-import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
@@ -36,8 +35,7 @@ class EngineTestKitFailedMethodDemo {
 			.tests() // <4>
 			.assertThatEvents().haveExactly(1, // <5>
 				event(test("failingTest"),
-					finishedWithFailure(
-						allOf(isA(ArithmeticException.class), message("/ by zero")))));
+					finishedWithFailure(isA(ArithmeticException.class), message("/ by zero"))));
 	}
 
 }
