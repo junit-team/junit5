@@ -23,7 +23,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.test;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.lang.annotation.ElementType;
@@ -181,7 +181,7 @@ public class AggregatorIntegrationTests {
 			selectMethod(ErroneousTestCases.class, "testWithErroneousAggregator", Object.class.getName()));
 
 		results.tests().assertThatEvents()//
-				.haveExactly(1, event(test(), finishedWithFailure(allOf(isA(ParameterResolutionException.class), //
+				.haveExactly(1, event(test(), finishedWithFailure(allOf(instanceOf(ParameterResolutionException.class), //
 					message("Error aggregating arguments for parameter at index 0: something went horribly wrong")))));
 	}
 

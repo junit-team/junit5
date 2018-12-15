@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.test;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.lang.reflect.AnnotatedElement;
@@ -55,7 +55,7 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 			event(test("syntaxError"), //
 				finishedWithFailure( //
 					allOf( //
-						isA(JUnitException.class), //
+						instanceOf(JUnitException.class), //
 						message(value -> value.contains("syntax error")) //
 					))));
 	}

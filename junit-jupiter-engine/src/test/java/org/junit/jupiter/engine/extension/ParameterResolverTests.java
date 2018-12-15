@@ -20,7 +20,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMetho
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.test;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.lang.reflect.Method;
@@ -114,7 +114,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		tests.failed().assertEventsMatchExactly(
 			event(
 				test("injectPrimitive"),
-				finishedWithFailure(allOf(isA(ParameterResolutionException.class), message(expectations)))
+				finishedWithFailure(allOf(instanceOf(ParameterResolutionException.class), message(expectations)))
 			));
 		// @formatter:on
 	}
@@ -156,7 +156,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		tests.failed().assertEventsMatchExactly(
 			event(
 				test("doubleParameterInjection"),
-				finishedWithFailure(allOf(isA(ParameterResolutionException.class), message(expectations)
+				finishedWithFailure(allOf(instanceOf(ParameterResolutionException.class), message(expectations)
 			))));
 		// @formatter:on
 	}

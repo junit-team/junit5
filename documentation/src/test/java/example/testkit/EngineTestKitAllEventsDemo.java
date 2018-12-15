@@ -23,7 +23,7 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedWithFail
 import static org.junit.platform.testkit.engine.EventConditions.skippedWithReason;
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import example.ExampleTestCase;
@@ -49,11 +49,11 @@ class EngineTestKitAllEventsDemo {
 				event(test("succeedingTest"), finishedSuccessfully()),
 				event(test("abortedTest"), started()),
 				event(test("abortedTest"),
-					abortedWithReason(isA(TestAbortedException.class),
+					abortedWithReason(instanceOf(TestAbortedException.class),
 						message(m -> m.contains("abc does not contain Z")))),
 				event(test("failingTest"), started()),
 				event(test("failingTest"),
-					finishedWithFailure(isA(ArithmeticException.class), message("/ by zero"))),
+					finishedWithFailure(instanceOf(ArithmeticException.class), message("/ by zero"))),
 				event(container(ExampleTestCase.class), finishedSuccessfully()),
 				event(engine(), finishedSuccessfully()));
 	}

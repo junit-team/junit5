@@ -33,7 +33,7 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessf
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.util.Arrays;
@@ -328,7 +328,8 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 			event(dynamicTestRegistered("dynamic-test:#2")), //
 			event(test("dynamic-test:#2", "failingTest"), started()), //
 			event(test("dynamic-test:#2", "failingTest"), finishedWithFailure(message("failing"))), //
-			event(container("dynamic-container:#1"), finishedWithFailure(isA(ArrayIndexOutOfBoundsException.class))), //
+			event(container("dynamic-container:#1"),
+				finishedWithFailure(instanceOf(ArrayIndexOutOfBoundsException.class))), //
 			event(container("dynamicContainerWithExceptionThrowingStream"), finishedSuccessfully()), //
 			event(container(MyDynamicTestCase.class), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));

@@ -22,9 +22,9 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessf
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.suppressedThrowable;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.suppressed;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -61,7 +61,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 		tests.failed().assertEventsMatchExactly( //
 			event(test("failingTest"),
-				finishedWithFailure(allOf(isA(AssertionFailedError.class), message("always fails")))));
+				finishedWithFailure(allOf(instanceOf(AssertionFailedError.class), message("always fails")))));
 	}
 
 	@Test
@@ -74,7 +74,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 		tests.failed().assertEventsMatchExactly( //
 			event(test("testWithUncheckedException"),
-				finishedWithFailure(allOf(isA(RuntimeException.class), message("unchecked")))));
+				finishedWithFailure(allOf(instanceOf(RuntimeException.class), message("unchecked")))));
 	}
 
 	@Test
@@ -87,7 +87,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 		tests.failed().assertEventsMatchExactly( //
 			event(test("testWithCheckedException"),
-				finishedWithFailure(allOf(isA(IOException.class), message("checked")))));
+				finishedWithFailure(allOf(instanceOf(IOException.class), message("checked")))));
 	}
 
 	@Test
@@ -99,8 +99,8 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 		tests.assertStatistics(stats -> stats.started(1).failed(1));
 
-		tests.failed().assertEventsMatchExactly(
-			event(test("succeedingTest"), finishedWithFailure(allOf(isA(IOException.class), message("checked")))));
+		tests.failed().assertEventsMatchExactly(event(test("succeedingTest"),
+			finishedWithFailure(allOf(instanceOf(IOException.class), message("checked")))));
 	}
 
 	@Test
@@ -112,8 +112,8 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 		tests.assertStatistics(stats -> stats.started(1).failed(1));
 
-		tests.failed().assertEventsMatchExactly(
-			event(test("succeedingTest"), finishedWithFailure(allOf(isA(IOException.class), message("checked")))));
+		tests.failed().assertEventsMatchExactly(event(test("succeedingTest"),
+			finishedWithFailure(allOf(instanceOf(IOException.class), message("checked")))));
 	}
 
 	@Test
@@ -130,9 +130,9 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 			event(test("testWithUncheckedException"), started()), //
 			event(test("testWithUncheckedException"), //
 				finishedWithFailure(allOf( //
-					isA(RuntimeException.class), //
+					instanceOf(RuntimeException.class), //
 					message("unchecked"), //
-					suppressedThrowable(0, allOf(isA(IOException.class), message("checked")))))), //
+					suppressed(0, allOf(instanceOf(IOException.class), message("checked")))))), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -149,9 +149,9 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 			event(test("abortedTest"), started()), //
 			event(test("abortedTest"), //
 				finishedWithFailure(allOf( //
-					isA(IOException.class), //
+					instanceOf(IOException.class), //
 					message("checked"), //
-					suppressedThrowable(0, allOf(isA(TestAbortedException.class)))))), //
+					suppressed(0, allOf(instanceOf(TestAbortedException.class)))))), //
 			event(container(FailureTestCase.class), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -167,7 +167,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
-			event(container(testClass), finishedWithFailure(allOf(isA(IOException.class), message("checked")))), //
+			event(container(testClass), finishedWithFailure(allOf(instanceOf(IOException.class), message("checked")))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -184,7 +184,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 			event(container(testClass), started()), //
 			event(test("succeedingTest"), started()), //
 			event(test("succeedingTest"), finishedSuccessfully()), //
-			event(container(testClass), finishedWithFailure(allOf(isA(IOException.class), message("checked")))), //
+			event(container(testClass), finishedWithFailure(allOf(instanceOf(IOException.class), message("checked")))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -195,9 +195,9 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 		executionResults.all().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
-			event(container(testClass), finishedWithFailure(allOf( //
+			event(container(testClass), finishedWithFailure( //
 				message("beforeAll callback"), //
-				suppressedThrowable(0, message("afterAll callback"))))), //
+				suppressed(0, message("afterAll callback")))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -236,8 +236,8 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 			event(engine(), started()), //
 			event(container(FailureTestCase.class), started()), //
 			event(container(FailureTestCase.class),
-				finishedWithFailure(allOf(isA(IOException.class), message("checked"),
-					suppressedThrowable(0, allOf(isA(TestAbortedException.class), message("aborted")))))), //
+				finishedWithFailure(allOf(instanceOf(IOException.class), message("checked"),
+					suppressed(0, allOf(instanceOf(TestAbortedException.class), message("aborted")))))), //
 			event(engine(), finishedSuccessfully()));
 	}
 

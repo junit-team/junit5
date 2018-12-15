@@ -24,7 +24,7 @@ import static org.junit.platform.testkit.engine.EventConditions.skippedWithReaso
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.EventConditions.uniqueIdSubstring;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 import static org.junit.runner.Description.createSuiteDescription;
 import static org.junit.runner.Description.createTestDescription;
@@ -90,7 +90,7 @@ class VintageTestEngineExecutionTests {
 			event(container(testClass), started()), //
 			event(test("failingTest"), started()), //
 			event(test("failingTest"),
-				finishedWithFailure(allOf(isA(AssertionError.class), message("this test should fail")))), //
+				finishedWithFailure(allOf(instanceOf(AssertionError.class), message("this test should fail")))), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -104,7 +104,7 @@ class VintageTestEngineExecutionTests {
 			event(container(testClass), started()), //
 			event(test("failingTest"), started()), //
 			event(test("failingTest"),
-				finishedWithFailure(allOf(isA(AssertionError.class), message("this test should fail")))), //
+				finishedWithFailure(allOf(instanceOf(AssertionError.class), message("this test should fail")))), //
 			event(test("successfulTest"), started()), //
 			event(test("successfulTest"), finishedSuccessfully()), //
 			event(container(testClass), finishedSuccessfully()), //
@@ -121,10 +121,10 @@ class VintageTestEngineExecutionTests {
 			event(test("abortedTest"), started()), //
 			event(test("abortedTest"),
 				abortedWithReason(
-					allOf(isA(AssumptionViolatedException.class), message("this test should be aborted")))), //
+					allOf(instanceOf(AssumptionViolatedException.class), message("this test should be aborted")))), //
 			event(test("failingTest"), started()), //
 			event(test("failingTest"),
-				finishedWithFailure(allOf(isA(AssertionError.class), message("this test should fail")))), //
+				finishedWithFailure(allOf(instanceOf(AssertionError.class), message("this test should fail")))), //
 			event(test("ignoredTest1_withoutReason"), skippedWithReason("")), //
 			event(test("ignoredTest2_withReason"), skippedWithReason("a custom reason")), //
 			event(test("successfulTest"), started()), //
@@ -146,7 +146,7 @@ class VintageTestEngineExecutionTests {
 			event(test("successfulTest"), finishedSuccessfully()), //
 			event(test("failingTest"), started()), //
 			event(test("failingTest"),
-				finishedWithFailure(allOf(isA(AssertionError.class), message("this test should fail")))), //
+				finishedWithFailure(allOf(instanceOf(AssertionError.class), message("this test should fail")))), //
 			event(container(nestedClass), finishedSuccessfully()), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
@@ -164,7 +164,7 @@ class VintageTestEngineExecutionTests {
 			event(container(testClass), started()), //
 			event(test("test"), started()), //
 			event(test("test"),
-				finishedWithFailure(allOf(isA(AssertionError.class), message("this test should fail")))), //
+				finishedWithFailure(allOf(instanceOf(AssertionError.class), message("this test should fail")))), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(container("TestSuite with 1 tests"), finishedSuccessfully()), //
 			event(container(junit4SuiteClass), finishedSuccessfully()), //
@@ -192,7 +192,7 @@ class VintageTestEngineExecutionTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass),
-				finishedWithFailure(allOf(isA(AssertionError.class), message("something went wrong")))), //
+				finishedWithFailure(allOf(instanceOf(AssertionError.class), message("something went wrong")))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -206,7 +206,7 @@ class VintageTestEngineExecutionTests {
 			event(container(suiteClass), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass),
-				finishedWithFailure(allOf(isA(AssertionError.class), message("something went wrong")))), //
+				finishedWithFailure(allOf(instanceOf(AssertionError.class), message("something went wrong")))), //
 			event(container(suiteClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -223,7 +223,7 @@ class VintageTestEngineExecutionTests {
 			event(container(suiteClass), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass),
-				finishedWithFailure(allOf(isA(AssertionError.class), message("something went wrong")))), //
+				finishedWithFailure(allOf(instanceOf(AssertionError.class), message("something went wrong")))), //
 			event(container(suiteClass), finishedSuccessfully()), //
 			event(container(suiteOfSuiteClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
@@ -237,7 +237,8 @@ class VintageTestEngineExecutionTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass),
-				abortedWithReason(allOf(isA(AssumptionViolatedException.class), message("assumption violated")))), //
+				abortedWithReason(
+					allOf(instanceOf(AssumptionViolatedException.class), message("assumption violated")))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -253,7 +254,8 @@ class VintageTestEngineExecutionTests {
 			event(container(suiteClass), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass),
-				abortedWithReason(allOf(isA(AssumptionViolatedException.class), message("assumption violated")))), //
+				abortedWithReason(
+					allOf(instanceOf(AssumptionViolatedException.class), message("assumption violated")))), //
 			event(container(suiteClass), finishedSuccessfully()), //
 			event(container(suiteOfSuiteClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
@@ -268,11 +270,11 @@ class VintageTestEngineExecutionTests {
 			event(container(testClass), started()), //
 			event(test("failingTest"), started()), //
 			event(test("failingTest"),
-				finishedWithFailure(allOf(isA(AssertionError.class), message("expected to fail")))), //
+				finishedWithFailure(allOf(instanceOf(AssertionError.class), message("expected to fail")))), //
 			event(test("succeedingTest"), started()), //
 			event(test("succeedingTest"), finishedSuccessfully()), //
 			event(container(testClass),
-				finishedWithFailure(allOf(isA(AssertionError.class), message("error in @AfterClass")))), //
+				finishedWithFailure(allOf(instanceOf(AssertionError.class), message("error in @AfterClass")))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -415,7 +417,8 @@ class VintageTestEngineExecutionTests {
 			event(container("[bar]"), started()), //
 			event(test("test[bar]"), started()), //
 			event(test("test[bar]"),
-				finishedWithFailure(allOf(isA(AssertionError.class), message("expected:<[foo]> but was:<[bar]>")))), //
+				finishedWithFailure(
+					allOf(instanceOf(AssertionError.class), message("expected:<[foo]> but was:<[bar]>")))), //
 			event(container("[bar]"), finishedSuccessfully()), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
@@ -544,7 +547,7 @@ class VintageTestEngineExecutionTests {
 			event(container(testClass), started()), //
 			event(test("example"), started()), //
 			event(test("example"), //
-				finishedWithFailure(allOf(isA(MultipleFailuresError.class), //
+				finishedWithFailure(allOf(instanceOf(MultipleFailuresError.class), //
 					new Condition<>(throwable -> ((MultipleFailuresError) throwable).getFailures().size() == 3,
 						"Must contain multiple errors (3)")))), //
 			event(container(testClass), finishedSuccessfully()), //

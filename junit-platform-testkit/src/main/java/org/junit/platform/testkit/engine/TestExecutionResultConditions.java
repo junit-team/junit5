@@ -35,11 +35,22 @@ public final class TestExecutionResultConditions {
 		/* no-op */
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if a
+	 * {@link TestExecutionResult}'s {@linkplain TestExecutionResult#getStatus()
+	 * status} is equal to the supplied {@link Status Status}.
+	 */
 	public static Condition<TestExecutionResult> status(Status expectedStatus) {
 		return new Condition<>(where(TestExecutionResult::getStatus, isEqual(expectedStatus)), "status is %s",
 			expectedStatus);
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if a
+	 * {@link TestExecutionResult}'s
+	 * {@linkplain TestExecutionResult#getThrowable() throwable} matches the
+	 * supplied {@code Condition}.
+	 */
 	public static Condition<TestExecutionResult> throwable(Condition<? super Throwable> condition) {
 		return new Condition<>(
 			where(TestExecutionResult::getThrowable,
@@ -47,27 +58,52 @@ public final class TestExecutionResultConditions {
 			"throwable matches %s", condition);
 	}
 
-	public static Condition<Throwable> nestedThrowable(Condition<Throwable> condition) {
+	/**
+	 * Create a new {@link Condition} that matches if and only if a
+	 * {@link Throwable}'s {@linkplain Throwable#getCause() cause} matches the
+	 * supplied {@code Condition}.
+	 */
+	public static Condition<Throwable> cause(Condition<Throwable> condition) {
 		return new Condition<>(throwable -> condition.matches(throwable.getCause()), "nested throwable matches %s",
 			condition);
 	}
 
-	public static Condition<Throwable> suppressedThrowable(int index, Condition<Throwable> condition) {
+	/**
+	 * Create a new {@link Condition} that matches if and only if a
+	 * {@link Throwable}'s {@linkplain Throwable#getSuppressed() suppressed
+	 * throwable} at the supplied index matches the supplied {@code Condition}.
+	 */
+	public static Condition<Throwable> suppressed(int index, Condition<Throwable> condition) {
 		return new Condition<>(
 			throwable -> throwable.getSuppressed().length > index
 					&& condition.matches(throwable.getSuppressed()[index]),
 			"suppressed throwable at index %d matches %s", index, condition);
 	}
 
-	public static Condition<Throwable> isA(Class<? extends Throwable> expectedType) {
+	/**
+	 * Create a new {@link Condition} that matches if and only if a
+	 * {@link Throwable} is an {@linkplain Class#isInstance(Object) instance of}
+	 * the supplied {@link Class}.
+	 */
+	public static Condition<Throwable> instanceOf(Class<? extends Throwable> expectedType) {
 		return new Condition<>(expectedType::isInstance, "instance of %s", expectedType.getName());
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if a
+	 * {@link Throwable}'s {@linkplain Throwable#getMessage() message} is equal
+	 * to the supplied {@link String}.
+	 */
 	public static Condition<Throwable> message(String expectedMessage) {
 		return new Condition<>(where(Throwable::getMessage, isEqual(expectedMessage)), "message is '%s'",
 			expectedMessage);
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if a
+	 * {@link Throwable}'s {@linkplain Throwable#getMessage() message} matches
+	 * the supplied {@link Predicate}.
+	 */
 	public static Condition<Throwable> message(Predicate<String> expectedMessagePredicate) {
 		return new Condition<>(where(Throwable::getMessage, expectedMessagePredicate), "message matches predicate");
 	}

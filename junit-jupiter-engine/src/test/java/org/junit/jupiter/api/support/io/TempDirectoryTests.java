@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -195,7 +195,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 				String message) {
 			results.tests().assertStatistics(stats -> stats.started(1).failed(1).succeeded(0));
 			results.tests().assertThatEvents().haveExactly(1,
-				finishedWithFailure(allOf(isA(clazz), message(actual -> actual.contains(message)))));
+				finishedWithFailure(allOf(instanceOf(clazz), message(actual -> actual.contains(message)))));
 		}
 	}
 

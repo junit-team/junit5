@@ -22,7 +22,7 @@ import static org.junit.platform.testkit.engine.EventConditions.displayName;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.test;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.lang.annotation.ElementType;
@@ -157,7 +157,7 @@ class ParameterizedTestIntegrationTests {
 	void reportsExceptionForErroneousConverter() {
 		var results = execute(selectMethod(TestCase.class, "testWithErroneousConverter", Object.class.getName()));
 		results.all().assertThatEvents() //
-				.haveExactly(1, event(test(), finishedWithFailure(allOf(isA(ParameterResolutionException.class), //
+				.haveExactly(1, event(test(), finishedWithFailure(allOf(instanceOf(ParameterResolutionException.class), //
 					message("Error converting parameter at index 0: something went horribly wrong")))));
 	}
 
@@ -292,8 +292,8 @@ class ParameterizedTestIntegrationTests {
 		void reportsContainerWithAssumptionFailureInMethodSourceAsAborted() {
 			execute("assumptionFailureInMethodSourceFactoryMethod", String.class).all().assertThatEvents() //
 					.haveExactly(1, event(container("test-template:assumptionFailureInMethodSourceFactoryMethod"), //
-						abortedWithReason(
-							allOf(isA(TestAbortedException.class), message("Assumption failed: nothing to test")))));
+						abortedWithReason(allOf(instanceOf(TestAbortedException.class),
+							message("Assumption failed: nothing to test")))));
 		}
 
 		private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {

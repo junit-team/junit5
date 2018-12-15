@@ -17,7 +17,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.test;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import example.ExampleTestCase;
@@ -35,7 +35,7 @@ class EngineTestKitFailedMethodDemo {
 			.tests() // <4>
 			.assertThatEvents().haveExactly(1, // <5>
 				event(test("failingTest"),
-					finishedWithFailure(isA(ArithmeticException.class), message("/ by zero"))));
+					finishedWithFailure(instanceOf(ArithmeticException.class), message("/ by zero"))));
 	}
 
 }

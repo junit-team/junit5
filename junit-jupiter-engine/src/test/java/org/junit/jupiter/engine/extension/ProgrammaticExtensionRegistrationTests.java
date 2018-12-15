@@ -15,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.cause;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.nestedThrowable;
 
 import java.lang.reflect.Field;
 import java.util.function.Predicate;
@@ -84,36 +84,36 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	@Test
 	void propagatesCheckedExceptionThrownDuringInitializationOfStaticField() {
 		assertClassFails(ClassLevelExplosiveCheckedExceptionTestCase.class, allOf(
-			isA(ExceptionInInitializerError.class), nestedThrowable(allOf(isA(Exception.class), message("boom")))));
+			instanceOf(ExceptionInInitializerError.class), cause(allOf(instanceOf(Exception.class), message("boom")))));
 	}
 
 	@Test
 	void propagatesUncheckedExceptionThrownDuringInitializationOfStaticField() {
 		assertClassFails(ClassLevelExplosiveUncheckedExceptionTestCase.class,
-			allOf(isA(ExceptionInInitializerError.class),
-				nestedThrowable(allOf(isA(RuntimeException.class), message("boom")))));
+			allOf(instanceOf(ExceptionInInitializerError.class),
+				cause(allOf(instanceOf(RuntimeException.class), message("boom")))));
 	}
 
 	@Test
 	void propagatesErrorThrownDuringInitializationOfStaticField() {
-		assertClassFails(ClassLevelExplosiveErrorTestCase.class, allOf(isA(Error.class), message("boom")));
+		assertClassFails(ClassLevelExplosiveErrorTestCase.class, allOf(instanceOf(Error.class), message("boom")));
 	}
 
 	@Test
 	void propagatesCheckedExceptionThrownDuringInitializationOfInstanceField() {
 		assertTestFails(InstanceLevelExplosiveCheckedExceptionTestCase.class,
-			allOf(isA(Exception.class), message("boom")));
+			allOf(instanceOf(Exception.class), message("boom")));
 	}
 
 	@Test
 	void propagatesUncheckedExceptionThrownDuringInitializationOfInstanceField() {
 		assertTestFails(InstanceLevelExplosiveUncheckedExceptionTestCase.class,
-			allOf(isA(RuntimeException.class), message("boom")));
+			allOf(instanceOf(RuntimeException.class), message("boom")));
 	}
 
 	@Test
 	void propagatesErrorThrownDuringInitializationOfInstanceField() {
-		assertTestFails(InstanceLevelExplosiveErrorTestCase.class, allOf(isA(Error.class), message("boom")));
+		assertTestFails(InstanceLevelExplosiveErrorTestCase.class, allOf(instanceOf(Error.class), message("boom")));
 	}
 
 	private void assertClassFails(Class<?> testClass, Condition<Throwable> causeCondition) {

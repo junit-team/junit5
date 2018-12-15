@@ -18,7 +18,7 @@ import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.test;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.io.IOException;
@@ -52,11 +52,11 @@ class ExpectedExceptionSupportTests {
 						finishedWithFailure(message("no exception expected")))) //
 				.haveExactly(1, //
 					event(test("exceptionExpectedButNotThrown"), //
-						finishedWithFailure(allOf(isA(AssertionError.class), //
+						finishedWithFailure(allOf(instanceOf(AssertionError.class), //
 							message("Expected test to throw an instance of java.lang.RuntimeException"))))) //
 				.haveExactly(1, //
 					event(test("wrongExceptionExpected"), //
-						finishedWithFailure(allOf(isA(AssertionError.class), //
+						finishedWithFailure(allOf(instanceOf(AssertionError.class), //
 							message(value -> value.contains("Expected: an instance of java.io.IOException"))))));
 	}
 

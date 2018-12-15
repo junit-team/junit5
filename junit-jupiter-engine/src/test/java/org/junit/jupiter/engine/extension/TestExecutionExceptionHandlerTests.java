@@ -23,7 +23,7 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessf
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.isA;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.io.IOException;
@@ -70,7 +70,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 			event(engine(), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testRethrow"), started()), //
-			event(test("testRethrow"), finishedWithFailure(allOf(isA(IOException.class), message("checked")))), //
+			event(test("testRethrow"), finishedWithFailure(allOf(instanceOf(IOException.class), message("checked")))), //
 			event(container(ATestCase.class), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -104,7 +104,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 			event(engine(), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testConvert"), started()), //
-			event(test("testConvert"), finishedWithFailure(allOf(isA(IOException.class), message("checked")))), //
+			event(test("testConvert"), finishedWithFailure(allOf(instanceOf(IOException.class), message("checked")))), //
 			event(container(ATestCase.class), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
