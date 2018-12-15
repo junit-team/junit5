@@ -64,7 +64,7 @@ public final class TestExecutionResultConditions {
 	 * supplied {@code Condition}.
 	 */
 	public static Condition<Throwable> cause(Condition<Throwable> condition) {
-		return new Condition<>(throwable -> condition.matches(throwable.getCause()), "nested throwable matches %s",
+		return new Condition<>(throwable -> condition.matches(throwable.getCause()), "throwable cause matches %s",
 			condition);
 	}
 
