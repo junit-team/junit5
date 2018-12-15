@@ -454,7 +454,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="../org/junit/platform/console/options/Theme.html#status(org.junit.platform.engine.TestExecutionResult)">status(TestExecutionResult)</a></span> - Method in enum org.junit.platform.console.options.<a href="../org/junit/platform/console/options/Theme.html" title="enum in org.junit.platform.console.options">Theme</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/TestExecutionResultConditions.html#status(org.junit.platform.engine.TestExecutionResult.Status)">status(TestExecutionResult.Status)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/TestExecutionResultConditions.html" title="class in org.junit.platform.testkit.engine">TestExecutionResultConditions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Create a new <a href="http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink"><code>Condition</code></a> that matches if and only if a
+ <a href="../org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>'s <a href="../org/junit/platform/engine/TestExecutionResult.html#getStatus()">status</a> is equal to the supplied <a href="../org/junit/platform/engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine"><code>Status</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/LauncherConstants.html#STDERR_REPORT_ENTRY_KEY">STDERR_REPORT_ENTRY_KEY</a></span> - Static variable in class org.junit.platform.launcher.<a href="../org/junit/platform/launcher/LauncherConstants.html" title="class in org.junit.platform.launcher">LauncherConstants</a></dt>
 <dd>
 <div class="block">Key used to publish captured output to <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html?is-external=true#err" title="class or interface in java.lang" class="externalLink"><code>System.err</code></a> as part of a
@@ -584,8 +587,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Determine if this provider supports providing invocation contexts for the
  test template method represented by the supplied <code>context</code>.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/TestExecutionResultConditions.html#suppressedThrowable(int,org.assertj.core.api.Condition)">suppressedThrowable(int, Condition&lt;Throwable&gt;)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/TestExecutionResultConditions.html" title="class in org.junit.platform.testkit.engine">TestExecutionResultConditions</a></dt>
-<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/TestExecutionResultConditions.html#suppressed(int,org.assertj.core.api.Condition)">suppressed(int, Condition&lt;Throwable&gt;)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/TestExecutionResultConditions.html" title="class in org.junit.platform.testkit.engine">TestExecutionResultConditions</a></dt>
+<dd>
+<div class="block">Create a new <a href="http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink"><code>Condition</code></a> that matches if and only if a
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a>'s <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true#getSuppressed()" title="class or interface in java.lang" class="externalLink">suppressed
+ throwable</a> at the supplied index matches the supplied <code>Condition</code>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/parallel/Resources.html#SYSTEM_ERR">SYSTEM_ERR</a></span> - Static variable in class org.junit.jupiter.api.parallel.<a href="../org/junit/jupiter/api/parallel/Resources.html" title="class in org.junit.jupiter.api.parallel">Resources</a></dt>
 <dd>
 <div class="block">Represents the standard error stream of the current process.</div>
