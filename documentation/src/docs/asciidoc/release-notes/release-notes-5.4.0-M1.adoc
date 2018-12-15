@@ -69,7 +69,9 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* `@ResourceLock` can now be declared on test template methods such as `@RepeatedTest` and
+  `@ParameterizedTest` methods. If `@ResourceLock` is used, the invocations will run in
+  the same thread, even if parallel execution is enabled.
 
 ==== Deprecations and Breaking Changes
 

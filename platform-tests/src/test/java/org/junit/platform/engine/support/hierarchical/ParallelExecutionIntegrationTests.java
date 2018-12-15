@@ -171,6 +171,14 @@ class ParallelExecutionIntegrationTests {
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).size().isEqualTo(4);
 	}
 
+	@Test
+	void executesTestTemplatesWithResourceLocksInSameThread() {
+		List<Event> events = execute(2, ConcurrentTemplateTestCase.class);
+
+		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).size().isEqualTo(10);
+		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
+	}
+
 	private List<Instant> getTimestampsFor(List<Event> events, Condition<Event> condition) {
 		// @formatter:off
 		return events.stream()
@@ -494,6 +502,16 @@ class ParallelExecutionIntegrationTests {
 			Thread.sleep(10);
 		}
 
+	}
+
+	@Execution(CONCURRENT)
+	@ExtendWith(ThreadReporter.class)
+	static class ConcurrentTemplateTestCase {
+		@RepeatedTest(10)
+		@ResourceLock("a")
+		void repeatedTest() throws Exception {
+			Thread.sleep(100);
+		}
 	}
 
 	private static void incrementBlockAndCheck(AtomicInteger sharedResource, CountDownLatch countDownLatch)

@@ -22,11 +22,11 @@ import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
  */
 class NodeExecutionAdvisor {
 
-	private final Map<TestDescriptor, ExecutionMode> forcedExecutionModeByTestDescriptor = new HashMap<>();
+	private final Map<TestDescriptor, ExecutionMode> forcedDescendantExecutionModeByTestDescriptor = new HashMap<>();
 	private final Map<TestDescriptor, ResourceLock> resourceLocksByTestDescriptor = new HashMap<>();
 
-	void forceExecutionMode(TestDescriptor testDescriptor, ExecutionMode executionMode) {
-		forcedExecutionModeByTestDescriptor.put(testDescriptor, executionMode);
+	void forceDescendantExecutionMode(TestDescriptor testDescriptor, ExecutionMode executionMode) {
+		forcedDescendantExecutionModeByTestDescriptor.put(testDescriptor, executionMode);
 	}
 
 	void useResourceLock(TestDescriptor testDescriptor, ResourceLock resourceLock) {
@@ -34,7 +34,15 @@ class NodeExecutionAdvisor {
 	}
 
 	Optional<ExecutionMode> getForcedExecutionMode(TestDescriptor testDescriptor) {
-		return Optional.ofNullable(forcedExecutionModeByTestDescriptor.get(testDescriptor));
+		return testDescriptor.getParent().flatMap(this::lookupExecutionModeForcedByAncestor);
+	}
+
+	private Optional<ExecutionMode> lookupExecutionModeForcedByAncestor(TestDescriptor testDescriptor) {
+		ExecutionMode value = forcedDescendantExecutionModeByTestDescriptor.get(testDescriptor);
+		if (value != null) {
+			return Optional.of(value);
+		}
+		return testDescriptor.getParent().flatMap(this::lookupExecutionModeForcedByAncestor);
 	}
 
 	ResourceLock getResourceLock(TestDescriptor testDescriptor) {

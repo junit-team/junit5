@@ -38,9 +38,10 @@ class NodeTreeWalker {
 		}
 		else {
 			Set<ExclusiveResource> allResources = new HashSet<>(exclusiveResources);
+			advisor.forceDescendantExecutionMode(testDescriptor, SAME_THREAD);
 			doForChildrenRecursively(testDescriptor, child -> {
 				allResources.addAll(getExclusiveResources(child));
-				advisor.forceExecutionMode(child, SAME_THREAD);
+				advisor.forceDescendantExecutionMode(child, SAME_THREAD);
 			});
 			advisor.useResourceLock(testDescriptor, lockManager.getLockForResources(allResources));
 		}
