@@ -26,6 +26,9 @@ import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
+import java.io.StringWriter;
+import java.io.Writer;
+
 import example.ExampleTestCase;
 
 import org.junit.jupiter.api.Test;
@@ -36,11 +39,17 @@ class EngineTestKitAllEventsDemo {
 
 	@Test
 	void verifyAllJupiterEvents() {
+		Writer writer = // create a java.io.Writer for debug output
+		// end::user_guide[]
+				// For the demo, we are simply swallowing the debug output.
+				new StringWriter();
+		// tag::user_guide[]
+
 		EngineTestKit.engine("junit-jupiter") // <1>
 			.selectors(selectClass(ExampleTestCase.class)) // <2>
 			.execute() // <3>
 			.all() // <4>
-			.debug() // <5>
+			.debug(writer) // <5>
 			.assertEventsMatchExactly( // <6>
 				event(engine(), started()),
 				event(container(ExampleTestCase.class), started()),

@@ -140,7 +140,8 @@ include::{testDir}/example/testkit/EngineTestKitAllEventsDemo.java[tags=user_gui
 <2> Select the <<testkit-engine-ExampleTestCase, `ExampleTestCase`>> test class.
 <3> Execute the `TestPlan`.
 <4> Filter by _all_ events.
-<5> Print all events to the standard output stream (`STD_OUT`) for debugging purposes.
+<5> Print all events to the supplied `writer` for debugging purposes. Debug information
+    can also be written to an `OutputStream` such as `System.out` or `System.err`.
 <6> Assert _all_ events in exactly the order in which they were fired by the test engine.
 
 The `debug()` invocation from the preceding example results in output similar to the
