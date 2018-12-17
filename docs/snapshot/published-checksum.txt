@@ -19,6 +19,7 @@
 09971025eb5a14efb28b1cce89868eef  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/JupiterEngineExtensionContext.java
 09af82238565deb864ae25a17a2b2596  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/MutableTestExecutionSummary.java
 0a302208d938ae01316facd38d09ce23  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/Node.java
+0a3e7786e5a28880df95baec23ccf823  documentation/src/test/java/example/testkit/EngineTestKitAllEventsDemo.java
 0a4df5461c31a0d3b3b83edb07d9fcc8  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/FilePosition.java
 0abb8110e64d8700654c7b94b931986c  junit-platform-console/src/main/java/org/junit/platform/console/package-info.java
 0ae05b4ec6de3afc1852d0cc21146e36  documentation/src/test/java/example/JUnitPlatformClassDemo.java
@@ -66,7 +67,6 @@
 21e61a9f4cb1f5f46d685100bfb2790f  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeTestTaskContext.java
 23277e6f4b75ca28b7dc8b1fe082262e  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/AbstractTestRuleAdapter.java
 2345b0e83dd8ede2da21857cfd3b50ee  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ServiceLoaderTestExecutionListenerRegistry.java
-251c467d9cccf5294ba864af5938c786  documentation/src/docs/asciidoc/user-guide/testkit.adoc
 2614fef6d8de808c9cde145537cc4116  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/TestFactoryMethodResolver.java
 267040a9ff7c5182d2b343d57343f55a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodFinder.java
 2680967006c19b60bf63cb4e721f8bd8  documentation/src/test/java/example/TestingAStackDemo.java
@@ -422,6 +422,7 @@ b539ba3fafed749b5da7c1612cc460e2  documentation/src/docs/asciidoc/release-notes/
 b53f687e678badbc99647d546004fa40  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestFactory.java
 b659d6afa2ba4637865ed4a0d4311b5b  documentation/src/docs/asciidoc/user-guide/contributors.adoc
 b765d5a9da9e387de0feba55ccf08b36  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ReflectionSupport.java
+b7bc0c9d9490da01055e230670f80208  documentation/src/docs/asciidoc/user-guide/testkit.adoc
 b80d6784ea0c6c4509a349dd60cf2e54  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateInvocationTestDescriptor.java
 b81337df56667f30c7290ebe39bfa19c  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.java
 b9fe38826efbff5a75f6bf057cf39ce4  documentation/src/docs/asciidoc/release-notes/release-notes-5.3.2.adoc
@@ -429,7 +430,6 @@ ba2e44c132b20574d2da9835fda35c38  junit-platform-launcher/src/main/java/org/juni
 ba5344cacee9047b28ab7c46a311bc30  junit-platform-commons/src/main/java/org/junit/platform/commons/support/package-info.java
 bb6d66d5dc15f7b22ea8e9db9cb8fe93  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.java
 bbc1eeb37c9099bbdc262ebfe32fa9fb  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.java
-bc029dbf256c4522bad63b17af80a8d7  documentation/src/test/java/example/testkit/EngineTestKitAllEventsDemo.java
 bcecf4e882b45e1ac2ca5de1d8c63a36  junit-vintage-engine/src/main/java/org/junit/vintage/engine/VintageTestEngine.java
 bd0861a7cf8c8b2a16521f25fb2c1584  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedField.java
 bd3529611b07bd5936478efdf0c28018  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/EngineDescriptor.java

@@ -7239,6 +7239,9 @@ reliable.</p>
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.platform.testkit.engine.TestExecutionResultConditions.message</span>;
 
+<span class="keyword">import</span> <span class="include">java.io.StringWriter</span>;
+<span class="keyword">import</span> <span class="include">java.io.Writer</span>;
+
 <span class="keyword">import</span> <span class="include">example.ExampleTestCase</span>;
 
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
@@ -7249,11 +7252,13 @@ reliable.</p>
 
     <span class="annotation">@Test</span>
     <span class="type">void</span> verifyAllJupiterEvents() {
+        <span class="predefined-type">Writer</span> writer = <span class="comment">// create a java.io.Writer for debug output</span>
+
         EngineTestKit.engine(<span class="string"><span class="delimiter">&quot;</span><span class="content">junit-jupiter</span><span class="delimiter">&quot;</span></span>) <i class="conum" data-value="1"></i><b>(1)</b>
             .selectors(selectClass(ExampleTestCase.class)) <i class="conum" data-value="2"></i><b>(2)</b>
             .execute() <i class="conum" data-value="3"></i><b>(3)</b>
             .all() <i class="conum" data-value="4"></i><b>(4)</b>
-            .debug() <i class="conum" data-value="5"></i><b>(5)</b>
+            .debug(writer) <i class="conum" data-value="5"></i><b>(5)</b>
             .assertEventsMatchExactly( <i class="conum" data-value="6"></i><b>(6)</b>
                 event(engine(), started()),
                 event(container(ExampleTestCase.class), started()),
@@ -7294,7 +7299,8 @@ reliable.</p>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Print all events to the standard output stream (<code>STD_OUT</code>) for debugging purposes.</td>
+<td>Print all events to the supplied <code>writer</code> for debugging purposes. Debug information
+can also be written to an <code>OutputStream</code> such as <code>System.out</code> or <code>System.err</code>.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="6"></i><b>6</b></td>
@@ -8056,7 +8062,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-12-17 16:45:25 UTC
+Last updated 2018-12-17 17:33:37 UTC
 </div>
 </div>
 </body>
