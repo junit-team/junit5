@@ -303,7 +303,6 @@
 82c34b4c0b1255cb06ba088e7fe583b5  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeEngines.java
 82f2b95aafb259a4fb41795b05fc3d31  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EngineExecutionResults.java
 837ecaab122a07f9ff975374debd5520  junit-jupiter-api/src/main/java/org/junit/jupiter/api/RepetitionInfo.java
-8408f44c27245f89cdaa55e71d1bfb31  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertDoesNotThrow.java
 84397b8f4d6f30cd8fd0128a47203b60  documentation/src/docs/asciidoc/user-guide/index.adoc
 84cafa61acdc83ba0213c1df75806ecd  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/VerifierSupport.java
 855e13355685519e5fc57adcac2130ba  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/conditions/package-info.java
@@ -478,6 +477,7 @@ cc55d2ccefa34464fedc3b0abe54cb20  junit-platform-launcher/src/main/java/org/juni
 cc660aae3f06140206ac6508df0cab87  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledOnJre.java
 cc82647f4c62bcd57244e29d04c99812  documentation/src/test/java/org/junit/api/tools/ApiReport.java
 cd9be65f3b95c1e7a5de731c0af6b716  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/OpenTest4JAwareThrowableCollector.java
+ce57056fdbe244e07545e923439e889e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertDoesNotThrow.java
 ce5721fe93cad9c202bb6d2baa4b75d2  documentation/src/test/java/example/UsingTheLauncherDemo.java
 ce81daf96749147c5c60280e1e787d14  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Nested.java
 cee414c7457ca099203c2ac3c4b228ed  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfSystemPropertyCondition.java
