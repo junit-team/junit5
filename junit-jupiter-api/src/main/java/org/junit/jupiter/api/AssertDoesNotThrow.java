@@ -49,9 +49,7 @@ class AssertDoesNotThrow {
 			executable.execute();
 		}
 		catch (Throwable t) {
-			String message = buildPrefix(nullSafeGet(messageOrSupplier)) + "Unexpected exception thrown: "
-					+ t.getClass().getName() + addThrowableMessage(t);
-			throw new AssertionFailedError(message, t);
+			throw createAssertionFailedError(messageOrSupplier, t);
 		}
 	}
 
@@ -72,10 +70,14 @@ class AssertDoesNotThrow {
 			return supplier.get();
 		}
 		catch (Throwable t) {
-			String message = buildPrefix(nullSafeGet(messageOrSupplier)) + "Unexpected exception thrown: "
-					+ t.getClass().getName() + addThrowableMessage(t);
-			throw new AssertionFailedError(message, t);
+			throw createAssertionFailedError(messageOrSupplier, t);
 		}
+	}
+
+	private static AssertionFailedError createAssertionFailedError(Object messageOrSupplier, Throwable t) {
+		String message = buildPrefix(nullSafeGet(messageOrSupplier)) + "Unexpected exception thrown: "
+				+ t.getClass().getName() + addThrowableMessage(t);
+		return new AssertionFailedError(message, t);
 	}
 
 	private static String addThrowableMessage(Throwable t) {
