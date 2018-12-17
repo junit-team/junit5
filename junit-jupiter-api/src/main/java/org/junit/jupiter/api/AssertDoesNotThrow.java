@@ -17,6 +17,7 @@ import java.util.function.Supplier;
 
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
+import org.junit.platform.commons.util.StringUtils;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -49,7 +50,7 @@ class AssertDoesNotThrow {
 		}
 		catch (Throwable t) {
 			String message = buildPrefix(nullSafeGet(messageOrSupplier)) + "Unexpected exception thrown: "
-					+ t.getClass().getName();
+					+ t.getClass().getName() + addThrowableMessage(t);
 			throw new AssertionFailedError(message, t);
 		}
 	}
@@ -72,9 +73,13 @@ class AssertDoesNotThrow {
 		}
 		catch (Throwable t) {
 			String message = buildPrefix(nullSafeGet(messageOrSupplier)) + "Unexpected exception thrown: "
-					+ t.getClass().getName();
+					+ t.getClass().getName() + addThrowableMessage(t);
 			throw new AssertionFailedError(message, t);
 		}
+	}
+
+	private static String addThrowableMessage(Throwable t) {
+		return StringUtils.isBlank(t.getMessage()) ? "" : ": " + t.getMessage();
 	}
 
 }
