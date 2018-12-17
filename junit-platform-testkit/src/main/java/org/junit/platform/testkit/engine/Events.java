@@ -217,11 +217,13 @@ public final class Events {
 	 * <p>{@code events.assertStatistics(stats -> stats.started(1).succeeded(1).failed(0));}
 	 *
 	 * @param statisticsConsumer a consumer of {@link EventStatistics}
+	 * @return this {@code Events} object for method chaining; never {@code null}
 	 */
-	public void assertStatistics(Consumer<EventStatistics> statisticsConsumer) {
+	public Events assertStatistics(Consumer<EventStatistics> statisticsConsumer) {
 		EventStatistics eventStatistics = new EventStatistics(this, this.category);
 		statisticsConsumer.accept(eventStatistics);
 		eventStatistics.assertAll();
+		return this;
 	}
 
 	/**
