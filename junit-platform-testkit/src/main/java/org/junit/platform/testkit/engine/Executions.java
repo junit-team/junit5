@@ -230,11 +230,11 @@ public final class Executions {
 	private Stream<Execution> finishedExecutionsByStatus(Status status) {
 		Preconditions.notNull(status, "Status must not be null");
 		return finishedExecutions()//
-				.filter(execution -> execution.getTerminationInfo().getExecutionResult().getStatus().equals(status));
+				.filter(execution -> execution.getTerminationInfo().getExecutionResult().getStatus() == status);
 	}
 
 	private Stream<Execution> executionsByTerminationInfo(Predicate<TerminationInfo> predicate) {
-		return this.executions.stream().filter(execution -> predicate.test(execution.getTerminationInfo()));
+		return filter(execution -> predicate.test(execution.getTerminationInfo()));
 	}
 
 	/**
