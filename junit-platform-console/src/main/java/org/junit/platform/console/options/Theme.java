@@ -129,7 +129,7 @@ public enum Theme {
 	}
 
 	/**
-	 * Return lower case {@link #name} for easier usage in help text for
+	 * Return lower case {@link #name()} for easier usage in help text for
 	 * available options.
 	 */
 	@Override
