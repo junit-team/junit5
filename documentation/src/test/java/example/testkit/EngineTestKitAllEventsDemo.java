@@ -61,8 +61,8 @@ class EngineTestKitAllEventsDemo {
 					abortedWithReason(instanceOf(TestAbortedException.class),
 						message(m -> m.contains("abc does not contain Z")))),
 				event(test("failingTest"), started()),
-				event(test("failingTest"),
-					finishedWithFailure(instanceOf(ArithmeticException.class), message("/ by zero"))),
+				event(test("failingTest"), finishedWithFailure(
+					instanceOf(ArithmeticException.class), message("/ by zero"))),
 				event(container(ExampleTestCase.class), finishedSuccessfully()),
 				event(engine(), finishedSuccessfully()));
 	}

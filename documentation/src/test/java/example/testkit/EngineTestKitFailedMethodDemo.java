@@ -35,7 +35,8 @@ class EngineTestKitFailedMethodDemo {
 			.tests() // <4>
 			.assertThatEvents().haveExactly(1, // <5>
 				event(test("failingTest"),
-					finishedWithFailure(instanceOf(ArithmeticException.class), message("/ by zero"))));
+					finishedWithFailure(
+						instanceOf(ArithmeticException.class), message("/ by zero"))));
 	}
 
 }
