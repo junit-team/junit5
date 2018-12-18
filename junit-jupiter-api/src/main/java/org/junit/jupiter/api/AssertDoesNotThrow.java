@@ -76,7 +76,7 @@ class AssertDoesNotThrow {
 
 	private static AssertionFailedError createAssertionFailedError(Object messageOrSupplier, Throwable t) {
 		String message = buildPrefix(nullSafeGet(messageOrSupplier)) + "Unexpected exception thrown: "
-				+ t.getClass().getName() + buildSuffix(t.getLocalizedMessage());
+				+ t.getClass().getName() + buildSuffix(t.getMessage());
 		return new AssertionFailedError(message, t);
 	}
 
