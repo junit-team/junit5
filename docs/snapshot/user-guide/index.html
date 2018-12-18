@@ -7168,7 +7168,8 @@ events and execution results, consult the Javadoc for <code><a href="../api/org/
             .tests() <i class="conum" data-value="4"></i><b>(4)</b>
             .assertThatEvents().haveExactly(<span class="integer">1</span>, <i class="conum" data-value="5"></i><b>(5)</b>
                 event(test(<span class="string"><span class="delimiter">&quot;</span><span class="content">failingTest</span><span class="delimiter">&quot;</span></span>),
-                    finishedWithFailure(instanceOf(<span class="exception">ArithmeticException</span>.class), message(<span class="string"><span class="delimiter">&quot;</span><span class="content">/ by zero</span><span class="delimiter">&quot;</span></span>))));
+                    finishedWithFailure(
+                        instanceOf(<span class="exception">ArithmeticException</span>.class), message(<span class="string"><span class="delimiter">&quot;</span><span class="content">/ by zero</span><span class="delimiter">&quot;</span></span>))));
     }
 
 }</code></pre>
@@ -7270,8 +7271,8 @@ reliable.</p>
                     abortedWithReason(instanceOf(TestAbortedException.class),
                         message(m -&gt; m.contains(<span class="string"><span class="delimiter">&quot;</span><span class="content">abc does not contain Z</span><span class="delimiter">&quot;</span></span>)))),
                 event(test(<span class="string"><span class="delimiter">&quot;</span><span class="content">failingTest</span><span class="delimiter">&quot;</span></span>), started()),
-                event(test(<span class="string"><span class="delimiter">&quot;</span><span class="content">failingTest</span><span class="delimiter">&quot;</span></span>),
-                    finishedWithFailure(instanceOf(<span class="exception">ArithmeticException</span>.class), message(<span class="string"><span class="delimiter">&quot;</span><span class="content">/ by zero</span><span class="delimiter">&quot;</span></span>))),
+                event(test(<span class="string"><span class="delimiter">&quot;</span><span class="content">failingTest</span><span class="delimiter">&quot;</span></span>), finishedWithFailure(
+                    instanceOf(<span class="exception">ArithmeticException</span>.class), message(<span class="string"><span class="delimiter">&quot;</span><span class="content">/ by zero</span><span class="delimiter">&quot;</span></span>))),
                 event(container(ExampleTestCase.class), finishedSuccessfully()),
                 event(engine(), finishedSuccessfully()));
     }
@@ -8062,7 +8063,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-12-18 15:07:48 UTC
+Last updated 2018-12-18 17:17:21 UTC
 </div>
 </div>
 </body>
