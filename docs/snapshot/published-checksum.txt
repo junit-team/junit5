@@ -67,6 +67,7 @@
 21e61a9f4cb1f5f46d685100bfb2790f  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeTestTaskContext.java
 23277e6f4b75ca28b7dc8b1fe082262e  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/AbstractTestRuleAdapter.java
 2345b0e83dd8ede2da21857cfd3b50ee  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ServiceLoaderTestExecutionListenerRegistry.java
+256b9e47519b33c271d57e6bb5a793cd  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertDoesNotThrow.java
 2614fef6d8de808c9cde145537cc4116  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/TestFactoryMethodResolver.java
 267040a9ff7c5182d2b343d57343f55a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodFinder.java
 2680967006c19b60bf63cb4e721f8bd8  documentation/src/test/java/example/TestingAStackDemo.java
@@ -166,7 +167,6 @@
 4db6ec5c5cbb1345ca708c638b42694e  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/GenericBeforeAndAfterAdvice.java
 4db83f5e1c4a1b741d7783dbef86cb79  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerRequest.java
 4eb491bf2aa69aacd0ecb2a9c6638de7  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstanceFactoryContext.java
-4ecae6f79c8ca03baabf0e302a63ea49  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertDoesNotThrow.java
 4efcadbbafd6f6a8e3c84126a9e5cfbb  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestMethodOrder.java
 4fd625980b113f0104f666a4d2fe6447  documentation/src/test/java/example/DisplayNameGeneratorDemo.java
 504572baedabdcd6c8132182030c114a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/RepeatedTest.java
