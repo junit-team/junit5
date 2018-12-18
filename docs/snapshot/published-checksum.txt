@@ -58,7 +58,6 @@
 1dd8c475c3ad90107a13058c1dd93a41  junit-platform-commons/src/main/java/org/junit/platform/commons/annotation/Testable.java
 1ea4159a98ad9184aac3536719311669  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LogRecordListener.java
 1f0fab51c248b28ca2b293cd874938b3  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/ArgumentsAggregator.java
-20a5e4d649fda50d55fc8a2092fff4dd  junit-platform-console/src/main/java/org/junit/platform/console/options/Theme.java
 2152592b046bf6c2ffdf998c46d9bd62  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariable.java
 2158b4904f47101793ed45d214056aff  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodDescriptor.java
 217104b4e9552d278159aacd4f1b49ef  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/PackageNameFilter.java
@@ -220,6 +219,7 @@
 61441de2eae0e9fcba0b86c75197d631  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/ExternalResourceAdapter.java
 61c48af3ac3249428d5f82c09b8bf773  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/ExtensionUtils.java
 62229e4c98825c40f47400ea43bde02e  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/TestExecutionListenerRegistry.java
+6312ee5b02f4af20f4539fdec9ec1d51  junit-platform-console/src/main/java/org/junit/platform/console/options/Theme.java
 638bd8bc316542b9d46dde5f04af286c  documentation/src/test/java/example/TempDirectoryWithCustomFileSystemDemo.java
 63e7f20953158020a461ef51a48600ed  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/DefaultMethodDescriptor.java
 63fd8d8d7c501d072ca6bcd37a7ff388  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/PackageSelector.java
