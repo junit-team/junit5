@@ -76,12 +76,12 @@ class AssertDoesNotThrow {
 
 	private static AssertionFailedError createAssertionFailedError(Object messageOrSupplier, Throwable t) {
 		String message = buildPrefix(nullSafeGet(messageOrSupplier)) + "Unexpected exception thrown: "
-				+ t.getClass().getName() + addThrowableMessage(t);
+				+ t.getClass().getName() + buildSuffix(t.getLocalizedMessage());
 		return new AssertionFailedError(message, t);
 	}
 
-	private static String addThrowableMessage(Throwable t) {
-		return StringUtils.isBlank(t.getMessage()) ? "" : ": " + t.getMessage();
+	private static String buildSuffix(String message) {
+		return StringUtils.isNotBlank(message) ? ": " + message : "";
 	}
 
 }
