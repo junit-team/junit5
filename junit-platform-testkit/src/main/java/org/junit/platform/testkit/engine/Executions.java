@@ -261,20 +261,32 @@ public final class Executions {
 					break;
 				}
 				case SKIPPED: {
-					Instant startInstant = executionStarts.get(event.getTestDescriptor());
-					Execution skippedEvent = Execution.skipped(event.getTestDescriptor(),
-						startInstant != null ? startInstant : event.getTimestamp(), event.getTimestamp(),
+					// Based on the Javadoc for EngineExecutionListener.executionSkipped(...),
+					// a skipped descriptor must never be reported as started or finished,
+					// but just in case a TestEngine does not adhere to that contract, we
+					// make an attempt to remove any tracked "started" event.
+					executionStarts.remove(event.getTestDescriptor());
+
+					// Use the same timestamp for both the start and end Instant values.
+					Instant timestamp = event.getTimestamp();
+
+					Execution skippedEvent = Execution.skipped(event.getTestDescriptor(), timestamp, timestamp,
 						event.getRequiredPayload(String.class));
 					executions.add(skippedEvent);
-					executionStarts.remove(event.getTestDescriptor());
 					break;
 				}
 				case FINISHED: {
-					Execution finishedEvent = Execution.finished(event.getTestDescriptor(),
-						executionStarts.get(event.getTestDescriptor()), event.getTimestamp(),
-						event.getRequiredPayload(TestExecutionResult.class));
-					executions.add(finishedEvent);
-					executionStarts.remove(event.getTestDescriptor());
+					Instant startInstant = executionStarts.remove(event.getTestDescriptor());
+					Instant endInstant = event.getTimestamp();
+
+					// If "started" events have already been filtered out, it is no
+					// longer possible to create a legitimate Execution for the current
+					// descriptor. So we effectively ignore it in that case.
+					if (startInstant != null) {
+						Execution finishedEvent = Execution.finished(event.getTestDescriptor(), startInstant,
+							endInstant, event.getRequiredPayload(TestExecutionResult.class));
+						executions.add(finishedEvent);
+					}
 					break;
 				}
 				default: {
