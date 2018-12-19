@@ -85,6 +85,9 @@ public final class Executions {
 	/**
 	 * Shortcut for {@code executions.stream().map(mapper)}.
 	 *
+	 * @param mapper a {@code Function} to apply to each execution;
+	 * never {@code null}
+	 * @return the mapped stream of executions; never {@code null}
 	 * @see #stream()
 	 * @see Stream#map(Function)
 	 */
@@ -96,6 +99,9 @@ public final class Executions {
 	/**
 	 * Shortcut for {@code executions.stream().filter(predicate)}.
 	 *
+	 * @param predicate a {@code Predicate} to apply to each execution to decide
+	 * if it should be included in the filtered stream; never {@code null}
+	 * @return the filtered stream of executions; never {@code null}
 	 * @see #stream()
 	 * @see Stream#filter(Predicate)
 	 */
@@ -198,9 +204,11 @@ public final class Executions {
 	/**
 	 * Print all executions to the supplied {@link OutputStream}.
 	 *
+	 * @param out the {@code OutputStream} to print to; never {@code null}
 	 * @return this {@code Executions} object for method chaining; never {@code null}
 	 */
 	public Executions debug(OutputStream out) {
+		Preconditions.notNull(out, "OutputStream must not be null");
 		debug(new PrintWriter(out, true));
 		return this;
 	}
@@ -208,16 +216,18 @@ public final class Executions {
 	/**
 	 * Print all executions to the supplied {@link Writer}.
 	 *
+	 * @param writer the {@code Writer} to print to; never {@code null}
 	 * @return this {@code Executions} object for method chaining; never {@code null}
 	 */
 	public Executions debug(Writer writer) {
+		Preconditions.notNull(writer, "Writer must not be null");
 		debug(new PrintWriter(writer, true));
 		return this;
 	}
 
 	private Executions debug(PrintWriter printWriter) {
 		printWriter.println(this.category + " Executions:");
-		this.executions.forEach(event -> printWriter.printf("\t%s%n", event));
+		this.executions.forEach(execution -> printWriter.printf("\t%s%n", execution));
 		return this;
 	}
 

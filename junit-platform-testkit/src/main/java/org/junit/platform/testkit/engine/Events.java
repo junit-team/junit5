@@ -90,6 +90,8 @@ public final class Events {
 	/**
 	 * Shortcut for {@code events.stream().map(mapper)}.
 	 *
+	 * @param mapper a {@code Function} to apply to each event; never {@code null}
+	 * @return the mapped stream of events; never {@code null}
 	 * @see #stream()
 	 * @see Stream#map(Function)
 	 */
@@ -101,6 +103,9 @@ public final class Events {
 	/**
 	 * Shortcut for {@code events.stream().filter(predicate)}.
 	 *
+	 * @param predicate a {@code Predicate} to apply to each event to decide if
+	 * it should be included in the filtered stream; never {@code null}
+	 * @return the filtered stream of events; never {@code null}
 	 * @see #stream()
 	 * @see Stream#filter(Predicate)
 	 */
@@ -216,10 +221,12 @@ public final class Events {
 	 *
 	 * <p>{@code events.assertStatistics(stats -> stats.started(1).succeeded(1).failed(0));}
 	 *
-	 * @param statisticsConsumer a consumer of {@link EventStatistics}
+	 * @param statisticsConsumer a {@link Consumer} of {@link EventStatistics};
+	 * never {@code null}
 	 * @return this {@code Events} object for method chaining; never {@code null}
 	 */
 	public Events assertStatistics(Consumer<EventStatistics> statisticsConsumer) {
+		Preconditions.notNull(statisticsConsumer, "Consumer must not be null");
 		EventStatistics eventStatistics = new EventStatistics(this, this.category);
 		statisticsConsumer.accept(eventStatistics);
 		eventStatistics.assertAll();
@@ -242,20 +249,20 @@ public final class Events {
 	 * );
 	 * </pre>
 	 *
-	 * @param conditions the conditions to match against
+	 * @param conditions the conditions to match against; never {@code null}
 	 * @see EventConditions
 	 * @see TestExecutionResultConditions
 	 */
 	@SafeVarargs
 	public final void assertEventsMatchExactly(Condition<? super Event>... conditions) {
+		Preconditions.notNull(conditions, "conditions must not be null");
 		assertEventsMatchExactly(this.events, conditions);
 	}
 
 	/**
 	 * Shortcut for {@code org.assertj.core.api.Assertions.assertThat(events.list())}.
 	 *
-	 * @return an instance of {@link ListAssert} for events; never
-	 * {@code null}
+	 * @return an instance of {@link ListAssert} for events; never {@code null}
 	 * @see org.assertj.core.api.Assertions#assertThat(List)
 	 * @see org.assertj.core.api.ListAssert
 	 */
@@ -278,9 +285,11 @@ public final class Events {
 	/**
 	 * Print all events to the supplied {@link OutputStream}.
 	 *
+	 * @param out the {@code OutputStream} to print to; never {@code null}
 	 * @return this {@code Events} object for method chaining; never {@code null}
 	 */
 	public Events debug(OutputStream out) {
+		Preconditions.notNull(out, "OutputStream must not be null");
 		debug(new PrintWriter(out, true));
 		return this;
 	}
@@ -288,9 +297,11 @@ public final class Events {
 	/**
 	 * Print all events to the supplied {@link Writer}.
 	 *
+	 * @param writer the {@code Writer} to print to; never {@code null}
 	 * @return this {@code Events} object for method chaining; never {@code null}
 	 */
 	public Events debug(Writer writer) {
+		Preconditions.notNull(writer, "Writer must not be null");
 		debug(new PrintWriter(writer, true));
 		return this;
 	}
