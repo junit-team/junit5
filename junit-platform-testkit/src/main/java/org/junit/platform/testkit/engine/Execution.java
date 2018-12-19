@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
@@ -35,12 +36,15 @@ public class Execution {
 	 * Create a new instance of an {@code Execution} that finished with the
 	 * provided {@link TestExecutionResult}.
 	 *
-	 * @param testDescriptor the {@code TestDescriptor} that finished
-	 * @param startInstant the {@code Instant} that the {@code Execution} started
-	 * @param endInstant the {@code Instant} that the {@code Execution} completed
+	 * @param testDescriptor the {@code TestDescriptor} that finished;
+	 * never {@code null}
+	 * @param startInstant the {@code Instant} that the {@code Execution} started;
+	 * never {@code null}
+	 * @param endInstant the {@code Instant} that the {@code Execution} completed;
+	 * never {@code null}
 	 * @param executionResult the {@code TestExecutionResult} of the finished
-	 * {@code TestDescriptor}
-	 * @return the newly created {@code Execution} instance
+	 * {@code TestDescriptor}; never {@code null}
+	 * @return the newly created {@code Execution} instance; never {@code null}
 	 */
 	public static Execution finished(TestDescriptor testDescriptor, Instant startInstant, Instant endInstant,
 			TestExecutionResult executionResult) {
@@ -49,14 +53,18 @@ public class Execution {
 	}
 
 	/**
-	 * Create a new instance of an {@code Execution} that was skipped with the provided
-	 * {@code skipReason}.
+	 * Create a new instance of an {@code Execution} that was skipped with the
+	 * provided {@code skipReason}.
 	 *
-	 * @param testDescriptor the {@code TestDescriptor} that finished
-	 * @param startInstant the {@code Instant} that the {@code Execution} started
-	 * @param endInstant the {@code Instant} that the {@code Execution} completed
-	 * @param skipReason the reason the {@code TestDescriptor} was skipped
-	 * @return the newly created {@code Execution} instance
+	 * @param testDescriptor the {@code TestDescriptor} that finished;
+	 * never {@code null}
+	 * @param startInstant the {@code Instant} that the {@code Execution} started;
+	 * never {@code null}
+	 * @param endInstant the {@code Instant} that the {@code Execution} completed;
+	 * never {@code null}
+	 * @param skipReason the reason the {@code TestDescriptor} was skipped;
+	 * may be {@code null}
+	 * @return the newly created {@code Execution} instance; never {@code null}
 	 */
 	public static Execution skipped(TestDescriptor testDescriptor, Instant startInstant, Instant endInstant,
 			String skipReason) {
@@ -74,6 +82,11 @@ public class Execution {
 
 	private Execution(TestDescriptor testDescriptor, Instant startInstant, Instant endInstant,
 			TerminationInfo terminationInfo) {
+
+		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
+		Preconditions.notNull(startInstant, "Start Instant must not be null");
+		Preconditions.notNull(endInstant, "End Instant must not be null");
+		Preconditions.notNull(terminationInfo, "TerminationInfo must not be null");
 
 		this.testDescriptor = testDescriptor;
 		this.startInstant = startInstant;
