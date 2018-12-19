@@ -334,6 +334,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <pre class="methodSignature">public&nbsp;&lt;R&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;R&gt;&nbsp;map&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;? super <a href="Execution.html" title="class in org.junit.platform.testkit.engine">Execution</a>,&#8203;? extends R&gt;&nbsp;mapper)</pre>
 <div class="block">Shortcut for <code>executions.stream().map(mapper)</code>.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>mapper</code> - a <code>Function</code> to apply to each execution;
+ never <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the mapped stream of executions; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="#stream()"><code>stream()</code></a>, 
 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true#map(java.util.function.Function)" title="class or interface in java.util.stream" class="externalLink"><code>Stream.map(Function)</code></a></dd>
@@ -349,6 +354,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="Execution.html" title="class in org.junit.platform.testkit.engine">Execution</a>&gt;&nbsp;filter&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;? super <a href="Execution.html" title="class in org.junit.platform.testkit.engine">Execution</a>&gt;&nbsp;predicate)</pre>
 <div class="block">Shortcut for <code>executions.stream().filter(predicate)</code>.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>predicate</code> - a <code>Predicate</code> to apply to each execution to decide
+ if it should be included in the filtered stream; never <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the filtered stream of executions; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="#stream()"><code>stream()</code></a>, 
 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true#filter(java.util.function.Predicate)" title="class or interface in java.util.stream" class="externalLink"><code>Stream.filter(Predicate)</code></a></dd>
@@ -490,6 +500,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <pre class="methodSignature">public&nbsp;<a href="Executions.html" title="class in org.junit.platform.testkit.engine">Executions</a>&nbsp;debug&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;out)</pre>
 <div class="block">Print all executions to the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>OutputStream</code></a>.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>out</code> - the <code>OutputStream</code> to print to; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this <code>Executions</code> object for method chaining; never <code>null</code></dd>
 </dl>
@@ -504,6 +516,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <pre class="methodSignature">public&nbsp;<a href="Executions.html" title="class in org.junit.platform.testkit.engine">Executions</a>&nbsp;debug&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/Writer.html?is-external=true" title="class or interface in java.io" class="externalLink">Writer</a>&nbsp;writer)</pre>
 <div class="block">Print all executions to the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Writer.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>Writer</code></a>.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>writer</code> - the <code>Writer</code> to print to; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this <code>Executions</code> object for method chaining; never <code>null</code></dd>
 </dl>

@@ -373,6 +373,10 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <pre class="methodSignature">public&nbsp;&lt;R&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;R&gt;&nbsp;map&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;? super <a href="Event.html" title="class in org.junit.platform.testkit.engine">Event</a>,&#8203;? extends R&gt;&nbsp;mapper)</pre>
 <div class="block">Shortcut for <code>events.stream().map(mapper)</code>.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>mapper</code> - a <code>Function</code> to apply to each event; never <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the mapped stream of events; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="#stream()"><code>stream()</code></a>, 
 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true#map(java.util.function.Function)" title="class or interface in java.util.stream" class="externalLink"><code>Stream.map(Function)</code></a></dd>
@@ -388,6 +392,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;&nbsp;filter&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;? super <a href="Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;&nbsp;predicate)</pre>
 <div class="block">Shortcut for <code>events.stream().filter(predicate)</code>.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>predicate</code> - a <code>Predicate</code> to apply to each event to decide if
+ it should be included in the filtered stream; never <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the filtered stream of events; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="#stream()"><code>stream()</code></a>, 
 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true#filter(java.util.function.Predicate)" title="class or interface in java.util.stream" class="externalLink"><code>Stream.filter(Predicate)</code></a></dd>
@@ -549,7 +558,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <p><code>events.assertStatistics(stats -&gt; stats.started(1).succeeded(1).failed(0));</code></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>statisticsConsumer</code> - a consumer of <a href="EventStatistics.html" title="class in org.junit.platform.testkit.engine"><code>EventStatistics</code></a></dd>
+<dd><code>statisticsConsumer</code> - a <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html?is-external=true" title="class or interface in java.util.function" class="externalLink"><code>Consumer</code></a> of <a href="EventStatistics.html" title="class in org.junit.platform.testkit.engine"><code>EventStatistics</code></a>;
+ never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this <code>Events</code> object for method chaining; never <code>null</code></dd>
 </dl>
@@ -579,7 +589,7 @@ public final&nbsp;void&nbsp;assertEventsMatchExactly&#8203;(<a href="http://joel
  </pre></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>conditions</code> - the conditions to match against</dd>
+<dd><code>conditions</code> - the conditions to match against; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="EventConditions.html" title="class in org.junit.platform.testkit.engine"><code>EventConditions</code></a>, 
 <a href="TestExecutionResultConditions.html" title="class in org.junit.platform.testkit.engine"><code>TestExecutionResultConditions</code></a></dd>
@@ -596,8 +606,7 @@ public final&nbsp;void&nbsp;assertEventsMatchExactly&#8203;(<a href="http://joel
 <div class="block">Shortcut for <code>org.assertj.core.api.Assertions.assertThat(events.list())</code>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>an instance of <a href="http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/ListAssert.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink"><code>ListAssert</code></a> for events; never
- <code>null</code></dd>
+<dd>an instance of <a href="http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/ListAssert.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink"><code>ListAssert</code></a> for events; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/Assertions.html?is-external=true#assertThat(java.util.List)" title="class or interface in org.assertj.core.api" class="externalLink"><code>Assertions.assertThat(List)</code></a>, 
 <a href="http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/ListAssert.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink"><code>ListAssert</code></a></dd>
@@ -627,6 +636,8 @@ public final&nbsp;void&nbsp;assertEventsMatchExactly&#8203;(<a href="http://joel
 <pre class="methodSignature">public&nbsp;<a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a>&nbsp;debug&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;out)</pre>
 <div class="block">Print all events to the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>OutputStream</code></a>.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>out</code> - the <code>OutputStream</code> to print to; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this <code>Events</code> object for method chaining; never <code>null</code></dd>
 </dl>
@@ -641,6 +652,8 @@ public final&nbsp;void&nbsp;assertEventsMatchExactly&#8203;(<a href="http://joel
 <pre class="methodSignature">public&nbsp;<a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a>&nbsp;debug&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/Writer.html?is-external=true" title="class or interface in java.io" class="externalLink">Writer</a>&nbsp;writer)</pre>
 <div class="block">Print all events to the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Writer.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>Writer</code></a>.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>writer</code> - the <code>Writer</code> to print to; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this <code>Events</code> object for method chaining; never <code>null</code></dd>
 </dl>
