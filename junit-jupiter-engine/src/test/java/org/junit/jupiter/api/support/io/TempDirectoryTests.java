@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api.support.io;
 
-import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -195,7 +194,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 				String message) {
 			results.tests().assertStatistics(stats -> stats.started(1).failed(1).succeeded(0));
 			results.tests().assertThatEvents().haveExactly(1,
-				finishedWithFailure(allOf(instanceOf(clazz), message(actual -> actual.contains(message)))));
+				finishedWithFailure(instanceOf(clazz), message(actual -> actual.contains(message))));
 		}
 	}
 

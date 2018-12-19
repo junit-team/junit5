@@ -11,7 +11,6 @@
 package org.junit.jupiter.params.aggregator;
 
 import static java.util.stream.Collectors.toMap;
-import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -181,8 +180,8 @@ public class AggregatorIntegrationTests {
 			selectMethod(ErroneousTestCases.class, "testWithErroneousAggregator", Object.class.getName()));
 
 		results.tests().assertThatEvents()//
-				.haveExactly(1, event(test(), finishedWithFailure(allOf(instanceOf(ParameterResolutionException.class), //
-					message("Error aggregating arguments for parameter at index 0: something went horribly wrong")))));
+				.haveExactly(1, event(test(), finishedWithFailure(instanceOf(ParameterResolutionException.class), //
+					message("Error aggregating arguments for parameter at index 0: something went horribly wrong"))));
 	}
 
 	private void testPersonAggregator(Person person) {

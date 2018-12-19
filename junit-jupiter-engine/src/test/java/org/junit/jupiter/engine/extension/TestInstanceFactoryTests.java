@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
@@ -75,10 +74,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass),
-				finishedWithFailure(allOf(instanceOf(ExtensionConfigurationException.class),
+				finishedWithFailure(instanceOf(ExtensionConfigurationException.class),
 					message("The following TestInstanceFactory extensions were registered for test class ["
 							+ testClass.getName() + "], but only one is permitted: "
-							+ nullSafeToString(FooInstanceFactory.class, BarInstanceFactory.class))))), //
+							+ nullSafeToString(FooInstanceFactory.class, BarInstanceFactory.class)))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -94,10 +93,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass),
-				finishedWithFailure(allOf(instanceOf(ExtensionConfigurationException.class),
+				finishedWithFailure(instanceOf(ExtensionConfigurationException.class),
 					message("The following TestInstanceFactory extensions were registered for test class ["
 							+ testClass.getName() + "], but only one is permitted: "
-							+ nullSafeToString(FooInstanceFactory.class, BarInstanceFactory.class))))), //
+							+ nullSafeToString(FooInstanceFactory.class, BarInstanceFactory.class)))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -117,10 +116,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			event(test("outerTest()"), finishedSuccessfully()), //
 			event(nestedContainer(nestedClass), started()), //
 			event(nestedContainer(nestedClass),
-				finishedWithFailure(allOf(instanceOf(ExtensionConfigurationException.class),
+				finishedWithFailure(instanceOf(ExtensionConfigurationException.class),
 					message("The following TestInstanceFactory extensions were registered for test class ["
 							+ nestedClass.getName() + "], but only one is permitted: "
-							+ nullSafeToString(FooInstanceFactory.class, BarInstanceFactory.class))))), //
+							+ nullSafeToString(FooInstanceFactory.class, BarInstanceFactory.class)))), //
 			event(container(outerClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -138,10 +137,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			event(container(testClass), started()), //
 			event(test("testShouldNotBeCalled"), started()), //
 			event(test("testShouldNotBeCalled"),
-				finishedWithFailure(allOf(instanceOf(TestInstantiationException.class),
+				finishedWithFailure(instanceOf(TestInstantiationException.class),
 					message(m -> m.equals("TestInstanceFactory [" + NullTestInstanceFactory.class.getName()
 							+ "] failed to return an instance of [" + testClass.getName()
-							+ "] and instead returned an instance of [null]."))))), //
+							+ "] and instead returned an instance of [null].")))), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -158,10 +157,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass),
-				finishedWithFailure(allOf(instanceOf(TestInstantiationException.class),
+				finishedWithFailure(instanceOf(TestInstantiationException.class),
 					message(m -> m.equals("TestInstanceFactory [" + NullTestInstanceFactory.class.getName()
 							+ "] failed to return an instance of [" + testClass.getName()
-							+ "] and instead returned an instance of [null]."))))), //
+							+ "] and instead returned an instance of [null].")))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -178,10 +177,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			event(container(testClass), started()), //
 			event(test("testShouldNotBeCalled"), started()), //
 			event(test("testShouldNotBeCalled"),
-				finishedWithFailure(allOf(instanceOf(TestInstantiationException.class),
+				finishedWithFailure(instanceOf(TestInstantiationException.class),
 					message(m -> m.equals("TestInstanceFactory [" + BogusTestInstanceFactory.class.getName()
 							+ "] failed to return an instance of [" + testClass.getName()
-							+ "] and instead returned an instance of [java.lang.String]."))))), //
+							+ "] and instead returned an instance of [java.lang.String].")))), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -198,10 +197,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass),
-				finishedWithFailure(allOf(instanceOf(TestInstantiationException.class),
+				finishedWithFailure(instanceOf(TestInstantiationException.class),
 					message(m -> m.equals("TestInstanceFactory [" + BogusTestInstanceFactory.class.getName()
 							+ "] failed to return an instance of [" + testClass.getName()
-							+ "] and instead returned an instance of [java.lang.String]."))))), //
+							+ "] and instead returned an instance of [java.lang.String].")))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -218,9 +217,9 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			event(container(testClass), started()), //
 			event(test("testShouldNotBeCalled"), started()), //
 			event(test("testShouldNotBeCalled"),
-				finishedWithFailure(allOf(instanceOf(TestInstantiationException.class),
+				finishedWithFailure(instanceOf(TestInstantiationException.class),
 					message("TestInstanceFactory [" + ExplosiveTestInstanceFactory.class.getName()
-							+ "] failed to instantiate test class [" + testClass.getName() + "]: boom!")))), //
+							+ "] failed to instantiate test class [" + testClass.getName() + "]: boom!"))), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -237,9 +236,9 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass), //
-				finishedWithFailure(allOf(instanceOf(TestInstantiationException.class),
+				finishedWithFailure(instanceOf(TestInstantiationException.class),
 					message("TestInstanceFactory [" + ExplosiveTestInstanceFactory.class.getName()
-							+ "] failed to instantiate test class [" + testClass.getName() + "]: boom!")))), //
+							+ "] failed to instantiate test class [" + testClass.getName() + "]: boom!"))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -259,12 +258,12 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 				// instantiated using different ClassLoaders. Thus, we check for the
 				// appended "@" but ignore the actual hash code for the test class
 				// loaded by the different ClassLoader.
-				finishedWithFailure(allOf(instanceOf(TestInstantiationException.class),
+				finishedWithFailure(instanceOf(TestInstantiationException.class),
 					message(m -> m.startsWith("TestInstanceFactory [" + ProxyTestInstanceFactory.class.getName() + "]")
 							&& m.contains("failed to return an instance of [" + testClass.getName() + "@"
 									+ Integer.toHexString(System.identityHashCode(testClass)))
 							&& m.contains("and instead returned an instance of [" + testClass.getName() + "@")//
-					)))), //
+					))), //
 			event(engine(), finishedSuccessfully()));
 	}
 

@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.params;
 
-import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -157,8 +156,8 @@ class ParameterizedTestIntegrationTests {
 	void reportsExceptionForErroneousConverter() {
 		var results = execute(selectMethod(TestCase.class, "testWithErroneousConverter", Object.class.getName()));
 		results.all().assertThatEvents() //
-				.haveExactly(1, event(test(), finishedWithFailure(allOf(instanceOf(ParameterResolutionException.class), //
-					message("Error converting parameter at index 0: something went horribly wrong")))));
+				.haveExactly(1, event(test(), finishedWithFailure(instanceOf(ParameterResolutionException.class), //
+					message("Error converting parameter at index 0: something went horribly wrong"))));
 	}
 
 	@Nested
@@ -292,8 +291,8 @@ class ParameterizedTestIntegrationTests {
 		void reportsContainerWithAssumptionFailureInMethodSourceAsAborted() {
 			execute("assumptionFailureInMethodSourceFactoryMethod", String.class).all().assertThatEvents() //
 					.haveExactly(1, event(container("test-template:assumptionFailureInMethodSourceFactoryMethod"), //
-						abortedWithReason(allOf(instanceOf(TestAbortedException.class),
-							message("Assumption failed: nothing to test")))));
+						abortedWithReason(instanceOf(TestAbortedException.class),
+							message("Assumption failed: nothing to test"))));
 		}
 
 		private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {

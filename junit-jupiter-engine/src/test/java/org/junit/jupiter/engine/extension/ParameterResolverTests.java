@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -114,7 +113,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		tests.failed().assertEventsMatchExactly(
 			event(
 				test("injectPrimitive"),
-				finishedWithFailure(allOf(instanceOf(ParameterResolutionException.class), message(expectations)))
+				finishedWithFailure(instanceOf(ParameterResolutionException.class), message(expectations))
 			));
 		// @formatter:on
 	}
@@ -156,8 +155,8 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		tests.failed().assertEventsMatchExactly(
 			event(
 				test("doubleParameterInjection"),
-				finishedWithFailure(allOf(instanceOf(ParameterResolutionException.class), message(expectations)
-			))));
+				finishedWithFailure(instanceOf(ParameterResolutionException.class), message(expectations)
+			)));
 		// @formatter:on
 	}
 

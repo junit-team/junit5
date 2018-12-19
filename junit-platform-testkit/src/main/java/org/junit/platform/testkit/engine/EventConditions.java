@@ -255,40 +255,12 @@ public final class EventConditions {
 	 * {@linkplain Event#getPayload() result} has a
 	 * {@linkplain TestExecutionResult#getStatus() status} of
 	 * {@link TestExecutionResult.Status#ABORTED ABORTED} as well as a
-	 * {@linkplain TestExecutionResult#getThrowable() cause} that matches the
-	 * supplied {@code Condition}.
-	 */
-	public static Condition<Event> abortedWithReason(Condition<? super Throwable> causeCondition) {
-		return finishedWithCause(ABORTED, causeCondition);
-	}
-
-	/**
-	 * Create a new {@link Condition} that matches if and only if an
-	 * {@link Event}'s {@linkplain Event#getType() type} is
-	 * {@link EventType#FINISHED} and its
-	 * {@linkplain Event#getPayload() result} has a
-	 * {@linkplain TestExecutionResult#getStatus() status} of
-	 * {@link TestExecutionResult.Status#ABORTED ABORTED} as well as a
 	 * {@linkplain TestExecutionResult#getThrowable() cause} that matches all of
 	 * the supplied {@code Conditions}.
 	 */
 	@SafeVarargs
 	public static Condition<Event> abortedWithReason(Condition<Throwable>... conditions) {
 		return finishedWithCause(ABORTED, conditions);
-	}
-
-	/**
-	 * Create a new {@link Condition} that matches if and only if an
-	 * {@link Event}'s {@linkplain Event#getType() type} is
-	 * {@link EventType#FINISHED} and its
-	 * {@linkplain Event#getPayload() result} has a
-	 * {@linkplain TestExecutionResult#getStatus() status} of
-	 * {@link TestExecutionResult.Status#FAILED FAILED} as well as a
-	 * {@linkplain TestExecutionResult#getThrowable() cause} that matches the
-	 * supplied {@code Condition}.
-	 */
-	public static Condition<Event> finishedWithFailure(Condition<? super Throwable> causeCondition) {
-		return finishedWithCause(FAILED, causeCondition);
 	}
 
 	/**
@@ -316,13 +288,6 @@ public final class EventConditions {
 		list.add(0, TestExecutionResultConditions.status(expectedStatus));
 
 		return finished(Assertions.allOf(list));
-	}
-
-	private static Condition<Event> finishedWithCause(Status expectedStatus,
-			Condition<? super Throwable> causeCondition) {
-
-		return finished(Assertions.allOf(TestExecutionResultConditions.status(expectedStatus),
-			TestExecutionResultConditions.throwable(causeCondition)));
 	}
 
 	/**

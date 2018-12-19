@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -53,11 +52,8 @@ class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 		tests.failed().assertEventsMatchExactly( //
 			event(test("syntaxError"), //
-				finishedWithFailure( //
-					allOf( //
-						instanceOf(JUnitException.class), //
-						message(value -> value.contains("syntax error")) //
-					))));
+				finishedWithFailure(instanceOf(JUnitException.class),
+					message(value -> value.contains("syntax error")))));
 	}
 
 	@Test

@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
-import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -52,12 +51,12 @@ class ExpectedExceptionSupportTests {
 						finishedWithFailure(message("no exception expected")))) //
 				.haveExactly(1, //
 					event(test("exceptionExpectedButNotThrown"), //
-						finishedWithFailure(allOf(instanceOf(AssertionError.class), //
-							message("Expected test to throw an instance of java.lang.RuntimeException"))))) //
+						finishedWithFailure(instanceOf(AssertionError.class), //
+							message("Expected test to throw an instance of java.lang.RuntimeException")))) //
 				.haveExactly(1, //
 					event(test("wrongExceptionExpected"), //
-						finishedWithFailure(allOf(instanceOf(AssertionError.class), //
-							message(value -> value.contains("Expected: an instance of java.io.IOException"))))));
+						finishedWithFailure(instanceOf(AssertionError.class), //
+							message(value -> value.contains("Expected: an instance of java.io.IOException")))));
 	}
 
 	@Test

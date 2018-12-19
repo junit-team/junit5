@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -70,7 +69,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 			event(engine(), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testRethrow"), started()), //
-			event(test("testRethrow"), finishedWithFailure(allOf(instanceOf(IOException.class), message("checked")))), //
+			event(test("testRethrow"), finishedWithFailure(instanceOf(IOException.class), message("checked"))), //
 			event(container(ATestCase.class), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -104,7 +103,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 			event(engine(), started()), //
 			event(container(ATestCase.class), started()), //
 			event(test("testConvert"), started()), //
-			event(test("testConvert"), finishedWithFailure(allOf(instanceOf(IOException.class), message("checked")))), //
+			event(test("testConvert"), finishedWithFailure(instanceOf(IOException.class), message("checked"))), //
 			event(container(ATestCase.class), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
