@@ -216,8 +216,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
        <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;endInstant,
        <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;skipReason)</code></th>
 <td class="colLast">
-<div class="block">Create a new instance of an <code>Execution</code> that was skipped with the provided
- <code>skipReason</code>.</div>
+<div class="block">Create a new instance of an <code>Execution</code> that was skipped with the
+ provided <code>skipReason</code>.</div>
 </td>
 </tr>
 <tr id="i7" class="rowColor">
@@ -263,13 +263,16 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  provided <a href="../../engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>testDescriptor</code> - the <code>TestDescriptor</code> that finished</dd>
-<dd><code>startInstant</code> - the <code>Instant</code> that the <code>Execution</code> started</dd>
-<dd><code>endInstant</code> - the <code>Instant</code> that the <code>Execution</code> completed</dd>
+<dd><code>testDescriptor</code> - the <code>TestDescriptor</code> that finished;
+ never <code>null</code></dd>
+<dd><code>startInstant</code> - the <code>Instant</code> that the <code>Execution</code> started;
+ never <code>null</code></dd>
+<dd><code>endInstant</code> - the <code>Instant</code> that the <code>Execution</code> completed;
+ never <code>null</code></dd>
 <dd><code>executionResult</code> - the <code>TestExecutionResult</code> of the finished
- <code>TestDescriptor</code></dd>
+ <code>TestDescriptor</code>; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the newly created <code>Execution</code> instance</dd>
+<dd>the newly created <code>Execution</code> instance; never <code>null</code></dd>
 </dl>
 </li>
 </ul>
@@ -283,16 +286,20 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;startInstant,
                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink">Instant</a>&nbsp;endInstant,
                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;skipReason)</pre>
-<div class="block">Create a new instance of an <code>Execution</code> that was skipped with the provided
- <code>skipReason</code>.</div>
+<div class="block">Create a new instance of an <code>Execution</code> that was skipped with the
+ provided <code>skipReason</code>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>testDescriptor</code> - the <code>TestDescriptor</code> that finished</dd>
-<dd><code>startInstant</code> - the <code>Instant</code> that the <code>Execution</code> started</dd>
-<dd><code>endInstant</code> - the <code>Instant</code> that the <code>Execution</code> completed</dd>
-<dd><code>skipReason</code> - the reason the <code>TestDescriptor</code> was skipped</dd>
+<dd><code>testDescriptor</code> - the <code>TestDescriptor</code> that finished;
+ never <code>null</code></dd>
+<dd><code>startInstant</code> - the <code>Instant</code> that the <code>Execution</code> started;
+ never <code>null</code></dd>
+<dd><code>endInstant</code> - the <code>Instant</code> that the <code>Execution</code> completed;
+ never <code>null</code></dd>
+<dd><code>skipReason</code> - the reason the <code>TestDescriptor</code> was skipped;
+ may be <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the newly created <code>Execution</code> instance</dd>
+<dd>the newly created <code>Execution</code> instance; never <code>null</code></dd>
 </dl>
 </li>
 </ul>
