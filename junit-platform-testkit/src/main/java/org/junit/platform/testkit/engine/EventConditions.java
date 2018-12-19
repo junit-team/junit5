@@ -52,57 +52,144 @@ public final class EventConditions {
 		/* no-op */
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event} matches all of the supplied conditions.
+	 */
 	@SafeVarargs
 	@SuppressWarnings("varargs")
 	public static Condition<Event> event(Condition<? super Event>... conditions) {
 		return Assertions.allOf(conditions);
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getTestDescriptor() test descriptor} is
+	 * an instance of {@link EngineDescriptor}.
+	 */
 	public static Condition<Event> engine() {
 		return new Condition<>(byTestDescriptor(EngineDescriptor.class::isInstance), "is an engine");
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getTestDescriptor() test descriptor} is
+	 * a {@linkplain TestDescriptor#isTest() test} and its
+	 * {@linkplain TestDescriptor#getUniqueId() unique id} contains the supplied
+	 * {@link String}.
+	 *
+	 * @see #test()
+	 * @see #uniqueIdSubstring(String)
+	 */
 	public static Condition<Event> test(String uniqueIdSubstring) {
 		return Assertions.allOf(test(), uniqueIdSubstring(uniqueIdSubstring));
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getTestDescriptor() test descriptor} is
+	 * a {@linkplain TestDescriptor#isTest() test}, its
+	 * {@linkplain TestDescriptor#getUniqueId() unique id} contains the supplied
+	 * {@link String}, and its {@linkplain TestDescriptor#getDisplayName()
+	 * display name} equals the supplied {@link String}.
+	 *
+	 * @see #test()
+	 * @see #uniqueIdSubstring(String)
+	 * @see #displayName(String)
+	 */
 	public static Condition<Event> test(String uniqueIdSubstring, String displayName) {
 		return Assertions.allOf(test(), uniqueIdSubstring(uniqueIdSubstring), displayName(displayName));
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getTestDescriptor() test descriptor} is
+	 * a {@linkplain TestDescriptor#isTest() test}.
+	 */
 	public static Condition<Event> test() {
 		return new Condition<>(byTestDescriptor(TestDescriptor::isTest), "is a test");
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getTestDescriptor() test descriptor} is
+	 * a {@linkplain TestDescriptor#isContainer() container} and its
+	 * {@linkplain TestDescriptor#getUniqueId() unique id} contains the
+	 * fully-qualified name of the supplied {@link Class}.
+	 */
 	public static Condition<Event> container(Class<?> clazz) {
 		return container(clazz.getName());
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getTestDescriptor() test descriptor} is
+	 * a {@linkplain TestDescriptor#isContainer() container} and its
+	 * {@linkplain TestDescriptor#getUniqueId() unique id} contains the supplied
+	 * {@link String}.
+	 */
 	public static Condition<Event> container(String uniqueIdSubstring) {
 		return container(uniqueIdSubstring(uniqueIdSubstring));
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event} matches the supplied {@code Condition} and its
+	 * {@linkplain Event#getTestDescriptor() test descriptor} is a
+	 * {@linkplain TestDescriptor#isContainer() container}.
+	 */
 	public static Condition<Event> container(Condition<Event> condition) {
 		return Assertions.allOf(container(), condition);
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getTestDescriptor() test descriptor} is
+	 * a {@linkplain TestDescriptor#isContainer() container}.
+	 */
 	public static Condition<Event> container() {
 		return new Condition<>(byTestDescriptor(TestDescriptor::isContainer), "is a container");
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getTestDescriptor() test descriptor} is
+	 * a {@linkplain TestDescriptor#isContainer() container} and its
+	 * {@linkplain TestDescriptor#getUniqueId() unique id} contains the
+	 * simple name of the supplied {@link Class} as well as the fully-qualified
+	 * name of its {@linkplain Class#getEnclosingClass() enclosing class}.
+	 */
 	public static Condition<Event> nestedContainer(Class<?> clazz) {
-		return Assertions.allOf(container(uniqueIdSubstring(clazz.getEnclosingClass().getName())),
-			container(uniqueIdSubstring(clazz.getSimpleName())));
+		return Assertions.allOf(container(clazz.getEnclosingClass()), uniqueIdSubstring(clazz.getSimpleName()));
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getType() type} is
+	 * {@link EventType#DYNAMIC_TEST_REGISTERED} and its
+	 * {@linkplain TestDescriptor#getUniqueId() unique id} contains the
+	 * supplied {@link String}.
+	 */
 	public static Condition<Event> dynamicTestRegistered(String uniqueIdSubstring) {
 		return dynamicTestRegistered(uniqueIdSubstring(uniqueIdSubstring));
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getType() type} is
+	 * {@link EventType#DYNAMIC_TEST_REGISTERED} and it matches the supplied
+	 * {@code Condition}.
+	 */
 	public static Condition<Event> dynamicTestRegistered(Condition<Event> condition) {
 		return Assertions.allOf(type(DYNAMIC_TEST_REGISTERED), condition);
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if the
+	 * {@linkplain TestDescriptor#getUniqueId() unique id} of an
+	 * {@link Event}'s {@linkplain Event#getTestDescriptor() test descriptor}
+	 * contains the supplied {@link String}.
+	 */
 	public static Condition<Event> uniqueIdSubstring(String uniqueIdSubstring) {
 		Predicate<UniqueId.Segment> predicate = segment -> {
 			String text = segment.getType() + ":" + segment.getValue();
@@ -115,36 +202,107 @@ public final class EventConditions {
 			"descriptor with uniqueId substring '%s'", uniqueIdSubstring);
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if the
+	 * {@linkplain TestDescriptor#getDisplayName()} display name} of an
+	 * {@link Event}'s {@linkplain Event#getTestDescriptor() test descriptor}
+	 * is equal to the supplied {@link String}.
+	 */
 	public static Condition<Event> displayName(String displayName) {
 		return new Condition<>(byTestDescriptor(where(TestDescriptor::getDisplayName, isEqual(displayName))),
 			"descriptor with display name '%s'", displayName);
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getType() type} is
+	 * {@link EventType#SKIPPED} and the
+	 * {@linkplain Event#getPayload() reason} is equal to the supplied
+	 * {@link String}.
+	 *
+	 * @see #reason(String)
+	 */
 	public static Condition<Event> skippedWithReason(String expectedReason) {
 		return Assertions.allOf(type(SKIPPED), reason(expectedReason));
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getType() type} is
+	 * {@link EventType#SKIPPED} and the
+	 * {@linkplain Event#getPayload() reason} matches the supplied
+	 * {@link Predicate}.
+	 *
+	 * @see #reason(Predicate)
+	 */
 	public static Condition<Event> skippedWithReason(Predicate<String> predicate) {
 		return Assertions.allOf(type(SKIPPED), reason(predicate));
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getType() type} is
+	 * {@link EventType#STARTED}.
+	 *
+	 * @see #reason(Predicate)
+	 */
 	public static Condition<Event> started() {
 		return type(STARTED);
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getType() type} is
+	 * {@link EventType#FINISHED} and its
+	 * {@linkplain Event#getPayload() result} has a
+	 * {@linkplain TestExecutionResult#getStatus() status} of
+	 * {@link TestExecutionResult.Status#ABORTED ABORTED} as well as a
+	 * {@linkplain TestExecutionResult#getThrowable() cause} that matches the
+	 * supplied {@code Condition}.
+	 */
 	public static Condition<Event> abortedWithReason(Condition<? super Throwable> causeCondition) {
 		return finishedWithCause(ABORTED, causeCondition);
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getType() type} is
+	 * {@link EventType#FINISHED} and its
+	 * {@linkplain Event#getPayload() result} has a
+	 * {@linkplain TestExecutionResult#getStatus() status} of
+	 * {@link TestExecutionResult.Status#ABORTED ABORTED} as well as a
+	 * {@linkplain TestExecutionResult#getThrowable() cause} that matches all of
+	 * the supplied {@code Conditions}.
+	 */
 	@SafeVarargs
 	public static Condition<Event> abortedWithReason(Condition<Throwable>... conditions) {
 		return finishedWithCause(ABORTED, conditions);
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getType() type} is
+	 * {@link EventType#FINISHED} and its
+	 * {@linkplain Event#getPayload() result} has a
+	 * {@linkplain TestExecutionResult#getStatus() status} of
+	 * {@link TestExecutionResult.Status#FAILED FAILED} as well as a
+	 * {@linkplain TestExecutionResult#getThrowable() cause} that matches the
+	 * supplied {@code Condition}.
+	 */
 	public static Condition<Event> finishedWithFailure(Condition<? super Throwable> causeCondition) {
 		return finishedWithCause(FAILED, causeCondition);
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getType() type} is
+	 * {@link EventType#FINISHED} and its
+	 * {@linkplain Event#getPayload() result} has a
+	 * {@linkplain TestExecutionResult#getStatus() status} of
+	 * {@link TestExecutionResult.Status#FAILED FAILED} as well as a
+	 * {@linkplain TestExecutionResult#getThrowable() cause} that matches all of
+	 * the supplied {@code Conditions}.
+	 */
 	@SafeVarargs
 	public static Condition<Event> finishedWithFailure(Condition<Throwable>... conditions) {
 		return finishedWithCause(FAILED, conditions);
@@ -169,32 +327,75 @@ public final class EventConditions {
 			TestExecutionResultConditions.throwable(causeCondition)));
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getType() type} is
+	 * {@link EventType#FINISHED} and its
+	 * {@linkplain Event#getPayload() result} has a
+	 * {@linkplain TestExecutionResult#getStatus() status} of
+	 * {@link TestExecutionResult.Status#FAILED FAILED}.
+	 */
 	public static Condition<Event> finishedWithFailure() {
 		return finished(TestExecutionResultConditions.status(FAILED));
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getType() type} is
+	 * {@link EventType#FINISHED} and its
+	 * {@linkplain Event#getPayload() result} has a
+	 * {@linkplain TestExecutionResult#getStatus() status} of
+	 * {@link TestExecutionResult.Status#SUCCESSFUL SUCCESSFUL}.
+	 */
 	public static Condition<Event> finishedSuccessfully() {
 		return finished(TestExecutionResultConditions.status(SUCCESSFUL));
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getType() type} is
+	 * {@link EventType#FINISHED} and its
+	 * {@linkplain Event#getPayload() payload} is an instance of
+	 * {@link TestExecutionResult} that matches the supplied {@code Condition}.
+	 */
 	public static Condition<Event> finished(Condition<TestExecutionResult> resultCondition) {
 		return Assertions.allOf(type(FINISHED), result(resultCondition));
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getType() type} is equal to the
+	 * supplied {@link EventType}.
+	 */
 	public static Condition<Event> type(EventType expectedType) {
 		return new Condition<>(byType(expectedType), "type is %s", expectedType);
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getPayload() payload} is an instance of
+	 * {@link TestExecutionResult} that matches the supplied {@code Condition}.
+	 */
 	public static Condition<Event> result(Condition<TestExecutionResult> condition) {
 		return new Condition<>(byPayload(TestExecutionResult.class, condition::matches), "event with result where %s",
 			condition);
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getPayload() payload} is an instance of
+	 * {@link String} that is equal to the supplied value.
+	 */
 	public static Condition<Event> reason(String expectedReason) {
 		return new Condition<>(byPayload(String.class, isEqual(expectedReason)), "event with reason '%s'",
 			expectedReason);
 	}
 
+	/**
+	 * Create a new {@link Condition} that matches if and only if an
+	 * {@link Event}'s {@linkplain Event#getPayload() payload} is an instance of
+	 * {@link String} that matches the supplied {@link Predicate}.
+	 */
 	public static Condition<Event> reason(Predicate<String> predicate) {
 		return new Condition<>(byPayload(String.class, predicate), "event with custom reason predicate");
 	}
