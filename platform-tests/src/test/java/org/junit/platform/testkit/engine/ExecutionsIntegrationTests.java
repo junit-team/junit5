@@ -37,6 +37,26 @@ class ExecutionsIntegrationTests {
 	}
 
 	@Test
+	void executionsFromStartedTestEvents() {
+		Events testEvents = getTestEvents();
+
+		// We expect 3 if the executions are created BEFORE filtering out "finished" events.
+		assertThat(testEvents.executions().started().count()).isEqualTo(3);
+		// We expect 0 if the executions are created AFTER filtering out "finished" events.
+		assertThat(testEvents.started().executions().count()).isEqualTo(0);
+	}
+
+	@Test
+	void executionsFromFinishedTestEvents() {
+		Events testEvents = getTestEvents();
+
+		// We expect 3 if the executions are created BEFORE filtering out "started" events.
+		assertThat(testEvents.executions().finished().count()).isEqualTo(3);
+		// We expect 0 if the executions are created AFTER filtering out "started" events.
+		assertThat(testEvents.finished().executions().count()).isEqualTo(0);
+	}
+
+	@Test
 	void executionsFromSucceededTestEvents() {
 		Events testEvents = getTestEvents();
 
