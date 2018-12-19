@@ -418,9 +418,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Signals that the execution of a <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has been skipped.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/EventConditions.html#skippedWithReason(java.lang.String)">skippedWithReason(String)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Create a new <a href="http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink"><code>Condition</code></a> that matches if and only if an
+ <a href="../org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a>'s <a href="../org/junit/platform/testkit/engine/Event.html#getType()">type</a> is
+ <a href="../org/junit/platform/testkit/engine/EventType.html#SKIPPED"><code>EventType.SKIPPED</code></a> and the
+ <a href="../org/junit/platform/testkit/engine/Event.html#getPayload()">reason</a> is equal to the supplied
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>String</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/EventConditions.html#skippedWithReason(java.util.function.Predicate)">skippedWithReason(Predicate&lt;String&gt;)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Create a new <a href="http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink"><code>Condition</code></a> that matches if and only if an
+ <a href="../org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a>'s <a href="../org/junit/platform/testkit/engine/Event.html#getType()">type</a> is
+ <a href="../org/junit/platform/testkit/engine/EventType.html#SKIPPED"><code>EventType.SKIPPED</code></a> and the
+ <a href="../org/junit/platform/testkit/engine/Event.html#getPayload()">reason</a> matches the supplied
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink"><code>Predicate</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/condition/OS.html#SOLARIS">SOLARIS</a></span> - org.junit.jupiter.api.condition.<a href="../org/junit/jupiter/api/condition/OS.html" title="enum in org.junit.jupiter.api.condition">OS</a></dt>
 <dd>
 <div class="block">Oracle Solaris operating system.</div>
@@ -434,7 +446,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  "^(Test.*|.+[.$]Test.*|.*Tests?)$"</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/EventConditions.html#started()">started()</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Create a new <a href="http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink"><code>Condition</code></a> that matches if and only if an
+ <a href="../org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a>'s <a href="../org/junit/platform/testkit/engine/Event.html#getType()">type</a> is
+ <a href="../org/junit/platform/testkit/engine/EventType.html#STARTED"><code>EventType.STARTED</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/Events.html#started()">started()</a></span> - Method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/Events.html" title="class in org.junit.platform.testkit.engine">Events</a></dt>
 <dd>
 <div class="block">Get the started <a href="../org/junit/platform/testkit/engine/Events.html" title="class in org.junit.platform.testkit.engine"><code>Events</code></a> contained in this <code>Events</code> object.</div>

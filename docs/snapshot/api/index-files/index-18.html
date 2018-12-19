@@ -157,7 +157,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  was skipped or the <a href="../org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a> if the container/test was executed.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/EventConditions.html#test()">test()</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Create a new <a href="http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink"><code>Condition</code></a> that matches if and only if an
+ <a href="../org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a>'s <a href="../org/junit/platform/testkit/engine/Event.html#getTestDescriptor()">test descriptor</a> is
+ a <a href="../org/junit/platform/engine/TestDescriptor.html#isTest()">test</a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/discovery/predicates/IsInnerClass.html#test(java.lang.Class)">test(Class&lt;?&gt;)</a></span> - Method in class org.junit.jupiter.engine.discovery.predicates.<a href="../org/junit/jupiter/engine/discovery/predicates/IsInnerClass.html" title="class in org.junit.jupiter.engine.discovery.predicates">IsInnerClass</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/discovery/predicates/IsNestedTestClass.html#test(java.lang.Class)">test(Class&lt;?&gt;)</a></span> - Method in class org.junit.jupiter.engine.discovery.predicates.<a href="../org/junit/jupiter/engine/discovery/predicates/IsNestedTestClass.html" title="class in org.junit.jupiter.engine.discovery.predicates">IsNestedTestClass</a></dt>
@@ -169,9 +173,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/ClassFilter.html#test(java.lang.Class)">test(Class&lt;?&gt;)</a></span> - Method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/ClassFilter.html" title="class in org.junit.platform.commons.util">ClassFilter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/EventConditions.html#test(java.lang.String)">test(String)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Create a new <a href="http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink"><code>Condition</code></a> that matches if and only if an
+ <a href="../org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a>'s <a href="../org/junit/platform/testkit/engine/Event.html#getTestDescriptor()">test descriptor</a> is
+ a <a href="../org/junit/platform/engine/TestDescriptor.html#isTest()">test</a> and its
+ <a href="../org/junit/platform/engine/TestDescriptor.html#getUniqueId()">unique id</a> contains the supplied
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>String</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/EventConditions.html#test(java.lang.String,java.lang.String)">test(String, String)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Create a new <a href="http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink"><code>Condition</code></a> that matches if and only if an
+ <a href="../org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a>'s <a href="../org/junit/platform/testkit/engine/Event.html#getTestDescriptor()">test descriptor</a> is
+ a <a href="../org/junit/platform/engine/TestDescriptor.html#isTest()">test</a>, its
+ <a href="../org/junit/platform/engine/TestDescriptor.html#getUniqueId()">unique id</a> contains the supplied
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>String</code></a>, and its <a href="../org/junit/platform/engine/TestDescriptor.html#getDisplayName()">display name</a> equals the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>String</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.html#test(org.junit.platform.engine.UniqueId)">test(UniqueId)</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.html" title="class in org.junit.jupiter.engine.descriptor">DynamicDescendantFilter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="../org/junit/jupiter/api/Test.html" title="annotation in org.junit.jupiter.api"><span class="typeNameLink">Test</span></a> - Annotation Type in <a href="../org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a></dt>
@@ -652,7 +668,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Try to read the value of a potentially inaccessible field.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/EventConditions.html#type(org.junit.platform.testkit.engine.EventType)">type(EventType)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Create a new <a href="http://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink"><code>Condition</code></a> that matches if and only if an
+ <a href="../org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a>'s <a href="../org/junit/platform/testkit/engine/Event.html#getType()">type</a> is equal to the
+ supplied <a href="../org/junit/platform/testkit/engine/EventType.html" title="enum in org.junit.platform.testkit.engine"><code>EventType</code></a>.</div>
+</dd>
 </dl>
 <a href="index-1.html">A</a>&nbsp;<a href="index-2.html">B</a>&nbsp;<a href="index-3.html">C</a>&nbsp;<a href="index-4.html">D</a>&nbsp;<a href="index-5.html">E</a>&nbsp;<a href="index-6.html">F</a>&nbsp;<a href="index-7.html">G</a>&nbsp;<a href="index-8.html">H</a>&nbsp;<a href="index-9.html">I</a>&nbsp;<a href="index-10.html">J</a>&nbsp;<a href="index-11.html">L</a>&nbsp;<a href="index-12.html">M</a>&nbsp;<a href="index-13.html">N</a>&nbsp;<a href="index-14.html">O</a>&nbsp;<a href="index-15.html">P</a>&nbsp;<a href="index-16.html">R</a>&nbsp;<a href="index-17.html">S</a>&nbsp;<a href="index-18.html">T</a>&nbsp;<a href="index-19.html">U</a>&nbsp;<a href="index-20.html">V</a>&nbsp;<a href="index-21.html">W</a>&nbsp;<br><a href="../allclasses-index.html">All&nbsp;Classes</a>&nbsp;<a href="../allpackages-index.html">All&nbsp;Packages</a></div>
 </main>
