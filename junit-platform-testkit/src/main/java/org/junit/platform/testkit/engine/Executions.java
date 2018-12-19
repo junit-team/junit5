@@ -56,7 +56,7 @@ public final class Executions {
 		Preconditions.notNull(events, "Event list must not be null");
 		Preconditions.containsNoNullElements(events, "Event list must not contain null elements");
 
-		this.executions = createExecutions(events);
+		this.executions = Collections.unmodifiableList(createExecutions(events));
 		this.category = category;
 	}
 
