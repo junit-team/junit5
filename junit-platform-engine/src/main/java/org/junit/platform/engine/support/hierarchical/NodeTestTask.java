@@ -115,26 +115,31 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		started = true;
 
 		throwableCollector.execute(() -> {
-			// @formatter:off
-			List<NodeTestTask<C>> children = testDescriptor.getChildren().stream()
-					.map(descriptor -> new NodeTestTask<C>(taskContext, descriptor))
-					.collect(toCollection(ArrayList::new));
-			// @formatter:on
+			node.around(context, ctx -> {
+				context = ctx;
+				throwableCollector.execute(() -> {
+					// @formatter:off
+					List<NodeTestTask<C>> children = testDescriptor.getChildren().stream()
+							.map(descriptor -> new NodeTestTask<C>(taskContext, descriptor))
+							.collect(toCollection(ArrayList::new));
+					// @formatter:on
 
-			context = node.before(context);
+					context = node.before(context);
 
-			DynamicTestExecutor dynamicTestExecutor = new DefaultDynamicTestExecutor();
-			context = node.execute(context, dynamicTestExecutor);
+					final DynamicTestExecutor dynamicTestExecutor = new DefaultDynamicTestExecutor();
+					context = node.execute(context, dynamicTestExecutor);
 
-			if (!children.isEmpty()) {
-				children.forEach(child -> child.setParentContext(context));
-				taskContext.getExecutorService().invokeAll(children);
-			}
+					if (!children.isEmpty()) {
+						children.forEach(child -> child.setParentContext(context));
+						taskContext.getExecutorService().invokeAll(children);
+					}
 
-			dynamicTestExecutor.awaitFinished();
+					throwableCollector.execute(dynamicTestExecutor::awaitFinished);
+				});
+
+				throwableCollector.execute(() -> node.after(context));
+			});
 		});
-
-		throwableCollector.execute(() -> node.after(context));
 	}
 
 	private void cleanUp() {
