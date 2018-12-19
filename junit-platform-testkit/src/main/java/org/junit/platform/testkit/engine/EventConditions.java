@@ -204,7 +204,7 @@ public final class EventConditions {
 
 	/**
 	 * Create a new {@link Condition} that matches if and only if the
-	 * {@linkplain TestDescriptor#getDisplayName()} display name} of an
+	 * {@linkplain TestDescriptor#getDisplayName() display name} of an
 	 * {@link Event}'s {@linkplain Event#getTestDescriptor() test descriptor}
 	 * is equal to the supplied {@link String}.
 	 */
@@ -243,8 +243,6 @@ public final class EventConditions {
 	 * Create a new {@link Condition} that matches if and only if an
 	 * {@link Event}'s {@linkplain Event#getType() type} is
 	 * {@link EventType#STARTED}.
-	 *
-	 * @see #reason(Predicate)
 	 */
 	public static Condition<Event> started() {
 		return type(STARTED);
