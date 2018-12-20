@@ -15,7 +15,9 @@ import static java.lang.String.join;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.platform.launcher.TestIdentifier;
@@ -34,6 +36,7 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 
 	private static final String CAUSED_BY = "Caused by: ";
 	private static final String SUPPRESSED = "Suppressed: ";
+	private static final String CIRCULAR = "Circular reference: ";
 
 	final AtomicLong containersFound = new AtomicLong();
 	final AtomicLong containersStarted = new AtomicLong();
@@ -220,19 +223,26 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 				|| (throwable.getSuppressed() != null && throwable.getSuppressed().length > 0)) {
 			max = max / 2;
 		}
-		printStackTrace(writer, new StackTraceElement[] {}, throwable, "", DOUBLE_TAB + " ", max);
+		printStackTrace(writer, new StackTraceElement[] {}, throwable, "", DOUBLE_TAB + " ", new HashSet<>(), max);
 		writer.flush();
 	}
 
 	private void printStackTrace(PrintWriter writer, StackTraceElement[] parentTrace, Throwable throwable,
-			String caption, String indentation, int max) {
+			String caption, String indentation, Set<Throwable> seenThrowables, int max) {
+		if (seenThrowables.contains(throwable)) {
+			writer.printf("%s%s[%s%s]%n", indentation, TAB, CIRCULAR, throwable);
+			return;
+		}
+		seenThrowables.add(throwable);
+
 		StackTraceElement[] trace = throwable.getStackTrace();
 		if (parentTrace != null && parentTrace.length > 0) {
 			writer.printf("%s%s%s%n", indentation, caption, throwable);
 		}
 		int duplicates = numberOfCommonFrames(trace, parentTrace);
-		int numLines = (trace.length - duplicates > max) ? max : trace.length - duplicates;
-		for (int i = 0; i < numLines; i++) {
+		int numDistinctFrames = trace.length - duplicates;
+		int numDisplayLines = (numDistinctFrames > max) ? max : numDistinctFrames;
+		for (int i = 0; i < numDisplayLines; i++) {
 			writer.printf("%s%s%s%n", indentation, TAB, trace[i]);
 		}
 		if (trace.length > max || duplicates != 0) {
@@ -240,10 +250,10 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 		}
 
 		for (Throwable suppressed : throwable.getSuppressed()) {
-			printStackTrace(writer, trace, suppressed, SUPPRESSED, indentation + TAB, max);
+			printStackTrace(writer, trace, suppressed, SUPPRESSED, indentation + TAB, seenThrowables, max);
 		}
 		if (throwable.getCause() != null) {
-			printStackTrace(writer, trace, throwable.getCause(), CAUSED_BY, indentation, max);
+			printStackTrace(writer, trace, throwable.getCause(), CAUSED_BY, indentation, seenThrowables, max);
 		}
 	}
 

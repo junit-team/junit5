@@ -13,6 +13,7 @@ package org.junit.platform.launcher.listeners;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.PrintWriter;
@@ -187,7 +188,39 @@ class SummaryGenerationTests {
 		);
 	}
 
-	@SuppressWarnings("deprecation")
+	@Test
+	public void reportingCircularFailure() {
+		IllegalArgumentException iaeCausedBy = new IllegalArgumentException("Illegal Argument Exception");
+		RuntimeException failedException = new RuntimeException("Runtime Exception", iaeCausedBy);
+		NullPointerException npeSuppressed = new NullPointerException("Null Pointer Exception");
+		failedException.addSuppressed(npeSuppressed);
+		npeSuppressed.addSuppressed(iaeCausedBy);
+
+		TestDescriptorStub testDescriptor = new TestDescriptorStub(UniqueId.root("root", "2"), "failingTest") {
+
+			@Override
+			public Optional<TestSource> getSource() {
+				return Optional.of(ClassSource.from(Object.class));
+			}
+		};
+		TestIdentifier failed = TestIdentifier.from(testDescriptor);
+
+		listener.testPlanExecutionStarted(testPlan);
+		listener.executionStarted(failed);
+		listener.executionFinished(failed, TestExecutionResult.failed(failedException));
+		listener.testPlanExecutionFinished(testPlan);
+
+		assertEquals(1, listener.getSummary().getTestsFailedCount());
+
+		String failuresString = failuresAsString();
+		assertAll("failures", //
+			() -> assertTrue(failuresString.contains("Suppressed: " + npeSuppressed), "Suppressed exception"), //
+			() -> assertTrue(failuresString.contains("Circular reference: " + iaeCausedBy), "Circular reference"), //
+			() -> assertFalse(failuresString.contains("Caused by: "),
+				"'Caused by: ' omitted because of Circular reference") //
+		);
+	}
+
 	private TestIdentifier createTestIdentifier(String uniqueId) {
 		TestIdentifier identifier = TestIdentifier.from(
 			new TestDescriptorStub(UniqueId.root("test", uniqueId), uniqueId));
