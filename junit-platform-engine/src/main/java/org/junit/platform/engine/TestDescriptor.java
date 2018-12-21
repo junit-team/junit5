@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * Mutable descriptor for a test or container that has been discovered by a
@@ -195,10 +196,18 @@ public interface TestDescriptor {
 	}
 
 	/**
-	 * Determine if the supplied descriptor or any of its descendants contains
-	 * any tests.
+	 * Determine if the supplied descriptor (or any of its descendants)
+	 * {@linkplain TestDescriptor#isTest() is a test} or
+	 * {@linkplain TestDescriptor#mayRegisterTests() may potentially register
+	 * tests dynamically}.
+	 *
+	 * @param testDescriptor the {@code TestDescriptor} to check for tests; never
+	 * {@code null}
+	 * @return {@code true} if the descriptor is a test, contains tests, or may
+	 * later register tests dynamically
 	 */
 	static boolean containsTests(TestDescriptor testDescriptor) {
+		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
 		return testDescriptor.isTest() || testDescriptor.mayRegisterTests()
 				|| testDescriptor.getChildren().stream().anyMatch(TestDescriptor::containsTests);
 	}
