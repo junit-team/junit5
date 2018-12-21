@@ -240,11 +240,12 @@ public interface TestDescriptor {
 	Optional<? extends TestDescriptor> findByUniqueId(UniqueId uniqueId);
 
 	/**
-	 * Accept a visitor to the subtree starting with this descriptor.
+	 * Accept a {@link Visitor} to the subtree starting with this descriptor.
 	 *
 	 * @param visitor the {@code Visitor} to accept; never {@code null}
 	 */
 	default void accept(Visitor visitor) {
+		Preconditions.notNull(visitor, "Visitor must not be null");
 		visitor.visit(this);
 		// Create a copy of the set in order to avoid a ConcurrentModificationException
 		new LinkedHashSet<>(this.getChildren()).forEach(child -> child.accept(visitor));
@@ -253,7 +254,7 @@ public interface TestDescriptor {
 	/**
 	 * Visitor for the tree-like {@link TestDescriptor} structure.
 	 *
-	 * @see TestDescriptor#accept
+	 * @see TestDescriptor#accept(Visitor)
 	 */
 	@FunctionalInterface
 	interface Visitor {
@@ -264,6 +265,7 @@ public interface TestDescriptor {
 		 * @param descriptor the {@code TestDescriptor} to visit; never {@code null}
 		 */
 		void visit(TestDescriptor descriptor);
+
 	}
 
 	/**
