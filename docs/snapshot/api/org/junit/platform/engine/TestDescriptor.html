@@ -210,8 +210,10 @@ public interface <span class="typeNameLabel">TestDescriptor</span></pre>
 <td class="colFirst"><code>static boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#containsTests(org.junit.platform.engine.TestDescriptor)">containsTests</a></span>&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</code></th>
 <td class="colLast">
-<div class="block">Determine if the supplied descriptor or any of its descendants contains
- any tests.</div>
+<div class="block">Determine if the supplied descriptor (or any of its descendants)
+ <a href="#isTest()">is a test</a> or
+ <a href="#mayRegisterTests()">may potentially register
+ tests dynamically</a>.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -627,8 +629,18 @@ public interface <span class="typeNameLabel">TestDescriptor</span></pre>
 <li class="blockList">
 <h4>containsTests</h4>
 <pre class="methodSignature">static&nbsp;boolean&nbsp;containsTests&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</pre>
-<div class="block">Determine if the supplied descriptor or any of its descendants contains
- any tests.</div>
+<div class="block">Determine if the supplied descriptor (or any of its descendants)
+ <a href="#isTest()">is a test</a> or
+ <a href="#mayRegisterTests()">may potentially register
+ tests dynamically</a>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>testDescriptor</code> - the <code>TestDescriptor</code> to check for tests; never
+ <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>true</code> if the descriptor is a test, contains tests, or may
+ later register tests dynamically</dd>
+</dl>
 </li>
 </ul>
 <a id="prune()">
