@@ -39,6 +39,7 @@
 11cb748ddb7df02e0af8de08c2aca999  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingConsumer.java
 1222e5d9a1ded9b30a69bcd10c767abb  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ValueSource.java
 13c76a7853cbb65c8d2f2330aac9495d  documentation/src/docs/asciidoc/user-guide/api-evolution.adoc
+141b9615c89bb88aa08144fc76a95d5d  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 14b0964d557e7a254bff02d75cadfed7  documentation/src/test/java/example/RepeatedTestsDemo.java
 14b2a5cefb39ba29a76d9624a259c3d5  documentation/src/docs/asciidoc/user-guide/overview.adoc
 158b92187743566e70c7893a2127c54d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertThrows.java
@@ -419,7 +420,6 @@ b2deb6b2dae1d2a8ef35298c49654c1a  junit-platform-console/src/main/java/org/junit
 b2ea2fc66e4f0ab66214ac7fc8366d91  documentation/src/test/java/example/AssumptionsDemo.java
 b3664096af061384eb33fd7562b089e2  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/ClassNamePatternParameterConverter.java
 b434c47c9dca732ff816ffbe361f9a4b  documentation/src/test/java/example/AssertionsDemo.java
-b539ba3fafed749b5da7c1612cc460e2  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 b53f687e678badbc99647d546004fa40  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestFactory.java
 b659d6afa2ba4637865ed4a0d4311b5b  documentation/src/docs/asciidoc/user-guide/contributors.adoc
 b765d5a9da9e387de0feba55ccf08b36  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ReflectionSupport.java
