@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.apiguardian.api.API.Status.MAINTAINED;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.AnnotatedElement;
@@ -163,7 +163,6 @@ public interface ExtensionContext {
 	 * @see #getRequiredTestInstance()
 	 * @see #getTestInstances()
 	 */
-	@API(status = MAINTAINED, since = "5.4")
 	Optional<Object> getTestInstance();
 
 	/**
@@ -179,7 +178,6 @@ public interface ExtensionContext {
 	 *
 	 * @see #getRequiredTestInstances()
 	 */
-	@API(status = MAINTAINED, since = "5.4")
 	default Object getRequiredTestInstance() {
 		return Preconditions.notNull(getTestInstance().orElse(null),
 			"Illegal state: required test instance is not present in the current ExtensionContext");
@@ -190,7 +188,7 @@ public interface ExtensionContext {
 	 * if available.
 	 *
 	 * <p>While top-level tests only have a single test instance, nested tests
-	 * have one instance per containing test class.
+	 * have one additional instance for each enclosing test class.
 	 *
 	 * @return an {@code Optional} containing the test instances; never
 	 * {@code null} but potentially empty
@@ -198,7 +196,7 @@ public interface ExtensionContext {
 	 *
 	 * @since 5.4
 	 */
-	@API(status = MAINTAINED, since = "5.4")
+	@API(status = EXPERIMENTAL, since = "5.4")
 	Optional<TestInstances> getTestInstances();
 
 	/**
@@ -214,7 +212,7 @@ public interface ExtensionContext {
 	 *
 	 * @since 5.4
 	 */
-	@API(status = MAINTAINED, since = "5.4")
+	@API(status = EXPERIMENTAL, since = "5.4")
 	default TestInstances getRequiredTestInstances() {
 		return Preconditions.notNull(getTestInstances().orElse(null),
 			"Illegal state: required test instances are not present in the current ExtensionContext");

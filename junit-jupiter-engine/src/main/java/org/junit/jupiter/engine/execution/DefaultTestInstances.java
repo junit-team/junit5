@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.TestInstances;
+import org.junit.platform.commons.util.Preconditions;
 
 @API(status = INTERNAL, since = "5.4")
 public class DefaultTestInstances implements TestInstances {
@@ -37,7 +38,7 @@ public class DefaultTestInstances implements TestInstances {
 	private final List<Object> instances;
 
 	private DefaultTestInstances(List<Object> instances) {
-		this.instances = instances;
+		this.instances = Preconditions.notEmpty(instances, "instances must not be empty");
 	}
 
 	@Override
@@ -47,7 +48,7 @@ public class DefaultTestInstances implements TestInstances {
 
 	@Override
 	public List<Object> getEnclosing() {
-		return instances.size() <= 1 ? Collections.emptyList() : instances.subList(0, instances.size() - 1);
+		return instances.subList(0, instances.size() - 1);
 	}
 
 	@Override
@@ -57,6 +58,7 @@ public class DefaultTestInstances implements TestInstances {
 
 	@Override
 	public <T> Optional<T> find(Class<T> requiredType) {
+		Preconditions.notNull(requiredType, "requiredType must not be null");
 		ListIterator<Object> iterator = instances.listIterator(instances.size());
 		while (iterator.hasPrevious()) {
 			Object instance = iterator.previous();

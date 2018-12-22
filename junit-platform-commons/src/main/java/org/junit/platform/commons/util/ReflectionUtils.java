@@ -782,7 +782,7 @@ public final class ReflectionUtils {
 	 * @return an {@code Optional} containing the outermost instance; never {@code null}
 	 * but potentially empty
 	 */
-	@API(status = DEPRECATED, since = "5.4")
+	@API(status = DEPRECATED, since = "1.4")
 	@Deprecated
 	public static Optional<Object> getOutermostInstance(Object inner, Class<?> requiredType) {
 		Preconditions.notNull(inner, "inner object must not be null");

@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.apiguardian.api.API.Status.MAINTAINED;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,38 +18,51 @@ import java.util.Optional;
 import org.apiguardian.api.API;
 
 /**
- * {@code ParameterContext} encapsulates the <em>test instances</em> of a test.
+ * {@code TestInstances} encapsulates the <em>test instances</em> of a test.
  *
  * <p>While top-level tests only have a single test instance, nested tests
- * have one instance per containing test class.
+ * have one additional instance for each enclosing test class.
  *
  * @since 5.4
  * @see ExtensionContext#getTestInstances()
  * @see ExtensionContext#getRequiredTestInstances()
  */
-@API(status = MAINTAINED, since = "5.4")
+@API(status = EXPERIMENTAL, since = "5.4")
 public interface TestInstances {
 
 	/**
 	 * Get the innermost test instance.
 	 *
 	 * <p>The innermost instance is the one closest to the test method.
+	 *
+	 * @return the innermost test instance; never {@code null}
 	 */
 	Object getInnermost();
 
 	/**
 	 * Get the enclosing test instances, excluding the innermost test instance,
 	 * ordered from outermost to innermost.
+	 *
+	 * @return the enclosing test instances; never {@code null} or containing
+	 * {@code null}, but potentially empty
 	 */
 	List<Object> getEnclosing();
 
 	/**
 	 * Get all test instances, ordered from outermost to innermost.
+	 *
+	 * @return all test instances; never {@code null}, containing {@code null},
+	 * or empty
 	 */
 	List<Object> getAll();
 
 	/**
-	 * Find the test instance of the supplied required type.
+	 * Find the first test instance that is an instance of the supplied required
+	 * type, checking from innermost to outermost.
+	 *
+	 * @param requiredType the type to search for
+	 * @return the first test instance of the required type; never {@code null}
+	 * but potentially empty
 	 */
 	<T> Optional<T> find(Class<T> requiredType);
 
