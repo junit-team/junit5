@@ -189,7 +189,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#containsTests()">containsTests</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Return whether this test plan contains any tests.</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>long</code></td>
@@ -441,6 +443,16 @@ public static&nbsp;<a href="TestPlan.html" title="class in org.junit.platform.la
 <li class="blockList">
 <h4>containsTests</h4>
 <pre class="methodSignature">public&nbsp;boolean&nbsp;containsTests()</pre>
+<div class="block">Return whether this test plan contains any tests.
+
+ <p>A test plan contains tests, if at least one of the contained engine
+ descriptors <a href="../engine/TestDescriptor.html#containsTests(org.junit.platform.engine.TestDescriptor)">contains tests</a>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>true</code> if this test plan contains tests</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../engine/TestDescriptor.html#containsTests(org.junit.platform.engine.TestDescriptor)"><code>TestDescriptor.containsTests(TestDescriptor)</code></a></dd>
+</dl>
 </li>
 </ul>
 </li>

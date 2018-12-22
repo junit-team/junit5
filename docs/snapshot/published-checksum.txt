@@ -34,6 +34,7 @@
 0ecf238f6b5ac456f69163c528f4b52d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java
 0ed97f559995e32766a4405e1fe3cf4d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/TokenWith.java
 0fa3bd61410444b5f7b8731b83e72d60  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnJre.java
+0fa6e56209f44854a77eb2fa592ff391  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestPlan.java
 105d9e4b87226ac563af50df51a3ff70  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestIdentifier.java
 11cb748ddb7df02e0af8de08c2aca999  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingConsumer.java
 1222e5d9a1ded9b30a69bcd10c767abb  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ValueSource.java
@@ -425,7 +426,6 @@ b7bc0c9d9490da01055e230670f80208  documentation/src/docs/asciidoc/user-guide/tes
 b80d6784ea0c6c4509a349dd60cf2e54  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateInvocationTestDescriptor.java
 b81337df56667f30c7290ebe39bfa19c  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.java
 b9fe38826efbff5a75f6bf057cf39ce4  documentation/src/docs/asciidoc/release-notes/release-notes-5.3.2.adoc
-ba2e44c132b20574d2da9835fda35c38  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestPlan.java
 ba5344cacee9047b28ab7c46a311bc30  junit-platform-commons/src/main/java/org/junit/platform/commons/support/package-info.java
 bb6d66d5dc15f7b22ea8e9db9cb8fe93  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.java
 bbc1eeb37c9099bbdc262ebfe32fa9fb  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.java
