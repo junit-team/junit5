@@ -62,6 +62,9 @@ repository on GitHub.
 * Exceptions reported due to failed reflective operations such as loading a class, reading
   a field's value, or looking up a method by name now include the original exception as
   their cause to make it easier to debug underlying issues.
+* Implementations of `HierarchicalTestEngine` may now add behavior that wraps around the
+  invocation of `Node.before()`, `Node.execute()`, and `Node.after()` using the new
+  `Node.around()` hook.
 
 
 [[release-notes-5.4.0-M1-junit-jupiter]]
