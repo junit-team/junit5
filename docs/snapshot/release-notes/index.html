@@ -691,6 +691,11 @@ Guide</a> for details.</p>
 a field&#8217;s value, or looking up a method by name now include the original exception as
 their cause to make it easier to debug underlying issues.</p>
 </li>
+<li>
+<p>Implementations of <code>HierarchicalTestEngine</code> may now add behavior that wraps around the
+invocation of <code>Node.before()</code>, <code>Node.execute()</code>, and <code>Node.after()</code> using the new
+<code>Node.around()</code> hook.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -1072,7 +1077,7 @@ well as various minor improvements and bug fixes.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-12-21 16:54:28 UTC
+Last updated 2018-12-22 10:13:46 UTC
 </div>
 </div>
 </body>

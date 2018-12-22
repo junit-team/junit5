@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":18,"i1":18,"i2":18,"i3":18,"i4":18,"i5":18,"i6":18,"i7":18};
+var data = {"i0":18,"i1":18,"i2":18,"i3":18,"i4":18,"i5":18,"i6":18,"i7":18,"i8":18};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -181,6 +181,13 @@ public interface <span class="typeNameLabel">Node&lt;C extends <a href="EngineEx
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>static interface&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="Node.Invocation.html" title="interface in org.junit.platform.engine.support.hierarchical">Node.Invocation</a>&lt;<a href="Node.Invocation.html" title="type parameter in Node.Invocation">C</a> extends <a href="EngineExecutionContext.html" title="interface in org.junit.platform.engine.support.hierarchical">EngineExecutionContext</a>&gt;</span></code></th>
+<td class="colLast">
+<div class="block">Represents an invocation that runs with the supplied context.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="Node.SkipResult.html" title="class in org.junit.platform.engine.support.hierarchical">Node.SkipResult</a></span></code></th>
 <td class="colLast">
@@ -214,20 +221,30 @@ public interface <span class="typeNameLabel">Node&lt;C extends <a href="EngineEx
 </td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>default void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#around(C,org.junit.platform.engine.support.hierarchical.Node.Invocation)">around</a></span>&#8203;(<a href="Node.html" title="type parameter in Node">C</a>&nbsp;context,
+      <a href="Node.Invocation.html" title="interface in org.junit.platform.engine.support.hierarchical">Node.Invocation</a>&lt;<a href="Node.html" title="type parameter in Node">C</a>&gt;&nbsp;invocation)</code></th>
+<td class="colLast">
+<div class="block">Wraps around the invocation of <a href="#before(C)"><code>before(EngineExecutionContext)</code></a>,
+ <a href="#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)"><code>execute(EngineExecutionContext, DynamicTestExecutor)</code></a>, and
+ <a href="#after(C)"><code>after(EngineExecutionContext)</code></a>.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>default <a href="Node.html" title="type parameter in Node">C</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#before(C)">before</a></span>&#8203;(<a href="Node.html" title="type parameter in Node">C</a>&nbsp;context)</code></th>
 <td class="colLast">
 <div class="block">Execute the <em>before</em> behavior of this node.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#cleanUp(C)">cleanUp</a></span>&#8203;(<a href="Node.html" title="type parameter in Node">C</a>&nbsp;context)</code></th>
 <td class="colLast">
 <div class="block">Clean up the supplied <code>context</code> after execution.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>default <a href="Node.html" title="type parameter in Node">C</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execute</a></span>&#8203;(<a href="Node.html" title="type parameter in Node">C</a>&nbsp;context,
        <a href="Node.DynamicTestExecutor.html" title="interface in org.junit.platform.engine.support.hierarchical">Node.DynamicTestExecutor</a>&nbsp;dynamicTestExecutor)</code></th>
@@ -235,7 +252,7 @@ public interface <span class="typeNameLabel">Node&lt;C extends <a href="EngineEx
 <div class="block">Execute the <em>behavior</em> of this node.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>default <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">ExclusiveResource</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getExclusiveResources()">getExclusiveResources</a></span>()</code></th>
 <td class="colLast">
@@ -243,7 +260,7 @@ public interface <span class="typeNameLabel">Node&lt;C extends <a href="EngineEx
  required to execute this node.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>default <a href="Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getExecutionMode()">getExecutionMode</a></span>()</code></th>
 <td class="colLast">
@@ -251,14 +268,14 @@ public interface <span class="typeNameLabel">Node&lt;C extends <a href="EngineEx
  parallel execution of this node.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>default <a href="Node.html" title="type parameter in Node">C</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#prepare(C)">prepare</a></span>&#8203;(<a href="Node.html" title="type parameter in Node">C</a>&nbsp;context)</code></th>
 <td class="colLast">
 <div class="block">Prepare the supplied <code>context</code> prior to execution.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>default <a href="Node.SkipResult.html" title="class in org.junit.platform.engine.support.hierarchical">Node.SkipResult</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#shouldBeSkipped(C)">shouldBeSkipped</a></span>&#8203;(<a href="Node.html" title="type parameter in Node">C</a>&nbsp;context)</code></th>
 <td class="colLast">
@@ -436,6 +453,33 @@ public interface <span class="typeNameLabel">Node&lt;C extends <a href="EngineEx
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="#before(C)"><code>before(C)</code></a>, 
 <a href="#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)"><code>execute(C, org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="around(org.junit.platform.engine.support.hierarchical.EngineExecutionContext,org.junit.platform.engine.support.hierarchical.Node.Invocation)">
+<!--   -->
+</a><a id="around(C,org.junit.platform.engine.support.hierarchical.Node.Invocation)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>around</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
+default&nbsp;void&nbsp;around&#8203;(<a href="Node.html" title="type parameter in Node">C</a>&nbsp;context,
+                    <a href="Node.Invocation.html" title="interface in org.junit.platform.engine.support.hierarchical">Node.Invocation</a>&lt;<a href="Node.html" title="type parameter in Node">C</a>&gt;&nbsp;invocation)
+             throws <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a></pre>
+<div class="block">Wraps around the invocation of <a href="#before(C)"><code>before(EngineExecutionContext)</code></a>,
+ <a href="#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)"><code>execute(EngineExecutionContext, DynamicTestExecutor)</code></a>, and
+ <a href="#after(C)"><code>after(EngineExecutionContext)</code></a>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>context</code> - context the context to execute in</dd>
+<dd><code>invocation</code> - the wrapped invocation (must be invoked exactly once)</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a></code></dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.4</dd>
 </dl>
 </li>
 </ul>
