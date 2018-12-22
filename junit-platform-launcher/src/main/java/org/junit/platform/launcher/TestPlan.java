@@ -197,7 +197,18 @@ public final class TestPlan {
 		return unmodifiableSet(result);
 	}
 
+	/**
+	 * Return whether this test plan contains any tests.
+	 *
+	 * <p>A test plan contains tests, if at least one of the contained engine
+	 * descriptors {@linkplain TestDescriptor#containsTests(TestDescriptor)
+	 * contains tests}.
+	 *
+	 * @return {@code true} if this test plan contains tests
+	 * @see TestDescriptor#containsTests(TestDescriptor)
+	 */
 	public boolean containsTests() {
 		return containsTests;
 	}
+
 }
