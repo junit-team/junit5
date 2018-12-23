@@ -30,7 +30,7 @@ public class DefaultTestInstances implements TestInstances {
 	}
 
 	public static DefaultTestInstances of(TestInstances testInstances, Object instance) {
-		List<Object> allInstances = new ArrayList<>(testInstances.getAll());
+		List<Object> allInstances = new ArrayList<>(testInstances.getAllInstances());
 		allInstances.add(instance);
 		return new DefaultTestInstances(Collections.unmodifiableList(allInstances));
 	}
@@ -42,22 +42,22 @@ public class DefaultTestInstances implements TestInstances {
 	}
 
 	@Override
-	public Object getInnermost() {
+	public Object getInnermostInstance() {
 		return instances.get(instances.size() - 1);
 	}
 
 	@Override
-	public List<Object> getEnclosing() {
+	public List<Object> getEnclosingInstances() {
 		return instances.subList(0, instances.size() - 1);
 	}
 
 	@Override
-	public List<Object> getAll() {
+	public List<Object> getAllInstances() {
 		return instances;
 	}
 
 	@Override
-	public <T> Optional<T> find(Class<T> requiredType) {
+	public <T> Optional<T> findInstance(Class<T> requiredType) {
 		Preconditions.notNull(requiredType, "requiredType must not be null");
 		ListIterator<Object> iterator = instances.listIterator(instances.size());
 		while (iterator.hasPrevious()) {

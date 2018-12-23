@@ -52,7 +52,7 @@ final class TestTemplateExtensionContext extends AbstractExtensionContext<TestTe
 
 	@Override
 	public Optional<Object> getTestInstance() {
-		return getTestInstances().map(TestInstances::getInnermost);
+		return getTestInstances().map(TestInstances::getInnermostInstance);
 	}
 
 	@Override

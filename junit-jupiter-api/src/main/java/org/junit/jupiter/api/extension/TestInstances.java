@@ -37,7 +37,7 @@ public interface TestInstances {
 	 *
 	 * @return the innermost test instance; never {@code null}
 	 */
-	Object getInnermost();
+	Object getInnermostInstance();
 
 	/**
 	 * Get the enclosing test instances, excluding the innermost test instance,
@@ -46,7 +46,7 @@ public interface TestInstances {
 	 * @return the enclosing test instances; never {@code null} or containing
 	 * {@code null}, but potentially empty
 	 */
-	List<Object> getEnclosing();
+	List<Object> getEnclosingInstances();
 
 	/**
 	 * Get all test instances, ordered from outermost to innermost.
@@ -54,7 +54,7 @@ public interface TestInstances {
 	 * @return all test instances; never {@code null}, containing {@code null},
 	 * or empty
 	 */
-	List<Object> getAll();
+	List<Object> getAllInstances();
 
 	/**
 	 * Find the first test instance that is an instance of the supplied required
@@ -64,6 +64,6 @@ public interface TestInstances {
 	 * @return the first test instance of the required type; never {@code null}
 	 * but potentially empty
 	 */
-	<T> Optional<T> find(Class<T> requiredType);
+	<T> Optional<T> findInstance(Class<T> requiredType);
 
 }

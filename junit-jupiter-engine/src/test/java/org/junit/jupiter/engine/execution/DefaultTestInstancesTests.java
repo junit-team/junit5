@@ -20,11 +20,11 @@ class DefaultTestInstancesTests {
 	void topLevelClass() {
 		DefaultTestInstances instances = DefaultTestInstances.of(this);
 
-		assertThat(instances.getInnermost()).isSameAs(this);
-		assertThat(instances.getAll()).containsExactly(this);
-		assertThat(instances.getEnclosing()).isEmpty();
-		assertThat(instances.find(Object.class)).contains(this);
-		assertThat(instances.find(String.class)).isEmpty();
+		assertThat(instances.getInnermostInstance()).isSameAs(this);
+		assertThat(instances.getAllInstances()).containsExactly(this);
+		assertThat(instances.getEnclosingInstances()).isEmpty();
+		assertThat(instances.findInstance(Object.class)).contains(this);
+		assertThat(instances.findInstance(String.class)).isEmpty();
 	}
 
 	@Test
@@ -33,13 +33,13 @@ class DefaultTestInstancesTests {
 		Nested innermost = new Nested();
 		DefaultTestInstances instances = DefaultTestInstances.of(DefaultTestInstances.of(outermost), innermost);
 
-		assertThat(instances.getInnermost()).isSameAs(innermost);
-		assertThat(instances.getAll()).containsExactly(outermost, innermost);
-		assertThat(instances.getEnclosing()).containsExactly(outermost);
-		assertThat(instances.find(Object.class)).contains(innermost);
-		assertThat(instances.find(Nested.class)).contains(innermost);
-		assertThat(instances.find(DefaultTestInstancesTests.class)).contains(outermost);
-		assertThat(instances.find(String.class)).isEmpty();
+		assertThat(instances.getInnermostInstance()).isSameAs(innermost);
+		assertThat(instances.getAllInstances()).containsExactly(outermost, innermost);
+		assertThat(instances.getEnclosingInstances()).containsExactly(outermost);
+		assertThat(instances.findInstance(Object.class)).contains(innermost);
+		assertThat(instances.findInstance(Nested.class)).contains(innermost);
+		assertThat(instances.findInstance(DefaultTestInstancesTests.class)).contains(outermost);
+		assertThat(instances.findInstance(String.class)).isEmpty();
 	}
 
 	class Nested {

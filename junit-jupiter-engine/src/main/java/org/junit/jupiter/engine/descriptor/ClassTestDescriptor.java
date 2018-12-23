@@ -267,11 +267,11 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			ExtensionContext extensionContext, ExtensionRegistry registry) {
 
 		TestInstances instances = instantiateTestClass(parentExecutionContext, registry, extensionContext);
-		invokeTestInstancePostProcessors(instances.getInnermost(), registry, extensionContext);
+		invokeTestInstancePostProcessors(instances.getInnermostInstance(), registry, extensionContext);
 		// In addition, we register extensions from instance fields here since the
 		// best time to do that is immediately following test class instantiation
 		// and post processing.
-		registerExtensionsFromFields(registry, this.testClass, instances.getInnermost());
+		registerExtensionsFromFields(registry, this.testClass, instances.getInnermostInstance());
 		return instances;
 	}
 
@@ -284,7 +284,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	protected TestInstances instantiateTestClass(Optional<TestInstances> outerInstances, ExtensionRegistry registry,
 			ExtensionContext extensionContext) {
 
-		Optional<Object> outerInstance = outerInstances.map(TestInstances::getInnermost);
+		Optional<Object> outerInstance = outerInstances.map(TestInstances::getInnermostInstance);
 		Object instance = this.testInstanceFactory != null //
 				? invokeTestInstanceFactory(outerInstance, extensionContext) //
 				: invokeTestClassConstructor(outerInstance, registry, extensionContext);
@@ -433,7 +433,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 	private void invokeMethodInExtensionContext(Method method, ExtensionContext context, ExtensionRegistry registry) {
 		TestInstances testInstances = context.getRequiredTestInstances();
-		Object target = testInstances.find(method.getDeclaringClass()).orElseThrow(
+		Object target = testInstances.findInstance(method.getDeclaringClass()).orElseThrow(
 			() -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
 
 		executableInvoker.invoke(method, target, context, registry);

@@ -61,7 +61,7 @@ public final class MethodExtensionContext extends AbstractExtensionContext<TestM
 
 	@Override
 	public Optional<Object> getTestInstance() {
-		return Optional.of(this.testInstances.getInnermost());
+		return Optional.of(this.testInstances.getInnermostInstance());
 	}
 
 	@Override
