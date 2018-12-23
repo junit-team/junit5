@@ -134,7 +134,8 @@ class ExtensionContextTests {
 		assertThat(nestedExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 
 		MethodExtensionContext methodExtensionContext = new MethodExtensionContext(outerExtensionContext, null,
-			methodTestDescriptor, configuration, new OuterClass(), new OpenTest4JAwareThrowableCollector());
+			methodTestDescriptor, configuration, DefaultTestInstances.of(new OuterClass()),
+			new OpenTest4JAwareThrowableCollector());
 		assertThat(methodExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "method-tag");
 		assertThat(methodExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 	}
@@ -156,7 +157,8 @@ class ExtensionContextTests {
 		ClassExtensionContext classExtensionContext = new ClassExtensionContext(engineExtensionContext, null,
 			classTestDescriptor, configuration, null);
 		MethodExtensionContext methodExtensionContext = new MethodExtensionContext(classExtensionContext, null,
-			methodTestDescriptor, configuration, testInstance, new OpenTest4JAwareThrowableCollector());
+			methodTestDescriptor, configuration, DefaultTestInstances.of(testInstance),
+			new OpenTest4JAwareThrowableCollector());
 
 		// @formatter:off
 		assertAll("methodContext",
@@ -213,7 +215,7 @@ class ExtensionContextTests {
 		ExtensionContext parentContext = new ClassExtensionContext(null, null, classTestDescriptor, configuration,
 			null);
 		MethodExtensionContext childContext = new MethodExtensionContext(parentContext, null, methodTestDescriptor,
-			configuration, new OuterClass(), new OpenTest4JAwareThrowableCollector());
+			configuration, DefaultTestInstances.of(new OuterClass()), new OpenTest4JAwareThrowableCollector());
 
 		ExtensionContext.Store childStore = childContext.getStore(Namespace.GLOBAL);
 		ExtensionContext.Store parentStore = parentContext.getStore(Namespace.GLOBAL);

@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 
 /**
@@ -22,8 +23,8 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
  */
 @FunctionalInterface
 @API(status = INTERNAL, since = "5.0")
-public interface TestInstanceProvider {
+public interface TestInstancesProvider {
 
-	Object getTestInstance(Optional<ExtensionRegistry> childExtensionRegistry);
+	TestInstances getTestInstances(Optional<ExtensionRegistry> childExtensionRegistry);
 
 }

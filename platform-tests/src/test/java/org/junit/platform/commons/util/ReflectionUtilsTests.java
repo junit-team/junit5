@@ -585,6 +585,7 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
+	@SuppressWarnings("deprecation")
 	void getOutermostInstancePreconditions() {
 		// @formatter:off
 		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getOutermostInstance(null, null));
@@ -594,6 +595,7 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
+	@SuppressWarnings("deprecation")
 	void getOutermostInstance() {
 		FirstClass firstClass = new FirstClass();
 		FirstClass.SecondClass secondClass = firstClass.new SecondClass();

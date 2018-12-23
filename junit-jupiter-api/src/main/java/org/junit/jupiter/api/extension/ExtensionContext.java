@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.AnnotatedElement;
@@ -160,6 +161,7 @@ public interface ExtensionContext {
 	 * @return an {@code Optional} containing the test instance; never
 	 * {@code null} but potentially empty
 	 * @see #getRequiredTestInstance()
+	 * @see #getTestInstances()
 	 */
 	Optional<Object> getTestInstance();
 
@@ -173,10 +175,47 @@ public interface ExtensionContext {
 	 * @return the test instance; never {@code null}
 	 * @throws PreconditionViolationException if the test instance is not present
 	 * in this {@code ExtensionContext}
+	 *
+	 * @see #getRequiredTestInstances()
 	 */
 	default Object getRequiredTestInstance() {
 		return Preconditions.notNull(getTestInstance().orElse(null),
 			"Illegal state: required test instance is not present in the current ExtensionContext");
+	}
+
+	/**
+	 * Get the test instances associated with the current test or container,
+	 * if available.
+	 *
+	 * <p>While top-level tests only have a single test instance, nested tests
+	 * have one additional instance for each enclosing test class.
+	 *
+	 * @return an {@code Optional} containing the test instances; never
+	 * {@code null} but potentially empty
+	 * @see #getRequiredTestInstances()
+	 *
+	 * @since 5.4
+	 */
+	@API(status = EXPERIMENTAL, since = "5.4")
+	Optional<TestInstances> getTestInstances();
+
+	/**
+	 * Get the <em>required</em> test instances associated with the current test
+	 * or container.
+	 *
+	 * <p>Use this method as an alternative to {@link #getTestInstances()} for use
+	 * cases in which the test instances are required to be present.
+	 *
+	 * @return the test instances; never {@code null}
+	 * @throws PreconditionViolationException if the test instances are not present
+	 * in this {@code ExtensionContext}
+	 *
+	 * @since 5.4
+	 */
+	@API(status = EXPERIMENTAL, since = "5.4")
+	default TestInstances getRequiredTestInstances() {
+		return Preconditions.notNull(getTestInstances().orElse(null),
+			"Illegal state: required test instances are not present in the current ExtensionContext");
 	}
 
 	/**

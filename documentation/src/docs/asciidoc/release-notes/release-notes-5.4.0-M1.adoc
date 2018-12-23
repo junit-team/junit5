@@ -132,6 +132,8 @@ repository on GitHub.
   methods via the `junit-jupiter-migrationsupport` module.
   - See the <<../user-guide/index.adoc#migrating-from-junit4-ignore-annotation-support,
     User Guide>> for details.
+* New `ExtensionContext` methods to access all test instances, including enclosing ones
+  for `@Nested` tests: `getTestInstances()` and `getRequiredTestInstances()`.
 
 
 [[release-notes-5.4.0-M1-junit-vintage]]
