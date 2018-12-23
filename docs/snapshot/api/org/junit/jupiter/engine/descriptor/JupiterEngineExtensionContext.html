@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -298,20 +298,28 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </td>
 </tr>
 <tr id="i13" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestInstances()">getTestInstances</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Get the test instances associated with the current test or container,
+ if available.</div>
+</td>
+</tr>
+<tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestMethod()">getTestMethod</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> associated with the current test, if available.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getUniqueId()">getUniqueId</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the unique ID of the current test or container.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#publishReportEntry(java.util.Map)">publishReportEntry</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;values)</code></th>
 <td class="colLast">
@@ -333,7 +341,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;org.junit.jupiter.api.extension.<a href="../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a></h3>
-<code><a href="../../api/extension/ExtensionContext.html#getRequiredTestClass()">getRequiredTestClass</a>, <a href="../../api/extension/ExtensionContext.html#getRequiredTestInstance()">getRequiredTestInstance</a>, <a href="../../api/extension/ExtensionContext.html#getRequiredTestMethod()">getRequiredTestMethod</a>, <a href="../../api/extension/ExtensionContext.html#publishReportEntry(java.lang.String)">publishReportEntry</a>, <a href="../../api/extension/ExtensionContext.html#publishReportEntry(java.lang.String,java.lang.String)">publishReportEntry</a></code></li>
+<code><a href="../../api/extension/ExtensionContext.html#getRequiredTestClass()">getRequiredTestClass</a>, <a href="../../api/extension/ExtensionContext.html#getRequiredTestInstance()">getRequiredTestInstance</a>, <a href="../../api/extension/ExtensionContext.html#getRequiredTestInstances()">getRequiredTestInstances</a>, <a href="../../api/extension/ExtensionContext.html#getRequiredTestMethod()">getRequiredTestMethod</a>, <a href="../../api/extension/ExtensionContext.html#publishReportEntry(java.lang.String)">publishReportEntry</a>, <a href="../../api/extension/ExtensionContext.html#publishReportEntry(java.lang.String,java.lang.String)">publishReportEntry</a></code></li>
 </ul>
 </li>
 </ul>
@@ -454,7 +462,30 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd>an <code>Optional</code> containing the test instance; never
  <code>null</code> but potentially empty</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../api/extension/ExtensionContext.html#getRequiredTestInstance()"><code>ExtensionContext.getRequiredTestInstance()</code></a></dd>
+<dd><a href="../../api/extension/ExtensionContext.html#getRequiredTestInstance()"><code>ExtensionContext.getRequiredTestInstance()</code></a>, 
+<a href="../../api/extension/ExtensionContext.html#getTestInstances()"><code>ExtensionContext.getTestInstances()</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="getTestInstances()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTestInstances</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&gt;&nbsp;getTestInstances()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../api/extension/ExtensionContext.html#getTestInstances()">ExtensionContext</a></code></span></div>
+<div class="block">Get the test instances associated with the current test or container,
+ if available.
+
+ <p>While top-level tests only have a single test instance, nested tests
+ have one additional instance for each enclosing test class.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>an <code>Optional</code> containing the test instances; never
+ <code>null</code> but potentially empty</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../api/extension/ExtensionContext.html#getRequiredTestInstances()"><code>ExtensionContext.getRequiredTestInstances()</code></a></dd>
 </dl>
 </li>
 </ul>
