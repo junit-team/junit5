@@ -508,18 +508,20 @@ parameters. This allows for greater flexibility and enables _Dependency Injectio
 constructors and methods.
 
 `{ParameterResolver}` defines the API for test extensions that wish to _dynamically_
-resolve parameters at runtime. If a test constructor or a `@Test`, `@TestFactory`,
-`@BeforeEach`, `@AfterEach`, `@BeforeAll`, or `@AfterAll` method accepts a parameter, the
-parameter must be resolved at runtime by a registered `ParameterResolver`.
+resolve parameters at runtime. If a test class constructor or a `@Test`, `@RepeatedTest`,
+`@ParameterizedTest`, `@TestFactory`, `@TestTemplate`, `@BeforeEach`, `@AfterEach`,
+`@BeforeAll`, or `@AfterAll` method accepts a parameter, the parameter must be resolved at
+runtime by a registered `ParameterResolver`.
 
 There are currently three built-in resolvers that are registered automatically.
 
-* `{TestInfoParameterResolver}`: if a method parameter is of type `{TestInfo}`, the
-  `TestInfoParameterResolver` will supply an instance of `TestInfo` corresponding to the
-  current test as the value for the parameter. The `TestInfo` can then be used to retrieve
-  information about the current test such as the test's display name, the test class, the
-  test method, or associated tags. The display name is either a technical name, such as
-  the name of the test class or test method, or a custom name configured via `@DisplayName`.
+* `{TestInfoParameterResolver}`: if a constructor or method parameter is of type
+  `{TestInfo}`, the `TestInfoParameterResolver` will supply an instance of `TestInfo`
+  corresponding to the current container or test as the value for the parameter. The
+  `TestInfo` can then be used to retrieve information about the current container or test
+  such as the display name, the test class, the test method, and associated tags. The
+  display name is either a technical name, such as the name of the test class or test
+  method, or a custom name configured via `@DisplayName`.
 +
 `{TestInfo}` acts as a drop-in replacement for the `TestName` rule from JUnit 4. The
 following demonstrates how to have `TestInfo` injected into a test constructor,
@@ -538,15 +540,16 @@ include::{testDir}/example/TestInfoDemo.java[tags=user_guide]
   however, that `RepetitionInfoParameterResolver` is not registered outside the context
   of a `@RepeatedTest`. See <<writing-tests-repeated-tests-examples>>.
 
-* `{TestReporterParameterResolver}`: if a method parameter is of type `{TestReporter}`,
-  the `TestReporterParameterResolver` will supply an instance of `TestReporter`. The
-  `TestReporter` can be used to publish additional data about the current test run. The
-  data can be consumed through `{TestExecutionListener}.reportingEntryPublished()` and
-  thus be viewed by IDEs or included in reports.
+* `{TestReporterParameterResolver}`: if a constructor or method parameter is of type
+  `{TestReporter}`, the `TestReporterParameterResolver` will supply an instance of
+  `TestReporter`. The `TestReporter` can be used to publish additional data about the
+  current test run. The data can be consumed via the `reportingEntryPublished()` method in
+  a `{TestExecutionListener}`, allowing it to be viewed in IDEs or included in reports.
 +
 In JUnit Jupiter you should use `TestReporter` where you used to print information to
-`stdout` or `stderr` in JUnit 4. Using `@RunWith(JUnitPlatform.class)` will even output
-all reported entries to `stdout`.
+`stdout` or `stderr` in JUnit 4. Using `@RunWith(JUnitPlatform.class)` will output all
+reported entries to `stdout`. In addition, some IDEs print report entries to `stdout` or
+display them in the user interface for test results.
 
 [source,java,indent=0]
 ----
@@ -1324,6 +1327,8 @@ invocation of a test template method behaves like the execution of a regular `@T
 method with full support for the same lifecycle callbacks and extensions. Please refer to
 <<extensions-test-templates>> for usage examples.
 
+NOTE: <<writing-tests-repeated-tests>> and <<writing-tests-parameterized-tests>> are
+built-in specializations of test templates.
 
 [[writing-tests-dynamic-tests]]
 === Dynamic Tests
