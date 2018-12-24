@@ -2194,9 +2194,10 @@ constructors and methods.</p>
 </div>
 <div class="paragraph">
 <p><code><a href="../api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code> defines the API for test extensions that wish to <em>dynamically</em>
-resolve parameters at runtime. If a test constructor or a <code>@Test</code>, <code>@TestFactory</code>,
-<code>@BeforeEach</code>, <code>@AfterEach</code>, <code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts a parameter, the
-parameter must be resolved at runtime by a registered <code>ParameterResolver</code>.</p>
+resolve parameters at runtime. If a test class constructor or a <code>@Test</code>, <code>@RepeatedTest</code>,
+<code>@ParameterizedTest</code>, <code>@TestFactory</code>, <code>@TestTemplate</code>, <code>@BeforeEach</code>, <code>@AfterEach</code>,
+<code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts a parameter, the parameter must be resolved at
+runtime by a registered <code>ParameterResolver</code>.</p>
 </div>
 <div class="paragraph">
 <p>There are currently three built-in resolvers that are registered automatically.</p>
@@ -2204,12 +2205,13 @@ parameter must be resolved at runtime by a registered <code>ParameterResolver</c
 <div class="ulist">
 <ul>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a method parameter is of type <code><a href="../api/org/junit/jupiter/api/TestInfo.html">TestInfo</a></code>, the
-<code>TestInfoParameterResolver</code> will supply an instance of <code>TestInfo</code> corresponding to the
-current test as the value for the parameter. The <code>TestInfo</code> can then be used to retrieve
-information about the current test such as the test&#8217;s display name, the test class, the
-test method, or associated tags. The display name is either a technical name, such as
-the name of the test class or test method, or a custom name configured via <code>@DisplayName</code>.</p>
+<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>: if a constructor or method parameter is of type
+<code><a href="../api/org/junit/jupiter/api/TestInfo.html">TestInfo</a></code>, the <code>TestInfoParameterResolver</code> will supply an instance of <code>TestInfo</code>
+corresponding to the current container or test as the value for the parameter. The
+<code>TestInfo</code> can then be used to retrieve information about the current container or test
+such as the display name, the test class, the test method, and associated tags. The
+display name is either a technical name, such as the name of the test class or test
+method, or a custom name configured via <code>@DisplayName</code>.</p>
 <div class="paragraph">
 <p><code><a href="../api/org/junit/jupiter/api/TestInfo.html">TestInfo</a></code> acts as a drop-in replacement for the <code>TestName</code> rule from JUnit 4. The
 following demonstrates how to have <code>TestInfo</code> injected into a test constructor,
@@ -2269,15 +2271,16 @@ however, that <code>RepetitionInfoParameterResolver</code> is not registered out
 of a <code>@RepeatedTest</code>. See <a href="#writing-tests-repeated-tests-examples">Repeated Test Examples</a>.</p>
 </li>
 <li>
-<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a method parameter is of type <code><a href="../api/org/junit/jupiter/api/TestReporter.html">TestReporter</a></code>,
-the <code>TestReporterParameterResolver</code> will supply an instance of <code>TestReporter</code>. The
-<code>TestReporter</code> can be used to publish additional data about the current test run. The
-data can be consumed through <code><a href="../api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a>.reportingEntryPublished()</code> and
-thus be viewed by IDEs or included in reports.</p>
+<p><code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java">TestReporterParameterResolver</a></code>: if a constructor or method parameter is of type
+<code><a href="../api/org/junit/jupiter/api/TestReporter.html">TestReporter</a></code>, the <code>TestReporterParameterResolver</code> will supply an instance of
+<code>TestReporter</code>. The <code>TestReporter</code> can be used to publish additional data about the
+current test run. The data can be consumed via the <code>reportingEntryPublished()</code> method in
+a <code><a href="../api/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code>, allowing it to be viewed in IDEs or included in reports.</p>
 <div class="paragraph">
 <p>In JUnit Jupiter you should use <code>TestReporter</code> where you used to print information to
-<code>stdout</code> or <code>stderr</code> in JUnit 4. Using <code>@RunWith(JUnitPlatform.class)</code> will even output
-all reported entries to <code>stdout</code>.</p>
+<code>stdout</code> or <code>stderr</code> in JUnit 4. Using <code>@RunWith(JUnitPlatform.class)</code> will output all
+reported entries to <code>stdout</code>. In addition, some IDEs print report entries to <code>stdout</code> or
+display them in the user interface for test results.</p>
 </div>
 </li>
 </ul>
@@ -3763,6 +3766,19 @@ conjunction with a registered <code><a href="../api/org/junit/jupiter/api/extens
 invocation of a test template method behaves like the execution of a regular <code>@Test</code>
 method with full support for the same lifecycle callbacks and extensions. Please refer to
 <a href="#extensions-test-templates">Providing Invocation Contexts for Test Templates</a> for usage examples.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<a href="#writing-tests-repeated-tests">Repeated Tests</a> and <a href="#writing-tests-parameterized-tests">Parameterized Tests</a> are
+built-in specializations of test templates.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -8079,7 +8095,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2018-12-24 15:38:12 UTC
+Last updated 2018-12-24 16:26:45 UTC
 </div>
 </div>
 </body>

@@ -321,7 +321,6 @@
 8d26f073bf57eef0301153fc2077fd4a  documentation/src/test/resources/log4j2-test.xml
 8d97e515c34f40e0b3b5a41570efec8c  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/JupiterTestEngine.java
 8e2b488c517d3914e38d9152d72fd3a8  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
-8ed362eb0f8ac546289559c3589d446c  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 907a8d74d68e4db1e92d44f5570e2061  documentation/src/test/java/example/testkit/EngineTestKitAllEventsDemo.java
 90a4da384dd8e66ecfc7dcab5b5a5799  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/ClasspathRootSelectorResolver.java
 9165b85430eeba08228c551306062f38  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/JavaTimeConversionPattern.java
@@ -576,6 +575,7 @@ f3f53cd5c8f2a8dc30b4e10f919c0042  junit-platform-engine/src/main/java/org/junit/
 f4bd4389396359b18a22b1689c3fc446  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Executions.java
 f580382cc969dd55b6f7ea605147063f  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvArgumentsProvider.java
 f5919de0da68f042c7d92f96abe28f6c  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
+f683f1edb46d4d08f5f5389e98c1fc5b  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 f6951ab0a5722995c5aa01a0731cd6c8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertArrayEquals.java
 f6ed9c7883a1b5b6f9c7d21cc5233382  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Events.java
 f71bb381f0a2608cbdf1c56568820d5f  junit-platform-engine/src/main/java/org/junit/platform/engine/EngineDiscoveryRequest.java
