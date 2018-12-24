@@ -27,20 +27,21 @@ module.
 | `@TestTemplate`          | Denotes that a method is a <<writing-tests-test-templates, template for test cases>> designed to be invoked multiple times depending on the number of invocation contexts returned by the registered <<extensions-test-templates, providers>>. Such methods are _inherited_ unless they are _overridden_.
 | `@TestMethodOrder`       | Used to configure the <<writing-tests-test-execution-order, test method execution order>> for the annotated test class; similar to JUnit 4's `@FixMethodOrder`. Such annotations are _inherited_.
 | `@TestInstance`          | Used to configure the <<writing-tests-test-instance-lifecycle, test instance lifecycle>> for the annotated test class. Such annotations are _inherited_.
-| `@DisplayName`           | Declares a custom display name for the test class or test method. Such annotations are not _inherited_.
-| `@DisplayNameGeneration` | Declares a custom display name generator for the test class. Such annotations are _inherited_.
+| `@DisplayName`           | Declares a custom <<writing-tests-display-names,display name>> for the test class or test method. Such annotations are not _inherited_.
+| `@DisplayNameGeneration` | Declares a custom <<writing-tests-display-name-generator,display name generator>> for the test class. Such annotations are _inherited_.
 | `@BeforeEach`            | Denotes that the annotated method should be executed _before_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@Before`. Such methods are _inherited_ unless they are _overridden_.
 | `@AfterEach`             | Denotes that the annotated method should be executed _after_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@After`. Such methods are _inherited_ unless they are _overridden_.
 | `@BeforeAll`             | Denotes that the annotated method should be executed _before_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@BeforeClass`. Such methods are _inherited_ (unless they are _hidden_ or _overridden_) and must be `static` (unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used).
 | `@AfterAll`              | Denotes that the annotated method should be executed _after_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@AfterClass`. Such methods are _inherited_ (unless they are _hidden_ or _overridden_) and must be `static` (unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used).
-| `@Nested`                | Denotes that the annotated class is a nested, non-static test class. `@BeforeAll` and `@AfterAll` methods cannot be used directly in a `@Nested` test class unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used. Such annotations are not _inherited_.
-| `@Tag`                   | Used to declare _tags_ for filtering tests, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4. Such annotations are _inherited_ at the class level but not at the method level.
-| `@Disabled`              | Used to _disable_ a test class or test method; analogous to JUnit 4's `@Ignore`. Such annotations are not _inherited_.
-| `@ExtendWith`            | Used to register custom <<extensions,extensions>>. Such annotations are _inherited_.
+| `@Nested`                | Denotes that the annotated class is a non-static <<writing-tests-nested,nested test class>>. `@BeforeAll` and `@AfterAll` methods cannot be used directly in a `@Nested` test class unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used. Such annotations are not _inherited_.
+| `@Tag`                   | Used to declare <<writing-tests-tagging-and-filtering,tags for filtering tests>>, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4. Such annotations are _inherited_ at the class level but not at the method level.
+| `@Disabled`              | Used to <<writing-tests-disabling,disable>> a test class or test method; analogous to JUnit 4's `@Ignore`. Such annotations are not _inherited_.
+| `@ExtendWith`            | Used to <<extensions-registration-declarative,register extensions declaratively>>. Such annotations are _inherited_.
+| `@RegisterExtension`     | Used to <<extensions-registration-programmatic,register extensions programmatically>> via fields. Such fields are _inherited_ unless they are _shadowed_.
 |===
 
-Methods annotated with `@Test`, `@TestTemplate`, `@RepeatedTest`, `@BeforeAll`,
-`@AfterAll`, `@BeforeEach`, or `@AfterEach` annotations must not return a value.
+Any method annotated with `@Test`, `@TestTemplate`, `@RepeatedTest`, `@ParameterizedTest`,
+`@BeforeAll`, `@AfterAll`, `@BeforeEach`, or `@AfterEach` must not return a value.
 
 WARNING: Some annotations may currently be _experimental_. Consult the table in
 <<api-evolution-experimental-apis>> for details.
@@ -65,9 +66,10 @@ include::{testDir}/example/Fast.java[tags=user_guide]
 [[writing-tests-classes-and-methods]]
 === Test Classes and Methods
 
-A _test method_ is any instance method that is directly or meta-annotated with `@Test`,
-`@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or `@TestTemplate`. A _test class_
-is any top level or static member class that contains at least one test method.
+A _test method_ is any instance method that is directly annotated or meta-annotated with
+`@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or `@TestTemplate`. A
+_test class_ is any top-level or `static` member class that contains at least one _test
+method_.
 
 [source,java,indent=0]
 .A standard test class
