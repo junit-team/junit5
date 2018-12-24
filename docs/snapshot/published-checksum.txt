@@ -321,6 +321,7 @@
 8d26f073bf57eef0301153fc2077fd4a  documentation/src/test/resources/log4j2-test.xml
 8d97e515c34f40e0b3b5a41570efec8c  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/JupiterTestEngine.java
 8e2b488c517d3914e38d9152d72fd3a8  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
+8ed362eb0f8ac546289559c3589d446c  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 907a8d74d68e4db1e92d44f5570e2061  documentation/src/test/java/example/testkit/EngineTestKitAllEventsDemo.java
 90a4da384dd8e66ecfc7dcab5b5a5799  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/ClasspathRootSelectorResolver.java
 9165b85430eeba08228c551306062f38  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/JavaTimeConversionPattern.java
@@ -565,7 +566,6 @@ f08ec93048fdd5b2fdcde96b48b1d90c  junit-platform-launcher/src/main/java/org/juni
 f0b2ca619d96206c214dbbb9c31563e6  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestNameFormatter.java
 f12dddde4058f12477f7f738aff75d95  documentation/src/test/java/example/DynamicTestsDemo.java
 f13717dbd77fa7d75ce96105aae25d5a  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageTestDescriptor.java
-f14d757fd793befbbe216813e797c51a  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 f1762a519ec6c0fc1ff8ba86ed0e5145  documentation/src/test/java/example/TestReporterDemo.java
 f1bf2dbc836072da61d73568717d7c1d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DisplayNameUtils.java
 f2326304790929f0961315df46caee1b  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/DirectorySelector.java
