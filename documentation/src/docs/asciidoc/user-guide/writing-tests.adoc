@@ -83,8 +83,9 @@ be `private`.
 [[writing-tests-display-names]]
 === Display Names
 
-Test classes and test methods can declare custom display names -- with spaces, special
-characters, and even emojis -- that will be displayed by test runners and test reporting.
+Test classes and test methods can declare custom display names via `@DisplayName` -- with
+spaces, special characters, and even emojis -- that will be displayed in test reports and
+by test runners and IDEs.
 
 [source,java,indent=0]
 ----
@@ -378,18 +379,18 @@ include::{testDir}/example/TaggingDemo.java[tags=user_guide]
 [[writing-tests-test-execution-order]]
 === Test Execution Order
 
-By default, test methods will be ordered using a default algorithm that is deterministic
-but intentionally nonobvious. This ensures that subsequent runs of a test suite execute
-test methods in the same order, thereby allowing for repeatable builds.
+By default, test methods will be ordered using an algorithm that is deterministic but
+intentionally nonobvious. This ensures that subsequent runs of a test suite execute test
+methods in the same order, thereby allowing for repeatable builds.
 
-NOTE: In this context, a _test method_ is any instance method that is directly or
-meta-annotated with `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or
+NOTE: In this context, a _test method_ is any instance method that is directly annotated
+or meta-annotated with `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or
 `@TestTemplate`.
 
 Although true _unit tests_ typically should not rely on the order in which they are
-executed, there are times when it is necessary to enforce a specific test method
-execution order -- for example, when writing _integration tests_ or _functional tests_
-where the sequence of the tests is important, especially in conjunction
+executed, there are times when it is necessary to enforce a specific test method execution
+order -- for example, when writing _integration tests_ or _functional tests_ where the
+sequence of the tests is important, especially in conjunction
 `@TestInstance(Lifecycle.PER_CLASS)`.
 
 To control the order in which test methods are executed, annotate your test class or test
@@ -401,8 +402,8 @@ following built-in `MethodOrderer` implementations.
   parameter lists.
 * `{OrderAnnotation}`: sorts test methods _numerically_ based on values specified via the
   `{Order}` annotation.
-* `{Random}`: orders test methods _pseudo-randomly_ and supports configuration of a
-  custom _seed_.
+* `{Random}`: orders test methods _pseudo-randomly_ and supports configuration of a custom
+  _seed_.
 
 The following example demonstrates how to guarantee that test methods are executed in the
 order specified via the `@Order` annotation.
