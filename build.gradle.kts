@@ -429,6 +429,15 @@ rootProject.apply {
 				.filter { !it.path.contains("kotlin") }
 				// Remove subproject JARs so Kotlin classes don"t get picked up
 				.filter { it.isDirectory() || !it.absolutePath.startsWith(projectDir.absolutePath) }
+
+            doLast {
+				// For compatibility with pre JDK 11 versions of the Javadoc tool
+				copy {
+					from(File(destinationDir, "element-list"))
+					into(destinationDir)
+					rename { "package-list" }
+				}
+			}
 		}
 	}
 
