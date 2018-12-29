@@ -70,14 +70,24 @@ for JUnit 5_ section of the
 https://www.eclipse.org/eclipse/news/4.7.1a/#junit-5-support[Eclipse Project Oxygen.1a
 (4.7.1a) - New and Noteworthy] documentation.
 
+[[running-tests-ide-netbeans]]
+==== NetBeans
+
+NetBeans offers support for JUnit Jupiter and the JUnit Platform since the
+https://netbeans.apache.org/download/nb100/nb100.html[Apache NetBeans 10.0 release].
+
+For more information consult the JUnit 5 section of the
+https://netbeans.apache.org/download/nb100/index.html#_junit_5[Apache NetBeans 10.0
+release notes].
+
 [[running-tests-ide-other]]
 ==== Other IDEs
 
-At the time of this writing, there is no direct support for running tests on the JUnit
-Platform within IDEs other than IntelliJ IDEA and Eclipse. However, the JUnit team
-provides two intermediate solutions so that you can go ahead and try out JUnit 5 within
-your IDE today. You can use the <<running-tests-console-launcher>> manually or execute
-tests with a <<running-tests-junit-platform-runner,JUnit 4 based Runner>>.
+If you are using an editor or IDE other than one of those listed in the previous sections,
+the JUnit team provides two alternative solutions to assist you in using JUnit 5. You can
+use the <<running-tests-console-launcher>> manually -- for example, from the command line
+-- or execute tests with a <<running-tests-junit-platform-runner,JUnit 4 based Runner>> if
+your IDE has built-in support for JUnit 4.
 
 [[running-tests-build]]
 === Build Support
