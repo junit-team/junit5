@@ -301,6 +301,7 @@
 8484515d013caa7b71d3fdc76a147332  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/DefaultTestInstances.java
 84cafa61acdc83ba0213c1df75806ecd  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/VerifierSupport.java
 855e13355685519e5fc57adcac2130ba  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/conditions/package-info.java
+85620ef1d2345b79c1e3aa320907a1d9  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 85bbc67c76c1ecde610d9615e2d8d3f0  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/LockManager.java
 862e28f19a4512cd049cb3e44831767a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/Constants.java
 86dca0c782659b90ef9df65b4a25434b  junit-platform-engine/src/main/java/org/junit/platform/engine/Filter.java
@@ -481,7 +482,6 @@ cf100585a9071d17057c3c32f4d5ef7c  junit-platform-suite-api/src/main/java/org/jun
 cf78045d2fa82db6f6de759f56a27d07  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/LegacyReportingUtils.java
 d0fd9d6786030195bee8127acb417227  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ModuleUtils.java
 d1ab7eedb6800a6aac9ff86a4c1c4013  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/package-info.java
-d273e4d9c13f7755dc61c2ee3ffe14a7  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 d2767e8891990ed19bcbc753d68be5dd  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherConfig.java
 d2c2fc3d17d0d4fa70e66f7ca1368f4a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/AbstractTestDescriptor.java
 d48ca497e27808531a970f7782107993  junit-vintage-engine/src/main/java/org/junit/vintage/engine/support/package-info.java
