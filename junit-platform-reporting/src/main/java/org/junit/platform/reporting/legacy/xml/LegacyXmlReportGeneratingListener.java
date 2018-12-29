@@ -24,6 +24,7 @@ import javax.xml.stream.XMLStreamException;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.descriptor.ClassSource;
