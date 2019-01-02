@@ -198,6 +198,7 @@
 5a87a899775288930454ae9ae0a0e96c  documentation/src/test/java/example/timing/TimingExtensionTests.java
 5b143dbb7aceed36bbb3320761d77bff  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/package-info.java
 5b42b0ef3d28d441cd5d39cb8b05aa34  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstanceFactory.java
+5b732b7f9147ddd254cf83ae73acdc3b  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M2.adoc
 5beeebeb56b5d1f68ce917275a7a5b68  junit-vintage-engine/src/main/java/org/junit/vintage/engine/package-info.java
 5c12535522598fc37404e144cc9d8a07  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Assertions.java
 5c21143f95f500bfc225d4f00ca816ba  documentation/src/test/java/example/JUnit4Tests.java
@@ -316,6 +317,7 @@
 8b7715f381c21d02c702aac9d2eb675f  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/ExpectedExceptionAdapter.java
 8b77582126185ea662d3209bfdda5a20  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/FileSource.java
 8bc850be238cf6a4a1cf9a7f45eca9ba  junit-vintage-engine/src/main/java/org/junit/vintage/engine/support/UniqueIdReader.java
+8bf1fd034da18ff8f2f27c3c47417b4b  documentation/src/docs/asciidoc/release-notes/index.adoc
 8c1485f97b6752beb7a7b6bf784bd4df  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/SingleLock.java
 8c566bb4f4ffbb3321ea588a44460dc0  documentation/src/docs/asciidoc/release-notes/release-notes-5.3.0.adoc
 8cd01b72b5be5d7d3b2996466d0e1d52  junit-platform-console/src/main/java/org/junit/platform/console/options/CommandLineOptions.java
@@ -517,7 +519,6 @@ dcf05e050738662f5ff676bf45edfa67  junit-jupiter-api/src/main/java/org/junit/jupi
 dd07c2b529d5b9e05f691ba93a3a115a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/ClassExtensionContext.java
 de13d12a45a170889bd687beb07b6373  junit-platform-engine/src/main/java/org/junit/platform/engine/support/filter/package-info.java
 de855297e3b2cdcf254bf1429c98298e  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/SimpleArgumentConverter.java
-ded115be6306be940647bfa89743d5c8  documentation/src/docs/asciidoc/release-notes/index.adoc
 dee3f208b4244771999371133ec9bc76  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertionUtils.java
 df417450fcf48ea5e704fd909943d28f  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TagFilter.java
 df572876eef660cceaadac38e9b1069f  documentation/src/test/java/example/defaultmethods/StringTests.java
