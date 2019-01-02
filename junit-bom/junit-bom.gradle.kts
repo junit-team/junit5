@@ -16,6 +16,10 @@ the<PublishingExtension>().publications.named<MavenPublication>("maven") {
 	pom {
 		description.set("This Bill of Materials POM can be used to ease dependency management " +
 				"when referencing multiple JUnit artifacts using Gradle or Maven.")
+		withXml {
+			val filteredContent = asString().replace("\\s*<scope>compile</scope>".toRegex(), "")
+			asString().clear().append(filteredContent)
+		}
 	}
 }
 
@@ -27,6 +31,9 @@ tasks.withType<GenerateMavenPom> {
 		}
 		require(xml.contains("<dependencyManagement>")) {
 			"BOM must contain a <dependencyManagement> element:\n$destination"
+		}
+		require(!xml.contains("<scope>")) {
+			"BOM must not contain <scope> elements:\n$destination"
 		}
 	}
 }
