@@ -33,7 +33,6 @@ import java.util.Set;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
@@ -112,7 +111,6 @@ public class JUnitPlatform extends Runner implements Filterable {
 	private final Class<?> testClass;
 	private final Launcher launcher;
 
-	private LauncherDiscoveryRequest discoveryRequest;
 	private JUnitPlatformTestTree testTree;
 
 	public JUnitPlatform(Class<?> testClass) {
@@ -123,8 +121,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 	JUnitPlatform(Class<?> testClass, Launcher launcher) {
 		this.launcher = launcher;
 		this.testClass = testClass;
-		this.discoveryRequest = createDiscoveryRequest();
-		this.testTree = generateTestTree();
+		this.testTree = generateTestTree(createDiscoveryRequest());
 	}
 
 	@Override
@@ -134,15 +131,12 @@ public class JUnitPlatform extends Runner implements Filterable {
 
 	@Override
 	public void run(RunNotifier notifier) {
-		JUnitPlatformRunnerListener listener = new JUnitPlatformRunnerListener(this.testTree, notifier);
-		this.launcher.registerTestExecutionListeners(listener);
-		this.launcher.execute(this.discoveryRequest);
+		this.launcher.execute(this.testTree.getTestPlan(), new JUnitPlatformRunnerListener(this.testTree, notifier));
 	}
 
-	private JUnitPlatformTestTree generateTestTree() {
-		Preconditions.notNull(this.discoveryRequest, "DiscoveryRequest must not be null");
-		TestPlan plan = this.launcher.discover(this.discoveryRequest);
-		return new JUnitPlatformTestTree(plan, testClass);
+	private JUnitPlatformTestTree generateTestTree(LauncherDiscoveryRequest discoveryRequest) {
+		TestPlan testPlan = this.launcher.discover(discoveryRequest);
+		return new JUnitPlatformTestTree(testPlan, this.testClass);
 	}
 
 	private LauncherDiscoveryRequest createDiscoveryRequest() {
@@ -308,8 +302,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 		if (filteredIdentifiers.isEmpty()) {
 			throw new NoTestsRemainException();
 		}
-		this.discoveryRequest = createDiscoveryRequestForUniqueIds(filteredIdentifiers);
-		this.testTree = generateTestTree();
+		this.testTree = generateTestTree(createDiscoveryRequestForUniqueIds(filteredIdentifiers));
 	}
 
 	private LauncherDiscoveryRequest createDiscoveryRequestForUniqueIds(Set<TestIdentifier> testIdentifiers) {

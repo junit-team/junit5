@@ -64,20 +64,14 @@ public interface Launcher {
 	 * {@link LauncherDiscoveryRequest} by querying all registered engines and
 	 * collecting their results.
 	 *
-	 * @apiNote This method should only be called to generate a preview of the
-	 * test tree when executing tests is not desired. First calling this method
-	 * to get access to the {@link TestPlan} and then {@link #execute} causes
-	 * test discovery to be executed twice which may result in a significant
-	 * performance degradation. Instead, {@link #execute} should be called
-	 * directly and a {@link TestExecutionListener} that overrides
-	 * {@link TestExecutionListener#testPlanExecutionStarted(TestPlan)} should
-	 * be registered to get access to the test tree, for example to render it in
-	 * an IDE.
+	 * @apiNote This method may be called to generate a preview of the test
+	 * tree. The resulting {@link TestPlan} is unmodifiable and may be passed to
+	 * {@link #execute(TestPlan, TestExecutionListener...)} for execution.
 	 *
 	 * @param launcherDiscoveryRequest the launcher discovery request; never
 	 * {@code null}
-	 * @return a {@code TestPlan} that contains all resolved {@linkplain
-	 * TestIdentifier identifiers} from all registered engines
+	 * @return an unmodifiable {@code TestPlan} that contains all resolved
+	 * {@linkplain TestIdentifier identifiers} from all registered engines
 	 */
 	TestPlan discover(LauncherDiscoveryRequest launcherDiscoveryRequest);
 
@@ -91,14 +85,33 @@ public interface Launcher {
 	 * <p>Supplied test execution listeners are registered in addition to already
 	 * registered listeners but only for the supplied launcher discovery request.
 	 *
-	 * @apiNote In order to get access to the test tree, for example to render
-	 * it in an IDE, register a {@link TestExecutionListener} that overrides
-	 * {@link TestExecutionListener#testPlanExecutionStarted(TestPlan)} instead
-	 * of calling {@link #discover} first.
+	 * @apiNote Calling this method will cause test discovery to be executed for
+	 * all registered engines. If the same {@link LauncherDiscoveryRequest} was
+	 * previously passed to {@link #discover(LauncherDiscoveryRequest)}, you
+	 * should instead call {@link #execute(TestPlan, TestExecutionListener...)}
+	 * and pass the already acquired {@link TestPlan} to avoid the potential
+	 * performance degradation (e.g., classpath scanning) of running test
+	 * discovery twice.
 	 *
 	 * @param launcherDiscoveryRequest the launcher discovery request; never {@code null}
 	 * @param listeners additional test execution listeners; never {@code null}
 	 */
 	void execute(LauncherDiscoveryRequest launcherDiscoveryRequest, TestExecutionListener... listeners);
+
+	/**
+	 * Execute the supplied {@link TestPlan} and notify
+	 * {@linkplain #registerTestExecutionListeners registered listeners} about
+	 * the progress and results of the execution.
+	 *
+	 * <p>Supplied test execution listeners are registered in addition to
+	 * already registered listeners but only for the execution of the supplied
+	 * test plan.
+	 *
+	 * @param testPlan the test plan to execute; never {@code null}
+	 * @param listeners additional test execution listeners; never {@code null}
+	 * @since 1.4
+	 */
+	@API(status = STABLE, since = "1.4")
+	void execute(TestPlan testPlan, TestExecutionListener... listeners);
 
 }
