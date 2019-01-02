@@ -9,6 +9,12 @@ For a complete list of all _closed_ issues and pull requests for this release, c
 the link:{junit5-repo}+/milestone/32?closed=1+[5.4.0-M2] milestone page in the JUnit
 repository on GitHub.
 
+[[release-notes-5.4.0-M2-overall-improvements]]
+=== Overall Improvements
+
+* A regression introduced in 5.4.0-M1 of the `junit-bom` has been fixed: `<scope/>`
+  elements are omitted from the `<dependency/>` elements again.
+
 [[release-notes-5.4.0-M2-junit-platform]]
 === JUnit Platform
 
