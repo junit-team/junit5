@@ -22,9 +22,13 @@ import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 import java.util.logging.Level;
@@ -43,6 +47,7 @@ import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 import org.junit.platform.fakes.TestDescriptorStub;
@@ -491,6 +496,36 @@ class DefaultLauncherTests {
 		inOrder.verify(listener).executionFinished(containerAndTestIdentifier, successful());
 		inOrder.verify(listener).executionFinished(engineTestIdentifier, successful());
 		inOrder.verify(listener).testPlanExecutionFinished(same(testPlan));
+	}
+
+	@Test
+	void launcherCanExecuteTestPlan() {
+		TestEngine engine = mock(TestEngine.class);
+		when(engine.getId()).thenReturn("some-engine");
+		when(engine.discover(any(), any())).thenAnswer(invocation -> {
+			UniqueId uniqueId = invocation.getArgument(1);
+			return new EngineDescriptor(uniqueId, uniqueId.toString());
+		});
+
+		DefaultLauncher launcher = createLauncher(engine);
+		TestPlan testPlan = launcher.discover(request().build());
+		verify(engine, times(1)).discover(any(), any());
+
+		launcher.execute(testPlan);
+		verify(engine, times(1)).execute(any());
+	}
+
+	@Test
+	void testPlanIsUnmodifiable() {
+		TestEngine engine = new TestEngineSpy();
+		DefaultLauncher launcher = createLauncher(engine);
+		TestPlan testPlan = launcher.discover(request().build());
+		TestIdentifier testIdentifier = getOnlyElement(testPlan.getRoots());
+
+		UnsupportedOperationException exception = assertThrows(UnsupportedOperationException.class,
+			() -> testPlan.add(testIdentifier));
+
+		assertEquals("TestPlan must not be modified", exception.getMessage());
 	}
 
 	@Test

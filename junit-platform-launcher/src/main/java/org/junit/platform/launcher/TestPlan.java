@@ -52,7 +52,7 @@ import org.junit.platform.engine.TestDescriptor.Visitor;
  * @see TestExecutionListener
  */
 @API(status = STABLE, since = "1.0")
-public final class TestPlan {
+public class TestPlan {
 
 	private final Set<TestIdentifier> roots = Collections.synchronizedSet(new LinkedHashSet<>(4));
 
@@ -82,7 +82,8 @@ public final class TestPlan {
 		return testPlan;
 	}
 
-	private TestPlan(boolean containsTests) {
+	@API(status = INTERNAL, since = "1.4")
+	protected TestPlan(boolean containsTests) {
 		this.containsTests = containsTests;
 	}
 
@@ -91,6 +92,7 @@ public final class TestPlan {
 	 *
 	 * @param testIdentifier the identifier to add; never {@code null}
 	 */
+	@API(status = INTERNAL, since = "1.0")
 	public void add(TestIdentifier testIdentifier) {
 		Preconditions.notNull(testIdentifier, "testIdentifier must not be null");
 		allIdentifiers.put(testIdentifier.getUniqueId(), testIdentifier);
