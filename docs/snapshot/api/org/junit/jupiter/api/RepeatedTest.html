@@ -142,7 +142,28 @@ public @interface <span class="memberNameLabel">RepeatedTest</span></pre>
 
  <p><code>@RepeatedTest</code> may also be used as a meta-annotation in order to
  create a custom <em>composed annotation</em> that inherits the semantics
- of <code>@RepeatedTest</code>.</div>
+ of <code>@RepeatedTest</code>.
+
+ <h3>Test Execution Order</h3>
+
+ <p>By default, test methods will be ordered using an algorithm that is
+ deterministic but intentionally nonobvious. This ensures that subsequent runs
+ of a test suite execute test methods in the same order, thereby allowing for
+ repeatable builds. In this context, a <em>test method</em> is any instance
+ method that is directly annotated or meta-annotated with <code>@Test</code>,
+ <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, <code>@TestFactory</code>, or
+ <code>@TestTemplate</code>.
+
+ <p>Although true <em>unit tests</em> typically should not rely on the order
+ in which they are executed, there are times when it is necessary to enforce
+ a specific test method execution order &mdash; for example, when writing
+ <em>integration tests</em> or <em>functional tests</em> where the sequence of
+ the tests is important, especially in conjunction with
+ <a href="TestInstance.html" title="annotation in org.junit.jupiter.api"><code>@TestInstance(Lifecycle.PER_CLASS)</code></a>.
+
+ <p>To control the order in which test methods are executed, annotate your
+ test class or test interface with <a href="TestMethodOrder.html" title="annotation in org.junit.jupiter.api"><code>@TestMethodOrder</code></a>
+ and specify the desired <a href="MethodOrderer.html" title="interface in org.junit.jupiter.api"><code>MethodOrderer</code></a> implementation.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.0</dd>
