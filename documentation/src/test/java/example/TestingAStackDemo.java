@@ -53,13 +53,13 @@ class TestingAStackDemo {
 		@Test
 		@DisplayName("throws EmptyStackException when popped")
 		void throwsExceptionWhenPopped() {
-			assertThrows(EmptyStackException.class, () -> stack.pop());
+			assertThrows(EmptyStackException.class, stack::pop);
 		}
 
 		@Test
 		@DisplayName("throws EmptyStackException when peeked")
 		void throwsExceptionWhenPeeked() {
-			assertThrows(EmptyStackException.class, () -> stack.peek());
+			assertThrows(EmptyStackException.class, stack::peek);
 		}
 
 		@Nested
