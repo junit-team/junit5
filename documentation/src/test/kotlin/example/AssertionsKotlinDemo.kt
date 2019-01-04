@@ -11,6 +11,7 @@ package example
 
 // tag::user_guide[]
 import example.domain.Person
+import example.util.Calculator
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
@@ -23,6 +24,8 @@ class AssertionsKotlinDemo {
     val person = Person("Jane", "Doe")
     val people = setOf(person, Person("John", "Doe"))
 
+    val calculator = Calculator()
+
     @Test
     fun `grouped assertions`() {
         assertAll("person",
@@ -33,10 +36,10 @@ class AssertionsKotlinDemo {
 
     @Test
     fun `exception testing`() {
-        val exception = assertThrows<IllegalArgumentException> ("Should throw an exception") {
-            throw IllegalArgumentException("a message")
+        val exception = assertThrows<ArithmeticException> ("Should throw an exception") {
+            calculator.divide(1, 0)
         }
-        assertEquals("a message", exception.message)
+        assertEquals("/ by zero", exception.message)
     }
 
     @Test
