@@ -1151,7 +1151,7 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
 
     <span class="annotation">@Test</span>
     <span class="type">void</span> groupedAssertions() {
-        <span class="comment">// In a grouped assertion all assertions are executed, and any</span>
+        <span class="comment">// In a grouped assertion all assertions are executed, and all</span>
         <span class="comment">// failures will be reported together.</span>
         assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">person</span><span class="delimiter">&quot;</span></span>,
             () -&gt; assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Jane</span><span class="delimiter">&quot;</span></span>, person.getFirstName()),
@@ -1191,10 +1191,9 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
 
     <span class="annotation">@Test</span>
     <span class="type">void</span> exceptionTesting() {
-        <span class="predefined-type">Throwable</span> exception = assertThrows(<span class="exception">IllegalArgumentException</span>.class, () -&gt; {
-            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="exception">IllegalArgumentException</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">a message</span><span class="delimiter">&quot;</span></span>);
-        });
-        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">a message</span><span class="delimiter">&quot;</span></span>, exception.getMessage());
+        <span class="exception">Exception</span> exception = assertThrows(<span class="exception">ArithmeticException</span>.class, () -&gt;
+            calculator.divide(<span class="integer">1</span>, <span class="integer">0</span>));
+        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">/ by zero</span><span class="delimiter">&quot;</span></span>, exception.getMessage());
     }
 
     <span class="annotation">@Test</span>
@@ -3014,7 +3013,7 @@ parameter type as demonstrated in the following example.</p>
 }
 
 <span class="directive">static</span> Stream&lt;<span class="predefined-type">String</span>&gt; stringProvider() {
-    <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>);
+    <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">apple</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">banana</span><span class="delimiter">&quot;</span></span>);
 }</code></pre>
 </div>
 </div>
@@ -3032,7 +3031,7 @@ will search for a <em>factory</em> method that has the same name as the current
 }
 
 <span class="directive">static</span> Stream&lt;<span class="predefined-type">String</span>&gt; testWithSimpleMethodSourceHavingNoValue() {
-    <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>);
+    <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">apple</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">banana</span><span class="delimiter">&quot;</span></span>);
 }</code></pre>
 </div>
 </div>
@@ -3066,15 +3065,15 @@ interface. In addition, <code>Arguments.of(Object&#8230;&#8203;)</code> may be u
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
 <span class="annotation">@MethodSource</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">stringIntAndListProvider</span><span class="delimiter">&quot;</span></span>)
 <span class="type">void</span> testWithMultiArgMethodSource(<span class="predefined-type">String</span> str, <span class="type">int</span> num, <span class="predefined-type">List</span>&lt;<span class="predefined-type">String</span>&gt; list) {
-    assertEquals(<span class="integer">3</span>, str.length());
+    assertEquals(<span class="integer">5</span>, str.length());
     assertTrue(num &gt;=<span class="integer">1</span> &amp;&amp; num &lt;=<span class="integer">2</span>);
     assertEquals(<span class="integer">2</span>, list.size());
 }
 
 <span class="directive">static</span> Stream&lt;Arguments&gt; stringIntAndListProvider() {
     <span class="keyword">return</span> Stream.of(
-        arguments(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="integer">1</span>, <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">b</span><span class="delimiter">&quot;</span></span>)),
-        arguments(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>, <span class="integer">2</span>, <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">x</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">y</span><span class="delimiter">&quot;</span></span>))
+        arguments(<span class="string"><span class="delimiter">&quot;</span><span class="content">apple</span><span class="delimiter">&quot;</span></span>, <span class="integer">1</span>, <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">b</span><span class="delimiter">&quot;</span></span>)),
+        arguments(<span class="string"><span class="delimiter">&quot;</span><span class="content">lemon</span><span class="delimiter">&quot;</span></span>, <span class="integer">2</span>, <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">x</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">y</span><span class="delimiter">&quot;</span></span>))
     );
 }</code></pre>
 </div>
@@ -3233,7 +3232,7 @@ class or as a <code>static</code> nested class.</p>
 
     <span class="annotation">@Override</span>
     <span class="directive">public</span> Stream&lt;? <span class="directive">extends</span> Arguments&gt; provideArguments(ExtensionContext context) {
-        <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>).map(Arguments::of);
+        <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">apple</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">banana</span><span class="delimiter">&quot;</span></span>).map(Arguments::of);
     }
 }</code></pre>
 </div>
@@ -3673,7 +3672,7 @@ However, you can customize invocation display names via the <code>name</code> at
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@DisplayName</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Display name of container</span><span class="delimiter">&quot;</span></span>)
 <span class="annotation">@ParameterizedTest</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">{index} ==&gt; first=''{0}'', second={1}</span><span class="delimiter">&quot;</span></span>)
-<span class="annotation">@CsvSource</span>({ <span class="string"><span class="delimiter">&quot;</span><span class="content">foo, 1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar, 2</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">'baz, qux', 3</span><span class="delimiter">&quot;</span></span> })
+<span class="annotation">@CsvSource</span>({ <span class="string"><span class="delimiter">&quot;</span><span class="content">apple, 1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">banana, 2</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">'lemon, lime', 3</span><span class="delimiter">&quot;</span></span> })
 <span class="type">void</span> testWithCustomDisplayNames(<span class="predefined-type">String</span> first, <span class="type">int</span> second) {
 }</code></pre>
 </div>
@@ -3743,7 +3742,7 @@ lifecycle methods (e.g. <code>@BeforeEach</code>) and test class constructors.</
 }
 
 <span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@ValueSource</span>(strings = <span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>)
+<span class="annotation">@ValueSource</span>(strings = <span class="string"><span class="delimiter">&quot;</span><span class="content">apple</span><span class="delimiter">&quot;</span></span>)
 <span class="type">void</span> testWithRegularParameterResolver(<span class="predefined-type">String</span> argument, TestReporter testReporter) {
     testReporter.publishEntry(<span class="string"><span class="delimiter">&quot;</span><span class="content">argument</span><span class="delimiter">&quot;</span></span>, argument);
 }
@@ -4220,15 +4219,15 @@ to the same shared resource is running.</p>
     <span class="annotation">@Test</span>
     <span class="annotation">@ResourceLock</span>(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
     <span class="type">void</span> canSetCustomPropertyToFoo() {
-        <span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.prop</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>);
-        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.prop</span><span class="delimiter">&quot;</span></span>));
+        <span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.prop</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">apple</span><span class="delimiter">&quot;</span></span>);
+        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">apple</span><span class="delimiter">&quot;</span></span>, <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.prop</span><span class="delimiter">&quot;</span></span>));
     }
 
     <span class="annotation">@Test</span>
     <span class="annotation">@ResourceLock</span>(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
     <span class="type">void</span> canSetCustomPropertyToBar() {
-        <span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.prop</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>);
-        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>, <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.prop</span><span class="delimiter">&quot;</span></span>));
+        <span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.prop</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">banana</span><span class="delimiter">&quot;</span></span>);
+        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">banana</span><span class="delimiter">&quot;</span></span>, <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.prop</span><span class="delimiter">&quot;</span></span>));
     }
 }</code></pre>
 </div>
@@ -8122,7 +8121,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-02 19:10:00 UTC
+Last updated 2019-01-04 13:03:38 UTC
 </div>
 </div>
 </body>
