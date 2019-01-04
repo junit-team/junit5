@@ -24,18 +24,9 @@ class AssertionsKotlinDemo {
     val person = Person("Jane", "Doe")
     val people = setOf(person, Person("John", "Doe"))
 
-    val calculator = Calculator()
-
     @Test
-    fun `grouped assertions`() {
-        assertAll("person",
-            { assertEquals("Jane", person.firstName) },
-            { assertEquals("Doe", person.lastName) }
-        )
-    }
-
-    @Test
-    fun `exception testing`() {
+    fun `expected exception testing`() {
+        val calculator = Calculator()
         val exception = assertThrows<ArithmeticException> ("Should throw an exception") {
             calculator.divide(1, 0)
         }
@@ -43,9 +34,16 @@ class AssertionsKotlinDemo {
     }
 
     @Test
-    fun `assertions from a stream`() {
-        assertAll(
-            "people with name starting with J",
+    fun `grouped assertions`() {
+        assertAll("Person accessor methods",
+            { assertEquals("Jane", person.firstName) },
+            { assertEquals("Doe", person.lastName) }
+        )
+    }
+
+    @Test
+    fun `grouped assertions from a stream`() {
+        assertAll("People with name starting with J",
             people
                 .stream()
                 .map {
@@ -56,9 +54,8 @@ class AssertionsKotlinDemo {
     }
 
     @Test
-    fun `assertions from a collection`() {
-        assertAll(
-            "people with last name of Doe",
+    fun `grouped assertions from a collection`() {
+        assertAll("People with last name of Doe",
             people.map { { assertEquals("Doe", it.lastName) } }
         )
     }
