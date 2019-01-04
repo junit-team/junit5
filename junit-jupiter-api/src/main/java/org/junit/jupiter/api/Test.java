@@ -32,11 +32,36 @@ import org.junit.platform.commons.annotation.Testable;
  * resolved by {@link org.junit.jupiter.api.extension.ParameterResolver
  * ParameterResolvers}.
  *
- * <p>{@code @Test} may also be used as a meta-annotation in order to
- * create a custom <em>composed annotation</em> that inherits the semantics
- * of {@code @Test}.
+ * <p>{@code @Test} may also be used as a meta-annotation in order to create
+ * a custom <em>composed annotation</em> that inherits the semantics of
+ * {@code @Test}.
+ *
+ * <h3>Test Execution Order</h3>
+ *
+ * <p>By default, test methods will be ordered using an algorithm that is
+ * deterministic but intentionally nonobvious. This ensures that subsequent runs
+ * of a test suite execute test methods in the same order, thereby allowing for
+ * repeatable builds. In this context, a <em>test method</em> is any instance
+ * method that is directly annotated or meta-annotated with {@code @Test},
+ * {@code @RepeatedTest}, {@code @ParameterizedTest}, {@code @TestFactory}, or
+ * {@code @TestTemplate}.
+ *
+ * <p>Although true <em>unit tests</em> typically should not rely on the order
+ * in which they are executed, there are times when it is necessary to enforce
+ * a specific test method execution order &mdash; for example, when writing
+ * <em>integration tests</em> or <em>functional tests</em> where the sequence of
+ * the tests is important, especially in conjunction with
+ * {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}.
+ *
+ * <p>To control the order in which test methods are executed, annotate your
+ * test class or test interface with {@link TestMethodOrder @TestMethodOrder}
+ * and specify the desired {@link MethodOrderer} implementation.
  *
  * @since 5.0
+ * @see RepeatedTest
+ * @see org.junit.jupiter.params.ParameterizedTest
+ * @see TestTemplate
+ * @see TestFactory
  * @see TestInfo
  * @see DisplayName
  * @see Tag

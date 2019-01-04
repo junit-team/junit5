@@ -425,7 +425,7 @@ or meta-annotated with `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFac
 Although true _unit tests_ typically should not rely on the order in which they are
 executed, there are times when it is necessary to enforce a specific test method execution
 order -- for example, when writing _integration tests_ or _functional tests_ where the
-sequence of the tests is important, especially in conjunction
+sequence of the tests is important, especially in conjunction with
 `@TestInstance(Lifecycle.PER_CLASS)`.
 
 To control the order in which test methods are executed, annotate your test class or test
