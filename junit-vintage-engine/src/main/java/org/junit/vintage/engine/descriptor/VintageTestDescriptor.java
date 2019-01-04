@@ -16,6 +16,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
+import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -65,6 +66,12 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 
 	public Description getDescription() {
 		return description;
+	}
+
+	@Override
+	public String getLegacyReportingName() {
+		String className = description.getClassName();
+		return isNotBlank(className) ? className : super.getLegacyReportingName();
 	}
 
 	@Override
