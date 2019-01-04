@@ -385,6 +385,8 @@ get(String name)` method.
 Test classes and methods can be tagged via the `@Tag` annotation. Those tags can later be
 used to filter <<running-tests,test discovery and execution>>.
 
+TIP: See also: <<running-tests-tag-expressions>>
+
 ==== Syntax Rules for Tags
 
 * A tag must not be `null` or _blank_.
