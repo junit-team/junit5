@@ -3079,7 +3079,7 @@ parameter type as demonstrated in the following example.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
 <span class="annotation">@MethodSource</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">stringProvider</span><span class="delimiter">&quot;</span></span>)
-<span class="type">void</span> testWithSimpleMethodSource(<span class="predefined-type">String</span> argument) {
+<span class="type">void</span> testWithExplicitLocalMethodSource(<span class="predefined-type">String</span> argument) {
     assertNotNull(argument);
 }
 
@@ -3097,11 +3097,11 @@ will search for a <em>factory</em> method that has the same name as the current
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
 <span class="annotation">@MethodSource</span>
-<span class="type">void</span> testWithSimpleMethodSourceHavingNoValue(<span class="predefined-type">String</span> argument) {
+<span class="type">void</span> testWithDefaultLocalMethodSource(<span class="predefined-type">String</span> argument) {
     assertNotNull(argument);
 }
 
-<span class="directive">static</span> Stream&lt;<span class="predefined-type">String</span>&gt; testWithSimpleMethodSourceHavingNoValue() {
+<span class="directive">static</span> Stream&lt;<span class="predefined-type">String</span>&gt; testWithDefaultLocalMethodSource() {
     <span class="keyword">return</span> Stream.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">apple</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">banana</span><span class="delimiter">&quot;</span></span>);
 }</code></pre>
 </div>
@@ -3194,14 +3194,14 @@ qualified method name</em> as demonstrated in the following example.</p>
     <span class="string"><span class="delimiter">&quot;</span><span class="content">banana,        2</span><span class="delimiter">&quot;</span></span>,
     <span class="string"><span class="delimiter">&quot;</span><span class="content">'lemon, lime', 0xF1</span><span class="delimiter">&quot;</span></span>
 })
-<span class="type">void</span> testWithCsvSource(<span class="predefined-type">String</span> first, <span class="type">int</span> second) {
-    assertNotNull(first);
-    assertNotEquals(<span class="integer">0</span>, second);
+<span class="type">void</span> testWithCsvSource(<span class="predefined-type">String</span> fruit, <span class="type">int</span> rank) {
+    assertNotNull(fruit);
+    assertNotEquals(<span class="integer">0</span>, rank);
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><code>@CsvSource</code> uses a single quote <code>'</code> as its quote character. See the <code>'baz, qux'</code> value
+<p><code>@CsvSource</code> uses a single quote <code>'</code> as its quote character. See the <code>'lemon, lime'</code> value
 in the example above and in the table below. An empty, quoted value <code>''</code> results in an
 empty <code>String</code>; whereas, an entirely <em>empty</em> value is interpreted as a <code>null</code> reference.
 An <code>ArgumentConversionException</code> is raised if the target type of a <code>null</code> reference is a
@@ -3220,20 +3220,20 @@ primitive type.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@CsvSource({ "foo, bar" })</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"foo"</code>, <code>"bar"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@CsvSource({ "apple, banana" })</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"apple"</code>, <code>"banana"</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@CsvSource({ "foo, 'baz, qux'" })</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"foo"</code>, <code>"baz, qux"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@CsvSource({ "apple, 'lemon, lime'" })</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"apple"</code>, <code>"lemon, lime"</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@CsvSource({ "foo, ''" })</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"foo"</code>, <code>""</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@CsvSource({ "apple, ''" })</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"apple"</code>, <code>""</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@CsvSource({ "foo, " })</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"foo"</code>, <code>null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@CsvSource({ "apple, " })</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"apple"</code>, <code>null</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -3248,9 +3248,9 @@ results in one invocation of the parameterized test.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
 <span class="annotation">@CsvFileSource</span>(resources = <span class="string"><span class="delimiter">&quot;</span><span class="content">/two-column.csv</span><span class="delimiter">&quot;</span></span>, numLinesToSkip = <span class="integer">1</span>)
-<span class="type">void</span> testWithCsvFileSource(<span class="predefined-type">String</span> first, <span class="type">int</span> second) {
-    assertNotNull(first);
-    assertNotEquals(<span class="integer">0</span>, second);
+<span class="type">void</span> testWithCsvFileSource(<span class="predefined-type">String</span> country, <span class="type">int</span> reference) {
+    assertNotNull(country);
+    assertNotEquals(<span class="integer">0</span>, reference);
 }</code></pre>
 </div>
 </div>
@@ -3742,21 +3742,22 @@ However, you can customize invocation display names via the <code>name</code> at
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@DisplayName</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Display name of container</span><span class="delimiter">&quot;</span></span>)
-<span class="annotation">@ParameterizedTest</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">{index} ==&gt; first=''{0}'', second={1}</span><span class="delimiter">&quot;</span></span>)
+<span class="annotation">@ParameterizedTest</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">{index} ==&gt; fruit=''{0}'', rank={1}</span><span class="delimiter">&quot;</span></span>)
 <span class="annotation">@CsvSource</span>({ <span class="string"><span class="delimiter">&quot;</span><span class="content">apple, 1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">banana, 2</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">'lemon, lime', 3</span><span class="delimiter">&quot;</span></span> })
-<span class="type">void</span> testWithCustomDisplayNames(<span class="predefined-type">String</span> first, <span class="type">int</span> second) {
+<span class="type">void</span> testWithCustomDisplayNames(<span class="predefined-type">String</span> fruit, <span class="type">int</span> rank) {
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>When executing the above method using the <code>ConsoleLauncher</code> you will see output similar to the following.</p>
+<p>When executing the above method using the <code>ConsoleLauncher</code> you will see output similar to
+the following.</p>
 </div>
 <div class="literalblock">
 <div class="content">
 <pre>Display name of container ✔
-├─ 1 ==&gt; first='foo', second=1 ✔
-├─ 2 ==&gt; first='bar', second=2 ✔
-└─ 3 ==&gt; first='baz, qux', second=3 ✔</pre>
+├─ 1 ==&gt; fruit='apple', rank=1 ✔
+├─ 2 ==&gt; fruit='banana', rank=2 ✔
+└─ 3 ==&gt; fruit='lemon, lime', rank=3 ✔</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4289,17 +4290,18 @@ to the same shared resource is running.</p>
 
     <span class="annotation">@Test</span>
     <span class="annotation">@ResourceLock</span>(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
-    <span class="type">void</span> canSetCustomPropertyToFoo() {
+    <span class="type">void</span> canSetCustomPropertyToApple() {
         <span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.prop</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">apple</span><span class="delimiter">&quot;</span></span>);
         assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">apple</span><span class="delimiter">&quot;</span></span>, <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.prop</span><span class="delimiter">&quot;</span></span>));
     }
 
     <span class="annotation">@Test</span>
     <span class="annotation">@ResourceLock</span>(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
-    <span class="type">void</span> canSetCustomPropertyToBar() {
+    <span class="type">void</span> canSetCustomPropertyToBanana() {
         <span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.prop</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">banana</span><span class="delimiter">&quot;</span></span>);
         assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">banana</span><span class="delimiter">&quot;</span></span>, <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">my.prop</span><span class="delimiter">&quot;</span></span>));
     }
+
 }</code></pre>
 </div>
 </div>
@@ -5679,9 +5681,9 @@ those supplied via the configuration file.
 </table>
 <div class="paragraph">
 <p>If you are tagging your tests across multiple dimensions, tag expressions help you to
-select which tests to execute. Tagging by test type (e.g. <em>micro</em>, <em>integration</em>,
-<em>end-to-end</em>) and feature (e.g. <strong>foo</strong>, <strong>bar</strong>, <strong>baz</strong>) the following tag expressions can be
-useful.</p>
+select which tests to execute. When tagging by test type (e.g., <em>micro</em>, <em>integration</em>,
+<em>end-to-end</em>) and feature (e.g., <strong>product</strong>, <strong>catalog</strong>, <strong>shipping</strong>), the following tag
+expressions can be useful.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -5696,24 +5698,24 @@ useful.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">foo</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">all tests for <strong>foo</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">product</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all tests for <strong>product</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">bar | baz</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">all tests for <strong>bar</strong> plus all tests for <strong>baz</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">catalog | shipping</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all tests for <strong>catalog</strong> plus all tests for <strong>shipping</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">bar &amp; baz</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">all tests for the intersection between <strong>bar</strong> and <strong>baz</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">catalog &amp; shipping</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all tests for the intersection between <strong>catalog</strong> and <strong>shipping</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">foo &amp; !end-to-end</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">all tests for <strong>foo</strong>, but not the <em>end-to-end</em> tests</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">product &amp; !end-to-end</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all tests for <strong>product</strong>, but not the <em>end-to-end</em> tests</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">(micro | integration) &amp; (foo | baz)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">all <em>micro</em> or <em>integration</em> tests for <strong>foo</strong> or <strong>baz</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(micro | integration) &amp; (product | shipping)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">all <em>micro</em> or <em>integration</em> tests for <strong>product</strong> or <strong>shipping</strong></p></td>
 </tr>
 </tbody>
 </table>
@@ -6420,10 +6422,12 @@ implement a <code><a href="../api/org/junit/jupiter/api/extension/TestTemplateIn
 <div class="listingblock">
 <div class="title">A test template with accompanying extension</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@TestTemplate</span>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">final</span> <span class="predefined-type">List</span>&lt;<span class="predefined-type">String</span>&gt; fruits = <span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">&quot;</span><span class="content">apple</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">banana</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">lemon</span><span class="delimiter">&quot;</span></span>);
+
+<span class="annotation">@TestTemplate</span>
 <span class="annotation">@ExtendWith</span>(MyTestTemplateInvocationContextProvider.class)
-<span class="type">void</span> testTemplate(<span class="predefined-type">String</span> parameter) {
-    assertEquals(<span class="integer">3</span>, parameter.length());
+<span class="type">void</span> testTemplate(<span class="predefined-type">String</span> fruit) {
+    assertTrue(fruits.contains(fruit));
 }
 
 <span class="directive">public</span> <span class="type">class</span> <span class="class">MyTestTemplateInvocationContextProvider</span>
@@ -6438,7 +6442,7 @@ implement a <code><a href="../api/org/junit/jupiter/api/extension/TestTemplateIn
     <span class="directive">public</span> Stream&lt;TestTemplateInvocationContext&gt; provideTestTemplateInvocationContexts(
             ExtensionContext context) {
 
-        <span class="keyword">return</span> Stream.of(invocationContext(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>), invocationContext(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>));
+        <span class="keyword">return</span> Stream.of(invocationContext(<span class="string"><span class="delimiter">&quot;</span><span class="content">apple</span><span class="delimiter">&quot;</span></span>), invocationContext(<span class="string"><span class="delimiter">&quot;</span><span class="content">banana</span><span class="delimiter">&quot;</span></span>));
     }
 
     <span class="directive">private</span> TestTemplateInvocationContext invocationContext(<span class="predefined-type">String</span> parameter) {
@@ -6471,15 +6475,15 @@ implement a <code><a href="../api/org/junit/jupiter/api/extension/TestTemplateIn
 </div>
 <div class="paragraph">
 <p>In this example, the test template will be invoked twice. The display names of the
-invocations will be &#8220;foo&#8221; and &#8220;bar&#8221; as specified by the invocation context. Each
+invocations will be <code>apple</code> and <code>banana</code> as specified by the invocation context. Each
 invocation registers a custom <code><a href="../api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code> which is used to resolve the method
 parameter. The output when using the <code>ConsoleLauncher</code> is as follows.</p>
 </div>
 <div class="literalblock">
 <div class="content">
 <pre>└─ testTemplate(String) ✔
-   ├─ foo ✔
-   └─ bar ✔</pre>
+   ├─ apple ✔
+   └─ banana ✔</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -8192,7 +8196,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-04 14:01:38 UTC
+Last updated 2019-01-04 14:32:56 UTC
 </div>
 </div>
 </body>
