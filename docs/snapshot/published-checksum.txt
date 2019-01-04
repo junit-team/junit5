@@ -205,7 +205,6 @@
 5c21143f95f500bfc225d4f00ca816ba  documentation/src/test/java/example/JUnit4Tests.java
 5c22221e8d4d3a7e7e4fb500c38cff92  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/script/ScriptExecutionManager.java
 5c4c53a5249d43ca29ce5204b83ab8dd  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedMember.java
-5c61c9d0b03b7c2c995442ae9472a037  documentation/src/test/kotlin/example/AssertionsKotlinDemo.kt
 5c78a9f966df312b61c9ebe4b64f0231  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestClassWithTests.java
 5cd548da9c4072f4c9eabc3cd937c7c6  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/VintageDiscoverer.java
 5e11d5de1773cdeecae38cb471a4f778  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicNode.java
@@ -449,6 +448,7 @@ c3403d01302e3c6cef0de83dfb2a8635  junit-platform-commons/src/main/java/org/junit
 c3620c452e198a5673b5b7f1ac86ec51  documentation/src/docs/asciidoc/link-attributes.adoc
 c3688201bf2478ac367a27021cc6f4d3  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/package-info.java
 c385f3d605bcb2ffb936518e30cb42fe  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/FileSelector.java
+c4a6107e953d2657b11a1abb2744b7e7  documentation/src/test/kotlin/example/AssertionsKotlinDemo.kt
 c4bae4bd05858c3904478e642cd93dda  junit-platform-engine/src/main/java/org/junit/platform/engine/TestExecutionResult.java
 c4dd6dab041fa33890ef493d3d99e5f5  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassLoaderUtils.java
 c5385bc01f5fbe9f33fc3db363ce38c0  junit-jupiter-api/src/main/java/org/junit/jupiter/api/support/io/package-info.java

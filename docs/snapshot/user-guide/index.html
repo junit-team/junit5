@@ -1301,6 +1301,7 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">import</span> <span class="include">example.domain.Person</span>
+<span class="keyword">import</span> <span class="include">example.util.Calculator</span>
 
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.assertAll</span>
@@ -1313,6 +1314,8 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
     val person = Person(<span class="string"><span class="delimiter">&quot;</span><span class="content">Jane</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span>)
     val people = setOf(person, Person(<span class="string"><span class="delimiter">&quot;</span><span class="content">John</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span>))
 
+    val calculator = Calculator()
+
     <span class="annotation">@Test</span>
     fun <span class="error">`</span>grouped assertions<span class="error">`</span>() {
         assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">person</span><span class="delimiter">&quot;</span></span>,
@@ -1323,10 +1326,10 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 
     <span class="annotation">@Test</span>
     fun <span class="error">`</span>exception testing<span class="error">`</span>() {
-        val exception = assertThrows&lt;<span class="exception">IllegalArgumentException</span>&gt; (<span class="string"><span class="delimiter">&quot;</span><span class="content">Should throw an exception</span><span class="delimiter">&quot;</span></span>) {
-            <span class="keyword">throw</span> <span class="exception">IllegalArgumentException</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">a message</span><span class="delimiter">&quot;</span></span>)
+        val exception = assertThrows&lt;<span class="exception">ArithmeticException</span>&gt; (<span class="string"><span class="delimiter">&quot;</span><span class="content">Should throw an exception</span><span class="delimiter">&quot;</span></span>) {
+            calculator.divide(<span class="integer">1</span>, <span class="integer">0</span>)
         }
-        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">a message</span><span class="delimiter">&quot;</span></span>, exception.message)
+        assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">/ by zero</span><span class="delimiter">&quot;</span></span>, exception.message)
     }
 
     <span class="annotation">@Test</span>
@@ -8167,7 +8170,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-04 13:18:57 UTC
+Last updated 2019-01-04 13:26:51 UTC
 </div>
 </div>
 </body>
