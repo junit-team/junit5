@@ -1,6 +1,7 @@
 0040c7e37946d170af695f8b06314c6c  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/StreamInterceptingTestExecutionListener.java
 00539ddb3a9e9010aa87c4e1d7cb49ca  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ConditionEvaluator.java
 006d3237e3111753468a836b44edb96c  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.java
+008eaabcf265ce82833fba2c00deb785  documentation/src/test/java/example/FastTest.java
 009a77eccf222e0634cb7dd09fc5dad6  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/package-info.java
 00ccd2974aae136a970c813a35ef45ae  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/JupiterEngineDescriptor.java
 02dea89e074264ff836fb6ee5297860e  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepetitionInfoParameterResolver.java
@@ -243,6 +244,7 @@
 6c7321da395ecb027e22ee2968e3647d  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ToStringBuilder.java
 6cd431f2a063da9375181802d60e6fcb  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DefaultTestInstanceFactoryContext.java
 6cf37d76e0babb5f2d71e9c6e9c7015c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/RegisterExtension.java
+6efe34e38603e426bb0d9c9453b6647a  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 6f481d7f4ce9a6f1ffdb43fd5ddbec85  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EnumArgumentsProvider.java
 6f61da4456fe20fc6aa595c17ae052d3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNotSame.java
 6fb5ff9d7760978a0262171805b23a7d  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestMethodContext.java
@@ -576,7 +578,6 @@ f3f53cd5c8f2a8dc30b4e10f919c0042  junit-platform-engine/src/main/java/org/junit/
 f4bd4389396359b18a22b1689c3fc446  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Executions.java
 f580382cc969dd55b6f7ea605147063f  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvArgumentsProvider.java
 f5919de0da68f042c7d92f96abe28f6c  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
-f683f1edb46d4d08f5f5389e98c1fc5b  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 f6951ab0a5722995c5aa01a0731cd6c8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertArrayEquals.java
 f6ed9c7883a1b5b6f9c7d21cc5233382  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Events.java
 f71bb381f0a2608cbdf1c56568820d5f  junit-platform-engine/src/main/java/org/junit/platform/engine/EngineDiscoveryRequest.java

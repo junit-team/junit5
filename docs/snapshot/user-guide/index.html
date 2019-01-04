@@ -905,6 +905,52 @@ named <code>@Fast</code> as follows. <code>@Fast</code> can then be used as a dr
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The following <code>@Test</code> method demonstrates usage of the <code>@Fast</code> annotation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Fast</span>
+<span class="annotation">@Test</span>
+<span class="type">void</span> myFastTest() {
+    <span class="comment">// ...</span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can even take that one step further by introducing a custom <code>@FastTest</code> annotation
+that can be used as a drop-in replacement for <code>@Tag("fast")</code> <em>and</em> <code>@Test</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">java.lang.annotation.ElementType</span>;
+<span class="keyword">import</span> <span class="include">java.lang.annotation.Retention</span>;
+<span class="keyword">import</span> <span class="include">java.lang.annotation.RetentionPolicy</span>;
+<span class="keyword">import</span> <span class="include">java.lang.annotation.Target</span>;
+
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Tag</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+
+<span class="annotation">@Target</span>(<span class="predefined-type">ElementType</span>.METHOD)
+<span class="annotation">@Retention</span>(<span class="predefined-type">RetentionPolicy</span>.RUNTIME)
+<span class="annotation">@Tag</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">fast</span><span class="delimiter">&quot;</span></span>)
+<span class="annotation">@Test</span>
+<span class="directive">public</span> <span class="annotation">@interface</span> FastTest {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>JUnit automatically recognizes the following as a <code>@Test</code> method that is tagged with
+"fast".</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@FastTest</span>
+<span class="type">void</span> myFastTest() {
+    <span class="comment">// ...</span>
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -8121,7 +8167,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-04 13:03:38 UTC
+Last updated 2019-01-04 13:18:57 UTC
 </div>
 </div>
 </body>
