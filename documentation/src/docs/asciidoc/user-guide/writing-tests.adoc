@@ -63,6 +63,36 @@ named `@Fast` as follows. `@Fast` can then be used as a drop-in replacement for
 include::{testDir}/example/Fast.java[tags=user_guide]
 ----
 
+The following `@Test` method demonstrates usage of the `@Fast` annotation.
+
+[source,java,indent=0]
+----
+@Fast
+@Test
+void myFastTest() {
+    // ...
+}
+----
+
+You can even take that one step further by introducing a custom `@FastTest` annotation
+that can be used as a drop-in replacement for `@Tag("fast")` _and_ `@Test`.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/FastTest.java[tags=user_guide]
+----
+
+JUnit automatically recognizes the following as a `@Test` method that is tagged with
+"fast".
+
+[source,java,indent=0]
+----
+@FastTest
+void myFastTest() {
+    // ...
+}
+----
+
 [[writing-tests-classes-and-methods]]
 === Test Classes and Methods
 
