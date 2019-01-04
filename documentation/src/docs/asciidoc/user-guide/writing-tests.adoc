@@ -408,6 +408,9 @@ characters have been removed.
 include::{testDir}/example/TaggingDemo.java[tags=user_guide]
 ----
 
+TIP: See <<writing-tests-meta-annotations>> for examples demonstrating how to create
+custom annotations for tags.
+
 [[writing-tests-test-execution-order]]
 === Test Execution Order
 
