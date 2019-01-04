@@ -1309,7 +1309,7 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.assertThrows</span>
 
-<span class="type">class</span> <span class="class">AssertionsKotlinDemo</span> {
+<span class="type">class</span> <span class="class">KotlinAssertionsDemo</span> {
 
     val person = Person(<span class="string"><span class="delimiter">&quot;</span><span class="content">Jane</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span>)
     val people = setOf(person, Person(<span class="string"><span class="delimiter">&quot;</span><span class="content">John</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span>))
@@ -1325,7 +1325,7 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 
     <span class="annotation">@Test</span>
     fun <span class="error">`</span>grouped assertions<span class="error">`</span>() {
-        assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">Person accessor methods</span><span class="delimiter">&quot;</span></span>,
+        assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">Person properties</span><span class="delimiter">&quot;</span></span>,
             { assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Jane</span><span class="delimiter">&quot;</span></span>, person.firstName) },
             { assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span>, person.lastName) }
         )
@@ -1333,7 +1333,7 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 
     <span class="annotation">@Test</span>
     fun <span class="error">`</span>grouped assertions from a stream<span class="error">`</span>() {
-        assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">People with name starting with J</span><span class="delimiter">&quot;</span></span>,
+        assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">People with first name starting with J</span><span class="delimiter">&quot;</span></span>,
             people
                 .stream()
                 .map {
@@ -1387,7 +1387,7 @@ then use them in tests like in the <code>assertWithHamcrestMatcher()</code> meth
 
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
 
-<span class="type">class</span> <span class="class">HamcrestAssertionDemo</span> {
+<span class="type">class</span> <span class="class">HamcrestAssertionsDemo</span> {
 
     <span class="directive">private</span> <span class="directive">final</span> Calculator calculator = <span class="keyword">new</span> Calculator();
 
@@ -8167,7 +8167,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-04 13:35:35 UTC
+Last updated 2019-01-04 13:43:52 UTC
 </div>
 </div>
 </body>
