@@ -35,7 +35,7 @@ class AssertionsKotlinDemo {
 
     @Test
     fun `grouped assertions`() {
-        assertAll("Person accessor methods",
+        assertAll("Person properties",
             { assertEquals("Jane", person.firstName) },
             { assertEquals("Doe", person.lastName) }
         )
@@ -43,7 +43,7 @@ class AssertionsKotlinDemo {
 
     @Test
     fun `grouped assertions from a stream`() {
-        assertAll("People with name starting with J",
+        assertAll("People with first name starting with J",
             people
                 .stream()
                 .map {
