@@ -420,14 +420,14 @@ include::{testDir}/example/TestTemplateDemo.java[tags=user_guide]
 ----
 
 In this example, the test template will be invoked twice. The display names of the
-invocations will be "`foo`" and "`bar`" as specified by the invocation context. Each
+invocations will be `apple` and `banana` as specified by the invocation context. Each
 invocation registers a custom `{ParameterResolver}` which is used to resolve the method
 parameter. The output when using the `ConsoleLauncher` is as follows.
 
 ....
 └─ testTemplate(String) ✔
-   ├─ foo ✔
-   └─ bar ✔
+   ├─ apple ✔
+   └─ banana ✔
 ....
 
 The `{TestTemplateInvocationContextProvider}` extension API is primarily intended for

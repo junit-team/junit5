@@ -114,7 +114,7 @@ class ParameterizedTestDemo {
 	// tag::simple_MethodSource_example[]
 	@ParameterizedTest
 	@MethodSource("stringProvider")
-	void testWithSimpleMethodSource(String argument) {
+	void testWithExplicitLocalMethodSource(String argument) {
 		assertNotNull(argument);
 	}
 
@@ -126,11 +126,11 @@ class ParameterizedTestDemo {
 	// tag::simple_MethodSource_without_value_example[]
 	@ParameterizedTest
 	@MethodSource
-	void testWithSimpleMethodSourceHavingNoValue(String argument) {
+	void testWithDefaultLocalMethodSource(String argument) {
 		assertNotNull(argument);
 	}
 
-	static Stream<String> testWithSimpleMethodSourceHavingNoValue() {
+	static Stream<String> testWithDefaultLocalMethodSource() {
 		return Stream.of("apple", "banana");
 	}
 	// end::simple_MethodSource_without_value_example[]
@@ -174,9 +174,9 @@ class ParameterizedTestDemo {
 		"banana,        2",
 		"'lemon, lime', 0xF1"
 	})
-	void testWithCsvSource(String first, int second) {
-		assertNotNull(first);
-		assertNotEquals(0, second);
+	void testWithCsvSource(String fruit, int rank) {
+		assertNotNull(fruit);
+		assertNotEquals(0, rank);
 	}
 	// end::CsvSource_example[]
 	// @formatter:on
@@ -184,9 +184,9 @@ class ParameterizedTestDemo {
 	// tag::CsvFileSource_example[]
 	@ParameterizedTest
 	@CsvFileSource(resources = "/two-column.csv", numLinesToSkip = 1)
-	void testWithCsvFileSource(String first, int second) {
-		assertNotNull(first);
-		assertNotEquals(0, second);
+	void testWithCsvFileSource(String country, int reference) {
+		assertNotNull(country);
+		assertNotEquals(0, reference);
 	}
 	// end::CsvFileSource_example[]
 
@@ -371,9 +371,9 @@ class ParameterizedTestDemo {
 
 	// tag::custom_display_names[]
 	@DisplayName("Display name of container")
-	@ParameterizedTest(name = "{index} ==> first=''{0}'', second={1}")
+	@ParameterizedTest(name = "{index} ==> fruit=''{0}'', rank={1}")
 	@CsvSource({ "apple, 1", "banana, 2", "'lemon, lime', 3" })
-	void testWithCustomDisplayNames(String first, int second) {
+	void testWithCustomDisplayNames(String fruit, int rank) {
 	}
 	// end::custom_display_names[]
 }

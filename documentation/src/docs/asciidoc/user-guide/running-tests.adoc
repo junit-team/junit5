@@ -737,29 +737,29 @@ Tag expressions are boolean expressions with the operators `!`, `&` and `|`. In 
 |===
 
 If you are tagging your tests across multiple dimensions, tag expressions help you to
-select which tests to execute. Tagging by test type (e.g. _micro_, _integration_,
-_end-to-end_) and feature (e.g. *foo*, *bar*, *baz*) the following tag expressions can be
-useful.
+select which tests to execute. When tagging by test type (e.g., _micro_, _integration_,
+_end-to-end_) and feature (e.g., *product*, *catalog*, *shipping*), the following tag
+expressions can be useful.
 
 [%header,cols="40,60"]
 |===
 | Tag Expression
 | Selection
 
-| +foo+
-| all tests for *foo*
+| +product+
+| all tests for *product*
 
-| +bar \| baz+
-| all tests for *bar* plus all tests for *baz*
+| +catalog \| shipping+
+| all tests for *catalog* plus all tests for *shipping*
 
-| +bar & baz+
-| all tests for the intersection between *bar* and *baz*
+| +catalog & shipping+
+| all tests for the intersection between *catalog* and *shipping*
 
-| +foo & !end-to-end+
-| all tests for *foo*, but not the _end-to-end_ tests
+| +product & !end-to-end+
+| all tests for *product*, but not the _end-to-end_ tests
 
-| +(micro \| integration) & (foo \| baz)+
-| all _micro_ or _integration_ tests for *foo* or *baz*
+| +(micro \| integration) & (product \| shipping)+
+| all _micro_ or _integration_ tests for *product* or *shipping*
 |===
 
 [[running-tests-capturing-output]]

@@ -10,8 +10,9 @@
 
 package example;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
@@ -28,10 +29,12 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 class TestTemplateDemo {
 
 	// tag::user_guide[]
+	final List<String> fruits = Arrays.asList("apple", "banana", "lemon");
+
 	@TestTemplate
 	@ExtendWith(MyTestTemplateInvocationContextProvider.class)
-	void testTemplate(String parameter) {
-		assertEquals(3, parameter.length());
+	void testTemplate(String fruit) {
+		assertTrue(fruits.contains(fruit));
 	}
 
 	// end::user_guide[]
@@ -50,7 +53,7 @@ class TestTemplateDemo {
 		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
 				ExtensionContext context) {
 
-			return Stream.of(invocationContext("foo"), invocationContext("bar"));
+			return Stream.of(invocationContext("apple"), invocationContext("banana"));
 		}
 
 		private TestTemplateInvocationContext invocationContext(String parameter) {
