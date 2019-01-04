@@ -44,7 +44,7 @@ class AssertionsDemo {
 
 	@Test
 	void groupedAssertions() {
-		// In a grouped assertion all assertions are executed, and any
+		// In a grouped assertion all assertions are executed, and all
 		// failures will be reported together.
 		assertAll("person",
 			() -> assertEquals("Jane", person.getFirstName()),
@@ -84,10 +84,9 @@ class AssertionsDemo {
 
 	@Test
 	void exceptionTesting() {
-		Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
-			calculator.divide(1, 0);
-		});
-		assertEquals("Division by zero is not allowed!", exception.getMessage());
+		Exception exception = assertThrows(ArithmeticException.class, () ->
+			calculator.divide(1, 0));
+		assertEquals("/ by zero", exception.getMessage());
 	}
 
 	@Test
