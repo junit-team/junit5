@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.assertThrows
 
-class AssertionsKotlinDemo {
+class KotlinAssertionsDemo {
 
     val person = Person("Jane", "Doe")
     val people = setOf(person, Person("John", "Doe"))

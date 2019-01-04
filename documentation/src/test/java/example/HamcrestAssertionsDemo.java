@@ -19,7 +19,7 @@ import example.util.Calculator;
 
 import org.junit.jupiter.api.Test;
 
-class HamcrestAssertionDemo {
+class HamcrestAssertionsDemo {
 
 	private final Calculator calculator = new Calculator();
 

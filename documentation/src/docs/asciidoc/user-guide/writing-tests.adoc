@@ -168,7 +168,7 @@ functions in the `org.junit.jupiter.api` package.
 // TODO: Change to using kotlin language highlighting after switch to rouge syntax highlighter
 [source,groovy,indent=0]
 ----
-include::{kotlinTestDir}/example/AssertionsKotlinDemo.kt[tags=user_guide]
+include::{kotlinTestDir}/example/KotlinAssertionsDemo.kt[tags=user_guide]
 ----
 
 [[writing-tests-assertions-third-party]]
@@ -196,7 +196,7 @@ then use them in tests like in the `assertWithHamcrestMatcher()` method below.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/HamcrestAssertionDemo.java[tags=user_guide]
+include::{testDir}/example/HamcrestAssertionsDemo.java[tags=user_guide]
 ----
 
 Naturally, legacy tests based on the JUnit 4 programming model can continue using
