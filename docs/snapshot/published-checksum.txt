@@ -38,6 +38,7 @@
 105d9e4b87226ac563af50df51a3ff70  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestIdentifier.java
 11cb748ddb7df02e0af8de08c2aca999  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingConsumer.java
 1222e5d9a1ded9b30a69bcd10c767abb  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ValueSource.java
+127377036132a7465e66281fb8606e91  documentation/src/test/java/example/TestingAStackDemo.java
 13c76a7853cbb65c8d2f2330aac9495d  documentation/src/docs/asciidoc/user-guide/api-evolution.adoc
 14b0964d557e7a254bff02d75cadfed7  documentation/src/test/java/example/RepeatedTestsDemo.java
 14b2a5cefb39ba29a76d9624a259c3d5  documentation/src/docs/asciidoc/user-guide/overview.adoc
@@ -66,7 +67,6 @@
 256b9e47519b33c271d57e6bb5a793cd  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertDoesNotThrow.java
 2614fef6d8de808c9cde145537cc4116  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/TestFactoryMethodResolver.java
 267040a9ff7c5182d2b343d57343f55a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodFinder.java
-2680967006c19b60bf63cb4e721f8bd8  documentation/src/test/java/example/TestingAStackDemo.java
 26b672a8b01c69148e533acb116b9a34  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/ElementResolver.java
 26c96616501733badaa544c27e156cca  junit-platform-console/src/main/java/org/junit/platform/console/options/CommandLineOptionsParser.java
 271d4955169fd6898bdac452bce505d1  documentation/src/docs/asciidoc/user-guide/extensions.adoc
