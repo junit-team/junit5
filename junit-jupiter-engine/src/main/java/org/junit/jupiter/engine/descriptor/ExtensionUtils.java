@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
+import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
 import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
@@ -19,10 +20,13 @@ import static org.junit.platform.commons.util.ReflectionUtils.tryToReadFieldValu
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -78,6 +82,9 @@ final class ExtensionUtils {
 	 * Register extensions in the supplied registry from fields in the supplied
 	 * class that are annotated with {@link RegisterExtension @RegisterExtension}.
 	 *
+	 * <p>The extensions will be sorted according to {@link Order @Order} semantics
+	 * prior to registration.
+	 *
 	 * @param registry the registry in which to register the extensions; never {@code null}
 	 * @param clazz the class or interface in which to find the fields; never {@code null}
 	 * @param instance the instance of the supplied class; may be {@code null}
@@ -89,12 +96,31 @@ final class ExtensionUtils {
 
 		Predicate<Field> predicate = (instance == null) ? isStaticExtension : isNonStaticExtension;
 
-		findAnnotatedFields(clazz, RegisterExtension.class, predicate).forEach(field -> {
+		// Ensure that the list is modifiable, since findAnnotatedFields() returns an unmodifiable list.
+		List<Field> fields = new ArrayList<>(findAnnotatedFields(clazz, RegisterExtension.class, predicate));
+
+		// Sort fields based on @Order.
+		fields.sort(orderComparator);
+
+		fields.forEach(field -> {
 			tryToReadFieldValue(field, instance).ifSuccess(value -> {
 				Extension extension = (Extension) value;
 				registry.registerExtension(extension, field);
 			});
 		});
+	}
+
+	/**
+	 * @since 5.4
+	 */
+	private static final Comparator<Field> orderComparator = //
+		(field1, field2) -> Integer.compare(getOrder(field1), getOrder(field2));
+
+	/**
+	 * @since 5.4
+	 */
+	private static int getOrder(Field field) {
+		return findAnnotation(field, Order.class).map(Order::value).orElse(Integer.MAX_VALUE);
 	}
 
 	static class IsNonStaticExtensionField implements Predicate<Field> {
