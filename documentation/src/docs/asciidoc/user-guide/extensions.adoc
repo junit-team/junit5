@@ -68,26 +68,42 @@ class MySecondTests {
 }
 ----
 
+[TIP]
 .Extension Registration Order
-NOTE: Extensions registered declaratively via `@ExtendWith` will be executed in the order
-in which they are declared in the source code. For example, the execution of tests in
-both `MyFirstTests` and `MySecondTests` will be extended by the `DatabaseExtension` and
+====
+Extensions registered declaratively via `@ExtendWith` will be executed in the order in
+which they are declared in the source code. For example, the execution of tests in both
+`MyFirstTests` and `MySecondTests` will be extended by the `DatabaseExtension` and
 `WebServerExtension`, **in exactly that order**.
+====
 
 [[extensions-registration-programmatic]]
 ==== Programmatic Extension Registration
 
-Developers can register extensions _programmatically_ by annotating fields in test
-classes with `{RegisterExtension}`.
+Developers can register extensions _programmatically_ by annotating fields in test classes
+with `{RegisterExtension}`.
 
 When an extension is registered _declaratively_ via
-<<extensions-registration-declarative,`@ExtendWith`>>, it can typically only be
-configured via annotations. In contrast, when an extension is registered via
-`@RegisterExtension`, it can be configured _programmatically_ -- for example, in order to
-pass arguments to the extension's constructor, a static factory method, or a builder API.
+<<extensions-registration-declarative,`@ExtendWith`>>, it can typically only be configured
+via annotations. In contrast, when an extension is registered via `@RegisterExtension`, it
+can be configured _programmatically_ -- for example, in order to pass arguments to the
+extension's constructor, a static factory method, or a builder API.
 
-NOTE: `@RegisterExtension` fields must not be `private` or `null` (at evaluation time)
-but may be either `static` or non-static.
+[[extensions-registration-programmatic-order]]
+[TIP]
+.Extension Registration Order
+====
+By default, extensions registered programmatically via `@RegisterExtension` will be
+ordered using an algorithm that is deterministic but intentionally nonobvious. This
+ensures that subsequent runs of a test suite execute extensions in the same order, thereby
+allowing for repeatable builds. However, there are times when extensions need to be
+registered in an explicit order. To achieve that, annotate each `@RegisterExtension` field
+with `{Order}`. Any `@RegisterExtension` field not annotated with `@Order` will appear at
+the end of the sorted list.
+====
+
+NOTE: `@RegisterExtension` fields must not be `private` or `null` (at evaluation time) but
+may be either `static` or non-static.
 
 [[extensions-registration-programmatic-static-fields]]
 ===== Static Fields

@@ -88,7 +88,20 @@ import org.apiguardian.api.API;
  *     }
  * }</pre>
  *
+ * <h3>Registration Order</h3>
+ *
+ * <p>By default, if multiple extensions are registered via
+ * {@code @RegisterExtension}, they will be ordered using an algorithm that is
+ * deterministic but intentionally nonobvious. This ensures that subsequent runs
+ * of a test suite execute extensions in the same order, thereby allowing for
+ * repeatable builds. However, there are times when extensions need to be
+ * registered in an explicit order. To achieve that, annotate each
+ * {@code @RegisterExtension} field with {@link org.junit.jupiter.api.Order @Order}.
+ * Any {@code @RegisterExtension} field not annotated with {@code @Order} will
+ * appear at the end of the sorted list.
+ *
  * <h3>Supported Extension APIs</h3>
+ *
  * <ul>
  * <li>{@link ExecutionCondition}</li>
  * <li>{@link BeforeAllCallback}</li>
@@ -104,8 +117,9 @@ import org.apiguardian.api.API;
  * </ul>
  *
  * @since 5.1
- * @see ExtendWith
+ * @see ExtendWith @ExtendWith
  * @see Extension
+ * @see org.junit.jupiter.api.Order @Order
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

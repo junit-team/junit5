@@ -48,6 +48,7 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
  * via {@link RegisterExtension @RegisterExtension} in the {@link JupiterTestEngine}.
  *
  * @since 5.1
+ * @see OrderedProgrammaticExtensionRegistrationTests
  */
 class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTests {
 

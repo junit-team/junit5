@@ -3,7 +3,8 @@
 
 *Date of Release:* ❓
 
-*Scope:* Improvements and bug fixes since 5.4.0-M1.
+*Scope:* `@RegisterExtension` ordering, as well as minor improvements and bug fixes since
+5.4.0-M1.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult
 the link:{junit5-repo}+/milestone/32?closed=1+[5.4.0-M2] milestone page in the JUnit
@@ -44,7 +45,10 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Extensions registered _programmatically_ via `@RegisterExtension` may now be registered
+  in an explicit order via the `@Order` annotation.
+  - See <<../user-guide/index.adoc#extensions-registration-programmatic-order, Extension
+    Registration Order>> in the User Guide for details.
 
 
 [[release-notes-5.4.0-M2-junit-vintage]]
