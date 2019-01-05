@@ -59,6 +59,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.engine.DiscoverySelector;
@@ -158,6 +159,36 @@ class ParameterizedTestIntegrationTests {
 		results.all().assertThatEvents() //
 				.haveExactly(1, event(test(), finishedWithFailure(instanceOf(ParameterResolutionException.class), //
 					message("Error converting parameter at index 0: something went horribly wrong"))));
+	}
+
+	/**
+	 * @since 5.4
+	 */
+	@Nested
+	class NullSourceIntegrationTests {
+
+		@Test
+		void executesWithNullSourceForString() {
+			var results = execute(selectMethod(TestCase.class, "testWithNullSourceForString", String.class.getName()));
+			results.tests().failed().assertEventsMatchExactly(
+				event(test(), displayName("[1] null"), finishedWithFailure(message("null"))));
+		}
+
+		@Test
+		void executesWithNullSourceForNumber() {
+			var results = execute(selectMethod(TestCase.class, "testWithNullSourceForNumber", Number.class.getName()));
+			results.tests().failed().assertEventsMatchExactly(
+				event(test(), displayName("[1] null"), finishedWithFailure(message("null"))));
+		}
+
+		@Test
+		void failsWithNullSourceForPrimitive() {
+			var results = execute(selectMethod(TestCase.class, "testWithNullSourceForPrimitive", int.class.getName()));
+			results.tests().failed().assertEventsMatchExactly(event(test(), displayName("[1] null"),
+				finishedWithFailure(instanceOf(ParameterResolutionException.class), message(
+					"Error converting parameter at index 0: Cannot convert null to primitive value of type int"))));
+		}
+
 	}
 
 	@Nested
@@ -395,6 +426,24 @@ class ParameterizedTestIntegrationTests {
 		@ArgumentsSource(TwoSingleStringArgumentsProvider.class)
 		void testWithTwoSingleStringArgumentsProvider(String argument) {
 			fail(argument);
+		}
+
+		@ParameterizedTest
+		@NullSource
+		void testWithNullSourceForString(String argument) {
+			fail(String.valueOf(argument));
+		}
+
+		@ParameterizedTest
+		@NullSource
+		void testWithNullSourceForNumber(Number argument) {
+			fail(String.valueOf(argument));
+		}
+
+		@ParameterizedTest
+		@NullSource
+		void testWithNullSourceForPrimitive(int argument) {
+			fail("should not have been executed");
 		}
 
 		@ParameterizedTest
