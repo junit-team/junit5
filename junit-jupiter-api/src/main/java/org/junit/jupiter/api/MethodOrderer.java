@@ -167,7 +167,7 @@ public interface MethodOrderer {
 		private static final Comparator<MethodDescriptor> comparator = //
 			(descriptor1, descriptor2) -> Integer.compare(getOrder(descriptor1), getOrder(descriptor2));
 
-		private static Integer getOrder(MethodDescriptor descriptor) {
+		private static int getOrder(MethodDescriptor descriptor) {
 			return descriptor.findAnnotation(Order.class).map(Order::value).orElse(Integer.MAX_VALUE);
 		}
 	}
