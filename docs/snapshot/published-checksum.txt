@@ -287,7 +287,6 @@
 7c45a350e04db267187d92bac1612a9f  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/package-info.java
 7da106646b6f7eaf6b168f23fd473402  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/RunnerExecutor.java
 7e757a25317017ac6a9436bbcc5e69af  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicContainer.java
-7ece97fe05264e5158fbdea4c340aeb6  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrderer.java
 7f11e3ada3d6d98b202b9198f90cae6e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariableCondition.java
 7f31f814d405e42914098ed232635355  junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatform.java
 7fbc1280302e754349c9ea16fc89ea2e  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/StreamInterceptor.java
@@ -322,6 +321,7 @@
 8c566bb4f4ffbb3321ea588a44460dc0  documentation/src/docs/asciidoc/release-notes/release-notes-5.3.0.adoc
 8cd01b72b5be5d7d3b2996466d0e1d52  junit-platform-console/src/main/java/org/junit/platform/console/options/CommandLineOptions.java
 8d26f073bf57eef0301153fc2077fd4a  documentation/src/test/resources/log4j2-test.xml
+8d8d480fd95f5b19ea075fe579dee999  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrderer.java
 8d97e515c34f40e0b3b5a41570efec8c  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/JupiterTestEngine.java
 8e2b488c517d3914e38d9152d72fd3a8  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 907a8d74d68e4db1e92d44f5570e2061  documentation/src/test/java/example/testkit/EngineTestKitAllEventsDemo.java
