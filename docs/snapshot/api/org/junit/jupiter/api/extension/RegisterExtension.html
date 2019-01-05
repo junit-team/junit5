@@ -189,7 +189,20 @@ public @interface <span class="memberNameLabel">RegisterExtension</span></pre>
      }
  }</pre>
 
+ <h3>Registration Order</h3>
+
+ <p>By default, if multiple extensions are registered via
+ <code>@RegisterExtension</code>, they will be ordered using an algorithm that is
+ deterministic but intentionally nonobvious. This ensures that subsequent runs
+ of a test suite execute extensions in the same order, thereby allowing for
+ repeatable builds. However, there are times when extensions need to be
+ registered in an explicit order. To achieve that, annotate each
+ <code>@RegisterExtension</code> field with <a href="../Order.html" title="annotation in org.junit.jupiter.api"><code>@Order</code></a>.
+ Any <code>@RegisterExtension</code> field not annotated with <code>@Order</code> will
+ appear at the end of the sorted list.
+
  <h3>Supported Extension APIs</h3>
+
  <ul>
  <li><a href="ExecutionCondition.html" title="interface in org.junit.jupiter.api.extension"><code>ExecutionCondition</code></a></li>
  <li><a href="BeforeAllCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeAllCallback</code></a></li>
@@ -207,8 +220,9 @@ public @interface <span class="memberNameLabel">RegisterExtension</span></pre>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.1</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="ExtendWith.html" title="annotation in org.junit.jupiter.api.extension"><code>ExtendWith</code></a>, 
-<a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extension</code></a></dd>
+<dd><a href="ExtendWith.html" title="annotation in org.junit.jupiter.api.extension"><code>@ExtendWith</code></a>, 
+<a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extension</code></a>, 
+<a href="../Order.html" title="annotation in org.junit.jupiter.api"><code>@Order</code></a></dd>
 </dl>
 </li>
 </ul>

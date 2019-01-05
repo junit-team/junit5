@@ -117,26 +117,31 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <hr>
-<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Target</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html?is-external=true#METHOD" title="class or interface in java.lang.annotation" class="externalLink">METHOD</a>)
+<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Target</a>({<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html?is-external=true#FIELD" title="class or interface in java.lang.annotation" class="externalLink">FIELD</a>,<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html?is-external=true#METHOD" title="class or interface in java.lang.annotation" class="externalLink">METHOD</a>})
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Retention</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation" class="externalLink">RUNTIME</a>)
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Documented.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Documented</a>
 <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.4")
 public @interface <span class="memberNameLabel">Order</span></pre>
-<div class="block"><code>@Order</code> is a method-level annotation that is used to configure the
- <a href="#value()">order</a> in which the annotated method should be executed
- relative to other methods of the same category.
+<div class="block"><code>@Order</code> is an annotation that is used to configure the
+ <a href="#value()">order</a> in which the annotated element (i.e., field or
+ method) should be evaluated or executed relative to other elements of the
+ same category.
 
- <p>When used with the <a href="MethodOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api"><code>MethodOrderer.OrderAnnotation</code></a> <a href="MethodOrderer.html" title="interface in org.junit.jupiter.api"><code>MethodOrderer</code></a>, the
- category applies to <em>test methods</em>.
+ <p>When used with
+ <a href="extension/RegisterExtension.html" title="annotation in org.junit.jupiter.api.extension"><code>@RegisterExtension</code></a>,
+ the category applies to <em>extension fields</em>. When used with the
+ <a href="MethodOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api"><code>MethodOrderer.OrderAnnotation</code></a> <a href="MethodOrderer.html" title="interface in org.junit.jupiter.api"><code>MethodOrderer</code></a>, the category applies to
+ <em>test methods</em>.
 
- <p>If <code>@Order</code> is not explicitly declared on a method, the default
- order value assigned to the method is <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true#MAX_VALUE" title="class or interface in java.lang" class="externalLink"><code>Integer.MAX_VALUE</code></a>.</div>
+ <p>If <code>@Order</code> is not explicitly declared on an element, the default
+ order value assigned to the element is <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true#MAX_VALUE" title="class or interface in java.lang" class="externalLink"><code>Integer.MAX_VALUE</code></a>.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.4</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="MethodOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api"><code>MethodOrderer.OrderAnnotation</code></a></dd>
+<dd><a href="MethodOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api"><code>MethodOrderer.OrderAnnotation</code></a>, 
+<a href="extension/RegisterExtension.html" title="annotation in org.junit.jupiter.api.extension"><code>@RegisterExtension</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -162,7 +167,7 @@ public @interface <span class="memberNameLabel">Order</span></pre>
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#value()">value</a></span></code></th>
 <td class="colLast">
-<div class="block">The order value for the annotated method.</div>
+<div class="block">The order value for the annotated element (i.e., field or method).</div>
 </td>
 </tr>
 </table>
@@ -189,9 +194,9 @@ public @interface <span class="memberNameLabel">Order</span></pre>
 <li class="blockList">
 <h4>value</h4>
 <pre>int&nbsp;value</pre>
-<div class="block">The order value for the annotated method.
+<div class="block">The order value for the annotated element (i.e., field or method).
 
- <p>Methods are ordered based on priority where a lower value has greater
+ <p>Elements are ordered based on priority where a lower value has greater
  priority than a higher value. For example, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true#MAX_VALUE" title="class or interface in java.lang" class="externalLink"><code>Integer.MAX_VALUE</code></a> has
  the lowest priority.</div>
 </li>
