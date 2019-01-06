@@ -933,6 +933,51 @@ the values `1`, `2`, and `3` respectively.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=ValueSource_example]
 ----
 
+[[writing-tests-parameterized-tests-sources-null-and-empty]]
+===== Null and Empty Sources
+
+In order to check corner cases and verify proper behavior of our software when it is
+supplied _bad input_, it can be useful to have `null` and _empty_ values supplied to our
+parameterized tests. The following annotations serve as sources of `null` and empty values
+for parameterized tests that accept a single argument.
+
+* `{NullSource}`: provides a single `null` argument to the annotated `@ParameterizedTest`
+  method.
+   - `@NullSource` cannot be used for a parameter that has a primitive type.
+* `{EmptySource}`: provides a single _empty_ argument to the annotated `@ParameterizedTest`
+  method for parameters of the following types: `java.lang.String`, `java.util.List`,
+  `java.util.Set`, `java.util.Map`, primitive arrays (e.g., `int[]`, `char[][]`, etc.),
+  object arrays (e.g.,`String[]`, `Integer[][]`, etc.).
+   - Subtypes of the supported types are not supported.
+* `{NullAndEmptySource}`: a _composed annotation_ that combines the functionality of
+  `@NullSource` and `@EmptySource`.
+
+If you need to supply multiple varying types of _empty_ or _blank_ strings to a
+parameterized test, you can achieve that using
+<<writing-tests-parameterized-tests-sources-ValueSource>> -- for example,
+`@ValueSource(strings = {" ", " ", "\t", "\n"})`.
+
+You can also combine `@NullSource`, `@EmptySource`, and `@ValueSource` to test a wider
+range of `null`, _empty_, and _blank_ input. The following example demonstrates how to
+achieve this for strings.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=NullAndEmptySource_example1]
+----
+
+Making use of the composed `@NullAndEmptySource` annotation simplifies the above as
+follows.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=NullAndEmptySource_example2]
+----
+
+NOTE: Both variants of the `nullEmptyAndBlankStrings(String)` parameterized test method
+result in six invocations: 1 for `null`, 1 for the empty string, and 4 for the explicit
+blank strings supplied via `@ValueSource`.
+
 [[writing-tests-parameterized-tests-sources-EnumSource]]
 ===== @EnumSource
 
