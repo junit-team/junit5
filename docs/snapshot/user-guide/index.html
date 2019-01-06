@@ -2996,6 +2996,97 @@ the values <code>1</code>, <code>2</code>, and <code>3</code> respectively.</p>
 </div>
 </div>
 <div class="sect4">
+<h5 id="writing-tests-parameterized-tests-sources-null-and-empty"><a class="anchor" href="#writing-tests-parameterized-tests-sources-null-and-empty"></a>Null and Empty Sources</h5>
+<div class="paragraph">
+<p>In order to check corner cases and verify proper behavior of our software when it is
+supplied <em>bad input</em>, it can be useful to have <code>null</code> and <em>empty</em> values supplied to our
+parameterized tests. The following annotations serve as sources of <code>null</code> and empty values
+for parameterized tests that accept a single argument.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code><a href="../api/org/junit/jupiter/params/provider/NullSource.html">@NullSource</a></code>: provides a single <code>null</code> argument to the annotated <code>@ParameterizedTest</code>
+method.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@NullSource</code> cannot be used for a parameter that has a primitive type.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code><a href="../api/org/junit/jupiter/params/provider/EmptySource.html">@EmptySource</a></code>: provides a single <em>empty</em> argument to the annotated <code>@ParameterizedTest</code>
+method for parameters of the following types: <code>java.lang.String</code>, <code>java.util.List</code>,
+<code>java.util.Set</code>, <code>java.util.Map</code>, primitive arrays (e.g., <code>int[]</code>, <code>char[][]</code>, etc.),
+object arrays (e.g.,<code>String[]</code>, <code>Integer[][]</code>, etc.).</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Subtypes of the supported types are not supported.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code><a href="../api/org/junit/jupiter/params/provider/NullAndEmptySource.html">@NullAndEmptySource</a></code>: a <em>composed annotation</em> that combines the functionality of
+<code>@NullSource</code> and <code>@EmptySource</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you need to supply multiple varying types of <em>empty</em> or <em>blank</em> strings to a
+parameterized test, you can achieve that using
+<a href="#writing-tests-parameterized-tests-sources-ValueSource">@ValueSource</a>&#8201;&#8212;&#8201;for example,
+<code>@ValueSource(strings = {" ", " ", "\t", "\n"})</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can also combine <code>@NullSource</code>, <code>@EmptySource</code>, and <code>@ValueSource</code> to test a wider
+range of <code>null</code>, <em>empty</em>, and <em>blank</em> input. The following example demonstrates how to
+achieve this for strings.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@NullSource</span>
+<span class="annotation">@EmptySource</span>
+<span class="annotation">@ValueSource</span>(strings = { <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">   </span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="char">\t</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span> })
+<span class="type">void</span> nullEmptyAndBlankStrings(<span class="predefined-type">String</span> text) {
+    assertTrue(text == <span class="predefined-constant">null</span> || text.trim().isEmpty());
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Making use of the composed <code>@NullAndEmptySource</code> annotation simplifies the above as
+follows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@NullAndEmptySource</span>
+<span class="annotation">@ValueSource</span>(strings = { <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">   </span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="char">\t</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span> })
+<span class="type">void</span> nullEmptyAndBlankStrings(<span class="predefined-type">String</span> text) {
+    assertTrue(text == <span class="predefined-constant">null</span> || text.trim().isEmpty());
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Both variants of the <code>nullEmptyAndBlankStrings(String)</code> parameterized test method
+result in six invocations: 1 for <code>null</code>, 1 for the empty string, and 4 for the explicit
+blank strings supplied via <code>@ValueSource</code>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
 <h5 id="writing-tests-parameterized-tests-sources-EnumSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-EnumSource"></a>@EnumSource</h5>
 <div class="paragraph">
 <p><code>@EnumSource</code> provides a convenient way to use <code>Enum</code> constants. The annotation provides
@@ -7797,6 +7888,11 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.provider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EmptySource</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.provider</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>EnumSource</code> <em>(annotation)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.0</code></p></td>
 </tr>
@@ -7804,6 +7900,16 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.provider</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MethodSource</code> <em>(annotation)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.provider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NullAndEmptySource</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.provider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NullSource</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.provider</code></p></td>
@@ -8219,7 +8325,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-05 13:44:11 UTC
+Last updated 2019-01-06 14:29:22 UTC
 </div>
 </div>
 </body>
