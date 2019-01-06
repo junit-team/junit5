@@ -21,22 +21,24 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @NullSource} is an {@link ArgumentsSource} which provides a single
- * {@code null} argument to the annotated {@code @ParameterizedTest} method.
+ * {@code @NullAndEmptySource} is a <em>composed annotation</em> that combines
+ * the functionality of {@link NullSource @NullSource} and
+ * {@link EmptySource @EmptySource}.
  *
- * <p>Note that {@code @NullSource} cannot be used for an argument that has
- * a primitive type.
+ * <p>Annotating a {@code @ParameterizedTest} method with
+ * {@code @NullAndEmptySource} is equivalent to annotating the method with
+ * {@code @NullSource} and {@code @EmptySource}.
  *
  * @since 5.4
- * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.ParameterizedTest
+ * @see NullSource
  * @see EmptySource
- * @see NullAndEmptySource
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = EXPERIMENTAL, since = "5.4")
-@ArgumentsSource(NullArgumentsProvider.class)
-public @interface NullSource {
+@NullSource
+@EmptySource
+public @interface NullAndEmptySource {
 }

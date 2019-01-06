@@ -11,6 +11,7 @@
 package org.junit.jupiter.params;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -63,6 +64,7 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.ClassUtils;
@@ -335,6 +337,63 @@ class ParameterizedTestIntegrationTests {
 		private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
 			return ParameterizedTestIntegrationTests.this.execute(EmptySourceTestCase.class, methodName,
 				methodParameterTypes);
+		}
+
+	}
+
+	/**
+	 * @since 5.4
+	 */
+	@Nested
+	class NullAndEmptySourceIntegrationTests {
+
+		@Test
+		void executesWithNullAndEmptySourceForString() {
+			var results = execute("testWithNullAndEmptySourceForString", String.class);
+			assertNullAndEmptyString(results);
+		}
+
+		@Test
+		void executesWithNullAndEmptySourceForStringAndTestInfo() {
+			var results = execute("testWithNullAndEmptySourceForStringAndTestInfo", String.class, TestInfo.class);
+			assertNullAndEmptyString(results);
+		}
+
+		@Test
+		void executesWithNullAndEmptySourceForList() {
+			var results = execute("testWithNullAndEmptySourceForList", List.class);
+			assertNullAndEmpty(results);
+		}
+
+		@Test
+		void executesWithNullAndEmptySourceForOneDimensionalPrimitiveArray() {
+			var results = execute("testWithNullAndEmptySourceForOneDimensionalPrimitiveArray", int[].class);
+			assertNullAndEmpty(results);
+		}
+
+		@Test
+		void executesWithNullAndEmptySourceForTwoDimensionalStringArray() {
+			var results = execute("testWithNullAndEmptySourceForTwoDimensionalStringArray", String[][].class);
+			assertNullAndEmpty(results);
+		}
+
+		private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
+			return ParameterizedTestIntegrationTests.this.execute(NullAndEmptySourceTestCase.class, methodName,
+				methodParameterTypes);
+		}
+
+		private void assertNullAndEmptyString(EngineExecutionResults results) {
+			results.tests().succeeded().assertEventsMatchExactly(//
+				event(test(), displayName("[1] null")), //
+				event(test(), displayName("[2] "))//
+			);
+		}
+
+		private void assertNullAndEmpty(EngineExecutionResults results) {
+			results.tests().succeeded().assertEventsMatchExactly(//
+				event(test(), displayName("[1] null")), //
+				event(test(), displayName("[2] []"))//
+			);
 		}
 
 	}
@@ -691,6 +750,41 @@ class ParameterizedTestIntegrationTests {
 		@EmptySource
 		void testWithEmptySourceForUnsupportedMapSubtype(HashMap<?, ?> argument) {
 			fail("should not have been executed");
+		}
+
+	}
+
+	static class NullAndEmptySourceTestCase {
+
+		@ParameterizedTest
+		@NullAndEmptySource
+		void testWithNullAndEmptySourceForString(String argument) {
+			assertTrue(argument == null || argument.isEmpty());
+		}
+
+		@ParameterizedTest
+		@NullAndEmptySource
+		void testWithNullAndEmptySourceForStringAndTestInfo(String argument, TestInfo testInfo) {
+			assertTrue(argument == null || argument.isEmpty());
+			assertThat(testInfo).isNotNull();
+		}
+
+		@ParameterizedTest
+		@NullAndEmptySource
+		void testWithNullAndEmptySourceForList(List<?> argument) {
+			assertTrue(argument == null || argument.isEmpty());
+		}
+
+		@ParameterizedTest
+		@NullAndEmptySource
+		void testWithNullAndEmptySourceForOneDimensionalPrimitiveArray(int[] argument) {
+			assertTrue(argument == null || argument.length == 0);
+		}
+
+		@ParameterizedTest
+		@NullAndEmptySource
+		void testWithNullAndEmptySourceForTwoDimensionalStringArray(String[][] argument) {
+			assertTrue(argument == null || argument.length == 0);
 		}
 
 	}
