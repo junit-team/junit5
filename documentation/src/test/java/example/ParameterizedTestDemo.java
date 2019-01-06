@@ -38,6 +38,7 @@ import example.util.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -54,8 +55,11 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class ParameterizedTestDemo {
@@ -75,6 +79,33 @@ class ParameterizedTestDemo {
 		assertTrue(argument > 0 && argument < 4);
 	}
 	// end::ValueSource_example[]
+
+	@Nested
+	class NullAndEmptySource_1 {
+
+		// tag::NullAndEmptySource_example1[]
+		@ParameterizedTest
+		@NullSource
+		@EmptySource
+		@ValueSource(strings = { " ", "   ", "\t", "\n" })
+		void nullEmptyAndBlankStrings(String text) {
+			assertTrue(text == null || text.trim().isEmpty());
+		}
+		// end::NullAndEmptySource_example1[]
+	}
+
+	@Nested
+	class NullAndEmptySource_2 {
+
+		// tag::NullAndEmptySource_example2[]
+		@ParameterizedTest
+		@NullAndEmptySource
+		@ValueSource(strings = { " ", "   ", "\t", "\n" })
+		void nullEmptyAndBlankStrings(String text) {
+			assertTrue(text == null || text.trim().isEmpty());
+		}
+		// end::NullAndEmptySource_example2[]
+	}
 
 	// tag::EnumSource_example[]
 	@ParameterizedTest
