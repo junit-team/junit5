@@ -161,6 +161,30 @@ are `static` methods in the `{Assertions}` class.
 include::{testDir}/example/AssertionsDemo.java[tags=user_guide]
 ----
 
+[WARNING]
+.Preemptive Timeouts
+====
+The various `assertTimeoutPreemptively()` methods in the `Assertions` class execute the
+provided `executable` or `supplier` in a different thread than that of the calling code.
+This behavior can lead to undesirable side effects if the code that is executed within the
+`executable` or `supplier` relies on `java.lang.ThreadLocal` storage.
+
+One common example of this is the transactional testing support in the Spring Framework.
+Specifically, Spring's testing support binds transaction state to the current thread (via
+a `ThreadLocal`) before a test method is invoked. Consequently, if an `executable` or
+`supplier` provided to `assertTimeoutPreemptively()` invokes Spring-managed components
+that participate in transactions, any actions taken by those components will not be rolled
+back with the test-managed transaction. On the contrary, such actions will be committed to
+the persistent store (e.g., relational database) even though the test-managed transaction
+is rolled back.
+
+Similar side side effects may be encountered with other frameworks that rely on
+`ThreadLocal` storage.
+====
+
+[[writing-tests-assertions-kotlin]]
+==== Kotlin Assertion Support
+
 JUnit Jupiter also comes with a few assertion methods that lend themselves well to being
 used in https://kotlinlang.org/[Kotlin]. All JUnit Jupiter Kotlin assertions are top-level
 functions in the `org.junit.jupiter.api` package.
