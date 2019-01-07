@@ -161,6 +161,7 @@ are `static` methods in the `{Assertions}` class.
 include::{testDir}/example/AssertionsDemo.java[tags=user_guide]
 ----
 
+[[writing-tests-assertions-preemptive-timeouts]]
 [WARNING]
 .Preemptive Timeouts
 ====
