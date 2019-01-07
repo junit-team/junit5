@@ -316,6 +316,17 @@ class ParameterizedTestIntegrationTests {
 			results.tests().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
 		}
 
+		@Test
+		void failsWithEmptySourceWithZeroFormalParameters() {
+			String methodName = "testWithEmptySourceWithZeroFormalParameters";
+			execute(methodName).containers().failed().assertEventsMatchExactly(//
+				event(container(methodName), //
+					finishedWithFailure(//
+						instanceOf(PreconditionViolationException.class), //
+						message(msg -> msg.matches(
+							"@EmptySource cannot provide an empty argument to method .+: the method does not declare any formal parameters.")))));
+		}
+
 		@ParameterizedTest(name = "{1}")
 		@CsvSource({ //
 				"testWithEmptySourceForPrimitive, int", //
@@ -329,8 +340,8 @@ class ParameterizedTestIntegrationTests {
 				event(container(methodName), //
 					finishedWithFailure(//
 						instanceOf(PreconditionViolationException.class), //
-						message(msg -> msg.matches("Cannot provide an empty argument to method .+: \\["
-								+ parameterType.getName() + "\\] is not supported by @EmptySource."))//
+						message(msg -> msg.matches("@EmptySource cannot provide an empty argument to method .+: \\["
+								+ parameterType.getName() + "\\] is not a supported type."))//
 					)));
 		}
 
@@ -720,6 +731,12 @@ class ParameterizedTestIntegrationTests {
 		@EmptySource
 		void testWithEmptySourceForTwoDimensionalStringArray(String[][] argument) {
 			assertThat(argument).isEmpty();
+		}
+
+		@ParameterizedTest
+		@EmptySource
+		void testWithEmptySourceWithZeroFormalParameters() {
+			fail("should not have been executed");
 		}
 
 		@ParameterizedTest

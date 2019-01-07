@@ -35,10 +35,9 @@ class EmptyArgumentsProvider implements ArgumentsProvider {
 		Method testMethod = context.getRequiredTestMethod();
 		Class<?>[] parameterTypes = testMethod.getParameterTypes();
 
-		Preconditions.condition(parameterTypes.length > 0,
-			() -> String.format(
-				"Cannot provide an 'empty' argument, since method [%s] does not declare any formal parameters.",
-				testMethod.toGenericString()));
+		Preconditions.condition(parameterTypes.length > 0, () -> String.format(
+			"@EmptySource cannot provide an empty argument to method [%s]: the method does not declare any formal parameters.",
+			testMethod.toGenericString()));
 
 		Class<?> parameterType = parameterTypes[0];
 
@@ -60,7 +59,7 @@ class EmptyArgumentsProvider implements ArgumentsProvider {
 		}
 		// else
 		throw new PreconditionViolationException(
-			String.format("Cannot provide an empty argument to method [%s]: [%s] is not supported by @EmptySource.",
+			String.format("@EmptySource cannot provide an empty argument to method [%s]: [%s] is not a supported type.",
 				testMethod.toGenericString(), parameterType.getName()));
 	}
 
