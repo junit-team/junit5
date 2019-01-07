@@ -1293,6 +1293,40 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
 }</code></pre>
 </div>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">Preemptive Timeouts</div>
+<div class="paragraph">
+<p>The various <code>assertTimeoutPreemptively()</code> methods in the <code>Assertions</code> class execute the
+provided <code>executable</code> or <code>supplier</code> in a different thread than that of the calling code.
+This behavior can lead to undesirable side effects if the code that is executed within the
+<code>executable</code> or <code>supplier</code> relies on <code>java.lang.ThreadLocal</code> storage.</p>
+</div>
+<div class="paragraph">
+<p>One common example of this is the transactional testing support in the Spring Framework.
+Specifically, Spring&#8217;s testing support binds transaction state to the current thread (via
+a <code>ThreadLocal</code>) before a test method is invoked. Consequently, if an <code>executable</code> or
+<code>supplier</code> provided to <code>assertTimeoutPreemptively()</code> invokes Spring-managed components
+that participate in transactions, any actions taken by those components will not be rolled
+back with the test-managed transaction. On the contrary, such actions will be committed to
+the persistent store (e.g., relational database) even though the test-managed transaction
+is rolled back.</p>
+</div>
+<div class="paragraph">
+<p>Similar side side effects may be encountered with other frameworks that rely on
+<code>ThreadLocal</code> storage.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="writing-tests-assertions-kotlin"><a class="anchor" href="#writing-tests-assertions-kotlin"></a>2.4.1. Kotlin Assertion Support</h4>
 <div class="paragraph">
 <p>JUnit Jupiter also comes with a few assertion methods that lend themselves well to being
 used in <a href="https://kotlinlang.org/">Kotlin</a>. All JUnit Jupiter Kotlin assertions are top-level
@@ -1352,8 +1386,9 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 }</code></pre>
 </div>
 </div>
+</div>
 <div class="sect3">
-<h4 id="writing-tests-assertions-third-party"><a class="anchor" href="#writing-tests-assertions-third-party"></a>2.4.1. Third-party Assertion Libraries</h4>
+<h4 id="writing-tests-assertions-third-party"><a class="anchor" href="#writing-tests-assertions-third-party"></a>2.4.2. Third-party Assertion Libraries</h4>
 <div class="paragraph">
 <p>Even though the assertion facilities provided by JUnit Jupiter are sufficient for many
 testing scenarios, there are times when more power and additional functionality such as
@@ -8325,7 +8360,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-07 12:25:23 UTC
+Last updated 2019-01-07 15:03:42 UTC
 </div>
 </div>
 </body>
