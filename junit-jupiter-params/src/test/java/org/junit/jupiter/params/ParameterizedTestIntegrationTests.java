@@ -242,6 +242,17 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		@Test
+		void failsWithNullSourceWithZeroFormalParameters() {
+			String methodName = "testWithNullSourceWithZeroFormalParameters";
+			execute(methodName).containers().failed().assertEventsMatchExactly(//
+				event(container(methodName), //
+					finishedWithFailure(//
+						instanceOf(PreconditionViolationException.class), //
+						message(msg -> msg.matches(
+							"@NullSource cannot provide a null argument to method .+: the method does not declare any formal parameters.")))));
+		}
+
+		@Test
 		void failsWithNullSourceForPrimitive() {
 			var results = execute("testWithNullSourceForPrimitive", int.class);
 			results.tests().failed().assertEventsMatchExactly(event(test(), displayName("[1] null"),
@@ -666,6 +677,12 @@ class ParameterizedTestIntegrationTests {
 		@NullSource
 		void testWithNullSourceForNumber(Number argument) {
 			fail(String.valueOf(argument));
+		}
+
+		@ParameterizedTest
+		@NullSource
+		void testWithNullSourceWithZeroFormalParameters() {
+			fail("should not have been executed");
 		}
 
 		@ParameterizedTest
