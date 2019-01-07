@@ -42,20 +42,20 @@ class MethodArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<M
 		Object testInstance = context.getTestInstance().orElse(null);
 		// @formatter:off
 		return Arrays.stream(this.methodNames)
-				.map(argumentsMethodName -> getMethod(context, argumentsMethodName))
+				.map(factoryMethodName -> getMethod(context, factoryMethodName))
 				.map(method -> ReflectionUtils.invokeMethod(method, testInstance))
 				.flatMap(CollectionUtils::toStream)
 				.map(MethodArgumentsProvider::toArguments);
 		// @formatter:on
 	}
 
-	private Method getMethod(ExtensionContext context, String argumentsMethodName) {
-		if (StringUtils.isNotBlank(argumentsMethodName)) {
-			if (argumentsMethodName.contains("#")) {
-				return getMethodByFullyQualifiedName(argumentsMethodName);
+	private Method getMethod(ExtensionContext context, String factoryMethodName) {
+		if (StringUtils.isNotBlank(factoryMethodName)) {
+			if (factoryMethodName.contains("#")) {
+				return getMethodByFullyQualifiedName(factoryMethodName);
 			}
 			else {
-				return getMethod(context.getRequiredTestClass(), argumentsMethodName);
+				return getMethod(context.getRequiredTestClass(), factoryMethodName);
 			}
 		}
 		return getMethod(context.getRequiredTestClass(), context.getRequiredTestMethod().getName());
