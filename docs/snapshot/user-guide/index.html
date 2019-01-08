@@ -549,30 +549,114 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#writing-tests">2. Writing Tests</a>
 <ul class="sectlevel2">
-<li><a href="#writing-tests-annotations">2.1. Annotations</a></li>
+<li><a href="#writing-tests-annotations">2.1. Annotations</a>
+<ul class="sectlevel3">
+<li><a href="#writing-tests-meta-annotations">2.1.1. Meta-Annotations and Composed Annotations</a></li>
+</ul>
+</li>
 <li><a href="#writing-tests-classes-and-methods">2.2. Test Classes and Methods</a></li>
-<li><a href="#writing-tests-display-names">2.3. Display Names</a></li>
-<li><a href="#writing-tests-assertions">2.4. Assertions</a></li>
+<li><a href="#writing-tests-display-names">2.3. Display Names</a>
+<ul class="sectlevel3">
+<li><a href="#writing-tests-display-name-generator">2.3.1. Display Name Generators</a></li>
+</ul>
+</li>
+<li><a href="#writing-tests-assertions">2.4. Assertions</a>
+<ul class="sectlevel3">
+<li><a href="#writing-tests-assertions-kotlin">2.4.1. Kotlin Assertion Support</a></li>
+<li><a href="#writing-tests-assertions-third-party">2.4.2. Third-party Assertion Libraries</a></li>
+</ul>
+</li>
 <li><a href="#writing-tests-assumptions">2.5. Assumptions</a></li>
 <li><a href="#writing-tests-disabling">2.6. Disabling Tests</a></li>
-<li><a href="#writing-tests-conditional-execution">2.7. Conditional Test Execution</a></li>
-<li><a href="#writing-tests-tagging-and-filtering">2.8. Tagging and Filtering</a></li>
+<li><a href="#writing-tests-conditional-execution">2.7. Conditional Test Execution</a>
+<ul class="sectlevel3">
+<li><a href="#writing-tests-conditional-execution-os">2.7.1. Operating System Conditions</a></li>
+<li><a href="#writing-tests-conditional-execution-jre">2.7.2. Java Runtime Environment Conditions</a></li>
+<li><a href="#writing-tests-conditional-execution-system-properties">2.7.3. System Property Conditions</a></li>
+<li><a href="#writing-tests-conditional-execution-environment-variables">2.7.4. Environment Variable Conditions</a></li>
+<li><a href="#writing-tests-conditional-execution-scripts">2.7.5. Script-based Conditions</a>
+<ul class="sectlevel4">
+<li><a href="#writing-tests-conditional-execution-scripts-bindings">Script Bindings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#writing-tests-tagging-and-filtering">2.8. Tagging and Filtering</a>
+<ul class="sectlevel3">
+<li><a href="#syntax-rules-for-tags">2.8.1. Syntax Rules for Tags</a></li>
+</ul>
+</li>
 <li><a href="#writing-tests-test-execution-order">2.9. Test Execution Order</a></li>
-<li><a href="#writing-tests-test-instance-lifecycle">2.10. Test Instance Lifecycle</a></li>
+<li><a href="#writing-tests-test-instance-lifecycle">2.10. Test Instance Lifecycle</a>
+<ul class="sectlevel3">
+<li><a href="#writing-tests-test-instance-lifecycle-changing-default">2.10.1. Changing the Default Test Instance Lifecycle</a></li>
+</ul>
+</li>
 <li><a href="#writing-tests-nested">2.11. Nested Tests</a></li>
 <li><a href="#writing-tests-dependency-injection">2.12. Dependency Injection for Constructors and Methods</a></li>
 <li><a href="#writing-tests-test-interfaces-and-default-methods">2.13. Test Interfaces and Default Methods</a></li>
-<li><a href="#writing-tests-repeated-tests">2.14. Repeated Tests</a></li>
-<li><a href="#writing-tests-parameterized-tests">2.15. Parameterized Tests</a></li>
+<li><a href="#writing-tests-repeated-tests">2.14. Repeated Tests</a>
+<ul class="sectlevel3">
+<li><a href="#writing-tests-repeated-tests-examples">2.14.1. Repeated Test Examples</a></li>
+</ul>
+</li>
+<li><a href="#writing-tests-parameterized-tests">2.15. Parameterized Tests</a>
+<ul class="sectlevel3">
+<li><a href="#writing-tests-parameterized-tests-setup">2.15.1. Required Setup</a></li>
+<li><a href="#writing-tests-parameterized-tests-consuming-arguments">2.15.2. Consuming Arguments</a></li>
+<li><a href="#writing-tests-parameterized-tests-sources">2.15.3. Sources of Arguments</a>
+<ul class="sectlevel4">
+<li><a href="#writing-tests-parameterized-tests-sources-ValueSource">@ValueSource</a></li>
+<li><a href="#writing-tests-parameterized-tests-sources-null-and-empty">Null and Empty Sources</a></li>
+<li><a href="#writing-tests-parameterized-tests-sources-EnumSource">@EnumSource</a></li>
+<li><a href="#writing-tests-parameterized-tests-sources-MethodSource">@MethodSource</a></li>
+<li><a href="#writing-tests-parameterized-tests-sources-CsvSource">@CsvSource</a></li>
+<li><a href="#writing-tests-parameterized-tests-sources-CsvFileSource">@CsvFileSource</a></li>
+<li><a href="#writing-tests-parameterized-tests-sources-ArgumentsSource">@ArgumentsSource</a></li>
+</ul>
+</li>
+<li><a href="#writing-tests-parameterized-tests-argument-conversion">2.15.4. Argument Conversion</a>
+<ul class="sectlevel4">
+<li><a href="#writing-tests-parameterized-tests-argument-conversion-widening">Widening Conversion</a></li>
+<li><a href="#writing-tests-parameterized-tests-argument-conversion-implicit">Implicit Conversion</a></li>
+<li><a href="#writing-tests-parameterized-tests-argument-conversion-explicit">Explicit Conversion</a></li>
+</ul>
+</li>
+<li><a href="#writing-tests-parameterized-tests-argument-aggregation">2.15.5. Argument Aggregation</a>
+<ul class="sectlevel4">
+<li><a href="#writing-tests-parameterized-tests-argument-aggregation-custom">Custom Aggregators</a></li>
+</ul>
+</li>
+<li><a href="#writing-tests-parameterized-tests-display-names">2.15.6. Customizing Display Names</a></li>
+<li><a href="#writing-tests-parameterized-tests-lifecycle-interop">2.15.7. Lifecycle and Interoperability</a></li>
+</ul>
+</li>
 <li><a href="#writing-tests-test-templates">2.16. Test Templates</a></li>
-<li><a href="#writing-tests-dynamic-tests">2.17. Dynamic Tests</a></li>
-<li><a href="#writing-tests-parallel-execution">2.18. Parallel Execution</a></li>
-<li><a href="#writing-tests-built-in-extensions">2.19. Built-in Extensions</a></li>
+<li><a href="#writing-tests-dynamic-tests">2.17. Dynamic Tests</a>
+<ul class="sectlevel3">
+<li><a href="#writing-tests-dynamic-tests-examples">2.17.1. Dynamic Test Examples</a></li>
+</ul>
+</li>
+<li><a href="#writing-tests-parallel-execution">2.18. Parallel Execution</a>
+<ul class="sectlevel3">
+<li><a href="#writing-tests-parallel-execution-config">2.18.1. Configuration</a></li>
+<li><a href="#writing-tests-parallel-execution-synchronization">2.18.2. Synchronization</a></li>
+</ul>
+</li>
+<li><a href="#writing-tests-built-in-extensions">2.19. Built-in Extensions</a>
+<ul class="sectlevel3">
+<li><a href="#writing-tests-built-in-extensions-TempDirectory">2.19.1. The TempDirectory Extension</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#migrating-from-junit4">3. Migrating from JUnit 4</a>
 <ul class="sectlevel2">
-<li><a href="#migrating-from-junit4-running">3.1. Running JUnit 4 Tests on the JUnit Platform</a></li>
+<li><a href="#migrating-from-junit4-running">3.1. Running JUnit 4 Tests on the JUnit Platform</a>
+<ul class="sectlevel3">
+<li><a href="#migrating-from-junit4-categories-support">3.1.1. Categories Support</a></li>
+</ul>
+</li>
 <li><a href="#migrating-from-junit4-tips">3.2. Migration Tips</a></li>
 <li><a href="#migrating-from-junit4-rule-support">3.3. Limited JUnit 4 Rule Support</a></li>
 <li><a href="#migrating-from-junit4-ignore-annotation-support">3.4. JUnit 4 @Ignore Support</a></li>
@@ -580,10 +664,58 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#running-tests">4. Running Tests</a>
 <ul class="sectlevel2">
-<li><a href="#running-tests-ide">4.1. IDE Support</a></li>
-<li><a href="#running-tests-build">4.2. Build Support</a></li>
-<li><a href="#running-tests-console-launcher">4.3. Console Launcher</a></li>
-<li><a href="#running-tests-junit-platform-runner">4.4. Using JUnit 4 to run the JUnit Platform</a></li>
+<li><a href="#running-tests-ide">4.1. IDE Support</a>
+<ul class="sectlevel3">
+<li><a href="#running-tests-ide-intellij-idea">4.1.1. IntelliJ IDEA</a></li>
+<li><a href="#running-tests-ide-eclipse">4.1.2. Eclipse</a></li>
+<li><a href="#running-tests-ide-netbeans">4.1.3. NetBeans</a></li>
+<li><a href="#running-tests-ide-vscode">4.1.4. Visual Studio Code</a></li>
+<li><a href="#running-tests-ide-other">4.1.5. Other IDEs</a></li>
+</ul>
+</li>
+<li><a href="#running-tests-build">4.2. Build Support</a>
+<ul class="sectlevel3">
+<li><a href="#running-tests-build-gradle">4.2.1. Gradle</a>
+<ul class="sectlevel4">
+<li><a href="#running-tests-build-gradle-config-params">Configuration Parameters</a></li>
+<li><a href="#running-tests-build-gradle-engines-configure">Configuring Test Engines</a></li>
+<li><a href="#running-tests-build-gradle-logging">Configuring Logging (optional)</a></li>
+</ul>
+</li>
+<li><a href="#running-tests-build-maven">4.2.2. Maven</a>
+<ul class="sectlevel4">
+<li><a href="#running-tests-build-maven-engines-configure">Configuring Test Engines</a></li>
+<li><a href="#running-tests-build-maven-filter-test-class-names">Filtering by Test Class Names</a></li>
+<li><a href="#running-tests-build-maven-filter-tags">Filtering by Tags</a></li>
+<li><a href="#running-tests-build-maven-config-params">Configuration Parameters</a></li>
+</ul>
+</li>
+<li><a href="#running-tests-build-ant">4.2.3. Ant</a>
+<ul class="sectlevel4">
+<li><a href="#basic-usage">Basic Usage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#running-tests-console-launcher">4.3. Console Launcher</a>
+<ul class="sectlevel3">
+<li><a href="#running-tests-console-launcher-options">4.3.1. Options</a></li>
+<li><a href="#running-tests-console-launcher-argument-files">4.3.2. Argument Files (@-files)</a></li>
+</ul>
+</li>
+<li><a href="#running-tests-junit-platform-runner">4.4. Using JUnit 4 to run the JUnit Platform</a>
+<ul class="sectlevel3">
+<li><a href="#running-tests-junit-platform-runner-setup">4.4.1. Setup</a>
+<ul class="sectlevel4">
+<li><a href="#explicit-dependencies">Explicit Dependencies</a></li>
+<li><a href="#transitive-dependencies">Transitive Dependencies</a></li>
+</ul>
+</li>
+<li><a href="#running-tests-junit-platform-runner-technical-names">4.4.2. Display Names vs. Technical Names</a></li>
+<li><a href="#running-tests-junit-platform-runner-single-test">4.4.3. Single Test Class</a></li>
+<li><a href="#running-tests-junit-platform-runner-test-suite">4.4.4. Test Suite</a></li>
+</ul>
+</li>
 <li><a href="#running-tests-config-params">4.5. Configuration Parameters</a></li>
 <li><a href="#running-tests-tag-expressions">4.6. Tag Expressions</a></li>
 <li><a href="#running-tests-capturing-output">4.7. Capturing Standard Output/Error</a></li>
@@ -592,23 +724,74 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#extensions">5. Extension Model</a>
 <ul class="sectlevel2">
 <li><a href="#extensions-overview">5.1. Overview</a></li>
-<li><a href="#extensions-registration">5.2. Registering Extensions</a></li>
-<li><a href="#extensions-conditions">5.3. Conditional Test Execution</a></li>
+<li><a href="#extensions-registration">5.2. Registering Extensions</a>
+<ul class="sectlevel3">
+<li><a href="#extensions-registration-declarative">5.2.1. Declarative Extension Registration</a></li>
+<li><a href="#extensions-registration-programmatic">5.2.2. Programmatic Extension Registration</a>
+<ul class="sectlevel4">
+<li><a href="#extensions-registration-programmatic-static-fields">Static Fields</a></li>
+<li><a href="#extensions-registration-programmatic-static-fields-kotlin">Static Fields in Kotlin</a></li>
+<li><a href="#extensions-registration-programmatic-instance-fields">Instance Fields</a></li>
+</ul>
+</li>
+<li><a href="#extensions-registration-automatic">5.2.3. Automatic Extension Registration</a>
+<ul class="sectlevel4">
+<li><a href="#extensions-registration-automatic-enabling">Enabling Automatic Extension Detection</a></li>
+</ul>
+</li>
+<li><a href="#extensions-registration-inheritance">5.2.4. Extension Inheritance</a></li>
+</ul>
+</li>
+<li><a href="#extensions-conditions">5.3. Conditional Test Execution</a>
+<ul class="sectlevel3">
+<li><a href="#extensions-conditions-deactivation">5.3.1. Deactivating Conditions</a>
+<ul class="sectlevel4">
+<li><a href="#extensions-conditions-deactivation-patterns">Pattern Matching Syntax</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#extensions-test-instance-factories">5.4. Test Instance Factories</a></li>
 <li><a href="#extensions-test-instance-post-processing">5.5. Test Instance Post-processing</a></li>
 <li><a href="#extensions-parameter-resolution">5.6. Parameter Resolution</a></li>
-<li><a href="#extensions-lifecycle-callbacks">5.7. Test Lifecycle Callbacks</a></li>
+<li><a href="#extensions-lifecycle-callbacks">5.7. Test Lifecycle Callbacks</a>
+<ul class="sectlevel3">
+<li><a href="#extensions-lifecycle-callbacks-before-after-execution">5.7.1. Before and After Test Execution Callbacks</a></li>
+</ul>
+</li>
 <li><a href="#extensions-exception-handling">5.8. Exception Handling</a></li>
 <li><a href="#extensions-test-templates">5.9. Providing Invocation Contexts for Test Templates</a></li>
 <li><a href="#extensions-keeping-state">5.10. Keeping State in Extensions</a></li>
-<li><a href="#extensions-supported-utilities">5.11. Supported Utilities in Extensions</a></li>
+<li><a href="#extensions-supported-utilities">5.11. Supported Utilities in Extensions</a>
+<ul class="sectlevel3">
+<li><a href="#extensions-supported-utilities-annotations">5.11.1. Annotation Support</a></li>
+<li><a href="#extensions-supported-utilities-classes">5.11.2. Class Support</a></li>
+<li><a href="#extensions-supported-utilities-reflection">5.11.3. Reflection Support</a></li>
+<li><a href="#extensions-supported-utilities-modifier">5.11.4. Modifier Support</a></li>
+</ul>
+</li>
 <li><a href="#extensions-execution-order">5.12. Relative Execution Order of User Code and Extensions</a></li>
 </ul>
 </li>
 <li><a href="#advanced-topics">6. Advanced Topics</a>
 <ul class="sectlevel2">
-<li><a href="#launcher-api">6.1. JUnit Platform Launcher API</a></li>
-<li><a href="#testkit">6.2. JUnit Platform Test Kit</a></li>
+<li><a href="#launcher-api">6.1. JUnit Platform Launcher API</a>
+<ul class="sectlevel3">
+<li><a href="#launcher-api-discovery">6.1.1. Discovering Tests</a></li>
+<li><a href="#launcher-api-execution">6.1.2. Executing Tests</a></li>
+<li><a href="#launcher-api-engines-custom">6.1.3. Plugging in your own Test Engine</a></li>
+<li><a href="#launcher-api-listeners-custom">6.1.4. Plugging in your own Test Execution Listener</a></li>
+<li><a href="#launcher-api-listeners-reporting">6.1.5. JUnit Platform Reporting</a></li>
+<li><a href="#launcher-api-launcher-config">6.1.6. Configuring the Launcher</a></li>
+</ul>
+</li>
+<li><a href="#testkit">6.2. JUnit Platform Test Kit</a>
+<ul class="sectlevel3">
+<li><a href="#testkit-engine">6.2.1. Engine Test Kit</a></li>
+<li><a href="#testkit-engine-statistics">6.2.2. Asserting Statistics</a></li>
+<li><a href="#testkit-engine-events">6.2.3. Asserting Events</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#api-evolution">7. API Evolution</a>
@@ -623,7 +806,15 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#release-notes">9. Release Notes</a></li>
 <li><a href="#appendix">10. Appendix</a>
 <ul class="sectlevel2">
-<li><a href="#dependency-metadata">10.1. Dependency Metadata</a></li>
+<li><a href="#dependency-metadata">10.1. Dependency Metadata</a>
+<ul class="sectlevel3">
+<li><a href="#dependency-metadata-junit-platform">10.1.1. JUnit Platform</a></li>
+<li><a href="#dependency-metadata-junit-jupiter">10.1.2. JUnit Jupiter</a></li>
+<li><a href="#dependency-metadata-junit-vintage">10.1.3. JUnit Vintage</a></li>
+<li><a href="#dependency-metadata-junit-bom">10.1.4. Bill of Materials (BOM)</a></li>
+<li><a href="#dependency-metadata-dependencies">10.1.5. Dependencies</a></li>
+</ul>
+</li>
 <li><a href="#dependency-diagram">10.2. Dependency Diagram</a></li>
 </ul>
 </li>
@@ -8360,7 +8551,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-07 15:43:35 UTC
+Last updated 2019-01-08 14:53:43 UTC
 </div>
 </div>
 </body>
