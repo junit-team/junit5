@@ -407,6 +407,7 @@ rootProject.apply {
 					links("https://docs.oracle.com/javase/8/docs/api/")
 					links("https://ota4j-team.github.io/opentest4j/docs/${ota4jDocVersion}/api/")
 					links("https://apiguardian-team.github.io/apiguardian/docs/${apiGuardianDocVersion}/api/")
+					links("https://junit.org/junit4/javadoc/${Versions.junit4}/")
 					links("https://joel-costigliola.github.io/assertj/core-8/api/")
 					stylesheetFile = rootProject.file("src/javadoc/stylesheet.css")
 					groups = mapOf(
