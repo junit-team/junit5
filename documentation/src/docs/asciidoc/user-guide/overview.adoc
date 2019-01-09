@@ -58,18 +58,36 @@ Ask JUnit 5 related questions on {StackOverflow} or chat with us on {Gitter}.
 [[overview-getting-started]]
 === Getting Started
 
-To find out what artifacts are available for download and inclusion in your project,
-refer to <<dependency-metadata>> for details on the available artifacts and their
-versions.
+[[overview-getting-started-junit-artifacts]]
+==== Downloading JUnit Artifacts
 
-To find out what features are available and how to use them, read the corresponding
-sections of this User Guide, organized by topic.
+To find out what artifacts are available for download and inclusion in your project, refer
+to <<dependency-metadata>>. To set up dependency management for your build, refer to
+<<running-tests-build>> and the <<overview-getting-started-example-projects>>.
+
+[[overview-getting-started-features]]
+==== JUnit 5 Features
+
+To find out what features are available in JUnit 5 and how to use them, read the
+corresponding sections of this User Guide, organized by topic.
+
+* <<writing-tests, Writing Tests in JUnit Jupiter>>
+* <<migrating-from-junit4, Migrating from JUnit 4 to JUnit Jupiter>>
+* <<running-tests>>
+* <<extensions, Extension Model for JUnit Jupiter>>
+* Advanced Topics
+  - <<launcher-api>>
+  - <<testkit>>
+
+[[overview-getting-started-example-projects]]
+==== Example Projects
 
 To see complete, working examples of projects that you can copy and experiment with, the
 {junit5-samples-repo}[`junit5-samples`] repository is a good place to start. The
-`junit5-samples` repository hosts a collection of sample projects based on JUnit Jupiter
-and JUnit Vintage. You'll find the respective build scripts (e.g., `build.gradle`,
-`pom.xml`, etc.) in the projects below.
+`junit5-samples` repository hosts a collection of sample projects based on JUnit Jupiter,
+JUnit Vintage, and other testing frameworks. You'll find appropriate build scripts (e.g.,
+`build.gradle`, `pom.xml`, etc.) in the example projects. The links below highlight some
+of the combinations you can choose from.
 
 * For Gradle and Java, check out the `{junit5-jupiter-starter-gradle}` project.
 * For Gradle and Kotlin, check out the `{junit5-jupiter-starter-gradle-kotlin}` project.
