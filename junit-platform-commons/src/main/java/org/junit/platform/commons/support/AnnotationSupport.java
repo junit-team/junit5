@@ -225,15 +225,15 @@ public final class AnnotationSupport {
 	 * or <em>meta-annotated</em> with the specified {@code annotationType}.
 	 *
 	 * @param object the instance in which to find the fields; never {@code null}
-	 * @param fieldType the type of field to find; never {@code null}
 	 * @param annotationType the annotation type to search for; never {@code null}
+	 * @param fieldType the type of field to find; never {@code null}
 	 * @return the list of all such field values found; neither {@code null} nor mutable
 	 * @since 1.4
 	 * @see Class#getFields()
 	 */
 	@API(status = MAINTAINED, since = "1.4")
-	public static <T> List<T> findAnnotatedFieldValues(Object object, Class<T> fieldType,
-			Class<? extends Annotation> annotationType) {
+	public static <T> List<T> findAnnotatedFieldValues(Object object, Class<? extends Annotation> annotationType,
+			Class<T> fieldType) {
 
 		return ReflectionUtils.getFieldValues(findAnnotatedFields(object.getClass(), annotationType), object,
 			fieldType);
