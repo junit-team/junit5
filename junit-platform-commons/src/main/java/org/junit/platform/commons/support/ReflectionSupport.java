@@ -13,6 +13,7 @@ package org.junit.platform.commons.support;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.List;
@@ -194,6 +195,33 @@ public final class ReflectionSupport {
 	 */
 	public static Object invokeMethod(Method method, Object target, Object... args) {
 		return ReflectionUtils.invokeMethod(method, target, args);
+	}
+
+	/**
+	 * Find all {@linkplain Field fields} of the supplied class or interface
+	 * that match the specified {@code predicate}.
+	 *
+	 * <p>Fields declared in the same class or interface will be ordered using
+	 * an algorithm that is deterministic but intentionally nonobvious.
+	 *
+	 * <p>The results will not contain fields that are <em>hidden</em> or
+	 * {@linkplain Field#isSynthetic() synthetic}.
+	 *
+	 * @param clazz the class or interface in which to find the fields; never {@code null}
+	 * @param predicate the field filter; never {@code null}
+	 * @param traversalMode the hierarchy traversal mode; never {@code null}
+	 * @return an immutable list of all such fields found; never {@code null}
+	 * but potentially empty
+	 * @since 1.4
+	 */
+	@API(status = MAINTAINED, since = "1.4")
+	public static List<Field> findFields(Class<?> clazz, Predicate<Field> predicate,
+			HierarchyTraversalMode traversalMode) {
+
+		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
+
+		return ReflectionUtils.findFields(clazz, predicate,
+			ReflectionUtils.HierarchyTraversalMode.valueOf(traversalMode.name()));
 	}
 
 	/**

@@ -986,16 +986,7 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Find all {@linkplain Field fields} of the supplied class or interface
-	 * that match the specified {@code predicate}.
-	 *
-	 * <p>The results will not contain fields that are <em>hidden</em>.
-	 *
-	 * @param clazz the class or interface in which to find the fields; never {@code null}
-	 * @param predicate the field filter; never {@code null}
-	 * @param traversalMode the hierarchy traversal mode; never {@code null}
-	 * @return an immutable list of all such fields found; never {@code null}
-	 * but potentially empty
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findFields(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
 	public static List<Field> findFields(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {

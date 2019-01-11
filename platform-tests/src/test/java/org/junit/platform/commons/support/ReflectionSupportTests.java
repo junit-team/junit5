@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.commons.support.PreconditionAssertions.assertPreconditionViolationException;
 import static org.junit.platform.commons.support.PreconditionAssertions.assertPreconditionViolationExceptionForString;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.file.Path;
@@ -34,9 +35,10 @@ import org.junit.platform.commons.util.ReflectionUtils;
  */
 class ReflectionSupportTests {
 
-	private final Predicate<Class<?>> allTypes = type -> true;
-	private final Predicate<String> allNames = name -> true;
-	private final Predicate<Method> allMethods = name -> true;
+	private static final Predicate<Class<?>> allTypes = type -> true;
+	private static final Predicate<String> allNames = name -> true;
+	private static final Predicate<Method> allMethods = name -> true;
+	private static final Predicate<Field> allFields = name -> true;
 
 	@Test
 	@SuppressWarnings("deprecation")
@@ -134,6 +136,36 @@ class ReflectionSupportTests {
 			() -> ReflectionSupport.findAllClassesInModule("org.junit.platform.commons", null, allNames));
 		assertPreconditionViolationException("name predicate",
 			() -> ReflectionSupport.findAllClassesInModule("org.junit.platform.commons", allTypes, null));
+	}
+
+	@Test
+	void findFieldsDelegates() {
+
+		ReflectionSupport.findFields(ReflectionSupportTests.class, allFields, HierarchyTraversalMode.BOTTOM_UP).forEach(
+			System.out::println);
+
+		assertEquals(
+			ReflectionUtils.findFields(ReflectionSupportTests.class, allFields,
+				ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP),
+			ReflectionSupport.findFields(ReflectionSupportTests.class, allFields, HierarchyTraversalMode.BOTTOM_UP));
+		assertEquals(
+			ReflectionUtils.findFields(ReflectionSupportTests.class, allFields,
+				ReflectionUtils.HierarchyTraversalMode.TOP_DOWN),
+			ReflectionSupport.findFields(ReflectionSupportTests.class, allFields, HierarchyTraversalMode.TOP_DOWN));
+	}
+
+	@Test
+	void findFieldsPreconditions() {
+		assertPreconditionViolationException("Class",
+			() -> ReflectionSupport.findFields(null, allFields, HierarchyTraversalMode.BOTTOM_UP));
+		assertPreconditionViolationException("Class",
+			() -> ReflectionSupport.findFields(null, allFields, HierarchyTraversalMode.TOP_DOWN));
+		assertPreconditionViolationException("Predicate",
+			() -> ReflectionSupport.findFields(ReflectionSupportTests.class, null, HierarchyTraversalMode.BOTTOM_UP));
+		assertPreconditionViolationException("Predicate",
+			() -> ReflectionSupport.findFields(ReflectionSupportTests.class, null, HierarchyTraversalMode.TOP_DOWN));
+		assertPreconditionViolationException("HierarchyTraversalMode",
+			() -> ReflectionSupport.findFields(ReflectionSupportTests.class, allFields, null));
 	}
 
 	@Test
