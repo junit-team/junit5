@@ -175,8 +175,10 @@ public final class AnnotationSupport {
 	 * @param clazz the class or interface in which to find the fields; never {@code null}
 	 * @param annotationType the annotation type to search for; never {@code null}
 	 * @return the list of all such fields found; neither {@code null} nor mutable
+	 * @since 1.4
 	 * @see Class#getFields()
 	 */
+	@API(status = MAINTAINED, since = "1.4")
 	public static List<Field> findAnnotatedFields(Class<?> clazz, Class<? extends Annotation> annotationType) {
 
 		return AnnotationUtils.findAnnotatedFields(clazz, annotationType, f -> true);
@@ -209,8 +211,10 @@ public final class AnnotationSupport {
 	 * @param object the instance in which to find the fields; never {@code null}
 	 * @param annotationType the annotation type to search for; never {@code null}
 	 * @return the list of all such field values found; neither {@code null} nor mutable
+	 * @since 1.4
 	 * @see Class#getFields()
 	 */
+	@API(status = MAINTAINED, since = "1.4")
 	public static List<Object> findAnnotatedFieldValues(Object object, Class<? extends Annotation> annotationType) {
 		return ReflectionUtils.getFieldValues(findAnnotatedFields(object.getClass(), annotationType), object);
 	}
@@ -224,8 +228,10 @@ public final class AnnotationSupport {
 	 * @param fieldType the type of field to find; never {@code null}
 	 * @param annotationType the annotation type to search for; never {@code null}
 	 * @return the list of all such field values found; neither {@code null} nor mutable
+	 * @since 1.4
 	 * @see Class#getFields()
 	 */
+	@API(status = MAINTAINED, since = "1.4")
 	public static <T> List<T> findAnnotatedFieldValues(Object object, Class<T> fieldType,
 			Class<? extends Annotation> annotationType) {
 
