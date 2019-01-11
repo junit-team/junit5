@@ -575,6 +575,49 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * Read the values of the supplied fields, making each field accessible if
+	 * necessary and {@linkplain ExceptionUtils#throwAsUncheckedException masking}
+	 * any checked exception as an unchecked exception.
+	 *
+	 * @param fields the list of fields to read; never {@code null}
+	 * @param instance the instance from which the values are to be read; may
+	 * be {@code null} for static fields
+	 * @return an immutable list of the values of the specified fields; never
+	 * {@code null} but may be empty or contain {@code null} entries
+	 */
+	public static List<Object> readFieldValues(List<Field> fields, Object instance) {
+		return readFieldValues(fields, instance, Object.class);
+	}
+
+	/**
+	 * Read the values of the supplied fields, making each field accessible if
+	 * necessary, {@linkplain ExceptionUtils#throwAsUncheckedException masking}
+	 * any checked exception as an unchecked exception, and filtering out values
+	 * that not of the {@code requiredType}.
+	 *
+	 * @param fields the list of fields to read; never {@code null}
+	 * @param instance the instance from which the values are to be read; may
+	 * be {@code null} for static fields
+	 * @param requiredType the required type for the values; never {@code null}
+	 * @return an immutable list of the values of the specified fields; never
+	 * {@code null} but may be empty or contain {@code null} entries
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> readFieldValues(List<Field> fields, Object instance, Class<T> requiredType) {
+		Preconditions.notNull(fields, "fields list must not be null");
+		Preconditions.notNull(requiredType, "requiredType must not be null");
+
+		// @formatter:off
+		return (List<T>) fields.stream()
+				.map(field ->
+					tryToReadFieldValue(field, instance)
+						.getOrThrow(ExceptionUtils::throwAsUncheckedException))
+				.filter(value -> isAssignableTo(value, requiredType))
+				.collect(toUnmodifiableList());
+		// @formatter:on
+	}
+
+	/**
 	 * @see org.junit.platform.commons.support.ReflectionSupport#invokeMethod(Method, Object, Object...)
 	 */
 	public static Object invokeMethod(Method method, Object target, Object... args) {
@@ -1194,43 +1237,6 @@ public final class ReflectionUtils {
 				// unmodifiable since returned by public, non-internal method(s)
 				.collect(toUnmodifiableList());
 		// @formatter:on
-	}
-
-	/**
-	 * Get the values of the specified fields on the given instance.
-	 *
-	 * @param fields list of fields on a class(static or nonstatic); never {@code null}
-	 * @param object instance of a class; never {@code null}
-	 * @return an immutable list of values of the specified fields on the given instance; never {@code null} but
-	 * can contain null values
-	 */
-	public static List<Object> getFieldValues(List<Field> fields, Object object) {
-		return getFieldValues(fields, object, Object.class);
-	}
-
-	/**
-	 * Get the values of the specified fields of specified type on the given instance.
-	 *
-	 * @param fields list of fields on a class(static or nonstatic); never {@code null}
-	 * @param object instance of a class; never {@code null}
-	 * @param fieldType the type of all fields from fields; never {@code null}
-	 * @return an immutable list of values of the specified fields on the given instance; never {@code null} but
-	 * can contain null values
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> List<T> getFieldValues(List<Field> fields, Object object, Class<T> fieldType) {
-		Preconditions.notNull(fields, "Fields must not be null");
-		Preconditions.notNull(object, "Object must not be null");
-		Preconditions.notNull(fieldType, "Field type must not be null");
-
-		return fields.stream().map(ReflectionUtils::makeAccessible).map(f -> {
-			try {
-				return (T) f.get(object);
-			}
-			catch (IllegalAccessException e) {
-				throw ExceptionUtils.throwAsUncheckedException(e);
-			}
-		}).collect(toUnmodifiableList());
 	}
 
 	/**

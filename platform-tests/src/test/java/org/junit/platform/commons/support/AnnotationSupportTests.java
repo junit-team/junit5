@@ -142,14 +142,30 @@ class AnnotationSupportTests {
 
 	@Test
 	void findPublicAnnotatedFieldsDelegates() {
-		assertEquals(AnnotationUtils.findAnnotatedFields(Probe.class, FieldMarker.class, f -> true),
-			AnnotationSupport.findAnnotatedFields(Probe.class, FieldMarker.class));
-		assertEquals(AnnotationUtils.findAnnotatedFields(Probe.class, Override.class, f -> true),
-			AnnotationSupport.findAnnotatedFields(Probe.class, Override.class));
 		assertEquals(AnnotationUtils.findPublicAnnotatedFields(Probe.class, String.class, FieldMarker.class),
 			AnnotationSupport.findPublicAnnotatedFields(Probe.class, String.class, FieldMarker.class));
 		assertEquals(AnnotationUtils.findPublicAnnotatedFields(Probe.class, Throwable.class, Override.class),
 			AnnotationSupport.findPublicAnnotatedFields(Probe.class, Throwable.class, Override.class));
+	}
+
+	@Test
+	void findAnnotatedFieldsDelegates() {
+		assertEquals(AnnotationUtils.findAnnotatedFields(Probe.class, FieldMarker.class, f -> true),
+			AnnotationSupport.findAnnotatedFields(Probe.class, FieldMarker.class));
+		assertEquals(AnnotationUtils.findAnnotatedFields(Probe.class, Override.class, f -> true),
+			AnnotationSupport.findAnnotatedFields(Probe.class, Override.class));
+
+		assertEquals(
+			AnnotationUtils.findAnnotatedFields(Probe.class, FieldMarker.class, f -> true,
+				ReflectionUtils.HierarchyTraversalMode.TOP_DOWN),
+			AnnotationSupport.findAnnotatedFields(Probe.class, FieldMarker.class, f -> true,
+				HierarchyTraversalMode.TOP_DOWN));
+		assertEquals(
+			AnnotationUtils.findAnnotatedFields(Probe.class, Override.class, f -> true,
+				ReflectionUtils.HierarchyTraversalMode.TOP_DOWN),
+			AnnotationSupport.findAnnotatedFields(Probe.class, Override.class, f -> true,
+				HierarchyTraversalMode.TOP_DOWN));
+
 	}
 
 	@Target(ElementType.FIELD)

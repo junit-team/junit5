@@ -1137,67 +1137,89 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	void getFieldValuesWithNullParameters() {
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getFieldValues(null, new Object()));
+	void readFieldValuesPreconditions() {
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.readFieldValues(null, new Object()));
 		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.getFieldValues(new ArrayList<>(), null));
-		assertThrows(PreconditionViolationException.class,
-			() -> ReflectionUtils.getFieldValues(new ArrayList<>(), new Object(), null));
+			() -> ReflectionUtils.readFieldValues(new ArrayList<>(), new Object(), null));
 	}
 
 	@Test
-	void getFieldValues() {
-		ClassWithFields classWithFields = new ClassWithFields();
-		classWithFields.stringField = "string";
-		classWithFields.integerField = 10;
-		classWithFields.doubleField = 11.0;
-		classWithFields.privateStringField = "privatestring";
-		List<Field> fields = ReflectionUtils.findFields(ClassWithFields.class, f -> true, TOP_DOWN);
+	void readFieldValuesFromInstance() {
+		var fields = ReflectionUtils.findFields(ClassWithFields.class, f -> true, TOP_DOWN);
 
-		List<Object> fieldValuesForInstance = ReflectionUtils.getFieldValues(fields, classWithFields);
-		assertEquals(4, fieldValuesForInstance.size());
+		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields());
 
-		assertTrue(fieldValuesForInstance.get(0) instanceof String);
-		assertEquals(classWithFields.privateStringField, fieldValuesForInstance.get(0).toString());
-
-		assertTrue(fieldValuesForInstance.get(1) instanceof Double);
-		assertEquals(classWithFields.doubleField, (double) fieldValuesForInstance.get(1));
-
-		assertTrue(fieldValuesForInstance.get(2) instanceof String);
-		assertEquals(classWithFields.stringField, fieldValuesForInstance.get(2).toString());
-
-		assertTrue(fieldValuesForInstance.get(3) instanceof Integer);
-		assertEquals(classWithFields.integerField, (int) fieldValuesForInstance.get(3));
-
+		assertThat(values).containsExactly("enigma", 3.14, "text", 2.5, null, 42, "constant", 99);
 	}
 
 	@Test
-	void getFieldValuesOfType() {
-		ClassWithFields classWithFields = new ClassWithFields();
-		classWithFields.stringField = "string";
-		classWithFields.integerField = 10;
-		classWithFields.doubleField = 11.0;
-		classWithFields.privateStringField = "privatestring";
+	void readFieldValuesFromClass() {
+		var fields = ReflectionUtils.findFields(ClassWithFields.class, ReflectionUtils::isStatic, TOP_DOWN);
 
-		List<Field> stringFields = ReflectionUtils.findFields(ClassWithFields.class,
-			f -> f.getType().isAssignableFrom(String.class), TOP_DOWN);
-		List<String> stringFieldValues = ReflectionUtils.getFieldValues(stringFields, classWithFields, String.class);
-		assertEquals(2, stringFieldValues.size());
-		assertEquals(classWithFields.privateStringField, stringFieldValues.get(0));
-		assertEquals(classWithFields.stringField, stringFieldValues.get(1));
+		var values = ReflectionUtils.readFieldValues(fields, null);
 
-		List<Field> integerFields = ReflectionUtils.findFields(ClassWithFields.class,
-			f -> f.getType().isAssignableFrom(int.class), TOP_DOWN);
-		List<Integer> integerFieldValues = ReflectionUtils.getFieldValues(integerFields, classWithFields,
-			Integer.class);
-		assertEquals(1, integerFieldValues.size());
-		assertEquals(classWithFields.integerField, integerFieldValues.get(0).intValue());
+		assertThat(values).containsExactly(2.5, "constant", 99);
+	}
 
-		List<Field> doubleFields = ReflectionUtils.findFields(ClassWithFields.class,
-			f -> f.getType().isAssignableFrom(double.class), TOP_DOWN);
-		List<Double> doubleFieldValues = ReflectionUtils.getFieldValues(doubleFields, classWithFields, Double.class);
-		assertEquals(1, doubleFieldValues.size());
-		assertEquals(classWithFields.doubleField, doubleFieldValues.get(0).doubleValue());
+	@Test
+	void readFieldValuesFromInstanceWithTypeFilterForString() {
+		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(String.class), TOP_DOWN);
+
+		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), String.class);
+
+		assertThat(values).containsExactly("enigma", "text", null, "constant");
+	}
+
+	@Test
+	void readFieldValuesFromClassWithTypeFilterForString() {
+		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(String.class).and(ReflectionUtils::isStatic),
+			TOP_DOWN);
+
+		var values = ReflectionUtils.readFieldValues(fields, null, String.class);
+
+		assertThat(values).containsExactly("constant");
+	}
+
+	@Test
+	void readFieldValuesFromInstanceWithTypeFilterForInteger() {
+		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(int.class), TOP_DOWN);
+
+		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), Integer.class);
+
+		assertThat(values).containsExactly(42);
+	}
+
+	@Test
+	void readFieldValuesFromClassWithTypeFilterForInteger() {
+		var fields = ReflectionUtils.findFields(ClassWithFields.class,
+			isA(Integer.class).and(ReflectionUtils::isStatic), TOP_DOWN);
+
+		var values = ReflectionUtils.readFieldValues(fields, null, Integer.class);
+
+		assertThat(values).containsExactly(99);
+	}
+
+	@Test
+	void readFieldValuesFromInstanceWithTypeFilterForDouble() {
+		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(double.class), TOP_DOWN);
+
+		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), double.class);
+
+		assertThat(values).containsExactly(3.14);
+	}
+
+	@Test
+	void readFieldValuesFromClassWithTypeFilterForDouble() {
+		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(Double.class).and(ReflectionUtils::isStatic),
+			TOP_DOWN);
+
+		var values = ReflectionUtils.readFieldValues(fields, null, double.class);
+
+		assertThat(values).containsExactly(2.5);
+	}
+
+	private Predicate<Field> isA(Class<?> type) {
+		return f -> f.getType().isAssignableFrom(type);
 	}
 
 	private static void createDirectories(Path... paths) throws IOException {
@@ -1603,13 +1625,22 @@ class ReflectionUtilsTests {
 
 	public static class ClassWithFields {
 
-		public int integerField;
+		public static final String CONST = "constant";
 
-		public String stringField;
+		public static final Integer CONST_INTEGER = 99;
 
-		public double doubleField;
+		public static final Double CONST_DOUBLE = 2.5;
 
-		private String privateStringField;
+		public final String stringField = "text";
+
+		@SuppressWarnings("unused")
+		private final String privateStringField = "enigma";
+
+		final String nullStringField = null;
+
+		public final int integerField = 42;
+
+		public final double doubleField = 3.14;
 
 	}
 
