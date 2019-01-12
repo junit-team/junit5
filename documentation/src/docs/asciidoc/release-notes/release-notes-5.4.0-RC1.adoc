@@ -60,6 +60,8 @@ repository on GitHub.
     Null and Empty Sources>> in the User Guide for details.
 * New `TestWatcher` extension API that allows extensions to process test results by
   defining result-based callbacks invoked after text execution.
+  - See <<../user-guide/index.adoc#extensions-test-result-processing, Test Result
+    Processing>> in the User Guide for details.
 
 
 [[release-notes-5.4.0-RC1-junit-vintage]]

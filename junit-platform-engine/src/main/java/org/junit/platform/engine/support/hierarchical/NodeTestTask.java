@@ -97,6 +97,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 					this.testDescriptor.getDisplayName(), this.testDescriptor.getUniqueId()));
 			}
 		}
+
 		// Clear reference to context to allow it to be garbage collected.
 		// See https://github.com/junit-team/junit5/issues/1578
 		context = null;
@@ -158,7 +159,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 			catch (Throwable throwable) {
 				BlacklistedExceptions.rethrowIfBlacklisted(throwable);
 				logger.debug(throwable,
-					() -> String.format("Failed to invoke nodeSkipped on Node %s", testDescriptor.getUniqueId()));
+					() -> String.format("Failed to invoke nodeSkipped() on Node %s", testDescriptor.getUniqueId()));
 			}
 			taskContext.getListener().executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
 			return;
@@ -173,7 +174,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		catch (Throwable throwable) {
 			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
 			logger.debug(throwable,
-				() -> String.format("Failed to invoke nodeFinished on Node %s", testDescriptor.getUniqueId()));
+				() -> String.format("Failed to invoke nodeFinished() on Node %s", testDescriptor.getUniqueId()));
 		}
 		taskContext.getListener().executionFinished(testDescriptor, throwableCollector.toTestExecutionResult());
 		throwableCollector = null;
@@ -210,4 +211,5 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 			}
 		}
 	}
+
 }

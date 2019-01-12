@@ -245,46 +245,51 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	@Override
 	public void nodeSkipped(JupiterEngineExecutionContext context, TestDescriptor descriptor, SkipResult result) {
 		if (context != null) {
-			invokeTestWatchers(context, watcher -> {
-				watcher.testDisabled(context.getExtensionContext(), result.getReason());
-			}, false);
+			invokeTestWatchers(context, false,
+				watcher -> watcher.testDisabled(context.getExtensionContext(), result.getReason()));
 		}
 	}
 
 	@Override
 	public void nodeFinished(JupiterEngineExecutionContext context, TestDescriptor descriptor,
 			TestExecutionResult result) {
+
 		if (context != null) {
-			invokeTestWatchers(context, watcher -> {
-				ExtensionContext extensionContext = context.getExtensionContext();
-				TestExecutionResult.Status status = result.getStatus();
+			ExtensionContext extensionContext = context.getExtensionContext();
+			TestExecutionResult.Status status = result.getStatus();
+
+			invokeTestWatchers(context, true, watcher -> {
 				switch (status) {
 					case SUCCESSFUL:
 						watcher.testSuccessful(extensionContext);
 						break;
-					case FAILED:
-						watcher.testFailed(extensionContext, result.getThrowable().get());
-						break;
 					case ABORTED:
-						watcher.testAborted(extensionContext, result.getThrowable().get());
+						watcher.testAborted(extensionContext, result.getThrowable().orElse(null));
+						break;
+					case FAILED:
+						watcher.testFailed(extensionContext, result.getThrowable().orElse(null));
 						break;
 				}
-			}, true);
+			});
 		}
 	}
 
-	private void invokeTestWatchers(JupiterEngineExecutionContext context, Consumer<TestWatcher> callback,
-			boolean reverseOrder) {
+	private void invokeTestWatchers(JupiterEngineExecutionContext context, boolean reverseOrder,
+			Consumer<TestWatcher> callback) {
+
 		ExtensionRegistry registry = context.getExtensionRegistry();
-		List<? extends TestWatcher> watchers = reverseOrder ? registry.getReversedExtensions(TestWatcher.class)
+
+		List<TestWatcher> watchers = reverseOrder //
+				? registry.getReversedExtensions(TestWatcher.class)
 				: registry.getExtensions(TestWatcher.class);
+
 		watchers.forEach(watcher -> {
 			try {
 				callback.accept(watcher);
 			}
 			catch (Throwable throwable) {
-				ExtensionContext extensionContext = context.getExtensionContext();
 				BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+				ExtensionContext extensionContext = context.getExtensionContext();
 				logger.warn(throwable,
 					() -> String.format("Failed to invoke TestWatcher %s for test %s", watcher.getClass().getName(),
 						ReflectionUtils.getFullyQualifiedMethodName(extensionContext.getRequiredTestClass(),

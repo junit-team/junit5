@@ -347,23 +347,27 @@ those provided in `java.lang.reflect.Parameter` in order to avoid this bug in th
 ====
 
 [[extensions-test-result-processing]]
-=== Test result processing
+=== Test Result Processing
 
 `{TestWatcher}` defines the API for extensions that wish to process test results.
+Specifically, a `TestWatcher` will be invoked with contextual information for the
+following events.
 
-Test methods extended with any number of TestWatcher extensions will
-have their results reported to each of them, by invoking the interface method
-corresponding to the test result. Methods are injected with the current ExtensionContext
-and the cause of a failed/aborted/skipped execution, where applicable.
+* `testDisabled`: invoked after a disabled test has been skipped
+* `testSuccessful`: invoked after a test has completed successfully
+* `testAborted`: invoked after a test has been aborted
+* `testFailed`: invoked after a test has failed
 
-Extensions implementing this interface can also be registered at the class level,
-and will be invoked for any contained tests including nested classes.
+Extensions implementing this interface can be registered at the method level or at the
+class level. In the latter case they will be invoked for any contained tests including
+those in `@Nested` classes.
 
 [WARNING]
 ====
-Any instances of `ExtensionContext.Store.CloseableResource` stored in the provided
-`{ExtensionContext}` will be closed (see <<extensions-keeping-state>>). You can use the
-parent context's store to operate with such resources.
+Any instances of `ExtensionContext.Store.CloseableResource` stored in the `Store` of the
+provided `{ExtensionContext}` will be closed _before_ methods in this API are invoked (see
+<<extensions-keeping-state>>). You can use the parent context's `Store` to work with such
+resources.
 ====
 
 [[extensions-lifecycle-callbacks]]

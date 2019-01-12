@@ -122,30 +122,6 @@ public interface Node<C extends EngineExecutionContext> {
 	}
 
 	/**
-	 * Action triggered when the execution of this Node is skipped.
-	 *
-	 *  @param context the execution context
-	 *  @param descriptor  the skipped test {@link TestDescriptor}
-	 *  @param result the cause of skipped execution
-	 * @since 1.4
-	 */
-	@API(status = MAINTAINED, since = "1.4", consumers = "org.junit.platform.engine.support.hierarchical")
-	default void nodeSkipped(C context, TestDescriptor descriptor, SkipResult result) {
-	}
-
-	/**
-	 * Action triggered when the execution of this Node has finished.
-	 *
-	 * @param context the execution context
-	 * @param descriptor the skipped test's {@link TestDescriptor}
-	 * @param result the {@link TestExecutionResult} resulting from the execution of {@code descriptor}
-	 * @since 1.4
-	 */
-	@API(status = MAINTAINED, since = "1.4", consumers = "org.junit.platform.engine.support.hierarchical")
-	default void nodeFinished(C context, TestDescriptor descriptor, TestExecutionResult result) {
-	}
-
-	/**
 	 * Wraps around the invocation of {@link #before(EngineExecutionContext)},
 	 * {@link #execute(EngineExecutionContext, DynamicTestExecutor)}, and
 	 * {@link #after(EngineExecutionContext)}.
@@ -157,6 +133,34 @@ public interface Node<C extends EngineExecutionContext> {
 	@API(status = EXPERIMENTAL, since = "1.4")
 	default void around(C context, Invocation<C> invocation) throws Exception {
 		invocation.invoke(context);
+	}
+
+	/**
+	 * Callback invoked when the execution of this node has been skipped.
+	 *
+	 * <p>The default implementation does nothing.
+	 *
+	 * @param context the execution context
+	 * @param testDescriptor the test descriptor that was skipped
+	 * @param result the result of skipped execution
+	 * @since 1.4
+	 */
+	@API(status = EXPERIMENTAL, since = "1.4", consumers = "org.junit.platform.engine.support.hierarchical")
+	default void nodeSkipped(C context, TestDescriptor testDescriptor, SkipResult result) {
+	}
+
+	/**
+	 * Callback invoked when the execution of this node has finished.
+	 *
+	 * <p>The default implementation does nothing.
+	 *
+	 * @param context the execution context
+	 * @param testDescriptor the test descriptor that was executed
+	 * @param result the result of the execution
+	 * @since 1.4
+	 */
+	@API(status = EXPERIMENTAL, since = "1.4", consumers = "org.junit.platform.engine.support.hierarchical")
+	default void nodeFinished(C context, TestDescriptor testDescriptor, TestExecutionResult result) {
 	}
 
 	/**

@@ -17,21 +17,39 @@ import java.util.Optional;
 import org.apiguardian.api.API;
 
 /**
- * The {@code TestWatcher} interface defines an extension API for processing test results.
+ * {@code TestWatcher} defines the API for {@link Extension Extensions} that
+ * wish to process test results.
  *
- * <p> Interface methods are called after a test has been processed. Currently,
- * only method based tests will be reported.
+ * <p>The methods in this API are called after a test has been skipped or
+ * executed. Any {@link ExtensionContext.Store.CloseableResource CloseableResource}
+ * objects stored in the {@link ExtensionContext.Store Store} of the supplied
+ * {@link ExtensionContext} will have already been <strong>closed</strong> before
+ * methods in this API are invoked.
  *
- * <p>Extensions implementing this API can be registered at any level, reporting subsequent
- * tests down the chain.
+ * <p>Please note that this API is currently only used to report the results of
+ * method-based tests.
  *
- * <p>Any {@code ClosableResource} objects stored in the injected {@link ExtensionContext}
- * have already been <strong>closed</strong> at invocation time.
+ * <p>Extensions implementing this API can be registered at any level.
+ *
+ * <h3>Exception Handling</h3>
+ *
+ * <p>In contrast to other {@link Extension} APIs, a {@code TestWatcher} is not
+ * permitted to adversely influence the execution of tests. Consequently, any
+ * exception thrown by a {@code TestWatcher} will be logged at {@code WARNING}
+ * level and will not allowed to propagate or fail test execution.
  *
  * @since 5.4
  */
 @API(status = EXPERIMENTAL, since = "5.4")
 public interface TestWatcher extends Extension {
+
+	/**
+	 * Invoked after a disabled test has been skipped.
+	 *
+	 * @param context the current extension context; never {@code null}
+	 * @param reason the reason the test is disabled; never {@code null}
+	 */
+	void testDisabled(ExtensionContext context, Optional<String> reason);
 
 	/**
 	 * Invoked after a test has completed successfully.
@@ -41,7 +59,7 @@ public interface TestWatcher extends Extension {
 	void testSuccessful(ExtensionContext context);
 
 	/**
-	 * Invoked after a test was aborted.
+	 * Invoked after a test has been aborted.
 	 *
 	 * @param context the current extension context; never {@code null}
 	 * @param cause the throwable responsible for the test being aborted; may be {@code null}
@@ -56,11 +74,4 @@ public interface TestWatcher extends Extension {
 	 */
 	void testFailed(ExtensionContext context, Throwable cause);
 
-	/**
-	 * Invoked after skipping a disabled test.
-	 *
-	 * @param context the current extension context; never {@code null}
-	 * @param reason the reason for skipping the test; never {@code null}
-	 */
-	void testDisabled(ExtensionContext context, Optional<String> reason);
 }
