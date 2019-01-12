@@ -60,6 +60,7 @@ public final class AnnotationSupport {
 	 * @see #isAnnotated(AnnotatedElement, Class)
 	 * @see #findAnnotation(Optional, Class)
 	 */
+	@API(status = MAINTAINED, since = "1.3")
 	public static boolean isAnnotated(Optional<? extends AnnotatedElement> element,
 			Class<? extends Annotation> annotationType) {
 
@@ -93,8 +94,10 @@ public final class AnnotationSupport {
 	 * @param annotationType the annotation type to search for; never {@code null}
 	 * @return an {@code Optional} containing the annotation; never {@code null} but
 	 * potentially empty
+	 * @since 1.1
 	 * @see #findAnnotation(AnnotatedElement, Class)
 	 */
+	@API(status = MAINTAINED, since = "1.1")
 	public static <A extends Annotation> Optional<A> findAnnotation(Optional<? extends AnnotatedElement> element,
 			Class<A> annotationType) {
 
