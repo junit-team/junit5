@@ -104,6 +104,9 @@ final class ExtensionUtils {
 
 		fields.forEach(field -> {
 			tryToReadFieldValue(field, instance).ifSuccess(value -> {
+				Preconditions.notNull(value, () -> String.format(
+					"Failed to register extension via @RegisterExtension field [%s]: field must not be null when evaluated.",
+					field));
 				Extension extension = (Extension) value;
 				registry.registerExtension(extension, field);
 			});

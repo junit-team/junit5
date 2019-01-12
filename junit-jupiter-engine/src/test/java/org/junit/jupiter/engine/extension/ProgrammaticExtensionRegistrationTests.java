@@ -40,6 +40,7 @@ import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
@@ -80,6 +81,36 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	@Test
 	void classLevelFromInterface() {
 		assertOneTestSucceeded(ExtensionRegistrationFromInterfaceTestCase.class);
+	}
+
+	@Test
+	void instanceLevelWithNullField() {
+		Class<?> testClass = InstanceLevelExtensionRegistrationWithNullFieldTestCase.class;
+
+		executeTestsForClass(testClass).tests().assertThatEvents().haveExactly(1,
+			finishedWithFailure(instanceOf(PreconditionViolationException.class), message(expectedMessage(testClass))));
+	}
+
+	@Test
+	void classLevelWithNullField() {
+		Class<?> testClass = ClassLevelExtensionRegistrationWithNullFieldTestCase.class;
+
+		executeTestsForClass(testClass).containers().assertThatEvents().haveExactly(1,
+			finishedWithFailure(instanceOf(PreconditionViolationException.class), message(expectedMessage(testClass))));
+	}
+
+	private String expectedMessage(Class<?> testClass) {
+		return "Failed to register extension via @RegisterExtension field [" + field(testClass)
+				+ "]: field must not be null when evaluated.";
+	}
+
+	private Field field(Class<?> testClass) {
+		try {
+			return testClass.getDeclaredField("extension");
+		}
+		catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 
 	@Test
@@ -319,6 +350,20 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 		@Test
 		void test() {
 		}
+
+	}
+
+	static class InstanceLevelExtensionRegistrationWithNullFieldTestCase extends AbstractTestCase {
+
+		@RegisterExtension
+		Extension extension;
+
+	}
+
+	static class ClassLevelExtensionRegistrationWithNullFieldTestCase extends AbstractTestCase {
+
+		@RegisterExtension
+		static Extension extension;
 
 	}
 
