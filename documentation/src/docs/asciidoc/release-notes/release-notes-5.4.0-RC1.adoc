@@ -1,5 +1,5 @@
-[[release-notes-5.4.0-M2]]
-== 5.4.0-M2
+[[release-notes-5.4.0-RC1]]
+== 5.4.0-RC1
 
 *Date of Release:* ❓
 
@@ -7,18 +7,18 @@
 `@ParameterizedTest` methods, as well as minor improvements and bug fixes since 5.4.0-M1.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/32?closed=1+[5.4.0-M2] milestone page in the JUnit
+link:{junit5-repo}+/milestone/32?closed=1+[5.4.0-RC1] milestone page in the JUnit
 repository on GitHub.
 
 
-[[release-notes-5.4.0-M2-overall-improvements]]
+[[release-notes-5.4.0-RC1-overall-improvements]]
 === Overall Improvements
 
 * A regression introduced in version 5.4.0-M1 of the `junit-bom` has been fixed:
   `<scope/>` elements are omitted from the `<dependency/>` elements again.
 
 
-[[release-notes-5.4.0-M2-junit-platform]]
+[[release-notes-5.4.0-RC1-junit-platform]]
 === JUnit Platform
 
 ==== Bug Fixes
@@ -34,7 +34,7 @@ repository on GitHub.
 * ❓
 
 
-[[release-notes-5.4.0-M2-junit-jupiter]]
+[[release-notes-5.4.0-RC1-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
@@ -57,7 +57,7 @@ repository on GitHub.
     Null and Empty Sources>> in the User Guide for details.
 
 
-[[release-notes-5.4.0-M2-junit-vintage]]
+[[release-notes-5.4.0-RC1-junit-vintage]]
 === JUnit Vintage
 
 ==== Bug Fixes
