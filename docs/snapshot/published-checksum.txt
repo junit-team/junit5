@@ -451,6 +451,7 @@ c1dce8d7d5de8586edf51ebb8306d5d2  documentation/src/test/java/example/defaultmet
 c27e3f8d6eacbb0a814b0260144291d6  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsNestedTestClass.java
 c30ed9a2cb7439134ec150102d9bf94d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/script/ScriptAccessor.java
 c3403d01302e3c6cef0de83dfb2a8635  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LoggerFactory.java
+c360ce18bdf97215cbea81589a70ba70  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageTestDescriptor.java
 c3688201bf2478ac367a27021cc6f4d3  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/package-info.java
 c385f3d605bcb2ffb936518e30cb42fe  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/FileSelector.java
 c4bae4bd05858c3904478e642cd93dda  junit-platform-engine/src/main/java/org/junit/platform/engine/TestExecutionResult.java
@@ -571,7 +572,6 @@ f049f59e0faf16a11c7105b9bc8d7bd1  documentation/src/docs/asciidoc/docinfos/index
 f08ec93048fdd5b2fdcde96b48b1d90c  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/TestExecutionSummary.java
 f0b2ca619d96206c214dbbb9c31563e6  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestNameFormatter.java
 f12dddde4058f12477f7f738aff75d95  documentation/src/test/java/example/DynamicTestsDemo.java
-f13717dbd77fa7d75ce96105aae25d5a  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageTestDescriptor.java
 f1762a519ec6c0fc1ff8ba86ed0e5145  documentation/src/test/java/example/TestReporterDemo.java
 f1bf2dbc836072da61d73568717d7c1d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DisplayNameUtils.java
 f1dc89ee329c3675cc5e7fc929b9ffe3  documentation/src/docs/asciidoc/link-attributes.adoc

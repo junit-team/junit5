@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -269,20 +269,29 @@ extends <a href="../../../platform/engine/support/descriptor/AbstractTestDescrip
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLegacyReportingName()">getLegacyReportingName</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Get the name of this descriptor in a format that is suitable for legacy
+ reporting infrastructure &mdash; for example, for reporting systems built
+ on the Ant-based XML reporting format for JUnit 4.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../platform/engine/TestTag.html" title="class in org.junit.platform.engine">TestTag</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTags()">getTags</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the set of <a href="../../../platform/engine/TestTag.html" title="class in org.junit.platform.engine">tags</a> associated with this descriptor.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../../../platform/engine/TestDescriptor.Type.html" title="enum in org.junit.platform.engine">TestDescriptor.Type</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getType()">getType</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Determine the <a href="../../../platform/engine/TestDescriptor.Type.html" title="enum in org.junit.platform.engine"><code>TestDescriptor.Type</code></a> of this descriptor.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeFromHierarchy()">removeFromHierarchy</a></span>()</code></th>
 <td class="colLast">
@@ -290,7 +299,7 @@ extends <a href="../../../platform/engine/support/descriptor/AbstractTestDescrip
  children from this descriptor.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>protected boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tryToExcludeFromRunner(org.junit.runner.Description)">tryToExcludeFromRunner</a></span>&#8203;(<a href="https://junit.org/junit4/javadoc/4.12/org/junit/runner/Description.html?is-external=true" title="class or interface in org.junit.runner" class="externalLink">Description</a>&nbsp;description)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -315,7 +324,7 @@ extends <a href="../../../platform/engine/support/descriptor/AbstractTestDescrip
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;org.junit.platform.engine.<a href="../../../platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a></h3>
-<code><a href="../../../platform/engine/TestDescriptor.html#accept(org.junit.platform.engine.TestDescriptor.Visitor)">accept</a>, <a href="../../../platform/engine/TestDescriptor.html#getDescendants()">getDescendants</a>, <a href="../../../platform/engine/TestDescriptor.html#getLegacyReportingName()">getLegacyReportingName</a>, <a href="../../../platform/engine/TestDescriptor.html#isContainer()">isContainer</a>, <a href="../../../platform/engine/TestDescriptor.html#isRoot()">isRoot</a>, <a href="../../../platform/engine/TestDescriptor.html#isTest()">isTest</a>, <a href="../../../platform/engine/TestDescriptor.html#mayRegisterTests()">mayRegisterTests</a>, <a href="../../../platform/engine/TestDescriptor.html#prune()">prune</a></code></li>
+<code><a href="../../../platform/engine/TestDescriptor.html#accept(org.junit.platform.engine.TestDescriptor.Visitor)">accept</a>, <a href="../../../platform/engine/TestDescriptor.html#getDescendants()">getDescendants</a>, <a href="../../../platform/engine/TestDescriptor.html#isContainer()">isContainer</a>, <a href="../../../platform/engine/TestDescriptor.html#isRoot()">isRoot</a>, <a href="../../../platform/engine/TestDescriptor.html#isTest()">isTest</a>, <a href="../../../platform/engine/TestDescriptor.html#mayRegisterTests()">mayRegisterTests</a>, <a href="../../../platform/engine/TestDescriptor.html#prune()">prune</a></code></li>
 </ul>
 </li>
 </ul>
@@ -422,6 +431,25 @@ extends <a href="../../../platform/engine/support/descriptor/AbstractTestDescrip
 <li class="blockList">
 <h4>getDescription</h4>
 <pre class="methodSignature">public&nbsp;<a href="https://junit.org/junit4/javadoc/4.12/org/junit/runner/Description.html?is-external=true" title="class or interface in org.junit.runner" class="externalLink">Description</a>&nbsp;getDescription()</pre>
+</li>
+</ul>
+<a id="getLegacyReportingName()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLegacyReportingName</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getLegacyReportingName()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../platform/engine/TestDescriptor.html#getLegacyReportingName()">TestDescriptor</a></code></span></div>
+<div class="block">Get the name of this descriptor in a format that is suitable for legacy
+ reporting infrastructure &mdash; for example, for reporting systems built
+ on the Ant-based XML reporting format for JUnit 4.
+
+ <p>The default implementation simply delegates to <a href="../../../platform/engine/TestDescriptor.html#getDisplayName()"><code>TestDescriptor.getDisplayName()</code></a>.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the legacy reporting name; never <code>null</code> or blank</dd>
+</dl>
 </li>
 </ul>
 <a id="getType()">
