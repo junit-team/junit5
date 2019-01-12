@@ -60,7 +60,7 @@ public interface TestTemplateInvocationContext {
 	 * <p>The default implementation returns an empty list.
 	 *
 	 * @return the additional extensions for this invocation; never {@code null}
-	 * but potentially empty
+	 * or containing {@code null} elements, but potentially empty
 	 */
 	default List<Extension> getAdditionalExtensions() {
 		return emptyList();

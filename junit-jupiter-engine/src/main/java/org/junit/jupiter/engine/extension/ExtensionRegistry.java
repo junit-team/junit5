@@ -239,11 +239,15 @@ public class ExtensionRegistry {
 	 * or method reference, the {@code source} object should be the underlying
 	 * {@link java.lang.reflect.Method} that implements the extension API.
 	 *
-	 * @param extension the extension to register
-	 * @param source the source of the extension
+	 * @param extension the extension to register; never {@code null}
+	 * @param source the source of the extension; never {@code null}
 	 */
 	public void registerExtension(Extension extension, Object source) {
+		Preconditions.notNull(extension, "Extension must not be null");
+		Preconditions.notNull(source, "source must not be null");
+
 		logger.trace(() -> String.format("Registering extension [%s] from source [%s].", extension, source));
+
 		this.registeredExtensions.add(extension);
 	}
 
