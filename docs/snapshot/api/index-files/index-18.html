@@ -204,6 +204,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block"><code>@Testable</code> is used to signal to IDEs and tooling vendors that the
  annotated or meta-annotated element is <em>testable</em>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/TestWatcher.html#testAborted(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)">testAborted(ExtensionContext, Throwable)</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/TestWatcher.html" title="interface in org.junit.jupiter.api.extension">TestWatcher</a></dt>
+<dd>
+<div class="block">Invoked after a test has been aborted.</div>
+</dd>
 <dt><a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><span class="typeNameLink">TestDescriptor</span></a> - Interface in <a href="../org/junit/platform/engine/package-summary.html">org.junit.platform.engine</a></dt>
 <dd>
 <div class="block">Mutable descriptor for a test or container that has been discovered by a
@@ -216,6 +220,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><a href="../org/junit/platform/engine/TestDescriptor.Visitor.html" title="interface in org.junit.platform.engine"><span class="typeNameLink">TestDescriptor.Visitor</span></a> - Interface in <a href="../org/junit/platform/engine/package-summary.html">org.junit.platform.engine</a></dt>
 <dd>
 <div class="block">Visitor for the tree-like <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> structure.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/TestWatcher.html#testDisabled(org.junit.jupiter.api.extension.ExtensionContext,java.util.Optional)">testDisabled(ExtensionContext, Optional&lt;String&gt;)</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/TestWatcher.html" title="interface in org.junit.jupiter.api.extension">TestWatcher</a></dt>
+<dd>
+<div class="block">Invoked after a disabled test has been skipped.</div>
 </dd>
 <dt><a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><span class="typeNameLink">TestEngine</span></a> - Interface in <a href="../org/junit/platform/engine/package-summary.html">org.junit.platform.engine</a></dt>
 <dd>
@@ -265,6 +273,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.html#%3Cinit%3E(org.junit.platform.engine.UniqueId,java.lang.Class,java.lang.reflect.Method,org.junit.jupiter.engine.config.JupiterConfiguration)">TestFactoryTestDescriptor(UniqueId, Class&lt;?&gt;, Method, JupiterConfiguration)</a></span> - Constructor for class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestFactoryTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/TestWatcher.html#testFailed(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)">testFailed(ExtensionContext, Throwable)</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/TestWatcher.html" title="interface in org.junit.jupiter.api.extension">TestWatcher</a></dt>
+<dd>
+<div class="block">Invoked after a test has failed.</div>
+</dd>
 <dt><a href="../org/junit/platform/launcher/TestIdentifier.html" title="class in org.junit.platform.launcher"><span class="typeNameLink">TestIdentifier</span></a> - Class in <a href="../org/junit/platform/launcher/package-summary.html">org.junit.platform.launcher</a></dt>
 <dd>
 <div class="block">Immutable data transfer object that represents a test or container which is
@@ -387,6 +399,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Representation of the source of a test or container used to navigate to
  its location by IDEs and build tools.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/TestWatcher.html#testSuccessful(org.junit.jupiter.api.extension.ExtensionContext)">testSuccessful(ExtensionContext)</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/TestWatcher.html" title="interface in org.junit.jupiter.api.extension">TestWatcher</a></dt>
+<dd>
+<div class="block">Invoked after a test has completed successfully.</div>
+</dd>
 <dt><a href="../org/junit/platform/engine/TestTag.html" title="class in org.junit.platform.engine"><span class="typeNameLink">TestTag</span></a> - Class in <a href="../org/junit/platform/engine/package-summary.html">org.junit.platform.engine</a></dt>
 <dd>
 <div class="block">Immutable value object for a <em>tag</em> that is assigned to a test or
@@ -422,6 +438,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.html#%3Cinit%3E(org.junit.platform.engine.UniqueId,java.lang.Class,java.lang.reflect.Method,org.junit.jupiter.engine.config.JupiterConfiguration)">TestTemplateTestDescriptor(UniqueId, Class&lt;?&gt;, Method, JupiterConfiguration)</a></span> - Constructor for class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestTemplateTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="../org/junit/jupiter/api/extension/TestWatcher.html" title="interface in org.junit.jupiter.api.extension"><span class="typeNameLink">TestWatcher</span></a> - Interface in <a href="../org/junit/jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a></dt>
+<dd>
+<div class="block"><code>TestWatcher</code> defines the API for <a href="../org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that
+ wish to process test results.</div>
+</dd>
 <dt><a href="../org/junit/platform/console/options/Theme.html" title="enum in org.junit.platform.console.options"><span class="typeNameLink">Theme</span></a> - Enum in <a href="../org/junit/platform/console/options/package-summary.html">org.junit.platform.console.options</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/TestExecutionResultConditions.html#throwable(org.assertj.core.api.Condition)">throwable(Condition&lt;? super Throwable&gt;)</a></span> - Static method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/TestExecutionResultConditions.html" title="class in org.junit.platform.testkit.engine">TestExecutionResultConditions</a></dt>

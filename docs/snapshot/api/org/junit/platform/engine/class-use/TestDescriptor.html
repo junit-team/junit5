@@ -284,6 +284,30 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 </tbody>
 </table>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../../jupiter/engine/descriptor/package-summary.html">org.junit.jupiter.engine.descriptor</a> with parameters of type <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">TestMethodTestDescriptor.</span><code><span class="memberNameLink"><a href="../../../jupiter/engine/descriptor/TestMethodTestDescriptor.html#nodeFinished(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">nodeFinished</a></span>&#8203;(<a href="../../../jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context,
+            <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor,
+            <a href="../TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;result)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">TestMethodTestDescriptor.</span><code><span class="memberNameLink"><a href="../../../jupiter/engine/descriptor/TestMethodTestDescriptor.html#nodeSkipped(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.support.hierarchical.Node.SkipResult)">nodeSkipped</a></span>&#8203;(<a href="../../../jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context,
+           <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor,
+           <a href="../support/hierarchical/Node.SkipResult.html" title="class in org.junit.platform.engine.support.hierarchical">Node.SkipResult</a>&nbsp;result)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+</tbody>
+</table>
 </section>
 </li>
 <li class="blockList">
@@ -609,6 +633,24 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">Node.DynamicTestExecutor.</span><code><span class="memberNameLink"><a href="../support/hierarchical/Node.DynamicTestExecutor.html#execute(org.junit.platform.engine.TestDescriptor)">execute</a></span>&#8203;(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</code></th>
 <td class="colLast">
 <div class="block">Submit a dynamic test descriptor for immediate execution.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>default void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Node.</span><code><span class="memberNameLink"><a href="../support/hierarchical/Node.html#nodeFinished(C,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">nodeFinished</a></span>&#8203;(<a href="../support/hierarchical/Node.html" title="type parameter in Node">C</a>&nbsp;context,
+            <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+            <a href="../TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;result)</code></th>
+<td class="colLast">
+<div class="block">Callback invoked when the execution of this node has finished.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>default void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Node.</span><code><span class="memberNameLink"><a href="../support/hierarchical/Node.html#nodeSkipped(C,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.support.hierarchical.Node.SkipResult)">nodeSkipped</a></span>&#8203;(<a href="../support/hierarchical/Node.html" title="type parameter in Node">C</a>&nbsp;context,
+           <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+           <a href="../support/hierarchical/Node.SkipResult.html" title="class in org.junit.platform.engine.support.hierarchical">Node.SkipResult</a>&nbsp;result)</code></th>
+<td class="colLast">
+<div class="block">Callback invoked when the execution of this node has been skipped.</div>
 </td>
 </tr>
 </tbody>

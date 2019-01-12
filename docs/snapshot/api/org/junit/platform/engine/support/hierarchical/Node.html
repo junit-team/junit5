@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":18,"i1":18,"i2":18,"i3":18,"i4":18,"i5":18,"i6":18,"i7":18,"i8":18};
+var data = {"i0":18,"i1":18,"i2":18,"i3":18,"i4":18,"i5":18,"i6":18,"i7":18,"i8":18,"i9":18,"i10":18};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -269,13 +269,31 @@ public interface <span class="typeNameLabel">Node&lt;C extends <a href="EngineEx
 </td>
 </tr>
 <tr id="i7" class="rowColor">
+<td class="colFirst"><code>default void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nodeFinished(C,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">nodeFinished</a></span>&#8203;(<a href="Node.html" title="type parameter in Node">C</a>&nbsp;context,
+            <a href="../../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+            <a href="../../TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;result)</code></th>
+<td class="colLast">
+<div class="block">Callback invoked when the execution of this node has finished.</div>
+</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>default void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nodeSkipped(C,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.support.hierarchical.Node.SkipResult)">nodeSkipped</a></span>&#8203;(<a href="Node.html" title="type parameter in Node">C</a>&nbsp;context,
+           <a href="../../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+           <a href="Node.SkipResult.html" title="class in org.junit.platform.engine.support.hierarchical">Node.SkipResult</a>&nbsp;result)</code></th>
+<td class="colLast">
+<div class="block">Callback invoked when the execution of this node has been skipped.</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>default <a href="Node.html" title="type parameter in Node">C</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#prepare(C)">prepare</a></span>&#8203;(<a href="Node.html" title="type parameter in Node">C</a>&nbsp;context)</code></th>
 <td class="colLast">
 <div class="block">Prepare the supplied <code>context</code> prior to execution.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>default <a href="Node.SkipResult.html" title="class in org.junit.platform.engine.support.hierarchical">Node.SkipResult</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#shouldBeSkipped(C)">shouldBeSkipped</a></span>&#8203;(<a href="Node.html" title="type parameter in Node">C</a>&nbsp;context)</code></th>
 <td class="colLast">
@@ -478,6 +496,60 @@ default&nbsp;void&nbsp;around&#8203;(<a href="Node.html" title="type parameter i
 <dd><code>invocation</code> - the wrapped invocation (must be invoked exactly once)</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a></code></dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.4</dd>
+</dl>
+</li>
+</ul>
+<a id="nodeSkipped(org.junit.platform.engine.support.hierarchical.EngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.support.hierarchical.Node.SkipResult)">
+<!--   -->
+</a><a id="nodeSkipped(C,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.support.hierarchical.Node.SkipResult)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>nodeSkipped</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4",
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#consumers()" title="class or interface in org.apiguardian.api" class="externalLink">consumers</a>="org.junit.platform.engine.support.hierarchical")
+default&nbsp;void&nbsp;nodeSkipped&#8203;(<a href="Node.html" title="type parameter in Node">C</a>&nbsp;context,
+                         <a href="../../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+                         <a href="Node.SkipResult.html" title="class in org.junit.platform.engine.support.hierarchical">Node.SkipResult</a>&nbsp;result)</pre>
+<div class="block">Callback invoked when the execution of this node has been skipped.
+
+ <p>The default implementation does nothing.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>context</code> - the execution context</dd>
+<dd><code>testDescriptor</code> - the test descriptor that was skipped</dd>
+<dd><code>result</code> - the result of skipped execution</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.4</dd>
+</dl>
+</li>
+</ul>
+<a id="nodeFinished(org.junit.platform.engine.support.hierarchical.EngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">
+<!--   -->
+</a><a id="nodeFinished(C,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>nodeFinished</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4",
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#consumers()" title="class or interface in org.apiguardian.api" class="externalLink">consumers</a>="org.junit.platform.engine.support.hierarchical")
+default&nbsp;void&nbsp;nodeFinished&#8203;(<a href="Node.html" title="type parameter in Node">C</a>&nbsp;context,
+                          <a href="../../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+                          <a href="../../TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;result)</pre>
+<div class="block">Callback invoked when the execution of this node has finished.
+
+ <p>The default implementation does nothing.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>context</code> - the execution context</dd>
+<dd><code>testDescriptor</code> - the test descriptor that was executed</dd>
+<dd><code>result</code> - the result of the execution</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.4</dd>
 </dl>

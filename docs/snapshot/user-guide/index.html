@@ -700,23 +700,24 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#extensions-test-instance-factories">5.4. Test Instance Factories</a></li>
 <li><a href="#extensions-test-instance-post-processing">5.5. Test Instance Post-processing</a></li>
 <li><a href="#extensions-parameter-resolution">5.6. Parameter Resolution</a></li>
-<li><a href="#extensions-lifecycle-callbacks">5.7. Test Lifecycle Callbacks</a>
+<li><a href="#extensions-test-result-processing">5.7. Test Result Processing</a></li>
+<li><a href="#extensions-lifecycle-callbacks">5.8. Test Lifecycle Callbacks</a>
 <ul class="sectlevel3">
-<li><a href="#extensions-lifecycle-callbacks-before-after-execution">5.7.1. Before and After Test Execution Callbacks</a></li>
+<li><a href="#extensions-lifecycle-callbacks-before-after-execution">5.8.1. Before and After Test Execution Callbacks</a></li>
 </ul>
 </li>
-<li><a href="#extensions-exception-handling">5.8. Exception Handling</a></li>
-<li><a href="#extensions-test-templates">5.9. Providing Invocation Contexts for Test Templates</a></li>
-<li><a href="#extensions-keeping-state">5.10. Keeping State in Extensions</a></li>
-<li><a href="#extensions-supported-utilities">5.11. Supported Utilities in Extensions</a>
+<li><a href="#extensions-exception-handling">5.9. Exception Handling</a></li>
+<li><a href="#extensions-test-templates">5.10. Providing Invocation Contexts for Test Templates</a></li>
+<li><a href="#extensions-keeping-state">5.11. Keeping State in Extensions</a></li>
+<li><a href="#extensions-supported-utilities">5.12. Supported Utilities in Extensions</a>
 <ul class="sectlevel3">
-<li><a href="#extensions-supported-utilities-annotations">5.11.1. Annotation Support</a></li>
-<li><a href="#extensions-supported-utilities-classes">5.11.2. Class Support</a></li>
-<li><a href="#extensions-supported-utilities-reflection">5.11.3. Reflection Support</a></li>
-<li><a href="#extensions-supported-utilities-modifier">5.11.4. Modifier Support</a></li>
+<li><a href="#extensions-supported-utilities-annotations">5.12.1. Annotation Support</a></li>
+<li><a href="#extensions-supported-utilities-classes">5.12.2. Class Support</a></li>
+<li><a href="#extensions-supported-utilities-reflection">5.12.3. Reflection Support</a></li>
+<li><a href="#extensions-supported-utilities-modifier">5.12.4. Modifier Support</a></li>
 </ul>
 </li>
-<li><a href="#extensions-execution-order">5.12. Relative Execution Order of User Code and Extensions</a></li>
+<li><a href="#extensions-execution-order">5.13. Relative Execution Order of User Code and Extensions</a></li>
 </ul>
 </li>
 <li><a href="#advanced-topics">6. Advanced Topics</a>
@@ -6563,7 +6564,53 @@ those provided in <code>java.lang.reflect.Parameter</code> in order to avoid thi
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-lifecycle-callbacks"><a class="anchor" href="#extensions-lifecycle-callbacks"></a>5.7. Test Lifecycle Callbacks</h3>
+<h3 id="extensions-test-result-processing"><a class="anchor" href="#extensions-test-result-processing"></a>5.7. Test Result Processing</h3>
+<div class="paragraph">
+<p><code><a href="../api/org/junit/jupiter/api/extension/TestWatcher.html">TestWatcher</a></code> defines the API for extensions that wish to process test results.
+Specifically, a <code>TestWatcher</code> will be invoked with contextual information for the
+following events.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>testDisabled</code>: invoked after a disabled test has been skipped</p>
+</li>
+<li>
+<p><code>testSuccessful</code>: invoked after a test has completed successfully</p>
+</li>
+<li>
+<p><code>testAborted</code>: invoked after a test has been aborted</p>
+</li>
+<li>
+<p><code>testFailed</code>: invoked after a test has failed</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Extensions implementing this interface can be registered at the method level or at the
+class level. In the latter case they will be invoked for any contained tests including
+those in <code>@Nested</code> classes.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Any instances of <code>ExtensionContext.Store.CloseableResource</code> stored in the <code>Store</code> of the
+provided <code><a href="../api/org/junit/jupiter/api/extension/ExtensionContext.html">ExtensionContext</a></code> will be closed <em>before</em> methods in this API are invoked (see
+<a href="#extensions-keeping-state">Keeping State in Extensions</a>). You can use the parent context&#8217;s <code>Store</code> to work with such
+resources.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="extensions-lifecycle-callbacks"><a class="anchor" href="#extensions-lifecycle-callbacks"></a>5.8. Test Lifecycle Callbacks</h3>
 <div class="paragraph">
 <p>The following interfaces define the APIs for extending tests at various points in the
 test execution lifecycle. Consult the following sections for examples and the Javadoc for
@@ -6615,7 +6662,7 @@ concrete example.
 </table>
 </div>
 <div class="sect3">
-<h4 id="extensions-lifecycle-callbacks-before-after-execution"><a class="anchor" href="#extensions-lifecycle-callbacks-before-after-execution"></a>5.7.1. Before and After Test Execution Callbacks</h4>
+<h4 id="extensions-lifecycle-callbacks-before-after-execution"><a class="anchor" href="#extensions-lifecycle-callbacks-before-after-execution"></a>5.8.1. Before and After Test Execution Callbacks</h4>
 <div class="paragraph">
 <p><code><a href="../api/org/junit/jupiter/api/extension/BeforeTestExecutionCallback.html">BeforeTestExecutionCallback</a></code> and <code><a href="../api/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html">AfterTestExecutionCallback</a></code> define the APIs for
 <code>Extensions</code> that wish to add behavior that will be executed <em>immediately before</em> and
@@ -6704,7 +6751,7 @@ INFO: Method [sleep50ms] took 53 ms.</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-exception-handling"><a class="anchor" href="#extensions-exception-handling"></a>5.8. Exception Handling</h3>
+<h3 id="extensions-exception-handling"><a class="anchor" href="#extensions-exception-handling"></a>5.9. Exception Handling</h3>
 <div class="paragraph">
 <p><code><a href="../api/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.html">TestExecutionExceptionHandler</a></code> defines the API for <code>Extensions</code> that wish to handle
 exceptions thrown during test execution.</p>
@@ -6732,7 +6779,7 @@ but rethrow any other type of exception.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-test-templates"><a class="anchor" href="#extensions-test-templates"></a>5.9. Providing Invocation Contexts for Test Templates</h3>
+<h3 id="extensions-test-templates"><a class="anchor" href="#extensions-test-templates"></a>5.10. Providing Invocation Contexts for Test Templates</h3>
 <div class="paragraph">
 <p>A <code><a href="../api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method can only be executed when at least one
 <code><a href="../api/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html">TestTemplateInvocationContextProvider</a></code> is registered. Each such provider is responsible
@@ -6822,7 +6869,7 @@ functionality.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-keeping-state"><a class="anchor" href="#extensions-keeping-state"></a>5.10. Keeping State in Extensions</h3>
+<h3 id="extensions-keeping-state"><a class="anchor" href="#extensions-keeping-state"></a>5.11. Keeping State in Extensions</h3>
 <div class="paragraph">
 <p>Usually, an extension is instantiated only once. So the question becomes relevant: How do
 you keep the state from one invocation of an extension to the next? The
@@ -6853,7 +6900,7 @@ an invocation of their <code>close()</code> method.
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-supported-utilities"><a class="anchor" href="#extensions-supported-utilities"></a>5.11. Supported Utilities in Extensions</h3>
+<h3 id="extensions-supported-utilities"><a class="anchor" href="#extensions-supported-utilities"></a>5.12. Supported Utilities in Extensions</h3>
 <div class="paragraph">
 <p>The <code>junit-platform-commons</code> artifact exposes a package named
 <code><a href="../api/org/junit/platform/commons/support/package-summary.html">org.junit.platform.commons.support</a></code> that contains <em>maintained</em> utility methods for working
@@ -6862,7 +6909,7 @@ with annotations, classes, reflection, and classpath scanning tasks. <code>TestE
 the behavior of the JUnit Platform.</p>
 </div>
 <div class="sect3">
-<h4 id="extensions-supported-utilities-annotations"><a class="anchor" href="#extensions-supported-utilities-annotations"></a>5.11.1. Annotation Support</h4>
+<h4 id="extensions-supported-utilities-annotations"><a class="anchor" href="#extensions-supported-utilities-annotations"></a>5.12.1. Annotation Support</h4>
 <div class="paragraph">
 <p><code>AnnotationSupport</code> provides static utility methods that operate on annotated elements
 (e.g., packages, annotations, classes, interfaces, constructors, methods, and fields).
@@ -6874,14 +6921,14 @@ interfaces and within class hierarchies to find annotations. Consult the Javadoc
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-supported-utilities-classes"><a class="anchor" href="#extensions-supported-utilities-classes"></a>5.11.2. Class Support</h4>
+<h4 id="extensions-supported-utilities-classes"><a class="anchor" href="#extensions-supported-utilities-classes"></a>5.12.2. Class Support</h4>
 <div class="paragraph">
 <p><code>ClassSupport</code> provides static utility methods for working with classes (i.e., instances
 of <code>java.lang.Class</code>). Consult the Javadoc for <code><a href="../api/org/junit/platform/commons/support/ClassSupport.html">ClassSupport</a></code> for further details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-supported-utilities-reflection"><a class="anchor" href="#extensions-supported-utilities-reflection"></a>5.11.3. Reflection Support</h4>
+<h4 id="extensions-supported-utilities-reflection"><a class="anchor" href="#extensions-supported-utilities-reflection"></a>5.12.3. Reflection Support</h4>
 <div class="paragraph">
 <p><code>ReflectionSupport</code> provides static utility methods that augment the standard JDK
 reflection and class-loading mechanisms. These include methods to scan the classpath in
@@ -6892,7 +6939,7 @@ details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-supported-utilities-modifier"><a class="anchor" href="#extensions-supported-utilities-modifier"></a>5.11.4. Modifier Support</h4>
+<h4 id="extensions-supported-utilities-modifier"><a class="anchor" href="#extensions-supported-utilities-modifier"></a>5.12.4. Modifier Support</h4>
 <div class="paragraph">
 <p><code>ModifierSupport</code> provides static utility methods for working with member and class
 modifiers&#8201;&#8212;&#8201;for example, to determine if a member is declared as <code>public</code>, <code>private</code>,
@@ -6902,7 +6949,7 @@ details.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-execution-order"><a class="anchor" href="#extensions-execution-order"></a>5.12. Relative Execution Order of User Code and Extensions</h3>
+<h3 id="extensions-execution-order"><a class="anchor" href="#extensions-execution-order"></a>5.13. Relative Execution Order of User Code and Extensions</h3>
 <div class="paragraph">
 <p>When executing a test class that contains one or more test methods, a number of extension
 callbacks are called in addition to the user-provided test and lifecycle methods. The
@@ -7943,6 +7990,11 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.3</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TestWatcher</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.parallel</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Execution</code> <em>(annotation)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.3</code></p></td>
@@ -8536,7 +8588,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-12 11:31:16 UTC
+Last updated 2019-01-12 16:32:09 UTC
 </div>
 </div>
 </body>
