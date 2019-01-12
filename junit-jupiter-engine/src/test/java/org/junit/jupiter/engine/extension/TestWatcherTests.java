@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -21,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Assumptions;
@@ -38,38 +39,47 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
+/**
+ * Integration tests for the {@link TestWatcher} extension API.
+ *
+ * @since 5.4
+ */
 class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	void testWatcherValidityIncludingNestedTest() {
-		EngineExecutionResults engineExecutionResults = executeTestsForClass(TestWatcherValidityTestCase.class);
-		assertEquals(0, engineExecutionResults.containers().failed().count());
+	void testWatcherValidityIncludingNestedTests() {
+		assertCommonStatistics(executeTestsForClass(TestWatcherValidityTestCase.class));
 	}
 
 	@Test
 	@TrackLogRecords
-	void testWatcherExceptionsAreLoggedAndSwallowedTest(LogRecordListener logRecordListener) {
+	void testWatcherExceptionsAreLoggedAndSwallowed(LogRecordListener logRecordListener) {
+		assertCommonStatistics(executeTestsForClass(TestWatcherSimpleExceptionHandlingTestCase.class));
 
 		List<String> testWatcherMethodNames = getTestWatcherMethodNames();
-		EngineExecutionResults engineExecutionResults = executeTestsForClass(
-			TestWatcherSimpleExceptionHandlingTestCase.class);
 
-		assertAll(
-			() -> assertEquals(8,
-				logRecordListener.stream(TestMethodTestDescriptor.class).filter(
-					listener -> listener.getSourceMethodName().contains("invokeTestWatchers")
-							&& listener.getThrown() instanceof JUnitException
-							&& testWatcherMethodNames.contains(
-								listener.getThrown().getStackTrace()[0].getMethodName())).count(),
-				"Thrown exceptions were not logged properly."),
-			() -> assertEquals(2, engineExecutionResults.tests().failed().count(),
-				"Thrown exceptions were not successfully caught."));
+		// @formatter:off
+		long exceptionCount = logRecordListener.stream(TestMethodTestDescriptor.class, Level.WARNING)
+				.map(LogRecord::getThrown)
+				.filter(throwable -> throwable instanceof JUnitException)
+				.filter(throwable -> testWatcherMethodNames.contains(throwable.getStackTrace()[0].getMethodName()))
+				.count();
+		// @formatter:on
+
+		assertEquals(8, exceptionCount, "Thrown exceptions were not logged properly.");
 	}
 
-	static List<String> getTestWatcherMethodNames() {
+	private void assertCommonStatistics(EngineExecutionResults results) {
+		results.containers().assertStatistics(stats -> stats.started(3).succeeded(3).failed(0));
+		results.tests().assertStatistics(stats -> stats.skipped(2).started(6).succeeded(2).aborted(2).failed(2));
+	}
+
+	private static List<String> getTestWatcherMethodNames() {
 		Method[] methods = TestWatcher.class.getDeclaredMethods();
 		return Arrays.stream(methods).map(Method::getName).collect(Collectors.toList());
 	}
+
+	// -------------------------------------------------------------------------
 
 	static class BaseTestWatcherNestedTestCase {
 
@@ -127,38 +137,37 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	static class TestWatcherSimpleExceptionHandlingTestCase extends BaseTestWatcherNestedTestCase {
 	}
 
-	static class TestResultAggregator implements TestWatcher {
+	static class TrackingTestWatcher implements TestWatcher {
 
-		protected Map<String, List<String>> results = new HashMap<>();
+		final Map<String, List<String>> results = new HashMap<>();
 
 		@Override
 		public void testSuccessful(ExtensionContext context) {
-			storeResult("SUCCESSFUL", context.getUniqueId());
+			trackResult("SUCCESSFUL", context.getUniqueId());
 		}
 
 		@Override
 		public void testAborted(ExtensionContext context, Throwable cause) {
-			storeResult("ABORTED", context.getUniqueId());
+			trackResult("ABORTED", context.getUniqueId());
 		}
 
 		@Override
 		public void testFailed(ExtensionContext context, Throwable cause) {
-			storeResult("FAILED", context.getUniqueId());
+			trackResult("FAILED", context.getUniqueId());
 		}
 
 		@Override
 		public void testDisabled(ExtensionContext context, Optional<String> reason) {
-			storeResult("SKIPPED", context.getUniqueId());
+			trackResult("DISABLED", context.getUniqueId());
 		}
 
-		protected void storeResult(String status, String method) {
-			List<String> l = results.computeIfAbsent(status, k -> new ArrayList<>());
-			l.add(method);
-			results.put(status, l);
+		protected void trackResult(String status, String method) {
+			results.computeIfAbsent(status, k -> new ArrayList<>()).add(method);
 		}
 	}
 
-	static class TestWatcherValidityCheckingWatcher extends TestResultAggregator implements AfterAllCallback {
+	static class TestWatcherValidityCheckingWatcher extends TrackingTestWatcher implements AfterAllCallback {
+
 		@Override
 		public void afterAll(ExtensionContext context) {
 			this.results.values().forEach(idList -> assertEquals(2, idList.size()));
@@ -166,6 +175,7 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	}
 
 	static class ExceptionThrowingTestWatcher implements TestWatcher {
+
 		@Override
 		public void testSuccessful(ExtensionContext context) {
 			throw new JUnitException("Exception in testSuccessful ");
