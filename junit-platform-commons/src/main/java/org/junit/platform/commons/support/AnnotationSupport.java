@@ -167,6 +167,30 @@ public final class AnnotationSupport {
 	}
 
 	/**
+	 * Find all {@code public} {@linkplain Field fields} of the supplied class
+	 * or interface that are of the specified {@code fieldType} and annotated
+	 * or <em>meta-annotated</em> with the specified {@code annotationType}.
+	 *
+	 * <p>Consult the Javadoc for {@link Class#getFields()} for details on
+	 * inheritance and ordering.
+	 *
+	 * @param clazz the class or interface in which to find the fields; never {@code null}
+	 * @param fieldType the type of field to find; never {@code null}
+	 * @param annotationType the annotation type to search for; never {@code null}
+	 * @return the list of all such fields found; neither {@code null} nor mutable
+	 * @see Class#getFields()
+	 * @see #findAnnotatedFields(Class, Class)
+	 * @see #findAnnotatedFields(Class, Class, Predicate, HierarchyTraversalMode)
+	 * @see ReflectionSupport#findFields(Class, Predicate, HierarchyTraversalMode)
+	 * @see ReflectionSupport#tryToReadFieldValue(Field, Object)
+	 */
+	public static List<Field> findPublicAnnotatedFields(Class<?> clazz, Class<?> fieldType,
+			Class<? extends Annotation> annotationType) {
+
+		return AnnotationUtils.findPublicAnnotatedFields(clazz, fieldType, annotationType);
+	}
+
+	/**
 	 * Find all {@linkplain Field fields} of the supplied class or interface
 	 * that are annotated or <em>meta-annotated</em> with the specified
 	 * {@code annotationType}, using top-down search semantics within the type
@@ -183,30 +207,14 @@ public final class AnnotationSupport {
 	 * @return the list of all such fields found; neither {@code null} nor mutable
 	 * @since 1.4
 	 * @see Class#getDeclaredFields()
+	 * @see #findPublicAnnotatedFields(Class, Class, Class)
+	 * @see #findAnnotatedFields(Class, Class, Predicate, HierarchyTraversalMode)
+	 * @see ReflectionSupport#findFields(Class, Predicate, HierarchyTraversalMode)
+	 * @see ReflectionSupport#tryToReadFieldValue(Field, Object)
 	 */
 	@API(status = MAINTAINED, since = "1.4")
 	public static List<Field> findAnnotatedFields(Class<?> clazz, Class<? extends Annotation> annotationType) {
 		return AnnotationUtils.findAnnotatedFields(clazz, annotationType, field -> true);
-	}
-
-	/**
-	 * Find all {@code public} {@linkplain Field fields} of the supplied class
-	 * or interface that are of the specified {@code fieldType} and annotated
-	 * or <em>meta-annotated</em> with the specified {@code annotationType}.
-	 *
-	 * <p>Consult the Javadoc for {@link Class#getFields()} for details on
-	 * inheritance and ordering.
-	 *
-	 * @param clazz the class or interface in which to find the fields; never {@code null}
-	 * @param fieldType the type of field to find; never {@code null}
-	 * @param annotationType the annotation type to search for; never {@code null}
-	 * @return the list of all such fields found; neither {@code null} nor mutable
-	 * @see Class#getFields()
-	 */
-	public static List<Field> findPublicAnnotatedFields(Class<?> clazz, Class<?> fieldType,
-			Class<? extends Annotation> annotationType) {
-
-		return AnnotationUtils.findPublicAnnotatedFields(clazz, fieldType, annotationType);
 	}
 
 	/**
@@ -228,6 +236,9 @@ public final class AnnotationSupport {
 	 * @return the list of all such fields found; neither {@code null} nor mutable
 	 * @since 1.4
 	 * @see Class#getDeclaredFields()
+	 * @see #findAnnotatedFields(Class, Class)
+	 * @see ReflectionSupport#findFields(Class, Predicate, HierarchyTraversalMode)
+	 * @see ReflectionSupport#tryToReadFieldValue(Field, Object)
 	 */
 	@API(status = MAINTAINED, since = "1.4")
 	public static List<Field> findAnnotatedFields(Class<?> clazz, Class<? extends Annotation> annotationType,
@@ -240,8 +251,8 @@ public final class AnnotationSupport {
 	}
 
 	/**
-	 * Find the values of all {@linkplain Field fields} of the supplied
-	 * {@code object} that are annotated or <em>meta-annotated</em> with the
+	 * Find the values of all non-static {@linkplain Field fields} of the supplied
+	 * {@code instance} that are annotated or <em>meta-annotated</em> with the
 	 * specified {@code annotationType}, using top-down search semantics within
 	 * the type hierarchy.
 	 *
@@ -252,22 +263,59 @@ public final class AnnotationSupport {
 	 * <p>The results will not contain values from fields that are <em>hidden</em>
 	 * or {@linkplain Field#isSynthetic() synthetic}.
 	 *
-	 * @param object the instance in which to find the fields; never {@code null}
+	 * @param instance the instance in which to find the fields; never {@code null}
 	 * @param annotationType the annotation type to search for; never {@code null}
 	 * @return the list of all such field values found; neither {@code null} nor mutable
 	 * @since 1.4
-	 * @see Class#getFields()
+	 * @see #findAnnotatedFields(Class, Class)
+	 * @see #findAnnotatedFields(Class, Class, Predicate, HierarchyTraversalMode)
+	 * @see ReflectionSupport#findFields(Class, Predicate, HierarchyTraversalMode)
+	 * @see ReflectionSupport#tryToReadFieldValue(Field, Object)
 	 */
 	@API(status = MAINTAINED, since = "1.4")
-	public static List<Object> findAnnotatedFieldValues(Object object, Class<? extends Annotation> annotationType) {
-		Preconditions.notNull(object, "Object must not be null");
-		List<Field> fields = findAnnotatedFields(object.getClass(), annotationType);
-		return ReflectionUtils.readFieldValues(fields, object);
+	public static List<Object> findAnnotatedFieldValues(Object instance, Class<? extends Annotation> annotationType) {
+		Preconditions.notNull(instance, "instance must not be null");
+
+		List<Field> fields = findAnnotatedFields(instance.getClass(), annotationType, ModifierSupport::isNotStatic,
+			HierarchyTraversalMode.TOP_DOWN);
+
+		return ReflectionUtils.readFieldValues(fields, instance);
 	}
 
 	/**
-	 * Find the values of all {@linkplain Field fields} of the supplied
-	 * {@code object} that are of the specified {@code fieldType} and annotated
+	 * Find the values of all static {@linkplain Field fields} of the supplied
+	 * class or interface that are annotated or <em>meta-annotated</em> with the
+	 * specified {@code annotationType}, using top-down search semantics within
+	 * the type hierarchy.
+	 *
+	 * <p>Values from fields declared in the same class or interface will be
+	 * ordered using an algorithm that is deterministic but intentionally
+	 * nonobvious.
+	 *
+	 * <p>The results will not contain values from fields that are <em>hidden</em>
+	 * or {@linkplain Field#isSynthetic() synthetic}.
+	 *
+	 * @param clazz the class or interface in which to find the fields; never {@code null}
+	 * @param annotationType the annotation type to search for; never {@code null}
+	 * @return the list of all such field values found; neither {@code null} nor mutable
+	 * @since 1.4
+	 * @see #findAnnotatedFields(Class, Class)
+	 * @see #findAnnotatedFields(Class, Class, Predicate, HierarchyTraversalMode)
+	 * @see ReflectionSupport#findFields(Class, Predicate, HierarchyTraversalMode)
+	 * @see ReflectionSupport#tryToReadFieldValue(Field, Object)
+	 */
+	@API(status = MAINTAINED, since = "1.4")
+	public static List<Object> findAnnotatedFieldValues(Class<?> clazz, Class<? extends Annotation> annotationType) {
+
+		List<Field> fields = findAnnotatedFields(clazz, annotationType, ModifierSupport::isStatic,
+			HierarchyTraversalMode.TOP_DOWN);
+
+		return ReflectionUtils.readFieldValues(fields, null);
+	}
+
+	/**
+	 * Find the values of all non-static {@linkplain Field fields} of the supplied
+	 * {@code instance} that are of the specified {@code fieldType} and annotated
 	 * or <em>meta-annotated</em> with the specified {@code annotationType},
 	 * using top-down search semantics within the type hierarchy.
 	 *
@@ -278,20 +326,69 @@ public final class AnnotationSupport {
 	 * <p>The results will not contain values from fields that are <em>hidden</em>
 	 * or {@linkplain Field#isSynthetic() synthetic}.
 	 *
-	 * @param object the instance in which to find the fields; never {@code null}
+	 * @param instance the instance in which to find the fields; never {@code null}
 	 * @param annotationType the annotation type to search for; never {@code null}
 	 * @param fieldType the type of field to find; never {@code null}
 	 * @return the list of all such field values found; neither {@code null} nor mutable
 	 * @since 1.4
-	 * @see Class#getFields()
+	 * @see #findAnnotatedFields(Class, Class)
+	 * @see #findAnnotatedFields(Class, Class, Predicate, HierarchyTraversalMode)
+	 * @see ReflectionSupport#findFields(Class, Predicate, HierarchyTraversalMode)
+	 * @see ReflectionSupport#tryToReadFieldValue(Field, Object)
 	 */
+	@SuppressWarnings("unchecked")
 	@API(status = MAINTAINED, since = "1.4")
-	public static <T> List<T> findAnnotatedFieldValues(Object object, Class<? extends Annotation> annotationType,
+	public static <T> List<T> findAnnotatedFieldValues(Object instance, Class<? extends Annotation> annotationType,
 			Class<T> fieldType) {
 
-		Preconditions.notNull(object, "Object must not be null");
-		List<Field> fields = findAnnotatedFields(object.getClass(), annotationType);
-		return ReflectionUtils.readFieldValues(fields, object, fieldType);
+		Preconditions.notNull(instance, "instance must not be null");
+		Preconditions.notNull(fieldType, "fieldType must not be null");
+
+		Predicate<Field> predicate = //
+			field -> ModifierSupport.isNotStatic(field) && fieldType.isAssignableFrom(field.getType());
+
+		List<Field> fields = findAnnotatedFields(instance.getClass(), annotationType, predicate,
+			HierarchyTraversalMode.TOP_DOWN);
+
+		return (List<T>) ReflectionUtils.readFieldValues(fields, instance);
+	}
+
+	/**
+	 * Find the values of all static {@linkplain Field fields} of the supplied
+	 * class or interface that are of the specified {@code fieldType} and annotated
+	 * or <em>meta-annotated</em> with the specified {@code annotationType},
+	 * using top-down search semantics within the type hierarchy.
+	 *
+	 * <p>Values from fields declared in the same class or interface will be
+	 * ordered using an algorithm that is deterministic but intentionally
+	 * nonobvious.
+	 *
+	 * <p>The results will not contain values from fields that are <em>hidden</em>
+	 * or {@linkplain Field#isSynthetic() synthetic}.
+	 *
+	 * @param clazz the class or interface in which to find the fields; never {@code null}
+	 * @param annotationType the annotation type to search for; never {@code null}
+	 * @param fieldType the type of field to find; never {@code null}
+	 * @return the list of all such field values found; neither {@code null} nor mutable
+	 * @since 1.4
+	 * @see #findAnnotatedFields(Class, Class)
+	 * @see #findAnnotatedFields(Class, Class, Predicate, HierarchyTraversalMode)
+	 * @see ReflectionSupport#findFields(Class, Predicate, HierarchyTraversalMode)
+	 * @see ReflectionSupport#tryToReadFieldValue(Field, Object)
+	 */
+	@SuppressWarnings("unchecked")
+	@API(status = MAINTAINED, since = "1.4")
+	public static <T> List<T> findAnnotatedFieldValues(Class<?> clazz, Class<? extends Annotation> annotationType,
+			Class<T> fieldType) {
+
+		Preconditions.notNull(fieldType, "fieldType must not be null");
+
+		Predicate<Field> predicate = //
+			field -> ModifierSupport.isStatic(field) && fieldType.isAssignableFrom(field.getType());
+
+		List<Field> fields = findAnnotatedFields(clazz, annotationType, predicate, HierarchyTraversalMode.TOP_DOWN);
+
+		return (List<T>) ReflectionUtils.readFieldValues(fields, null);
 	}
 
 	/**

@@ -1165,7 +1165,7 @@ class ReflectionUtilsTests {
 	void readFieldValuesFromInstanceWithTypeFilterForString() {
 		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(String.class), TOP_DOWN);
 
-		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), String.class);
+		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), isA(String.class));
 
 		assertThat(values).containsExactly("enigma", "text", null, "constant");
 	}
@@ -1175,7 +1175,7 @@ class ReflectionUtilsTests {
 		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(String.class).and(ReflectionUtils::isStatic),
 			TOP_DOWN);
 
-		var values = ReflectionUtils.readFieldValues(fields, null, String.class);
+		var values = ReflectionUtils.readFieldValues(fields, null, isA(String.class));
 
 		assertThat(values).containsExactly("constant");
 	}
@@ -1184,7 +1184,7 @@ class ReflectionUtilsTests {
 	void readFieldValuesFromInstanceWithTypeFilterForInteger() {
 		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(int.class), TOP_DOWN);
 
-		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), Integer.class);
+		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), isA(int.class));
 
 		assertThat(values).containsExactly(42);
 	}
@@ -1194,7 +1194,7 @@ class ReflectionUtilsTests {
 		var fields = ReflectionUtils.findFields(ClassWithFields.class,
 			isA(Integer.class).and(ReflectionUtils::isStatic), TOP_DOWN);
 
-		var values = ReflectionUtils.readFieldValues(fields, null, Integer.class);
+		var values = ReflectionUtils.readFieldValues(fields, null, isA(Integer.class));
 
 		assertThat(values).containsExactly(99);
 	}
@@ -1203,7 +1203,7 @@ class ReflectionUtilsTests {
 	void readFieldValuesFromInstanceWithTypeFilterForDouble() {
 		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(double.class), TOP_DOWN);
 
-		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), double.class);
+		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), isA(double.class));
 
 		assertThat(values).containsExactly(3.14);
 	}
@@ -1213,7 +1213,7 @@ class ReflectionUtilsTests {
 		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(Double.class).and(ReflectionUtils::isStatic),
 			TOP_DOWN);
 
-		var values = ReflectionUtils.readFieldValues(fields, null, double.class);
+		var values = ReflectionUtils.readFieldValues(fields, null, isA(Double.class));
 
 		assertThat(values).containsExactly(2.5);
 	}

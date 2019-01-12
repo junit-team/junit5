@@ -586,33 +586,32 @@ public final class ReflectionUtils {
 	 * {@code null} but may be empty or contain {@code null} entries
 	 */
 	public static List<Object> readFieldValues(List<Field> fields, Object instance) {
-		return readFieldValues(fields, instance, Object.class);
+		return readFieldValues(fields, instance, field -> true);
 	}
 
 	/**
 	 * Read the values of the supplied fields, making each field accessible if
 	 * necessary, {@linkplain ExceptionUtils#throwAsUncheckedException masking}
-	 * any checked exception as an unchecked exception, and filtering out values
-	 * that not of the {@code requiredType}.
+	 * any checked exception as an unchecked exception, and filtering out fields
+	 * that do not pass the supplied {@code predicate}.
 	 *
 	 * @param fields the list of fields to read; never {@code null}
 	 * @param instance the instance from which the values are to be read; may
 	 * be {@code null} for static fields
-	 * @param requiredType the required type for the values; never {@code null}
+	 * @param predicate the field filter; never {@code null}
 	 * @return an immutable list of the values of the specified fields; never
 	 * {@code null} but may be empty or contain {@code null} entries
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> List<T> readFieldValues(List<Field> fields, Object instance, Class<T> requiredType) {
+	public static List<Object> readFieldValues(List<Field> fields, Object instance, Predicate<Field> predicate) {
 		Preconditions.notNull(fields, "fields list must not be null");
-		Preconditions.notNull(requiredType, "requiredType must not be null");
+		Preconditions.notNull(predicate, "Predicate must not be null");
 
 		// @formatter:off
-		return (List<T>) fields.stream()
+		return fields.stream()
+				.filter(predicate)
 				.map(field ->
 					tryToReadFieldValue(field, instance)
 						.getOrThrow(ExceptionUtils::throwAsUncheckedException))
-				.filter(value -> isAssignableTo(value, requiredType))
 				.collect(toUnmodifiableList());
 		// @formatter:on
 	}
