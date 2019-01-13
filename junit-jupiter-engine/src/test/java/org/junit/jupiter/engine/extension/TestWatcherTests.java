@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,7 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
@@ -55,7 +54,7 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
 class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
 	private static final List<String> testWatcherMethodNames = Arrays.stream(TestWatcher.class.getDeclaredMethods())//
-			.map(Method::getName).collect(toList());
+			.map(Method::getName).collect(toUnmodifiableList());
 
 	@BeforeEach
 	void clearResults() {
@@ -142,7 +141,7 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		public void abortedTest() {
-			Assumptions.assumeTrue(false);
+			assumeTrue(false);
 		}
 
 		@Test
@@ -166,7 +165,7 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
 			@Test
 			public void abortedTest() {
-				Assumptions.assumeTrue(false);
+				assumeTrue(false);
 			}
 
 			@Test
@@ -198,7 +197,7 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
 		@RepeatedTest(2)
 		void abortedTest() {
-			Assumptions.assumeTrue(false);
+			assumeTrue(false);
 		}
 
 		@RepeatedTest(2)

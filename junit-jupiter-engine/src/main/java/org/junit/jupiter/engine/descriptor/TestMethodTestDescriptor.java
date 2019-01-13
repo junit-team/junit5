@@ -245,6 +245,9 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	/**
+	 * Invoke {@link TestWatcher#testDisabled(ExtensionContext, Optional)} on each
+	 * registered {@link TestWatcher}, in registration order.
+	 *
 	 * @since 5.4
 	 */
 	@Override
@@ -256,6 +259,12 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	/**
+	 * Invoke {@link TestWatcher#testSuccessful testSuccessful()},
+	 * {@link TestWatcher#testAborted testAborted()}, or
+	 * {@link TestWatcher#testFailed testFailed()} on each
+	 * registered {@link TestWatcher} according to the status of the supplied
+	 * {@link TestExecutionResult}, in reverse registration order.
+	 *
 	 * @since 5.4
 	 */
 	@Override
