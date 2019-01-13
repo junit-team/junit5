@@ -300,9 +300,11 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 				BlacklistedExceptions.rethrowIfBlacklisted(throwable);
 				ExtensionContext extensionContext = context.getExtensionContext();
 				logger.warn(throwable,
-					() -> String.format("Failed to invoke TestWatcher %s for test %s", watcher.getClass().getName(),
+					() -> String.format("Failed to invoke TestWatcher [%s] for method [%s] with display name [%s]",
+						watcher.getClass().getName(),
 						ReflectionUtils.getFullyQualifiedMethodName(extensionContext.getRequiredTestClass(),
-							extensionContext.getRequiredTestMethod())));
+							extensionContext.getRequiredTestMethod()),
+						getDisplayName()));
 			}
 		});
 	}
