@@ -48,6 +48,8 @@ repository on GitHub.
 * `@RegisterExtension` fields that are `null` when evaluated are no longer silently
   ignored. Instead, the corresponding test class or test method now fails with an
   informative exception.
+* `@ParameterizedTest` now again supports `MessageFormat` patterns for individual
+  parameters (e.g. `{0,number,#.##}`).
 
 ==== Deprecations and Breaking Changes
 

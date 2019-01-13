@@ -15,6 +15,7 @@ import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedTest.DISPLAY_NAME_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedTest.INDEX_PLACEHOLDER;
 
+import java.text.Format;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -36,9 +37,21 @@ class ParameterizedTestNameFormatter {
 	}
 
 	String format(int invocationIndex, Object... arguments) {
+		try {
+			return formatSafely(invocationIndex, arguments);
+		}
+		catch (Exception ex) {
+			String message = "The display name pattern defined for the parameterized test is invalid. "
+					+ "See nested exception for further details.";
+			throw new JUnitException(message, ex);
+		}
+	}
+
+	private String formatSafely(int invocationIndex, Object[] arguments) {
 		String pattern = prepareMessageFormatPattern(invocationIndex, arguments);
-		Object[] humanReadableArguments = makeReadable(arguments);
-		return formatSafely(pattern, humanReadableArguments);
+		MessageFormat format = new MessageFormat(pattern);
+		Object[] humanReadableArguments = makeReadable(format, arguments);
+		return format.format(humanReadableArguments);
 	}
 
 	private String prepareMessageFormatPattern(int invocationIndex, Object[] arguments) {
@@ -58,23 +71,15 @@ class ParameterizedTestNameFormatter {
 		return result;
 	}
 
-	private Object[] makeReadable(Object[] arguments) {
-		// Note: humanReadableArguments must be an Object[] in order to
-		// avoid varargs issues with non-Eclipse compilers.
-		Object[] humanReadableArguments = //
-			Arrays.stream(arguments).map(StringUtils::nullSafeToString).toArray(String[]::new);
-		return humanReadableArguments;
-	}
-
-	private String formatSafely(String pattern, Object[] arguments) {
-		try {
-			return MessageFormat.format(pattern, arguments);
+	private Object[] makeReadable(MessageFormat format, Object[] arguments) {
+		Format[] formats = format.getFormatsByArgumentIndex();
+		Object[] result = Arrays.copyOf(arguments, Math.min(arguments.length, formats.length));
+		for (int i = 0; i < result.length; i++) {
+			if (formats[i] == null) {
+				result[i] = StringUtils.nullSafeToString(arguments[i]);
+			}
 		}
-		catch (IllegalArgumentException ex) {
-			String message = "The display name pattern defined for the parameterized test is invalid. "
-					+ "See nested exception for further details.";
-			throw new JUnitException(message, ex);
-		}
+		return result;
 	}
 
 }

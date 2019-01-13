@@ -20,15 +20,30 @@ import static org.junit.jupiter.params.ParameterizedTest.DEFAULT_DISPLAY_NAME;
 import static org.junit.jupiter.params.ParameterizedTest.DISPLAY_NAME_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedTest.INDEX_PLACEHOLDER;
 
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Locale;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.platform.commons.JUnitException;
 
 /**
  * @since 5.0
  */
 class ParameterizedTestNameFormatterTests {
+
+	private Locale originalLocale = Locale.getDefault();
+
+	@AfterEach
+	void restoreLocale() {
+		Locale.setDefault(originalLocale);
+	}
 
 	@Test
 	void formatsDisplayName() {
@@ -117,6 +132,50 @@ class ParameterizedTestNameFormatterTests {
 
 		assertThat(formattedName).startsWith("[1] " + ToStringThrowsException.class.getName() + "@");
 		assertThat(formattedName).endsWith("foo");
+	}
+
+	@ParameterizedTest(name = "{0}")
+	@CsvSource(delimiter = '|', value = { "US | 42.23 is positive on 2019 Jan 13 at 12:34:56",
+			"DE | 42,23 is positive on 13.01.2019 at 12:34:56" })
+	void customFormattingExpressionsAreSupported(Locale locale, String expectedValue) {
+		var pattern = "[{index}] {1,number,#.##} is {1,choice,0<positive} on {0,date} at {0,time} even though {2}";
+		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter(pattern, "enigma");
+		Locale.setDefault(Locale.US);
+
+		var date = Date.from(
+			LocalDate.of(2019, 1, 13).atTime(LocalTime.of(12, 34, 56)).atZone(ZoneId.systemDefault()).toInstant());
+		Locale.setDefault(locale);
+		String formattedName = formatter.format(1, date, new BigDecimal("42.23"), new ToStringThrowsException());
+
+		assertThat(formattedName).startsWith(
+			"[1] " + expectedValue + " even though " + ToStringThrowsException.class.getName() + "@");
+	}
+
+	@Test
+	void ignoresExcessPlaceholders() {
+		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter("{0}, {1}", "enigma");
+
+		String formattedName = formatter.format(1, "foo");
+
+		assertThat(formattedName).isEqualTo("foo, {1}");
+	}
+
+	@Test
+	void placeholdersCanBeOmitted() {
+		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter("{0}", "enigma");
+
+		String formattedName = formatter.format(1, "foo", "bar");
+
+		assertThat(formattedName).isEqualTo("foo");
+	}
+
+	@Test
+	void placeholdersCanBeSkipped() {
+		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter("{0}, {2}", "enigma");
+
+		String formattedName = formatter.format(1, "foo", "bar", "baz");
+
+		assertThat(formattedName).isEqualTo("foo, baz");
 	}
 
 	private static class ToStringThrowsException {
