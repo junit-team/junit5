@@ -293,8 +293,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 				logger.warn(throwable,
 					() -> String.format("Failed to invoke TestWatcher %s for test %s", watcher.getClass().getName(),
 						ReflectionUtils.getFullyQualifiedMethodName(extensionContext.getRequiredTestClass(),
-							extensionContext.getRequiredTestMethod().getName(),
-							extensionContext.getRequiredTestMethod().getParameterTypes())));
+							extensionContext.getRequiredTestMethod())));
 			}
 		});
 	}
