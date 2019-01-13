@@ -14,6 +14,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
@@ -22,6 +24,8 @@ import org.junit.platform.launcher.TestPlan;
  * @since 1.4
  */
 class UnmodifiableTestPlan extends TestPlan {
+
+	private static final Logger logger = LoggerFactory.getLogger(UnmodifiableTestPlan.class);
 
 	private final Root root;
 	private final TestPlan delegate;
@@ -47,7 +51,9 @@ class UnmodifiableTestPlan extends TestPlan {
 
 	@Override
 	public void add(TestIdentifier testIdentifier) {
-		throw new UnsupportedOperationException("TestPlan must not be modified");
+		logger.error(() -> "Attempt to modify the TestPlan was detected and ignored. "
+				+ "A future version of the JUnit Platform will instead throw an exception. "
+				+ "Please contact your IDE/tool vendor and request a fix.");
 	}
 
 	@Override

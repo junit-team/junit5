@@ -516,16 +516,24 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void testPlanIsUnmodifiable() {
+	void testPlanIsUnmodifiable(LogRecordListener listener) {
 		TestEngine engine = new TestEngineSpy();
 		DefaultLauncher launcher = createLauncher(engine);
 		TestPlan testPlan = launcher.discover(request().build());
-		TestIdentifier testIdentifier = getOnlyElement(testPlan.getRoots());
+		TestIdentifier engineIdentifier = getOnlyElement(testPlan.getRoots());
+		UniqueId engineUniqueId = UniqueId.parse(engineIdentifier.getUniqueId());
+		assertThat(testPlan.getChildren(engineIdentifier)).hasSize(1);
 
-		UnsupportedOperationException exception = assertThrows(UnsupportedOperationException.class,
-			() -> testPlan.add(testIdentifier));
+		TestIdentifier addedIdentifier = TestIdentifier.from(
+			new TestDescriptorStub(engineUniqueId.append("test", "test2"), "test2"));
+		testPlan.add(addedIdentifier);
 
-		assertEquals("TestPlan must not be modified", exception.getMessage());
+		assertThat(testPlan.getChildren(engineIdentifier)).hasSize(1).doesNotContain(addedIdentifier);
+		assertThat(
+			listener.stream(UnmodifiableTestPlan.class, Level.SEVERE).findFirst().map(LogRecord::getMessage)).contains(
+				"Attempt to modify the TestPlan was detected and ignored. " //
+						+ "A future version of the JUnit Platform will instead throw an exception. " //
+						+ "Please contact your IDE/tool vendor and request a fix.");
 	}
 
 	@Test
