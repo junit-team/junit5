@@ -18,6 +18,9 @@ import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
+/**
+ * @since 1.4
+ */
 class UnmodifiableTestPlan extends TestPlan {
 
 	private final Root root;
