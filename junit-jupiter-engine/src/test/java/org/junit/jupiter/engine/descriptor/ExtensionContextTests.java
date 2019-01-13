@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine.execution;
+package org.junit.jupiter.engine.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -32,13 +32,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.engine.config.DefaultJupiterConfiguration;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.jupiter.engine.descriptor.ClassExtensionContext;
-import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
-import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
-import org.junit.jupiter.engine.descriptor.JupiterEngineExtensionContext;
-import org.junit.jupiter.engine.descriptor.MethodExtensionContext;
-import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
-import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
+import org.junit.jupiter.engine.execution.DefaultTestInstances;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -56,9 +50,9 @@ import org.mockito.Mockito;
  * {@link MethodExtensionContext}.
  *
  * @since 5.0
- * @see ExtensionValuesStoreTests
+ * @see org.junit.jupiter.engine.execution.ExtensionValuesStoreTests
  */
-class ExtensionContextTests {
+public class ExtensionContextTests {
 
 	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
 

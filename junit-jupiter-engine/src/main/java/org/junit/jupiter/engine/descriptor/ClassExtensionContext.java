@@ -10,13 +10,10 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
@@ -27,8 +24,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 /**
  * @since 5.0
  */
-@API(status = INTERNAL, since = "5.0")
-public final class ClassExtensionContext extends AbstractExtensionContext<ClassTestDescriptor> {
+final class ClassExtensionContext extends AbstractExtensionContext<ClassTestDescriptor> {
 
 	private final Lifecycle lifecycle;
 
@@ -41,14 +37,14 @@ public final class ClassExtensionContext extends AbstractExtensionContext<ClassT
 	 *
 	 * @see #ClassExtensionContext(ExtensionContext, EngineExecutionListener, ClassTestDescriptor, Lifecycle, JupiterConfiguration, ThrowableCollector)
 	 */
-	public ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
+	ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			ClassTestDescriptor testDescriptor, JupiterConfiguration configuration,
 			ThrowableCollector throwableCollector) {
 
 		this(parent, engineExecutionListener, testDescriptor, Lifecycle.PER_METHOD, configuration, throwableCollector);
 	}
 
-	public ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
+	ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			ClassTestDescriptor testDescriptor, Lifecycle lifecycle, JupiterConfiguration configuration,
 			ThrowableCollector throwableCollector) {
 

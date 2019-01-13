@@ -24,8 +24,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.jupiter.engine.descriptor.ClassExtensionContext;
-import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -55,9 +53,7 @@ class JupiterEngineExecutionContextTests {
 	@Test
 	void extendWithAllAttributes() {
 		UniqueId uniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
-		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(uniqueId, getClass(), configuration);
-		ClassExtensionContext extensionContext = new ClassExtensionContext(null, null, classTestDescriptor,
-			configuration, null);
+		ExtensionContext extensionContext = mock(ExtensionContext.class);
 		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configuration);
 		TestInstancesProvider testInstancesProvider = mock(TestInstancesProvider.class);
 		JupiterEngineExecutionContext newContext = originalContext.extend() //
@@ -74,13 +70,10 @@ class JupiterEngineExecutionContextTests {
 	@Test
 	void canOverrideAttributeWhenContextIsExtended() {
 		UniqueId uniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
-		ClassTestDescriptor classTestDescriptor = new ClassTestDescriptor(uniqueId, getClass(), configuration);
-		ClassExtensionContext extensionContext = new ClassExtensionContext(null, null, classTestDescriptor,
-			configuration, null);
+		ExtensionContext extensionContext = mock(ExtensionContext.class);
 		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configuration);
 		TestInstancesProvider testInstancesProvider = mock(TestInstancesProvider.class);
-		ClassExtensionContext newExtensionContext = new ClassExtensionContext(extensionContext, null,
-			classTestDescriptor, configuration, null);
+		ExtensionContext newExtensionContext = mock(ExtensionContext.class);
 
 		JupiterEngineExecutionContext newContext = originalContext.extend() //
 				.withExtensionContext(extensionContext) //

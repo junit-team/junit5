@@ -10,13 +10,10 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
@@ -27,14 +24,13 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 /**
  * @since 5.0
  */
-@API(status = INTERNAL, since = "5.0")
-public final class MethodExtensionContext extends AbstractExtensionContext<TestMethodTestDescriptor> {
+final class MethodExtensionContext extends AbstractExtensionContext<TestMethodTestDescriptor> {
 
 	private final ThrowableCollector throwableCollector;
 
 	private TestInstances testInstances;
 
-	public MethodExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
+	MethodExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			TestMethodTestDescriptor testDescriptor, JupiterConfiguration configuration,
 			ThrowableCollector throwableCollector) {
 
@@ -68,7 +64,7 @@ public final class MethodExtensionContext extends AbstractExtensionContext<TestM
 		return Optional.ofNullable(this.testInstances);
 	}
 
-	public void setTestInstances(TestInstances testInstances) {
+	void setTestInstances(TestInstances testInstances) {
 		this.testInstances = testInstances;
 	}
 

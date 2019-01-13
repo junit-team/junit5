@@ -27,9 +27,9 @@ import org.junit.jupiter.api.extension.ExtensionContextException;
  * Unit tests for {@link ExtensionValuesStore}.
  *
  * @since 5.0
- * @see ExtensionContextTests
+ * @see org.junit.jupiter.engine.descriptor.ExtensionContextTests
  */
-class ExtensionValuesStoreTests {
+public class ExtensionValuesStoreTests {
 
 	private final Object key = "key";
 	private final Object value = "value";
