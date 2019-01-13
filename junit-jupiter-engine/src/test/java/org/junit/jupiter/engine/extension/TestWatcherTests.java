@@ -13,7 +13,10 @@ package org.junit.jupiter.engine.extension;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -24,12 +27,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
@@ -56,10 +63,40 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void testWatcherInvokedForTestMethodsInTopLevelAndNestedTestClasses() {
-		assertCommonStatistics(executeTestsForClass(TrackingTestWatcherTestCase.class));
+	void testWatcherIsInvokedForTestMethodsInTopLevelAndNestedTestClasses() {
+		assertCommonStatistics(executeTestsForClass(TrackingTestWatcherTestMethodsTestCase.class));
 		assertThat(TrackingTestWatcher.results.keySet()).containsAll(testWatcherMethodNames);
 		TrackingTestWatcher.results.values().forEach(uidList -> assertEquals(2, uidList.size()));
+	}
+
+	@Test
+	void testWatcherIsInvokedForRepeatedTestMethods() {
+		EngineExecutionResults results = executeTestsForClass(TrackingTestWatcherRepeatedTestMethodsTestCase.class);
+
+		results.containers().assertStatistics(stats -> stats.skipped(1).started(5).succeeded(5).aborted(0).failed(0));
+		results.tests().assertStatistics(
+			stats -> stats.dynamicallyRegistered(6).skipped(0).started(6).succeeded(2).aborted(2).failed(2));
+
+		ArrayList<String> expectedMethods = new ArrayList<>(testWatcherMethodNames);
+		// Since the @RepeatedTest container is disabled, the individual invocations never occur.
+		expectedMethods.remove("testDisabled");
+		assertThat(TrackingTestWatcher.results.keySet()).containsAll(expectedMethods);
+		// 2 => number of iterations declared in @RepeatedTest(2).
+		TrackingTestWatcher.results.values().forEach(uidList -> assertEquals(2, uidList.size()));
+	}
+
+	@Test
+	void testWatcherIsInvokedForTestFactoryMethods() {
+		EngineExecutionResults results = executeTestsForClass(TrackingTestWatcherTestFactoryMethodsTestCase.class);
+
+		results.containers().assertStatistics(stats -> stats.skipped(1).started(5).succeeded(5).aborted(0).failed(0));
+		results.tests().assertStatistics(
+			stats -> stats.dynamicallyRegistered(6).skipped(0).started(6).succeeded(2).aborted(2).failed(2));
+
+		assertThat(TrackingTestWatcher.results.get("testAborted")).isNull();
+		assertThat(TrackingTestWatcher.results.get("testFailed")).isNull();
+		assertThat(TrackingTestWatcher.results.get("testDisabled")).size().isEqualTo(1);
+		assertThat(TrackingTestWatcher.results.get("testSuccessful")).size().isEqualTo(3);
 	}
 
 	@Test
@@ -137,7 +174,61 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@ExtendWith(TrackingTestWatcher.class)
-	static class TrackingTestWatcherTestCase extends AbstractTestCase {
+	static class TrackingTestWatcherTestMethodsTestCase extends AbstractTestCase {
+	}
+
+	@ExtendWith(TrackingTestWatcher.class)
+	static class TrackingTestWatcherRepeatedTestMethodsTestCase {
+
+		@RepeatedTest(2)
+		void successfulTest() {
+			//no-op
+		}
+
+		@RepeatedTest(2)
+		void failedTest() {
+			fail("Must fail");
+		}
+
+		@RepeatedTest(2)
+		void abortedTest() {
+			Assumptions.assumeTrue(false);
+		}
+
+		@RepeatedTest(2)
+		@Disabled
+		void skippedTest() {
+			//no-op
+		}
+
+	}
+
+	@ExtendWith(TrackingTestWatcher.class)
+	static class TrackingTestWatcherTestFactoryMethodsTestCase {
+
+		@TestFactory
+		Stream<DynamicTest> successfulTest() {
+			return Stream.of("A", "B").map(text -> dynamicTest(text, () -> assertTrue(true)));
+		}
+
+		@TestFactory
+		Stream<DynamicTest> failedTest() {
+			return Stream.of("A", "B").map(text -> dynamicTest(text, () -> fail("Must fail")));
+
+		}
+
+		@TestFactory
+		Stream<DynamicTest> abortedTest() {
+			return Stream.of("A", "B").map(text -> dynamicTest(text, () -> assumeTrue(false)));
+
+		}
+
+		@TestFactory
+		@Disabled
+		Stream<DynamicTest> skippedTest() {
+			return Stream.of("A", "B").map(text -> dynamicTest(text, () -> assertTrue(false)));
+		}
+
 	}
 
 	@ExtendWith(ExceptionThrowingTestWatcher.class)
