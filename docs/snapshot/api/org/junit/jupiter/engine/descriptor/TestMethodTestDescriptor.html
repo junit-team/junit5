@@ -297,7 +297,11 @@ extends <a href="MethodBasedTestDescriptor.html" title="class in org.junit.jupit
             <a href="../../../platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor,
             <a href="../../../platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;result)</code></th>
 <td class="colLast">
-<div class="block">Callback invoked when the execution of this node has finished.</div>
+<div class="block">Invoke <a href="../../api/extension/TestWatcher.html#testSuccessful(org.junit.jupiter.api.extension.ExtensionContext)"><code>testSuccessful()</code></a>,
+ <a href="../../api/extension/TestWatcher.html#testAborted(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)"><code>testAborted()</code></a>, or
+ <a href="../../api/extension/TestWatcher.html#testFailed(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)"><code>testFailed()</code></a> on each
+ registered <a href="../../api/extension/TestWatcher.html" title="interface in org.junit.jupiter.api.extension"><code>TestWatcher</code></a> according to the status of the supplied
+ <a href="../../../platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>, in reverse registration order.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
@@ -306,7 +310,8 @@ extends <a href="MethodBasedTestDescriptor.html" title="class in org.junit.jupit
            <a href="../../../platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor,
            <a href="../../../platform/engine/support/hierarchical/Node.SkipResult.html" title="class in org.junit.platform.engine.support.hierarchical">Node.SkipResult</a>&nbsp;result)</code></th>
 <td class="colLast">
-<div class="block">Callback invoked when the execution of this node has been skipped.</div>
+<div class="block">Invoke <a href="../../api/extension/TestWatcher.html#testDisabled(org.junit.jupiter.api.extension.ExtensionContext,java.util.Optional)"><code>TestWatcher.testDisabled(ExtensionContext, Optional)</code></a> on each
+ registered <a href="../../api/extension/TestWatcher.html" title="interface in org.junit.jupiter.api.extension"><code>TestWatcher</code></a>, in registration order.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
@@ -504,10 +509,8 @@ extends <a href="MethodBasedTestDescriptor.html" title="class in org.junit.jupit
 <pre class="methodSignature">public&nbsp;void&nbsp;nodeSkipped&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context,
                         <a href="../../../platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor,
                         <a href="../../../platform/engine/support/hierarchical/Node.SkipResult.html" title="class in org.junit.platform.engine.support.hierarchical">Node.SkipResult</a>&nbsp;result)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../platform/engine/support/hierarchical/Node.html#nodeSkipped(C,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.support.hierarchical.Node.SkipResult)">Node</a></code></span></div>
-<div class="block">Callback invoked when the execution of this node has been skipped.
-
- <p>The default implementation does nothing.</div>
+<div class="block">Invoke <a href="../../api/extension/TestWatcher.html#testDisabled(org.junit.jupiter.api.extension.ExtensionContext,java.util.Optional)"><code>TestWatcher.testDisabled(ExtensionContext, Optional)</code></a> on each
+ registered <a href="../../api/extension/TestWatcher.html" title="interface in org.junit.jupiter.api.extension"><code>TestWatcher</code></a>, in registration order.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>context</code> - the execution context</dd>
@@ -527,10 +530,11 @@ extends <a href="MethodBasedTestDescriptor.html" title="class in org.junit.jupit
 <pre class="methodSignature">public&nbsp;void&nbsp;nodeFinished&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context,
                          <a href="../../../platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor,
                          <a href="../../../platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;result)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../platform/engine/support/hierarchical/Node.html#nodeFinished(C,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">Node</a></code></span></div>
-<div class="block">Callback invoked when the execution of this node has finished.
-
- <p>The default implementation does nothing.</div>
+<div class="block">Invoke <a href="../../api/extension/TestWatcher.html#testSuccessful(org.junit.jupiter.api.extension.ExtensionContext)"><code>testSuccessful()</code></a>,
+ <a href="../../api/extension/TestWatcher.html#testAborted(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)"><code>testAborted()</code></a>, or
+ <a href="../../api/extension/TestWatcher.html#testFailed(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)"><code>testFailed()</code></a> on each
+ registered <a href="../../api/extension/TestWatcher.html" title="interface in org.junit.jupiter.api.extension"><code>TestWatcher</code></a> according to the status of the supplied
+ <a href="../../../platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>, in reverse registration order.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>context</code> - the execution context</dd>

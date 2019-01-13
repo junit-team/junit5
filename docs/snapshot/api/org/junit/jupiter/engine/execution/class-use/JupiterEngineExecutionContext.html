@@ -298,7 +298,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestMethodTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/TestMethodTestDescriptor.html#nodeFinished(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">nodeFinished</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context,
             <a href="../../../../platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor,
             <a href="../../../../platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;result)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Invoke <a href="../../../api/extension/TestWatcher.html#testSuccessful(org.junit.jupiter.api.extension.ExtensionContext)"><code>testSuccessful()</code></a>,
+ <a href="../../../api/extension/TestWatcher.html#testAborted(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)"><code>testAborted()</code></a>, or
+ <a href="../../../api/extension/TestWatcher.html#testFailed(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)"><code>testFailed()</code></a> on each
+ registered <a href="../../../api/extension/TestWatcher.html" title="interface in org.junit.jupiter.api.extension"><code>TestWatcher</code></a> according to the status of the supplied
+ <a href="../../../../platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>, in reverse registration order.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
@@ -316,7 +322,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestMethodTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/TestMethodTestDescriptor.html#nodeSkipped(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.support.hierarchical.Node.SkipResult)">nodeSkipped</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context,
            <a href="../../../../platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor,
            <a href="../../../../platform/engine/support/hierarchical/Node.SkipResult.html" title="class in org.junit.platform.engine.support.hierarchical">Node.SkipResult</a>&nbsp;result)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Invoke <a href="../../../api/extension/TestWatcher.html#testDisabled(org.junit.jupiter.api.extension.ExtensionContext,java.util.Optional)"><code>TestWatcher.testDisabled(ExtensionContext, Optional)</code></a> on each
+ registered <a href="../../../api/extension/TestWatcher.html" title="interface in org.junit.jupiter.api.extension"><code>TestWatcher</code></a>, in registration order.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected <a href="../../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
