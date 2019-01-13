@@ -193,11 +193,23 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Callback invoked when the execution of this node has finished.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.html#nodeFinished(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">nodeFinished(JupiterEngineExecutionContext, TestDescriptor, TestExecutionResult)</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestFactoryTestDescriptor</a></dt>
+<dd>
+<div class="block">Override <a href="../org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.html#nodeFinished(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)"><code>TestMethodTestDescriptor.nodeFinished(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext, org.junit.platform.engine.TestDescriptor, org.junit.platform.engine.TestExecutionResult)</code></a> as a no-op, since
+ the <code>TestWatcher</code> API is not supported for <code>@TestFactory</code>
+ containers.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.html#nodeFinished(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">nodeFinished(JupiterEngineExecutionContext, TestDescriptor, TestExecutionResult)</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestMethodTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/Node.html#nodeSkipped(C,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.support.hierarchical.Node.SkipResult)">nodeSkipped(C, TestDescriptor, Node.SkipResult)</a></span> - Method in interface org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical">Node</a></dt>
 <dd>
 <div class="block">Callback invoked when the execution of this node has been skipped.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.html#nodeSkipped(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.support.hierarchical.Node.SkipResult)">nodeSkipped(JupiterEngineExecutionContext, TestDescriptor, Node.SkipResult)</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestFactoryTestDescriptor</a></dt>
+<dd>
+<div class="block">Override <a href="../org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.html#nodeSkipped(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.support.hierarchical.Node.SkipResult)"><code>TestMethodTestDescriptor.nodeSkipped(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext, org.junit.platform.engine.TestDescriptor, org.junit.platform.engine.support.hierarchical.Node.SkipResult)</code></a> as a no-op, since
+ the <code>TestWatcher</code> API is not supported for <code>@TestFactory</code>
+ containers.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.html#nodeSkipped(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.support.hierarchical.Node.SkipResult)">nodeSkipped(JupiterEngineExecutionContext, TestDescriptor, Node.SkipResult)</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestMethodTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
