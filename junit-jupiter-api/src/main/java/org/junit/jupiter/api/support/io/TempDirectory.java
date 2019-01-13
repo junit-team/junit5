@@ -14,6 +14,7 @@ import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -45,7 +46,8 @@ import org.junit.platform.commons.util.Preconditions;
  *
  * <p>The temporary directory is only created if a test or lifecycle method or
  * test class constructor has a parameter annotated with
- * {@link TempDir @TempDir}. If the parameter type is not {@link Path} or if the
+ * {@link TempDir @TempDir}. If the parameter type is
+ * neither {@link Path} not {@link File} or if the
  * temporary directory could not be created, this extension will throw a
  * {@link ParameterResolutionException}.
  *
@@ -87,8 +89,8 @@ public final class TempDirectory implements ParameterResolver {
 
 	/**
 	 * {@code TempDir} can be used to annotate a test or lifecycle method or
-	 * test class constructor parameter of type {@link Path} that should be
-	 * resolved into a temporary directory.
+	 * test class constructor parameter of type {@link Path} or {@link File}
+	 * that should be resolved into a temporary directory.
 	 *
 	 * @see TempDirectory
 	 */
@@ -220,15 +222,26 @@ public final class TempDirectory implements ParameterResolver {
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Class<?> parameterType = parameterContext.getParameter().getType();
-		if (parameterType != Path.class) {
-			throw new ParameterResolutionException(
-				"Can only resolve parameter of type " + Path.class.getName() + " but was: " + parameterType.getName());
+		boolean expectsPath = parameterType == Path.class;
+		if (!expectsPath && parameterType != File.class) {
+			throw new ParameterResolutionException("Can only resolve parameter of type " + Path.class.getName() + " or "
+					+ File.class.getName() + " but was: " + parameterType.getName());
 		}
-		return extensionContext.getStore(NAMESPACE) //
+		Path path = extensionContext.getStore(NAMESPACE) //
 				.getOrComputeIfAbsent(KEY,
 					key -> tempDirProvider.get(parameterContext, extensionContext, TEMP_DIR_PREFIX),
 					CloseablePath.class) //
 				.get();
+		if (expectsPath) {
+			return path;
+		}
+		try {
+			return path.toFile();
+		}
+		catch (final UnsupportedOperationException uoe) { // not default filesystem
+			throw new ParameterResolutionException("Unsupported FileSystem in tempDirProvider: " + tempDirProvider,
+				uoe);
+		}
 	}
 
 	private static CloseablePath createDefaultTempDir(String dirPrefix) {

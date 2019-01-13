@@ -11,6 +11,7 @@
 package org.junit.jupiter.api.support.io;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -158,11 +159,11 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		@DisplayName("when @TempDir is used on parameter of wrong type")
-		void onlySupportsParametersOfTypePath() {
+		void onlySupportsParametersOfTypePathAndFile() {
 			var results = executeTests(selectClass(InvalidTestCase.class));
 
 			assertSingleFailedTest(results, ParameterResolutionException.class,
-				"Can only resolve parameter of type java.nio.file.Path");
+				"Can only resolve parameter of type java.nio.file.Path or java.io.File");
 		}
 
 		@Test
@@ -340,8 +341,21 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	@ExtendWith(TempDirectory.class)
 	static class InvalidTestCase {
 		@Test
-		void wrongParameterType(@SuppressWarnings("unused") @TempDir File ignored) {
+		void wrongParameterType(@SuppressWarnings("unused") @TempDir String ignored) {
 			fail("this should never be called");
+		}
+	}
+
+	@Nested
+	@DisplayName("User can rely on java.io.File injection type")
+	@ExtendWith(TempDirectory.class)
+	class FileInjection {
+		@Test
+		@DisplayName("File and Path injections lead to the same folder/behavior")
+		void checkFile(@TempDir File tempDir, @TempDir Path ref) {
+			final Path path = tempDir.toPath();
+			assertEquals(ref.toAbsolutePath(), path.toAbsolutePath());
+			assertTrue(Files.exists(path));
 		}
 	}
 
