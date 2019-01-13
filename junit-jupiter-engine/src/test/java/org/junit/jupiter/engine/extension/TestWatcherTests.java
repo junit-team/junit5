@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -22,13 +24,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
@@ -46,17 +47,25 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
  */
 class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
+	private static final List<String> testWatcherMethodNames = Arrays.stream(TestWatcher.class.getDeclaredMethods())//
+			.map(Method::getName).collect(toList());
+
+	@BeforeEach
+	void clearResults() {
+		TrackingTestWatcher.results.clear();
+	}
+
 	@Test
-	void testWatcherValidityIncludingNestedTests() {
-		assertCommonStatistics(executeTestsForClass(TestWatcherValidityTestCase.class));
+	void testWatcherInvokedForTestMethodsInTopLevelAndNestedTestClasses() {
+		assertCommonStatistics(executeTestsForClass(TrackingTestWatcherTestCase.class));
+		assertThat(TrackingTestWatcher.results.keySet()).containsAll(testWatcherMethodNames);
+		TrackingTestWatcher.results.values().forEach(uidList -> assertEquals(2, uidList.size()));
 	}
 
 	@Test
 	@TrackLogRecords
 	void testWatcherExceptionsAreLoggedAndSwallowed(LogRecordListener logRecordListener) {
-		assertCommonStatistics(executeTestsForClass(TestWatcherSimpleExceptionHandlingTestCase.class));
-
-		List<String> testWatcherMethodNames = getTestWatcherMethodNames();
+		assertCommonStatistics(executeTestsForClass(ExceptionThrowingTestWatcherTestCase.class));
 
 		// @formatter:off
 		long exceptionCount = logRecordListener.stream(TestMethodTestDescriptor.class, Level.WARNING)
@@ -74,14 +83,9 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 		results.tests().assertStatistics(stats -> stats.skipped(2).started(6).succeeded(2).aborted(2).failed(2));
 	}
 
-	private static List<String> getTestWatcherMethodNames() {
-		Method[] methods = TestWatcher.class.getDeclaredMethods();
-		return Arrays.stream(methods).map(Method::getName).collect(Collectors.toList());
-	}
-
 	// -------------------------------------------------------------------------
 
-	static class BaseTestWatcherNestedTestCase {
+	private static abstract class AbstractTestCase {
 
 		@Test
 		public void successfulTest() {
@@ -105,7 +109,8 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Nested
-		class SecondLevelTestWatcherTestCase {
+		class SecondLevel {
+
 			@Test
 			public void successfulTest() {
 				//no-op
@@ -126,75 +131,71 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 			public void skippedTest() {
 				//no-op
 			}
+
 		}
+
 	}
 
-	@ExtendWith(TestWatcherValidityCheckingWatcher.class)
-	static class TestWatcherValidityTestCase extends BaseTestWatcherNestedTestCase {
+	@ExtendWith(TrackingTestWatcher.class)
+	static class TrackingTestWatcherTestCase extends AbstractTestCase {
 	}
 
 	@ExtendWith(ExceptionThrowingTestWatcher.class)
-	static class TestWatcherSimpleExceptionHandlingTestCase extends BaseTestWatcherNestedTestCase {
+	static class ExceptionThrowingTestWatcherTestCase extends AbstractTestCase {
 	}
 
-	static class TrackingTestWatcher implements TestWatcher {
+	private static class TrackingTestWatcher implements TestWatcher {
 
-		final Map<String, List<String>> results = new HashMap<>();
+		private static final Map<String, List<String>> results = new HashMap<>();
 
 		@Override
 		public void testSuccessful(ExtensionContext context) {
-			trackResult("SUCCESSFUL", context.getUniqueId());
+			trackResult("testSuccessful", context.getUniqueId());
 		}
 
 		@Override
 		public void testAborted(ExtensionContext context, Throwable cause) {
-			trackResult("ABORTED", context.getUniqueId());
+			trackResult("testAborted", context.getUniqueId());
 		}
 
 		@Override
 		public void testFailed(ExtensionContext context, Throwable cause) {
-			trackResult("FAILED", context.getUniqueId());
+			trackResult("testFailed", context.getUniqueId());
 		}
 
 		@Override
 		public void testDisabled(ExtensionContext context, Optional<String> reason) {
-			trackResult("DISABLED", context.getUniqueId());
+			trackResult("testDisabled", context.getUniqueId());
 		}
 
-		protected void trackResult(String status, String method) {
-			results.computeIfAbsent(status, k -> new ArrayList<>()).add(method);
+		protected void trackResult(String status, String uid) {
+			results.computeIfAbsent(status, k -> new ArrayList<>()).add(uid);
 		}
+
 	}
 
-	static class TestWatcherValidityCheckingWatcher extends TrackingTestWatcher implements AfterAllCallback {
-
-		@Override
-		public void afterAll(ExtensionContext context) {
-			this.results.values().forEach(idList -> assertEquals(2, idList.size()));
-		}
-	}
-
-	static class ExceptionThrowingTestWatcher implements TestWatcher {
+	private static class ExceptionThrowingTestWatcher implements TestWatcher {
 
 		@Override
 		public void testSuccessful(ExtensionContext context) {
-			throw new JUnitException("Exception in testSuccessful ");
+			throw new JUnitException("Exception in testSuccessful()");
 		}
 
 		@Override
 		public void testDisabled(ExtensionContext context, Optional<String> reason) {
-			throw new JUnitException("Exception in testDisabled");
+			throw new JUnitException("Exception in testDisabled()");
 		}
 
 		@Override
 		public void testAborted(ExtensionContext context, Throwable cause) {
-			throw new JUnitException("Exception in testAborted");
+			throw new JUnitException("Exception in testAborted()");
 		}
 
 		@Override
 		public void testFailed(ExtensionContext context, Throwable cause) {
-			throw new JUnitException("Exception in testFailed");
+			throw new JUnitException("Exception in testFailed()");
 		}
+
 	}
 
 }
