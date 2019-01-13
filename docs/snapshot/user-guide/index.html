@@ -6566,29 +6566,42 @@ those provided in <code>java.lang.reflect.Parameter</code> in order to avoid thi
 <div class="sect2">
 <h3 id="extensions-test-result-processing"><a class="anchor" href="#extensions-test-result-processing"></a>5.7. Test Result Processing</h3>
 <div class="paragraph">
-<p><code><a href="../api/org/junit/jupiter/api/extension/TestWatcher.html">TestWatcher</a></code> defines the API for extensions that wish to process the results of <code>@Test</code>
-method executions. Specifically, a <code>TestWatcher</code> will be invoked with contextual
+<p><code><a href="../api/org/junit/jupiter/api/extension/TestWatcher.html">TestWatcher</a></code> defines the API for extensions that wish to process the results of <em>test
+method</em> executions. Specifically, a <code>TestWatcher</code> will be invoked with contextual
 information for the following events.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>testDisabled</code>: invoked after a disabled <code>@Test</code> method has been skipped</p>
+<p><code>testDisabled</code>: invoked after a disabled <em>test method</em> has been skipped</p>
 </li>
 <li>
-<p><code>testSuccessful</code>: invoked after a <code>@Test</code> method has completed successfully</p>
+<p><code>testSuccessful</code>: invoked after a <em>test method</em> has completed successfully</p>
 </li>
 <li>
-<p><code>testAborted</code>: invoked after a <code>@Test</code> method has been aborted</p>
+<p><code>testAborted</code>: invoked after a <em>test method</em> has been aborted</p>
 </li>
 <li>
-<p><code>testFailed</code>: invoked after a <code>@Test</code> method has failed</p>
+<p><code>testFailed</code>: invoked after a <em>test method</em> has failed</p>
 </li>
 </ul>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In this context, <em>test method</em> refers to any <code>@Test</code> method or <code>@TestTemplate</code>
+method (for example, a <code>@RepeatedTest</code> or <code>@ParameterizedTest</code>).
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Extensions implementing this interface can be registered at the method level or at the
-class level. In the latter case they will be invoked for any contained <code>@Test</code> methods
+class level. In the latter case they will be invoked for any contained <em>test method</em>
 including those in <code>@Nested</code> classes.</p>
 </div>
 <div class="admonitionblock warning">
@@ -8588,7 +8601,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-13 17:09:17 UTC
+Last updated 2019-01-13 17:20:01 UTC
 </div>
 </div>
 </body>
