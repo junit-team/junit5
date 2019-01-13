@@ -32,6 +32,8 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClasspathResourceSource;
@@ -160,6 +162,32 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	static TestSource fromUri(URI uri) {
 		Preconditions.notNull(uri, "URI must not be null");
 		return CLASSPATH_SCHEME.equals(uri.getScheme()) ? ClasspathResourceSource.from(uri) : UriSource.from(uri);
+	}
+
+	/**
+	 * Override {@link TestMethodTestDescriptor#nodeSkipped} as a no-op, since
+	 * the {@code TestWatcher} API is not supported for {@code @TestFactory}
+	 * containers.
+	 *
+	 * @since 5.4
+	 */
+	@Override
+	public void nodeSkipped(JupiterEngineExecutionContext context, TestDescriptor descriptor, SkipResult result) {
+		/* no-op */
+	}
+
+	/**
+	 * Override {@link TestMethodTestDescriptor#nodeFinished} as a no-op, since
+	 * the {@code TestWatcher} API is not supported for {@code @TestFactory}
+	 * containers.
+	 *
+	 * @since 5.4
+	 */
+	@Override
+	public void nodeFinished(JupiterEngineExecutionContext context, TestDescriptor descriptor,
+			TestExecutionResult result) {
+
+		/* no-op */
 	}
 
 }

@@ -86,17 +86,15 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void testWatcherIsInvokedForTestFactoryMethods() {
+	void testWatcherIsNotInvokedForTestFactoryMethods() {
 		EngineExecutionResults results = executeTestsForClass(TrackingTestWatcherTestFactoryMethodsTestCase.class);
 
 		results.containers().assertStatistics(stats -> stats.skipped(1).started(5).succeeded(5).aborted(0).failed(0));
 		results.tests().assertStatistics(
 			stats -> stats.dynamicallyRegistered(6).skipped(0).started(6).succeeded(2).aborted(2).failed(2));
 
-		assertThat(TrackingTestWatcher.results.get("testAborted")).isNull();
-		assertThat(TrackingTestWatcher.results.get("testFailed")).isNull();
-		assertThat(TrackingTestWatcher.results.get("testDisabled")).size().isEqualTo(1);
-		assertThat(TrackingTestWatcher.results.get("testSuccessful")).size().isEqualTo(3);
+		// There should be zero results, since the TestWatcher API is not supported for @TestFactory containers.
+		assertThat(TrackingTestWatcher.results).isEmpty();
 	}
 
 	@Test
