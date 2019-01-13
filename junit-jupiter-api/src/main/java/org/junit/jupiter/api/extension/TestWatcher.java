@@ -27,7 +27,9 @@ import org.apiguardian.api.API;
  * methods in this API are invoked.
  *
  * <p>Please note that this API is currently only used to report the results of
- * {@link org.junit.jupiter.api.Test @Test} methods.
+ * {@link org.junit.jupiter.api.Test @Test} methods and
+ * {@link org.junit.jupiter.api.TestTemplate @TestTemplate} methods (e.g.,
+ * {@code @RepeatedTest} and {@code @ParameterizedTest}).
  *
  * <p>Extensions implementing this API can be registered at any level.
  *
@@ -35,8 +37,9 @@ import org.apiguardian.api.API;
  *
  * <p>In contrast to other {@link Extension} APIs, a {@code TestWatcher} is not
  * permitted to adversely influence the execution of tests. Consequently, any
- * exception thrown by a {@code TestWatcher} will be logged at {@code WARNING}
- * level and will not be allowed to propagate or fail test execution.
+ * exception thrown by a method in the {@code TestWatcher} API will be logged at
+ * {@code WARNING} level and will not be allowed to propagate or fail test
+ * execution.
  *
  * @since 5.4
  */
