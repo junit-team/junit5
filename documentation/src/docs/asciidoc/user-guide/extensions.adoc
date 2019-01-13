@@ -349,18 +349,18 @@ those provided in `java.lang.reflect.Parameter` in order to avoid this bug in th
 [[extensions-test-result-processing]]
 === Test Result Processing
 
-`{TestWatcher}` defines the API for extensions that wish to process test results.
-Specifically, a `TestWatcher` will be invoked with contextual information for the
-following events.
+`{TestWatcher}` defines the API for extensions that wish to process the results of `@Test`
+method executions. Specifically, a `TestWatcher` will be invoked with contextual
+information for the following events.
 
-* `testDisabled`: invoked after a disabled test has been skipped
-* `testSuccessful`: invoked after a test has completed successfully
-* `testAborted`: invoked after a test has been aborted
-* `testFailed`: invoked after a test has failed
+* `testDisabled`: invoked after a disabled `@Test` method has been skipped
+* `testSuccessful`: invoked after a `@Test` method has completed successfully
+* `testAborted`: invoked after a `@Test` method has been aborted
+* `testFailed`: invoked after a `@Test` method has failed
 
 Extensions implementing this interface can be registered at the method level or at the
-class level. In the latter case they will be invoked for any contained tests including
-those in `@Nested` classes.
+class level. In the latter case they will be invoked for any contained `@Test` methods
+including those in `@Nested` classes.
 
 [WARNING]
 ====
