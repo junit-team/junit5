@@ -675,7 +675,9 @@ repository on GitHub.</p>
 <ul>
 <li>
 <p><code>TestPlan.add(TestIdentifier)</code> has always been considered <em>internal</em> and is now
-appropriately annotated with <code>@API(status = INTERNAL)</code>.</p>
+appropriately annotated with <code>@API(status = INTERNAL)</code>. All attempts to call it from
+third-party code will now be ignored. IDEs and build tools should remove any code that
+calls the method.</p>
 </li>
 </ul>
 </div>
@@ -705,6 +707,10 @@ method that allows one to execute a previously discovered <code>TestPlan</code>.
 <p><code>@RegisterExtension</code> fields that are <code>null</code> when evaluated are no longer silently
 ignored. Instead, the corresponding test class or test method now fails with an
 informative exception.</p>
+</li>
+<li>
+<p><code>@ParameterizedTest</code> now again supports <code>MessageFormat</code> patterns for individual
+parameters (e.g. <code>{0,number,<mark>.</mark>#}</code>).</p>
 </li>
 </ul>
 </div>
@@ -1257,7 +1263,7 @@ well as various minor improvements and bug fixes.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-13 13:54:17 UTC
+Last updated 2019-01-13 15:27:06 UTC
 </div>
 </div>
 </body>
