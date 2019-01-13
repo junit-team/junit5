@@ -143,7 +143,7 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
  methods in this API are invoked.
 
  <p>Please note that this API is currently only used to report the results of
- method-based tests.
+ <a href="../Test.html" title="annotation in org.junit.jupiter.api"><code>@Test</code></a> methods.
 
  <p>Extensions implementing this API can be registered at any level.
 
@@ -152,7 +152,7 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
  <p>In contrast to other <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extension</code></a> APIs, a <code>TestWatcher</code> is not
  permitted to adversely influence the execution of tests. Consequently, any
  exception thrown by a <code>TestWatcher</code> will be logged at <code>WARNING</code>
- level and will not allowed to propagate or fail test execution.</div>
+ level and will not be allowed to propagate or fail test execution.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.4</dd>
