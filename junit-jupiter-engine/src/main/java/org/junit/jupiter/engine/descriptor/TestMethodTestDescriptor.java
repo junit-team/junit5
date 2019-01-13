@@ -91,11 +91,13 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
 		ExtensionRegistry registry = populateNewExtensionRegistry(context);
-		TestInstances testInstances = context.getTestInstancesProvider().getTestInstances(Optional.of(registry));
-
 		ThrowableCollector throwableCollector = createThrowableCollector();
-		ExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, context.getConfiguration(), testInstances, throwableCollector);
+		MethodExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
+			context.getExecutionListener(), this, context.getConfiguration(), throwableCollector);
+		throwableCollector.execute(() -> {
+			TestInstances testInstances = context.getTestInstancesProvider().getTestInstances(Optional.of(registry));
+			extensionContext.setTestInstances(testInstances);
+		});
 
 		// @formatter:off
 		return context.extend()

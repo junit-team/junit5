@@ -113,6 +113,14 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 		assertEquals(8, exceptionCount, "Thrown exceptions were not logged properly.");
 	}
 
+	@Test
+	void testWatcherInvokedForTestMethodsInTestCaseWithProblematicConstructor() {
+		EngineExecutionResults results = executeTestsForClass(ProblematicConstructorTestCase.class);
+		results.tests().assertStatistics(stats -> stats.skipped(0).started(8).succeeded(0).aborted(0).failed(8));
+		assertThat(TrackingTestWatcher.results.keySet()).containsExactly("testFailed");
+		assertThat(TrackingTestWatcher.results.get("testFailed")).hasSize(8);
+	}
+
 	private void assertCommonStatistics(EngineExecutionResults results) {
 		results.containers().assertStatistics(stats -> stats.started(3).succeeded(3).failed(0));
 		results.tests().assertStatistics(stats -> stats.skipped(2).started(6).succeeded(2).aborted(2).failed(2));
@@ -231,6 +239,12 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
 	@ExtendWith(ExceptionThrowingTestWatcher.class)
 	static class ExceptionThrowingTestWatcherTestCase extends AbstractTestCase {
+	}
+
+	@ExtendWith(TrackingTestWatcher.class)
+	static class ProblematicConstructorTestCase extends AbstractTestCase {
+		ProblematicConstructorTestCase(Object ignore) {
+		}
 	}
 
 	private static class TrackingTestWatcher implements TestWatcher {

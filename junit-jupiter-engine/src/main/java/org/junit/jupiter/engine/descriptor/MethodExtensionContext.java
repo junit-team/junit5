@@ -30,17 +30,16 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 @API(status = INTERNAL, since = "5.0")
 public final class MethodExtensionContext extends AbstractExtensionContext<TestMethodTestDescriptor> {
 
-	private final TestInstances testInstances;
-
 	private final ThrowableCollector throwableCollector;
 
+	private TestInstances testInstances;
+
 	public MethodExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			TestMethodTestDescriptor testDescriptor, JupiterConfiguration configuration, TestInstances testInstances,
+			TestMethodTestDescriptor testDescriptor, JupiterConfiguration configuration,
 			ThrowableCollector throwableCollector) {
 
 		super(parent, engineExecutionListener, testDescriptor, configuration);
 
-		this.testInstances = testInstances;
 		this.throwableCollector = throwableCollector;
 	}
 
@@ -61,12 +60,16 @@ public final class MethodExtensionContext extends AbstractExtensionContext<TestM
 
 	@Override
 	public Optional<Object> getTestInstance() {
-		return Optional.of(this.testInstances.getInnermostInstance());
+		return getTestInstances().map(TestInstances::getInnermostInstance);
 	}
 
 	@Override
 	public Optional<TestInstances> getTestInstances() {
-		return Optional.of(this.testInstances);
+		return Optional.ofNullable(this.testInstances);
+	}
+
+	public void setTestInstances(TestInstances testInstances) {
+		this.testInstances = testInstances;
 	}
 
 	@Override

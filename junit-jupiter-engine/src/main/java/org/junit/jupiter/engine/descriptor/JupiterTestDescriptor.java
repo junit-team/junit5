@@ -167,6 +167,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	@Override
 	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
+		context.getThrowableCollector().assertEmpty();
 		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluate(context.getExtensionRegistry(),
 			context.getConfiguration(), context.getExtensionContext());
 		return toSkipResult(evaluationResult);

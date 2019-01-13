@@ -29,7 +29,9 @@ import org.apiguardian.api.API;
  * <p>Please note that this API is currently only used to report the results of
  * {@link org.junit.jupiter.api.Test @Test} methods and
  * {@link org.junit.jupiter.api.TestTemplate @TestTemplate} methods (e.g.,
- * {@code @RepeatedTest} and {@code @ParameterizedTest}).
+ * {@code @RepeatedTest} and {@code @ParameterizedTest}). Moreover, if there's a
+ * failure on the class level, e.g. an exception thrown by a {@code @BeforeAll}
+ * method, no test results will be reported.
  *
  * <p>Extensions implementing this API can be registered at any level.
  *
