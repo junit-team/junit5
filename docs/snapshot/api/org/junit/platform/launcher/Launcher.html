@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":6};
+var data = {"i0":6,"i1":6,"i2":6,"i3":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -205,6 +205,16 @@ public interface <span class="typeNameLabel">Launcher</span></pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#execute(org.junit.platform.launcher.TestPlan,org.junit.platform.launcher.TestExecutionListener...)">execute</a></span>&#8203;(<a href="TestPlan.html" title="class in org.junit.platform.launcher">TestPlan</a>&nbsp;testPlan,
+       <a href="TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>...&nbsp;listeners)</code></th>
+<td class="colLast">
+<div class="block">Execute the supplied <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> and notify
+ <a href="#registerTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">registered listeners</a> about
+ the progress and results of the execution.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#registerTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">registerTestExecutionListeners</a></span>&#8203;(<a href="TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>...&nbsp;listeners)</code></th>
 <td class="colLast">
 <div class="block">Register one or more listeners for test execution.</div>
@@ -257,24 +267,19 @@ public interface <span class="typeNameLabel">Launcher</span></pre>
 <dd><code>launcherDiscoveryRequest</code> - the launcher discovery request; never
  <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a <code>TestPlan</code> that contains all resolved <a href="TestIdentifier.html" title="class in org.junit.platform.launcher">identifiers</a> from all registered engines</dd>
+<dd>an unmodifiable <code>TestPlan</code> that contains all resolved
+ <a href="TestIdentifier.html" title="class in org.junit.platform.launcher">identifiers</a> from all registered engines</dd>
 <dt><span class="simpleTagLabel">API Note:</span></dt>
-<dd>This method should only be called to generate a preview of the
- test tree when executing tests is not desired. First calling this method
- to get access to the <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> and then <a href="#execute(org.junit.platform.launcher.LauncherDiscoveryRequest,org.junit.platform.launcher.TestExecutionListener...)"><code>execute(org.junit.platform.launcher.LauncherDiscoveryRequest, org.junit.platform.launcher.TestExecutionListener...)</code></a> causes
- test discovery to be executed twice which may result in a significant
- performance degradation. Instead, <a href="#execute(org.junit.platform.launcher.LauncherDiscoveryRequest,org.junit.platform.launcher.TestExecutionListener...)"><code>execute(org.junit.platform.launcher.LauncherDiscoveryRequest, org.junit.platform.launcher.TestExecutionListener...)</code></a> should be called
- directly and a <a href="TestExecutionListener.html" title="interface in org.junit.platform.launcher"><code>TestExecutionListener</code></a> that overrides
- <a href="TestExecutionListener.html#testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)"><code>TestExecutionListener.testPlanExecutionStarted(TestPlan)</code></a> should
- be registered to get access to the test tree, for example to render it in
- an IDE.</dd>
+<dd>This method may be called to generate a preview of the test
+ tree. The resulting <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> is unmodifiable and may be passed to
+ <a href="#execute(org.junit.platform.launcher.TestPlan,org.junit.platform.launcher.TestExecutionListener...)"><code>execute(TestPlan, TestExecutionListener...)</code></a> for execution.</dd>
 </dl>
 </li>
 </ul>
 <a id="execute(org.junit.platform.launcher.LauncherDiscoveryRequest,org.junit.platform.launcher.TestExecutionListener...)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>execute</h4>
 <pre class="methodSignature">void&nbsp;execute&#8203;(<a href="LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryRequest</a>&nbsp;launcherDiscoveryRequest,
@@ -292,10 +297,39 @@ public interface <span class="typeNameLabel">Launcher</span></pre>
 <dd><code>launcherDiscoveryRequest</code> - the launcher discovery request; never <code>null</code></dd>
 <dd><code>listeners</code> - additional test execution listeners; never <code>null</code></dd>
 <dt><span class="simpleTagLabel">API Note:</span></dt>
-<dd>In order to get access to the test tree, for example to render
- it in an IDE, register a <a href="TestExecutionListener.html" title="interface in org.junit.platform.launcher"><code>TestExecutionListener</code></a> that overrides
- <a href="TestExecutionListener.html#testPlanExecutionStarted(org.junit.platform.launcher.TestPlan)"><code>TestExecutionListener.testPlanExecutionStarted(TestPlan)</code></a> instead
- of calling <a href="#discover(org.junit.platform.launcher.LauncherDiscoveryRequest)"><code>discover(org.junit.platform.launcher.LauncherDiscoveryRequest)</code></a> first.</dd>
+<dd>Calling this method will cause test discovery to be executed for
+ all registered engines. If the same <a href="LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher"><code>LauncherDiscoveryRequest</code></a> was
+ previously passed to <a href="#discover(org.junit.platform.launcher.LauncherDiscoveryRequest)"><code>discover(LauncherDiscoveryRequest)</code></a>, you
+ should instead call <a href="#execute(org.junit.platform.launcher.TestPlan,org.junit.platform.launcher.TestExecutionListener...)"><code>execute(TestPlan, TestExecutionListener...)</code></a>
+ and pass the already acquired <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> to avoid the potential
+ performance degradation (e.g., classpath scanning) of running test
+ discovery twice.</dd>
+</dl>
+</li>
+</ul>
+<a id="execute(org.junit.platform.launcher.TestPlan,org.junit.platform.launcher.TestExecutionListener...)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>execute</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#STABLE" title="class or interface in org.apiguardian.api" class="externalLink">STABLE</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.4")
+void&nbsp;execute&#8203;(<a href="TestPlan.html" title="class in org.junit.platform.launcher">TestPlan</a>&nbsp;testPlan,
+             <a href="TestExecutionListener.html" title="interface in org.junit.platform.launcher">TestExecutionListener</a>...&nbsp;listeners)</pre>
+<div class="block">Execute the supplied <a href="TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a> and notify
+ <a href="#registerTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">registered listeners</a> about
+ the progress and results of the execution.
+
+ <p>Supplied test execution listeners are registered in addition to
+ already registered listeners but only for the execution of the supplied
+ test plan.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>testPlan</code> - the test plan to execute; never <code>null</code></dd>
+<dd><code>listeners</code> - additional test execution listeners; never <code>null</code></dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.4</dd>
 </dl>
 </li>
 </ul>
