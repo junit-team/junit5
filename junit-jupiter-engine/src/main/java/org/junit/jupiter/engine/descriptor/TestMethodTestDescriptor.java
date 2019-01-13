@@ -48,7 +48,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executable;
 
 /**
- * {@link TestDescriptor} for tests based on Java methods.
+ * {@link TestDescriptor} for {@link org.junit.jupiter.api.Test @Test} methods.
  *
  * <h3>Default Display Names</h3>
  *
@@ -242,6 +242,9 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		});
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	@Override
 	public void nodeSkipped(JupiterEngineExecutionContext context, TestDescriptor descriptor, SkipResult result) {
 		if (context != null) {
@@ -250,6 +253,9 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	@Override
 	public void nodeFinished(JupiterEngineExecutionContext context, TestDescriptor descriptor,
 			TestExecutionResult result) {
@@ -274,6 +280,9 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		}
 	}
 
+	/**
+	 * @since 5.4
+	 */
 	private void invokeTestWatchers(JupiterEngineExecutionContext context, boolean reverseOrder,
 			Consumer<TestWatcher> callback) {
 
