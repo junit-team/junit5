@@ -517,6 +517,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
+	@SuppressWarnings("deprecation")
 	void testPlanWarnsWhenModified(LogRecordListener listener) {
 		TestEngine engine = new TestEngineSpy();
 		DefaultLauncher launcher = createLauncher(engine);

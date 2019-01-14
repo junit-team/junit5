@@ -189,9 +189,8 @@ class DefaultLauncher implements Launcher {
 		ConfigurationParameters configurationParameters = root.getConfigurationParameters();
 		TestExecutionListenerRegistry listenerRegistry = buildListenerRegistryForExecution(listeners);
 		withInterceptedStreams(configurationParameters, listenerRegistry, testExecutionListener -> {
-			TestPlan testPlan = internalTestPlan.getDelegate();
 			testExecutionListener.testPlanExecutionStarted(internalTestPlan);
-			ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(testPlan,
+			ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(internalTestPlan,
 				testExecutionListener);
 			for (TestEngine testEngine : root.getTestEngines()) {
 				TestDescriptor testDescriptor = root.getTestDescriptorFor(testEngine);

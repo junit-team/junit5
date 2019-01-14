@@ -12,6 +12,7 @@ package org.junit.platform.launcher;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -46,6 +47,8 @@ import org.junit.platform.engine.TestDescriptor.Visitor;
  * instances of this class contain mutable state. For example, when a dynamic
  * test is registered at runtime, it is added to the original test plan and
  * reported to {@link TestExecutionListener} implementations.
+ *
+ * <p>This class is not intended to be extended by clients.
  *
  * @since 1.0
  * @see Launcher
@@ -91,8 +94,10 @@ public class TestPlan {
 	 * Add the supplied {@link TestIdentifier} to this test plan.
 	 *
 	 * @param testIdentifier the identifier to add; never {@code null}
+	 * @deprecated without replacement since this method was intended to be internal.
 	 */
-	@API(status = INTERNAL, since = "1.0")
+	@Deprecated
+	@API(status = DEPRECATED, since = "1.4")
 	public void add(TestIdentifier testIdentifier) {
 		Preconditions.notNull(testIdentifier, "testIdentifier must not be null");
 		allIdentifiers.put(testIdentifier.getUniqueId(), testIdentifier);

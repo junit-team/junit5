@@ -182,6 +182,7 @@ class SummaryGenerationTests {
 		);
 	}
 
+	@SuppressWarnings("deprecation")
 	private TestIdentifier createTestIdentifier(String uniqueId) {
 		TestIdentifier identifier = TestIdentifier.from(
 			new TestDescriptorStub(UniqueId.root("test", uniqueId), uniqueId));
@@ -189,6 +190,7 @@ class SummaryGenerationTests {
 		return identifier;
 	}
 
+	@SuppressWarnings("deprecation")
 	private TestIdentifier createContainerIdentifier(String uniqueId) {
 		TestIdentifier identifier = TestIdentifier.from(
 			new TestDescriptorStub(UniqueId.root("container", uniqueId), uniqueId) {

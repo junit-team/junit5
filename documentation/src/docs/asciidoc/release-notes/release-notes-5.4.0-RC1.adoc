@@ -29,9 +29,8 @@ repository on GitHub.
 ==== Deprecations and Breaking Changes
 
 * `TestPlan.add(TestIdentifier)` has always been considered _internal_ and is now
-  appropriately annotated with `@API(status = INTERNAL)`. All attempts to call it from
-  third-party code will now be ignored. IDEs and build tools should remove any code that
-  calls the method.
+  _deprecated_. While calls from third-party code will continue to work for the time
+  being, IDEs and build tools should remove any such code as soon as possible.
 
 ==== New Features and Improvements
 

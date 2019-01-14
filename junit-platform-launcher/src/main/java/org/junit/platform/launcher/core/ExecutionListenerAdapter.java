@@ -26,10 +26,10 @@ import org.junit.platform.launcher.TestPlan;
  */
 class ExecutionListenerAdapter implements EngineExecutionListener {
 
-	private final TestPlan testPlan;
+	private final InternalTestPlan testPlan;
 	private final TestExecutionListener testExecutionListener;
 
-	ExecutionListenerAdapter(TestPlan testPlan, TestExecutionListener testExecutionListener) {
+	ExecutionListenerAdapter(InternalTestPlan testPlan, TestExecutionListener testExecutionListener) {
 		this.testPlan = testPlan;
 		this.testExecutionListener = testExecutionListener;
 	}
@@ -37,7 +37,7 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 	@Override
 	public void dynamicTestRegistered(TestDescriptor testDescriptor) {
 		TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
-		this.testPlan.add(testIdentifier);
+		this.testPlan.addInternal(testIdentifier);
 		this.testExecutionListener.dynamicTestRegistered(testIdentifier);
 	}
 

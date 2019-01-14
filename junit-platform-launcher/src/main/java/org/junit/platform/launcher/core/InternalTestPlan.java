@@ -52,12 +52,18 @@ class InternalTestPlan extends TestPlan {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public void add(TestIdentifier testIdentifier) {
 		if (warningEmitted.compareAndSet(false, true)) {
 			logger.warn(() -> "Attempt to modify the TestPlan was detected. "
 					+ "A future version of the JUnit Platform will ignore this call and eventually even throw an exception. "
 					+ "Please contact your IDE/tool vendor and request a fix (see https://github.com/junit-team/junit5/issues/1732 for details).");
 		}
+		addInternal(testIdentifier);
+	}
+
+	@SuppressWarnings("deprecation")
+	void addInternal(TestIdentifier testIdentifier) {
 		delegate.add(testIdentifier);
 	}
 
