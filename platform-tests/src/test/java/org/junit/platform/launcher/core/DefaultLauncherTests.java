@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -516,7 +517,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void testPlanIsUnmodifiable(LogRecordListener listener) {
+	void testPlanWarnsWhenModified(LogRecordListener listener) {
 		TestEngine engine = new TestEngineSpy();
 		DefaultLauncher launcher = createLauncher(engine);
 		TestPlan testPlan = launcher.discover(request().build());
@@ -527,13 +528,13 @@ class DefaultLauncherTests {
 		TestIdentifier addedIdentifier = TestIdentifier.from(
 			new TestDescriptorStub(engineUniqueId.append("test", "test2"), "test2"));
 		testPlan.add(addedIdentifier);
+		testPlan.add(addedIdentifier);
 
 		assertThat(testPlan.getChildren(engineIdentifier)).hasSize(1).doesNotContain(addedIdentifier);
-		assertThat(
-			listener.stream(UnmodifiableTestPlan.class, Level.SEVERE).findFirst().map(LogRecord::getMessage)).contains(
-				"Attempt to modify the TestPlan was detected and ignored. " //
-						+ "A future version of the JUnit Platform will instead throw an exception. " //
-						+ "Please contact your IDE/tool vendor and request a fix.");
+		assertThat(listener.stream(InternalTestPlan.class, Level.WARNING).map(LogRecord::getMessage).collect(
+			toList())).containsExactly("Attempt to modify the TestPlan was detected. " //
+					+ "A future version of the JUnit Platform will ignore this call and eventually even throw an exception. " //
+					+ "Please contact your IDE/tool vendor and request a fix (see https://github.com/junit-team/junit5/issues/1732 for details).");
 	}
 
 	@Test

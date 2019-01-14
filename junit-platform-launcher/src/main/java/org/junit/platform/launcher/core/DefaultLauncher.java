@@ -117,7 +117,7 @@ class DefaultLauncher implements Launcher {
 	@Override
 	public TestPlan discover(LauncherDiscoveryRequest discoveryRequest) {
 		Preconditions.notNull(discoveryRequest, "LauncherDiscoveryRequest must not be null");
-		return UnmodifiableTestPlan.from(discoverRoot(discoveryRequest, "discovery"));
+		return InternalTestPlan.from(discoverRoot(discoveryRequest, "discovery"));
 	}
 
 	@Override
@@ -125,16 +125,16 @@ class DefaultLauncher implements Launcher {
 		Preconditions.notNull(discoveryRequest, "LauncherDiscoveryRequest must not be null");
 		Preconditions.notNull(listeners, "TestExecutionListener array must not be null");
 		Preconditions.containsNoNullElements(listeners, "individual listeners must not be null");
-		execute(UnmodifiableTestPlan.from(discoverRoot(discoveryRequest, "execution")), listeners);
+		execute(InternalTestPlan.from(discoverRoot(discoveryRequest, "execution")), listeners);
 	}
 
 	@Override
 	public void execute(TestPlan testPlan, TestExecutionListener... listeners) {
 		Preconditions.notNull(testPlan, "TestPlan must not be null");
-		Preconditions.condition(testPlan instanceof UnmodifiableTestPlan, "TestPlan was not returned by this Launcher");
+		Preconditions.condition(testPlan instanceof InternalTestPlan, "TestPlan was not returned by this Launcher");
 		Preconditions.notNull(listeners, "TestExecutionListener array must not be null");
 		Preconditions.containsNoNullElements(listeners, "individual listeners must not be null");
-		execute((UnmodifiableTestPlan) testPlan, listeners);
+		execute((InternalTestPlan) testPlan, listeners);
 	}
 
 	TestExecutionListenerRegistry getTestExecutionListenerRegistry() {
@@ -184,13 +184,13 @@ class DefaultLauncher implements Launcher {
 		}
 	}
 
-	private void execute(UnmodifiableTestPlan unmodifiableTestPlan, TestExecutionListener[] listeners) {
-		Root root = unmodifiableTestPlan.getRoot();
+	private void execute(InternalTestPlan internalTestPlan, TestExecutionListener[] listeners) {
+		Root root = internalTestPlan.getRoot();
 		ConfigurationParameters configurationParameters = root.getConfigurationParameters();
 		TestExecutionListenerRegistry listenerRegistry = buildListenerRegistryForExecution(listeners);
 		withInterceptedStreams(configurationParameters, listenerRegistry, testExecutionListener -> {
-			TestPlan testPlan = unmodifiableTestPlan.getDelegate();
-			testExecutionListener.testPlanExecutionStarted(unmodifiableTestPlan);
+			TestPlan testPlan = internalTestPlan.getDelegate();
+			testExecutionListener.testPlanExecutionStarted(internalTestPlan);
 			ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(testPlan,
 				testExecutionListener);
 			for (TestEngine testEngine : root.getTestEngines()) {
@@ -198,7 +198,7 @@ class DefaultLauncher implements Launcher {
 				execute(testEngine,
 					new ExecutionRequest(testDescriptor, engineExecutionListener, configurationParameters));
 			}
-			testExecutionListener.testPlanExecutionFinished(unmodifiableTestPlan);
+			testExecutionListener.testPlanExecutionFinished(internalTestPlan);
 		});
 	}
 

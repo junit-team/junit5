@@ -12,6 +12,7 @@ package org.junit.platform.launcher.core;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.logging.Logger;
@@ -23,19 +24,20 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * @since 1.4
  */
-class UnmodifiableTestPlan extends TestPlan {
+class InternalTestPlan extends TestPlan {
 
-	private static final Logger logger = LoggerFactory.getLogger(UnmodifiableTestPlan.class);
+	private static final Logger logger = LoggerFactory.getLogger(InternalTestPlan.class);
 
+	private final AtomicBoolean warningEmitted = new AtomicBoolean(false);
 	private final Root root;
 	private final TestPlan delegate;
 
-	static UnmodifiableTestPlan from(Root root) {
+	static InternalTestPlan from(Root root) {
 		TestPlan delegate = TestPlan.from(root.getEngineDescriptors());
-		return new UnmodifiableTestPlan(root, delegate);
+		return new InternalTestPlan(root, delegate);
 	}
 
-	private UnmodifiableTestPlan(Root root, TestPlan delegate) {
+	private InternalTestPlan(Root root, TestPlan delegate) {
 		super(delegate.containsTests());
 		this.root = root;
 		this.delegate = delegate;
@@ -51,9 +53,12 @@ class UnmodifiableTestPlan extends TestPlan {
 
 	@Override
 	public void add(TestIdentifier testIdentifier) {
-		logger.error(() -> "Attempt to modify the TestPlan was detected and ignored. "
-				+ "A future version of the JUnit Platform will instead throw an exception. "
-				+ "Please contact your IDE/tool vendor and request a fix.");
+		if (warningEmitted.compareAndSet(false, true)) {
+			logger.warn(() -> "Attempt to modify the TestPlan was detected. "
+					+ "A future version of the JUnit Platform will ignore this call and eventually even throw an exception. "
+					+ "Please contact your IDE/tool vendor and request a fix (see https://github.com/junit-team/junit5/issues/1732 for details).");
+		}
+		delegate.add(testIdentifier);
 	}
 
 	@Override
