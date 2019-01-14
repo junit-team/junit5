@@ -142,8 +142,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 public final class <span class="typeNameLabel">TempDirectory</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
 implements <a href="../../extension/ParameterResolver.html" title="interface in org.junit.jupiter.api.extension">ParameterResolver</a></pre>
-<div class="block"><code>TempDirectory</code> is a JUnit Jupiter extension to create and clean up a
- temporary directory.
+<div class="block"><code>TempDirectory</code> is a JUnit Jupiter extension that creates and cleans
+ up temporary directories.
 
  <p>The temporary directory is only created if a test or lifecycle method or
  test class constructor has a parameter annotated with
@@ -166,13 +166,13 @@ implements <a href="../../extension/ParameterResolver.html" title="interface in 
  to recursively delete all files and directories in the temporary directory
  and, finally, the temporary directory itself. In case deletion of a file or
  directory fails, this extension will throw an <a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>IOException</code></a> that will
- cause the test to fail.
+ cause the test or test class to fail.
 
  <p>By default, this extension will use the default
  <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>FileSystem</code></a> to create temporary directories
  in the default location. However, you may instantiate this extension using
  the <a href="#createInCustomDirectory(org.junit.jupiter.api.support.io.TempDirectory.ParentDirProvider)"><code>createInCustomDirectory(ParentDirProvider)</code></a>
- or <a href="#createInCustomDirectory(java.util.concurrent.Callable)"><code>createInCustomDirectory(Callable)</code></a>} factory methods
+ or <a href="#createInCustomDirectory(java.util.concurrent.Callable)"><code>createInCustomDirectory(Callable)</code></a> factory methods
  and register it via <a href="../../extension/RegisterExtension.html" title="annotation in org.junit.jupiter.api.extension"><code>@RegisterExtension</code></a>
  to pass a custom provider to configure the parent directory for all temporary
  directories created by this extension. This allows the use of this extension
@@ -380,7 +380,7 @@ implements <a href="../../extension/ParameterResolver.html" title="interface in 
  <a href="../../extension/ExtendWith.html" title="annotation in org.junit.jupiter.api.extension"><code>@ExtendWith</code></a>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a <code>TempDirectory</code> extension</dd>
+<dd>a <code>TempDirectory</code> extension; never <code>null</code></dd>
 </dl>
 </li>
 </ul>
@@ -399,10 +399,11 @@ implements <a href="../../extension/ParameterResolver.html" title="interface in 
  <a href="../../extension/RegisterExtension.html" title="annotation in org.junit.jupiter.api.extension"><code>@RegisterExtension</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>parentDirProvider</code> - used to configure the parent directory for the
- temporary directories created by this extension</dd>
+<dd><code>parentDirProvider</code> - a <code>ParentDirProvider</code> used to configure the
+ parent directory for the temporary directories created by this extension;
+ never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a <code>TempDirectory</code> extension</dd>
+<dd>a <code>TempDirectory</code> extension; never <code>null</code></dd>
 </dl>
 </li>
 </ul>
@@ -421,8 +422,11 @@ implements <a href="../../extension/ParameterResolver.html" title="interface in 
  <a href="../../extension/RegisterExtension.html" title="annotation in org.junit.jupiter.api.extension"><code>@RegisterExtension</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>parentDirProvider</code> - used to configure the parent directory for the
- temporary directories created by this extension</dd>
+<dd><code>parentDirProvider</code> - a <code>Callable</code> that returns a <code>Path</code>
+ used to configure the parent directory for the temporary directories
+ created by this extension; never <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a <code>TempDirectory</code> extension; never <code>null</code></dd>
 </dl>
 </li>
 </ul>
