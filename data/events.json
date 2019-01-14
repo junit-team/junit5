@@ -510,6 +510,16 @@
     ]
   },
   {
+    "title": "Spock vs JUnit 5 - Clash of the Titans",
+    "event": "Jfokus",
+    "date": "2019-02-06",
+    "location": "Stockholm, Sweden",
+    "link": "https://www.jfokus.se/jfokus19/talks/2481",
+    "speakers": [
+      "szpak"
+    ]
+  },
+  {
     "title": "News from JUnit 5.x: From Revolution to Continuous Evolution",
     "event": "JavaLand",
     "date": "2019-03-19",
