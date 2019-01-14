@@ -47,7 +47,7 @@ import org.junit.platform.commons.util.Preconditions;
  * <p>The temporary directory is only created if a test or lifecycle method or
  * test class constructor has a parameter annotated with
  * {@link TempDir @TempDir}. If the parameter type is
- * neither {@link Path} not {@link File} or if the
+ * neither {@link Path} nor {@link File} or if the
  * temporary directory could not be created, this extension will throw a
  * {@link ParameterResolutionException}.
  *
