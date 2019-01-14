@@ -40,8 +40,8 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
- * {@code TempDirectory} is a JUnit Jupiter extension to create and clean up a
- * temporary directory.
+ * {@code TempDirectory} is a JUnit Jupiter extension that creates and cleans
+ * up temporary directories.
  *
  * <p>The temporary directory is only created if a test or lifecycle method or
  * test class constructor has a parameter annotated with
@@ -64,7 +64,7 @@ import org.junit.platform.commons.util.Preconditions;
  * to recursively delete all files and directories in the temporary directory
  * and, finally, the temporary directory itself. In case deletion of a file or
  * directory fails, this extension will throw an {@link IOException} that will
- * cause the test to fail.
+ * cause the test or test class to fail.
  *
  * <p>By default, this extension will use the default
  * {@link java.nio.file.FileSystem FileSystem} to create temporary directories
@@ -113,6 +113,9 @@ public final class TempDirectory implements ParameterResolver {
 		 * Get the parent directory for all temporary directories created by the
 		 * {@link TempDirectory} extension this is used with.
 		 *
+		 * @param parameterContext the context for the parameter for which a
+		 * temporary directory should be created; never {@code null}
+		 * @param extensionContext the current extension context; never {@code null}
 		 * @return the parent directory for all temporary directories; never
 		 * {@code null}
 		 */
@@ -168,7 +171,7 @@ public final class TempDirectory implements ParameterResolver {
 	 * although you might prefer the simpler registration via
 	 * {@link org.junit.jupiter.api.extension.ExtendWith @ExtendWith}.
 	 *
-	 * @return a {@code TempDirectory} extension
+	 * @return a {@code TempDirectory} extension; never {@code null}
 	 */
 	public static TempDirectory createInDefaultDirectory() {
 		return new TempDirectory();
@@ -182,10 +185,10 @@ public final class TempDirectory implements ParameterResolver {
 	 * <p>You may use this factory method when registering this extension via
 	 * {@link org.junit.jupiter.api.extension.RegisterExtension @RegisterExtension}.
 	 *
-	 * @param parentDirProvider used to configure the parent directory for the
-	 * temporary directories created by this extension
-	 *
-	 * @return a {@code TempDirectory} extension
+	 * @param parentDirProvider a {@code ParentDirProvider} used to configure the
+	 * parent directory for the temporary directories created by this extension;
+	 * never {@code null}
+	 * @return a {@code TempDirectory} extension; never {@code null}
 	 */
 	public static TempDirectory createInCustomDirectory(ParentDirProvider parentDirProvider) {
 		Preconditions.notNull(parentDirProvider, "ParentDirProvider must not be null");
@@ -204,8 +207,10 @@ public final class TempDirectory implements ParameterResolver {
 	 * <p>You may use this factory method when registering this extension via
 	 * {@link org.junit.jupiter.api.extension.RegisterExtension @RegisterExtension}.
 	 *
-	 * @param parentDirProvider used to configure the parent directory for the
-	 * temporary directories created by this extension
+	 * @param parentDirProvider a {@code Callable} that returns a {@code Path}
+	 * used to configure the parent directory for the temporary directories
+	 * created by this extension; never {@code null}
+	 * @return a {@code TempDirectory} extension; never {@code null}
 	 */
 	public static TempDirectory createInCustomDirectory(Callable<Path> parentDirProvider) {
 		Preconditions.notNull(parentDirProvider, "parentDirProvider must not be null");
