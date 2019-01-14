@@ -70,7 +70,7 @@ import org.junit.platform.commons.util.Preconditions;
  * {@link java.nio.file.FileSystem FileSystem} to create temporary directories
  * in the default location. However, you may instantiate this extension using
  * the {@link TempDirectory#createInCustomDirectory(ParentDirProvider)}
- * or {@link TempDirectory#createInCustomDirectory(Callable)}} factory methods
+ * or {@link TempDirectory#createInCustomDirectory(Callable)} factory methods
  * and register it via {@link org.junit.jupiter.api.extension.RegisterExtension @RegisterExtension}
  * to pass a custom provider to configure the parent directory for all temporary
  * directories created by this extension. This allows the use of this extension
