@@ -221,6 +221,7 @@ class SummaryGenerationTests {
 		);
 	}
 
+	@SuppressWarnings("deprecation")
 	private TestIdentifier createTestIdentifier(String uniqueId) {
 		TestIdentifier identifier = TestIdentifier.from(
 			new TestDescriptorStub(UniqueId.root("test", uniqueId), uniqueId));
