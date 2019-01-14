@@ -58,6 +58,11 @@ import org.junit.jupiter.api.support.io.TempDirectory.TempDir;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
+/**
+ * Integration tests for the {@link TempDirectory} extension.
+ *
+ * @since 5.4
+ */
 @DisplayName("TempDirectory extension")
 class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
@@ -75,28 +80,28 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@DisplayName("when @TempDir is used on constructor parameter")
 		void resolvesSharedTempDirWhenAnnotationIsUsedOnConstructorParameter() {
-			assertResolvesShareTempDir(AnnotationOnConstructorParameterTestCase.class);
+			assertResolvesSharedTempDir(AnnotationOnConstructorParameterTestCase.class);
 		}
 
 		@Test
 		@DisplayName("when @TempDir is used on @BeforeAll method parameter")
 		void resolvesSharedTempDirWhenAnnotationIsUsedOnBeforeAllMethodParameter() {
-			assertResolvesShareTempDir(AnnotationOnBeforeAllMethodParameterTestCase.class);
+			assertResolvesSharedTempDir(AnnotationOnBeforeAllMethodParameterTestCase.class);
 		}
 
 		@Test
 		@DisplayName("when @TempDir is used on constructor parameter with @TestInstance(PER_CLASS)")
 		void resolvesSharedTempDirWhenAnnotationIsUsedOnConstructorParameterWithTestInstancePerClass() {
-			assertResolvesShareTempDir(AnnotationOnConstructorParameterWithTestInstancePerClassTestCase.class);
+			assertResolvesSharedTempDir(AnnotationOnConstructorParameterWithTestInstancePerClassTestCase.class);
 		}
 
 		@Test
 		@DisplayName("when @TempDir is used on @BeforeAll method parameter with @TestInstance(PER_CLASS)")
 		void resolvesSharedTempDirWhenAnnotationIsUsedOnBeforeAllMethodParameterWithTestInstancePerClass() {
-			assertResolvesShareTempDir(AnnotationOnBeforeAllMethodParameterWithTestInstancePerClassTestCase.class);
+			assertResolvesSharedTempDir(AnnotationOnBeforeAllMethodParameterWithTestInstancePerClassTestCase.class);
 		}
 
-		private void assertResolvesShareTempDir(Class<? extends BaseSharedTempDirTestCase> testClass) {
+		private void assertResolvesSharedTempDir(Class<? extends BaseSharedTempDirTestCase> testClass) {
 			var results = executeTests(selectClass(testClass));
 
 			results.tests().assertStatistics(stats -> stats.started(2).failed(0).succeeded(2));
@@ -269,7 +274,14 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	@TestInstance(PER_CLASS)
 	static class AnnotationOnBeforeAllMethodParameterWithTestInstancePerClassTestCase
-			extends AnnotationOnBeforeAllMethodParameterTestCase {
+			extends BaseSharedTempDirTestCase {
+
+		@BeforeAll
+		void beforeAll(@TempDir Path tempDir) {
+			assertThat(BaseSharedTempDirTestCase.tempDir).isNull();
+			BaseSharedTempDirTestCase.tempDir = tempDir;
+			check(tempDir);
+		}
 	}
 
 	@ExtendWith(TempDirectory.class)
@@ -322,7 +334,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			check(tempDir);
 		}
 
-		void check(@TempDir Path tempDir) {
+		void check(Path tempDir) {
 			assertSame(tempDirs.getLast(), tempDir);
 			assertTrue(Files.exists(tempDir));
 		}
@@ -469,8 +481,9 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static void writeFile(@TempDir Path tempDir, TestInfo testInfo) throws IOException {
+	private static void writeFile(Path tempDir, TestInfo testInfo) throws IOException {
 		Path file = tempDir.resolve(testInfo.getTestMethod().orElseThrow().getName() + ".txt");
 		Files.write(file, testInfo.getDisplayName().getBytes());
 	}
+
 }
