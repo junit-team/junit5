@@ -37,7 +37,8 @@ repository on GitHub.
 * The `Launcher` API now provides an `execute(TestPlan, TestExecutionListener...)`
   method that allows one to execute a previously discovered `TestPlan`.
 * `@RunWith(JUnitPlatform.class)` no longer executes test discovery twice.
-
+* Add root cause and suppressed exceptions in the stack trace printed by
+  the `ConsoleLauncher`.
 
 [[release-notes-5.4.0-RC1-junit-jupiter]]
 === JUnit Jupiter
