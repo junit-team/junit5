@@ -158,6 +158,15 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	class Failures {
 
 		@Test
+		@DisplayName("when @TempDir is used on parameter of File type with a custom FileSystem")
+		void onlySupportsParametersOfTypeFileForDefaultFileSystem() {
+			var results = executeTests(selectClass(InvalidFileInjection.class));
+
+			assertSingleFailedTest(results, ParameterResolutionException.class,
+				"Unsupported FileSystem in tempDirProvider: org.junit.jupiter.api.support.io.TempDirectory"/*lambda*/);
+		}
+
+		@Test
 		@DisplayName("when @TempDir is used on parameter of wrong type")
 		void onlySupportsParametersOfTypePathAndFile() {
 			var results = executeTests(selectClass(InvalidTestCase.class));
@@ -356,6 +365,32 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			Path path = tempDir.toPath();
 			assertEquals(ref.toAbsolutePath(), path.toAbsolutePath());
 			assertTrue(Files.exists(path));
+		}
+	}
+
+	@DisplayName("User can't rely on java.io.File injection type for custom filesystems")
+	static class InvalidFileInjection {
+		private FileSystem fileSystem;
+
+		@BeforeEach
+		void createFileSystem() {
+			fileSystem = Jimfs.newFileSystem();
+		}
+
+		@AfterEach
+		void closeFileSystem() throws Exception {
+			fileSystem.close();
+		}
+
+		@RegisterExtension
+		@SuppressWarnings("unused")
+		Extension tempDirectory = TempDirectory.createInCustomDirectory(
+			() -> Files.createDirectories(fileSystem.getPath("tmp")));
+
+		@Test
+		@DisplayName("File can't be injected using Jimfs FileSystem")
+		void failingInjection(@TempDir File tempDir) {
+			fail("this should never be called");
 		}
 	}
 
