@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -48,7 +49,10 @@ public class KitchenSinkExtension implements
 	ExecutionCondition,
 
 	// @TestTemplate
-	TestTemplateInvocationContextProvider
+	TestTemplateInvocationContextProvider,
+
+	// Miscellaneous
+	TestWatcher
 
 // @formatter:on
 {
@@ -86,9 +90,7 @@ public class KitchenSinkExtension implements
 	// --- Dependency Injection ------------------------------------------------
 
 	@Override
-	public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext)
-			throws TestInstantiationException {
-
+	public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {
 		return null;
 	}
 
@@ -97,16 +99,12 @@ public class KitchenSinkExtension implements
 	}
 
 	@Override
-	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-			throws ParameterResolutionException {
-
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return false;
 	}
 
 	@Override
-	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-			throws ParameterResolutionException {
-
+	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return null;
 	}
 
@@ -126,8 +124,25 @@ public class KitchenSinkExtension implements
 
 	@Override
 	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
-
 		return null;
+	}
+
+	// --- TestWatcher ---------------------------------------------------------
+
+	@Override
+	public void testDisabled(ExtensionContext context, Optional<String> reason) {
+	}
+
+	@Override
+	public void testSuccessful(ExtensionContext context) {
+	}
+
+	@Override
+	public void testAborted(ExtensionContext context, Throwable cause) {
+	}
+
+	@Override
+	public void testFailed(ExtensionContext context, Throwable cause) {
 	}
 
 }
