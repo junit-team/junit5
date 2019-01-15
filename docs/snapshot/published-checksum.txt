@@ -19,6 +19,7 @@
 0752b7d188ad9a75993dcb7ac0907069  documentation/src/docs/asciidoc/link-attributes.adoc
 0764a5f8bc178b0d5d7e1ee4297a3f51  documentation/src/docs/asciidoc/user-guide/appendix.adoc
 0878c4ebc6b060a2f328f7b7248810f2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java
+08af433dd86b3a65e9a4d2abaa7a3541  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-RC1.adoc
 092c4d342d11536bb3d50747db326c4c  junit-platform-commons/src/main/java/org/junit/platform/commons/support/AnnotationSupport.java
 0a4df5461c31a0d3b3b83edb07d9fcc8  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/FilePosition.java
 0abb8110e64d8700654c7b94b931986c  junit-platform-console/src/main/java/org/junit/platform/console/package-info.java
@@ -230,7 +231,6 @@
 63e7f20953158020a461ef51a48600ed  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/DefaultMethodDescriptor.java
 63fd8d8d7c501d072ca6bcd37a7ff388  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/PackageSelector.java
 64088dda375635ae673be3bcb970658d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/LoggingListener.java
-64487014cda32dc1f10c01170837d4cd  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-RC1.adoc
 658ed99ad8736560d4468c5a9f7a5088  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreeNode.java
 65d849663a861fdd87b48f70e3f04fc8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/support/package-info.java
 660114527ac26d5ade58e7a782f5a0d3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestTemplate.java
