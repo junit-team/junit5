@@ -353,7 +353,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@DisplayName("File and Path injections lead to the same folder/behavior")
 		void checkFile(@TempDir File tempDir, @TempDir Path ref) {
-			final Path path = tempDir.toPath();
+			Path path = tempDir.toPath();
 			assertEquals(ref.toAbsolutePath(), path.toAbsolutePath());
 			assertTrue(Files.exists(path));
 		}
