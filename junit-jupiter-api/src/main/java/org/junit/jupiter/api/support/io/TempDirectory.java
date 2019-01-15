@@ -13,6 +13,10 @@ package org.junit.jupiter.api.support.io;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
+import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
+import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
+import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,11 +25,13 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.Callable;
@@ -38,25 +44,28 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
  * {@code TempDirectory} is a JUnit Jupiter extension that creates and cleans
  * up temporary directories.
  *
- * <p>The temporary directory is only created if a test or lifecycle method or
- * test class constructor has a parameter annotated with
- * {@link TempDir @TempDir}. If the parameter type is neither {@link Path} nor
- * {@link File} or if the temporary directory could not be created, this
- * extension will throw a {@link ParameterResolutionException}.
+ * <p>The temporary directory is only created if an instance field in a test
+ * class or a parameter in a test method, lifecycle method, or test class
+ * constructor is annotated with {@link TempDir @TempDir}. If the field or
+ * parameter type is neither {@link Path} nor {@link File} or if the temporary
+ * directory could not be created, this extension will throw a
+ * {@link ParameterResolutionException}.
  *
  * <p>The scope of the temporary directory depends on where the first
- * {@link TempDir @TempDir} annotation is encountered when executing a test
- * class. The temporary directory will be shared by all tests in a class when
- * the annotation is present on a parameter of a
+ * {@code @TempDir} annotation is encountered when executing a test class. The
+ * temporary directory will be shared by all tests in a class when the
+ * annotation is present on a parameter of a
  * {@link org.junit.jupiter.api.BeforeAll @BeforeAll} method or the test class
- * constructor. Otherwise, e.g. when only used on test or
- * {@link org.junit.jupiter.api.BeforeEach @BeforeEach} or
+ * constructor. Otherwise, e.g. when only used on test,
+ * {@link org.junit.jupiter.api.BeforeEach @BeforeEach}, or
  * {@link org.junit.jupiter.api.AfterEach @AfterEach} methods, each test will
  * use its own temporary directory.
  *
@@ -70,12 +79,12 @@ import org.junit.platform.commons.util.Preconditions;
  * <p>By default, this extension will use the default
  * {@link java.nio.file.FileSystem FileSystem} to create temporary directories
  * in the default location. However, you may instantiate this extension using
- * the {@link TempDirectory#createInCustomDirectory(ParentDirProvider)}
- * or {@link TempDirectory#createInCustomDirectory(Callable)} factory methods
- * and register it via {@link org.junit.jupiter.api.extension.RegisterExtension @RegisterExtension}
+ * the {@link TempDirectory#createInCustomDirectory(ParentDirProvider)} or
+ * {@link TempDirectory#createInCustomDirectory(Callable)} factory methods and
+ * register it via {@link org.junit.jupiter.api.extension.RegisterExtension @RegisterExtension}
  * to pass a custom provider to configure the parent directory for all temporary
  * directories created by this extension. This allows the use of this extension
- * with any third-party {@code FileSystem} implementation, e.g.
+ * with any third-party {@code FileSystem} implementation &mdash; for example,
  * <a href="https://github.com/google/jimfs">Jimfs</a>.
  *
  * @since 5.4
@@ -84,16 +93,17 @@ import org.junit.platform.commons.util.Preconditions;
  * @see Files#createTempDirectory
  */
 @API(status = EXPERIMENTAL, since = "5.4")
-public final class TempDirectory implements ParameterResolver {
+public final class TempDirectory implements TestInstancePostProcessor, ParameterResolver {
 
 	/**
-	 * {@code @TempDir} can be used to annotate a test or lifecycle method or
-	 * test class constructor parameter of type {@link Path} or {@link File}
-	 * that should be resolved into a temporary directory.
+	 * {@code @TempDir} can be used to annotate an instance field in a test
+	 * class or a parameter in a test method, lifecycle method, or test class
+	 * constructor of type {@link Path} or {@link File} that should be resolved
+	 * into a temporary directory.
 	 *
 	 * @see TempDirectory
 	 */
-	@Target(ElementType.PARAMETER)
+	@Target({ ElementType.FIELD, ElementType.PARAMETER })
 	@Retention(RetentionPolicy.RUNTIME)
 	@Documented
 	public @interface TempDir {
@@ -219,6 +229,30 @@ public final class TempDirectory implements ParameterResolver {
 	}
 
 	@Override
+	public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
+		List<Field> fields = findAnnotatedFields(testInstance.getClass(), TempDir.class, field -> true);
+
+		if (!fields.isEmpty()) {
+			fields.forEach(field -> {
+				assertValidFieldCandidate(field);
+				try {
+					makeAccessible(field).set(testInstance, getPathOrFile(field, null, context));
+				}
+				catch (Throwable t) {
+					ExceptionUtils.throwAsUncheckedException(t);
+				}
+			});
+		}
+	}
+
+	private void assertValidFieldCandidate(Field field) {
+		assertSupportedType("field", field.getType());
+		if (isPrivate(field) || isStatic(field)) {
+			throw new ParameterResolutionException("@TempDir field [" + field + "] must not be private or static.");
+		}
+	}
+
+	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return parameterContext.isAnnotated(TempDir.class);
 	}
@@ -226,17 +260,27 @@ public final class TempDirectory implements ParameterResolver {
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Class<?> parameterType = parameterContext.getParameter().getType();
-		boolean expectsPath = parameterType == Path.class;
-		if (!expectsPath && parameterType != File.class) {
-			throw new ParameterResolutionException("Can only resolve parameter of type " + Path.class.getName() + " or "
-					+ File.class.getName() + " but was: " + parameterType.getName());
+		assertSupportedType("parameter", parameterType);
+		return getPathOrFile(null, parameterContext, extensionContext);
+	}
+
+	private void assertSupportedType(String target, Class<?> type) {
+		if (type != Path.class && type != File.class) {
+			throw new ParameterResolutionException("Can only resolve @TempDir " + target + " of type "
+					+ Path.class.getName() + " or " + File.class.getName() + " but was: " + type.getName());
 		}
+	}
+
+	private Object getPathOrFile(Field field, ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Path path = extensionContext.getStore(NAMESPACE) //
 				.getOrComputeIfAbsent(KEY,
 					key -> tempDirProvider.get(parameterContext, extensionContext, TEMP_DIR_PREFIX),
 					CloseablePath.class) //
 				.get();
-		if (expectsPath) {
+
+		Class<?> targetType = field != null ? field.getType() : parameterContext.getParameter().getType();
+
+		if (targetType == Path.class) {
 			return path;
 		}
 		try {
