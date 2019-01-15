@@ -238,7 +238,7 @@ public final class TempDirectory implements ParameterResolver {
 		try {
 			return path.toFile();
 		}
-		catch (final UnsupportedOperationException uoe) { // not default filesystem
+		catch (UnsupportedOperationException uoe) { // not default filesystem
 			throw new ParameterResolutionException("Unsupported FileSystem in tempDirProvider: " + tempDirProvider,
 				uoe);
 		}
