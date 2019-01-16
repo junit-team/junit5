@@ -10,9 +10,11 @@
 
 package org.junit.platform.commons.util;
 
+import static java.util.regex.Pattern.UNICODE_CHARACTER_CLASS;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 import org.apiguardian.api.API;
 
@@ -30,6 +32,9 @@ import org.apiguardian.api.API;
  */
 @API(status = INTERNAL, since = "1.0")
 public final class StringUtils {
+
+	private static final Pattern ISO_CONTROL_PATTERN = Pattern.compile("\\p{Cntrl}", UNICODE_CHARACTER_CLASS);
+	private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s");
 
 	private StringUtils() {
 		/* no-op */
@@ -180,4 +185,33 @@ public final class StringUtils {
 		}
 	}
 
+	/**
+	 * Replace all ISO control characters in the supplied {@link String}.
+	 *
+	 * @param str the string to check; may be {@code null}
+	 * @param replacement the replacement string; never {@code null}
+	 * @return The supplied string with all control characters replaced.
+	 *
+	 * @since 1.4
+	 */
+	@API(status = INTERNAL, since = "1.4")
+	public static String replaceIsoControlCharacters(String str, String replacement) {
+		Preconditions.notNull(replacement, "replacement must not be null");
+		return str == null ? null : ISO_CONTROL_PATTERN.matcher(str).replaceAll(replacement);
+	}
+
+	/**
+	 * Replace all whitespace characters in the supplied {@link String}.
+	 *
+	 * @param str the string to check; may be {@code null}
+	 * @param replacement the replacement string; never {@code null}
+	 * @return The supplied string with all whitespace characters replaced.
+	 *
+	 * @since 1.4
+	 */
+	@API(status = INTERNAL, since = "1.4")
+	public static String replaceWhitespaceCharacters(String str, String replacement) {
+		Preconditions.notNull(replacement, "replacement must not be null");
+		return str == null ? null : WHITESPACE_PATTERN.matcher(str).replaceAll(replacement);
+	}
 }

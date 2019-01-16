@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestIdentifier;
@@ -40,7 +41,7 @@ class TreeNode {
 	}
 
 	TreeNode(TestIdentifier identifier) {
-		this(identifier.getDisplayName());
+		this(createCaption(identifier.getDisplayName()));
 		this.identifier = identifier;
 		this.visible = true;
 	}
@@ -80,5 +81,12 @@ class TreeNode {
 
 	Optional<TestIdentifier> identifier() {
 		return Optional.ofNullable(identifier);
+	}
+
+	static String createCaption(String displayName) {
+		boolean normal = displayName.length() <= 80;
+		String caption = normal ? displayName : displayName.substring(0, 80) + "...";
+		String whites = StringUtils.replaceWhitespaceCharacters(caption, " ");
+		return StringUtils.replaceIsoControlCharacters(whites, ".");
 	}
 }
