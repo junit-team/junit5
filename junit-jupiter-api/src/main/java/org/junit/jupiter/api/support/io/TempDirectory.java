@@ -243,7 +243,10 @@ public final class TempDirectory implements ParameterResolver {
 			return path.toFile();
 		}
 		catch (UnsupportedOperationException ex) { // not default filesystem
-			throw new ParameterResolutionException("Unsupported FileSystem", ex);
+			throw new ParameterResolutionException(
+				String.format("The configured FileSystem does not support conversion to a %s; declare a %s instead.",
+					File.class.getName(), Path.class.getName()),
+				ex);
 		}
 	}
 

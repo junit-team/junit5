@@ -167,7 +167,8 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		void onlySupportsParametersOfTypeFileForDefaultFileSystem() {
 			var results = executeTests(selectClass(InvalidFileInjection.class));
 
-			assertSingleFailedTest(results, ParameterResolutionException.class, "Unsupported FileSystem");
+			assertSingleFailedTest(results, ParameterResolutionException.class,
+				"The configured FileSystem does not support conversion to a java.io.File; declare a java.nio.file.Path instead.");
 		}
 
 		@Test
