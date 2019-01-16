@@ -4623,8 +4623,8 @@ another dependency.</p>
 <div class="paragraph">
 <p>The <code>TempDirectory</code> extension can be used to create and clean up a temporary directory
 for an individual test or all tests in a test class. To use it, register the extension
-and add a parameter of type <code>java.nio.file.Path</code> annotated with <code>@TempDir</code> to your test
-method, lifecycle method, or test class constructor.</p>
+and add a parameter of type <code>java.nio.file.Path</code> or <code>java.io.File</code> annotated with <code>@TempDir</code>
+to your test method, lifecycle method, or test class constructor.</p>
 </div>
 <div class="paragraph">
 <p>For example, the following test registers the extension for a single test method, creates
@@ -4684,6 +4684,20 @@ of a custom parent directory of type <code>Path</code>. The following example us
 
 }</code></pre>
 </div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+If you configure a <code>FileSystem</code> that is not based on the default file system for
+the current operating system, using a parameter of type <code>File</code> may result in an exception.
+If that occurs you will need to use <code>Path</code> instead of <code>File</code>.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -8601,7 +8615,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-15 10:31:42 UTC
+Last updated 2019-01-16 17:29:39 UTC
 </div>
 </div>
 </body>

@@ -146,9 +146,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><a href="../org/junit/jupiter/api/support/io/TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io"><span class="typeNameLink">TempDirectory.TempDir</span></a> - Annotation Type in <a href="../org/junit/jupiter/api/support/io/package-summary.html">org.junit.jupiter.api.support.io</a></dt>
 <dd>
-<div class="block"><code>TempDir</code> can be used to annotate a test or lifecycle method or
- test class constructor parameter of type <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> that should be
- resolved into a temporary directory.</div>
+<div class="block"><code>@TempDir</code> can be used to annotate a test or lifecycle method or
+ test class constructor parameter of type <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> or <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>File</code></a>
+ that should be resolved into a temporary directory.</div>
 </dd>
 <dt><a href="../org/junit/platform/testkit/engine/TerminationInfo.html" title="class in org.junit.platform.testkit.engine"><span class="typeNameLink">TerminationInfo</span></a> - Class in <a href="../org/junit/platform/testkit/engine/package-summary.html">org.junit.platform.testkit.engine</a></dt>
 <dd>
@@ -608,7 +608,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/UniqueId.html#toString()">toString()</a></span> - Method in class org.junit.platform.engine.<a href="../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></dt>
 <dd>
 <div class="block">Generate the unique, formatted string representation of this <code>UniqueId</code>
- using the configured <a href="https://junit.org/junit4/javadoc/4.12/org/junit/platform.engine.UniqueIdFormat.html?is-external=true" title="class or interface in org.junit" class="externalLink"><code>UniqueIdFormat</code></a>.</div>
+ using the configured <code>UniqueIdFormat</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/EngineFilter.html#toString()">toString()</a></span> - Method in class org.junit.platform.launcher.<a href="../org/junit/platform/launcher/EngineFilter.html" title="class in org.junit.platform.launcher">EngineFilter</a></dt>
 <dd>&nbsp;</dd>

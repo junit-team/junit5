@@ -147,9 +147,9 @@ implements <a href="../../extension/ParameterResolver.html" title="interface in 
 
  <p>The temporary directory is only created if a test or lifecycle method or
  test class constructor has a parameter annotated with
- <a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io"><code>@TempDir</code></a>. If the parameter type is not <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> or if the
- temporary directory could not be created, this extension will throw a
- <a href="../../extension/ParameterResolutionException.html" title="class in org.junit.jupiter.api.extension"><code>ParameterResolutionException</code></a>.
+ <a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io"><code>@TempDir</code></a>. If the parameter type is neither <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> nor
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>File</code></a> or if the temporary directory could not be created, this
+ extension will throw a <a href="../../extension/ParameterResolutionException.html" title="class in org.junit.jupiter.api.extension"><code>ParameterResolutionException</code></a>.
 
  <p>The scope of the temporary directory depends on where the first
  <a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io"><code>@TempDir</code></a> annotation is encountered when executing a test
@@ -219,9 +219,9 @@ implements <a href="../../extension/ParameterResolver.html" title="interface in 
 <td class="colFirst"><code>static interface&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io">TempDirectory.TempDir</a></span></code></th>
 <td class="colLast">
-<div class="block"><code>TempDir</code> can be used to annotate a test or lifecycle method or
- test class constructor parameter of type <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> that should be
- resolved into a temporary directory.</div>
+<div class="block"><code>@TempDir</code> can be used to annotate a test or lifecycle method or
+ test class constructor parameter of type <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> or <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>File</code></a>
+ that should be resolved into a temporary directory.</div>
 </td>
 </tr>
 </table>
