@@ -404,6 +404,7 @@ rootProject.apply {
 						"implNote:a:Implementation Note:"
 					)
 					jFlags("-Xmx1g")
+					source("8") // https://github.com/junit-team/junit5/issues/1735
 					links("https://docs.oracle.com/javase/8/docs/api/")
 					links("https://ota4j-team.github.io/opentest4j/docs/${ota4jDocVersion}/api/")
 					links("https://apiguardian-team.github.io/apiguardian/docs/${apiGuardianDocVersion}/api/")
