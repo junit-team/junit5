@@ -46,10 +46,9 @@ import org.junit.platform.commons.util.Preconditions;
  *
  * <p>The temporary directory is only created if a test or lifecycle method or
  * test class constructor has a parameter annotated with
- * {@link TempDir @TempDir}. If the parameter type is
- * neither {@link Path} nor {@link File} or if the
- * temporary directory could not be created, this extension will throw a
- * {@link ParameterResolutionException}.
+ * {@link TempDir @TempDir}. If the parameter type is neither {@link Path} nor
+ * {@link File} or if the temporary directory could not be created, this
+ * extension will throw a {@link ParameterResolutionException}.
  *
  * <p>The scope of the temporary directory depends on where the first
  * {@link TempDir @TempDir} annotation is encountered when executing a test
@@ -88,7 +87,7 @@ import org.junit.platform.commons.util.Preconditions;
 public final class TempDirectory implements ParameterResolver {
 
 	/**
-	 * {@code TempDir} can be used to annotate a test or lifecycle method or
+	 * {@code @TempDir} can be used to annotate a test or lifecycle method or
 	 * test class constructor parameter of type {@link Path} or {@link File}
 	 * that should be resolved into a temporary directory.
 	 *
@@ -243,9 +242,8 @@ public final class TempDirectory implements ParameterResolver {
 		try {
 			return path.toFile();
 		}
-		catch (UnsupportedOperationException uoe) { // not default filesystem
-			throw new ParameterResolutionException("Unsupported FileSystem in tempDirProvider: " + tempDirProvider,
-				uoe);
+		catch (UnsupportedOperationException ex) { // not default filesystem
+			throw new ParameterResolutionException("Unsupported FileSystem", ex);
 		}
 	}
 

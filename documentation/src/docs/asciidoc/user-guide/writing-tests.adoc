@@ -1682,5 +1682,6 @@ of a custom parent directory of type `Path`. The following example uses the Jimf
 include::{testDir}/example/TempDirectoryWithCustomFileSystemDemo.java[tags=user_guide]
 ----
 
-WARNING: if you don't use a `FileSystem` relying on the default file system then `File` support
-is not guaranteed.
+WARNING: If you configure a `FileSystem` that is not based on the default file system for
+the current operating system, using a parameter of type `File` may result in an exception.
+If that occurs you will need to use `Path` instead of `File`.

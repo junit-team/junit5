@@ -70,9 +70,11 @@ repository on GitHub.
   defining result-based callbacks invoked after text execution.
   - See <<../user-guide/index.adoc#extensions-test-result-processing, Test Result
     Processing>> in the User Guide for details.
-* `TempDirectory` extension now also accepts to inject a parameter of type `File`.
-  - See <<../user-guide/index.adoc#writing-tests-built-in-extensions-TempDirectory,
-  The TempDirectory Extension>> in the User Guide for details.
+* The `TempDirectory` extension now supports parameters of type `File` in addition to
+  `Path`.
+  - See <<../user-guide/index.adoc#writing-tests-built-in-extensions-TempDirectory, The
+    TempDirectory Extension>> in the User Guide for details.
+
 
 [[release-notes-5.4.0-RC1-junit-vintage]]
 === JUnit Vintage

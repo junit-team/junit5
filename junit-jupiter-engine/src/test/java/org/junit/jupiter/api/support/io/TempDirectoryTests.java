@@ -167,8 +167,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		void onlySupportsParametersOfTypeFileForDefaultFileSystem() {
 			var results = executeTests(selectClass(InvalidFileInjection.class));
 
-			assertSingleFailedTest(results, ParameterResolutionException.class,
-				"Unsupported FileSystem in tempDirProvider: org.junit.jupiter.api.support.io.TempDirectory"/*lambda*/);
+			assertSingleFailedTest(results, ParameterResolutionException.class, "Unsupported FileSystem");
 		}
 
 		@Test
