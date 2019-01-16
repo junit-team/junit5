@@ -6,12 +6,13 @@ branches:
     - /^r\d.*$/
 
 install:
-# JDK installation via: https://chocolatey.org/packages/jdk11
-  - cinst jdk11 -params 'installdir=C:\\jdk11'
-  - SET JAVA_HOME="C:\jdk11"
-# Or use pre-installed JDK
-#  - SET JAVA_HOME="C:\Program Files\Java\jdk10"
+# OpenJDK installation via: https://chocolatey.org/packages/openjdk
+#  - choco install openjdk --version 11.0.2
+#  - SET JAVA_HOME="C:\Program Files\OpenJDK\jdk-11.0.2"
+# Or use pre-installed JDK: https://www.appveyor.com/docs/windows-images-software/#java
+  - SET JAVA_HOME="C:\Program Files\Java\jdk11"
   - SET PATH=%JAVA_HOME%\bin;%PATH%
+  - java -version
 
 test_script:
   - gradlew --no-daemon -version
