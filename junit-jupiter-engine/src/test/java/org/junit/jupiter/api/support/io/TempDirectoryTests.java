@@ -18,8 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.cause;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,6 +39,7 @@ import java.util.LinkedList;
 
 import com.google.common.jimfs.Jimfs;
 
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -50,6 +51,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
@@ -111,7 +113,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		}
 
 		private void assertResolvesSharedTempDir(Class<? extends BaseSharedTempDirTestCase> testClass) {
-			var results = executeTests(selectClass(testClass));
+			var results = executeTestsForClass(testClass);
 
 			results.tests().assertStatistics(stats -> stats.started(2).failed(0).succeeded(2));
 			assertThat(BaseSharedTempDirTestCase.tempDir).isNotNull().doesNotExist();
@@ -125,7 +127,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@DisplayName("for @AfterAll method parameter when @TempDir is not used on constructor or @BeforeAll method parameter")
 		void resolvesSeparateTempDirWhenAnnotationIsUsedOnAfterAllMethodParameterOnly() {
-			var results = executeTests(selectClass(AnnotationOnAfterAllMethodParameterTestCase.class));
+			var results = executeTestsForClass(AnnotationOnAfterAllMethodParameterTestCase.class);
 
 			results.tests().assertStatistics(stats -> stats.started(1).failed(0).succeeded(1));
 			assertThat(AnnotationOnAfterAllMethodParameterTestCase.firstTempDir).isNotNull().doesNotExist();
@@ -171,45 +173,77 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	class Failures {
 
 		@Test
-		@DisplayName("when @TempDir is used on parameter of File type with a custom FileSystem")
-		void onlySupportsParametersOfTypeFileForDefaultFileSystem() {
-			var results = executeTests(selectClass(InvalidFileInjection.class));
-
-			assertSingleFailedTest(results, ParameterResolutionException.class,
-				"The configured FileSystem does not support conversion to a java.io.File; declare a java.nio.file.Path instead.");
-		}
-
-		@Test
 		@DisplayName("when @TempDir is used on field of an unsupported type")
-		void onlySupportsFieldsOfTypePath() {
-			var results = executeTests(selectClass(AnnotationOnInstanceFieldWithUnsupportedTypeTestCase.class));
+		void onlySupportsFieldsOfTypePathAndFile() {
+			var results = executeTestsForClass(AnnotationOnInstanceFieldWithUnsupportedTypeTestCase.class);
 
-			assertSingleFailedTest(results, ParameterResolutionException.class,
+			assertSingleFailedTest(results, ExtensionConfigurationException.class,
 				"Can only resolve @TempDir field of type java.nio.file.Path or java.io.File");
 		}
 
 		@Test
-		@DisplayName("when @TempDir is used on parameter of wrong type")
+		@DisplayName("when @TempDir is used on parameter of an unsupported type")
 		void onlySupportsParametersOfTypePathAndFile() {
-			var results = executeTests(selectClass(InvalidTestCase.class));
+			var results = executeTestsForClass(InvalidTestCase.class);
 
-			assertSingleFailedTest(results, ParameterResolutionException.class,
-				"Can only resolve @TempDir parameter of type java.nio.file.Path or java.io.File");
+			// @formatter:off
+			TempDirectoryTests.assertSingleFailedTest(results,
+				instanceOf(ParameterResolutionException.class),
+				message(m -> m.matches("Failed to resolve parameter \\[java.lang.String .+\\] in method \\[.+\\]")),
+					cause(instanceOf(ExtensionConfigurationException.class)),
+					cause(message("Can only resolve @TempDir parameter of type java.nio.file.Path or java.io.File but was: java.lang.String")));
+			// @formatter:on
+		}
+
+		@Test
+		@DisplayName("when @TempDir is used on field of type File with a custom FileSystem")
+		void onlySupportsFieldsOfTypeFileForDefaultFileSystem() {
+			var results = executeTestsForClass(InvalidFileFieldInjection.class);
+
+			// @formatter:off
+			TempDirectoryTests.assertSingleFailedTest(results,
+				instanceOf(ExtensionConfigurationException.class),
+				message("The configured FileSystem does not support conversion to a java.io.File; declare a java.nio.file.Path instead."),
+					cause(instanceOf(UnsupportedOperationException.class))
+			);
+			// @formatter:on
+		}
+
+		@Test
+		@DisplayName("when @TempDir is used on parameter of type File with a custom FileSystem")
+		void onlySupportsParametersOfTypeFileForDefaultFileSystem() {
+			var results = executeTestsForClass(InvalidFileParameterInjection.class);
+
+			// @formatter:off
+			TempDirectoryTests.assertSingleFailedTest(results,
+				instanceOf(ParameterResolutionException.class),
+				message(m -> m.matches("Failed to resolve parameter \\[java.io.File .+\\] in method \\[.+\\]")),
+					cause(instanceOf(ExtensionConfigurationException.class)),
+					cause(message("The configured FileSystem does not support conversion to a java.io.File; declare a java.nio.file.Path instead.")),
+						cause(cause(instanceOf(UnsupportedOperationException.class))));
+			// @formatter:on
 		}
 
 		@Test
 		@DisplayName("when attempt to create temp dir fails")
 		void failedCreationAttemptMakesTestFail() {
-			var results = executeTests(selectClass(FailedCreationAttemptTestCase.class));
+			var results = executeTestsForClass(FailedCreationAttemptTestCase.class);
 
-			assertSingleFailedTest(results, ParameterResolutionException.class,
-				"Failed to create custom temp directory");
+			// @formatter:off
+			TempDirectoryTests.assertSingleFailedTest(results,
+				instanceOf(ParameterResolutionException.class),
+				message(m -> m.matches("Failed to resolve parameter \\[java.nio.file.Path .+\\] in method \\[.+\\]")),
+					cause(instanceOf(ExtensionConfigurationException.class)),
+					cause(message("Failed to create custom temp directory")),
+						cause(cause(instanceOf(RuntimeException.class))),
+						cause(cause(message("Simulated creation failure"))));
+			// @formatter:on
 		}
 
 		@Test
 		@DisplayName("when attempt to delete temp dir fails")
 		void failedDeletionAttemptMakesTestFail() {
-			var results = executeTests(selectClass(FailedDeletionAttemptTestCase.class));
+			var results = executeTestsForClass(FailedDeletionAttemptTestCase.class);
 
 			assertSingleFailedTest(results, IOException.class, "Failed to delete temp directory");
 		}
@@ -217,21 +251,35 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@DisplayName("when attempt to get parent dir from ParentDirProvider fails")
 		void erroneousParentDirProviderMakesTestFail() {
-			var results = executeTests(selectClass(ErroneousParentDirProviderTestCase.class));
+			var results = executeTestsForClass(ErroneousParentDirProviderTestCase.class);
 
-			assertSingleFailedTest(results, ParameterResolutionException.class, "Failed to get parent directory");
+			// @formatter:off
+			TempDirectoryTests.assertSingleFailedTest(results,
+				instanceOf(ParameterResolutionException.class),
+				message(m -> m.matches("Failed to resolve parameter \\[java.nio.file.Path .+\\] in method \\[.+\\]")),
+					cause(instanceOf(ExtensionConfigurationException.class)),
+					cause(message("Failed to get parent directory from provider")),
+						cause(cause(instanceOf(IOException.class))),
+						cause(cause(message("something went horribly wrong"))));
+			// @formatter:on
 		}
 
-		private void assertSingleFailedTest(EngineExecutionResults results, Class<? extends Throwable> clazz,
-				String message) {
-			results.tests().assertStatistics(stats -> stats.started(1).failed(1).succeeded(0));
-			results.tests().assertThatEvents().haveExactly(1,
-				finishedWithFailure(instanceOf(clazz), message(actual -> actual.contains(message))));
-		}
+	}
+
+	private static void assertSingleFailedTest(EngineExecutionResults results, Class<? extends Throwable> clazz,
+			String message) {
+
+		assertSingleFailedTest(results, instanceOf(clazz), message(actual -> actual.contains(message)));
+	}
+
+	@SafeVarargs
+	private static void assertSingleFailedTest(EngineExecutionResults results, Condition<Throwable>... conditions) {
+		results.tests().assertStatistics(stats -> stats.started(1).failed(1).succeeded(0));
+		results.tests().debug().assertThatEvents().haveExactly(1, finishedWithFailure(conditions));
 	}
 
 	private void assertResolvesSeparateTempDirs(Class<? extends BaseSeparateTempDirsTestCase> testClass) {
-		var results = executeTests(selectClass(testClass));
+		var results = executeTestsForClass(testClass);
 
 		results.tests().assertStatistics(stats -> stats.started(2).failed(0).succeeded(2));
 		Deque<Path> tempDirs = BaseSeparateTempDirsTestCase.tempDirs;
@@ -422,6 +470,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	@ExtendWith(TempDirectory.class)
 	static class InvalidTestCase {
+
 		@Test
 		void wrongParameterType(@SuppressWarnings("unused") @TempDir String ignored) {
 			fail("this should never be called");
@@ -431,9 +480,10 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	@Nested
 	@DisplayName("User can rely on java.io.File injection type")
 	@ExtendWith(TempDirectory.class)
-	class FileInjection {
+	class FileAndPathParameterInjection {
+
 		@Test
-		@DisplayName("File and Path injections lead to the same folder/behavior")
+		@DisplayName("File and Path injection lead to the same folder/behavior")
 		void checkFile(@TempDir File tempDir, @TempDir Path ref) {
 			Path path = tempDir.toPath();
 			assertEquals(ref.toAbsolutePath(), path.toAbsolutePath());
@@ -441,8 +491,8 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@DisplayName("User can't rely on java.io.File injection type for custom filesystems")
-	static class InvalidFileInjection {
+	@DisplayName("User can't rely on java.io.File parameter injection type for custom filesystems")
+	static class InvalidFileParameterInjection {
 		private FileSystem fileSystem;
 
 		@BeforeEach
@@ -463,6 +513,35 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@DisplayName("File can't be injected using Jimfs FileSystem")
 		void failingInjection(@TempDir File tempDir) {
+			fail("this should never be called");
+		}
+	}
+
+	@DisplayName("User can't rely on java.io.File field injection type for custom filesystems")
+	static class InvalidFileFieldInjection {
+
+		@TempDir
+		File tempDir;
+
+		private static FileSystem fileSystem;
+
+		@BeforeAll
+		static void createFileSystem() {
+			fileSystem = Jimfs.newFileSystem();
+		}
+
+		@AfterAll
+		static void closeFileSystem() throws Exception {
+			fileSystem.close();
+		}
+
+		@RegisterExtension
+		@SuppressWarnings("unused")
+		static Extension tempDirectory = TempDirectory.createInCustomDirectory(
+			() -> Files.createDirectories(fileSystem.getPath("tmp")));
+
+		@Test
+		void test() {
 			fail("this should never be called");
 		}
 	}

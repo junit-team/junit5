@@ -60,8 +60,9 @@ import org.junit.platform.commons.util.Preconditions;
  * class or a parameter in a test method, lifecycle method, or test class
  * constructor is annotated with {@link TempDir @TempDir}. If the field or
  * parameter type is neither {@link Path} nor {@link File} or if the temporary
- * directory could not be created, this extension will throw a
- * {@link ParameterResolutionException}.
+ * directory could not be created, this extension will throw an
+ * {@link ExtensionConfigurationException} or a
+ * {@link ParameterResolutionException} as appropriate.
  *
  * <p>The scope of the temporary directory depends on where the first
  * {@code @TempDir} annotation is encountered when executing a test class. The
@@ -290,7 +291,7 @@ public final class TempDirectory implements TestInstancePostProcessor, Parameter
 	private void assertValidFieldCandidate(Field field) {
 		assertSupportedType("field", field.getType());
 		if (isPrivate(field) || isStatic(field)) {
-			throw new ParameterResolutionException("@TempDir field [" + field + "] must not be private or static.");
+			throw new ExtensionConfigurationException("@TempDir field [" + field + "] must not be private or static.");
 		}
 	}
 
@@ -308,7 +309,7 @@ public final class TempDirectory implements TestInstancePostProcessor, Parameter
 
 	private void assertSupportedType(String target, Class<?> type) {
 		if (type != Path.class && type != File.class) {
-			throw new ParameterResolutionException("Can only resolve @TempDir " + target + " of type "
+			throw new ExtensionConfigurationException("Can only resolve @TempDir " + target + " of type "
 					+ Path.class.getName() + " or " + File.class.getName() + " but was: " + type.getName());
 		}
 	}
@@ -330,7 +331,7 @@ public final class TempDirectory implements TestInstancePostProcessor, Parameter
 			String message = String.format(
 				"The configured FileSystem does not support conversion to a %s; declare a %s instead.",
 				File.class.getName(), Path.class.getName());
-			throw new ParameterResolutionException(message, ex);
+			throw new ExtensionConfigurationException(message, ex);
 		}
 	}
 
@@ -352,13 +353,13 @@ public final class TempDirectory implements TestInstancePostProcessor, Parameter
 			Preconditions.notNull(parentDir, "ParentDirProvider returned null for the parent directory");
 		}
 		catch (Exception ex) {
-			throw new ParameterResolutionException("Failed to get parent directory from provider", ex);
+			throw new ExtensionConfigurationException("Failed to get parent directory from provider", ex);
 		}
 		try {
 			return new CloseablePath(Files.createTempDirectory(parentDir, dirPrefix));
 		}
 		catch (Exception ex) {
-			throw new ParameterResolutionException("Failed to create custom temp directory", ex);
+			throw new ExtensionConfigurationException("Failed to create custom temp directory", ex);
 		}
 	}
 
