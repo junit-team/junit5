@@ -20,6 +20,7 @@ install:
 
 jdk:
   - openjdk11
+  - openjdk12
   - openjdk-ea
 
 os:
@@ -28,6 +29,8 @@ os:
 
 matrix:
   exclude:
+    - os: osx
+      jdk: openjdk-12
     - os: osx
       jdk: openjdk-ea
   allow_failures:
