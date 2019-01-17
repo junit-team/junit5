@@ -43,8 +43,9 @@ public final class ClassLoaderUtils {
 				return contextClassLoader;
 			}
 		}
-		catch (Throwable ex) {
-			/* ignore */
+		catch (Throwable t) {
+			BlacklistedExceptions.rethrowIfBlacklisted(t);
+			/* otherwise ignore */
 		}
 		return ClassLoader.getSystemClassLoader();
 	}
@@ -73,8 +74,9 @@ public final class ClassLoaderUtils {
 			try {
 				return Optional.ofNullable(loader.getResource(name));
 			}
-			catch (Throwable ignore) {
-				/* ignore */
+			catch (Throwable t) {
+				BlacklistedExceptions.rethrowIfBlacklisted(t);
+				/* otherwise ignore */
 			}
 		}
 		// try protection domain

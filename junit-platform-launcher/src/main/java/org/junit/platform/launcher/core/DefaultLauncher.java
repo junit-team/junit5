@@ -234,9 +234,9 @@ class DefaultLauncher implements Launcher {
 	}
 
 	private void handleThrowable(TestEngine testEngine, String phase, Throwable throwable) {
+		BlacklistedExceptions.rethrowIfBlacklisted(throwable);
 		logger.warn(throwable,
 			() -> String.format("TestEngine with ID '%s' failed to %s tests", testEngine.getId(), phase));
-		BlacklistedExceptions.rethrowIfBlacklisted(throwable);
 	}
 
 }

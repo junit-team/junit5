@@ -184,6 +184,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 				executableInvoker.invoke(testMethod, instance, extensionContext, context.getExtensionRegistry());
 			}
 			catch (Throwable throwable) {
+				BlacklistedExceptions.rethrowIfBlacklisted(throwable);
 				invokeTestExecutionExceptionHandlers(context.getExtensionRegistry(), extensionContext, throwable);
 			}
 		});
@@ -209,6 +210,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			handlers.remove(0).handleTestExecutionException(context, ex);
 		}
 		catch (Throwable t) {
+			BlacklistedExceptions.rethrowIfBlacklisted(t);
 			invokeTestExecutionExceptionHandlers(t, handlers, context);
 		}
 	}

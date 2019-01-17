@@ -195,6 +195,7 @@ class ClasspathScanner {
 				classFile.toAbsolutePath(), fullyQualifiedClassName));
 		}
 		catch (Throwable t) {
+			rethrowIfBlacklisted(t);
 			ex.addSuppressed(t);
 			logGenericFileProcessingException(classFile, ex);
 		}
