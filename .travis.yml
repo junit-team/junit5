@@ -30,7 +30,7 @@ os:
 matrix:
   exclude:
     - os: osx
-      jdk: openjdk-12
+      jdk: openjdk12
     - os: osx
       jdk: openjdk-ea
   allow_failures:
