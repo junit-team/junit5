@@ -168,17 +168,19 @@ public final class AnnotationSupport {
 
 	/**
 	 * Find all {@code public} {@linkplain Field fields} of the supplied class
-	 * or interface that are of the specified {@code fieldType} and annotated
-	 * or <em>meta-annotated</em> with the specified {@code annotationType}.
+	 * or interface that are declared to be of the specified {@code fieldType}
+	 * and are annotated or <em>meta-annotated</em> with the specified
+	 * {@code annotationType}.
 	 *
 	 * <p>Consult the Javadoc for {@link Class#getFields()} for details on
 	 * inheritance and ordering.
 	 *
 	 * @param clazz the class or interface in which to find the fields; never {@code null}
-	 * @param fieldType the type of field to find; never {@code null}
+	 * @param fieldType the declared type of fields to find; never {@code null}
 	 * @param annotationType the annotation type to search for; never {@code null}
 	 * @return the list of all such fields found; neither {@code null} nor mutable
 	 * @see Class#getFields()
+	 * @see Field#getType()
 	 * @see #findAnnotatedFields(Class, Class)
 	 * @see #findAnnotatedFields(Class, Class, Predicate, HierarchyTraversalMode)
 	 * @see ReflectionSupport#findFields(Class, Predicate, HierarchyTraversalMode)
@@ -315,9 +317,10 @@ public final class AnnotationSupport {
 
 	/**
 	 * Find the values of all non-static {@linkplain Field fields} of the supplied
-	 * {@code instance} that are of the specified {@code fieldType} and annotated
-	 * or <em>meta-annotated</em> with the specified {@code annotationType},
-	 * using top-down search semantics within the type hierarchy.
+	 * {@code instance} that are declared to be of the specified {@code fieldType}
+	 * and are annotated or <em>meta-annotated</em> with the specified
+	 * {@code annotationType}, using top-down search semantics within the type
+	 * hierarchy.
 	 *
 	 * <p>Values from fields declared in the same class or interface will be
 	 * ordered using an algorithm that is deterministic but intentionally
@@ -328,9 +331,10 @@ public final class AnnotationSupport {
 	 *
 	 * @param instance the instance in which to find the fields; never {@code null}
 	 * @param annotationType the annotation type to search for; never {@code null}
-	 * @param fieldType the type of field to find; never {@code null}
+	 * @param fieldType the declared type of fields to find; never {@code null}
 	 * @return the list of all such field values found; neither {@code null} nor mutable
 	 * @since 1.4
+	 * @see Field#getType()
 	 * @see #findAnnotatedFields(Class, Class)
 	 * @see #findAnnotatedFields(Class, Class, Predicate, HierarchyTraversalMode)
 	 * @see ReflectionSupport#findFields(Class, Predicate, HierarchyTraversalMode)
@@ -355,9 +359,10 @@ public final class AnnotationSupport {
 
 	/**
 	 * Find the values of all static {@linkplain Field fields} of the supplied
-	 * class or interface that are of the specified {@code fieldType} and annotated
-	 * or <em>meta-annotated</em> with the specified {@code annotationType},
-	 * using top-down search semantics within the type hierarchy.
+	 * class or interface that are declared to be of the specified
+	 * {@code fieldType} and are annotated or <em>meta-annotated</em> with the
+	 * specified {@code annotationType}, using top-down search semantics within
+	 * the type hierarchy.
 	 *
 	 * <p>Values from fields declared in the same class or interface will be
 	 * ordered using an algorithm that is deterministic but intentionally
@@ -368,9 +373,10 @@ public final class AnnotationSupport {
 	 *
 	 * @param clazz the class or interface in which to find the fields; never {@code null}
 	 * @param annotationType the annotation type to search for; never {@code null}
-	 * @param fieldType the type of field to find; never {@code null}
+	 * @param fieldType the declared type of fields to find; never {@code null}
 	 * @return the list of all such field values found; neither {@code null} nor mutable
 	 * @since 1.4
+	 * @see Field#getType()
 	 * @see #findAnnotatedFields(Class, Class)
 	 * @see #findAnnotatedFields(Class, Class, Predicate, HierarchyTraversalMode)
 	 * @see ReflectionSupport#findFields(Class, Predicate, HierarchyTraversalMode)
