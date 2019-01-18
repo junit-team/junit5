@@ -556,7 +556,7 @@ public final class ReflectionUtils {
 	 */
 	@API(status = DEPRECATED, since = "1.4")
 	@Deprecated
-	public static <T> Optional<Object> readFieldValue(Field field, T instance) {
+	public static Optional<Object> readFieldValue(Field field, Object instance) {
 		return tryToReadFieldValue(field, instance).toOptional();
 	}
 
