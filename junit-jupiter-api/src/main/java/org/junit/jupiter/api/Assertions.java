@@ -1528,6 +1528,16 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
 	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Byte unexpected, Byte actual) {
+		AssertNotEquals.assertNotEquals(unexpected, actual);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
 	 * <p>Fails with the supplied failure {@code message}.
 	 *
 	 * @since 5.4
@@ -1559,6 +1569,18 @@ public class Assertions {
 	@API(status = STABLE, since = "5.4")
 	public static void assertNotEquals(Byte unexpected, byte actual, String message) {
 		AssertNotEquals.assertNotEquals(unexpected, (Byte) actual, message);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
+	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Byte unexpected, Byte actual, String message) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
 	/**
@@ -1603,6 +1625,19 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
 	 *
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Byte unexpected, Byte actual, Supplier<String> messageSupplier) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
@@ -1628,6 +1663,16 @@ public class Assertions {
 	@API(status = STABLE, since = "5.4")
 	public static void assertNotEquals(Short unexpected, short actual) {
 		AssertNotEquals.assertNotEquals(unexpected, (Short) actual);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Short unexpected, Short actual) {
+		AssertNotEquals.assertNotEquals(unexpected, actual);
 	}
 
 	/**
@@ -1669,6 +1714,18 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
 	 *
+	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Short unexpected, Short actual, String message) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, message);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
 	 * <p>If necessary, the failure message will be retrieved lazily from the
 	 * supplied {@code messageSupplier}.
 	 *
@@ -1703,6 +1760,19 @@ public class Assertions {
 	@API(status = STABLE, since = "5.4")
 	public static void assertNotEquals(Short unexpected, short actual, Supplier<String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, (Short) actual, messageSupplier);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Short unexpected, Short actual, Supplier<String> messageSupplier) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
 	/**
@@ -1878,6 +1948,16 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
 	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Long unexpected, Long actual) {
+		AssertNotEquals.assertNotEquals(unexpected, actual);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
 	 * <p>Fails with the supplied failure {@code message}.
 	 *
 	 * @since 5.4
@@ -1909,6 +1989,18 @@ public class Assertions {
 	@API(status = STABLE, since = "5.4")
 	public static void assertNotEquals(Long unexpected, long actual, String message) {
 		AssertNotEquals.assertNotEquals(unexpected, (Long) actual, message);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
+	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Long unexpected, Long actual, String message) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
 	/**
@@ -1953,6 +2045,19 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
 	 *
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Long unexpected, Long actual, Supplier<String> messageSupplier) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
 	 * <p>Inequality imposed by this method is consistent with
 	 * {@link Float#equals(Object)} and {@link Float#compare(float, float)}.
 	 *
@@ -1987,6 +2092,19 @@ public class Assertions {
 	@API(status = STABLE, since = "5.4")
 	public static void assertNotEquals(Float unexpected, float actual) {
 		AssertNotEquals.assertNotEquals(unexpected, (Float) actual);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
+	 * <p>Inequality imposed by this method is consistent with
+	 * {@link Float#equals(Object)} and {@link Float#compare(float, float)}.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Float unexpected, Float actual) {
+		AssertNotEquals.assertNotEquals(unexpected, actual);
 	}
 
 	/**
@@ -2040,6 +2158,21 @@ public class Assertions {
 	 * <p>Inequality imposed by this method is consistent with
 	 * {@link Float#equals(Object)} and {@link Float#compare(float, float)}.
 	 *
+	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Float unexpected, Float actual, String message) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, message);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
+	 * <p>Inequality imposed by this method is consistent with
+	 * {@link Float#equals(Object)} and {@link Float#compare(float, float)}.
+	 *
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
@@ -2071,6 +2204,19 @@ public class Assertions {
 	@API(status = STABLE, since = "5.4")
 	public static void assertNotEquals(Float unexpected, float actual, Supplier<String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, (Float) actual, messageSupplier);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
+	 * <p>Inequality imposed by this method is consistent with
+	 * {@link Float#equals(Object)} and {@link Float#compare(float, float)}.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Float unexpected, Float actual, Supplier<String> messageSupplier) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
 	/**
@@ -2162,6 +2308,19 @@ public class Assertions {
 	 * <p>Inequality imposed by this method is consistent with
 	 * {@link Double#equals(Object)} and {@link Double#compare(double, double)}.
 	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Double unexpected, Double actual) {
+		AssertNotEquals.assertNotEquals(unexpected, actual);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
+	 * <p>Inequality imposed by this method is consistent with
+	 * {@link Double#equals(Object)} and {@link Double#compare(double, double)}.
+	 *
 	 * <p>Fails with the supplied failure {@code message}.
 	 *
 	 * @since 5.4
@@ -2207,6 +2366,21 @@ public class Assertions {
 	 * <p>Inequality imposed by this method is consistent with
 	 * {@link Double#equals(Object)} and {@link Double#compare(double, double)}.
 	 *
+	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Double unexpected, Double actual, String message) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, message);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
+	 * <p>Inequality imposed by this method is consistent with
+	 * {@link Double#equals(Object)} and {@link Double#compare(double, double)}.
+	 *
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
@@ -2238,6 +2412,19 @@ public class Assertions {
 	@API(status = STABLE, since = "5.4")
 	public static void assertNotEquals(Double unexpected, double actual, Supplier<String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, (Double) actual, messageSupplier);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
+	 * <p>Inequality imposed by this method is consistent with
+	 * {@link Double#equals(Object)} and {@link Double#compare(double, double)}.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Double unexpected, Double actual, Supplier<String> messageSupplier) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
 	/**
@@ -2318,6 +2505,16 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
 	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Character unexpected, Character actual) {
+		AssertNotEquals.assertNotEquals(unexpected, actual);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
 	 * <p>Fails with the supplied failure {@code message}.
 	 *
 	 * @since 5.4
@@ -2349,6 +2546,18 @@ public class Assertions {
 	@API(status = STABLE, since = "5.4")
 	public static void assertNotEquals(Character unexpected, char actual, String message) {
 		AssertNotEquals.assertNotEquals(unexpected, (Character) actual, message);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
+	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Character unexpected, Character actual, String message) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
 	/**
@@ -2388,6 +2597,19 @@ public class Assertions {
 	@API(status = STABLE, since = "5.4")
 	public static void assertNotEquals(Character unexpected, char actual, Supplier<String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, (Character) actual, messageSupplier);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} and {@code actual} are not equal.
+	 *
+	 * <p>If necessary, the failure message will be retrieved lazily from the
+	 * supplied {@code messageSupplier}.
+	 *
+	 * @since 5.4
+	 */
+	@API(status = STABLE, since = "5.4")
+	public static void assertNotEquals(Character unexpected, Character actual, Supplier<String> messageSupplier) {
+		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
 	/**
