@@ -189,7 +189,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			// @formatter:off
 			TempDirectoryTests.assertSingleFailedTest(results,
 				instanceOf(ParameterResolutionException.class),
-				message(m -> m.matches("Failed to resolve parameter \\[java.lang.String .+\\] in method \\[.+\\]")),
+				message(m -> m.matches("Failed to resolve parameter \\[java.lang.String .+\\] in method \\[.+\\]: .+")),
 					cause(instanceOf(ExtensionConfigurationException.class)),
 					cause(message("Can only resolve @TempDir parameter of type java.nio.file.Path or java.io.File but was: java.lang.String")));
 			// @formatter:on
@@ -217,7 +217,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			// @formatter:off
 			TempDirectoryTests.assertSingleFailedTest(results,
 				instanceOf(ParameterResolutionException.class),
-				message(m -> m.matches("Failed to resolve parameter \\[java.io.File .+\\] in method \\[.+\\]")),
+				message(m -> m.matches("Failed to resolve parameter \\[java.io.File .+\\] in method \\[.+\\]: .+")),
 					cause(instanceOf(ExtensionConfigurationException.class)),
 					cause(message("The configured FileSystem does not support conversion to a java.io.File; declare a java.nio.file.Path instead.")),
 						cause(cause(instanceOf(UnsupportedOperationException.class))));
@@ -232,7 +232,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			// @formatter:off
 			TempDirectoryTests.assertSingleFailedTest(results,
 				instanceOf(ParameterResolutionException.class),
-				message(m -> m.matches("Failed to resolve parameter \\[java.nio.file.Path .+\\] in method \\[.+\\]")),
+				message(m -> m.matches("Failed to resolve parameter \\[java.nio.file.Path .+\\] in method \\[.+\\]: .+")),
 					cause(instanceOf(ExtensionConfigurationException.class)),
 					cause(message("Failed to create custom temp directory")),
 						cause(cause(instanceOf(RuntimeException.class))),
@@ -256,7 +256,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			// @formatter:off
 			TempDirectoryTests.assertSingleFailedTest(results,
 				instanceOf(ParameterResolutionException.class),
-				message(m -> m.matches("Failed to resolve parameter \\[java.nio.file.Path .+\\] in method \\[.+\\]")),
+				message(m -> m.matches("Failed to resolve parameter \\[java.nio.file.Path .+?\\] in method \\[.+?\\]: .+")),
 					cause(instanceOf(ExtensionConfigurationException.class)),
 					cause(message("Failed to get parent directory from provider")),
 						cause(cause(instanceOf(IOException.class))),
