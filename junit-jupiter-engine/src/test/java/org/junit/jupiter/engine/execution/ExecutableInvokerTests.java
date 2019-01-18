@@ -239,8 +239,20 @@ class ExecutableInvokerTests {
 
 		assertSame(cause, caught.getCause(), () -> "cause should be present");
 		assertThat(caught.getMessage())//
-				.startsWith("Failed to resolve parameter [java.lang.String")//
-				.contains("in method");
+				.matches("^Failed to resolve parameter \\[java.lang.String .+?\\] in method \\[.+?\\]$");
+	}
+
+	@Test
+	void exceptionMessageContainsMessageFromEexceptionThrownDuringParameterResolution() {
+		anyTestMethodWithAtLeastOneParameter();
+		RuntimeException cause = new RuntimeException("boom!");
+		throwDuringParameterResolution(cause);
+
+		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
+
+		assertSame(cause, caught.getCause(), () -> "cause should be present");
+		assertThat(caught.getMessage())//
+				.matches("^Failed to resolve parameter \\[java.lang.String .+?\\] in method \\[.+?\\]: boom!$");
 	}
 
 	@Test
