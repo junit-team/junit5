@@ -225,6 +225,22 @@ public final class ReflectionSupport {
 	}
 
 	/**
+	 * Try to read the value of a potentially inaccessible field.
+	 *
+	 * <p>If an exception occurs while reading the field, a failed {@link Try}
+	 * is returned that contains the corresponding exception.
+	 *
+	 * @param field the field to read; never {@code null}
+	 * @param instance the instance from which the value is to be read; may
+	 * be {@code null} for a static field
+	 * @since 1.4
+	 */
+	@API(status = MAINTAINED, since = "1.4")
+	public static Try<Object> tryToReadFieldValue(Field field, Object instance) {
+		return ReflectionUtils.tryToReadFieldValue(field, instance);
+	}
+
+	/**
 	 * Find the first {@link Method} of the supplied class or interface that
 	 * meets the specified criteria, beginning with the specified class or
 	 * interface and traversing up the type hierarchy until such a method is

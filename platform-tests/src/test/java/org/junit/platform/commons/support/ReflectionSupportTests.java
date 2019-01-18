@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.support;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,6 +40,9 @@ class ReflectionSupportTests {
 	private static final Predicate<String> allNames = name -> true;
 	private static final Predicate<Method> allMethods = name -> true;
 	private static final Predicate<Field> allFields = name -> true;
+
+	static final String staticField = "static";
+	final String instanceField = "instance";
 
 	@Test
 	@SuppressWarnings("deprecation")
@@ -166,6 +170,29 @@ class ReflectionSupportTests {
 			() -> ReflectionSupport.findFields(ReflectionSupportTests.class, null, HierarchyTraversalMode.TOP_DOWN));
 		assertPreconditionViolationException("HierarchyTraversalMode",
 			() -> ReflectionSupport.findFields(ReflectionSupportTests.class, allFields, null));
+	}
+
+	@Test
+	void tryToReadFieldValueDelegates() throws Exception {
+		Field staticField = getClass().getDeclaredField("staticField");
+		assertEquals(ReflectionUtils.tryToReadFieldValue(staticField, null),
+			ReflectionSupport.tryToReadFieldValue(staticField, null));
+
+		Field instanceField = getClass().getDeclaredField("instanceField");
+		assertEquals(ReflectionUtils.tryToReadFieldValue(instanceField, this),
+			ReflectionSupport.tryToReadFieldValue(instanceField, this));
+	}
+
+	@Test
+	void tryToReadFieldValuePreconditions() throws Exception {
+		assertPreconditionViolationException("Field", () -> ReflectionSupport.tryToReadFieldValue(null, this));
+
+		Field instanceField = getClass().getDeclaredField("instanceField");
+		Exception exception = assertThrows(PreconditionViolationException.class,
+			() -> ReflectionSupport.tryToReadFieldValue(instanceField, null));
+		assertThat(exception)//
+				.hasMessageStartingWith("Cannot read non-static field")//
+				.hasMessageEndingWith("on a null instance.");
 	}
 
 	@Test
