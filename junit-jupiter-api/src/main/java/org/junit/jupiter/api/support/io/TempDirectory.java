@@ -123,7 +123,7 @@ public final class TempDirectory implements TestInstancePostProcessor, Parameter
 	public interface TempDirContext {
 
 		/**
-		 * Get the {@link AnnotatedElement} corresponding to the current context.
+		 * Get the {@link AnnotatedElement} associated with this context.
 		 *
 		 * <p>The annotated element will be the corresponding {@link Field} or
 		 * {@link Parameter} on which {@link TempDir @TempDir} is declared.
@@ -138,14 +138,89 @@ public final class TempDirectory implements TestInstancePostProcessor, Parameter
 		 */
 		AnnotatedElement getElement();
 
+		/**
+		 * Get the {@link Field} associated with this context, if available.
+		 *
+		 * <p>If this method returns an empty {@code Optional},
+		 * {@link #getParameterContext()} will return a non-empty {@code Optional}.
+		 *
+		 * @return an {@code Optional} containing the field; never {@code null} but
+		 * potentially empty
+		 * @see #getElement()
+		 * @see #getParameterContext()
+		 */
 		Optional<Field> getField();
 
+		/**
+		 * Get the {@link ParameterContext} associated with this context, if
+		 * available.
+		 *
+		 * <p>If this method returns an empty {@code Optional},
+		 * {@link #getField()} will return a non-empty {@code Optional}.
+		 *
+		 * @return an {@code Optional} containing the {@code ParameterContext};
+		 * never {@code null} but potentially empty
+		 * @see #getElement()
+		 * @see #getField()
+		 */
 		Optional<ParameterContext> getParameterContext();
 
+		/**
+		 * Determine if an annotation of {@code annotationType} is either
+		 * <em>present</em> or <em>meta-present</em> on the {@link Field} or
+		 * {@link Parameter} associated with this context.
+		 *
+		 * <h3>WARNING</h3>
+		 * <p>Favor the use of this method over directly invoking
+		 * {@link Parameter#isAnnotationPresent(Class)} due to a bug in {@code javac}
+		 * on JDK versions prior to JDK 9.
+		 *
+		 * @param annotationType the annotation type to search for; never {@code null}
+		 * @return {@code true} if the annotation is present or meta-present
+		 * @see #findAnnotation(Class)
+		 * @see #findRepeatableAnnotations(Class)
+		 */
 		boolean isAnnotated(Class<? extends Annotation> annotationType);
 
+		/**
+		 * Find the first annotation of {@code annotationType} that is either
+		 * <em>present</em> or <em>meta-present</em> on the {@link Field} or
+		 * {@link Parameter} associated with this context.
+		 *
+		 * <h3>WARNING</h3>
+		 * <p>Favor the use of this method over directly invoking annotation lookup
+		 * methods in the {@link Parameter} API due to a bug in {@code javac} on JDK
+		 * versions prior to JDK 9.
+		 *
+		 * @param <A> the annotation type
+		 * @param annotationType the annotation type to search for; never {@code null}
+		 * @return an {@code Optional} containing the annotation; never {@code null} but
+		 * potentially empty
+		 * @see #isAnnotated(Class)
+		 * @see #findRepeatableAnnotations(Class)
+		 */
 		<A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType);
 
+		/**
+		 * Find all <em>repeatable</em> {@linkplain Annotation annotations} of
+		 * {@code annotationType} that are either <em>present</em> or
+		 * <em>meta-present</em> on the {@link Field} or {@link Parameter}
+		 * associated with this context.
+		 *
+		 * <h3>WARNING</h3>
+		 * <p>Favor the use of this method over directly invoking annotation lookup
+		 * methods in the {@link Parameter} API due to a bug in {@code javac} on JDK
+		 * versions prior to JDK 9.
+		 *
+		 * @param <A> the annotation type
+		 * @param annotationType the repeatable annotation type to search for; never
+		 * {@code null}
+		 * @return the list of all such annotations found; neither {@code null} nor
+		 * mutable, but potentially empty
+		 * @see #isAnnotated(Class)
+		 * @see #findAnnotation(Class)
+		 * @see java.lang.annotation.Repeatable
+		 */
 		<A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType);
 
 	}
