@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.support.io.TempDirectory.TempDirContext;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
  * Default implementation of the {@link TempDirContext} API.
@@ -83,6 +84,18 @@ class DefaultTempDirContext implements TempDirContext {
 			return AnnotationUtils.findRepeatableAnnotations(this.field, annotationType);
 		}
 		return this.parameterContext.findRepeatableAnnotations(annotationType);
+	}
+
+	@Override
+	public String toString() {
+		ToStringBuilder builder = new ToStringBuilder(this);
+		if (this.field != null) {
+			builder.append("field", this.field);
+		}
+		else {
+			builder.append("parameter", this.parameterContext.getParameter());
+		}
+		return builder.toString();
 	}
 
 }
