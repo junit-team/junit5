@@ -70,8 +70,14 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 
 	@Override
 	public String getLegacyReportingName() {
-		String className = description.getClassName();
-		return isNotBlank(className) ? className : super.getLegacyReportingName();
+		String methodName = description.getMethodName();
+		if (methodName == null) {
+			String className = description.getClassName();
+			if (isNotBlank(className)) {
+				return className;
+			}
+		}
+		return super.getLegacyReportingName();
 	}
 
 	@Override

@@ -12,7 +12,6 @@ package org.junit.vintage.engine.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.Optional;
 
@@ -40,13 +39,20 @@ class VintageTestDescriptorTests {
 	}
 
 	@Test
-	void legacyReportingNameIncludesClassName() {
+	void legacyReportingNameUsesClassName() {
+		Description description = Description.createSuiteDescription(ConcreteTest.class);
+		VintageTestDescriptor testDescriptor = new VintageTestDescriptor(uniqueId, description);
+
+		assertEquals("org.junit.vintage.engine.descriptor.VintageTestDescriptorTests$ConcreteTest",
+			testDescriptor.getLegacyReportingName());
+	}
+
+	@Test
+	void legacyReportingNameUsesMethodName() {
 		Description description = Description.createTestDescription(ConcreteTest.class, "legacyTest");
 		VintageTestDescriptor testDescriptor = new VintageTestDescriptor(uniqueId, description);
 
-		assertEquals(ConcreteTest.class.getName(), testDescriptor.getLegacyReportingName(),
-			"Legacy reporting name should include fully-qualified class name when available.");
-		assertNotEquals(testDescriptor.getDisplayName(), testDescriptor.getLegacyReportingName());
+		assertEquals("legacyTest", testDescriptor.getLegacyReportingName());
 	}
 
 	@Test
