@@ -25,6 +25,15 @@ import platform.tooling.support.Request;
 
 class VintageMavenIntegrationTests {
 
+	@Test
+	void unsupportedVersion() {
+		Result result = run("4.11");
+
+		assertThat(result.getExitCode()).isEqualTo(0);
+		assertThat(result.getOutput("out")) //
+				.contains("Tests run: 0, Failures: 0, Errors: 0, Skipped: 0");
+	}
+
 	@ParameterizedTest(name = "{0}")
 	@ValueSource(strings = { "4.12", "4.13-beta-1" })
 	void supportedVersions(String version) {

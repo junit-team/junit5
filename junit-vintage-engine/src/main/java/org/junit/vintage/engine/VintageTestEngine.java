@@ -58,6 +58,7 @@ public final class VintageTestEngine implements TestEngine {
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+		JUnit4VersionCheck.checkSupported();
 		return new VintageDiscoverer().discover(discoveryRequest, uniqueId);
 	}
 

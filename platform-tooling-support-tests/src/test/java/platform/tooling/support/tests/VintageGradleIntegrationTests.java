@@ -27,6 +27,16 @@ import platform.tooling.support.Request;
 
 class VintageGradleIntegrationTests {
 
+	@Test
+	void unsupportedVersion() {
+		Result result = run("4.11");
+
+		assertThat(result.getExitCode()).isEqualTo(0);
+		assertThat(result.getOutput("out")) //
+				.doesNotContain("STARTED") //
+				.contains("Unsupported version of junit:junit: 4.11");
+	}
+
 	@ParameterizedTest(name = "{0}")
 	@ValueSource(strings = { "4.12", "4.13-beta-1" })
 	void supportedVersions(String version) {
