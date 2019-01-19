@@ -10,6 +10,9 @@ dependencies {
 		because("moving/deleting directory trees")
 	}
 
+	testImplementation("org.assertj:assertj-core:${Versions.assertJ}") {
+		because("more assertions")
+	}
 	testImplementation("com.tngtech.archunit:archunit-junit5-api:${Versions.archunit}") {
 		because("checking the architecture of JUnit 5")
 	}
