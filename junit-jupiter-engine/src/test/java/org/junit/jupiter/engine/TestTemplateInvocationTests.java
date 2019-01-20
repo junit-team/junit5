@@ -388,7 +388,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@SafeVarargs
-	@SuppressWarnings({ "unchecked", "varargs", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "varargs" })
 	private final Condition<? super Event>[] wrappedInContainerEvents(Class<MyTestTemplateTestCase> clazz,
 			Condition<? super Event>... wrappedConditions) {
 
