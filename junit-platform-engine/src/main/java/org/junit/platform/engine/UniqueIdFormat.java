@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ class UniqueIdFormat implements Serializable {
 
 	private static String encode(char c) {
 		try {
-			return URLEncoder.encode(String.valueOf(c), "UTF-8");
+			return URLEncoder.encode(String.valueOf(c), StandardCharsets.UTF_8.name());
 		}
 		catch (UnsupportedEncodingException e) {
 			throw new AssertionError("UTF-8 should be supported", e);
@@ -150,7 +151,7 @@ class UniqueIdFormat implements Serializable {
 
 	private String decode(String s) {
 		try {
-			return URLDecoder.decode(s, "UTF-8");
+			return URLDecoder.decode(s, StandardCharsets.UTF_8.name());
 		}
 		catch (UnsupportedEncodingException e) {
 			throw new JUnitException("UTF-8 should be supported", e);
