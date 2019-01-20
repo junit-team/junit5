@@ -149,7 +149,7 @@ class UniqueIdFormat implements Serializable {
 		return builder.toString();
 	}
 
-	private String decode(String s) {
+	private static String decode(String s) {
 		try {
 			return URLDecoder.decode(s, StandardCharsets.UTF_8.name());
 		}
