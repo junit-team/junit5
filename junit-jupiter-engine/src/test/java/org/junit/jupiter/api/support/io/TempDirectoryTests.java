@@ -383,6 +383,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@SafeVarargs
+	@SuppressWarnings("varargs")
 	private static void assertSingleFailedContainer(EngineExecutionResults results,
 			Condition<Throwable>... conditions) {
 
@@ -397,6 +398,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@SafeVarargs
+	@SuppressWarnings("varargs")
 	private static void assertSingleFailedTest(EngineExecutionResults results, Condition<Throwable>... conditions) {
 		results.tests().assertStatistics(stats -> stats.started(1).failed(1).succeeded(0));
 		results.tests().assertThatEvents().haveExactly(1, finishedWithFailure(conditions));
