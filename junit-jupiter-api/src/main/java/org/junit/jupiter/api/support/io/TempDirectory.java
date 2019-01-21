@@ -41,6 +41,7 @@ import java.util.TreeMap;
 import java.util.concurrent.Callable;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -48,7 +49,6 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -98,7 +98,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @see Files#createTempDirectory
  */
 @API(status = EXPERIMENTAL, since = "5.4")
-public final class TempDirectory implements TestInstancePostProcessor, ParameterResolver {
+public final class TempDirectory implements BeforeEachCallback, ParameterResolver {
 
 	/**
 	 * {@code @TempDir} can be used to annotate an instance field in a test
@@ -346,7 +346,8 @@ public final class TempDirectory implements TestInstancePostProcessor, Parameter
 	}
 
 	@Override
-	public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
+	public void beforeEach(ExtensionContext context) throws Exception {
+		Object testInstance = context.getRequiredTestInstance();
 		List<Field> fields = findAnnotatedFields(testInstance.getClass(), TempDir.class, field -> true);
 
 		if (!fields.isEmpty()) {

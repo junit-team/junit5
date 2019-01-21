@@ -46,7 +46,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Nested;
@@ -88,13 +87,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	@DisplayName("resolves shared temp dir")
 	@TestMethodOrder(OrderAnnotation.class)
 	class SharedTempDir {
-
-		@Test
-		@DisplayName("when @TempDir is used on instance field")
-		@Order(11)
-		void resolvesSharedTempDirWhenAnnotationIsUsedOnInstanceField() {
-			assertSharedTempDirForFieldInjection(AnnotationOnInstanceFieldTestCase.class);
-		}
 
 		@Test
 		@DisplayName("when @TempDir is used on instance field and constructor parameter")
@@ -184,7 +176,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	@TestMethodOrder(OrderAnnotation.class)
 	class SeparateTempDirs {
 
-		@Disabled("@TempDir field injection currently results in a shared temp directory")
 		@Test
 		@DisplayName("when @TempDir is used on instance field")
 		@Order(11)
@@ -195,7 +186,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			assertThat(BaseSeparateTempDirsFieldInjectionTestCase.tempDirs.getLast()).doesNotExist();
 		}
 
-		@Disabled("@TempDir field injection currently results in a shared temp directory")
 		@Test
 		@DisplayName("when @TempDir is used on instance field with @TestInstance(PER_CLASS)")
 		@Order(12)
@@ -207,19 +197,8 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Test
-		@DisplayName("for @AfterAll method parameter when @TempDir is not used on constructor or @BeforeAll method parameter")
-		@Order(21)
-		void resolvesSeparateTempDirWhenAnnotationIsUsedOnAfterAllMethodParameterOnly() {
-			var results = executeTestsForClass(AnnotationOnAfterAllMethodParameterTestCase.class);
-
-			results.tests().assertStatistics(stats -> stats.started(1).failed(0).succeeded(1));
-			assertThat(AnnotationOnAfterAllMethodParameterTestCase.firstTempDir).isNotNull().doesNotExist();
-			assertThat(AnnotationOnAfterAllMethodParameterTestCase.secondTempDir).isNotNull().doesNotExist();
-		}
-
-		@Test
 		@DisplayName("when @TempDir is used on @BeforeEach/@AfterEach method parameters")
-		@Order(22)
+		@Order(21)
 		void resolvesSeparateTempDirsWhenUsedOnForEachLifecycleMethods() {
 			assertSeparateTempDirsForParameterInjection(
 				SeparateTempDirsWhenUsedOnForEachLifecycleMethodsParameterInjectionTestCase.class);
@@ -229,12 +208,23 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		@DisplayName("when @TempDir is used on @BeforeEach/@AfterEach method parameters with @TestInstance(PER_CLASS)")
-		@Order(23)
+		@Order(22)
 		void resolvesSeparateTempDirsWhenUsedOnForEachLifecycleMethodsWithTestInstancePerClass() {
 			assertSeparateTempDirsForParameterInjection(
 				SeparateTempDirsWhenUsedOnForEachLifecycleMethodsWithTestInstancePerClassParameterInjectionTestCase.class);
 			assertThat(BaseSeparateTempDirsParameterInjectionTestCase.tempDirs.getFirst()).doesNotExist();
 			assertThat(BaseSeparateTempDirsParameterInjectionTestCase.tempDirs.getLast()).doesNotExist();
+		}
+
+		@Test
+		@DisplayName("for @AfterAll method parameter when @TempDir is not used on constructor or @BeforeAll method parameter")
+		@Order(31)
+		void resolvesSeparateTempDirWhenAnnotationIsUsedOnAfterAllMethodParameterOnly() {
+			var results = executeTestsForClass(AnnotationOnAfterAllMethodParameterTestCase.class);
+
+			results.tests().assertStatistics(stats -> stats.started(1).failed(0).succeeded(1));
+			assertThat(AnnotationOnAfterAllMethodParameterTestCase.firstTempDir).isNotNull().doesNotExist();
+			assertThat(AnnotationOnAfterAllMethodParameterTestCase.secondTempDir).isNotNull().doesNotExist();
 		}
 
 	}
@@ -529,6 +519,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			assertThat(BaseSharedTempDirParameterInjectionTestCase.tempDir).isNotNull().isSameAs(tempDir);
 			assertTrue(Files.exists(tempDir));
 		}
+
 	}
 
 	static class AnnotationOnConstructorParameterTestCase extends BaseSharedTempDirParameterInjectionTestCase {
@@ -729,6 +720,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			assertEquals(ref.toAbsolutePath(), path.toAbsolutePath());
 			assertTrue(Files.exists(path));
 		}
+
 	}
 
 	@DisplayName("User can't rely on java.io.File parameter injection type for custom filesystems")
