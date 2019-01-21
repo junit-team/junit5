@@ -34,5 +34,4 @@ Your donations will help to make that a reality!
 - Gabriel Yoran
 - Stefan Gwihs
 - Gregory Zuckerman
-- Tomasz Wojciechowski
 - olcbean
