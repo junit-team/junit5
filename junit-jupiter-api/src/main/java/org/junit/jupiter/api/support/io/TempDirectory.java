@@ -15,7 +15,6 @@ import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
-import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 
 import java.io.File;
@@ -39,8 +38,10 @@ import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.Callable;
+import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -51,12 +52,13 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * {@code TempDirectory} is a JUnit Jupiter extension that creates and cleans
  * up temporary directories.
  *
- * <p>The temporary directory is only created if an instance field in a test
+ * <p>The temporary directory is only created if a field in a test
  * class or a parameter in a test method, lifecycle method, or test class
  * constructor is annotated with {@link TempDir @TempDir}. If the field or
  * parameter type is neither {@link Path} nor {@link File} or if the temporary
@@ -67,12 +69,12 @@ import org.junit.platform.commons.util.Preconditions;
  * <p>The scope of the temporary directory depends on where the first
  * {@code @TempDir} annotation is encountered when executing a test class. The
  * temporary directory will be shared by all tests in a class when the
- * annotation is present on a parameter of a
- * {@link org.junit.jupiter.api.BeforeAll @BeforeAll} method or the test class
- * constructor. Otherwise, e.g. when only used on test,
- * {@link org.junit.jupiter.api.BeforeEach @BeforeEach}, or
- * {@link org.junit.jupiter.api.AfterEach @AfterEach} methods, each test will
- * use its own temporary directory.
+ * annotation is present on a {@code static} field, on a parameter of a
+ * {@link org.junit.jupiter.api.BeforeAll @BeforeAll} method, or on a parameter
+ * of the test class constructor. Otherwise &mdash; for example, when only used
+ * on test, {@link org.junit.jupiter.api.BeforeEach @BeforeEach}, or
+ * {@link org.junit.jupiter.api.AfterEach @AfterEach} methods &mdash; each test
+ * will use its own temporary directory.
  *
  * <p>When the end of the scope of a temporary directory is reached, i.e. when
  * the test method or class has finished execution, this extension will attempt
@@ -98,13 +100,13 @@ import org.junit.platform.commons.util.Preconditions;
  * @see Files#createTempDirectory
  */
 @API(status = EXPERIMENTAL, since = "5.4")
-public final class TempDirectory implements BeforeEachCallback, ParameterResolver {
+public final class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterResolver {
 
 	/**
-	 * {@code @TempDir} can be used to annotate an instance field in a test
-	 * class or a parameter in a test method, lifecycle method, or test class
-	 * constructor of type {@link Path} or {@link File} that should be resolved
-	 * into a temporary directory.
+	 * {@code @TempDir} can be used to annotate a field in a test class or a
+	 * parameter in a test method, lifecycle method, or test class constructor
+	 * of type {@link Path} or {@link File} that should be resolved into a
+	 * temporary directory.
 	 *
 	 * @see TempDirectory
 	 */
@@ -345,10 +347,28 @@ public final class TempDirectory implements BeforeEachCallback, ParameterResolve
 		return createInCustomDirectory((tempDirContext, extensionContext) -> parentDirProvider.call());
 	}
 
+	/**
+	 * Perform field injection for non-private, {@code static} fields (i.e.,
+	 * class fields) of type {@link Path} or {@link File} that are annotated with
+	 * {@link TempDir @TempDir}.
+	 */
+	@Override
+	public void beforeAll(ExtensionContext context) throws Exception {
+		injectFields(context, null, ReflectionUtils::isStatic);
+	}
+
+	/**
+	 * Perform field injection for non-private, non-static fields (i.e.,
+	 * instance fields) of type {@link Path} or {@link File} that are annotated
+	 * with {@link TempDir @TempDir}.
+	 */
 	@Override
 	public void beforeEach(ExtensionContext context) throws Exception {
-		Object testInstance = context.getRequiredTestInstance();
-		List<Field> fields = findAnnotatedFields(testInstance.getClass(), TempDir.class, field -> true);
+		injectFields(context, context.getRequiredTestInstance(), ReflectionUtils::isNotStatic);
+	}
+
+	private void injectFields(ExtensionContext context, Object testInstance, Predicate<Field> predicate) {
+		List<Field> fields = findAnnotatedFields(context.getRequiredTestClass(), TempDir.class, predicate);
 
 		if (!fields.isEmpty()) {
 			fields.forEach(field -> {
@@ -366,16 +386,24 @@ public final class TempDirectory implements BeforeEachCallback, ParameterResolve
 
 	private void assertValidFieldCandidate(Field field) {
 		assertSupportedType("field", field.getType());
-		if (isPrivate(field) || isStatic(field)) {
-			throw new ExtensionConfigurationException("@TempDir field [" + field + "] must not be private or static.");
+		if (isPrivate(field)) {
+			throw new ExtensionConfigurationException("@TempDir field [" + field + "] must not be private.");
 		}
 	}
 
+	/**
+	 * Determine if the {@link Parameter} in the supplied {@link ParameterContext}
+	 * is annotated with {@link TempDir @TempDir}.
+	 */
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return parameterContext.isAnnotated(TempDir.class);
 	}
 
+	/**
+	 * Resolve the current temporary directory for the {@link Parameter} in the
+	 * supplied {@link ParameterContext}.
+	 */
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Class<?> parameterType = parameterContext.getParameter().getType();

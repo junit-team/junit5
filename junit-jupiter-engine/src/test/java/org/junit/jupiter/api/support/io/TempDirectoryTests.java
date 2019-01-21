@@ -89,6 +89,20 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	class SharedTempDir {
 
 		@Test
+		@DisplayName("when @TempDir is used on static field")
+		@Order(10)
+		void resolvesSharedTempDirWhenAnnotationIsUsedOnStaticField() {
+			assertSharedTempDirForFieldInjection(AnnotationOnStaticFieldTestCase.class);
+		}
+
+		@Test
+		@DisplayName("when @TempDir is used on static field and @BeforeAll method parameter")
+		@Order(11)
+		void resolvesSharedTempDirWhenAnnotationIsUsedOnStaticFieldAndBeforeAllMethodParameter() {
+			assertSharedTempDirForFieldInjection(AnnotationOnStaticFieldAndBeforeAllMethodParameterTestCase.class);
+		}
+
+		@Test
 		@DisplayName("when @TempDir is used on instance field and constructor parameter")
 		@Order(12)
 		void resolvesSharedTempDirWhenAnnotationIsUsedOnInstanceFieldAndConstructorParameter() {
@@ -252,9 +266,19 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	class Failures {
 
 		@Test
-		@DisplayName("when @TempDir is used on field of an unsupported type")
+		@DisplayName("when @TempDir is used on static field of an unsupported type")
 		@Order(1)
-		void onlySupportsFieldsOfTypePathAndFile() {
+		void onlySupportsStaticFieldsOfTypePathAndFile() {
+			var results = executeTestsForClass(AnnotationOnStaticFieldWithUnsupportedTypeTestCase.class);
+
+			assertSingleFailedContainer(results, ExtensionConfigurationException.class,
+				"Can only resolve @TempDir field of type java.nio.file.Path or java.io.File");
+		}
+
+		@Test
+		@DisplayName("when @TempDir is used on instance field of an unsupported type")
+		@Order(1)
+		void onlySupportsInstanceFieldsOfTypePathAndFile() {
 			var results = executeTestsForClass(AnnotationOnInstanceFieldWithUnsupportedTypeTestCase.class);
 
 			assertSingleFailedTest(results, ExtensionConfigurationException.class,
@@ -277,9 +301,9 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Test
-		@DisplayName("when @TempDir is used on field of type File with a custom FileSystem")
+		@DisplayName("when @TempDir is used on instance field of type File with a custom FileSystem")
 		@Order(3)
-		void onlySupportsFieldsOfTypeFileForDefaultFileSystem() {
+		void onlySupportsInstanceFieldsOfTypeFileForDefaultFileSystem() {
 			var results = executeTestsForClass(InvalidFileFieldInjection.class);
 
 			// @formatter:off
@@ -350,6 +374,20 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			// @formatter:on
 		}
 
+	}
+
+	private static void assertSingleFailedContainer(EngineExecutionResults results, Class<? extends Throwable> clazz,
+			String message) {
+
+		assertSingleFailedContainer(results, instanceOf(clazz), message(actual -> actual.contains(message)));
+	}
+
+	@SafeVarargs
+	private static void assertSingleFailedContainer(EngineExecutionResults results,
+			Condition<Throwable>... conditions) {
+
+		results.containers().assertStatistics(stats -> stats.started(2).failed(1).succeeded(1));
+		results.containers().assertThatEvents().haveExactly(1, finishedWithFailure(conditions));
 	}
 
 	private static void assertSingleFailedTest(EngineExecutionResults results, Class<? extends Throwable> clazz,
@@ -431,7 +469,41 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	static class AnnotationOnInstanceFieldTestCase extends BaseSharedTempDirFieldInjectionTestCase {
+	static class AnnotationOnStaticFieldTestCase extends BaseSharedTempDirFieldInjectionTestCase {
+
+		@TempDir
+		static Path staticTempPath;
+
+		@TempDir
+		static File staticTempFile;
+
+		@Override
+		void check(Path tempDir) {
+			assertThat(BaseSharedTempDirFieldInjectionTestCase.staticTempDir)//
+					.isNotNull()//
+					.isSameAs(AnnotationOnStaticFieldTestCase.staticTempPath)//
+					.isSameAs(tempDir)//
+					.isSameAs(this.tempDir);
+			assertTrue(Files.exists(tempDir));
+		}
+
+	}
+
+	static class AnnotationOnStaticFieldAndBeforeAllMethodParameterTestCase extends AnnotationOnStaticFieldTestCase {
+
+		@BeforeAll
+		static void beforeAll(@TempDir Path tempDir) {
+			assertThat(BaseSharedTempDirFieldInjectionTestCase.staticTempDir).isNull();
+			BaseSharedTempDirFieldInjectionTestCase.staticTempDir = tempDir;
+			assertThat(AnnotationOnStaticFieldTestCase.staticTempFile).isNotNull();
+			assertThat(AnnotationOnStaticFieldTestCase.staticTempPath)//
+					.isNotNull()//
+					.isSameAs(tempDir);
+			assertThat(AnnotationOnStaticFieldTestCase.staticTempFile.toPath().toAbsolutePath())//
+					.isEqualTo(AnnotationOnStaticFieldTestCase.staticTempPath.toAbsolutePath());
+			assertTrue(Files.exists(tempDir));
+		}
+
 	}
 
 	static class AnnotationOnInstanceFieldAndConstructorParameterTestCase
@@ -473,6 +545,18 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	@TestInstance(PER_CLASS)
 	static class AnnotationOnInstanceFieldAndBeforeAllMethodParameterWithTestInstancePerClassTestCase
 			extends AnnotationOnInstanceFieldAndBeforeAllMethodParameterTestCase {
+
+	}
+
+	@ExtendWith(TempDirectory.class)
+	static class AnnotationOnStaticFieldWithUnsupportedTypeTestCase {
+
+		@TempDir
+		static String tempDir;
+
+		@Test
+		void test1() {
+		}
 
 	}
 
