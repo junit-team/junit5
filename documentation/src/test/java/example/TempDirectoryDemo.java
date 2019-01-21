@@ -26,16 +26,43 @@ import org.junit.jupiter.api.support.io.TempDirectory.TempDir;
 
 class TempDirectoryDemo {
 
-	// tag::user_guide[]
+	// tag::user_guide_parameter_injection[]
 	@Test
 	@ExtendWith(TempDirectory.class)
-	void writesItemsToFile(@TempDir Path tempDir) throws IOException {
+	void writeItemsToFile(@TempDir Path tempDir) throws IOException {
 		Path file = tempDir.resolve("test.txt");
 
 		new ListWriter(file).write("a", "b", "c");
 
 		assertEquals(singletonList("a,b,c"), Files.readAllLines(file));
 	}
-	// end::user_guide[]
+	// end::user_guide_parameter_injection[]
+
+	// tag::user_guide_field_injection[]
+	@ExtendWith(TempDirectory.class)
+	// end::user_guide_field_injection[]
+	static
+	// tag::user_guide_field_injection[]
+	class FieldInjection {
+
+		@TempDir
+		static Path sharedTempDir;
+
+		@Test
+		void writeItemsToFile() throws IOException {
+			Path file = sharedTempDir.resolve("test.txt");
+
+			new ListWriter(file).write("a", "b", "c");
+
+			assertEquals(singletonList("a,b,c"), Files.readAllLines(file));
+		}
+
+		@Test
+		void anotherTestThatUsesTheSameTempDir() {
+			// use sharedTempDir
+		}
+
+	}
+	// end::user_guide_field_injection[]
 
 }

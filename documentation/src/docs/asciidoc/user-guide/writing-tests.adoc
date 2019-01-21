@@ -1654,10 +1654,11 @@ another dependency.
 [[writing-tests-built-in-extensions-TempDirectory]]
 ==== The TempDirectory Extension
 
-The `TempDirectory` extension can be used to create and clean up a temporary directory
-for an individual test or all tests in a test class. To use it, register the extension
-and add a parameter of type `java.nio.file.Path` or `java.io.File` annotated with `@TempDir`
-to your test method, lifecycle method, or test class constructor.
+The `TempDirectory` extension can be used to create and clean up a temporary directory for
+an individual test or all tests in a test class. To use it, register the extension and
+annotate a field of type `java.nio.file.Path` or `java.io.File` with `@TempDir` or add
+a parameter of type `java.nio.file.Path` or `java.io.File` annotated with `@TempDir` to
+your test method, lifecycle method, or test class constructor.
 
 For example, the following test registers the extension for a single test method, creates
 and writes to a file in the temporary directory, and checks its content.
@@ -1665,16 +1666,26 @@ and writes to a file in the temporary directory, and checks its content.
 [source,java,indent=0]
 .A test method that requires a temporary directory
 ----
-include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide]
+include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_parameter_injection]
 ----
 
-In addition to the default file system for the local operating system, the
-`TempDirectory` extension can also be used with any `FileSystem` implementation -- for
-example, https://github.com/google/jimfs[Jimfs]. In order to use a custom file system,
-register the extension _programmatically_ via `@RegisterExtension` and supply a provider
-of a custom parent directory of type `Path`. The following example uses the Jimfs
-`FileSystem` and passes a custom `tmp` parent directory to the
-`createInCustomDirectory()` static factory method.
+The following example registers the extension for the entire class and then stores a
+_shared_ temporary directory in a `static` field. This allows the same `sharedTempDir` to
+be used in all lifecycle methods and test methods of the test class.
+
+[source,java,indent=0]
+.A test class that shares a temporary directory across test methods
+----
+include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_field_injection]
+----
+
+In addition to the default file system for the local operating system, the `TempDirectory`
+extension can also be used with any `FileSystem` implementation -- for example,
+https://github.com/google/jimfs[Jimfs]. In order to use a custom file system, register the
+extension _programmatically_ via `@RegisterExtension` and supply a provider of a custom
+parent directory of type `Path`. The following example uses the Jimfs `FileSystem` and
+passes a custom `tmp` parent directory to the `createInCustomDirectory()` static factory
+method.
 
 [source,java]
 .A test class that configures the TempDirectory extension to use a custom file system
@@ -1683,5 +1694,6 @@ include::{testDir}/example/TempDirectoryWithCustomFileSystemDemo.java[tags=user_
 ----
 
 WARNING: If you configure a `FileSystem` that is not based on the default file system for
-the current operating system, using a parameter of type `File` may result in an exception.
-If that occurs you will need to use `Path` instead of `File`.
+the current operating system, declaring a field or parameter of type `File` for your
+temporary directory may result in an exception. If that occurs you will need to use `Path`
+instead of `File`.
