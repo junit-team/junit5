@@ -144,10 +144,6 @@ class ReflectionSupportTests {
 
 	@Test
 	void findFieldsDelegates() {
-
-		ReflectionSupport.findFields(ReflectionSupportTests.class, allFields, HierarchyTraversalMode.BOTTOM_UP).forEach(
-			System.out::println);
-
 		assertEquals(
 			ReflectionUtils.findFields(ReflectionSupportTests.class, allFields,
 				ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP),
