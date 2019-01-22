@@ -240,6 +240,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Find all non-system boot modules names.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/support/AnnotationSupport.html#findAnnotatedFields(java.lang.Class,java.lang.Class)">findAnnotatedFields(Class&lt;?&gt;, Class&lt;? extends Annotation&gt;)</a></span> - Static method in class org.junit.platform.commons.support.<a href="../org/junit/platform/commons/support/AnnotationSupport.html" title="class in org.junit.platform.commons.support">AnnotationSupport</a></dt>
+<dd>
+<div class="block">Find all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">fields</a> of the supplied class or interface
+ that are annotated or <em>meta-annotated</em> with the specified
+ <code>annotationType</code>, using top-down search semantics within the type
+ hierarchy.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/AnnotationUtils.html#findAnnotatedFields(java.lang.Class,java.lang.Class,java.util.function.Predicate)">findAnnotatedFields(Class&lt;?&gt;, Class&lt;? extends Annotation&gt;, Predicate&lt;Field&gt;)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/AnnotationUtils.html" title="class in org.junit.platform.commons.util">AnnotationUtils</a></dt>
 <dd>
 <div class="block">Find all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">fields</a> of the supplied class or interface
@@ -247,11 +254,48 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  <code>annotationType</code> and match the specified <code>predicate</code>, using
  top-down search semantics within the type hierarchy.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/support/AnnotationSupport.html#findAnnotatedFields(java.lang.Class,java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.support.HierarchyTraversalMode)">findAnnotatedFields(Class&lt;?&gt;, Class&lt;? extends Annotation&gt;, Predicate&lt;Field&gt;, HierarchyTraversalMode)</a></span> - Static method in class org.junit.platform.commons.support.<a href="../org/junit/platform/commons/support/AnnotationSupport.html" title="class in org.junit.platform.commons.support">AnnotationSupport</a></dt>
+<dd>
+<div class="block">Find all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">fields</a> of the supplied class or interface
+ that are annotated or <em>meta-annotated</em> with the specified
+ <code>annotationType</code> and match the specified <code>predicate</code>, using
+ the supplied hierarchy traversal mode.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/AnnotationUtils.html#findAnnotatedFields(java.lang.Class,java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode)">findAnnotatedFields(Class&lt;?&gt;, Class&lt;? extends Annotation&gt;, Predicate&lt;Field&gt;, ReflectionUtils.HierarchyTraversalMode)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/AnnotationUtils.html" title="class in org.junit.platform.commons.util">AnnotationUtils</a></dt>
 <dd>
 <div class="block">Find all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">fields</a> of the supplied class or interface
  that are annotated or <em>meta-annotated</em> with the specified
  <code>annotationType</code> and match the specified <code>predicate</code>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/support/AnnotationSupport.html#findAnnotatedFieldValues(java.lang.Class,java.lang.Class)">findAnnotatedFieldValues(Class&lt;?&gt;, Class&lt;? extends Annotation&gt;)</a></span> - Static method in class org.junit.platform.commons.support.<a href="../org/junit/platform/commons/support/AnnotationSupport.html" title="class in org.junit.platform.commons.support">AnnotationSupport</a></dt>
+<dd>
+<div class="block">Find the values of all static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">fields</a> of the supplied
+ class or interface that are annotated or <em>meta-annotated</em> with the
+ specified <code>annotationType</code>, using top-down search semantics within
+ the type hierarchy.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/support/AnnotationSupport.html#findAnnotatedFieldValues(java.lang.Class,java.lang.Class,java.lang.Class)">findAnnotatedFieldValues(Class&lt;?&gt;, Class&lt;? extends Annotation&gt;, Class&lt;T&gt;)</a></span> - Static method in class org.junit.platform.commons.support.<a href="../org/junit/platform/commons/support/AnnotationSupport.html" title="class in org.junit.platform.commons.support">AnnotationSupport</a></dt>
+<dd>
+<div class="block">Find the values of all static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">fields</a> of the supplied
+ class or interface that are declared to be of the specified
+ <code>fieldType</code> and are annotated or <em>meta-annotated</em> with the
+ specified <code>annotationType</code>, using top-down search semantics within
+ the type hierarchy.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/support/AnnotationSupport.html#findAnnotatedFieldValues(java.lang.Object,java.lang.Class)">findAnnotatedFieldValues(Object, Class&lt;? extends Annotation&gt;)</a></span> - Static method in class org.junit.platform.commons.support.<a href="../org/junit/platform/commons/support/AnnotationSupport.html" title="class in org.junit.platform.commons.support">AnnotationSupport</a></dt>
+<dd>
+<div class="block">Find the values of all non-static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">fields</a> of the supplied
+ <code>instance</code> that are annotated or <em>meta-annotated</em> with the
+ specified <code>annotationType</code>, using top-down search semantics within
+ the type hierarchy.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/support/AnnotationSupport.html#findAnnotatedFieldValues(java.lang.Object,java.lang.Class,java.lang.Class)">findAnnotatedFieldValues(Object, Class&lt;? extends Annotation&gt;, Class&lt;T&gt;)</a></span> - Static method in class org.junit.platform.commons.support.<a href="../org/junit/platform/commons/support/AnnotationSupport.html" title="class in org.junit.platform.commons.support">AnnotationSupport</a></dt>
+<dd>
+<div class="block">Find the values of all non-static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">fields</a> of the supplied
+ <code>instance</code> that are declared to be of the specified <code>fieldType</code>
+ and are annotated or <em>meta-annotated</em> with the specified
+ <code>annotationType</code>, using top-down search semantics within the type
+ hierarchy.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/support/AnnotationSupport.html#findAnnotatedMethods(java.lang.Class,java.lang.Class,org.junit.platform.commons.support.HierarchyTraversalMode)">findAnnotatedMethods(Class&lt;?&gt;, Class&lt;? extends Annotation&gt;, HierarchyTraversalMode)</a></span> - Static method in class org.junit.platform.commons.support.<a href="../org/junit/platform/commons/support/AnnotationSupport.html" title="class in org.junit.platform.commons.support">AnnotationSupport</a></dt>
 <dd>
@@ -305,11 +349,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Find all constructors in the supplied class that match the supplied predicate.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/ReflectionUtils.html#findFields(java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode)">findFields(Class&lt;?&gt;, Predicate&lt;Field&gt;, ReflectionUtils.HierarchyTraversalMode)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/support/ReflectionSupport.html#findFields(java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.support.HierarchyTraversalMode)">findFields(Class&lt;?&gt;, Predicate&lt;Field&gt;, HierarchyTraversalMode)</a></span> - Static method in class org.junit.platform.commons.support.<a href="../org/junit/platform/commons/support/ReflectionSupport.html" title="class in org.junit.platform.commons.support">ReflectionSupport</a></dt>
 <dd>
 <div class="block">Find all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">fields</a> of the supplied class or interface
  that match the specified <code>predicate</code>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/ReflectionUtils.html#findFields(java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode)">findFields(Class&lt;?&gt;, Predicate&lt;Field&gt;, ReflectionUtils.HierarchyTraversalMode)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/TestInstances.html#findInstance(java.lang.Class)">findInstance(Class&lt;T&gt;)</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a></dt>
 <dd>
 <div class="block">Find the first test instance that is an instance of the supplied required
@@ -358,8 +404,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/support/AnnotationSupport.html#findPublicAnnotatedFields(java.lang.Class,java.lang.Class,java.lang.Class)">findPublicAnnotatedFields(Class&lt;?&gt;, Class&lt;?&gt;, Class&lt;? extends Annotation&gt;)</a></span> - Static method in class org.junit.platform.commons.support.<a href="../org/junit/platform/commons/support/AnnotationSupport.html" title="class in org.junit.platform.commons.support">AnnotationSupport</a></dt>
 <dd>
 <div class="block">Find all <code>public</code> <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">fields</a> of the supplied class
- or interface that are of the specified <code>fieldType</code> and annotated
- or <em>meta-annotated</em> with the specified <code>annotationType</code>.</div>
+ or interface that are declared to be of the specified <code>fieldType</code>
+ and are annotated or <em>meta-annotated</em> with the specified
+ <code>annotationType</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/AnnotationUtils.html#findPublicAnnotatedFields(java.lang.Class,java.lang.Class,java.lang.Class)">findPublicAnnotatedFields(Class&lt;?&gt;, Class&lt;?&gt;, Class&lt;? extends Annotation&gt;)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/AnnotationUtils.html" title="class in org.junit.platform.commons.util">AnnotationUtils</a></dt>
 <dd>&nbsp;</dd>

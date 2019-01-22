@@ -142,6 +142,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  instead.</div>
 </div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/ReflectionUtils.html#readFieldValues(java.util.List,java.lang.Object)">readFieldValues(List&lt;Field&gt;, Object)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
+<dd>
+<div class="block">Read the values of the supplied fields, making each field accessible if
+ necessary and <a href="../org/junit/platform/commons/util/ExceptionUtils.html#throwAsUncheckedException(java.lang.Throwable)">masking</a>
+ any checked exception as an unchecked exception.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/ReflectionUtils.html#readFieldValues(java.util.List,java.lang.Object,java.util.function.Predicate)">readFieldValues(List&lt;Field&gt;, Object, Predicate&lt;Field&gt;)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
+<dd>
+<div class="block">Read the values of the supplied fields, making each field accessible if
+ necessary, <a href="../org/junit/platform/commons/util/ExceptionUtils.html#throwAsUncheckedException(java.lang.Throwable)">masking</a>
+ any checked exception as an unchecked exception, and filtering out fields
+ that do not pass the supplied <code>predicate</code>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/util/ExceptionUtils.html#readStackTrace(java.lang.Throwable)">readStackTrace(Throwable)</a></span> - Static method in class org.junit.platform.commons.util.<a href="../org/junit/platform/commons/util/ExceptionUtils.html" title="class in org.junit.platform.commons.util">ExceptionUtils</a></dt>
 <dd>
 <div class="block">Read the stacktrace of the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a> into a String.</div>

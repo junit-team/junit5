@@ -157,6 +157,19 @@ the order they are declared.</div>
 </tr>
 <tbody>
 <tr class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">AnnotationSupport.</span><code><span class="memberNameLink"><a href="../AnnotationSupport.html#findAnnotatedFields(java.lang.Class,java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.support.HierarchyTraversalMode)">findAnnotatedFields</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+                   <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;&nbsp;annotationType,
+                   <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&gt;&nbsp;predicate,
+                   <a href="../HierarchyTraversalMode.html" title="enum in org.junit.platform.commons.support">HierarchyTraversalMode</a>&nbsp;traversalMode)</code></th>
+<td class="colLast">
+<div class="block">Find all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">fields</a> of the supplied class or interface
+ that are annotated or <em>meta-annotated</em> with the specified
+ <code>annotationType</code> and match the specified <code>predicate</code>, using
+ the supplied hierarchy traversal mode.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AnnotationSupport.</span><code><span class="memberNameLink"><a href="../AnnotationSupport.html#findAnnotatedMethods(java.lang.Class,java.lang.Class,org.junit.platform.commons.support.HierarchyTraversalMode)">findAnnotatedMethods</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                     <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;&nbsp;annotationType,
@@ -165,6 +178,16 @@ the order they are declared.</div>
 <div class="block">Find all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">methods</a> of the supplied class or interface
  that are annotated or <em>meta-annotated</em> with the specified
  <code>annotationType</code>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ReflectionSupport.</span><code><span class="memberNameLink"><a href="../ReflectionSupport.html#findFields(java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.support.HierarchyTraversalMode)">findFields</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
+          <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&gt;&nbsp;predicate,
+          <a href="../HierarchyTraversalMode.html" title="enum in org.junit.platform.commons.support">HierarchyTraversalMode</a>&nbsp;traversalMode)</code></th>
+<td class="colLast">
+<div class="block">Find all <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">fields</a> of the supplied class or interface
+ that match the specified <code>predicate</code>.</div>
 </td>
 </tr>
 <tr class="rowColor">
