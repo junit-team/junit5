@@ -21,8 +21,6 @@ import java.nio.file.Path;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 
-import example.util.ListWriter;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -31,6 +29,9 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.support.io.TempDirectory;
 import org.junit.jupiter.api.support.io.TempDirectory.TempDir;
 
+import example.util.ListWriter;
+
+//@formatter:off
 // tag::user_guide[]
 class TempDirectoryWithCustomFileSystemDemo {
 
@@ -47,7 +48,8 @@ class TempDirectoryWithCustomFileSystemDemo {
 	}
 
 	@RegisterExtension
-	Extension tempDirectory = TempDirectory.createInCustomDirectory(() -> fileSystem.getPath("/"));
+	Extension tempDirectory =
+		TempDirectory.createInCustomDirectory(() -> fileSystem.getPath("/"));
 
 	@Test
 	void writesItemsToFile(@TempDir Path tempDir) throws IOException {
@@ -60,3 +62,4 @@ class TempDirectoryWithCustomFileSystemDemo {
 
 }
 // end::user_guide[]
+// @formatter:on
