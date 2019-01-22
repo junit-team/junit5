@@ -494,7 +494,6 @@ cee414c7457ca099203c2ac3c4b228ed  junit-jupiter-api/src/main/java/org/junit/jupi
 cf0b475c2486c9bf8d8ce333e3633018  junit-platform-engine/src/main/java/org/junit/platform/engine/TestTag.java
 cf100585a9071d17057c3c32f4d5ef7c  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeClassNamePatterns.java
 cf78045d2fa82db6f6de759f56a27d07  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/LegacyReportingUtils.java
-d0b18986cd115fe903ab86b7563092dc  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-RC1.adoc
 d0fd9d6786030195bee8127acb417227  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ModuleUtils.java
 d1ab7eedb6800a6aac9ff86a4c1c4013  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/package-info.java
 d2767e8891990ed19bcbc753d68be5dd  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherConfig.java
@@ -510,6 +509,7 @@ d7719e0e05a08a033df5388df2ba2640  junit-platform-launcher/src/main/java/org/juni
 d7c2b52c789e3ea5b6184bcc1df4d51b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtensionContextException.java
 d7cb51eca443bbfa1f626c1c9322ff22  documentation/src/test/java/example/ConditionalTestExecutionDemo.java
 d852ab51e4f3d33e7ab68ebeffe5d2e4  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/TestInstancesProvider.java
+d8724af0f679693b5b41e178f7bbcfab  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-RC1.adoc
 d9027e2555215d8ffdca380dde20eafc  junit-platform-console/src/main/java/org/junit/platform/console/tasks/DiscoveryRequestCreator.java
 d95c0a56b97f108fc2ba4dc24d1f35c0  documentation/src/test/java/example/ExampleTestCase.java
 d9a30a3f27339bfae2cf790197b1ca7c  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutor.java
