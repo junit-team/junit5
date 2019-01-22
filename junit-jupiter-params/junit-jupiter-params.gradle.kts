@@ -30,7 +30,7 @@ tasks {
 		onlyIf {
 			(rootProject.extra["generateManifest"] as Boolean || !archivePath.exists())
 		}
-		classifier = ""
+		archiveClassifier.set("")
 		configurations = listOf(project.configurations["shadowed"])
 		exclude("META-INF/maven/**")
 		relocate("com.univocity", "org.junit.jupiter.params.shadow.com.univocity")
@@ -39,12 +39,10 @@ tasks {
 			into("META-INF")
 		}
 	}
-	afterEvaluate {
-		test {
-			classpath.minus(sourceSets["main"].output)
-			classpath.plus(files(shadowJar.get().archivePath))
-			dependsOn(shadowJar)
-		}
+	test {
+		// in order to run the test against the shadowJar
+		classpath = classpath - sourceSets.main.get().output + files(shadowJar.get().archiveFile)
+		dependsOn(shadowJar)
 	}
 	jar {
 		enabled = false
