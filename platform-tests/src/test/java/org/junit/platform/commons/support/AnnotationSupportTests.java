@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.support;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -183,6 +184,42 @@ class AnnotationSupportTests {
 	}
 
 	@Test
+	void findAnnotatedFieldValuesForNonStaticFields() {
+		Fields instance = new Fields();
+
+		assertThat(AnnotationSupport.findAnnotatedFieldValues(instance, Tag.class)).isEmpty();
+
+		assertThat(AnnotationSupport.findAnnotatedFieldValues(instance, FieldMarker.class))//
+				.containsExactlyInAnyOrder("i1", "i2");
+	}
+
+	@Test
+	void findAnnotatedFieldValuesForStaticFields() {
+		assertThat(AnnotationSupport.findAnnotatedFieldValues(Fields.class, Tag.class)).isEmpty();
+
+		assertThat(AnnotationSupport.findAnnotatedFieldValues(Fields.class, FieldMarker.class))//
+				.containsExactlyInAnyOrder("s1", "s2");
+	}
+
+	@Test
+	void findAnnotatedFieldValuesForNonStaticFieldsByType() {
+		Fields instance = new Fields();
+
+		assertThat(AnnotationSupport.findAnnotatedFieldValues(instance, FieldMarker.class, Number.class)).isEmpty();
+
+		assertThat(AnnotationSupport.findAnnotatedFieldValues(instance, FieldMarker.class, String.class))//
+				.containsExactlyInAnyOrder("i1", "i2");
+	}
+
+	@Test
+	void findAnnotatedFieldValuesForStaticFieldsByType() {
+		assertThat(AnnotationSupport.findAnnotatedFieldValues(Fields.class, FieldMarker.class, Number.class)).isEmpty();
+
+		assertThat(AnnotationSupport.findAnnotatedFieldValues(Fields.class, FieldMarker.class, String.class))//
+				.containsExactlyInAnyOrder("s1", "s2");
+	}
+
+	@Test
 	void findAnnotatedFieldValuesPreconditions() {
 		assertPreconditionViolationException("instance",
 			() -> AnnotationSupport.findAnnotatedFieldValues((Object) null, FieldMarker.class));
@@ -233,6 +270,23 @@ class AnnotationSupportTests {
 		@Tag("method-tag-2")
 		void bMethod() {
 		}
+
+	}
+
+	static class Fields {
+
+		@FieldMarker
+		static String staticField1 = "s1";
+
+		@FieldMarker
+		static String staticField2 = "s2";
+
+		@FieldMarker
+		String instanceField1 = "i1";
+
+		@FieldMarker
+		String instanceField2 = "i2";
+
 	}
 
 }
