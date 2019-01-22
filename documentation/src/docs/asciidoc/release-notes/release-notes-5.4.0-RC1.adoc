@@ -40,10 +40,11 @@ repository on GitHub.
 * `@RunWith(JUnitPlatform.class)` no longer executes test discovery twice.
 * The root cause and suppressed exceptions are now included in the stack trace printed by
   the `ConsoleLauncher`.
-* The `ConsoleLauncher` now sanitizes user-provided display names before emitting
-  them: commong whitespace characters `\t`, `\n`, `\x0B`, `\f`, and `\r` are replaced by
-  a standard space character ` ` and all other ISO control characters emitted as a
-  dot `.`.
+* The `ConsoleLauncher` now sanitizes user-provided display names before printing them to
+  the console.
+  - Common whitespace characters such as `\t`, `\n`, `\x0B`, `\f`, and `\r` are replaced
+    by a standard space character, and all other ISO control characters are emitted as a
+    single dot (`.`).
 * `AnnotationSupport` provides new methods for finding annotated fields and their values.
   - Consult the Javadoc for the various `findAnnotatedFields()` and
     `findAnnotatedFieldValues()` methods in `{AnnotationSupport}` for details.
