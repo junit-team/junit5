@@ -182,6 +182,33 @@ class AnnotationSupportTests {
 			() -> AnnotationSupport.findAnnotatedFields(Probe.class, Override.class, f -> true, null));
 	}
 
+	@Test
+	void findAnnotatedFieldValuesPreconditions() {
+		assertPreconditionViolationException("instance",
+			() -> AnnotationSupport.findAnnotatedFieldValues((Object) null, FieldMarker.class));
+		assertPreconditionViolationException("annotationType",
+			() -> AnnotationSupport.findAnnotatedFieldValues(this, null));
+
+		assertPreconditionViolationException("Class",
+			() -> AnnotationSupport.findAnnotatedFieldValues((Class<?>) null, FieldMarker.class));
+		assertPreconditionViolationException("annotationType",
+			() -> AnnotationSupport.findAnnotatedFieldValues(Probe.class, null));
+
+		assertPreconditionViolationException("instance",
+			() -> AnnotationSupport.findAnnotatedFieldValues((Object) null, FieldMarker.class, Number.class));
+		assertPreconditionViolationException("annotationType",
+			() -> AnnotationSupport.findAnnotatedFieldValues(this, null, Number.class));
+		assertPreconditionViolationException("fieldType",
+			() -> AnnotationSupport.findAnnotatedFieldValues(this, FieldMarker.class, null));
+
+		assertPreconditionViolationException("Class",
+			() -> AnnotationSupport.findAnnotatedFieldValues((Class<?>) null, FieldMarker.class, Number.class));
+		assertPreconditionViolationException("annotationType",
+			() -> AnnotationSupport.findAnnotatedFieldValues(Probe.class, null, Number.class));
+		assertPreconditionViolationException("fieldType",
+			() -> AnnotationSupport.findAnnotatedFieldValues(Probe.class, FieldMarker.class, null));
+	}
+
 	// -------------------------------------------------------------------------
 
 	@Target(ElementType.FIELD)
