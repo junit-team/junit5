@@ -87,6 +87,8 @@ endif::[]
 :TestTemplateInvocationContext:          {javadoc-root}/org/junit/jupiter/api/extension/TestTemplateInvocationContext.html[TestTemplateInvocationContext]
 :TestTemplateInvocationContextProvider:  {javadoc-root}/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html[TestTemplateInvocationContextProvider]
 :TestWatcher:                            {javadoc-root}/org/junit/jupiter/api/extension/TestWatcher.html[TestWatcher]
+// Jupiter Support and Built-in Extensions
+:TempDirectory:                          {javadoc-root}/org/junit/jupiter/api/support/io/TempDirectory.html[TempDirectory]
 // Jupiter Conditions
 :DisabledIf:                             {javadoc-root}/org/junit/jupiter/api/condition/DisabledIf.html[@DisabledIf]
 :DisabledIfEnvironmentVariable:          {javadoc-root}/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariable.html[@DisabledIfEnvironmentVariable]
