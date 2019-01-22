@@ -41,40 +41,6 @@ class AnnotationSupportTests {
 	}
 
 	@Test
-	void findAnnotationPreconditions() {
-		Optional<Class<Probe>> optional = Optional.of(Probe.class);
-		assertPreconditionViolationException("annotationType", () -> AnnotationSupport.findAnnotation(optional, null));
-		assertPreconditionViolationException("annotationType",
-			() -> AnnotationSupport.findAnnotation(Probe.class, null));
-	}
-
-	@Test
-	void findRepeatableAnnotationsPreconditions() {
-		assertPreconditionViolationException("annotationType",
-			() -> AnnotationSupport.findRepeatableAnnotations(Probe.class, null));
-	}
-
-	@Test
-	void findPublicAnnotatedFieldsPreconditions() {
-		assertPreconditionViolationException("Class",
-			() -> AnnotationSupport.findPublicAnnotatedFields(null, String.class, FieldMarker.class));
-		assertPreconditionViolationException("fieldType",
-			() -> AnnotationSupport.findPublicAnnotatedFields(Probe.class, null, FieldMarker.class));
-		assertPreconditionViolationException("annotationType",
-			() -> AnnotationSupport.findPublicAnnotatedFields(Probe.class, String.class, null));
-	}
-
-	@Test
-	void findAnnotatedMethodsPreconditions() {
-		assertPreconditionViolationException("Class",
-			() -> AnnotationSupport.findAnnotatedMethods(null, Tag.class, HierarchyTraversalMode.TOP_DOWN));
-		assertPreconditionViolationException("annotationType",
-			() -> AnnotationSupport.findAnnotatedMethods(Probe.class, null, HierarchyTraversalMode.TOP_DOWN));
-		assertPreconditionViolationException("HierarchyTraversalMode",
-			() -> AnnotationSupport.findAnnotatedMethods(Probe.class, Tag.class, null));
-	}
-
-	@Test
 	void isAnnotatedDelegates() {
 		Class<Probe> element = Probe.class;
 		Optional<Class<Probe>> optional = Optional.of(element);
@@ -88,6 +54,14 @@ class AnnotationSupportTests {
 			AnnotationSupport.isAnnotated(element, Tag.class));
 		assertEquals(AnnotationUtils.isAnnotated(element, Override.class),
 			AnnotationSupport.isAnnotated(element, Override.class));
+	}
+
+	@Test
+	void findAnnotationPreconditions() {
+		Optional<Class<Probe>> optional = Optional.of(Probe.class);
+		assertPreconditionViolationException("annotationType", () -> AnnotationSupport.findAnnotation(optional, null));
+		assertPreconditionViolationException("annotationType",
+			() -> AnnotationSupport.findAnnotation(Probe.class, null));
 	}
 
 	@Test
@@ -107,16 +81,31 @@ class AnnotationSupportTests {
 	}
 
 	@Test
-	void findRepeatableAnnotationsDelegates() throws Throwable {
-		Method bMethod = Probe.class.getDeclaredMethod("bMethod");
-		assertEquals(AnnotationUtils.findRepeatableAnnotations(bMethod, Tag.class),
-			AnnotationSupport.findRepeatableAnnotations(bMethod, Tag.class));
-		Object expected = assertThrows(PreconditionViolationException.class,
-			() -> AnnotationUtils.findRepeatableAnnotations(bMethod, Override.class));
-		Object actual = assertThrows(PreconditionViolationException.class,
-			() -> AnnotationSupport.findRepeatableAnnotations(bMethod, Override.class));
-		assertSame(expected.getClass(), actual.getClass(), "expected same exception class");
-		assertEquals(expected.toString(), actual.toString(), "expected equal exception toString representation");
+	void findPublicAnnotatedFieldsPreconditions() {
+		assertPreconditionViolationException("Class",
+			() -> AnnotationSupport.findPublicAnnotatedFields(null, String.class, FieldMarker.class));
+		assertPreconditionViolationException("fieldType",
+			() -> AnnotationSupport.findPublicAnnotatedFields(Probe.class, null, FieldMarker.class));
+		assertPreconditionViolationException("annotationType",
+			() -> AnnotationSupport.findPublicAnnotatedFields(Probe.class, String.class, null));
+	}
+
+	@Test
+	void findPublicAnnotatedFieldsDelegates() {
+		assertEquals(AnnotationUtils.findPublicAnnotatedFields(Probe.class, String.class, FieldMarker.class),
+			AnnotationSupport.findPublicAnnotatedFields(Probe.class, String.class, FieldMarker.class));
+		assertEquals(AnnotationUtils.findPublicAnnotatedFields(Probe.class, Throwable.class, Override.class),
+			AnnotationSupport.findPublicAnnotatedFields(Probe.class, Throwable.class, Override.class));
+	}
+
+	@Test
+	void findAnnotatedMethodsPreconditions() {
+		assertPreconditionViolationException("Class",
+			() -> AnnotationSupport.findAnnotatedMethods(null, Tag.class, HierarchyTraversalMode.TOP_DOWN));
+		assertPreconditionViolationException("annotationType",
+			() -> AnnotationSupport.findAnnotatedMethods(Probe.class, null, HierarchyTraversalMode.TOP_DOWN));
+		assertPreconditionViolationException("HierarchyTraversalMode",
+			() -> AnnotationSupport.findAnnotatedMethods(Probe.class, Tag.class, null));
 	}
 
 	@Test
@@ -141,11 +130,22 @@ class AnnotationSupportTests {
 	}
 
 	@Test
-	void findPublicAnnotatedFieldsDelegates() {
-		assertEquals(AnnotationUtils.findPublicAnnotatedFields(Probe.class, String.class, FieldMarker.class),
-			AnnotationSupport.findPublicAnnotatedFields(Probe.class, String.class, FieldMarker.class));
-		assertEquals(AnnotationUtils.findPublicAnnotatedFields(Probe.class, Throwable.class, Override.class),
-			AnnotationSupport.findPublicAnnotatedFields(Probe.class, Throwable.class, Override.class));
+	void findRepeatableAnnotationsDelegates() throws Throwable {
+		Method bMethod = Probe.class.getDeclaredMethod("bMethod");
+		assertEquals(AnnotationUtils.findRepeatableAnnotations(bMethod, Tag.class),
+			AnnotationSupport.findRepeatableAnnotations(bMethod, Tag.class));
+		Object expected = assertThrows(PreconditionViolationException.class,
+			() -> AnnotationUtils.findRepeatableAnnotations(bMethod, Override.class));
+		Object actual = assertThrows(PreconditionViolationException.class,
+			() -> AnnotationSupport.findRepeatableAnnotations(bMethod, Override.class));
+		assertSame(expected.getClass(), actual.getClass(), "expected same exception class");
+		assertEquals(expected.toString(), actual.toString(), "expected equal exception toString representation");
+	}
+
+	@Test
+	void findRepeatableAnnotationsPreconditions() {
+		assertPreconditionViolationException("annotationType",
+			() -> AnnotationSupport.findRepeatableAnnotations(Probe.class, null));
 	}
 
 	@Test
@@ -165,8 +165,9 @@ class AnnotationSupportTests {
 				ReflectionUtils.HierarchyTraversalMode.TOP_DOWN),
 			AnnotationSupport.findAnnotatedFields(Probe.class, Override.class, f -> true,
 				HierarchyTraversalMode.TOP_DOWN));
-
 	}
+
+	// -------------------------------------------------------------------------
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
