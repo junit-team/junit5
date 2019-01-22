@@ -4621,21 +4621,22 @@ another dependency.</p>
 <div class="sect3">
 <h4 id="writing-tests-built-in-extensions-TempDirectory"><a class="anchor" href="#writing-tests-built-in-extensions-TempDirectory"></a>2.19.1. The TempDirectory Extension</h4>
 <div class="paragraph">
-<p>The <code>TempDirectory</code> extension can be used to create and clean up a temporary directory
-for an individual test or all tests in a test class. To use it, register the extension
-and add a parameter of type <code>java.nio.file.Path</code> or <code>java.io.File</code> annotated with <code>@TempDir</code>
-to your test method, lifecycle method, or test class constructor.</p>
+<p>The <code><a href="../api/org/junit/jupiter/api/support/io/TempDirectory.html">TempDirectory</a></code> extension can be used to create and clean up a temporary directory
+for an individual test or all tests in a test class. To use it, register the extension and
+then annotate a field of type <code>java.nio.file.Path</code> or <code>java.io.File</code> with <code>@TempDir</code> or
+add a parameter of type <code>java.nio.file.Path</code> or <code>java.io.File</code> annotated with <code>@TempDir</code>
+to a test method, lifecycle method, or test class constructor.</p>
 </div>
 <div class="paragraph">
-<p>For example, the following test registers the extension for a single test method, creates
-and writes to a file in the temporary directory, and checks its content.</p>
+<p>For example, the following test registers the <code>TempDirectory</code> extension for a single test
+method, creates and writes to a file in the temporary directory, and checks its content.</p>
 </div>
 <div class="listingblock">
 <div class="title">A test method that requires a temporary directory</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Test</span>
 <span class="annotation">@ExtendWith</span>(TempDirectory.class)
-<span class="type">void</span> writesItemsToFile(<span class="annotation">@TempDir</span> Path tempDir) <span class="directive">throws</span> <span class="exception">IOException</span> {
+<span class="type">void</span> writeItemsToFile(<span class="annotation">@TempDir</span> Path tempDir) <span class="directive">throws</span> <span class="exception">IOException</span> {
     Path file = tempDir.resolve(<span class="string"><span class="delimiter">&quot;</span><span class="content">test.txt</span><span class="delimiter">&quot;</span></span>);
 
     <span class="keyword">new</span> ListWriter(file).write(<span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">b</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">c</span><span class="delimiter">&quot;</span></span>);
@@ -4645,13 +4646,44 @@ and writes to a file in the temporary directory, and checks its content.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>In addition to the default file system for the local operating system, the
-<code>TempDirectory</code> extension can also be used with any <code>FileSystem</code> implementation&#8201;&#8212;&#8201;for
-example, <a href="https://github.com/google/jimfs">Jimfs</a>. In order to use a custom file system,
-register the extension <em>programmatically</em> via <code>@RegisterExtension</code> and supply a provider
-of a custom parent directory of type <code>Path</code>. The following example uses the Jimfs
-<code>FileSystem</code> and passes a custom <code>tmp</code> parent directory to the
-<code>createInCustomDirectory()</code> static factory method.</p>
+<p>The following example registers the <code>TempDirectory</code> extension for the entire class and
+then stores a <em>shared</em> temporary directory in a <code>static</code> field. This allows the same
+<code>sharedTempDir</code> to be used in all lifecycle methods and test methods of the test class.</p>
+</div>
+<div class="listingblock">
+<div class="title">A test class that shares a temporary directory across test methods</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ExtendWith</span>(TempDirectory.class)
+<span class="type">class</span> <span class="class">SharedTempDirectoryDemo</span> {
+
+    <span class="annotation">@TempDir</span>
+    <span class="directive">static</span> Path sharedTempDir;
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> writeItemsToFile() <span class="directive">throws</span> <span class="exception">IOException</span> {
+        Path file = sharedTempDir.resolve(<span class="string"><span class="delimiter">&quot;</span><span class="content">test.txt</span><span class="delimiter">&quot;</span></span>);
+
+        <span class="keyword">new</span> ListWriter(file).write(<span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">b</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">c</span><span class="delimiter">&quot;</span></span>);
+
+        assertEquals(singletonList(<span class="string"><span class="delimiter">&quot;</span><span class="content">a,b,c</span><span class="delimiter">&quot;</span></span>), Files.readAllLines(file));
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> anotherTestThatUsesTheSameTempDir() {
+        <span class="comment">// use sharedTempDir</span>
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In addition to the default file system for the local operating system, the <code>TempDirectory</code>
+extension can also be used with any <code>FileSystem</code> implementation&#8201;&#8212;&#8201;for example,
+<a href="https://github.com/google/jimfs">Jimfs</a>. In order to use a custom file system, register the
+extension <em>programmatically</em> via <code>@RegisterExtension</code> and supply a provider of a custom
+parent directory of type <code>Path</code>. The following example uses the Jimfs <code>FileSystem</code> and
+passes a custom <code>tmp</code> parent directory to the <code>createInCustomDirectory()</code> static factory
+method.</p>
 </div>
 <div class="listingblock">
 <div class="title">A test class that configures the TempDirectory extension to use a custom file system</div>
@@ -4693,8 +4725,9 @@ of a custom parent directory of type <code>Path</code>. The following example us
 </td>
 <td class="content">
 If you configure a <code>FileSystem</code> that is not based on the default file system for
-the current operating system, using a parameter of type <code>File</code> may result in an exception.
-If that occurs you will need to use <code>Path</code> instead of <code>File</code>.
+the current operating system, declaring a field or parameter of type <code>File</code> for your
+temporary directory may result in an exception. If that occurs you will need to use <code>Path</code>
+instead of <code>File</code>.
 </td>
 </tr>
 </table>
@@ -8615,7 +8648,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-21 18:30:13 UTC
+Last updated 2019-01-22 13:51:38 UTC
 </div>
 </div>
 </body>

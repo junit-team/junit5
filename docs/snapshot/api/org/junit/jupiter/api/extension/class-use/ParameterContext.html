@@ -182,6 +182,24 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h3>Uses of <a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a> in <a href="../../support/io/package-summary.html">org.junit.jupiter.api.support.io</a></h3>
 <table class="useSummary">
+<caption><span>Methods in <a href="../../support/io/package-summary.html">org.junit.jupiter.api.support.io</a> that return types with arguments of type <a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">TempDirectory.TempDirContext.</span><code><span class="memberNameLink"><a href="../../support/io/TempDirectory.TempDirContext.html#getParameterContext()">getParameterContext</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Get the <a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterContext</code></a> associated with this context, if
+ available.</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
 <caption><span>Methods in <a href="../../support/io/package-summary.html">org.junit.jupiter.api.support.io</a> with parameters of type <a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
@@ -190,25 +208,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink">Path</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">TempDirectory.ParentDirProvider.</span><code><span class="memberNameLink"><a href="../../support/io/TempDirectory.ParentDirProvider.html#get(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">get</a></span>&#8203;(<a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;parameterContext,
-   <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
-<td class="colLast">
-<div class="block">Get the parent directory for all temporary directories created by the
- <a href="../../support/io/TempDirectory.html" title="class in org.junit.jupiter.api.support.io"><code>TempDirectory</code></a> extension this is used with.</div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TempDirectory.</span><code><span class="memberNameLink"><a href="../../support/io/TempDirectory.html#resolveParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">resolveParameter</a></span>&#8203;(<a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;parameterContext,
                 <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Resolve the current temporary directory for the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Parameter</code></a> in the
+ supplied <a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterContext</code></a>.</div>
+</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TempDirectory.</span><code><span class="memberNameLink"><a href="../../support/io/TempDirectory.html#supportsParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">supportsParameter</a></span>&#8203;(<a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;parameterContext,
                  <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Determine if the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Parameter</code></a> in the supplied <a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterContext</code></a>
+ is annotated with <a href="../../support/io/TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io"><code>@TempDir</code></a>.</div>
+</td>
 </tr>
 </tbody>
 </table>

@@ -120,6 +120,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  <a href="TempDirectory.html" title="class in org.junit.jupiter.api.support.io"><code>TempDirectory</code></a> extension this is used with.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<th class="colFirst" scope="row"><a href="TempDirectory.TempDirContext.html" title="interface in org.junit.jupiter.api.support.io">TempDirectory.TempDirContext</a></th>
+<td class="colLast">
+<div class="block"><code>TempDirContext</code> encapsulates the <em>context</em> in which
+ <a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io"><code>@TempDir</code></a> is declared.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </li>
@@ -152,9 +159,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io">TempDirectory.TempDir</a></th>
 <td class="colLast">
-<div class="block"><code>@TempDir</code> can be used to annotate a test or lifecycle method or
- test class constructor parameter of type <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> or <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>File</code></a>
- that should be resolved into a temporary directory.</div>
+<div class="block"><code>@TempDir</code> can be used to annotate a field in a test class or a
+ parameter in a test method, lifecycle method, or test class constructor
+ of type <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> or <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>File</code></a> that should be resolved into a
+ temporary directory.</div>
 </td>
 </tr>
 </tbody>

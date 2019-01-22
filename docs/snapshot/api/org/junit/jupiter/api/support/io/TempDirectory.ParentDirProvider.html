@@ -165,7 +165,7 @@ public static interface <span class="typeNameLabel">TempDirectory.ParentDirProvi
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink">Path</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">get</a></span>&#8203;(<a href="../../extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;parameterContext,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(org.junit.jupiter.api.support.io.TempDirectory.TempDirContext,org.junit.jupiter.api.extension.ExtensionContext)">get</a></span>&#8203;(<a href="TempDirectory.TempDirContext.html" title="interface in org.junit.jupiter.api.support.io">TempDirectory.TempDirContext</a>&nbsp;tempDirContext,
    <a href="../../extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
 <td class="colLast">
 <div class="block">Get the parent directory for all temporary directories created by the
@@ -189,20 +189,20 @@ public static interface <span class="typeNameLabel">TempDirectory.ParentDirProvi
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="get(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">
+<a id="get(org.junit.jupiter.api.support.io.TempDirectory.TempDirContext,org.junit.jupiter.api.extension.ExtensionContext)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>get</h4>
-<pre class="methodSignature"><a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink">Path</a>&nbsp;get&#8203;(<a href="../../extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;parameterContext,
+<pre class="methodSignature"><a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink">Path</a>&nbsp;get&#8203;(<a href="TempDirectory.TempDirContext.html" title="interface in org.junit.jupiter.api.support.io">TempDirectory.TempDirContext</a>&nbsp;tempDirContext,
          <a href="../../extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)
   throws <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a></pre>
 <div class="block">Get the parent directory for all temporary directories created by the
  <a href="TempDirectory.html" title="class in org.junit.jupiter.api.support.io"><code>TempDirectory</code></a> extension this is used with.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>parameterContext</code> - the context for the parameter for which a
+<dd><code>tempDirContext</code> - the context for the field or parameter for which a
  temporary directory should be created; never <code>null</code></dd>
 <dd><code>extensionContext</code> - the current extension context; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
