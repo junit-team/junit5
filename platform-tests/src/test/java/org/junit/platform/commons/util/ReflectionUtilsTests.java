@@ -38,6 +38,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -1135,6 +1136,92 @@ class ReflectionUtilsTests {
 		}
 	}
 
+	@Test
+	void readFieldValuesPreconditions() {
+		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.readFieldValues(null, new Object()));
+		assertThrows(PreconditionViolationException.class,
+			() -> ReflectionUtils.readFieldValues(new ArrayList<>(), new Object(), null));
+	}
+
+	@Test
+	void readFieldValuesFromInstance() {
+		var fields = ReflectionUtils.findFields(ClassWithFields.class, f -> true, TOP_DOWN);
+
+		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields());
+
+		assertThat(values).containsExactly("enigma", 3.14, "text", 2.5, null, 42, "constant", 99);
+	}
+
+	@Test
+	void readFieldValuesFromClass() {
+		var fields = ReflectionUtils.findFields(ClassWithFields.class, ReflectionUtils::isStatic, TOP_DOWN);
+
+		var values = ReflectionUtils.readFieldValues(fields, null);
+
+		assertThat(values).containsExactly(2.5, "constant", 99);
+	}
+
+	@Test
+	void readFieldValuesFromInstanceWithTypeFilterForString() {
+		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(String.class), TOP_DOWN);
+
+		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), isA(String.class));
+
+		assertThat(values).containsExactly("enigma", "text", null, "constant");
+	}
+
+	@Test
+	void readFieldValuesFromClassWithTypeFilterForString() {
+		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(String.class).and(ReflectionUtils::isStatic),
+			TOP_DOWN);
+
+		var values = ReflectionUtils.readFieldValues(fields, null, isA(String.class));
+
+		assertThat(values).containsExactly("constant");
+	}
+
+	@Test
+	void readFieldValuesFromInstanceWithTypeFilterForInteger() {
+		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(int.class), TOP_DOWN);
+
+		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), isA(int.class));
+
+		assertThat(values).containsExactly(42);
+	}
+
+	@Test
+	void readFieldValuesFromClassWithTypeFilterForInteger() {
+		var fields = ReflectionUtils.findFields(ClassWithFields.class,
+			isA(Integer.class).and(ReflectionUtils::isStatic), TOP_DOWN);
+
+		var values = ReflectionUtils.readFieldValues(fields, null, isA(Integer.class));
+
+		assertThat(values).containsExactly(99);
+	}
+
+	@Test
+	void readFieldValuesFromInstanceWithTypeFilterForDouble() {
+		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(double.class), TOP_DOWN);
+
+		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), isA(double.class));
+
+		assertThat(values).containsExactly(3.14);
+	}
+
+	@Test
+	void readFieldValuesFromClassWithTypeFilterForDouble() {
+		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(Double.class).and(ReflectionUtils::isStatic),
+			TOP_DOWN);
+
+		var values = ReflectionUtils.readFieldValues(fields, null, isA(Double.class));
+
+		assertThat(values).containsExactly(2.5);
+	}
+
+	private Predicate<Field> isA(Class<?> type) {
+		return f -> f.getType().isAssignableFrom(type);
+	}
+
 	private static void createDirectories(Path... paths) throws IOException {
 		for (Path path : paths) {
 			Files.createDirectory(path);
@@ -1534,6 +1621,27 @@ class ReflectionUtilsTests {
 		@Override
 		public void otherMethod2() {
 		}
+	}
+
+	public static class ClassWithFields {
+
+		public static final String CONST = "constant";
+
+		public static final Integer CONST_INTEGER = 99;
+
+		public static final Double CONST_DOUBLE = 2.5;
+
+		public final String stringField = "text";
+
+		@SuppressWarnings("unused")
+		private final String privateStringField = "enigma";
+
+		final String nullStringField = null;
+
+		public final int integerField = 42;
+
+		public final double doubleField = 3.14;
+
 	}
 
 	@SuppressWarnings("unused")

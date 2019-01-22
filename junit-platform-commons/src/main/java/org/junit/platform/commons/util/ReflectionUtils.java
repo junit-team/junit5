@@ -561,15 +561,7 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Try to read the value of a potentially inaccessible field.
-	 *
-	 * <p>If an exception occurs while reading the field, a failed {@link Try}
-	 * is returned that contains the corresponding exception.
-	 *
-	 * @param field the field to read; never {@code null}
-	 * @param instance the instance from which the value is to be read; may
-	 * be {@code null} for a static field
-	 * @see #tryToReadFieldValue(Field)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToReadFieldValue(Field, Object)
 	 * @see #tryToReadFieldValue(Class, String, Object)
 	 * @since 1.4
 	 */
@@ -580,6 +572,48 @@ public final class ReflectionUtils {
 			() -> String.format("Cannot read non-static field [%s] on a null instance.", field));
 
 		return Try.call(() -> makeAccessible(field).get(instance));
+	}
+
+	/**
+	 * Read the values of the supplied fields, making each field accessible if
+	 * necessary and {@linkplain ExceptionUtils#throwAsUncheckedException masking}
+	 * any checked exception as an unchecked exception.
+	 *
+	 * @param fields the list of fields to read; never {@code null}
+	 * @param instance the instance from which the values are to be read; may
+	 * be {@code null} for static fields
+	 * @return an immutable list of the values of the specified fields; never
+	 * {@code null} but may be empty or contain {@code null} entries
+	 */
+	public static List<Object> readFieldValues(List<Field> fields, Object instance) {
+		return readFieldValues(fields, instance, field -> true);
+	}
+
+	/**
+	 * Read the values of the supplied fields, making each field accessible if
+	 * necessary, {@linkplain ExceptionUtils#throwAsUncheckedException masking}
+	 * any checked exception as an unchecked exception, and filtering out fields
+	 * that do not pass the supplied {@code predicate}.
+	 *
+	 * @param fields the list of fields to read; never {@code null}
+	 * @param instance the instance from which the values are to be read; may
+	 * be {@code null} for static fields
+	 * @param predicate the field filter; never {@code null}
+	 * @return an immutable list of the values of the specified fields; never
+	 * {@code null} but may be empty or contain {@code null} entries
+	 */
+	public static List<Object> readFieldValues(List<Field> fields, Object instance, Predicate<Field> predicate) {
+		Preconditions.notNull(fields, "fields list must not be null");
+		Preconditions.notNull(predicate, "Predicate must not be null");
+
+		// @formatter:off
+		return fields.stream()
+				.filter(predicate)
+				.map(field ->
+					tryToReadFieldValue(field, instance)
+						.getOrThrow(ExceptionUtils::throwAsUncheckedException))
+				.collect(toUnmodifiableList());
+		// @formatter:on
 	}
 
 	/**
@@ -986,16 +1020,7 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Find all {@linkplain Field fields} of the supplied class or interface
-	 * that match the specified {@code predicate}.
-	 *
-	 * <p>The results will not contain fields that are <em>hidden</em>.
-	 *
-	 * @param clazz the class or interface in which to find the fields; never {@code null}
-	 * @param predicate the field filter; never {@code null}
-	 * @param traversalMode the hierarchy traversal mode; never {@code null}
-	 * @return an immutable list of all such fields found; never {@code null}
-	 * but potentially empty
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findFields(Class, Predicate, org.junit.platform.commons.support.HierarchyTraversalMode)
 	 */
 	public static List<Field> findFields(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {
