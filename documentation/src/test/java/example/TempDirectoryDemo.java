@@ -43,7 +43,7 @@ class TempDirectoryDemo {
 	// end::user_guide_field_injection[]
 	static
 	// tag::user_guide_field_injection[]
-	class FieldInjection {
+	class SharedTempDirectoryDemo {
 
 		@TempDir
 		static Path sharedTempDir;

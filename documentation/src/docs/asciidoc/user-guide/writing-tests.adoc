@@ -1654,14 +1654,14 @@ another dependency.
 [[writing-tests-built-in-extensions-TempDirectory]]
 ==== The TempDirectory Extension
 
-The `TempDirectory` extension can be used to create and clean up a temporary directory for
-an individual test or all tests in a test class. To use it, register the extension and
-annotate a field of type `java.nio.file.Path` or `java.io.File` with `@TempDir` or add
-a parameter of type `java.nio.file.Path` or `java.io.File` annotated with `@TempDir` to
-your test method, lifecycle method, or test class constructor.
+The `{TempDirectory}` extension can be used to create and clean up a temporary directory
+for an individual test or all tests in a test class. To use it, register the extension and
+then annotate a field of type `java.nio.file.Path` or `java.io.File` with `@TempDir` or
+add a parameter of type `java.nio.file.Path` or `java.io.File` annotated with `@TempDir`
+to a test method, lifecycle method, or test class constructor.
 
-For example, the following test registers the extension for a single test method, creates
-and writes to a file in the temporary directory, and checks its content.
+For example, the following test registers the `TempDirectory` extension for a single test
+method, creates and writes to a file in the temporary directory, and checks its content.
 
 [source,java,indent=0]
 .A test method that requires a temporary directory
@@ -1669,9 +1669,9 @@ and writes to a file in the temporary directory, and checks its content.
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_parameter_injection]
 ----
 
-The following example registers the extension for the entire class and then stores a
-_shared_ temporary directory in a `static` field. This allows the same `sharedTempDir` to
-be used in all lifecycle methods and test methods of the test class.
+The following example registers the `TempDirectory` extension for the entire class and
+then stores a _shared_ temporary directory in a `static` field. This allows the same
+`sharedTempDir` to be used in all lifecycle methods and test methods of the test class.
 
 [source,java,indent=0]
 .A test class that shares a temporary directory across test methods
