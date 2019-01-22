@@ -27,7 +27,6 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.EngineExecutionListener;
-import org.junit.platform.engine.UniqueId;
 
 /**
  * Unit tests for {@link JupiterEngineExecutionContext}.
@@ -52,7 +51,6 @@ class JupiterEngineExecutionContextTests {
 
 	@Test
 	void extendWithAllAttributes() {
-		UniqueId uniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
 		ExtensionContext extensionContext = mock(ExtensionContext.class);
 		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configuration);
 		TestInstancesProvider testInstancesProvider = mock(TestInstancesProvider.class);
@@ -69,7 +67,6 @@ class JupiterEngineExecutionContextTests {
 
 	@Test
 	void canOverrideAttributeWhenContextIsExtended() {
-		UniqueId uniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
 		ExtensionContext extensionContext = mock(ExtensionContext.class);
 		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configuration);
 		TestInstancesProvider testInstancesProvider = mock(TestInstancesProvider.class);
