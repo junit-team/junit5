@@ -167,6 +167,21 @@ class AnnotationSupportTests {
 				HierarchyTraversalMode.TOP_DOWN));
 	}
 
+	@Test
+	void findAnnotatedFieldsPreconditions() {
+		assertPreconditionViolationException("Class",
+			() -> AnnotationSupport.findAnnotatedFields(null, FieldMarker.class));
+		assertPreconditionViolationException("annotationType",
+			() -> AnnotationSupport.findAnnotatedFields(Probe.class, null));
+
+		assertPreconditionViolationException("Class", () -> AnnotationSupport.findAnnotatedFields(null, Override.class,
+			f -> true, HierarchyTraversalMode.TOP_DOWN));
+		assertPreconditionViolationException("annotationType",
+			() -> AnnotationSupport.findAnnotatedFields(Probe.class, null, f -> true, HierarchyTraversalMode.TOP_DOWN));
+		assertPreconditionViolationException("HierarchyTraversalMode",
+			() -> AnnotationSupport.findAnnotatedFields(Probe.class, Override.class, f -> true, null));
+	}
+
 	// -------------------------------------------------------------------------
 
 	@Target(ElementType.FIELD)
