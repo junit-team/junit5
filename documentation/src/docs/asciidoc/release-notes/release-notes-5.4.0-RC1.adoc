@@ -44,6 +44,13 @@ repository on GitHub.
   them: commong whitespace characters `\t`, `\n`, `\x0B`, `\f`, and `\r` are replaced by
   a standard space character ` ` and all other ISO control characters emitted as a
   dot `.`.
+* `AnnotationSupport` provides new methods for finding annotated fields and their values.
+  - Consult the Javadoc for the various `findAnnotatedFields()` and
+    `findAnnotatedFieldValues()` methods in `{AnnotationSupport}` for details.
+* `ReflectionSupport` provides new methods for finding fields and reading a field's value.
+  - Consult the Javadoc for the `findFields()` and `tryToReadFieldValue()` methods in
+    `{ReflectionSupport}` for details.
+
 
 [[release-notes-5.4.0-RC1-junit-jupiter]]
 === JUnit Jupiter
