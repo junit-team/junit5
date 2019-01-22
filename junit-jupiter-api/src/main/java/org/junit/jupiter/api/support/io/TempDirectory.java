@@ -368,20 +368,16 @@ public final class TempDirectory implements BeforeAllCallback, BeforeEachCallbac
 	}
 
 	private void injectFields(ExtensionContext context, Object testInstance, Predicate<Field> predicate) {
-		List<Field> fields = findAnnotatedFields(context.getRequiredTestClass(), TempDir.class, predicate);
-
-		if (!fields.isEmpty()) {
-			fields.forEach(field -> {
-				assertValidFieldCandidate(field);
-				try {
-					makeAccessible(field).set(testInstance,
-						getPathOrFile(field.getType(), DefaultTempDirContext.from(field), context));
-				}
-				catch (Throwable t) {
-					ExceptionUtils.throwAsUncheckedException(t);
-				}
-			});
-		}
+		findAnnotatedFields(context.getRequiredTestClass(), TempDir.class, predicate).forEach(field -> {
+			assertValidFieldCandidate(field);
+			try {
+				makeAccessible(field).set(testInstance,
+					getPathOrFile(field.getType(), DefaultTempDirContext.from(field), context));
+			}
+			catch (Throwable t) {
+				ExceptionUtils.throwAsUncheckedException(t);
+			}
+		});
 	}
 
 	private void assertValidFieldCandidate(Field field) {
