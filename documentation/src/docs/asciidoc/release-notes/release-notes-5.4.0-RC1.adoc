@@ -61,7 +61,7 @@ repository on GitHub.
   ignored. Instead, the corresponding test class or test method now fails with an
   informative exception.
 * `@ParameterizedTest` once again supports `MessageFormat` patterns for individual
-  parameters -- for example, `{0,number,#.##}`.
+  parameters -- for example, `+{0,number,#.##}+`.
 
 ==== Deprecations and Breaking Changes
 
