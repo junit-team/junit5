@@ -225,6 +225,36 @@ class ReflectionSupportTests {
 	}
 
 	@Test
+	void findMethodDelegates() throws Exception {
+		assertEquals(ReflectionUtils.findMethod(Boolean.class, "valueOf", String.class.getName()),
+			ReflectionSupport.findMethod(Boolean.class, "valueOf", String.class.getName()));
+
+		assertEquals(ReflectionUtils.findMethod(Boolean.class, "valueOf", String.class),
+			ReflectionSupport.findMethod(Boolean.class, "valueOf", String.class));
+	}
+
+	@Test
+	void findMethodPreconditions() throws Exception {
+		assertPreconditionViolationException("Class",
+			() -> ReflectionSupport.findMethod(null, "valueOf", String.class.getName()));
+		assertPreconditionViolationExceptionForString("Method name",
+			() -> ReflectionSupport.findMethod(Boolean.class, "", String.class.getName()));
+		assertPreconditionViolationExceptionForString("Method name",
+			() -> ReflectionSupport.findMethod(Boolean.class, "   ", String.class.getName()));
+
+		assertPreconditionViolationException("Class",
+			() -> ReflectionSupport.findMethod(null, "valueOf", String.class));
+		assertPreconditionViolationExceptionForString("Method name",
+			() -> ReflectionSupport.findMethod(Boolean.class, "", String.class));
+		assertPreconditionViolationExceptionForString("Method name",
+			() -> ReflectionSupport.findMethod(Boolean.class, "   ", String.class));
+		assertPreconditionViolationException("Parameter types array",
+			() -> ReflectionSupport.findMethod(Boolean.class, "valueOf", (Class<?>[]) null));
+		assertPreconditionViolationException("Individual parameter types",
+			() -> ReflectionSupport.findMethod(Boolean.class, "valueOf", new Class<?>[] { null }));
+	}
+
+	@Test
 	void findMethodsDelegates() {
 		assertEquals(
 			ReflectionUtils.findMethods(ReflectionSupportTests.class, allMethods,
