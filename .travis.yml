@@ -68,3 +68,9 @@ jobs:
         # GRGIT_USER
         - secure: PwwKcsVdukfzvDBHmdajhMsIVHSbPt+lorgibpRXImBt+C4XHlaz/Z78Bq8jtkDvrXb+DTSfSGvAxg1IBM+rtCzrYb5DAqq+OfuG9Uu6FDTnkIOHs5Gii7pAfT0+W31Oj76OgiCAXX+p8lbFTchz6ope5zVYEpSlAe7aXCVTGM0=
       script: ./src/publishDocumentationSnapshotOnlyIfNecessary.sh
+
+notifications:
+  slack:
+    on_pull_requests: false
+    rooms:
+      - secure: WFsU02gopb070NzuGL97y83Oke8X18iyv93V1ZOjRDom1hiWtsiW0bA7VSGPXfAK2gjexhpmvmi8k97B92qkM5I8N3fERddu6YfxN4bXemXnvJuwUufN6fX/thO8+Wh4Qc5iPMRrnmYplDz9J5WzMLgNjs8WKQOwml418nRQmLs=
