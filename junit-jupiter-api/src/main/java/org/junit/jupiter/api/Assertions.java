@@ -299,7 +299,10 @@ public class Assertions {
 
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Short expected, Short actual) {
 		AssertEquals.assertEquals(expected, actual);
 	}
@@ -331,7 +334,10 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Short expected, Short actual, String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
@@ -363,7 +369,10 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Short expected, Short actual, Supplier<String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
@@ -391,7 +400,10 @@ public class Assertions {
 
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Byte expected, Byte actual) {
 		AssertEquals.assertEquals(expected, actual);
 	}
@@ -423,7 +435,10 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Byte expected, Byte actual, String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
@@ -455,7 +470,10 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Byte expected, Byte actual, Supplier<String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
@@ -483,7 +501,10 @@ public class Assertions {
 
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Integer expected, Integer actual) {
 		AssertEquals.assertEquals(expected, actual);
 	}
@@ -515,7 +536,10 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Integer expected, Integer actual, String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
@@ -547,7 +571,10 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Integer expected, Integer actual, Supplier<String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
@@ -575,7 +602,10 @@ public class Assertions {
 
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Long expected, Long actual) {
 		AssertEquals.assertEquals(expected, actual);
 	}
@@ -607,7 +637,10 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Long expected, Long actual, String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
@@ -639,7 +672,10 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Long expected, Long actual, Supplier<String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
@@ -675,7 +711,10 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
 	 * {@link Float#compare(float, float)}.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Float expected, Float actual) {
 		AssertEquals.assertEquals(expected, actual);
 	}
@@ -715,7 +754,10 @@ public class Assertions {
 	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
 	 * {@link Float#compare(float, float)}.
 	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Float expected, Float actual, String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
@@ -755,7 +797,10 @@ public class Assertions {
 	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
 	 * {@link Float#compare(float, float)}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Float expected, Float actual, Supplier<String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
@@ -820,7 +865,10 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Double expected, Double actual) {
 		AssertEquals.assertEquals(expected, actual);
 	}
@@ -860,7 +908,10 @@ public class Assertions {
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.
 	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Double expected, Double actual, String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
@@ -900,7 +951,10 @@ public class Assertions {
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Double expected, Double actual, Supplier<String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
@@ -957,7 +1011,10 @@ public class Assertions {
 
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Character expected, Character actual) {
 		AssertEquals.assertEquals(expected, actual);
 	}
@@ -989,7 +1046,10 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Character expected, Character actual, String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
@@ -1021,7 +1081,10 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
+	 *
+	 * @since 5.4
 	 */
+	@API(status = STABLE, since = "5.4")
 	public static void assertEquals(Character expected, Character actual, Supplier<String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
