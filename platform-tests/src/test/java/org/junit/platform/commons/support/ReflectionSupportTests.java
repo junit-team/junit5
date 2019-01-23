@@ -280,4 +280,28 @@ class ReflectionSupportTests {
 			() -> ReflectionSupport.findMethods(ReflectionSupportTests.class, allMethods, null));
 	}
 
+	@Test
+	void findNestedClassesDelegates() throws Exception {
+		assertEquals(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class, ReflectionUtils::isStatic),
+			ReflectionSupport.findNestedClasses(ClassWithNestedClasses.class, ReflectionUtils::isStatic));
+	}
+
+	@Test
+	void findNestedClassesPreconditions() throws Exception {
+		assertPreconditionViolationException("Class",
+			() -> ReflectionSupport.findNestedClasses(null, ReflectionUtils::isStatic));
+		assertPreconditionViolationException("Predicate",
+			() -> ReflectionSupport.findNestedClasses(ClassWithNestedClasses.class, null));
+	}
+
+	static class ClassWithNestedClasses {
+
+		class Nested1 {
+		}
+
+		static class Nested2 {
+		}
+
+	}
+
 }
