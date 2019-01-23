@@ -64,6 +64,9 @@ repository on GitHub.
 * `@ParameterizedTest` once again supports `MessageFormat` patterns for individual
   parameters -- for example, `+{0,number,#.##}+`.
 
+* More overloaded `assertEquals()` und `assertNotEquals()` methods solve Groovy method
+  dispatch problems.
+
 ==== Deprecations and Breaking Changes
 
 * The `ParentDirProvider` strategy in the `TempDirectory` extension introduced in 5.4 M1
