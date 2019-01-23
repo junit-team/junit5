@@ -143,6 +143,21 @@ class ReflectionSupportTests {
 	}
 
 	@Test
+	void newInstanceDelegates() {
+		assertEquals(ReflectionUtils.newInstance(String.class, "foo"),
+			ReflectionSupport.newInstance(String.class, "foo"));
+	}
+
+	@Test
+	void newInstancePreconditions() {
+		assertPreconditionViolationException("Class", () -> ReflectionSupport.newInstance(null));
+		assertPreconditionViolationException("Argument array",
+			() -> ReflectionSupport.newInstance(String.class, (Object[]) null));
+		assertPreconditionViolationException("Individual arguments",
+			() -> ReflectionSupport.newInstance(String.class, new Object[] { null }));
+	}
+
+	@Test
 	void findFieldsDelegates() {
 		assertEquals(
 			ReflectionUtils.findFields(ReflectionSupportTests.class, allFields,
