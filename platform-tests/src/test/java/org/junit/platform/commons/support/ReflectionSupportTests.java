@@ -158,6 +158,24 @@ class ReflectionSupportTests {
 	}
 
 	@Test
+	void invokeMethodDelegates() throws Exception {
+		Method method = Boolean.class.getMethod("valueOf", String.class);
+		assertEquals(ReflectionUtils.invokeMethod(method, null, "true"),
+			ReflectionSupport.invokeMethod(method, null, "true"));
+	}
+
+	@Test
+	void invokeMethodPreconditions() throws Exception {
+		assertPreconditionViolationException("Method", () -> ReflectionSupport.invokeMethod(null, null, "true"));
+
+		Method method = Boolean.class.getMethod("toString");
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> ReflectionSupport.invokeMethod(method, null));
+		assertEquals("Cannot invoke non-static method [" + method.toGenericString() + "] on a null target.",
+			exception.getMessage());
+	}
+
+	@Test
 	void findFieldsDelegates() {
 		assertEquals(
 			ReflectionUtils.findFields(ReflectionSupportTests.class, allFields,
