@@ -509,7 +509,6 @@ d7719e0e05a08a033df5388df2ba2640  junit-platform-launcher/src/main/java/org/juni
 d7c2b52c789e3ea5b6184bcc1df4d51b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtensionContextException.java
 d7cb51eca443bbfa1f626c1c9322ff22  documentation/src/test/java/example/ConditionalTestExecutionDemo.java
 d852ab51e4f3d33e7ab68ebeffe5d2e4  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/TestInstancesProvider.java
-d8724af0f679693b5b41e178f7bbcfab  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-RC1.adoc
 d9027e2555215d8ffdca380dde20eafc  junit-platform-console/src/main/java/org/junit/platform/console/tasks/DiscoveryRequestCreator.java
 d95c0a56b97f108fc2ba4dc24d1f35c0  documentation/src/test/java/example/ExampleTestCase.java
 d9a30a3f27339bfae2cf790197b1ca7c  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutor.java
@@ -557,6 +556,7 @@ ea0f3eaa0f017616d4690d1c22e0500e  junit-platform-console/src/main/java/org/junit
 ea15560f6602cf4bc151f70f471bd361  documentation/src/test/java/example/Fast.java
 ea2117c8d8c4a8a5e96255175a933b7f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/BeforeEach.java
 eaa4188a41a4ec440c3a15e5139a3f67  junit-platform-console/src/main/java/org/junit/platform/console/tasks/package-info.java
+eaec7f41abbc9ed3fe50fac0539c0f1a  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-RC1.adoc
 eb1f8bde7895a1fc965155810a7140eb  documentation/src/test/java/example/defaultmethods/EqualsContract.java
 eb3e144a98fc8b1da7e24db2bea6f774  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfiguration.java
 eb3e3559696a8708158929073c22e292  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterAllCallback.java
