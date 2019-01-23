@@ -1369,16 +1369,7 @@ public final class ReflectionUtils {
 	 * implementation.
 	 */
 	private static int defaultFieldSorter(Field field1, Field field2) {
-		String name1 = field1.getName();
-		String name2 = field2.getName();
-		int comparison = Integer.compare(name1.hashCode(), name2.hashCode());
-		if (comparison == 0) {
-			comparison = name1.compareTo(name2);
-			if (comparison == 0) {
-				comparison = field1.toString().compareTo(field2.toString());
-			}
-		}
-		return comparison;
+		return Integer.compare(field1.getName().hashCode(), field2.getName().hashCode());
 	}
 
 	/**
