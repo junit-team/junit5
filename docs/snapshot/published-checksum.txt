@@ -79,6 +79,7 @@
 2c41521402642a938cf8134b999aa541  documentation/src/test/java/example/testkit/EngineTestKitStatisticsDemo.java
 2c58187308496bd21c101660b65dee85  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/Resources.java
 2d02719038b13d91ae5314d4a8db464b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExecutionCondition.java
+2d72acbfab32c77c3b37e043642fe397  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-RC1.adoc
 2e1b8967b68e00867b802d73392453b9  documentation/src/test/java/example/testinterface/TestLifecycleLogger.java
 2e2a2499e3045eec89fec4bd7d135dc0  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/CachingJupiterConfiguration.java
 2ee24cfc33409d41bbb650dec6e4016b  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfiguration.java
@@ -556,7 +557,6 @@ ea0f3eaa0f017616d4690d1c22e0500e  junit-platform-console/src/main/java/org/junit
 ea15560f6602cf4bc151f70f471bd361  documentation/src/test/java/example/Fast.java
 ea2117c8d8c4a8a5e96255175a933b7f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/BeforeEach.java
 eaa4188a41a4ec440c3a15e5139a3f67  junit-platform-console/src/main/java/org/junit/platform/console/tasks/package-info.java
-eaec7f41abbc9ed3fe50fac0539c0f1a  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-RC1.adoc
 eb1f8bde7895a1fc965155810a7140eb  documentation/src/test/java/example/defaultmethods/EqualsContract.java
 eb3e144a98fc8b1da7e24db2bea6f774  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfiguration.java
 eb3e3559696a8708158929073c22e292  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterAllCallback.java
