@@ -504,8 +504,13 @@ class AssertEqualsAssertionsTests {
 	}
 
 	@Test
-	void assertEqualsWithTwoNulls() {
-		assertEquals(null, null);
+	void assertEqualsWithNullReferences() {
+		Object null1 = null;
+		Object null2 = null;
+
+		assertEquals(null1, null);
+		assertEquals(null, null2);
+		assertEquals(null1, null2);
 	}
 
 	@Test

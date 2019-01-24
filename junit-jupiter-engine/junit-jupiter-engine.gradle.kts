@@ -1,3 +1,7 @@
+plugins {
+	groovy
+}
+
 apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 description = "JUnit Jupiter Engine"
@@ -31,6 +35,7 @@ dependencies {
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(":junit-platform-testkit"))
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
+	testImplementation(localGroovy())
 	testImplementation("com.google.jimfs:jimfs:${Versions.jimfs}") {
 		because("used to test TempDirectory extension")
 	}
