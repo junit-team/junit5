@@ -141,9 +141,7 @@ tasks {
 				"source-highlighter" to "coderay@", // TODO switch to "rouge" once supported by the html5 backend and on MS Windows
 				"tabsize" to "4",
 				"toc" to "left",
-				"toclevels" to "3",
 				"icons" to "font",
-				"sectnums" to true,
 				"sectanchors" to true,
 				"idprefix" to "",
 				"idseparator" to "-"

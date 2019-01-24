@@ -11,6 +11,9 @@ ifdef::backend-pdf[:imagesdir: {imagesoutdir}]
 //
 // Blank lines are not permitted in the doc-header: http://asciidoctor.org/docs/user-manual/#doc-header
 //
+:sectnums:
+:toclevels: 3
+//
 
 include::../link-attributes.adoc[]
 
