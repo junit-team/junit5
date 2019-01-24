@@ -10,4 +10,5 @@ coverage:
       default:
         url: "secret:F3tyY8zm4BW8W1KD5t4X7atr6OTDT7FNo+UatckerMIidQIWAkO8dJdc7bnNLNSBNIvIPR+3apf+9MMoSrNuscNgHjgAwR7N2PxP5Qpr0O0UNW/ys/ZkG3xiXWg5uAsovDJ137bYM7KgDhguZTQ+vp5RIeaok9FaXkvfjRHz4PM="
         only_pulls: false
-        branches: master
+        branches: null
+        threshold: 0%
