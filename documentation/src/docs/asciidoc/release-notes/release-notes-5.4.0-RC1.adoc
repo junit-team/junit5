@@ -23,10 +23,6 @@ repository on GitHub.
 [[release-notes-5.4.0-RC1-junit-platform]]
 === JUnit Platform
 
-==== Bug Fixes
-
-* ❓
-
 ==== Deprecations and Breaking Changes
 
 * `TestPlan.add(TestIdentifier)` has always been considered _internal_ and is now
@@ -58,14 +54,14 @@ repository on GitHub.
 
 ==== Bug Fixes
 
+* Additional overloaded variants of the `assertEquals()` und `assertNotEquals()` methods
+  in `Assertions` that solve Groovy method dispatch problems caused by overloaded variants
+  introduced in 5.4 M1.
 * `@RegisterExtension` fields that are `null` when evaluated are no longer silently
   ignored. Instead, the corresponding test class or test method now fails with an
   informative exception.
 * `@ParameterizedTest` once again supports `MessageFormat` patterns for individual
   parameters -- for example, `+{0,number,#.##}+`.
-
-* More overloaded `assertEquals()` und `assertNotEquals()` methods solve Groovy method
-  dispatch problems.
 
 ==== Deprecations and Breaking Changes
 
