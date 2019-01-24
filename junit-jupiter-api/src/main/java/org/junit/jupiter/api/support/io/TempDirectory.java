@@ -26,6 +26,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 import java.nio.file.FileVisitResult;
@@ -393,6 +394,10 @@ public final class TempDirectory implements BeforeAllCallback, BeforeEachCallbac
 	 */
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		if (parameterContext.getDeclaringExecutable() instanceof Constructor) {
+			throw new ParameterResolutionException(
+				"@TempDir is not supported on constructor parameters. Please use field injection instead.");
+		}
 		return parameterContext.isAnnotated(TempDir.class);
 	}
 

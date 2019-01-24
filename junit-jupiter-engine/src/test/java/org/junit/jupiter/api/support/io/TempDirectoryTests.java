@@ -14,7 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -103,21 +102,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Test
-		@DisplayName("when @TempDir is used on instance field and constructor parameter")
-		@Order(12)
-		void resolvesSharedTempDirWhenAnnotationIsUsedOnInstanceFieldAndConstructorParameter() {
-			assertSharedTempDirForFieldInjection(AnnotationOnInstanceFieldAndConstructorParameterTestCase.class);
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on instance field and constructor parameter with @TestInstance(PER_CLASS)")
-		@Order(13)
-		void resolvesSharedTempDirWhenAnnotationIsUsedOnInstanceFieldAndConstructorParameterWithTestInstancePerClass() {
-			assertSharedTempDirForFieldInjection(
-				AnnotationOnInstanceFieldAndConstructorParameterWithTestInstancePerClassTestCase.class);
-		}
-
-		@Test
 		@DisplayName("when @TempDir is used on instance field and @BeforeAll method parameter")
 		@Order(14)
 		void resolvesSharedTempDirWhenAnnotationIsUsedOnInstanceFieldAndBeforeAllMethodParameter() {
@@ -130,21 +114,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		void resolvesSharedTempDirWhenAnnotationIsUsedOnInstanceFieldAndBeforeAllMethodParameterWithTestInstancePerClass() {
 			assertSharedTempDirForFieldInjection(
 				AnnotationOnInstanceFieldAndBeforeAllMethodParameterWithTestInstancePerClassTestCase.class);
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on constructor parameter")
-		@Order(21)
-		void resolvesSharedTempDirWhenAnnotationIsUsedOnConstructorParameter() {
-			assertSharedTempDirForParameterInjection(AnnotationOnConstructorParameterTestCase.class);
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on constructor parameter with @TestInstance(PER_CLASS)")
-		@Order(22)
-		void resolvesSharedTempDirWhenAnnotationIsUsedOnConstructorParameterWithTestInstancePerClass() {
-			assertSharedTempDirForParameterInjection(
-				AnnotationOnConstructorParameterWithTestInstancePerClassTestCase.class);
 		}
 
 		@Test
@@ -374,6 +343,26 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			// @formatter:on
 		}
 
+		@Test
+		@DisplayName("when @TempDir is used on constructor parameter")
+		@Order(8)
+		void resolvesSharedTempDirWhenAnnotationIsUsedOnConstructorParameter() {
+			var results = executeTestsForClass(AnnotationOnConstructorParameterTestCase.class);
+
+			assertSingleFailedTest(results, ParameterResolutionException.class,
+				"@TempDir is not supported on constructor parameters. Please use field injection instead.");
+		}
+
+		@Test
+		@DisplayName("when @TempDir is used on constructor parameter with @TestInstance(PER_CLASS)")
+		@Order(9)
+		void resolvesSharedTempDirWhenAnnotationIsUsedOnConstructorParameterWithTestInstancePerClass() {
+			var results = executeTestsForClass(AnnotationOnConstructorParameterWithTestInstancePerClassTestCase.class);
+
+			assertSingleFailedContainer(results, ParameterResolutionException.class,
+				"@TempDir is not supported on constructor parameters. Please use field injection instead.");
+		}
+
 	}
 
 	private static void assertSingleFailedContainer(EngineExecutionResults results, Class<? extends Throwable> clazz,
@@ -508,30 +497,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	static class AnnotationOnInstanceFieldAndConstructorParameterTestCase
-			extends BaseSharedTempDirFieldInjectionTestCase {
-
-		AnnotationOnInstanceFieldAndConstructorParameterTestCase(@TempDir Path tempDir) {
-			if (BaseSharedTempDirFieldInjectionTestCase.staticTempDir != null) {
-				assertSame(BaseSharedTempDirFieldInjectionTestCase.staticTempDir, tempDir);
-			}
-			else {
-				BaseSharedTempDirFieldInjectionTestCase.staticTempDir = tempDir;
-			}
-			assertNull(this.tempDir);
-			assertTrue(Files.exists(tempDir));
-		}
-	}
-
-	@TestInstance(PER_CLASS)
-	static class AnnotationOnInstanceFieldAndConstructorParameterWithTestInstancePerClassTestCase
-			extends AnnotationOnInstanceFieldAndConstructorParameterTestCase {
-
-		AnnotationOnInstanceFieldAndConstructorParameterWithTestInstancePerClassTestCase(@TempDir Path tempDir) {
-			super(tempDir);
-		}
-	}
-
 	static class AnnotationOnInstanceFieldAndBeforeAllMethodParameterTestCase
 			extends BaseSharedTempDirFieldInjectionTestCase {
 
@@ -608,17 +573,18 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	static class AnnotationOnConstructorParameterTestCase extends BaseSharedTempDirParameterInjectionTestCase {
+	@ExtendWith(TempDirectory.class)
+	static class AnnotationOnConstructorParameterTestCase {
 
 		AnnotationOnConstructorParameterTestCase(@TempDir Path tempDir) {
-			if (BaseSharedTempDirParameterInjectionTestCase.tempDir != null) {
-				assertSame(BaseSharedTempDirParameterInjectionTestCase.tempDir, tempDir);
-			}
-			else {
-				BaseSharedTempDirParameterInjectionTestCase.tempDir = tempDir;
-			}
-			check(tempDir);
+			// never called
 		}
+
+		@Test
+		void test() {
+			// never called
+		}
+
 	}
 
 	@TestInstance(PER_CLASS)

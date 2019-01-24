@@ -67,6 +67,8 @@ repository on GitHub.
 
 * The `ParentDirProvider` strategy in the `TempDirectory` extension introduced in 5.4 M1
   now accepts a `TempDirContext` instead of `ParameterContext`.
+* `@TempDir` (introduced in 5.4 M1) is no longer supported on constructor parameters.
+  Please use field injection instead.
 
 ==== New Features and Improvements
 
