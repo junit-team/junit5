@@ -1,7 +1,7 @@
 [[release-notes-5.4.0-RC1]]
 == 5.4.0-RC1
 
-*Date of Release:* ❓
+*Date of Release:* January 24, 2019
 
 *Scope:* `@RegisterExtension` ordering, `null` and _empty_ argument sources for
 `@ParameterizedTest` methods, new `TestWatcher` extension API, `@TempDir` field injection
