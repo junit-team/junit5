@@ -139,6 +139,7 @@
 4000f08d559378835df7779d2297cfd0  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertIterableEquals.java
 41d0d0830a29d416ed94af021995f372  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.java
 4255f3a9e3d7f3945c3cc043c8b186b0  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/package-info.java
+443f279a76a4004c84dbba8935663c92  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java
 450ba11a4a0ce352fac7d8800d473e1c  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/SingleTestExecutor.java
 459b9f20e0a68f2b7e01ef9657d948a3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/OS.java
 45fd324e7ecfb8dec21ed5a9e0a6e4ea  documentation/src/main/java/example/util/StringUtils.java
@@ -281,7 +282,6 @@
 78256810122c8fab15681f490e1aa08e  junit-platform-commons/src/main/java/org/junit/platform/commons/package-info.java
 786558f30639a7228fa0a984d6761e19  documentation/src/test/java/extensions/ExpectToFail.java
 78e3da888f3b7f7543f2b8297f60ebb8  documentation/src/main/java/example/registration/package-info.java
-79372c0287d0d8966094bf188b33f1a6  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java
 79450c974d0e02853aa73d3266a8401d  documentation/src/test/resources/two-column.csv
 7978c5909291b221f41bb8a2fc8c8b7a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfSystemProperty.java
 799348c3788aa759e3e4933fb4300bff  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodExtensionContext.java
