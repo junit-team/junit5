@@ -16,6 +16,7 @@ import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.Lock;
@@ -77,12 +78,8 @@ public class ExtensionValuesStore {
 		CompositeKey compositeKey = new CompositeKey(namespace, key);
 		Supplier<Object> storedValue = getStoredValue(compositeKey);
 		if (storedValue == null) {
-			storedValue = new MemoizingSupplier(() -> defaultCreator.apply(key));
-			Supplier<Object> previousValue = storedValues.putIfAbsent(compositeKey, storedValue);
-			if (previousValue != null) {
-				// There was a race condition, and we lost.
-				storedValue = previousValue;
-			}
+			Supplier<Object> newValue = new MemoizingSupplier(() -> defaultCreator.apply(key));
+			storedValue = Optional.ofNullable(storedValues.putIfAbsent(compositeKey, newValue)).orElse(newValue);
 		}
 		return storedValue.get();
 	}
