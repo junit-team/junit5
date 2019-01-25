@@ -394,11 +394,12 @@ public final class TempDirectory implements BeforeAllCallback, BeforeEachCallbac
 	 */
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		if (parameterContext.getDeclaringExecutable() instanceof Constructor) {
+		boolean annotated = parameterContext.isAnnotated(TempDir.class);
+		if (annotated && parameterContext.getDeclaringExecutable() instanceof Constructor) {
 			throw new ParameterResolutionException(
 				"@TempDir is not supported on constructor parameters. Please use field injection instead.");
 		}
-		return parameterContext.isAnnotated(TempDir.class);
+		return annotated;
 	}
 
 	/**

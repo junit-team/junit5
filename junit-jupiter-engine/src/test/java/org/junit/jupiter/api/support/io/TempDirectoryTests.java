@@ -82,6 +82,13 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		BaseSeparateTempDirsParameterInjectionTestCase.tempDirs.clear();
 	}
 
+	@Test
+	@DisplayName("does not prevent constructor parameter resolution")
+	void tempDirectoryDoesNotPreventConstructorParameterResolution() {
+		executeTestsForClass(TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase.class).tests()//
+				.assertStatistics(stats -> stats.started(1).succeeded(1));
+	}
+
 	@Nested
 	@DisplayName("resolves shared temp dir")
 	@TestMethodOrder(OrderAnnotation.class)
@@ -957,6 +964,20 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	private static void writeFile(Path tempDir, TestInfo testInfo) throws IOException {
 		Path file = tempDir.resolve(testInfo.getTestMethod().orElseThrow().getName() + ".txt");
 		Files.write(file, testInfo.getDisplayName().getBytes());
+	}
+
+	// https://github.com/junit-team/junit5/issues/1748
+	@ExtendWith(TempDirectory.class)
+	static class TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase {
+
+		TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase(TestInfo testInfo) {
+			assertNotNull(testInfo);
+		}
+
+		@Test
+		void test() {
+		}
+
 	}
 
 }
