@@ -145,22 +145,23 @@ implements <a href="../../extension/BeforeAllCallback.html" title="interface in 
 <div class="block"><code>TempDirectory</code> is a JUnit Jupiter extension that creates and cleans
  up temporary directories.
 
- <p>The temporary directory is only created if a field in a test
- class or a parameter in a test method, lifecycle method, or test class
- constructor is annotated with <a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io"><code>@TempDir</code></a>. If the field or
- parameter type is neither <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> nor <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>File</code></a> or if the temporary
- directory could not be created, this extension will throw an
- <a href="../../extension/ExtensionConfigurationException.html" title="class in org.junit.jupiter.api.extension"><code>ExtensionConfigurationException</code></a> or a
- <a href="../../extension/ParameterResolutionException.html" title="class in org.junit.jupiter.api.extension"><code>ParameterResolutionException</code></a> as appropriate.
+ <p>The temporary directory is only created if a field in a test class or a
+ parameter in a lifecycle method or test method is annotated with
+ <a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io"><code>@TempDir</code></a>. If the field type or parameter type is neither
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> nor <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>File</code></a> or if the temporary directory cannot be created,
+ this extension will throw an <a href="../../extension/ExtensionConfigurationException.html" title="class in org.junit.jupiter.api.extension"><code>ExtensionConfigurationException</code></a> or a
+ <a href="../../extension/ParameterResolutionException.html" title="class in org.junit.jupiter.api.extension"><code>ParameterResolutionException</code></a> as appropriate. In addition, this
+ extension will throw a <code>ParameterResolutionException</code> for a constructor
+ parameter annotated with <code>@TempDir</code>.
 
  <p>The scope of the temporary directory depends on where the first
  <code>@TempDir</code> annotation is encountered when executing a test class. The
  temporary directory will be shared by all tests in a class when the
- annotation is present on a <code>static</code> field, on a parameter of a
- <a href="../../BeforeAll.html" title="annotation in org.junit.jupiter.api"><code>@BeforeAll</code></a> method, or on a parameter
- of the test class constructor. Otherwise &mdash; for example, when only used
- on test, <a href="../../BeforeEach.html" title="annotation in org.junit.jupiter.api"><code>@BeforeEach</code></a>, or
- <a href="../../AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> methods &mdash; each test
+ annotation is present on a <code>static</code> field or on a parameter of a
+ <a href="../../BeforeAll.html" title="annotation in org.junit.jupiter.api"><code>@BeforeAll</code></a> method. Otherwise &mdash;
+ for example, when <code>@TempDir</code> is only used on instance fields or on
+ parameters in test, <a href="../../BeforeEach.html" title="annotation in org.junit.jupiter.api"><code>@BeforeEach</code></a>,
+ or <a href="../../AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> methods &mdash; each test
  will use its own temporary directory.
 
  <p>When the end of the scope of a temporary directory is reached, i.e. when
@@ -174,7 +175,7 @@ implements <a href="../../extension/BeforeAllCallback.html" title="interface in 
  <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/FileSystem.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>FileSystem</code></a> to create temporary directories
  in the default location. However, you may instantiate this extension using
  the <a href="#createInCustomDirectory(org.junit.jupiter.api.support.io.TempDirectory.ParentDirProvider)"><code>createInCustomDirectory(ParentDirProvider)</code></a> or
- <a href="#createInCustomDirectory(java.util.concurrent.Callable)"><code>createInCustomDirectory(Callable)</code></a> factory methods and
+ <a href="#createInCustomDirectory(java.util.concurrent.Callable)"><code>createInCustomDirectory(Callable)</code></a> factory method and
  register it via <a href="../../extension/RegisterExtension.html" title="annotation in org.junit.jupiter.api.extension"><code>@RegisterExtension</code></a>
  to pass a custom provider to configure the parent directory for all temporary
  directories created by this extension. This allows the use of this extension
@@ -222,9 +223,8 @@ implements <a href="../../extension/BeforeAllCallback.html" title="interface in 
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io">TempDirectory.TempDir</a></span></code></th>
 <td class="colLast">
 <div class="block"><code>@TempDir</code> can be used to annotate a field in a test class or a
- parameter in a test method, lifecycle method, or test class constructor
- of type <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> or <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>File</code></a> that should be resolved into a
- temporary directory.</div>
+ parameter in a lifecycle method or test method of type <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> or
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>File</code></a> that should be resolved into a temporary directory.</div>
 </td>
 </tr>
 <tr class="altColor">

@@ -4625,7 +4625,7 @@ another dependency.</p>
 for an individual test or all tests in a test class. To use it, register the extension and
 then annotate a field of type <code>java.nio.file.Path</code> or <code>java.io.File</code> with <code>@TempDir</code> or
 add a parameter of type <code>java.nio.file.Path</code> or <code>java.io.File</code> annotated with <code>@TempDir</code>
-to a test method, lifecycle method, or test class constructor.</p>
+to a lifecycle method or test method.</p>
 </div>
 <div class="paragraph">
 <p>For example, the following test registers the <code>TempDirectory</code> extension for a single test
@@ -4644,6 +4644,20 @@ method, creates and writes to a file in the temporary directory, and checks its 
     assertEquals(singletonList(<span class="string"><span class="delimiter">&quot;</span><span class="content">a,b,c</span><span class="delimiter">&quot;</span></span>), Files.readAllLines(file));
 }</code></pre>
 </div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<code>@TempDir</code> is not supported on constructor parameters. If you wish to retain a
+single reference to a temp directory across lifecycle methods and the current test method,
+please use field injection, by annotating an instance field with <code>@TempDir</code>.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>The following example registers the <code>TempDirectory</code> extension for the entire class and
@@ -8649,7 +8663,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-26 15:53:40 UTC
+Last updated 2019-01-26 16:37:37 UTC
 </div>
 </div>
 </body>
