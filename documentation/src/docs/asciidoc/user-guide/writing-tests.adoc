@@ -1658,7 +1658,7 @@ The `{TempDirectory}` extension can be used to create and clean up a temporary d
 for an individual test or all tests in a test class. To use it, register the extension and
 then annotate a field of type `java.nio.file.Path` or `java.io.File` with `@TempDir` or
 add a parameter of type `java.nio.file.Path` or `java.io.File` annotated with `@TempDir`
-to a test method, lifecycle method, or test class constructor.
+to a lifecycle method or test method.
 
 For example, the following test registers the `TempDirectory` extension for a single test
 method, creates and writes to a file in the temporary directory, and checks its content.
@@ -1668,6 +1668,10 @@ method, creates and writes to a file in the temporary directory, and checks its 
 ----
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_parameter_injection]
 ----
+
+WARNING: `@TempDir` is not supported on constructor parameters. If you wish to retain a
+single reference to a temp directory across lifecycle methods and the current test method,
+please use field injection, by annotating an instance field with `@TempDir`.
 
 The following example registers the `TempDirectory` extension for the entire class and
 then stores a _shared_ temporary directory in a `static` field. This allows the same

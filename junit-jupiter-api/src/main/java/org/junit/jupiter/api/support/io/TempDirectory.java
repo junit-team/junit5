@@ -59,22 +59,23 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * {@code TempDirectory} is a JUnit Jupiter extension that creates and cleans
  * up temporary directories.
  *
- * <p>The temporary directory is only created if a field in a test
- * class or a parameter in a test method, lifecycle method, or test class
- * constructor is annotated with {@link TempDir @TempDir}. If the field or
- * parameter type is neither {@link Path} nor {@link File} or if the temporary
- * directory could not be created, this extension will throw an
- * {@link ExtensionConfigurationException} or a
- * {@link ParameterResolutionException} as appropriate.
+ * <p>The temporary directory is only created if a field in a test class or a
+ * parameter in a lifecycle method or test method is annotated with
+ * {@link TempDir @TempDir}. If the field type or parameter type is neither
+ * {@link Path} nor {@link File} or if the temporary directory cannot be created,
+ * this extension will throw an {@link ExtensionConfigurationException} or a
+ * {@link ParameterResolutionException} as appropriate. In addition, this
+ * extension will throw a {@code ParameterResolutionException} for a constructor
+ * parameter annotated with {@code @TempDir}.
  *
  * <p>The scope of the temporary directory depends on where the first
  * {@code @TempDir} annotation is encountered when executing a test class. The
  * temporary directory will be shared by all tests in a class when the
- * annotation is present on a {@code static} field, on a parameter of a
- * {@link org.junit.jupiter.api.BeforeAll @BeforeAll} method, or on a parameter
- * of the test class constructor. Otherwise &mdash; for example, when only used
- * on test, {@link org.junit.jupiter.api.BeforeEach @BeforeEach}, or
- * {@link org.junit.jupiter.api.AfterEach @AfterEach} methods &mdash; each test
+ * annotation is present on a {@code static} field or on a parameter of a
+ * {@link org.junit.jupiter.api.BeforeAll @BeforeAll} method. Otherwise &mdash;
+ * for example, when {@code @TempDir} is only used on instance fields or on
+ * parameters in test, {@link org.junit.jupiter.api.BeforeEach @BeforeEach},
+ * or {@link org.junit.jupiter.api.AfterEach @AfterEach} methods &mdash; each test
  * will use its own temporary directory.
  *
  * <p>When the end of the scope of a temporary directory is reached, i.e. when
@@ -88,7 +89,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * {@link java.nio.file.FileSystem FileSystem} to create temporary directories
  * in the default location. However, you may instantiate this extension using
  * the {@link TempDirectory#createInCustomDirectory(ParentDirProvider)} or
- * {@link TempDirectory#createInCustomDirectory(Callable)} factory methods and
+ * {@link TempDirectory#createInCustomDirectory(Callable)} factory method and
  * register it via {@link org.junit.jupiter.api.extension.RegisterExtension @RegisterExtension}
  * to pass a custom provider to configure the parent directory for all temporary
  * directories created by this extension. This allows the use of this extension
@@ -105,9 +106,12 @@ public final class TempDirectory implements BeforeAllCallback, BeforeEachCallbac
 
 	/**
 	 * {@code @TempDir} can be used to annotate a field in a test class or a
-	 * parameter in a test method, lifecycle method, or test class constructor
-	 * of type {@link Path} or {@link File} that should be resolved into a
-	 * temporary directory.
+	 * parameter in a lifecycle method or test method of type {@link Path} or
+	 * {@link File} that should be resolved into a temporary directory.
+	 *
+	 * <p>Please note that {@code @TempDir} is not supported on constructor
+	 * parameters. Please use field injection instead, by annotating an
+	 * instance field with {@code @TempDir}.
 	 *
 	 * @see TempDirectory
 	 */
