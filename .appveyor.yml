@@ -18,3 +18,11 @@ test_script:
   - gradlew --no-daemon -version
   - gradlew --no-daemon --stacktrace build publishToMavenLocal
   - gradlew --no-daemon --stacktrace -Dplatform.tooling.support.tests.enabled=true build
+
+notifications:
+  - provider: Slack
+    incoming_webhook:
+      secure: yuiEy7Tlmr5iHbBQqpwb5XNC83j4Mexcz/4jVGeuzeEluQ5wkksdDmqP+CV2yFudxYHG8T/JqNTQF1RNftw26PmkL426mj3QzrwbQU6O5H0=
+    on_build_success: false
+    on_build_failure: false
+    on_build_status_changed: true
