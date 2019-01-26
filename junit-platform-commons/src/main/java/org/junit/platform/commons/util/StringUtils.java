@@ -128,10 +128,8 @@ public final class StringUtils {
 	 * will be used to convert it to a String.</li>
 	 * <li>Otherwise, the result of invoking {@code toString()} on the object
 	 * will be returned.</li>
-	 * <li>If any of the above results in an exception, the String returned by
-	 * this method will be generated using the supplied object's class name and
-	 * hash code as follows:
-	 * {@code obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj))}</li>
+	 * <li>If any of the above results in an exception, this method delegates to
+	 * {@link #defaultToString(Object)}</li>
 	 * </ul>
 	 *
 	 * @param obj the object to convert to a String; may be {@code null}
@@ -181,8 +179,33 @@ public final class StringUtils {
 		catch (Throwable throwable) {
 			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
 
-			return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj));
+			return defaultToString(obj);
 		}
+	}
+
+	/**
+	 * Convert the supplied {@code Object} to a <em>default</em> {@code String}
+	 * representation using the following algorithm.
+	 *
+	 * <ul>
+	 * <li>If the supplied object is {@code null}, this method returns {@code "null"}.</li>
+	 * <li>Otherwise, the String returned by this method will be generated analogous
+	 * to the default implementation of {@link Object#toString()} by using the supplied
+	 * object's class name and hash code as follows:
+	 * {@code obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj))}</li>
+	 * </ul>
+	 *
+	 * @param obj the object to convert to a String; may be {@code null}
+	 * @return the default String representation of the supplied object; never {@code null}
+	 * @see #nullSafeToString(Object)
+	 * @see ClassUtils#nullSafeToString(Class...)
+	 */
+	public static String defaultToString(Object obj) {
+		if (obj == null) {
+			return "null";
+		}
+
+		return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj));
 	}
 
 	/**
@@ -214,4 +237,5 @@ public final class StringUtils {
 		Preconditions.notNull(replacement, "replacement must not be null");
 		return str == null ? null : WHITESPACE_PATTERN.matcher(str).replaceAll(replacement);
 	}
+
 }
