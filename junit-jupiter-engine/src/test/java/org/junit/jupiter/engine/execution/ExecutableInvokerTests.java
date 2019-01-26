@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -206,11 +207,12 @@ class ExecutableInvokerTests {
 
 		ParameterResolutionException caught = assertThrows(ParameterResolutionException.class, this::invokeMethod);
 
+		String className = Pattern.quote(ConfigurableParameterResolver.class.getName());
+
 		// @formatter:off
 		assertThat(caught.getMessage())
-				.contains("parameter [java.lang.String")
-				.contains("in method")
-				.contains(ConfigurableParameterResolver.class.getName() + ", " + ConfigurableParameterResolver.class.getName());
+				.matches("Discovered multiple competing ParameterResolvers for parameter \\[java.lang.String .+?\\] " +
+						"in method .+: " + className + "@.+, " + className + "@.+");
 		// @formatter:on
 	}
 
