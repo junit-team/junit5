@@ -353,7 +353,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@DisplayName("when @TempDir is used on constructor parameter")
 		@Order(8)
-		void resolvesSharedTempDirWhenAnnotationIsUsedOnConstructorParameter() {
+		void doesNotSupportTempDirAnnotationOnConstructorParameter() {
 			var results = executeTestsForClass(AnnotationOnConstructorParameterTestCase.class);
 
 			assertSingleFailedTest(results, ParameterResolutionException.class,
@@ -363,7 +363,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@DisplayName("when @TempDir is used on constructor parameter with @TestInstance(PER_CLASS)")
 		@Order(9)
-		void resolvesSharedTempDirWhenAnnotationIsUsedOnConstructorParameterWithTestInstancePerClass() {
+		void doesNotSupportTempDirAnnotationOnConstructorParameterWithTestInstancePerClass() {
 			var results = executeTestsForClass(AnnotationOnConstructorParameterWithTestInstancePerClassTestCase.class);
 
 			assertSingleFailedContainer(results, ParameterResolutionException.class,
