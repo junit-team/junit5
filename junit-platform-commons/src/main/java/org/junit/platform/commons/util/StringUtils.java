@@ -211,10 +211,10 @@ public final class StringUtils {
 	/**
 	 * Replace all ISO control characters in the supplied {@link String}.
 	 *
-	 * @param str the string to check; may be {@code null}
+	 * @param str the string in which to perform the replacement; may be {@code null}
 	 * @param replacement the replacement string; never {@code null}
-	 * @return The supplied string with all control characters replaced.
-	 *
+	 * @return the supplied string with all control characters replaced, or
+	 * {@code null} if the supplied string was {@code null}
 	 * @since 1.4
 	 */
 	@API(status = INTERNAL, since = "1.4")
@@ -226,10 +226,10 @@ public final class StringUtils {
 	/**
 	 * Replace all whitespace characters in the supplied {@link String}.
 	 *
-	 * @param str the string to check; may be {@code null}
+	 * @param str the string in which to perform the replacement; may be {@code null}
 	 * @param replacement the replacement string; never {@code null}
-	 * @return The supplied string with all whitespace characters replaced.
-	 *
+	 * @return the supplied string with all whitespace characters replaced, or
+	 * {@code null} if the supplied string was {@code null}
 	 * @since 1.4
 	 */
 	@API(status = INTERNAL, since = "1.4")
