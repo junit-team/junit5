@@ -31,7 +31,9 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* A change to the `TempDirectory` extension in 5.4.0-RC1 made it impossible for test
+  classes to have any parameters declared in their constructor if the `TempDirectory`
+  extension was registered at the class level. This regression has been fixed.
 
 ==== Deprecations and Breaking Changes
 
