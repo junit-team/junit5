@@ -111,6 +111,7 @@ tasks {
 		resources(delegateClosureOf<CopySpec> {
 			from(sourceDir) {
 				include("**/images/**")
+				include("tocbot-*/**")
 			}
 		})
 

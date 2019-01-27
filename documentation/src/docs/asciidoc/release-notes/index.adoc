@@ -3,7 +3,7 @@
 Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Christian Stein
 //
 :docinfodir: ../docinfos
-:docinfo: private-head
+:docinfo2:
 :numbered!:
 //
 

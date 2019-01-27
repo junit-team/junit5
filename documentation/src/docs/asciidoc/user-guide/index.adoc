@@ -5,14 +5,14 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Chri
 :imagesoutdir: {outdir}/user-guide/images
 //
 :docinfodir: ../docinfos
-:docinfo: private-head
+:docinfo2:
 //
 ifdef::backend-pdf[:imagesdir: {imagesoutdir}]
 //
 // Blank lines are not permitted in the doc-header: http://asciidoctor.org/docs/user-manual/#doc-header
 //
 :sectnums:
-:toclevels: 3
+:toclevels: 4
 //
 
 include::../link-attributes.adoc[]
