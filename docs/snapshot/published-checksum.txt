@@ -221,6 +221,7 @@
 5e90b2127e41d09abf274360956eeb0a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/JavaElementsResolver.java
 5f01a7b613df765a1d0d73b4772fc42d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertEquals.java
 5f3c697ebcd0442a8efbce5d34dad6ed  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayNameGenerator.java
+5fdfc2d668596634375c5358b3bda2a5  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-RC2.adoc
 5ff846c85eb5734602734985158e1f73  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/MethodSelector.java
 603ae49c8df304eb7aaebfca8495feed  documentation/src/test/java/example/SharedResourcesDemo.java
 60f96e25d25a51142183a855a6aa0e86  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutorService.java
@@ -602,7 +603,6 @@ f8ff9545052f8b24e7ecf57c786fb820  junit-vintage-engine/src/main/java/org/junit/v
 f9002139b027bef6974cddbcda2238ad  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueId.java
 f9166160c7cae7de504962a92eb367a4  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepeatedTestInvocationContext.java
 f94153d579f89eab0a979480a6a75e5a  documentation/src/main/java/example/util/Calculator.java
-f94edc51a17942be6ae691fffb908a7d  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-RC2.adoc
 f970013d69d23b0163abab4176207fb4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIf.java
 f9cebc3b1e61f67c4584abd8965e1d6c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/package-info.java
 fa35be3f0920fc29d4a7ede8975c5706  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assumptions.java
