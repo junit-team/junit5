@@ -190,7 +190,6 @@
 535538a8d8bde7b685f24482d0279ef6  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/ExpectedExceptionSupport.java
 53e3b422427c94c376730e20a23aafbe  junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncher.java
 53f6ce3703263802eef1aa866556a13d  documentation/src/main/java/example/registration/WebResponse.java
-53ff64101f14eeac220ae3fdeab74eae  documentation/src/docs/asciidoc/release-notes/index.adoc
 54069537609a0bba036fabf549148a0c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.java
 5461ea84b3840f01c162771254c7c854  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/CompositeLock.java
 54abe9b2f323c412be4c0f5f18060edc  documentation/src/docs/asciidoc/user-guide/launcher-api.adoc
@@ -447,6 +446,7 @@ b80d6784ea0c6c4509a349dd60cf2e54  junit-jupiter-engine/src/main/java/org/junit/j
 b896265621110a39085a86554e157274  documentation/src/test/java/example/HamcrestAssertionsDemo.java
 b94c071f76e00002ef35bb084d5609a5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/RepeatedTest.java
 b9fe38826efbff5a75f6bf057cf39ce4  documentation/src/docs/asciidoc/release-notes/release-notes-5.3.2.adoc
+ba0b8f6267e1fc33423105e829ece54d  documentation/src/docs/asciidoc/release-notes/index.adoc
 ba5344cacee9047b28ab7c46a311bc30  junit-platform-commons/src/main/java/org/junit/platform/commons/support/package-info.java
 bd0861a7cf8c8b2a16521f25fb2c1584  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedField.java
 bd3529611b07bd5936478efdf0c28018  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/EngineDescriptor.java
@@ -602,6 +602,7 @@ f8ff9545052f8b24e7ecf57c786fb820  junit-vintage-engine/src/main/java/org/junit/v
 f9002139b027bef6974cddbcda2238ad  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueId.java
 f9166160c7cae7de504962a92eb367a4  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepeatedTestInvocationContext.java
 f94153d579f89eab0a979480a6a75e5a  documentation/src/main/java/example/util/Calculator.java
+f94edc51a17942be6ae691fffb908a7d  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-RC2.adoc
 f970013d69d23b0163abab4176207fb4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIf.java
 f9cebc3b1e61f67c4584abd8965e1d6c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/package-info.java
 fa35be3f0920fc29d4a7ede8975c5706  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assumptions.java
