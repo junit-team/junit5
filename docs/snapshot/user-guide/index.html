@@ -4767,63 +4767,6 @@ then stores a <em>shared</em> temporary directory in a <code>static</code> field
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>In addition to the default file system for the local operating system, the <code>TempDirectory</code>
-extension can also be used with any <code>FileSystem</code> implementation&#8201;&#8212;&#8201;for example,
-<a href="https://github.com/google/jimfs">Jimfs</a>. In order to use a custom file system, register the
-extension <em>programmatically</em> via <code>@RegisterExtension</code> and supply a provider of a custom
-parent directory of type <code>Path</code>. The following example uses the Jimfs <code>FileSystem</code> and
-passes a custom <code>tmp</code> parent directory to the <code>createInCustomDirectory()</code> static factory
-method.</p>
-</div>
-<div class="listingblock">
-<div class="title">A test class that configures the TempDirectory extension to use a custom file system</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">TempDirectoryWithCustomFileSystemDemo</span> {
-
-    <span class="directive">private</span> <span class="directive">static</span> FileSystem fileSystem;
-
-    <span class="annotation">@BeforeAll</span>
-    <span class="directive">static</span> <span class="type">void</span> createFileSystem() {
-        fileSystem = Jimfs.newFileSystem(<span class="predefined-type">Configuration</span>.unix());
-    }
-
-    <span class="annotation">@AfterAll</span>
-    <span class="directive">static</span> <span class="type">void</span> closeFileSystem() <span class="directive">throws</span> <span class="exception">Exception</span> {
-        fileSystem.close();
-    }
-
-    <span class="annotation">@RegisterExtension</span>
-    Extension tempDirectory =
-        TempDirectory.createInCustomDirectory(() -&gt; fileSystem.getPath(<span class="string"><span class="delimiter">&quot;</span><span class="content">/</span><span class="delimiter">&quot;</span></span>));
-
-    <span class="annotation">@Test</span>
-    <span class="type">void</span> writesItemsToFile(<span class="annotation">@TempDir</span> Path tempDir) <span class="directive">throws</span> <span class="exception">IOException</span> {
-        Path file = tempDir.resolve(<span class="string"><span class="delimiter">&quot;</span><span class="content">test.txt</span><span class="delimiter">&quot;</span></span>);
-
-        <span class="keyword">new</span> ListWriter(file).write(<span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">b</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">c</span><span class="delimiter">&quot;</span></span>);
-
-        assertEquals(singletonList(<span class="string"><span class="delimiter">&quot;</span><span class="content">a,b,c</span><span class="delimiter">&quot;</span></span>), Files.readAllLines(file));
-    }
-
-}</code></pre>
-</div>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-If you configure a <code>FileSystem</code> that is not based on the default file system for
-the current operating system, declaring a field or parameter of type <code>File</code> for your
-temporary directory may result in an exception. If that occurs you will need to use <code>Path</code>
-instead of <code>File</code>.
-</td>
-</tr>
-</table>
-</div>
 </div>
 </div>
 </div>
@@ -8740,7 +8683,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-27 17:18:11 UTC
+Last updated 2019-01-27 17:52:26 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
