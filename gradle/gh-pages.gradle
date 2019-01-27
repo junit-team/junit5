@@ -13,6 +13,7 @@ task prepareDocsForUploadToGhPages(type: Copy) {
 	from("${project(':documentation').buildDir}/asciidoc") {
 		include 'user-guide/**'
 		include 'release-notes/**'
+		include 'tocbot-*/**'
 	}
 	from("$buildDir/docs") {
 		include 'javadoc/**'
