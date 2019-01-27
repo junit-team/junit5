@@ -522,6 +522,23 @@ table.CodeRay td.code>pre{padding:0}
 .CodeRay .change .change{color:#66f}
 .CodeRay .head .head{color:#f4f}
 </style>
+<style>
+  /* Tocbot dynamic TOC, works with tocbot 3.0.2 */
+  /* Source: https://github.com/asciidoctor/asciidoctor/issues/699#issuecomment-321066006 */
+  #tocbot a.toc-link.node-name--H1{ font-style: italic }
+  @media screen{
+    #tocbot > ul.toc-list{ margin-bottom: 0.5em; margin-left: 0.125em }
+    #tocbot ul.sectlevel0, #tocbot a.toc-link.node-name--H1 + ul{
+      padding-left: 0 }
+    #tocbot a.toc-link{ height:100% }
+    .is-collapsible{ max-height:3000px; overflow:hidden; }
+    .is-collapsed{ max-height:0 }
+    .is-active-link{ font-weight:700 }
+  }
+  @media print{
+    #tocbot a.toc-link.node-name--H4{ display:none }
+  }
+</style>
 <link rel="icon" type="image/png" href="https://junit.org/junit5/assets/img/junit5-logo.png" />
 </head>
 <body id="user-guide" class="article toc2 toc-left">
@@ -580,7 +597,11 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests-conditional-execution-jre">2.7.2. Java Runtime Environment Conditions</a></li>
 <li><a href="#writing-tests-conditional-execution-system-properties">2.7.3. System Property Conditions</a></li>
 <li><a href="#writing-tests-conditional-execution-environment-variables">2.7.4. Environment Variable Conditions</a></li>
-<li><a href="#writing-tests-conditional-execution-scripts">2.7.5. Script-based Conditions</a></li>
+<li><a href="#writing-tests-conditional-execution-scripts">2.7.5. Script-based Conditions</a>
+<ul class="sectlevel4">
+<li><a href="#writing-tests-conditional-execution-scripts-bindings">Script Bindings</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#writing-tests-tagging-and-filtering">2.8. Tagging and Filtering</a>
@@ -606,9 +627,29 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel3">
 <li><a href="#writing-tests-parameterized-tests-setup">2.15.1. Required Setup</a></li>
 <li><a href="#writing-tests-parameterized-tests-consuming-arguments">2.15.2. Consuming Arguments</a></li>
-<li><a href="#writing-tests-parameterized-tests-sources">2.15.3. Sources of Arguments</a></li>
-<li><a href="#writing-tests-parameterized-tests-argument-conversion">2.15.4. Argument Conversion</a></li>
-<li><a href="#writing-tests-parameterized-tests-argument-aggregation">2.15.5. Argument Aggregation</a></li>
+<li><a href="#writing-tests-parameterized-tests-sources">2.15.3. Sources of Arguments</a>
+<ul class="sectlevel4">
+<li><a href="#writing-tests-parameterized-tests-sources-ValueSource">@ValueSource</a></li>
+<li><a href="#writing-tests-parameterized-tests-sources-null-and-empty">Null and Empty Sources</a></li>
+<li><a href="#writing-tests-parameterized-tests-sources-EnumSource">@EnumSource</a></li>
+<li><a href="#writing-tests-parameterized-tests-sources-MethodSource">@MethodSource</a></li>
+<li><a href="#writing-tests-parameterized-tests-sources-CsvSource">@CsvSource</a></li>
+<li><a href="#writing-tests-parameterized-tests-sources-CsvFileSource">@CsvFileSource</a></li>
+<li><a href="#writing-tests-parameterized-tests-sources-ArgumentsSource">@ArgumentsSource</a></li>
+</ul>
+</li>
+<li><a href="#writing-tests-parameterized-tests-argument-conversion">2.15.4. Argument Conversion</a>
+<ul class="sectlevel4">
+<li><a href="#writing-tests-parameterized-tests-argument-conversion-widening">Widening Conversion</a></li>
+<li><a href="#writing-tests-parameterized-tests-argument-conversion-implicit">Implicit Conversion</a></li>
+<li><a href="#writing-tests-parameterized-tests-argument-conversion-explicit">Explicit Conversion</a></li>
+</ul>
+</li>
+<li><a href="#writing-tests-parameterized-tests-argument-aggregation">2.15.5. Argument Aggregation</a>
+<ul class="sectlevel4">
+<li><a href="#writing-tests-parameterized-tests-argument-aggregation-custom">Custom Aggregators</a></li>
+</ul>
+</li>
 <li><a href="#writing-tests-parameterized-tests-display-names">2.15.6. Customizing Display Names</a></li>
 <li><a href="#writing-tests-parameterized-tests-lifecycle-interop">2.15.7. Lifecycle and Interoperability</a></li>
 </ul>
@@ -657,9 +698,26 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#running-tests-build">4.2. Build Support</a>
 <ul class="sectlevel3">
-<li><a href="#running-tests-build-gradle">4.2.1. Gradle</a></li>
-<li><a href="#running-tests-build-maven">4.2.2. Maven</a></li>
-<li><a href="#running-tests-build-ant">4.2.3. Ant</a></li>
+<li><a href="#running-tests-build-gradle">4.2.1. Gradle</a>
+<ul class="sectlevel4">
+<li><a href="#running-tests-build-gradle-config-params">Configuration Parameters</a></li>
+<li><a href="#running-tests-build-gradle-engines-configure">Configuring Test Engines</a></li>
+<li><a href="#running-tests-build-gradle-logging">Configuring Logging (optional)</a></li>
+</ul>
+</li>
+<li><a href="#running-tests-build-maven">4.2.2. Maven</a>
+<ul class="sectlevel4">
+<li><a href="#running-tests-build-maven-engines-configure">Configuring Test Engines</a></li>
+<li><a href="#running-tests-build-maven-filter-test-class-names">Filtering by Test Class Names</a></li>
+<li><a href="#running-tests-build-maven-filter-tags">Filtering by Tags</a></li>
+<li><a href="#running-tests-build-maven-config-params">Configuration Parameters</a></li>
+</ul>
+</li>
+<li><a href="#running-tests-build-ant">4.2.3. Ant</a>
+<ul class="sectlevel4">
+<li><a href="#basic-usage">Basic Usage</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#running-tests-console-launcher">4.3. Console Launcher</a>
@@ -670,7 +728,12 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#running-tests-junit-platform-runner">4.4. Using JUnit 4 to run the JUnit Platform</a>
 <ul class="sectlevel3">
-<li><a href="#running-tests-junit-platform-runner-setup">4.4.1. Setup</a></li>
+<li><a href="#running-tests-junit-platform-runner-setup">4.4.1. Setup</a>
+<ul class="sectlevel4">
+<li><a href="#explicit-dependencies">Explicit Dependencies</a></li>
+<li><a href="#transitive-dependencies">Transitive Dependencies</a></li>
+</ul>
+</li>
 <li><a href="#running-tests-junit-platform-runner-technical-names">4.4.2. Display Names vs. Technical Names</a></li>
 <li><a href="#running-tests-junit-platform-runner-single-test">4.4.3. Single Test Class</a></li>
 <li><a href="#running-tests-junit-platform-runner-test-suite">4.4.4. Test Suite</a></li>
@@ -687,14 +750,28 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#extensions-registration">5.2. Registering Extensions</a>
 <ul class="sectlevel3">
 <li><a href="#extensions-registration-declarative">5.2.1. Declarative Extension Registration</a></li>
-<li><a href="#extensions-registration-programmatic">5.2.2. Programmatic Extension Registration</a></li>
-<li><a href="#extensions-registration-automatic">5.2.3. Automatic Extension Registration</a></li>
+<li><a href="#extensions-registration-programmatic">5.2.2. Programmatic Extension Registration</a>
+<ul class="sectlevel4">
+<li><a href="#extensions-registration-programmatic-static-fields">Static Fields</a></li>
+<li><a href="#extensions-registration-programmatic-static-fields-kotlin">Static Fields in Kotlin</a></li>
+<li><a href="#extensions-registration-programmatic-instance-fields">Instance Fields</a></li>
+</ul>
+</li>
+<li><a href="#extensions-registration-automatic">5.2.3. Automatic Extension Registration</a>
+<ul class="sectlevel4">
+<li><a href="#extensions-registration-automatic-enabling">Enabling Automatic Extension Detection</a></li>
+</ul>
+</li>
 <li><a href="#extensions-registration-inheritance">5.2.4. Extension Inheritance</a></li>
 </ul>
 </li>
 <li><a href="#extensions-conditions">5.3. Conditional Test Execution</a>
 <ul class="sectlevel3">
-<li><a href="#extensions-conditions-deactivation">5.3.1. Deactivating Conditions</a></li>
+<li><a href="#extensions-conditions-deactivation">5.3.1. Deactivating Conditions</a>
+<ul class="sectlevel4">
+<li><a href="#extensions-conditions-deactivation-patterns">Pattern Matching Syntax</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#extensions-test-instance-factories">5.4. Test Instance Factories</a></li>
@@ -8663,8 +8740,41 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-26 16:37:37 UTC
+Last updated 2019-01-27 12:45:52 UTC
 </div>
 </div>
+<script src="../tocbot-3.0.2/tocbot.min.js"></script>
+<script>
+    /* Tocbot dynamic TOC, works with tocbot 3.0.2 */
+    /* Source: https://github.com/asciidoctor/asciidoctor/issues/699#issuecomment-321066006 */
+    var oldtoc = document.getElementById('toctitle').nextElementSibling;
+    var newtoc = document.createElement('div');
+    newtoc.setAttribute('id', 'tocbot');
+    newtoc.setAttribute('class', 'js-toc');
+    oldtoc.parentNode.replaceChild(newtoc, oldtoc);
+    tocbot.init({ contentSelector: '#content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        smoothScroll: false });
+    var handleTocOnResize = function() {
+        var width = window.innerWidth
+                    || document.documentElement.clientWidth
+                    || document.body.clientWidth;
+        if (width < 768) {
+            tocbot.refresh({ contentSelector: '#content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 6,
+                activeLinkClass: 'ignoreactive',
+                throttleTimeout: 1000,
+                smoothScroll: false });
+        }
+        else {
+            tocbot.refresh({ contentSelector: '#content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                smoothScroll: false });
+        }
+    };
+    window.addEventListener('resize', handleTocOnResize);
+    handleTocOnResize();
+</script>
 </body>
 </html>
