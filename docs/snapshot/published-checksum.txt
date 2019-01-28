@@ -446,7 +446,6 @@ b896265621110a39085a86554e157274  documentation/src/test/java/example/HamcrestAs
 b94c071f76e00002ef35bb084d5609a5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/RepeatedTest.java
 b9fe38826efbff5a75f6bf057cf39ce4  documentation/src/docs/asciidoc/release-notes/release-notes-5.3.2.adoc
 ba0b8f6267e1fc33423105e829ece54d  documentation/src/docs/asciidoc/release-notes/index.adoc
-ba0ef3c260696067eb03b3e489968c17  documentation/src/docs/asciidoc/link-attributes.adoc
 ba5344cacee9047b28ab7c46a311bc30  junit-platform-commons/src/main/java/org/junit/platform/commons/support/package-info.java
 bd0861a7cf8c8b2a16521f25fb2c1584  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedField.java
 bd3529611b07bd5936478efdf0c28018  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/EngineDescriptor.java
@@ -530,6 +529,7 @@ db2e98900785b50b6a69ea0f9c58461d  junit-platform-console/src/main/java/org/junit
 db3513030987ecfb84fde3893cd02601  documentation/src/test/java/example/testinterface/TestInterfaceDemo.java
 db52e52e7246321e4dfba1cf19fb90cf  junit-jupiter-params/src/main/java/org/junit/jupiter/params/support/AnnotationConsumerInitializer.java
 db570ec1abefa4c0cc3043c26940eb2d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/package-info.java
+db72e15f1baf98a7db4ee6c405c27b76  documentation/src/docs/asciidoc/link-attributes.adoc
 dc26873f09592368c9e43cf9d9ec99c2  junit-platform-engine/src/main/java/org/junit/platform/engine/support/filter/ClasspathScanningSupport.java
 dc532b08f728f06d0ca7dca036a61297  junit-platform-console/src/main/java/org/junit/platform/console/tasks/Color.java
 dca6da471ddade4325725706788f060b  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/package-info.java
