@@ -1024,8 +1024,8 @@ of the combinations you can choose from.</p>
 framework.</p>
 </div>
 <div class="paragraph">
-<p>All core annotations are located in the <code><a href="../api/org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a></code> package in the <code>junit-jupiter-api</code>
-module.</p>
+<p>Unless otherwise stated, all core annotations are located in the <code><a href="../api/org/junit/jupiter/api/package-summary.html">org.junit.jupiter.api</a></code> package
+in the <code>junit-jupiter-api</code> module.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1110,6 +1110,10 @@ module.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@RegisterExtension</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Used to <a href="#extensions-registration-programmatic">register extensions programmatically</a> via fields. Such fields are <em>inherited</em> unless they are <em>shadowed</em>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TempDir</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to supply a <a href="#writing-tests-built-in-extensions-TempDirectory">temporary directory</a> via field injection or parameter injection in a lifecycle method or test method; located in the <code>org.junit.jupiter.api.io</code> package.</p></td>
 </tr>
 </tbody>
 </table>
@@ -4698,15 +4702,16 @@ another dependency.</p>
 <div class="sect3">
 <h4 id="writing-tests-built-in-extensions-TempDirectory"><a class="anchor" href="#writing-tests-built-in-extensions-TempDirectory"></a>2.19.1. The TempDirectory Extension</h4>
 <div class="paragraph">
-<p>The <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java">TempDirectory</a></code> extension can be used to create and clean up a temporary directory
-for an individual test or all tests in a test class. To use it, register the extension and
-then annotate a field of type <code>java.nio.file.Path</code> or <code>java.io.File</code> with <code><a href="../api/org/junit/jupiter/api/io/TempDir.html">@TempDir</a></code> or
-add a parameter of type <code>java.nio.file.Path</code> or <code>java.io.File</code> annotated with <code>@TempDir</code>
-to a lifecycle method or test method.</p>
+<p>The built-in <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java">TempDirectory</a></code> extension is used to create and clean up a temporary
+directory for an individual test or all tests in a test class. It is registered by
+default. To use it, annotate a field of type <code>java.nio.file.Path</code> or <code>java.io.File</code> with
+<code><a href="../api/org/junit/jupiter/api/io/TempDir.html">@TempDir</a></code> or add a parameter of type <code>java.nio.file.Path</code> or <code>java.io.File</code> annotated
+with <code>@TempDir</code> to a lifecycle method or test method.</p>
 </div>
 <div class="paragraph">
-<p>For example, the following test registers the <code>TempDirectory</code> extension for a single test
-method, creates and writes to a file in the temporary directory, and checks its content.</p>
+<p>For example, the following test declares a parameter annotated with <code>@TempDir</code> for a
+single test method, creates and writes to a file in the temporary directory, and checks
+its content.</p>
 </div>
 <div class="listingblock">
 <div class="title">A test method that requires a temporary directory</div>
@@ -4736,9 +4741,9 @@ please use field injection, by annotating an instance field with <code>@TempDir<
 </table>
 </div>
 <div class="paragraph">
-<p>The following example registers the <code>TempDirectory</code> extension for the entire class and
-then stores a <em>shared</em> temporary directory in a <code>static</code> field. This allows the same
-<code>sharedTempDir</code> to be used in all lifecycle methods and test methods of the test class.</p>
+<p>The following example stores a <em>shared</em> temporary directory in a <code>static</code> field. This
+allows the same <code>sharedTempDir</code> to be used in all lifecycle methods and test methods of
+the test class.</p>
 </div>
 <div class="listingblock">
 <div class="title">A test class that shares a temporary directory across test methods</div>
@@ -8681,7 +8686,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-28 11:41:05 UTC
+Last updated 2019-01-28 11:46:36 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

@@ -110,6 +110,7 @@
 358d818948d3cfe6c3ba96c6f07624ab  junit-platform-commons/src/main/java/org/junit/platform/commons/util/BlacklistedExceptions.java
 364e2d6ff9aef5ed85ee85c1a008f2bd  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateExtensionContext.java
 36c3996946a5cb5ed1fe4baca9857c31  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingSupplier.java
+370b18a287881c60a450e8c9356fe436  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 37c2bd22501fdf23063946c427dce995  junit-platform-engine/src/main/java/org/junit/platform/engine/TestDescriptor.java
 386ece4858b64381bffc4218bb101735  documentation/src/test/java/example/CustomTestEngine.java
 38c1a9a89986943e19f29fe41b9c5078  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestInstanceLifecycleUtils.java
@@ -379,7 +380,6 @@
 9cf14e0949d123bc76644377e7e33916  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ClassSupport.java
 9da415a935f10a977b776b5a99caa010  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestPlan.java
 9dc91026328a4f7e28f9652d5c5557a4  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/RunnerTestDescriptorAwareFilter.java
-9f655932303e2f1012b7cb7392eeea44  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 9f6a618caf103a2d0cbdcf31644e1cad  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/DefaultParameterContext.java
 a017ac3a4a4e757cd70928019fa5653d  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
 a0d163927c7de8f97169d9202f298ff7  documentation/src/test/java/example/IgnoredTestsDemo.java
