@@ -616,7 +616,8 @@ authors as well as build tool and IDE vendors.</p>
 <p><strong>Date of Release:</strong> ❓</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> minor improvements and bug fixes since 5.4.0-RC1.</p>
+<p><strong>Scope:</strong> Simplification of the <code>@TempDir</code> support, as well as minor improvements and bug
+fixes since 5.4.0-RC1.</p>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
@@ -625,12 +626,20 @@ repository on GitHub.</p>
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.4.0-RC2-junit-platform"><a class="anchor" href="#release-notes-5.4.0-RC2-junit-platform"></a>JUnit Platform</h3>
+<div class="paragraph">
+<p>No changes</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.4.0-RC2-junit-jupiter"><a class="anchor" href="#release-notes-5.4.0-RC2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
 <h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>A change to the <code>TempDirectory</code> extension in 5.4.0-RC1 made it impossible for test
+classes to have any parameters declared in their constructor if the <code>TempDirectory</code>
+extension was registered. This regression has been fixed.</p>
 </li>
 </ul>
 </div>
@@ -640,7 +649,25 @@ repository on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The implementation of the <code>TempDirectory</code> extension is now internal to the
+<code>JupiterTestEngine</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Declarations of <code>@ExtendWith(TempDirectory.class)</code> will now result in a compiler
+error; however, explicit registration is no longer necessary since the <code>TempDirectory</code>
+extension is now registered automatically.</p>
+</li>
+<li>
+<p>The <code>ParentDirProvider</code> and <code>TempDirContext</code> APIs and corresponding factory methods in
+the <code>TempDirectory</code> extension have been removed without replacement. <code>@TempDir</code> can
+therefore no longer be configured with a custom file system or custom parent directory.</p>
+</li>
+<li>
+<p>See the <a href="../user-guide/index.html#writing-tests-built-in-extensions-TempDirectory">User Guide</a> for details.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -650,42 +677,15 @@ repository on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.4.0-RC2-junit-jupiter"><a class="anchor" href="#release-notes-5.4.0-RC2-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
+<p><code>@TempDir</code> can now be used without the need to explicitly register the <code>TempDirectory</code>
+(which is now an internal implementation).</p>
 <div class="ulist">
 <ul>
 <li>
-<p>A change to the <code>TempDirectory</code> extension in 5.4.0-RC1 made it impossible for test
-classes to have any parameters declared in their constructor if the <code>TempDirectory</code>
-extension was registered at the class level. This regression has been fixed.</p>
+<p>See the <a href="../user-guide/index.html#writing-tests-built-in-extensions-TempDirectory">User Guide</a> for examples.</p>
 </li>
 </ul>
 </div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
 </li>
 </ul>
 </div>
@@ -693,35 +693,8 @@ extension was registered at the class level. This regression has been fixed.</p>
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.4.0-RC2-junit-vintage"><a class="anchor" href="#release-notes-5.4.0-RC2-junit-vintage"></a>JUnit Vintage</h3>
-<div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
+<div class="paragraph">
+<p>No changes</p>
 </div>
 </div>
 </div>
@@ -757,7 +730,7 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.0-RC1-junit-platform"><a class="anchor" href="#release-notes-5.4.0-RC1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-4"><a class="anchor" href="#deprecations-and-breaking-changes-4"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-2"><a class="anchor" href="#deprecations-and-breaking-changes-2"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -769,7 +742,7 @@ being, IDEs and build tools should remove any such code as soon as possible.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -825,7 +798,7 @@ single dot (<code>.</code>).</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.0-RC1-junit-jupiter"><a class="anchor" href="#release-notes-5.4.0-RC1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -846,7 +819,7 @@ parameters&#8201;&#8212;&#8201;for example, <code>{0,number,#.##}</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-5"><a class="anchor" href="#deprecations-and-breaking-changes-5"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -861,7 +834,7 @@ Please use field injection instead.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -918,7 +891,7 @@ TempDirectory Extension</a> in the User Guide for details.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.0-RC1-junit-vintage"><a class="anchor" href="#release-notes-5.4.0-RC1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -931,7 +904,7 @@ Surefire.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -966,7 +939,7 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.0-M1-junit-platform"><a class="anchor" href="#release-notes-5.4.0-M1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -998,7 +971,7 @@ properly by user code.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-6"><a class="anchor" href="#deprecations-and-breaking-changes-6"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-4"><a class="anchor" href="#deprecations-and-breaking-changes-4"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1012,7 +985,7 @@ higher).</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-7"><a class="anchor" href="#new-features-and-improvements-7"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1070,7 +1043,7 @@ invocation of <code>Node.before()</code>, <code>Node.execute()</code>, and <code
 <div class="sect2">
 <h3 id="release-notes-5.4.0-M1-junit-jupiter"><a class="anchor" href="#release-notes-5.4.0-M1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1082,7 +1055,7 @@ the same thread, even if parallel execution is enabled.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="deprecations-and-breaking-changes-7"><a class="anchor" href="#deprecations-and-breaking-changes-7"></a>Deprecations and Breaking Changes</h4>
+<h4 id="deprecations-and-breaking-changes-5"><a class="anchor" href="#deprecations-and-breaking-changes-5"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1097,7 +1070,7 @@ configuration parameter. Please refer to the
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-8"><a class="anchor" href="#new-features-and-improvements-8"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1236,7 +1209,7 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.3.2-junit-platform"><a class="anchor" href="#release-notes-5.3.2-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1251,7 +1224,7 @@ specifiers such as <code>%c</code>.</p>
 <div class="sect2">
 <h3 id="release-notes-5.3.2-junit-jupiter"><a class="anchor" href="#release-notes-5.3.2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1326,7 +1299,7 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.3.1-junit-platform"><a class="anchor" href="#release-notes-5.3.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-10"><a class="anchor" href="#bug-fixes-10"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1359,7 +1332,7 @@ messages to be discarded when used from Gradle and potentially other tools and I
 <div class="sect2">
 <h3 id="release-notes-5.3.1-junit-jupiter"><a class="anchor" href="#release-notes-5.3.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-11"><a class="anchor" href="#bug-fixes-11"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1421,7 +1394,7 @@ well as various minor improvements and bug fixes.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-28 14:03:50 UTC
+Last updated 2019-01-28 14:28:49 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
