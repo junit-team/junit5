@@ -4712,7 +4712,6 @@ method, creates and writes to a file in the temporary directory, and checks its 
 <div class="title">A test method that requires a temporary directory</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Test</span>
-<span class="annotation">@ExtendWith</span>(TempDirectory.class)
 <span class="type">void</span> writeItemsToFile(<span class="annotation">@TempDir</span> Path tempDir) <span class="directive">throws</span> <span class="exception">IOException</span> {
     Path file = tempDir.resolve(<span class="string"><span class="delimiter">&quot;</span><span class="content">test.txt</span><span class="delimiter">&quot;</span></span>);
 
@@ -4744,8 +4743,7 @@ then stores a <em>shared</em> temporary directory in a <code>static</code> field
 <div class="listingblock">
 <div class="title">A test class that shares a temporary directory across test methods</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ExtendWith</span>(TempDirectory.class)
-<span class="type">class</span> <span class="class">SharedTempDirectoryDemo</span> {
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">SharedTempDirectoryDemo</span> {
 
     <span class="annotation">@TempDir</span>
     <span class="directive">static</span> Path sharedTempDir;
@@ -8120,11 +8118,6 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.3</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.support.io</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TempDirectory</code> <em>(class)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.migrationsupport</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>EnableJUnit4MigrationSupport</code> <em>(annotation)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
@@ -8683,7 +8676,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-01-28 10:51:58 UTC
+Last updated 2019-01-28 11:17:33 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
