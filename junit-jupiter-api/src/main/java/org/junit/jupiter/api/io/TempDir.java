@@ -57,8 +57,8 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * the test method or class has finished execution, JUnit will attempt to
  * recursively delete all files and directories in the temporary directory
  * and, finally, the temporary directory itself. In case deletion of a file or
- * directory fails, this extension will throw an {@link IOException} that will
- * cause the test or test class to fail.
+ * directory fails, an {@link IOException} will be thrown that will cause the
+ * test or test class to fail.
  *
  * @since 5.4
  */
