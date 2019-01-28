@@ -382,7 +382,6 @@
 9f6a618caf103a2d0cbdcf31644e1cad  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/DefaultParameterContext.java
 a017ac3a4a4e757cd70928019fa5653d  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
 a0d163927c7de8f97169d9202f298ff7  documentation/src/test/java/example/IgnoredTestsDemo.java
-a0ec1085d6f6b2fc6f105e54ff4847de  documentation/src/docs/asciidoc/docinfos/docinfo.html
 a0f8100d0bcf86631ddf73019272b077  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/TagExpressions.java
 a12b6c9b061abe1c784b9afe52683a47  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/Filterable.java
 a13e307b638a6586a01e562005110e54  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledOnJreCondition.java
@@ -473,6 +472,7 @@ c51b51824647aaf053fb126fa132ae1b  junit-platform-engine/src/main/java/org/junit/
 c5f3033e8bec0aec0829b10ce9fc49a1  junit-platform-commons/src/main/java/org/junit/platform/commons/util/PackageUtils.java
 c5ffd6a8568f2971e977f876223f99f0  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvSource.java
 c64645b8407543c680a8e6fafefe6011  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/MethodSource.java
+c665cbffd3af83710d24959605b66d5b  documentation/src/docs/asciidoc/docinfos/docinfo.html
 c67a7b29971995c2b11b7144691b0988  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterContext.java
 c75a351306c5d352b46ef55d309327ac  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledOnOs.java
 c77f25d530f08066bf21f2e0eae29e7a  documentation/src/docs/asciidoc/docinfos/docinfo-footer.html
@@ -581,7 +581,6 @@ efcbfc6d050b751d344c62b958ab8af0  junit-platform-launcher/src/main/java/org/juni
 eff90a7cb1dfa7206dca42ea0e986f7c  junit-platform-testkit/src/main/java/org/junit/platform/testkit/package-info.java
 f012f93a6db563a6fa14e09d4e8a6aef  junit-vintage-engine/src/main/java/org/junit/vintage/engine/support/UniqueIdStringifier.java
 f02b067dd26ff65062706c42c2aff2c6  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/package-info.java
-f049f59e0faf16a11c7105b9bc8d7bd1  documentation/src/docs/asciidoc/docinfos/index-docinfo.html
 f08ec93048fdd5b2fdcde96b48b1d90c  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/TestExecutionSummary.java
 f12dddde4058f12477f7f738aff75d95  documentation/src/test/java/example/DynamicTestsDemo.java
 f1762a519ec6c0fc1ff8ba86ed0e5145  documentation/src/test/java/example/TestReporterDemo.java
