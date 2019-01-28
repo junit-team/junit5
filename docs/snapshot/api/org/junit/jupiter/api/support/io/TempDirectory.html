@@ -90,7 +90,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -147,7 +147,7 @@ implements <a href="../../extension/BeforeAllCallback.html" title="interface in 
 
  <p>The temporary directory is only created if a field in a test class or a
  parameter in a lifecycle method or test method is annotated with
- <a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io"><code>@TempDir</code></a>. If the field type or parameter type is neither
+ <a href="../../io/TempDir.html" title="annotation in org.junit.jupiter.api.io"><code>@TempDir</code></a>. If the field type or parameter type is neither
  <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> nor <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>File</code></a> or if the temporary directory cannot be created,
  this extension will throw an <a href="../../extension/ExtensionConfigurationException.html" title="class in org.junit.jupiter.api.extension"><code>ExtensionConfigurationException</code></a> or a
  <a href="../../extension/ParameterResolutionException.html" title="class in org.junit.jupiter.api.extension"><code>ParameterResolutionException</code></a> as appropriate. In addition, this
@@ -174,7 +174,7 @@ implements <a href="../../extension/BeforeAllCallback.html" title="interface in 
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.4</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io"><code>TempDirectory.TempDir</code></a>, 
+<dd><a href="../../io/TempDir.html" title="annotation in org.junit.jupiter.api.io"><code>TempDir</code></a>, 
 <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Files.html?is-external=true#createTempDirectory(java.nio.file.Path,java.lang.String,java.nio.file.attribute.FileAttribute...)" title="class or interface in java.nio.file" class="externalLink"><code>Files.createTempDirectory(java.nio.file.Path, java.lang.String, java.nio.file.attribute.FileAttribute&lt;?&gt;...)</code></a></dd>
 </dl>
 </li>
@@ -183,33 +183,6 @@ implements <a href="../../extension/BeforeAllCallback.html" title="interface in 
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
-<!-- ======== NESTED CLASS SUMMARY ======== -->
-<section role="region">
-<ul class="blockList">
-<li class="blockList"><a id="nested.class.summary">
-<!--   -->
-</a>
-<h3>Nested Class Summary</h3>
-<table class="memberSummary">
-<caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Class</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>static interface&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io">TempDirectory.TempDir</a></span></code></th>
-<td class="colLast">
-<div class="block"><code>@TempDir</code> can be used to annotate a field in a test class or a
- parameter in a lifecycle method or test method of type <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> or
- <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>File</code></a> that should be resolved into a temporary directory.</div>
-</td>
-</tr>
-</table>
-</li>
-</ul>
-</section>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <section role="region">
 <ul class="blockList">
@@ -251,7 +224,7 @@ implements <a href="../../extension/BeforeAllCallback.html" title="interface in 
 <td class="colLast">
 <div class="block">Perform field injection for non-private, <code>static</code> fields (i.e.,
  class fields) of type <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> or <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>File</code></a> that are annotated with
- <a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io"><code>@TempDir</code></a>.</div>
+ <a href="../../io/TempDir.html" title="annotation in org.junit.jupiter.api.io"><code>@TempDir</code></a>.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -260,7 +233,7 @@ implements <a href="../../extension/BeforeAllCallback.html" title="interface in 
 <td class="colLast">
 <div class="block">Perform field injection for non-private, non-static fields (i.e.,
  instance fields) of type <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> or <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>File</code></a> that are annotated
- with <a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io"><code>@TempDir</code></a>.</div>
+ with <a href="../../io/TempDir.html" title="annotation in org.junit.jupiter.api.io"><code>@TempDir</code></a>.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
@@ -278,7 +251,7 @@ implements <a href="../../extension/BeforeAllCallback.html" title="interface in 
                  <a href="../../extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
 <td class="colLast">
 <div class="block">Determine if the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Parameter</code></a> in the supplied <a href="../../extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterContext</code></a>
- is annotated with <a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io"><code>@TempDir</code></a>.</div>
+ is annotated with <a href="../../io/TempDir.html" title="annotation in org.junit.jupiter.api.io"><code>@TempDir</code></a>.</div>
 </td>
 </tr>
 </table>
@@ -334,7 +307,7 @@ implements <a href="../../extension/BeforeAllCallback.html" title="interface in 
                throws <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a></pre>
 <div class="block">Perform field injection for non-private, <code>static</code> fields (i.e.,
  class fields) of type <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> or <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>File</code></a> that are annotated with
- <a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io"><code>@TempDir</code></a>.</div>
+ <a href="../../io/TempDir.html" title="annotation in org.junit.jupiter.api.io"><code>@TempDir</code></a>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../extension/BeforeAllCallback.html#beforeAll(org.junit.jupiter.api.extension.ExtensionContext)">beforeAll</a></code>&nbsp;in interface&nbsp;<code><a href="../../extension/BeforeAllCallback.html" title="interface in org.junit.jupiter.api.extension">BeforeAllCallback</a></code></dd>
@@ -355,7 +328,7 @@ implements <a href="../../extension/BeforeAllCallback.html" title="interface in 
                 throws <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a></pre>
 <div class="block">Perform field injection for non-private, non-static fields (i.e.,
  instance fields) of type <a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html?is-external=true" title="class or interface in java.nio.file" class="externalLink"><code>Path</code></a> or <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>File</code></a> that are annotated
- with <a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io"><code>@TempDir</code></a>.</div>
+ with <a href="../../io/TempDir.html" title="annotation in org.junit.jupiter.api.io"><code>@TempDir</code></a>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../extension/BeforeEachCallback.html#beforeEach(org.junit.jupiter.api.extension.ExtensionContext)">beforeEach</a></code>&nbsp;in interface&nbsp;<code><a href="../../extension/BeforeEachCallback.html" title="interface in org.junit.jupiter.api.extension">BeforeEachCallback</a></code></dd>
@@ -375,7 +348,7 @@ implements <a href="../../extension/BeforeAllCallback.html" title="interface in 
 <pre class="methodSignature">public&nbsp;boolean&nbsp;supportsParameter&#8203;(<a href="../../extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;parameterContext,
                                  <a href="../../extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</pre>
 <div class="block">Determine if the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Parameter</code></a> in the supplied <a href="../../extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterContext</code></a>
- is annotated with <a href="TempDirectory.TempDir.html" title="annotation in org.junit.jupiter.api.support.io"><code>@TempDir</code></a>.</div>
+ is annotated with <a href="../../io/TempDir.html" title="annotation in org.junit.jupiter.api.io"><code>@TempDir</code></a>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../extension/ParameterResolver.html#supportsParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">supportsParameter</a></code>&nbsp;in interface&nbsp;<code><a href="../../extension/ParameterResolver.html" title="interface in org.junit.jupiter.api.extension">ParameterResolver</a></code></dd>
@@ -472,7 +445,7 @@ implements <a href="../../extension/BeforeAllCallback.html" title="interface in 
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
