@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.api.io;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Documented;
@@ -19,6 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.file.Path;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 
@@ -56,9 +59,12 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * and, finally, the temporary directory itself. In case deletion of a file or
  * directory fails, this extension will throw an {@link IOException} that will
  * cause the test or test class to fail.
+ *
+ * @since 5.4
  */
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@API(status = EXPERIMENTAL, since = "5.4")
 public @interface TempDir {
 }
