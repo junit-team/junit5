@@ -154,8 +154,8 @@ public @interface <span class="memberNameLabel">TempDir</span></pre>
  the test method or class has finished execution, JUnit will attempt to
  recursively delete all files and directories in the temporary directory
  and, finally, the temporary directory itself. In case deletion of a file or
- directory fails, this extension will throw an <a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>IOException</code></a> that will
- cause the test or test class to fail.</div>
+ directory fails, an <a href="https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>IOException</code></a> will be thrown that will cause the
+ test or test class to fail.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.4</dd>
