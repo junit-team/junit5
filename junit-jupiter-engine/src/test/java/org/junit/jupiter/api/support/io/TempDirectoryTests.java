@@ -47,7 +47,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.junit.jupiter.api.support.io.TempDirectory.TempDir;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 

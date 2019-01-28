@@ -19,11 +19,6 @@ import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
@@ -46,6 +41,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -85,23 +81,6 @@ import org.junit.platform.commons.util.ReflectionUtils;
  */
 @API(status = EXPERIMENTAL, since = "5.4")
 public final class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterResolver {
-
-	/**
-	 * {@code @TempDir} can be used to annotate a field in a test class or a
-	 * parameter in a lifecycle method or test method of type {@link Path} or
-	 * {@link File} that should be resolved into a temporary directory.
-	 *
-	 * <p>Please note that {@code @TempDir} is not supported on constructor
-	 * parameters. Please use field injection instead, by annotating an
-	 * instance field with {@code @TempDir}.
-	 *
-	 * @see TempDirectory
-	 */
-	@Target({ ElementType.FIELD, ElementType.PARAMETER })
-	@Retention(RetentionPolicy.RUNTIME)
-	@Documented
-	public @interface TempDir {
-	}
 
 	private static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
 	private static final String KEY = "temp.dir";

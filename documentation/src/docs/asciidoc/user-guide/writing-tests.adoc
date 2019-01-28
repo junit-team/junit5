@@ -1656,7 +1656,7 @@ another dependency.
 
 The `{TempDirectory}` extension can be used to create and clean up a temporary directory
 for an individual test or all tests in a test class. To use it, register the extension and
-then annotate a field of type `java.nio.file.Path` or `java.io.File` with `@TempDir` or
+then annotate a field of type `java.nio.file.Path` or `java.io.File` with `{TempDir}` or
 add a parameter of type `java.nio.file.Path` or `java.io.File` annotated with `@TempDir`
 to a lifecycle method or test method.
 
