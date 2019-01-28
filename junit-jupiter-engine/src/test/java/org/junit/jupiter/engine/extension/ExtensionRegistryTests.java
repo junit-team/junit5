@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ParameterResolver;
@@ -39,6 +40,8 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
  */
 class ExtensionRegistryTests {
 
+	private static final int NUM_DEFAULT_EXTENSIONS = 6;
+
 	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
 
 	private ExtensionRegistry registry = createRegistryWithDefaultExtensions(configuration);
@@ -47,7 +50,7 @@ class ExtensionRegistryTests {
 	void newRegistryWithoutParentHasDefaultExtensions() {
 		List<Extension> extensions = registry.getExtensions(Extension.class);
 
-		assertEquals(5, extensions.size());
+		assertEquals(NUM_DEFAULT_EXTENSIONS, extensions.size());
 		assertDefaultGlobalExtensionsAreRegistered();
 	}
 
@@ -59,11 +62,11 @@ class ExtensionRegistryTests {
 
 		List<Extension> extensions = registry.getExtensions(Extension.class);
 
-		assertEquals(6, extensions.size());
-		assertDefaultGlobalExtensionsAreRegistered();
+		assertEquals(NUM_DEFAULT_EXTENSIONS + 1, extensions.size());
+		assertDefaultGlobalExtensionsAreRegistered(2);
 
 		assertExtensionRegistered(registry, ServiceLoaderExtension.class);
-		assertEquals(1, countExtensions(registry, BeforeAllCallback.class));
+		assertEquals(2, countExtensions(registry, BeforeAllCallback.class));
 	}
 
 	@Test
@@ -152,13 +155,20 @@ class ExtensionRegistryTests {
 	}
 
 	private void assertDefaultGlobalExtensionsAreRegistered() {
+		assertDefaultGlobalExtensionsAreRegistered(1);
+	}
+
+	private void assertDefaultGlobalExtensionsAreRegistered(long bacCount) {
 		assertExtensionRegistered(registry, DisabledCondition.class);
 		assertExtensionRegistered(registry, ScriptExecutionCondition.class);
+		assertExtensionRegistered(registry, TempDirectory.class);
 		assertExtensionRegistered(registry, RepeatedTestExtension.class);
 		assertExtensionRegistered(registry, TestInfoParameterResolver.class);
 		assertExtensionRegistered(registry, TestReporterParameterResolver.class);
 
-		assertEquals(2, countExtensions(registry, ParameterResolver.class));
+		assertEquals(bacCount, countExtensions(registry, BeforeAllCallback.class));
+		assertEquals(1, countExtensions(registry, BeforeEachCallback.class));
+		assertEquals(3, countExtensions(registry, ParameterResolver.class));
 		assertEquals(2, countExtensions(registry, ExecutionCondition.class));
 		assertEquals(1, countExtensions(registry, TestTemplateInvocationContextProvider.class));
 	}

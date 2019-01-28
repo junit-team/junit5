@@ -44,7 +44,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.io.TempDir;
@@ -316,7 +315,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	// -------------------------------------------------------------------------
 
-	@ExtendWith(TempDirectory.class)
 	static class BaseSharedTempDirFieldInjectionTestCase {
 
 		static Path staticTempDir;
@@ -417,7 +415,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	@ExtendWith(TempDirectory.class)
 	static class AnnotationOnStaticFieldWithUnsupportedTypeTestCase {
 
 		@TempDir
@@ -429,7 +426,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	@ExtendWith(TempDirectory.class)
 	static class AnnotationOnInstanceFieldWithUnsupportedTypeTestCase {
 
 		@TempDir
@@ -441,7 +437,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	@ExtendWith(TempDirectory.class)
 	static class BaseSharedTempDirParameterInjectionTestCase {
 
 		static Path tempDir;
@@ -475,7 +470,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	@ExtendWith(TempDirectory.class)
 	static class AnnotationOnConstructorParameterTestCase {
 
 		AnnotationOnConstructorParameterTestCase(@TempDir Path tempDir) {
@@ -520,7 +514,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@ExtendWith(TempDirectory.class)
 	static class AnnotationOnAfterAllMethodParameterTestCase {
 
 		static Path firstTempDir = null;
@@ -585,7 +578,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	@ExtendWith(TempDirectory.class)
 	static class SeparateTempDirsWhenUsedOnForEachLifecycleMethodsFieldInjectionTestCase
 			extends BaseSeparateTempDirsFieldInjectionTestCase {
 	}
@@ -632,7 +624,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@ExtendWith(TempDirectory.class)
 	static class SeparateTempDirsWhenUsedOnForEachLifecycleMethodsParameterInjectionTestCase
 			extends BaseSeparateTempDirsParameterInjectionTestCase {
 	}
@@ -642,7 +633,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			extends SeparateTempDirsWhenUsedOnForEachLifecycleMethodsParameterInjectionTestCase {
 	}
 
-	@ExtendWith(TempDirectory.class)
 	static class InvalidTestCase {
 
 		@Test
@@ -653,7 +643,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	@Nested
 	@DisplayName("resolves java.io.File injection type")
-	@ExtendWith(TempDirectory.class)
 	class FileAndPathInjection {
 
 		@TempDir
@@ -683,7 +672,6 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/1748
-	@ExtendWith(TempDirectory.class)
 	static class TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase {
 
 		TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase(TestInfo testInfo) {

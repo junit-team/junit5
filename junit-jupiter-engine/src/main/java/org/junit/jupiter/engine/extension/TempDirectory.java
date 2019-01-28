@@ -8,11 +8,10 @@
  * http://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.api.support.io;
+package org.junit.jupiter.engine.extension;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
@@ -31,7 +30,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Predicate;
 
-import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
@@ -47,40 +45,16 @@ import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * {@code TempDirectory} is a JUnit Jupiter extension that creates and cleans
- * up temporary directories.
+ * up temporary directories if field in a test class or a parameter in a
+ * lifecycle method or test method is annotated with {@code @TempDir}.
  *
- * <p>The temporary directory is only created if a field in a test class or a
- * parameter in a lifecycle method or test method is annotated with
- * {@link TempDir @TempDir}. If the field type or parameter type is neither
- * {@link Path} nor {@link File} or if the temporary directory cannot be created,
- * this extension will throw an {@link ExtensionConfigurationException} or a
- * {@link ParameterResolutionException} as appropriate. In addition, this
- * extension will throw a {@code ParameterResolutionException} for a constructor
- * parameter annotated with {@code @TempDir}.
- *
- * <p>The scope of the temporary directory depends on where the first
- * {@code @TempDir} annotation is encountered when executing a test class. The
- * temporary directory will be shared by all tests in a class when the
- * annotation is present on a {@code static} field or on a parameter of a
- * {@link org.junit.jupiter.api.BeforeAll @BeforeAll} method. Otherwise &mdash;
- * for example, when {@code @TempDir} is only used on instance fields or on
- * parameters in test, {@link org.junit.jupiter.api.BeforeEach @BeforeEach},
- * or {@link org.junit.jupiter.api.AfterEach @AfterEach} methods &mdash; each test
- * will use its own temporary directory.
- *
- * <p>When the end of the scope of a temporary directory is reached, i.e. when
- * the test method or class has finished execution, this extension will attempt
- * to recursively delete all files and directories in the temporary directory
- * and, finally, the temporary directory itself. In case deletion of a file or
- * directory fails, this extension will throw an {@link IOException} that will
- * cause the test or test class to fail.
+ * <p>Consult the Javadoc for {@link TempDir} for details on the contract.
  *
  * @since 5.4
  * @see TempDir
  * @see Files#createTempDirectory
  */
-@API(status = EXPERIMENTAL, since = "5.4")
-public final class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterResolver {
+class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterResolver {
 
 	private static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
 	private static final String KEY = "temp.dir";

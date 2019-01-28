@@ -41,9 +41,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.api.support.io.TempDirectory;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -62,7 +60,6 @@ import org.opentest4j.AssertionFailedError;
  *
  * @since 1.0
  */
-@ExtendWith(TempDirectory.class)
 class LegacyXmlReportGeneratingListenerTests {
 
 	@Test

@@ -53,6 +53,7 @@ public class ExtensionRegistry {
 	private static final List<Extension> DEFAULT_EXTENSIONS = Collections.unmodifiableList(Arrays.asList(//
 		new DisabledCondition(), //
 		new ScriptExecutionCondition(), //
+		new TempDirectory(), //
 		new RepeatedTestExtension(), //
 		new TestInfoParameterResolver(), //
 		new TestReporterParameterResolver()));

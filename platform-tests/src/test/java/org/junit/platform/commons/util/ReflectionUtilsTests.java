@@ -48,9 +48,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.api.support.io.TempDirectory;
 import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.LogRecordListener;
@@ -611,7 +609,6 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	@ExtendWith(TempDirectory.class)
 	void getAllClasspathRootDirectories(@TempDir Path tempDirectory) throws Exception {
 		Path root1 = tempDirectory.resolve("root1").toAbsolutePath();
 		Path root2 = tempDirectory.resolve("root2").toAbsolutePath();

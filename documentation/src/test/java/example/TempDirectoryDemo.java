@@ -20,15 +20,12 @@ import java.nio.file.Path;
 import example.util.ListWriter;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.api.support.io.TempDirectory;
 
 class TempDirectoryDemo {
 
 	// tag::user_guide_parameter_injection[]
 	@Test
-	@ExtendWith(TempDirectory.class)
 	void writeItemsToFile(@TempDir Path tempDir) throws IOException {
 		Path file = tempDir.resolve("test.txt");
 
@@ -38,9 +35,6 @@ class TempDirectoryDemo {
 	}
 	// end::user_guide_parameter_injection[]
 
-	// tag::user_guide_field_injection[]
-	@ExtendWith(TempDirectory.class)
-	// end::user_guide_field_injection[]
 	static
 	// tag::user_guide_field_injection[]
 	class SharedTempDirectoryDemo {
