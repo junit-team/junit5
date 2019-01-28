@@ -87,8 +87,6 @@ endif::[]
 :TestTemplateInvocationContext:          {javadoc-root}/org/junit/jupiter/api/extension/TestTemplateInvocationContext.html[TestTemplateInvocationContext]
 :TestTemplateInvocationContextProvider:  {javadoc-root}/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html[TestTemplateInvocationContextProvider]
 :TestWatcher:                            {javadoc-root}/org/junit/jupiter/api/extension/TestWatcher.html[TestWatcher]
-// Jupiter Support and Built-in Extensions
-:TempDirectory:                          {javadoc-root}/org/junit/jupiter/api/support/io/TempDirectory.html[TempDirectory]
 // Jupiter Conditions
 :DisabledIf:                             {javadoc-root}/org/junit/jupiter/api/condition/DisabledIf.html[@DisabledIf]
 :DisabledIfEnvironmentVariable:          {javadoc-root}/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariable.html[@DisabledIfEnvironmentVariable]
@@ -116,6 +114,7 @@ endif::[]
 // Jupiter Extension Implementations
 :DisabledCondition:                      {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java[DisabledCondition]
 :RepetitionInfoParameterResolver:        {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepetitionInfoParameterResolver.java[RepetitionInfoParameterResolver]
+:TempDirectory:                          {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java[TempDirectory]
 :TestInfoParameterResolver:              {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java[TestInfoParameterResolver]
 :TestReporterParameterResolver:          {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestReporterParameterResolver.java[TestReporterParameterResolver]
 // Jupiter Examples
