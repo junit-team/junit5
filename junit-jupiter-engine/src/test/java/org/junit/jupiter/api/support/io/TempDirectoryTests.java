@@ -210,8 +210,26 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	class Failures {
 
 		@Test
+		@DisplayName("when @TempDir is used on private static field")
+		@Order(10)
+		void onlySupportsNonPrivateInstanceFields() {
+			var results = executeTestsForClass(AnnotationOnPrivateStaticFieldTestCase.class);
+
+			assertSingleFailedContainer(results, ExtensionConfigurationException.class, "must not be private");
+		}
+
+		@Test
+		@DisplayName("when @TempDir is used on private instance field")
+		@Order(11)
+		void onlySupportsNonPrivateStaticFields() {
+			var results = executeTestsForClass(AnnotationOnPrivateInstanceFieldTestCase.class);
+
+			assertSingleFailedTest(results, ExtensionConfigurationException.class, "must not be private");
+		}
+
+		@Test
 		@DisplayName("when @TempDir is used on static field of an unsupported type")
-		@Order(1)
+		@Order(20)
 		void onlySupportsStaticFieldsOfTypePathAndFile() {
 			var results = executeTestsForClass(AnnotationOnStaticFieldWithUnsupportedTypeTestCase.class);
 
@@ -221,7 +239,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		@DisplayName("when @TempDir is used on instance field of an unsupported type")
-		@Order(1)
+		@Order(21)
 		void onlySupportsInstanceFieldsOfTypePathAndFile() {
 			var results = executeTestsForClass(AnnotationOnInstanceFieldWithUnsupportedTypeTestCase.class);
 
@@ -231,7 +249,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		@DisplayName("when @TempDir is used on parameter of an unsupported type")
-		@Order(2)
+		@Order(22)
 		void onlySupportsParametersOfTypePathAndFile() {
 			var results = executeTestsForClass(InvalidTestCase.class);
 
@@ -246,7 +264,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		@DisplayName("when @TempDir is used on constructor parameter")
-		@Order(8)
+		@Order(30)
 		void doesNotSupportTempDirAnnotationOnConstructorParameter() {
 			var results = executeTestsForClass(AnnotationOnConstructorParameterTestCase.class);
 
@@ -256,7 +274,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		@DisplayName("when @TempDir is used on constructor parameter with @TestInstance(PER_CLASS)")
-		@Order(9)
+		@Order(31)
 		void doesNotSupportTempDirAnnotationOnConstructorParameterWithTestInstancePerClass() {
 			var results = executeTestsForClass(AnnotationOnConstructorParameterWithTestInstancePerClassTestCase.class);
 
@@ -412,6 +430,28 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	@TestInstance(PER_CLASS)
 	static class AnnotationOnInstanceFieldAndBeforeAllMethodParameterWithTestInstancePerClassTestCase
 			extends AnnotationOnInstanceFieldAndBeforeAllMethodParameterTestCase {
+
+	}
+
+	static class AnnotationOnPrivateInstanceFieldTestCase {
+
+		@TempDir
+		private Path tempDir;
+
+		@Test
+		void test() {
+		}
+
+	}
+
+	static class AnnotationOnPrivateStaticFieldTestCase {
+
+		@TempDir
+		private static Path tempDir;
+
+		@Test
+		void test() {
+		}
 
 	}
 
