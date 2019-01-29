@@ -13,18 +13,3 @@ tasks.jar {
 		)
 	}
 }
-
-publishing {
-	publications {
-		create<MavenPublication>("mavenJava") {
-			from(components["java"])
-			afterEvaluate {
-				configurations.all {
-					dependencies.removeIf{
-						it.group == "org.apiguardian"
-					}
-				}
-			}
-		}
-	}
-}

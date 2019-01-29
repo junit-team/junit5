@@ -208,10 +208,6 @@ subprojects {
 
 		apply(from = "$rootDir/gradle/publishing.gradle.kts")
 
-		dependencies {
-			api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
-		}
-
 		tasks.javadoc {
 			options {
 				memberLevel = JavadocMemberLevel.PROTECTED
