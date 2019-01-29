@@ -34,6 +34,8 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * parameters. Please use field injection instead, by annotating an
  * instance field with {@code @TempDir}.
  *
+ * <h3>Temporary Directory Creation</h3>
+ *
  * <p>The temporary directory is only created if a field in a test class or a
  * parameter in a lifecycle method or test method is annotated with
  * {@link TempDir @TempDir}. If the field type or parameter type is neither
@@ -42,6 +44,8 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * {@link ParameterResolutionException} will be thrown as appropriate. In
  * addition, a {@code ParameterResolutionException} will be thrown for a
  * constructor parameter annotated with {@code @TempDir}.
+ *
+ * <h3>Temporary Directory Scope</h3>
  *
  * <p>The scope of the temporary directory depends on where the first
  * {@code @TempDir} annotation is encountered when executing a test class. The
@@ -52,6 +56,8 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * parameters in test, {@link org.junit.jupiter.api.BeforeEach @BeforeEach},
  * or {@link org.junit.jupiter.api.AfterEach @AfterEach} methods &mdash; each test
  * will use its own temporary directory.
+ *
+ * <h3>Temporary Directory Deletion</h3>
  *
  * <p>When the end of the scope of a temporary directory is reached, i.e. when
  * the test method or class has finished execution, JUnit will attempt to
