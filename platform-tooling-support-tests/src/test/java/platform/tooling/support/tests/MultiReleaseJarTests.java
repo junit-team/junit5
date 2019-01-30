@@ -34,7 +34,7 @@ class MultiReleaseJarTests {
 	void checkDefault() throws Exception {
 		var variant = "default";
 		var expectedLines = List.of( //
-			">> BANNER >>",
+			">> BANNER >>", //
 			".", //
 			"'-- JUnit Jupiter [OK]", //
 			"  '-- JupiterIntegrationTests [OK]", //
