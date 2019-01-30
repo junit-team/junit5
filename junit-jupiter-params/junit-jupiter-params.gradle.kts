@@ -10,6 +10,8 @@ extra["testJavaVersion"] = JavaVersion.VERSION_1_10
 description = "JUnit Jupiter Params"
 
 dependencies {
+	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
+
 	api(project(":junit-jupiter-api"))
 
 	shadowed("com.univocity:univocity-parsers:${Versions.univocity}")

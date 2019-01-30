@@ -19,7 +19,7 @@ val testArtifacts by configurations.creating {
 }
 
 val testJar by tasks.creating(Jar::class) {
-	classifier = "test"
+	archiveClassifier.set("test")
 	from(sourceSets.getByName("test").output)
 }
 
@@ -28,6 +28,8 @@ artifacts {
 }
 
 dependencies {
+	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
+
 	api(project(":junit-platform-engine"))
 	api(project(":junit-jupiter-api"))
 

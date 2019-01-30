@@ -3,7 +3,9 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 description = "JUnit Vintage Engine"
 
 dependencies {
+	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 	api(project(":junit-platform-engine"))
+
 	implementation("junit:junit:${Versions.junit4}")
 
 	testImplementation(project(":junit-platform-launcher"))
