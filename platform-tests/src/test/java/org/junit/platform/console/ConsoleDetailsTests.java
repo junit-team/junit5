@@ -93,6 +93,7 @@ class ConsoleDetailsTests {
 							"--details", details.name(), //
 							"--details-theme", theme.name(), //
 							"--disable-ansi-colors", //
+							"--disable-banner", //
 							"--include-classname", containerClass.getCanonicalName(), //
 							"--select-method", getFullyQualifiedMethodName(containerClass, methodName, types) //
 					};

@@ -67,6 +67,7 @@ class StandaloneTests {
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
 				.addArguments("-jar", jar) //
 				.addArguments("--scan-class-path") //
+				.addArguments("--disable-banner") //
 				.addArguments("--include-classname", "standalone.*") //
 				.addArguments("--classpath", "bin").build() //
 				.run(false);

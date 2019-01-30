@@ -39,6 +39,7 @@ public class CommandLineOptions {
 
 	private boolean displayHelp;
 	private boolean ansiColorOutputDisabled;
+	private boolean bannerDisabled;
 	private Details details = DEFAULT_DETAILS;
 	private Theme theme = DEFAULT_THEME;
 	private List<Path> additionalClasspathEntries = emptyList();
@@ -85,6 +86,14 @@ public class CommandLineOptions {
 
 	public void setAnsiColorOutputDisabled(boolean ansiColorOutputDisabled) {
 		this.ansiColorOutputDisabled = ansiColorOutputDisabled;
+	}
+
+	public boolean isBannerDisabled() {
+		return this.bannerDisabled;
+	}
+
+	public void setBannerDisabled(boolean bannerDisabled) {
+		this.bannerDisabled = bannerDisabled;
 	}
 
 	public boolean isScanModulepath() {

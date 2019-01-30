@@ -11,6 +11,7 @@
 package org.junit.platform.console;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -18,6 +19,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.CommandLineOptions;
@@ -28,7 +31,8 @@ import org.junit.platform.console.options.CommandLineOptionsParser;
  */
 class ConsoleLauncherTests {
 
-	private final PrintStream printSink = new PrintStream(new ByteArrayOutputStream());
+	private final ByteArrayOutputStream printedBytes = new ByteArrayOutputStream(1000);
+	private final PrintStream printSink = new PrintStream(printedBytes);
 
 	@Test
 	void displayHelp() {
@@ -43,6 +47,40 @@ class ConsoleLauncherTests {
 
 		assertEquals(0, exitCode);
 		verify(commandLineOptionsParser).parse("--help");
+	}
+
+	@Test
+	void displayBanner() {
+		CommandLineOptions options = new CommandLineOptions();
+		options.setBannerDisabled(false);
+		options.setDisplayHelp(true);
+
+		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
+		when(commandLineOptionsParser.parse(any())).thenReturn(options);
+
+		ConsoleLauncher consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
+		int exitCode = consoleLauncher.execute("--help").getExitCode();
+
+		assertEquals(0, exitCode);
+		assertLinesMatch(
+			List.of("", "Thanks for using JUnit! Support its development at https://junit.org/sponsoring", ""),
+			printedBytes.toString().lines().collect(Collectors.toList()));
+	}
+
+	@Test
+	void disableBanner() {
+		CommandLineOptions options = new CommandLineOptions();
+		options.setBannerDisabled(true);
+		options.setDisplayHelp(true);
+
+		CommandLineOptionsParser commandLineOptionsParser = mock(CommandLineOptionsParser.class);
+		when(commandLineOptionsParser.parse(any())).thenReturn(options);
+
+		ConsoleLauncher consoleLauncher = new ConsoleLauncher(commandLineOptionsParser, printSink, printSink);
+		int exitCode = consoleLauncher.execute("--help", "--disable-banner").getExitCode();
+
+		assertEquals(0, exitCode);
+		assertLinesMatch(List.of(), printedBytes.toString().lines().collect(Collectors.toList()));
 	}
 
 	@Test

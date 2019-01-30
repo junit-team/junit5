@@ -34,6 +34,7 @@ class MultiReleaseJarTests {
 	void checkDefault() throws Exception {
 		var variant = "default";
 		var expectedLines = List.of( //
+			">> BANNER >>",
 			".", //
 			"'-- JUnit Jupiter [OK]", //
 			"  '-- JupiterIntegrationTests [OK]", //
@@ -70,7 +71,7 @@ class MultiReleaseJarTests {
 	void checkNoScripting() throws Exception {
 		var variant = "no-scripting";
 		var expectedLines = List.of( //
-			".", //
+			">> BANNER >>", ".", //
 			"'-- JUnit Jupiter [OK]", //
 			"  '-- JupiterIntegrationTests [OK]", //
 			"    +-- javaPlatformModuleSystemIsAvailable() [OK]", //
