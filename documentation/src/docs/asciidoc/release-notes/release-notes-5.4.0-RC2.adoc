@@ -1,7 +1,7 @@
 [[release-notes-5.4.0-RC2]]
 == 5.4.0-RC2
 
-*Date of Release:* ❓
+*Date of Release:* January 31, 2019
 
 *Scope:* Simplification of the `@TempDir` support, as well as minor improvements and bug
 fixes since 5.4.0-RC1.
