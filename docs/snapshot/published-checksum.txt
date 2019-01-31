@@ -216,6 +216,7 @@
 60facaf12ba1dd5e59afb43c1fc16fc5  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 61d5b7e5bff27fd6690dcbaa937bc6af  documentation/src/test/java/example/ExampleTestCase.java
 62f4385a2c4dee8e915b8819690d7835  documentation/src/test/java/example/TestingAStackDemo.java
+632cbfa51cdd4403dfdca49f628b323d  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-RC2.adoc
 634adddee2f4da165ece58b4297c16fc  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ServiceLoaderTestEngineRegistry.java
 63582391f7916996e80a5cf165843604  junit-vintage-engine/src/main/java/org/junit/vintage/engine/JUnit4VersionCheck.java
 640de39e110c8c218b88ab5de530e474  documentation/src/test/java/example/defaultmethods/StringTests.java
@@ -331,7 +332,6 @@
 8e9605baffdecbe7f7d809496c77eff8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIf.java
 8edb7b1fc9d7a40708672c8052eba9df  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/LifecycleMethodUtils.java
 9025c4527d1c382b958db287765d9e83  documentation/src/test/kotlin/example/KotlinAssertionsDemo.kt
-906d61d865eab70feb100686633b085e  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-RC2.adoc
 907cfbea7c6cb4fa817abc7eb3ef79a2  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/LegacyReportingUtils.java
 90b77abf8dedebae2150ed0b8468d299  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvFileSource.java
 918838f65ef881c25dce66ca130780a9  junit-platform-console/src/main/java/org/junit/platform/console/tasks/ConsoleTestExecutor.java
