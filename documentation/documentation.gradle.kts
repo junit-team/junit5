@@ -116,12 +116,8 @@ tasks {
 		})
 
 		backends("html5")
-
-		// does currently not work on Java 11, see https://github.com/junit-team/junit5/issues/1608
-		if (JavaVersion.current() < JavaVersion.VERSION_11) {
-			backends("pdf")
-			attributes(mapOf("linkToPdf" to "true"))
-		}
+		backends("pdf")
+		attributes(mapOf("linkToPdf" to "true"))
 
 		attributes(mapOf(
 				"jupiter-version" to version,
