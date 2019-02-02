@@ -34,7 +34,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The `@Execution` and `@ResourceLock` annotations used to configure parallel test
+  execution are now inherited within test class hierarchies (via `@Inherited` semantics).
 
 ==== Deprecations and Breaking Changes
 

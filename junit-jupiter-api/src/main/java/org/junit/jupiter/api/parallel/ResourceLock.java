@@ -13,6 +13,7 @@ package org.junit.jupiter.api.parallel;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -36,6 +37,9 @@ import org.apiguardian.api.API;
  *
  * <p>This annotation can be repeated to declare the use of multiple shared resources.
  *
+ * <p>Since JUnit Jupiter 5.4, this annotation is {@linkplain Inherited inherited}
+ * within class hierarchies.
+ *
  * @see Resources
  * @see ResourceAccessMode
  * @see ResourceLocks
@@ -44,6 +48,7 @@ import org.apiguardian.api.API;
 @API(status = EXPERIMENTAL, since = "5.3")
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
+@Inherited
 @Repeatable(ResourceLocks.class)
 public @interface ResourceLock {
 
