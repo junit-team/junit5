@@ -437,9 +437,9 @@ b7bc0c9d9490da01055e230670f80208  documentation/src/docs/asciidoc/user-guide/tes
 b814daaf5968635ac5b51dcb08ef6916  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/Extensions.java
 b904eb710ee2795fb1c190ecf66f1f76  junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatformRunnerListener.java
 b93adc27f72da3d4a85edf1140dc1fc3  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullAndEmptySource.java
+b9e45a1a5dd14178e6b5344f8d326342  documentation/src/docs/asciidoc/release-notes/index.adoc
 b9fe38826efbff5a75f6bf057cf39ce4  documentation/src/docs/asciidoc/release-notes/release-notes-5.3.2.adoc
 ba01147f8a1c8545e3e738abfd24bac1  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTest.java
-ba0b8f6267e1fc33423105e829ece54d  documentation/src/docs/asciidoc/release-notes/index.adoc
 ba371c4524ce21b50c09f38128d39d75  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestInstanceLifecycleUtils.java
 ba5344cacee9047b28ab7c46a311bc30  junit-platform-commons/src/main/java/org/junit/platform/commons/support/package-info.java
 ba8ed6a28fd5ec21cd9f53eaff275c01  documentation/src/test/java/example/registration/DocumentationDemo.java
@@ -451,6 +451,7 @@ bd6febd9e64437b7dfc1dbe0ffe47192  junit-jupiter-api/src/main/java/org/junit/jupi
 be7d184bb9af5845d97bbddb8fba257d  documentation/src/main/java/example/domain/Person.java
 beef6201f53b4d4690fac508081425cf  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/TestClassRequestResolver.java
 bf60a0c035a687d5acf97068c866e8a6  documentation/src/test/java/example/FastTest.java
+bf6dbff09038a755c0cee731801f1361  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0.adoc
 bf8d76cf67ea68f9d620a5fb5e2f9ab3  documentation/src/docs/asciidoc/tocbot-3.0.2/styles.css
 bfb77e1845eee9e027c81777c92a2433  junit-platform-engine/src/main/java/org/junit/platform/engine/TestTag.java
 c04e1208b47e927e48376572a220a33a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/DirectorySource.java
