@@ -10,6 +10,9 @@
 
 package example.callbacks;
 
+import static example.callbacks.Logger.afterEachMethod;
+import static example.callbacks.Logger.beforeEachMethod;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -20,12 +23,12 @@ abstract class AbstractDatabaseTests {
 
 	@BeforeEach
 	void connectToDatabase() {
-		System.out.println("  @BeforeEach " + AbstractDatabaseTests.class.getSimpleName() + ".connectToDatabase()");
+		beforeEachMethod(AbstractDatabaseTests.class.getSimpleName() + ".connectToDatabase()");
 	}
 
 	@AfterEach
 	void disconnectFromDatabase() {
-		System.out.println("  @AfterEach " + AbstractDatabaseTests.class.getSimpleName() + ".disconnectFromDatabase()");
+		afterEachMethod(AbstractDatabaseTests.class.getSimpleName() + ".disconnectFromDatabase()");
 	}
 
 }

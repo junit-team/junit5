@@ -1,0 +1,45 @@
+/*
+ * Copyright 2015-2019 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v20.html
+ */
+
+package example.callbacks;
+
+import java.util.function.Supplier;
+
+import org.junit.jupiter.api.extension.Extension;
+
+class Logger {
+
+	static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Logger.class.getName());
+
+	static void beforeEachCallback(Extension extension) {
+		log(() -> extension.getClass().getSimpleName() + ".beforeEach()");
+	}
+
+	static void beforeEachMethod(String text) {
+		log(() -> "  @BeforeEach " + text);
+	}
+
+	static void testMethod(String text) {
+		log(() -> "    @Test " + text);
+	}
+
+	static void afterEachMethod(String text) {
+		log(() -> "  @AfterEach " + text);
+	}
+
+	static void afterEachCallback(Extension extension) {
+		log(() -> extension.getClass().getSimpleName() + ".afterEach()");
+	}
+
+	private static void log(Supplier<String> supplier) {
+		logger.info(supplier);
+	}
+
+}

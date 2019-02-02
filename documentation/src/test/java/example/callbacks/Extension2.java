@@ -10,6 +10,9 @@
 
 package example.callbacks;
 
+import static example.callbacks.Logger.afterEachCallback;
+import static example.callbacks.Logger.beforeEachCallback;
+
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -18,12 +21,12 @@ public class Extension2 implements BeforeEachCallback, AfterEachCallback {
 
 	@Override
 	public void beforeEach(ExtensionContext context) {
-		System.out.println(getClass().getSimpleName() + ".beforeEach()");
+		beforeEachCallback(this);
 	}
 
 	@Override
 	public void afterEach(ExtensionContext context) {
-		System.out.println(getClass().getSimpleName() + ".afterEach()");
+		afterEachCallback(this);
 	}
 
 }

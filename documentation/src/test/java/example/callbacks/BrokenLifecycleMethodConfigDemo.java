@@ -10,6 +10,10 @@
 
 package example.callbacks;
 
+import static example.callbacks.Logger.afterEachMethod;
+import static example.callbacks.Logger.beforeEachMethod;
+import static example.callbacks.Logger.testMethod;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,27 +31,27 @@ class BrokenLifecycleMethodConfigDemo {
 
 	@BeforeEach
 	void connectToDatabase() {
-		System.out.println("  @BeforeEach " + getClass().getSimpleName() + ".connectToDatabase()");
+		beforeEachMethod(getClass().getSimpleName() + ".connectToDatabase()");
 	}
 
 	@BeforeEach
 	void insertTestDataIntoDatabase() {
-		System.out.println("  @BeforeEach " + getClass().getSimpleName() + ".insertTestDataIntoDatabase()");
+		beforeEachMethod(getClass().getSimpleName() + ".insertTestDataIntoDatabase()");
 	}
 
 	@Test
 	void testDatabaseFunctionality() {
-		System.out.println("    @Test " + getClass().getSimpleName() + ".testDatabaseFunctionality()");
+		testMethod(getClass().getSimpleName() + ".testDatabaseFunctionality()");
 	}
 
 	@AfterEach
 	void deleteTestDataInDatabase() {
-		System.out.println("  @AfterEach " + getClass().getSimpleName() + ".deleteTestDataInDatabase()");
+		afterEachMethod(getClass().getSimpleName() + ".deleteTestDataInDatabase()");
 	}
 
 	@AfterEach
 	void disconnectFromDatabase() {
-		System.out.println("  @AfterEach " + getClass().getSimpleName() + ".disconnectFromDatabase()");
+		afterEachMethod(getClass().getSimpleName() + ".disconnectFromDatabase()");
 	}
 
 }

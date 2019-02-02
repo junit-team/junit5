@@ -10,6 +10,10 @@
 
 package example.callbacks;
 
+import static example.callbacks.Logger.afterEachMethod;
+import static example.callbacks.Logger.beforeEachMethod;
+import static example.callbacks.Logger.testMethod;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,17 +29,17 @@ class DatabaseTestsDemo extends AbstractDatabaseTests {
 
 	@BeforeEach
 	void insertTestDataIntoDatabase() {
-		System.out.println("  @BeforeEach " + getClass().getSimpleName() + ".insertTestDataIntoDatabase()");
+		beforeEachMethod(getClass().getSimpleName() + ".insertTestDataIntoDatabase()");
 	}
 
 	@Test
 	void testDatabaseFunctionality() {
-		System.out.println("    @Test " + getClass().getSimpleName() + ".testDatabaseFunctionality()");
+		testMethod(getClass().getSimpleName() + ".testDatabaseFunctionality()");
 	}
 
 	@AfterEach
 	void deleteTestDataInDatabase() {
-		System.out.println("  @AfterEach " + getClass().getSimpleName() + ".deleteTestDataInDatabase()");
+		afterEachMethod(getClass().getSimpleName() + ".deleteTestDataInDatabase()");
 	}
 
 }
