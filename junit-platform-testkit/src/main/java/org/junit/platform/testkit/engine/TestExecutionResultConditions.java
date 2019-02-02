@@ -11,12 +11,16 @@
 package org.junit.platform.testkit.engine;
 
 import static java.util.function.Predicate.isEqual;
+import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
@@ -48,36 +52,47 @@ public final class TestExecutionResultConditions {
 	/**
 	 * Create a new {@link Condition} that matches if and only if a
 	 * {@link TestExecutionResult}'s
-	 * {@linkplain TestExecutionResult#getThrowable() throwable} matches the
-	 * supplied {@code Condition}.
+	 * {@linkplain TestExecutionResult#getThrowable() throwable} matches all
+	 * supplied conditions.
 	 */
-	public static Condition<TestExecutionResult> throwable(Condition<? super Throwable> condition) {
-		return new Condition<>(
-			where(TestExecutionResult::getThrowable,
-				throwable -> throwable.isPresent() && condition.matches(throwable.get())),
-			"throwable matches %s", condition);
+	@SafeVarargs
+	@SuppressWarnings("varargs")
+	public static Condition<TestExecutionResult> throwable(Condition<Throwable>... conditions) {
+		List<Condition<TestExecutionResult>> list = Arrays.stream(conditions)//
+				.map(TestExecutionResultConditions::throwable)//
+				.collect(toList());
+
+		return Assertions.allOf(list);
 	}
 
 	/**
 	 * Create a new {@link Condition} that matches if and only if a
-	 * {@link Throwable}'s {@linkplain Throwable#getCause() cause} matches the
-	 * supplied {@code Condition}.
+	 * {@link Throwable}'s {@linkplain Throwable#getCause() cause} matches all
+	 * supplied conditions.
 	 */
-	public static Condition<Throwable> cause(Condition<Throwable> condition) {
-		return new Condition<>(throwable -> condition.matches(throwable.getCause()), "throwable cause matches %s",
-			condition);
+	@SafeVarargs
+	@SuppressWarnings("varargs")
+	public static Condition<Throwable> cause(Condition<Throwable>... conditions) {
+		List<Condition<Throwable>> list = Arrays.stream(conditions)//
+				.map(TestExecutionResultConditions::cause)//
+				.collect(toList());
+
+		return Assertions.allOf(list);
 	}
 
 	/**
 	 * Create a new {@link Condition} that matches if and only if a
 	 * {@link Throwable}'s {@linkplain Throwable#getSuppressed() suppressed
-	 * throwable} at the supplied index matches the supplied {@code Condition}.
+	 * throwable} at the supplied index matches all supplied conditions.
 	 */
-	public static Condition<Throwable> suppressed(int index, Condition<Throwable> condition) {
-		return new Condition<>(
-			throwable -> throwable.getSuppressed().length > index
-					&& condition.matches(throwable.getSuppressed()[index]),
-			"suppressed throwable at index %d matches %s", index, condition);
+	@SafeVarargs
+	@SuppressWarnings("varargs")
+	public static Condition<Throwable> suppressed(int index, Condition<Throwable>... conditions) {
+		List<Condition<Throwable>> list = Arrays.stream(conditions)//
+				.map(condition -> suppressed(index, condition))//
+				.collect(toList());
+
+		return Assertions.allOf(list);
 	}
 
 	/**
@@ -106,6 +121,25 @@ public final class TestExecutionResultConditions {
 	 */
 	public static Condition<Throwable> message(Predicate<String> expectedMessagePredicate) {
 		return new Condition<>(where(Throwable::getMessage, expectedMessagePredicate), "message matches predicate");
+	}
+
+	private static Condition<TestExecutionResult> throwable(Condition<? super Throwable> condition) {
+		return new Condition<>(
+			where(TestExecutionResult::getThrowable,
+				throwable -> throwable.isPresent() && condition.matches(throwable.get())),
+			"throwable matches %s", condition);
+	}
+
+	private static Condition<Throwable> cause(Condition<Throwable> condition) {
+		return new Condition<>(throwable -> condition.matches(throwable.getCause()), "throwable cause matches %s",
+			condition);
+	}
+
+	private static Condition<Throwable> suppressed(int index, Condition<Throwable> condition) {
+		return new Condition<>(
+			throwable -> throwable.getSuppressed().length > index
+					&& condition.matches(throwable.getSuppressed()[index]),
+			"suppressed throwable at index %d matches %s", index, condition);
 	}
 
 }

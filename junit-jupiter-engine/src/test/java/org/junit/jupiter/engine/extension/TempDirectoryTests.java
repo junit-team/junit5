@@ -257,8 +257,9 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			TempDirectoryTests.assertSingleFailedTest(results,
 				instanceOf(ParameterResolutionException.class),
 				message(m -> m.matches("Failed to resolve parameter \\[java.lang.String .+\\] in method \\[.+\\]: .+")),
-					cause(instanceOf(ExtensionConfigurationException.class)),
-					cause(message("Can only resolve @TempDir parameter of type java.nio.file.Path or java.io.File but was: java.lang.String")));
+				cause(
+					instanceOf(ExtensionConfigurationException.class),
+					message("Can only resolve @TempDir parameter of type java.nio.file.Path or java.io.File but was: java.lang.String")));
 			// @formatter:on
 		}
 

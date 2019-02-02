@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine;
 
-import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
@@ -132,7 +131,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 				finishedWithFailure( //
 					instanceOf(RuntimeException.class), //
 					message("unchecked"), //
-					suppressed(0, allOf(instanceOf(IOException.class), message("checked"))))), //
+					suppressed(0, instanceOf(IOException.class), message("checked")))), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -149,7 +148,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 			event(test("abortedTest"), started()), //
 			event(test("abortedTest"), //
 				finishedWithFailure(instanceOf(IOException.class), message("checked"), //
-					suppressed(0, allOf(instanceOf(TestAbortedException.class))))), //
+					suppressed(0, instanceOf(TestAbortedException.class)))), //
 			event(container(FailureTestCase.class), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
@@ -235,7 +234,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 			event(container(FailureTestCase.class), started()), //
 			event(container(FailureTestCase.class),
 				finishedWithFailure(instanceOf(IOException.class), message("checked"),
-					suppressed(0, allOf(instanceOf(TestAbortedException.class), message("aborted"))))), //
+					suppressed(0, instanceOf(TestAbortedException.class), message("aborted")))), //
 			event(engine(), finishedSuccessfully()));
 	}
 

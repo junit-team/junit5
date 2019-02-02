@@ -115,15 +115,14 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 
 	@Test
 	void propagatesCheckedExceptionThrownDuringInitializationOfStaticField() {
-		assertClassFails(ClassLevelExplosiveCheckedExceptionTestCase.class, allOf(
-			instanceOf(ExceptionInInitializerError.class), cause(allOf(instanceOf(Exception.class), message("boom")))));
+		assertClassFails(ClassLevelExplosiveCheckedExceptionTestCase.class,
+			allOf(instanceOf(ExceptionInInitializerError.class), cause(instanceOf(Exception.class), message("boom"))));
 	}
 
 	@Test
 	void propagatesUncheckedExceptionThrownDuringInitializationOfStaticField() {
-		assertClassFails(ClassLevelExplosiveUncheckedExceptionTestCase.class,
-			allOf(instanceOf(ExceptionInInitializerError.class),
-				cause(allOf(instanceOf(RuntimeException.class), message("boom")))));
+		assertClassFails(ClassLevelExplosiveUncheckedExceptionTestCase.class, allOf(
+			instanceOf(ExceptionInInitializerError.class), cause(instanceOf(RuntimeException.class), message("boom"))));
 	}
 
 	@Test
