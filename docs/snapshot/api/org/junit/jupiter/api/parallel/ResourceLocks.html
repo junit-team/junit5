@@ -121,13 +121,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.3")
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Retention</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation" class="externalLink">RUNTIME</a>)
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Target</a>({<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html?is-external=true#TYPE" title="class or interface in java.lang.annotation" class="externalLink">TYPE</a>,<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html?is-external=true#METHOD" title="class or interface in java.lang.annotation" class="externalLink">METHOD</a>})
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Inherited.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Inherited</a>
 public @interface <span class="memberNameLabel">ResourceLocks</span></pre>
 <div class="block"><code>@ResourceLocks</code> is a container for one or more
  <a href="ResourceLock.html" title="annotation in org.junit.jupiter.api.parallel"><code>@ResourceLock</code></a> declarations.
 
  <p>Note, however, that use of the <code>@ResourceLocks</code> container is
  completely optional since <code>@ResourceLock</code> is a
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Repeatable.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">repeatable</a> annotation.</div>
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Repeatable.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">repeatable</a> annotation.
+
+ <p>Since JUnit Jupiter 5.4, this annotation is <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Inherited.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">inherited</a>
+ within class hierarchies.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.3</dd>
