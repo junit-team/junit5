@@ -155,6 +155,7 @@
 427a9b6874d08db57d80931c525f7e10  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeEngines.java
 42cfff3442eabb62b891945dee41f6e0  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueId.java
 43ced772fc2410bf73dd32f53032ce3d  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Executions.java
+43e6eea373e18ffbcc1cf80526d462d0  documentation/src/test/java/example/callbacks/Extension2.java
 46e996ef07e69cb14bf2da60cafa6ea3  documentation/src/test/java/example/testinterface/TestInterfaceDemo.java
 47b3d9832e690e5ba930281da2976f18  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/TestExecutionResultConditions.java
 483abd07813240273568a4dc169105d2  junit-platform-commons/src/main/java/org/junit/platform/commons/function/Try.java
@@ -192,6 +193,7 @@
 56a9914adcc052ba38d6cb5fafd07a65  junit-platform-engine/src/main/java/org/junit/platform/engine/TestDescriptor.java
 56bd6baac57e7f383aec9b621f878a8e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnOs.java
 579a9d9f4ab0dc695b27a107ee8a33c8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestReporter.java
+589214b97e7152b3afeeaf408df8d33e  documentation/src/test/java/example/callbacks/AbstractDatabaseTests.java
 58b13468f6595724abdab673d88d148b  documentation/src/test/java/example/SharedResourcesDemo.java
 59452a30e5b8895ae8e28bc93c5edfd1  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestFactoryMethod.java
 5988452c0e7ee3287ea4775d1b909fbc  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingConsumer.java
@@ -324,6 +326,7 @@
 8ce43e752c88e1508a2dcb59cce28d96  documentation/src/test/java/example/TestReporterDemo.java
 8d26f073bf57eef0301153fc2077fd4a  documentation/src/test/resources/log4j2-test.xml
 8d3539ea0b2a44ed6a1d730a081978c5  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Assertions.java
+8d3588f3cc71345e11a83a9e8d89f84a  documentation/src/test/java/example/callbacks/DatabaseTestsDemo.java
 8d7d22cedf6307fb61fb636a64572c42  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java
 8e2b488c517d3914e38d9152d72fd3a8  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-M1.adoc
 8e9605baffdecbe7f7d809496c77eff8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIf.java
@@ -378,6 +381,7 @@
 9f05e5157bfc68c4c11096b7047e002c  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/script/Script.java
 9f098881ed9428a313d3f9f3eb7f2fa9  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AfterAll.java
 9f46e1e9cf5dae970df21751c47040e9  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/ArgumentConverter.java
+9f72eca9f71d29bc5f0fac22da1ce990  documentation/src/test/java/example/callbacks/BrokenLifecycleMethodConfigDemo.java
 9fbb465eefb0d621ca566c1d83b63cda  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EventStatistics.java
 a017ac3a4a4e757cd70928019fa5653d  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
 a0c04f7f3cf8062ad65c76dddf070574  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/AbstractTestRuleAnnotatedMember.java
@@ -460,6 +464,7 @@ c3688201bf2478ac367a27021cc6f4d3  junit-jupiter-migrationsupport/src/main/java/o
 c3a7c351e2efb2e8e551e218fcfa3bd3  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.java
 c3e52893edc04ff223f7630d4aa4957a  documentation/src/docs/asciidoc/user-guide/advanced-topics.adoc
 c3f2b832e6f68c5db3df67a9092c4cd0  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ReflectionUtils.java
+c430b404023e0bc07dc7dd12e195b2d8  documentation/src/test/java/example/callbacks/Extension1.java
 c4493343b035b0034a7b8d30f1f3e851  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodFinder.java
 c4cb7d81b04aefab6ea5b86ef372a0f4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrdererContext.java
 c4cf018befe9e5b6faae1933e365737b  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/VerifierAdapter.java
