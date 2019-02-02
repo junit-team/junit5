@@ -453,12 +453,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="https://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink">Condition</a>&lt;<a href="../TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">TestExecutionResultConditions.</span><code><span class="memberNameLink"><a href="../../testkit/engine/TestExecutionResultConditions.html#throwable(org.assertj.core.api.Condition)">throwable</a></span>&#8203;(<a href="https://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink">Condition</a>&lt;? super <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&gt;&nbsp;condition)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">TestExecutionResultConditions.</span><code><span class="memberNameLink"><a href="../../testkit/engine/TestExecutionResultConditions.html#throwable(org.assertj.core.api.Condition...)">throwable</a></span>&#8203;(<a href="https://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink">Condition</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&gt;...&nbsp;conditions)</code></th>
 <td class="colLast">
 <div class="block">Create a new <a href="https://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink"><code>Condition</code></a> that matches if and only if a
  <a href="../TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>'s
- <a href="../TestExecutionResult.html#getThrowable()">throwable</a> matches the
- supplied <code>Condition</code>.</div>
+ <a href="../TestExecutionResult.html#getThrowable()">throwable</a> matches all
+ supplied conditions.</div>
 </td>
 </tr>
 </tbody>
