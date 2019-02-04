@@ -23,7 +23,6 @@
 0833d67569abc3c32f85348f4e3fca83  junit-platform-console/src/main/java/org/junit/platform/console/tasks/DiscoveryRequestCreator.java
 0abb8110e64d8700654c7b94b931986c  junit-platform-console/src/main/java/org/junit/platform/console/package-info.java
 0ad657e51981206744d1dbaa28a08a3b  junit-jupiter-params/src/main/java/org/junit/jupiter/params/support/AnnotationConsumer.java
-0afe65d6676ba5d0c84e51f845806102  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0.adoc
 0b800a48384721d45330a72ce3e39392  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterEachCallback.java
 0c16938e054fdbab624161a788171077  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.java
 0c481bdb314053214aa23d14ba89b64c  documentation/src/test/java/example/DynamicTestsDemo.java
@@ -41,7 +40,6 @@
 0f2761bf06b57a37cb68793e8810c08d  junit-platform-engine/src/main/java/org/junit/platform/engine/DiscoverySelector.java
 0fe89fd074283ef5af442b2360055639  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/PackageSelector.java
 10101f131a9a49ffcbe6da55f330e620  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Tag.java
-1056fd342b82c00a6867506efbb1c04b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/JRE.java
 11f1ca9c8bacaf2b06364c9e409f44af  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullSource.java
 131248304a78fe920166fa57c7c09bb5  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeTags.java
 1365277bdd6cd49aa17ccf9dd3d16f67  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/JavaElementsResolver.java
@@ -242,6 +240,7 @@
 6c2eb59f6abdaa7fed408a93c2a902af  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/ConvertWith.java
 6c66d2a899040ecd5825dca4dc9542df  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/MutableTestExecutionSummary.java
 6c7cec7805ccce7f1e038d44cb39f567  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherConstants.java
+6cc4b80206ee1a496ca25f6b8c752fcd  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/JRE.java
 6db08de70874b1b3fee457516cd1bd93  junit-platform-engine/src/main/java/org/junit/platform/engine/ConfigurationParameters.java
 6dfd0bb13e566c1c7abb4b4561f0202b  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/EngineDescriptor.java
 6e554e2cac71f72d943f6fbd3617e9cc  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LoggerFactory.java
@@ -339,6 +338,7 @@
 908a20df05859ec52ad3d924e1cff717  junit-jupiter-api/src/main/java/org/junit/jupiter/api/io/TempDir.java
 9095c8944ba7578b4a30cf20a64d0c8f  documentation/src/test/java/example/callbacks/Extension2.java
 90b77abf8dedebae2150ed0b8468d299  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvFileSource.java
+91333a69c78e5fea92df83d7dc40a7b4  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0.adoc
 918838f65ef881c25dce66ca130780a9  junit-platform-console/src/main/java/org/junit/platform/console/tasks/ConsoleTestExecutor.java
 91f06abae6eb690ca11104aa733ea89a  junit-platform-commons/src/main/java/org/junit/platform/commons/util/package-info.java
 92178068565e332103e23c9dbf43d47a  documentation/src/test/java/example/TaggingDemo.java
