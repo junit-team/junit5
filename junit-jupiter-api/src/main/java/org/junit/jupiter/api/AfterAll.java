@@ -29,7 +29,7 @@ import org.apiguardian.api.API;
  *
  * <h3>Method Signatures</h3>
  *
- * {@code @AfterAll} methods must have a {@code void} return type,
+ * <p>{@code @AfterAll} methods must have a {@code void} return type,
  * must not be {@code private}, and must be {@code static} by default.
  * Consequently, {@code @AfterAll} methods are not
  * supported in {@link Nested @Nested} test classes or as <em>interface default
