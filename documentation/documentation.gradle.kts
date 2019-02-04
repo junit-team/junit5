@@ -35,9 +35,6 @@ dependencies {
 			.forEach { testImplementation(it) }
 
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
-	testImplementation("com.google.jimfs:jimfs:${Versions.jimfs}") {
-		because("used to demo TempDirectory extension")
-	}
 
 	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${Versions.log4j}")
 	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${Versions.log4j}")
