@@ -56,6 +56,7 @@
 177789153befb697b5a309a1984263d7  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/ScriptExecutionEvaluator.java
 18265c94ed71c8b5c1bb94f4bb46be75  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicNode.java
 183fcd36b45a4e0fa39b2602e7ec8bd8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/package-info.java
+187af3026f88281c086820b9b6eff773  documentation/src/docs/asciidoc/release-notes/index.adoc
 1909b5309b722be82d505c55f7838d29  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EventType.java
 195010388ddf780b64f0bc08acc52c9a  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestParameterResolver.java
 19ac01c80834ca1ced6e41bc85fc5136  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/MethodArgumentsProvider.java
@@ -196,7 +197,6 @@
 56a9914adcc052ba38d6cb5fafd07a65  junit-platform-engine/src/main/java/org/junit/platform/engine/TestDescriptor.java
 56bd6baac57e7f383aec9b621f878a8e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnOs.java
 579a9d9f4ab0dc695b27a107ee8a33c8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestReporter.java
-57f7af8a5c5280628ec5109e78a536cd  documentation/src/docs/asciidoc/release-notes/index.adoc
 58b13468f6595724abdab673d88d148b  documentation/src/test/java/example/SharedResourcesDemo.java
 59452a30e5b8895ae8e28bc93c5edfd1  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestFactoryMethod.java
 5988452c0e7ee3287ea4775d1b909fbc  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingConsumer.java
@@ -219,7 +219,6 @@
 60facaf12ba1dd5e59afb43c1fc16fc5  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 61d5b7e5bff27fd6690dcbaa937bc6af  documentation/src/test/java/example/ExampleTestCase.java
 62f4385a2c4dee8e915b8819690d7835  documentation/src/test/java/example/TestingAStackDemo.java
-632cbfa51cdd4403dfdca49f628b323d  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0-RC2.adoc
 634adddee2f4da165ece58b4297c16fc  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ServiceLoaderTestEngineRegistry.java
 63582391f7916996e80a5cf165843604  junit-vintage-engine/src/main/java/org/junit/vintage/engine/JUnit4VersionCheck.java
 636bd9703ab7696925ff6ea1652a159a  documentation/src/test/java/example/callbacks/Logger.java
