@@ -33,5 +33,4 @@ Your donations will help to make that a reality!
 - Jose Luis De la Cruz Morales
 - Gabriel Yoran
 - Stefan Gwihs
-- Gregory Zuckerman
 - olcbean
