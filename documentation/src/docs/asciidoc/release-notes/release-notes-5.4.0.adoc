@@ -3,7 +3,24 @@
 
 *Date of Release:* February 6, 2019
 
-*Scope:* ❓
+*Scope:*
+
+* New `junit-jupiter` dependency-aggregating artifact for simplified dependency management
+  in build tools
+* XML report generating listener
+* Test Kit for testing engines and extensions
+* `null` and _empty_ argument sources for `@ParameterizedTest` methods
+* `@TempDir` support for temporary directories
+* Custom display name generator API
+* Support for ordering test methods
+* Support for ordering extensions registered via `@RegisterExtension`
+* `TestWatcher` extension API
+* API for accessing outer test instances in `ExtensionContext`
+* JUnit 4 `@Ignore` migration support
+* Improved diagnostics and error reporting
+* Improved documentation and user experience in the User Guide
+* Discontinuation of the `junit-platform-surefire-provider`
+* Various minor improvements and bug fixes
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/29?closed=1+[5.4 M1],
