@@ -57,6 +57,9 @@ on GitHub.
   <<../user-guide/index.adoc#running-tests-build-maven, Maven Surefire’s native support>>
   for running tests on the JUnit Platform instead (requires Maven Surefire 2.22.0 or
   higher).
+* `TestPlan.add(TestIdentifier)` has always been considered _internal_ and is now
+  _deprecated_. While calls from third-party code will continue to work for the time
+  being, IDEs and build tools should remove any such code as soon as possible.
 
 ==== New Features and Improvements
 
@@ -70,13 +73,29 @@ on GitHub.
   execution of a `{TestEngine}` running on the JUnit Platform.
   - See <<../user-guide/index.adoc#testkit, JUnit Platform Test Kit>> in the User Guide
     for details.
+* The root cause and suppressed exceptions are now included in the stack trace printed by
+  the `ConsoleLauncher`.
+* The `ConsoleLauncher` now sanitizes user-provided display names before printing them to
+  the console.
+  - Common whitespace characters such as `\t`, `\n`, `\x0B`, `\f`, and `\r` are replaced
+    by a standard space character, and all other ISO control characters are emitted as a
+    single dot (`.`).
 * New `ModifierSupport` class providing an API for extension and test engine authors to
   inspect modifiers of classes and members.
   - See the <<../user-guide/index.adoc#extensions-supported-utilities-modifier, User
     Guide>> for details.
+* `AnnotationSupport` provides new methods for finding annotated fields and their values.
+  - Consult the Javadoc for the various `findAnnotatedFields()` and
+    `findAnnotatedFieldValues()` methods in `{AnnotationSupport}` for details.
+* `ReflectionSupport` provides new methods for finding fields and reading a field's value.
+  - Consult the Javadoc for the `findFields()` and `tryToReadFieldValue()` methods in
+    `{ReflectionSupport}` for details.
 * Exceptions reported due to failed reflective operations such as loading a class, reading
   a field's value, or looking up a method by name now include the original exception as
   their cause to make it easier to debug underlying issues.
+* The `Launcher` API now provides an `execute(TestPlan, TestExecutionListener...)`
+  method that allows one to execute a previously discovered `TestPlan`.
+* `@RunWith(JUnitPlatform.class)` no longer executes test discovery twice.
 * Implementations of `HierarchicalTestEngine` may now add behavior that wraps around the
   invocation of `Node.before()`, `Node.execute()`, and `Node.after()` using the new
   `Node.around()` hook.
@@ -87,6 +106,11 @@ on GitHub.
 
 ==== Bug Fixes
 
+* `@RegisterExtension` fields that are `null` when evaluated are no longer silently
+  ignored. Instead, the corresponding test class or test method now fails with an
+  informative exception.
+* `@ParameterizedTest` once again supports `MessageFormat` patterns for individual
+  parameters -- for example, `+{0,number,#.##}+`.
 * `@ResourceLock` can now be declared on test template methods such as `@RepeatedTest` and
   `@ParameterizedTest` methods. If `@ResourceLock` is used, the invocations will run in
   the same thread, even if parallel execution is enabled.
@@ -125,15 +149,23 @@ on GitHub.
 * JUnit 4's `AssumptionViolatedException` is now supported in JUnit Jupiter for aborting
   a test mid-flight due to a failed assumption -- for example, via JUnit 4's
   `org.junit.Assume` utility class.
-* New `TempDirectory` extension (formerly part of JUnit Pioneer) that allows one to write
-  test that require a temporary directory in a `java.nio.file.FileSystem`.
+* JUnit 4's `@Ignore` annotation is now supported for disabling test classes and test
+  methods via the `junit-jupiter-migrationsupport` module.
+  - See the <<../user-guide/index.adoc#migrating-from-junit4-ignore-annotation-support,
+    User Guide>> for details.
+* New `@TempDir` extension (formerly part of JUnit Pioneer) that allows one to write tests
+  that require a temporary directory in a `java.nio.file.FileSystem`.
   - See the <<../user-guide/index.adoc#writing-tests-built-in-extensions-TempDirectory,
     User Guide>> for details.
-* New `JRE.JAVA_12` enum constant for use with `@EnabledOnJre` and `@DisabledOnJre`.
 * In addition to returning streams, `@TestFactory`-annotated methods may now return a
   single `DynamicNode` -- for example, a `DynamicTest` or a `DynamicContainer`.
+* New `@NullSource`, `@EmptySource`, and `@NullAndEmptySource` argument sources that
+  provide `null` and _empty_ arguments to `@ParameterizedTest` methods.
+  - See <<../user-guide/index.adoc#writing-tests-parameterized-tests-sources-null-and-empty,
+    Null and Empty Sources>> in the User Guide for details.
 * Implicit conversion from hexadecimal and octal string representations to integral types
   in `@ParameterizedTest` arguments -- for example, conversion from `"0xff"` to `255`.
+* New `JRE.JAVA_12` enum constant for use with `@EnabledOnJre` and `@DisabledOnJre`.
 * New `LOCALE` and `TIME_ZONE` constants in `org.junit.jupiter.api.parallel.Resources`
   for use with `@ResourceLock` to synchronize test execution regarding the default
   `Locale` and default `TimeZone`, respectively.
@@ -145,10 +177,14 @@ on GitHub.
   declarative configuration of a pre-defined or custom display name generator.
   - See <<../user-guide/index.adoc#writing-tests-display-name-generator, Display Name
     Generators>> in the User Guide for details.
-* JUnit 4's `@Ignore` annotation is now supported for disabling test classes and test
-  methods via the `junit-jupiter-migrationsupport` module.
-  - See the <<../user-guide/index.adoc#migrating-from-junit4-ignore-annotation-support,
-    User Guide>> for details.
+* New `TestWatcher` extension API that allows extensions to process test results by
+  defining result-based callbacks invoked after text execution.
+  - See <<../user-guide/index.adoc#extensions-test-result-processing, Test Result
+    Processing>> in the User Guide for details.
+* Extensions registered _programmatically_ via `@RegisterExtension` may now be registered
+  in an explicit order via the `@Order` annotation.
+  - See <<../user-guide/index.adoc#extensions-registration-programmatic-order, Extension
+    Registration Order>> in the User Guide for details.
 * New `ExtensionContext` methods to access all test instances, including enclosing ones
   for `@Nested` tests: `getTestInstances()` and `getRequiredTestInstances()`.
 
@@ -158,7 +194,10 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The `VintageTestEngine` now uses the fully qualified class name as the _legacy reporting
+  name_ for Vintage test classes instead of the simple class name which caused problems in
+  test reports based on legacy reporting names -- for example, reports generated by Maven
+  Surefire.
 
 ==== Deprecations and Breaking Changes
 
@@ -166,4 +205,5 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* The `VintageTestEngine` now validates that the version of `junit:junit` on the classpath
+  is supported (i.e., is equal to or greater than 4.12).
