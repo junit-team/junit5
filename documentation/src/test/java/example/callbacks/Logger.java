@@ -18,6 +18,10 @@ class Logger {
 
 	static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Logger.class.getName());
 
+	static void beforeAllMethod(String text) {
+		log(() -> "  @BeforeAll " + text);
+	}
+
 	static void beforeEachCallback(Extension extension) {
 		log(() -> extension.getClass().getSimpleName() + ".beforeEach()");
 	}
@@ -36,6 +40,10 @@ class Logger {
 
 	static void afterEachCallback(Extension extension) {
 		log(() -> extension.getClass().getSimpleName() + ".afterEach()");
+	}
+
+	static void afterAllMethod(String text) {
+		log(() -> "  @AfterAll " + text);
 	}
 
 	private static void log(Supplier<String> supplier) {

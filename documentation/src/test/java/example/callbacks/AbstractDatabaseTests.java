@@ -10,16 +10,25 @@
 
 package example.callbacks;
 
+import static example.callbacks.Logger.afterAllMethod;
 import static example.callbacks.Logger.afterEachMethod;
+import static example.callbacks.Logger.beforeAllMethod;
 import static example.callbacks.Logger.beforeEachMethod;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 /**
  * Abstract base class for tests that use the database.
  */
 abstract class AbstractDatabaseTests {
+
+	@BeforeAll
+	static void createDatabase() {
+		beforeAllMethod(AbstractDatabaseTests.class.getSimpleName() + ".createDatabase()");
+	}
 
 	@BeforeEach
 	void connectToDatabase() {
@@ -29,6 +38,11 @@ abstract class AbstractDatabaseTests {
 	@AfterEach
 	void disconnectFromDatabase() {
 		afterEachMethod(AbstractDatabaseTests.class.getSimpleName() + ".disconnectFromDatabase()");
+	}
+
+	@AfterAll
+	static void destroyDatabase() {
+		afterAllMethod(AbstractDatabaseTests.class.getSimpleName() + ".destroyDatabase()");
 	}
 
 }

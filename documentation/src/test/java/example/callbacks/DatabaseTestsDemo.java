@@ -11,10 +11,13 @@
 package example.callbacks;
 
 import static example.callbacks.Logger.afterEachMethod;
+import static example.callbacks.Logger.beforeAllMethod;
 import static example.callbacks.Logger.beforeEachMethod;
 import static example.callbacks.Logger.testMethod;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +29,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
  */
 @ExtendWith({ Extension1.class, Extension2.class })
 class DatabaseTestsDemo extends AbstractDatabaseTests {
+
+	@BeforeAll
+	static void beforeAll() {
+		beforeAllMethod(DatabaseTestsDemo.class.getSimpleName() + ".beforeAll()");
+	}
 
 	@BeforeEach
 	void insertTestDataIntoDatabase() {
@@ -40,6 +48,11 @@ class DatabaseTestsDemo extends AbstractDatabaseTests {
 	@AfterEach
 	void deleteTestDataInDatabase() {
 		afterEachMethod(getClass().getSimpleName() + ".deleteTestDataInDatabase()");
+	}
+
+	@AfterAll
+	static void afterAll() {
+		beforeAllMethod(DatabaseTestsDemo.class.getSimpleName() + ".beforeAll()");
 	}
 
 }
