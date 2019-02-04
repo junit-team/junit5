@@ -570,14 +570,6 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#release-notes-5.4.0-RC2-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
-<li><a href="#release-notes-5.4.0-RC1">5.4.0-RC1</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.4.0-RC1-overall-improvements">Overall Improvements</a></li>
-<li><a href="#release-notes-5.4.0-RC1-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.4.0-RC1-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.4.0-RC1-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
 <li><a href="#release-notes-5.3.2">5.3.2</a>
 <ul class="sectlevel2">
 <li><a href="#release-notes-5.3.2-junit-platform">JUnit Platform</a></li>
@@ -721,6 +713,11 @@ been discontinued and is no longer released as part of JUnit 5. Please use
 for running tests on the JUnit Platform instead (requires Maven Surefire 2.22.0 or
 higher).</p>
 </li>
+<li>
+<p><code>TestPlan.add(TestIdentifier)</code> has always been considered <em>internal</em> and is now
+<em>deprecated</em>. While calls from third-party code will continue to work for the time
+being, IDEs and build tools should remove any such code as soon as possible.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -755,6 +752,23 @@ for details.</p>
 </div>
 </li>
 <li>
+<p>The root cause and suppressed exceptions are now included in the stack trace printed by
+the <code>ConsoleLauncher</code>.</p>
+</li>
+<li>
+<p>The <code>ConsoleLauncher</code> now sanitizes user-provided display names before printing them to
+the console.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Common whitespace characters such as <code>\t</code>, <code>\n</code>, <code>\x0B</code>, <code>\f</code>, and <code>\r</code> are replaced
+by a standard space character, and all other ISO control characters are emitted as a
+single dot (<code>.</code>).</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p>New <code>ModifierSupport</code> class providing an API for extension and test engine authors to
 inspect modifiers of classes and members.</p>
 <div class="ulist">
@@ -767,9 +781,38 @@ Guide</a> for details.</p>
 </div>
 </li>
 <li>
+<p><code>AnnotationSupport</code> provides new methods for finding annotated fields and their values.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Consult the Javadoc for the various <code>findAnnotatedFields()</code> and
+<code>findAnnotatedFieldValues()</code> methods in <code><a href="../api/org/junit/platform/commons/support/AnnotationSupport.html">AnnotationSupport</a></code> for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>ReflectionSupport</code> provides new methods for finding fields and reading a field&#8217;s value.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Consult the Javadoc for the <code>findFields()</code> and <code>tryToReadFieldValue()</code> methods in
+<code><a href="../api/org/junit/platform/commons/support/ReflectionSupport.html">ReflectionSupport</a></code> for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p>Exceptions reported due to failed reflective operations such as loading a class, reading
 a field&#8217;s value, or looking up a method by name now include the original exception as
 their cause to make it easier to debug underlying issues.</p>
+</li>
+<li>
+<p>The <code>Launcher</code> API now provides an <code>execute(TestPlan, TestExecutionListener&#8230;&#8203;)</code>
+method that allows one to execute a previously discovered <code>TestPlan</code>.</p>
+</li>
+<li>
+<p><code>@RunWith(JUnitPlatform.class)</code> no longer executes test discovery twice.</p>
 </li>
 <li>
 <p>Implementations of <code>HierarchicalTestEngine</code> may now add behavior that wraps around the
@@ -786,6 +829,15 @@ invocation of <code>Node.before()</code>, <code>Node.execute()</code>, and <code
 <h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
+<li>
+<p><code>@RegisterExtension</code> fields that are <code>null</code> when evaluated are no longer silently
+ignored. Instead, the corresponding test class or test method now fails with an
+informative exception.</p>
+</li>
+<li>
+<p><code>@ParameterizedTest</code> once again supports <code>MessageFormat</code> patterns for individual
+parameters&#8201;&#8212;&#8201;for example, <code>{0,number,#.##}</code>.</p>
+</li>
 <li>
 <p><code>@ResourceLock</code> can now be declared on test template methods such as <code>@RepeatedTest</code> and
 <code>@ParameterizedTest</code> methods. If <code>@ResourceLock</code> is used, the invocations will run in
@@ -859,8 +911,19 @@ a test mid-flight due to a failed assumption&#8201;&#8212;&#8201;for example, vi
 <code>org.junit.Assume</code> utility class.</p>
 </li>
 <li>
-<p>New <code>TempDirectory</code> extension (formerly part of JUnit Pioneer) that allows one to write
-test that require a temporary directory in a <code>java.nio.file.FileSystem</code>.</p>
+<p>JUnit 4&#8217;s <code>@Ignore</code> annotation is now supported for disabling test classes and test
+methods via the <code>junit-jupiter-migrationsupport</code> module.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See the <a href="../user-guide/index.html#migrating-from-junit4-ignore-annotation-support">User Guide</a> for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>New <code>@TempDir</code> extension (formerly part of JUnit Pioneer) that allows one to write tests
+that require a temporary directory in a <code>java.nio.file.FileSystem</code>.</p>
 <div class="ulist">
 <ul>
 <li>
@@ -870,15 +933,26 @@ test that require a temporary directory in a <code>java.nio.file.FileSystem</cod
 </div>
 </li>
 <li>
-<p>New <code>JRE.JAVA_12</code> enum constant for use with <code>@EnabledOnJre</code> and <code>@DisabledOnJre</code>.</p>
-</li>
-<li>
 <p>In addition to returning streams, <code>@TestFactory</code>-annotated methods may now return a
 single <code>DynamicNode</code>&#8201;&#8212;&#8201;for example, a <code>DynamicTest</code> or a <code>DynamicContainer</code>.</p>
 </li>
 <li>
+<p>New <code>@NullSource</code>, <code>@EmptySource</code>, and <code>@NullAndEmptySource</code> argument sources that
+provide <code>null</code> and <em>empty</em> arguments to <code>@ParameterizedTest</code> methods.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="../user-guide/index.html#writing-tests-parameterized-tests-sources-null-and-empty">Null and Empty Sources</a> in the User Guide for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p>Implicit conversion from hexadecimal and octal string representations to integral types
 in <code>@ParameterizedTest</code> arguments&#8201;&#8212;&#8201;for example, conversion from <code>"0xff"</code> to <code>255</code>.</p>
+</li>
+<li>
+<p>New <code>JRE.JAVA_12</code> enum constant for use with <code>@EnabledOnJre</code> and <code>@DisabledOnJre</code>.</p>
 </li>
 <li>
 <p>New <code>LOCALE</code> and <code>TIME_ZONE</code> constants in <code>org.junit.jupiter.api.parallel.Resources</code>
@@ -910,12 +984,25 @@ Generators</a> in the User Guide for details.</p>
 </div>
 </li>
 <li>
-<p>JUnit 4&#8217;s <code>@Ignore</code> annotation is now supported for disabling test classes and test
-methods via the <code>junit-jupiter-migrationsupport</code> module.</p>
+<p>New <code>TestWatcher</code> extension API that allows extensions to process test results by
+defining result-based callbacks invoked after text execution.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>See the <a href="../user-guide/index.html#migrating-from-junit4-ignore-annotation-support">User Guide</a> for details.</p>
+<p>See <a href="../user-guide/index.html#extensions-test-result-processing">Test Result
+Processing</a> in the User Guide for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Extensions registered <em>programmatically</em> via <code>@RegisterExtension</code> may now be registered
+in an explicit order via the <code>@Order</code> annotation.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="../user-guide/index.html#extensions-registration-programmatic-order">Extension
+Registration Order</a> in the User Guide for details.</p>
 </li>
 </ul>
 </div>
@@ -935,7 +1022,10 @@ for <code>@Nested</code> tests: <code>getTestInstances()</code> and <code>getReq
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The <code>VintageTestEngine</code> now uses the fully qualified class name as the <em>legacy reporting
+name</em> for Vintage test classes instead of the simple class name which caused problems in
+test reports based on legacy reporting names&#8201;&#8212;&#8201;for example, reports generated by Maven
+Surefire.</p>
 </li>
 </ul>
 </div>
@@ -955,7 +1045,8 @@ for <code>@Nested</code> tests: <code>getTestInstances()</code> and <code>getReq
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The <code>VintageTestEngine</code> now validates that the version of <code>junit:junit</code> on the classpath
+is supported (i.e., is equal to or greater than 4.12).</p>
 </li>
 </ul>
 </div>
@@ -1054,224 +1145,6 @@ therefore no longer be configured with a custom file system or custom parent dir
 </div>
 </div>
 <div class="sect1">
-<h2 id="release-notes-5.4.0-RC1"><a class="anchor" href="#release-notes-5.4.0-RC1"></a>5.4.0-RC1</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> January 24, 2019</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong> <code>@RegisterExtension</code> ordering, <code>null</code> and <em>empty</em> argument sources for
-<code>@ParameterizedTest</code> methods, new <code>TestWatcher</code> extension API, <code>@TempDir</code> field injection
-for the <code>TempDirectory</code> extension, as well as minor improvements and bug fixes since
-5.4.0-M1.</p>
-</div>
-<div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/32?closed=1">5.4.0-RC1</a> milestone page in the JUnit
-repository on GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.4.0-RC1-overall-improvements"><a class="anchor" href="#release-notes-5.4.0-RC1-overall-improvements"></a>Overall Improvements</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>A regression introduced in version 5.4.0-M1 of the <code>junit-bom</code> has been fixed:
-<code>&lt;scope/&gt;</code> elements are omitted from the <code>&lt;dependency/&gt;</code> elements again.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.4.0-RC1-junit-platform"><a class="anchor" href="#release-notes-5.4.0-RC1-junit-platform"></a>JUnit Platform</h3>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-5"><a class="anchor" href="#deprecations-and-breaking-changes-5"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>TestPlan.add(TestIdentifier)</code> has always been considered <em>internal</em> and is now
-<em>deprecated</em>. While calls from third-party code will continue to work for the time
-being, IDEs and build tools should remove any such code as soon as possible.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>Launcher</code> API now provides an <code>execute(TestPlan, TestExecutionListener&#8230;&#8203;)</code>
-method that allows one to execute a previously discovered <code>TestPlan</code>.</p>
-</li>
-<li>
-<p><code>@RunWith(JUnitPlatform.class)</code> no longer executes test discovery twice.</p>
-</li>
-<li>
-<p>The root cause and suppressed exceptions are now included in the stack trace printed by
-the <code>ConsoleLauncher</code>.</p>
-</li>
-<li>
-<p>The <code>ConsoleLauncher</code> now sanitizes user-provided display names before printing them to
-the console.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Common whitespace characters such as <code>\t</code>, <code>\n</code>, <code>\x0B</code>, <code>\f</code>, and <code>\r</code> are replaced
-by a standard space character, and all other ISO control characters are emitted as a
-single dot (<code>.</code>).</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><code>AnnotationSupport</code> provides new methods for finding annotated fields and their values.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Consult the Javadoc for the various <code>findAnnotatedFields()</code> and
-<code>findAnnotatedFieldValues()</code> methods in <code><a href="../api/org/junit/platform/commons/support/AnnotationSupport.html">AnnotationSupport</a></code> for details.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><code>ReflectionSupport</code> provides new methods for finding fields and reading a field&#8217;s value.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Consult the Javadoc for the <code>findFields()</code> and <code>tryToReadFieldValue()</code> methods in
-<code><a href="../api/org/junit/platform/commons/support/ReflectionSupport.html">ReflectionSupport</a></code> for details.</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.4.0-RC1-junit-jupiter"><a class="anchor" href="#release-notes-5.4.0-RC1-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Additional overloaded variants of the <code>assertEquals()</code> und <code>assertNotEquals()</code> methods
-in <code>Assertions</code> that solve Groovy method dispatch problems caused by overloaded variants
-introduced in 5.4 M1.</p>
-</li>
-<li>
-<p><code>@RegisterExtension</code> fields that are <code>null</code> when evaluated are no longer silently
-ignored. Instead, the corresponding test class or test method now fails with an
-informative exception.</p>
-</li>
-<li>
-<p><code>@ParameterizedTest</code> once again supports <code>MessageFormat</code> patterns for individual
-parameters&#8201;&#8212;&#8201;for example, <code>{0,number,#.##}</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-6"><a class="anchor" href="#deprecations-and-breaking-changes-6"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>ParentDirProvider</code> strategy in the <code>TempDirectory</code> extension introduced in 5.4 M1
-now accepts a <code>TempDirContext</code> instead of <code>ParameterContext</code>.</p>
-</li>
-<li>
-<p><code>@TempDir</code> (introduced in 5.4 M1) is no longer supported on constructor parameters.
-Please use field injection instead.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Extensions registered <em>programmatically</em> via <code>@RegisterExtension</code> may now be registered
-in an explicit order via the <code>@Order</code> annotation.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>See <a href="../user-guide/index.html#extensions-registration-programmatic-order">Extension
-Registration Order</a> in the User Guide for details.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>New <code>@NullSource</code>, <code>@EmptySource</code>, and <code>@NullAndEmptySource</code> argument sources that
-provide <code>null</code> and <em>empty</em> arguments to <code>@ParameterizedTest</code> methods.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>See <a href="../user-guide/index.html#writing-tests-parameterized-tests-sources-null-and-empty">Null and Empty Sources</a> in the User Guide for details.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>New <code>TestWatcher</code> extension API that allows extensions to process test results by
-defining result-based callbacks invoked after text execution.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>See <a href="../user-guide/index.html#extensions-test-result-processing">Test Result
-Processing</a> in the User Guide for details.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>The <code>TempDirectory</code> extension now supports parameters of type <code>File</code> in addition to
-<code>Path</code>, and <code>@TempDir</code> may now be applied to static or non-static fields.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>See <a href="../user-guide/index.html#writing-tests-built-in-extensions-TempDirectory">The
-TempDirectory Extension</a> in the User Guide for details.</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.4.0-RC1-junit-vintage"><a class="anchor" href="#release-notes-5.4.0-RC1-junit-vintage"></a>JUnit Vintage</h3>
-<div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>VintageTestEngine</code> now uses the fully qualified class name as the <em>legacy reporting
-name</em> for Vintage test classes instead of the simple class name which caused problems in
-test reports based on legacy reporting names&#8201;&#8212;&#8201;for example, reports generated by Maven
-Surefire.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-7"><a class="anchor" href="#new-features-and-improvements-7"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>VintageTestEngine</code> now validates that the version of <code>junit:junit</code> on the classpath
-is supported (i.e., is equal to or greater than 4.12).</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="release-notes-5.3.2"><a class="anchor" href="#release-notes-5.3.2"></a>5.3.2</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1288,7 +1161,7 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.3.2-junit-platform"><a class="anchor" href="#release-notes-5.3.2-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1303,7 +1176,7 @@ specifiers such as <code>%c</code>.</p>
 <div class="sect2">
 <h3 id="release-notes-5.3.2-junit-jupiter"><a class="anchor" href="#release-notes-5.3.2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1378,7 +1251,7 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.3.1-junit-platform"><a class="anchor" href="#release-notes-5.3.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1411,7 +1284,7 @@ messages to be discarded when used from Gradle and potentially other tools and I
 <div class="sect2">
 <h3 id="release-notes-5.3.1-junit-jupiter"><a class="anchor" href="#release-notes-5.3.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-10"><a class="anchor" href="#bug-fixes-10"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1473,7 +1346,7 @@ well as various minor improvements and bug fixes.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-02-04 18:33:20 UTC
+Last updated 2019-02-04 18:53:02 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
