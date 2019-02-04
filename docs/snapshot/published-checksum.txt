@@ -23,6 +23,7 @@
 0833d67569abc3c32f85348f4e3fca83  junit-platform-console/src/main/java/org/junit/platform/console/tasks/DiscoveryRequestCreator.java
 0abb8110e64d8700654c7b94b931986c  junit-platform-console/src/main/java/org/junit/platform/console/package-info.java
 0ad657e51981206744d1dbaa28a08a3b  junit-jupiter-params/src/main/java/org/junit/jupiter/params/support/AnnotationConsumer.java
+0afe65d6676ba5d0c84e51f845806102  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0.adoc
 0b800a48384721d45330a72ce3e39392  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterEachCallback.java
 0c16938e054fdbab624161a788171077  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.java
 0c481bdb314053214aa23d14ba89b64c  documentation/src/test/java/example/DynamicTestsDemo.java
@@ -388,7 +389,6 @@ a017ac3a4a4e757cd70928019fa5653d  documentation/src/docs/asciidoc/user-guide/mig
 a0c04f7f3cf8062ad65c76dddf070574  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/AbstractTestRuleAnnotatedMember.java
 a0c3f78a59b1212c4756db163746880d  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedMember.java
 a142ab00a174270e9712b7032cf5ee7f  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutor.java
-a17418cd7b9b08e09cc1b299c30b857b  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0.adoc
 a1ea21eb6905311553d061647b2c98d0  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/package-info.java
 a301a954832c0f1d8e9820b19199eddc  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ExecutableInvoker.java
 a357bcf8d822a1c2182f0356118a5cc8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/TestContainerResolver.java
