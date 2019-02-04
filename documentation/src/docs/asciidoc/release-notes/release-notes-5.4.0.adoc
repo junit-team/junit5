@@ -35,15 +35,51 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The `junit-platform-suite-api` artifact no longer has an unnecessary direct dependency
+  on `junit-platform-commons`.
+* Containers and tests that interrupt the current thread no longer cause surprising
+  failures in subsequent tests that interact with the reused thread.
+  - This applies specifically to containers and tests executed via a
+    `HierarchicalTestExecutorService` -- for example, a `@Test` method in JUnit Jupiter
+    -- that interrupt the current thread -- for example, via
+    `Thread.currentThread().interrupt()` -- but fail to clear the _interrupted status_
+    flag for the current thread.
+  - The `TestTask` implementation used internally by `HierarchicalTestExecutorService`
+    implementations now automatically clears the _interrupted status_ for the current
+    thread after the execution of each container and test and logs a message at `DEBUG`
+    level (`FINE` in java.util.logging) if the _interrupted status_ is not cleared
+    properly by user code.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The JUnit Platform Maven Surefire Provider (`junit-platform-surefire-provider`) has
+  been discontinued and is no longer released as part of JUnit 5. Please use
+  <<../user-guide/index.adoc#running-tests-build-maven, Maven Surefire’s native support>>
+  for running tests on the JUnit Platform instead (requires Maven Surefire 2.22.0 or
+  higher).
 
 ==== New Features and Improvements
 
-* ❓
+* New `junit-platform-reporting` artifact containing a
+  `LegacyXmlReportGeneratingListener` that generates XML reports using a format which is
+  compatible with the de facto standard for JUnit 4 based test reports that was made
+  popular by the Ant build system.
+  - See <<../user-guide/index.adoc#launcher-api-listeners-reporting, JUnit Platform
+    Reporting>> in the User Guide for details.
+* New `junit-platform-testkit` artifact containing a _Test Kit_ API for testing the
+  execution of a `{TestEngine}` running on the JUnit Platform.
+  - See <<../user-guide/index.adoc#testkit, JUnit Platform Test Kit>> in the User Guide
+    for details.
+* New `ModifierSupport` class providing an API for extension and test engine authors to
+  inspect modifiers of classes and members.
+  - See the <<../user-guide/index.adoc#extensions-supported-utilities-modifier, User
+    Guide>> for details.
+* Exceptions reported due to failed reflective operations such as loading a class, reading
+  a field's value, or looking up a method by name now include the original exception as
+  their cause to make it easier to debug underlying issues.
+* Implementations of `HierarchicalTestEngine` may now add behavior that wraps around the
+  invocation of `Node.before()`, `Node.execute()`, and `Node.after()` using the new
+  `Node.around()` hook.
 
 
 [[release-notes-5.4.0-junit-jupiter]]
@@ -51,16 +87,70 @@ on GitHub.
 
 ==== Bug Fixes
 
+* `@ResourceLock` can now be declared on test template methods such as `@RepeatedTest` and
+  `@ParameterizedTest` methods. If `@ResourceLock` is used, the invocations will run in
+  the same thread, even if parallel execution is enabled.
 * The `@Execution` and `@ResourceLock` annotations used to configure parallel test
   execution are now inherited within test class hierarchies (via `@Inherited` semantics).
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The default mode for parallel test execution has been changed from `CONCURRENT` to
+  `SAME_THREAD` to allow for gradual opt-in by using the `@Execution` annotation on
+  individual test classes or methods. You can invert this behavior by changing the default
+  execution mode via the new `junit.jupiter.execution.parallel.mode.default`
+  configuration parameter. Please refer to the
+  <<../user-guide/index.adoc#writing-tests-parallel-execution, User Guide>> for details.
 
 ==== New Features and Improvements
 
-* ❓
+* New `org.junit.jupiter:junit-jupiter` artifact that simplifies dependency management
+  for JUnit Jupiter in build tools such as Gradle and Maven.
+  - Specifically, this artifact aggregates all dependencies that are required to use
+    JUnit Jupiter along with optional dependencies that extend the core Jupiter APIs.
+  - It contains compile-time dependencies on `junit-jupiter-api` and
+    `junit-jupiter-params` and a runtime dependency on `junit-jupiter-engine`.
+* `Assertions.assertEquals()` variants that compare floating point numbers using a delta
+  now support a _delta_ of zero.
+* New `Assertions.assertEquals()` variants that accept mixed boxed and unboxed primitive
+  values, allowing statements such as `assertEquals(42, Integer.valueOf("42"))` to
+  compile.
+* New `Assertions.assertNotEquals()` variants that accept the following primitive data
+  types: `char`, `byte`, `short`, `int`, `long`, `float`, and `double`. Mixed boxed and
+  unboxed primitive values are also supported.
+* Exceptions thrown in `Assertions.assertAll()` are now additionally tracked as
+  _suppressed exceptions_ in the resulting `MultipleFailuresError`. Consequently, the
+  stack traces for such exceptions are now visible as _Suppressed_ at the end of the
+  stack trace for the invocation of `assertAll()`.
+* JUnit 4's `AssumptionViolatedException` is now supported in JUnit Jupiter for aborting
+  a test mid-flight due to a failed assumption -- for example, via JUnit 4's
+  `org.junit.Assume` utility class.
+* New `TempDirectory` extension (formerly part of JUnit Pioneer) that allows one to write
+  test that require a temporary directory in a `java.nio.file.FileSystem`.
+  - See the <<../user-guide/index.adoc#writing-tests-built-in-extensions-TempDirectory,
+    User Guide>> for details.
+* New `JRE.JAVA_12` enum constant for use with `@EnabledOnJre` and `@DisabledOnJre`.
+* In addition to returning streams, `@TestFactory`-annotated methods may now return a
+  single `DynamicNode` -- for example, a `DynamicTest` or a `DynamicContainer`.
+* Implicit conversion from hexadecimal and octal string representations to integral types
+  in `@ParameterizedTest` arguments -- for example, conversion from `"0xff"` to `255`.
+* New `LOCALE` and `TIME_ZONE` constants in `org.junit.jupiter.api.parallel.Resources`
+  for use with `@ResourceLock` to synchronize test execution regarding the default
+  `Locale` and default `TimeZone`, respectively.
+* New `MethodOrderer` API for ordering the sequence of tests with built-in support for
+  _alphanumeric_, `@Order` annotation based, and _random_ ordering of test methods.
+  - See <<../user-guide/index.adoc#writing-tests-test-execution-order, Test Execution
+    Order>> in the User Guide for details.
+* New `DisplayNameGenerator` interface and `@DisplayNameGeneration` annotation that allow
+  declarative configuration of a pre-defined or custom display name generator.
+  - See <<../user-guide/index.adoc#writing-tests-display-name-generator, Display Name
+    Generators>> in the User Guide for details.
+* JUnit 4's `@Ignore` annotation is now supported for disabling test classes and test
+  methods via the `junit-jupiter-migrationsupport` module.
+  - See the <<../user-guide/index.adoc#migrating-from-junit4-ignore-annotation-support,
+    User Guide>> for details.
+* New `ExtensionContext` methods to access all test instances, including enclosing ones
+  for `@Nested` tests: `getTestInstances()` and `getRequiredTestInstances()`.
 
 
 [[release-notes-5.4.0-junit-vintage]]
