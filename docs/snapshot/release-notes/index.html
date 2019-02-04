@@ -578,13 +578,6 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#release-notes-5.4.0-RC1-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
-<li><a href="#release-notes-5.4.0-M1">5.4.0-M1</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.4.0-M1-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.4.0-M1-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.4.0-M1-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
 <li><a href="#release-notes-5.3.2">5.3.2</a>
 <ul class="sectlevel2">
 <li><a href="#release-notes-5.3.2-junit-platform">JUnit Platform</a></li>
@@ -623,7 +616,57 @@ authors as well as build tool and IDE vendors.</p>
 <p><strong>Date of Release:</strong> February 6, 2019</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> ❓</p>
+<p><strong>Scope:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>New <code>junit-jupiter</code> dependency-aggregating artifact for simplified dependency management
+in build tools</p>
+</li>
+<li>
+<p>XML report generating listener</p>
+</li>
+<li>
+<p>Test Kit for testing engines and extensions</p>
+</li>
+<li>
+<p><code>null</code> and <em>empty</em> argument sources for <code>@ParameterizedTest</code> methods</p>
+</li>
+<li>
+<p><code>@TempDir</code> support for temporary directories</p>
+</li>
+<li>
+<p>Custom display name generator API</p>
+</li>
+<li>
+<p>Support for ordering test methods</p>
+</li>
+<li>
+<p>Support for ordering extensions registered via <code>@RegisterExtension</code></p>
+</li>
+<li>
+<p><code>TestWatcher</code> extension API</p>
+</li>
+<li>
+<p>API for accessing outer test instances in <code>ExtensionContext</code></p>
+</li>
+<li>
+<p>JUnit 4 <code>@Ignore</code> migration support</p>
+</li>
+<li>
+<p>Improved diagnostics and error reporting</p>
+</li>
+<li>
+<p>Improved documentation and user experience in the User Guide</p>
+</li>
+<li>
+<p>Discontinuation of the <code>junit-platform-surefire-provider</code></p>
+</li>
+<li>
+<p>Various minor improvements and bug fixes</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
@@ -640,7 +683,29 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The <code>junit-platform-suite-api</code> artifact no longer has an unnecessary direct dependency
+on <code>junit-platform-commons</code>.</p>
+</li>
+<li>
+<p>Containers and tests that interrupt the current thread no longer cause surprising
+failures in subsequent tests that interact with the reused thread.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>This applies specifically to containers and tests executed via a
+<code>HierarchicalTestExecutorService</code>&#8201;&#8212;&#8201;for example, a <code>@Test</code> method in JUnit Jupiter&#8201;&#8212;&#8201;that interrupt the current thread&#8201;&#8212;&#8201;for example, via
+<code>Thread.currentThread().interrupt()</code>&#8201;&#8212;&#8201;but fail to clear the <em>interrupted status</em>
+flag for the current thread.</p>
+</li>
+<li>
+<p>The <code>TestTask</code> implementation used internally by <code>HierarchicalTestExecutorService</code>
+implementations now automatically clears the <em>interrupted status</em> for the current
+thread after the execution of each container and test and logs a message at <code>DEBUG</code>
+level (<code>FINE</code> in java.util.logging) if the <em>interrupted status</em> is not cleared
+properly by user code.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -650,7 +715,11 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The JUnit Platform Maven Surefire Provider (<code>junit-platform-surefire-provider</code>) has
+been discontinued and is no longer released as part of JUnit 5. Please use
+<a href="../user-guide/index.html#running-tests-build-maven">Maven Surefire’s native support</a>
+for running tests on the JUnit Platform instead (requires Maven Surefire 2.22.0 or
+higher).</p>
 </li>
 </ul>
 </div>
@@ -660,7 +729,52 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>New <code>junit-platform-reporting</code> artifact containing a
+<code>LegacyXmlReportGeneratingListener</code> that generates XML reports using a format which is
+compatible with the de facto standard for JUnit 4 based test reports that was made
+popular by the Ant build system.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="../user-guide/index.html#launcher-api-listeners-reporting">JUnit Platform
+Reporting</a> in the User Guide for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>New <code>junit-platform-testkit</code> artifact containing a <em>Test Kit</em> API for testing the
+execution of a <code><a href="../api/org/junit/platform/engine/TestEngine.html">TestEngine</a></code> running on the JUnit Platform.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="../user-guide/index.html#testkit">JUnit Platform Test Kit</a> in the User Guide
+for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>New <code>ModifierSupport</code> class providing an API for extension and test engine authors to
+inspect modifiers of classes and members.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See the <a href="../user-guide/index.html#extensions-supported-utilities-modifier">User
+Guide</a> for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Exceptions reported due to failed reflective operations such as loading a class, reading
+a field&#8217;s value, or looking up a method by name now include the original exception as
+their cause to make it easier to debug underlying issues.</p>
+</li>
+<li>
+<p>Implementations of <code>HierarchicalTestEngine</code> may now add behavior that wraps around the
+invocation of <code>Node.before()</code>, <code>Node.execute()</code>, and <code>Node.after()</code> using the new
+<code>Node.around()</code> hook.</p>
 </li>
 </ul>
 </div>
@@ -673,6 +787,11 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
+<p><code>@ResourceLock</code> can now be declared on test template methods such as <code>@RepeatedTest</code> and
+<code>@ParameterizedTest</code> methods. If <code>@ResourceLock</code> is used, the invocations will run in
+the same thread, even if parallel execution is enabled.</p>
+</li>
+<li>
 <p>The <code>@Execution</code> and <code>@ResourceLock</code> annotations used to configure parallel test
 execution are now inherited within test class hierarchies (via <code>@Inherited</code> semantics).</p>
 </li>
@@ -684,7 +803,12 @@ execution are now inherited within test class hierarchies (via <code>@Inherited<
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The default mode for parallel test execution has been changed from <code>CONCURRENT</code> to
+<code>SAME_THREAD</code> to allow for gradual opt-in by using the <code>@Execution</code> annotation on
+individual test classes or methods. You can invert this behavior by changing the default
+execution mode via the new <code>junit.jupiter.execution.parallel.mode.default</code>
+configuration parameter. Please refer to the
+<a href="../user-guide/index.html#writing-tests-parallel-execution">User Guide</a> for details.</p>
 </li>
 </ul>
 </div>
@@ -694,7 +818,111 @@ execution are now inherited within test class hierarchies (via <code>@Inherited<
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>New <code>org.junit.jupiter:junit-jupiter</code> artifact that simplifies dependency management
+for JUnit Jupiter in build tools such as Gradle and Maven.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Specifically, this artifact aggregates all dependencies that are required to use
+JUnit Jupiter along with optional dependencies that extend the core Jupiter APIs.</p>
+</li>
+<li>
+<p>It contains compile-time dependencies on <code>junit-jupiter-api</code> and
+<code>junit-jupiter-params</code> and a runtime dependency on <code>junit-jupiter-engine</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>Assertions.assertEquals()</code> variants that compare floating point numbers using a delta
+now support a <em>delta</em> of zero.</p>
+</li>
+<li>
+<p>New <code>Assertions.assertEquals()</code> variants that accept mixed boxed and unboxed primitive
+values, allowing statements such as <code>assertEquals(42, Integer.valueOf("42"))</code> to
+compile.</p>
+</li>
+<li>
+<p>New <code>Assertions.assertNotEquals()</code> variants that accept the following primitive data
+types: <code>char</code>, <code>byte</code>, <code>short</code>, <code>int</code>, <code>long</code>, <code>float</code>, and <code>double</code>. Mixed boxed and
+unboxed primitive values are also supported.</p>
+</li>
+<li>
+<p>Exceptions thrown in <code>Assertions.assertAll()</code> are now additionally tracked as
+<em>suppressed exceptions</em> in the resulting <code>MultipleFailuresError</code>. Consequently, the
+stack traces for such exceptions are now visible as <em>Suppressed</em> at the end of the
+stack trace for the invocation of <code>assertAll()</code>.</p>
+</li>
+<li>
+<p>JUnit 4&#8217;s <code>AssumptionViolatedException</code> is now supported in JUnit Jupiter for aborting
+a test mid-flight due to a failed assumption&#8201;&#8212;&#8201;for example, via JUnit 4&#8217;s
+<code>org.junit.Assume</code> utility class.</p>
+</li>
+<li>
+<p>New <code>TempDirectory</code> extension (formerly part of JUnit Pioneer) that allows one to write
+test that require a temporary directory in a <code>java.nio.file.FileSystem</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See the <a href="../user-guide/index.html#writing-tests-built-in-extensions-TempDirectory">User Guide</a> for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>New <code>JRE.JAVA_12</code> enum constant for use with <code>@EnabledOnJre</code> and <code>@DisabledOnJre</code>.</p>
+</li>
+<li>
+<p>In addition to returning streams, <code>@TestFactory</code>-annotated methods may now return a
+single <code>DynamicNode</code>&#8201;&#8212;&#8201;for example, a <code>DynamicTest</code> or a <code>DynamicContainer</code>.</p>
+</li>
+<li>
+<p>Implicit conversion from hexadecimal and octal string representations to integral types
+in <code>@ParameterizedTest</code> arguments&#8201;&#8212;&#8201;for example, conversion from <code>"0xff"</code> to <code>255</code>.</p>
+</li>
+<li>
+<p>New <code>LOCALE</code> and <code>TIME_ZONE</code> constants in <code>org.junit.jupiter.api.parallel.Resources</code>
+for use with <code>@ResourceLock</code> to synchronize test execution regarding the default
+<code>Locale</code> and default <code>TimeZone</code>, respectively.</p>
+</li>
+<li>
+<p>New <code>MethodOrderer</code> API for ordering the sequence of tests with built-in support for
+<em>alphanumeric</em>, <code>@Order</code> annotation based, and <em>random</em> ordering of test methods.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="../user-guide/index.html#writing-tests-test-execution-order">Test Execution
+Order</a> in the User Guide for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>New <code>DisplayNameGenerator</code> interface and <code>@DisplayNameGeneration</code> annotation that allow
+declarative configuration of a pre-defined or custom display name generator.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="../user-guide/index.html#writing-tests-display-name-generator">Display Name
+Generators</a> in the User Guide for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>JUnit 4&#8217;s <code>@Ignore</code> annotation is now supported for disabling test classes and test
+methods via the <code>junit-jupiter-migrationsupport</code> module.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See the <a href="../user-guide/index.html#migrating-from-junit4-ignore-annotation-support">User Guide</a> for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>New <code>ExtensionContext</code> methods to access all test instances, including enclosing ones
+for <code>@Nested</code> tests: <code>getTestInstances()</code> and <code>getRequiredTestInstances()</code>.</p>
 </li>
 </ul>
 </div>
@@ -1044,281 +1272,6 @@ is supported (i.e., is equal to or greater than 4.12).</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="release-notes-5.4.0-M1"><a class="anchor" href="#release-notes-5.4.0-M1"></a>5.4.0-M1</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> December 23, 2018</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong> XML report generating listener, Test Kit for testing engines and extensions, new
-<code>junit-jupiter</code> dependency aggregating artifact for simplified dependency management in
-build tools, <code>TempDirectory</code> extension, display name generator API, test execution order
-API, API for accessing outer test instances, JUnit 4 <code>@Ignore</code> migration support, improved
-diagnostics and error reporting, discontinuation of the <code>junit-platform-surefire-provider</code>,
-as well as various minor improvements and bug fixes.</p>
-</div>
-<div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult
-the <a href="https://github.com/junit-team/junit5/milestone/29?closed=1">5.4.0-M1</a> milestone page in the JUnit
-repository on GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.4.0-M1-junit-platform"><a class="anchor" href="#release-notes-5.4.0-M1-junit-platform"></a>JUnit Platform</h3>
-<div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>junit-platform-suite-api</code> artifact no longer has an unnecessary direct dependency
-on <code>junit-platform-commons</code>.</p>
-</li>
-<li>
-<p>Containers and tests that interrupt the current thread no longer cause surprising
-failures in subsequent tests that interact with the reused thread.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>This applies specifically to containers and tests executed via a
-<code>HierarchicalTestExecutorService</code>&#8201;&#8212;&#8201;for example, a <code>@Test</code> method in JUnit Jupiter&#8201;&#8212;&#8201;that interrupt the current thread&#8201;&#8212;&#8201;for example, via
-<code>Thread.currentThread().interrupt()</code>&#8201;&#8212;&#8201;but fail to clear the <em>interrupted status</em>
-flag for the current thread.</p>
-</li>
-<li>
-<p>The <code>TestTask</code> implementation used internally by <code>HierarchicalTestExecutorService</code>
-implementations now automatically clears the <em>interrupted status</em> for the current
-thread after the execution of each container and test and logs a message at <code>DEBUG</code>
-level (<code>FINE</code> in java.util.logging) if the <em>interrupted status</em> is not cleared
-properly by user code.</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-7"><a class="anchor" href="#deprecations-and-breaking-changes-7"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The JUnit Platform Maven Surefire Provider (<code>junit-platform-surefire-provider</code>) has
-been discontinued and is no longer released as part of JUnit 5. Please use
-<a href="../user-guide/index.html#running-tests-build-maven">Maven Surefire’s native support</a>
-for running tests on the JUnit Platform instead (requires Maven Surefire 2.22.0 or
-higher).</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-8"><a class="anchor" href="#new-features-and-improvements-8"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>New <code>junit-platform-reporting</code> artifact containing a
-<code>LegacyXmlReportGeneratingListener</code> that generates XML reports using a format which is
-compatible with the de facto standard for JUnit 4 based test reports that was made
-popular by the Ant build system.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>See <a href="../user-guide/index.html#launcher-api-listeners-reporting">JUnit Platform
-Reporting</a> in the User Guide for details.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>New <code>junit-platform-testkit</code> artifact containing a <em>Test Kit</em> API for testing the
-execution of a <code><a href="../api/org/junit/platform/engine/TestEngine.html">TestEngine</a></code> running on the JUnit Platform.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>See <a href="../user-guide/index.html#testkit">JUnit Platform Test Kit</a> in the User Guide
-for details.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>New <code>ModifierSupport</code> class providing an API for extension and test engine authors to
-inspect modifiers of classes and members.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>See the <a href="../user-guide/index.html#extensions-supported-utilities-modifier">User
-Guide</a> for details.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Exceptions reported due to failed reflective operations such as loading a class, reading
-a field&#8217;s value, or looking up a method by name now include the original exception as
-their cause to make it easier to debug underlying issues.</p>
-</li>
-<li>
-<p>Implementations of <code>HierarchicalTestEngine</code> may now add behavior that wraps around the
-invocation of <code>Node.before()</code>, <code>Node.execute()</code>, and <code>Node.after()</code> using the new
-<code>Node.around()</code> hook.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.4.0-M1-junit-jupiter"><a class="anchor" href="#release-notes-5.4.0-M1-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>@ResourceLock</code> can now be declared on test template methods such as <code>@RepeatedTest</code> and
-<code>@ParameterizedTest</code> methods. If <code>@ResourceLock</code> is used, the invocations will run in
-the same thread, even if parallel execution is enabled.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-8"><a class="anchor" href="#deprecations-and-breaking-changes-8"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The default mode for parallel test execution has been changed from <code>CONCURRENT</code> to
-<code>SAME_THREAD</code> to allow for gradual opt-in by using the <code>@Execution</code> annotation on
-individual test classes or methods. You can invert this behavior by changing the default
-execution mode via the new <code>junit.jupiter.execution.parallel.mode.default</code>
-configuration parameter. Please refer to the
-<a href="../user-guide/index.html#writing-tests-parallel-execution">User Guide</a> for details.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-9"><a class="anchor" href="#new-features-and-improvements-9"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>New <code>org.junit.jupiter:junit-jupiter</code> artifact that simplifies dependency management
-for JUnit Jupiter in build tools such as Gradle and Maven.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Specifically, this artifact aggregates all dependencies that are required to use
-JUnit Jupiter along with optional dependencies that extend the core Jupiter APIs.</p>
-</li>
-<li>
-<p>It contains compile-time dependencies on <code>junit-jupiter-api</code> and
-<code>junit-jupiter-params</code> and a runtime dependency on <code>junit-jupiter-engine</code>.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><code>Assertions.assertEquals()</code> variants that compare floating point numbers using a delta
-now support a <em>delta</em> of zero.</p>
-</li>
-<li>
-<p>New <code>Assertions.assertEquals()</code> variants that accept mixed boxed and unboxed primitive
-values, allowing statements such as <code>assertEquals(42, Integer.valueOf("42"))</code> to
-compile.</p>
-</li>
-<li>
-<p>New <code>Assertions.assertNotEquals()</code> variants that accept the following primitive data
-types: <code>char</code>, <code>byte</code>, <code>short</code>, <code>int</code>, <code>long</code>, <code>float</code>, and <code>double</code>. Mixed boxed and
-unboxed primitive values are also supported.</p>
-</li>
-<li>
-<p>Exceptions thrown in <code>Assertions.assertAll()</code> are now additionally tracked as
-<em>suppressed exceptions</em> in the resulting <code>MultipleFailuresError</code>. Consequently, the
-stack traces for such exceptions are now visible as <em>Suppressed</em> at the end of the
-stack trace for the invocation of <code>assertAll()</code>.</p>
-</li>
-<li>
-<p>JUnit 4&#8217;s <code>AssumptionViolatedException</code> is now supported in JUnit Jupiter for aborting
-a test mid-flight due to a failed assumption&#8201;&#8212;&#8201;for example, via JUnit 4&#8217;s
-<code>org.junit.Assume</code> utility class.</p>
-</li>
-<li>
-<p>New <code>TempDirectory</code> extension (formerly part of JUnit Pioneer) that allows one to write
-test that require a temporary directory in a <code>java.nio.file.FileSystem</code>.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>See the <a href="../user-guide/index.html#writing-tests-built-in-extensions-TempDirectory">User Guide</a> for details.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>New <code>JRE.JAVA_12</code> enum constant for use with <code>@EnabledOnJre</code> and <code>@DisabledOnJre</code>.</p>
-</li>
-<li>
-<p>In addition to returning streams, <code>@TestFactory</code>-annotated methods may now return a
-single <code>DynamicNode</code>&#8201;&#8212;&#8201;for example, a <code>DynamicTest</code> or a <code>DynamicContainer</code>.</p>
-</li>
-<li>
-<p>Implicit conversion from hexadecimal and octal string representations to integral types
-in <code>@ParameterizedTest</code> arguments&#8201;&#8212;&#8201;for example, conversion from <code>"0xff"</code> to <code>255</code>.</p>
-</li>
-<li>
-<p>New <code>LOCALE</code> and <code>TIME_ZONE</code> constants in <code>org.junit.jupiter.api.parallel.Resources</code>
-for use with <code>@ResourceLock</code> to synchronize test execution regarding the default
-<code>Locale</code> and default <code>TimeZone</code>, respectively.</p>
-</li>
-<li>
-<p>New <code>MethodOrderer</code> API for ordering the sequence of tests with built-in support for
-<em>alphanumeric</em>, <code>@Order</code> annotation based, and <em>random</em> ordering of test methods.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>See <a href="../user-guide/index.html#writing-tests-test-execution-order">Test Execution
-Order</a> in the User Guide for details.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>New <code>DisplayNameGenerator</code> interface and <code>@DisplayNameGeneration</code> annotation that allow
-declarative configuration of a pre-defined or custom display name generator.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>See <a href="../user-guide/index.html#writing-tests-display-name-generator">Display Name
-Generators</a> in the User Guide for details.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>JUnit 4&#8217;s <code>@Ignore</code> annotation is now supported for disabling test classes and test
-methods via the <code>junit-jupiter-migrationsupport</code> module.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>See the <a href="../user-guide/index.html#migrating-from-junit4-ignore-annotation-support">User Guide</a> for details.</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>New <code>ExtensionContext</code> methods to access all test instances, including enclosing ones
-for <code>@Nested</code> tests: <code>getTestInstances()</code> and <code>getRequiredTestInstances()</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.4.0-M1-junit-vintage"><a class="anchor" href="#release-notes-5.4.0-M1-junit-vintage"></a>JUnit Vintage</h3>
-<div class="paragraph">
-<p>No changes</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="release-notes-5.3.2"><a class="anchor" href="#release-notes-5.3.2"></a>5.3.2</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1335,7 +1288,7 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.3.2-junit-platform"><a class="anchor" href="#release-notes-5.3.2-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1350,7 +1303,7 @@ specifiers such as <code>%c</code>.</p>
 <div class="sect2">
 <h3 id="release-notes-5.3.2-junit-jupiter"><a class="anchor" href="#release-notes-5.3.2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-10"><a class="anchor" href="#bug-fixes-10"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1425,7 +1378,7 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.3.1-junit-platform"><a class="anchor" href="#release-notes-5.3.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-11"><a class="anchor" href="#bug-fixes-11"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-9"><a class="anchor" href="#bug-fixes-9"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1458,7 +1411,7 @@ messages to be discarded when used from Gradle and potentially other tools and I
 <div class="sect2">
 <h3 id="release-notes-5.3.1-junit-jupiter"><a class="anchor" href="#release-notes-5.3.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-12"><a class="anchor" href="#bug-fixes-12"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-10"><a class="anchor" href="#bug-fixes-10"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1520,7 +1473,7 @@ well as various minor improvements and bug fixes.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-02-02 16:52:46 UTC
+Last updated 2019-02-04 18:33:20 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
