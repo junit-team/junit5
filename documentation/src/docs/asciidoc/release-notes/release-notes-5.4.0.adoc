@@ -165,7 +165,8 @@ on GitHub.
     Null and Empty Sources>> in the User Guide for details.
 * Implicit conversion from hexadecimal and octal string representations to integral types
   in `@ParameterizedTest` arguments -- for example, conversion from `"0xff"` to `255`.
-* New `JRE.JAVA_12` enum constant for use with `@EnabledOnJre` and `@DisabledOnJre`.
+* New `JAVA_12` and `JAVA_13` constants in the `JRE` enum for use with `@EnabledOnJre` and
+  `@DisabledOnJre`.
 * New `LOCALE` and `TIME_ZONE` constants in `org.junit.jupiter.api.parallel.Resources`
   for use with `@ResourceLock` to synchronize test execution regarding the default
   `Locale` and default `TimeZone`, respectively.
