@@ -1655,6 +1655,10 @@ another dependency.
 [[writing-tests-built-in-extensions-TempDirectory]]
 ==== The TempDirectory Extension
 
+.`@TempDir` is an experimental feature
+WARNING: You're invited to give it a try and provide feedback to the JUnit team so they
+can improve and eventually <<api-evolution, promote>> this feature.
+
 The built-in `{TempDirectory}` extension is used to create and clean up a temporary
 directory for an individual test or all tests in a test class. It is registered by
 default. To use it, annotate a field of type `java.nio.file.Path` or `java.io.File` with
