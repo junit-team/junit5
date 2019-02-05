@@ -633,6 +633,11 @@ please consult the respective Javadoc for each annotation and extension.
 JUnit Jupiter guarantees wrapping behavior within class hierarchies for user-supplied
 lifecycle callbacks (e.g., `@BeforeEach` and `@AfterEach`):
 
+////
+PNG generated using ZenUML: https://app.zenuml.com
+
+See corresponding *.txt file in images folder for the source.
+////
 image::extensions_DatabaseTestsDemo.png[caption='',title='DatabaseTestsDemo.java']
 
 JUnit Jupiter does **not** guarantee the order in which multiple lifecycle methods are
@@ -647,6 +652,11 @@ test methods in the same order, thereby allowing for repeatable builds.
 In addition, and more importantly, JUnit Jupiter does **not** support wrapping behavior
 for multiple lifecycle methods declared within a single test class or test interface.
 
+////
+PNG generated using ZenUML: https://app.zenuml.com
+
+See corresponding *.txt file in images folder for the source.
+////
 image::extensions_BrokenLifecycleMethodConfigDemo.png[caption='',title='BrokenLifecycleMethodConfigDemo.java']
 
 Due to the aforementioned behavior, the JUnit Team recommends that developers declare at

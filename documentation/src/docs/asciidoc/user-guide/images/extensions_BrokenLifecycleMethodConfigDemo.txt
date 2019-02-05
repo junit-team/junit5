@@ -1,5 +1,6 @@
 @Starter(Platform)
-Result = JupiterEngine.execute("BrokenLifecycleMethodConfigDemo.testDatabaseFunctionality") {
+Result = JupiterEngine.execute(BrokenLifecycleMethodConfigDemo) {
+
   Extension1.beforeEach()
   Extension2.beforeEach()
   // @BeforeEach
@@ -11,7 +12,8 @@ Result = JupiterEngine.execute("BrokenLifecycleMethodConfigDemo.testDatabaseFunc
   // @AfterEach
   BrokenLifecycleMethodConfigDemo.disconnectFromDatabase()
   // @AfterEach
-  BrokenLifecycleMethodConfigDemo.deleteTestDataInDatabase()
+  BrokenLifecycleMethodConfigDemo.deleteTestDataFromDatabase()
   Extension2.afterEach()
   Extension1.afterEach()
+
 }

@@ -45,8 +45,8 @@ class BrokenLifecycleMethodConfigDemo {
 	}
 
 	@AfterEach
-	void deleteTestDataInDatabase() {
-		afterEachMethod(getClass().getSimpleName() + ".deleteTestDataInDatabase()");
+	void deleteTestDataFromDatabase() {
+		afterEachMethod(getClass().getSimpleName() + ".deleteTestDataFromDatabase()");
 	}
 
 	@AfterEach

@@ -46,13 +46,13 @@ class DatabaseTestsDemo extends AbstractDatabaseTests {
 	}
 
 	@AfterEach
-	void deleteTestDataInDatabase() {
-		afterEachMethod(getClass().getSimpleName() + ".deleteTestDataInDatabase()");
+	void deleteTestDataFromDatabase() {
+		afterEachMethod(getClass().getSimpleName() + ".deleteTestDataFromDatabase()");
 	}
 
 	@AfterAll
 	static void afterAll() {
-		beforeAllMethod(DatabaseTestsDemo.class.getSimpleName() + ".beforeAll()");
+		beforeAllMethod(DatabaseTestsDemo.class.getSimpleName() + ".afterAll()");
 	}
 
 }
