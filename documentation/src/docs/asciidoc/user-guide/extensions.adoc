@@ -733,7 +733,7 @@ image::extensions_DatabaseTestsDemo.png[caption='',title='DatabaseTestsDemo']
 JUnit Jupiter does **not** guarantee the order in which multiple lifecycle methods are
 invoked within a _single_ test class. It would appear that JUnit Jupiter invokes such
 methods in alphabetical order. However, that is not precisely true. The ordering is
-analogous to the ordering for `@Test` methods within a single test class:
+analogous to the ordering for `@Test` methods within a single test class.
 
 NOTE: By default, test methods will be ordered using an algorithm that is deterministic
 but intentionally non-obvious. This ensures that subsequent runs of a test suite execute
@@ -748,6 +748,23 @@ for multiple lifecycle methods declared within a single test class or test inter
 include::{testDir}/example/callbacks/BrokenLifecycleMethodConfigDemo.java[tags=user_guide]
 ----
 
+When the `BrokenLifecycleMethodConfigDemo` test class is executed, the following is logged.
+
+----
+Extension1.beforeEach()
+Extension2.beforeEach()
+  @BeforeEach BrokenLifecycleMethodConfigDemo.insertTestDataIntoDatabase()
+  @BeforeEach BrokenLifecycleMethodConfigDemo.connectToDatabase()
+    @Test BrokenLifecycleMethodConfigDemo.testDatabaseFunctionality()
+  @AfterEach BrokenLifecycleMethodConfigDemo.disconnectFromDatabase()
+  @AfterEach BrokenLifecycleMethodConfigDemo.deleteTestDataFromDatabase()
+Extension2.afterEach()
+Extension1.afterEach()
+----
+
+The following sequence diagram helps to shed further light on what actually goes on within
+the `JupiterTestEngine` when the `BrokenLifecycleMethodConfigDemo` test class is executed.
+
 ////
 PNG generated using ZenUML: https://app.zenuml.com
 
@@ -757,4 +774,5 @@ image::extensions_BrokenLifecycleMethodConfigDemo.png[caption='',title='BrokenLi
 
 Due to the aforementioned behavior, the JUnit Team recommends that developers declare at
 most one of each type of lifecycle method (i.e., `@BeforeAll`, `@AfterAll`, `@BeforeEach`,
-`@AfterEach`) per test class or test interface.
+`@AfterEach`) per test class or test interface unless there are no dependencies between
+such lifecycle methods.
