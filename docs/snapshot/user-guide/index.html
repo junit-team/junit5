@@ -7183,8 +7183,197 @@ please consult the respective Javadoc for each annotation and extension.</p>
 <div class="sect3">
 <h4 id="extensions-lifecycle-wrapping-behavior"><a class="anchor" href="#extensions-lifecycle-wrapping-behavior"></a>5.13.2. Wrapping Behavior of Callbacks</h4>
 <div class="paragraph">
-<p>JUnit Jupiter guarantees wrapping behavior within class hierarchies for user-supplied
-lifecycle callbacks (e.g., <code>@BeforeEach</code> and <code>@AfterEach</code>):</p>
+<p>JUnit Jupiter always guarantees <em>wrapping</em> behavior for multiple registered extensions
+that implement lifecycle callbacks such as <code>BeforeAllCallback</code>, <code>AfterAllCallback</code>,
+<code>BeforeEachCallback</code>, <code>AfterAllCallback</code>, <code>BeforeTestExecutionCallback</code>, and
+<code>AfterTestExecutionCallback</code>.</p>
+</div>
+<div class="paragraph">
+<p>That means that, given two extensions <code>Extension1</code> and <code>Extension2</code> with <code>Extension1</code>
+registered before <code>Extension2</code>, any "before" callbacks implemented by <code>Extension1</code> are
+guaranteed to execute <strong>before</strong> any "before" callbacks implemented by <code>Extension2</code>.
+Similarly, given the two same two extensions registered in the same order, any "after"
+callbacks implemented by <code>Extension1</code> are guaranteed to execute <strong>after</strong> any "after"
+callbacks implemented by <code>Extension2</code>. <code>Extension1</code> is therefore said to <em>wrap</em>
+<code>Extension2</code>.</p>
+</div>
+<div class="paragraph">
+<p>JUnit Jupiter also guarantees <em>wrapping</em> behavior within class hierarchies for
+user-supplied lifecycle callbacks such as <code>@BeforeAll</code>, <code>@AfterAll</code>, <code>@BeforeEach</code>, and
+<code>@AfterEach</code>.</p>
+</div>
+<div class="paragraph">
+<p>The following examples demonstrate this behavior. Please note that the examples do not
+actually do anything realistic. Instead, they mimic common scenarios for testing
+interactions with the database. All methods imported statically from the <code>Logger</code> class
+simply log contextual information in order to help us better understand the execution
+order of user-supplied callback methods and callback methods in extensions.</p>
+</div>
+<div class="listingblock">
+<div class="title">Extension1</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">example.callbacks.Logger.afterEachCallback</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">example.callbacks.Logger.beforeEachCallback</span>;
+
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.extension.AfterEachCallback</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.extension.BeforeEachCallback</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.extension.ExtensionContext</span>;
+
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Extension1</span> <span class="directive">implements</span> BeforeEachCallback, AfterEachCallback {
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> beforeEach(ExtensionContext context) {
+        beforeEachCallback(<span class="local-variable">this</span>);
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> afterEach(ExtensionContext context) {
+        afterEachCallback(<span class="local-variable">this</span>);
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Extension2</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">example.callbacks.Logger.afterEachCallback</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">example.callbacks.Logger.beforeEachCallback</span>;
+
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.extension.AfterEachCallback</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.extension.BeforeEachCallback</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.extension.ExtensionContext</span>;
+
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Extension2</span> <span class="directive">implements</span> BeforeEachCallback, AfterEachCallback {
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> beforeEach(ExtensionContext context) {
+        beforeEachCallback(<span class="local-variable">this</span>);
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> afterEach(ExtensionContext context) {
+        afterEachCallback(<span class="local-variable">this</span>);
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">AbstractDatabaseTests</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">example.callbacks.Logger.afterAllMethod</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">example.callbacks.Logger.afterEachMethod</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">example.callbacks.Logger.beforeAllMethod</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">example.callbacks.Logger.beforeEachMethod</span>;
+
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterAll</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterEach</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeAll</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
+
+<span class="comment">/**
+ * Abstract base class for tests that use the database.
+ */</span>
+<span class="directive">abstract</span> <span class="type">class</span> <span class="class">AbstractDatabaseTests</span> {
+
+    <span class="annotation">@BeforeAll</span>
+    <span class="directive">static</span> <span class="type">void</span> createDatabase() {
+        beforeAllMethod(AbstractDatabaseTests.class.getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">.createDatabase()</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="annotation">@BeforeEach</span>
+    <span class="type">void</span> connectToDatabase() {
+        beforeEachMethod(AbstractDatabaseTests.class.getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">.connectToDatabase()</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="annotation">@AfterEach</span>
+    <span class="type">void</span> disconnectFromDatabase() {
+        afterEachMethod(AbstractDatabaseTests.class.getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">.disconnectFromDatabase()</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="annotation">@AfterAll</span>
+    <span class="directive">static</span> <span class="type">void</span> destroyDatabase() {
+        afterAllMethod(AbstractDatabaseTests.class.getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">.destroyDatabase()</span><span class="delimiter">&quot;</span></span>);
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">DatabaseTestsDemo</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">example.callbacks.Logger.afterEachMethod</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">example.callbacks.Logger.beforeAllMethod</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">example.callbacks.Logger.beforeEachMethod</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">example.callbacks.Logger.testMethod</span>;
+
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterAll</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterEach</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeAll</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.extension.ExtendWith</span>;
+
+<span class="comment">/**
+ * Extension of {@link AbstractDatabaseTests} that inserts test data
+ * into the database (after the database connection has been opened)
+ * and deletes test data (before the database connection is closed).
+ */</span>
+<span class="annotation">@ExtendWith</span>({ Extension1.class, Extension2.class })
+<span class="type">class</span> <span class="class">DatabaseTestsDemo</span> <span class="directive">extends</span> AbstractDatabaseTests {
+
+    <span class="annotation">@BeforeAll</span>
+    <span class="directive">static</span> <span class="type">void</span> beforeAll() {
+        beforeAllMethod(DatabaseTestsDemo.class.getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">.beforeAll()</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="annotation">@BeforeEach</span>
+    <span class="type">void</span> insertTestDataIntoDatabase() {
+        beforeEachMethod(getClass().getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">.insertTestDataIntoDatabase()</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> testDatabaseFunctionality() {
+        testMethod(getClass().getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">.testDatabaseFunctionality()</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="annotation">@AfterEach</span>
+    <span class="type">void</span> deleteTestDataFromDatabase() {
+        afterEachMethod(getClass().getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">.deleteTestDataFromDatabase()</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="annotation">@AfterAll</span>
+    <span class="directive">static</span> <span class="type">void</span> afterAll() {
+        beforeAllMethod(DatabaseTestsDemo.class.getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">.afterAll()</span><span class="delimiter">&quot;</span></span>);
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the <code>DatabaseTestsDemo</code> test class is executed, the following is logged.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>@BeforeAll AbstractDatabaseTests.createDatabase()
+@BeforeAll DatabaseTestsDemo.beforeAll()
+  Extension1.beforeEach()
+  Extension2.beforeEach()
+    @BeforeEach AbstractDatabaseTests.connectToDatabase()
+    @BeforeEach DatabaseTestsDemo.insertTestDataIntoDatabase()
+      @Test DatabaseTestsDemo.testDatabaseFunctionality()
+    @AfterEach DatabaseTestsDemo.deleteTestDataFromDatabase()
+    @AfterEach AbstractDatabaseTests.disconnectFromDatabase()
+  Extension2.afterEach()
+  Extension1.afterEach()
+@BeforeAll DatabaseTestsDemo.afterAll()
+@AfterAll AbstractDatabaseTests.destroyDatabase()</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following sequence diagram helps to shed further light on actually what goes on within
+the <code>JupiterTestEngine</code> when the <code>DatabaseTestsDemo</code> test class is executed.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -7215,6 +7404,56 @@ test methods in the same order, thereby allowing for repeatable builds.
 <div class="paragraph">
 <p>In addition, and more importantly, JUnit Jupiter does <strong>not</strong> support wrapping behavior
 for multiple lifecycle methods declared within a single test class or test interface.</p>
+</div>
+<div class="listingblock">
+<div class="title">BrokenLifecycleMethodConfigDemo</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">example.callbacks.Logger.afterEachMethod</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">example.callbacks.Logger.beforeEachMethod</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">example.callbacks.Logger.testMethod</span>;
+
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterEach</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.extension.ExtendWith</span>;
+
+<span class="comment">/**
+ * Example of &quot;broken&quot; lifecycle method configuration.
+ *
+ * &lt;p&gt;Test data is inserted before the database connection has been opened.
+ *
+ * &lt;p&gt;Database connection is closed before deleting test data.
+ */</span>
+<span class="annotation">@ExtendWith</span>({ Extension1.class, Extension2.class })
+<span class="type">class</span> <span class="class">BrokenLifecycleMethodConfigDemo</span> {
+
+    <span class="annotation">@BeforeEach</span>
+    <span class="type">void</span> connectToDatabase() {
+        beforeEachMethod(getClass().getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">.connectToDatabase()</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="annotation">@BeforeEach</span>
+    <span class="type">void</span> insertTestDataIntoDatabase() {
+        beforeEachMethod(getClass().getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">.insertTestDataIntoDatabase()</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> testDatabaseFunctionality() {
+        testMethod(getClass().getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">.testDatabaseFunctionality()</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="annotation">@AfterEach</span>
+    <span class="type">void</span> deleteTestDataFromDatabase() {
+        afterEachMethod(getClass().getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">.deleteTestDataFromDatabase()</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="annotation">@AfterEach</span>
+    <span class="type">void</span> disconnectFromDatabase() {
+        afterEachMethod(getClass().getSimpleName() + <span class="string"><span class="delimiter">&quot;</span><span class="content">.disconnectFromDatabase()</span><span class="delimiter">&quot;</span></span>);
+    }
+
+}</code></pre>
+</div>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -8764,7 +9003,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-02-05 16:24:25 UTC
+Last updated 2019-02-05 16:57:37 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
