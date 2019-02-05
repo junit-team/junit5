@@ -198,11 +198,11 @@
 56a9914adcc052ba38d6cb5fafd07a65  junit-platform-engine/src/main/java/org/junit/platform/engine/TestDescriptor.java
 56bd6baac57e7f383aec9b621f878a8e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnOs.java
 579a9d9f4ab0dc695b27a107ee8a33c8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestReporter.java
-583f1984d616fd5082dbe1e5c4cbbe9e  documentation/src/docs/asciidoc/user-guide/extensions.adoc
 58b13468f6595724abdab673d88d148b  documentation/src/test/java/example/SharedResourcesDemo.java
 59452a30e5b8895ae8e28bc93c5edfd1  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestFactoryMethod.java
 5988452c0e7ee3287ea4775d1b909fbc  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingConsumer.java
 5a24d334156e9df004beda179fd0db28  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/NamespaceAwareStore.java
+5a84eae02cd17cb6ceaf15067cf97cf7  documentation/src/docs/asciidoc/user-guide/extensions.adoc
 5b09876130edc53e4ec4ca9fa1bb663b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/BeforeTestExecutionCallback.java
 5b143dbb7aceed36bbb3320761d77bff  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/package-info.java
 5b4828f55053fbd7dcd405fc1f7f5b57  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassFilter.java

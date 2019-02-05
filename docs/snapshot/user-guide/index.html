@@ -7442,10 +7442,11 @@ the <code>JupiterTestEngine</code> when the <code>DatabaseTestsDemo</code> test 
 <div class="title">DatabaseTestsDemo</div>
 </div>
 <div class="paragraph">
-<p>JUnit Jupiter does <strong>not</strong> guarantee the order in which multiple lifecycle methods are
-invoked within a <em>single</em> test class. It would appear that JUnit Jupiter invokes such
-methods in alphabetical order. However, that is not precisely true. The ordering is
-analogous to the ordering for <code>@Test</code> methods within a single test class:</p>
+<p>JUnit Jupiter does <strong>not</strong> guarantee the execution order of multiple lifecycle methods
+that are declared within a <em>single</em> test class or test interface. It may at times appear
+that JUnit Jupiter invokes such methods in alphabetical order. However, that is not
+precisely true. The ordering is analogous to the ordering for <code>@Test</code> methods within a
+single test class.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -7454,16 +7455,36 @@ analogous to the ordering for <code>@Test</code> methods within a single test cl
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-By default, test methods will be ordered using an algorithm that is deterministic
-but intentionally non-obvious. This ensures that subsequent runs of a test suite execute
-test methods in the same order, thereby allowing for repeatable builds.
+<div class="paragraph">
+<p>Lifecycle methods that are declared within a <em>single</em> test class or test interface will be
+ordered using an algorithm that is deterministic but intentionally non-obvious. This
+ensures that subsequent runs of a test suite execute lifecycle methods in the same order,
+thereby allowing for repeatable builds.</p>
+</div>
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>In addition, and more importantly, JUnit Jupiter does <strong>not</strong> support wrapping behavior
-for multiple lifecycle methods declared within a single test class or test interface.</p>
+<p>In addition, JUnit Jupiter does <strong>not</strong> support <em>wrapping</em> behavior for multiple lifecycle
+methods declared within a single test class or test interface.</p>
+</div>
+<div class="paragraph">
+<p>The following example demonstrates this behavior. Specifically, the lifecycle method
+configuration is <em>broken</em> due to the order in which the locally declared lifecycle methods
+are executed.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Test data is inserted <em>before</em> the database connection has been opened, which results in
+a failure to connect to the database.</p>
+</li>
+<li>
+<p>The database connection is closed <em>before</em> deleting the test data, which results in a
+failure to connect to the database.</p>
+</li>
+</ul>
 </div>
 <div class="listingblock">
 <div class="title">BrokenLifecycleMethodConfigDemo</div>
@@ -7515,6 +7536,26 @@ for multiple lifecycle methods declared within a single test class or test inter
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>When the <code>BrokenLifecycleMethodConfigDemo</code> test class is executed, the following is logged.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Extension1.beforeEach()
+Extension2.beforeEach()
+  @BeforeEach BrokenLifecycleMethodConfigDemo.insertTestDataIntoDatabase()
+  @BeforeEach BrokenLifecycleMethodConfigDemo.connectToDatabase()
+    @Test BrokenLifecycleMethodConfigDemo.testDatabaseFunctionality()
+  @AfterEach BrokenLifecycleMethodConfigDemo.disconnectFromDatabase()
+  @AfterEach BrokenLifecycleMethodConfigDemo.deleteTestDataFromDatabase()
+Extension2.afterEach()
+Extension1.afterEach()</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following sequence diagram helps to shed further light on what actually goes on within
+the <code>JupiterTestEngine</code> when the <code>BrokenLifecycleMethodConfigDemo</code> test class is executed.</p>
+</div>
 <div class="imageblock">
 <div class="content">
 <img src="images/extensions_BrokenLifecycleMethodConfigDemo.png" alt="extensions BrokenLifecycleMethodConfigDemo">
@@ -7524,7 +7565,8 @@ for multiple lifecycle methods declared within a single test class or test inter
 <div class="paragraph">
 <p>Due to the aforementioned behavior, the JUnit Team recommends that developers declare at
 most one of each type of lifecycle method (i.e., <code>@BeforeAll</code>, <code>@AfterAll</code>, <code>@BeforeEach</code>,
-<code>@AfterEach</code>) per test class or test interface.</p>
+<code>@AfterEach</code>) per test class or test interface unless there are no dependencies between
+such lifecycle methods.</p>
 </div>
 </div>
 </div>
@@ -9063,7 +9105,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-02-05 17:55:21 UTC
+Last updated 2019-02-05 18:15:24 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
