@@ -1,9 +1,9 @@
 @Starter(Platform)
 Result = JupiterEngine.execute(DatabaseTestsDemo) {
 
-  // @BeforeAll inherited from AbstractDatabaseTests
-  DatabaseTestsDemo.createDatabase()
-  // @BeforeAll
+  // @BeforeAll (static invocation)
+  AbstractDatabaseTests.createDatabase()
+  // @BeforeAll (static invocation)
   DatabaseTestsDemo.beforeAll()
   Extension1.beforeEach()
   Extension2.beforeEach()
@@ -19,9 +19,9 @@ Result = JupiterEngine.execute(DatabaseTestsDemo) {
   DatabaseTestsDemo.disconnectFromDatabase()
   Extension2.afterEach()
   Extension1.afterEach()
-  // @BeforeAll
+  // @AfterAll (static invocation)
   DatabaseTestsDemo.afterAll()
-  // @AfterAll inherited from AbstractDatabaseTests
-  DatabaseTestsDemo.destroyDatabase()
+  // @AfterAll (static invocation)
+  AbstractDatabaseTests.destroyDatabase()
 
 }

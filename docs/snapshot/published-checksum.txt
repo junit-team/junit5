@@ -355,6 +355,7 @@
 953ff4fcce03f154e0b0d2cf3b874013  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/TestExecutionSummary.java
 95a7873d097a443caf3601af821e08cc  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Events.java
 961f82734a839e1762257e7c96b80c15  documentation/src/test/java/example/TestInfoDemo.java
+96233d7888a2134bce2d771e63929b9e  documentation/src/docs/asciidoc/user-guide/images/extensions_DatabaseTestsDemo.png
 9646f7a8ca38e75d102e9c67bc1db30a  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreeNode.java
 96a117399b4fdece706166e8719f6d8a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/OpenTest4JAwareThrowableCollector.java
 96bc24e9defad1376c95e6b81396115f  documentation/src/test/java/example/callbacks/BrokenLifecycleMethodConfigDemo.java
@@ -528,6 +529,7 @@ da529da981677697fe3b0034123c32f7  junit-jupiter-api/src/main/java/org/junit/jupi
 dac0a59142a509578105ea5987af22f4  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIf.java
 db13b949f9068d6cbc46a0ddfa1baf6e  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestMethod.java
 db2e98900785b50b6a69ea0f9c58461d  junit-platform-console/src/main/java/org/junit/platform/console/options/package-info.java
+db568ac4ee5f2c617c82b26315e8ffb1  documentation/src/docs/asciidoc/user-guide/images/extensions_DatabaseTestsDemo.txt
 db570ec1abefa4c0cc3043c26940eb2d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/package-info.java
 db72e15f1baf98a7db4ee6c405c27b76  documentation/src/docs/asciidoc/link-attributes.adoc
 dbb56ac254d89915661d039b44511ccf  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/DefensiveAllDefaultPossibilitiesBuilder.java
@@ -570,7 +572,6 @@ e9180df043e9c8558870644a358b1404  junit-platform-engine/src/main/java/org/junit/
 e981d24e5f3f54de6fa4e6c2d960d10e  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/DefaultUriSource.java
 ea09f35608c6c9a3065e72fd80d03a49  documentation/src/test/java/example/Fast.java
 ea253702a64ee9614c2a5342ac23fb2a  documentation/src/docs/asciidoc/tocbot-3.0.2/tocbot.css
-ea6b3ec4d6855acfb9cfa8b52ef4f60a  documentation/src/docs/asciidoc/user-guide/images/extensions_DatabaseTestsDemo.txt
 eaa18d774a85bcdf85309a0756162767  documentation/src/main/java/example/registration/WebServerExtension.java
 eaa4188a41a4ec440c3a15e5139a3f67  junit-platform-console/src/main/java/org/junit/platform/console/tasks/package-info.java
 eaead45adcdde6d3a03c6ef6e1def5f9  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/support/JupiterThrowableCollectorFactory.java
@@ -580,7 +581,6 @@ ebd4f5c26d5ae2b472d99d002611c0b8  junit-platform-commons/src/main/java/org/junit
 ec000bd7b6b3b1254ab51694b31c9b76  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/SingleTestExecutor.java
 ec10997662084b961aaa07317aecd0a1  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/Executable.java
 ec26e3704de1ecc94d684f7722fc9517  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertionUtils.java
-ec67f104e86e06556033388da039643e  documentation/src/docs/asciidoc/user-guide/images/extensions_DatabaseTestsDemo.png
 eca18e07dba553dd773fce2915f28fb8  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/RunListenerAdapter.java
 ecc4a54b5ca04cbbfb4dd0870d64ef3e  documentation/src/test/java/example/AssertionsDemo.java
 ecd370091f611ca6783e1ed3b96886bd  junit-platform-engine/src/main/java/org/junit/platform/engine/Filter.java
