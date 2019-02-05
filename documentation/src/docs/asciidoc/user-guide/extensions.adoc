@@ -551,14 +551,14 @@ details.
 === Relative Execution Order of User Code and Extensions
 
 When executing a test class that contains one or more test methods, a number of extension
-callbacks are called in addition to the user-provided test and lifecycle methods. The
-following diagrams illustrates the relative order of user-provided code and extension code.
+callbacks are called in addition to the user-supplied test and lifecycle methods. The
+following diagram illustrates the relative order of user-supplied code and extension code.
 
 ==== User and Extension Code
 
-User-provided test and lifecycle methods are shown in orange, with callback code provided
-by extensions shown in blue. The grey box denotes the execution of a single test method
-and will be repeated for every test method in the test class.
+User-supplied test and lifecycle methods are shown in orange, with callback code
+implemented by extensions shown in blue. The grey box denotes the execution of a single
+test method and will be repeated for every test method in the test class.
 
 :figure-caption: User code and extension code
 
@@ -643,9 +643,34 @@ callbacks implemented by `Extension1` are guaranteed to execute **after** any "a
 callbacks implemented by `Extension2`. `Extension1` is therefore said to _wrap_
 `Extension2`.
 
-JUnit Jupiter also guarantees _wrapping_ behavior within class hierarchies for
-user-supplied lifecycle callbacks such as `@BeforeAll`, `@AfterAll`, `@BeforeEach`, and
-`@AfterEach`.
+JUnit Jupiter also guarantees _wrapping_ behavior within class and interface hierarchies
+for user-supplied lifecycle callbacks such as `@BeforeAll`, `@AfterAll`, `@BeforeEach`,
+and `@AfterEach` methods.
+
+* `@BeforeAll` methods are inherited from superclasses as long as they are not _hidden_ or
+  _overridden_. Furthermore, `@BeforeAll` methods from superclasses will be executed
+  **before** `@BeforeAll` methods in subclasses.
+** Similarly, `@BeforeAll` methods declared in an interface are inherited as long as they
+   are not _hidden_ or _overridden_, and `@BeforeAll` methods from an interface will be
+   executed **before** `@BeforeAll` methods in the class that implements the interface.
+* `@AfterAll` methods are inherited from superclasses as long as they are not _hidden_ or
+  _overridden_. Furthermore, `@AfterAll` methods from superclasses will be executed
+  **after** `@AfterAll` methods in subclasses.
+** Similarly, `@AfterAll` methods declared in an interface are inherited as long as they
+   are not _hidden_ or _overridden_, and `@AfterAll` methods from an interface will be
+   executed **after** `@AfterAll` methods in the class that implements the interface.
+* `@BeforeEach` methods are inherited from superclasses as long as they are not
+  _overridden_. Furthermore, `@BeforeEach` methods from superclasses will be executed
+  **before** `@BeforeEach` methods in subclasses.
+** Similarly, `@BeforeEach` methods declared as interface default methods are inherited as
+   long as they are not _overridden_, and `@BeforeEach` default methods will be executed
+   **before** `@BeforeEach` methods in the class that implements the interface.
+* `@AfterEach` methods are inherited from superclasses as long as they are not
+  _overridden_. Furthermore, `@AfterEach` methods from superclasses will be executed
+  **after** `@AfterEach` methods in subclasses.
+** Similarly, `@AfterEach` methods declared as interface default methods are inherited as
+   long as they are not _overridden_, and `@AfterEach` default methods will be executed
+   **after** `@AfterEach` methods in the class that implements the interface.
 
 The following examples demonstrate this behavior. Please note that the examples do not
 actually do anything realistic. Instead, they mimic common scenarios for testing
@@ -695,7 +720,7 @@ When the `DatabaseTestsDemo` test class is executed, the following is logged.
 @AfterAll AbstractDatabaseTests.destroyDatabase()
 ----
 
-The following sequence diagram helps to shed further light on actually what goes on within
+The following sequence diagram helps to shed further light on what actually goes on within
 the `JupiterTestEngine` when the `DatabaseTestsDemo` test class is executed.
 
 ////
@@ -703,7 +728,7 @@ PNG generated using ZenUML: https://app.zenuml.com
 
 See corresponding *.txt file in images folder for the source.
 ////
-image::extensions_DatabaseTestsDemo.png[caption='',title='DatabaseTestsDemo.java']
+image::extensions_DatabaseTestsDemo.png[caption='',title='DatabaseTestsDemo']
 
 JUnit Jupiter does **not** guarantee the order in which multiple lifecycle methods are
 invoked within a _single_ test class. It would appear that JUnit Jupiter invokes such
@@ -728,7 +753,7 @@ PNG generated using ZenUML: https://app.zenuml.com
 
 See corresponding *.txt file in images folder for the source.
 ////
-image::extensions_BrokenLifecycleMethodConfigDemo.png[caption='',title='BrokenLifecycleMethodConfigDemo.java']
+image::extensions_BrokenLifecycleMethodConfigDemo.png[caption='',title='BrokenLifecycleMethodConfigDemo']
 
 Due to the aforementioned behavior, the JUnit Team recommends that developers declare at
 most one of each type of lifecycle method (i.e., `@BeforeAll`, `@AfterAll`, `@BeforeEach`,
