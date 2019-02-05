@@ -552,16 +552,18 @@ details.
 
 When executing a test class that contains one or more test methods, a number of extension
 callbacks are called in addition to the user-provided test and lifecycle methods. The
-following diagram illustrates the relative order of user-provided code and extension code.
+following diagrams illustrates the relative order of user-provided code and extension code.
+
+==== User and Extension Code
+
+User-provided test and lifecycle methods are shown in orange, with callback code provided
+by extensions shown in blue. The grey box denotes the execution of a single test method
+and will be repeated for every test method in the test class.
 
 :figure-caption: User code and extension code
 
 [#extensions-execution-order-diagram,reftext='{figure-caption}']
 image::extensions_lifecycle.png[caption='',title='{figure-caption}']
-
-User-provided test and lifecycle methods are shown in orange, with callback code provided
-by extensions shown in blue. The grey box denotes the execution of a single test method
-and will be repeated for every test method in the test class.
 
 The following table further explains the twelve steps in the
 <<extensions-execution-order-diagram>> diagram.
@@ -624,3 +626,29 @@ In the simplest case only the actual test method will be executed (step 6); all 
 steps are optional depending on the presence of user code or extension support for the
 corresponding lifecycle callback. For further details on the various lifecycle callbacks
 please consult the respective Javadoc for each annotation and extension.
+
+[[extensions-lifecycle-wrapping-behavior]]
+==== Wrapping Behavior of Callbacks
+
+JUnit Jupiter guarantees wrapping behavior within class hierarchies for user-supplied
+lifecycle callbacks (e.g., `@BeforeEach` and `@AfterEach`):
+
+image::extensions_DatabaseTestsDemo.png[caption='',title='DatabaseTestsDemo.java']
+
+JUnit Jupiter does **not** guarantee the order in which multiple lifecycle methods are
+invoked within a _single_ test class. It would appear that JUnit Jupiter invokes such
+methods in alphabetical order. However, that is not precisely true. The ordering is
+analogous to the ordering for `@Test` methods within a single test class:
+
+NOTE: By default, test methods will be ordered using an algorithm that is deterministic
+but intentionally non-obvious. This ensures that subsequent runs of a test suite execute
+test methods in the same order, thereby allowing for repeatable builds.
+
+In addition, and more importantly, JUnit Jupiter does **not** support wrapping behavior
+for multiple lifecycle methods declared within a single test class or test interface.
+
+image::extensions_BrokenLifecycleMethodConfigDemo.png[caption='',title='BrokenLifecycleMethodConfigDemo.java']
+
+Due to the aforementioned behavior, the JUnit Team recommends that developers declare at
+most one of each type of lifecycle method (i.e., `@BeforeAll`, `@AfterAll`, `@BeforeEach`,
+`@AfterEach`) per test class or test interface.
