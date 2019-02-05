@@ -198,6 +198,7 @@
 56a9914adcc052ba38d6cb5fafd07a65  junit-platform-engine/src/main/java/org/junit/platform/engine/TestDescriptor.java
 56bd6baac57e7f383aec9b621f878a8e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnOs.java
 579a9d9f4ab0dc695b27a107ee8a33c8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestReporter.java
+583f1984d616fd5082dbe1e5c4cbbe9e  documentation/src/docs/asciidoc/user-guide/extensions.adoc
 58b13468f6595724abdab673d88d148b  documentation/src/test/java/example/SharedResourcesDemo.java
 59452a30e5b8895ae8e28bc93c5edfd1  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestFactoryMethod.java
 5988452c0e7ee3287ea4775d1b909fbc  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/ThrowingConsumer.java
@@ -402,7 +403,6 @@ a6355b6dcbfda26803b08adb8ec1c6bf  junit-jupiter-engine/src/main/java/org/junit/j
 a690d2dd4f3f9b0a54a5ae29a6d1573c  documentation/documentation.gradle.kts
 a6c525eca2361233766404de5cd7a833  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayName.java
 a7856d0756fd2e66c8bddf75c4b0c0af  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterContext.java
-a7ac72fd19e3ebc1a8886d9fe8d68ce6  documentation/src/docs/asciidoc/user-guide/extensions.adoc
 a7fb726626e72bcc4233e542b16b7e09  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestableMethod.java
 a8a86698a239f19b0fa89ec42503de3c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ExecutionMode.java
 a8cfc3df6dd24bf8dcc4880f65917bf6  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ShuntingYard.java

@@ -7077,15 +7077,15 @@ details.</p>
 <h3 id="extensions-execution-order"><a class="anchor" href="#extensions-execution-order"></a>5.13. Relative Execution Order of User Code and Extensions</h3>
 <div class="paragraph">
 <p>When executing a test class that contains one or more test methods, a number of extension
-callbacks are called in addition to the user-provided test and lifecycle methods. The
-following diagrams illustrates the relative order of user-provided code and extension code.</p>
+callbacks are called in addition to the user-supplied test and lifecycle methods. The
+following diagram illustrates the relative order of user-supplied code and extension code.</p>
 </div>
 <div class="sect3">
 <h4 id="user-and-extension-code"><a class="anchor" href="#user-and-extension-code"></a>5.13.1. User and Extension Code</h4>
 <div class="paragraph">
-<p>User-provided test and lifecycle methods are shown in orange, with callback code provided
-by extensions shown in blue. The grey box denotes the execution of a single test method
-and will be repeated for every test method in the test class.</p>
+<p>User-supplied test and lifecycle methods are shown in orange, with callback code
+implemented by extensions shown in blue. The grey box denotes the execution of a single
+test method and will be repeated for every test method in the test class.</p>
 </div>
 <div id="extensions-execution-order-diagram" class="imageblock">
 <div class="content">
@@ -7198,9 +7198,69 @@ callbacks implemented by <code>Extension2</code>. <code>Extension1</code> is the
 <code>Extension2</code>.</p>
 </div>
 <div class="paragraph">
-<p>JUnit Jupiter also guarantees <em>wrapping</em> behavior within class hierarchies for
-user-supplied lifecycle callbacks such as <code>@BeforeAll</code>, <code>@AfterAll</code>, <code>@BeforeEach</code>, and
-<code>@AfterEach</code>.</p>
+<p>JUnit Jupiter also guarantees <em>wrapping</em> behavior within class and interface hierarchies
+for user-supplied lifecycle callbacks such as <code>@BeforeAll</code>, <code>@AfterAll</code>, <code>@BeforeEach</code>,
+and <code>@AfterEach</code> methods.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@BeforeAll</code> methods are inherited from superclasses as long as they are not <em>hidden</em> or
+<em>overridden</em>. Furthermore, <code>@BeforeAll</code> methods from superclasses will be executed
+<strong>before</strong> <code>@BeforeAll</code> methods in subclasses.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Similarly, <code>@BeforeAll</code> methods declared in an interface are inherited as long as they
+are not <em>hidden</em> or <em>overridden</em>, and <code>@BeforeAll</code> methods from an interface will be
+executed <strong>before</strong> <code>@BeforeAll</code> methods in the class that implements the interface.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>@AfterAll</code> methods are inherited from superclasses as long as they are not <em>hidden</em> or
+<em>overridden</em>. Furthermore, <code>@AfterAll</code> methods from superclasses will be executed
+<strong>after</strong> <code>@AfterAll</code> methods in subclasses.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Similarly, <code>@AfterAll</code> methods declared in an interface are inherited as long as they
+are not <em>hidden</em> or <em>overridden</em>, and <code>@AfterAll</code> methods from an interface will be
+executed <strong>after</strong> <code>@AfterAll</code> methods in the class that implements the interface.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>@BeforeEach</code> methods are inherited from superclasses as long as they are not
+<em>overridden</em>. Furthermore, <code>@BeforeEach</code> methods from superclasses will be executed
+<strong>before</strong> <code>@BeforeEach</code> methods in subclasses.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Similarly, <code>@BeforeEach</code> methods declared as interface default methods are inherited as
+long as they are not <em>overridden</em>, and <code>@BeforeEach</code> default methods will be executed
+<strong>before</strong> <code>@BeforeEach</code> methods in the class that implements the interface.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>@AfterEach</code> methods are inherited from superclasses as long as they are not
+<em>overridden</em>. Furthermore, <code>@AfterEach</code> methods from superclasses will be executed
+<strong>after</strong> <code>@AfterEach</code> methods in subclasses.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Similarly, <code>@AfterEach</code> methods declared as interface default methods are inherited as
+long as they are not <em>overridden</em>, and <code>@AfterEach</code> default methods will be executed
+<strong>after</strong> <code>@AfterEach</code> methods in the class that implements the interface.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>The following examples demonstrate this behavior. Please note that the examples do not
@@ -7372,14 +7432,14 @@ order of user-supplied callback methods and callback methods in extensions.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The following sequence diagram helps to shed further light on actually what goes on within
+<p>The following sequence diagram helps to shed further light on what actually goes on within
 the <code>JupiterTestEngine</code> when the <code>DatabaseTestsDemo</code> test class is executed.</p>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="images/extensions_DatabaseTestsDemo.png" alt="extensions DatabaseTestsDemo">
 </div>
-<div class="title">DatabaseTestsDemo.java</div>
+<div class="title">DatabaseTestsDemo</div>
 </div>
 <div class="paragraph">
 <p>JUnit Jupiter does <strong>not</strong> guarantee the order in which multiple lifecycle methods are
@@ -7459,7 +7519,7 @@ for multiple lifecycle methods declared within a single test class or test inter
 <div class="content">
 <img src="images/extensions_BrokenLifecycleMethodConfigDemo.png" alt="extensions BrokenLifecycleMethodConfigDemo">
 </div>
-<div class="title">BrokenLifecycleMethodConfigDemo.java</div>
+<div class="title">BrokenLifecycleMethodConfigDemo</div>
 </div>
 <div class="paragraph">
 <p>Due to the aforementioned behavior, the JUnit Team recommends that developers declare at
@@ -9003,7 +9063,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-02-05 16:57:37 UTC
+Last updated 2019-02-05 17:55:21 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
