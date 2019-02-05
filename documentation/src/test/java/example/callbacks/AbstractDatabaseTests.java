@@ -10,6 +10,8 @@
 
 package example.callbacks;
 
+// tag::user_guide[]
+
 import static example.callbacks.Logger.afterAllMethod;
 import static example.callbacks.Logger.afterEachMethod;
 import static example.callbacks.Logger.beforeAllMethod;
@@ -46,3 +48,4 @@ abstract class AbstractDatabaseTests {
 	}
 
 }
+// end::user_guide[]

@@ -10,6 +10,8 @@
 
 package example.callbacks;
 
+// tag::user_guide[]
+
 import static example.callbacks.Logger.afterEachCallback;
 import static example.callbacks.Logger.beforeEachCallback;
 
@@ -30,3 +32,4 @@ public class Extension1 implements BeforeEachCallback, AfterEachCallback {
 	}
 
 }
+// end::user_guide[]

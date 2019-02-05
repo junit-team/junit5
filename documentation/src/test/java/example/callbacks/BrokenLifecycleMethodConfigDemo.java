@@ -10,6 +10,8 @@
 
 package example.callbacks;
 
+// tag::user_guide[]
+
 import static example.callbacks.Logger.afterEachMethod;
 import static example.callbacks.Logger.beforeEachMethod;
 import static example.callbacks.Logger.testMethod;
@@ -55,3 +57,4 @@ class BrokenLifecycleMethodConfigDemo {
 	}
 
 }
+// end::user_guide[]
