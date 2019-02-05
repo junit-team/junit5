@@ -1,0 +1,17 @@
+@Starter(Platform)
+Result = JupiterEngine.execute("DatabaseTestsDemo.testDatabaseFunctionality") {
+  Extension1.beforeEach()
+  Extension2.beforeEach()
+  // @BeforeEach inherited from AbstractDatabaseTests
+  DatabaseTestsDemo.connectToDatabase()
+  // @BeforeEach
+  DatabaseTestsDemo.insertTestDataIntoDatabase()
+  // @Test
+  DatabaseTestsDemo.testDatabaseFunctionality()
+  // @AfterEach
+  DatabaseTestsDemo.deleteTestDataInDatabase()
+  // @AfterEach inherited from AbstractDatabaseTests
+  DatabaseTestsDemo.disconnectFromDatabase()
+  Extension2.afterEach()
+  Extension1.afterEach()
+}
