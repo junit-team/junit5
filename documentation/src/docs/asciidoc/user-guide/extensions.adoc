@@ -730,17 +730,31 @@ See corresponding *.txt file in images folder for the source.
 ////
 image::extensions_DatabaseTestsDemo.png[caption='',title='DatabaseTestsDemo']
 
-JUnit Jupiter does **not** guarantee the order in which multiple lifecycle methods are
-invoked within a _single_ test class. It would appear that JUnit Jupiter invokes such
-methods in alphabetical order. However, that is not precisely true. The ordering is
-analogous to the ordering for `@Test` methods within a single test class.
+JUnit Jupiter does **not** guarantee the execution order of multiple lifecycle methods
+that are declared within a _single_ test class or test interface. It may at times appear
+that JUnit Jupiter invokes such methods in alphabetical order. However, that is not
+precisely true. The ordering is analogous to the ordering for `@Test` methods within a
+single test class.
 
-NOTE: By default, test methods will be ordered using an algorithm that is deterministic
-but intentionally non-obvious. This ensures that subsequent runs of a test suite execute
-test methods in the same order, thereby allowing for repeatable builds.
+[NOTE]
+====
+Lifecycle methods that are declared within a _single_ test class or test interface will be
+ordered using an algorithm that is deterministic but intentionally non-obvious. This
+ensures that subsequent runs of a test suite execute lifecycle methods in the same order,
+thereby allowing for repeatable builds.
+====
 
-In addition, and more importantly, JUnit Jupiter does **not** support wrapping behavior
-for multiple lifecycle methods declared within a single test class or test interface.
+In addition, JUnit Jupiter does **not** support _wrapping_ behavior for multiple lifecycle
+methods declared within a single test class or test interface.
+
+The following example demonstrates this behavior. Specifically, the lifecycle method
+configuration is _broken_ due to the order in which the locally declared lifecycle methods
+are executed.
+
+* Test data is inserted _before_ the database connection has been opened, which results in
+  a failure to connect to the database.
+* The database connection is closed _before_ deleting the test data, which results in a
+  failure to connect to the database.
 
 [source,java,indent=0]
 .BrokenLifecycleMethodConfigDemo
