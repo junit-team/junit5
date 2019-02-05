@@ -392,6 +392,7 @@ a0c04f7f3cf8062ad65c76dddf070574  junit-jupiter-migrationsupport/src/main/java/o
 a0c3f78a59b1212c4756db163746880d  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedMember.java
 a142ab00a174270e9712b7032cf5ee7f  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutor.java
 a1ea21eb6905311553d061647b2c98d0  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/package-info.java
+a1f11f53c60dd29c6300d3ef4e970a65  documentation/src/docs/asciidoc/user-guide/images/extensions_DatabaseTestsDemo.txt
 a301a954832c0f1d8e9820b19199eddc  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ExecutableInvoker.java
 a357bcf8d822a1c2182f0356118a5cc8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/TestContainerResolver.java
 a384d6ca46d33132af954e15435076a2  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicContainerTestDescriptor.java
@@ -434,6 +435,7 @@ b659d6afa2ba4637865ed4a0d4311b5b  documentation/src/docs/asciidoc/user-guide/con
 b686eb97408c359360cb07392231272a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/EnumConfigurationParameterConverter.java
 b6d4d83bba600a70a503f4e2f77ae844  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerTestDescriptor.java
 b6fb1b190eb1e75b6cb83ca9bfb50b51  documentation/src/test/java/example/CustomTestEngine.java
+b7124cfdd17461310e238500bd4fd383  documentation/src/docs/asciidoc/user-guide/images/extensions_BrokenLifecycleMethodConfigDemo.txt
 b76a411b0637028bb3f333902d4eb365  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreePrinter.java
 b7ae0f267f3f1a91075a40f4dd97cf8f  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Execution.java
 b7bc0c9d9490da01055e230670f80208  documentation/src/docs/asciidoc/user-guide/testkit.adoc
