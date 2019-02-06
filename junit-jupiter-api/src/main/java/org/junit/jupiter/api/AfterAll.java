@@ -45,6 +45,11 @@ import org.apiguardian.api.API;
  * {@code @AfterAll} methods from superclasses will be executed after
  * {@code @AfterAll} methods in subclasses.
  *
+ * <p>Similarly, {@code @AfterAll} methods declared in an interface are
+ * inherited as long as they are not <em>hidden</em> or <em>overridden</em>,
+ * and {@code @AfterAll} methods from an interface will be executed after
+ * {@code @AfterAll} methods in the class that implements the interface.
+ *
  * <h3>Composition</h3>
  *
  * <p>{@code @AfterAll} may be used as a meta-annotation in order to create
