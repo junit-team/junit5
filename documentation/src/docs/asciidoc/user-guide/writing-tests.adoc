@@ -1,6 +1,10 @@
 [[writing-tests]]
 == Writing Tests
 
+The following example provides a glimpse at the minimum requirements for writing a test in
+JUnit Jupiter. Subsequent sections of this chapter will provide further details on all
+available features.
+
 [source,java,indent=0]
 .A first test case
 ----
@@ -40,9 +44,6 @@ in the `junit-jupiter-api` module.
 | `@RegisterExtension`     | Used to <<extensions-registration-programmatic,register extensions programmatically>> via fields. Such fields are _inherited_ unless they are _shadowed_.
 | `@TempDir`               | Used to supply a <<writing-tests-built-in-extensions-TempDirectory,temporary directory>> via field injection or parameter injection in a lifecycle method or test method; located in the `org.junit.jupiter.api.io` package.
 |===
-
-Any method annotated with `@Test`, `@TestTemplate`, `@RepeatedTest`, `@ParameterizedTest`,
-`@BeforeAll`, `@AfterAll`, `@BeforeEach`, or `@AfterEach` must not return a value.
 
 WARNING: Some annotations may currently be _experimental_. Consult the table in
 <<api-evolution-experimental-apis>> for details.
@@ -97,19 +98,33 @@ void myFastTest() {
 [[writing-tests-classes-and-methods]]
 === Test Classes and Methods
 
-A _test method_ is any instance method that is directly annotated or meta-annotated with
-`@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or `@TestTemplate`. A
-_test class_ is any top-level or `static` member class that contains at least one _test
-method_.
+**Test Class**: any top-level class, `static` member class, or <<writing-tests-nested,
+`@Nested` class>> that contains at least one _test method_.
+
+Test classes must not be `abstract` and must have a single constructor.
+
+**Test Method**: any instance method that is directly annotated or meta-annotated with
+`@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or `@TestTemplate`.
+
+**Lifecycle Method**: any method that is directly annotated or meta-annotated with
+`@BeforeAll`, `@AfterAll`, `@BeforeEach`, or `@AfterEach`.
+
+Test methods and lifecycle methods may be declared locally within the current test class,
+inherited from superclasses, or inherited from interfaces (see
+<<writing-tests-test-interfaces-and-default-methods>>). In addition, test methods and
+lifecycle methods must not be `abstract` and must not return a value.
+
+NOTE: Test classes, test methods, and lifecycle methods are not required to be `public`,
+but they must _not_ be `private`.
+
+The following test class demonstrates the use of `@Test` methods and all supported
+lifecycle methods.
 
 [source,java,indent=0]
 .A standard test class
 ----
 include::{testDir}/example/StandardTests.java[tags=user_guide]
 ----
-
-NOTE: Test classes and test methods are not required to be `public`, but they must _not_
-be `private`.
 
 [[writing-tests-display-names]]
 === Display Names
@@ -542,8 +557,8 @@ configuration file instead of via a JVM system property.
 [[writing-tests-nested]]
 === Nested Tests
 
-Nested tests give the test writer more capabilities to express the relationship among
-several group of tests. Here's an elaborate example.
+`@Nested` tests give the test writer more capabilities to express the relationship among
+several groups of tests. Here's an elaborate example.
 
 [source,java,indent=0]
 .Nested test suite for testing a stack
