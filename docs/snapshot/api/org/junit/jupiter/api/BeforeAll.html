@@ -147,6 +147,11 @@ public @interface <span class="memberNameLabel">BeforeAll</span></pre>
  <code>@BeforeAll</code> methods from superclasses will be executed before
  <code>@BeforeAll</code> methods in subclasses.
 
+ <p>Similarly, <code>@BeforeAll</code> methods declared in an interface are
+ inherited as long as they are not <em>hidden</em> or <em>overridden</em>,
+ and <code>@BeforeAll</code> methods from an interface will be executed before
+ <code>@BeforeAll</code> methods in the class that implements the interface.
+
  <h3>Composition</h3>
 
  <p><code>@BeforeAll</code> may be used as a meta-annotation in order to create

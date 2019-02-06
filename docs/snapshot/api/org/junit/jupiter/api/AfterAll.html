@@ -147,6 +147,11 @@ public @interface <span class="memberNameLabel">AfterAll</span></pre>
  <code>@AfterAll</code> methods from superclasses will be executed after
  <code>@AfterAll</code> methods in subclasses.
 
+ <p>Similarly, <code>@AfterAll</code> methods declared in an interface are
+ inherited as long as they are not <em>hidden</em> or <em>overridden</em>,
+ and <code>@AfterAll</code> methods from an interface will be executed after
+ <code>@AfterAll</code> methods in the class that implements the interface.
+
  <h3>Composition</h3>
 
  <p><code>@AfterAll</code> may be used as a meta-annotation in order to create
