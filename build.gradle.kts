@@ -14,6 +14,7 @@ plugins {
 	id("com.diffplug.gradle.spotless")
 	id("org.ajoberstar.git-publish")
 	id("de.marcphilipp.nexus-publish") apply false
+	id("org.sonarqube")
 }
 
 buildScan {

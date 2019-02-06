@@ -50,6 +50,10 @@ jobs:
       script:
         - ./gradlew --scan --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport
         - bash <(curl -s https://codecov.io/bash)
+    - name: "Code analysis"
+      if: branch = master
+      script:
+        - ./gradlew sonarqube
     - stage: deploy
       name: "Publish snapshot artifacts"
       env:
