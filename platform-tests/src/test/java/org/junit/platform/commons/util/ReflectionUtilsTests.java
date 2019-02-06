@@ -137,6 +137,24 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
+	void isFinal() throws Exception {
+		assertTrue(ReflectionUtils.isFinal(FinalClass.class));
+		assertTrue(ReflectionUtils.isFinal(FinalClass.class.getDeclaredMethod("finalMethod")));
+
+		assertFalse(ReflectionUtils.isFinal(PublicClass.class));
+		assertFalse(ReflectionUtils.isFinal(PublicClass.class.getDeclaredMethod("publicMethod")));
+	}
+
+	@Test
+	void isNotFinal() throws Exception {
+		assertTrue(ReflectionUtils.isNotFinal(PublicClass.class));
+		assertTrue(ReflectionUtils.isNotFinal(PublicClass.class.getDeclaredMethod("publicMethod")));
+
+		assertFalse(ReflectionUtils.isNotFinal(FinalClass.class));
+		assertFalse(ReflectionUtils.isNotFinal(FinalClass.class.getDeclaredMethod("finalMethod")));
+	}
+
+	@Test
 	void returnsVoid() throws Exception {
 		Class<?> clazz = ClassWithVoidAndNonVoidMethods.class;
 		assertTrue(ReflectionUtils.returnsVoid(clazz.getDeclaredMethod("voidMethod")));
@@ -1404,6 +1422,13 @@ class ReflectionUtilsTests {
 
 		@SuppressWarnings("unused")
 		void packageVisibleMethod() {
+		}
+	}
+
+	final class FinalClass {
+
+		@SuppressWarnings("unused")
+		final void finalMethod() {
 		}
 	}
 
