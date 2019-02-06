@@ -796,8 +796,8 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#extensions-execution-order">5.13. Relative Execution Order of User Code and Extensions</a>
 <ul class="sectlevel3">
-<li><a href="#user-and-extension-code">5.13.1. User and Extension Code</a></li>
-<li><a href="#extensions-lifecycle-wrapping-behavior">5.13.2. Wrapping Behavior of Callbacks</a></li>
+<li><a href="#extensions-execution-order-overview">5.13.1. User and Extension Code</a></li>
+<li><a href="#extensions-execution-order-wrapping-behavior">5.13.2. Wrapping Behavior of Callbacks</a></li>
 </ul>
 </li>
 </ul>
@@ -1258,7 +1258,9 @@ but they must <em>not</em> be <code>private</code>.
 </div>
 <div class="paragraph">
 <p>The following test class demonstrates the use of <code>@Test</code> methods and all supported
-lifecycle methods.</p>
+lifecycle methods. For further information on runtime semantics, see
+<a href="#writing-tests-test-execution-order">Test Execution Order</a> and
+<a href="#extensions-execution-order-wrapping-behavior">Wrapping Behavior of Callbacks</a>.</p>
 </div>
 <div class="listingblock">
 <div class="title">A standard test class</div>
@@ -2293,9 +2295,7 @@ methods in the same order, thereby allowing for repeatable builds.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-In this context, a <em>test method</em> is any instance method that is directly annotated
-or meta-annotated with <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, <code>@TestFactory</code>, or
-<code>@TestTemplate</code>.
+See <a href="#writing-tests-classes-and-methods">Test Classes and Methods</a> for a definition of <em>test method</em>.
 </td>
 </tr>
 </table>
@@ -2328,6 +2328,18 @@ parameter lists.</p>
 <em>seed</em>.</p>
 </li>
 </ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+See also: <a href="#extensions-execution-order-wrapping-behavior">Wrapping Behavior of Callbacks</a>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>The following example demonstrates how to guarantee that test methods are executed in the
@@ -2585,10 +2597,9 @@ constructors and methods.</p>
 </div>
 <div class="paragraph">
 <p><code><a href="../api/org/junit/jupiter/api/extension/ParameterResolver.html">ParameterResolver</a></code> defines the API for test extensions that wish to <em>dynamically</em>
-resolve parameters at runtime. If a test class constructor or a <code>@Test</code>, <code>@RepeatedTest</code>,
-<code>@ParameterizedTest</code>, <code>@TestFactory</code>, <code>@TestTemplate</code>, <code>@BeforeEach</code>, <code>@AfterEach</code>,
-<code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts a parameter, the parameter must be resolved at
-runtime by a registered <code>ParameterResolver</code>.</p>
+resolve parameters at runtime. If a <em>test class</em> constructor, a <em>test method</em>, or a
+<em>lifecycle method</em> (see <a href="#writing-tests-classes-and-methods">Test Classes and Methods</a>) accepts a parameter, the
+parameter must be resolved at runtime by a registered <code>ParameterResolver</code>.</p>
 </div>
 <div class="paragraph">
 <p>There are currently three built-in resolvers that are registered automatically.</p>
@@ -6648,14 +6659,13 @@ initialization methods on the test instance, etc.</p>
 runtime.</p>
 </div>
 <div class="paragraph">
-<p>If a test constructor or a <code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>,
-<code>@TestFactory</code>, <code>@BeforeEach</code>, <code>@AfterEach</code>, <code>@BeforeAll</code>, or <code>@AfterAll</code> method accepts
-a parameter, the parameter must be <em>resolved</em> at runtime by a <code>ParameterResolver</code>. A
-<code>ParameterResolver</code> can either be built-in (see <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or
-<a href="#extensions-registration">registered by the user</a>. Generally speaking, parameters may be
-resolved by <em>name</em>, <em>type</em>, <em>annotation</em>, or any combination thereof. For concrete
-examples, consult the source code for <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and
-<code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>.</p>
+<p>If a <em>test class</em> constructor, <em>test method</em>, or <em>lifecycle method</em> (see
+<a href="#writing-tests-classes-and-methods">Test Classes and Methods</a>) accepts a parameter, the parameter must be
+<em>resolved</em> at runtime by a <code>ParameterResolver</code>. A <code>ParameterResolver</code> can either be
+built-in (see <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TestInfoParameterResolver.java">TestInfoParameterResolver</a></code>) or <a href="#extensions-registration">registered by
+the user</a>. Generally speaking, parameters may be resolved by <em>name</em>, <em>type</em>,
+<em>annotation</em>, or any combination thereof. For concrete examples, consult the source code
+for <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java">CustomTypeParameterResolver</a></code> and <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java">CustomAnnotationParameterResolver</a></code>.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -6724,8 +6734,10 @@ information for the following events.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-In this context, <em>test method</em> refers to any <code>@Test</code> method or <code>@TestTemplate</code>
-method (for example, a <code>@RepeatedTest</code> or <code>@ParameterizedTest</code>).
+In contrast to the definition of "test method" presented in
+<a href="#writing-tests-classes-and-methods">Test Classes and Methods</a>, in this context <em>test method</em> refers to any
+<code>@Test</code> method or <code>@TestTemplate</code> method (for example, a <code>@RepeatedTest</code> or
+<code>@ParameterizedTest</code>).
 </td>
 </tr>
 </table>
@@ -7096,13 +7108,25 @@ details.</p>
 <h3 id="extensions-execution-order"><a class="anchor" href="#extensions-execution-order"></a>5.13. Relative Execution Order of User Code and Extensions</h3>
 <div class="paragraph">
 <p>When executing a test class that contains one or more test methods, a number of extension
-callbacks are called in addition to the user-supplied test and lifecycle methods. The
-following diagram illustrates the relative order of user-supplied code and extension code.</p>
+callbacks are called in addition to the user-supplied test and lifecycle methods.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+See also: <a href="#writing-tests-test-execution-order">Test Execution Order</a>
+</td>
+</tr>
+</table>
 </div>
 <div class="sect3">
-<h4 id="user-and-extension-code"><a class="anchor" href="#user-and-extension-code"></a>5.13.1. User and Extension Code</h4>
+<h4 id="extensions-execution-order-overview"><a class="anchor" href="#extensions-execution-order-overview"></a>5.13.1. User and Extension Code</h4>
 <div class="paragraph">
-<p>User-supplied test and lifecycle methods are shown in orange, with callback code
+<p>The following diagram illustrates the relative order of user-supplied code and extension
+code. User-supplied test and lifecycle methods are shown in orange, with callback code
 implemented by extensions shown in blue. The grey box denotes the execution of a single
 test method and will be repeated for every test method in the test class.</p>
 </div>
@@ -7200,7 +7224,7 @@ please consult the respective Javadoc for each annotation and extension.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-lifecycle-wrapping-behavior"><a class="anchor" href="#extensions-lifecycle-wrapping-behavior"></a>5.13.2. Wrapping Behavior of Callbacks</h4>
+<h4 id="extensions-execution-order-wrapping-behavior"><a class="anchor" href="#extensions-execution-order-wrapping-behavior"></a>5.13.2. Wrapping Behavior of Callbacks</h4>
 <div class="paragraph">
 <p>JUnit Jupiter always guarantees <em>wrapping</em> behavior for multiple registered extensions
 that implement lifecycle callbacks such as <code>BeforeAllCallback</code>, <code>AfterAllCallback</code>,
@@ -7218,8 +7242,7 @@ callbacks implemented by <code>Extension2</code>. <code>Extension1</code> is the
 </div>
 <div class="paragraph">
 <p>JUnit Jupiter also guarantees <em>wrapping</em> behavior within class and interface hierarchies
-for user-supplied lifecycle callbacks such as <code>@BeforeAll</code>, <code>@AfterAll</code>, <code>@BeforeEach</code>,
-and <code>@AfterEach</code> methods.</p>
+for user-supplied <em>lifecycle methods</em> (see <a href="#writing-tests-classes-and-methods">Test Classes and Methods</a>).</p>
 </div>
 <div class="ulist">
 <ul>
@@ -7581,11 +7604,22 @@ the <code>JupiterTestEngine</code> when the <code>BrokenLifecycleMethodConfigDem
 </div>
 <div class="title">BrokenLifecycleMethodConfigDemo</div>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
 <div class="paragraph">
 <p>Due to the aforementioned behavior, the JUnit Team recommends that developers declare at
-most one of each type of lifecycle method (i.e., <code>@BeforeAll</code>, <code>@AfterAll</code>, <code>@BeforeEach</code>,
-<code>@AfterEach</code>) per test class or test interface unless there are no dependencies between
-such lifecycle methods.</p>
+most one of each type of <em>lifecycle method</em> (see <a href="#writing-tests-classes-and-methods">Test Classes and Methods</a>)
+per test class or test interface unless there are no dependencies between such lifecycle
+methods.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -9124,7 +9158,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-02-06 14:15:08 UTC
+Last updated 2019-02-06 15:08:04 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
