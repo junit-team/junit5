@@ -1005,6 +1005,11 @@ of the combinations you can choose from.</p>
 <div class="sect1">
 <h2 id="writing-tests"><a class="anchor" href="#writing-tests"></a>2. Writing Tests</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>The following example provides a glimpse at the minimum requirements for writing a test in
+JUnit Jupiter. Subsequent sections of this chapter will provide further details on all
+available features.</p>
+</div>
 <div class="listingblock">
 <div class="title">A first test case</div>
 <div class="content">
@@ -1126,10 +1131,6 @@ in the <code>junit-jupiter-api</code> module.</p>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>Any method annotated with <code>@Test</code>, <code>@TestTemplate</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>,
-<code>@BeforeAll</code>, <code>@AfterAll</code>, <code>@BeforeEach</code>, or <code>@AfterEach</code> must not return a value.</p>
-</div>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -1223,10 +1224,41 @@ that can be used as a drop-in replacement for <code>@Tag("fast")</code> <em>and<
 <div class="sect2">
 <h3 id="writing-tests-classes-and-methods"><a class="anchor" href="#writing-tests-classes-and-methods"></a>2.2. Test Classes and Methods</h3>
 <div class="paragraph">
-<p>A <em>test method</em> is any instance method that is directly annotated or meta-annotated with
-<code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, <code>@TestFactory</code>, or <code>@TestTemplate</code>. A
-<em>test class</em> is any top-level or <code>static</code> member class that contains at least one <em>test
-method</em>.</p>
+<p><strong>Test Class</strong>: any top-level class, <code>static</code> member class, or <a href="#writing-tests-nested"><code>@Nested</code> class</a> that contains at least one <em>test method</em>.</p>
+</div>
+<div class="paragraph">
+<p>Test classes must not be <code>abstract</code> and must have a single constructor.</p>
+</div>
+<div class="paragraph">
+<p><strong>Test Method</strong>: any instance method that is directly annotated or meta-annotated with
+<code>@Test</code>, <code>@RepeatedTest</code>, <code>@ParameterizedTest</code>, <code>@TestFactory</code>, or <code>@TestTemplate</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Lifecycle Method</strong>: any method that is directly annotated or meta-annotated with
+<code>@BeforeAll</code>, <code>@AfterAll</code>, <code>@BeforeEach</code>, or <code>@AfterEach</code>.</p>
+</div>
+<div class="paragraph">
+<p>Test methods and lifecycle methods may be declared locally within the current test class,
+inherited from superclasses, or inherited from interfaces (see
+<a href="#writing-tests-test-interfaces-and-default-methods">Test Interfaces and Default Methods</a>). In addition, test methods and
+lifecycle methods must not be <code>abstract</code> and must not return a value.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Test classes, test methods, and lifecycle methods are not required to be <code>public</code>,
+but they must <em>not</em> be <code>private</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following test class demonstrates the use of <code>@Test</code> methods and all supported
+lifecycle methods.</p>
 </div>
 <div class="listingblock">
 <div class="title">A standard test class</div>
@@ -1282,19 +1314,6 @@ method</em>.</p>
 
 }</code></pre>
 </div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Test classes and test methods are not required to be <code>public</code>, but they must <em>not</em>
-be <code>private</code>.
-</td>
-</tr>
-</table>
 </div>
 </div>
 <div class="sect2">
@@ -2444,8 +2463,8 @@ configuration file instead of via a JVM system property.
 <div class="sect2">
 <h3 id="writing-tests-nested"><a class="anchor" href="#writing-tests-nested"></a>2.11. Nested Tests</h3>
 <div class="paragraph">
-<p>Nested tests give the test writer more capabilities to express the relationship among
-several group of tests. Here&#8217;s an elaborate example.</p>
+<p><code>@Nested</code> tests give the test writer more capabilities to express the relationship among
+several groups of tests. Here&#8217;s an elaborate example.</p>
 </div>
 <div class="listingblock">
 <div class="title">Nested test suite for testing a stack</div>
@@ -9105,7 +9124,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-02-05 18:15:24 UTC
+Last updated 2019-02-06 14:15:08 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
