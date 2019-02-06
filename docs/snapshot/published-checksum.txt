@@ -164,7 +164,6 @@
 42cfff3442eabb62b891945dee41f6e0  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueId.java
 43ced772fc2410bf73dd32f53032ce3d  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Executions.java
 46e996ef07e69cb14bf2da60cafa6ea3  documentation/src/test/java/example/testinterface/TestInterfaceDemo.java
-48276d1a641c8de7ad2c8e88f01a080e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/BeforeAll.java
 483abd07813240273568a4dc169105d2  junit-platform-commons/src/main/java/org/junit/platform/commons/function/Try.java
 4878439374931f5b71279b4f3002ca3d  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueIdFormat.java
 48a6f2273e984dd41bdd6e51ffd99b1c  documentation/src/test/java/example/HamcrestAssertionsDemo.java
@@ -603,6 +602,7 @@ f2e6532e204e4b7980b56887d12aceaf  junit-jupiter-api/src/main/java/org/junit/jupi
 f32bc8608f63f39ae60d92244432d7e1  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EventConditions.java
 f339df69abac0a77419b9e9869272045  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertEquals.java
 f42c05e5ea73cf0e8f5145e5e01ff3c5  junit-platform-commons/src/main/java/org/junit/platform/commons/annotation/Testable.java
+f4309c580c1d1e1ffcfed70344550241  junit-jupiter-api/src/main/java/org/junit/jupiter/api/BeforeAll.java
 f43341a93361cb5886ebe46d95cb775e  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/Logger.java
 f44bd9f96ede94e04072859450482860  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/DefaultJupiterConfiguration.java
 f5919de0da68f042c7d92f96abe28f6c  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
