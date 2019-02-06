@@ -118,7 +118,9 @@ NOTE: Test classes, test methods, and lifecycle methods are not required to be `
 but they must _not_ be `private`.
 
 The following test class demonstrates the use of `@Test` methods and all supported
-lifecycle methods.
+lifecycle methods. For further information on runtime semantics, see
+<<writing-tests-test-execution-order>> and
+<<extensions-execution-order-wrapping-behavior>>.
 
 [source,java,indent=0]
 .A standard test class
@@ -459,9 +461,7 @@ By default, test methods will be ordered using an algorithm that is deterministi
 intentionally nonobvious. This ensures that subsequent runs of a test suite execute test
 methods in the same order, thereby allowing for repeatable builds.
 
-NOTE: In this context, a _test method_ is any instance method that is directly annotated
-or meta-annotated with `@Test`, `@RepeatedTest`, `@ParameterizedTest`, `@TestFactory`, or
-`@TestTemplate`.
+NOTE: See <<writing-tests-classes-and-methods>> for a definition of _test method_.
 
 Although true _unit tests_ typically should not rely on the order in which they are
 executed, there are times when it is necessary to enforce a specific test method execution
@@ -480,6 +480,8 @@ following built-in `MethodOrderer` implementations.
   `{Order}` annotation.
 * `{Random}`: orders test methods _pseudo-randomly_ and supports configuration of a custom
   _seed_.
+
+NOTE: See also: <<extensions-execution-order-wrapping-behavior>>
 
 The following example demonstrates how to guarantee that test methods are executed in the
 order specified via the `@Order` annotation.
@@ -584,10 +586,9 @@ parameters. This allows for greater flexibility and enables _Dependency Injectio
 constructors and methods.
 
 `{ParameterResolver}` defines the API for test extensions that wish to _dynamically_
-resolve parameters at runtime. If a test class constructor or a `@Test`, `@RepeatedTest`,
-`@ParameterizedTest`, `@TestFactory`, `@TestTemplate`, `@BeforeEach`, `@AfterEach`,
-`@BeforeAll`, or `@AfterAll` method accepts a parameter, the parameter must be resolved at
-runtime by a registered `ParameterResolver`.
+resolve parameters at runtime. If a _test class_ constructor, a _test method_, or a
+_lifecycle method_ (see <<writing-tests-classes-and-methods>>) accepts a parameter, the
+parameter must be resolved at runtime by a registered `ParameterResolver`.
 
 There are currently three built-in resolvers that are registered automatically.
 

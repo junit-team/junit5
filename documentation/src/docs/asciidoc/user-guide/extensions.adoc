@@ -320,14 +320,13 @@ For a concrete example, consult the source code for the `{MockitoExtension}` and
 `{ParameterResolver}` defines the `Extension` API for dynamically resolving parameters at
 runtime.
 
-If a test constructor or a `@Test`, `@RepeatedTest`, `@ParameterizedTest`,
-`@TestFactory`, `@BeforeEach`, `@AfterEach`, `@BeforeAll`, or `@AfterAll` method accepts
-a parameter, the parameter must be _resolved_ at runtime by a `ParameterResolver`. A
-`ParameterResolver` can either be built-in (see `{TestInfoParameterResolver}`) or
-<<extensions-registration,registered by the user>>. Generally speaking, parameters may be
-resolved by _name_, _type_, _annotation_, or any combination thereof. For concrete
-examples, consult the source code for `{CustomTypeParameterResolver}` and
-`{CustomAnnotationParameterResolver}`.
+If a _test class_ constructor, _test method_, or _lifecycle method_ (see
+<<writing-tests-classes-and-methods>>) accepts a parameter, the parameter must be
+_resolved_ at runtime by a `ParameterResolver`. A `ParameterResolver` can either be
+built-in (see `{TestInfoParameterResolver}`) or <<extensions-registration,registered by
+the user>>. Generally speaking, parameters may be resolved by _name_, _type_,
+_annotation_, or any combination thereof. For concrete examples, consult the source code
+for `{CustomTypeParameterResolver}` and `{CustomAnnotationParameterResolver}`.
 
 [WARNING]
 ====
@@ -358,8 +357,10 @@ information for the following events.
 * `testAborted`: invoked after a _test method_ has been aborted
 * `testFailed`: invoked after a _test method_ has failed
 
-NOTE: In this context, _test method_ refers to any `@Test` method or `@TestTemplate`
-method (for example, a `@RepeatedTest` or `@ParameterizedTest`).
+NOTE: In contrast to the definition of "test method" presented in
+<<writing-tests-classes-and-methods>>, in this context _test method_ refers to any
+`@Test` method or `@TestTemplate` method (for example, a `@RepeatedTest` or
+`@ParameterizedTest`).
 
 Extensions implementing this interface can be registered at the method level or at the
 class level. In the latter case they will be invoked for any contained _test method_
@@ -551,12 +552,15 @@ details.
 === Relative Execution Order of User Code and Extensions
 
 When executing a test class that contains one or more test methods, a number of extension
-callbacks are called in addition to the user-supplied test and lifecycle methods. The
-following diagram illustrates the relative order of user-supplied code and extension code.
+callbacks are called in addition to the user-supplied test and lifecycle methods.
 
+NOTE: See also: <<writing-tests-test-execution-order>>
+
+[[extensions-execution-order-overview]]
 ==== User and Extension Code
 
-User-supplied test and lifecycle methods are shown in orange, with callback code
+The following diagram illustrates the relative order of user-supplied code and extension
+code. User-supplied test and lifecycle methods are shown in orange, with callback code
 implemented by extensions shown in blue. The grey box denotes the execution of a single
 test method and will be repeated for every test method in the test class.
 
@@ -627,7 +631,7 @@ steps are optional depending on the presence of user code or extension support f
 corresponding lifecycle callback. For further details on the various lifecycle callbacks
 please consult the respective Javadoc for each annotation and extension.
 
-[[extensions-lifecycle-wrapping-behavior]]
+[[extensions-execution-order-wrapping-behavior]]
 ==== Wrapping Behavior of Callbacks
 
 JUnit Jupiter always guarantees _wrapping_ behavior for multiple registered extensions
@@ -644,8 +648,7 @@ callbacks implemented by `Extension2`. `Extension1` is therefore said to _wrap_
 `Extension2`.
 
 JUnit Jupiter also guarantees _wrapping_ behavior within class and interface hierarchies
-for user-supplied lifecycle callbacks such as `@BeforeAll`, `@AfterAll`, `@BeforeEach`,
-and `@AfterEach` methods.
+for user-supplied _lifecycle methods_ (see <<writing-tests-classes-and-methods>>).
 
 * `@BeforeAll` methods are inherited from superclasses as long as they are not _hidden_ or
   _overridden_. Furthermore, `@BeforeAll` methods from superclasses will be executed
@@ -786,7 +789,10 @@ See corresponding *.txt file in images folder for the source.
 ////
 image::extensions_BrokenLifecycleMethodConfigDemo.png[caption='',title='BrokenLifecycleMethodConfigDemo']
 
+[TIP]
+====
 Due to the aforementioned behavior, the JUnit Team recommends that developers declare at
-most one of each type of lifecycle method (i.e., `@BeforeAll`, `@AfterAll`, `@BeforeEach`,
-`@AfterEach`) per test class or test interface unless there are no dependencies between
-such lifecycle methods.
+most one of each type of _lifecycle method_ (see <<writing-tests-classes-and-methods>>)
+per test class or test interface unless there are no dependencies between such lifecycle
+methods.
+====
