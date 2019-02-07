@@ -636,7 +636,7 @@ please consult the respective Javadoc for each annotation and extension.
 
 JUnit Jupiter always guarantees _wrapping_ behavior for multiple registered extensions
 that implement lifecycle callbacks such as `BeforeAllCallback`, `AfterAllCallback`,
-`BeforeEachCallback`, `AfterAllCallback`, `BeforeTestExecutionCallback`, and
+`BeforeEachCallback`, `AfterEachCallback`, `BeforeTestExecutionCallback`, and
 `AfterTestExecutionCallback`.
 
 That means that, given two extensions `Extension1` and `Extension2` with `Extension1`
