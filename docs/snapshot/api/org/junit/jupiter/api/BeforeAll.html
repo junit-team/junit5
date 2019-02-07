@@ -160,14 +160,15 @@ public @interface <span class="memberNameLabel">BeforeAll</span></pre>
 
  <p>In addition, <code>@BeforeAll</code> methods are in no way linked to
  <code>@AfterAll</code> methods. Consequently, there are no guarantees with regard
- to their <em>wrapping</em> behavior. For example, given two <code>@BeforeAll</code>
- methods <code>createA()</code> and <code>createB()</code> as well as two <code>@AfterAll</code>
- methods <code>destroyA()</code> and <code>destroyB()</code>, the order in which the
- <code>@BeforeAll</code> methods are executed (e.g. <code>createA()</code> before
- <code>createB()</code>) does not imply any order for the seemingly corresponding
- <code>@AfterAll</code> methods. In other words, <code>destroyA()</code> might be called
- before <em>or</em> after <code>destroyB()</code>. The JUnit Team therefore recommends
- that developers declare at most one <code>@BeforeAll</code> method and at most one
+ to their <em>wrapping</em> behavior. For example, given two
+ <code>@BeforeAll</code> methods <code>createA()</code> and <code>createB()</code> as well as
+ two <code>@AfterAll</code> methods <code>destroyA()</code> and <code>destroyB()</code>, the
+ order in which the <code>@BeforeAll</code> methods are executed (e.g.
+ <code>createA()</code> before <code>createB()</code>) does not imply any order for the
+ seemingly corresponding <code>@AfterAll</code> methods. In other words,
+ <code>destroyA()</code> might be called before <em>or</em> after
+ <code>destroyB()</code>. The JUnit Team therefore recommends that developers
+ declare at most one <code>@BeforeAll</code> method and at most one
  <code>@AfterAll</code> method per test class or test interface unless there are no
  dependencies between the <code>@BeforeAll</code> methods or between the
  <code>@AfterAll</code> methods.

@@ -135,7 +135,7 @@ public @interface <span class="memberNameLabel">AfterEach</span></pre>
  They may optionally declare parameters to be resolved by
  <a href="extension/ParameterResolver.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterResolvers</code></a>.
 
- <h3>Inheritance</h3>
+ <h3>Inheritance and Execution Order</h3>
 
  <p><code>@AfterEach</code> methods are inherited from superclasses as long as
  they are not overridden. Furthermore, <code>@AfterEach</code> methods from
@@ -145,6 +145,27 @@ public @interface <span class="memberNameLabel">AfterEach</span></pre>
  methods</em> are inherited as long as they are not overridden, and
  <code>@AfterEach</code> default methods will be executed after <code>@AfterEach</code>
  methods in the class that implements the interface.
+
+ <p>JUnit Jupiter does not guarantee the execution order of multiple
+ <code>@AfterEach</code> methods that are declared within a single test class or
+ test interface. While it may at times appear that these methods are invoked
+ in alphabetical order, they are in fact sorted using an algorithm that is
+ deterministic but intentionally non-obvious.
+
+ <p>In addition, <code>@AfterEach</code> methods are in no way linked to
+ <code>@BeforeEach</code> methods. Consequently, there are no guarantees with
+ regard to their <em>wrapping</em> behavior. For example, given two
+ <code>@BeforeEach</code> methods <code>createA()</code> and <code>createB()</code> as well
+ as two <code>@AfterEach</code> methods <code>destroyA()</code> and <code>destroyB()</code>,
+ the order in which the <code>@BeforeEach</code> methods are executed (e.g.
+ <code>createA()</code> before <code>createB()</code>) does not imply any order for the
+ seemingly corresponding <code>@AfterEach</code> methods. In other words,
+ <code>destroyA()</code> might be called before <em>or</em> after
+ <code>destroyB()</code>. The JUnit Team therefore recommends that developers
+ declare at most one <code>@BeforeEach</code> method and at most one
+ <code>@AfterEach</code> method per test class or test interface unless there are
+ no dependencies between the <code>@BeforeEach</code> methods or between the
+ <code>@AfterEach</code> methods.
 
  <h3>Composition</h3>
 
