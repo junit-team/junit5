@@ -271,9 +271,9 @@ following.
 			</plugin>
 		</plugins>
 	</build>
-	...
+	<!-- ... -->
 	<dependencies>
-		...
+		<!-- ... -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
@@ -286,9 +286,9 @@ following.
 			<version>{jupiter-version}</version>
 			<scope>test</scope>
 		</dependency>
-		...
+		<!-- ... -->
 	</dependencies>
-	...
+	<!-- ... -->
 ----
 
 Maven Surefire and Maven Failsafe can run JUnit 4 based tests alongside Jupiter tests as
@@ -298,7 +298,7 @@ long as you configure `test` scoped dependencies on JUnit 4 and the JUnit Vintag
 [source,xml,indent=0]
 [subs=attributes+]
 ----
-	...
+	<!-- ... -->
 	<build>
 		<plugins>
 			<plugin>
@@ -311,9 +311,9 @@ long as you configure `test` scoped dependencies on JUnit 4 and the JUnit Vintag
 			</plugin>
 		</plugins>
 	</build>
-	...
+	<!-- ... -->
 	<dependencies>
-		...
+		<!-- ... -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -326,9 +326,9 @@ long as you configure `test` scoped dependencies on JUnit 4 and the JUnit Vintag
 			<version>{vintage-version}</version>
 			<scope>test</scope>
 		</dependency>
-		...
+		<!-- ... -->
 	</dependencies>
-	...
+	<!-- ... -->
 ----
 
 [[running-tests-build-maven-filter-test-class-names]]
@@ -352,7 +352,7 @@ from excluding static member classes, you can override its exclude rules as foll
 [subs=attributes+]
 .Overriding exclude rules of Maven Surefire
 ----
-	...
+	<!-- ... -->
 	<build>
 		<plugins>
 			<plugin>
@@ -366,7 +366,7 @@ from excluding static member classes, you can override its exclude rules as foll
 			</plugin>
 		</plugins>
 	</build>
-	...
+	<!-- ... -->
 ----
 
 Please see the
@@ -385,7 +385,7 @@ the following configuration properties.
 [source,xml,indent=0]
 [subs=attributes+]
 ----
-	...
+	<!-- ... -->
 	<build>
 		<plugins>
 			<plugin>
@@ -398,7 +398,7 @@ the following configuration properties.
 			</plugin>
 		</plugins>
 	</build>
-	...
+	<!-- ... -->
 ----
 
 [[running-tests-build-maven-config-params]]
@@ -412,7 +412,7 @@ below) or via the `junit-platform.properties` file.
 [source,xml,indent=0]
 [subs=attributes+]
 ----
-	...
+	<!-- ... -->
 	<build>
 		<plugins>
 			<plugin>
@@ -430,7 +430,7 @@ below) or via the `junit-platform.properties` file.
 			</plugin>
 		</plugins>
 	</build>
-	...
+	<!-- ... -->
 ----
 
 [[running-tests-build-ant]]
@@ -491,7 +491,7 @@ test classes from multiple locations.
 		<!-- The location where you have your compiled classes -->
 		<pathelement location="${build.classes.dir}" />
 	</path>
-	....
+	<!-- ... -->
 	<junitlauncher>
 		<classpath refid="test.classpath" />
 		<testclasses outputdir="${output.dir}">
