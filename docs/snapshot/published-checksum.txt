@@ -43,6 +43,7 @@
 0f2eebcd2dc1cc94bd9467ddd8cf8ce4  documentation/src/test/java/example/callbacks/Extension2.java
 0fe89fd074283ef5af442b2360055639  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/PackageSelector.java
 10101f131a9a49ffcbe6da55f330e620  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Tag.java
+1087e868716352fdedff924e7a2e2c5f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/BeforeAll.java
 11f1ca9c8bacaf2b06364c9e409f44af  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullSource.java
 131248304a78fe920166fa57c7c09bb5  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeTags.java
 1365277bdd6cd49aa17ccf9dd3d16f67  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/JavaElementsResolver.java
@@ -602,7 +603,6 @@ f2e6532e204e4b7980b56887d12aceaf  junit-jupiter-api/src/main/java/org/junit/jupi
 f32bc8608f63f39ae60d92244432d7e1  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EventConditions.java
 f339df69abac0a77419b9e9869272045  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertEquals.java
 f42c05e5ea73cf0e8f5145e5e01ff3c5  junit-platform-commons/src/main/java/org/junit/platform/commons/annotation/Testable.java
-f4309c580c1d1e1ffcfed70344550241  junit-jupiter-api/src/main/java/org/junit/jupiter/api/BeforeAll.java
 f43341a93361cb5886ebe46d95cb775e  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/Logger.java
 f44bd9f96ede94e04072859450482860  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/DefaultJupiterConfiguration.java
 f5919de0da68f042c7d92f96abe28f6c  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
