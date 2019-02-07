@@ -33,7 +33,7 @@ import org.apiguardian.api.API;
  * They may optionally declare parameters to be resolved by
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
  *
- * <h3>Inheritance</h3>
+ * <h3>Inheritance and Execution Order</h3>
  *
  * <p>{@code @BeforeEach} methods are inherited from superclasses as long as
  * they are not overridden. Furthermore, {@code @BeforeEach} methods from
@@ -43,6 +43,27 @@ import org.apiguardian.api.API;
  * methods</em> are inherited as long as they are not overridden, and
  * {@code @BeforeEach} default methods will be executed before {@code @BeforeEach}
  * methods in the class that implements the interface.
+ *
+ * <p>JUnit Jupiter does not guarantee the execution order of multiple
+ * {@code @BeforeEach} methods that are declared within a single test class or
+ * test interface. While it may at times appear that these methods are invoked
+ * in alphabetical order, they are in fact sorted using an algorithm that is
+ * deterministic but intentionally non-obvious.
+ *
+ * <p>In addition, {@code @BeforeEach} methods are in no way linked to
+ * {@code @AfterEach} methods. Consequently, there are no guarantees with regard
+ * to their <em>wrapping</em> behavior. For example, given two
+ * {@code @BeforeEach} methods {@code createA()} and {@code createB()} as well
+ * as two {@code @AfterEach} methods {@code destroyA()} and {@code destroyB()},
+ * the order in which the {@code @BeforeEach} methods are executed (e.g.
+ * {@code createA()} before {@code createB()}) does not imply any order for the
+ * seemingly corresponding {@code @AfterEach} methods. In other words,
+ * {@code destroyA()} might be called before <em>or</em> after
+ * {@code destroyB()}. The JUnit Team therefore recommends that developers
+ * declare at most one {@code @BeforeEach} method and at most one
+ * {@code @AfterEach} method per test class or test interface unless there are
+ * no dependencies between the {@code @BeforeEach} methods or between the
+ * {@code @AfterEach} methods.
  *
  * <h3>Composition</h3>
  *

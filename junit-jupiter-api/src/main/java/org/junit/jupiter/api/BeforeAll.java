@@ -58,14 +58,15 @@ import org.apiguardian.api.API;
  *
  * <p>In addition, {@code @BeforeAll} methods are in no way linked to
  * {@code @AfterAll} methods. Consequently, there are no guarantees with regard
- * to their <em>wrapping</em> behavior. For example, given two {@code @BeforeAll}
- * methods {@code createA()} and {@code createB()} as well as two {@code @AfterAll}
- * methods {@code destroyA()} and {@code destroyB()}, the order in which the
- * {@code @BeforeAll} methods are executed (e.g. {@code createA()} before
- * {@code createB()}) does not imply any order for the seemingly corresponding
- * {@code @AfterAll} methods. In other words, {@code destroyA()} might be called
- * before <em>or</em> after {@code destroyB()}. The JUnit Team therefore recommends
- * that developers declare at most one {@code @BeforeAll} method and at most one
+ * to their <em>wrapping</em> behavior. For example, given two
+ * {@code @BeforeAll} methods {@code createA()} and {@code createB()} as well as
+ * two {@code @AfterAll} methods {@code destroyA()} and {@code destroyB()}, the
+ * order in which the {@code @BeforeAll} methods are executed (e.g.
+ * {@code createA()} before {@code createB()}) does not imply any order for the
+ * seemingly corresponding {@code @AfterAll} methods. In other words,
+ * {@code destroyA()} might be called before <em>or</em> after
+ * {@code destroyB()}. The JUnit Team therefore recommends that developers
+ * declare at most one {@code @BeforeAll} method and at most one
  * {@code @AfterAll} method per test class or test interface unless there are no
  * dependencies between the {@code @BeforeAll} methods or between the
  * {@code @AfterAll} methods.
