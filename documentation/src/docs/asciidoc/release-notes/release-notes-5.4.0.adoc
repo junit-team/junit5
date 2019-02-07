@@ -1,7 +1,7 @@
 [[release-notes-5.4.0]]
 == 5.4.0
 
-*Date of Release:* February 6, 2019
+*Date of Release:* February 7, 2019
 
 *Scope:*
 
