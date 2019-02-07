@@ -243,14 +243,14 @@ Starting with https://issues.apache.org/jira/browse/SUREFIRE-1330[version 2.22.0
 Surefire and Maven Failsafe provide
 http://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html[native support]
 for executing tests on the JUnit Platform. The `pom.xml` file in the
-`{junit5-jupiter-starter-maven}` project demonstrates how to use it and can serve as a
-starting point for configuring your Maven build.
+`{junit5-jupiter-starter-maven}` project demonstrates how to use the Maven Surefire plugin
+and can serve as a starting point for configuring your Maven build.
 
 [[running-tests-build-maven-engines-configure]]
 ===== Configuring Test Engines
 
-In order to have Maven Surefire run any tests at all, at least one `TestEngine`
-implementation must be added to the test classpath.
+In order to have Maven Surefire or Maven Failsafe run any tests at all, at least one
+`TestEngine` implementation must be added to the test classpath.
 
 To configure support for JUnit Jupiter based tests, configure `test` scoped dependencies
 on the JUnit Jupiter API and the JUnit Jupiter `TestEngine` implementation similar to the
@@ -291,9 +291,9 @@ following.
 	...
 ----
 
-Maven Surefire can run JUnit 4 based tests alongside Jupiter tests as long as you
-configure `test` scoped dependencies on JUnit 4 and the JUnit Vintage `TestEngine`
-implementation similar to the following.
+Maven Surefire and Maven Failsafe can run JUnit 4 based tests alongside Jupiter tests as
+long as you configure `test` scoped dependencies on JUnit 4 and the JUnit Vintage
+`TestEngine` implementation similar to the following.
 
 [source,xml,indent=0]
 [subs=attributes+]
