@@ -5338,14 +5338,14 @@ native support instead.</p>
 Surefire and Maven Failsafe provide
 <a href="http://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html">native support</a>
 for executing tests on the JUnit Platform. The <code>pom.xml</code> file in the
-<code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project demonstrates how to use it and can serve as a
-starting point for configuring your Maven build.</p>
+<code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project demonstrates how to use the Maven Surefire plugin
+and can serve as a starting point for configuring your Maven build.</p>
 </div>
 <div class="sect4">
 <h5 id="running-tests-build-maven-engines-configure"><a class="anchor" href="#running-tests-build-maven-engines-configure"></a>Configuring Test Engines</h5>
 <div class="paragraph">
-<p>In order to have Maven Surefire run any tests at all, at least one <code>TestEngine</code>
-implementation must be added to the test classpath.</p>
+<p>In order to have Maven Surefire or Maven Failsafe run any tests at all, at least one
+<code>TestEngine</code> implementation must be added to the test classpath.</p>
 </div>
 <div class="paragraph">
 <p>To configure support for JUnit Jupiter based tests, configure <code>test</code> scoped dependencies
@@ -5366,9 +5366,9 @@ following.</p>
         <span class="tag">&lt;/plugin&gt;</span>
     <span class="tag">&lt;/plugins&gt;</span>
 <span class="tag">&lt;/build&gt;</span>
-...
+<span class="comment">&lt;!-- ... --&gt;</span>
 <span class="tag">&lt;dependencies&gt;</span>
-    ...
+    <span class="comment">&lt;!-- ... --&gt;</span>
     <span class="tag">&lt;dependency&gt;</span>
         <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
         <span class="tag">&lt;artifactId&gt;</span>junit-jupiter-api<span class="tag">&lt;/artifactId&gt;</span>
@@ -5381,19 +5381,19 @@ following.</p>
         <span class="tag">&lt;version&gt;</span>5.4.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
         <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
     <span class="tag">&lt;/dependency&gt;</span>
-    ...
+    <span class="comment">&lt;!-- ... --&gt;</span>
 <span class="tag">&lt;/dependencies&gt;</span>
-...</code></pre>
+<span class="comment">&lt;!-- ... --&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Maven Surefire can run JUnit 4 based tests alongside Jupiter tests as long as you
-configure <code>test</code> scoped dependencies on JUnit 4 and the JUnit Vintage <code>TestEngine</code>
-implementation similar to the following.</p>
+<p>Maven Surefire and Maven Failsafe can run JUnit 4 based tests alongside Jupiter tests as
+long as you configure <code>test</code> scoped dependencies on JUnit 4 and the JUnit Vintage
+<code>TestEngine</code> implementation similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">...
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="comment">&lt;!-- ... --&gt;</span>
 <span class="tag">&lt;build&gt;</span>
     <span class="tag">&lt;plugins&gt;</span>
         <span class="tag">&lt;plugin&gt;</span>
@@ -5406,9 +5406,9 @@ implementation similar to the following.</p>
         <span class="tag">&lt;/plugin&gt;</span>
     <span class="tag">&lt;/plugins&gt;</span>
 <span class="tag">&lt;/build&gt;</span>
-...
+<span class="comment">&lt;!-- ... --&gt;</span>
 <span class="tag">&lt;dependencies&gt;</span>
-    ...
+    <span class="comment">&lt;!-- ... --&gt;</span>
     <span class="tag">&lt;dependency&gt;</span>
         <span class="tag">&lt;groupId&gt;</span>junit<span class="tag">&lt;/groupId&gt;</span>
         <span class="tag">&lt;artifactId&gt;</span>junit<span class="tag">&lt;/artifactId&gt;</span>
@@ -5421,9 +5421,9 @@ implementation similar to the following.</p>
         <span class="tag">&lt;version&gt;</span>5.4.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
         <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
     <span class="tag">&lt;/dependency&gt;</span>
-    ...
+    <span class="comment">&lt;!-- ... --&gt;</span>
 <span class="tag">&lt;/dependencies&gt;</span>
-...</code></pre>
+<span class="comment">&lt;!-- ... --&gt;</span></code></pre>
 </div>
 </div>
 </div>
@@ -5460,7 +5460,7 @@ from excluding static member classes, you can override its exclude rules as foll
 <div class="listingblock">
 <div class="title">Overriding exclude rules of Maven Surefire</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">...
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="comment">&lt;!-- ... --&gt;</span>
 <span class="tag">&lt;build&gt;</span>
     <span class="tag">&lt;plugins&gt;</span>
         <span class="tag">&lt;plugin&gt;</span>
@@ -5474,7 +5474,7 @@ from excluding static member classes, you can override its exclude rules as foll
         <span class="tag">&lt;/plugin&gt;</span>
     <span class="tag">&lt;/plugins&gt;</span>
 <span class="tag">&lt;/build&gt;</span>
-...</code></pre>
+<span class="comment">&lt;!-- ... --&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5501,7 +5501,7 @@ the following configuration properties.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">...
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="comment">&lt;!-- ... --&gt;</span>
 <span class="tag">&lt;build&gt;</span>
     <span class="tag">&lt;plugins&gt;</span>
         <span class="tag">&lt;plugin&gt;</span>
@@ -5514,7 +5514,7 @@ the following configuration properties.</p>
         <span class="tag">&lt;/plugin&gt;</span>
     <span class="tag">&lt;/plugins&gt;</span>
 <span class="tag">&lt;/build&gt;</span>
-...</code></pre>
+<span class="comment">&lt;!-- ... --&gt;</span></code></pre>
 </div>
 </div>
 </div>
@@ -5528,7 +5528,7 @@ below) or via the <code>junit-platform.properties</code> file.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="xml">...
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="comment">&lt;!-- ... --&gt;</span>
 <span class="tag">&lt;build&gt;</span>
     <span class="tag">&lt;plugins&gt;</span>
         <span class="tag">&lt;plugin&gt;</span>
@@ -5546,7 +5546,7 @@ below) or via the <code>junit-platform.properties</code> file.</p>
         <span class="tag">&lt;/plugin&gt;</span>
     <span class="tag">&lt;/plugins&gt;</span>
 <span class="tag">&lt;/build&gt;</span>
-...</code></pre>
+<span class="comment">&lt;!-- ... --&gt;</span></code></pre>
 </div>
 </div>
 </div>
@@ -5624,7 +5624,7 @@ test classes from multiple locations.</p>
     <span class="comment">&lt;!-- The location where you have your compiled classes --&gt;</span>
     <span class="tag">&lt;pathelement</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${build.classes.dir}</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
 <span class="tag">&lt;/path&gt;</span>
-....
+<span class="comment">&lt;!-- ... --&gt;</span>
 <span class="tag">&lt;junitlauncher&gt;</span>
     <span class="tag">&lt;classpath</span> <span class="attribute-name">refid</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">test.classpath</span><span class="delimiter">&quot;</span></span> <span class="tag">/&gt;</span>
     <span class="tag">&lt;testclasses</span> <span class="attribute-name">outputdir</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">${output.dir}</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
@@ -9166,7 +9166,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-02-07 14:05:22 UTC
+Last updated 2019-02-07 14:14:33 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
