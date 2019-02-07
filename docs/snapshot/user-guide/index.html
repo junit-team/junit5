@@ -5335,7 +5335,7 @@ native support instead.</p>
 </div>
 <div class="paragraph">
 <p>Starting with <a href="https://issues.apache.org/jira/browse/SUREFIRE-1330">version 2.22.0</a>, Maven
-Surefire provides
+Surefire and Maven Failsafe provide
 <a href="http://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html">native support</a>
 for executing tests on the JUnit Platform. The <code>pom.xml</code> file in the
 <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-maven">junit5-jupiter-starter-maven</a></code> project demonstrates how to use it and can serve as a
@@ -5358,6 +5358,10 @@ following.</p>
     <span class="tag">&lt;plugins&gt;</span>
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
+        <span class="tag">&lt;/plugin&gt;</span>
+        <span class="tag">&lt;plugin&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/artifactId&gt;</span>
             <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
         <span class="tag">&lt;/plugin&gt;</span>
     <span class="tag">&lt;/plugins&gt;</span>
@@ -5394,6 +5398,10 @@ implementation similar to the following.</p>
     <span class="tag">&lt;plugins&gt;</span>
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
+        <span class="tag">&lt;/plugin&gt;</span>
+        <span class="tag">&lt;plugin&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/artifactId&gt;</span>
             <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
         <span class="tag">&lt;/plugin&gt;</span>
     <span class="tag">&lt;/plugins&gt;</span>
@@ -9158,7 +9166,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.4.0-SNAPSHOT<br>
-Last updated 2019-02-07 13:55:07 UTC
+Last updated 2019-02-07 14:05:22 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

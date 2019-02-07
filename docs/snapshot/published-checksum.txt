@@ -45,6 +45,7 @@
 10101f131a9a49ffcbe6da55f330e620  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Tag.java
 1087e868716352fdedff924e7a2e2c5f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/BeforeAll.java
 11f1ca9c8bacaf2b06364c9e409f44af  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullSource.java
+12bca972fdc08dcfeadb0f18eb0ffa23  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 131248304a78fe920166fa57c7c09bb5  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeTags.java
 1365277bdd6cd49aa17ccf9dd3d16f67  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/JavaElementsResolver.java
 13c76a7853cbb65c8d2f2330aac9495d  documentation/src/docs/asciidoc/user-guide/api-evolution.adoc
@@ -218,7 +219,6 @@
 5f31d0b3e732125d98e8a578ebb91d65  junit-platform-commons/src/main/java/org/junit/platform/commons/JUnitException.java
 609729ab4796185b48a549d17c224533  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayNameGenerator.java
 60b45fbefc5ad4316199aeed36203206  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherFactory.java
-60facaf12ba1dd5e59afb43c1fc16fc5  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 61d5b7e5bff27fd6690dcbaa937bc6af  documentation/src/test/java/example/ExampleTestCase.java
 62f4385a2c4dee8e915b8819690d7835  documentation/src/test/java/example/TestingAStackDemo.java
 634adddee2f4da165ece58b4297c16fc  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ServiceLoaderTestEngineRegistry.java
