@@ -227,13 +227,17 @@ class ModifierSupportTests {
 	}
 
 	static Stream<Method> methods() throws Exception {
-		return Stream.of(//
-			PublicClass.class.getMethod("publicMethod"), //
+		// @formatter:off
+		return Stream.of(
+			PublicClass.class.getMethod("publicMethod"),
 			PrivateClass.class.getDeclaredMethod("privateMethod"),
 			ProtectedClass.class.getDeclaredMethod("protectedMethod"),
 			PackageVisibleClass.class.getDeclaredMethod("packageVisibleMethod"),
 			AbstractClass.class.getDeclaredMethod("abstractMethod"),
-			StaticClass.class.getDeclaredMethod("staticMethod"), FinalClass.class.getDeclaredMethod("finalMethod"));
+			StaticClass.class.getDeclaredMethod("staticMethod"),
+			FinalClass.class.getDeclaredMethod("finalMethod")
+		);
+		// @formatter:on
 	}
 
 }
