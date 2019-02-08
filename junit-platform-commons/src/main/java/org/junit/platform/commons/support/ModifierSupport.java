@@ -205,7 +205,9 @@ public final class ModifierSupport {
 	 * @param clazz the class to check; never {@code null}
 	 * @return {@code true} if the class is {@code final}
 	 * @see java.lang.reflect.Modifier#isFinal(int)
+	 * @since 1.5
 	 */
+	@API(status = MAINTAINED, since = "1.5")
 	public static boolean isFinal(Class<?> clazz) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		return ReflectionUtils.isFinal(clazz);
@@ -217,7 +219,9 @@ public final class ModifierSupport {
 	 * @param clazz the class to check; never {@code null}
 	 * @return {@code true} if the class is not {@code final}
 	 * @see java.lang.reflect.Modifier#isFinal(int)
+	 * @since 1.5
 	 */
+	@API(status = MAINTAINED, since = "1.5")
 	public static boolean isNotFinal(Class<?> clazz) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		return ReflectionUtils.isNotFinal(clazz);
@@ -229,7 +233,9 @@ public final class ModifierSupport {
 	 * @param member the member to check; never {@code null}
 	 * @return {@code true} if the member is {@code final}
 	 * @see java.lang.reflect.Modifier#isFinal(int)
+	 * @since 1.5
 	 */
+	@API(status = MAINTAINED, since = "1.5")
 	public static boolean isFinal(Member member) {
 		Preconditions.notNull(member, "Member must not be null");
 		return ReflectionUtils.isFinal(member);
@@ -241,7 +247,9 @@ public final class ModifierSupport {
 	 * @param member the member to check; never {@code null}
 	 * @return {@code true} if the member is not {@code final}
 	 * @see java.lang.reflect.Modifier#isFinal(int)
+	 * @since 1.5
 	 */
+	@API(status = MAINTAINED, since = "1.5")
 	public static boolean isNotFinal(Member member) {
 		Preconditions.notNull(member, "Member must not be null");
 		return ReflectionUtils.isNotFinal(member);
