@@ -199,4 +199,51 @@ public final class ModifierSupport {
 		return ReflectionUtils.isNotStatic(member);
 	}
 
+	/**
+	 * Determine if the supplied class is {@code final}.
+	 *
+	 * @param clazz the class to check; never {@code null}
+	 * @return {@code true} if the class is {@code final}
+	 * @see java.lang.reflect.Modifier#isFinal(int)
+	 */
+	public static boolean isFinal(Class<?> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		return ReflectionUtils.isFinal(clazz);
+	}
+
+	/**
+	 * Determine if the supplied class is not {@code final}.
+	 *
+	 * @param clazz the class to check; never {@code null}
+	 * @return {@code true} if the class is not {@code final}
+	 * @see java.lang.reflect.Modifier#isFinal(int)
+	 */
+	public static boolean isNotFinal(Class<?> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		return ReflectionUtils.isNotFinal(clazz);
+	}
+
+	/**
+	 * Determine if the supplied member is {@code final}.
+	 *
+	 * @param member the member to check; never {@code null}
+	 * @return {@code true} if the member is {@code final}
+	 * @see java.lang.reflect.Modifier#isFinal(int)
+	 */
+	public static boolean isFinal(Member member) {
+		Preconditions.notNull(member, "Member must not be null");
+		return ReflectionUtils.isFinal(member);
+	}
+
+	/**
+	 * Determine if the supplied member is not {@code final}.
+	 *
+	 * @param member the member to check; never {@code null}
+	 * @return {@code true} if the member is not {@code final}
+	 * @see java.lang.reflect.Modifier#isFinal(int)
+	 */
+	public static boolean isNotFinal(Member member) {
+		Preconditions.notNull(member, "Member must not be null");
+		return ReflectionUtils.isNotFinal(member);
+	}
 }
