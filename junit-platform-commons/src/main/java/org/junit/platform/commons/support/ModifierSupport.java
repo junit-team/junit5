@@ -254,4 +254,5 @@ public final class ModifierSupport {
 		Preconditions.notNull(member, "Member must not be null");
 		return ReflectionUtils.isNotFinal(member);
 	}
+
 }
