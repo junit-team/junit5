@@ -273,7 +273,7 @@ subprojects {
 	val versionRegex = """(\d+\.\d+\.\d+).*""".toRegex()
 	val normalizeVersion = { versionLiteral: String ->
 		try {
-			versionRegex.matchEntire(versionLiteral)!!.groups[1]
+			versionRegex.matchEntire(versionLiteral)!!.groups[1]!!.value
 		} catch (ex: Exception) {
 			throw GradleException("Version '$versionLiteral' does not match version pattern, e.g. 5.0.0-QUALIFIER", ex)
 		}
