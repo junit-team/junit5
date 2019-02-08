@@ -25,7 +25,6 @@
 08c929464e676d98213d46f956af7079  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterEachCallback.java
 0abb8110e64d8700654c7b94b931986c  junit-platform-console/src/main/java/org/junit/platform/console/package-info.java
 0ad657e51981206744d1dbaa28a08a3b  junit-jupiter-params/src/main/java/org/junit/jupiter/params/support/AnnotationConsumer.java
-0b5417b89a88ead48c47efe1c74cd41f  documentation/src/docs/asciidoc/release-notes/release-notes-5.5.0-M1.adoc
 0c16938e054fdbab624161a788171077  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.java
 0c481bdb314053214aa23d14ba89b64c  documentation/src/test/java/example/DynamicTestsDemo.java
 0c97d74387fb4e05f600812fb4a82a69  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EmptySource.java
@@ -413,6 +412,7 @@ ab35d7af1db2be6899eff8922ea00998  junit-jupiter-api/src/main/java/org/junit/jupi
 ab83ef64ae475dffa6ef688db027c5e0  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/package-info.java
 abc9da67419b57b76f89f58bbcdd1889  documentation/src/test/java/example/defaultmethods/EqualsContract.java
 abe7b472561eee6df1cbbd87584ae651  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertTimeout.java
+ac4b932eee57189bb7e70c052673dca4  documentation/src/docs/asciidoc/release-notes/release-notes-5.5.0-M1.adoc
 ac84824ef9e2b231b5464fc25b64cc15  documentation/src/test/java/example/timing/TimingExtension.java
 aca924203f0a29049fce770db91b6a11  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java
 adbda85a6d3fc30ce1e22be825f0066c  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.java
