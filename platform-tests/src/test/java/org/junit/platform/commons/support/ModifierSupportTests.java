@@ -130,6 +130,38 @@ class ModifierSupportTests {
 		assertEquals(ReflectionUtils.isNotStatic(method), ModifierSupport.isNotStatic(method));
 	}
 
+	@Test
+	void isFinalPreconditions() {
+		assertPreconditionViolationException("Class", () -> ModifierSupport.isFinal((Class<?>) null));
+		assertPreconditionViolationException("Member", () -> ModifierSupport.isFinal((Member) null));
+	}
+
+	@Classes
+	void isFinalDelegates(Class<?> clazz) {
+		assertEquals(ReflectionUtils.isFinal(clazz), ModifierSupport.isFinal(clazz));
+	}
+
+	@Methods
+	void isFinalDelegates(Method method) {
+		assertEquals(ReflectionUtils.isFinal(method), ModifierSupport.isFinal(method));
+	}
+
+	@Test
+	void isNotFinalPreconditions() {
+		assertPreconditionViolationException("Class", () -> ModifierSupport.isNotFinal((Class<?>) null));
+		assertPreconditionViolationException("Member", () -> ModifierSupport.isNotFinal((Member) null));
+	}
+
+	@Classes
+	void isNotFinalDelegates(Class<?> clazz) {
+		assertEquals(ReflectionUtils.isNotFinal(clazz), ModifierSupport.isNotFinal(clazz));
+	}
+
+	@Methods
+	void isNotFinalDelegates(Method method) {
+		assertEquals(ReflectionUtils.isNotFinal(method), ModifierSupport.isNotFinal(method));
+	}
+
 	// -------------------------------------------------------------------------
 
 	// Intentionally non-static
@@ -171,13 +203,19 @@ class ModifierSupportTests {
 		}
 	}
 
+	final class FinalClass {
+
+		final void finalMethod() {
+		}
+	}
+
 	// -------------------------------------------------------------------------
 
 	@Target(ElementType.METHOD)
 	@Retention(RetentionPolicy.RUNTIME)
 	@ParameterizedTest
 	@ValueSource(classes = { PublicClass.class, PrivateClass.class, ProtectedClass.class, PackageVisibleClass.class,
-			AbstractClass.class, StaticClass.class })
+			AbstractClass.class, StaticClass.class, FinalClass.class })
 	@interface Classes {
 	}
 
@@ -195,7 +233,7 @@ class ModifierSupportTests {
 			ProtectedClass.class.getDeclaredMethod("protectedMethod"),
 			PackageVisibleClass.class.getDeclaredMethod("packageVisibleMethod"),
 			AbstractClass.class.getDeclaredMethod("abstractMethod"),
-			StaticClass.class.getDeclaredMethod("staticMethod"));
+			StaticClass.class.getDeclaredMethod("staticMethod"), FinalClass.class.getDeclaredMethod("finalMethod"));
 	}
 
 }

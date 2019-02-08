@@ -262,6 +262,22 @@ public final class ReflectionUtils {
 		return !isStatic(member);
 	}
 
+	public static boolean isFinal(Class<?> clazz) {
+		return Modifier.isFinal(clazz.getModifiers());
+	}
+
+	public static boolean isNotFinal(Class<?> clazz) {
+		return !isFinal(clazz);
+	}
+
+	public static boolean isFinal(Member member) {
+		return Modifier.isFinal(member.getModifiers());
+	}
+
+	public static boolean isNotFinal(Member member) {
+		return !isFinal(member);
+	}
+
 	/**
 	 * Determine if the supplied class is an <em>inner class</em> (i.e., a
 	 * non-static member class).
