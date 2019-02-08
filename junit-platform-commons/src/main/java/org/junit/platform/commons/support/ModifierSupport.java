@@ -15,7 +15,6 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 import java.lang.reflect.Member;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -49,7 +48,6 @@ public final class ModifierSupport {
 	 * @see java.lang.reflect.Modifier#isPublic(int)
 	 */
 	public static boolean isPublic(Class<?> clazz) {
-		Preconditions.notNull(clazz, "Class must not be null");
 		return ReflectionUtils.isPublic(clazz);
 	}
 
@@ -61,7 +59,6 @@ public final class ModifierSupport {
 	 * @see java.lang.reflect.Modifier#isPublic(int)
 	 */
 	public static boolean isPublic(Member member) {
-		Preconditions.notNull(member, "Member must not be null");
 		return ReflectionUtils.isPublic(member);
 	}
 
@@ -73,7 +70,6 @@ public final class ModifierSupport {
 	 * @see java.lang.reflect.Modifier#isPrivate(int)
 	 */
 	public static boolean isPrivate(Class<?> clazz) {
-		Preconditions.notNull(clazz, "Class must not be null");
 		return ReflectionUtils.isPrivate(clazz);
 	}
 
@@ -85,7 +81,6 @@ public final class ModifierSupport {
 	 * @see java.lang.reflect.Modifier#isPrivate(int)
 	 */
 	public static boolean isPrivate(Member member) {
-		Preconditions.notNull(member, "Member must not be null");
 		return ReflectionUtils.isPrivate(member);
 	}
 
@@ -104,7 +99,6 @@ public final class ModifierSupport {
 	 * @see java.lang.reflect.Modifier#isPrivate(int)
 	 */
 	public static boolean isNotPrivate(Class<?> clazz) {
-		Preconditions.notNull(clazz, "Class must not be null");
 		return ReflectionUtils.isNotPrivate(clazz);
 	}
 
@@ -123,7 +117,6 @@ public final class ModifierSupport {
 	 * @see java.lang.reflect.Modifier#isPrivate(int)
 	 */
 	public static boolean isNotPrivate(Member member) {
-		Preconditions.notNull(member, "Member must not be null");
 		return ReflectionUtils.isNotPrivate(member);
 	}
 
@@ -135,7 +128,6 @@ public final class ModifierSupport {
 	 * @see java.lang.reflect.Modifier#isAbstract(int)
 	 */
 	public static boolean isAbstract(Class<?> clazz) {
-		Preconditions.notNull(clazz, "Class must not be null");
 		return ReflectionUtils.isAbstract(clazz);
 	}
 
@@ -147,7 +139,6 @@ public final class ModifierSupport {
 	 * @see java.lang.reflect.Modifier#isAbstract(int)
 	 */
 	public static boolean isAbstract(Member member) {
-		Preconditions.notNull(member, "Member must not be null");
 		return ReflectionUtils.isAbstract(member);
 	}
 
@@ -159,7 +150,6 @@ public final class ModifierSupport {
 	 * @see java.lang.reflect.Modifier#isStatic(int)
 	 */
 	public static boolean isStatic(Class<?> clazz) {
-		Preconditions.notNull(clazz, "Class must not be null");
 		return ReflectionUtils.isStatic(clazz);
 	}
 
@@ -171,7 +161,6 @@ public final class ModifierSupport {
 	 * @see java.lang.reflect.Modifier#isStatic(int)
 	 */
 	public static boolean isStatic(Member member) {
-		Preconditions.notNull(member, "Member must not be null");
 		return ReflectionUtils.isStatic(member);
 	}
 
@@ -183,7 +172,6 @@ public final class ModifierSupport {
 	 * @see java.lang.reflect.Modifier#isStatic(int)
 	 */
 	public static boolean isNotStatic(Class<?> clazz) {
-		Preconditions.notNull(clazz, "Class must not be null");
 		return ReflectionUtils.isNotStatic(clazz);
 	}
 
@@ -195,7 +183,6 @@ public final class ModifierSupport {
 	 * @see java.lang.reflect.Modifier#isStatic(int)
 	 */
 	public static boolean isNotStatic(Member member) {
-		Preconditions.notNull(member, "Member must not be null");
 		return ReflectionUtils.isNotStatic(member);
 	}
 
@@ -209,7 +196,6 @@ public final class ModifierSupport {
 	 */
 	@API(status = MAINTAINED, since = "1.5")
 	public static boolean isFinal(Class<?> clazz) {
-		Preconditions.notNull(clazz, "Class must not be null");
 		return ReflectionUtils.isFinal(clazz);
 	}
 
@@ -223,7 +209,6 @@ public final class ModifierSupport {
 	 */
 	@API(status = MAINTAINED, since = "1.5")
 	public static boolean isNotFinal(Class<?> clazz) {
-		Preconditions.notNull(clazz, "Class must not be null");
 		return ReflectionUtils.isNotFinal(clazz);
 	}
 
@@ -237,7 +222,6 @@ public final class ModifierSupport {
 	 */
 	@API(status = MAINTAINED, since = "1.5")
 	public static boolean isFinal(Member member) {
-		Preconditions.notNull(member, "Member must not be null");
 		return ReflectionUtils.isFinal(member);
 	}
 
@@ -251,7 +235,6 @@ public final class ModifierSupport {
 	 */
 	@API(status = MAINTAINED, since = "1.5")
 	public static boolean isNotFinal(Member member) {
-		Preconditions.notNull(member, "Member must not be null");
 		return ReflectionUtils.isNotFinal(member);
 	}
 
