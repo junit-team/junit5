@@ -215,18 +215,22 @@ public final class ReflectionUtils {
 	}
 
 	public static boolean isPublic(Class<?> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
 		return Modifier.isPublic(clazz.getModifiers());
 	}
 
 	public static boolean isPublic(Member member) {
+		Preconditions.notNull(member, "Member must not be null");
 		return Modifier.isPublic(member.getModifiers());
 	}
 
 	public static boolean isPrivate(Class<?> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
 		return Modifier.isPrivate(clazz.getModifiers());
 	}
 
 	public static boolean isPrivate(Member member) {
+		Preconditions.notNull(member, "Member must not be null");
 		return Modifier.isPrivate(member.getModifiers());
 	}
 
@@ -239,14 +243,17 @@ public final class ReflectionUtils {
 	}
 
 	public static boolean isAbstract(Class<?> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
 		return Modifier.isAbstract(clazz.getModifiers());
 	}
 
 	public static boolean isAbstract(Member member) {
+		Preconditions.notNull(member, "Member must not be null");
 		return Modifier.isAbstract(member.getModifiers());
 	}
 
 	public static boolean isStatic(Class<?> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
 		return Modifier.isStatic(clazz.getModifiers());
 	}
 
@@ -255,6 +262,7 @@ public final class ReflectionUtils {
 	}
 
 	public static boolean isStatic(Member member) {
+		Preconditions.notNull(member, "Member must not be null");
 		return Modifier.isStatic(member.getModifiers());
 	}
 
@@ -267,6 +275,7 @@ public final class ReflectionUtils {
 	 */
 	@API(status = INTERNAL, since = "1.5")
 	public static boolean isFinal(Class<?> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
 		return Modifier.isFinal(clazz.getModifiers());
 	}
 
@@ -283,6 +292,7 @@ public final class ReflectionUtils {
 	 */
 	@API(status = INTERNAL, since = "1.5")
 	public static boolean isFinal(Member member) {
+		Preconditions.notNull(member, "Member must not be null");
 		return Modifier.isFinal(member.getModifiers());
 	}
 
@@ -307,6 +317,7 @@ public final class ReflectionUtils {
 	 * @return {@code true} if the class is an <em>inner class</em>
 	 */
 	public static boolean isInnerClass(Class<?> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
 		return !isStatic(clazz) && clazz.isMemberClass();
 	}
 
