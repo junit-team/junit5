@@ -23,7 +23,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* Enhance `ModifierSupport` class by providing `isFinal()`/`isNotFinal()` methods.
+* New `isFinal()` and `isNotFinal()` methods in `ModifierSupport`.
+
 
 [[release-notes-5.5.0-M1-junit-jupiter]]
 === JUnit Jupiter
