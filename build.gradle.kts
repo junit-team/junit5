@@ -271,15 +271,6 @@ subprojects {
 		}
 	}
 
-	val versionRegex = """(\d+\.\d+\.\d+).*""".toRegex()
-	val normalizeVersion = { versionLiteral: String ->
-		try {
-			versionRegex.matchEntire(versionLiteral)!!.groups[1]!!.value
-		} catch (ex: Exception) {
-			throw GradleException("Version '$versionLiteral' does not match version pattern, e.g. 5.0.0-QUALIFIER", ex)
-		}
-	}
-
 	tasks.compileJava {
 		doLast {
 			// Enable JAR manifest generation
@@ -299,7 +290,7 @@ subprojects {
 				"Build-Time" to buildTime,
 				"Build-Revision" to buildRevision,
 				"Specification-Title" to project.name,
-				"Specification-Version" to normalizeVersion(project.version as String),
+				"Specification-Version" to (project.version as String).substringBefore('-'),
 				"Specification-Vendor" to "junit.org",
 				"Implementation-Title" to project.name,
 				"Implementation-Version" to project.version,
