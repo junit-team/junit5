@@ -30,7 +30,7 @@ class ManifestTests {
 
 	@ParameterizedTest
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
-	void packageNamesStartWithNameOfTheModule(String module) throws Exception {
+	void manifestEntriesAdhereToConventions(String module) throws Exception {
 		var version = Helper.version(module);
 		var modulePath = modulePath(module);
 		var uri = ModuleFinder.of(modulePath).findAll().iterator().next().location().orElseThrow();
