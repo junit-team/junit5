@@ -262,18 +262,34 @@ public final class ReflectionUtils {
 		return !isStatic(member);
 	}
 
+	/**
+	 * @since 1.5
+	 */
+	@API(status = INTERNAL, since = "1.5")
 	public static boolean isFinal(Class<?> clazz) {
 		return Modifier.isFinal(clazz.getModifiers());
 	}
 
+	/**
+	 * @since 1.5
+	 */
+	@API(status = INTERNAL, since = "1.5")
 	public static boolean isNotFinal(Class<?> clazz) {
 		return !isFinal(clazz);
 	}
 
+	/**
+	 * @since 1.5
+	 */
+	@API(status = INTERNAL, since = "1.5")
 	public static boolean isFinal(Member member) {
 		return Modifier.isFinal(member.getModifiers());
 	}
 
+	/**
+	 * @since 1.5
+	 */
+	@API(status = INTERNAL, since = "1.5")
 	public static boolean isNotFinal(Member member) {
 		return !isFinal(member);
 	}
