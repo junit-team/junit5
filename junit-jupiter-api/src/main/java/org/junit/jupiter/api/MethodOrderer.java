@@ -15,7 +15,10 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -169,6 +172,76 @@ public interface MethodOrderer {
 
 		private static int getOrder(MethodDescriptor descriptor) {
 			return descriptor.findAnnotation(Order.class).map(Order::value).orElse(Integer.MAX_VALUE);
+		}
+	}
+
+	/**
+	 * {@code MethodOrderer} that sorts methods based on the {@link Depend @Depend}
+	 * annotation.
+	 */
+	class DependAnnotation implements MethodOrderer {
+		private static final Logger logger = LoggerFactory.getLogger(Random.class);
+
+		private static Map<String, Integer> dependencySize;
+		private static Map<String, String[]> digraph;
+
+		@Override
+		public void orderMethods(MethodOrdererContext context) {
+			digraph = context.getMethodDescriptors().stream().filter(
+				descriptor -> descriptor.findAnnotation(Depend.class).isPresent()).collect(
+					Collectors.toMap(descriptor -> descriptor.getMethod().getName(),
+						descriptor -> descriptor.findAnnotation(Depend.class).map(Depend::methods).get()));
+
+			dependencySize = new HashMap<>();
+
+			try {
+				for (String name : digraph.keySet()) {
+					if (!dependencySize.containsKey(name)) {
+						int sz = DFS(name);
+						if (sz == -1) {
+							throw new IllegalArgumentException("Cycle Detected!!!");
+						}
+					}
+				}
+			}
+			catch (IllegalArgumentException exception) {
+				logger.error(exception,
+					() -> "ERROR - Some arguments from @Depend annotations form cyclic dependencies, which would cause undefined behavior!");
+			}
+
+			context.getMethodDescriptors().sort(Comparator.comparing(DependAnnotation::getDependencySize));
+		}
+
+		private static int getDependencySize(MethodDescriptor descriptor) {
+			return dependencySize.getOrDefault(descriptor.getMethod().getName(), 0);
+		}
+
+		private static int DFS(String name) {
+			if (dependencySize.containsKey(name)) {
+				return dependencySize.get(name);
+			}
+			// mark entering this node
+			dependencySize.put(name, -1);
+
+			String[] ancestors = digraph.get(name);
+			int total = 1;
+
+			if (ancestors != null) {
+				for (String ancestor : ancestors) {
+					int sz = DFS(ancestor);
+
+					// cycle detected
+					if (sz == -1) {
+						return -1;
+					}
+
+					total += sz;
+				}
+			}
+
+			// update with correct value
+			dependencySize.put(name, total);
+			return total;
 		}
 	}
 

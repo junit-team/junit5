@@ -1,0 +1,48 @@
+/*
+ * Copyright 2015-2019 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * http://www.eclipse.org/legal/epl-v20.html
+ */
+
+package org.junit.jupiter.api;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import org.apiguardian.api.API;
+
+/**
+ * {@code @Depend} is an annotation that is used to configure the
+ * {@linkplain #methods order} in which the annotated element (i.e., field or
+ * method) should be evaluated or executed after given methods.
+ *
+ * <p>When used with the
+ * {@link MethodOrderer.DependAnnotation} {@link MethodOrderer}, the category applies to
+ * <em>test methods</em>.
+ *
+ * @since 5.5.0-SNAPSHOT
+ * @see MethodOrderer.DependAnnotation
+ */
+@Target({ ElementType.FIELD, ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@API(status = EXPERIMENTAL, since = "5.4")
+public @interface Depend {
+
+	/**
+	 * The methods that must be executed before the annotated method.
+	 *
+	 * <p>Elements are ordered based on priority where methods whose names are
+	 * provided have higher priority than the annotated method.
+	 */
+	String[] methods();
+}
