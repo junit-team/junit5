@@ -12,34 +12,32 @@ package example;
 
 // tag::user_guide[]
 
-import org.junit.jupiter.api.Depend;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.MethodOrderer.DependAnnotation;
+import org.junit.jupiter.api.DependsOn;
+import org.junit.jupiter.api.MethodOrderer.DependsOnAnnotation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-@TestMethodOrder(DependAnnotation.class)
-public class ExampleDependAnnotationTestCase {
+@TestMethodOrder(DependsOnAnnotation.class)
+public class ExampleDependsOnAnnotationTestCase {
 	@Test
-	@Disabled
 	void d() {
 		System.out.println("Test 1");
 	}
 
 	@Test
-	@Depend(methods = "d")
+	@DependsOn(value = "d")
 	void c() {
 		System.out.println("Test 2");
 	}
 
 	@Test
-	@Depend(methods = "d")
+	@DependsOn(value = "c")
 	void b() {
 		System.out.println("Test 3");
 	}
 
 	@Test
-	@Depend(methods = "b")
+	@DependsOn(value = "b")
 	void a() {
 		System.out.println("Test 4");
 	}

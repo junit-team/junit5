@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static java.util.stream.Collectors.toMap;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.Method;
@@ -18,7 +19,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -176,47 +176,48 @@ public interface MethodOrderer {
 	}
 
 	/**
-	 * {@code MethodOrderer} that sorts methods based on the {@link Depend @Depend}
+	 * {@code MethodOrderer} that sorts methods based on the {@link DependsOn @DependsOn}
 	 * annotation.
 	 */
-	class DependAnnotation implements MethodOrderer {
+	class DependsOnAnnotation implements MethodOrderer {
 		private static final Logger logger = LoggerFactory.getLogger(Random.class);
-
-		private static Map<String, Integer> dependencySize;
-		private static Map<String, String[]> digraph;
 
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
-			digraph = context.getMethodDescriptors().stream().filter(
-				descriptor -> descriptor.findAnnotation(Depend.class).isPresent()).collect(
-					Collectors.toMap(descriptor -> descriptor.getMethod().getName(),
-						descriptor -> descriptor.findAnnotation(Depend.class).map(Depend::methods).get()));
+			// Directed Acyclic Graph to represent order relationship between methods
+			// An edge from A -> B means A should run after B
+			Map<String, String[]> digraph = context.getMethodDescriptors().stream()
+					.filter(descriptor -> descriptor.isAnnotated(DependsOn.class))
+					.collect( toMap (
+							descriptor -> descriptor.getMethod().getName(),
+							descriptor -> descriptor.findAnnotation(DependsOn.class).map(DependsOn::value).get()));
 
-			dependencySize = new HashMap<>();
+			// Give each an @Order's value equivalent to its number of previous dependencies
+			Map<String, Integer> dependencySize = new HashMap<>();
 
 			try {
-				for (String name : digraph.keySet()) {
+				digraph.keySet().forEach(name -> {
 					if (!dependencySize.containsKey(name)) {
-						int sz = DFS(name);
-						if (sz == -1) {
-							throw new IllegalArgumentException("Cycle Detected!!!");
-						}
+						depthFirstSearch(name, digraph, dependencySize);
 					}
-				}
+				});
 			}
 			catch (IllegalArgumentException exception) {
 				logger.error(exception,
-					() -> "ERROR - Some arguments from @Depend annotations form cyclic dependencies, which would cause undefined behavior!");
+					() -> "ERROR - Some arguments from @DependsOn annotations form cyclic dependencies, which would cause undefined behavior!");
 			}
 
-			context.getMethodDescriptors().sort(Comparator.comparing(DependAnnotation::getDependencySize));
+			context.getMethodDescriptors().sort(Comparator.comparing(descriptor -> dependencySize.getOrDefault(descriptor.getMethod().getName(), 0)));
 		}
 
-		private static int getDependencySize(MethodDescriptor descriptor) {
-			return dependencySize.getOrDefault(descriptor.getMethod().getName(), 0);
-		}
-
-		private static int DFS(String name) {
+		/**
+		 * This method will compute the (number of methods that must be run before the annotated method) + 1 (to simplify computation)
+		 * @param name: A node in the graph - a method represented by its name
+		 * @param digraph: Directed Acyclic Graph
+		 * @param dependencySize: the Map store the answer for each method
+		 * @return total = (number of methods that must be run before the annotated method) + 1
+		 */
+		private int depthFirstSearch(String name, Map<String, String[]> digraph, Map<String, Integer> dependencySize) {
 			if (dependencySize.containsKey(name)) {
 				return dependencySize.get(name);
 			}
@@ -228,13 +229,12 @@ public interface MethodOrderer {
 
 			if (ancestors != null) {
 				for (String ancestor : ancestors) {
-					int sz = DFS(ancestor);
-
-					// cycle detected
+					int sz = depthFirstSearch(ancestor, digraph, dependencySize);
+					// cycle detected, -1 means in process but not yet finished -> should not appear
 					if (sz == -1) {
-						return -1;
+						throw new IllegalArgumentException(
+								String.format("Cycle detected between %s and %s", name, ancestor));
 					}
-
 					total += sz;
 				}
 			}

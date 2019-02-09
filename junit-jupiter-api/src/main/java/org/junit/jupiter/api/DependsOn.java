@@ -21,28 +21,28 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @Depend} is an annotation that is used to configure the
- * {@linkplain #methods order} in which the annotated element (i.e., field or
+ * {@code @DependsOn} is an annotation that is used to configure the
+ * {@linkplain #value order} in which the annotated element (i.e., field or
  * method) should be evaluated or executed after given methods.
  *
  * <p>When used with the
- * {@link MethodOrderer.DependAnnotation} {@link MethodOrderer}, the category applies to
+ * {@link MethodOrderer.DependsOnAnnotation} {@link MethodOrderer}, the category applies to
  * <em>test methods</em>.
  *
- * @since 5.5.0-SNAPSHOT
- * @see MethodOrderer.DependAnnotation
+ * @since 5.5
+ * @see MethodOrderer.DependsOnAnnotation
  */
 @Target({ ElementType.FIELD, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = EXPERIMENTAL, since = "5.4")
-public @interface Depend {
+@API(status = EXPERIMENTAL, since = "5.5")
+public @interface DependsOn {
 
 	/**
-	 * The methods that must be executed before the annotated method.
+	 * Name of the methods that must be executed before the annotated method.
 	 *
-	 * <p>Elements are ordered based on priority where methods whose names are
-	 * provided have higher priority than the annotated method.
+	 * <p>Methods are ordered based on priority where methods whose names are
+	 * provided in value() have higher priority than the annotated method.
 	 */
-	String[] methods();
+	String[] value();
 }
