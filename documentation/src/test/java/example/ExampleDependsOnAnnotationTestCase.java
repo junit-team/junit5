@@ -41,5 +41,10 @@ public class ExampleDependsOnAnnotationTestCase {
 	void a() {
 		System.out.println("Test 4");
 	}
+
+	@Test
+	void indenepentTest() {
+		System.out.println("Independent tests will run first");
+	}
 }
 // end::user_guide[]

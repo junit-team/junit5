@@ -185,17 +185,17 @@ public interface MethodOrderer {
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
 			// Directed Acyclic Graph to represent order relationship between methods
-			// An edge from A -> B means A should run after B
-			Map<String, String[]> digraph = context.getMethodDescriptors().stream()
-					.filter(descriptor -> descriptor.isAnnotated(DependsOn.class))
-					.collect( toMap (
-							descriptor -> descriptor.getMethod().getName(),
-							descriptor -> descriptor.findAnnotation(DependsOn.class).map(DependsOn::value).get()));
+			// An edge from A -> B means method A should run after B
+			Map<String, String[]> digraph = context.getMethodDescriptors().stream().filter(
+				descriptor -> descriptor.isAnnotated(DependsOn.class)).collect(
+					toMap(descriptor -> descriptor.getMethod().getName(),
+						descriptor -> descriptor.findAnnotation(DependsOn.class).map(DependsOn::value).get()));
 
 			// Give each an @Order's value equivalent to its number of previous dependencies
 			Map<String, Integer> dependencySize = new HashMap<>();
 
 			try {
+				// loop through all vertexes (methods) in graph
 				digraph.keySet().forEach(name -> {
 					if (!dependencySize.containsKey(name)) {
 						depthFirstSearch(name, digraph, dependencySize);
@@ -207,15 +207,13 @@ public interface MethodOrderer {
 					() -> "ERROR - Some arguments from @DependsOn annotations form cyclic dependencies, which would cause undefined behavior!");
 			}
 
-			context.getMethodDescriptors().sort(Comparator.comparing(descriptor -> dependencySize.getOrDefault(descriptor.getMethod().getName(), 0)));
+			// default value = 0 to make independent test run first, give it MAX_INT to make it run last
+			context.getMethodDescriptors().sort(
+				Comparator.comparing(descriptor -> dependencySize.getOrDefault(descriptor.getMethod().getName(), 0)));
 		}
 
 		/**
-		 * This method will compute the (number of methods that must be run before the annotated method) + 1 (to simplify computation)
-		 * @param name: A node in the graph - a method represented by its name
-		 * @param digraph: Directed Acyclic Graph
-		 * @param dependencySize: the Map store the answer for each method
-		 * @return total = (number of methods that must be run before the annotated method) + 1
+		 * This method will compute the (number of methods that must be run before the annotated method) + 1 (+1 to simplify computation)
 		 */
 		private int depthFirstSearch(String name, Map<String, String[]> digraph, Map<String, Integer> dependencySize) {
 			if (dependencySize.containsKey(name)) {
@@ -233,7 +231,7 @@ public interface MethodOrderer {
 					// cycle detected, -1 means in process but not yet finished -> should not appear
 					if (sz == -1) {
 						throw new IllegalArgumentException(
-								String.format("Cycle detected between %s and %s", name, ancestor));
+							String.format("Cycle detected between %s and %s", name, ancestor));
 					}
 					total += sz;
 				}
