@@ -10,8 +10,8 @@
 
 package org.junit.jupiter.api;
 
-import static java.util.stream.Collectors.toMap;
 import static java.util.Comparator.comparingInt;
+import static java.util.stream.Collectors.toMap;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.Method;
@@ -185,11 +185,7 @@ public interface MethodOrderer {
 
 			try {
 				// loop through all vertexes (methods) in graph
-				digraph.keySet().forEach(name -> {
-					if (!dependencySize.containsKey(name)) {
-						depthFirstSearch(name, digraph, dependencySize);
-					}
-				});
+				digraph.keySet().forEach(name -> depthFirstSearch(name, digraph, dependencySize));
 			}
 			catch (IllegalArgumentException exception) {
 				logger.error(exception,

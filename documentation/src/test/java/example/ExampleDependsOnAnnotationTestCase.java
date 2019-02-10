@@ -12,39 +12,51 @@ package example;
 
 // tag::user_guide[]
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DependsOn;
 import org.junit.jupiter.api.MethodOrderer.DependsOnAnnotation;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(DependsOnAnnotation.class)
 public class ExampleDependsOnAnnotationTestCase {
-	@Test
-	void d() {
-		System.out.println("Test 1");
+	private int counter = 0;
+
+	@AfterEach
+	void increaseCounter() {
+		counter += 1;
 	}
 
 	@Test
-	@DependsOn(value = "d")
-	void c() {
-		System.out.println("Test 2");
+	void alpha() {
+		assertEquals(1, counter);
 	}
 
 	@Test
-	@DependsOn(value = "c")
-	void b() {
-		System.out.println("Test 3");
+	@DependsOn("alpha")
+	void beta() {
+		assertEquals(2, counter);
 	}
 
 	@Test
-	@DependsOn(value = "b")
-	void a() {
-		System.out.println("Test 4");
+	@DependsOn("beta")
+	void gamma() {
+		assertEquals(3, counter);
 	}
 
 	@Test
-	void indenepentTest() {
-		System.out.println("Independent tests will run first");
+	@DependsOn("gamma")
+	void delta() {
+		assertEquals(4, counter);
+	}
+
+	@Test
+	void independentTest() {
+		assertEquals(0, counter, "Independent tests should run first");
 	}
 }
 // end::user_guide[]
