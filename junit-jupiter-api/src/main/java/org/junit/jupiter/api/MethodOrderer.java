@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static java.util.Comparator.comparingInt;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.Method;
@@ -123,18 +124,9 @@ public interface MethodOrderer {
 			context.getMethodDescriptors().sort(comparator);
 		}
 
-		private static final Comparator<MethodDescriptor> comparator = (descriptor1, descriptor2) -> {
-			Method method1 = descriptor1.getMethod();
-			Method method2 = descriptor2.getMethod();
-
-			int result = method1.getName().compareTo(method2.getName());
-			if (result != 0) {
-				return result;
-			}
-
-			// else
-			return parameterList(method1).compareTo(parameterList(method2));
-		};
+		private static final Comparator<MethodDescriptor> comparator = Comparator.<MethodDescriptor, String> //
+				comparing(descriptor -> descriptor.getMethod().getName())//
+				.thenComparing(descriptor -> parameterList(descriptor.getMethod()));
 
 		private static String parameterList(Method method) {
 			return ClassUtils.nullSafeToString(method.getParameterTypes());
@@ -161,11 +153,8 @@ public interface MethodOrderer {
 		 */
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
-			context.getMethodDescriptors().sort(comparator);
+			context.getMethodDescriptors().sort(comparingInt(OrderAnnotation::getOrder));
 		}
-
-		private static final Comparator<MethodDescriptor> comparator = //
-			(descriptor1, descriptor2) -> Integer.compare(getOrder(descriptor1), getOrder(descriptor2));
 
 		private static int getOrder(MethodDescriptor descriptor) {
 			return descriptor.findAnnotation(Order.class).map(Order::value).orElse(Integer.MAX_VALUE);
