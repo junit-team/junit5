@@ -397,6 +397,7 @@ a6355b6dcbfda26803b08adb8ec1c6bf  junit-jupiter-engine/src/main/java/org/junit/j
 a690d2dd4f3f9b0a54a5ae29a6d1573c  documentation/documentation.gradle.kts
 a6c525eca2361233766404de5cd7a833  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayName.java
 a6eb763a0120d2e1717665f51b1454d1  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0.adoc
+a76eb236aeff782306187b2e0a15f2ef  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrderer.java
 a7856d0756fd2e66c8bddf75c4b0c0af  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterContext.java
 a7fb726626e72bcc4233e542b16b7e09  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestableMethod.java
 a8a86698a239f19b0fa89ec42503de3c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ExecutionMode.java
@@ -530,7 +531,6 @@ dbb56ac254d89915661d039b44511ccf  junit-vintage-engine/src/main/java/org/junit/v
 dbd2c5380a2246d370ce93dd038172fd  junit-jupiter-params/src/main/java/org/junit/jupiter/params/support/AnnotationConsumerInitializer.java
 dbeccc8f4115e9005dc44c6b06b18e75  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtensionContext.java
 dca6da471ddade4325725706788f060b  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/package-info.java
-dd124e3e6112f58801ba8cf01b194401  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrderer.java
 de13d12a45a170889bd687beb07b6373  junit-platform-engine/src/main/java/org/junit/platform/engine/support/filter/package-info.java
 de25d7b4e31dcb351f5bddd6404aea92  junit-platform-engine/src/main/java/org/junit/platform/engine/reporting/ReportEntry.java
 de425a6fc7755171e455388c31481fd2  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeTestTask.java
