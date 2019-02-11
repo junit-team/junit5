@@ -20,7 +20,10 @@ import org.junit.jupiter.api.MethodOrderer.DependsOnAnnotation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.engine.extension.DependsOnTestWatcher;
 
+@ExtendWith(DependsOnTestWatcher.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(DependsOnAnnotation.class)
 public class ExampleDependsOnAnnotationTestCase {
