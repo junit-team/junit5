@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.extension;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -24,35 +25,32 @@ import org.junit.jupiter.api.extension.TestWatcher;
 /**
  * {@link ExecutionCondition} that supports the {@code @DependsOn} annotation.
  *
+ * @author Lam Gia Thuan @duckladydinh
  * @since 5.5
  * @see DependsOn
  * @see #evaluateExecutionCondition(ExtensionContext)
  */
 public class DependsOnTestWatcher implements ExecutionCondition, TestWatcher {
 	/**
-	 * unfinishedTests stores tests that are ignored or just fail by names, which are added by
-	 * methods from ExecutionConditon
+	 * successfulTests stores tests that are successfully executed
 	 */
-	private Set<String> unfinishedTests = new HashSet<>();
+	private Set<String> successfulTests = new HashSet<>();
 
 	@Override
 	public void testDisabled(ExtensionContext context, Optional<String> reason) {
-		context.getTestMethod().ifPresent(method -> unfinishedTests.add(method.getName()));
 	}
 
 	@Override
 	public void testSuccessful(ExtensionContext context) {
-
+		context.getTestMethod().ifPresent(method -> successfulTests.add(method.getName()));
 	}
 
 	@Override
 	public void testAborted(ExtensionContext context, Throwable cause) {
-		context.getTestMethod().ifPresent(method -> unfinishedTests.add(method.getName()));
 	}
 
 	@Override
 	public void testFailed(ExtensionContext context, Throwable cause) {
-		context.getTestMethod().ifPresent(method -> unfinishedTests.add(method.getName()));
 	}
 
 	@Override
@@ -63,13 +61,14 @@ public class DependsOnTestWatcher implements ExecutionCondition, TestWatcher {
 			DependsOn annotation = method.getAnnotation(DependsOn.class);
 			if (annotation != null) {
 				// loop through all dependent methods' name
-				for (String name : annotation.value()) {
-					// ignore this test if even of one their depedent method has not been executed
-					if (unfinishedTests.contains(name)) {
-						return ConditionEvaluationResult.disabled(String.format(
-							"'%s()' cannot be executed because its dependent test '%s()' either failed or just did not execute!",
-							method.getName(), name));
-					}
+				Optional<String> unsuccessfulMethod = Arrays.stream(annotation.value()).filter(
+					name -> !successfulTests.contains(name)).findAny();
+
+				if (unsuccessfulMethod.isPresent()) {
+					// disable this test
+					return ConditionEvaluationResult.disabled(String.format(
+						"'%s()' cannot be executed because its dependent test '%s()' either failed or just did not execute!",
+						method.getName(), unsuccessfulMethod.get()));
 				}
 			}
 		}
