@@ -25,7 +25,6 @@ import org.junit.jupiter.api.extension.TestWatcher;
 /**
  * {@link ExecutionCondition} that supports the {@code @DependsOn} annotation.
  *
- * @author Lam Gia Thuan @duckladydinh
  * @since 5.5
  * @see DependsOn
  * @see #evaluateExecutionCondition(ExtensionContext)

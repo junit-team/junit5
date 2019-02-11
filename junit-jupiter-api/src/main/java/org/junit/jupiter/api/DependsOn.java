@@ -29,7 +29,6 @@ import org.apiguardian.api.API;
  * {@link MethodOrderer.DependsOnAnnotation} {@link MethodOrderer}, the category applies to
  * <em>test methods</em>.
  *
- * @author Lam Gia Thuan @duckladydinh
  * @since 5.5
  * @see MethodOrderer.DependsOnAnnotation
  */

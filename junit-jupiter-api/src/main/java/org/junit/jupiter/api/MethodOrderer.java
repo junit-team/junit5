@@ -168,7 +168,6 @@ public interface MethodOrderer {
 	 * {@code MethodOrderer} that sorts methods based on the {@link DependsOn @DependsOn}
 	 * annotation.
 	 *
-	 * @author Lam Gia Thuan @duckladydinh
 	 * @see  DependsOn
 	 */
 	class DependsOnAnnotation implements MethodOrderer {
