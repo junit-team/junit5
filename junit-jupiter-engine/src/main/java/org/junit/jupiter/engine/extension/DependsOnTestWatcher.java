@@ -21,7 +21,18 @@ import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
 
+/**
+ * {@link ExecutionCondition} that supports the {@code @DependsOn} annotation.
+ *
+ * @since 5.5
+ * @see DependsOn
+ * @see #evaluateExecutionCondition(ExtensionContext)
+ */
 public class DependsOnTestWatcher implements ExecutionCondition, TestWatcher {
+	/**
+	 * unfinishedTests stores tests that are ignored or just fail by names, which are added by
+	 * methods from ExecutionConditon
+	 */
 	private Set<String> unfinishedTests = new HashSet<>();
 
 	@Override
@@ -51,7 +62,9 @@ public class DependsOnTestWatcher implements ExecutionCondition, TestWatcher {
 		if (method != null) {
 			DependsOn annotation = method.getAnnotation(DependsOn.class);
 			if (annotation != null) {
+				// loop through all dependent methods' name
 				for (String name : annotation.value()) {
+					// ignore this test if even of one their depedent method has not been executed
 					if (unfinishedTests.contains(name)) {
 						return ConditionEvaluationResult.disabled(String.format(
 							"'%s()' cannot be executed because its dependent test '%s()' either failed or just did not execute!",
