@@ -37,13 +37,13 @@ class AssertTrue {
 
 	static void assertTrue(boolean condition, String message) {
 		if (!condition) {
-			fail(buildPrefix(message) + EXPECTED_TRUE);
+			fail(buildPrefix(message) + EXPECTED_TRUE, true, false);
 		}
 	}
 
 	static void assertTrue(boolean condition, Supplier<String> messageSupplier) {
 		if (!condition) {
-			fail(buildPrefix(nullSafeGet(messageSupplier)) + EXPECTED_TRUE);
+			fail(buildPrefix(nullSafeGet(messageSupplier)) + EXPECTED_TRUE, true, false);
 		}
 	}
 

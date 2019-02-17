@@ -43,7 +43,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Supply expected and actual values for failed boolean assertions for enhanced IDE
+  support.
 
 
 [[release-notes-5.5.0-M1-junit-vintage]]
