@@ -964,6 +964,7 @@ The following types of literal values are supported by `@ValueSource`.
 - `float`
 - `double`
 - `char`
+- `boolean`
 - `java.lang.String`
 - `java.lang.Class`
 

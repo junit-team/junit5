@@ -26,6 +26,8 @@ on GitHub.
 * Configurable test discovery implementation that can be reused by different test engines
   (see Javadoc of `org.junit.platform.engine.support.discovery`).
 * New `isFinal()` and `isNotFinal()` methods in `ModifierSupport`.
+* `@ValueSource` now additionally supports literal values of type `boolean` for
+  parameterized tests.
 
 
 [[release-notes-5.5.0-M1-junit-jupiter]]
