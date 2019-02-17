@@ -42,6 +42,7 @@ class ValueArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Va
 					source.floats(),
 					source.doubles(),
 					source.chars(),
+					source.booleans(),
 					source.strings(),
 					source.classes()
 				)
