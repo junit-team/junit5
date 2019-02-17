@@ -29,6 +29,8 @@ on GitHub.
 [[release-notes-5.5.0-M1-junit-jupiter]]
 === JUnit Jupiter
 
+* New `booleans` property in `ValueSource`.
+
 ==== Bug Fixes
 
 * ❓

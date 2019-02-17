@@ -87,6 +87,13 @@ public @interface ValueSource {
 	char[] chars() default {};
 
 	/**
+	 * The {@code boolean} values to use as sources of arguments; must not be empty.
+	 *
+	 * @since 5.5
+	 */
+	boolean[] booleans() default {};
+
+	/**
 	 * The {@link String} values to use as sources of arguments; must not be empty.
 	 */
 	String[] strings() default {};
