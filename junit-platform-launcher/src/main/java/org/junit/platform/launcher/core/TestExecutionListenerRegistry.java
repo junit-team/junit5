@@ -83,11 +83,7 @@ class TestExecutionListenerRegistry {
 					listener.dynamicTestRegistered(testIdentifier);
 				}
 				catch (Throwable throwable) {
-					BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-					logger.error(throwable,
-						() -> String.format(
-							"Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
-							listener.getClass().getName(), "dynamicTestRegistered", testIdentifier.getDisplayName()));
+					rethrowIfBlacklistedAndLogTest(throwable, listener, testIdentifier, "dynamicTestRegistered");
 				}
 			});
 		}
@@ -99,11 +95,7 @@ class TestExecutionListenerRegistry {
 					listener.executionSkipped(testIdentifier, reason);
 				}
 				catch (Throwable throwable) {
-					BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-					logger.error(throwable,
-						() -> String.format(
-							"Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
-							listener.getClass().getName(), "executionSkipped", testIdentifier.getDisplayName()));
+					rethrowIfBlacklistedAndLogTest(throwable, listener, testIdentifier, "executionSkipped");
 				}
 			});
 		}
@@ -116,11 +108,7 @@ class TestExecutionListenerRegistry {
 					listener.executionStarted(testIdentifier);
 				}
 				catch (Throwable throwable) {
-					BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-					logger.error(throwable,
-						() -> String.format(
-							"Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
-							listener.getClass().getName(), "executionStarted", testIdentifier.getDisplayName()));
+					rethrowIfBlacklistedAndLogTest(throwable, listener, testIdentifier, "executionStarted");
 				}
 			});
 		}
@@ -134,11 +122,7 @@ class TestExecutionListenerRegistry {
 					listener.executionFinished(testIdentifier, testExecutionResult);
 				}
 				catch (Throwable throwable) {
-					BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-					logger.error(throwable,
-						() -> String.format(
-							"Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
-							listener.getClass().getName(), "executionFinished", testIdentifier.getDisplayName()));
+					rethrowIfBlacklistedAndLogTest(throwable, listener, testIdentifier, "executionFinished");
 				}
 			});
 		}
@@ -150,11 +134,7 @@ class TestExecutionListenerRegistry {
 					listener.testPlanExecutionStarted(testPlan);
 				}
 				catch (Throwable throwable) {
-					BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-					logger.error(throwable,
-						() -> String.format(
-							"Failed to invoke ExecutionListener [%s] for method [%s] for test plan [%s]",
-							listener.getClass().getName(), "testPlanExecutionStarted", testPlan.getClass().getName()));
+					rethrowIfBlacklistedAndLogPlan(throwable, testPlan, listener, "testPlanExecutionStarted");
 				}
 			});
 		}
@@ -166,11 +146,7 @@ class TestExecutionListenerRegistry {
 					listener.testPlanExecutionFinished(testPlan);
 				}
 				catch (Throwable throwable) {
-					BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-					logger.error(throwable,
-						() -> String.format(
-							"Failed to invoke ExecutionListener [%s] for method [%s] for test plan [%s]",
-							listener.getClass().getName(), "testPlanExecutionFinished", testPlan.getClass().getName()));
+					rethrowIfBlacklistedAndLogPlan(throwable, testPlan, listener, "testPlanExecutionFinished");
 				}
 			});
 		}
@@ -182,13 +158,26 @@ class TestExecutionListenerRegistry {
 					listener.reportingEntryPublished(testIdentifier, entry);
 				}
 				catch (Throwable throwable) {
-					BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-					logger.error(throwable,
-						() -> String.format(
-							"Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
-							listener.getClass().getName(), "reportingEntryPublished", testIdentifier.getDisplayName()));
+					rethrowIfBlacklistedAndLogTest(throwable, listener, testIdentifier, "reportingEntryPublished");
 				}
 			});
+		}
+
+		private void rethrowIfBlacklistedAndLogTest(Throwable throwable, TestExecutionListener listener,
+				TestIdentifier testIdentifier, String methodName) {
+			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+			logger.error(throwable,
+				() -> String.format(
+					"Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
+					listener.getClass().getName(), methodName, testIdentifier.getDisplayName()));
+		}
+
+		private void rethrowIfBlacklistedAndLogPlan(Throwable throwable, TestPlan testPlan,
+				TestExecutionListener listener, String method) {
+			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+			logger.error(throwable,
+				() -> String.format("Failed to invoke ExecutionListener [%s] for method [%s] for test plan [%s]",
+					listener.getClass().getName(), method, testPlan.getClass().getName()));
 		}
 
 	}

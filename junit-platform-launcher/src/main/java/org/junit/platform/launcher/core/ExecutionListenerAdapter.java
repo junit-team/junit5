@@ -46,12 +46,7 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 			this.testExecutionListener.dynamicTestRegistered(testIdentifier);
 		}
 		catch (Throwable throwable) {
-			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-			logger.error(throwable,
-				() -> String.format(
-					"Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
-					this.testExecutionListener.getClass().getName(), "dynamicTestRegistered",
-					testIdentifier.getDisplayName()));
+			rethrowIfBlacklistedAndLog(throwable, testIdentifier, "dynamicTestRegistered");
 		}
 	}
 
@@ -62,12 +57,7 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 			this.testExecutionListener.executionStarted(testIdentifier);
 		}
 		catch (Throwable throwable) {
-			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-			logger.error(throwable,
-				() -> String.format(
-					"Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
-					this.testExecutionListener.getClass().getName(), "executionStarted",
-					testIdentifier.getDisplayName()));
+			rethrowIfBlacklistedAndLog(throwable, testIdentifier, "executionStarted");
 		}
 	}
 
@@ -78,12 +68,7 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 			this.testExecutionListener.executionSkipped(testIdentifier, reason);
 		}
 		catch (Throwable throwable) {
-			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-			logger.error(throwable,
-				() -> String.format(
-					"Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
-					this.testExecutionListener.getClass().getName(), "executionSkipped",
-					testIdentifier.getDisplayName()));
+			rethrowIfBlacklistedAndLog(throwable, testIdentifier, "executionSkipped");
 		}
 	}
 
@@ -94,12 +79,7 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 			this.testExecutionListener.executionFinished(testIdentifier, testExecutionResult);
 		}
 		catch (Throwable throwable) {
-			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-			logger.error(throwable,
-				() -> String.format(
-					"Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
-					this.testExecutionListener.getClass().getName(), "executionFinished",
-					testIdentifier.getDisplayName()));
+			rethrowIfBlacklistedAndLog(throwable, testIdentifier, "executionFinished");
 		}
 	}
 
@@ -110,12 +90,7 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 			this.testExecutionListener.reportingEntryPublished(testIdentifier, entry);
 		}
 		catch (Throwable throwable) {
-			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-			logger.error(throwable,
-				() -> String.format(
-					"Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
-					this.testExecutionListener.getClass().getName(), "reportingEntryPublished",
-					testIdentifier.getDisplayName()));
+			rethrowIfBlacklistedAndLog(throwable, testIdentifier, "reportingEntryPublished");
 		}
 	}
 
@@ -123,4 +98,10 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 		return this.testPlan.getTestIdentifier(testDescriptor.getUniqueId().toString());
 	}
 
+	private void rethrowIfBlacklistedAndLog(Throwable throwable, TestIdentifier testIdentifier, String methodName) {
+		BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+		logger.error(throwable,
+			() -> String.format("Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
+				this.testExecutionListener.getClass().getName(), methodName, testIdentifier.getDisplayName()));
+	}
 }
