@@ -30,7 +30,6 @@ import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.descriptor.DemoMethodTestDescriptor;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
-import org.junit.platform.launcher.TestPlan;
 
 /**
  * @since 1.0
@@ -185,32 +184,22 @@ class ExecutionListenerAdapterTests {
 
 	static class ThrowableMockTestExecutionListener implements TestExecutionListener {
 		@Override
-		public void executionStarted(TestIdentifier testIdentifier) {
-			throw new RuntimeException("failed to invoke listener");
-		}
-
-		@Override
-		public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-			throw new RuntimeException("failed to invoke listener");
-		}
-
-		@Override
-		public void testPlanExecutionStarted(TestPlan testPlan) {
-			throw new RuntimeException("failed to invoke listener");
-		}
-
-		@Override
-		public void testPlanExecutionFinished(TestPlan testPlan) {
-			throw new RuntimeException("failed to invoke listener");
-		}
-
-		@Override
 		public void dynamicTestRegistered(TestIdentifier testIdentifier) {
 			throw new RuntimeException("failed to invoke listener");
 		}
 
 		@Override
+		public void executionStarted(TestIdentifier testIdentifier) {
+			throw new RuntimeException("failed to invoke listener");
+		}
+
+		@Override
 		public void executionSkipped(TestIdentifier testIdentifier, String reason) {
+			throw new RuntimeException("failed to invoke listener");
+		}
+
+		@Override
+		public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 			throw new RuntimeException("failed to invoke listener");
 		}
 
