@@ -887,6 +887,17 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
+	void findMethodChooseSpecificOverGenericMethod() throws NoSuchMethodException {
+		String methodName = "foo";
+		Class<?> parameterType = Double.class;
+		Class<?> testClass = InterfaceWithSpecificAndGenericDefaultMethodImpl.class;
+
+		Method specificMethod = testClass.getMethod(methodName, parameterType);
+		Optional<Method> optional = findMethod(testClass, methodName, parameterType);
+		assertThat(optional).contains(specificMethod);
+	}
+
+	@Test
 	void findMethodsPreconditions() {
 		// @formatter:off
 		assertThrows(PreconditionViolationException.class, () -> findMethods(null, null));
@@ -1310,6 +1321,16 @@ class ReflectionUtilsTests {
 
 		void foo(Double number) {
 		}
+	}
+
+	interface InterfaceWithSpecificDefaultMethod {
+
+		default void foo(Double number) {
+		}
+	}
+
+	static class InterfaceWithSpecificAndGenericDefaultMethodImpl
+			implements InterfaceWithGenericDefaultMethod<Integer>, InterfaceWithSpecificDefaultMethod {
 	}
 
 	static class InterfaceWithOverriddenGenericDefaultMethodImpl implements InterfaceWithGenericDefaultMethod<Long> {
