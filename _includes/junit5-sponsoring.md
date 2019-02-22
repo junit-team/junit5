@@ -9,7 +9,7 @@ Your donations will help to make that a reality!
 **Thank you!**
 
 <div align="center">
- <table style="width:100%">
+ <table>
  <tr>
  <td>
   <div class="card" onclick="location.href='https://www.societegenerale.com/en/digital-and-innovation/tech-culture-it';">
@@ -46,10 +46,11 @@ Your donations will help to make that a reality!
     <div class="card-bottom">
       <h4>G O L D&nbsp;&nbsp;S P O N S O R</h4>
       <p>Since February 2019</p>
-    </div>    
+    </div>
   </div>
  </td>
  </tr>
+ </table> 
 </div>
 
 ### Backers
