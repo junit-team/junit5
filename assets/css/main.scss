@@ -83,6 +83,7 @@ footer {
     font-size: small;
     background-color: gold; /* For browsers that do not support gradients */
     background-image: linear-gradient(to bottom right, gold, white); /* Standard syntax (must be last) */
+    cursor: pointer;
 }
 
 .card:hover {
