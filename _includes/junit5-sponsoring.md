@@ -52,6 +52,5 @@ Your donations will help to make that a reality!
 ### Backers
 
 - Jose Luis De la Cruz Morales
-- Gabriel Yoran
 - Stefan Gwihs
 - olcbean
