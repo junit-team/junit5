@@ -500,6 +500,57 @@ class DefaultLauncherTests {
 	}
 
 	@Test
+	void logTestExecutionListenerFailureAndContinue(LogRecordListener logRecordListener) {
+		UniqueId engineId = UniqueId.forEngine(TestEngineSpy.ID);
+		UniqueId containerAndTestId = engineId.append("c&t", "c&t");
+		UniqueId dynamicTestId = containerAndTestId.append("test", "test");
+
+		TestEngineSpy engine = new TestEngineSpy() {
+
+			@Override
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+				super.discover(discoveryRequest, uniqueId);
+				TestDescriptorStub engineDescriptor = new TestDescriptorStub(uniqueId, uniqueId.toString());
+				engineDescriptor.addChild(new TestDescriptorStub(containerAndTestId, "c&t") {
+
+					@Override
+					public Type getType() {
+						return Type.CONTAINER_AND_TEST;
+					}
+				});
+				return engineDescriptor;
+			}
+
+			@Override
+			public void execute(ExecutionRequest request) {
+				super.execute(request);
+				EngineExecutionListener listener = request.getEngineExecutionListener();
+
+				listener.executionStarted(request.getRootTestDescriptor());
+				TestDescriptor containerAndTest = getOnlyElement(request.getRootTestDescriptor().getChildren());
+				listener.executionStarted(containerAndTest);
+
+				TestDescriptorStub dynamicTest = new TestDescriptorStub(dynamicTestId, "test");
+				dynamicTest.setParent(containerAndTest);
+				listener.dynamicTestRegistered(dynamicTest);
+				listener.executionStarted(dynamicTest);
+				listener.executionFinished(dynamicTest, successful());
+
+				listener.executionFinished(containerAndTest, successful());
+				listener.executionFinished(request.getRootTestDescriptor(), successful());
+			}
+		};
+
+		DefaultLauncher launcher = createLauncher(engine);
+		TestExecutionListener listener = new ThrowableTestExecutionListener();
+		launcher.execute(request().build(), listener);
+
+		assertThat(logRecordListener.stream(TestExecutionListenerRegistry.class, Level.WARNING).map(
+			LogRecord::getMessage).collect(toList())).contains(
+				"Failed to invoke ExecutionListener [org.junit.platform.launcher.core.ThrowableTestExecutionListener] for method [testPlanExecutionStarted] for test plan [org.junit.platform.launcher.core.InternalTestPlan]");
+	}
+
+	@Test
 	void launcherCanExecuteTestPlan() {
 		TestEngine engine = mock(TestEngine.class);
 		when(engine.getId()).thenReturn("some-engine");

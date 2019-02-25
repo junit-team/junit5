@@ -67,7 +67,7 @@ class TestExecutionListenerRegistry {
 		this.eagerTestExecutionListeners.forEach(consumer);
 	}
 
-	TestExecutionListener getCompositeTestExecutionListener() {
+	CompositeTestExecutionListener getCompositeTestExecutionListener() {
 		return new CompositeTestExecutionListener();
 	}
 
