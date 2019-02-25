@@ -134,12 +134,12 @@ class ExecutionListenerAdapterTests {
 	}
 
 	private LogRecord firstErrorLogRecord(LogRecordListener logRecordListener) throws AssertionError {
-		return logRecordListener.stream(Level.SEVERE).findFirst().orElseThrow(
+		return logRecordListener.stream(Level.WARNING).findFirst().orElseThrow(
 			() -> new AssertionError("Failed to find error log record"));
 	}
 
 	private void assertNotLogs(LogRecordListener logRecordListener) throws AssertionError {
-		assertThat(logRecordListener.stream(Level.SEVERE).count()).isZero();
+		assertThat(logRecordListener.stream(Level.WARNING).count()).isZero();
 	}
 
 	private TestDescriptor getSampleMethodTestDescriptor() {

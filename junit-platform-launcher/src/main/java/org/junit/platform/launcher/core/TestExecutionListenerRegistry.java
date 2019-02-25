@@ -166,7 +166,7 @@ class TestExecutionListenerRegistry {
 		private void rethrowIfBlacklistedAndLogTest(Throwable throwable, TestExecutionListener listener,
 				TestIdentifier testIdentifier, String methodName) {
 			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-			logger.error(throwable,
+			logger.warn(throwable,
 				() -> String.format(
 					"Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
 					listener.getClass().getName(), methodName, testIdentifier.getDisplayName()));
@@ -175,7 +175,7 @@ class TestExecutionListenerRegistry {
 		private void rethrowIfBlacklistedAndLogPlan(Throwable throwable, TestPlan testPlan,
 				TestExecutionListener listener, String method) {
 			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-			logger.error(throwable,
+			logger.warn(throwable,
 				() -> String.format("Failed to invoke ExecutionListener [%s] for method [%s] for test plan [%s]",
 					listener.getClass().getName(), method, testPlan.getClass().getName()));
 		}

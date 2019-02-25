@@ -100,7 +100,7 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 
 	private void rethrowIfBlacklistedAndLog(Throwable throwable, TestIdentifier testIdentifier, String methodName) {
 		BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-		logger.error(throwable,
+		logger.warn(throwable,
 			() -> String.format("Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
 				this.testExecutionListener.getClass().getName(), methodName, testIdentifier.getDisplayName()));
 	}
