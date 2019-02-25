@@ -104,6 +104,7 @@ class TestExecutionListenerRegistryTest {
 		assertThatTestPlanListenerErrorLogged(logRecordListener, "testPlanExecutionStarted");
 	}
 
+	@Test
 	@TrackLogRecords
 	void shouldNotThrowExceptionButLogIfTesPlanExecutionFinishedListenerMethodFails(
 			LogRecordListener logRecordListener) {
@@ -132,13 +133,13 @@ class TestExecutionListenerRegistryTest {
 		assertNotLogs(logRecordListener);
 	}
 
-	private LogRecord firstErrorLogRecord(LogRecordListener logRecordListener) throws AssertionError {
-		return logRecordListener.stream(Level.WARNING).findFirst().orElseThrow(
+	private LogRecord firstWarnLogRecord(LogRecordListener logRecordListener) throws AssertionError {
+		return logRecordListener.stream(TestExecutionListenerRegistry.class, Level.WARNING).findFirst().orElseThrow(
 			() -> new AssertionError("Failed to find error log record"));
 	}
 
 	private void assertNotLogs(LogRecordListener logRecordListener) throws AssertionError {
-		assertThat(logRecordListener.stream(Level.WARNING).count()).isZero();
+		assertThat(logRecordListener.stream(TestExecutionListenerRegistry.class, Level.WARNING).count()).isZero();
 	}
 
 	private TestIdentifier getSampleMethodTestIdentifier() {
@@ -147,13 +148,13 @@ class TestExecutionListenerRegistryTest {
 	}
 
 	private void assertThatTestListenerErrorLogged(LogRecordListener logRecordListener, final String methodName) {
-		assertThat(firstErrorLogRecord(logRecordListener).getMessage()).isEqualTo(
+		assertThat(firstWarnLogRecord(logRecordListener).getMessage()).isEqualTo(
 			"Failed to invoke ExecutionListener [org.junit.platform.launcher.core.ThrowableTestExecutionListener] for method ["
 					+ methodName + "] with test display name [nothing()]");
 	}
 
 	private void assertThatTestPlanListenerErrorLogged(LogRecordListener logRecordListener, final String planName) {
-		assertThat(firstErrorLogRecord(logRecordListener).getMessage()).isEqualTo(
+		assertThat(firstWarnLogRecord(logRecordListener).getMessage()).isEqualTo(
 			"Failed to invoke ExecutionListener [org.junit.platform.launcher.core.ThrowableTestExecutionListener] for method ["
 					+ planName + "] for test plan [org.junit.platform.launcher.TestPlan]");
 	}

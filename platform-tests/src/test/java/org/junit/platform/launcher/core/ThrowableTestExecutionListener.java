@@ -23,6 +23,11 @@ public class ThrowableTestExecutionListener implements TestExecutionListener {
 	}
 
 	@Override
+	public void testPlanExecutionFinished(TestPlan testPlan) {
+		throw new RuntimeException("failed to invoke listener");
+	}
+
+	@Override
 	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
 		throw new RuntimeException("failed to invoke listener");
 	}
