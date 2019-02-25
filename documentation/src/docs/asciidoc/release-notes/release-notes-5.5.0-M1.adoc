@@ -24,6 +24,7 @@ on GitHub.
 ==== New Features and Improvements
 
 * New `isFinal()` and `isNotFinal()` methods in `ModifierSupport`.
+* Gracefully handle exception occurred in `TestExecutionListener` with log instead of failing test plan.
 
 
 [[release-notes-5.5.0-M1-junit-jupiter]]
