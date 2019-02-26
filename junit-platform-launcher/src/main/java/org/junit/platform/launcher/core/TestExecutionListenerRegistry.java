@@ -54,7 +54,7 @@ class TestExecutionListenerRegistry {
 		// @formatter:off
 		Arrays.stream(listeners)
 				.filter(EagerTestExecutionListener.class::isInstance)
- 				.map(EagerTestExecutionListener.class::cast)
+				.map(EagerTestExecutionListener.class::cast)
 				.forEach(this.eagerTestExecutionListeners::add);
 		// @formatter:on
 	}
