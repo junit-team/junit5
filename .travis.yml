@@ -53,7 +53,7 @@ jobs:
     - name: "Code analysis"
       if: branch = master
       script:
-        - ./gradlew sonarqube -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=6405ce221514f081109da1c961d11ab5c5284038
+        - ./gradlew sonarqube -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=6405ce221514f081109da1c961d11ab5c5284038 -Dsonar.projectKey=alixwar_junit5
     - stage: deploy
       name: "Publish snapshot artifacts"
       env:
