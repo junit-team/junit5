@@ -47,7 +47,7 @@ stages:
 jobs:
   include:
     - name: "Coverage"
-      if: branch =! master
+      if: branch != master
       script:
         - ./gradlew --scan --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport
         - bash <(curl -s https://codecov.io/bash)
