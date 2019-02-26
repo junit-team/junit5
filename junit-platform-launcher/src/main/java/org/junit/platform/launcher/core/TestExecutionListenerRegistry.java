@@ -52,11 +52,11 @@ class TestExecutionListenerRegistry {
 	void registerListeners(TestExecutionListener... listeners) {
 		Collections.addAll(this.testExecutionListeners, listeners);
 		// @formatter:off
-        Arrays.stream(listeners)
-                .filter(EagerTestExecutionListener.class::isInstance)
-                .map(EagerTestExecutionListener.class::cast)
-                .forEach(this.eagerTestExecutionListeners::add);
-        // @formatter:on
+		Arrays.stream(listeners)
+				.filter(EagerTestExecutionListener.class::isInstance)
+ 				.map(EagerTestExecutionListener.class::cast)
+				.forEach(this.eagerTestExecutionListeners::add);
+		// @formatter:on
 	}
 
 	private void notifyTestExecutionListeners(Consumer<TestExecutionListener> consumer) {
