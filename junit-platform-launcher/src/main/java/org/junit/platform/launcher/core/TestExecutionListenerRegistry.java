@@ -59,16 +59,61 @@ class TestExecutionListenerRegistry {
 		// @formatter:on
 	}
 
-	private void notifyTestExecutionListeners(Consumer<TestExecutionListener> consumer) {
-		this.testExecutionListeners.forEach(consumer);
-	}
-
-	private void notifyEagerTestExecutionListeners(Consumer<EagerTestExecutionListener> consumer) {
-		this.eagerTestExecutionListeners.forEach(consumer);
-	}
-
 	CompositeTestExecutionListener getCompositeTestExecutionListener() {
 		return new CompositeTestExecutionListener();
+	}
+
+	private void notifyTestExecutionListeners(TestIdentifier testIdentifier, String listenerMethodName,
+			Consumer<TestExecutionListener> consumer) {
+		this.testExecutionListeners.forEach(testExecutionListener -> {
+			try {
+				consumer.accept(testExecutionListener);
+			}
+			catch (Throwable throwable) {
+				rethrowIfBlacklistedAndLogTest(throwable, testExecutionListener, testIdentifier, listenerMethodName);
+			}
+		});
+	}
+
+	private void notifyTestExecutionListeners(TestPlan testPlan, String listenerMethodName,
+			Consumer<TestExecutionListener> consumer) {
+		this.testExecutionListeners.forEach(testExecutionListener -> {
+			try {
+				consumer.accept(testExecutionListener);
+			}
+			catch (Throwable throwable) {
+				rethrowIfBlacklistedAndLogPlan(throwable, testExecutionListener, testPlan, listenerMethodName);
+			}
+		});
+	}
+
+	private void notifyEagerTestExecutionListeners(TestIdentifier testIdentifier, String listenerMethodName,
+			Consumer<EagerTestExecutionListener> consumer) {
+		this.eagerTestExecutionListeners.forEach(eagerTestExecutionListener -> {
+			try {
+				consumer.accept(eagerTestExecutionListener);
+			}
+			catch (Throwable throwable) {
+				rethrowIfBlacklistedAndLogTest(throwable, eagerTestExecutionListener, testIdentifier,
+					listenerMethodName);
+			}
+		});
+	}
+
+	private void rethrowIfBlacklistedAndLogTest(Throwable throwable, TestExecutionListener listener,
+			TestIdentifier testIdentifier, String methodName) {
+		BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+		logger.warn(throwable,
+			() -> String.format("Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
+				listener.getClass().getName(), methodName, testIdentifier.getDisplayName()));
+	}
+
+	private void rethrowIfBlacklistedAndLogPlan(Throwable throwable, TestExecutionListener listener, TestPlan testPlan,
+			String method) {
+		BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+		logger.warn(throwable,
+			() -> String.format("Failed to invoke ExecutionListener [%s] for method [%s] for test plan [%s]",
+				listener.getClass().getName(), method, testPlan.getClass().getName()));
 	}
 
 	class CompositeTestExecutionListener implements TestExecutionListener {
@@ -78,123 +123,50 @@ class TestExecutionListenerRegistry {
 
 		@Override
 		public void dynamicTestRegistered(TestIdentifier testIdentifier) {
-			notifyTestExecutionListeners(listener -> {
-				try {
-					listener.dynamicTestRegistered(testIdentifier);
-				}
-				catch (Throwable throwable) {
-					rethrowIfBlacklistedAndLogTest(throwable, listener, testIdentifier, "dynamicTestRegistered");
-				}
-			});
+			notifyTestExecutionListeners(testIdentifier, "dynamicTestRegistered",
+				listener -> listener.dynamicTestRegistered(testIdentifier));
 		}
 
 		@Override
 		public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-			notifyTestExecutionListeners(listener -> {
-				try {
-					listener.executionSkipped(testIdentifier, reason);
-				}
-				catch (Throwable throwable) {
-					rethrowIfBlacklistedAndLogTest(throwable, listener, testIdentifier, "executionSkipped");
-				}
-			});
+			notifyTestExecutionListeners(testIdentifier, "executionSkipped",
+				listener -> listener.executionSkipped(testIdentifier, reason));
 		}
 
 		@Override
 		public void executionStarted(TestIdentifier testIdentifier) {
-			notifyEagerTestExecutionListeners(listener -> {
-				try {
-					listener.executionJustStarted(testIdentifier);
-				}
-				catch (Throwable throwable) {
-					rethrowIfBlacklistedAndLogTest(throwable, listener, testIdentifier, "executionJustStarted");
-				}
-			});
-			notifyTestExecutionListeners(listener -> {
-				try {
-					listener.executionStarted(testIdentifier);
-				}
-				catch (Throwable throwable) {
-					rethrowIfBlacklistedAndLogTest(throwable, listener, testIdentifier, "executionStarted");
-				}
-			});
+			notifyEagerTestExecutionListeners(testIdentifier, "executionJustStarted",
+				listener -> listener.executionJustStarted(testIdentifier));
+			notifyTestExecutionListeners(testIdentifier, "executionStarted",
+				listener -> listener.executionStarted(testIdentifier));
 		}
 
 		@Override
 		public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-			notifyEagerTestExecutionListeners(listener -> {
-				try {
-					listener.executionJustFinished(testIdentifier, testExecutionResult);
-				}
-				catch (Throwable throwable) {
-					rethrowIfBlacklistedAndLogTest(throwable, listener, testIdentifier, "executionJustFinished");
-				}
-			});
-			notifyTestExecutionListeners(listener -> {
-				try {
-					listener.executionFinished(testIdentifier, testExecutionResult);
-				}
-				catch (Throwable throwable) {
-					rethrowIfBlacklistedAndLogTest(throwable, listener, testIdentifier, "executionFinished");
-				}
-			});
+			notifyEagerTestExecutionListeners(testIdentifier, "executionJustFinished",
+				listener -> listener.executionJustFinished(testIdentifier, testExecutionResult));
+			notifyTestExecutionListeners(testIdentifier, "executionFinished",
+				listener -> listener.executionFinished(testIdentifier, testExecutionResult));
 		}
 
 		@Override
 		public void testPlanExecutionStarted(TestPlan testPlan) {
-			notifyTestExecutionListeners(listener -> {
-				try {
-					listener.testPlanExecutionStarted(testPlan);
-				}
-				catch (Throwable throwable) {
-					rethrowIfBlacklistedAndLogPlan(throwable, testPlan, listener, "testPlanExecutionStarted");
-				}
-			});
+			notifyTestExecutionListeners(testPlan, "testPlanExecutionStarted",
+				listener -> listener.testPlanExecutionStarted(testPlan));
 		}
 
 		@Override
 		public void testPlanExecutionFinished(TestPlan testPlan) {
-			notifyTestExecutionListeners(listener -> {
-				try {
-					listener.testPlanExecutionFinished(testPlan);
-				}
-				catch (Throwable throwable) {
-					rethrowIfBlacklistedAndLogPlan(throwable, testPlan, listener, "testPlanExecutionFinished");
-				}
-			});
+			notifyTestExecutionListeners(testPlan, "testPlanExecutionFinished",
+				listener -> listener.testPlanExecutionFinished(testPlan));
 		}
 
 		@Override
 		public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
-			notifyTestExecutionListeners(listener -> {
-				try {
-					listener.reportingEntryPublished(testIdentifier, entry);
-				}
-				catch (Throwable throwable) {
-					rethrowIfBlacklistedAndLogTest(throwable, listener, testIdentifier, "reportingEntryPublished");
-				}
-			});
+			notifyTestExecutionListeners(testIdentifier, "reportingEntryPublished",
+				listener -> listener.reportingEntryPublished(testIdentifier, entry));
 		}
-
-		private void rethrowIfBlacklistedAndLogTest(Throwable throwable, TestExecutionListener listener,
-				TestIdentifier testIdentifier, String methodName) {
-			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-			logger.warn(throwable,
-				() -> String.format(
-					"Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
-					listener.getClass().getName(), methodName, testIdentifier.getDisplayName()));
-		}
-
-		private void rethrowIfBlacklistedAndLogPlan(Throwable throwable, TestPlan testPlan,
-				TestExecutionListener listener, String method) {
-			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-			logger.warn(throwable,
-				() -> String.format("Failed to invoke ExecutionListener [%s] for method [%s] for test plan [%s]",
-					listener.getClass().getName(), method, testPlan.getClass().getName()));
-		}
-
 	}
-
 	interface EagerTestExecutionListener extends TestExecutionListener {
 		default void executionJustStarted(TestIdentifier testIdentifier) {
 		}
