@@ -43,39 +43,40 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 	@Override
 	public void dynamicTestRegistered(TestDescriptor testDescriptor) {
 		TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
-		notifyTestExecutionListeners(testIdentifier, "dynamicTestRegistered",
+		this.testPlan.addInternal(testIdentifier);
+		notifyTestExecutionListener(testIdentifier, "dynamicTestRegistered",
 			listener -> listener.dynamicTestRegistered(testIdentifier));
 	}
 
 	@Override
 	public void executionStarted(TestDescriptor testDescriptor) {
 		TestIdentifier testIdentifier = getTestIdentifier(testDescriptor);
-		notifyTestExecutionListeners(testIdentifier, "executionStarted",
+		notifyTestExecutionListener(testIdentifier, "executionStarted",
 			listener -> listener.executionStarted(testIdentifier));
 	}
 
 	@Override
 	public void executionSkipped(TestDescriptor testDescriptor, String reason) {
 		TestIdentifier testIdentifier = getTestIdentifier(testDescriptor);
-		notifyTestExecutionListeners(testIdentifier, "executionSkipped",
+		notifyTestExecutionListener(testIdentifier, "executionSkipped",
 			listener -> listener.executionSkipped(testIdentifier, reason));
 	}
 
 	@Override
 	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
 		TestIdentifier testIdentifier = getTestIdentifier(testDescriptor);
-		notifyTestExecutionListeners(testIdentifier, "executionFinished",
+		notifyTestExecutionListener(testIdentifier, "executionFinished",
 			listener -> listener.executionFinished(testIdentifier, testExecutionResult));
 	}
 
 	@Override
 	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
 		TestIdentifier testIdentifier = getTestIdentifier(testDescriptor);
-		notifyTestExecutionListeners(testIdentifier, "reportingEntryPublished",
+		notifyTestExecutionListener(testIdentifier, "reportingEntryPublished",
 			listener -> listener.reportingEntryPublished(testIdentifier, entry));
 	}
 
-	private void notifyTestExecutionListeners(TestIdentifier testIdentifier, String listenerMethodName,
+	private void notifyTestExecutionListener(TestIdentifier testIdentifier, String listenerMethodName,
 			Consumer<TestExecutionListener> consumer) {
 		try {
 			consumer.accept(this.testExecutionListener);
