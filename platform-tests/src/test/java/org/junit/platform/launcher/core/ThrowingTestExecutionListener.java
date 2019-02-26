@@ -16,7 +16,7 @@ import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
-public class ThrowableTestExecutionListener implements TestExecutionListener {
+public class ThrowingTestExecutionListener implements TestExecutionListener {
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
 		throw new RuntimeException("failed to invoke listener");

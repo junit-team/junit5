@@ -44,7 +44,7 @@ class ExecutionListenerAdapterTests {
 	void setUp() {
 		testDescriptor = getSampleMethodTestDescriptor();
 		InternalTestPlan testPlan = getInternalTestPlan(testDescriptor);
-		ThrowableTestExecutionListener testExecutionListener = new ThrowableTestExecutionListener();
+		ThrowingTestExecutionListener testExecutionListener = new ThrowingTestExecutionListener();
 
 		adapter = new ExecutionListenerAdapter(testPlan, testExecutionListener);
 	}
@@ -150,7 +150,7 @@ class ExecutionListenerAdapterTests {
 
 	private void assertThatTestListenerErrorLogged(LogRecordListener logRecordListener, final String methodName) {
 		assertThat(firstWarnLogRecord(logRecordListener).getMessage()).isEqualTo(
-			"Failed to invoke ExecutionListener [org.junit.platform.launcher.core.ThrowableTestExecutionListener] for method ["
+			"Failed to invoke ExecutionListener [org.junit.platform.launcher.core.ThrowingTestExecutionListener] for method ["
 					+ methodName + "] with test display name [nothing()]");
 	}
 

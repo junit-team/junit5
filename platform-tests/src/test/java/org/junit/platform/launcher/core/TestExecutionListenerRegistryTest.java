@@ -38,7 +38,7 @@ class TestExecutionListenerRegistryTest {
 	@BeforeEach
 	void setUp() {
 		TestExecutionListenerRegistry executionListenerRegistry = new TestExecutionListenerRegistry();
-		executionListenerRegistry.registerListeners(new ThrowableTestExecutionListener());
+		executionListenerRegistry.registerListeners(new ThrowingTestExecutionListener());
 		compositeTestExecutionListener = executionListenerRegistry.getCompositeTestExecutionListener();
 	}
 
@@ -149,13 +149,13 @@ class TestExecutionListenerRegistryTest {
 
 	private void assertThatTestListenerErrorLogged(LogRecordListener logRecordListener, final String methodName) {
 		assertThat(firstWarnLogRecord(logRecordListener).getMessage()).isEqualTo(
-			"Failed to invoke ExecutionListener [org.junit.platform.launcher.core.ThrowableTestExecutionListener] for method ["
+			"Failed to invoke ExecutionListener [org.junit.platform.launcher.core.ThrowingTestExecutionListener] for method ["
 					+ methodName + "] with test display name [nothing()]");
 	}
 
 	private void assertThatTestPlanListenerErrorLogged(LogRecordListener logRecordListener, final String planName) {
 		assertThat(firstWarnLogRecord(logRecordListener).getMessage()).isEqualTo(
-			"Failed to invoke ExecutionListener [org.junit.platform.launcher.core.ThrowableTestExecutionListener] for method ["
+			"Failed to invoke ExecutionListener [org.junit.platform.launcher.core.ThrowingTestExecutionListener] for method ["
 					+ planName + "] for test plan [org.junit.platform.launcher.TestPlan]");
 	}
 

@@ -542,12 +542,12 @@ class DefaultLauncherTests {
 		};
 
 		DefaultLauncher launcher = createLauncher(engine);
-		TestExecutionListener listener = new ThrowableTestExecutionListener();
+		TestExecutionListener listener = new ThrowingTestExecutionListener();
 		launcher.execute(request().build(), listener);
 
 		assertThat(logRecordListener.stream(TestExecutionListenerRegistry.class, Level.WARNING).map(
 			LogRecord::getMessage).collect(toList())).contains(
-				"Failed to invoke ExecutionListener [org.junit.platform.launcher.core.ThrowableTestExecutionListener] for method [testPlanExecutionStarted] for test plan [org.junit.platform.launcher.core.InternalTestPlan]");
+				"Failed to invoke ExecutionListener [org.junit.platform.launcher.core.ThrowingTestExecutionListener] for method [testPlanExecutionStarted] for test plan [org.junit.platform.launcher.core.InternalTestPlan]");
 	}
 
 	@Test
