@@ -47,13 +47,16 @@ stages:
 jobs:
   include:
     - name: "Coverage"
+      if: branch =! master
       script:
         - ./gradlew --scan --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport
         - bash <(curl -s https://codecov.io/bash)
-    - name: "Code analysis"
+    - name: "Analyze code quality"
       if: branch = master
       script:
-        - ./gradlew sonarqube --info -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=6405ce221514f081109da1c961d11ab5c5284038 -Dsonar.projectKey=alixwar_junit5 -Dsonar.organization=alixwar-github -Dsonar.jacoco.reportPaths=build/jacoco/jacocoMerge.exec
+      - ./gradlew --scan --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport
+      - bash <(curl -s https://codecov.io/bash)
+      - ./gradlew sonarqube --info -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=6405ce221514f081109da1c961d11ab5c5284038 -Dsonar.projectKey=alixwar_junit5 -Dsonar.organization=alixwar-github -Dsonar.jacoco.reportPaths=build/jacoco/jacocoMerge.exec
     - stage: deploy
       name: "Publish snapshot artifacts"
       env:
