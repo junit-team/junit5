@@ -117,11 +117,57 @@ class TestExecutionListenerRegistryTest {
 
 	@Test
 	@TrackLogRecords
-	void shouldOutOfMemoryExceptionAndStopListenerWithoutLog(LogRecordListener logRecordListener) {
+	void shouldNotThrowExceptionButLogIfExecutionJustStartedEagerTestListenerMethodFails(
+			LogRecordListener logRecordListener) {
+		TestExecutionListenerRegistry executionListenerRegistry = new TestExecutionListenerRegistry();
+		executionListenerRegistry.registerListeners(new ThrowingEagerTestExecutionListener());
+		TestExecutionListener compositeEagerTestExecutionListener = executionListenerRegistry.getCompositeTestExecutionListener();
+
+		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
+		compositeEagerTestExecutionListener.executionStarted(testIdentifier);
+
+		assertThatEagerTestListenerErrorLogged(logRecordListener, "executionJustStarted");
+	}
+
+	@Test
+	@TrackLogRecords
+	void shouldNotThrowExceptionButLogIfExecutionJustFinishedEagerTestListenerMethodFails(
+			LogRecordListener logRecordListener) {
+		TestExecutionListenerRegistry executionListenerRegistry = new TestExecutionListenerRegistry();
+		executionListenerRegistry.registerListeners(new ThrowingEagerTestExecutionListener());
+		TestExecutionListener compositeEagerTestExecutionListener = executionListenerRegistry.getCompositeTestExecutionListener();
+
+		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
+		compositeEagerTestExecutionListener.executionFinished(testIdentifier, mock(TestExecutionResult.class));
+
+		assertThatEagerTestListenerErrorLogged(logRecordListener, "executionJustFinished");
+	}
+
+	@Test
+	@TrackLogRecords
+	void shouldThrowOutOfMemoryExceptionAndStopListenerWithoutLog(LogRecordListener logRecordListener) {
 		TestExecutionListenerRegistry registry = new TestExecutionListenerRegistry();
 		registry.registerListeners(new TestExecutionListener() {
 			@Override
 			public void executionStarted(TestIdentifier testIdentifier) {
+				throw new OutOfMemoryError();
+			}
+		});
+		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
+		assertThatThrownBy(() -> {
+			registry.getCompositeTestExecutionListener().executionStarted(testIdentifier);
+		}).isInstanceOf(OutOfMemoryError.class);
+
+		assertNotLogs(logRecordListener);
+	}
+
+	@Test
+	@TrackLogRecords
+	void shouldThrowOutOfMemoryExceptionAndStopEagerListenerWithoutLog(LogRecordListener logRecordListener) {
+		TestExecutionListenerRegistry registry = new TestExecutionListenerRegistry();
+		registry.registerListeners(new TestExecutionListenerRegistry.EagerTestExecutionListener() {
+			@Override
+			public void executionJustStarted(TestIdentifier testIdentifier) {
 				throw new OutOfMemoryError();
 			}
 		});
@@ -159,6 +205,12 @@ class TestExecutionListenerRegistryTest {
 					+ planName + "] for test plan [org.junit.platform.launcher.TestPlan]");
 	}
 
+	private void assertThatEagerTestListenerErrorLogged(LogRecordListener logRecordListener, final String methodName) {
+		assertThat(firstWarnLogRecord(logRecordListener).getMessage()).isEqualTo(
+			"Failed to invoke ExecutionListener [org.junit.platform.launcher.core.TestExecutionListenerRegistryTest$ThrowingEagerTestExecutionListener] for method ["
+					+ methodName + "] with test display name [nothing()]");
+	}
+
 	private DemoMethodTestDescriptor getDemoMethodTestDescriptor() {
 		Method localMethodNamedNothing = ReflectionUtils.findMethod(this.getClass(), "nothing", new Class<?>[0]).get();
 		return new DemoMethodTestDescriptor(UniqueId.root("method", "unique_id"), this.getClass(),
@@ -167,5 +219,18 @@ class TestExecutionListenerRegistryTest {
 
 	//for reflection purposes only
 	void nothing() {
+	}
+
+	private static class ThrowingEagerTestExecutionListener
+			implements TestExecutionListenerRegistry.EagerTestExecutionListener {
+		@Override
+		public void executionJustStarted(TestIdentifier testIdentifier) {
+			throw new RuntimeException("failed to invoke listener");
+		}
+
+		@Override
+		public void executionJustFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+			throw new RuntimeException("failed to invoke listener");
+		}
 	}
 }

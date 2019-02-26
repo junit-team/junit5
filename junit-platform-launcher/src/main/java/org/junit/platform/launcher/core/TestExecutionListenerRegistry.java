@@ -102,7 +102,14 @@ class TestExecutionListenerRegistry {
 
 		@Override
 		public void executionStarted(TestIdentifier testIdentifier) {
-			notifyEagerTestExecutionListeners(listener -> listener.executionJustStarted(testIdentifier));
+			notifyEagerTestExecutionListeners(listener -> {
+				try {
+					listener.executionJustStarted(testIdentifier);
+				}
+				catch (Throwable throwable) {
+					rethrowIfBlacklistedAndLogTest(throwable, listener, testIdentifier, "executionJustStarted");
+				}
+			});
 			notifyTestExecutionListeners(listener -> {
 				try {
 					listener.executionStarted(testIdentifier);
@@ -115,8 +122,14 @@ class TestExecutionListenerRegistry {
 
 		@Override
 		public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-			notifyEagerTestExecutionListeners(
-				listener -> listener.executionJustFinished(testIdentifier, testExecutionResult));
+			notifyEagerTestExecutionListeners(listener -> {
+				try {
+					listener.executionJustFinished(testIdentifier, testExecutionResult);
+				}
+				catch (Throwable throwable) {
+					rethrowIfBlacklistedAndLogTest(throwable, listener, testIdentifier, "executionJustFinished");
+				}
+			});
 			notifyTestExecutionListeners(listener -> {
 				try {
 					listener.executionFinished(testIdentifier, testExecutionResult);
