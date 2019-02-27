@@ -13,25 +13,16 @@ jobs:
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
-  #- checkout: self  # self represents the repo where the initial Pipelines YAML file was found
-  #  clean: false
-  #  fetchDepth: 1
-  - script: ./gradlew --version
-  - task: Gradle@2
-    inputs:
-      workingDirectory: ''
-      gradleWrapperFile: 'gradlew'
-      gradleOptions: '-Xmx3072m'
-      options: '--scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: '1.11'
-      jdkArchitectureOption: 'x64'
-      publishJUnitResults: true
-      testResultsFiles: '**/TEST-*.xml'
-      tasks: 'build'
-#  - job: Mac_OS
-#    pool:
-#      vmImage: 'macOS-10.13'
-#  - job: Windows
-#    pool:
-#      vmImage: 'windows-2019
+    - template: azure-gradle-step.yml
+
+  - job: Mac
+    pool:
+      vmImage: 'macOS-10.13'
+    steps:
+      - template: azure-gradle-step.yml
+
+  - job: Windows
+    pool:
+      vmImage: 'windows-2019'
+    steps:
+      - template: azure-gradle-step.yml
