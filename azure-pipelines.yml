@@ -15,14 +15,14 @@ jobs:
   steps:
     - template: azure-gradle-step.yml
 
-  - job: Mac
-    pool:
-      vmImage: 'macOS-10.13'
-    steps:
-      - template: azure-gradle-step.yml
+- job: Mac
+  pool:
+    vmImage: 'macOS-10.13'
+  steps:
+    - template: azure-gradle-step.yml
 
-  - job: Windows
-    pool:
-      vmImage: 'windows-2019'
-    steps:
-      - template: azure-gradle-step.yml
+- job: Windows
+  pool:
+    vmImage: 'windows-2019'
+  steps:
+    - template: azure-gradle-step.yml
