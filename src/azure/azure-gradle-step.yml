@@ -9,5 +9,5 @@ steps:
       jdkVersionOption: '1.11'
       jdkArchitectureOption: 'x64'
       publishJUnitResults: true
-      testResultsFiles: '**/TEST-*.xml'
+      testResultsFiles: '**/build/test-results/test/TEST-*.xml'
       tasks: 'build'
