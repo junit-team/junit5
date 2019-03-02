@@ -64,7 +64,7 @@ Your donations will help to make that a reality!
           <h4>Heusch/Boesefeldt GmbH</h4>
         </div>
         <div class="cardbronze-bottom">
-          <h4>BRONZE&nbsp;&nbsp;SPONSOR</h4>
+          <h5>Bronze&nbsp;&nbsp;Sponsor</h5>
           <p>Since March 2019</p>
         </div>
       </div>
