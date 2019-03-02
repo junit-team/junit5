@@ -94,7 +94,7 @@ footer {
     display: block;
     width: 100%;
     height: 120px;
-    line-height: 140px;
+    line-height: 120px;
     overflow: hidden;
 }
 
@@ -135,7 +135,7 @@ footer {
     display: block;
     width: 100%;
     height: 100px;
-    line-height: 140px;
+    line-height: 100px;
     overflow: hidden;
 }
 
@@ -163,8 +163,8 @@ footer {
     border-radius: 5px;
     text-align: center;
     font-size: small;
-    background-color: bronze; /* For browsers that do not support gradients */
-    background-image: linear-gradient(to bottom right, bronze, white); /* Standard syntax (must be last) */
+    background-color: chocolate; /* For browsers that do not support gradients */
+    background-image: linear-gradient(to bottom right, chocolate, white); /* Standard syntax (must be last) */
     cursor: pointer;
 }
 
@@ -176,7 +176,7 @@ footer {
     display: block;
     width: 100%;
     height: 80px;
-    line-height: 140px;
+    line-height: 80px;
     overflow: hidden;
 }
 
