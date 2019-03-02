@@ -72,7 +72,7 @@ footer {
 
 /* Sponsor card styles
 -------------------------------------------------- */
-.card-gold {
+.cardgold {
     width: 240px;
     height: 300px;
     margin: 10px 16px;
@@ -86,11 +86,11 @@ footer {
     cursor: pointer;
 }
 
-.card-gold:hover {
+.cardgold:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.card-gold-image {
+.cardgold-image {
     display: block;
     width: 100%;
     height: 120px;
@@ -98,14 +98,14 @@ footer {
     overflow: hidden;
 }
 
-.card-gold-center {
+.cardgold-center {
     display: block;
     width: 100%;
     height: 120px;
     overflow: hidden;
 }
 
-.card-gold-bottom {
+.cardgold-bottom {
     display: block;
     width: 100%;
     height: 60px;
@@ -113,7 +113,7 @@ footer {
     font-size: x-small;
 }
 
-.card-silver {
+.cardsilver {
     width: 240px;
     height: 240px;
     margin: 10px 16px;
@@ -127,11 +127,11 @@ footer {
     cursor: pointer;
 }
 
-.card-silver:hover {
+.cardsilver:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.card-silver-image {
+.cardsilver-image {
     display: block;
     width: 100%;
     height: 100px;
@@ -139,14 +139,14 @@ footer {
     overflow: hidden;
 }
 
-.card-silver-center {
+.cardsilver-center {
     display: block;
     width: 100%;
     height: 100px;
     overflow: hidden;
 }
 
-.card-silver-bottom {
+.cardsilver-bottom {
     display: block;
     width: 100%;
     height: 40px;
@@ -154,7 +154,7 @@ footer {
     font-size: x-small;
 }
 
-.card-bronze {
+.cardbronze {
     width: 240px;
     height: 180px;
     margin: 10px 16px;
@@ -168,11 +168,11 @@ footer {
     cursor: pointer;
 }
 
-.card-bronze:hover {
+.cardbronze:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.card-bronze-image {
+.cardbronze-image {
     display: block;
     width: 100%;
     height: 80px;
@@ -180,14 +180,14 @@ footer {
     overflow: hidden;
 }
 
-.card-bronze-center {
+.cardbronze-center {
     display: block;
     width: 100%;
     height: 80px;
     overflow: hidden;
 }
 
-.card-bronze-bottom {
+.cardbronze-bottom {
     display: block;
     width: 100%;
     height: 20px;
