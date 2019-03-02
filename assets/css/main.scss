@@ -72,7 +72,7 @@ footer {
 
 /* Sponsor card styles
 -------------------------------------------------- */
-.card {
+.card-gold {
     width: 240px;
     height: 300px;
     margin: 10px 16px;
@@ -86,11 +86,11 @@ footer {
     cursor: pointer;
 }
 
-.card:hover {
+.card-gold:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.card-image {
+.card-gold-image {
     display: block;
     width: 100%;
     height: 120px;
@@ -98,14 +98,14 @@ footer {
     overflow: hidden;
 }
 
-.card-center {
+.card-gold-center {
     display: block;
     width: 100%;
     height: 120px;
     overflow: hidden;
 }
 
-.card-bottom {
+.card-gold-bottom {
     display: block;
     width: 100%;
     height: 60px;
