@@ -112,3 +112,85 @@ footer {
     overflow: hidden;
     font-size: x-small;
 }
+
+.card-silver {
+    width: 240px;
+    height: 240px;
+    margin: 10px 16px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 5px;
+    text-align: center;
+    font-size: small;
+    background-color: gold; /* For browsers that do not support gradients */
+    background-image: linear-gradient(to bottom right, gold, white); /* Standard syntax (must be last) */
+    cursor: pointer;
+}
+
+.card-silver:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.card-silver-image {
+    display: block;
+    width: 100%;
+    height: 100px;
+    line-height: 140px;
+    overflow: hidden;
+}
+
+.card-silver-center {
+    display: block;
+    width: 100%;
+    height: 100px;
+    overflow: hidden;
+}
+
+.card-silver-bottom {
+    display: block;
+    width: 100%;
+    height: 40px;
+    overflow: hidden;
+    font-size: x-small;
+}
+
+.card-bronze {
+    width: 240px;
+    height: 180px;
+    margin: 10px 16px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 5px;
+    text-align: center;
+    font-size: small;
+    background-color: gold; /* For browsers that do not support gradients */
+    background-image: linear-gradient(to bottom right, gold, white); /* Standard syntax (must be last) */
+    cursor: pointer;
+}
+
+.card-bronze:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.card-bronze-image {
+    display: block;
+    width: 100%;
+    height: 80px;
+    line-height: 140px;
+    overflow: hidden;
+}
+
+.card-bronze-center {
+    display: block;
+    width: 100%;
+    height: 80px;
+    overflow: hidden;
+}
+
+.card-bronze-bottom {
+    display: block;
+    width: 100%;
+    height: 20px;
+    overflow: hidden;
+    font-size: x-small;
+}
