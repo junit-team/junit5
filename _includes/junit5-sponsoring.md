@@ -9,6 +9,7 @@ Your donations will help to make that a reality!
 **Thank you!**
 
 [//]: # (First line of Gold Sponsor Badges)
+<div align="center">
   <ul class="list-inline">
     <li>
       <div class="card-gold" onclick="location.href='https://www.societegenerale.com/en/digital-and-innovation/tech-culture-it';">
@@ -49,6 +50,27 @@ Your donations will help to make that a reality!
       </div>
     </li>
   </ul>
+</div>
+
+[//]: # (First line of Bronze Sponsor Badges)
+<div align="center">
+  <ul class="list-inline">
+    <li>
+      <div class="card-bronze" onclick="location.href='http://www.heuboe.de';">
+        <div class="card-bronze-image">
+          <img src="https://www.heuboe.de/fileadmin/heuboe/images/logo_arrows.gif" >
+        </div>
+        <div class="card-bronze-center">
+          <h4>Heusch/Boesefeldt GmbH</h4>
+        </div>
+        <div class="card-bronze-bottom">
+          <h4>BRONZE&nbsp;&nbsp;SPONSOR</h4>
+          <p>Since March 2019</p>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
 
 ### Backers
 
