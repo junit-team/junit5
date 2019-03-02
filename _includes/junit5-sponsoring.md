@@ -9,7 +9,6 @@ Your donations will help to make that a reality!
 **Thank you!**
 
 [//]: # (First line of Gold Sponsor Badges)
-<div align="center">
   <ul class="list-inline">
     <li>
       <div class="card-gold" onclick="location.href='https://www.societegenerale.com/en/digital-and-innovation/tech-culture-it';">
@@ -50,10 +49,8 @@ Your donations will help to make that a reality!
       </div>
     </li>
   </ul>
-</div>
 
 [//]: # (First line of Bronze Sponsor Badges)
-<div align="center">
   <ul class="list-inline">
     <li>
       <div class="card-bronze" onclick="location.href='http://www.heuboe.de';">
@@ -70,7 +67,6 @@ Your donations will help to make that a reality!
       </div>
     </li>
   </ul>
-</div>
 
 ### Backers
 
