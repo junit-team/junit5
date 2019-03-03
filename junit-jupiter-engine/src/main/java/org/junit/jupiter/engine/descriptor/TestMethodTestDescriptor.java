@@ -68,6 +68,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executa
 @API(status = INTERNAL, since = "5.0")
 public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
+	public static final String SEGMENT_TYPE = "method";
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 	private static final Logger logger = LoggerFactory.getLogger(TestMethodTestDescriptor.class);
 

@@ -49,7 +49,7 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 	public static final String SEGMENT_TYPE_TEST = "test";
 	public static final String SEGMENT_TYPE_DYNAMIC = "dynamic";
 
-	private final Description description;
+	protected Description description;
 
 	public VintageTestDescriptor(UniqueId uniqueId, Description description) {
 		this(uniqueId, description, generateDisplayName(description), toTestSource(description));

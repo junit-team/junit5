@@ -40,6 +40,7 @@ import org.junit.platform.engine.UniqueId;
 @API(status = INTERNAL, since = "5.0")
 public class NestedClassTestDescriptor extends ClassTestDescriptor {
 
+	public static final String SEGMENT_TYPE = "nested-class";
 	/**
 	 * Set of local class-level tags; does not contain tags from parent.
 	 */

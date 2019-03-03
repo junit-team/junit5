@@ -13,6 +13,7 @@ package org.junit.platform.engine;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -255,6 +256,29 @@ class UniqueIdTests {
 
 			assertFalse(id1.hasPrefix(id2));
 			assertFalse(id2.hasPrefix(id1));
+		}
+
+	}
+
+	@Nested
+	class LastSegment {
+
+		@Test
+		void returnsLastSegment() {
+			UniqueId uniqueId = UniqueId.forEngine("foo");
+			assertSame(uniqueId.getSegments().get(0), uniqueId.getLastSegment());
+
+			uniqueId = UniqueId.forEngine("foo").append("type", "bar");
+			assertSame(uniqueId.getSegments().get(1), uniqueId.getLastSegment());
+		}
+
+		@Test
+		void removesLastSegment() {
+			UniqueId uniqueId = UniqueId.forEngine("foo");
+			assertThrows(PreconditionViolationException.class, uniqueId::removeLastSegment);
+
+			UniqueId newUniqueId = uniqueId.append("type", "bar").removeLastSegment();
+			assertEquals(uniqueId, newUniqueId);
 		}
 
 	}

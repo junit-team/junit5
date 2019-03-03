@@ -13,17 +13,25 @@ package org.junit.vintage.engine.discovery;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.vintage.engine.VintageUniqueIdBuilder.engineId;
+
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.platform.commons.logging.LogRecordListener;
+import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.PackageNameFilter;
+import org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.vintage.engine.VintageUniqueIdBuilder;
 import org.junit.vintage.engine.samples.junit3.AbstractJUnit3TestCase;
 import org.junit.vintage.engine.samples.junit4.AbstractJunit4TestCaseWithConstructorParameter;
 
@@ -44,8 +52,7 @@ class VintageDiscovererTests {
 				.build();
 		// @formatter:on
 
-		VintageDiscoverer discoverer = new VintageDiscoverer();
-		TestDescriptor testDescriptor = discoverer.discover(request, engineId());
+		TestDescriptor testDescriptor = discover(request);
 
 		assertThat(testDescriptor.getChildren()).hasSize(1);
 		assertThat(getOnlyElement(testDescriptor.getChildren()).getUniqueId().toString()).contains(Foo.class.getName());
@@ -60,30 +67,48 @@ class VintageDiscovererTests {
 				.build();
 		// @formatter:on
 
-		VintageDiscoverer discoverer = new VintageDiscoverer();
-		TestDescriptor testDescriptor = discoverer.discover(request, engineId());
+		TestDescriptor testDescriptor = discover(request);
 
 		assertThat(testDescriptor.getChildren()).isEmpty();
 	}
 
 	@Test
 	void doesNotResolveAbstractJUnit3Classes(LogRecordListener listener) {
-		doesNotResolve(listener, AbstractJUnit3TestCase.class);
+		doesNotResolve(listener, selectClass(AbstractJUnit3TestCase.class));
 	}
 
 	@Test
 	void doesNotResolveAbstractJUnit4Classes(LogRecordListener listener) {
-		doesNotResolve(listener, AbstractJunit4TestCaseWithConstructorParameter.class);
+		doesNotResolve(listener, selectClass(AbstractJunit4TestCaseWithConstructorParameter.class));
 	}
 
-	private void doesNotResolve(LogRecordListener listener, Class<?> testClass) {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(testClass)).build();
+	@Test
+	void logsWarningOnUnloadableTestClass(LogRecordListener listener) {
+		UniqueId uniqueId = VintageUniqueIdBuilder.uniqueIdForClass("foo.bar.UnknownClass");
 
-		VintageDiscoverer discoverer = new VintageDiscoverer();
-		TestDescriptor testDescriptor = discoverer.discover(request, engineId());
+		doesNotResolve(listener, selectUniqueId(uniqueId));
+
+		LogRecord logRecord = listener.stream(EngineDiscoveryRequestResolver.class, Level.WARNING).findFirst().get();
+		assertThat(logRecord.getMessage()).isEqualTo(
+			"UniqueIdSelector [uniqueId = " + uniqueId + "] could not be resolved.");
+		assertThat(logRecord.getThrown()).hasCauseInstanceOf(ClassNotFoundException.class);
+	}
+
+	@Test
+	void ignoresUniqueIdsOfOtherEngines(LogRecordListener listener) {
+		doesNotResolve(listener, selectUniqueId(UniqueId.forEngine("someEngine")));
+	}
+
+	private void doesNotResolve(LogRecordListener listener, DiscoverySelector selector) {
+		LauncherDiscoveryRequest request = request().selectors(selector).build();
+
+		TestDescriptor testDescriptor = discover(request);
 
 		assertThat(testDescriptor.getChildren()).isEmpty();
-		assertThat(listener.stream(VintageDiscoverer.class)).isEmpty();
+	}
+
+	private TestDescriptor discover(EngineDiscoveryRequest request) {
+		return new VintageDiscoverer().discover(request, engineId());
 	}
 
 	public static class Foo {

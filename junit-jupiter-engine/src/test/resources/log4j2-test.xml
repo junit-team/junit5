@@ -9,6 +9,7 @@
 		<Logger name="org.junit" level="warn" />
 		<Logger name="org.junit.jupiter.api" level="off" />
 		<Logger name="org.junit.jupiter.engine" level="off" />
+		<Logger name="org.junit.platform.engine.support.discovery" level="off" />
 		<Root level="error">
 			<AppenderRef ref="Console" />
 		</Root>

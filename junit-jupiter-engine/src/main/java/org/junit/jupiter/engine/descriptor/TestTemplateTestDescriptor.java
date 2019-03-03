@@ -40,6 +40,7 @@ import org.junit.platform.engine.UniqueId;
 @API(status = INTERNAL, since = "5.0")
 public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implements Filterable {
 
+	public static final String SEGMENT_TYPE = "test-template";
 	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
 
 	public TestTemplateTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod,
