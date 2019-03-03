@@ -12,7 +12,6 @@ package org.junit.vintage.engine.discovery;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toCollection;
-import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_TYPE_RUNNER;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -25,73 +24,24 @@ import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.UniqueId;
 import org.junit.runner.Description;
-import org.junit.runner.Runner;
-import org.junit.runner.manipulation.Filter;
-import org.junit.runner.manipulation.Filterable;
-import org.junit.runners.model.RunnerBuilder;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 import org.junit.vintage.engine.descriptor.VintageTestDescriptor;
 import org.junit.vintage.engine.support.UniqueIdReader;
 import org.junit.vintage.engine.support.UniqueIdStringifier;
 
 /**
- * @since 4.12
+ * @since 5.5
  */
-class TestClassRequestResolver {
+class RunnerTestDescriptorPostProcessor {
 
-	private static final Logger logger = LoggerFactory.getLogger(TestClassRequestResolver.class);
-
-	private static final RunnerBuilder RUNNER_BUILDER = new DefensiveAllDefaultPossibilitiesBuilder();
+	private static final Logger logger = LoggerFactory.getLogger(RunnerTestDescriptorPostProcessor.class);
 
 	private final UniqueIdReader uniqueIdReader = new UniqueIdReader();
-
 	private final UniqueIdStringifier uniqueIdStringifier = new UniqueIdStringifier();
 
-	TestClassRequestResolver() {
-	}
-
-	RunnerTestDescriptor createRunnerTestDescriptor(TestClassRequest request, UniqueId engineId) {
-		Class<?> testClass = request.getTestClass();
-		Runner runner = RUNNER_BUILDER.safeRunnerForClass(testClass);
-		if (runner == null) {
-			return null;
-		}
-		return determineRunnerTestDescriptor(testClass, runner, request.getFilters(), engineId);
-	}
-
-	private RunnerTestDescriptor determineRunnerTestDescriptor(Class<?> testClass, Runner runner,
-			List<RunnerTestDescriptorAwareFilter> filters, UniqueId engineId) {
-		RunnerTestDescriptor runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, runner, engineId);
-		if (!filters.isEmpty()) {
-			if (runner instanceof Filterable) {
-				Filter filter = createOrFilter(filters, runnerTestDescriptor);
-				Runner filteredRunner = runnerTestDescriptor.toRequest().filterWith(filter).getRunner();
-				runnerTestDescriptor = createCompleteRunnerTestDescriptor(testClass, filteredRunner, engineId);
-			}
-			else {
-				Runner runnerToReport = (runner instanceof RunnerDecorator)
-						? ((RunnerDecorator) runner).getDecoratedRunner()
-						: runner;
-				logger.warn(() -> "Runner " + runnerToReport.getClass().getName() //
-						+ " (used on " + testClass.getName() + ") does not support filtering" //
-						+ " and will therefore be run completely.");
-			}
-		}
-		return runnerTestDescriptor;
-	}
-
-	private Filter createOrFilter(List<RunnerTestDescriptorAwareFilter> filters,
-			RunnerTestDescriptor runnerTestDescriptor) {
-		filters.forEach(filter -> filter.initialize(runnerTestDescriptor));
-		return new OrFilter(filters);
-	}
-
-	private RunnerTestDescriptor createCompleteRunnerTestDescriptor(Class<?> testClass, Runner runner,
-			UniqueId engineId) {
-		UniqueId id = engineId.append(SEGMENT_TYPE_RUNNER, testClass.getName());
-		RunnerTestDescriptor runnerTestDescriptor = new RunnerTestDescriptor(id, testClass, runner);
+	void applyFiltersAndCreateDescendants(RunnerTestDescriptor runnerTestDescriptor) {
 		addChildrenRecursively(runnerTestDescriptor);
-		return runnerTestDescriptor;
+		runnerTestDescriptor.applyFilters(this::addChildrenRecursively);
 	}
 
 	private void addChildrenRecursively(VintageTestDescriptor parent) {

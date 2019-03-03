@@ -23,6 +23,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Configurable test discovery implementation that can be reused by different test engines
+  (see Javadoc of `org.junit.platform.engine.support.discovery`).
 * New `isFinal()` and `isNotFinal()` methods in `ModifierSupport`.
 
 

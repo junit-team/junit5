@@ -33,7 +33,7 @@ public class IsTestClassWithTests implements Predicate<Class<?>> {
 
 	private static final IsTestTemplateMethod isTestTemplateMethod = new IsTestTemplateMethod();
 
-	private static final Predicate<Method> isTestOrTestFactoryOrTestTemplateMethod = isTestMethod.or(
+	public static final Predicate<Method> isTestOrTestFactoryOrTestTemplateMethod = isTestMethod.or(
 		isTestFactoryMethod).or(isTestTemplateMethod);
 
 	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();

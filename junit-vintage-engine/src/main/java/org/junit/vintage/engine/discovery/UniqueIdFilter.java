@@ -21,28 +21,32 @@ import java.util.Set;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.runner.Description;
+import org.junit.runner.manipulation.Filter;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 import org.junit.vintage.engine.descriptor.VintageTestDescriptor;
 
 /**
  * @since 4.12
  */
-class UniqueIdFilter extends RunnerTestDescriptorAwareFilter {
+class UniqueIdFilter extends Filter {
 
+	private final RunnerTestDescriptor runnerTestDescriptor;
 	private final UniqueId uniqueId;
 
 	private Deque<Description> path;
 	private Set<Description> descendants;
 
-	UniqueIdFilter(UniqueId uniqueId) {
+	UniqueIdFilter(RunnerTestDescriptor runnerTestDescriptor, UniqueId uniqueId) {
+		this.runnerTestDescriptor = runnerTestDescriptor;
 		this.uniqueId = uniqueId;
 	}
 
-	@Override
-	void initialize(RunnerTestDescriptor runnerTestDescriptor) {
-		Optional<? extends TestDescriptor> identifiedTestDescriptor = runnerTestDescriptor.findByUniqueId(uniqueId);
-		descendants = determineDescendants(identifiedTestDescriptor);
-		path = determinePath(runnerTestDescriptor, identifiedTestDescriptor);
+	private void ensureInitialized() {
+		if (descendants == null) {
+			Optional<? extends TestDescriptor> identifiedTestDescriptor = runnerTestDescriptor.findByUniqueId(uniqueId);
+			descendants = determineDescendants(identifiedTestDescriptor);
+			path = determinePath(runnerTestDescriptor, identifiedTestDescriptor);
+		}
 	}
 
 	private Deque<Description> determinePath(RunnerTestDescriptor runnerTestDescriptor,
@@ -71,6 +75,7 @@ class UniqueIdFilter extends RunnerTestDescriptorAwareFilter {
 
 	@Override
 	public boolean shouldRun(Description description) {
+		ensureInitialized();
 		return path.contains(description) || descendants.contains(description);
 	}
 

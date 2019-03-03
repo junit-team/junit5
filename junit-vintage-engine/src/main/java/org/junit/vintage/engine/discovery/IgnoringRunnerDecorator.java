@@ -14,6 +14,7 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
+import org.junit.vintage.engine.descriptor.RunnerDecorator;
 
 /**
  * Decorator for Runners that will be ignored completely.

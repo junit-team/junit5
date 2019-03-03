@@ -77,6 +77,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 @API(status = INTERNAL, since = "5.0")
 public class ClassTestDescriptor extends JupiterTestDescriptor {
 
+	public static final String SEGMENT_TYPE = "class";
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	private final Class<?> testClass;
