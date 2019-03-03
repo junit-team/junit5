@@ -164,7 +164,7 @@ footer {
     text-align: center;
     font-size: small;
     background-color: chocolate; /* For browsers that do not support gradients */
-    background-image: linear-gradient(to bottom right, chocolate, white); /* Standard syntax (must be last) */
+    background-image: linear-gradient(to bottom right, white, chocolate); /* Standard syntax (must be last) */
     cursor: pointer;
 }
 
