@@ -74,7 +74,6 @@ footer {
 -------------------------------------------------- */
 .cardgold {
     width: 240px;
-    height: 300px;
     margin: 10px 16px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
@@ -108,9 +107,13 @@ footer {
 .cardgold-bottom {
     display: block;
     width: 100%;
-    height: 60px;
     overflow: hidden;
     font-size: x-small;
+}
+
+.cardgold-bottom h4 {
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
 }
 
 .cardsilver {
@@ -156,7 +159,6 @@ footer {
 
 .cardbronze {
     width: 240px;
-    height: 180px;
     margin: 10px 16px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
@@ -190,7 +192,11 @@ footer {
 .cardbronze-bottom {
     display: block;
     width: 100%;
-    height: 50px;
     overflow: hidden;
     font-size: x-small;
+}
+
+.cardbronze-bottom h4 {
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
 }

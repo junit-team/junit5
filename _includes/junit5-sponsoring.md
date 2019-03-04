@@ -25,7 +25,7 @@ Your donations will help to make that a reality!
           </p>
         </div>
         <div class="cardgold-bottom">
-          <h4>G O L D&nbsp;&nbsp;S P O N S O R</h4>
+          <h4>Gold Sponsor</h4>
           <p>Since October 2018</p>
         </div>
       </div>
@@ -44,7 +44,7 @@ Your donations will help to make that a reality!
           </p>
         </div>
         <div class="cardgold-bottom">
-          <h4>G O L D&nbsp;&nbsp;S P O N S O R</h4>
+          <h4>Gold Sponsor</h4>
           <p>Since February 2019</p>
         </div>
       </div>
@@ -64,7 +64,7 @@ Your donations will help to make that a reality!
           <h4>Heusch/Boesefeldt GmbH</h4>
         </div>
         <div class="cardbronze-bottom">
-          <h5>Bronze&nbsp;&nbsp;Sponsor</h5>
+          <h4>Bronze Sponsor</h4>
           <p>Since March 2019</p>
         </div>
       </div>
