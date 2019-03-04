@@ -58,7 +58,7 @@ Your donations will help to make that a reality!
     <li>
       <div class="cardbronze" onclick="location.href='http://www.heuboe.de';">
         <div class="cardbronze-image">
-          <img src="assets/img/sponsor-logo-heuboe.png" alt="Heusch/Boesefeldt">
+          <img src="assets/img/sponsor-logo-heuboe.svg" alt="Heusch/Boesefeldt">
         </div>
         <div class="cardbronze-center">
           <h4>Heusch/Boesefeldt GmbH</h4>
