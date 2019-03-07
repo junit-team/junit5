@@ -183,10 +183,29 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Add a <em>child</em> to this descriptor.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.Builder.html#addClassContainerSelectorResolver(java.util.function.Predicate)">addClassContainerSelectorResolver(Predicate&lt;Class&lt;?&gt;&gt;)</a></span> - Method in class org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.Builder.html" title="class in org.junit.platform.engine.support.discovery">EngineDiscoveryRequestResolver.Builder</a></dt>
+<dd>
+<div class="block">Add a predefined resolver that resolves <a href="../org/junit/platform/engine/discovery/ClasspathRootSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClasspathRootSelectors</code></a>, <a href="../org/junit/platform/engine/discovery/ModuleSelector.html" title="class in org.junit.platform.engine.discovery"><code>ModuleSelectors</code></a>, and
+ <a href="../org/junit/platform/engine/discovery/PackageSelector.html" title="class in org.junit.platform.engine.discovery"><code>PackageSelectors</code></a> into <a href="../org/junit/platform/engine/discovery/ClassSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClassSelectors</code></a> by scanning for classes that satisfy the supplied
+ predicate in the respective class containers to this builder.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/logging/LoggerFactory.html#addListener(org.junit.platform.commons.logging.LogRecordListener)">addListener(LogRecordListener)</a></span> - Static method in class org.junit.platform.commons.logging.<a href="../org/junit/platform/commons/logging/LoggerFactory.html" title="class in org.junit.platform.commons.logging">LoggerFactory</a></dt>
 <dd>
 <div class="block">Add the supplied <a href="../org/junit/platform/commons/logging/LogRecordListener.html" title="class in org.junit.platform.commons.logging"><code>LogRecordListener</code></a> to the set of registered
  listeners.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.Builder.html#addSelectorResolver(java.util.function.Function)">addSelectorResolver(Function&lt;EngineDiscoveryRequestResolver.InitializationContext&lt;T&gt;, SelectorResolver&gt;)</a></span> - Method in class org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.Builder.html" title="class in org.junit.platform.engine.support.discovery">EngineDiscoveryRequestResolver.Builder</a></dt>
+<dd>
+<div class="block">Add a context sensitive <a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery"><code>SelectorResolver</code></a> to this builder.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.Builder.html#addSelectorResolver(org.junit.platform.engine.support.discovery.SelectorResolver)">addSelectorResolver(SelectorResolver)</a></span> - Method in class org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.Builder.html" title="class in org.junit.platform.engine.support.discovery">EngineDiscoveryRequestResolver.Builder</a></dt>
+<dd>
+<div class="block">Add a context insensitive <a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery"><code>SelectorResolver</code></a> to this builder.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.Builder.html#addTestDescriptorVisitor(java.util.function.Function)">addTestDescriptorVisitor(Function&lt;EngineDiscoveryRequestResolver.InitializationContext&lt;T&gt;, TestDescriptor.Visitor&gt;)</a></span> - Method in class org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.Builder.html" title="class in org.junit.platform.engine.support.discovery">EngineDiscoveryRequestResolver.Builder</a></dt>
+<dd>
+<div class="block">Add a context sensitive <a href="../org/junit/platform/engine/TestDescriptor.Visitor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor.Visitor</code></a> to this
+ builder.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/core/LauncherConfig.Builder.html#addTestEngines(org.junit.platform.engine.TestEngine...)">addTestEngines(TestEngine...)</a></span> - Method in class org.junit.platform.launcher.core.<a href="../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></dt>
 <dd>
@@ -195,6 +214,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/core/LauncherConfig.Builder.html#addTestExecutionListeners(org.junit.platform.launcher.TestExecutionListener...)">addTestExecutionListeners(TestExecutionListener...)</a></span> - Method in class org.junit.platform.launcher.core.<a href="../org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></dt>
 <dd>
 <div class="block">Add all of the supplied <code>listeners</code> to the configuration.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html#addToParent(java.util.function.Function)">addToParent(Function&lt;TestDescriptor, Optional&lt;T&gt;&gt;)</a></span> - Method in interface org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver.Context</a></dt>
+<dd>
+<div class="block">Add a <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> to an unspecified parent, usually the
+ engine descriptor, by applying the supplied <code>Function</code> to the
+ new parent.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html#addToParent(java.util.function.Supplier,java.util.function.Function)">addToParent(Supplier&lt;DiscoverySelector&gt;, Function&lt;TestDescriptor, Optional&lt;T&gt;&gt;)</a></span> - Method in interface org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver.Context</a></dt>
+<dd>
+<div class="block">Add a <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> to a parent, specified by the <a href="../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> returned by the supplied <code>Supplier</code>, by
+ applying the supplied <code>Function</code> to the new parent.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/migrationsupport/rules/adapter/ExpectedExceptionAdapter.html#after()">after()</a></span> - Method in class org.junit.jupiter.migrationsupport.rules.adapter.<a href="../org/junit/jupiter/migrationsupport/rules/adapter/ExpectedExceptionAdapter.html" title="class in org.junit.jupiter.migrationsupport.rules.adapter">ExpectedExceptionAdapter</a></dt>
 <dd>&nbsp;</dd>
@@ -350,6 +380,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Apply this filter to the supplied object.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/vintage/engine/descriptor/RunnerTestDescriptor.html#applyFilters(java.util.function.Consumer)">applyFilters(Consumer&lt;RunnerTestDescriptor&gt;)</a></span> - Method in class org.junit.vintage.engine.descriptor.<a href="../org/junit/vintage/engine/descriptor/RunnerTestDescriptor.html" title="class in org.junit.vintage.engine.descriptor">RunnerTestDescriptor</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="../org/junit/jupiter/params/aggregator/ArgumentAccessException.html" title="class in org.junit.jupiter.params.aggregator"><span class="typeNameLink">ArgumentAccessException</span></a> - Exception in <a href="../org/junit/jupiter/params/aggregator/package-summary.html">org.junit.jupiter.params.aggregator</a></dt>
 <dd>
 <div class="block"><code>ArgumentAccessException</code> is an exception thrown by an

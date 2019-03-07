@@ -242,6 +242,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/vintage/engine/descriptor/VintageTestDescriptor.html#removeFromHierarchy()">removeFromHierarchy()</a></span> - Method in class org.junit.vintage.engine.descriptor.<a href="../org/junit/vintage/engine/descriptor/VintageTestDescriptor.html" title="class in org.junit.vintage.engine.descriptor">VintageTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/UniqueId.html#removeLastSegment()">removeLastSegment()</a></span> - Method in class org.junit.platform.engine.<a href="../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></dt>
+<dd>
+<div class="block">Construct a new <code>UniqueId</code> and removing the last <a href="../org/junit/platform/engine/UniqueId.Segment.html" title="class in org.junit.platform.engine"><code>UniqueId.Segment</code></a> of
+ this <code>UniqueId</code>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/commons/logging/LoggerFactory.html#removeListener(org.junit.platform.commons.logging.LogRecordListener)">removeListener(LogRecordListener)</a></span> - Static method in class org.junit.platform.commons.logging.<a href="../org/junit/platform/commons/logging/LoggerFactory.html" title="class in org.junit.platform.commons.logging">LoggerFactory</a></dt>
 <dd>
 <div class="block">Remove the supplied <a href="../org/junit/platform/commons/logging/LogRecordListener.html" title="class in org.junit.platform.commons.logging"><code>LogRecordListener</code></a> from the set of registered
@@ -319,12 +324,76 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block"><em>Reserved characters</em> that are not permissible as part of a tag name.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html#resolve(org.junit.platform.engine.discovery.ClasspathResourceSelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve(ClasspathResourceSelector, SelectorResolver.Context)</a></span> - Method in interface org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver</a></dt>
+<dd>
+<div class="block">Resolve the supplied <a href="../org/junit/platform/engine/discovery/ClasspathResourceSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClasspathResourceSelector</code></a> using the supplied
+ <a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html#resolve(org.junit.platform.engine.discovery.ClasspathRootSelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve(ClasspathRootSelector, SelectorResolver.Context)</a></span> - Method in interface org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver</a></dt>
+<dd>
+<div class="block">Resolve the supplied <a href="../org/junit/platform/engine/discovery/ClasspathRootSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClasspathRootSelector</code></a> using the supplied
+ <a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html#resolve(org.junit.platform.engine.discovery.ClassSelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve(ClassSelector, SelectorResolver.Context)</a></span> - Method in interface org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver</a></dt>
+<dd>
+<div class="block">Resolve the supplied <a href="../org/junit/platform/engine/discovery/ClassSelector.html" title="class in org.junit.platform.engine.discovery"><code>ClassSelector</code></a> using the supplied
+ <a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html#resolve(org.junit.platform.engine.discovery.DirectorySelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve(DirectorySelector, SelectorResolver.Context)</a></span> - Method in interface org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver</a></dt>
+<dd>
+<div class="block">Resolve the supplied <a href="../org/junit/platform/engine/discovery/DirectorySelector.html" title="class in org.junit.platform.engine.discovery"><code>DirectorySelector</code></a> using the supplied
+ <a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html#resolve(org.junit.platform.engine.discovery.FileSelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve(FileSelector, SelectorResolver.Context)</a></span> - Method in interface org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver</a></dt>
+<dd>
+<div class="block">Resolve the supplied <a href="../org/junit/platform/engine/discovery/FileSelector.html" title="class in org.junit.platform.engine.discovery"><code>FileSelector</code></a> using the supplied
+ <a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html#resolve(org.junit.platform.engine.discovery.MethodSelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve(MethodSelector, SelectorResolver.Context)</a></span> - Method in interface org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver</a></dt>
+<dd>
+<div class="block">Resolve the supplied <a href="../org/junit/platform/engine/discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a> using the supplied
+ <a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html#resolve(org.junit.platform.engine.discovery.ModuleSelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve(ModuleSelector, SelectorResolver.Context)</a></span> - Method in interface org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver</a></dt>
+<dd>
+<div class="block">Resolve the supplied <a href="../org/junit/platform/engine/discovery/ModuleSelector.html" title="class in org.junit.platform.engine.discovery"><code>ModuleSelector</code></a> using the supplied
+ <a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html#resolve(org.junit.platform.engine.discovery.PackageSelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve(PackageSelector, SelectorResolver.Context)</a></span> - Method in interface org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver</a></dt>
+<dd>
+<div class="block">Resolve the supplied <a href="../org/junit/platform/engine/discovery/PackageSelector.html" title="class in org.junit.platform.engine.discovery"><code>PackageSelector</code></a> using the supplied
+ <a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html#resolve(org.junit.platform.engine.discovery.UniqueIdSelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve(UniqueIdSelector, SelectorResolver.Context)</a></span> - Method in interface org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver</a></dt>
+<dd>
+<div class="block">Resolve the supplied <a href="../org/junit/platform/engine/discovery/UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery"><code>UniqueIdSelector</code></a> using the supplied
+ <a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html#resolve(org.junit.platform.engine.discovery.UriSelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve(UriSelector, SelectorResolver.Context)</a></span> - Method in interface org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver</a></dt>
+<dd>
+<div class="block">Resolve the supplied <a href="../org/junit/platform/engine/discovery/UriSelector.html" title="class in org.junit.platform.engine.discovery"><code>UriSelector</code></a> using the supplied
+ <a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html#resolve(org.junit.platform.engine.DiscoverySelector)">resolve(DiscoverySelector)</a></span> - Method in interface org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver.Context</a></dt>
+<dd>
+<div class="block">Resolve the supplied <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>, if possible.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html#resolve(org.junit.platform.engine.DiscoverySelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve(DiscoverySelector, SelectorResolver.Context)</a></span> - Method in interface org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver</a></dt>
+<dd>
+<div class="block">Resolve the supplied <a href="../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> using the supplied
+ <a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.html#resolve(org.junit.platform.engine.EngineDiscoveryRequest,T)">resolve(EngineDiscoveryRequest, T)</a></span> - Method in class org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.html" title="class in org.junit.platform.engine.support.discovery">EngineDiscoveryRequestResolver</a></dt>
+<dd>
+<div class="block">Resolve the supplied <a href="../org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><code>EngineDiscoveryRequest</code></a> and collect the
+ results into the supplied <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/ParameterResolver.html#resolveParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">resolveParameter(ParameterContext, ExtensionContext)</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/ParameterResolver.html" title="interface in org.junit.jupiter.api.extension">ParameterResolver</a></dt>
 <dd>
 <div class="block">Resolve an argument for the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Parameter</code></a> in the supplied <a href="../org/junit/jupiter/api/extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterContext</code></a>
  for the supplied <a href="../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/discovery/DiscoverySelectorResolver.html#resolveSelectors(org.junit.platform.engine.EngineDiscoveryRequest,org.junit.jupiter.engine.config.JupiterConfiguration,org.junit.platform.engine.TestDescriptor)">resolveSelectors(EngineDiscoveryRequest, JupiterConfiguration, TestDescriptor)</a></span> - Method in class org.junit.jupiter.engine.discovery.<a href="../org/junit/jupiter/engine/discovery/DiscoverySelectorResolver.html" title="class in org.junit.jupiter.engine.discovery">DiscoverySelectorResolver</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/discovery/DiscoverySelectorResolver.html#resolveSelectors(org.junit.platform.engine.EngineDiscoveryRequest,org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor)">resolveSelectors(EngineDiscoveryRequest, JupiterEngineDescriptor)</a></span> - Method in class org.junit.jupiter.engine.discovery.<a href="../org/junit/jupiter/engine/discovery/DiscoverySelectorResolver.html" title="class in org.junit.jupiter.engine.discovery">DiscoverySelectorResolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="../org/junit/jupiter/api/parallel/ResourceAccessMode.html" title="enum in org.junit.jupiter.api.parallel"><span class="typeNameLink">ResourceAccessMode</span></a> - Enum in <a href="../org/junit/jupiter/api/parallel/package-summary.html">org.junit.jupiter.api.parallel</a></dt>
 <dd>
@@ -375,7 +444,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/runner/JUnitPlatform.html#run(org.junit.runner.notification.RunNotifier)">run(RunNotifier)</a></span> - Method in class org.junit.platform.runner.<a href="../org/junit/platform/runner/JUnitPlatform.html" title="class in org.junit.platform.runner">JUnitPlatform</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="../org/junit/vintage/engine/discovery/RunnerDecorator.html" title="interface in org.junit.vintage.engine.discovery"><span class="typeNameLink">RunnerDecorator</span></a> - Interface in <a href="../org/junit/vintage/engine/discovery/package-summary.html">org.junit.vintage.engine.discovery</a></dt>
+<dt><a href="../org/junit/vintage/engine/descriptor/RunnerDecorator.html" title="interface in org.junit.vintage.engine.descriptor"><span class="typeNameLink">RunnerDecorator</span></a> - Interface in <a href="../org/junit/vintage/engine/descriptor/package-summary.html">org.junit.vintage.engine.descriptor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="../org/junit/vintage/engine/execution/RunnerExecutor.html" title="class in org.junit.vintage.engine.execution"><span class="typeNameLink">RunnerExecutor</span></a> - Class in <a href="../org/junit/vintage/engine/execution/package-summary.html">org.junit.vintage.engine.execution</a></dt>
 <dd>&nbsp;</dd>

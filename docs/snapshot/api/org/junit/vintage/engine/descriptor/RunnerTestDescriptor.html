@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -190,7 +190,7 @@ extends <a href="VintageTestDescriptor.html" title="class in org.junit.vintage.e
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;org.junit.vintage.engine.descriptor.<a href="VintageTestDescriptor.html" title="class in org.junit.vintage.engine.descriptor">VintageTestDescriptor</a></h3>
-<code><a href="VintageTestDescriptor.html#ENGINE_ID">ENGINE_ID</a>, <a href="VintageTestDescriptor.html#SEGMENT_TYPE_DYNAMIC">SEGMENT_TYPE_DYNAMIC</a>, <a href="VintageTestDescriptor.html#SEGMENT_TYPE_RUNNER">SEGMENT_TYPE_RUNNER</a>, <a href="VintageTestDescriptor.html#SEGMENT_TYPE_TEST">SEGMENT_TYPE_TEST</a></code></li>
+<code><a href="VintageTestDescriptor.html#description">description</a>, <a href="VintageTestDescriptor.html#ENGINE_ID">ENGINE_ID</a>, <a href="VintageTestDescriptor.html#SEGMENT_TYPE_DYNAMIC">SEGMENT_TYPE_DYNAMIC</a>, <a href="VintageTestDescriptor.html#SEGMENT_TYPE_RUNNER">SEGMENT_TYPE_RUNNER</a>, <a href="VintageTestDescriptor.html#SEGMENT_TYPE_TEST">SEGMENT_TYPE_TEST</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="fields.inherited.from.class.org.junit.platform.engine.support.descriptor.AbstractTestDescriptor">
@@ -240,11 +240,26 @@ extends <a href="VintageTestDescriptor.html" title="class in org.junit.vintage.e
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#applyFilters(java.util.function.Consumer)">applyFilters</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Consumer</a>&lt;<a href="RunnerTestDescriptor.html" title="class in org.junit.vintage.engine.descriptor">RunnerTestDescriptor</a>&gt;&nbsp;childrenCreator)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>protected boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#canBeRemovedFromHierarchy()">canBeRemovedFromHierarchy</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#clearFilters()">clearFilters</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://junit.org/junit4/javadoc/4.12/org/junit/runner/manipulation/Filter.html?is-external=true" title="class or interface in org.junit.runner.manipulation" class="externalLink">Filter</a>&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFilters()">getFilters</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#prune()">prune</a></span>()</code></th>
 <td class="colLast">
@@ -252,12 +267,12 @@ extends <a href="VintageTestDescriptor.html" title="class in org.junit.vintage.e
  tests.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="https://junit.org/junit4/javadoc/4.12/org/junit/runner/Request.html?is-external=true" title="class or interface in org.junit.runner" class="externalLink">Request</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toRequest()">toRequest</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>protected boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tryToExcludeFromRunner(org.junit.runner.Description)">tryToExcludeFromRunner</a></span>&#8203;(<a href="https://junit.org/junit4/javadoc/4.12/org/junit/runner/Description.html?is-external=true" title="class or interface in org.junit.runner" class="externalLink">Description</a>&nbsp;description)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -366,7 +381,7 @@ extends <a href="VintageTestDescriptor.html" title="class in org.junit.vintage.e
 <a id="prune()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>prune</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;prune()</pre>
@@ -382,6 +397,33 @@ extends <a href="VintageTestDescriptor.html" title="class in org.junit.vintage.e
 <a href="../../../platform/engine/TestDescriptor.html#containsTests(org.junit.platform.engine.TestDescriptor)"><code>TestDescriptor.containsTests(TestDescriptor)</code></a>, 
 <a href="../../../platform/engine/TestDescriptor.html#removeFromHierarchy()"><code>TestDescriptor.removeFromHierarchy()</code></a></dd>
 </dl>
+</li>
+</ul>
+<a id="getFilters()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getFilters</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://junit.org/junit4/javadoc/4.12/org/junit/runner/manipulation/Filter.html?is-external=true" title="class or interface in org.junit.runner.manipulation" class="externalLink">Filter</a>&gt;&gt;&nbsp;getFilters()</pre>
+</li>
+</ul>
+<a id="clearFilters()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>clearFilters</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;clearFilters()</pre>
+</li>
+</ul>
+<a id="applyFilters(java.util.function.Consumer)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>applyFilters</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;applyFilters&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Consumer</a>&lt;<a href="RunnerTestDescriptor.html" title="class in org.junit.vintage.engine.descriptor">RunnerTestDescriptor</a>&gt;&nbsp;childrenCreator)</pre>
 </li>
 </ul>
 </li>

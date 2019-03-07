@@ -148,7 +148,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/script/ScriptExecutionManager.html#%3Cinit%3E()">ScriptExecutionManager()</a></span> - Constructor for class org.junit.jupiter.engine.script.<a href="../org/junit/jupiter/engine/script/ScriptExecutionManager.html" title="class in org.junit.jupiter.engine.script">ScriptExecutionManager</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#SEGMENT_TYPE">SEGMENT_TYPE</a></span> - Static variable in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassTestDescriptor</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/NestedClassTestDescriptor.html#SEGMENT_TYPE">SEGMENT_TYPE</a></span> - Static variable in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/NestedClassTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">NestedClassTestDescriptor</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.html#SEGMENT_TYPE">SEGMENT_TYPE</a></span> - Static variable in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestFactoryTestDescriptor</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.html#SEGMENT_TYPE">SEGMENT_TYPE</a></span> - Static variable in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/TestMethodTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestMethodTestDescriptor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/TestTemplateInvocationTestDescriptor.html#SEGMENT_TYPE">SEGMENT_TYPE</a></span> - Static variable in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/TestTemplateInvocationTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestTemplateInvocationTestDescriptor</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.html#SEGMENT_TYPE">SEGMENT_TYPE</a></span> - Static variable in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">TestTemplateTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/vintage/engine/descriptor/VintageTestDescriptor.html#SEGMENT_TYPE_DYNAMIC">SEGMENT_TYPE_DYNAMIC</a></span> - Static variable in class org.junit.vintage.engine.descriptor.<a href="../org/junit/vintage/engine/descriptor/VintageTestDescriptor.html" title="class in org.junit.vintage.engine.descriptor">VintageTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
@@ -230,9 +240,33 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Create a list of <code>ModuleSelectors</code> for the supplied module names.</div>
 </dd>
+<dt><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery"><span class="typeNameLink">SelectorResolver</span></a> - Interface in <a href="../org/junit/platform/engine/support/discovery/package-summary.html">org.junit.platform.engine.support.discovery</a></dt>
+<dd>
+<div class="block">A resolver that supports resolving one or multiple types of
+ <a href="../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelectors</code></a>.</div>
+</dd>
+<dt><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><span class="typeNameLink">SelectorResolver.Context</span></a> - Interface in <a href="../org/junit/platform/engine/support/discovery/package-summary.html">org.junit.platform.engine.support.discovery</a></dt>
+<dd>
+<div class="block">The context for resolving a <a href="../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> and adding it to
+ the test tree.</div>
+</dd>
+<dt><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Match.html" title="class in org.junit.platform.engine.support.discovery"><span class="typeNameLink">SelectorResolver.Match</span></a> - Class in <a href="../org/junit/platform/engine/support/discovery/package-summary.html">org.junit.platform.engine.support.discovery</a></dt>
+<dd>
+<div class="block">An exact or partial match for resolving a <a href="../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> into
+ a <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>.</div>
+</dd>
+<dt><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery"><span class="typeNameLink">SelectorResolver.Resolution</span></a> - Class in <a href="../org/junit/platform/engine/support/discovery/package-summary.html">org.junit.platform.engine.support.discovery</a></dt>
+<dd>
+<div class="block">The result of an attempt to resolve a <a href="../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a>.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html#selectors(java.util.List)">selectors(List&lt;? extends DiscoverySelector&gt;)</a></span> - Method in class org.junit.platform.launcher.core.<a href="../org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core">LauncherDiscoveryRequestBuilder</a></dt>
 <dd>
 <div class="block">Add all of the supplied <code>selectors</code> to the request.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Resolution.html#selectors(java.util.Set)">selectors(Set&lt;? extends DiscoverySelector&gt;)</a></span> - Static method in class org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Resolution</a></dt>
+<dd>
+<div class="block">Factory for creating a resolution that contains the supplied
+ <a href="../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelectors</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html#selectors(org.junit.platform.engine.DiscoverySelector...)">selectors(DiscoverySelector...)</a></span> - Method in class org.junit.platform.launcher.core.<a href="../org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core">LauncherDiscoveryRequestBuilder</a></dt>
 <dd>

@@ -122,6 +122,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
+<th class="colFirst" scope="row"><a href="#org.junit.platform.engine.support.discovery">org.junit.platform.engine.support.discovery</a></th>
+<td class="colLast">
+<div class="block">Configurable test discovery implementation that can be reused by different test engines.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#org.junit.platform.launcher.core">org.junit.platform.launcher.core</a></th>
 <td class="colLast">
 <div class="block">Core support classes for the <a href="../../launcher/Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a>
@@ -129,7 +135,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  and the <a href="../../launcher/core/LauncherDiscoveryRequestBuilder.html" title="class in org.junit.platform.launcher.core"><code>LauncherDiscoveryRequestBuilder</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="#org.junit.platform.testkit.engine">org.junit.platform.testkit.engine</a></th>
 <td class="colLast">
 <div class="block">Test Kit for testing the execution of a <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>
@@ -272,6 +278,107 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">A <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> that selects a <a href="https://docs.oracle.com/javase/8/docs/api/java/net/URI.html?is-external=true" title="class or interface in java.net" class="externalLink"><code>URI</code></a> so that
  <a href="../TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a>
  can discover tests or containers based on URIs.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="org.junit.platform.engine.support.discovery">
+<!--   -->
+</a>
+<h3>Uses of <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a> in <a href="../support/discovery/package-summary.html">org.junit.platform.engine.support.discovery</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../support/discovery/package-summary.html">org.junit.platform.engine.support.discovery</a> that return types with arguments of type <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;? extends <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">SelectorResolver.Match.</span><code><span class="memberNameLink"><a href="../support/discovery/SelectorResolver.Match.html#expand()">expand</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Expand this match in order to resolve the children of the contained
+ <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;? extends <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">SelectorResolver.Resolution.</span><code><span class="memberNameLink"><a href="../support/discovery/SelectorResolver.Resolution.html#getSelectors()">getSelectors</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Returns the selectors contained by this resolution.</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Methods in <a href="../support/discovery/package-summary.html">org.junit.platform.engine.support.discovery</a> with parameters of type <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">SelectorResolver.Context.</span><code><span class="memberNameLink"><a href="../support/discovery/SelectorResolver.Context.html#resolve(org.junit.platform.engine.DiscoverySelector)">resolve</a></span>&#8203;(<a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&nbsp;selector)</code></th>
+<td class="colLast">
+<div class="block">Resolve the supplied <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>, if possible.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>default <a href="../support/discovery/SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Resolution</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">SelectorResolver.</span><code><span class="memberNameLink"><a href="../support/discovery/SelectorResolver.html#resolve(org.junit.platform.engine.DiscoverySelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve</a></span>&#8203;(<a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&nbsp;selector,
+       <a href="../support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver.Context</a>&nbsp;context)</code></th>
+<td class="colLast">
+<div class="block">Resolve the supplied <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> using the supplied
+ <a href="../support/discovery/SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Method parameters in <a href="../support/discovery/package-summary.html">org.junit.platform.engine.support.discovery</a> with type arguments of type <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>&lt;T extends <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">SelectorResolver.Context.</span><code><span class="memberNameLink"><a href="../support/discovery/SelectorResolver.Context.html#addToParent(java.util.function.Supplier,java.util.function.Function)">addToParent</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Supplier</a>&lt;<a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&gt;&nbsp;parentSelectorSupplier,
+           <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>,&#8203;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;T&gt;&gt;&nbsp;creator)</code></th>
+<td class="colLast">
+<div class="block">Add a <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> to a parent, specified by the <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> returned by the supplied <code>Supplier</code>, by
+ applying the supplied <code>Function</code> to the new parent.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../support/discovery/SelectorResolver.Match.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Match</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">SelectorResolver.Match.</span><code><span class="memberNameLink"><a href="../support/discovery/SelectorResolver.Match.html#exact(org.junit.platform.engine.TestDescriptor,java.util.function.Supplier)">exact</a></span>&#8203;(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+     <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Supplier</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;? extends <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&gt;&gt;&nbsp;childSelectorsSupplier)</code></th>
+<td class="colLast">
+<div class="block">Factory for creating an exact match with potential children.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../support/discovery/SelectorResolver.Match.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Match</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">SelectorResolver.Match.</span><code><span class="memberNameLink"><a href="../support/discovery/SelectorResolver.Match.html#partial(org.junit.platform.engine.TestDescriptor,java.util.function.Supplier)">partial</a></span>&#8203;(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+       <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Supplier</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;? extends <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&gt;&gt;&nbsp;childSelectorsSupplier)</code></th>
+<td class="colLast">
+<div class="block">Factory for creating a partial match with potential children.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../support/discovery/SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Resolution</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">SelectorResolver.Resolution.</span><code><span class="memberNameLink"><a href="../support/discovery/SelectorResolver.Resolution.html#selectors(java.util.Set)">selectors</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;? extends <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&gt;&nbsp;selectors)</code></th>
+<td class="colLast">
+<div class="block">Factory for creating a resolution that contains the supplied
+ <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelectors</code></a>.</div>
 </td>
 </tr>
 </tbody>

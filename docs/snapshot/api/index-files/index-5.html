@@ -204,6 +204,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block"><code>EngineDiscoveryRequest</code> provides a <a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> access to the
  information necessary to discover tests and containers.</div>
 </dd>
+<dt><a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.html" title="class in org.junit.platform.engine.support.discovery"><span class="typeNameLink">EngineDiscoveryRequestResolver</span></a>&lt;<a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.html" title="type parameter in EngineDiscoveryRequestResolver">T</a> extends <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&gt; - Class in <a href="../org/junit/platform/engine/support/discovery/package-summary.html">org.junit.platform.engine.support.discovery</a></dt>
+<dd>
+<div class="block">Configurable test discovery implementation based on <a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery"><code>SelectorResolver</code></a>
+ and <a href="../org/junit/platform/engine/TestDescriptor.Visitor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor.Visitor</code></a> that can be reused by different
+ <a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngines</code></a>.</div>
+</dd>
+<dt><a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.Builder.html" title="class in org.junit.platform.engine.support.discovery"><span class="typeNameLink">EngineDiscoveryRequestResolver.Builder</span></a>&lt;<a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.Builder.html" title="type parameter in EngineDiscoveryRequestResolver.Builder">T</a> extends <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&gt; - Class in <a href="../org/junit/platform/engine/support/discovery/package-summary.html">org.junit.platform.engine.support.discovery</a></dt>
+<dd>
+<div class="block">Builder for <a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.html" title="class in org.junit.platform.engine.support.discovery"><code>EngineDiscoveryRequestResolver</code></a>.</div>
+</dd>
+<dt><a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.InitializationContext.html" title="interface in org.junit.platform.engine.support.discovery"><span class="typeNameLink">EngineDiscoveryRequestResolver.InitializationContext</span></a>&lt;<a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.InitializationContext.html" title="type parameter in EngineDiscoveryRequestResolver.InitializationContext">T</a> extends <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&gt; - Interface in <a href="../org/junit/platform/engine/support/discovery/package-summary.html">org.junit.platform.engine.support.discovery</a></dt>
+<dd>
+<div class="block">The initialization context for creating <a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery">resolvers</a> and <a href="../org/junit/platform/engine/TestDescriptor.Visitor.html" title="interface in org.junit.platform.engine">visitors</a> that depend
+ on the <a href="../org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><code>EngineDiscoveryRequest</code></a> to be resolved or the engine
+ descriptor that will be used to collect the results.</div>
+</dd>
 <dt><a href="../org/junit/platform/engine/support/hierarchical/EngineExecutionContext.html" title="interface in org.junit.platform.engine.support.hierarchical"><span class="typeNameLink">EngineExecutionContext</span></a> - Interface in <a href="../org/junit/platform/engine/support/hierarchical/package-summary.html">org.junit.platform.engine.support.hierarchical</a></dt>
 <dd>
 <div class="block">Marker interface for an execution context used by a concrete implementation
@@ -363,6 +379,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><a href="../org/junit/platform/testkit/engine/EventType.html" title="enum in org.junit.platform.testkit.engine"><span class="typeNameLink">EventType</span></a> - Enum in <a href="../org/junit/platform/testkit/engine/package-summary.html">org.junit.platform.testkit.engine</a></dt>
 <dd>
 <div class="block">Enumeration of the different possible <a href="../org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a> types.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Match.html#exact(org.junit.platform.engine.TestDescriptor)">exact(TestDescriptor)</a></span> - Static method in class org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Match.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Match</a></dt>
+<dd>
+<div class="block">Factory for creating an exact match without any children.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Match.html#exact(org.junit.platform.engine.TestDescriptor,java.util.function.Supplier)">exact(TestDescriptor, Supplier&lt;Set&lt;? extends DiscoverySelector&gt;&gt;)</a></span> - Static method in class org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Match.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Match</a></dt>
+<dd>
+<div class="block">Factory for creating an exact match with potential children.</div>
 </dd>
 <dt><a href="../org/junit/platform/commons/util/ExceptionUtils.html" title="class in org.junit.platform.commons.util"><span class="typeNameLink">ExceptionUtils</span></a> - Class in <a href="../org/junit/platform/commons/util/package-summary.html">org.junit.platform.commons.util</a></dt>
 <dd>
@@ -673,6 +697,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html#executionStarted(org.junit.platform.launcher.TestIdentifier)">executionStarted(TestIdentifier)</a></span> - Method in class org.junit.platform.reporting.legacy.xml.<a href="../org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html" title="class in org.junit.platform.reporting.legacy.xml">LegacyXmlReportGeneratingListener</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Match.html#expand()">expand()</a></span> - Method in class org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/SelectorResolver.Match.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Match</a></dt>
+<dd>
+<div class="block">Expand this match in order to resolve the children of the contained
+ <a href="../org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a>.</div>
+</dd>
 <dt><a href="../org/junit/jupiter/migrationsupport/rules/adapter/ExpectedExceptionAdapter.html" title="class in org.junit.jupiter.migrationsupport.rules.adapter"><span class="typeNameLink">ExpectedExceptionAdapter</span></a> - Class in <a href="../org/junit/jupiter/migrationsupport/rules/adapter/package-summary.html">org.junit.jupiter.migrationsupport.rules.adapter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/migrationsupport/rules/adapter/ExpectedExceptionAdapter.html#%3Cinit%3E(org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember)">ExpectedExceptionAdapter(TestRuleAnnotatedMember)</a></span> - Constructor for class org.junit.jupiter.migrationsupport.rules.adapter.<a href="../org/junit/jupiter/migrationsupport/rules/adapter/ExpectedExceptionAdapter.html" title="class in org.junit.jupiter.migrationsupport.rules.adapter">ExpectedExceptionAdapter</a></dt>
