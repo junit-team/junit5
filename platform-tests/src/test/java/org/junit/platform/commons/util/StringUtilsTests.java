@@ -108,7 +108,7 @@ class StringUtilsTests {
 	}
 
 	@Test
-	void replacWhitespaceCharacters() {
+	void replaceWhitespaces() {
 		assertNull(replaceWhitespaceCharacters(null, ""));
 		assertEquals("", replaceWhitespaceCharacters("", "."));
 		assertEquals("", replaceWhitespaceCharacters("\t\n\r", ""));
