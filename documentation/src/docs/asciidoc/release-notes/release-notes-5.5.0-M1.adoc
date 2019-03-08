@@ -15,7 +15,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Unsupported `Pattern` flags, like `UNICODE_CHARACTER_CLASS`, no longer cause class
+  `StringUtils` fail to initialize.
 
 ==== Deprecations and Breaking Changes
 
