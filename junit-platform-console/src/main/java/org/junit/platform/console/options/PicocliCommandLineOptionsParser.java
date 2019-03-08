@@ -13,10 +13,13 @@ package org.junit.platform.console.options;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.ServiceLoader;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.engine.TestEngine;
 
 import picocli.CommandLine;
 import picocli.CommandLine.ParseResult;
@@ -44,6 +47,17 @@ public class PicocliCommandLineOptionsParser implements CommandLineOptionsParser
 	public void printHelp(Writer writer) {
 		try {
 			writer.write(getAvailableOptions().getParser().getUsageMessage());
+
+			PrintWriter out = new PrintWriter(writer);
+			out.println("##");
+			out.println("## JUnit Platform Properties");
+			out.println("##");
+			out.println("");
+			out.println("# n.a.");
+			out.println("");
+			for (TestEngine engine : ServiceLoader.load(TestEngine.class)) {
+				engine.printHelpMessage(out);
+			}
 		}
 		catch (IOException e) {
 			throw new JUnitException("Error printing help", e);

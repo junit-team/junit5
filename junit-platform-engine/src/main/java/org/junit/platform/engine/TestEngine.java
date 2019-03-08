@@ -12,6 +12,7 @@ package org.junit.platform.engine;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.io.PrintWriter;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
@@ -192,4 +193,13 @@ public interface TestEngine {
 		return Optional.of(PackageUtils.getAttribute(getClass(), Package::getImplementationVersion).orElse(fallback));
 	}
 
+	/**
+	 * Print help message in "help style".
+	 *
+	 * @since 1.5
+	 */
+	default void printHelpMessage(PrintWriter writer) {
+		writer.printf("# Engine with ID '%s' doesn't provide any configuration help.%n", getId());
+		writer.println();
+	}
 }
