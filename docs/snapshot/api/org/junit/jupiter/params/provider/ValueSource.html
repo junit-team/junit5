@@ -129,8 +129,9 @@ public @interface <span class="memberNameLabel">ValueSource</span></pre>
 
  <p>Supported types include <a href="#shorts()"><code>shorts()</code></a>, <a href="#bytes()"><code>bytes()</code></a>, <a href="#ints()"><code>ints()</code></a>,
  <a href="#longs()"><code>longs()</code></a>, <a href="#floats()"><code>floats()</code></a>, <a href="#doubles()"><code>doubles()</code></a>, <a href="#chars()"><code>chars()</code></a>,
- <a href="#strings()"><code>strings()</code></a>, and <a href="#classes()"><code>classes()</code></a>. Note, however, that only one of the
- supported types may be specified per <code>@ValueSource</code> declaration.
+ <a href="#booleans()"><code>booleans()</code></a>, <a href="#strings()"><code>strings()</code></a>, and <a href="#classes()"><code>classes()</code></a>. Note, however,
+ that only one of the supported types may be specified per
+ <code>@ValueSource</code> declaration.
 
  <p>The supplied literal values will be provided as arguments to the
  annotated <code>@ParameterizedTest</code> method.</div>
@@ -162,62 +163,69 @@ public @interface <span class="memberNameLabel">ValueSource</span></pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>boolean[]</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#booleans()">booleans</a></span></code></th>
+<td class="colLast">
+<div class="block">The <code>boolean</code> values to use as sources of arguments; must not be empty.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>byte[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bytes()">bytes</a></span></code></th>
 <td class="colLast">
 <div class="block">The <code>byte</code> values to use as sources of arguments; must not be empty.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>char[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#chars()">chars</a></span></code></th>
 <td class="colLast">
 <div class="block">The <code>char</code> values to use as sources of arguments; must not be empty.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#classes()">classes</a></span></code></th>
 <td class="colLast">
 <div class="block">The <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a> values to use as sources of arguments; must not be empty.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>double[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#doubles()">doubles</a></span></code></th>
 <td class="colLast">
 <div class="block">The <code>double</code> values to use as sources of arguments; must not be empty.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>float[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#floats()">floats</a></span></code></th>
 <td class="colLast">
 <div class="block">The <code>float</code> values to use as sources of arguments; must not be empty.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>int[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ints()">ints</a></span></code></th>
 <td class="colLast">
 <div class="block">The <code>int</code> values to use as sources of arguments; must not be empty.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>long[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#longs()">longs</a></span></code></th>
 <td class="colLast">
 <div class="block">The <code>long</code> values to use as sources of arguments; must not be empty.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>short[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#shorts()">shorts</a></span></code></th>
 <td class="colLast">
 <div class="block">The <code>short</code> values to use as sources of arguments; must not be empty.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#strings()">strings</a></span></code></th>
 <td class="colLast">
@@ -378,6 +386,29 @@ public @interface <span class="memberNameLabel">ValueSource</span></pre>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.1</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>{}</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="booleans()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>booleans</h4>
+<pre>boolean[]&nbsp;booleans</pre>
+<div class="block">The <code>boolean</code> values to use as sources of arguments; must not be empty.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.5</dd>
 </dl>
 <dl>
 <dt>Default:</dt>
