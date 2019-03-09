@@ -58,6 +58,7 @@ tasks {
 		dependsOn(testClasses)
 		val reportsDir = file("$buildDir/test-results")
 		outputs.dir(reportsDir)
+		outputs.cacheIf { true }
 		classpath = sourceSets["test"].runtimeClasspath
 		main = "org.junit.platform.console.ConsoleLauncher"
 		args("--scan-classpath")
