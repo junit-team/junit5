@@ -15,6 +15,8 @@ authors as well as build tool and IDE vendors.
 
 include::../link-attributes.adoc[]
 
+include::release-notes-5.4.1.adoc[]
+
 include::release-notes-5.4.0.adoc[]
 
 include::release-notes-5.3.2.adoc[]
