@@ -204,6 +204,7 @@
 534f953457e4535d2504195ef01a12a3  junit-platform-console/src/main/java/org/junit/platform/console/options/AvailableOptions.java
 5366b1dd6368a8fecbec792014f3ba8d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestTemplateMethod.java
 53b8b93b790b242e622321392b02444b  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.java
+540ac0b02a5b203ad93b9bce4bf3cd94  documentation/src/docs/asciidoc/release-notes/release-notes-5.5.0-M1.adoc
 54ab5c49f87271a93453a5a32fb0ac61  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassFilter.java
 54abe9b2f323c412be4c0f5f18060edc  documentation/src/docs/asciidoc/user-guide/launcher-api.adoc
 5515fa5dbf60811b548fb009aeb9fa57  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestParameterResolver.java
@@ -434,7 +435,6 @@ b159a655ed6e66c25fe416267db53f73  junit-jupiter-engine/src/main/java/org/junit/j
 b3225ed5c86df9ae4f633b89cadf8a42  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TagFilter.java
 b326d3991d8584d3c4135c6ba6f0d5a2  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeClassNamePatterns.java
 b378d59eefbadfc1d714289e879b8c62  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ConditionEvaluationException.java
-b3a7473f0b2722ebb2588021e394defd  documentation/src/docs/asciidoc/release-notes/release-notes-5.5.0-M1.adoc
 b3dc15bd0fcb1c3b8af89fc7ba3aacec  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodDescriptor.java
 b461e180a6f65df4d2288b6dbecc1dff  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/ResourceUtils.java
 b5a9266862327cb476db81204af2545d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsInnerClass.java
