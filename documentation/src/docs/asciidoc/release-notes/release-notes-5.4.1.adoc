@@ -21,7 +21,9 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Restore compatibility with Android: Unsupported `Pattern` flags, like
+  `UNICODE_CHARACTER_CLASS`, no longer cause class `StringUtils` to fail during
+  initialization.
 
 ==== Deprecations and Breaking Changes
 
