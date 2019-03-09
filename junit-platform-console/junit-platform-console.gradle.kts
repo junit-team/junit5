@@ -14,11 +14,6 @@ dependencies {
 
 tasks {
 	shadowJar {
-		// Generate shadow jar only if the underlying manifest was regenerated.
-		// See https://github.com/junit-team/junit5/issues/631
-		onlyIf {
-			(rootProject.extra["generateManifest"] as Boolean || !archivePath.exists())
-		}
 		classifier = ""
 		configurations = listOf(project.configurations["shadowed"])
 		exclude("META-INF/maven/**")
