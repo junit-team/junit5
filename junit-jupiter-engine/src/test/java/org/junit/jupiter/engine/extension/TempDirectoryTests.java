@@ -74,6 +74,13 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 				.assertStatistics(stats -> stats.started(1).succeeded(1));
 	}
 
+	@Test
+	@DisplayName("does not prevent user from deleting the temp dir within a test")
+	void tempDirectoryDoesNotPreventUserFromDeletingTempDir() {
+		executeTestsForClass(UserTempDirectoryDeletionDoesNotCauseFailureTestCase.class).tests()//
+				.assertStatistics(stats -> stats.started(1).succeeded(1));
+	}
+
 	@Nested
 	@DisplayName("resolves shared temp dir")
 	@TestMethodOrder(OrderAnnotation.class)
@@ -721,6 +728,17 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		void test() {
+		}
+
+	}
+
+	// https://github.com/junit-team/junit5/issues/1801
+	static class UserTempDirectoryDeletionDoesNotCauseFailureTestCase {
+
+		@Test
+		void deleteTempDir(@TempDir Path tempDir) throws IOException {
+			Files.delete(tempDir);
+			assertThat(tempDir).doesNotExist();
 		}
 
 	}
