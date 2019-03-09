@@ -23,7 +23,6 @@ buildScan {
 }
 
 val buildTimeAndDate = OffsetDateTime.now()
-var generateManifest by extra(false)
 val buildDate by extra { DateTimeFormatter.ISO_LOCAL_DATE.format(buildTimeAndDate) }
 val buildTime by extra { DateTimeFormatter.ofPattern("HH:mm:ss.SSSZ").format(buildTimeAndDate) }
 val buildRevision by extra { versioning.info.commit }
@@ -271,17 +270,16 @@ subprojects {
 		}
 	}
 
-	tasks.compileJava {
-		doLast {
-			// Enable JAR manifest generation
-			generateManifest = true
+	normalization {
+		runtimeClasspath {
+			// Ignore the JAR manifest when checking whether runtime classpath have changed
+			// because it contains timestamps and the commit checksum. This is used when
+			// checking whether a test task is up-to-date or can be loaded from the build cache.
+			ignore("/META-INF/MANIFEST.MF")
 		}
 	}
 
 	tasks.jar {
-		onlyIf {
-			generateManifest
-		}
 		manifest {
 			attributes(
 				"Created-By" to "${System.getProperty("java.version")} (${System.getProperty("java.vendor")} ${System.getProperty("java.vm.version")})",
