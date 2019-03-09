@@ -41,14 +41,12 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 	private static final Logger logger = LoggerFactory.getLogger(RunnerTestDescriptor.class);
 
 	private final Set<Description> rejectedExclusions = new HashSet<>();
-	private final Class<?> testClass;
 	private Runner runner;
 	private boolean wasFiltered;
 	private List<Filter> filters = new ArrayList<>();
 
 	public RunnerTestDescriptor(UniqueId uniqueId, Class<?> testClass, Runner runner) {
 		super(uniqueId, runner.getDescription(), testClass.getSimpleName(), ClassSource.from(testClass));
-		this.testClass = testClass;
 		this.runner = runner;
 	}
 
