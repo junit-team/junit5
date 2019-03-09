@@ -237,6 +237,7 @@
 61a19eafdf24cf996da028ccbf5c40ba  junit-platform-commons/src/main/java/org/junit/platform/commons/util/BlacklistedExceptions.java
 62094f56c18c02e177aad4912d4f86c4  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/DefaultLauncherConfig.java
 62db66514dafc8f37842b6f6da422d5c  junit-vintage-engine/src/main/java/org/junit/vintage/engine/support/UniqueIdStringifier.java
+6356bbfee631c114548dd734d311e622  documentation/documentation.gradle.kts
 64098c54e0e3503c8ffca302c8021bb4  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/ArgumentsAggregator.java
 64f00b6cc4ebebcca19d59d4af73025c  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueIdFormat.java
 659afc985a09dd31363b833cdbc255b3  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherDiscoveryRequest.java
@@ -401,7 +402,6 @@ a4ae2a59f33f6d3980a6fb1db7db4ce3  documentation/src/test/java/example/ExampleTes
 a50cb68e7ad256e73bdd321e12fbd360  documentation/src/main/java/example/registration/WebClient.java
 a5aeba1c241f5cf7c40f89ff18fad3b8  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreeNode.java
 a6497272beabdc6dce77cdf06f3b81c8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AfterAll.java
-a690d2dd4f3f9b0a54a5ae29a6d1573c  documentation/documentation.gradle.kts
 a6eb763a0120d2e1717665f51b1454d1  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.0.adoc
 a7128eaa0e60a97a84280d76dffc8047  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodFinder.java
 a7ff870938018642f94c02e5fc9b8cae  documentation/src/test/java/example/callbacks/Logger.java
