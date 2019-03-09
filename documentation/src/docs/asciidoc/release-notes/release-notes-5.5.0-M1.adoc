@@ -35,7 +35,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Deletion of a temporary directory within a test no longer results in a test failure for
+  a temporary directory supplied via `@TempDir`.
 
 ==== Deprecations and Breaking Changes
 
