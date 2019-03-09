@@ -77,3 +77,4 @@ Your donations will help to make that a reality!
 - Jose Luis De la Cruz Morales
 - Stefan Gwihs
 - olcbean
+- linux_china
