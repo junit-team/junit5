@@ -10,6 +10,12 @@ the link:{junit5-repo}+/milestone/36?closed=1+[5.4.1] milestone page in the JUni
 repository on GitHub.
 
 
+[[release-notes-5.4.1-overall-improvements]]
+=== Overall Improvements
+
+* Fix `Specification-Version` entry in JAR manifests
+
+
 [[release-notes-5.4.1-junit-platform]]
 === JUnit Platform
 
