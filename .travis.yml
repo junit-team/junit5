@@ -54,7 +54,7 @@ jobs:
     - name: "Analyze code quality"
       if: branch = master
       script:
-        - ./gradlew sonarqube -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=6405ce221514f081109da1c961d11ab5c5284038 -Dsonar.projectKey=alixwar_junit5 -Dsonar.organization=alixwar-github
+        - ./gradlew --scan --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport sonarqube --info -Dsonar.coverage.exclusions=**/* -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=6405ce221514f081109da1c961d11ab5c5284038 -Dsonar.projectKey=alixwar_junit5 -Dsonar.organization=alixwar-github
         - bash <(curl -s https://codecov.io/bash)
     - stage: deploy
       name: "Publish snapshot artifacts"
