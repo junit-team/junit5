@@ -23,7 +23,11 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Configurable test discovery implementation that can be reused by different test engines
+  (see Javadoc of `org.junit.platform.engine.support.discovery`).
 * New `isFinal()` and `isNotFinal()` methods in `ModifierSupport`.
+* `@ValueSource` now additionally supports literal values of type `boolean` for
+  parameterized tests.
 * Gracefully handle exception occurred in `TestExecutionListener` with log instead of failing test plan.
 
 
@@ -40,7 +44,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Supply expected and actual values for failed boolean assertions for enhanced IDE
+  support.
 
 
 [[release-notes-5.5.0-M1-junit-vintage]]

@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.engine.descriptor;
@@ -40,6 +40,7 @@ import org.junit.platform.engine.UniqueId;
 @API(status = INTERNAL, since = "5.0")
 public class NestedClassTestDescriptor extends ClassTestDescriptor {
 
+	public static final String SEGMENT_TYPE = "nested-class";
 	/**
 	 * Set of local class-level tags; does not contain tags from parent.
 	 */

@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.engine.extension;
@@ -71,6 +71,13 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	@DisplayName("does not prevent constructor parameter resolution")
 	void tempDirectoryDoesNotPreventConstructorParameterResolution() {
 		executeTestsForClass(TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase.class).tests()//
+				.assertStatistics(stats -> stats.started(1).succeeded(1));
+	}
+
+	@Test
+	@DisplayName("does not prevent user from deleting the temp dir within a test")
+	void tempDirectoryDoesNotPreventUserFromDeletingTempDir() {
+		executeTestsForClass(UserTempDirectoryDeletionDoesNotCauseFailureTestCase.class).tests()//
 				.assertStatistics(stats -> stats.started(1).succeeded(1));
 	}
 
@@ -721,6 +728,17 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		void test() {
+		}
+
+	}
+
+	// https://github.com/junit-team/junit5/issues/1801
+	static class UserTempDirectoryDeletionDoesNotCauseFailureTestCase {
+
+		@Test
+		void deleteTempDir(@TempDir Path tempDir) throws IOException {
+			Files.delete(tempDir);
+			assertThat(tempDir).doesNotExist();
 		}
 
 	}

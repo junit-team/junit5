@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.commons.util;
@@ -33,8 +33,24 @@ import org.apiguardian.api.API;
 @API(status = INTERNAL, since = "1.0")
 public final class StringUtils {
 
-	private static final Pattern ISO_CONTROL_PATTERN = Pattern.compile("\\p{Cntrl}", UNICODE_CHARACTER_CLASS);
+	private static final Pattern ISO_CONTROL_PATTERN = compileIsoControlPattern();
 	private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s");
+
+	/**
+	 * Guard against "IllegalArgumentException: Unsupported flags: 256" errors.
+	 * @see <a href="https://github.com/junit-team/junit5/issues/1800">#1800</a>
+	 */
+	static Pattern compileIsoControlPattern() {
+		// https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html#posix
+		try {
+			// All of the characters that Unicode refers to as 'control characters'
+			return Pattern.compile("\\p{Cntrl}", UNICODE_CHARACTER_CLASS);
+		}
+		catch (IllegalArgumentException e) {
+			// Fall-back to ASCII control characters only: [\x00-\x1F\x7F]
+			return Pattern.compile("\\p{Cntrl}");
+		}
+	}
 
 	private StringUtils() {
 		/* no-op */

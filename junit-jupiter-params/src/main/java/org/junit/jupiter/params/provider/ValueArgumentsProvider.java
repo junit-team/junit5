@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.params.provider;
@@ -42,6 +42,7 @@ class ValueArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Va
 					source.floats(),
 					source.doubles(),
 					source.chars(),
+					source.booleans(),
 					source.strings(),
 					source.classes()
 				)

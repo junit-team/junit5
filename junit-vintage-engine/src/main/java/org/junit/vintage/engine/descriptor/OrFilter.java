@@ -5,10 +5,10 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.vintage.engine.discovery;
+package org.junit.vintage.engine.descriptor;
 
 import static java.util.stream.Collectors.joining;
 
@@ -19,7 +19,7 @@ import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 
 /**
- * @since 4.12
+ * @since 5.4
  */
 class OrFilter extends Filter {
 

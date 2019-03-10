@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.vintage.engine.discovery;
@@ -14,6 +14,7 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
+import org.junit.vintage.engine.descriptor.RunnerDecorator;
 
 /**
  * Decorator for Runners that will be ignored completely.

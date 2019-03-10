@@ -5,13 +5,17 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.vintage.engine.discovery;
+package org.junit.vintage.engine.descriptor;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
 import org.junit.runner.Runner;
 
+@API(status = INTERNAL, since = "5.4")
 public interface RunnerDecorator {
 
 	Runner getDecoratedRunner();

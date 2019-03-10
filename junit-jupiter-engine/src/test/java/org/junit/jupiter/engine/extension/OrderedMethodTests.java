@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.engine.extension;
@@ -99,6 +99,17 @@ class OrderedMethodTests {
 	@Test
 	void orderAnnotationInNestedTestClass() {
 		assertOrderAnnotationSupport(OuterTestCase.class);
+	}
+
+	@Test
+	void orderAnnotationWithNestedTestClass() {
+		var tests = executeTestsInParallel(OrderAnnotationWithNestedClassTestCase.class);
+
+		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+		assertThat(callSequence).containsExactly("test1", "test2", "test3", "test4", "test5", "test6", "nestedTest1",
+			"nestedTest2");
+		assertThat(threadNames).hasSize(1);
 	}
 
 	private void assertOrderAnnotationSupport(Class<?> testClass) {
@@ -441,6 +452,29 @@ class OrderedMethodTests {
 
 		@Test
 		void test3() {
+		}
+	}
+
+	static class OrderAnnotationWithNestedClassTestCase extends OrderAnnotationTestCase {
+		@Nested
+		class NestedTests {
+
+			@BeforeEach
+			void trackInvocations(TestInfo testInfo) {
+				callSequence.add(testInfo.getDisplayName());
+			}
+
+			@Test
+			@Order(1)
+			@DisplayName("nestedTest1")
+			void nestedTest1() {
+			}
+
+			@Test
+			@Order(2)
+			@DisplayName("nestedTest2")
+			void nestedTest2() {
+			}
 		}
 	}
 

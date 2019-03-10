@@ -5,11 +5,12 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.api;
 
+import static org.junit.jupiter.api.AssertionTestUtils.assertExpectedAndActualValues;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -48,13 +49,14 @@ class AssertFalseAssertionsTests {
 	}
 
 	@Test
-	void assertFalseWithBooleanTrueAndDefaultMessage() {
+	void assertFalseWithBooleanTrueAndDefaultMessageWithExpectedAndActualValues() {
 		try {
 			assertFalse(true);
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "expected: <false> but was: <true>");
+			assertExpectedAndActualValues(ex, false, true);
 		}
 	}
 
@@ -66,6 +68,7 @@ class AssertFalseAssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "test ==> expected: <false> but was: <true>");
+			assertExpectedAndActualValues(ex, false, true);
 		}
 	}
 
@@ -77,6 +80,7 @@ class AssertFalseAssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "test ==> expected: <false> but was: <true>");
+			assertExpectedAndActualValues(ex, false, true);
 		}
 	}
 
@@ -88,6 +92,7 @@ class AssertFalseAssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "test ==> expected: <false> but was: <true>");
+			assertExpectedAndActualValues(ex, false, true);
 		}
 	}
 
@@ -99,6 +104,7 @@ class AssertFalseAssertionsTests {
 		}
 		catch (AssertionFailedError ex) {
 			assertMessageEquals(ex, "test ==> expected: <false> but was: <true>");
+			assertExpectedAndActualValues(ex, false, true);
 		}
 	}
 
