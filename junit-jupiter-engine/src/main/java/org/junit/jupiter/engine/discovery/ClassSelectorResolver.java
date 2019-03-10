@@ -120,14 +120,15 @@ class ClassSelectorResolver implements SelectorResolver {
 		return testDescriptor.map(it -> {
 			Class<?> testClass = it.getTestClass();
 			// @formatter:off
-            return Resolution.match(Match.exact(it, () -> {
-                Stream<MethodSelector> methods = findMethods(testClass, isTestOrTestFactoryOrTestTemplateMethod).stream()
-                        .map(method -> selectMethod(testClass, method));
+			return Resolution.match(Match.exact(it, () -> {
+				Stream<MethodSelector> methods = findMethods(testClass, isTestOrTestFactoryOrTestTemplateMethod).stream()
+						.map(method -> selectMethod(testClass, method));
 				Stream<ClassSelector> nestedClasses = findNestedClasses(testClass, isNestedTestClass).stream()
 						.map(DiscoverySelectors::selectClass);
 				return Stream.concat(methods, nestedClasses).collect(toCollection((Supplier<Set<DiscoverySelector>>) LinkedHashSet::new));
-            }));
-            // @formatter:on
+			}));
+			// @formatter:on
 		}).orElse(unresolved());
 	}
+
 }

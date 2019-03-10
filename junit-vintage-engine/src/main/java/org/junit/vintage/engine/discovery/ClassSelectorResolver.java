@@ -78,4 +78,5 @@ class ClassSelectorResolver implements SelectorResolver {
 		UniqueId uniqueId = parent.getUniqueId().append(SEGMENT_TYPE_RUNNER, testClass.getName());
 		return new RunnerTestDescriptor(uniqueId, testClass, runner);
 	}
+
 }
