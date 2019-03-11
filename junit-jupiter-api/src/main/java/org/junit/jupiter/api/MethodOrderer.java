@@ -69,7 +69,7 @@ public interface MethodOrderer {
 	 * </pre>
 	 *
 	 * @param context the {@code MethodOrdererContext} containing the
-	 *                {@link MethodDescriptor method descriptors} to order; never {@code null}
+	 * {@link MethodDescriptor method descriptors} to order; never {@code null}
 	 * @see #getDefaultExecutionMode()
 	 */
 	void orderMethods(MethodOrdererContext context);
