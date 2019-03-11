@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.junit.jupiter.api.MethodOrderer.Random.CONCURRENT_MODE_PROPERTY_NAME;
 import static org.junit.jupiter.api.MethodOrderer.Random.RANDOM_SEED_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
@@ -28,6 +29,7 @@ import java.util.logging.LogRecord;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodDescriptor;
@@ -135,8 +137,8 @@ class OrderedMethodTests {
 			uniqueSequences.add(callSequence.stream().collect(Collectors.joining(",")));
 		}
 
-		// We assume that at least 3 out of 10 are different...
-		assertThat(uniqueSequences).size().isGreaterThanOrEqualTo(3);
+		// As we are falling back to a static seed, the order should be the same for all tests
+		assertThat(uniqueSequences).size().isEqualTo(1);
 		// and that at least 2 different threads were used...
 		assertThat(threadNames).size().isGreaterThanOrEqualTo(2);
 	}
@@ -154,7 +156,7 @@ class OrderedMethodTests {
 			callSequence.clear();
 			listener.clear();
 
-			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed);
+			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed, seed);
 
 			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -167,7 +169,46 @@ class OrderedMethodTests {
 			// @formatter:on
 		}
 
-		// We assume that at least 3 out of 10 are different...
+		// As we are falling back to a static seed, the order should be the same for all tests
+		assertThat(uniqueSequences).size().isEqualTo(1);
+	}
+
+	@Test
+	@TrackLogRecords
+	@Disabled("might be not possible to listen to static initialization in the logs, as they are happening way earlier")
+	void randomForDefaultValue(LogRecordListener listener) {
+		String initalMessage = "Initializing MethodOrderer.Random seed with value";
+		executeTestsInParallelWithRandomSeed(RandomTestCase.class, "42", "false");
+		assertTrue(listener.stream(Random.class, Level.CONFIG).map(LogRecord::getMessage).anyMatch(
+			s -> s.startsWith(initalMessage)));
+	}
+
+	@Test
+	@TrackLogRecords
+	void randomWithDifferentSeed(LogRecordListener listener) {
+		Set<String> uniqueSequences = new HashSet<>();
+
+		for (int i = 0; i < 10; i++) {
+			String seed = String.valueOf(i);
+			String expectedMessage = "Using custom seed for configuration parameter ["
+					+ Random.RANDOM_SEED_PROPERTY_NAME + "] with value [" + seed + "].";
+			callSequence.clear();
+			listener.clear();
+
+			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed, "false");
+
+			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+			uniqueSequences.add(callSequence.stream().collect(Collectors.joining(",")));
+
+			// @formatter:off
+			assertTrue(listener.stream(Random.class, Level.CONFIG)
+				.map(LogRecord::getMessage)
+				.anyMatch(expectedMessage::equals));
+			// @formatter:on
+		}
+
+		// we are expecting at least 3 different runs
 		assertThat(uniqueSequences).size().isGreaterThanOrEqualTo(3);
 	}
 
@@ -182,7 +223,7 @@ class OrderedMethodTests {
 			callSequence.clear();
 			listener.clear();
 
-			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed);
+			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed, "true");
 
 			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -248,10 +289,11 @@ class OrderedMethodTests {
 		// @formatter:on
 	}
 
-	private Events executeTestsInParallelWithRandomSeed(Class<?> testClass, String seed) {
+	private Events executeTestsInParallelWithRandomSeed(Class<?> testClass, String seed, String concurrent) {
 		var configurationParameters = Map.of(//
 			PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true", //
-			RANDOM_SEED_PROPERTY_NAME, seed //
+			RANDOM_SEED_PROPERTY_NAME, seed, //
+			CONCURRENT_MODE_PROPERTY_NAME, concurrent //
 		);
 
 		// @formatter:off
