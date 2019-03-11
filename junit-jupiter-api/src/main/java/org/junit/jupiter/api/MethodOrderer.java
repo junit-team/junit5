@@ -69,7 +69,7 @@ public interface MethodOrderer {
 	 * </pre>
 	 *
 	 * @param context the {@code MethodOrdererContext} containing the
-	 * {@link MethodDescriptor method descriptors} to order; never {@code null}
+	 *                {@link MethodDescriptor method descriptors} to order; never {@code null}
 	 * @see #getDefaultExecutionMode()
 	 */
 	void orderMethods(MethodOrdererContext context);
@@ -171,11 +171,24 @@ public interface MethodOrderer {
 	 * value returned by {@link System#nanoTime()}. In order to produce repeatable
 	 * builds, a custom seed may be specified via the
 	 * {@link Random#RANDOM_SEED_PROPERTY_NAME junit.jupiter.execution.order.random.seed}
-	 * <em>configuration parameter</em> which can be supplied via the
+	 * <em>configuration parameter</em>.
+	 *
+	 * <h4>Execution Mode</h4>
+	 *
+	 * <p>By default, the {@link ExecutionMode} {@link ExecutionMode#CONCURRENT CONCURRENT} is used.
+	 * If a custom <em>seed</em> is provided or if the
+	 * {@link Random#CONCURRENT_MODE_PROPERTY_NAME junit.jupiter.execution.order.random.concurrent}
+	 * <em>configuration parameter</em> is set to {@code false},
+	 * {@link ExecutionMode} {@link ExecutionMode#SAME_THREAD SAME_THREAD} is used.
+	 *
+	 * <h4>Configuration parameters</h4>
+	 *
+	 * <p>The {@link Random#RANDOM_SEED_PROPERTY_NAME junit.jupiter.execution.order.random.concurrent}
+	 * and {@link Random#RANDOM_SEED_PROPERTY_NAME junit.jupiter.execution.order.random.seed}
+	 * <em>configuration parameter</em> can be supplied via the
 	 * {@code Launcher} API, build tools (e.g., Gradle and Maven), a JVM system
 	 * property, or the JUnit Platform configuration file (i.e., a file named
-	 * {@code junit-platform.properties} in the root of the class path). Consult
-	 * the User Guide for further information.
+	 * {@code junit-platform.properties} in the root of the class path).
 	 *
 	 * @see #getDefaultExecutionMode()
 	 * @see Random#RANDOM_SEED_PROPERTY_NAME
@@ -184,6 +197,12 @@ public interface MethodOrderer {
 	class Random implements MethodOrderer {
 
 		private static final Logger logger = LoggerFactory.getLogger(Random.class);
+
+		/**
+		 * Initial seed, which is generated during initialization of class
+		 * for reproducability of tests.
+		 */
+		private static final long INITIAL_SEED;
 
 		/**
 		 * Property name used to set the random seed used by this
@@ -200,7 +219,27 @@ public interface MethodOrderer {
 		 */
 		public static final String RANDOM_SEED_PROPERTY_NAME = "junit.jupiter.execution.order.random.seed";
 
-		private boolean usingCustomSeed = false;
+		/**
+		 * Property name used to set the concurrent mode used by this
+		 * {@code MethodOrderer}: {@value}
+		 *
+		 * <h3>Supported Values</h3>
+		 *
+		 * <p>Supported values include any string that can be converted to a
+		 * {@link Boolean} via {@link Boolean#valueOf(String)}.
+		 *
+		 * <p>If not specified or if the specified value cannot be converted to
+		 * a {@code Boolean}, {@code true} will be used.
+		 */
+		public static final String CONCURRENT_MODE_PROPERTY_NAME = "junit.jupiter.execution.order.random.concurrent";
+
+		private boolean usingConcurrentMode = true;
+
+		static {
+			INITIAL_SEED = System.nanoTime();
+			logger.config(
+				() -> String.format("Initializing MethodOrderer.Random seed with value '[%s]'.", INITIAL_SEED));
+		}
 
 		/**
 		 * Order the methods encapsulated in the supplied
@@ -208,14 +247,22 @@ public interface MethodOrderer {
 		 */
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
-			Long seed = null;
 
-			Optional<String> configurationParameter = context.getConfigurationParameter(RANDOM_SEED_PROPERTY_NAME);
-			if (configurationParameter.isPresent()) {
-				String value = configurationParameter.get();
+			Optional<Long> seed = getConfiguredSeed(context);
+
+			this.usingConcurrentMode = seed.isPresent()
+					&& context.getConfigurationParameter(CONCURRENT_MODE_PROPERTY_NAME).map(Boolean::valueOf).orElse(
+						true);
+
+			Collections.shuffle(context.getMethodDescriptors(), new java.util.Random(seed.orElse(INITIAL_SEED)));
+		}
+
+		private Optional<Long> getConfiguredSeed(MethodOrdererContext context) {
+			return context.getConfigurationParameter(RANDOM_SEED_PROPERTY_NAME).map(configurationParameter -> {
+				Long seed = null;
+				String value = configurationParameter;
 				try {
 					seed = Long.valueOf(value);
-					this.usingCustomSeed = true;
 					logger.config(
 						() -> String.format("Using custom seed for configuration parameter [%s] with value [%s].",
 							RANDOM_SEED_PROPERTY_NAME, value));
@@ -226,31 +273,32 @@ public interface MethodOrderer {
 								+ "Using System.nanoTime() as fallback.",
 							RANDOM_SEED_PROPERTY_NAME, value));
 				}
-			}
-
-			if (seed == null) {
-				seed = System.nanoTime();
-			}
-
-			Collections.shuffle(context.getMethodDescriptors(), new java.util.Random(seed));
+				return seed;
+			});
 		}
 
 		/**
 		 * Get the <em>default</em> {@link ExecutionMode} for the test class.
 		 *
-		 * <p>If a custom seed has been specified, this method returns
+		 * <p>If a custom seed has been specified or if the configuration parameter
+		 * {@link Random#CONCURRENT_MODE_PROPERTY_NAME junit.jupiter.execution.order.random.concurrent}
+		 * is set to {@code false}, this method returns
 		 * {@link ExecutionMode#SAME_THREAD SAME_THREAD} in order to ensure that
 		 * the results are repeatable across executions of the test plan.
 		 * Otherwise, this method returns {@link ExecutionMode#CONCURRENT
 		 * CONCURRENT} to allow concurrent execution of randomly ordered methods
 		 * by default.
 		 *
-		 * @return {@code SAME_THREAD} if a custom seed has been configured;
-		 * otherwise, {@code CONCURRENT}
+		 * <p>Be aware that the order still might differ if the {@link ExecutionMode}
+		 * differs!
+		 *
+		 * @return {@code SAME_THREAD} if a custom seed has been configured or
+		 * {@link Random#CONCURRENT_MODE_PROPERTY_NAME junit.jupiter.execution.order.random.concurrent}
+		 * has been set to {@code false} otherwise, {@code CONCURRENT}
 		 */
 		@Override
 		public Optional<ExecutionMode> getDefaultExecutionMode() {
-			return this.usingCustomSeed ? Optional.of(ExecutionMode.SAME_THREAD) : Optional.empty();
+			return this.usingConcurrentMode ? Optional.empty() : Optional.of(ExecutionMode.SAME_THREAD);
 		}
 	}
 
