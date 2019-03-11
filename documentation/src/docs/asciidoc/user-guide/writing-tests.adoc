@@ -197,7 +197,7 @@ back with the test-managed transaction. On the contrary, such actions will be co
 the persistent store (e.g., relational database) even though the test-managed transaction
 is rolled back.
 
-Similar side side effects may be encountered with other frameworks that rely on
+Similar side effects may be encountered with other frameworks that rely on
 `ThreadLocal` storage.
 ====
 
