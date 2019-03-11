@@ -175,16 +175,6 @@ class OrderedMethodTests {
 
 	@Test
 	@TrackLogRecords
-	@Disabled("might be not possible to listen to static initialization in the logs, as they are happening way earlier")
-	void randomForDefaultValue(LogRecordListener listener) {
-		String initalMessage = "Initializing MethodOrderer.Random seed with value";
-		executeTestsInParallelWithRandomSeed(RandomTestCase.class, "42", "false");
-		assertTrue(listener.stream(Random.class, Level.CONFIG).map(LogRecord::getMessage).anyMatch(
-			s -> s.startsWith(initalMessage)));
-	}
-
-	@Test
-	@TrackLogRecords
 	void randomWithDifferentSeed(LogRecordListener listener) {
 		Set<String> uniqueSequences = new HashSet<>();
 
