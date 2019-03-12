@@ -17,5 +17,5 @@ steps:
   - task: PublishTestResults@2
     displayName: Publish Test Results
     inputs:
-      testResultsFiles: '**/build/test-results/test/TEST-*.xml'
+      testResultsFiles: '*/build/test-results/test/TEST-*.xml'
     condition: eq(${{ parameters.publishTestResults }}, true)
