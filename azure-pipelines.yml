@@ -72,6 +72,7 @@ jobs:
         export JAVA_HOME="${JAVA_HOME_11_X64}"
         ./gradlew --scan publish -x check
       displayName: Publish
+      continueOnError: true
   condition: and(eq(variables['System.PullRequest.IsFork'], False), and(eq(variables['Build.Reason'], 'IndividualCI'), or(startsWith(variables['Build.SourceBranch'], 'refs/heads/releases/'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))))
 
 - job: update_documentation
