@@ -9,6 +9,8 @@ jobs:
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
+    - checkout: self
+      fetchDepth: 1
     - template: src/azure/azure-gradle-step.yml
 
 - job: linux_12
@@ -17,6 +19,8 @@ jobs:
     vmImage: 'ubuntu-16.04'
   container: openjdk:12
   steps:
+    - checkout: self
+      fetchDepth: 1
     - template: src/azure/azure-gradle-step.yml
       parameters:
         publishTestResults: true
@@ -27,6 +31,8 @@ jobs:
     vmImage: 'ubuntu-16.04'
   container: openjdk:13
   steps:
+    - checkout: self
+      fetchDepth: 1
     - template: src/azure/azure-gradle-step.yml
       parameters:
         continueOnError: true
@@ -35,12 +41,16 @@ jobs:
   pool:
     vmImage: 'macOS-10.13'
   steps:
+    - checkout: self
+      fetchDepth: 1
     - template: src/azure/azure-gradle-step.yml
 
 - job: Windows
   pool:
     vmImage: 'windows-2019'
   steps:
+    - checkout: self
+      fetchDepth: 1
     - template: src/azure/azure-gradle-step.yml
 
 - job: coverage
@@ -48,6 +58,8 @@ jobs:
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
+    - checkout: self
+      fetchDepth: 1
     - bash: |
         set -e
         export JAVA_HOME="${JAVA_HOME_11_X64}"
@@ -66,6 +78,8 @@ jobs:
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
+    - checkout: self
+      fetchDepth: 1
     - bash: |
         set -e
         export JAVA_HOME="${JAVA_HOME_11_X64}"
@@ -79,6 +93,8 @@ jobs:
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
+    - checkout: self
+      fetchDepth: 1
     - bash: |
         set -e
         export JAVA_HOME="${JAVA_HOME_11_X64}"
