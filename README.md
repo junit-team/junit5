@@ -36,7 +36,6 @@ Ask JUnit 5 related questions on [StackOverflow] or chat with the team and the c
 | CI Server | OS           | Status | Description |
 | --------- | ------------ | ------ | ----------- |
 | Travis CI | Linux, macOS | [![Travis CI build status](https://travis-ci.org/junit-team/junit5.svg?branch=master)](https://travis-ci.org/junit-team/junit5) | Official CI build server for JUnit 5. Used to perform quick checks on submitted pull requests and for build matrices including the latest released OpenJDK and early access builds of the next OpenJDK |
-| AppVeyor  | Windows      | [![Build status](https://ci.appveyor.com/api/projects/status/xv8wc8w9sr44ghc4/branch/master?svg=true)](https://ci.appveyor.com/project/marcphilipp/junit5/branch/master) | Used to ensure that JUnit 5 can be built on Windows |
 | Azure     | All          | [![Build Status](https://dev.azure.com/junit-team/junit5/_apis/build/status/junit-team.junit5?branchName=master)](https://dev.azure.com/junit-team/junit5/_build/latest?definitionId=1&branchName=master) | Used to ensure that JUnit 5 can be built on various platforms and JDK's |
 
 ## Code Coverage
