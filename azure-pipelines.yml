@@ -12,6 +12,8 @@ jobs:
     - checkout: self
       fetchDepth: 1
     - template: src/azure/azure-gradle-step.yml
+      parameters:
+        publishTestResults: true
 
 - job: linux_12
   displayName: Linux (OpenJDK 12)
@@ -22,8 +24,6 @@ jobs:
     - checkout: self
       fetchDepth: 1
     - template: src/azure/azure-gradle-step.yml
-      parameters:
-        publishTestResults: true
 
 - job: linux_13
   displayName: Linux (OpenJDK 13)
@@ -76,6 +76,7 @@ jobs:
         reportDirectory: '**/build/reports/jacoco/jacocoRootReport/html'
 
 - job: publish_artifacts
+  dependsOn: linux_11
   displayName: Publish Snapshot Artifacts
   pool:
     vmImage: 'ubuntu-16.04'
@@ -87,13 +88,13 @@ jobs:
         export JAVA_HOME="${JAVA_HOME_11_X64}"
         ./gradlew --scan publish -x check
       displayName: Publish
-      continueOnError: true
       env:
         ORG_GRADLE_PROJECT_nexusUsername: $(nexusUsername)
         ORG_GRADLE_PROJECT_nexusPassword: $(nexusPassword)
   condition: and(eq(variables['System.PullRequest.IsFork'], False), and(eq(variables['Build.Reason'], 'IndividualCI'), or(startsWith(variables['Build.SourceBranch'], 'refs/heads/releases/'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))))
 
 - job: update_documentation
+  dependsOn: linux_11
   displayName: Update Snapshot Documentation
   pool:
     vmImage: 'ubuntu-16.04'
