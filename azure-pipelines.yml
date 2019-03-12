@@ -55,6 +55,7 @@ jobs:
     - template: src/azure/azure-gradle-step.yml
 
 - job: coverage
+  dependsOn: linux_11
   displayName: Coverage
   pool:
     vmImage: 'ubuntu-16.04'
