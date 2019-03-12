@@ -3,7 +3,9 @@ parameters:
   publishTestResults: false
 
 steps:
-  - bash: |
+  - env:
+      LC_ALL: en_US.UTF-8
+    bash: |
       set -e
       # when executing on an Azure Pipelines build agent (not in a container)
       # default to java 11
