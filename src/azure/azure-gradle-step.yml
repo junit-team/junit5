@@ -3,9 +3,7 @@ parameters:
   publishTestResults: false
 
 steps:
-  - env:
-      LC_ALL: en_US.UTF-8
-    bash: |
+  - bash: |
       set -e
       # when executing on an Azure Pipelines build agent (not in a container)
       # default to java 11
@@ -14,6 +12,8 @@ steps:
       fi
       ./gradlew --version
       ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
+    env:
+      LC_ALL: en_US.UTF-8
     displayName: Test
     continueOnError: ${{ parameters.continueOnError }}
   - task: PublishTestResults@2
