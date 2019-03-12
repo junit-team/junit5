@@ -13,8 +13,8 @@ package org.junit.jupiter.engine.extension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.junit.jupiter.api.MethodOrderer.Random.CONCURRENT_MODE_PROPERTY_NAME;
 import static org.junit.jupiter.api.MethodOrderer.Random.RANDOM_SEED_PROPERTY_NAME;
+import static org.junit.jupiter.api.MethodOrderer.Random.SINGLE_THREAD_MODE_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -29,6 +29,7 @@ import java.util.logging.LogRecord;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodDescriptor;
@@ -63,6 +64,7 @@ class OrderedMethodTests {
 
 	private static final Set<String> callSequence = Collections.synchronizedSet(new LinkedHashSet<>());
 	private static final Set<String> threadNames = Collections.synchronizedSet(new LinkedHashSet<>());
+	private static final int THREAD_SLEEP = 10;
 
 	@BeforeEach
 	void clearCallSequence() {
@@ -124,27 +126,17 @@ class OrderedMethodTests {
 
 	@Test
 	void random() {
-		Set<String> uniqueSequences = new HashSet<>();
+		var tests = executeTestsInParallel(RandomTestCase.class);
 
-		for (int i = 0; i < 10; i++) {
-			callSequence.clear();
+		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
-			var tests = executeTestsInParallel(RandomTestCase.class);
-
-			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
-
-			uniqueSequences.add(callSequence.stream().collect(Collectors.joining(",")));
-		}
-
-		// As we are falling back to a static seed, the order should be the same for all tests
-		assertThat(uniqueSequences).size().isEqualTo(1);
 		// and that at least 2 different threads were used...
 		assertThat(threadNames).size().isGreaterThanOrEqualTo(2);
 	}
 
 	@Test
 	@TrackLogRecords
-	void randomWithBogusSeed(LogRecordListener listener) {
+	void randomWithBogusSeedRepeatedly(LogRecordListener listener) {
 		String seed = "explode";
 		String expectedMessage = "Failed to convert configuration parameter [" + Random.RANDOM_SEED_PROPERTY_NAME
 				+ "] with value [" + seed + "] to a long. Using System.nanoTime() as fallback.";
@@ -162,10 +154,10 @@ class OrderedMethodTests {
 			uniqueSequences.add(callSequence.stream().collect(Collectors.joining(",")));
 
 			// @formatter:off
-			assertTrue(listener.stream(Random.class, Level.WARNING)
-				.map(LogRecord::getMessage)
-				.anyMatch(expectedMessage::equals));
-			// @formatter:on
+            assertTrue(listener.stream(Random.class, Level.WARNING)
+                    .map(LogRecord::getMessage)
+                    .anyMatch(expectedMessage::equals));
+            // @formatter:on
 		}
 
 		// As we are falling back to a static seed, the order should be the same for all tests
@@ -174,7 +166,17 @@ class OrderedMethodTests {
 
 	@Test
 	@TrackLogRecords
-	void randomWithDifferentSeed(LogRecordListener listener) {
+	@Disabled("needs to be loaded within own Classloader, not sure how to verify")
+	void randomDefaultValue(LogRecordListener listener) {
+		String initalMessage = "Initializing MethodOrderer.Random seed with value";
+		executeTestsInParallel(RandomTestCase.class);
+		assertTrue(listener.stream(Random.class, Level.CONFIG).map(LogRecord::getMessage).anyMatch(
+			s -> s.startsWith(initalMessage)));
+	}
+
+	@Test
+	@TrackLogRecords
+	void randomWithDifferentSeedConsecutively(LogRecordListener listener) {
 		Set<String> uniqueSequences = new HashSet<>();
 
 		for (int i = 0; i < 10; i++) {
@@ -184,17 +186,19 @@ class OrderedMethodTests {
 			callSequence.clear();
 			listener.clear();
 
-			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed, "false");
+			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed, "true");
 
 			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
 			uniqueSequences.add(callSequence.stream().collect(Collectors.joining(",")));
 
 			// @formatter:off
-			assertTrue(listener.stream(Random.class, Level.CONFIG)
-				.map(LogRecord::getMessage)
-				.anyMatch(expectedMessage::equals));
-			// @formatter:on
+            assertTrue(listener.stream(Random.class, Level.CONFIG)
+                    .map(LogRecord::getMessage)
+                    .anyMatch(expectedMessage::equals));
+            // @formatter:on
+
+			assertThat(threadNames).hasSize(i + 1);
 		}
 
 		// we are expecting at least 3 different runs
@@ -217,14 +221,46 @@ class OrderedMethodTests {
 			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
 			// With a custom seed, the "randomness" must be the same for every iteration.
-			assertThat(callSequence).containsExactly("test2()", "test3()", "test4()", "repetition 1 of 1", "test1()");
+			assertThat(callSequence).containsExactly("test2()", "test1()", "test5()", "repetition 1 of 1", "test4()",
+				"test3()");
 
 			// @formatter:off
-			assertTrue(listener.stream(Random.class, Level.CONFIG)
-				.map(LogRecord::getMessage)
-				.anyMatch(expectedMessage::equals));
-			// @formatter:on
+            assertTrue(listener.stream(Random.class, Level.CONFIG)
+                    .map(LogRecord::getMessage)
+                    .anyMatch(expectedMessage::equals));
+            // @formatter:on
 		}
+	}
+
+	@Test
+	void randomWithCustomSeedExecutionModeCheck() {
+		String seed = "42";
+		executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed, "true");
+		assertThat(threadNames).hasSize(1);
+	}
+
+	@Test
+	void randomWithExecutionModeFalse() {
+		executeTestsInParallelWithConcurrentMode(RandomTestCase.class, "false");
+		assertThat(threadNames.size()).isGreaterThanOrEqualTo(2);
+	}
+
+	@Test
+	void randomWithExecutionModeBogus() {
+		executeTestsInParallelWithConcurrentMode(RandomTestCase.class, "bogus");
+		assertThat(threadNames.size()).isGreaterThanOrEqualTo(2);
+	}
+
+	@Test
+	void randomWithExecutionModeTrue() {
+		executeTestsInParallelWithConcurrentMode(RandomTestCase.class, "true");
+		assertThat(threadNames).hasSize(1);
+	}
+
+	@Test
+	void randomExecutionModeCheck() {
+		executeTestsInParallel(RandomTestCase.class);
+		assertThat(threadNames.size()).isGreaterThanOrEqualTo(2);
 	}
 
 	@Test
@@ -260,39 +296,55 @@ class OrderedMethodTests {
 
 	private void assertExpectedLogMessage(LogRecordListener listener, String expectedMessage) {
 		// @formatter:off
-		assertTrue(listener.stream(Level.WARNING)
-			.map(LogRecord::getMessage)
-			.anyMatch(expectedMessage::equals));
-		// @formatter:on
+        assertTrue(listener.stream(Level.WARNING)
+                .map(LogRecord::getMessage)
+                .anyMatch(expectedMessage::equals));
+        // @formatter:on
 	}
 
 	private Events executeTestsInParallel(Class<?> testClass) {
 		// @formatter:off
-		return EngineTestKit
-				.engine("junit-jupiter")
-				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true")
-				.configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent")
-				.selectors(selectClass(testClass))
-				.execute()
-				.tests();
-		// @formatter:on
+        return EngineTestKit
+                .engine("junit-jupiter")
+                .configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true")
+                .configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent")
+                .selectors(selectClass(testClass))
+                .execute()
+                .tests();
+        // @formatter:on
 	}
 
 	private Events executeTestsInParallelWithRandomSeed(Class<?> testClass, String seed, String concurrent) {
 		var configurationParameters = Map.of(//
 			PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true", //
 			RANDOM_SEED_PROPERTY_NAME, seed, //
-			CONCURRENT_MODE_PROPERTY_NAME, concurrent //
+			SINGLE_THREAD_MODE_PROPERTY_NAME, concurrent //
 		);
 
 		// @formatter:off
-		return EngineTestKit
-				.engine("junit-jupiter")
-				.configurationParameters(configurationParameters)
-				.selectors(selectClass(testClass))
-				.execute()
-				.tests();
-		// @formatter:on
+        return EngineTestKit
+                .engine("junit-jupiter")
+                .configurationParameters(configurationParameters)
+                .selectors(selectClass(testClass))
+                .execute()
+                .tests();
+        // @formatter:on
+	}
+
+	private Events executeTestsInParallelWithConcurrentMode(Class<?> testClass, String singleThread) {
+		var configurationParameters = Map.of(//
+			PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true", //
+			SINGLE_THREAD_MODE_PROPERTY_NAME, singleThread, //
+			DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent");
+
+		// @formatter:off
+        return EngineTestKit
+                .engine("junit-jupiter")
+                .configurationParameters(configurationParameters)
+                .selectors(selectClass(testClass))
+                .execute()
+                .tests();
+        // @formatter:on
 	}
 
 	// -------------------------------------------------------------------------
@@ -426,25 +478,33 @@ class OrderedMethodTests {
 		}
 
 		@Test
-		void test1() {
+		void test1() throws InterruptedException {
+			Thread.sleep(THREAD_SLEEP);
 		}
 
 		@Test
-		void test2() {
+		void test2() throws InterruptedException {
+			Thread.sleep(THREAD_SLEEP);
 		}
 
 		@Test
-		void test3() {
+		void test3() throws InterruptedException {
+			Thread.sleep(THREAD_SLEEP);
+		}
+
+		@Test
+		void test4() throws InterruptedException {
+			Thread.sleep(THREAD_SLEEP);
 		}
 
 		@TestFactory
-		DynamicTest test4() {
+		DynamicTest test5() {
 			return dynamicTest("dynamic", () -> {
 			});
 		}
 
 		@RepeatedTest(1)
-		void test5() {
+		void test6() {
 		}
 	}
 

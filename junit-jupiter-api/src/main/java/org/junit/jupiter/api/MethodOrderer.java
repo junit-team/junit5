@@ -177,7 +177,7 @@ public interface MethodOrderer {
 	 *
 	 * <p>By default, the {@link ExecutionMode} {@link ExecutionMode#CONCURRENT CONCURRENT} is used.
 	 * If a custom <em>seed</em> is provided or if the
-	 * {@link Random#CONCURRENT_MODE_PROPERTY_NAME junit.jupiter.execution.order.random.concurrent}
+	 * {@link Random#SINGLE_THREAD_MODE_PROPERTY_NAME junit.jupiter.execution.order.random.concurrent}
 	 * <em>configuration parameter</em> is set to {@code false},
 	 * {@link ExecutionMode} {@link ExecutionMode#SAME_THREAD SAME_THREAD} is used.
 	 *
@@ -229,9 +229,9 @@ public interface MethodOrderer {
 		 * {@link Boolean} via {@link Boolean#valueOf(String)}.
 		 *
 		 * <p>If not specified or if the specified value cannot be converted to
-		 * a {@code Boolean}, {@code true} will be used.
+		 * a {@code Boolean}, {@code false} will be used.
 		 */
-		public static final String CONCURRENT_MODE_PROPERTY_NAME = "junit.jupiter.execution.order.random.concurrent";
+		public static final String SINGLE_THREAD_MODE_PROPERTY_NAME = "junit.jupiter.execution.order.random.single.thread";
 
 		private boolean usingConcurrentMode = true;
 
@@ -251,8 +251,8 @@ public interface MethodOrderer {
 			Optional<Long> seed = getConfiguredSeed(context);
 
 			this.usingConcurrentMode = seed.isPresent()
-					&& context.getConfigurationParameter(CONCURRENT_MODE_PROPERTY_NAME).map(Boolean::valueOf).orElse(
-						true);
+					|| !context.getConfigurationParameter(SINGLE_THREAD_MODE_PROPERTY_NAME).map(
+						Boolean::valueOf).orElse(false);
 
 			Collections.shuffle(context.getMethodDescriptors(), new java.util.Random(seed.orElse(INITIAL_SEED)));
 		}
@@ -281,8 +281,8 @@ public interface MethodOrderer {
 		 * Get the <em>default</em> {@link ExecutionMode} for the test class.
 		 *
 		 * <p>If a custom seed has been specified or if the configuration parameter
-		 * {@link Random#CONCURRENT_MODE_PROPERTY_NAME junit.jupiter.execution.order.random.concurrent}
-		 * is set to {@code false}, this method returns
+		 * {@link Random#SINGLE_THREAD_MODE_PROPERTY_NAME junit.jupiter.execution.order.random.single.thread}
+		 * is set to {@code true}, this method returns
 		 * {@link ExecutionMode#SAME_THREAD SAME_THREAD} in order to ensure that
 		 * the results are repeatable across executions of the test plan.
 		 * Otherwise, this method returns {@link ExecutionMode#CONCURRENT
@@ -293,8 +293,8 @@ public interface MethodOrderer {
 		 * differs!
 		 *
 		 * @return {@code SAME_THREAD} if a custom seed has been configured or
-		 * {@link Random#CONCURRENT_MODE_PROPERTY_NAME junit.jupiter.execution.order.random.concurrent}
-		 * has been set to {@code false} otherwise, {@code CONCURRENT}
+		 * {@link Random#SINGLE_THREAD_MODE_PROPERTY_NAME junit.jupiter.execution.order.random.single.thread}
+		 * has been set to {@code true} otherwise, {@code CONCURRENT}
 		 */
 		@Override
 		public Optional<ExecutionMode> getDefaultExecutionMode() {
