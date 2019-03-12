@@ -20,29 +20,9 @@ install:
 
 jdk:
   - openjdk11
-  - openjdk12
-  - openjdk-ea
-
-os:
-  - linux
-  - osx
-
-matrix:
-  exclude:
-    - os: osx
-      jdk: openjdk12
-    - os: osx
-      jdk: openjdk-ea
-  allow_failures:
-    - jdk: openjdk-ea
 
 script:
-  - ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
-
-stages:
-  - test
-  - name: deploy
-    if: repo = junit-team/junit5 AND (branch = master OR branch =~ /^releases\/\d+\.\d+\.x$/) AND type = push
+  - ./gradlew --scan build
 
 notifications:
   slack:
