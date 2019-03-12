@@ -66,6 +66,8 @@ jobs:
         ./gradlew --scan --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport
         bash <(curl -s https://codecov.io/bash)
       displayName: Coverage
+      env:
+        CODECOV_TOKEN: $(codecovToken)
     - task: PublishCodeCoverageResults@1
       displayName: Publish Coverage Results
       inputs:
@@ -86,6 +88,9 @@ jobs:
         ./gradlew --scan publish -x check
       displayName: Publish
       continueOnError: true
+      env:
+        ORG_GRADLE_PROJECT_nexusUsername: $(nexusUsername)
+        ORG_GRADLE_PROJECT_nexusPassword: $(nexusPassword)
   condition: and(eq(variables['System.PullRequest.IsFork'], False), and(eq(variables['Build.Reason'], 'IndividualCI'), or(startsWith(variables['Build.SourceBranch'], 'refs/heads/releases/'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))))
 
 - job: update_documentation
@@ -101,5 +106,6 @@ jobs:
         sudo apt-get install graphviz
         ./src/publishDocumentationSnapshotOnlyIfNecessary.sh
       displayName: Publish
+      env:
+        GRGIT_USER: $(githubToken)
   condition: and(eq(variables['System.PullRequest.IsFork'], False), and(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
-
