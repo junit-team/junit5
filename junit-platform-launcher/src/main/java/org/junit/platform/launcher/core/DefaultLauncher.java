@@ -188,23 +188,22 @@ class DefaultLauncher implements Launcher {
 		Root root = internalTestPlan.getRoot();
 		ConfigurationParameters configurationParameters = root.getConfigurationParameters();
 		TestExecutionListenerRegistry listenerRegistry = buildListenerRegistryForExecution(listeners);
-		withInterceptedStreams(configurationParameters, listenerRegistry, compositeTestExecutionListener -> {
-			compositeTestExecutionListener.testPlanExecutionStarted(internalTestPlan);
+		withInterceptedStreams(configurationParameters, listenerRegistry, testExecutionListener -> {
+			testExecutionListener.testPlanExecutionStarted(internalTestPlan);
 			ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(internalTestPlan,
-				compositeTestExecutionListener);
+				testExecutionListener);
 			for (TestEngine testEngine : root.getTestEngines()) {
 				TestDescriptor testDescriptor = root.getTestDescriptorFor(testEngine);
 				execute(testEngine,
 					new ExecutionRequest(testDescriptor, engineExecutionListener, configurationParameters));
 			}
-			compositeTestExecutionListener.testPlanExecutionFinished(internalTestPlan);
+			testExecutionListener.testPlanExecutionFinished(internalTestPlan);
 		});
 	}
 
 	private void withInterceptedStreams(ConfigurationParameters configurationParameters,
-			TestExecutionListenerRegistry listenerRegistry,
-			Consumer<TestExecutionListenerRegistry.CompositeTestExecutionListener> action) {
-		TestExecutionListenerRegistry.CompositeTestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
+			TestExecutionListenerRegistry listenerRegistry, Consumer<TestExecutionListener> action) {
+		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
 		Optional<StreamInterceptingTestExecutionListener> streamInterceptingTestExecutionListener = StreamInterceptingTestExecutionListener.create(
 			configurationParameters, testExecutionListener::reportingEntryPublished);
 		streamInterceptingTestExecutionListener.ifPresent(listenerRegistry::registerListeners);

@@ -10,11 +10,6 @@
 
 package org.junit.platform.launcher.core;
 
-import java.util.function.Consumer;
-
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
@@ -30,7 +25,6 @@ import org.junit.platform.launcher.TestPlan;
  * @since 1.0
  */
 class ExecutionListenerAdapter implements EngineExecutionListener {
-	private static final Logger logger = LoggerFactory.getLogger(ExecutionListenerAdapter.class);
 
 	private final InternalTestPlan testPlan;
 	private final TestExecutionListener testExecutionListener;
@@ -44,56 +38,31 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 	public void dynamicTestRegistered(TestDescriptor testDescriptor) {
 		TestIdentifier testIdentifier = TestIdentifier.from(testDescriptor);
 		this.testPlan.addInternal(testIdentifier);
-		notifyTestExecutionListener(testIdentifier, "dynamicTestRegistered",
-			listener -> listener.dynamicTestRegistered(testIdentifier));
+		this.testExecutionListener.dynamicTestRegistered(testIdentifier);
 	}
 
 	@Override
 	public void executionStarted(TestDescriptor testDescriptor) {
-		TestIdentifier testIdentifier = getTestIdentifier(testDescriptor);
-		notifyTestExecutionListener(testIdentifier, "executionStarted",
-			listener -> listener.executionStarted(testIdentifier));
+		this.testExecutionListener.executionStarted(getTestIdentifier(testDescriptor));
 	}
 
 	@Override
 	public void executionSkipped(TestDescriptor testDescriptor, String reason) {
-		TestIdentifier testIdentifier = getTestIdentifier(testDescriptor);
-		notifyTestExecutionListener(testIdentifier, "executionSkipped",
-			listener -> listener.executionSkipped(testIdentifier, reason));
+		this.testExecutionListener.executionSkipped(getTestIdentifier(testDescriptor), reason);
 	}
 
 	@Override
 	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
-		TestIdentifier testIdentifier = getTestIdentifier(testDescriptor);
-		notifyTestExecutionListener(testIdentifier, "executionFinished",
-			listener -> listener.executionFinished(testIdentifier, testExecutionResult));
+		this.testExecutionListener.executionFinished(getTestIdentifier(testDescriptor), testExecutionResult);
 	}
 
 	@Override
 	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
-		TestIdentifier testIdentifier = getTestIdentifier(testDescriptor);
-		notifyTestExecutionListener(testIdentifier, "reportingEntryPublished",
-			listener -> listener.reportingEntryPublished(testIdentifier, entry));
-	}
-
-	private void notifyTestExecutionListener(TestIdentifier testIdentifier, String listenerMethodName,
-			Consumer<TestExecutionListener> consumer) {
-		try {
-			consumer.accept(this.testExecutionListener);
-		}
-		catch (Throwable throwable) {
-			rethrowIfBlacklistedAndLog(throwable, testIdentifier, listenerMethodName);
-		}
+		this.testExecutionListener.reportingEntryPublished(getTestIdentifier(testDescriptor), entry);
 	}
 
 	private TestIdentifier getTestIdentifier(TestDescriptor testDescriptor) {
 		return this.testPlan.getTestIdentifier(testDescriptor.getUniqueId().toString());
 	}
 
-	private void rethrowIfBlacklistedAndLog(Throwable throwable, TestIdentifier testIdentifier, String methodName) {
-		BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-		logger.warn(throwable,
-			() -> String.format("Failed to invoke ExecutionListener [%s] for method [%s] with test display name [%s]",
-				this.testExecutionListener.getClass().getName(), methodName, testIdentifier.getDisplayName()));
-	}
 }
