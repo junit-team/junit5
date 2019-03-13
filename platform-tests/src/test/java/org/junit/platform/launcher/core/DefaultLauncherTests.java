@@ -85,8 +85,8 @@ class DefaultLauncherTests {
 	@Test
 	void constructLauncherWithMultipleTestEnginesWithDuplicateIds() {
 		JUnitException exception = assertThrows(JUnitException.class,
-			() -> createLauncher(new DemoHierarchicalTestEngine("dummy id"),
-				new DemoHierarchicalTestEngine("dummy id")));
+				() -> createLauncher(new DemoHierarchicalTestEngine("dummy id"),
+						new DemoHierarchicalTestEngine("dummy id")));
 
 		assertThat(exception).hasMessageContaining("multiple engines with the same ID");
 	}
@@ -96,7 +96,7 @@ class DefaultLauncherTests {
 		DefaultLauncher launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
 
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> launcher.registerTestExecutionListeners((TestExecutionListener[]) null));
+				() -> launcher.registerTestExecutionListeners((TestExecutionListener[]) null));
 
 		assertThat(exception).hasMessageContaining("listeners array must not be null or empty");
 	}
@@ -106,7 +106,7 @@ class DefaultLauncherTests {
 		DefaultLauncher launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
 
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> launcher.registerTestExecutionListeners(new TestExecutionListener[0]));
+				() -> launcher.registerTestExecutionListeners(new TestExecutionListener[0]));
 
 		assertThat(exception).hasMessageContaining("listeners array must not be null or empty");
 	}
@@ -116,7 +116,7 @@ class DefaultLauncherTests {
 		DefaultLauncher launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
 
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> launcher.registerTestExecutionListeners(new TestExecutionListener[] { null }));
+				() -> launcher.registerTestExecutionListeners(new TestExecutionListener[] { null }));
 
 		assertThat(exception).hasMessageContaining("individual listeners must not be null");
 	}
@@ -198,7 +198,7 @@ class DefaultLauncherTests {
 		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
 
 		TestPlan testPlan = launcher.discover(
-			request().selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId())).build());
+				request().selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId())).build());
 
 		assertThat(testPlan.getRoots()).hasSize(2);
 		assertThat(testPlan.getChildren(UniqueId.forEngine("engine1").toString())).hasSize(1);
@@ -216,10 +216,10 @@ class DefaultLauncherTests {
 
 		// @formatter:off
 		TestPlan testPlan = launcher.discover(
-			request()
-				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
-				.filters(includeEngines("first"))
-				.build());
+				request()
+						.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
+						.filters(includeEngines("first"))
+						.build());
 		// @formatter:on
 
 		assertThat(testPlan.getRoots()).hasSize(1);
@@ -239,10 +239,10 @@ class DefaultLauncherTests {
 
 		// @formatter:off
 		TestPlan testPlan = launcher.discover(
-			request()
-				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
-				.filters(includeEngines("first", "second"))
-				.build());
+				request()
+						.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
+						.filters(includeEngines("first", "second"))
+						.build());
 		// @formatter:on
 
 		assertThat(testPlan.getRoots()).hasSize(2);
@@ -259,10 +259,10 @@ class DefaultLauncherTests {
 
 		// @formatter:off
 		TestPlan testPlan = launcher.discover(
-			request()
-				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
-				.filters(includeEngines("first"), includeEngines("second"))
-				.build());
+				request()
+						.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
+						.filters(includeEngines("first"), includeEngines("second"))
+						.build());
 		// @formatter:on
 
 		assertThat(testPlan.getRoots()).isEmpty();
@@ -279,10 +279,10 @@ class DefaultLauncherTests {
 
 		// @formatter:off
 		TestPlan testPlan = launcher.discover(
-			request()
-				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
-				.filters(excludeEngines("second"))
-				.build());
+				request()
+						.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
+						.filters(excludeEngines("second"))
+						.build());
 		// @formatter:on
 
 		assertThat(testPlan.getRoots()).hasSize(1);
@@ -304,10 +304,10 @@ class DefaultLauncherTests {
 
 		// @formatter:off
 		TestPlan testPlan = launcher.discover(
-			request()
-				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()), selectUniqueId(test3.getUniqueId()))
-				.filters(includeEngines("first", "second"), excludeEngines("second"))
-				.build());
+				request()
+						.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()), selectUniqueId(test3.getUniqueId()))
+						.filters(includeEngines("first", "second"), excludeEngines("second"))
+						.build());
 		// @formatter:on
 
 		assertThat(testPlan.getRoots()).hasSize(1);
@@ -325,16 +325,16 @@ class DefaultLauncherTests {
 		DefaultLauncher launcher = createLauncher(engine);
 
 		PostDiscoveryFilter includeWithUniqueIdContainsTest = new PostDiscoveryFilterStub(
-			descriptor -> FilterResult.includedIf(descriptor.getUniqueId().toString().contains("test")),
-			() -> "filter1");
+				descriptor -> FilterResult.includedIf(descriptor.getUniqueId().toString().contains("test")),
+				() -> "filter1");
 		PostDiscoveryFilter includeWithUniqueIdContains1 = new PostDiscoveryFilterStub(
-			descriptor -> FilterResult.includedIf(descriptor.getUniqueId().toString().contains("1")), () -> "filter2");
+				descriptor -> FilterResult.includedIf(descriptor.getUniqueId().toString().contains("1")), () -> "filter2");
 
 		TestPlan testPlan = launcher.discover( //
-			request() //
-					.selectors(selectPackage("any")) //
-					.filters(includeWithUniqueIdContainsTest, includeWithUniqueIdContains1) //
-					.build());
+				request() //
+						.selectors(selectPackage("any")) //
+						.filters(includeWithUniqueIdContainsTest, includeWithUniqueIdContains1) //
+						.build());
 
 		assertThat(testPlan.getChildren(UniqueId.forEngine("myEngine").toString())).hasSize(1);
 		assertThat(testPlan.getTestIdentifier(test1.getUniqueId().toString())).isNotNull();
@@ -408,7 +408,7 @@ class DefaultLauncherTests {
 				super.discover(discoveryRequest, uniqueId);
 				TestDescriptorStub engineDescriptor = new TestDescriptorStub(uniqueId, uniqueId.toString());
 				TestDescriptorStub containerDescriptor = new TestDescriptorStub(uniqueId.append("container", "a"),
-					"container") {
+						"container") {
 
 					@Override
 					public Type getType() {
@@ -416,7 +416,7 @@ class DefaultLauncherTests {
 					}
 				};
 				containerDescriptor.addChild(
-					new TestDescriptorStub(containerDescriptor.getUniqueId().append("test", "b"), "test"));
+						new TestDescriptorStub(containerDescriptor.getUniqueId().append("test", "b"), "test"));
 				engineDescriptor.addChild(containerDescriptor);
 				return engineDescriptor;
 			}
@@ -424,7 +424,7 @@ class DefaultLauncherTests {
 
 		DefaultLauncher launcher = createLauncher(engine);
 		TestPlan testPlan = launcher.discover(request().filters(
-			(PostDiscoveryFilter) testDescriptor -> FilterResult.includedIf(testDescriptor.isContainer())).build());
+				(PostDiscoveryFilter) testDescriptor -> FilterResult.includedIf(testDescriptor.isContainer())).build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		TestIdentifier engineIdentifier = getOnlyElement(testPlan.getRoots());
@@ -500,57 +500,6 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void logTestExecutionListenerFailureAndContinue(LogRecordListener logRecordListener) {
-		UniqueId engineId = UniqueId.forEngine(TestEngineSpy.ID);
-		UniqueId containerAndTestId = engineId.append("c&t", "c&t");
-		UniqueId dynamicTestId = containerAndTestId.append("test", "test");
-
-		TestEngineSpy engine = new TestEngineSpy() {
-
-			@Override
-			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-				super.discover(discoveryRequest, uniqueId);
-				TestDescriptorStub engineDescriptor = new TestDescriptorStub(uniqueId, uniqueId.toString());
-				engineDescriptor.addChild(new TestDescriptorStub(containerAndTestId, "c&t") {
-
-					@Override
-					public Type getType() {
-						return Type.CONTAINER_AND_TEST;
-					}
-				});
-				return engineDescriptor;
-			}
-
-			@Override
-			public void execute(ExecutionRequest request) {
-				super.execute(request);
-				EngineExecutionListener listener = request.getEngineExecutionListener();
-
-				listener.executionStarted(request.getRootTestDescriptor());
-				TestDescriptor containerAndTest = getOnlyElement(request.getRootTestDescriptor().getChildren());
-				listener.executionStarted(containerAndTest);
-
-				TestDescriptorStub dynamicTest = new TestDescriptorStub(dynamicTestId, "test");
-				dynamicTest.setParent(containerAndTest);
-				listener.dynamicTestRegistered(dynamicTest);
-				listener.executionStarted(dynamicTest);
-				listener.executionFinished(dynamicTest, successful());
-
-				listener.executionFinished(containerAndTest, successful());
-				listener.executionFinished(request.getRootTestDescriptor(), successful());
-			}
-		};
-
-		DefaultLauncher launcher = createLauncher(engine);
-		TestExecutionListener listener = new ThrowingTestExecutionListener();
-		launcher.execute(request().build(), listener);
-
-		assertThat(logRecordListener.stream(TestExecutionListenerRegistry.class, Level.WARNING).map(
-			LogRecord::getMessage).collect(toList())).contains(
-				"Failed to invoke ExecutionListener [org.junit.platform.launcher.core.ThrowingTestExecutionListener] for method [testPlanExecutionStarted] for test plan [org.junit.platform.launcher.core.InternalTestPlan]");
-	}
-
-	@Test
 	void launcherCanExecuteTestPlan() {
 		TestEngine engine = mock(TestEngine.class);
 		when(engine.getId()).thenReturn("some-engine");
@@ -578,15 +527,15 @@ class DefaultLauncherTests {
 		assertThat(testPlan.getChildren(engineIdentifier)).hasSize(1);
 
 		TestIdentifier addedIdentifier = TestIdentifier.from(
-			new TestDescriptorStub(engineUniqueId.append("test", "test2"), "test2"));
+				new TestDescriptorStub(engineUniqueId.append("test", "test2"), "test2"));
 		testPlan.add(addedIdentifier);
 		testPlan.add(addedIdentifier);
 
 		assertThat(testPlan.getChildren(engineIdentifier)).hasSize(1).doesNotContain(addedIdentifier);
 		assertThat(listener.stream(InternalTestPlan.class, Level.WARNING).map(LogRecord::getMessage).collect(
-			toList())).containsExactly("Attempt to modify the TestPlan was detected. " //
-					+ "A future version of the JUnit Platform will ignore this call and eventually even throw an exception. " //
-					+ "Please contact your IDE/tool vendor and request a fix (see https://github.com/junit-team/junit5/issues/1732 for details).");
+				toList())).containsExactly("Attempt to modify the TestPlan was detected. " //
+				+ "A future version of the JUnit Platform will ignore this call and eventually even throw an exception. " //
+				+ "Please contact your IDE/tool vendor and request a fix (see https://github.com/junit-team/junit5/issues/1732 for details).");
 	}
 
 	@Test
@@ -595,8 +544,8 @@ class DefaultLauncherTests {
 		createLauncher(new TestEngineStub(id));
 		assertThat(listener.stream(DefaultLauncher.class, Level.WARNING).map(LogRecord::getMessage)) //
 				.containsExactly(
-					"Third-party TestEngine implementations are forbidden to use the reserved 'junit-' prefix for their ID: '"
-							+ id + "'");
+						"Third-party TestEngine implementations are forbidden to use the reserved 'junit-' prefix for their ID: '"
+								+ id + "'");
 	}
 
 	@Test
@@ -613,8 +562,8 @@ class DefaultLauncherTests {
 		TestEngine impostor = new TestEngineStub(id);
 		Exception exception = assertThrows(JUnitException.class, () -> createLauncher(impostor));
 		assertThat(exception).hasMessage(
-			"Third-party TestEngine '%s' is forbidden to use the reserved '%s' TestEngine ID.",
-			impostor.getClass().getName(), id);
+				"Third-party TestEngine '%s' is forbidden to use the reserved '%s' TestEngine ID.",
+				impostor.getClass().getName(), id);
 	}
 
 }
