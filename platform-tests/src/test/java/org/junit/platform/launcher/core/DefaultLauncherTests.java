@@ -216,10 +216,10 @@ class DefaultLauncherTests {
 
 		// @formatter:off
 		TestPlan testPlan = launcher.discover(
-				request()
-						.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
-						.filters(includeEngines("first"))
-						.build());
+			request()
+				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
+				.filters(includeEngines("first"))
+				.build());
 		// @formatter:on
 
 		assertThat(testPlan.getRoots()).hasSize(1);
@@ -239,10 +239,10 @@ class DefaultLauncherTests {
 
 		// @formatter:off
 		TestPlan testPlan = launcher.discover(
-				request()
-						.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
-						.filters(includeEngines("first", "second"))
-						.build());
+			request()
+				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
+				.filters(includeEngines("first", "second"))
+				.build());
 		// @formatter:on
 
 		assertThat(testPlan.getRoots()).hasSize(2);
@@ -259,10 +259,10 @@ class DefaultLauncherTests {
 
 		// @formatter:off
 		TestPlan testPlan = launcher.discover(
-				request()
-						.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
-						.filters(includeEngines("first"), includeEngines("second"))
-						.build());
+			request()
+				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
+				.filters(includeEngines("first"), includeEngines("second"))
+				.build());
 		// @formatter:on
 
 		assertThat(testPlan.getRoots()).isEmpty();
@@ -279,10 +279,10 @@ class DefaultLauncherTests {
 
 		// @formatter:off
 		TestPlan testPlan = launcher.discover(
-				request()
-						.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
-						.filters(excludeEngines("second"))
-						.build());
+			request()
+				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()))
+				.filters(excludeEngines("second"))
+				.build());
 		// @formatter:on
 
 		assertThat(testPlan.getRoots()).hasSize(1);
@@ -304,10 +304,10 @@ class DefaultLauncherTests {
 
 		// @formatter:off
 		TestPlan testPlan = launcher.discover(
-				request()
-						.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()), selectUniqueId(test3.getUniqueId()))
-						.filters(includeEngines("first", "second"), excludeEngines("second"))
-						.build());
+			request()
+				.selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId()), selectUniqueId(test3.getUniqueId()))
+				.filters(includeEngines("first", "second"), excludeEngines("second"))
+				.build());
 		// @formatter:on
 
 		assertThat(testPlan.getRoots()).hasSize(1);
