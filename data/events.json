@@ -528,5 +528,25 @@
     "speakers": [
       "marcphilipp"
     ]
+  },
+  {
+    "title": "News from JUnit 5.x: From Revolution to Continuous Evolution",
+    "event": "JEEConf",
+    "date": "2019-04-27",
+    "location": "Kyiv, Ukraine",
+    "link": "https://jeeconf.com/program/news-from-junit-5-x-from-revolution-to-continuous-evolution/",
+    "speakers": [
+      "marcphilipp"
+    ]
+  },
+  {
+    "title": "Neues von JUnit 5.x: From Revolution to Continuous Evolution",
+    "event": "Entwicklertag Karlsruhe",
+    "date": "2019-06-03",
+    "location": "Karlsruhe, Germany",
+    "link": "https://entwicklertag.de/karlsruhe/2019/neues-von-junit-5x",
+    "speakers": [
+      "marcphilipp"
+    ]
   }
 ]
