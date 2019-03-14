@@ -177,13 +177,13 @@ public interface MethodOrderer {
 	 *
 	 * <p>By default, the {@link ExecutionMode} {@link ExecutionMode#CONCURRENT CONCURRENT} is used.
 	 * If a custom <em>seed</em> is provided or if the
-	 * {@link Random#SINGLE_THREAD_MODE_PROPERTY_NAME junit.jupiter.execution.order.random.concurrent}
+	 * {@link Random#SINGLE_THREAD_MODE_PROPERTY_NAME junit.jupiter.execution.order.random.single.thread}
 	 * <em>configuration parameter</em> is set to {@code false},
 	 * {@link ExecutionMode} {@link ExecutionMode#SAME_THREAD SAME_THREAD} is used.
 	 *
 	 * <h4>Configuration parameters</h4>
 	 *
-	 * <p>The {@link Random#RANDOM_SEED_PROPERTY_NAME junit.jupiter.execution.order.random.concurrent}
+	 * <p>The {@link Random#RANDOM_SEED_PROPERTY_NAME junit.jupiter.execution.order.random.single.thread}
 	 * and {@link Random#RANDOM_SEED_PROPERTY_NAME junit.jupiter.execution.order.random.seed}
 	 * <em>configuration parameter</em> can be supplied via the
 	 * {@code Launcher} API, build tools (e.g., Gradle and Maven), a JVM system
