@@ -441,7 +441,7 @@
   },
   {
     "title": "Welcome to JUnit 5",
-    "event": "Spring IO",
+    "event": "Spring I/O",
     "date": "2018-05-24",
     "location": "Barcelona, Spain",
     "link": "https://2018.springio.net/",
@@ -537,6 +537,16 @@
     "link": "https://jeeconf.com/program/news-from-junit-5-x-from-revolution-to-continuous-evolution/",
     "speakers": [
       "marcphilipp"
+    ]
+  },
+  {
+    "title": "JUnit 5: What's new and What's Coming",
+    "event": "Spring I/O",
+    "date": "2019-05-16",
+    "location": "Barcelona, Spain",
+    "link": "https://2019.springio.net/sessions/junit-5-whats-new-and-whats-coming",
+    "speakers": [
+      "sbrannen"
     ]
   },
   {
