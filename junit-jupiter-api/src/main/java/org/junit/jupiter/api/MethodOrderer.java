@@ -178,7 +178,7 @@ public interface MethodOrderer {
 	 * <p>By default, the {@link ExecutionMode} {@link ExecutionMode#CONCURRENT CONCURRENT} is used.
 	 * If a custom <em>seed</em> is provided or if the
 	 * {@link Random#SINGLE_THREAD_MODE_PROPERTY_NAME junit.jupiter.execution.order.random.single.thread}
-	 * <em>configuration parameter</em> is set to {@code false},
+	 * <em>configuration parameter</em> is set to {@code true},
 	 * {@link ExecutionMode} {@link ExecutionMode#SAME_THREAD SAME_THREAD} is used.
 	 *
 	 * <h4>Configuration parameters</h4>
