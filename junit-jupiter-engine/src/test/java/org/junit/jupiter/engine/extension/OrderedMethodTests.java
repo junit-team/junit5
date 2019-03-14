@@ -154,10 +154,10 @@ class OrderedMethodTests {
 			uniqueSequences.add(callSequence.stream().collect(Collectors.joining(",")));
 
 			// @formatter:off
-            assertTrue(listener.stream(Random.class, Level.WARNING)
-                    .map(LogRecord::getMessage)
-                    .anyMatch(expectedMessage::equals));
-            // @formatter:on
+			assertTrue(listener.stream(Random.class, Level.WARNING)
+					.map(LogRecord::getMessage)
+					.anyMatch(expectedMessage::equals));
+			// @formatter:on
 		}
 
 		// As we are falling back to a static seed, the order should be the same for all tests
@@ -193,10 +193,10 @@ class OrderedMethodTests {
 			uniqueSequences.add(callSequence.stream().collect(Collectors.joining(",")));
 
 			// @formatter:off
-            assertTrue(listener.stream(Random.class, Level.CONFIG)
-                    .map(LogRecord::getMessage)
-                    .anyMatch(expectedMessage::equals));
-            // @formatter:on
+			assertTrue(listener.stream(Random.class, Level.CONFIG)
+					.map(LogRecord::getMessage)
+					.anyMatch(expectedMessage::equals));
+			// @formatter:on
 
 			assertThat(threadNames).hasSize(i + 1);
 		}
@@ -225,10 +225,10 @@ class OrderedMethodTests {
 				"test3()");
 
 			// @formatter:off
-            assertTrue(listener.stream(Random.class, Level.CONFIG)
-                    .map(LogRecord::getMessage)
-                    .anyMatch(expectedMessage::equals));
-            // @formatter:on
+			assertTrue(listener.stream(Random.class, Level.CONFIG)
+					.map(LogRecord::getMessage)
+					.anyMatch(expectedMessage::equals));
+			// @formatter:on
 		}
 	}
 
@@ -296,22 +296,22 @@ class OrderedMethodTests {
 
 	private void assertExpectedLogMessage(LogRecordListener listener, String expectedMessage) {
 		// @formatter:off
-        assertTrue(listener.stream(Level.WARNING)
-                .map(LogRecord::getMessage)
-                .anyMatch(expectedMessage::equals));
-        // @formatter:on
+		assertTrue(listener.stream(Level.WARNING)
+				.map(LogRecord::getMessage)
+				.anyMatch(expectedMessage::equals));
+		// @formatter:on
 	}
 
 	private Events executeTestsInParallel(Class<?> testClass) {
 		// @formatter:off
-        return EngineTestKit
-                .engine("junit-jupiter")
-                .configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true")
-                .configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent")
-                .selectors(selectClass(testClass))
-                .execute()
-                .tests();
-        // @formatter:on
+		return EngineTestKit
+				.engine("junit-jupiter")
+				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true")
+				.configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent")
+				.selectors(selectClass(testClass))
+				.execute()
+				.tests();
+		// @formatter:on
 	}
 
 	private Events executeTestsInParallelWithRandomSeed(Class<?> testClass, String seed, String concurrent) {
@@ -322,13 +322,13 @@ class OrderedMethodTests {
 		);
 
 		// @formatter:off
-        return EngineTestKit
-                .engine("junit-jupiter")
-                .configurationParameters(configurationParameters)
-                .selectors(selectClass(testClass))
-                .execute()
-                .tests();
-        // @formatter:on
+		return EngineTestKit
+				.engine("junit-jupiter")
+				.configurationParameters(configurationParameters)
+				.selectors(selectClass(testClass))
+				.execute()
+				.tests();
+		// @formatter:on
 	}
 
 	private Events executeTestsInParallelWithConcurrentMode(Class<?> testClass, String singleThread) {
@@ -338,13 +338,13 @@ class OrderedMethodTests {
 			DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent");
 
 		// @formatter:off
-        return EngineTestKit
-                .engine("junit-jupiter")
-                .configurationParameters(configurationParameters)
-                .selectors(selectClass(testClass))
-                .execute()
-                .tests();
-        // @formatter:on
+		return EngineTestKit
+				.engine("junit-jupiter")
+				.configurationParameters(configurationParameters)
+				.selectors(selectClass(testClass))
+				.execute()
+				.tests();
+		// @formatter:on
 	}
 
 	// -------------------------------------------------------------------------
