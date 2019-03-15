@@ -84,7 +84,6 @@
 204b31683bc4e12c2656ece2a612546e  documentation/src/test/java/example/DocumentationTestSuite.java
 204d92a1f4d82c5c133379bf0179e2d0  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/ExternalResourceAdapter.java
 2064187820a078d19c1ad18937e9c366  junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatformRunnerListener.java
-209431794f798fc8ee4a78eabb52d028  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ReflectionUtils.java
 20d14d3d146b60516f9783ac54869e0b  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.java
 216cd71b2d495c3179da999a7bdd7146  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 22d96ea2eaca4fc33d7c05933a74e34b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/BeforeEachCallback.java
@@ -246,6 +245,7 @@
 675b9bb2094b7927f48dd6b57ea562d0  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/JupiterEngineExtensionContext.java
 67d8a8e00162be6fc52e0050d0bef698  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestInstance.java
 68710a9837ba700b70278a68918ce686  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/JupiterTestEngine.java
+68aad5ad496ac93b41952c41ded037fc  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ReflectionUtils.java
 69c8b885b62b12a7f8e993eb029ed0a4  documentation/src/test/java/example/ParameterizedTestDemo.java
 6a4fc6025deda930f868521dfc0051a8  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/SingleTestExecutor.java
 6b5cfcf4e3ecda01829b19b35914f1ce  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/TestExecutionSummary.java
