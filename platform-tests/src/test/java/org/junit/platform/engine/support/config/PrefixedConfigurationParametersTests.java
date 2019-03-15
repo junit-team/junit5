@@ -47,7 +47,7 @@ class PrefixedConfigurationParametersTests {
 
 	@Test
 	void delegatesGetCalls() {
-		when(delegate.get(any())).thenReturn(Optional.of("result"));
+		when(delegate.get((String) any())).thenReturn(Optional.of("result"));
 		PrefixedConfigurationParameters parameters = new PrefixedConfigurationParameters(delegate, "foo.bar.");
 
 		assertThat(parameters.get("qux")).contains("result");

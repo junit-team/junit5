@@ -19,6 +19,7 @@ import java.util.ServiceLoader;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.engine.ConfigurationParameter;
 import org.junit.platform.engine.TestEngine;
 
 import picocli.CommandLine;
@@ -56,7 +57,10 @@ public class PicocliCommandLineOptionsParser implements CommandLineOptionsParser
 			out.println("# n.a.");
 			out.println("");
 			for (TestEngine engine : ServiceLoader.load(TestEngine.class)) {
-				engine.printHelpMessage(out);
+				for (ConfigurationParameter parameter : engine.getAvailableConfigurationParameters()) {
+					out.println("# Description: " + parameter.getDescription());
+					out.println("#" + parameter.getKey() + " = " + parameter.getDefaultValue());
+				}
 			}
 		}
 		catch (IOException e) {

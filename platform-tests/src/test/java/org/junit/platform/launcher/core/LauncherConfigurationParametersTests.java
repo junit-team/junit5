@@ -61,7 +61,7 @@ class LauncherConfigurationParametersTests {
 	@Test
 	void getPreconditions() {
 		ConfigurationParameters configParams = fromMap(emptyMap());
-		assertThrows(PreconditionViolationException.class, () -> configParams.get(null));
+		assertThrows(PreconditionViolationException.class, () -> configParams.get((String) null));
 		assertThrows(PreconditionViolationException.class, () -> configParams.get(""));
 		assertThrows(PreconditionViolationException.class, () -> configParams.get("  "));
 	}

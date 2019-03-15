@@ -66,6 +66,13 @@ public interface ConfigurationParameters {
 	Optional<String> get(String key);
 
 	/**
+	 * @since 1.5
+	 */
+	default String get(ConfigurationParameter configurationParameter) {
+		return get(configurationParameter.getKey()).orElse(configurationParameter.getDefaultValue());
+	}
+
+	/**
 	 * Get the boolean configuration parameter stored under the specified
 	 * {@code key}.
 	 *

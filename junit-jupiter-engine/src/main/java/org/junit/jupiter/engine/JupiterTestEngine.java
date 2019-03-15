@@ -12,17 +12,18 @@ package org.junit.jupiter.engine;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
-import java.io.PrintWriter;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.engine.config.CachingJupiterConfiguration;
 import org.junit.jupiter.engine.config.DefaultJupiterConfiguration;
+import org.junit.jupiter.engine.config.JupiterAvailableParameter;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory;
+import org.junit.platform.engine.ConfigurationParameter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -104,15 +105,7 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 	 * @since 5.5
 	 */
 	@Override
-	public void printHelpMessage(PrintWriter out) {
-		out.println("##");
-		out.println("## JUnit Jupiter - " + getId());
-		out.println("##");
-		out.println("");
-		out.println("# " + Constants.DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME + " = *");
-		out.println(Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME + " = PER_METHOD");
-		out.println(Constants.EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME + " = false");
-		out.println(Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME + " = false");
-		out.println("");
+	public ConfigurationParameter[] getAvailableConfigurationParameters() {
+		return JupiterAvailableParameter.values();
 	}
 }
