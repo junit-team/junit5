@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Optional;
@@ -64,13 +65,6 @@ public interface ConfigurationParameters {
 	 * @see #CONFIG_FILE_NAME
 	 */
 	Optional<String> get(String key);
-
-	/**
-	 * @since 1.5
-	 */
-	default String get(ConfigurationParameter configurationParameter) {
-		return get(configurationParameter.getKey()).orElse(configurationParameter.getDefaultValue());
-	}
 
 	/**
 	 * Get the boolean configuration parameter stored under the specified
@@ -130,6 +124,14 @@ public interface ConfigurationParameters {
 				throw new JUnitException(message, ex);
 			}
 		});
+	}
+
+	/**
+	 * @since 1.5
+	 */
+	@API(status = EXPERIMENTAL, since = "1.5")
+	default String getOrDefault(ConfigurationParameter configurationParameter) {
+		return get(configurationParameter.getKey()).orElse(configurationParameter.getDefaultValue());
 	}
 
 	/**
