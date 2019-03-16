@@ -93,7 +93,7 @@ jobs:
       env:
         ORG_GRADLE_PROJECT_nexusUsername: $(nexusUsername)
         ORG_GRADLE_PROJECT_nexusPassword: $(nexusPassword)
-  condition: and(eq(variables['System.PullRequest.IsFork'], False), and(eq(variables['Build.Reason'], 'IndividualCI'), or(startsWith(variables['Build.SourceBranch'], 'refs/heads/releases/'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))))
+  condition: and(succeeded(), and(eq(variables['System.PullRequest.IsFork'], False), and(eq(variables['Build.Reason'], 'IndividualCI'), or(startsWith(variables['Build.SourceBranch'], 'refs/heads/releases/'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))))
 
 - job: update_documentation
   dependsOn: linux_11
@@ -111,4 +111,4 @@ jobs:
       displayName: Publish
       env:
         GRGIT_USER: $(githubToken)
-  condition: and(eq(variables['System.PullRequest.IsFork'], False), and(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))
+  condition: and(succeeded(), and(eq(variables['System.PullRequest.IsFork'], False), and(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))))
