@@ -33,13 +33,10 @@ Ask JUnit 5 related questions on [StackOverflow] or chat with the team and the c
 
 ## Continuous Integration Builds
 
-| CI Server | OS           | Status | Description |
-| --------- | ------------ | ------ | ----------- |
-| Travis CI | Linux, macOS | [![Travis CI build status](https://travis-ci.org/junit-team/junit5.svg?branch=master)](https://travis-ci.org/junit-team/junit5) | Official CI build server for JUnit 5. Used to perform quick checks on submitted pull requests and for build matrices including the latest released OpenJDK and early access builds of the next OpenJDK |
-| Azure     | All          | [![Build Status](https://dev.azure.com/junit-team/junit5/_apis/build/status/junit-team.junit5?branchName=master)](https://dev.azure.com/junit-team/junit5/_build/latest?definitionId=1&branchName=master) | Used to ensure that JUnit 5 can be built on various platforms and JDK 11..13-ea |
-| Azure     | Linux        | [![Build Status](https://dev.azure.com/junit-team/junit5/_apis/build/status/junit-team.junit5?branchName=master&jobName=Linux%20(OpenJDK%2011))](https://dev.azure.com/junit-team/junit5/_build/latest?definitionId=1&branchName=master) | Linux + OpenJDK 11 |
-| Azure     | Mac          | [![Build Status](https://dev.azure.com/junit-team/junit5/_apis/build/status/junit-team.junit5?branchName=master&jobName=Mac)](https://dev.azure.com/junit-team/junit5/_build/latest?definitionId=1&branchName=master) | Mac + OpenJDK 11 |
-| Azure     | Windows      | [![Build Status](https://dev.azure.com/junit-team/junit5/_apis/build/status/junit-team.junit5?branchName=master&jobName=Windows)](https://dev.azure.com/junit-team/junit5/_build/latest?definitionId=1&branchName=master) | Windows + OpenJDK 11 |
+[![Build Status](https://dev.azure.com/junit-team/junit5/_apis/build/status/junit-team.junit5?branchName=master)](https://dev.azure.com/junit-team/junit5/_build/latest?definitionId=1&branchName=master)
+
+Official CI build server for JUnit 5. Used to perform quick checks on submitted pull requests and for build matrices including the latest released OpenJDK and early access builds of the next OpenJDK 
+
 ## Code Coverage
 
 Code coverage using [JaCoCo] for the latest build is available on [Codecov].
