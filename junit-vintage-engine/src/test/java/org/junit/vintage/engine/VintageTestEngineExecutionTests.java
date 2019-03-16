@@ -46,10 +46,13 @@ import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 import org.junit.vintage.engine.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
 import org.junit.vintage.engine.samples.junit4.EmptyIgnoredTestCase;
 import org.junit.vintage.engine.samples.junit4.EnclosedJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCase;
+import org.junit.vintage.engine.samples.junit4.IgnoredParameterizedTestCase;
 import org.junit.vintage.engine.samples.junit4.JUnit4SuiteOfSuiteWithIgnoredJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
 import org.junit.vintage.engine.samples.junit4.JUnit4SuiteOfSuiteWithJUnit4TestCaseWithErrorInBeforeClass;
@@ -421,6 +424,23 @@ class VintageTestEngineExecutionTests {
 	}
 
 	@Test
+	void executesIgnoredParameterizedTestCase() {
+		Class<?> testClass = IgnoredParameterizedTestCase.class;
+
+		execute(testClass).assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(container("[foo]"), started()), //
+			event(test("test[foo]"), skippedWithReason("")), //
+			event(container("[foo]"), finishedSuccessfully()), //
+			event(container("[bar]"), started()), //
+			event(test("test[bar]"), skippedWithReason("")), //
+			event(container("[bar]"), finishedSuccessfully()), //
+			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
 	void executesJUnit4TestCaseWithExceptionThrowingRunner() {
 		Class<?> testClass = JUnit4TestCaseWithExceptionThrowingRunner.class;
 
@@ -466,7 +486,6 @@ class VintageTestEngineExecutionTests {
 
 	@RunWith(DynamicSuiteRunner.class)
 	public static class DynamicTestClass {
-
 	}
 
 	@Test
@@ -480,6 +499,61 @@ class VintageTestEngineExecutionTests {
 			event(test("dynamicTest"), started()), //
 			event(test("dynamicTest"), finishedSuccessfully()), //
 			event(test(testClass.getName()), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	public static class DynamicAndStaticChildrenRunner extends Runner {
+
+		private final Class<?> testClass;
+
+		public DynamicAndStaticChildrenRunner(Class<?> testClass) {
+			this.testClass = testClass;
+		}
+
+		@Override
+		public Description getDescription() {
+			Description suiteDescription = createSuiteDescription(testClass);
+			suiteDescription.addChild(createTestDescription(testClass, "staticTest"));
+			return suiteDescription;
+		}
+
+		@Override
+		public void run(RunNotifier notifier) {
+			Description staticDescription = getDescription().getChildren().get(0);
+			notifier.fireTestStarted(staticDescription);
+			notifier.fireTestFinished(staticDescription);
+			Description dynamicDescription = createTestDescription(testClass, "dynamicTest");
+			notifier.fireTestStarted(dynamicDescription);
+			notifier.fireTestFinished(dynamicDescription);
+		}
+
+	}
+
+	@RunWith(DynamicAndStaticChildrenRunner.class)
+	public static class DynamicAndStaticTestClass {
+	}
+
+	@RunWith(Suite.class)
+	@SuiteClasses(DynamicAndStaticTestClass.class)
+	public static class SuiteWithDynamicAndStaticTestClass {
+	}
+
+	@Test
+	void reportsIntermediateContainersFinishedAfterTheirDynamicChildren() {
+		Class<?> suiteClass = SuiteWithDynamicAndStaticTestClass.class;
+		Class<?> testClass = DynamicAndStaticTestClass.class;
+
+		execute(suiteClass).assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(suiteClass.getName()), started()), //
+			event(container(testClass.getName()), started()), //
+			event(test("staticTest"), started()), //
+			event(test("staticTest"), finishedSuccessfully()), //
+			event(dynamicTestRegistered("dynamicTest")), //
+			event(test("dynamicTest"), started()), //
+			event(test("dynamicTest"), finishedSuccessfully()), //
+			event(container(testClass.getName()), finishedSuccessfully()), //
+			event(container(suiteClass.getName()), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
