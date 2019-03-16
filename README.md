@@ -35,7 +35,9 @@ Ask JUnit 5 related questions on [StackOverflow] or chat with the team and the c
 
 [![Build Status](https://dev.azure.com/junit-team/junit5/_apis/build/status/junit-team.junit5?branchName=master)](https://dev.azure.com/junit-team/junit5/_build/latest?definitionId=1&branchName=master)
 
-Official CI build server for JUnit 5. Used to perform quick checks on submitted pull requests and for build matrices including the latest released OpenJDK and early access builds of the next OpenJDK 
+Official CI build server for JUnit 5. Used to perform quick checks on submitted pull
+requests and for build matrices including the latest released OpenJDK and early access
+builds of the next OpenJDK.
 
 ## Code Coverage
 
