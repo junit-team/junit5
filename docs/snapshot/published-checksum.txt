@@ -222,6 +222,7 @@
 5beeebeb56b5d1f68ce917275a7a5b68  junit-vintage-engine/src/main/java/org/junit/vintage/engine/package-info.java
 5c26dc1d99e858cceddd0ec89e831637  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeEngines.java
 5c7943bb50c093b70ef739c71272777c  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ReflectionSupport.java
+5d175c7c1151cbb1bdd03c0f3fa8db52  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 5d29856263ab78318ee15452552ae0e7  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/FileSystemSource.java
 5dd8098db2c78876fd940257e9c8ffdf  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NopLock.java
 5dde3a4d1c2572e8ac4bd043789951c3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/io/TempDir.java
@@ -471,7 +472,6 @@ c6fd7ded7b22e80a089c029762f3cf09  junit-platform-engine/src/main/java/org/junit/
 c729d069600b5da82c25dc54c9db2e13  documentation/src/test/java/example/TestTemplateDemo.java
 c751641e41bf4e150f7415d2d96f1010  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/Root.java
 c77f25d530f08066bf21f2e0eae29e7a  documentation/src/docs/asciidoc/docinfos/docinfo-footer.html
-c7b850e362bc5b4fdb13aab6d2fbcae3  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 c8204e0a13f8ea339b97d224ee0057b3  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/DefaultDiscoveryRequest.java
 c8c0a0f8fc39fbbad960af2ff1016e23  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/package-info.java
 c92af9b10b5d151f2d9be352c061a43b  junit-jupiter-params/src/main/java/org/junit/jupiter/params/support/AnnotationConsumer.java

@@ -5098,9 +5098,9 @@ include the corresponding versions of the <code>junit-platform-launcher</code>,
 <div class="title">Additional Gradle Dependencies</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="groovy"><span class="comment">// Only needed to run tests in a version of IntelliJ IDEA that bundles older versions</span>
-testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.platform:junit-platform-launcher:1.5.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)
-testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.jupiter:junit-jupiter-engine:5.5.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)
-testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.vintage:junit-vintage-engine:5.5.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)</code></pre>
+testRuntimeOnly(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.platform:junit-platform-launcher:1.5.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)
+testRuntimeOnly(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.jupiter:junit-jupiter-engine:5.5.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)
+testRuntimeOnly(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.vintage:junit-vintage-engine:5.5.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -5261,28 +5261,28 @@ build script via system properties (as shown below) or via the
 <p>In order to run any tests at all, a <code>TestEngine</code> implementation must be on the classpath.</p>
 </div>
 <div class="paragraph">
-<p>To configure support for JUnit Jupiter based tests, configure a <code>testCompile</code> dependency
-on the JUnit Jupiter API and a <code>testRuntime</code> dependency on the JUnit Jupiter <code>TestEngine</code>
+<p>To configure support for JUnit Jupiter based tests, configure a <code>testImplementation</code> dependency
+on the JUnit Jupiter API and a <code>testRuntimeOnly</code> dependency on the JUnit Jupiter <code>TestEngine</code>
 implementation similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java">dependencies {
-    testCompile(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.jupiter:junit-jupiter-api:5.5.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)
-    testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.jupiter:junit-jupiter-engine:5.5.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)
+    testImplementation(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.jupiter:junit-jupiter-api:5.5.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)
+    testRuntimeOnly(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.jupiter:junit-jupiter-engine:5.5.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The JUnit Platform can run JUnit 4 based tests as long as you configure a <code>testCompile</code>
-dependency on JUnit 4 and a <code>testRuntime</code> dependency on the JUnit Vintage <code>TestEngine</code>
+<p>The JUnit Platform can run JUnit 4 based tests as long as you configure a <code>testImplementation</code>
+dependency on JUnit 4 and a <code>testRuntimeOnly</code> dependency on the JUnit Vintage <code>TestEngine</code>
 implementation similar to the following.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java">dependencies {
-    testCompile(<span class="string"><span class="delimiter">&quot;</span><span class="content">junit:junit:4.12</span><span class="delimiter">&quot;</span></span>)
-    testRuntime(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.vintage:junit-vintage-engine:5.5.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)
+    testImplementation(<span class="string"><span class="delimiter">&quot;</span><span class="content">junit:junit:4.12</span><span class="delimiter">&quot;</span></span>)
+    testRuntimeOnly(<span class="string"><span class="delimiter">&quot;</span><span class="content">org.junit.vintage:junit-vintage-engine:5.5.0-SNAPSHOT</span><span class="delimiter">&quot;</span></span>)
 }</code></pre>
 </div>
 </div>
@@ -9204,7 +9204,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-03-15 14:33:18 UTC
+Last updated 2019-03-16 09:37:47 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
