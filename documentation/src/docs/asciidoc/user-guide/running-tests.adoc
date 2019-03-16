@@ -29,9 +29,9 @@ include the corresponding versions of the `junit-platform-launcher`,
 [subs=attributes+]
 ----
 // Only needed to run tests in a version of IntelliJ IDEA that bundles older versions
-testRuntime("org.junit.platform:junit-platform-launcher:{platform-version}")
-testRuntime("org.junit.jupiter:junit-jupiter-engine:{jupiter-version}")
-testRuntime("org.junit.vintage:junit-vintage-engine:{vintage-version}")
+testRuntimeOnly("org.junit.platform:junit-platform-launcher:{platform-version}")
+testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:{jupiter-version}")
+testRuntimeOnly("org.junit.vintage:junit-vintage-engine:{vintage-version}")
 ----
 
 .Additional Maven Dependencies
@@ -175,29 +175,29 @@ test {
 
 In order to run any tests at all, a `TestEngine` implementation must be on the classpath.
 
-To configure support for JUnit Jupiter based tests, configure a `testCompile` dependency
-on the JUnit Jupiter API and a `testRuntime` dependency on the JUnit Jupiter `TestEngine`
+To configure support for JUnit Jupiter based tests, configure a `testImplementation` dependency
+on the JUnit Jupiter API and a `testRuntimeOnly` dependency on the JUnit Jupiter `TestEngine`
 implementation similar to the following.
 
 [source,java,indent=0]
 [subs=attributes+]
 ----
 dependencies {
-	testCompile("org.junit.jupiter:junit-jupiter-api:{jupiter-version}")
-	testRuntime("org.junit.jupiter:junit-jupiter-engine:{jupiter-version}")
+	testImplementation("org.junit.jupiter:junit-jupiter-api:{jupiter-version}")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:{jupiter-version}")
 }
 ----
 
-The JUnit Platform can run JUnit 4 based tests as long as you configure a `testCompile`
-dependency on JUnit 4 and a `testRuntime` dependency on the JUnit Vintage `TestEngine`
+The JUnit Platform can run JUnit 4 based tests as long as you configure a `testImplementation`
+dependency on JUnit 4 and a `testRuntimeOnly` dependency on the JUnit Vintage `TestEngine`
 implementation similar to the following.
 
 [source,java,indent=0]
 [subs=attributes+]
 ----
 dependencies {
-	testCompile("junit:junit:{junit4-version}")
-	testRuntime("org.junit.vintage:junit-vintage-engine:{vintage-version}")
+	testImplementation("junit:junit:{junit4-version}")
+	testRuntimeOnly("org.junit.vintage:junit-vintage-engine:{vintage-version}")
 }
 ----
 
