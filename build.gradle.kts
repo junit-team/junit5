@@ -1,3 +1,4 @@
+import org.ajoberstar.gradle.git.publish.GitPublishExtension
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.spi.ToolProvider
@@ -357,18 +358,38 @@ subprojects {
 }
 
 rootProject.apply {
+	apply(plugin = "org.ajoberstar.git-publish")
+
 	description = "JUnit 5"
 
-	apply(from = "$rootDir/gradle/gh-pages.gradle")
-
+	val docsDir = file("$buildDir/ghpages-docs")
+	val replaceCurrentDocs = project.hasProperty("replaceCurrentDocs")
 	val ota4jDocVersion = if (Versions.ota4j.contains("SNAPSHOT")) "snapshot" else Versions.ota4j
 	val apiGuardianDocVersion = if (Versions.apiGuardian.contains("SNAPSHOT")) "snapshot" else Versions.apiGuardian
+
+	gitPublish {
+		repoUri.set("https://github.com/junit-team/junit5.git")
+		branch.set("gh-pages")
+
+		contents {
+			from(docsDir)
+			into("docs")
+		}
+
+		preserve {
+			include("**/*")
+			exclude("docs/${docsVersion}/**")
+			if (replaceCurrentDocs) {
+				exclude("docs/current/**")
+			}
+		}
+	}
 
 	tasks {
 		jar {
 			enabled = false
 		}
-		register<Javadoc>("aggregateJavadocs") {
+		val aggregateJavadocs by registering(Javadoc::class) {
 			group = "Documentation"
 			description = "Generates aggregated Javadocs"
 			dependsOn(subprojects.map { it.tasks.named("jar") })
@@ -425,6 +446,47 @@ rootProject.apply {
 					rename { "package-list" }
 				}
 			}
+		}
+
+		val prepareDocsForUploadToGhPages by registering(Copy::class) {
+			dependsOn(aggregateJavadocs, ":documentation:asciidoctor")
+			outputs.dir(docsDir)
+
+			from("${project(":documentation").buildDir}/checksum") {
+				include("published-checksum.txt")
+			}
+			from("${project(":documentation").buildDir}/asciidoc") {
+				include("user-guide/**")
+				include("release-notes/**")
+				include("tocbot-*/**")
+			}
+			from("$buildDir/docs") {
+				include("javadoc/**")
+				filesMatching("**/*.html") {
+					val favicon = "<link rel=\"icon\" type=\"image/png\" href=\"https://junit.org/junit5/assets/img/junit5-logo.png\">"
+					filter { line ->
+						if (line.startsWith("<head>")) line.replace("<head>", "<head>$favicon") else line
+					}
+				}
+			}
+			into("${docsDir}/${docsVersion}")
+			filesMatching("javadoc/**") {
+				path = path.replace("javadoc/", "api/")
+			}
+			includeEmptyDirs = false
+		}
+
+		val createCurrentDocsFolder by registering(Copy::class) {
+			dependsOn(prepareDocsForUploadToGhPages)
+			outputs.dir("${docsDir}/current")
+			onlyIf { replaceCurrentDocs }
+
+			from("${docsDir}/${docsVersion}")
+			into("${docsDir}/current")
+		}
+
+		gitPublishCommit {
+			dependsOn(prepareDocsForUploadToGhPages, createCurrentDocsFolder)
 		}
 	}
 
