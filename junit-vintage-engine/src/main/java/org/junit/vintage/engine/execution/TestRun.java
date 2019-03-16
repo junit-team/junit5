@@ -19,11 +19,14 @@ import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -46,7 +49,7 @@ class TestRun {
 	private final Map<Description, List<VintageTestDescriptor>> descriptionToDescriptors;
 	private final Map<TestDescriptor, List<TestExecutionResult>> executionResults = new LinkedHashMap<>();
 	private final Set<TestDescriptor> skippedDescriptors = new LinkedHashSet<>();
-	private final Set<TestDescriptor> startedDescriptors = new LinkedHashSet<>();
+	private final Map<TestDescriptor, EventType> startedDescriptors = new LinkedHashMap<>();
 	private final Set<TestDescriptor> finishedDescriptors = new LinkedHashSet<>();
 
 	TestRun(RunnerTestDescriptor runnerTestDescriptor) {
@@ -68,6 +71,16 @@ class TestRun {
 
 	RunnerTestDescriptor getRunnerTestDescriptor() {
 		return runnerTestDescriptor;
+	}
+
+	Collection<TestDescriptor> getInProgressTestDescriptorsWithSyntheticStartEvents() {
+		List<TestDescriptor> result = startedDescriptors.entrySet().stream() //
+				.filter(entry -> entry.getValue().equals(EventType.SYNTHETIC)) //
+				.map(Entry::getKey) //
+				.filter(descriptor -> !isFinished(descriptor)) //
+				.collect(toCollection(ArrayList::new));
+		Collections.reverse(result);
+		return result;
 	}
 
 	boolean isDescendantOfRunnerTestDescriptor(TestDescriptor testDescriptor) {
@@ -113,12 +126,12 @@ class TestRun {
 		return skippedDescriptors.contains(testDescriptor);
 	}
 
-	void markStarted(TestDescriptor testDescriptor) {
-		startedDescriptors.add(testDescriptor);
+	void markStarted(TestDescriptor testDescriptor, EventType eventType) {
+		startedDescriptors.put(testDescriptor, eventType);
 	}
 
 	boolean isNotStarted(TestDescriptor testDescriptor) {
-		return !startedDescriptors.contains(testDescriptor);
+		return !startedDescriptors.containsKey(testDescriptor);
 	}
 
 	void markFinished(TestDescriptor testDescriptor) {
