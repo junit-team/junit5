@@ -120,7 +120,7 @@ class VerboseTreePrintingListener implements TestExecutionListener {
 	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
 		printVerticals(theme.entry());
 		printf(Color.DYNAMIC, " %s", testIdentifier.getDisplayName());
-		printf(NONE, "%s", " dynamically registered%n");
+		printf(NONE, "%s%n", " dynamically registered");
 	}
 
 	@Override
