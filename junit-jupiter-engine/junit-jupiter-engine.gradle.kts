@@ -14,6 +14,13 @@ tasks.jar {
 	}
 }
 
+val testJavaVersion by extra(JavaVersion.VERSION_11)
+
+tasks.compileTestGroovy {
+	sourceCompatibility = testJavaVersion.majorVersion
+	targetCompatibility = testJavaVersion.majorVersion
+}
+
 val testArtifacts by configurations.creating {
 	extendsFrom(configurations["testRuntime"])
 }
