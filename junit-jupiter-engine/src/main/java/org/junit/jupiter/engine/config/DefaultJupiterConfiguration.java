@@ -81,7 +81,7 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
-	public Class<?> getDefaultDisplayNameGeneratorClass() {
+	public Optional<Class<?>> getDefaultDisplayNameGeneratorClass() {
 		return displayNameGeneratorClassConverter.get(configurationParameters,
 			DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME);
 	}

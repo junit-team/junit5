@@ -10,7 +10,8 @@
 
 package org.junit.jupiter.engine.config;
 
-import org.junit.jupiter.api.DisplayNameGenerator;
+import java.util.Optional;
+
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 
@@ -19,14 +20,17 @@ import org.junit.platform.engine.ConfigurationParameters;
  */
 class DisplayNameGeneratorClassParameterConverter {
 
-	Class<?> get(ConfigurationParameters configurationParameters, String key) {
-		return configurationParameters.get(key).filter(StringUtils::isNotBlank).map(String::trim).map(className -> {
-			try {
-				return Class.forName(className);
-			}
-			catch (ClassNotFoundException cnfe) {
-				return DisplayNameGenerator.Standard.class;
-			}
-		}).orElse(DisplayNameGenerator.Standard.class);
+	Optional<Class<?>> get(ConfigurationParameters configurationParameters, String key) {
+		return configurationParameters.get(key).filter(StringUtils::isNotBlank).map(String::trim).map(
+			this::getClassFrom);
+	}
+
+	private Class<?> getClassFrom(String className) {
+		try {
+			return Class.forName(className);
+		}
+		catch (ClassNotFoundException cnfe) {
+			return null;
+		}
 	}
 }

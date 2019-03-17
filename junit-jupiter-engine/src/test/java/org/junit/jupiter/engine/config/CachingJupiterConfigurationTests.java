@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.mockito.Mockito;
 
 class CachingJupiterConfigurationTests {
 
@@ -90,11 +89,10 @@ class CachingJupiterConfigurationTests {
 
 	@Test
 	void cachesDefaultDisplayNameGeneratorClass() {
-		Mockito.<Class<?>> when(delegate.getDefaultDisplayNameGeneratorClass()).thenReturn(
-			CustomDisplayNameGenerator.class);
+		when(delegate.getDefaultDisplayNameGeneratorClass()).thenReturn(Optional.of(CustomDisplayNameGenerator.class));
 
-		assertThat(cache.getDefaultDisplayNameGeneratorClass()).isEqualTo(CustomDisplayNameGenerator.class);
-		assertThat(cache.getDefaultDisplayNameGeneratorClass()).isEqualTo(CustomDisplayNameGenerator.class);
+		assertThat(cache.getDefaultDisplayNameGeneratorClass()).hasValue(CustomDisplayNameGenerator.class);
+		assertThat(cache.getDefaultDisplayNameGeneratorClass()).hasValue(CustomDisplayNameGenerator.class);
 
 		verify(delegate, times(1)).getDefaultDisplayNameGeneratorClass();
 		verifyNoMoreInteractions(delegate);

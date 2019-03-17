@@ -68,9 +68,9 @@ class DefaultJupiterConfigurationTests {
 		when(parameters.get(key)).thenReturn(Optional.of(CustomDisplayNameGenerator.class.getName()));
 		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
 
-		Class<?> defaultDisplayNameGeneratorClass = configuration.getDefaultDisplayNameGeneratorClass();
+		Optional<Class<?>> defaultDisplayNameGeneratorClass = configuration.getDefaultDisplayNameGeneratorClass();
 
-		assertThat(defaultDisplayNameGeneratorClass).isEqualTo(CustomDisplayNameGenerator.class);
+		assertThat(defaultDisplayNameGeneratorClass).hasValue(CustomDisplayNameGenerator.class);
 	}
 
 	@Test
@@ -80,9 +80,9 @@ class DefaultJupiterConfigurationTests {
 		when(parameters.get(key)).thenReturn(Optional.empty());
 		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
 
-		Class<?> defaultDisplayNameGeneratorClass = configuration.getDefaultDisplayNameGeneratorClass();
+		Optional<Class<?>> defaultDisplayNameGeneratorClass = configuration.getDefaultDisplayNameGeneratorClass();
 
-		assertThat(defaultDisplayNameGeneratorClass).isEqualTo(CustomDisplayNameGenerator.Standard.class);
+		assertThat(defaultDisplayNameGeneratorClass).isEmpty();
 	}
 
 	private void assertDefaultConfigParam(String configValue, Lifecycle expected) {
