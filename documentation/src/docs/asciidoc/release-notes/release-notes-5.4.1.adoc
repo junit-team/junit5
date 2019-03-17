@@ -56,7 +56,9 @@ repository on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Fix reporting of finish events of intermediate containers with static and dynamic
+  children, e.g. Spock test classes with regular and `@Unroll` feature methods in a test
+  suite.
 
 ==== Deprecations and Breaking Changes
 
