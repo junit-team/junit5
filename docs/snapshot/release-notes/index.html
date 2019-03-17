@@ -563,6 +563,14 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#release-notes-5.5.0-M1-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
+<li><a href="#release-notes-5.4.1">5.4.1</a>
+<ul class="sectlevel2">
+<li><a href="#release-notes-5.4.1-overall-improvements">Overall Improvements</a></li>
+<li><a href="#release-notes-5.4.1-junit-platform">JUnit Platform</a></li>
+<li><a href="#release-notes-5.4.1-junit-jupiter">JUnit Jupiter</a></li>
+<li><a href="#release-notes-5.4.1-junit-vintage">JUnit Vintage</a></li>
+</ul>
+</li>
 <li><a href="#release-notes-5.4.0">5.4.0</a></li>
 </ul>
 </div>
@@ -705,6 +713,76 @@ support.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="release-notes-5.4.1"><a class="anchor" href="#release-notes-5.4.1"></a>5.4.1</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Date of Release:</strong> March 17, 2019</p>
+</div>
+<div class="paragraph">
+<p><strong>Scope:</strong> Bug fixes since 5.4.0</p>
+</div>
+<div class="paragraph">
+<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult
+the <a href="https://github.com/junit-team/junit5/milestone/36?closed=1">5.4.1</a> milestone page in the JUnit
+repository on GitHub.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.4.1-overall-improvements"><a class="anchor" href="#release-notes-5.4.1-overall-improvements"></a>Overall Improvements</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Fix <code>Specification-Version</code> entry in JAR manifests</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.4.1-junit-platform"><a class="anchor" href="#release-notes-5.4.1-junit-platform"></a>JUnit Platform</h3>
+<div class="sect3">
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Restore compatibility with Android: Unsupported <code>Pattern</code> flags, like
+<code>UNICODE_CHARACTER_CLASS</code>, no longer cause class <code>StringUtils</code> to fail during
+initialization.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.4.1-junit-jupiter"><a class="anchor" href="#release-notes-5.4.1-junit-jupiter"></a>JUnit Jupiter</h3>
+<div class="sect3">
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Deletion of a temporary directory within a test no longer results in a test failure for
+a temporary directory supplied via <code>@TempDir</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.4.1-junit-vintage"><a class="anchor" href="#release-notes-5.4.1-junit-vintage"></a>JUnit Vintage</h3>
+<div class="sect3">
+<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Fix reporting of finish events of intermediate containers with static and dynamic
+children, e.g. Spock test classes with regular and <code>@Unroll</code> feature methods in a test
+suite.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="release-notes-5.4.0"><a class="anchor" href="#release-notes-5.4.0"></a>5.4.0</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -773,7 +851,7 @@ in build tools</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-03-16 15:15:32 UTC
+Last updated 2019-03-17 20:03:26 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
