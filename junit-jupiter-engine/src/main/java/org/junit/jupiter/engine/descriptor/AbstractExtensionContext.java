@@ -14,11 +14,13 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ExtensionValuesStore;
@@ -26,8 +28,12 @@ import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
+import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
+import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 
 /**
  * @since 5.0
@@ -83,8 +89,35 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		return getTestDescriptor().getDisplayName();
 	}
 
+	private class Checkpoint extends AbstractTestDescriptor {
+
+		protected Checkpoint(UniqueId uniqueId, String displayName, TestSource source) {
+			super(uniqueId, displayName, source);
+		}
+
+		@Override
+		public Type getType() {
+			return Type.TEST;
+		}
+	}
+
+	static final AtomicInteger CHECKPOINT_COUNTER = new AtomicInteger();
+
 	@Override
 	public void publishReportEntry(Map<String, String> values) {
+		if (values != null && values.size() == 1) {
+			String key = values.keySet().iterator().next();
+			String value = values.get(key);
+			if ("checkpoint".equals(key)) {
+				UniqueId checkpointId = this.testDescriptor.getUniqueId().append("checkpoint", "#" + CHECKPOINT_COUNTER.getAndIncrement());
+				TestSource checkpointSource = this.testDescriptor.getSource().orElse(null);
+				Checkpoint checkpoint = new Checkpoint(checkpointId, value, checkpointSource);
+				this.testDescriptor.addChild(checkpoint);
+				this.engineExecutionListener.dynamicTestRegistered(checkpoint);
+				this.engineExecutionListener.executionStarted(checkpoint);
+				this.engineExecutionListener.executionFinished(checkpoint, TestExecutionResult.successful());
+			}
+		}
 		this.engineExecutionListener.reportingEntryPublished(this.testDescriptor, ReportEntry.from(values));
 	}
 

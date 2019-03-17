@@ -41,5 +41,22 @@ class TestReporterDemo {
 		testReporter.publishEntry(values);
 	}
 
+	@Test
+	void reportCheckpoints(TestReporter testReporter) {
+		// createCompanyAndApplyAssertions();
+		testReporter.publishEntry("checkpoint", "Company created");
+		try {
+			// changeAddressAndApplyAssertions();
+			testReporter.publishEntry("checkpoint", "Address changed");
+			// changeEmailAndApplyAssertions();
+			testReporter.publishEntry("checkpoint", "Email changed");
+			// changeNameAndApplyAssertions();
+			testReporter.publishEntry("checkpoint", "Name changed");
+		} finally {
+			// deleteCompany();
+			testReporter.publishEntry("checkpoint", "Company deleted");
+		}
+	}
+
 }
 // end::user_guide[]
