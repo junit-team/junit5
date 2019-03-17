@@ -20,10 +20,12 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.mockito.Mockito;
 
 class CachingJupiterConfigurationTests {
 
@@ -87,6 +89,18 @@ class CachingJupiterConfigurationTests {
 	}
 
 	@Test
+	void cachesDefaultDisplayNameGeneratorClass() {
+		Mockito.<Class<?>> when(delegate.getDefaultDisplayNameGeneratorClass()).thenReturn(
+			CustomDisplayNameGenerator.class);
+
+		assertThat(cache.getDefaultDisplayNameGeneratorClass()).isEqualTo(CustomDisplayNameGenerator.class);
+		assertThat(cache.getDefaultDisplayNameGeneratorClass()).isEqualTo(CustomDisplayNameGenerator.class);
+
+		verify(delegate, times(1)).getDefaultDisplayNameGeneratorClass();
+		verifyNoMoreInteractions(delegate);
+	}
+
+	@Test
 	void doesNotCacheRawParameters() {
 		when(delegate.getRawConfigurationParameter("foo")).thenReturn(Optional.of("bar")).thenReturn(
 			Optional.of("baz"));
@@ -98,4 +112,7 @@ class CachingJupiterConfigurationTests {
 		verifyNoMoreInteractions(delegate);
 	}
 
+	abstract class CustomDisplayNameGenerator implements DisplayNameGenerator {
+
+	}
 }

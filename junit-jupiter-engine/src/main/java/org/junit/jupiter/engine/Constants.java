@@ -71,6 +71,20 @@ public final class Constants {
 	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = JupiterConfiguration.DEACTIVATE_ALL_CONDITIONS_PATTERN;
 
 	/**
+	 * Property name used to set the default display name generator class name: {@value}
+	 *
+	 * <h3>Supported Values</h3>
+	 *
+	 * <p>Supported values include full class names implementing
+	 * {@link org.junit.jupiter.api.DisplayNameGenerator}.
+	 *
+	 * <p>If not specified, the default is "Standard" which corresponds to
+	 * {@link org.junit.jupiter.api.DisplayNameGenerator.Standard}.
+	 *
+	 */
+	public static final String DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME = JupiterConfiguration.DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME;
+
+	/**
 	 * Property name used to enable auto-detection and registration of extensions via
 	 * Java's {@link java.util.ServiceLoader} mechanism: {@value}
 	 *

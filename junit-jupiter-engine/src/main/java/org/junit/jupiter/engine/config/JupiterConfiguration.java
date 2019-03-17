@@ -32,6 +32,7 @@ public interface JupiterConfiguration {
 	String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.enabled";
 	String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = "junit.jupiter.testinstance.lifecycle.default";
 	String DEACTIVATE_ALL_CONDITIONS_PATTERN = ClassNamePatternParameterConverter.DEACTIVATE_ALL_PATTERN;
+	String DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME = "junit.jupiter.displayname.generator.default";
 
 	Optional<String> getRawConfigurationParameter(String key);
 
@@ -44,5 +45,7 @@ public interface JupiterConfiguration {
 	TestInstance.Lifecycle getDefaultTestInstanceLifecycle();
 
 	Predicate<ExecutionCondition> getExecutionConditionFilter();
+
+	Class<?> getDefaultDisplayNameGeneratorClass();
 
 }

@@ -72,4 +72,9 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 			key -> delegate.getExecutionConditionFilter());
 	}
 
+	@Override
+	public Class<?> getDefaultDisplayNameGeneratorClass() {
+		return (Class<?>) cache.computeIfAbsent(DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME,
+			key -> delegate.getDefaultDisplayNameGeneratorClass());
+	}
 }

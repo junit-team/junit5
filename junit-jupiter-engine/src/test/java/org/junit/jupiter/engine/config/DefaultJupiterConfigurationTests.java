@@ -21,8 +21,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.engine.Constants;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 
@@ -59,6 +61,30 @@ class DefaultJupiterConfigurationTests {
 		);
 	}
 
+	@Test
+	void shouldGetDefaultDisplayNameGeneratorWithConfigParamSet() {
+		ConfigurationParameters parameters = mock(ConfigurationParameters.class);
+		String key = Constants.DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME;
+		when(parameters.get(key)).thenReturn(Optional.of(CustomDisplayNameGenerator.class.getName()));
+		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
+
+		Class<?> defaultDisplayNameGeneratorClass = configuration.getDefaultDisplayNameGeneratorClass();
+
+		assertThat(defaultDisplayNameGeneratorClass).isEqualTo(CustomDisplayNameGenerator.class);
+	}
+
+	@Test
+	void shouldGetStandardAsDefaultDisplayNameGeneratorWithoutConfigParamSet() {
+		ConfigurationParameters parameters = mock(ConfigurationParameters.class);
+		String key = Constants.DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME;
+		when(parameters.get(key)).thenReturn(Optional.empty());
+		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
+
+		Class<?> defaultDisplayNameGeneratorClass = configuration.getDefaultDisplayNameGeneratorClass();
+
+		assertThat(defaultDisplayNameGeneratorClass).isEqualTo(CustomDisplayNameGenerator.Standard.class);
+	}
+
 	private void assertDefaultConfigParam(String configValue, Lifecycle expected) {
 		ConfigurationParameters configParams = mock(ConfigurationParameters.class);
 		when(configParams.get(KEY)).thenReturn(Optional.ofNullable(configValue));
@@ -66,4 +92,7 @@ class DefaultJupiterConfigurationTests {
 		assertThat(lifecycle).isEqualTo(expected);
 	}
 
+	abstract class CustomDisplayNameGenerator implements DisplayNameGenerator {
+
+	}
 }
