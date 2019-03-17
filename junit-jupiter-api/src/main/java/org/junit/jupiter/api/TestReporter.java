@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Collections;
@@ -36,6 +37,9 @@ import org.apiguardian.api.API;
 @FunctionalInterface
 @API(status = STABLE, since = "5.0")
 public interface TestReporter {
+
+	@API(status = EXPERIMENTAL, since = "5.5")
+	String CHECKPOINT_ENTRY_KEY = "checkpoint";
 
 	/**
 	 * Publish the supplied map of key-value pairs as a <em>report entry</em>.
@@ -77,4 +81,8 @@ public interface TestReporter {
 		this.publishEntry("value", value);
 	}
 
+	@API(status = EXPERIMENTAL, since = "5.5")
+	default void checkpoint(String message) {
+		this.publishEntry(CHECKPOINT_ENTRY_KEY, message);
+	}
 }
