@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -81,7 +82,7 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
-	public Optional<Class<?>> getDefaultDisplayNameGeneratorClass() {
+	public Optional<Class<? extends DisplayNameGenerator>> getDefaultDisplayNameGeneratorClass() {
 		return displayNameGeneratorClassConverter.get(configurationParameters,
 			DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME);
 	}

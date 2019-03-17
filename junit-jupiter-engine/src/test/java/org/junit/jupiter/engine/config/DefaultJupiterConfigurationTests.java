@@ -19,6 +19,7 @@ import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -68,7 +69,7 @@ class DefaultJupiterConfigurationTests {
 		when(parameters.get(key)).thenReturn(Optional.of(CustomDisplayNameGenerator.class.getName()));
 		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
 
-		Optional<Class<?>> defaultDisplayNameGeneratorClass = configuration.getDefaultDisplayNameGeneratorClass();
+		Optional<Class<? extends DisplayNameGenerator>> defaultDisplayNameGeneratorClass = configuration.getDefaultDisplayNameGeneratorClass();
 
 		assertThat(defaultDisplayNameGeneratorClass).hasValue(CustomDisplayNameGenerator.class);
 	}
@@ -80,7 +81,7 @@ class DefaultJupiterConfigurationTests {
 		when(parameters.get(key)).thenReturn(Optional.empty());
 		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
 
-		Optional<Class<?>> defaultDisplayNameGeneratorClass = configuration.getDefaultDisplayNameGeneratorClass();
+		Optional<Class<? extends DisplayNameGenerator>> defaultDisplayNameGeneratorClass = configuration.getDefaultDisplayNameGeneratorClass();
 
 		assertThat(defaultDisplayNameGeneratorClass).isEmpty();
 	}
@@ -92,7 +93,21 @@ class DefaultJupiterConfigurationTests {
 		assertThat(lifecycle).isEqualTo(expected);
 	}
 
-	abstract class CustomDisplayNameGenerator implements DisplayNameGenerator {
+	class CustomDisplayNameGenerator implements DisplayNameGenerator {
 
+		@Override
+		public String generateDisplayNameForClass(Class<?> testClass) {
+			return null;
+		}
+
+		@Override
+		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
+			return null;
+		}
+
+		@Override
+		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
+			return null;
+		}
 	}
 }

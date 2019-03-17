@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -46,6 +47,6 @@ public interface JupiterConfiguration {
 
 	Predicate<ExecutionCondition> getExecutionConditionFilter();
 
-	Optional<Class<?>> getDefaultDisplayNameGeneratorClass();
+	Optional<Class<? extends DisplayNameGenerator>> getDefaultDisplayNameGeneratorClass();
 
 }
