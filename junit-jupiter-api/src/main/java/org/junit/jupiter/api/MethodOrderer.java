@@ -246,7 +246,7 @@ public interface MethodOrderer {
 		/**
 		 * Get the <em>default</em> {@link ExecutionMode} for the test class.
 		 *
-		 * <p>Tests ececuted with this {@code MethodOrderer}: {@value} will be alway executed
+		 * <p>Tests ececuted with this {@code MethodOrderer.Random} will be alway executed
 		 * with {@link ExecutionMode} {@link ExecutionMode#SAME_THREAD SAME_THREAD}.
 		 *
 		 * @return {@code SAME_THREAD}
