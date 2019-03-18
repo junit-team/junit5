@@ -171,21 +171,7 @@ public interface MethodOrderer {
 	 * value returned by {@link System#nanoTime()}. In order to produce repeatable
 	 * builds, a custom seed may be specified via the
 	 * {@link Random#RANDOM_SEED_PROPERTY_NAME junit.jupiter.execution.order.random.seed}
-	 * <em>configuration parameter</em>.
-	 *
-	 * <h4>Execution Mode</h4>
-	 *
-	 * <p>By default, the {@link ExecutionMode} {@link ExecutionMode#CONCURRENT CONCURRENT} is used.
-	 * If a custom <em>seed</em> is provided or if the
-	 * {@link Random#SINGLE_THREAD_MODE_PROPERTY_NAME junit.jupiter.execution.order.random.single.thread}
-	 * <em>configuration parameter</em> is set to {@code true},
-	 * {@link ExecutionMode} {@link ExecutionMode#SAME_THREAD SAME_THREAD} is used.
-	 *
-	 * <h4>Configuration parameters</h4>
-	 *
-	 * <p>The {@link Random#RANDOM_SEED_PROPERTY_NAME junit.jupiter.execution.order.random.single.thread}
-	 * and {@link Random#RANDOM_SEED_PROPERTY_NAME junit.jupiter.execution.order.random.seed}
-	 * <em>configuration parameter</em> can be supplied via the
+	 * <em>configuration parameter</em> via the
 	 * {@code Launcher} API, build tools (e.g., Gradle and Maven), a JVM system
 	 * property, or the JUnit Platform configuration file (i.e., a file named
 	 * {@code junit-platform.properties} in the root of the class path).
@@ -200,7 +186,7 @@ public interface MethodOrderer {
 
 		/**
 		 * Initial seed, which is generated during initialization of class
-		 * for reproducability of tests.
+		 * for reproducibility of tests.
 		 */
 		private static final long INITIAL_SEED;
 
@@ -219,22 +205,6 @@ public interface MethodOrderer {
 		 */
 		public static final String RANDOM_SEED_PROPERTY_NAME = "junit.jupiter.execution.order.random.seed";
 
-		/**
-		 * Property name used to set the concurrent mode used by this
-		 * {@code MethodOrderer}: {@value}
-		 *
-		 * <h3>Supported Values</h3>
-		 *
-		 * <p>Supported values include any string that can be converted to a
-		 * {@link Boolean} via {@link Boolean#valueOf(String)}.
-		 *
-		 * <p>If not specified or if the specified value cannot be converted to
-		 * a {@code Boolean}, {@code false} will be used.
-		 */
-		public static final String SINGLE_THREAD_MODE_PROPERTY_NAME = "junit.jupiter.execution.order.random.single.thread";
-
-		private boolean usingConcurrentMode = true;
-
 		static {
 			INITIAL_SEED = System.nanoTime();
 			logger.config(
@@ -247,12 +217,7 @@ public interface MethodOrderer {
 		 */
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
-
 			Optional<Long> seed = getConfiguredSeed(context);
-
-			this.usingConcurrentMode = seed.isPresent()
-					|| !context.getConfigurationParameter(SINGLE_THREAD_MODE_PROPERTY_NAME).map(
-						Boolean::valueOf).orElse(false);
 
 			Collections.shuffle(context.getMethodDescriptors(), new java.util.Random(seed.orElse(INITIAL_SEED)));
 		}
@@ -260,18 +225,18 @@ public interface MethodOrderer {
 		private Optional<Long> getConfiguredSeed(MethodOrdererContext context) {
 			return context.getConfigurationParameter(RANDOM_SEED_PROPERTY_NAME).map(configurationParameter -> {
 				Long seed = null;
-				String value = configurationParameter;
 				try {
-					seed = Long.valueOf(value);
+					seed = Long.valueOf(configurationParameter);
 					logger.config(
 						() -> String.format("Using custom seed for configuration parameter [%s] with value [%s].",
-							RANDOM_SEED_PROPERTY_NAME, value));
+							RANDOM_SEED_PROPERTY_NAME, configurationParameter));
 				}
 				catch (NumberFormatException ex) {
 					logger.warn(ex,
-						() -> String.format("Failed to convert configuration parameter [%s] with value [%s] to a long. "
-								+ "Using System.nanoTime() as fallback.",
-							RANDOM_SEED_PROPERTY_NAME, value));
+						() -> String.format(
+							"Failed to convert configuration parameter [%s] with value [%s] to a long. "
+									+ "Using System.nanoTime() as fallback.",
+							RANDOM_SEED_PROPERTY_NAME, configurationParameter));
 				}
 				return seed;
 			});
@@ -280,25 +245,14 @@ public interface MethodOrderer {
 		/**
 		 * Get the <em>default</em> {@link ExecutionMode} for the test class.
 		 *
-		 * <p>If a custom seed has been specified or if the configuration parameter
-		 * {@link Random#SINGLE_THREAD_MODE_PROPERTY_NAME junit.jupiter.execution.order.random.single.thread}
-		 * is set to {@code true}, this method returns
-		 * {@link ExecutionMode#SAME_THREAD SAME_THREAD} in order to ensure that
-		 * the results are repeatable across executions of the test plan.
-		 * Otherwise, this method returns {@link ExecutionMode#CONCURRENT
-		 * CONCURRENT} to allow concurrent execution of randomly ordered methods
-		 * by default.
+		 * <p>Tests ececuted with this {@code MethodOrderer}: {@value} will be alway executed
+		 * with {@link ExecutionMode} {@link ExecutionMode#SAME_THREAD SAME_THREAD}.
 		 *
-		 * <p>Be aware that the order still might differ if the {@link ExecutionMode}
-		 * differs!
-		 *
-		 * @return {@code SAME_THREAD} if a custom seed has been configured or
-		 * {@link Random#SINGLE_THREAD_MODE_PROPERTY_NAME junit.jupiter.execution.order.random.single.thread}
-		 * has been set to {@code true} otherwise, {@code CONCURRENT}
+		 * @return {@code SAME_THREAD}
 		 */
 		@Override
 		public Optional<ExecutionMode> getDefaultExecutionMode() {
-			return this.usingConcurrentMode ? Optional.empty() : Optional.of(ExecutionMode.SAME_THREAD);
+			return Optional.of(ExecutionMode.SAME_THREAD);
 		}
 	}
 

@@ -14,7 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.api.MethodOrderer.Random.RANDOM_SEED_PROPERTY_NAME;
-import static org.junit.jupiter.api.MethodOrderer.Random.SINGLE_THREAD_MODE_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -131,7 +130,7 @@ class OrderedMethodTests {
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
 		// and that at least 2 different threads were used...
-		assertThat(threadNames).size().isGreaterThanOrEqualTo(2);
+		assertThat(threadNames).hasSize(1);
 	}
 
 	@Test
@@ -147,7 +146,7 @@ class OrderedMethodTests {
 			callSequence.clear();
 			listener.clear();
 
-			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed, seed);
+			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed);
 
 			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -186,7 +185,7 @@ class OrderedMethodTests {
 			callSequence.clear();
 			listener.clear();
 
-			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed, "true");
+			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed);
 
 			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -216,7 +215,7 @@ class OrderedMethodTests {
 			callSequence.clear();
 			listener.clear();
 
-			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed, "true");
+			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed);
 
 			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -226,41 +225,13 @@ class OrderedMethodTests {
 
 			// @formatter:off
 			assertTrue(listener.stream(Random.class, Level.CONFIG)
-					.map(LogRecord::getMessage)
-					.anyMatch(expectedMessage::equals));
+				.map(LogRecord::getMessage)
+				.anyMatch(expectedMessage::equals));
 			// @formatter:on
 		}
-	}
 
-	@Test
-	void randomWithCustomSeedExecutionModeCheck() {
-		String seed = "42";
-		executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed, "true");
-		assertThat(threadNames).hasSize(1);
-	}
-
-	@Test
-	void randomWithExecutionModeFalse() {
-		executeTestsInParallelWithConcurrentMode(RandomTestCase.class, "false");
-		assertThat(threadNames.size()).isGreaterThanOrEqualTo(2);
-	}
-
-	@Test
-	void randomWithExecutionModeBogus() {
-		executeTestsInParallelWithConcurrentMode(RandomTestCase.class, "bogus");
-		assertThat(threadNames.size()).isGreaterThanOrEqualTo(2);
-	}
-
-	@Test
-	void randomWithExecutionModeTrue() {
-		executeTestsInParallelWithConcurrentMode(RandomTestCase.class, "true");
-		assertThat(threadNames).hasSize(1);
-	}
-
-	@Test
-	void randomExecutionModeCheck() {
-		executeTestsInParallel(RandomTestCase.class);
-		assertThat(threadNames.size()).isGreaterThanOrEqualTo(2);
+		// we are expecting at least 3 different runs
+		assertThat(threadNames).size().isGreaterThanOrEqualTo(3);
 	}
 
 	@Test
@@ -314,28 +285,11 @@ class OrderedMethodTests {
 		// @formatter:on
 	}
 
-	private Events executeTestsInParallelWithRandomSeed(Class<?> testClass, String seed, String concurrent) {
+	private Events executeTestsInParallelWithRandomSeed(Class<?> testClass, String seed) {
 		var configurationParameters = Map.of(//
 			PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true", //
-			RANDOM_SEED_PROPERTY_NAME, seed, //
-			SINGLE_THREAD_MODE_PROPERTY_NAME, concurrent //
+			RANDOM_SEED_PROPERTY_NAME, seed //
 		);
-
-		// @formatter:off
-		return EngineTestKit
-				.engine("junit-jupiter")
-				.configurationParameters(configurationParameters)
-				.selectors(selectClass(testClass))
-				.execute()
-				.tests();
-		// @formatter:on
-	}
-
-	private Events executeTestsInParallelWithConcurrentMode(Class<?> testClass, String singleThread) {
-		var configurationParameters = Map.of(//
-			PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true", //
-			SINGLE_THREAD_MODE_PROPERTY_NAME, singleThread, //
-			DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent");
 
 		// @formatter:off
 		return EngineTestKit
