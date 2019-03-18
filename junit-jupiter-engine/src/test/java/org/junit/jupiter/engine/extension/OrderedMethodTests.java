@@ -63,7 +63,6 @@ class OrderedMethodTests {
 
 	private static final Set<String> callSequence = Collections.synchronizedSet(new LinkedHashSet<>());
 	private static final Set<String> threadNames = Collections.synchronizedSet(new LinkedHashSet<>());
-	private static final int THREAD_SLEEP = 10;
 
 	@BeforeEach
 	void clearCallSequence() {
@@ -153,8 +152,8 @@ class OrderedMethodTests {
 
 			// @formatter:off
 			assertTrue(listener.stream(Random.class, Level.WARNING)
-					.map(LogRecord::getMessage)
-					.anyMatch(expectedMessage::equals));
+				.map(LogRecord::getMessage)
+				.anyMatch(expectedMessage::equals));
 			// @formatter:on
 		}
 
@@ -191,8 +190,8 @@ class OrderedMethodTests {
 
 			// @formatter:off
 			assertTrue(listener.stream(Random.class, Level.CONFIG)
-					.map(LogRecord::getMessage)
-					.anyMatch(expectedMessage::equals));
+				.map(LogRecord::getMessage)
+				.anyMatch(expectedMessage::equals));
 			// @formatter:on
 
 			assertThat(threadNames).hasSize(i + 1);
