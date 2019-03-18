@@ -129,7 +129,6 @@ class OrderedMethodTests {
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
-		// and that at least 2 different threads were used...
 		assertThat(threadNames).hasSize(1);
 	}
 
@@ -159,7 +158,6 @@ class OrderedMethodTests {
 			// @formatter:on
 		}
 
-		// As we are falling back to a static seed, the order should be the same for all tests
 		assertThat(uniqueSequences).size().isEqualTo(1);
 	}
 
@@ -200,7 +198,7 @@ class OrderedMethodTests {
 			assertThat(threadNames).hasSize(i + 1);
 		}
 
-		// we are expecting at least 3 different runs
+		// We assume that at least 3 out of 10 are different...
 		assertThat(uniqueSequences).size().isGreaterThanOrEqualTo(3);
 	}
 
@@ -220,8 +218,7 @@ class OrderedMethodTests {
 			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
 			// With a custom seed, the "randomness" must be the same for every iteration.
-			assertThat(callSequence).containsExactly("test2()", "test1()", "test5()", "repetition 1 of 1", "test4()",
-				"test3()");
+			assertThat(callSequence).containsExactly("test2()", "test3()", "test4()", "repetition 1 of 1", "test1()");
 
 			// @formatter:off
 			assertTrue(listener.stream(Random.class, Level.CONFIG)
@@ -230,7 +227,6 @@ class OrderedMethodTests {
 			// @formatter:on
 		}
 
-		// we are expecting at least 3 different runs
 		assertThat(threadNames).size().isGreaterThanOrEqualTo(3);
 	}
 
@@ -268,8 +264,8 @@ class OrderedMethodTests {
 	private void assertExpectedLogMessage(LogRecordListener listener, String expectedMessage) {
 		// @formatter:off
 		assertTrue(listener.stream(Level.WARNING)
-				.map(LogRecord::getMessage)
-				.anyMatch(expectedMessage::equals));
+			.map(LogRecord::getMessage)
+			.anyMatch(expectedMessage::equals));
 		// @formatter:on
 	}
 
@@ -432,33 +428,25 @@ class OrderedMethodTests {
 		}
 
 		@Test
-		void test1() throws InterruptedException {
-			Thread.sleep(THREAD_SLEEP);
+		void test1() {
 		}
 
 		@Test
-		void test2() throws InterruptedException {
-			Thread.sleep(THREAD_SLEEP);
+		void test2() {
 		}
 
 		@Test
-		void test3() throws InterruptedException {
-			Thread.sleep(THREAD_SLEEP);
-		}
-
-		@Test
-		void test4() throws InterruptedException {
-			Thread.sleep(THREAD_SLEEP);
+		void test3() {
 		}
 
 		@TestFactory
-		DynamicTest test5() {
+		DynamicTest test4() {
 			return dynamicTest("dynamic", () -> {
 			});
 		}
 
 		@RepeatedTest(1)
-		void test6() {
+		void test5() {
 		}
 	}
 
