@@ -6,8 +6,8 @@ This repository is the home of the next generation of JUnit, _JUnit 5_.
 
 ## Latest Releases
 
-- General Availability (GA): [JUnit 5.4.0](https://github.com/junit-team/junit5/releases/tag/r5.4.0)
-(February 7, 2019).
+- General Availability (GA): [JUnit 5.4.1](https://github.com/junit-team/junit5/releases/tag/r5.4.1)
+(March 17, 2019).
 - Preview (Milestone/Release Candidate): N/A
 
 ## Documentation
@@ -33,10 +33,11 @@ Ask JUnit 5 related questions on [StackOverflow] or chat with the team and the c
 
 ## Continuous Integration Builds
 
-| CI Server | OS           | Status | Description |
-| --------- | ------------ | ------ | ----------- |
-| Travis CI | Linux, macOS | [![Travis CI build status](https://travis-ci.org/junit-team/junit5.svg?branch=master)](https://travis-ci.org/junit-team/junit5) | Official CI build server for JUnit 5. Used to perform quick checks on submitted pull requests and for build matrices including the latest released OpenJDK and early access builds of the next OpenJDK |
-| AppVeyor  | Windows      | [![Build status](https://ci.appveyor.com/api/projects/status/xv8wc8w9sr44ghc4/branch/master?svg=true)](https://ci.appveyor.com/project/marcphilipp/junit5/branch/master) | Used to ensure that JUnit 5 can be built on Windows |
+[![Build Status](https://dev.azure.com/junit-team/junit5/_apis/build/status/junit-team.junit5?branchName=master)](https://dev.azure.com/junit-team/junit5/_build/latest?definitionId=1&branchName=master)
+
+Official CI build server for JUnit 5. Used to perform quick checks on submitted pull
+requests and for build matrices including the latest released OpenJDK and early access
+builds of the next OpenJDK.
 
 ## Code Coverage
 
@@ -83,7 +84,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 ### JUnit Platform
 
 - **Group ID**: `org.junit.platform`
-- **Version**: `1.4.0` or `1.5.0-SNAPSHOT`
+- **Version**: `1.4.1` or `1.5.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
   - `junit-platform-commons` (`org.junit.platform.commons`)
   - `junit-platform-console` (`org.junit.platform.console`)
@@ -98,7 +99,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 ### JUnit Jupiter
 
 - **Group ID**: `org.junit.jupiter`
-- **Version**: `5.4.0` or `5.5.0-SNAPSHOT`
+- **Version**: `5.4.1` or `5.5.0-SNAPSHOT`
 - **Artifact IDs** and **Automatic-Module-Name**:
   - `junit-jupiter` (`org.junit.jupiter`)
   - `junit-jupiter-api` (`org.junit.jupiter.api`)
@@ -109,7 +110,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 ### JUnit Vintage
 
 - **Group ID**: `org.junit.vintage`
-- **Version**: `5.4.0` or `5.5.0-SNAPSHOT`
+- **Version**: `5.4.1` or `5.5.0-SNAPSHOT`
 - **Artifact ID** and **Automatic-Module-Name**:
   - `junit-vintage-engine` (`org.junit.vintage.engine`)
 
@@ -117,7 +118,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 
 - **Group ID**: `org.junit`
 - **Artifact ID** `junit-bom`
-- **Version**: `5.4.0` or `5.5.0-SNAPSHOT`
+- **Version**: `5.4.1` or `5.5.0-SNAPSHOT`
 
 ## Java Module Names
 

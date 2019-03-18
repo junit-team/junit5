@@ -1,0 +1,45 @@
+[[release-notes-5.4.1]]
+== 5.4.1
+
+*Date of Release:* March 17, 2019
+
+*Scope:* Bug fixes since 5.4.0
+
+For a complete list of all _closed_ issues and pull requests for this release, consult
+the link:{junit5-repo}+/milestone/36?closed=1+[5.4.1] milestone page in the JUnit
+repository on GitHub.
+
+
+[[release-notes-5.4.1-overall-improvements]]
+=== Overall Improvements
+
+* Fix `Specification-Version` entry in JAR manifests
+
+
+[[release-notes-5.4.1-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* Restore compatibility with Android: Unsupported `Pattern` flags, like
+  `UNICODE_CHARACTER_CLASS`, no longer cause class `StringUtils` to fail during
+  initialization.
+
+
+[[release-notes-5.4.1-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* Deletion of a temporary directory within a test no longer results in a test failure for
+  a temporary directory supplied via `@TempDir`.
+
+
+[[release-notes-5.4.1-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* Fix reporting of finish events of intermediate containers with static and dynamic
+  children, e.g. Spock test classes with regular and `@Unroll` feature methods in a test
+  suite.
