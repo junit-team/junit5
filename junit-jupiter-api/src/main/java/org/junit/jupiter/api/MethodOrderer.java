@@ -171,10 +171,11 @@ public interface MethodOrderer {
 	 * value returned by {@link System#nanoTime()}. In order to produce repeatable
 	 * builds, a custom seed may be specified via the
 	 * {@link Random#RANDOM_SEED_PROPERTY_NAME junit.jupiter.execution.order.random.seed}
-	 * <em>configuration parameter</em> via the
+	 * <em>configuration parameter</em> which can be supplied via the
 	 * {@code Launcher} API, build tools (e.g., Gradle and Maven), a JVM system
 	 * property, or the JUnit Platform configuration file (i.e., a file named
-	 * {@code junit-platform.properties} in the root of the class path).
+	 * {@code junit-platform.properties} in the root of the class path). Consult
+	 * the User Guide for further information.
 	 *
 	 * @see #getDefaultExecutionMode()
 	 * @see Random#RANDOM_SEED_PROPERTY_NAME
