@@ -610,14 +610,10 @@ on GitHub.</p>
 <ul>
 <li>
 <p>Configurable test discovery implementation that can be reused by different test engines
-(see Javadoc of <code>org.junit.platform.engine.support.discovery</code>).</p>
+(see Javadoc of the <code><a href="../api/org/junit/platform/engine/support/discovery/package-summary.html">org.junit.platform.engine.support.discovery</a></code> package).</p>
 </li>
 <li>
 <p>New <code>isFinal()</code> and <code>isNotFinal()</code> methods in <code>ModifierSupport</code>.</p>
-</li>
-<li>
-<p><code>@ValueSource</code> now additionally supports literal values of type <code>boolean</code> for
-parameterized tests.</p>
 </li>
 </ul>
 </div>
@@ -630,8 +626,12 @@ parameterized tests.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Supply expected and actual values for failed boolean assertions for enhanced IDE
-support.</p>
+<p>Expected and actual values are now supplied for failed <code>boolean</code> assertions for enhanced
+IDE and reporting support&#8201;&#8212;&#8201;for example, when <code>assertTrue()</code> or <code>assertFalse()</code> fails.</p>
+</li>
+<li>
+<p><code>@ValueSource</code> now additionally supports literal values of type <code>boolean</code> for
+parameterized tests.</p>
 </li>
 </ul>
 </div>
@@ -784,7 +784,7 @@ in build tools</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-03-19 16:41:40 UTC
+Last updated 2019-03-19 18:39:04 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
