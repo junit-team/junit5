@@ -162,16 +162,6 @@ class OrderedMethodTests {
 
 	@Test
 	@TrackLogRecords
-	@Disabled("needs to be loaded within own Classloader, not sure how to verify")
-	void randomDefaultValue(LogRecordListener listener) {
-		String initalMessage = "Initializing MethodOrderer.Random seed with value";
-		executeTestsInParallel(RandomTestCase.class);
-		assertTrue(listener.stream(Random.class, Level.CONFIG).map(LogRecord::getMessage).anyMatch(
-			s -> s.startsWith(initalMessage)));
-	}
-
-	@Test
-	@TrackLogRecords
 	void randomWithDifferentSeedConsecutively(LogRecordListener listener) {
 		Set<String> uniqueSequences = new HashSet<>();
 

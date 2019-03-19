@@ -162,14 +162,13 @@ public interface MethodOrderer {
 	}
 
 	/**
-	 * {@code MethodOrderer} that orders methods pseudo-randomly and allows for
-	 * concurrent execution by default.
+	 * {@code MethodOrderer} that orders methods pseudo-randomly.
 	 *
 	 * <h4>Custom Seed</h4>
 	 *
 	 * <p>By default, the random <em>seed</em> used for ordering methods is the
-	 * value returned by {@link System#nanoTime()}. In order to produce repeatable
-	 * builds, a custom seed may be specified via the
+	 * value returned by {@link System#nanoTime()} during static initialization.
+	 * In order to produce repeatable builds, a custom seed may be specified via the
 	 * {@link Random#RANDOM_SEED_PROPERTY_NAME junit.jupiter.execution.order.random.seed}
 	 * <em>configuration parameter</em> which can be supplied via the
 	 * {@code Launcher} API, build tools (e.g., Gradle and Maven), a JVM system
@@ -177,7 +176,6 @@ public interface MethodOrderer {
 	 * {@code junit-platform.properties} in the root of the class path). Consult
 	 * the User Guide for further information.
 	 *
-	 * @see #getDefaultExecutionMode()
 	 * @see Random#RANDOM_SEED_PROPERTY_NAME
 	 * @see java.util.Random
 	 */
@@ -186,8 +184,8 @@ public interface MethodOrderer {
 		private static final Logger logger = LoggerFactory.getLogger(Random.class);
 
 		/**
-		 * Initial seed, which is generated during initialization of class
-		 * for reproducibility of tests.
+		 * Initial seed, which is generated during initialization of class with
+		 * {@link System#nanoTime()} for reproducibility of tests.
 		 */
 		private static final long INITIAL_SEED;
 
@@ -201,7 +199,7 @@ public interface MethodOrderer {
 		 * {@link Long} via {@link Long#valueOf(String)}.
 		 *
 		 * <p>If not specified or if the specified value cannot be converted to
-		 * a {@code Long}, {@link System#nanoTime()} will be used as the random
+		 * a {@code Long}, {@link Random:INITIAL_SEED} will be used as the random
 		 * seed.
 		 */
 		public static final String RANDOM_SEED_PROPERTY_NAME = "junit.jupiter.execution.order.random.seed";
@@ -241,19 +239,6 @@ public interface MethodOrderer {
 				}
 				return seed;
 			});
-		}
-
-		/**
-		 * Get the <em>default</em> {@link ExecutionMode} for the test class.
-		 *
-		 * <p>Tests ececuted with this {@code MethodOrderer.Random} will be alway executed
-		 * with {@link ExecutionMode} {@link ExecutionMode#SAME_THREAD SAME_THREAD}.
-		 *
-		 * @return {@code SAME_THREAD}
-		 */
-		@Override
-		public Optional<ExecutionMode> getDefaultExecutionMode() {
-			return Optional.of(ExecutionMode.SAME_THREAD);
 		}
 	}
 
