@@ -23,8 +23,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* MethodOrderer.Random generates random seed during static initialization and prints this information to the log.
-* MethodOrderer.Random is always running in SAME_THREAD, instead of running in CONCURRENT mode when no seed was provided.
+* ❓
 
 
 [[release-notes-5.5.0-M2-junit-jupiter]]
@@ -40,7 +39,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* MethodOrderer.Random generates random seed during static initialization and prints this information to the log.
+* MethodOrderer.Random is always running in SAME_THREAD, instead of running in CONCURRENT mode when no seed was provided.
 
 
 [[release-notes-5.5.0-M2-junit-vintage]]
