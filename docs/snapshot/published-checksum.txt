@@ -139,6 +139,7 @@
 366ad6786afed0587542a0b0aa718715  junit-platform-engine/src/main/java/org/junit/platform/engine/ConfigurationParameters.java
 37b7eb37e6b2182c4274e54d4d7d7869  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicTestTestDescriptor.java
 37ca1648340294829327398b1e5c5889  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/DefaultJupiterConfiguration.java
+37d2e6ed517f070fa81e51b0686e1907  documentation/src/docs/asciidoc/release-notes/release-notes-5.5.0-M1.adoc
 38a6ef7dcc8ec641d0e0e5d53ec1e0df  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Nested.java
 38ddd1c9a52c67af632b1661850e1b59  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/LegacyReportingUtils.java
 3999feee881b7e22bcf60fd50afa031a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/DiscoverySelectorResolver.java
@@ -516,7 +517,6 @@ d7967d582f8ec050fa4483677c992838  junit-platform-engine/src/main/java/org/junit/
 d83155ec3ccfe2c1ce080b79aad7d0c8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterContext.java
 d84029b0bd95c27a0c2db076fcad01e6  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/DirectorySelector.java
 d98a7ee7dc99f7031ab8cdfcc4779ae6  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/ClassExtensionContext.java
-d9caaab315c9ffbbef67bb48d5797f03  documentation/src/docs/asciidoc/release-notes/release-notes-5.5.0-M1.adoc
 d9d5c16c9edfc6011816243e3099211b  junit-platform-launcher/src/main/java/org/junit/platform/launcher/package-info.java
 da266ec0fdf867cde55a9b6efc54f91d  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectPackages.java
 da6bcf4451d56c0120d20acccb90e36e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertTimeout.java
