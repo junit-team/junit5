@@ -199,8 +199,8 @@ public interface MethodOrderer {
 		 * {@link Long} via {@link Long#valueOf(String)}.
 		 *
 		 * <p>If not specified or if the specified value cannot be converted to
-		 * a {@code Long}, {@link Random:INITIAL_SEED} will be used as the random
-		 * seed.
+		 * a {@link Long}, {@link Random#INITIAL_SEED INITIAL_SEED} will be used
+		 * as the random seed.
 		 */
 		public static final String RANDOM_SEED_PROPERTY_NAME = "junit.jupiter.execution.order.random.seed";
 
