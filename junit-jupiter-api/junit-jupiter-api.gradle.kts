@@ -1,3 +1,8 @@
+plugins {
+	`java-library`
+	kotlin("jvm")
+}
+
 description = "JUnit Jupiter API"
 
 dependencies {

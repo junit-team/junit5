@@ -1,3 +1,7 @@
+plugins {
+	`java-library`
+}
+
 apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 extra["mainJavaVersion"] = JavaVersion.VERSION_11

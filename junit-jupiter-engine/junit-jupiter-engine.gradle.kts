@@ -1,4 +1,6 @@
 plugins {
+	`java-library`
+	kotlin("jvm")
 	groovy
 }
 

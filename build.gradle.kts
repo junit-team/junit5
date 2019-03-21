@@ -75,12 +75,9 @@ val jacocoClassesDir = file("$buildDir/jacoco/classes")
 
 allprojects {
 
-	apply(plugin = "java-library")
-	apply(plugin = "kotlin")
 	apply(plugin = "eclipse")
 	apply(plugin = "idea")
 	apply(plugin = "com.diffplug.gradle.spotless")
-	apply(plugin = "checkstyle")
 	apply(plugin = "com.github.ben-manes.versions") // gradle dependencyUpdates
 
 	if (enableJaCoCo) {
@@ -93,75 +90,87 @@ allprojects {
 	repositories {
 		// mavenLocal()
 		mavenCentral()
-		maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+		maven(url = "https://oss.sonatype.org/content/repositories/snapshots") {
+			mavenContent {
+				snapshotsOnly()
+			}
+		}
 	}
 
-	tasks.compileJava {
-		options.encoding = "UTF-8"
+	pluginManager.withPlugin("java") {
 
-		// See: https://docs.oracle.com/en/java/javase/11/tools/javac.html
-		options.compilerArgs.addAll(listOf(
-			"-Xlint", // Enables all recommended warnings.
-			"-Werror" // Terminates compilation when warnings occur.
-		))
-	}
+		apply(plugin = "checkstyle")
 
-	// Declare "mainJavaVersion" and "testJavaVersion" as a global properties
-	//  so they can be overridden by subprojects
-	val mainJavaVersion by extra(Versions.jvmTarget)
-	val testJavaVersion by extra(JavaVersion.VERSION_11)
+		tasks.compileJava {
+			options.encoding = "UTF-8"
 
-	afterEvaluate {
+			// See: https://docs.oracle.com/en/java/javase/11/tools/javac.html
+			options.compilerArgs.addAll(listOf(
+					"-Xlint", // Enables all recommended warnings.
+					"-Werror" // Terminates compilation when warnings occur.
+			))
+		}
+
+		// Declare "mainJavaVersion" and "testJavaVersion" as a global properties
+		//  so they can be overridden by subprojects
+		val mainJavaVersion by extra(Versions.jvmTarget)
+		val testJavaVersion by extra(JavaVersion.VERSION_11)
+
+		afterEvaluate {
+			tasks {
+				compileJava {
+					sourceCompatibility = mainJavaVersion.majorVersion
+					targetCompatibility = mainJavaVersion.majorVersion // needed by asm
+					// --release release
+					// Compiles against the public, supported and documented API for a specific VM version.
+					// Supported release targets are 6, 7, 8, 9, 10, and 11.
+					// Note that if --release is added then -target and -source are ignored.
+					options.compilerArgs.addAll(listOf("--release", mainJavaVersion.majorVersion))
+				}
+				compileTestJava {
+					options.encoding = "UTF-8"
+					sourceCompatibility = testJavaVersion.majorVersion
+					targetCompatibility = testJavaVersion.majorVersion
+
+					// See: https://docs.oracle.com/en/java/javase/11/tools/javac.html
+					options.compilerArgs.addAll(listOf(
+							"-Xlint", // Enables all recommended warnings.
+							"-Xlint:-overrides", // Disables "method overrides" warnings.
+							"-parameters" // Generates metadata for reflection on method parameters.
+					))
+				}
+			}
+		}
+
+		checkstyle {
+			toolVersion = Versions.checkstyle
+			configDir = rootProject.file("src/checkstyle")
+		}
 		tasks {
-			compileJava {
-				sourceCompatibility = mainJavaVersion.majorVersion
-				targetCompatibility = mainJavaVersion.majorVersion // needed by asm
-				// --release release
-				// Compiles against the public, supported and documented API for a specific VM version.
-				// Supported release targets are 6, 7, 8, 9, 10, and 11.
-				// Note that if --release is added then -target and -source are ignored.
-				options.compilerArgs.addAll(listOf("--release", mainJavaVersion.majorVersion))
+			checkstyleMain {
+				configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
 			}
-			compileTestJava {
-				options.encoding = "UTF-8"
-				sourceCompatibility = testJavaVersion.majorVersion
-				targetCompatibility = testJavaVersion.majorVersion
-
-				// See: https://docs.oracle.com/en/java/javase/11/tools/javac.html
-				options.compilerArgs.addAll(listOf(
-						"-Xlint", // Enables all recommended warnings.
-						"-Xlint:-overrides", // Disables "method overrides" warnings.
-						"-parameters" // Generates metadata for reflection on method parameters.
-				))
+			checkstyleTest {
+				configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
 			}
 		}
 	}
 
-	tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-		kotlinOptions {
-			jvmTarget = Versions.jvmTarget.toString()
-			apiVersion = "1.1"
-			languageVersion = "1.1"
-		}
-	}
+	pluginManager.withPlugin("kotlin") {
 
-	// Workaround for https://youtrack.jetbrains.com/issue/KT-29823, should be fixed in Kotlin Plugin 1.3.30
-	configurations.getByName("apiElements") {
-		attributes {
-			attribute(Usage.USAGE_ATTRIBUTE, project.objects.named(Usage::class.java, Usage.JAVA_API_JARS))
+		tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+			kotlinOptions {
+				jvmTarget = Versions.jvmTarget.toString()
+				apiVersion = "1.1"
+				languageVersion = "1.1"
+			}
 		}
-	}
 
-	checkstyle {
-		toolVersion = Versions.checkstyle
-		configDir = rootProject.file("src/checkstyle")
-	}
-	tasks {
-		checkstyleMain {
-			configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
-		}
-		checkstyleTest {
-			configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
+		// Workaround for https://youtrack.jetbrains.com/issue/KT-29823, should be fixed in Kotlin Plugin 1.3.30
+		configurations.getByName("apiElements") {
+			attributes {
+				attribute(Usage.USAGE_ATTRIBUTE, project.objects.named(Usage::class.java, Usage.JAVA_API_JARS))
+			}
 		}
 	}
 }
@@ -182,191 +191,192 @@ subprojects {
 
 	val shadowed by configurations.creating
 
-	sourceSets {
-		main {
-			compileClasspath += shadowed
+	pluginManager.withPlugin("java") {
+
+		configure<SourceSetContainer> {
+			main {
+				compileClasspath += shadowed
+			}
+			test {
+				runtimeClasspath += shadowed
+			}
 		}
-		test {
-			runtimeClasspath += shadowed
+
+		eclipse {
+			classpath {
+				plusConfigurations.add(shadowed)
+			}
 		}
-	}
 
-	eclipse {
-		classpath {
-			plusConfigurations.add(shadowed)
+		idea {
+			module {
+				scopes["PROVIDED"]!!["plus"]!!.add(shadowed)
+			}
 		}
-	}
-
-	idea {
-		module {
-			scopes["PROVIDED"]!!["plus"]!!.add(shadowed)
-		}
-	}
-
-	tasks.javadoc {
-		classpath += shadowed
-	}
-
-	tasks.checkstyleMain {
-		classpath += shadowed
-	}
-
-	if (project in mavenizedProjects) {
-
-		apply(from = "$rootDir/gradle/publishing.gradle.kts")
 
 		tasks.javadoc {
-			options {
-				memberLevel = JavadocMemberLevel.PROTECTED
-				header = project.name
-				encoding = "UTF-8"
-				(this as StandardJavadocDocletOptions).apply {
-					addBooleanOption("Xdoclint:html,syntax", true)
-					addBooleanOption("html5", true)
-					addBooleanOption("-no-module-directories", true)
-					addMultilineStringsOption("tag").value = listOf(
-							"apiNote:a:API Note:",
-							"implNote:a:Implementation Note:"
-					)
-					use(true)
-					noTimestamp(true)
+			classpath += shadowed
+		}
+
+		tasks.checkstyleMain {
+			classpath += shadowed
+		}
+
+		if (project in mavenizedProjects) {
+
+			apply(from = "$rootDir/gradle/publishing.gradle.kts")
+
+			tasks.javadoc {
+				options {
+					memberLevel = JavadocMemberLevel.PROTECTED
+					header = project.name
+					encoding = "UTF-8"
+					(this as StandardJavadocDocletOptions).apply {
+						addBooleanOption("Xdoclint:html,syntax", true)
+						addBooleanOption("html5", true)
+						addBooleanOption("-no-module-directories", true)
+						addMultilineStringsOption("tag").value = listOf(
+								"apiNote:a:API Note:",
+								"implNote:a:Implementation Note:"
+						)
+						use(true)
+						noTimestamp(true)
+					}
+				}
+			}
+
+			val sourcesJar by tasks.creating(Jar::class) {
+				dependsOn(tasks.classes)
+				archiveClassifier.set("sources")
+				from(sourceSets.main.get().allSource)
+				duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+			}
+
+			val javadocJar by tasks.creating(Jar::class) {
+				archiveClassifier.set("javadoc")
+				from(tasks.javadoc)
+			}
+
+			tasks.withType<Jar> {
+				from(rootDir) {
+					include("LICENSE.md", "LICENSE-notice.md")
+					into("META-INF")
+				}
+			}
+
+			configure<PublishingExtension> {
+				publications {
+					named<MavenPublication>("maven") {
+						from(components["java"])
+						artifact(sourcesJar)
+						artifact(javadocJar)
+						pom {
+							description.set(provider { "Module \"${project.name}\" of JUnit 5." })
+						}
+					}
+				}
+			}
+
+		} else {
+			tasks {
+				jar {
+					enabled = false
+				}
+				javadoc {
+					enabled = false
 				}
 			}
 		}
 
-		val sourcesJar by tasks.creating(Jar::class) {
-			dependsOn(tasks.classes)
-			archiveClassifier.set("sources")
-			from(sourceSets.main.get().allSource)
-			duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-		}
-
-		val javadocJar by tasks.creating(Jar::class) {
-			archiveClassifier.set("javadoc")
-			from(tasks.javadoc)
-		}
-
-		tasks.withType<Jar> {
-			from(rootDir) {
-				include("LICENSE.md", "LICENSE-notice.md")
-				into("META-INF")
+		normalization {
+			runtimeClasspath {
+				// Ignore the JAR manifest when checking whether runtime classpath have changed
+				// because it contains timestamps and the commit checksum. This is used when
+				// checking whether a test task is up-to-date or can be loaded from the build cache.
+				ignore("/META-INF/MANIFEST.MF")
 			}
 		}
 
-		configure<PublishingExtension> {
-			publications {
-				named<MavenPublication>("maven") {
-					from(components["java"])
-					artifact(sourcesJar)
-					artifact(javadocJar)
-					pom {
-						description.set(provider { "Module \"${project.name}\" of JUnit 5." })
+		tasks.jar {
+			manifest {
+				attributes(
+						"Created-By" to "${System.getProperty("java.version")} (${System.getProperty("java.vendor")} ${System.getProperty("java.vm.version")})",
+						"Built-By" to builtByValue,
+						"Build-Date" to buildDate,
+						"Build-Time" to buildTime,
+						"Build-Revision" to buildRevision,
+						"Specification-Title" to project.name,
+						"Specification-Version" to (project.version as String).substringBefore('-'),
+						"Specification-Vendor" to "junit.org",
+						"Implementation-Title" to project.name,
+						"Implementation-Version" to project.version,
+						"Implementation-Vendor" to "junit.org"
+				)
+			}
+
+			// If available, compile and include classes for other Java versions.
+			listOf("9").forEach { version ->
+				val versionedProject = findProject(":${project.name}-java-$version")
+				if (versionedProject != null) {
+					// We"re only interested in the compiled classes. So we depend
+					// on the classes task and change (-C) to the destination
+					// directory of the version-aware project later.
+					dependsOn(versionedProject.tasks.matching { it.name == "classes" })
+					doLast {
+						ToolProvider.findFirst("jar").get().run(System.out, System.err,
+								"--update",
+								"--file", archivePath.toString(),
+								"--release", version,
+								"-C", versionedProject.tasks.compileJava.get().destinationDir.toString(),
+								".")
 					}
 				}
 			}
 		}
 
-	} else {
-		tasks {
-			jar {
-				enabled = false
+		spotless {
+			val headerFile = license.headerFile
+			val importOrderConfigFile = rootProject.file("src/eclipse/junit-eclipse.importorder")
+			val javaFormatterConfigFile = rootProject.file("src/eclipse/junit-eclipse-formatter-settings.xml")
+
+			java {
+				licenseHeaderFile(headerFile, "(package|import|open|module) ")
+				importOrderFile(importOrderConfigFile)
+				eclipse().configFile(javaFormatterConfigFile)
+				removeUnusedImports()
+				trimTrailingWhitespace()
+				endWithNewline()
 			}
-			javadoc {
-				enabled = false
+
+			kotlin {
+				ktlint(Versions.ktlint)
+				licenseHeaderFile(headerFile)
+				trimTrailingWhitespace()
+				endWithNewline()
 			}
 		}
-	}
 
-	normalization {
-		runtimeClasspath {
-			// Ignore the JAR manifest when checking whether runtime classpath have changed
-			// because it contains timestamps and the commit checksum. This is used when
-			// checking whether a test task is up-to-date or can be loaded from the build cache.
-			ignore("/META-INF/MANIFEST.MF")
-		}
-	}
-
-	tasks.jar {
-		manifest {
-			attributes(
-				"Created-By" to "${System.getProperty("java.version")} (${System.getProperty("java.vendor")} ${System.getProperty("java.vm.version")})",
-				"Built-By" to builtByValue,
-				"Build-Date" to buildDate,
-				"Build-Time" to buildTime,
-				"Build-Revision" to buildRevision,
-				"Specification-Title" to project.name,
-				"Specification-Version" to (project.version as String).substringBefore('-'),
-				"Specification-Vendor" to "junit.org",
-				"Implementation-Title" to project.name,
-				"Implementation-Version" to project.version,
-				"Implementation-Vendor" to "junit.org"
-			)
-		}
-
-		// If available, compile and include classes for other Java versions.
-		listOf("9").forEach { version ->
-			val versionedProject = findProject(":${project.name}-java-$version")
-			if (versionedProject != null) {
-				// We"re only interested in the compiled classes. So we depend
-				// on the classes task and change (-C) to the destination
-				// directory of the version-aware project later.
-				dependsOn(versionedProject.tasks.classes)
-				doLast {
-					ToolProvider.findFirst("jar").get().run(System.out, System.err,
-							"--update",
-							"--file", archivePath.toString(),
-							"--release", version,
-							"-C", versionedProject.tasks.compileJava.get().destinationDir.toString(),
-							".")
+		afterEvaluate {
+			if (enableJaCoCo && project in jacocoCoveredProjects) {
+				val jarTask = (tasks.findByName("shadowJar") ?: tasks.jar.get()) as Jar
+				val extractJar by tasks.registering(Copy::class) {
+					from(zipTree(jarTask.archivePath))
+					into(jacocoClassesDir)
+					include("**/*.class")
+					// don"t report coverage for shadowed classes
+					exclude("**/shadow/**")
+					// don"t version-specific classes of MR JARs
+					exclude("META-INF/versions/**")
+					includeEmptyDirs = false
+					onlyIf { jarTask.enabled }
 				}
+				jarTask.finalizedBy(extractJar)
 			}
-		}
-	}
-
-	spotless {
-		val headerFile = license.headerFile
-		val importOrderConfigFile = rootProject.file("src/eclipse/junit-eclipse.importorder")
-		val javaFormatterConfigFile = rootProject.file("src/eclipse/junit-eclipse-formatter-settings.xml")
-
-		java {
-			licenseHeaderFile(headerFile, "(package|import|open|module) ")
-			importOrderFile(importOrderConfigFile)
-			eclipse().configFile(javaFormatterConfigFile)
-			removeUnusedImports()
-			trimTrailingWhitespace()
-			endWithNewline()
-		}
-
-		kotlin {
-			ktlint(Versions.ktlint)
-			licenseHeaderFile(headerFile)
-			trimTrailingWhitespace()
-			endWithNewline()
-		}
-	}
-
-	afterEvaluate {
-		if (enableJaCoCo && project in jacocoCoveredProjects) {
-			val jarTask = (tasks.findByName("shadowJar") ?: tasks.jar.get()) as Jar
-			val extractJar by tasks.registering(Copy::class) {
-				from(zipTree(jarTask.archivePath))
-				into(jacocoClassesDir)
-				include("**/*.class")
-				// don"t report coverage for shadowed classes
-				exclude("**/shadow/**")
-				// don"t version-specific classes of MR JARs
-				exclude("META-INF/versions/**")
-				includeEmptyDirs = false
-				onlyIf { jarTask.enabled }
-			}
-			jarTask.finalizedBy(extractJar)
 		}
 	}
 }
 
 rootProject.apply {
-	apply(plugin = "org.ajoberstar.git-publish")
-
 	description = "JUnit 5"
 
 	val docsDir = file("$buildDir/ghpages-docs")
@@ -399,7 +409,6 @@ rootProject.apply {
 		val aggregateJavadocs by registering(Javadoc::class) {
 			group = "Documentation"
 			description = "Generates aggregated Javadocs"
-			dependsOn(subprojects.map { it.tasks.named("jar") })
 
 			title = "JUnit ${version} API"
 
@@ -433,17 +442,23 @@ rootProject.apply {
 					noTimestamp(true)
 				}
 			}
-			// Only generate JavaDoc for "main" sources in Mavenized projects
-			source(subprojects.filter { it in mavenizedProjects }.map { it.sourceSets.main.get().allJava })
 
 			maxMemory = "1024m"
 			destinationDir = file("$buildDir/docs/javadoc")
-			classpath = files(subprojects.map { it.sourceSets.main.get().compileClasspath })
-				// Remove Kotlin classes from classpath due to "bad" class file
-				// see https://bugs.openjdk.java.net/browse/JDK-8187422
-				.filter { !it.path.contains("kotlin") }
-				// Remove subproject JARs so Kotlin classes don"t get picked up
-				.filter { it.isDirectory() || !it.absolutePath.startsWith(projectDir.absolutePath) }
+
+			mavenizedProjects.forEach {
+				it.pluginManager.withPlugin("java") {
+					dependsOn(it.tasks.named("classes"))
+					// Only generate JavaDoc for "main" sources in Mavenized projects
+					source(it.sourceSets.main.get().allJava)
+					classpath += files(it.sourceSets.main.get().compileClasspath)
+							// Remove Kotlin classes from classpath due to "bad" class file
+							// see https://bugs.openjdk.java.net/browse/JDK-8187422
+							.filter { !it.path.contains("kotlin") }
+							// Remove subproject JARs so Kotlin classes don"t get picked up
+							.filter { it.isDirectory() || !it.absolutePath.startsWith(projectDir.absolutePath) }
+				}
+			}
 
 			doLast {
 				// For compatibility with pre JDK 10 versions of the Javadoc tool
@@ -522,9 +537,11 @@ rootProject.apply {
 			}
 			register<JacocoReport>("jacocoRootReport") {
 				dependsOn(jacocoMerge)
-				sourceDirectories.from(files(subprojects
-						.filter { it in jacocoCoveredProjects }
-						.map { it.sourceSets.main.get().allSource.srcDirs }))
+				jacocoCoveredProjects.forEach {
+					it.pluginManager.withPlugin("java") {
+						sourceDirectories.from(it.the<SourceSetContainer>()["main"].allSource.srcDirs)
+					}
+				}
 				classDirectories.from(files(jacocoClassesDir))
 				executionData(jacocoMerge.get().destinationFile)
 				reports {

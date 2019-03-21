@@ -16,6 +16,8 @@ buildscript {
 
 plugins {
 	id("org.asciidoctor.convert")
+	`java-library`
+	kotlin("jvm")
 }
 
 extra["mainJavaVersion"] = JavaVersion.VERSION_1_8

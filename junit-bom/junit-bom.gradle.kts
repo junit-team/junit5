@@ -1,3 +1,7 @@
+plugins {
+	`java-platform`
+}
+
 description = "${rootProject.description} (Bill of Materials)"
 
 apply(from = "$rootDir/gradle/publishing.gradle.kts")
@@ -12,7 +16,7 @@ dependencies {
 }
 
 the<PublishingExtension>().publications.named<MavenPublication>("maven") {
-	from(components["javaLibraryPlatform"])
+	from(components["javaPlatform"])
 	pom {
 		description.set("This Bill of Materials POM can be used to ease dependency management " +
 				"when referencing multiple JUnit artifacts using Gradle or Maven.")
