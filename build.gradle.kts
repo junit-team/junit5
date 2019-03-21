@@ -145,6 +145,13 @@ allprojects {
 		}
 	}
 
+	// Workaround for https://youtrack.jetbrains.com/issue/KT-29823, should be fixed in Kotlin Plugin 1.3.30
+	configurations.getByName("apiElements") {
+		attributes {
+			attribute(Usage.USAGE_ATTRIBUTE, project.objects.named(Usage::class.java, Usage.JAVA_API_JARS))
+		}
+	}
+
 	checkstyle {
 		toolVersion = Versions.checkstyle
 		configDir = rootProject.file("src/checkstyle")
