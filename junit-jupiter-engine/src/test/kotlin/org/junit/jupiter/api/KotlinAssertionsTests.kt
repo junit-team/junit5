@@ -9,10 +9,13 @@
  */
 package org.junit.jupiter.api
 
+import org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith
 import org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError
+import org.junit.jupiter.api.DynamicContainer.dynamicContainer
+import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.opentest4j.AssertionFailedError
 import org.opentest4j.MultipleFailuresError
 import java.lang.AssertionError
@@ -58,6 +61,60 @@ class KotlinAssertionsTests {
         assertThrows<AssertionError>({ "should fail" }) { fail(AssertionError()) }
         assertThrows<AssertionError>({ "should fail" }) { fail(null as Throwable?) }
     }
+
+    @TestFactory
+    fun assertDoesNotThrow(): Stream<out DynamicNode> = Stream.of(
+        dynamicContainer("succeeds when no exception thrown", Stream.of(
+            dynamicTest("for no arguments variant") {
+                assertDoesNotThrow { }
+            },
+            dynamicTest("for message variant") {
+                assertDoesNotThrow("message") { }
+            },
+            dynamicTest("for message supplier variant") {
+                assertDoesNotThrow({ "message" }) { }
+            }
+        )),
+        dynamicContainer("fails when an exception is thrown", Stream.of(
+            dynamicTest("for no arguments variant") {
+                try {
+                    assertDoesNotThrow {
+                        fail("fail")
+                    }
+                    expectAssertionFailedError()
+                } catch (exception: AssertionError) {
+                    assertMessageEquals(exception,
+                        "Unexpected exception thrown: org.opentest4j.AssertionFailedError: fail")
+                }
+            },
+            dynamicTest("for message variant") {
+                try {
+                    assertDoesNotThrow("Does not throw") {
+                        fail("fail")
+                    }
+                    expectAssertionFailedError()
+                } catch (exception: AssertionError) {
+                    assertMessageEquals(
+                        exception,
+                        "Does not throw ==> Unexpected exception thrown: org.opentest4j.AssertionFailedError: fail"
+                    )
+                }
+            },
+            dynamicTest("for message supplier variant") {
+                try {
+                    assertDoesNotThrow({ "Does not throw" }) {
+                        fail("fail")
+                    }
+                    expectAssertionFailedError()
+                } catch (exception: AssertionError) {
+                    assertMessageEquals(
+                        exception,
+                        "Does not throw ==> Unexpected exception thrown: org.opentest4j.AssertionFailedError: fail"
+                    )
+                }
+            }
+        ))
+    )
 
     @Test
     fun `assertAll with stream of functions that throw AssertionErrors`() {

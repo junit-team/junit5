@@ -7,8 +7,6 @@
  *
  * https://www.eclipse.org/legal/epl-v20.html
  */
-@file:API(status = EXPERIMENTAL, since = "5.1")
-
 package org.junit.jupiter.api
 
 import org.apiguardian.api.API
@@ -20,18 +18,21 @@ import java.util.stream.Stream
 /**
  * @see Assertions.fail
  */
+@API(status = EXPERIMENTAL, since = "5.1")
 fun fail(message: String?, throwable: Throwable? = null): Nothing =
     Assertions.fail<Nothing>(message, throwable)
 
 /**
  * @see Assertions.fail
  */
+@API(status = EXPERIMENTAL, since = "5.1")
 fun fail(message: (() -> String)?): Nothing =
     Assertions.fail<Nothing>(message)
 
 /**
  * @see Assertions.fail
  */
+@API(status = EXPERIMENTAL, since = "5.1")
 fun fail(throwable: Throwable?): Nothing =
     Assertions.fail<Nothing>(throwable)
 
@@ -44,12 +45,14 @@ private fun ExecutableStream.convert() = map { Executable(it) }
 /**
  * @see Assertions.assertAll
  */
+@API(status = EXPERIMENTAL, since = "5.1")
 fun assertAll(executables: ExecutableStream) =
     Assertions.assertAll(executables.convert())
 
 /**
  * @see Assertions.assertAll
  */
+@API(status = EXPERIMENTAL, since = "5.1")
 fun assertAll(heading: String?, executables: ExecutableStream) =
     Assertions.assertAll(heading, executables.convert())
 
@@ -62,24 +65,28 @@ private fun ExecutableCollection.convert() = map { Executable(it) }
 /**
  * @see Assertions.assertAll
  */
+@API(status = EXPERIMENTAL, since = "5.1")
 fun assertAll(executables: ExecutableCollection) =
     Assertions.assertAll(executables.convert())
 
 /**
  * @see Assertions.assertAll
  */
+@API(status = EXPERIMENTAL, since = "5.1")
 fun assertAll(heading: String?, executables: ExecutableCollection) =
     Assertions.assertAll(heading, executables.convert())
 
 /**
  * @see Assertions.assertAll
  */
+@API(status = EXPERIMENTAL, since = "5.1")
 fun assertAll(vararg executables: () -> Unit) =
     assertAll(executables.toList().stream())
 
 /**
  * @see Assertions.assertAll
  */
+@API(status = EXPERIMENTAL, since = "5.1")
 fun assertAll(heading: String?, vararg executables: () -> Unit) =
     assertAll(heading, executables.toList().stream())
 
@@ -93,6 +100,7 @@ fun assertAll(heading: String?, vararg executables: () -> Unit) =
  * ```
  * @see Assertions.assertThrows
  */
+@API(status = EXPERIMENTAL, since = "5.1")
 inline fun <reified T : Throwable> assertThrows(noinline executable: () -> Unit): T =
     Assertions.assertThrows(T::class.java, Executable(executable))
 
@@ -106,6 +114,7 @@ inline fun <reified T : Throwable> assertThrows(noinline executable: () -> Unit)
  * ```
  * @see Assertions.assertThrows
  */
+@API(status = EXPERIMENTAL, since = "5.1")
 inline fun <reified T : Throwable> assertThrows(message: String, noinline executable: () -> Unit): T =
     assertThrows({ message }, executable)
 
@@ -119,5 +128,45 @@ inline fun <reified T : Throwable> assertThrows(message: String, noinline execut
  * ```
  * @see Assertions.assertThrows
  */
+@API(status = EXPERIMENTAL, since = "5.1")
 inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, noinline executable: () -> Unit): T =
     Assertions.assertThrows(T::class.java, Executable(executable), Supplier(message))
+
+/**
+ * Example usage:
+ * ```kotlin
+ * assertDoesNotThrow {
+ *     // Code block that is expected to not throw an exception
+ * }
+ * ```
+ * @see Assertions.assertDoesNotThrow
+ */
+@API(status = EXPERIMENTAL, since = "5.5")
+fun assertDoesNotThrow(executable: () -> Unit): Unit =
+    Assertions.assertDoesNotThrow(Executable(executable))
+
+/**
+ * Example usage:
+ * ```kotlin
+ * assertDoesNotThrow("Should not throw an exception") {
+ *     // Code block that is expected to not throw an exception
+ * }
+ * ```
+ * @see Assertions.assertDoesNotThrow
+ */
+@API(status = EXPERIMENTAL, since = "5.5")
+fun assertDoesNotThrow(message: String, executable: () -> Unit): Unit =
+    assertDoesNotThrow({ message }, executable)
+
+/**
+ * Example usage:
+ * ```kotlin
+ * assertDoesNotThrow({ "Should not throw an exception }) {
+ *     // Code block that is expected to not throw an exception
+ * }
+ * ```
+ * @see Assertions.assertDoesNotThrow
+ */
+@API(status = EXPERIMENTAL, since = "5.5")
+fun assertDoesNotThrow(message: () -> String, executable: () -> Unit): Unit =
+    Assertions.assertDoesNotThrow(Executable(executable), Supplier(message))
