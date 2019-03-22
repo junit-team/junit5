@@ -90,5 +90,17 @@
     "name": "Danny Preussler",
     "github_username": "dpreussler",
     "picture": "https://avatars1.githubusercontent.com/u/2426606?s=460&v=4"
+  },
+  "juliettederancourt": {
+    "name": "Juliette de Rancourt",
+    "github_username": "juliette-derancourt",
+    "twitter_username": "ju_derancourt",
+    "picture": "https://avatars2.githubusercontent.com/u/28359762?s=460&v=4"
+  },
+  "julientopcu": {
+    "name": "Julien Topçu",
+    "twitter_username": "JulienTopcu",
+    "link": "https://beyondxscratch.com",
+    "picture": "https://secure.gravatar.com/avatar/610f3914d9b392b389657823719f09dd?s=460"
   }
 }
