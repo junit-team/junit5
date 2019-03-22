@@ -530,6 +530,17 @@
     ]
   },
   {
+    "title": "JUnit : il serait temps de passer la 5ème !",
+    "event": "Devoxx France",
+    "date": "2019-04-18",
+    "location": "Paris, France",
+    "link": "https://cfp.devoxx.fr/2019/talk/TPC-2275",
+    "speakers": [
+      "juliettederancourt",
+      "julientopcu"
+    ]
+  },
+  {
     "title": "News from JUnit 5.x: From Revolution to Continuous Evolution",
     "event": "JEEConf",
     "date": "2019-04-27",
