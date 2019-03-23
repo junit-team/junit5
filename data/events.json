@@ -530,6 +530,16 @@
     ]
   },
   {
+    "title": "Spock vs JUnit 5 - Clash of the Titans",
+    "event": "Greach",
+    "date": "2019-03-29",
+    "location": "Madrid, Spain",
+    "link": "https://agenda.greachconf.com/talk/spock-vs-junit5-clash-of-the-titans",
+    "speakers": [
+      "szpak"
+    ]
+  },
+  {
     "title": "JUnit : il serait temps de passer la 5ème !",
     "event": "Devoxx France",
     "date": "2019-04-18",
