@@ -540,6 +540,16 @@
     ]
   },
   {
+    "title": "JUnit 5 and Android",
+    "event": "Testing Droids, GDG Hamburg",
+    "date": "2019-4-02",
+    "location": "Hamburg, Germany",
+    "link": "https://www.meetup.com/de-DE/GDG-Hamburg-Android/events/259737272/",
+    "speakers": [
+      "dpreussler"
+    ]
+  },
+  {
     "title": "JUnit : il serait temps de passer la 5ème !",
     "event": "Devoxx France",
     "date": "2019-04-18",
