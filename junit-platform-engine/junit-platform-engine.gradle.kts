@@ -1,3 +1,7 @@
+plugins {
+	`java-library`
+}
+
 description = "JUnit Platform Engine API"
 
 dependencies {

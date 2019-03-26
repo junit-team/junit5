@@ -1,3 +1,7 @@
+plugins {
+	`java-library`
+}
+
 apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 description = "JUnit Jupiter Migration Support"

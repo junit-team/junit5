@@ -1,9 +1,9 @@
 [[release-notes-5.5.0-M1]]
 == 5.5.0-M1
 
-*Date of Release:* ❓
+*Date of Release:* March 19, 2019
 
-*Scope:* ❓
+*Scope:* Configurable test discovery implementation
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/34?closed=1+[5.5 M1] milestone page in the JUnit repository
@@ -13,52 +13,25 @@ on GitHub.
 [[release-notes-5.5.0-M1-junit-platform]]
 === JUnit Platform
 
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
 ==== New Features and Improvements
 
 * Configurable test discovery implementation that can be reused by different test engines
-  (see Javadoc of `org.junit.platform.engine.support.discovery`).
+  (see Javadoc of the `{junit-platform-engine-support-discovery}` package).
 * New `isFinal()` and `isNotFinal()` methods in `ModifierSupport`.
-* `@ValueSource` now additionally supports literal values of type `boolean` for
-  parameterized tests.
 * Gracefully handle exception occurred in `TestExecutionListener` with log instead of failing test plan.
-
 
 [[release-notes-5.5.0-M1-junit-jupiter]]
 === JUnit Jupiter
 
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
 ==== New Features and Improvements
 
-* Supply expected and actual values for failed boolean assertions for enhanced IDE
-  support.
+* Expected and actual values are now supplied for failed `boolean` assertions for enhanced
+  IDE and reporting support -- for example, when `assertTrue()` or `assertFalse()` fails.
+* `@ValueSource` now additionally supports literal values of type `boolean` for
+  parameterized tests.
 
 
 [[release-notes-5.5.0-M1-junit-vintage]]
 === JUnit Vintage
 
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
+No changes.

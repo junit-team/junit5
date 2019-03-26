@@ -1,4 +1,5 @@
 plugins {
+	`java-library`
 	id("me.champeau.gradle.jmh")
 }
 

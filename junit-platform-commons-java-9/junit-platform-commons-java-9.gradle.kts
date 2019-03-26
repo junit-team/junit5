@@ -1,3 +1,7 @@
+plugins {
+	`java-library`
+}
+
 description = "JUnit Platform Commons - Java 9+ specific implementations"
 
 apply(from = "$rootDir/gradle/testing.gradle.kts")
