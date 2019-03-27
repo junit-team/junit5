@@ -4,14 +4,10 @@ plugins {
 
 description = "JUnit Platform Commons"
 
-dependencies {
-	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
+javaLibrary {
+	automaticModuleName = "org.junit.platform.commons"
 }
 
-tasks.jar {
-	manifest {
-		attributes(
-			"Automatic-Module-Name" to "org.junit.platform.commons"
-		)
-	}
+dependencies {
+	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 }

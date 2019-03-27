@@ -1,4 +1,3 @@
-import Versions
 import java.util.spi.ToolProvider
 
 plugins {
@@ -14,8 +13,8 @@ val buildTime: String by rootProject.extra
 val buildRevision: Any by rootProject.extra
 val builtByValue: String by rootProject.extra
 
-
 val shadowed by configurations.creating
+val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 
 sourceSets {
 	main {
@@ -158,6 +157,17 @@ tasks.jar {
 	}
 }
 
+afterEvaluate {
+	val automaticModuleName = extension.automaticModuleName
+	if (automaticModuleName != null) {
+		tasks.jar {
+			manifest {
+				attributes("Automatic-Module-Name" to automaticModuleName)
+			}
+		}
+	}
+}
+
 tasks.compileJava {
 	options.encoding = "UTF-8"
 
@@ -168,26 +178,21 @@ tasks.compileJava {
 	))
 }
 
-// Declare "mainJavaVersion" and "testJavaVersion" as a global properties
-//  so they can be overridden by subprojects
-val mainJavaVersion by extra(Versions.jvmTarget)
-val testJavaVersion by extra(JavaVersion.VERSION_11)
-
 afterEvaluate {
 	tasks {
 		compileJava {
-			sourceCompatibility = mainJavaVersion.majorVersion
-			targetCompatibility = mainJavaVersion.majorVersion // needed by asm
+			sourceCompatibility = extension.mainJavaVersion.majorVersion
+			targetCompatibility = extension.mainJavaVersion.majorVersion // needed by asm
 			// --release release
 			// Compiles against the public, supported and documented API for a specific VM version.
 			// Supported release targets are 6, 7, 8, 9, 10, and 11.
 			// Note that if --release is added then -target and -source are ignored.
-			options.compilerArgs.addAll(listOf("--release", mainJavaVersion.majorVersion))
+			options.compilerArgs.addAll(listOf("--release", extension.mainJavaVersion.majorVersion))
 		}
 		compileTestJava {
 			options.encoding = "UTF-8"
-			sourceCompatibility = testJavaVersion.majorVersion
-			targetCompatibility = testJavaVersion.majorVersion
+			sourceCompatibility = extension.testJavaVersion.majorVersion
+			targetCompatibility = extension.testJavaVersion.majorVersion
 
 			// See: https://docs.oracle.com/en/java/javase/11/tools/javac.html
 			options.compilerArgs.addAll(listOf(

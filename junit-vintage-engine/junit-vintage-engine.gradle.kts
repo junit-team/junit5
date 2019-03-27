@@ -6,6 +6,10 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 description = "JUnit Vintage Engine"
 
+javaLibrary {
+	automaticModuleName = "org.junit.vintage.engine"
+}
+
 dependencies {
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 	api(project(":junit-platform-engine"))
@@ -17,12 +21,4 @@ dependencies {
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(path = ":junit-jupiter-engine", configuration = "testArtifacts"))
 	testImplementation(project(":junit-platform-testkit"))
-}
-
-tasks.jar {
-	manifest {
-		attributes(
-			"Automatic-Module-Name" to "org.junit.vintage.engine"
-		)
-	}
 }

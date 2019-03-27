@@ -4,16 +4,12 @@ plugins {
 
 description = "JUnit Platform Launcher"
 
+javaLibrary {
+	automaticModuleName = "org.junit.platform.launcher"
+}
+
 dependencies {
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 
 	api(project(":junit-platform-engine"))
-}
-
-tasks.jar {
-	manifest {
-		attributes(
-			"Automatic-Module-Name" to "org.junit.platform.launcher"
-		)
-	}
 }

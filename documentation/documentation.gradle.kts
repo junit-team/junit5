@@ -19,8 +19,10 @@ plugins {
 	`kotlin-library-conventions`
 }
 
-extra["mainJavaVersion"] = JavaVersion.VERSION_1_8
-extra["testJavaVersion"] = JavaVersion.VERSION_1_8
+javaLibrary {
+	mainJavaVersion = JavaVersion.VERSION_1_8
+	testJavaVersion = JavaVersion.VERSION_1_8
+}
 
 dependencies {
 	asciidoctor("org.jruby:jruby-complete:${Versions.jruby}")

@@ -4,7 +4,9 @@ plugins {
 
 apply(from = "$rootDir/gradle/testing.gradle.kts")
 
-extra["mainJavaVersion"] = JavaVersion.VERSION_11
+javaLibrary {
+	mainJavaVersion = JavaVersion.VERSION_11
+}
 
 dependencies {
 	implementation("de.sormuras:bartholdy:${Versions.bartholdy}") {

@@ -12,5 +12,7 @@ dependencies {
 	}
 }
 
-// Compiles against the public, supported and documented Java 9 API.
-extra["mainJavaVersion"] = JavaVersion.VERSION_1_9
+javaLibrary {
+	// Compiles against the public, supported and documented Java 9 API.
+	mainJavaVersion = JavaVersion.VERSION_1_9
+}

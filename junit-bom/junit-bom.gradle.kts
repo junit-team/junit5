@@ -2,9 +2,9 @@ plugins {
 	`java-platform`
 }
 
-description = "${rootProject.description} (Bill of Materials)"
-
 apply(from = "$rootDir/gradle/publishing.gradle.kts")
+
+description = "${rootProject.description} (Bill of Materials)"
 
 dependencies {
 	constraints {
@@ -27,7 +27,7 @@ the<PublishingExtension>().publications.named<MavenPublication>("maven") {
 	}
 }
 
-tasks.withType<GenerateMavenPom> {
+tasks.withType<GenerateMavenPom>().configureEach {
 	doLast {
 		val xml = destination.readText()
 		require(xml.indexOf("<dependencies>") == xml.lastIndexOf("<dependencies>")) {

@@ -5,6 +5,10 @@ plugins {
 
 description = "JUnit Platform Console"
 
+javaLibrary {
+	automaticModuleName = "org.junit.platform.console"
+}
+
 dependencies {
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 
@@ -28,10 +32,7 @@ tasks {
 		enabled = false
 		dependsOn(shadowJar)
 		manifest {
-			attributes(
-					"Main-Class" to "org.junit.platform.console.ConsoleLauncher",
-					"Automatic-Module-Name" to "org.junit.platform.console"
-			)
+			attributes("Main-Class" to "org.junit.platform.console.ConsoleLauncher")
 		}
 	}
 }

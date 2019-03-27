@@ -5,10 +5,13 @@ plugins {
 
 apply(from = "$rootDir/gradle/testing.gradle.kts")
 
-// TODO workaround for shadow plugin, should be fixed by 4.0.4
-extra["testJavaVersion"] = JavaVersion.VERSION_1_10
-
 description = "JUnit Jupiter Params"
+
+javaLibrary {
+	// TODO workaround for shadow plugin, should be fixed by 4.0.4
+	testJavaVersion = JavaVersion.VERSION_1_10
+	automaticModuleName = "org.junit.jupiter.params"
+}
 
 dependencies {
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
@@ -45,8 +48,5 @@ tasks {
 	jar {
 		enabled = false
 		dependsOn(shadowJar)
-		manifest {
-			attributes("Automatic-Module-Name" to "org.junit.jupiter.params")
-		}
 	}
 }
