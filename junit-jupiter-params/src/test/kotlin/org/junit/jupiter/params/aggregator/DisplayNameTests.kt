@@ -22,12 +22,14 @@ object DisplayNameTests {
     fun data() = arrayOf(
             arrayOf("A", 1),
             arrayOf("B", 2),
-            arrayOf("C", 3)
+            arrayOf("C", 3),
+            arrayOf("", 4), // empty is okay
+            arrayOf(null, 5) // null was the problem
     )
 
     @ParameterizedTest
     @MethodSource("data")
-    fun test(char: String, number: Int, info: TestInfo) {
+    fun test(char: String?, number: Int, info: TestInfo) {
         assertEquals("[$number] $char, $number", info.displayName)
     }
 }
