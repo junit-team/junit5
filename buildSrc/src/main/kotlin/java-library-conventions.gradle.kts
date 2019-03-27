@@ -141,7 +141,7 @@ tasks.jar {
 	listOf("9").forEach { version ->
 		val versionedProject = findProject(":${project.name}-java-$version")
 		if (versionedProject != null) {
-			// We"re only interested in the compiled classes. So we depend
+			// We're only interested in the compiled classes. So we depend
 			// on the classes task and change (-C) to the destination
 			// directory of the version-aware project later.
 			dependsOn(versionedProject.tasks.matching { it.name == "classes" })

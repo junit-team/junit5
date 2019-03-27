@@ -143,9 +143,9 @@ subprojects {
 					from(zipTree(jarTask.archivePath))
 					into(jacocoClassesDir)
 					include("**/*.class")
-					// don"t report coverage for shadowed classes
+					// don't report coverage for shadowed classes
 					exclude("**/shadow/**")
-					// don"t version-specific classes of MR JARs
+					// don't version-specific classes of MR JARs
 					exclude("META-INF/versions/**")
 					includeEmptyDirs = false
 					onlyIf { jarTask.enabled }
@@ -235,7 +235,7 @@ rootProject.apply {
 							// Remove Kotlin classes from classpath due to "bad" class file
 							// see https://bugs.openjdk.java.net/browse/JDK-8187422
 							.filter { !it.path.contains("kotlin") }
-							// Remove subproject JARs so Kotlin classes don"t get picked up
+							// Remove subproject JARs so Kotlin classes don't get picked up
 							.filter { it.isDirectory() || !it.absolutePath.startsWith(projectDir.absolutePath) }
 				}
 			}
