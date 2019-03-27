@@ -1,6 +1,5 @@
 plugins {
-	`java-library`
-	kotlin("jvm")
+	`kotlin-library-conventions`
 }
 
 description = "JUnit Jupiter API"

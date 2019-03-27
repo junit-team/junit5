@@ -1,5 +1,5 @@
 plugins {
-	`java-library`
+	`java-library-conventions`
 	id("com.github.johnrengelman.shadow")
 }
 

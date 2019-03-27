@@ -1,5 +1,5 @@
 plugins {
-	`java-library`
+	`java-library-conventions`
 }
 
 description = "JUnit Platform Engine API"

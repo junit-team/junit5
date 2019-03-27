@@ -1,5 +1,5 @@
 plugins {
-	`java-library`
+	`java-library-conventions`
 }
 
 description = "JUnit Platform Commons - Java 9+ specific implementations"

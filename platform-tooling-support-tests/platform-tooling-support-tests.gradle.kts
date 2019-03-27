@@ -1,5 +1,5 @@
 plugins {
-	`java-library`
+	`java-library-conventions`
 }
 
 apply(from = "$rootDir/gradle/testing.gradle.kts")

@@ -16,8 +16,7 @@ buildscript {
 
 plugins {
 	id("org.asciidoctor.convert")
-	`java-library`
-	kotlin("jvm")
+	`kotlin-library-conventions`
 }
 
 extra["mainJavaVersion"] = JavaVersion.VERSION_1_8
@@ -167,6 +166,9 @@ fun redirectOutput(task: JavaExec, outputFile: File) {
 		}
 	}
 }
+
+evaluationDependsOn(":junit-platform-console")
+evaluationDependsOn(":junit-jupiter-params")
 
 eclipse {
 	classpath {
