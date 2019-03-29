@@ -47,6 +47,9 @@ on GitHub.
 * New `emptyValue` attribute in `@CsvFileSource` and `@CsvSource`.
 * All methods in the `TestWatcher` API are now interface `default` methods with empty
   implementations.
+* New `InvocationInterceptor` extension API (see
+  <<../user-guide/index.adoc#extensions-intercepting-invocations, User Guide>> for
+  details)
 
 
 [[release-notes-5.5.0-M2-junit-vintage]]

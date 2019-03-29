@@ -40,20 +40,25 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.extension.TestInstantiationException;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.DefaultTestInstances;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
+import org.junit.jupiter.engine.execution.ExecutableInvoker.ReflectiveInterceptorCall;
+import org.junit.jupiter.engine.execution.ExecutableInvoker.ReflectiveInterceptorCall.VoidMethodInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.TestInstancesProvider;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.BlacklistedExceptions;
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -341,9 +346,8 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 			ExtensionContext extensionContext) {
 
 		Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
-		return outerInstance.isPresent() //
-				? executableInvoker.invoke(constructor, outerInstance.get(), extensionContext, registry) //
-				: executableInvoker.invoke(constructor, extensionContext, registry);
+		return executableInvoker.invoke(constructor, outerInstance, extensionContext, registry,
+			InvocationInterceptor::interceptTestClassConstructor);
 	}
 
 	private void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,
@@ -351,6 +355,15 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 
 		registry.stream(TestInstancePostProcessor.class).forEach(
 			extension -> executeAndMaskThrowable(() -> extension.postProcessTestInstance(instance, context)));
+	}
+
+	private void executeAndMaskThrowable(Executable executable) {
+		try {
+			executable.execute();
+		}
+		catch (Throwable throwable) {
+			ExceptionUtils.throwAsUncheckedException(throwable);
+		}
 	}
 
 	private void invokeBeforeAllCallbacks(JupiterEngineExecutionContext context) {
@@ -373,8 +386,8 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
 		for (Method method : this.beforeAllMethods) {
-			throwableCollector.execute(
-				() -> executableInvoker.invoke(method, testInstance, extensionContext, registry));
+			throwableCollector.execute(() -> executableInvoker.invoke(method, testInstance, extensionContext, registry,
+				ReflectiveInterceptorCall.ofVoidMethod(InvocationInterceptor::interceptBeforeAllMethod)));
 			if (throwableCollector.isNotEmpty()) {
 				break;
 			}
@@ -387,8 +400,9 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
-		this.afterAllMethods.forEach(method -> throwableCollector.execute(
-			() -> executableInvoker.invoke(method, testInstance, extensionContext, registry)));
+		this.afterAllMethods.forEach(
+			method -> throwableCollector.execute(() -> executableInvoker.invoke(method, testInstance, extensionContext,
+				registry, ReflectiveInterceptorCall.ofVoidMethod(InvocationInterceptor::interceptAfterAllMethod))));
 	}
 
 	private void invokeAfterAllCallbacks(JupiterEngineExecutionContext context) {
@@ -425,19 +439,23 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private BeforeEachMethodAdapter synthesizeBeforeEachMethodAdapter(Method method) {
-		return (extensionContext, registry) -> invokeMethodInExtensionContext(method, extensionContext, registry);
+		return (extensionContext, registry) -> invokeMethodInExtensionContext(method, extensionContext, registry,
+			InvocationInterceptor::interceptBeforeEachMethod);
 	}
 
 	private AfterEachMethodAdapter synthesizeAfterEachMethodAdapter(Method method) {
-		return (extensionContext, registry) -> invokeMethodInExtensionContext(method, extensionContext, registry);
+		return (extensionContext, registry) -> invokeMethodInExtensionContext(method, extensionContext, registry,
+			InvocationInterceptor::interceptAfterEachMethod);
 	}
 
-	private void invokeMethodInExtensionContext(Method method, ExtensionContext context, ExtensionRegistry registry) {
+	private void invokeMethodInExtensionContext(Method method, ExtensionContext context, ExtensionRegistry registry,
+			VoidMethodInterceptorCall interceptorCall) {
 		TestInstances testInstances = context.getRequiredTestInstances();
 		Object target = testInstances.findInstance(method.getDeclaringClass()).orElseThrow(
 			() -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
 
-		executableInvoker.invoke(method, target, context, registry);
+		executableInvoker.invoke(method, target, context, registry,
+			ReflectiveInterceptorCall.ofVoidMethod(interceptorCall));
 	}
 
 }

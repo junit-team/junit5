@@ -17,8 +17,10 @@ import java.lang.reflect.Method;
 import java.util.Set;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.execution.ExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.engine.TestDescriptor;
@@ -35,13 +37,16 @@ import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescriptor {
 
 	public static final String SEGMENT_TYPE = "test-template-invocation";
+	private static final ReflectiveInterceptorCall<Method, Void> interceptorCall = ReflectiveInterceptorCall.ofVoidMethod(
+		InvocationInterceptor::interceptTestTemplateMethod);
 
 	private TestTemplateInvocationContext invocationContext;
 	private final int index;
 
 	TestTemplateInvocationTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod,
 			TestTemplateInvocationContext invocationContext, int index, JupiterConfiguration configuration) {
-		super(uniqueId, invocationContext.getDisplayName(index), testClass, templateMethod, configuration);
+		super(uniqueId, invocationContext.getDisplayName(index), testClass, templateMethod, configuration,
+			interceptorCall);
 		this.invocationContext = invocationContext;
 		this.index = index;
 	}

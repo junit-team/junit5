@@ -28,7 +28,6 @@ import java.util.function.Supplier;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
-import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
@@ -38,7 +37,6 @@ import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
@@ -189,23 +187,6 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	@Override
 	public void cleanUp(JupiterEngineExecutionContext context) throws Exception {
 		context.close();
-	}
-
-	/**
-	 * Execute the supplied {@link Executable} and
-	 * {@linkplain ExceptionUtils#throwAsUncheckedException mask} any
-	 * exception thrown as an unchecked exception.
-	 *
-	 * @param executable the {@code Executable} to execute
-	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
-	 */
-	protected void executeAndMaskThrowable(Executable executable) {
-		try {
-			executable.execute();
-		}
-		catch (Throwable throwable) {
-			ExceptionUtils.throwAsUncheckedException(throwable);
-		}
 	}
 
 }

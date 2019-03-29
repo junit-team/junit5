@@ -52,7 +52,8 @@ public class KitchenSinkExtension implements
 	TestTemplateInvocationContextProvider,
 
 	// Miscellaneous
-	TestWatcher
+	TestWatcher,
+	InvocationInterceptor
 
 // @formatter:on
 {

@@ -11,8 +11,13 @@
 package org.junit.jupiter.engine.descriptor;
 
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.execution.InvocationInterceptorChain;
+import org.junit.jupiter.engine.execution.InvocationInterceptorChain.InterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
@@ -24,6 +29,7 @@ import org.junit.platform.engine.UniqueId;
  */
 class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 
+	private static final InvocationInterceptorChain interceptorChain = new InvocationInterceptorChain();
 	private final DynamicTest dynamicTest;
 
 	DynamicTestTestDescriptor(UniqueId uniqueId, int index, DynamicTest dynamicTest, TestSource source,
@@ -39,8 +45,15 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
-			DynamicTestExecutor dynamicTestExecutor) throws Exception {
-		executeAndMaskThrowable(dynamicTest.getExecutable());
+			DynamicTestExecutor dynamicTestExecutor) {
+		InvocationInterceptor.Invocation<Void> invocation = () -> {
+			dynamicTest.getExecutable().execute();
+			return null;
+		};
+		ExtensionContext extensionContext = context.getExtensionContext();
+		ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
+		interceptorChain.invoke(invocation, extensionRegistry, InterceptorCall.ofVoid(
+			(interceptor, wrappedInvocation) -> interceptor.interceptDynamicTest(wrappedInvocation, extensionContext)));
 		return context;
 	}
 
