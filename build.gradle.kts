@@ -1,19 +1,11 @@
-import org.ajoberstar.gradle.git.publish.GitPublishExtension
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
-import java.util.spi.ToolProvider
 
 plugins {
-	`java-library`
-	kotlin("jvm")
-	checkstyle
-	eclipse
-	idea
 	id("com.gradle.build-scan")
 	id("net.nemerosa.versioning")
-	id("com.github.ben-manes.versions") apply false
+	id("com.github.ben-manes.versions")
 	id("com.diffplug.gradle.spotless")
-	id("org.ajoberstar.git-publish")
 	id("de.marcphilipp.nexus-publish") apply false
 }
 
@@ -27,8 +19,6 @@ val buildDate by extra { DateTimeFormatter.ISO_LOCAL_DATE.format(buildTimeAndDat
 val buildTime by extra { DateTimeFormatter.ofPattern("HH:mm:ss.SSSZ").format(buildTimeAndDate) }
 val buildRevision by extra { versioning.info.commit }
 val builtByValue by extra { project.findProperty("builtBy") ?: project.property("defaultBuiltBy") }
-
-val docsVersion by extra { if (project.version.toString().contains("SNAPSHOT")) "snapshot" else project.version }
 
 val platformProjects by extra(listOf(
 		project(":junit-platform-commons"),
@@ -138,7 +128,7 @@ subprojects {
 
 		afterEvaluate {
 			if (enableJaCoCo && project in jacocoCoveredProjects) {
-				val jarTask = (tasks.findByName("shadowJar") ?: tasks.jar.get()) as Jar
+				val jarTask = (tasks.findByName("shadowJar") ?: tasks["jar"]) as Jar
 				val extractJar by tasks.registering(Copy::class) {
 					from(zipTree(jarTask.archivePath))
 					into(jacocoClassesDir)
@@ -159,139 +149,6 @@ subprojects {
 rootProject.apply {
 	description = "JUnit 5"
 
-	val docsDir = file("$buildDir/ghpages-docs")
-	val replaceCurrentDocs = project.hasProperty("replaceCurrentDocs")
-	val ota4jDocVersion = if (Versions.ota4j.contains("SNAPSHOT")) "snapshot" else Versions.ota4j
-	val apiGuardianDocVersion = if (Versions.apiGuardian.contains("SNAPSHOT")) "snapshot" else Versions.apiGuardian
-
-	gitPublish {
-		repoUri.set("https://github.com/junit-team/junit5.git")
-		branch.set("gh-pages")
-
-		contents {
-			from(docsDir)
-			into("docs")
-		}
-
-		preserve {
-			include("**/*")
-			exclude("docs/${docsVersion}/**")
-			if (replaceCurrentDocs) {
-				exclude("docs/current/**")
-			}
-		}
-	}
-
-	tasks {
-		jar {
-			enabled = false
-		}
-		val aggregateJavadocs by registering(Javadoc::class) {
-			group = "Documentation"
-			description = "Generates aggregated Javadocs"
-
-			title = "JUnit ${version} API"
-
-			options {
-				memberLevel = JavadocMemberLevel.PROTECTED
-				header = rootProject.description
-				encoding = "UTF-8"
-				(this as StandardJavadocDocletOptions).apply {
-					splitIndex(true)
-					addBooleanOption("Xdoclint:none", true)
-					addBooleanOption("html5", true)
-					addBooleanOption("-no-module-directories", true)
-					addMultilineStringsOption("tag").value = listOf(
-						"apiNote:a:API Note:",
-						"implNote:a:Implementation Note:"
-					)
-					jFlags("-Xmx1g")
-					source("8") // https://github.com/junit-team/junit5/issues/1735
-					links("https://docs.oracle.com/javase/8/docs/api/")
-					links("https://ota4j-team.github.io/opentest4j/docs/${ota4jDocVersion}/api/")
-					links("https://apiguardian-team.github.io/apiguardian/docs/${apiGuardianDocVersion}/api/")
-					links("https://junit.org/junit4/javadoc/${Versions.junit4}/")
-					links("https://joel-costigliola.github.io/assertj/core-8/api/")
-					stylesheetFile = rootProject.file("src/javadoc/stylesheet.css")
-					groups = mapOf(
-						"Jupiter" to listOf("org.junit.jupiter.*"),
-						"Vintage" to listOf("org.junit.vintage.*"),
-						"Platform" to listOf("org.junit.platform.*")
-					)
-					use(true)
-					noTimestamp(true)
-				}
-			}
-
-			maxMemory = "1024m"
-			destinationDir = file("$buildDir/docs/javadoc")
-
-			mavenizedProjects.forEach {
-				it.pluginManager.withPlugin("java") {
-					dependsOn(it.tasks.named("classes"))
-					// Only generate JavaDoc for "main" sources in Mavenized projects
-					source(it.sourceSets.main.get().allJava)
-					classpath += files(it.sourceSets.main.get().compileClasspath)
-							// Remove Kotlin classes from classpath due to "bad" class file
-							// see https://bugs.openjdk.java.net/browse/JDK-8187422
-							.filter { !it.path.contains("kotlin") }
-							// Remove subproject JARs so Kotlin classes don't get picked up
-							.filter { it.isDirectory() || !it.absolutePath.startsWith(projectDir.absolutePath) }
-				}
-			}
-
-			doLast {
-				// For compatibility with pre JDK 10 versions of the Javadoc tool
-				copy {
-					from(File(destinationDir, "element-list"))
-					into(destinationDir)
-					rename { "package-list" }
-				}
-			}
-		}
-
-		val prepareDocsForUploadToGhPages by registering(Copy::class) {
-			dependsOn(aggregateJavadocs, ":documentation:asciidoctor")
-			outputs.dir(docsDir)
-
-			from("${project(":documentation").buildDir}/checksum") {
-				include("published-checksum.txt")
-			}
-			from("${project(":documentation").buildDir}/asciidoc") {
-				include("user-guide/**")
-				include("release-notes/**")
-				include("tocbot-*/**")
-			}
-			from("$buildDir/docs") {
-				include("javadoc/**")
-				filesMatching("**/*.html") {
-					val favicon = "<link rel=\"icon\" type=\"image/png\" href=\"https://junit.org/junit5/assets/img/junit5-logo.png\">"
-					filter { line ->
-						if (line.startsWith("<head>")) line.replace("<head>", "<head>$favicon") else line
-					}
-				}
-			}
-			into("${docsDir}/${docsVersion}")
-			filesMatching("javadoc/**") {
-				path = path.replace("javadoc/", "api/")
-			}
-			includeEmptyDirs = false
-		}
-
-		val createCurrentDocsFolder by registering(Copy::class) {
-			dependsOn(prepareDocsForUploadToGhPages)
-			outputs.dir("${docsDir}/current")
-			onlyIf { replaceCurrentDocs }
-
-			from("${docsDir}/${docsVersion}")
-			into("${docsDir}/current")
-		}
-
-		gitPublishCommit {
-			dependsOn(prepareDocsForUploadToGhPages, createCurrentDocsFolder)
-		}
-	}
-
 	spotless {
 		format("misc") {
 			target("**/*.gradle", "**/*.gradle.kts", "**/*.gitignore")
@@ -306,8 +163,8 @@ rootProject.apply {
 		}
 	}
 
-	tasks {
-		if (enableJaCoCo) {
+	if (enableJaCoCo) {
+		tasks {
 			val jacocoMerge by registering(JacocoMerge::class) {
 				subprojects.filter { it in jacocoTestProjects }
 						.forEach { subproj ->
