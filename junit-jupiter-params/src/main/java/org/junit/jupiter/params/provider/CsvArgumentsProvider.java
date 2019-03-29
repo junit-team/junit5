@@ -45,7 +45,7 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 		settings.getFormat().setLineSeparator(LINE_SEPARATOR);
 		settings.getFormat().setQuote('\'');
 		settings.getFormat().setQuoteEscape('\'');
-		settings.setEmptyValue("");
+		settings.setEmptyValue(this.annotation.emptyValue());
 		settings.setAutoConfigurationEnabled(false);
 		CsvParser csvParser = new CsvParser(settings);
 		AtomicLong index = new AtomicLong(0);

@@ -55,4 +55,11 @@ public @interface CsvSource {
 	 */
 	char delimiter() default ',';
 
+	/**
+	 * The empty value definition to use when reading the {@linkplain #value lines}.
+	 *
+	 * <p>Defaults to empty string.
+	 */
+	String emptyValue() default "";
+
 }

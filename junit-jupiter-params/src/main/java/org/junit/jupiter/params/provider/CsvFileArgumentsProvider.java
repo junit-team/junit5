@@ -72,7 +72,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 		settings.getFormat().setLineSeparator(annotation.lineSeparator());
 		settings.getFormat().setQuote('"');
 		settings.getFormat().setQuoteEscape('"');
-		settings.setEmptyValue("");
+		settings.setEmptyValue(annotation.emptyValue());
 		settings.setAutoConfigurationEnabled(false);
 	}
 

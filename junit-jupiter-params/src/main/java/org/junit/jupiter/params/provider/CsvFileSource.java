@@ -79,4 +79,11 @@ public @interface CsvFileSource {
 	 */
 	int numLinesToSkip() default 0;
 
+	/**
+	 * The empty value definition to use when reading the CSV files.
+	 *
+	 * <p>Defaults to empty string.
+	 */
+	String emptyValue() default "";
+
 }
