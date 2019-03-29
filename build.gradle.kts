@@ -169,6 +169,7 @@ rootProject.apply {
 	spotless {
 		format("misc") {
 			target("**/*.gradle", "**/*.gradle.kts", "**/*.gitignore")
+			targetExclude("**/build/**")
 			indentWithTabs()
 			trimTrailingWhitespace()
 			endWithNewline()
