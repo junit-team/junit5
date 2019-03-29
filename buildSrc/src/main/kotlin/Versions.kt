@@ -26,7 +26,7 @@ object Versions {
 
     // Plugins
     val buildScanPlugin = "2.2.1"
-    val gitPublishPlugin = "2.0.0"
+    val gitPublishPlugin = "2.1.1"
     val jmhPlugin = "0.4.8"
     val nexusPublishPlugin = "0.2.0"
     val shadowPlugin = "4.0.1"
