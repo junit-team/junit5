@@ -581,6 +581,16 @@
     ]
   },
   {
+    "title": "JUnit 5 - Next Generation Testing on the JVM (workshop)",
+    "event": "DevSum 19",
+    "date": "2019-05-22",
+    "location": "Stockholm, Sweden",
+    "link": "https://www.devsum.se/sessions/junit-5-next-generation-testing-on-the-jvm/",
+    "speakers": [
+      "nicolaiparlog"
+    ]
+  },
+  {
     "title": "Neues von JUnit 5.x: From Revolution to Continuous Evolution",
     "event": "Entwicklertag Karlsruhe",
     "date": "2019-06-03",
