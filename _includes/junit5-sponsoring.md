@@ -78,3 +78,4 @@ Your donations will help to make that a reality!
 - Stefan Gwihs
 - olcbean
 - linux_china
+- Danny Preussler
