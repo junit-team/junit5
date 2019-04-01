@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -212,6 +213,28 @@ class JupiterTestDescriptorTests {
 		MethodSource methodSource = (MethodSource) sourceOptional.orElseThrow();
 		assertEquals(ConcreteTest.class.getName(), methodSource.getClassName());
 		assertEquals("theTest", methodSource.getMethodName());
+	}
+
+	@Test
+	void shouldTakeCustomMethodNameDescriptorFromConfigurationIfPresent() {
+		when(configuration.getDefaultDisplayNameGeneratorClass()).thenReturn(
+			Optional.of(CustomDisplayNameGenerator.class));
+
+		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, getClass(), configuration);
+		assertEquals("class-display-name", descriptor.getDisplayName());
+		assertEquals(getClass().getName(), descriptor.getLegacyReportingName());
+
+		descriptor = new NestedClassTestDescriptor(uniqueId, NestedTestCase.class, configuration);
+		assertEquals("nested-class-display-name", descriptor.getDisplayName());
+		assertEquals(NestedTestCase.class.getName(), descriptor.getLegacyReportingName());
+
+		descriptor = new ClassTestDescriptor(uniqueId, StaticTestCase.class, configuration);
+		assertEquals("class-display-name", descriptor.getDisplayName());
+		assertEquals(StaticTestCase.class.getName(), descriptor.getLegacyReportingName());
+
+		descriptor = new ClassTestDescriptor(uniqueId, StaticTestCaseLevel2.class, configuration);
+		assertEquals("class-display-name", descriptor.getDisplayName());
+		assertEquals(StaticTestCaseLevel2.class.getName(), descriptor.getLegacyReportingName());
 	}
 
 	@Test

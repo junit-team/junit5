@@ -26,6 +26,7 @@ class DisplayNameGeneratorClassParameterConverter {
 			this::getClassFrom);
 	}
 
+	@SuppressWarnings({ "unchecked" })
 	private Class<? extends DisplayNameGenerator> getClassFrom(String className) {
 		try {
 			Class<?> aClass = Class.forName(className);

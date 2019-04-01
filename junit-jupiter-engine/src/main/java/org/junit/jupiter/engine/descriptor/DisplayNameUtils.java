@@ -70,22 +70,33 @@ final class DisplayNameUtils {
 		return displayNameSupplier.get();
 	}
 
-	static String determineDisplayNameForMethod(Class<?> testClass, Method testMethod) {
-		DisplayNameGenerator generator = getDisplayNameGenerator(testClass);
+	static String determineDisplayNameForMethod(Class<?> testClass, Method testMethod,
+			Optional<Class<? extends DisplayNameGenerator>> defaultDisplayNameGeneratorClass) {
+		DisplayNameGenerator generator = getDisplayNameGenerator(testClass, defaultDisplayNameGeneratorClass);
 		return determineDisplayName(testMethod, () -> generator.generateDisplayNameForMethod(testClass, testMethod));
 
 	}
 
-	static Supplier<String> createDisplayNameSupplierForClass(Class<?> testClass) {
-		return () -> getDisplayNameGenerator(testClass).generateDisplayNameForClass(testClass);
+	static Supplier<String> createDisplayNameSupplierForClass(Class<?> testClass,
+			Optional<Class<? extends DisplayNameGenerator>> defaultDisplayNameGeneratorClass) {
+		return () -> getDisplayNameGenerator(testClass, defaultDisplayNameGeneratorClass).generateDisplayNameForClass(
+			testClass);
 	}
 
-	static Supplier<String> createDisplayNameSupplierForNestedClass(Class<?> testClass) {
-		return () -> getDisplayNameGenerator(testClass).generateDisplayNameForNestedClass(testClass);
+	static Supplier<String> createDisplayNameSupplierForNestedClass(Class<?> testClass,
+			Optional<Class<? extends DisplayNameGenerator>> defaultDisplayNameGeneratorClass) {
+		return () -> getDisplayNameGenerator(testClass,
+			defaultDisplayNameGeneratorClass).generateDisplayNameForNestedClass(testClass);
 	}
 
-	private static DisplayNameGenerator getDisplayNameGenerator(Class<?> testClass) {
+	private static DisplayNameGenerator getDisplayNameGenerator(Class<?> testClass,
+			Optional<Class<? extends DisplayNameGenerator>> defaultDisplayNameGeneratorClass) {
 		Preconditions.notNull(testClass, "Test class must not be null");
+
+		if (defaultDisplayNameGeneratorClass.isPresent()) {
+			return ReflectionUtils.newInstance(defaultDisplayNameGeneratorClass.get());
+		}
+
 		DisplayNameGeneration generation = getDisplayNameGeneration(testClass).orElse(null);
 		// trivial case: no user-defined generation annotation present, return default generator
 		if (generation == null) {
