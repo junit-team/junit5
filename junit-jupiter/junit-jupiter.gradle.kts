@@ -1,3 +1,7 @@
+plugins {
+	`java-library-conventions`
+}
+
 description = "JUnit Jupiter (Aggregator)"
 
 dependencies {
@@ -6,10 +10,6 @@ dependencies {
 	runtimeOnly(project(":junit-jupiter-engine"))
 }
 
-tasks.jar {
-	manifest {
-		attributes(
-				"Automatic-Module-Name" to "org.junit.jupiter"
-		)
-	}
+javaLibrary {
+	automaticModuleName = "org.junit.jupiter"
 }

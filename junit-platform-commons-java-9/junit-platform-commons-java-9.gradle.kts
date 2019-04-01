@@ -1,3 +1,7 @@
+plugins {
+	`java-library-conventions`
+}
+
 description = "JUnit Platform Commons - Java 9+ specific implementations"
 
 apply(from = "$rootDir/gradle/testing.gradle.kts")
@@ -8,5 +12,7 @@ dependencies {
 	}
 }
 
-// Compiles against the public, supported and documented Java 9 API.
-extra["mainJavaVersion"] = JavaVersion.VERSION_1_9
+javaLibrary {
+	// Compiles against the public, supported and documented Java 9 API.
+	mainJavaVersion = JavaVersion.VERSION_1_9
+}

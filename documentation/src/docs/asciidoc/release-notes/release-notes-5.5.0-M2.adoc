@@ -1,0 +1,59 @@
+[[release-notes-5.5.0-M2]]
+== 5.5.0-M2️
+
+*Date of Release:* ❓
+
+*Scope:* ❓
+
+For a complete list of all _closed_ issues and pull requests for this release, consult
+the link:{junit5-repo}+/milestone/37?closed=1+[5.5 M2] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.5.0-M2-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓
+
+
+[[release-notes-5.5.0-M2-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* Parameterized tests no longer throw an `ArrayStoreException` when creating human-readable
+  test names.
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* New `booleans` property in `ValueSource`.
+
+
+[[release-notes-5.5.0-M2-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓

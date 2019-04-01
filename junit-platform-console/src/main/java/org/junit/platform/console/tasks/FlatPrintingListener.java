@@ -52,7 +52,7 @@ class FlatPrintingListener implements TestExecutionListener {
 
 	@Override
 	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
-		printlnTestDescriptor(Color.DYNAMIC, "Test registered:", testIdentifier);
+		printlnTestDescriptor(Color.DYNAMIC, "Registered:", testIdentifier);
 	}
 
 	@Override

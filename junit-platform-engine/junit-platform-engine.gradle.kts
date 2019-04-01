@@ -1,4 +1,12 @@
+plugins {
+	`java-library-conventions`
+}
+
 description = "JUnit Platform Engine API"
+
+javaLibrary {
+	automaticModuleName = "org.junit.platform.engine"
+}
 
 dependencies {
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
@@ -7,12 +15,4 @@ dependencies {
 	api(project(":junit-platform-commons"))
 
 	testImplementation("org.assertj:assertj-core:${Versions.assertJ}")
-}
-
-tasks.jar {
-	manifest {
-		attributes(
-			"Automatic-Module-Name" to "org.junit.platform.engine"
-		)
-	}
 }

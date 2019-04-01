@@ -1,6 +1,12 @@
+plugins {
+	`java-library-conventions`
+}
+
 apply(from = "$rootDir/gradle/testing.gradle.kts")
 
-extra["mainJavaVersion"] = JavaVersion.VERSION_11
+javaLibrary {
+	mainJavaVersion = JavaVersion.VERSION_11
+}
 
 dependencies {
 	implementation("de.sormuras:bartholdy:${Versions.bartholdy}") {
@@ -43,7 +49,7 @@ tasks.test {
 			val home = project.properties["java.home.$N"]
 			if (home != null) systemProperty("java.home.$N", home)
 		}
-		// TODO Enabling parallel execution fails due to Gradle"s listener not being thread-safe:
+		// TODO Enabling parallel execution fails due to Gradle's listener not being thread-safe:
 		//   Received a completed event for test with unknown id "10.5".
 		//   Registered test ids: "[:platform-tooling-support-tests:test, 10.1]"
 		// systemProperty("junit.jupiter.execution.parallel.enabled", "true")

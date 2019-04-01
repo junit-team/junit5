@@ -116,6 +116,14 @@ class ParameterizedTestNameFormatterTests {
 	}
 
 	@Test
+	void formatDoesNotRaiseAnArrayStoreException() {
+		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter("{0} -> {1}", "enigma");
+
+		Object[] arguments = new Number[] { 1, 2 };
+		assertEquals("1 -> 2", formatter.format(1, arguments));
+	}
+
+	@Test
 	void throwsReadableExceptionForInvalidPattern() {
 		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter("{index", "enigma");
 
