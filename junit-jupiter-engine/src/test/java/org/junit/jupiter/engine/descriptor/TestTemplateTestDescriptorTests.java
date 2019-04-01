@@ -13,7 +13,9 @@ package org.junit.jupiter.engine.descriptor;
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Tag;
@@ -45,6 +47,43 @@ class TestTemplateTestDescriptorTests {
 
 		assertThat(testDescriptor.getTags()).containsExactlyInAnyOrder(TestTag.create("foo"), TestTag.create("bar"),
 			TestTag.create("baz"));
+	}
+
+	@Test
+	void shouldUseCustomDisplayNameIfPresentFromConfiguration() throws Exception {
+		UniqueId rootUniqueId = UniqueId.root("segment", "template");
+		UniqueId parentUniqueId = rootUniqueId.append("class", "myClass");
+		AbstractTestDescriptor parent = containerTestDescriptorWithTags(parentUniqueId,
+			singleton(TestTag.create("foo")));
+
+		JupiterConfiguration jupiterConfiguration = mock(JupiterConfiguration.class);
+		when(jupiterConfiguration.getDefaultDisplayNameGeneratorClass()).thenReturn(
+			Optional.of(CustomDisplayNameGenerator.class));
+
+		TestTemplateTestDescriptor testDescriptor = new TestTemplateTestDescriptor(
+			parentUniqueId.append("tmp", "testTemplate()"), MyTestCase.class,
+			MyTestCase.class.getDeclaredMethod("testTemplate"), jupiterConfiguration);
+		parent.addChild(testDescriptor);
+
+		assertThat(testDescriptor.getDisplayName()).isEqualTo("method-display-name");
+	}
+
+	@Test
+	void shouldUseDefaultDisplayNameIfConfigurationNotPresent() throws Exception {
+		UniqueId rootUniqueId = UniqueId.root("segment", "template");
+		UniqueId parentUniqueId = rootUniqueId.append("class", "myClass");
+		AbstractTestDescriptor parent = containerTestDescriptorWithTags(parentUniqueId,
+			singleton(TestTag.create("foo")));
+
+		JupiterConfiguration jupiterConfiguration = mock(JupiterConfiguration.class);
+		when(jupiterConfiguration.getDefaultDisplayNameGeneratorClass()).thenReturn(Optional.empty());
+
+		TestTemplateTestDescriptor testDescriptor = new TestTemplateTestDescriptor(
+			parentUniqueId.append("tmp", "testTemplate()"), MyTestCase.class,
+			MyTestCase.class.getDeclaredMethod("testTemplate"), jupiterConfiguration);
+		parent.addChild(testDescriptor);
+
+		assertThat(testDescriptor.getDisplayName()).isEqualTo("testTemplate()");
 	}
 
 	private AbstractTestDescriptor containerTestDescriptorWithTags(UniqueId uniqueId, Set<TestTag> tags) {
