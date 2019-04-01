@@ -19,13 +19,13 @@ import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.engine.Constants;
+import org.junit.jupiter.engine.descriptor.CustomDisplayNameGenerator;
 import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 
@@ -91,23 +91,5 @@ class DefaultJupiterConfigurationTests {
 		when(configParams.get(KEY)).thenReturn(Optional.ofNullable(configValue));
 		Lifecycle lifecycle = new DefaultJupiterConfiguration(configParams).getDefaultTestInstanceLifecycle();
 		assertThat(lifecycle).isEqualTo(expected);
-	}
-
-	class CustomDisplayNameGenerator implements DisplayNameGenerator {
-
-		@Override
-		public String generateDisplayNameForClass(Class<?> testClass) {
-			return null;
-		}
-
-		@Override
-		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
-			return null;
-		}
-
-		@Override
-		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
-			return null;
-		}
 	}
 }

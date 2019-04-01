@@ -20,11 +20,11 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.engine.descriptor.CustomDisplayNameGenerator;
 
 class CachingJupiterConfigurationTests {
 
@@ -108,9 +108,5 @@ class CachingJupiterConfigurationTests {
 
 		verify(delegate, times(2)).getRawConfigurationParameter("foo");
 		verifyNoMoreInteractions(delegate);
-	}
-
-	abstract class CustomDisplayNameGenerator implements DisplayNameGenerator {
-
 	}
 }
