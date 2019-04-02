@@ -5,10 +5,6 @@ plugins {
 
 description = "JUnit Platform Console"
 
-javaLibrary {
-	automaticModuleName = "org.junit.platform.console"
-}
-
 dependencies {
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 

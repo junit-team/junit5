@@ -4,10 +4,6 @@ plugins {
 
 description = "JUnit Platform Runner"
 
-javaLibrary {
-	automaticModuleName = "org.junit.platform.runner"
-}
-
 dependencies {
 	api("junit:junit:${Versions.junit4}")
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
