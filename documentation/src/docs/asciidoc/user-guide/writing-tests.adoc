@@ -1503,9 +1503,6 @@ As of JUnit Jupiter {jupiter-version}, dynamic tests must always be created by f
 methods; however, this might be complemented by a registration facility in a later
 release.
 
-WARNING: Dynamic tests are currently an _experimental_ feature. Consult the table in
-<<api-evolution-experimental-apis>> for details.
-
 [[writing-tests-dynamic-tests-examples]]
 ==== Dynamic Test Examples
 
