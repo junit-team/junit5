@@ -28,9 +28,10 @@ class KotlinAssertionsDemo {
     @Test
     fun `exception absence testing`() {
         val calculator = Calculator()
-        assertDoesNotThrow("Should not throw an exception") {
+        val result = assertDoesNotThrow("Should not throw an exception") {
             calculator.divide(0, 1)
         }
+        assertEquals(0, result)
     }
 
     @Test

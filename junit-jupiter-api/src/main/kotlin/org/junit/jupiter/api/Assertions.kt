@@ -14,6 +14,7 @@ package org.junit.jupiter.api
 import org.apiguardian.api.API
 import org.apiguardian.api.API.Status.EXPERIMENTAL
 import org.junit.jupiter.api.function.Executable
+import org.junit.jupiter.api.function.ThrowingSupplier
 import java.util.function.Supplier
 import java.util.stream.Stream
 
@@ -125,38 +126,41 @@ inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, 
 /**
  * Example usage:
  * ```kotlin
- * assertDoesNotThrow {
+ * val result = assertDoesNotThrow {
  *     // Code block that is expected to not throw an exception
  * }
  * ```
  * @see Assertions.assertDoesNotThrow
+ * @param R the result type of the [executable]
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-fun assertDoesNotThrow(executable: () -> Unit): Unit =
-    Assertions.assertDoesNotThrow(Executable(executable))
+fun <R> assertDoesNotThrow(executable: () -> R): R =
+    Assertions.assertDoesNotThrow(ThrowingSupplier(executable))
 
 /**
  * Example usage:
  * ```kotlin
- * assertDoesNotThrow("Should not throw an exception") {
+ * val result = assertDoesNotThrow("Should not throw an exception") {
  *     // Code block that is expected to not throw an exception
  * }
  * ```
  * @see Assertions.assertDoesNotThrow
+ * @param R the result type of the [executable]
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-fun assertDoesNotThrow(message: String, executable: () -> Unit): Unit =
+fun <R> assertDoesNotThrow(message: String, executable: () -> R): R =
     assertDoesNotThrow({ message }, executable)
 
 /**
  * Example usage:
  * ```kotlin
- * assertDoesNotThrow({ "Should not throw an exception }) {
+ * val result = assertDoesNotThrow({ "Should not throw an exception }) {
  *     // Code block that is expected to not throw an exception
  * }
  * ```
  * @see Assertions.assertDoesNotThrow
+ * @param R the result type of the [executable]
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-fun assertDoesNotThrow(message: () -> String, executable: () -> Unit): Unit =
-    Assertions.assertDoesNotThrow(Executable(executable), Supplier(message))
+fun <R> assertDoesNotThrow(message: () -> String, executable: () -> R): R =
+    Assertions.assertDoesNotThrow(ThrowingSupplier(executable), Supplier(message))

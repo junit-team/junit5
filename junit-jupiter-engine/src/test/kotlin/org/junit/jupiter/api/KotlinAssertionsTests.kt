@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith
 import org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DynamicContainer.dynamicContainer
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.opentest4j.AssertionFailedError
@@ -66,13 +67,16 @@ class KotlinAssertionsTests {
     fun assertDoesNotThrow(): Stream<out DynamicNode> = Stream.of(
         dynamicContainer("succeeds when no exception thrown", Stream.of(
             dynamicTest("for no arguments variant") {
-                assertDoesNotThrow { }
+                val actual = assertDoesNotThrow { 1 }
+                assertEquals(1, actual)
             },
             dynamicTest("for message variant") {
-                assertDoesNotThrow("message") { }
+                val actual = assertDoesNotThrow("message") { 2 }
+                assertEquals(2, actual)
             },
             dynamicTest("for message supplier variant") {
-                assertDoesNotThrow({ "message" }) { }
+                val actual = assertDoesNotThrow({ "message" }) { 3 }
+                assertEquals(3, actual)
             }
         )),
         dynamicContainer("fails when an exception is thrown", Stream.of(
