@@ -16,9 +16,18 @@ val builtByValue: String by rootProject.extra
 val shadowed by configurations.creating
 val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 
+fun javaModuleName(project: Project) = "org." + project.name.replace('-', '.')
+val javaModuleName = javaModuleName(project)
+
 sourceSets {
 	main {
 		compileClasspath += shadowed
+	}
+	create("module") {
+		java {
+			srcDir("src/module/$javaModuleName")
+		}
+		compileClasspath += main.get().output
 	}
 	test {
 		runtimeClasspath += shadowed
@@ -137,6 +146,9 @@ tasks.jar {
 		)
 	}
 
+	dependsOn(tasks.named("compileModuleJava"))
+	from("$buildDir/classes/java/module/$javaModuleName")
+
 	// If available, compile and include classes for other Java versions.
 	listOf("9").forEach { version ->
 		val versionedProject = findProject(":${project.name}-java-$version")
@@ -191,6 +203,28 @@ afterEvaluate {
 			))
 		}
 	}
+
+	val modulePath = tasks.compileJava.get().classpath.asPath
+	tasks.named<JavaCompile>("compileModuleJava") {
+		dependsOn(tasks.compileJava)
+		sourceCompatibility = "9"
+		targetCompatibility = "9"
+		options.encoding = "UTF-8"
+		options.compilerArgs.addAll(listOf("--release", "9",
+				"--module-source-path", files(mavenizedProjects.map { "${it.projectDir}/src/module" }).asPath,
+				"--module-path", modulePath,
+				"--patch-module", javaModuleName + "=" + classpath.asPath
+		))
+		mavenizedProjects.forEach {
+			if (it == project) {
+				return@forEach
+			}
+			val module = javaModuleName(it)
+			val source = "${it.projectDir}/src/main/java"
+			options.compilerArgs.addAll(listOf("--patch-module", "$module=$source"))
+		}
+		classpath = files()
+	}
 }
 
 checkstyle {
@@ -200,6 +234,9 @@ checkstyle {
 tasks {
 	checkstyleMain {
 		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
+	}
+	tasks.named<Checkstyle>("checkstyleModule") {
+		enabled = false
 	}
 	checkstyleTest {
 		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
