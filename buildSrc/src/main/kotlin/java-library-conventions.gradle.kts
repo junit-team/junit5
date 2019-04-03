@@ -213,6 +213,7 @@ afterEvaluate {
 		options.compilerArgs.addAll(listOf(
 				"-Xlint",
 				"--release", "9",
+				"--module-version", "${project.version}",
 				"--module-source-path", files(mavenizedProjects.map { "${it.projectDir}/src/module" }).asPath,
 				"--module-path", modulePath
 		))
