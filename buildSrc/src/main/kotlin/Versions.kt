@@ -29,7 +29,7 @@ object Versions {
     val gitPublishPlugin = "2.1.1"
     val jmhPlugin = "0.4.8"
     val nexusPublishPlugin = "0.2.0"
-    val shadowPlugin = "4.0.1"
+    val shadowPlugin = "5.0.0"
     val spotlessPlugin = "3.18.0"
     val versioningPlugin = "2.8.2"
     val versionsPlugin = "0.21.0"
@@ -42,7 +42,7 @@ object Versions {
     val jruby = "9.1.17.0"
 
     // Tools
-    val checkstyle = "8.10"
+    val checkstyle = "8.19"
     val jacoco = "0.8.2"
     val jmh = "1.21"
     val ktlint = "0.24.0"
