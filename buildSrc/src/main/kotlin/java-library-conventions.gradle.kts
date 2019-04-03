@@ -236,7 +236,8 @@ tasks {
 		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
 	}
 	tasks.named<Checkstyle>("checkstyleModule") {
-		enabled = false
+		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
+		exclude("module-info.java")
 	}
 	checkstyleTest {
 		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
