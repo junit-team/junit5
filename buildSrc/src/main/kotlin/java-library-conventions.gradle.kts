@@ -210,18 +210,17 @@ afterEvaluate {
 		sourceCompatibility = "9"
 		targetCompatibility = "9"
 		options.encoding = "UTF-8"
-		options.compilerArgs.addAll(listOf("--release", "9",
+		options.compilerArgs.addAll(listOf(
+				"-Xlint",
+				"--release", "9",
 				"--module-source-path", files(mavenizedProjects.map { "${it.projectDir}/src/module" }).asPath,
-				"--module-path", modulePath,
-				"--patch-module", javaModuleName + "=" + classpath.asPath
+				"--module-path", modulePath
 		))
 		mavenizedProjects.forEach {
-			if (it == project) {
-				return@forEach
-			}
 			val module = javaModuleName(it)
-			val source = "${it.projectDir}/src/main/java"
-			options.compilerArgs.addAll(listOf("--patch-module", "$module=$source"))
+			val patch = if (it == project) classpath.asPath else "${it.projectDir}/src/main/java"
+			options.compilerArgs.add("--patch-module")
+			options.compilerArgs.add("$module=$patch")
 		}
 		classpath = files()
 	}
