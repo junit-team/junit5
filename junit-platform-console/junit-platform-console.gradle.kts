@@ -23,6 +23,9 @@ tasks {
 			include("LICENSE-picocli.md")
 			into("META-INF")
 		}
+		from("$buildDir/classes/java/module/org.junit.platform.console") {
+			include("module-info.class")
+		}
 	}
 	jar {
 		enabled = false

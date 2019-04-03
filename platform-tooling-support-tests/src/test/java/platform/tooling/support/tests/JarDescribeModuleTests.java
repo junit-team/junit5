@@ -68,7 +68,7 @@ class JarDescribeModuleTests {
 		var moduleDescriptor = ModuleFinder.of(modulePath).findAll().iterator().next().descriptor();
 		var moduleName = moduleDescriptor.name();
 		for (var packageName : moduleDescriptor.packages()) {
-			assertTrue(packageName.startsWith(moduleName));
+			assertTrue(packageName.startsWith(moduleName), packageName + " / " + moduleName);
 		}
 	}
 

@@ -38,6 +38,9 @@ tasks {
 			include("LICENSE-univocity-parsers.md")
 			into("META-INF")
 		}
+		from("$buildDir/classes/java/module/org.junit.jupiter.params") {
+			include("module-info.class")
+		}		
 	}
 	test {
 		// in order to run the test against the shadowJar
