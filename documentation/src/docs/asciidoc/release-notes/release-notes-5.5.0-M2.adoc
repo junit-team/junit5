@@ -41,6 +41,7 @@ on GitHub.
 ==== New Features and Improvements
 
 * New `booleans` property in `ValueSource`.
+* New `emptyValue` property in `CsvFileSource` and `CsvSource`.
 
 
 [[release-notes-5.5.0-M2-junit-vintage]]

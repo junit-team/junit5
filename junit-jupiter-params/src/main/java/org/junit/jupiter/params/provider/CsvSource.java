@@ -58,6 +58,8 @@ public @interface CsvSource {
 	/**
 	 * The empty value definition to use when reading the {@linkplain #value lines}.
 	 *
+	 * <p>When reading, if the parser does not read any character from the input, and the input is within quotes, the empty is used instead of an empty string
+	 *
 	 * <p>Defaults to empty string.
 	 */
 	String emptyValue() default "";
