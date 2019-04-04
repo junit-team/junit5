@@ -1,14 +1,3 @@
->> 1 line header: No module descriptor found. Derived automatic module. >>
-
-org.junit.jupiter.engine@${jupiterVersion} automatic
+org.junit.jupiter.engine@${jupiterVersion} jar:file:.+!module-info.class
 requires java.base mandated
-provides org.junit.platform.engine.TestEngine with org.junit.jupiter.engine.[J|j]upiter[T|t]est[E|e]ngine
-contains org.junit.jupiter.engine
-contains org.junit.jupiter.engine.config
-contains org.junit.jupiter.engine.descriptor
-contains org.junit.jupiter.engine.discovery
-contains org.junit.jupiter.engine.discovery.predicates
-contains org.junit.jupiter.engine.execution
-contains org.junit.jupiter.engine.extension
-contains org.junit.jupiter.engine.script
-contains org.junit.jupiter.engine.support
+provides org.junit.platform.engine.TestEngine with org.junit.jupiter.engine.JupiterTestEngine
