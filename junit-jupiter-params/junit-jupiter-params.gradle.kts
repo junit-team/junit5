@@ -8,8 +8,6 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 description = "JUnit Jupiter Params"
 
 javaLibrary {
-	// TODO workaround for shadow plugin, should be fixed by 4.0.4
-	testJavaVersion = JavaVersion.VERSION_1_10
 	automaticModuleName = "org.junit.jupiter.params"
 }
 
@@ -39,6 +37,7 @@ tasks {
 			include("LICENSE-univocity-parsers.md")
 			into("META-INF")
 		}
+		from("$buildDir/classes/java/module/org.junit.jupiter.params")
 	}
 	test {
 		// in order to run the test against the shadowJar

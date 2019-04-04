@@ -27,6 +27,7 @@ tasks {
 			include("LICENSE-picocli.md")
 			into("META-INF")
 		}
+		from("$buildDir/classes/java/module/org.junit.platform.console")
 	}
 	jar {
 		enabled = false
@@ -34,5 +35,6 @@ tasks {
 		manifest {
 			attributes("Main-Class" to "org.junit.platform.console.ConsoleLauncher")
 		}
+		// TODO jar --update --file {} --main-class org.junit.platform.console.ConsoleLauncher
 	}
 }
