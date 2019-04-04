@@ -10,8 +10,9 @@
 
 module org.junit.jupiter.api {
 	requires org.apiguardian.api;
-	requires transitive org.junit.platform.commons;
 	requires org.opentest4j;
+
+	requires transitive org.junit.platform.commons;
 
 	exports org.junit.jupiter.api;
 	exports org.junit.jupiter.api.condition;

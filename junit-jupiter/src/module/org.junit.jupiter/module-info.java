@@ -10,5 +10,6 @@
 
 module org.junit.jupiter {
 	requires transitive org.junit.jupiter.api;
-	requires transitive static org.junit.jupiter.engine;
+	requires transitive org.junit.jupiter.params;
+	requires transitive org.junit.jupiter.engine;
 }

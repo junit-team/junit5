@@ -9,4 +9,11 @@
  */
 
 module org.junit.jupiter.engine {
+	requires org.apiguardian.api;
+
+	requires org.junit.jupiter.api;
+	requires org.junit.platform.engine;
+
+	provides org.junit.platform.engine.TestEngine
+			with org.junit.jupiter.engine.JupiterTestEngine;
 }

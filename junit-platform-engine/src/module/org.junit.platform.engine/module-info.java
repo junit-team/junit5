@@ -9,4 +9,8 @@
  */
 
 module org.junit.platform.engine {
+	requires org.apiguardian.api;
+	requires org.opentest4j;
+
+	requires org.junit.platform.commons;
 }
