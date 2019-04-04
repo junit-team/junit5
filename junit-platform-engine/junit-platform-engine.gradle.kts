@@ -1,5 +1,6 @@
 plugins {
 	`java-library-conventions`
+	id("org.moditect.gradleplugin")
 }
 
 description = "JUnit Platform Engine API"
@@ -15,4 +16,15 @@ dependencies {
 	api(project(":junit-platform-commons"))
 
 	testImplementation("org.assertj:assertj-core:${Versions.assertJ}")
+}
+
+moditect {
+	addMainModuleInfo {
+		overwriteExistingFiles.set(true)
+		module {
+			moduleInfo {
+				name = "org." + project.name.replace('-', '.')
+			}
+		}
+	}
 }

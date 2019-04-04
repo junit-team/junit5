@@ -1,4 +1,8 @@
 pluginManagement {
+	repositories {
+		gradlePluginPortal()
+		maven(url = "https://jitpack.io")
+	}
 	resolutionStrategy {
 		eachPlugin {
 			when (requested.id.id) {
@@ -12,6 +16,7 @@ pluginManagement {
 				"org.asciidoctor.convert" -> useVersion(Versions.asciidoctorPlugin)
 				"me.champeau.gradle.jmh" -> useVersion(Versions.jmhPlugin)
 				"de.marcphilipp.nexus-publish" -> useVersion(Versions.nexusPublishPlugin)
+				"org.moditect.gradleplugin" -> useVersion(Versions.moditectPlugin)
 			}
 		}
 	}

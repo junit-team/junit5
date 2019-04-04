@@ -1,5 +1,6 @@
 plugins {
 	`java-library-conventions`
+	id("org.moditect.gradleplugin")
 }
 
 apply(from = "$rootDir/gradle/testing.gradle.kts")
@@ -21,4 +22,17 @@ dependencies {
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(path = ":junit-jupiter-engine", configuration = "testArtifacts"))
 	testImplementation(project(":junit-platform-testkit"))
+}
+
+
+moditect {
+	addMainModuleInfo {
+		overwriteExistingFiles.set(true)
+		module {
+			moduleInfo {
+				name = "org." + project.name.replace('-', '.')
+				exports = "!*;"
+			}
+		}
+	}
 }

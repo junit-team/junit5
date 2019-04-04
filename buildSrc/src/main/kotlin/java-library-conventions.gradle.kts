@@ -1,5 +1,3 @@
-import java.util.spi.ToolProvider
-
 plugins {
 	`java-library`
 	eclipse
@@ -135,25 +133,6 @@ tasks.jar {
 				"Implementation-Version" to project.version,
 				"Implementation-Vendor" to "junit.org"
 		)
-	}
-
-	// If available, compile and include classes for other Java versions.
-	listOf("9").forEach { version ->
-		val versionedProject = findProject(":${project.name}-java-$version")
-		if (versionedProject != null) {
-			// We're only interested in the compiled classes. So we depend
-			// on the classes task and change (-C) to the destination
-			// directory of the version-aware project later.
-			dependsOn(versionedProject.tasks.matching { it.name == "classes" })
-			doLast {
-				ToolProvider.findFirst("jar").get().run(System.out, System.err,
-						"--update",
-						"--file", archiveFile.get().asFile.absolutePath,
-						"--release", version,
-						"-C", versionedProject.tasks.compileJava.get().destinationDir.toString(),
-						".")
-			}
-		}
 	}
 }
 

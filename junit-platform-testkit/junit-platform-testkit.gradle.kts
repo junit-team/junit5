@@ -1,5 +1,6 @@
 plugins {
 	`java-library-conventions`
+	id("org.moditect.gradleplugin")
 }
 
 description = "JUnit Platform Test Kit"
@@ -14,4 +15,15 @@ dependencies {
 	api("org.opentest4j:opentest4j:${Versions.ota4j}")
 
 	api(project(":junit-platform-launcher"))
+}
+
+moditect {
+	addMainModuleInfo {
+		overwriteExistingFiles.set(true)
+		module {
+			moduleInfo {
+				name = "org." + project.name.replace('-', '.')
+			}
+		}
+	}
 }

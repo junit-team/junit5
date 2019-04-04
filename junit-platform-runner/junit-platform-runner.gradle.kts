@@ -1,5 +1,6 @@
 plugins {
 	`java-library-conventions`
+	id("org.moditect.gradleplugin")
 }
 
 description = "JUnit Platform Runner"
@@ -14,4 +15,16 @@ dependencies {
 
 	api(project(":junit-platform-launcher"))
 	api(project(":junit-platform-suite-api"))
+}
+
+
+moditect {
+	addMainModuleInfo {
+		overwriteExistingFiles.set(true)
+		module {
+			moduleInfo {
+				name = "org." + project.name.replace('-', '.')
+			}
+		}
+	}
 }
