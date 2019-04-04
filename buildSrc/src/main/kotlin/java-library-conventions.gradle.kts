@@ -27,7 +27,7 @@ sourceSets {
 		java {
 			srcDir("src/module/$javaModuleName")
 		}
-		compileClasspath += main.get().output
+		compileClasspath += main.get().output + configurations["compileClasspath"]
 	}
 	test {
 		runtimeClasspath += shadowed
