@@ -50,6 +50,7 @@ if (project in mavenizedProjects) {
 	apply(from = "$rootDir/gradle/publishing.gradle.kts")
 
 	tasks.javadoc {
+		exclude("module-info.java")
 		options {
 			memberLevel = JavadocMemberLevel.PROTECTED
 			header = project.name
@@ -169,6 +170,8 @@ afterEvaluate {
 }
 
 tasks.compileJava {
+	exclude("module-info.java")
+
 	options.encoding = "UTF-8"
 
 	// See: https://docs.oracle.com/en/java/javase/11/tools/javac.html
@@ -201,6 +204,23 @@ afterEvaluate {
 					"-parameters" // Generates metadata for reflection on method parameters.
 			))
 		}
+
+		val modulePath: String  = tasks.compileJava.get().classpath.asPath
+		val compileModuleInfoJava by tasks.registering(JavaCompile::class) {
+			dependsOn(tasks.compileJava)
+
+			destinationDir = tasks.compileJava.get().destinationDir
+			setSource("src/main/java/module-info.java")
+			classpath = files() // using module path below
+			options.encoding = "UTF-8"
+			options.compilerArgs.addAll(listOf(
+					"-Xlint",
+					"--release", "9",
+					"--module-version", "${project.version}",
+					"--module-path", modulePath
+			))
+		}
+		tasks.named("classes").get().dependsOn(compileModuleInfoJava)
 	}
 }
 
@@ -211,6 +231,7 @@ checkstyle {
 tasks {
 	checkstyleMain {
 		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
+		exclude("module-info.java")
 	}
 	checkstyleTest {
 		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
