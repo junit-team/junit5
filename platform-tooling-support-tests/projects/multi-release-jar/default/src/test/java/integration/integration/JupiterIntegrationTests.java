@@ -13,7 +13,6 @@ package integration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -21,8 +20,6 @@ import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.condition.EnabledIf;
-import org.junit.platform.commons.util.CollectionUtils;
-import org.junit.platform.commons.util.ModuleUtils;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.launcher.TestIdentifier;
@@ -31,11 +28,6 @@ import org.junit.platform.launcher.core.LauncherFactory;
 
 @TestMethodOrder(Alphanumeric.class)
 class JupiterIntegrationTests {
-
-	@Test
-	void javaPlatformModuleSystemIsAvailable() {
-		assertTrue(ModuleUtils.isJavaPlatformModuleSystemAvailable());
-	}
 
 	@Test
 	void packageName() {
@@ -60,10 +52,10 @@ class JupiterIntegrationTests {
 				.filters(includeEngines("junit-jupiter"))
 				.build());
 
-		TestIdentifier engine = CollectionUtils.getOnlyElement(testPlan.getRoots());
+		TestIdentifier engine = testPlan.getRoots().iterator().next();
 
 		assertEquals(1, testPlan.getChildren(engine).size()); // JupiterIntegrationTests.class
-		assertEquals(5, testPlan.getChildren(getOnlyElement(testPlan.getChildren(engine))).size()); // 5 test methods
+		assertEquals(4, testPlan.getChildren(testPlan.getChildren(engine).iterator().next()).size()); // 4 test methods
 	}
 
 	@Test
