@@ -61,12 +61,14 @@ import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithIgnoredJUnit4TestC
 import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithJUnit3SuiteWithSingleTestCase;
 import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithJUnit4TestCaseWithAssumptionFailureInBeforeClass;
 import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithJUnit4TestCaseWithErrorInBeforeClass;
+import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithJUnit4TestCaseWithFailingDescriptionThatIsNotReportedAsFinished;
 import org.junit.vintage.engine.samples.junit4.JUnit4SuiteWithPlainJUnit4TestCaseWithSingleTestWhichIsIgnored;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithAssumptionFailureInBeforeClass;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithErrorCollectorStoringMultipleFailures;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithErrorInAfterClass;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithErrorInBeforeClass;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithExceptionThrowingRunner;
+import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithFailingDescriptionThatIsNotReportedAsFinished;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithOverloadedMethod;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithRunnerWithCustomUniqueIds;
 import org.junit.vintage.engine.samples.junit4.MalformedJUnit4TestCase;
@@ -621,6 +623,40 @@ class VintageTestEngineExecutionTests {
 					new Condition<>(throwable -> ((MultipleFailuresError) throwable).getFailures().size() == 3,
 						"Must contain multiple errors (3)"))), //
 			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesJUnit4TestCaseWithFailingDescriptionThatIsNotReportedAsFinished() {
+		Class<?> testClass = JUnit4TestCaseWithFailingDescriptionThatIsNotReportedAsFinished.class;
+
+		execute(testClass).assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(test("testWithMissingEvents"), started()), //
+			event(test("testWithMissingEvents"), finishedWithFailure()), //
+			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesJUnit4SuiteWithJUnit4TestCaseWithFailingDescriptionThatIsNotReportedAsFinished() {
+		Class<?> suiteClass = JUnit4SuiteWithJUnit4TestCaseWithFailingDescriptionThatIsNotReportedAsFinished.class;
+		Class<?> firstTestClass = JUnit4TestCaseWithFailingDescriptionThatIsNotReportedAsFinished.class;
+		Class<?> secondTestClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
+
+		execute(suiteClass).assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(suiteClass), started()), //
+			event(container(firstTestClass), started()), //
+			event(test("testWithMissingEvents"), started()), //
+			event(test("testWithMissingEvents"), finishedWithFailure()), //
+			event(container(firstTestClass), finishedSuccessfully()), //
+			event(container(secondTestClass), started()), //
+			event(test("failingTest"), started()), //
+			event(test("failingTest"), finishedWithFailure()), //
+			event(container(secondTestClass), finishedSuccessfully()), //
+			event(container(suiteClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
