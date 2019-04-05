@@ -1,9 +1,12 @@
 plugins {
-	`java-library`
-	kotlin("jvm")
+	`kotlin-library-conventions`
 }
 
 description = "JUnit Jupiter API"
+
+javaLibrary {
+	automaticModuleName = "org.junit.jupiter.api"
+}
 
 dependencies {
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
@@ -12,12 +15,4 @@ dependencies {
 	api(project(":junit-platform-commons"))
 
 	compileOnly("org.jetbrains.kotlin:kotlin-stdlib")
-}
-
-tasks.jar {
-	manifest {
-		attributes(
-			"Automatic-Module-Name" to "org.junit.jupiter.api"
-		)
-	}
 }
