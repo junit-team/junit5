@@ -8,6 +8,7 @@ plugins {
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
+val modularProjects: List<Project> by rootProject.extra
 val buildDate: String by rootProject.extra
 val buildTime: String by rootProject.extra
 val buildRevision: Any by rootProject.extra
@@ -27,7 +28,7 @@ sourceSets {
 		java {
 			srcDir("src/module/$javaModuleName")
 		}
-		compileClasspath += main.get().output + configurations["compileClasspath"]
+		compileClasspath += sourceSets["main"].output + configurations["compileClasspath"]
 	}
 	test {
 		runtimeClasspath += shadowed
@@ -146,7 +147,7 @@ tasks.jar {
 		)
 	}
 
-	dependsOn(tasks.named("compileModuleJava"))
+	// dependsOn(tasks.named("compileModuleJava"))
 	from("$buildDir/classes/java/module/$javaModuleName")
 
 	// If available, compile and include classes for other Java versions.
@@ -206,7 +207,8 @@ afterEvaluate {
 
 	val modulePath = tasks.compileJava.get().classpath.asPath
 	tasks.named<JavaCompile>("compileModuleJava") {
-		dependsOn(tasks.compileJava)
+		tasks.classes.get().dependsOn(this)
+		mustRunAfter(tasks.compileJava)
 		sourceCompatibility = "9"
 		targetCompatibility = "9"
 		options.encoding = "UTF-8"
@@ -214,16 +216,20 @@ afterEvaluate {
 				"-Xlint",
 				"--release", "9",
 				"--module-version", "${project.version}",
-				"--module-source-path", files(mavenizedProjects.map { "${it.projectDir}/src/module" }).asPath,
+				"--module-source-path", files(modularProjects.map { "${it.projectDir}/src/module" }).asPath,
 				"--module-path", modulePath
 		))
-		mavenizedProjects.forEach {
+		modularProjects.forEach {
 			val module = javaModuleName(it)
 			val patch = if (it == project) classpath.asPath else "${it.projectDir}/src/main/java"
 			options.compilerArgs.add("--patch-module")
 			options.compilerArgs.add("$module=$patch")
 		}
 		classpath = files()
+		doFirst {
+			println("options.compilerArgs")
+			options.compilerArgs.forEach{ println(it) }
+		}
 	}
 }
 

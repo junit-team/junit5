@@ -45,6 +45,7 @@ val vintageProjects by extra(listOf(
 ))
 
 val mavenizedProjects by extra(platformProjects + jupiterProjects + vintageProjects)
+val modularProjects by extra(mavenizedProjects.filter{ it != project(":junit-platform-console-standalone") })
 
 val license by extra(License(
 		name = "Eclipse Public License v2.0",
