@@ -1,0 +1,7 @@
+src/modules/org.junit.jupiter/module-info.java
+src/modules/org.junit.jupiter.api/module-info.java
+src/modules/org.junit.jupiter.engine/module-info.java
+src/modules/org.junit.jupiter.migrationsupport/module-info.java
+src/modules/org.junit.jupiter.params/module-info.java
+
+src/modules/org.junit.vintage.engine/module-info.java

@@ -1,0 +1,8 @@
+src/modules/org.junit.platform.commons/module-info.java
+src/modules/org.junit.platform.console/module-info.java
+src/modules/org.junit.platform.engine/module-info.java
+src/modules/org.junit.platform.launcher/module-info.java
+src/modules/org.junit.platform.reporting/module-info.java
+src/modules/org.junit.platform.runner/module-info.java
+src/modules/org.junit.platform.suite.api/module-info.java
+src/modules/org.junit.platform.testkit/module-info.java

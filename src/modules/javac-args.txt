@@ -1,0 +1,37 @@
+-d build/modules/bin
+
+--release 9
+
+--module-path build/modules/lib
+--module-source-path src/modules
+
+--patch-module
+org.junit.jupiter=junit-jupiter/build/classes/java/main
+--patch-module
+org.junit.jupiter.api=junit-jupiter-api/build/classes/java/main
+--patch-module
+org.junit.jupiter.engine=junit-jupiter-engine/build/classes/java/main
+--patch-module
+org.junit.jupiter.migrationsupport=junit-jupiter-migrationsupport/build/classes/java/main
+--patch-module
+org.junit.jupiter.params=junit-jupiter-params/build/classes/java/main
+
+--patch-module
+org.junit.platform.commons=junit-platform-commons/build/classes/java/main
+--patch-module
+org.junit.platform.console=junit-platform-console/build/classes/java/main
+--patch-module
+org.junit.platform.engine=junit-platform-engine/build/classes/java/main
+--patch-module
+org.junit.platform.launcher=junit-platform-launcher/build/classes/java/main
+--patch-module
+org.junit.platform.reporting=junit-platform-reporting/build/classes/java/main
+--patch-module
+org.junit.platform.runner=junit-platform-runner/build/classes/java/main
+--patch-module
+org.junit.platform.suite.api=junit-platform-suite-api/build/classes/java/main
+--patch-module
+org.junit.platform.testkit=junit-platform-testkit/build/classes/java/main
+
+--patch-module
+org.junit.vintage.engine=junit-vintage-engine/build/classes/java/main
