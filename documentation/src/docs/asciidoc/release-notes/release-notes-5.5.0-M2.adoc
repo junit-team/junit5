@@ -33,7 +33,6 @@ on GitHub.
 
 * Parameterized tests no longer throw an `ArrayStoreException` when creating human-readable
   test names.
-* Global jupiter configuration `junit.jupiter.displayname.generator.default` to override the default `DisplayNameGenerator`
 
 ==== Deprecations and Breaking Changes
 
