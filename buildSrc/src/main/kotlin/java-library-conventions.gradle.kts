@@ -16,6 +16,10 @@ val builtByValue: String by rootProject.extra
 val shadowed by configurations.creating
 val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 
+val javaModuleProjects by extra(mavenizedProjects.filter{ it != project(":junit-platform-console-standalone") })
+fun javaModuleName(project: Project) = "org." + project.name.replace('-', '.')
+val javaModuleName = javaModuleName(project)
+
 sourceSets {
 	main {
 		compileClasspath += shadowed
@@ -164,6 +168,7 @@ afterEvaluate {
 			manifest {
 				attributes("Automatic-Module-Name" to automaticModuleName)
 			}
+			from("$buildDir/classes/java/module/$automaticModuleName")
 		}
 	}
 }
@@ -179,6 +184,31 @@ tasks.compileJava {
 }
 
 afterEvaluate {
+	val modulePath: String = tasks.compileJava.get().classpath.asPath
+	val compileJavaModule by tasks.registering(JavaCompile::class) {
+		destinationDir = file("$buildDir/classes/java/module")
+		setSource("$rootDir/src/modules/$javaModuleName/module-info.java")
+		options.encoding = "UTF-8"
+		options.compilerArgs.addAll(listOf(
+				"-Xlint",
+				"--release", "9",
+				"--module-version", "${project.version}",
+				"--module-source-path", "$rootDir/src/modules",
+				"--module-path", modulePath
+		))
+		javaModuleProjects.forEach {
+			val module = javaModuleName(it)
+			val patch = if (it == project) (sourceSets["main"].output + configurations["compileClasspath"]).asPath else "${it.projectDir}/src/main/java"
+			options.compilerArgs.add("--patch-module")
+			options.compilerArgs.add("$module=$patch")
+		}
+		classpath = files()
+		doFirst {
+			println("M O D U L E --> $javaModuleName")
+			// options.compilerArgs.forEach{ println(it) }
+		}
+	}
+
 	tasks {
 		compileJava {
 			sourceCompatibility = extension.mainJavaVersion.majorVersion
@@ -188,6 +218,12 @@ afterEvaluate {
 			// Supported release targets are 6, 7, 8, 9, 10, and 11.
 			// Note that if --release is added then -target and -source are ignored.
 			options.compilerArgs.addAll(listOf("--release", extension.mainJavaVersion.majorVersion))
+			val automaticModuleName = extension.automaticModuleName
+			if (automaticModuleName != null) {
+				inputs.file("$rootDir/src/modules/$automaticModuleName/module-info.java")
+				outputs.file("$destinationDir/module-info.class")
+				finalizedBy(compileJavaModule)
+			}
 		}
 		compileTestJava {
 			options.encoding = "UTF-8"
