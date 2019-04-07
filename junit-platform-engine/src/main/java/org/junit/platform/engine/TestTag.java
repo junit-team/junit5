@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 
@@ -108,11 +108,11 @@ public final class TestTag implements Serializable {
 	 * <p>Note: the supplied {@code name} will be {@linkplain String#trim() trimmed}.
 	 *
 	 * @param name the name of the tag; must be syntactically <em>valid</em>
-	 * @throws PreconditionViolationException if the supplied tag name is not
+	 * @throws JUnitException if the supplied tag name is not
 	 * syntactically <em>valid</em>
 	 * @see TestTag#isValid(String)
 	 */
-	public static TestTag create(String name) throws PreconditionViolationException {
+	public static TestTag create(String name) throws JUnitException {
 		return new TestTag(name);
 	}
 
