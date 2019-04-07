@@ -153,6 +153,10 @@ public final class AnnotationSupport {
 	 * <p>If the supplied {@code element} is {@code null}, this method simply
 	 * returns an empty list.
 	 *
+	 * <p>As of JUnit Platform 1.5, the search algorithm will also find
+	 * repeatable annotations used as meta-annotations on other repeatable
+	 * annotations.
+	 *
 	 * @param <A> the annotation type
 	 * @param element the element to search on; may be {@code null}
 	 * @param annotationType the repeatable annotation type to search for; never {@code null}
