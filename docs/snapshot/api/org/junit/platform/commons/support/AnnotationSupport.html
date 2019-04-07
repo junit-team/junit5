@@ -486,7 +486,11 @@ public static&nbsp;&lt;A extends <a href="https://docs.oracle.com/javase/8/docs/
  search on interfaces implemented by each class in the hierarchy.
 
  <p>If the supplied <code>element</code> is <code>null</code>, this method simply
- returns an empty list.</div>
+ returns an empty list.
+
+ <p>As of JUnit Platform 1.5, the search algorithm will also find
+ repeatable annotations used as meta-annotations on other repeatable
+ annotations.</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>A</code> - the annotation type</dd>
