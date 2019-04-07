@@ -124,16 +124,11 @@ class RunListenerAdapter extends RunListener {
 			TestDescriptor testDescriptor) {
 		TestExecutionResult result = resultCreator.apply(failure.getException());
 		testRun.storeResult(testDescriptor, result);
-		if (testDescriptor.isContainer() && testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)) {
-			fireMissingContainerEvents(testDescriptor);
-		}
-	}
-
-	private void fireMissingContainerEvents(TestDescriptor testDescriptor) {
 		if (testRun.isNotStarted(testDescriptor)) {
 			testStarted(testDescriptor, EventType.SYNTHETIC);
 		}
-		if (testRun.isNotFinished(testDescriptor)) {
+		if (testRun.isNotFinished(testDescriptor) && testDescriptor.isContainer()
+				&& testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)) {
 			testFinished(testDescriptor);
 		}
 	}
