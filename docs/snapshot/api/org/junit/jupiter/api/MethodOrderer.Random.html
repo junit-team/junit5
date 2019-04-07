@@ -149,14 +149,15 @@ implements <a href="MethodOrderer.html" title="interface in org.junit.jupiter.ap
  <h4>Custom Seed</h4>
 
  <p>By default, the random <em>seed</em> used for ordering methods is the
- value returned by <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html?is-external=true#nanoTime()" title="class or interface in java.lang" class="externalLink"><code>System.nanoTime()</code></a> during static initialization.
- In order to produce repeatable builds, a custom seed may be specified via the
- <a href="#RANDOM_SEED_PROPERTY_NAME"><code>junit.jupiter.execution.order.random.seed</code></a>
- <em>configuration parameter</em> which can be supplied via the
- <code>Launcher</code> API, build tools (e.g., Gradle and Maven), a JVM system
- property, or the JUnit Platform configuration file (i.e., a file named
- <code>junit-platform.properties</code> in the root of the class path). Consult
- the User Guide for further information.</div>
+ value returned by <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html?is-external=true#nanoTime()" title="class or interface in java.lang" class="externalLink"><code>System.nanoTime()</code></a> during static initialization
+ of this class. In order to support repeatable builds, the value of the
+ default random seed is logged at <code>CONFIG</code> level. In addition, a
+ custom seed (potentially the default seed from the previous test plan
+ execution) may be specified via the <a href="#RANDOM_SEED_PROPERTY_NAME"><code>junit.jupiter.execution.order.random.seed</code></a> <em>configuration parameter</em>
+ which can be supplied via the <code>Launcher</code> API, build tools (e.g.,
+ Gradle and Maven), a JVM system property, or the JUnit Platform configuration
+ file (i.e., a file named <code>junit-platform.properties</code> in the root of
+ the class path). Consult the User Guide for further information.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="#RANDOM_SEED_PROPERTY_NAME"><code>RANDOM_SEED_PROPERTY_NAME</code></a>, 
@@ -301,8 +302,8 @@ implements <a href="MethodOrderer.html" title="interface in org.junit.jupiter.ap
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Long</code></a> via <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html?is-external=true#valueOf(java.lang.String)" title="class or interface in java.lang" class="externalLink"><code>Long.valueOf(String)</code></a>.
 
  <p>If not specified or if the specified value cannot be converted to
- a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Long</code></a>, <a href="#INITIAL_SEED"><code>INITIAL_SEED</code></a> will be used
- as the random seed.</div>
+ a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Long</code></a>, the default random seed will be used (see the
+ <a href="MethodOrderer.Random.html" title="class in org.junit.jupiter.api">class-level Javadoc</a> for details).</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../constant-values.html#org.junit.jupiter.api.MethodOrderer.Random.RANDOM_SEED_PROPERTY_NAME">Constant Field Values</a></dd>
