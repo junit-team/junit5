@@ -670,7 +670,12 @@ test names.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p><code>MethodOrderer.Random</code> now generates a default random seed only once and prints it to
+the log in order to allow reproducible builds.</p>
+</li>
+<li>
+<p>Methods ordered with <code>MethodOrderer.Random</code> now execute using the <code>SAME_THREAD</code>
+concurrency mode instead of the <code>CONCURRENT</code> mode when no custom seed is provided.</p>
 </li>
 </ul>
 </div>
@@ -907,7 +912,7 @@ in build tools</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-04-05 04:45:42 UTC
+Last updated 2019-04-07 12:21:24 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
