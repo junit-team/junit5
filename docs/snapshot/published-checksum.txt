@@ -114,6 +114,7 @@
 2c124044d893956651e0d137904c3ba7  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrderer.java
 2cdbd43e4b162e15d3146ecfedcb1aba  documentation/src/main/java/example/util/ListWriter.java
 2d15dcf1d77829753f6865844023ee0d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AfterEach.java
+2d47a259c30329fb47d414501fb60579  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.2.adoc
 2f6c53349ee30bd5b0ac609dcd27fa35  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/package-info.java
 2fa3152cc9086f7996b11f27a8a70800  junit-platform-launcher/src/main/java/org/junit/platform/launcher/PostDiscoveryFilter.java
 2fa8f468a324914fc630ea9cce9a9acf  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/package-info.java
@@ -224,7 +225,6 @@
 59c4c4c4f63c53318eb9f5ea70964a62  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueId.java
 59d244c82196396922ef1ad66d9ad684  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/FilePosition.java
 59db7856e6a14d0974c1adeb0b1fc1bd  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfSystemProperty.java
-5a47ce8a3a1dee1cbe96393f785455ff  documentation/src/docs/asciidoc/release-notes/index.adoc
 5b143dbb7aceed36bbb3320761d77bff  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/package-info.java
 5b31f0dd55abce9d96922761f3e1f751  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ExceptionUtils.java
 5babc71de91700cbe52606d6757b9e94  junit-platform-commons/src/main/java/org/junit/platform/commons/util/CollectionUtils.java
@@ -568,6 +568,7 @@ ea48d2c7c7dd1e55685e990a39b663d5  junit-jupiter-params/src/main/java/org/junit/j
 eaa4188a41a4ec440c3a15e5139a3f67  junit-platform-console/src/main/java/org/junit/platform/console/tasks/package-info.java
 eb6ece23077de314a4f6bdd14fe230f1  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/IgnoringRunnerDecorator.java
 eb8bcf457f9a0e5e28662054d6dafbd5  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestInstanceLifecycleUtils.java
+ec4036bd97997182cf41ec2fac18165c  documentation/src/docs/asciidoc/release-notes/index.adoc
 eca9c7a1b5a6b4564c1772333aaca6ca  documentation/src/test/java/example/callbacks/BrokenLifecycleMethodConfigDemo.java
 ee8cdba171d90c80addd7d4778804b43  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/AbstractTestRuleAdapter.java
 ee9b252abfcc35525aa2fc38d3a3b3f3  documentation/src/docs/asciidoc/user-guide/overview.adoc

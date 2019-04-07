@@ -570,6 +570,13 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#release-notes-5.5.0-M1-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
+<li><a href="#release-notes-5.4.2">5.4.2</a>
+<ul class="sectlevel2">
+<li><a href="#release-notes-5.4.2-junit-platform">JUnit Platform</a></li>
+<li><a href="#release-notes-5.4.2-junit-jupiter">JUnit Jupiter</a></li>
+<li><a href="#release-notes-5.4.2-junit-vintage">JUnit Vintage</a></li>
+</ul>
+</li>
 <li><a href="#release-notes-5.4.1">5.4.1</a>
 <ul class="sectlevel2">
 <li><a href="#release-notes-5.4.1-overall-improvements">Overall Improvements</a></li>
@@ -774,6 +781,56 @@ parameterized tests.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="release-notes-5.4.2"><a class="anchor" href="#release-notes-5.4.2"></a>5.4.2</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Date of Release:</strong> April 7, 2019</p>
+</div>
+<div class="paragraph">
+<p><strong>Scope:</strong> Bug fixes since 5.4.1</p>
+</div>
+<div class="paragraph">
+<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult
+the <a href="https://github.com/junit-team/junit5/milestone/38?closed=1">5.4.2</a> milestone page in the JUnit
+repository on GitHub.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.4.2-junit-platform"><a class="anchor" href="#release-notes-5.4.2-junit-platform"></a>JUnit Platform</h3>
+<div class="paragraph">
+<p>No changes.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.4.2-junit-jupiter"><a class="anchor" href="#release-notes-5.4.2-junit-jupiter"></a>JUnit Jupiter</h3>
+<div class="sect3">
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Parameterized tests no longer throw an <code>ArrayStoreException</code> when creating human-readable
+test names.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.4.2-junit-vintage"><a class="anchor" href="#release-notes-5.4.2-junit-vintage"></a>JUnit Vintage</h3>
+<div class="sect3">
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Safeguard against <code>Runners</code> that only report tests as failed but not as started or
+finished such as Spock in case of failures during data-provider preparation.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="release-notes-5.4.1"><a class="anchor" href="#release-notes-5.4.1"></a>5.4.1</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -800,7 +857,7 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.1-junit-platform"><a class="anchor" href="#release-notes-5.4.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -815,7 +872,7 @@ initialization.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.1-junit-jupiter"><a class="anchor" href="#release-notes-5.4.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -829,7 +886,7 @@ a temporary directory supplied via <code>@TempDir</code>.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.1-junit-vintage"><a class="anchor" href="#release-notes-5.4.1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -912,7 +969,7 @@ in build tools</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-04-07 15:04:03 UTC
+Last updated 2019-04-07 18:55:51 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
