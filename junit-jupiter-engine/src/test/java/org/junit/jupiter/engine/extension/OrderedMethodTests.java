@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -134,8 +135,9 @@ class OrderedMethodTests {
 	@TrackLogRecords
 	void randomWithBogusSeedRepeatedly(LogRecordListener listener) {
 		String seed = "explode";
-		String expectedMessage = "Failed to convert configuration parameter [" + Random.RANDOM_SEED_PROPERTY_NAME
-				+ "] with value [" + seed + "] to a long. Using System.nanoTime() as fallback.";
+		String expectedMessagePattern = "Failed to convert configuration parameter \\["
+				+ Pattern.quote(Random.RANDOM_SEED_PROPERTY_NAME) + "\\] with value \\[" + seed
+				+ "\\] to a long\\. Using default seed \\[\\d+\\] as fallback\\.";
 
 		Set<String> uniqueSequences = new HashSet<>();
 
@@ -152,7 +154,7 @@ class OrderedMethodTests {
 			// @formatter:off
 			assertTrue(listener.stream(Random.class, Level.WARNING)
 				.map(LogRecord::getMessage)
-				.anyMatch(expectedMessage::equals));
+				.anyMatch(msg -> msg.matches(expectedMessagePattern)));
 			// @formatter:on
 		}
 

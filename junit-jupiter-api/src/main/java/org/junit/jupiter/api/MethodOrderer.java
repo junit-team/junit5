@@ -167,14 +167,16 @@ public interface MethodOrderer {
 	 * <h4>Custom Seed</h4>
 	 *
 	 * <p>By default, the random <em>seed</em> used for ordering methods is the
-	 * value returned by {@link System#nanoTime()} during static initialization.
-	 * In order to produce repeatable builds, a custom seed may be specified via the
-	 * {@link Random#RANDOM_SEED_PROPERTY_NAME junit.jupiter.execution.order.random.seed}
-	 * <em>configuration parameter</em> which can be supplied via the
-	 * {@code Launcher} API, build tools (e.g., Gradle and Maven), a JVM system
-	 * property, or the JUnit Platform configuration file (i.e., a file named
-	 * {@code junit-platform.properties} in the root of the class path). Consult
-	 * the User Guide for further information.
+	 * value returned by {@link System#nanoTime()} during static initialization
+	 * of this class. In order to support repeatable builds, the value of the
+	 * default random seed is logged at {@code CONFIG} level. In addition, a
+	 * custom seed (potentially the default seed from the previous test plan
+	 * execution) may be specified via the {@link Random#RANDOM_SEED_PROPERTY_NAME
+	 * junit.jupiter.execution.order.random.seed} <em>configuration parameter</em>
+	 * which can be supplied via the {@code Launcher} API, build tools (e.g.,
+	 * Gradle and Maven), a JVM system property, or the JUnit Platform configuration
+	 * file (i.e., a file named {@code junit-platform.properties} in the root of
+	 * the class path). Consult the User Guide for further information.
 	 *
 	 * @see Random#RANDOM_SEED_PROPERTY_NAME
 	 * @see java.util.Random
@@ -184,10 +186,15 @@ public interface MethodOrderer {
 		private static final Logger logger = LoggerFactory.getLogger(Random.class);
 
 		/**
-		 * Initial seed, which is generated during initialization of class with
-		 * {@link System#nanoTime()} for reproducibility of tests.
+		 * Default seed, which is generated during initialization of this class
+		 * via {@link System#nanoTime()} for reproducibility of tests.
 		 */
-		private static final long INITIAL_SEED;
+		private static final long DEFAULT_SEED;
+
+		static {
+			DEFAULT_SEED = System.nanoTime();
+			logger.config(() -> "MethodOrderer.Random default seed: " + DEFAULT_SEED);
+		}
 
 		/**
 		 * Property name used to set the random seed used by this
@@ -199,16 +206,10 @@ public interface MethodOrderer {
 		 * {@link Long} via {@link Long#valueOf(String)}.
 		 *
 		 * <p>If not specified or if the specified value cannot be converted to
-		 * a {@link Long}, {@link Random#INITIAL_SEED INITIAL_SEED} will be used
-		 * as the random seed.
+		 * a {@link Long}, the default random seed will be used (see the
+		 * {@linkplain Random class-level Javadoc} for details).
 		 */
 		public static final String RANDOM_SEED_PROPERTY_NAME = "junit.jupiter.execution.order.random.seed";
-
-		static {
-			INITIAL_SEED = System.nanoTime();
-			logger.config(
-				() -> String.format("Initializing MethodOrderer.Random seed with value '[%s]'.", INITIAL_SEED));
-		}
 
 		/**
 		 * Order the methods encapsulated in the supplied
@@ -216,12 +217,11 @@ public interface MethodOrderer {
 		 */
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
-			Optional<Long> seed = getConfiguredSeed(context);
-
-			Collections.shuffle(context.getMethodDescriptors(), new java.util.Random(seed.orElse(INITIAL_SEED)));
+			Collections.shuffle(context.getMethodDescriptors(),
+				new java.util.Random(getCustomSeed(context).orElse(DEFAULT_SEED)));
 		}
 
-		private Optional<Long> getConfiguredSeed(MethodOrdererContext context) {
+		private Optional<Long> getCustomSeed(MethodOrdererContext context) {
 			return context.getConfigurationParameter(RANDOM_SEED_PROPERTY_NAME).map(configurationParameter -> {
 				Long seed = null;
 				try {
@@ -234,8 +234,8 @@ public interface MethodOrderer {
 					logger.warn(ex,
 						() -> String.format(
 							"Failed to convert configuration parameter [%s] with value [%s] to a long. "
-									+ "Using System.nanoTime() as fallback.",
-							RANDOM_SEED_PROPERTY_NAME, configurationParameter));
+									+ "Using default seed [%s] as fallback.",
+							RANDOM_SEED_PROPERTY_NAME, configurationParameter, DEFAULT_SEED));
 				}
 				return seed;
 			});
