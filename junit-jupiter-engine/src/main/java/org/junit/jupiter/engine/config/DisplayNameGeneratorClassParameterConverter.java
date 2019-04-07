@@ -13,7 +13,8 @@ package org.junit.jupiter.engine.config;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.ConfigurationParameters;
 
 /**
@@ -21,9 +22,10 @@ import org.junit.platform.engine.ConfigurationParameters;
  */
 class DisplayNameGeneratorClassParameterConverter {
 
+	private static final Logger logger = LoggerFactory.getLogger(DisplayNameGeneratorClassParameterConverter.class);
+
 	Optional<Class<? extends DisplayNameGenerator>> get(ConfigurationParameters configurationParameters, String key) {
-		return configurationParameters.get(key).filter(StringUtils::isNotBlank).map(String::trim).map(
-			this::getClassFrom);
+		return configurationParameters.get(key).map(String::trim).map(this::getClassFrom);
 	}
 
 	@SuppressWarnings({ "unchecked" })
@@ -31,11 +33,25 @@ class DisplayNameGeneratorClassParameterConverter {
 		try {
 			Class<?> aClass = Class.forName(className);
 			if (DisplayNameGenerator.class.isAssignableFrom(aClass)) {
+				logger.info(() -> String.format(
+					"Using default display name generator '%s' set via the '%s' configuration parameter.", className,
+					JupiterConfiguration.DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME));
 				return (Class<? extends DisplayNameGenerator>) aClass;
 			}
-			return null;
+			else {
+				logger.warn(() -> String.format(
+					"Default display name generator class '%s' set via the '%s' configuration parameter "
+							+ "is not of type `org.junit.jupiter.api.DisplayNameGenerator`."
+							+ "Falling back to default behaviour.",
+					className, JupiterConfiguration.DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME));
+				return null;
+			}
 		}
 		catch (ClassNotFoundException cnfe) {
+			logger.warn(() -> String.format(
+				"No default display name generator class '%s' set via the '%s' configuration parameter "
+						+ "is not not found. Falling back to default behaviour.",
+				className, JupiterConfiguration.DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME));
 			return null;
 		}
 	}
