@@ -31,8 +31,7 @@ on GitHub.
 
 ==== Bug Fixes
 
-* Parameterized tests no longer throw an `ArrayStoreException` when creating human-readable
-  test names.
+* ❓
 
 ==== Deprecations and Breaking Changes
 
