@@ -19,6 +19,8 @@ include::release-notes-5.5.0-M2.adoc[]
 
 include::release-notes-5.5.0-M1.adoc[]
 
+include::release-notes-5.4.2.adoc[]
+
 include::release-notes-5.4.1.adoc[]
 
 include::release-notes-5.4.0.adoc[]
