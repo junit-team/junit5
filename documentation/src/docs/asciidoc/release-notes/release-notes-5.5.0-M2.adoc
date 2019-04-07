@@ -40,9 +40,11 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* New `booleans` property in `ValueSource`.
-* MethodOrderer.Random generates random seed during static initialization and prints this information to the log.
-* MethodOrderer.Random is always running in SAME_THREAD, instead of running in CONCURRENT mode when no seed was provided.
+* `MethodOrderer.Random` now generates a default random seed only once and prints it to
+  the log in order to allow reproducible builds.
+* Methods ordered with `MethodOrderer.Random` now execute using the `SAME_THREAD`
+  concurrency mode instead of the `CONCURRENT` mode when no custom seed is provided.
+
 
 [[release-notes-5.5.0-M2-junit-vintage]]
 === JUnit Vintage
