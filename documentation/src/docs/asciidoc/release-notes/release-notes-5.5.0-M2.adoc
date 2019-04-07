@@ -40,7 +40,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Global jupiter configuration `junit.jupiter.displayname.generator.default`
+to override the default `DisplayNameGenerator` for entire test plan.
 
 
 [[release-notes-5.5.0-M2-junit-vintage]]
