@@ -167,7 +167,7 @@ include::{testDir}/example/DisplayNameGeneratorDemo.java[tags=user_guide]
       '-- Year 2048 is a leap year. [OK]
 ```
 
-[[override--default-display-name-generator]]
+[[override-default-display-name-generator]]
 ==== Global configuration to override the default DisplayNameGenerator
 Along with using `@DisplayName` and `@DisplayNameGeneration` annotation for custom display name
 , it is possible to change the default display name generator for

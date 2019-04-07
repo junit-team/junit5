@@ -706,7 +706,7 @@ parameters_ for the following use cases.
 - <<writing-tests-test-instance-lifecycle-changing-default>>
 - <<extensions-registration-automatic-enabling>>
 - <<extensions-conditions-deactivation>>
-- <<override--default-display-name-generator>>
+- <<override-default-display-name-generator>>
 
 _Configuration Parameters_ are text-based key-value pairs that can be supplied to test
 engines running on the JUnit Platform via one of the following mechanisms.
