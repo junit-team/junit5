@@ -40,7 +40,10 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* `MethodOrderer.Random` now generates a default random seed only once and prints it to
+  the log in order to allow reproducible builds.
+* Methods ordered with `MethodOrderer.Random` now execute using the `SAME_THREAD`
+  concurrency mode instead of the `CONCURRENT` mode when no custom seed is provided.
 
 
 [[release-notes-5.5.0-M2-junit-vintage]]
