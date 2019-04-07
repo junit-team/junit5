@@ -186,8 +186,10 @@ you can start your JVM with the following system property.
 make sure you use fully qualifies name (with class with package name) for the class and the class should
 implement `org.junit.jupiter.api.DisplayNameGenerator` interface.
 
-`@DisplayName` will take precedence over global configuration and then global configuration after
-that `@DisplayNameGeneration` will take precedence.
+precedence of display name will be
+1. `@DisplayName` annotation
+2. Global jupiter configuration parameter `junit.jupiter.displayname.generator.default`
+3. `@DisplayNameGeneration` annotation
 
 [[writing-tests-assertions]]
 === Assertions
