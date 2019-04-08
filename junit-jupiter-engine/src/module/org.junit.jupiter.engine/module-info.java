@@ -10,6 +10,7 @@
  */
 
 module org.junit.jupiter.engine {
+	requires static java.scripting;
 	requires transitive org.junit.jupiter.api;
 	requires transitive org.junit.platform.engine;
 

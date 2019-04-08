@@ -9,6 +9,7 @@
  */
 
 module org.junit.platform.reporting {
+	requires java.xml;
 	requires transitive org.junit.platform.launcher;
 
 	// exports org.junit.platform.reporting; empty package

@@ -1,10 +1,11 @@
->> 1 line header: No module descriptor found. Derived automatic module. >>
-
-org.junit.platform.commons@${platformVersion} automatic
+org.junit.platform.commons@${platformVersion} jar:file:.+junit-platform-commons/build/libs/junit-platform-commons-${platformVersion}.jar/!module-info.class
+exports org.junit.platform.commons
+exports org.junit.platform.commons.annotation
+exports org.junit.platform.commons.function
+exports org.junit.platform.commons.logging
+exports org.junit.platform.commons.support
+exports org.junit.platform.commons.util
 requires java.base mandated
-contains org.junit.platform.commons
-contains org.junit.platform.commons.annotation
-contains org.junit.platform.commons.function
-contains org.junit.platform.commons.logging
-contains org.junit.platform.commons.support
-contains org.junit.platform.commons.util
+requires java.compiler
+requires java.logging transitive
+requires org.apiguardian.api transitive

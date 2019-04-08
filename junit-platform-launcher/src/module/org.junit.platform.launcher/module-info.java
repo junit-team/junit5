@@ -9,9 +9,12 @@
  */
 
 module org.junit.platform.launcher {
-	requires transitive org.junit.platform.commons;
+	requires transitive org.junit.platform.engine;
 
 	exports org.junit.platform.launcher;
 	exports org.junit.platform.launcher.core;
 	exports org.junit.platform.launcher.listeners;
+
+	uses org.junit.platform.engine.TestEngine;
+	uses org.junit.platform.launcher.TestExecutionListener;
 }

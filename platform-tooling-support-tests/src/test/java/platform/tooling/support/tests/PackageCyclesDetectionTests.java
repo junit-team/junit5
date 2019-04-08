@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import de.sormuras.bartholdy.Configuration;
 import de.sormuras.bartholdy.tool.CyclesDetector;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import platform.tooling.support.Helper;
@@ -26,6 +27,7 @@ class PackageCyclesDetectionTests {
 
 	@ParameterizedTest
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
+	@Disabled("Need to pass --module-path...")
 	void moduleDoesNotContainCyclicPackageReferences(String module) {
 		var jar = Helper.createJarPath(module);
 		var result = new CyclesDetector(jar, this::ignore).run(Configuration.of());

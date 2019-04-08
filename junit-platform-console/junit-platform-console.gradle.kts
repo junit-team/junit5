@@ -1,3 +1,5 @@
+import java.util.spi.ToolProvider
+
 plugins {
 	`java-library-conventions`
 	id("com.github.johnrengelman.shadow")
@@ -22,6 +24,11 @@ tasks {
 		from(projectDir) {
 			include("LICENSE-picocli.md")
 			into("META-INF")
+		}
+		doLast {
+			ToolProvider.findFirst("jar").get().run(System.out, System.err, "--update",
+					"--file", archiveFile.get().asFile.absolutePath,
+					"--main-class", "org.junit.platform.console.ConsoleLauncher")
 		}
 	}
 	jar {
