@@ -19,23 +19,13 @@ sourceSets {
 		compileClasspath += shadowed
 	}
 	create("nine") {
-		java.srcDir("src/main/java")
-//		java.exclude {
-//			// println(it.file.toPath())
-//			// val match = it.file.toPath().toString() == projectDir.toPath().resolve("src/main/java/org/junit/platform/commons/util/ModuleUtils.java").toString()
-//			// println("  $match")
-//			// match
-//			it.file.toPath().toString() == projectDir.toPath().resolve("src/main/java/org/junit/platform/commons/util/ModuleUtils.java").toString()
-//		}
-		//java.filter {
-			// println(it.toPath())
-			// it.toPath().toString() == projectDir.toPath().resolve("src/main/java/org/junit/platform/commons/util/ModuleUtils.java").toString()
-		//	it.toPath().fileName.toString() == "ModuleUtils.java"
-		//}
-		//java.exclude("**/main/**/ModuleUtils.java")
-
-		compileClasspath += configurations["compileClasspath"]
-		compileClasspath += shadowed
+		java {
+			source(objects.sourceDirectorySet("main", "main without ModuleUtils").apply {
+				setSrcDirs(sourceSets.main.get().java.srcDirs)
+				exclude("**/ModuleUtils.java")
+			})
+		}
+		compileClasspath += configurations["compileClasspath"] + shadowed
 	}
 	test {
 		runtimeClasspath += shadowed
