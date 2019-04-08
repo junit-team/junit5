@@ -1,5 +1,3 @@
-import java.util.spi.ToolProvider
-
 plugins {
 	`java-library`
 	eclipse
@@ -18,6 +16,25 @@ val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 
 sourceSets {
 	main {
+		compileClasspath += shadowed
+	}
+	create("nine") {
+		java.srcDir("src/main/java")
+//		java.exclude {
+//			// println(it.file.toPath())
+//			// val match = it.file.toPath().toString() == projectDir.toPath().resolve("src/main/java/org/junit/platform/commons/util/ModuleUtils.java").toString()
+//			// println("  $match")
+//			// match
+//			it.file.toPath().toString() == projectDir.toPath().resolve("src/main/java/org/junit/platform/commons/util/ModuleUtils.java").toString()
+//		}
+		//java.filter {
+			// println(it.toPath())
+			// it.toPath().toString() == projectDir.toPath().resolve("src/main/java/org/junit/platform/commons/util/ModuleUtils.java").toString()
+		//	it.toPath().fileName.toString() == "ModuleUtils.java"
+		//}
+		//java.exclude("**/main/**/ModuleUtils.java")
+
+		compileClasspath += configurations["compileClasspath"]
 		compileClasspath += shadowed
 	}
 	test {
@@ -136,25 +153,6 @@ tasks.jar {
 				"Implementation-Vendor" to "junit.org"
 		)
 	}
-
-	// If available, compile and include classes for other Java versions.
-	listOf("9").forEach { version ->
-		val versionedProject = findProject(":${project.name}-java-$version")
-		if (versionedProject != null) {
-			// We're only interested in the compiled classes. So we depend
-			// on the classes task and change (-C) to the destination
-			// directory of the version-aware project later.
-			dependsOn(versionedProject.tasks.matching { it.name == "classes" })
-			doLast {
-				ToolProvider.findFirst("jar").get().run(System.out, System.err,
-						"--update",
-						"--file", archiveFile.get().asFile.absolutePath,
-						"--release", version,
-						"-C", versionedProject.tasks.compileJava.get().destinationDir.toString(),
-						".")
-			}
-		}
-	}
 }
 
 afterEvaluate {
@@ -189,6 +187,16 @@ afterEvaluate {
 			// Note that if --release is added then -target and -source are ignored.
 			options.compilerArgs.addAll(listOf("--release", extension.mainJavaVersion.majorVersion))
 		}
+		tasks.named<JavaCompile>("compileNineJava") {
+			sourceCompatibility = "9"
+			targetCompatibility = "9"
+			options.encoding = "UTF-8"
+			options.compilerArgs.addAll(listOf(
+					"-Xlint",
+					"--release", "9"
+					// "-verbose"
+			))
+		}
 		compileTestJava {
 			options.encoding = "UTF-8"
 			sourceCompatibility = extension.testJavaVersion.majorVersion
@@ -211,6 +219,10 @@ checkstyle {
 tasks {
 	checkstyleMain {
 		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
+	}
+	tasks.named<Checkstyle>("checkstyleNine") {
+		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
+		exclude("module-info.java")
 	}
 	checkstyleTest {
 		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
