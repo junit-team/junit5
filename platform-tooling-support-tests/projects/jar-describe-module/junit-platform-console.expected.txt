@@ -1,10 +1,3 @@
->> 1 line header: No module descriptor found. Derived automatic module. >>
-
-org.junit.platform.console@${platformVersion} automatic
+org.junit.platform.console@${platformVersion} jar:file:.+junit-platform-console/build/libs/junit-platform-console-${platformVersion}.jar/!module-info.class
 requires java.base mandated
-contains org.junit.platform.console
-contains org.junit.platform.console.options
-contains org.junit.platform.console.shadow.picocli
-contains org.junit.platform.console.shadow.picocli.groovy
-contains org.junit.platform.console.tasks
-main-class org.junit.platform.console.ConsoleLauncher
+requires org.junit.platform.reporting transitive
