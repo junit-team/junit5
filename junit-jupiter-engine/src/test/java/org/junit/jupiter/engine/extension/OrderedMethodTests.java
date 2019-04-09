@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -123,30 +124,20 @@ class OrderedMethodTests {
 
 	@Test
 	void random() {
-		Set<String> uniqueSequences = new HashSet<>();
+		var tests = executeTestsInParallel(RandomTestCase.class);
 
-		for (int i = 0; i < 10; i++) {
-			callSequence.clear();
+		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
-			var tests = executeTestsInParallel(RandomTestCase.class);
-
-			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
-
-			uniqueSequences.add(callSequence.stream().collect(Collectors.joining(",")));
-		}
-
-		// We assume that at least 3 out of 10 are different...
-		assertThat(uniqueSequences).size().isGreaterThanOrEqualTo(3);
-		// and that at least 2 different threads were used...
-		assertThat(threadNames).size().isGreaterThanOrEqualTo(2);
+		assertThat(threadNames).hasSize(1);
 	}
 
 	@Test
 	@TrackLogRecords
-	void randomWithBogusSeed(LogRecordListener listener) {
+	void randomWithBogusSeedRepeatedly(LogRecordListener listener) {
 		String seed = "explode";
-		String expectedMessage = "Failed to convert configuration parameter [" + Random.RANDOM_SEED_PROPERTY_NAME
-				+ "] with value [" + seed + "] to a long. Using System.nanoTime() as fallback.";
+		String expectedMessagePattern = "Failed to convert configuration parameter \\["
+				+ Pattern.quote(Random.RANDOM_SEED_PROPERTY_NAME) + "\\] with value \\[" + seed
+				+ "\\] to a long\\. Using default seed \\[\\d+\\] as fallback\\.";
 
 		Set<String> uniqueSequences = new HashSet<>();
 
@@ -163,8 +154,38 @@ class OrderedMethodTests {
 			// @formatter:off
 			assertTrue(listener.stream(Random.class, Level.WARNING)
 				.map(LogRecord::getMessage)
+				.anyMatch(msg -> msg.matches(expectedMessagePattern)));
+			// @formatter:on
+		}
+
+		assertThat(uniqueSequences).size().isEqualTo(1);
+	}
+
+	@Test
+	@TrackLogRecords
+	void randomWithDifferentSeedConsecutively(LogRecordListener listener) {
+		Set<String> uniqueSequences = new HashSet<>();
+
+		for (int i = 0; i < 10; i++) {
+			String seed = String.valueOf(i);
+			String expectedMessage = "Using custom seed for configuration parameter ["
+					+ Random.RANDOM_SEED_PROPERTY_NAME + "] with value [" + seed + "].";
+			callSequence.clear();
+			listener.clear();
+
+			var tests = executeTestsInParallelWithRandomSeed(RandomTestCase.class, seed);
+
+			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+			uniqueSequences.add(callSequence.stream().collect(Collectors.joining(",")));
+
+			// @formatter:off
+			assertTrue(listener.stream(Random.class, Level.CONFIG)
+				.map(LogRecord::getMessage)
 				.anyMatch(expectedMessage::equals));
 			// @formatter:on
+
+			assertThat(threadNames).hasSize(i + 1);
 		}
 
 		// We assume that at least 3 out of 10 are different...
@@ -195,6 +216,8 @@ class OrderedMethodTests {
 				.anyMatch(expectedMessage::equals));
 			// @formatter:on
 		}
+
+		assertThat(threadNames).size().isGreaterThanOrEqualTo(3);
 	}
 
 	@Test
