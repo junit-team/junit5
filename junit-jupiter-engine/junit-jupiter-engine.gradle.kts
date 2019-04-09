@@ -1,6 +1,5 @@
 plugins {
-	`java-library`
-	kotlin("jvm")
+	`kotlin-library-conventions`
 	groovy
 }
 
@@ -8,28 +7,22 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 description = "JUnit Jupiter Engine"
 
-tasks.jar {
-	manifest {
-		attributes(
-			"Automatic-Module-Name" to "org.junit.jupiter.engine"
-		)
-	}
+javaLibrary {
+	automaticModuleName = "org.junit.jupiter.engine"
 }
 
-val testJavaVersion by extra(JavaVersion.VERSION_11)
-
 tasks.compileTestGroovy {
-	sourceCompatibility = testJavaVersion.majorVersion
-	targetCompatibility = testJavaVersion.majorVersion
+	sourceCompatibility = javaLibrary.testJavaVersion.majorVersion
+	targetCompatibility = javaLibrary.testJavaVersion.majorVersion
 }
 
 val testArtifacts by configurations.creating {
-	extendsFrom(configurations["testRuntime"])
+	extendsFrom(configurations.testRuntime.get())
 }
 
 val testJar by tasks.creating(Jar::class) {
 	archiveClassifier.set("test")
-	from(sourceSets.getByName("test").output)
+	from(sourceSets.test.get().output)
 }
 
 artifacts {

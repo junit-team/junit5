@@ -1,17 +1,13 @@
 plugins {
-	`java-library`
+	`java-library-conventions`
 }
 
 description = "JUnit Platform Suite API"
 
-dependencies {
-	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
+javaLibrary {
+	automaticModuleName = "org.junit.platform.suite.api"
 }
 
-tasks.jar {
-	manifest {
-		attributes(
-			"Automatic-Module-Name" to "org.junit.platform.suite.api"
-		)
-	}
+dependencies {
+	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 }

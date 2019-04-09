@@ -257,6 +257,15 @@ class AnnotationUtilsTests {
 		assertExtensionsFound(SingleComposedExtensionClass.class, "foo");
 	}
 
+	/**
+	 * @since 1.5
+	 */
+	@Test
+	void findInheritedRepeatableAnnotationsWithComposedAnnotationsInNestedContainer() {
+		assertExtensionsFound(MultipleFoos1.class, "foo");
+		assertExtensionsFound(MultipleFoos2.class, "foo");
+	}
+
 	@Test
 	void findInheritedRepeatableAnnotationsWithSingleComposedAnnotationOnSuperclass() {
 		assertExtensionsFound(SubSingleComposedExtensionClass.class, "foo");
@@ -610,7 +619,18 @@ class AnnotationUtilsTests {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited
 	@ExtendWith("foo")
+	@Repeatable(FooExtensions.class)
 	@interface ExtendWithFoo {
+
+		String info() default "";
+	}
+
+	@Target({ ElementType.TYPE, ElementType.METHOD })
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface FooExtensions {
+
+		ExtendWithFoo[] value();
 	}
 
 	@Target({ ElementType.TYPE, ElementType.METHOD })
@@ -764,6 +784,15 @@ class AnnotationUtilsTests {
 
 	@ExtendWithFoo
 	static class SingleComposedExtensionClass {
+	}
+
+	@ExtendWithFoo(info = "A")
+	@ExtendWithFoo(info = "B")
+	static class MultipleFoos1 {
+	}
+
+	@FooExtensions({ @ExtendWithFoo(info = "A"), @ExtendWithFoo(info = "B") })
+	static class MultipleFoos2 {
 	}
 
 	static class SubSingleComposedExtensionClass extends SingleComposedExtensionClass {

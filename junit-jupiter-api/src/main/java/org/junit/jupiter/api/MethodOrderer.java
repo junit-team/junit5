@@ -162,28 +162,39 @@ public interface MethodOrderer {
 	}
 
 	/**
-	 * {@code MethodOrderer} that orders methods pseudo-randomly and allows for
-	 * concurrent execution by default.
+	 * {@code MethodOrderer} that orders methods pseudo-randomly.
 	 *
 	 * <h4>Custom Seed</h4>
 	 *
 	 * <p>By default, the random <em>seed</em> used for ordering methods is the
-	 * value returned by {@link System#nanoTime()}. In order to produce repeatable
-	 * builds, a custom seed may be specified via the
-	 * {@link Random#RANDOM_SEED_PROPERTY_NAME junit.jupiter.execution.order.random.seed}
-	 * <em>configuration parameter</em> which can be supplied via the
-	 * {@code Launcher} API, build tools (e.g., Gradle and Maven), a JVM system
-	 * property, or the JUnit Platform configuration file (i.e., a file named
-	 * {@code junit-platform.properties} in the root of the class path). Consult
-	 * the User Guide for further information.
+	 * value returned by {@link System#nanoTime()} during static initialization
+	 * of this class. In order to support repeatable builds, the value of the
+	 * default random seed is logged at {@code CONFIG} level. In addition, a
+	 * custom seed (potentially the default seed from the previous test plan
+	 * execution) may be specified via the {@link Random#RANDOM_SEED_PROPERTY_NAME
+	 * junit.jupiter.execution.order.random.seed} <em>configuration parameter</em>
+	 * which can be supplied via the {@code Launcher} API, build tools (e.g.,
+	 * Gradle and Maven), a JVM system property, or the JUnit Platform configuration
+	 * file (i.e., a file named {@code junit-platform.properties} in the root of
+	 * the class path). Consult the User Guide for further information.
 	 *
-	 * @see #getDefaultExecutionMode()
 	 * @see Random#RANDOM_SEED_PROPERTY_NAME
 	 * @see java.util.Random
 	 */
 	class Random implements MethodOrderer {
 
 		private static final Logger logger = LoggerFactory.getLogger(Random.class);
+
+		/**
+		 * Default seed, which is generated during initialization of this class
+		 * via {@link System#nanoTime()} for reproducibility of tests.
+		 */
+		private static final long DEFAULT_SEED;
+
+		static {
+			DEFAULT_SEED = System.nanoTime();
+			logger.config(() -> "MethodOrderer.Random default seed: " + DEFAULT_SEED);
+		}
 
 		/**
 		 * Property name used to set the random seed used by this
@@ -195,12 +206,10 @@ public interface MethodOrderer {
 		 * {@link Long} via {@link Long#valueOf(String)}.
 		 *
 		 * <p>If not specified or if the specified value cannot be converted to
-		 * a {@code Long}, {@link System#nanoTime()} will be used as the random
-		 * seed.
+		 * a {@link Long}, the default random seed will be used (see the
+		 * {@linkplain Random class-level Javadoc} for details).
 		 */
 		public static final String RANDOM_SEED_PROPERTY_NAME = "junit.jupiter.execution.order.random.seed";
-
-		private boolean usingCustomSeed = false;
 
 		/**
 		 * Order the methods encapsulated in the supplied
@@ -208,49 +217,28 @@ public interface MethodOrderer {
 		 */
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
-			Long seed = null;
+			Collections.shuffle(context.getMethodDescriptors(),
+				new java.util.Random(getCustomSeed(context).orElse(DEFAULT_SEED)));
+		}
 
-			Optional<String> configurationParameter = context.getConfigurationParameter(RANDOM_SEED_PROPERTY_NAME);
-			if (configurationParameter.isPresent()) {
-				String value = configurationParameter.get();
+		private Optional<Long> getCustomSeed(MethodOrdererContext context) {
+			return context.getConfigurationParameter(RANDOM_SEED_PROPERTY_NAME).map(configurationParameter -> {
+				Long seed = null;
 				try {
-					seed = Long.valueOf(value);
-					this.usingCustomSeed = true;
+					seed = Long.valueOf(configurationParameter);
 					logger.config(
 						() -> String.format("Using custom seed for configuration parameter [%s] with value [%s].",
-							RANDOM_SEED_PROPERTY_NAME, value));
+							RANDOM_SEED_PROPERTY_NAME, configurationParameter));
 				}
 				catch (NumberFormatException ex) {
 					logger.warn(ex,
-						() -> String.format("Failed to convert configuration parameter [%s] with value [%s] to a long. "
-								+ "Using System.nanoTime() as fallback.",
-							RANDOM_SEED_PROPERTY_NAME, value));
+						() -> String.format(
+							"Failed to convert configuration parameter [%s] with value [%s] to a long. "
+									+ "Using default seed [%s] as fallback.",
+							RANDOM_SEED_PROPERTY_NAME, configurationParameter, DEFAULT_SEED));
 				}
-			}
-
-			if (seed == null) {
-				seed = System.nanoTime();
-			}
-
-			Collections.shuffle(context.getMethodDescriptors(), new java.util.Random(seed));
-		}
-
-		/**
-		 * Get the <em>default</em> {@link ExecutionMode} for the test class.
-		 *
-		 * <p>If a custom seed has been specified, this method returns
-		 * {@link ExecutionMode#SAME_THREAD SAME_THREAD} in order to ensure that
-		 * the results are repeatable across executions of the test plan.
-		 * Otherwise, this method returns {@link ExecutionMode#CONCURRENT
-		 * CONCURRENT} to allow concurrent execution of randomly ordered methods
-		 * by default.
-		 *
-		 * @return {@code SAME_THREAD} if a custom seed has been configured;
-		 * otherwise, {@code CONCURRENT}
-		 */
-		@Override
-		public Optional<ExecutionMode> getDefaultExecutionMode() {
-			return this.usingCustomSeed ? Optional.of(ExecutionMode.SAME_THREAD) : Optional.empty();
+				return seed;
+			});
 		}
 	}
 
