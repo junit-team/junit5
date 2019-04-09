@@ -6,6 +6,7 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 javaLibrary {
 	mainJavaVersion = JavaVersion.VERSION_11
+	nineJavaVersion = JavaVersion.VERSION_11
 }
 
 dependencies {

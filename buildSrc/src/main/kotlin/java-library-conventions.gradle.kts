@@ -25,7 +25,7 @@ sourceSets {
 				exclude("**/ModuleUtils.java")
 			})
 		}
-		compileClasspath += configurations["compileClasspath"] + shadowed
+		compileClasspath += configurations["compileClasspath"] + shadowed + sourceSets["main"].output
 	}
 	test {
 		runtimeClasspath += shadowed
@@ -92,6 +92,13 @@ if (project in mavenizedProjects) {
 			include("LICENSE.md", "LICENSE-notice.md")
 			into("META-INF")
 		}
+		into("META-INF/versions/9") {
+			from(sourceSets.named<SourceSet>("nine").get().output) {
+				includeEmptyDirs = false
+				include("module-info.class")
+				include("**/ModuleUtils*.class")
+			}
+		}
 	}
 
 	configure<PublishingExtension> {
@@ -154,6 +161,13 @@ afterEvaluate {
 			}
 		}
 	}
+	if (!sourceSets.named<SourceSet>("nine").get().output.isEmpty) {
+		tasks.jar {
+			manifest {
+				attributes("Multi-Release" to "true")
+			}
+		}
+	}
 }
 
 tasks.compileJava {
@@ -178,12 +192,12 @@ afterEvaluate {
 			options.compilerArgs.addAll(listOf("--release", extension.mainJavaVersion.majorVersion))
 		}
 		tasks.named<JavaCompile>("compileNineJava") {
-			sourceCompatibility = "9"
-			targetCompatibility = "9"
+			sourceCompatibility = extension.nineJavaVersion.majorVersion
+			targetCompatibility = extension.nineJavaVersion.majorVersion
 			options.encoding = "UTF-8"
 			options.compilerArgs.addAll(listOf(
 					"-Xlint",
-					"--release", "9"
+					"--release", extension.nineJavaVersion.majorVersion
 					// "-verbose"
 			))
 		}
