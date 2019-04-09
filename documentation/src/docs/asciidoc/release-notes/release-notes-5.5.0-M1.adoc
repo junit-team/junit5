@@ -18,7 +18,6 @@ on GitHub.
 * Configurable test discovery implementation that can be reused by different test engines
   (see Javadoc of the `{junit-platform-engine-support-discovery}` package).
 * New `isFinal()` and `isNotFinal()` methods in `ModifierSupport`.
-* Gracefully handle exception occurred in `TestExecutionListener` with log instead of failing test plan.
 
 [[release-notes-5.5.0-M1-junit-jupiter]]
 === JUnit Jupiter
