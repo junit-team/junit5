@@ -32,119 +32,113 @@ import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
+@TrackLogRecords
 class TestExecutionListenerRegistryTest {
+
+	private TestExecutionListenerRegistry registry = new TestExecutionListenerRegistry();
 	private TestExecutionListener compositeTestExecutionListener;
 
 	@BeforeEach
 	void setUp() {
-		TestExecutionListenerRegistry executionListenerRegistry = new TestExecutionListenerRegistry();
-		executionListenerRegistry.registerListeners(new ThrowingTestExecutionListener());
-		compositeTestExecutionListener = executionListenerRegistry.getCompositeTestExecutionListener();
+		registry.registerListeners(new ThrowingTestExecutionListener());
+		compositeTestExecutionListener = registry.getCompositeTestExecutionListener();
 	}
 
 	@Test
-	@TrackLogRecords
 	void shouldNotThrowExceptionButLogIfDynamicTestRegisteredListenerMethodFails(LogRecordListener logRecordListener) {
 		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
 
 		compositeTestExecutionListener.dynamicTestRegistered(testIdentifier);
 
-		assertThatTestListenerErrorLogged(logRecordListener, "dynamicTestRegistered");
+		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class,
+			"dynamicTestRegistered");
 	}
 
 	@Test
-	@TrackLogRecords
 	void shouldNotThrowExceptionButLogIfExecutionStartedListenerMethodFails(LogRecordListener logRecordListener) {
 		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
 
 		compositeTestExecutionListener.executionStarted(testIdentifier);
 
-		assertThatTestListenerErrorLogged(logRecordListener, "executionStarted");
+		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class, "executionStarted");
 	}
 
 	@Test
-	@TrackLogRecords
 	void shouldNotThrowExceptionButLogIfExecutionSkippedListenerMethodFails(LogRecordListener logRecordListener) {
 		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
 
 		compositeTestExecutionListener.executionSkipped(testIdentifier, "deliberately skipped container");
 
-		assertThatTestListenerErrorLogged(logRecordListener, "executionSkipped");
+		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class, "executionSkipped");
 	}
 
 	@Test
-	@TrackLogRecords
 	void shouldNotThrowExceptionButLogIfExecutionFinishedListenerMethodFails(LogRecordListener logRecordListener) {
 		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
 
 		compositeTestExecutionListener.executionFinished(testIdentifier, mock(TestExecutionResult.class));
 
-		assertThatTestListenerErrorLogged(logRecordListener, "executionFinished");
+		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class, "executionFinished");
 	}
 
 	@Test
-	@TrackLogRecords
 	void shouldNotThrowExceptionButLogIfReportingEntryPublishedListenerMethodFails(
 			LogRecordListener logRecordListener) {
 		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
 
 		compositeTestExecutionListener.reportingEntryPublished(testIdentifier, ReportEntry.from("one", "two"));
 
-		assertThatTestListenerErrorLogged(logRecordListener, "reportingEntryPublished");
+		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class,
+			"reportingEntryPublished");
 	}
 
 	@Test
-	@TrackLogRecords
 	void shouldNotThrowExceptionButLogIfTesPlanExecutionStartedListenerMethodFails(
 			LogRecordListener logRecordListener) {
 		DemoMethodTestDescriptor testDescriptor = getDemoMethodTestDescriptor();
 
 		compositeTestExecutionListener.testPlanExecutionStarted(TestPlan.from(Collections.singleton(testDescriptor)));
 
-		assertThatTestPlanListenerErrorLogged(logRecordListener, "testPlanExecutionStarted");
+		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class,
+			"testPlanExecutionStarted");
 	}
 
 	@Test
-	@TrackLogRecords
 	void shouldNotThrowExceptionButLogIfTesPlanExecutionFinishedListenerMethodFails(
 			LogRecordListener logRecordListener) {
 		DemoMethodTestDescriptor testDescriptor = getDemoMethodTestDescriptor();
 
 		compositeTestExecutionListener.testPlanExecutionFinished(TestPlan.from(Collections.singleton(testDescriptor)));
 
-		assertThatTestPlanListenerErrorLogged(logRecordListener, "testPlanExecutionFinished");
+		assertThatTestListenerErrorLogged(logRecordListener, ThrowingTestExecutionListener.class,
+			"testPlanExecutionFinished");
 	}
 
 	@Test
-	@TrackLogRecords
 	void shouldNotThrowExceptionButLogIfExecutionJustStartedEagerTestListenerMethodFails(
 			LogRecordListener logRecordListener) {
-		TestExecutionListenerRegistry executionListenerRegistry = new TestExecutionListenerRegistry();
-		executionListenerRegistry.registerListeners(new ThrowingEagerTestExecutionListener());
-		TestExecutionListener compositeEagerTestExecutionListener = executionListenerRegistry.getCompositeTestExecutionListener();
+		registry.registerListeners(new ThrowingEagerTestExecutionListener());
 
 		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
-		compositeEagerTestExecutionListener.executionStarted(testIdentifier);
+		compositeTestExecutionListener.executionStarted(testIdentifier);
 
-		assertThatEagerTestListenerErrorLogged(logRecordListener, "executionJustStarted");
+		assertThatTestListenerErrorLogged(logRecordListener, ThrowingEagerTestExecutionListener.class,
+			"executionJustStarted");
 	}
 
 	@Test
-	@TrackLogRecords
 	void shouldNotThrowExceptionButLogIfExecutionJustFinishedEagerTestListenerMethodFails(
 			LogRecordListener logRecordListener) {
-		TestExecutionListenerRegistry executionListenerRegistry = new TestExecutionListenerRegistry();
-		executionListenerRegistry.registerListeners(new ThrowingEagerTestExecutionListener());
-		TestExecutionListener compositeEagerTestExecutionListener = executionListenerRegistry.getCompositeTestExecutionListener();
+		registry.registerListeners(new ThrowingEagerTestExecutionListener());
 
 		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
-		compositeEagerTestExecutionListener.executionFinished(testIdentifier, mock(TestExecutionResult.class));
+		compositeTestExecutionListener.executionFinished(testIdentifier, mock(TestExecutionResult.class));
 
-		assertThatEagerTestListenerErrorLogged(logRecordListener, "executionJustFinished");
+		assertThatTestListenerErrorLogged(logRecordListener, ThrowingEagerTestExecutionListener.class,
+			"executionJustFinished");
 	}
 
 	@Test
-	@TrackLogRecords
 	void shouldThrowOutOfMemoryExceptionAndStopListenerWithoutLog(LogRecordListener logRecordListener) {
 		TestExecutionListenerRegistry registry = new TestExecutionListenerRegistry();
 		registry.registerListeners(new TestExecutionListener() {
@@ -154,15 +148,14 @@ class TestExecutionListenerRegistryTest {
 			}
 		});
 		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
-		assertThatThrownBy(() -> {
-			registry.getCompositeTestExecutionListener().executionStarted(testIdentifier);
-		}).isInstanceOf(OutOfMemoryError.class);
+		assertThatThrownBy(
+			() -> registry.getCompositeTestExecutionListener().executionStarted(testIdentifier)).isInstanceOf(
+				OutOfMemoryError.class);
 
 		assertNotLogs(logRecordListener);
 	}
 
 	@Test
-	@TrackLogRecords
 	void shouldThrowOutOfMemoryExceptionAndStopEagerListenerWithoutLog(LogRecordListener logRecordListener) {
 		TestExecutionListenerRegistry registry = new TestExecutionListenerRegistry();
 		registry.registerListeners(new TestExecutionListenerRegistry.EagerTestExecutionListener() {
@@ -172,9 +165,9 @@ class TestExecutionListenerRegistryTest {
 			}
 		});
 		TestIdentifier testIdentifier = getSampleMethodTestIdentifier();
-		assertThatThrownBy(() -> {
-			registry.getCompositeTestExecutionListener().executionStarted(testIdentifier);
-		}).isInstanceOf(OutOfMemoryError.class);
+		assertThatThrownBy(
+			() -> registry.getCompositeTestExecutionListener().executionStarted(testIdentifier)).isInstanceOf(
+				OutOfMemoryError.class);
 
 		assertNotLogs(logRecordListener);
 	}
@@ -193,35 +186,19 @@ class TestExecutionListenerRegistryTest {
 		return TestIdentifier.from(demoMethodTestDescriptor);
 	}
 
-	private void assertThatTestListenerErrorLogged(LogRecordListener logRecordListener, final String methodName) {
-		assertThat(firstWarnLogRecord(logRecordListener).getMessage()).isEqualTo(
-			"Failed to invoke ExecutionListener [org.junit.platform.launcher.core.ThrowingTestExecutionListener] for method ["
-					+ methodName + "] with test display name [nothing()]");
-	}
-
-	private void assertThatTestPlanListenerErrorLogged(LogRecordListener logRecordListener, final String planName) {
-		assertThat(firstWarnLogRecord(logRecordListener).getMessage()).isEqualTo(
-			"Failed to invoke ExecutionListener [org.junit.platform.launcher.core.ThrowingTestExecutionListener] for method ["
-					+ planName + "] for test plan [org.junit.platform.launcher.TestPlan]");
-	}
-
-	private void assertThatEagerTestListenerErrorLogged(LogRecordListener logRecordListener, final String methodName) {
-		assertThat(firstWarnLogRecord(logRecordListener).getMessage()).isEqualTo(
-			"Failed to invoke ExecutionListener [org.junit.platform.launcher.core.TestExecutionListenerRegistryTest$ThrowingEagerTestExecutionListener] for method ["
-					+ methodName + "] with test display name [nothing()]");
+	private void assertThatTestListenerErrorLogged(LogRecordListener logRecordListener, Class<?> listenerClass,
+			String methodName) {
+		assertThat(firstWarnLogRecord(logRecordListener).getMessage()).startsWith(
+			"TestExecutionListener [" + listenerClass.getName() + "] threw exception for method: " + methodName);
 	}
 
 	private DemoMethodTestDescriptor getDemoMethodTestDescriptor() {
-		Method localMethodNamedNothing = ReflectionUtils.findMethod(this.getClass(), "nothing", new Class<?>[0]).get();
-		return new DemoMethodTestDescriptor(UniqueId.root("method", "unique_id"), this.getClass(),
-			localMethodNamedNothing);
+		Method method = ReflectionUtils.findMethod(this.getClass(), "getDemoMethodTestDescriptor",
+			new Class<?>[0]).orElseThrow();
+		return new DemoMethodTestDescriptor(UniqueId.root("method", "unique_id"), this.getClass(), method);
 	}
 
-	//for reflection purposes only
-	void nothing() {
-	}
-
-	private static class ThrowingEagerTestExecutionListener
+	private static class ThrowingEagerTestExecutionListener extends ThrowingTestExecutionListener
 			implements TestExecutionListenerRegistry.EagerTestExecutionListener {
 		@Override
 		public void executionJustStarted(TestIdentifier testIdentifier) {
