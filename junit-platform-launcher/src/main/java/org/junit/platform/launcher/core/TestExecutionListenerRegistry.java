@@ -60,10 +60,6 @@ class TestExecutionListenerRegistry {
 		// @formatter:on
 	}
 
-	CompositeTestExecutionListener getCompositeTestExecutionListener() {
-		return new CompositeTestExecutionListener();
-	}
-
 	private <T extends TestExecutionListener> void notifyEach(List<T> listeners, Consumer<T> consumer,
 			Supplier<String> description) {
 		listeners.forEach(listener -> {
@@ -76,6 +72,10 @@ class TestExecutionListenerRegistry {
 					listener.getClass().getName(), description.get()));
 			}
 		});
+	}
+
+	TestExecutionListener getCompositeTestExecutionListener() {
+		return new CompositeTestExecutionListener();
 	}
 
 	class CompositeTestExecutionListener implements TestExecutionListener {
@@ -127,6 +127,7 @@ class TestExecutionListenerRegistry {
 			notifyEach(testExecutionListeners, listener -> listener.reportingEntryPublished(testIdentifier, entry),
 				() -> "reportingEntryPublished(" + testIdentifier + ", " + entry + ")");
 		}
+
 	}
 
 	interface EagerTestExecutionListener extends TestExecutionListener {
