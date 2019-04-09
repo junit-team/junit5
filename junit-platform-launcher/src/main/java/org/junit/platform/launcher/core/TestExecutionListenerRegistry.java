@@ -78,7 +78,7 @@ class TestExecutionListenerRegistry {
 		return new CompositeTestExecutionListener();
 	}
 
-	class CompositeTestExecutionListener implements TestExecutionListener {
+	private class CompositeTestExecutionListener implements TestExecutionListener {
 
 		@Override
 		public void dynamicTestRegistered(TestIdentifier testIdentifier) {

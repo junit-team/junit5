@@ -210,4 +210,42 @@ class TestExecutionListenerRegistryTest {
 			throw new RuntimeException("failed to invoke listener");
 		}
 	}
+
+	private static class ThrowingTestExecutionListener implements TestExecutionListener {
+		@Override
+		public void testPlanExecutionStarted(TestPlan testPlan) {
+			throw new RuntimeException("failed to invoke listener");
+		}
+
+		@Override
+		public void testPlanExecutionFinished(TestPlan testPlan) {
+			throw new RuntimeException("failed to invoke listener");
+		}
+
+		@Override
+		public void dynamicTestRegistered(TestIdentifier testIdentifier) {
+			throw new RuntimeException("failed to invoke listener");
+		}
+
+		@Override
+		public void executionStarted(TestIdentifier testIdentifier) {
+			throw new RuntimeException("failed to invoke listener");
+		}
+
+		@Override
+		public void executionSkipped(TestIdentifier testIdentifier, String reason) {
+			throw new RuntimeException("failed to invoke listener");
+		}
+
+		@Override
+		public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+			throw new RuntimeException("failed to invoke listener");
+		}
+
+		@Override
+		public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
+			throw new RuntimeException("failed to invoke listener");
+		}
+	}
+
 }
