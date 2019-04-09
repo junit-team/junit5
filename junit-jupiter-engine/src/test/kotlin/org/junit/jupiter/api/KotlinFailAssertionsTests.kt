@@ -10,9 +10,10 @@
 package org.junit.jupiter.api
 
 import org.junit.jupiter.api.AssertEquals.assertEquals
+import org.junit.jupiter.api.AssertionTestUtils.assertEmptyMessage
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageContains
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals
-import org.junit.jupiter.api.AssertionTestUtils.assertEmptyMessage
+import org.junit.jupiter.api.Util.failSuspend
 import org.opentest4j.AssertionFailedError
 import java.util.stream.Stream
 
@@ -28,10 +29,28 @@ class KotlinFailAssertionsTests {
     }
 
     @Test
+    fun `fail with string suspending`() {
+        val message = "test"
+        val ex = assertThrows<AssertionFailedError> {
+            failSuspend(message)
+        }
+        assertMessageEquals(ex, message)
+    }
+
+    @Test
     fun `fail with message supplier`() {
         val message = "test"
         val ex = assertThrows<AssertionFailedError> {
             fail { message }
+        }
+        assertMessageEquals(ex, message)
+    }
+
+    @Test
+    fun `fail with message supplier suspending`() {
+        val message = "test"
+        val ex = assertThrows<AssertionFailedError> {
+            failSuspend { message }
         }
         assertMessageEquals(ex, message)
     }
@@ -45,9 +64,25 @@ class KotlinFailAssertionsTests {
     }
 
     @Test
+    fun `fail with null string suspending`() {
+        val ex = assertThrows<AssertionFailedError> {
+            failSuspend(null as String?)
+        }
+        assertEmptyMessage(ex)
+    }
+
+    @Test
     fun `fail with null message supplier`() {
         val ex = assertThrows<AssertionFailedError> {
             fail(null as (() -> String)?)
+        }
+        assertEmptyMessage(ex)
+    }
+
+    @Test
+    fun `fail with null message supplier suspending`() {
+        val ex = assertThrows<AssertionFailedError> {
+            failSuspend(null as (() -> String)?)
         }
         assertEmptyMessage(ex)
     }
@@ -65,10 +100,33 @@ class KotlinFailAssertionsTests {
     }
 
     @Test
+    fun `fail with string and throwable suspending`() {
+        val message = "message"
+        val throwableCause = "cause"
+        val ex = assertThrows<AssertionFailedError> {
+            failSuspend(message, Throwable(throwableCause))
+        }
+        assertMessageEquals(ex, message)
+        val cause = ex.cause
+        assertMessageContains(cause, throwableCause)
+    }
+
+    @Test
     fun `fail with throwable`() {
         val throwableCause = "cause"
         val ex = assertThrows<AssertionFailedError> {
             fail(Throwable(throwableCause))
+        }
+        assertEmptyMessage(ex)
+        val cause = ex.cause
+        assertMessageContains(cause, throwableCause)
+    }
+
+    @Test
+    fun `fail with throwable suspending`() {
+        val throwableCause = "cause"
+        val ex = assertThrows<AssertionFailedError> {
+            failSuspend(Throwable(throwableCause))
         }
         assertEmptyMessage(ex)
         val cause = ex.cause
@@ -88,6 +146,18 @@ class KotlinFailAssertionsTests {
     }
 
     @Test
+    fun `fail with string and null throwable suspending`() {
+        val message = "message"
+        val ex = assertThrows<AssertionFailedError> {
+            failSuspend(message, null)
+        }
+        assertMessageEquals(ex, message)
+        if (ex.cause != null) {
+            throw AssertionError("Cause should have been null")
+        }
+    }
+
+    @Test
     fun `fail with null string and throwable`() {
         val throwableCause = "cause"
         val ex = assertThrows<AssertionFailedError> {
@@ -99,11 +169,22 @@ class KotlinFailAssertionsTests {
     }
 
     @Test
+    fun `fail with null string and throwable suspending`() {
+        val throwableCause = "cause"
+        val ex = assertThrows<AssertionFailedError> {
+            failSuspend(null, Throwable(throwableCause))
+        }
+        assertEmptyMessage(ex)
+        val cause = ex.cause
+        assertMessageContains(cause, throwableCause)
+    }
+
+    @Test
     fun `fail usable as a stream expression`() {
         val count = Stream.empty<Any>()
-            .peek { _ -> fail("peek should never be called") }
-            .filter { _ -> fail("filter should never be called", Throwable("cause")) }
-            .map { _ -> fail(Throwable("map should never be called")) }
+            .peek { fail("peek should never be called") }
+            .filter { fail("filter should never be called", Throwable("cause")) }
+            .map { fail(Throwable("map should never be called")) }
             .sorted { _, _ -> fail { "sorted should never be called" } }
             .count()
         assertEquals(0L, count)
@@ -113,9 +194,9 @@ class KotlinFailAssertionsTests {
     fun `fail usable as a sequence expression`() {
         val count = emptyList<Any>()
             .asSequence()
-            .onEach { _ -> fail("peek should never be called") }
-            .filter { _ -> fail("filter should never be called", Throwable("cause")) }
-            .map { _ -> fail(Throwable("map should never be called")) }
+            .onEach { fail("peek should never be called") }
+            .filter { fail("filter should never be called", Throwable("cause")) }
+            .map { fail(Throwable("map should never be called")) }
             .count()
         assertEquals(0, count)
     }

@@ -12,6 +12,7 @@ object Versions {
     val ota4j = "1.2.0-SNAPSHOT"
     val picocli = "3.9.5"
     val univocity = "2.8.1"
+    val coroutines = "1.0.1"
 
     // Test Dependencies
     val archunit = "0.10.1"

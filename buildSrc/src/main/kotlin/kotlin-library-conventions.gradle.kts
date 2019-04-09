@@ -8,8 +8,8 @@ plugins {
 tasks.withType<KotlinCompile>().configureEach {
 	kotlinOptions {
 		jvmTarget = Versions.jvmTarget.toString()
-		apiVersion = "1.1"
-		languageVersion = "1.1"
+		apiVersion = "1.3"
+		languageVersion = "1.3"
 	}
 }
 

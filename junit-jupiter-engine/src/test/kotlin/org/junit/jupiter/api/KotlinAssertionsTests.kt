@@ -9,16 +9,14 @@
  */
 package org.junit.jupiter.api
 
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith
 import org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Util.failSuspend
 import org.opentest4j.AssertionFailedError
 import org.opentest4j.MultipleFailuresError
-import java.lang.AssertionError
-
 import java.util.stream.Stream
-
 import kotlin.reflect.KClass
 
 /**
@@ -54,9 +52,19 @@ class KotlinAssertionsTests {
         assertThrows<AssertionError> { fail("message") }
         assertThrows<AssertionError> { fail("message", AssertionError()) }
         assertThrows<AssertionError> { fail("message", null) }
-        assertThrows<AssertionError>("should fail") { fail({ "message" }) }
+        assertThrows<AssertionError>("should fail") { fail { "message" } }
         assertThrows<AssertionError>({ "should fail" }) { fail(AssertionError()) }
         assertThrows<AssertionError>({ "should fail" }) { fail(null as Throwable?) }
+    }
+
+    @Test
+    fun `assertThrows and fail with suspensions`() {
+        assertThrows<AssertionError> { failSuspend("message") }
+        assertThrows<AssertionError> { failSuspend("message", AssertionError()) }
+        assertThrows<AssertionError> { failSuspend("message", null) }
+        assertThrows<AssertionError>("should fail") { failSuspend { "message" } }
+        assertThrows<AssertionError>({ "should fail" }) { failSuspend(AssertionError()) }
+        assertThrows<AssertionError>({ "should fail" }) { failSuspend(null as Throwable?) }
     }
 
     @Test
@@ -92,6 +100,8 @@ class KotlinAssertionsTests {
             vararg exceptionTypes: KClass<out Throwable>
         ) =
             AssertAllAssertionsTests.assertExpectedExceptionTypes(
-                multipleFailuresError, *exceptionTypes.map { it.java }.toTypedArray())
+                multipleFailuresError,
+                *exceptionTypes.map { it.java }.toTypedArray()
+            )
     }
 }

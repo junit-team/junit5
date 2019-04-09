@@ -9,6 +9,7 @@ javaLibrary {
 }
 
 dependencies {
+	api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 	api("org.opentest4j:opentest4j:${Versions.ota4j}")
 

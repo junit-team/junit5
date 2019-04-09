@@ -11,10 +11,10 @@
 
 package org.junit.jupiter.api
 
+import kotlinx.coroutines.runBlocking
 import org.apiguardian.api.API
 import org.apiguardian.api.API.Status.EXPERIMENTAL
 import org.junit.jupiter.api.function.Executable
-import java.util.function.Supplier
 import java.util.stream.Stream
 
 /**
@@ -39,6 +39,7 @@ fun fail(throwable: Throwable?): Nothing =
  * [Stream] of functions to be executed.
  */
 private typealias ExecutableStream = Stream<() -> Unit>
+
 private fun ExecutableStream.convert() = map { Executable(it) }
 
 /**
@@ -57,6 +58,7 @@ fun assertAll(heading: String?, executables: ExecutableStream) =
  * [Collection] of functions to be executed.
  */
 private typealias ExecutableCollection = Collection<() -> Unit>
+
 private fun ExecutableCollection.convert() = map { Executable(it) }
 
 /**
@@ -93,8 +95,12 @@ fun assertAll(heading: String?, vararg executables: () -> Unit) =
  * ```
  * @see Assertions.assertThrows
  */
-inline fun <reified T : Throwable> assertThrows(noinline executable: () -> Unit): T =
-    Assertions.assertThrows(T::class.java, Executable(executable))
+inline fun <reified T : Throwable> assertThrows(noinline executable: suspend () -> Unit): T =
+    Assertions.assertThrows(T::class.java) {
+        runBlocking {
+            executable()
+        }
+    }
 
 /**
  * Example usage:
@@ -106,7 +112,7 @@ inline fun <reified T : Throwable> assertThrows(noinline executable: () -> Unit)
  * ```
  * @see Assertions.assertThrows
  */
-inline fun <reified T : Throwable> assertThrows(message: String, noinline executable: () -> Unit): T =
+inline fun <reified T : Throwable> assertThrows(message: String, noinline executable: suspend () -> Unit): T =
     assertThrows({ message }, executable)
 
 /**
@@ -119,5 +125,9 @@ inline fun <reified T : Throwable> assertThrows(message: String, noinline execut
  * ```
  * @see Assertions.assertThrows
  */
-inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, noinline executable: () -> Unit): T =
-    Assertions.assertThrows(T::class.java, Executable(executable), Supplier(message))
+inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, noinline executable: suspend () -> Unit): T =
+    Assertions.assertThrows(
+        T::class.java,
+        { runBlocking { executable() } },
+        { message() }
+    )
