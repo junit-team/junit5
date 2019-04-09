@@ -80,11 +80,11 @@ public @interface CsvFileSource {
 	int numLinesToSkip() default 0;
 
 	/**
-	 * The empty value definition to use when reading the CSV files.
+	 * The empty value to use when reading the CSV files.
 	 *
-	 * <p>When reading, if the parser does not read any character from the input, and the input is within quotes, the empty is used instead of an empty string
+	 * <p>This value replaces quoted empty strings read from the input.
 	 *
-	 * <p>Defaults to empty string.
+	 * <p>Defaults to {@code ""}.
 	 */
 	String emptyValue() default "";
 

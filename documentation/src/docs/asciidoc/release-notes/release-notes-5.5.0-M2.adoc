@@ -40,7 +40,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* New `emptyValue` property in `CsvFileSource` and `CsvSource`.
+* New `emptyValue` attribute in `@CsvFileSource` and `@CsvSource`.
 
 
 [[release-notes-5.5.0-M2-junit-vintage]]
