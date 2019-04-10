@@ -55,4 +55,16 @@ public @interface CsvSource {
 	 */
 	char delimiter() default ',';
 
+	/**
+	 * The empty value to use when reading the {@linkplain #value lines}.
+	 *
+	 * <p>This value replaces quoted empty strings read from the input.
+	 *
+	 * <p>Defaults to {@code ""}.
+	 *
+	 * @since 5.5
+	 */
+	@API(status = EXPERIMENTAL, since = "5.5")
+	String emptyValue() default "";
+
 }
