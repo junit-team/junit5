@@ -44,6 +44,7 @@ on GitHub.
   the log in order to allow reproducible builds.
 * Methods ordered with `MethodOrderer.Random` now execute using the `SAME_THREAD`
   concurrency mode instead of the `CONCURRENT` mode when no custom seed is provided.
+* New `emptyValue` attribute in `@CsvFileSource` and `@CsvSource`.
 
 
 [[release-notes-5.5.0-M2-junit-vintage]]
