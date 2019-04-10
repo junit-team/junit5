@@ -29,7 +29,7 @@ import org.junit.platform.commons.logging.LogRecordListener;
 /**
  * Unit tests for {@link DisplayNameUtils}.
  *
- * @since 5.0
+ * @since 5.5
  */
 class DisplayNameUtilsTests {
 
