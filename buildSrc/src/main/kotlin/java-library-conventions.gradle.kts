@@ -6,6 +6,7 @@ plugins {
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
+val modularProjects: List<Project> by rootProject.extra
 val buildDate: String by rootProject.extra
 val buildTime: String by rootProject.extra
 val buildRevision: Any by rootProject.extra
@@ -13,6 +14,9 @@ val builtByValue: String by rootProject.extra
 
 val shadowed by configurations.creating
 val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
+
+fun javaModuleName(project: Project) = "org." + project.name.replace('-', '.')
+val javaModuleName = javaModuleName(project)
 
 sourceSets {
 	main {
@@ -83,6 +87,9 @@ if (project in mavenizedProjects) {
 			include("LICENSE.md", "LICENSE-notice.md")
 			into("META-INF")
 		}
+		from("$buildDir/classes/java/module/$javaModuleName") {
+			include("module-info.class")
+		}
 	}
 
 	configure<PublishingExtension> {
@@ -147,6 +154,31 @@ tasks.compileJava {
 }
 
 afterEvaluate {
+
+	val modulePath = tasks.compileJava.get().classpath.asPath
+	val compileModule by tasks.registering(JavaCompile::class) {
+		destinationDir = file("$buildDir/classes/java/module")
+		source = fileTree("src/module/$javaModuleName").filter { it.path.endsWith(".java") }.asFileTree
+		sourceCompatibility = "9"
+		targetCompatibility = "9"
+		options.encoding = "UTF-8"
+		options.compilerArgs.addAll(listOf(
+				// "-verbose",
+				// "-Xlint:all,-module,-requires-transitive-automatic",
+				"--release", "9",
+				"--module-version", "${project.version}",
+				"--module-source-path", files(modularProjects.map { "${it.projectDir}/src/module" }).asPath,
+				"--module-path", modulePath
+		))
+		modularProjects.forEach {
+			val module = javaModuleName(it)
+			val patch = if (it == project) (sourceSets["main"].output + configurations["compileClasspath"]).asPath else "${it.projectDir}/src/main/java"
+			options.compilerArgs.add("--patch-module")
+			options.compilerArgs.add("$module=$patch")
+		}
+		classpath = files()
+	}
+
 	tasks {
 		compileJava {
 			sourceCompatibility = extension.mainJavaVersion.majorVersion
@@ -156,6 +188,9 @@ afterEvaluate {
 			// Supported release targets are 6, 7, 8, 9, 10, and 11.
 			// Note that if --release is added then -target and -source are ignored.
 			options.compilerArgs.addAll(listOf("--release", extension.mainJavaVersion.majorVersion))
+			if (modularProjects.contains(project)) {
+				finalizedBy(compileModule)
+			}
 		}
 		compileTestJava {
 			options.encoding = "UTF-8"
