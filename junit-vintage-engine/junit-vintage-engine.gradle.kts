@@ -6,10 +6,6 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 description = "JUnit Vintage Engine"
 
-javaLibrary {
-	automaticModuleName = "org.junit.vintage.engine"
-}
-
 dependencies {
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 	api(project(":junit-platform-engine"))

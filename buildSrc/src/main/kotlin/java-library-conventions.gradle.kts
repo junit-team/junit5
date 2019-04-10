@@ -136,17 +136,6 @@ tasks.jar {
 	}
 }
 
-afterEvaluate {
-	val automaticModuleName = extension.automaticModuleName
-	if (automaticModuleName != null) {
-		tasks.jar {
-			manifest {
-				attributes("Automatic-Module-Name" to automaticModuleName)
-			}
-		}
-	}
-}
-
 tasks.compileJava {
 	options.encoding = "UTF-8"
 
