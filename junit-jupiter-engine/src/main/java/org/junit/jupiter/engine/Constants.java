@@ -75,7 +75,7 @@ public final class Constants {
 	 *
 	 * <h3>Supported Values</h3>
 	 *
-	 * <p>Supported values include full class names implementing
+	 * <p>Supported values include fully qualified class names for types that implement
 	 * {@link org.junit.jupiter.api.DisplayNameGenerator}.
 	 *
 	 * <p>If not specified, the default is "Standard" which corresponds to
