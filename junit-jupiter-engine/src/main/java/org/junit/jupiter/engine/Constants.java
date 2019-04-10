@@ -80,7 +80,6 @@ public final class Constants {
 	 *
 	 * <p>If not specified, the default is "Standard" which corresponds to
 	 * {@link org.junit.jupiter.api.DisplayNameGenerator.Standard}.
-	 *
 	 */
 	public static final String DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME = JupiterConfiguration.DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME;
 
