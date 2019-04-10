@@ -3629,9 +3629,9 @@ qualified method name</em> as demonstrated in the following example.</p>
 <div class="paragraph">
 <p><code>@CsvSource</code> uses a single quote <code>'</code> as its quote character. See the <code>'lemon, lime'</code> value
 in the example above and in the table below. An empty, quoted value <code>''</code> results in an
-empty <code>String</code>; whereas, an entirely <em>empty</em> value is interpreted as a <code>null</code> reference.
-An <code>ArgumentConversionException</code> is raised if the target type of a <code>null</code> reference is a
-primitive type.</p>
+empty <code>String</code> unless the <code>emptyValue</code> attribute is set; whereas, an entirely <em>empty</em>
+value is interpreted as a <code>null</code> reference. An <code>ArgumentConversionException</code> is raised if
+the target type of a <code>null</code> reference is a primitive type.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -3698,10 +3698,10 @@ Poland, 2
 <td class="content">
 In contrast to the syntax used in <code>@CsvSource</code>, <code>@CsvFileSource</code> uses a double
 quote <code>"</code> as the quote character. See the <code>"United States of America"</code> value in the
-example above. An empty, quoted value <code>""</code> results in an empty <code>String</code>; whereas, an
-entirely <em>empty</em> value is interpreted as a <code>null</code> reference. An
-<code>ArgumentConversionException</code> is raised if the target type of a <code>null</code> reference is a
-primitive type.
+example above. An empty, quoted value <code>""</code> results in an empty <code>String</code> unless the
+<code>emptyValue</code> attribute is set; whereas, an entirely <em>empty</em> value is interpreted as a
+<code>null</code> reference. An <code>ArgumentConversionException</code> is raised if the target type of a
+<code>null</code> reference is a primitive type.
 </td>
 </tr>
 </table>
@@ -9191,7 +9191,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-04-07 18:55:51 UTC
+Last updated 2019-04-10 16:44:57 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

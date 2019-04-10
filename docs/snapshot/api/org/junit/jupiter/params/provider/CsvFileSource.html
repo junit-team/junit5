@@ -192,12 +192,19 @@ public @interface <span class="memberNameLabel">CsvFileSource</span></pre>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#emptyValue()">emptyValue</a></span></code></th>
+<td class="colLast">
+<div class="block">The empty value to use when reading the CSV files.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encoding()">encoding</a></span></code></th>
 <td class="colLast">
 <div class="block">The encoding to use when reading the CSV files; must be a valid charset.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lineSeparator()">lineSeparator</a></span></code></th>
 <td class="colLast">
@@ -205,7 +212,7 @@ public @interface <span class="memberNameLabel">CsvFileSource</span></pre>
  or 2 characters.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#numLinesToSkip()">numLinesToSkip</a></span></code></th>
 <td class="colLast">
@@ -317,18 +324,53 @@ public @interface <span class="memberNameLabel">CsvFileSource</span></pre>
 <li class="blockList"><a id="numLinesToSkip()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>numLinesToSkip</h4>
-<pre>int&nbsp;numLinesToSkip</pre>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.1")
+int&nbsp;numLinesToSkip</pre>
 <div class="block">The number of lines to skip when reading the CSV files.
 
  <p>Typically used to skip header lines.
 
  <p>Defaults to <code>0</code>.</div>
 <dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.1</dd>
+</dl>
+<dl>
 <dt>Default:</dt>
 <dd>0</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="emptyValue()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>emptyValue</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.5")
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;emptyValue</pre>
+<div class="block">The empty value to use when reading the CSV files.
+
+ <p>This value replaces quoted empty strings read from the input.
+
+ <p>Defaults to <code>""</code>.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.5</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
 </dl>
 </li>
 </ul>
