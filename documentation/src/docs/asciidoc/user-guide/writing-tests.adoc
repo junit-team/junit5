@@ -167,29 +167,30 @@ include::{testDir}/example/DisplayNameGeneratorDemo.java[tags=user_guide]
       '-- Year 2048 is a leap year. [OK]
 ```
 
-[[override-default-display-name-generator]]
+[[writing-tests-display-name-generator-default]]
 ==== Global configuration to override the default DisplayNameGenerator
-Along with using `@DisplayName` and `@DisplayNameGeneration` annotation for custom display name
-, it is possible to change the default display name generator for
-the execution of an entire test plan. To change the default display name generator,
-set the `junit.jupiter.displayname.generator.default` configuration parameter to the fully qualified
-name of an class implementing `org.junit.jupiter.api.DisplayNameGenerator`.
-The configuration can be supplied as a JVM system property, as a _configuration parameter_ in the
-`LauncherDiscoveryRequest` that is passed to the `Launcher`, or via the JUnit Platform
-configuration file (see <<running-tests-config-params>> for details).
+Along with using `@DisplayName` and `@DisplayNameGeneration` annotation for custom
+display name, it is possible to change the default display name generator for the
+execution of an entire test plan. To change the default display name generator, set the
+`junit.jupiter.displayname.generator.default` configuration parameter to the fully
+qualified name of an class implementing `org.junit.jupiter.api.DisplayNameGenerator`.
+Configuration can be supplied as a JVM system property, as a _configuration parameter_ in
+the `LauncherDiscoveryRequest` that is passed to the `Launcher`, or via the JUnit
+Platform configuration file (see <<running-tests-config-params>> for details).
 
-For example, to use `DisplayNameGenerator.ReplaceUnderscores` as a default display name generator
-you can start your JVM with the following system property.
+For example, to use `DisplayNameGenerator.ReplaceUnderscores` as a default display name
+generator you can start your JVM with the following system property.
 
-`-Djunit.jupiter.displayname.generator.default=org.junit.jupiter.api.DisplayNameGenerator.DisplayNameGenerator.ReplaceUnderscores`
+`-Djunit.jupiter.displayname.generator.default=org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores`
 
 Make sure you supply a fully qualified class name and that the class
 implements the `org.junit.jupiter.api.DisplayNameGenerator` interface.
 
 precedence of display name will be
-1. `@DisplayName` annotation
-2. Global jupiter configuration parameter `junit.jupiter.displayname.generator.default`
-3. `@DisplayNameGeneration` annotation
+    1. `@DisplayName` annotation
+    2. `@DisplayNameGeneration` annotation
+    3.  Global jupiter configuration parameter `junit.jupiter.displayname.generator.default`
+    4. `org.junit.jupiter.api.DisplayNameGenerator.Standard`
 
 [[writing-tests-assertions]]
 === Assertions
