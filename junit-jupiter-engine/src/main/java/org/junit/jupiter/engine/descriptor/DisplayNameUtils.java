@@ -32,10 +32,10 @@ import org.junit.platform.commons.util.StringUtils;
 /**
  * Collection of utilities for working with display names.
  *
+ * @since 5.4
  * @see DisplayName
  * @see DisplayNameGenerator
  * @see DisplayNameGeneration
- * @since 5.4
  */
 final class DisplayNameUtils {
 

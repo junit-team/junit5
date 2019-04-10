@@ -57,7 +57,4 @@ class DisplayNameGeneratorParameterConverter {
 
 	}
 
-	private Object abcd() {
-		return null;
-	}
 }
