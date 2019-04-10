@@ -148,10 +148,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre>public static class <span class="typeNameLabel">DisplayNameGenerator.Standard</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
 implements <a href="DisplayNameGenerator.html" title="interface in org.junit.jupiter.api">DisplayNameGenerator</a></pre>
-<div class="block">Standard display name generator.
+<div class="block">Standard <code>DisplayNameGenerator</code>.
 
- <p>The implementation matches the published behaviour when Jupiter 5.0.0
- was released.</div>
+ <p>This implementation matches the standard display name generation
+ behavior in place since JUnit Jupiter 5.0 was released.</div>
 </li>
 </ul>
 </div>
@@ -288,9 +288,9 @@ implements <a href="DisplayNameGenerator.html" title="interface in org.junit.jup
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="DisplayNameGenerator.html#generateDisplayNameForClass(java.lang.Class)">generateDisplayNameForClass</a></code>&nbsp;in interface&nbsp;<code><a href="DisplayNameGenerator.html" title="interface in org.junit.jupiter.api">DisplayNameGenerator</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>testClass</code> - the class generate a name for; never <code>null</code></dd>
+<dd><code>testClass</code> - the class to generate a name for; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the display name of the container; never <code>null</code> or blank</dd>
+<dd>the display name for the class; never <code>null</code> or blank</dd>
 </dl>
 </li>
 </ul>
@@ -307,9 +307,9 @@ implements <a href="DisplayNameGenerator.html" title="interface in org.junit.jup
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="DisplayNameGenerator.html#generateDisplayNameForNestedClass(java.lang.Class)">generateDisplayNameForNestedClass</a></code>&nbsp;in interface&nbsp;<code><a href="DisplayNameGenerator.html" title="interface in org.junit.jupiter.api">DisplayNameGenerator</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>nestedClass</code> - the class generate a name for; never <code>null</code></dd>
+<dd><code>nestedClass</code> - the class to generate a name for; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the display name of the container; never <code>null</code> or blank</dd>
+<dd>the display name for the nested class; never <code>null</code> or blank</dd>
 </dl>
 </li>
 </ul>
@@ -330,7 +330,7 @@ implements <a href="DisplayNameGenerator.html" title="interface in org.junit.jup
 <dd><code>testClass</code> - the class the test method is invoked on; never <code>null</code></dd>
 <dd><code>testMethod</code> - method to generate a display name for; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the display name of the test; never <code>null</code> or blank</dd>
+<dd>the display name for the test; never <code>null</code> or blank</dd>
 </dl>
 </li>
 </ul>

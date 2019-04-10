@@ -148,10 +148,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <hr>
 <pre>public static class <span class="typeNameLabel">DisplayNameGenerator.ReplaceUnderscores</span>
 extends <a href="DisplayNameGenerator.Standard.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Standard</a></pre>
-<div class="block">Replace all underscore characters with spaces.
+<div class="block"><code>DisplayNameGenerator</code> that replaces underscores with spaces.
 
- <p>The <code>ReplaceUnderscores</code> generator replaces all underscore characters
- (<code>'_'</code>) found in class and method names with space characters: <code>' '</code>.</div>
+ <p>This generator extends the functionality of <a href="DisplayNameGenerator.Standard.html" title="class in org.junit.jupiter.api"><code>DisplayNameGenerator.Standard</code></a> by
+ replacing all underscores (<code>'_'</code>) found in class and method names
+ with spaces (<code>' '</code>).</div>
 </li>
 </ul>
 </div>
@@ -290,9 +291,9 @@ extends <a href="DisplayNameGenerator.Standard.html" title="class in org.junit.j
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="DisplayNameGenerator.Standard.html#generateDisplayNameForClass(java.lang.Class)">generateDisplayNameForClass</a></code>&nbsp;in class&nbsp;<code><a href="DisplayNameGenerator.Standard.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Standard</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>testClass</code> - the class generate a name for; never <code>null</code></dd>
+<dd><code>testClass</code> - the class to generate a name for; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the display name of the container; never <code>null</code> or blank</dd>
+<dd>the display name for the class; never <code>null</code> or blank</dd>
 </dl>
 </li>
 </ul>
@@ -311,9 +312,9 @@ extends <a href="DisplayNameGenerator.Standard.html" title="class in org.junit.j
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="DisplayNameGenerator.Standard.html#generateDisplayNameForNestedClass(java.lang.Class)">generateDisplayNameForNestedClass</a></code>&nbsp;in class&nbsp;<code><a href="DisplayNameGenerator.Standard.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Standard</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>nestedClass</code> - the class generate a name for; never <code>null</code></dd>
+<dd><code>nestedClass</code> - the class to generate a name for; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the display name of the container; never <code>null</code> or blank</dd>
+<dd>the display name for the nested class; never <code>null</code> or blank</dd>
 </dl>
 </li>
 </ul>
@@ -336,7 +337,7 @@ extends <a href="DisplayNameGenerator.Standard.html" title="class in org.junit.j
 <dd><code>testClass</code> - the class the test method is invoked on; never <code>null</code></dd>
 <dd><code>testMethod</code> - method to generate a display name for; never <code>null</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the display name of the test; never <code>null</code> or blank</dd>
+<dd>the display name for the test; never <code>null</code> or blank</dd>
 </dl>
 </li>
 </ul>
