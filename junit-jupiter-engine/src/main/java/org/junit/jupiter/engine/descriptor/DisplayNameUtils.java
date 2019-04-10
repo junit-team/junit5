@@ -22,6 +22,7 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.DisplayNameGenerator.Standard;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
@@ -31,10 +32,10 @@ import org.junit.platform.commons.util.StringUtils;
 /**
  * Collection of utilities for working with display names.
  *
- * @since 5.4
  * @see DisplayName
  * @see DisplayNameGenerator
  * @see DisplayNameGeneration
+ * @since 5.4
  */
 final class DisplayNameUtils {
 
@@ -71,36 +72,31 @@ final class DisplayNameUtils {
 	}
 
 	static String determineDisplayNameForMethod(Class<?> testClass, Method testMethod,
-			Optional<Class<? extends DisplayNameGenerator>> defaultDisplayNameGeneratorClass) {
-		DisplayNameGenerator generator = getDisplayNameGenerator(testClass, defaultDisplayNameGeneratorClass);
+			JupiterConfiguration jupiterConfiguration) {
+		DisplayNameGenerator generator = getDisplayNameGenerator(testClass, jupiterConfiguration);
 		return determineDisplayName(testMethod, () -> generator.generateDisplayNameForMethod(testClass, testMethod));
 
 	}
 
 	static Supplier<String> createDisplayNameSupplierForClass(Class<?> testClass,
-			Optional<Class<? extends DisplayNameGenerator>> defaultDisplayNameGeneratorClass) {
-		return () -> getDisplayNameGenerator(testClass, defaultDisplayNameGeneratorClass).generateDisplayNameForClass(
-			testClass);
+			JupiterConfiguration jupiterConfiguration) {
+		return () -> getDisplayNameGenerator(testClass, jupiterConfiguration).generateDisplayNameForClass(testClass);
 	}
 
 	static Supplier<String> createDisplayNameSupplierForNestedClass(Class<?> testClass,
-			Optional<Class<? extends DisplayNameGenerator>> defaultDisplayNameGeneratorClass) {
-		return () -> getDisplayNameGenerator(testClass,
-			defaultDisplayNameGeneratorClass).generateDisplayNameForNestedClass(testClass);
+			JupiterConfiguration jupiterConfiguration) {
+		return () -> getDisplayNameGenerator(testClass, jupiterConfiguration).generateDisplayNameForNestedClass(
+			testClass);
 	}
 
 	private static DisplayNameGenerator getDisplayNameGenerator(Class<?> testClass,
-			Optional<Class<? extends DisplayNameGenerator>> defaultDisplayNameGeneratorClass) {
+			JupiterConfiguration jupiterConfiguration) {
 		Preconditions.notNull(testClass, "Test class must not be null");
-
-		if (defaultDisplayNameGeneratorClass.isPresent()) {
-			return ReflectionUtils.newInstance(defaultDisplayNameGeneratorClass.get());
-		}
 
 		DisplayNameGeneration generation = getDisplayNameGeneration(testClass).orElse(null);
 		// trivial case: no user-defined generation annotation present, return default generator
 		if (generation == null) {
-			return standardGenerator;
+			return jupiterConfiguration.getDefaultDisplayNameGenerator();
 		}
 		// check for pre-defined generators and return matching singleton
 		Class<? extends DisplayNameGenerator> displayNameGeneratorClass = generation.value();

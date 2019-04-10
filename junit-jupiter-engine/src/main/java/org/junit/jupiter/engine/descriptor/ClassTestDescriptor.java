@@ -90,9 +90,7 @@ public class ClassTestDescriptor extends JupiterTestDescriptor {
 	private List<Method> afterAllMethods;
 
 	public ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, JupiterConfiguration configuration) {
-		this(uniqueId, testClass,
-			createDisplayNameSupplierForClass(testClass, configuration.getDefaultDisplayNameGeneratorClass()),
-			configuration);
+		this(uniqueId, testClass, createDisplayNameSupplierForClass(testClass, configuration), configuration);
 	}
 
 	ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, Supplier<String> displayNameSupplier,

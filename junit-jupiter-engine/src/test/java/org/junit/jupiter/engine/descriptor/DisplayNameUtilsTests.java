@@ -11,19 +11,17 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
-import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.engine.TrackLogRecords;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.logging.LogRecordListener;
 
 /**
@@ -67,37 +65,14 @@ class DisplayNameUtilsTests {
 
 		@Nested
 		class ClassDisplayNameSupplierTests {
+			private JupiterConfiguration jupiterConfiguration = mock(JupiterConfiguration.class);
 
 			@Test
-			void shouldGetDisplayNameFromJupiterConfiguration() {
-				Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForClass(MyTestCase.class,
-					Optional.of(CustomDisplayNameGenerator.class));
-
-				assertThat(displayName.get()).isEqualTo("class-display-name");
-			}
-
-			@Test
-			void shouldGetDisplayNameFromDisplayNameGenerationAnnotationWhenNoConfigurationPresent() {
-				Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForClass(MyTestCase.class,
-					Optional.empty());
-
-				assertThat(displayName.get()).isEqualTo("class-display-name");
-			}
-
-			@Test
-			void shouldGetStandardDisplayNameIfAnnotationAndNoConfigurationPresent() {
+			void shouldGetDisplayNameFromDisplayNameGenerationAnnotation() {
+				when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(
+					new CustomDisplayNameGenerator());
 				Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForClass(
-					NotDisplayNameTestCase.class, Optional.empty());
-
-				String name = NotDisplayNameTestCase.class.getName();
-				String expectedClassName = name.substring(name.lastIndexOf(".") + 1);
-				assertThat(displayName.get()).isEqualTo(expectedClassName);
-			}
-
-			@Test
-			void shouldGetStandardDisplayNameFromDisplayNameGenerationAnnotation() {
-				Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForClass(
-					StandardDisplayNameTestCase.class, Optional.empty());
+					StandardDisplayNameTestCase.class, jupiterConfiguration);
 
 				String name = StandardDisplayNameTestCase.class.getName();
 				String expectedClassName = name.substring(name.lastIndexOf(".") + 1);
@@ -106,53 +81,72 @@ class DisplayNameUtilsTests {
 
 			@Test
 			void shouldGetUnderscoreDisplayNameFromDisplayNameGenerationAnnotation() {
+				when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(
+					new CustomDisplayNameGenerator());
 				Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForClass(
-					Underscore_DisplayName_TestCase.class, Optional.empty());
+					Underscore_DisplayName_TestCase.class, jupiterConfiguration);
 
 				assertThat(displayName.get()).isEqualTo("DisplayNameUtilsTests$Underscore DisplayName TestCase");
+			}
+
+			@Test
+			void shouldGetDisplayNameFromDefaultDisplayNameGenerator() {
+				when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(
+					new CustomDisplayNameGenerator());
+				Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForClass(MyTestCase.class,
+					jupiterConfiguration);
+
+				assertThat(displayName.get()).isEqualTo("class-display-name");
 			}
 		}
 	}
 
 	@Nested
 	class NestedClassDisplayNameTests {
-		@Test
-		void shouldGetDisplayNameFromConfigurationClass() {
-			Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForNestedClass(
-				NestedTestCase.class, Optional.of(CustomDisplayNameGenerator.class));
+		private JupiterConfiguration jupiterConfiguration = mock(JupiterConfiguration.class);
 
-			assertThat(displayName.get()).isEqualTo("nested-class-display-name");
+		@Test
+		void shouldGetDisplayNameFromDisplayNameGenerationAnnotation() {
+			when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
+			Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForNestedClass(
+				StandardDisplayNameTestCase.class, jupiterConfiguration);
+
+			assertThat(displayName.get()).isEqualTo(StandardDisplayNameTestCase.class.getSimpleName());
 		}
 
 		@Test
-		void shouldGetDisplayNameFromStandardIfConfigurationClass() {
+		void shouldGetDisplayNameFromDefaultDisplayNameGenerator() {
+			when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 			Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForNestedClass(
-				NestedTestCase.class, Optional.empty());
+				NestedTestCase.class, jupiterConfiguration);
 
-			assertThat(displayName.get()).isEqualTo("NestedTestCase");
+			assertThat(displayName.get()).isEqualTo("nested-class-display-name");
 		}
 	}
 
 	@Nested
 	class MethodDisplayNameTests {
+		private JupiterConfiguration jupiterConfiguration = mock(JupiterConfiguration.class);
+
 		@Test
-		void shouldGetDisplayNameFromConfigurationClass() throws Exception {
+		void shouldGetDisplayNameFromDisplayNameGenerationAnnotation() throws Exception {
+			when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 			Method method = MyTestCase.class.getDeclaredMethod("test1");
+			String displayName = DisplayNameUtils.determineDisplayNameForMethod(StandardDisplayNameTestCase.class,
+				method, jupiterConfiguration);
 
-			String displayName = DisplayNameUtils.determineDisplayNameForMethod(NestedTestCase.class, method,
-				Optional.of(CustomDisplayNameGenerator.class));
-
-			assertThat(displayName).isEqualTo("method-display-name");
+			assertThat(displayName).isEqualTo("test1()");
 		}
 
 		@Test
-		void shouldGetDisplayNameFromStandardIfConfigurationClass() throws Exception {
+		void shouldGetDisplayNameFromDefaultNameGenerator() throws Exception {
 			Method method = MyTestCase.class.getDeclaredMethod("test1");
+			when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 
-			String displayName = DisplayNameUtils.determineDisplayNameForMethod(NestedTestCase.class, method,
-				Optional.empty());
+			String displayName = DisplayNameUtils.determineDisplayNameForMethod(NotDisplayNameTestCase.class, method,
+				jupiterConfiguration);
 
-			assertThat(displayName).isEqualTo("test1()");
+			assertThat(displayName).isEqualTo("method-display-name");
 		}
 	}
 

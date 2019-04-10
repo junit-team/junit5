@@ -47,6 +47,6 @@ public interface JupiterConfiguration {
 
 	Predicate<ExecutionCondition> getExecutionConditionFilter();
 
-	Optional<Class<? extends DisplayNameGenerator>> getDefaultDisplayNameGeneratorClass();
+	DisplayNameGenerator getDefaultDisplayNameGenerator();
 
 }

@@ -75,8 +75,8 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 
 	@Override
 	@SuppressWarnings({ "unchecked" })
-	public Optional<Class<? extends DisplayNameGenerator>> getDefaultDisplayNameGeneratorClass() {
-		return (Optional<Class<? extends DisplayNameGenerator>>) cache.computeIfAbsent(
-			DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME, key -> delegate.getDefaultDisplayNameGeneratorClass());
+	public DisplayNameGenerator getDefaultDisplayNameGenerator() {
+		return (DisplayNameGenerator) cache.computeIfAbsent(DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME,
+			key -> delegate.getDefaultDisplayNameGenerator());
 	}
 }

@@ -88,12 +88,13 @@ class CachingJupiterConfigurationTests {
 	}
 
 	@Test
-	void cachesDefaultDisplayNameGeneratorClass() {
-		when(delegate.getDefaultDisplayNameGeneratorClass()).thenReturn(Optional.of(CustomDisplayNameGenerator.class));
+	void cachesDefaultDisplayNameGenerator() {
+        CustomDisplayNameGenerator customDisplayNameGenerator = new CustomDisplayNameGenerator();
+        when(delegate.getDefaultDisplayNameGenerator()).thenReturn(customDisplayNameGenerator);
 
-		assertThat(cache.getDefaultDisplayNameGeneratorClass()).hasValue(CustomDisplayNameGenerator.class);
+		assertThat(cache.getDefaultDisplayNameGenerator()).isEqualTo(customDisplayNameGenerator);
 
-		verify(delegate, times(1)).getDefaultDisplayNameGeneratorClass();
+		verify(delegate, times(1)).getDefaultDisplayNameGenerator();
 		verifyNoMoreInteractions(delegate);
 	}
 

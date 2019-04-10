@@ -30,6 +30,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -52,6 +53,11 @@ class JupiterTestDescriptorTests {
 	private static final UniqueId uniqueId = UniqueId.root("enigma", "foo");
 
 	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+
+	@BeforeEach
+	void setUp() {
+		when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new DisplayNameGenerator.Standard());
+	}
 
 	@Test
 	void constructFromClass() {
@@ -217,8 +223,7 @@ class JupiterTestDescriptorTests {
 
 	@Test
 	void shouldTakeCustomMethodNameDescriptorFromConfigurationIfPresent() {
-		when(configuration.getDefaultDisplayNameGeneratorClass()).thenReturn(
-			Optional.of(CustomDisplayNameGenerator.class));
+		when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 
 		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, getClass(), configuration);
 		assertEquals("class-display-name", descriptor.getDisplayName());

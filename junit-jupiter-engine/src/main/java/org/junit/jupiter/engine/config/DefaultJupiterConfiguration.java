@@ -37,8 +37,8 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	private static final EnumConfigurationParameterConverter<Lifecycle> lifecycleConverter = //
 		new EnumConfigurationParameterConverter<>(Lifecycle.class, "test instance lifecycle mode");
 
-	private static final DisplayNameGeneratorClassParameterConverter displayNameGeneratorClassConverter = //
-		new DisplayNameGeneratorClassParameterConverter();
+	private static final DisplayNameGeneratorParameterConverter displayNameGeneratorClassConverter = //
+		new DisplayNameGeneratorParameterConverter();
 
 	private final ConfigurationParameters configurationParameters;
 
@@ -82,7 +82,7 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
-	public Optional<Class<? extends DisplayNameGenerator>> getDefaultDisplayNameGeneratorClass() {
+	public DisplayNameGenerator getDefaultDisplayNameGenerator() {
 		return displayNameGeneratorClassConverter.get(configurationParameters,
 			DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME);
 	}

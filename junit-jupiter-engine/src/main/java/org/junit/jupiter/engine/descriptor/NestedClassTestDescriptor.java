@@ -47,9 +47,7 @@ public class NestedClassTestDescriptor extends ClassTestDescriptor {
 	private final Set<TestTag> tags;
 
 	public NestedClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, JupiterConfiguration configuration) {
-		super(uniqueId, testClass,
-			createDisplayNameSupplierForNestedClass(testClass, configuration.getDefaultDisplayNameGeneratorClass()),
-			configuration);
+		super(uniqueId, testClass, createDisplayNameSupplierForNestedClass(testClass, configuration), configuration);
 
 		this.tags = getTags(testClass);
 	}

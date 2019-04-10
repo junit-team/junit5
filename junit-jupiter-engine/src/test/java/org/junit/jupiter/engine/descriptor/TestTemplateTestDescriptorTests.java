@@ -15,9 +15,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
 import java.util.Set;
 
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestTemplate;
@@ -32,6 +32,7 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
  * @since 5.0
  */
 class TestTemplateTestDescriptorTests {
+	private JupiterConfiguration jupiterConfiguration = mock(JupiterConfiguration.class);
 
 	@Test
 	void inheritsTagsFromParent() throws Exception {
@@ -40,9 +41,11 @@ class TestTemplateTestDescriptorTests {
 		AbstractTestDescriptor parent = containerTestDescriptorWithTags(parentUniqueId,
 			singleton(TestTag.create("foo")));
 
+		when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(new DisplayNameGenerator.Standard());
+
 		TestTemplateTestDescriptor testDescriptor = new TestTemplateTestDescriptor(
 			parentUniqueId.append("tmp", "testTemplate()"), MyTestCase.class,
-			MyTestCase.class.getDeclaredMethod("testTemplate"), mock(JupiterConfiguration.class));
+			MyTestCase.class.getDeclaredMethod("testTemplate"), jupiterConfiguration);
 		parent.addChild(testDescriptor);
 
 		assertThat(testDescriptor.getTags()).containsExactlyInAnyOrder(TestTag.create("foo"), TestTag.create("bar"),
@@ -50,15 +53,13 @@ class TestTemplateTestDescriptorTests {
 	}
 
 	@Test
-	void shouldUseCustomDisplayNameIfPresentFromConfiguration() throws Exception {
+	void shouldUseCustomDisplayNameGeneratorIfPresentFromConfiguration() throws Exception {
 		UniqueId rootUniqueId = UniqueId.root("segment", "template");
 		UniqueId parentUniqueId = rootUniqueId.append("class", "myClass");
 		AbstractTestDescriptor parent = containerTestDescriptorWithTags(parentUniqueId,
 			singleton(TestTag.create("foo")));
 
-		JupiterConfiguration jupiterConfiguration = mock(JupiterConfiguration.class);
-		when(jupiterConfiguration.getDefaultDisplayNameGeneratorClass()).thenReturn(
-			Optional.of(CustomDisplayNameGenerator.class));
+		when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 
 		TestTemplateTestDescriptor testDescriptor = new TestTemplateTestDescriptor(
 			parentUniqueId.append("tmp", "testTemplate()"), MyTestCase.class,
@@ -69,14 +70,13 @@ class TestTemplateTestDescriptorTests {
 	}
 
 	@Test
-	void shouldUseDefaultDisplayNameIfConfigurationNotPresent() throws Exception {
+	void shouldUseStandardDisplayNameGeneratorIfConfigurationNotPresent() throws Exception {
 		UniqueId rootUniqueId = UniqueId.root("segment", "template");
 		UniqueId parentUniqueId = rootUniqueId.append("class", "myClass");
 		AbstractTestDescriptor parent = containerTestDescriptorWithTags(parentUniqueId,
 			singleton(TestTag.create("foo")));
 
-		JupiterConfiguration jupiterConfiguration = mock(JupiterConfiguration.class);
-		when(jupiterConfiguration.getDefaultDisplayNameGeneratorClass()).thenReturn(Optional.empty());
+		when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(new DisplayNameGenerator.Standard());
 
 		TestTemplateTestDescriptor testDescriptor = new TestTemplateTestDescriptor(
 			parentUniqueId.append("tmp", "testTemplate()"), MyTestCase.class,
