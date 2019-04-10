@@ -184,7 +184,7 @@ you can start your JVM with the following system property.
 `-Djunit.jupiter.displayname.generator.default=org.junit.jupiter.api.DisplayNameGenerator.DisplayNameGenerator.ReplaceUnderscores`
 
 make sure you use fully qualifies name (with class with package name) for the class and the class should
-implement `org.junit.jupiter.api.DisplayNameGenerator` interface.
+implements the `org.junit.jupiter.api.DisplayNameGenerator` interface.
 
 precedence of display name will be
 1. `@DisplayName` annotation
