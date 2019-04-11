@@ -42,17 +42,13 @@ class JupiterIntegrationTests {
 
 	@Test
 	void resolve() {
-		assumeTrue(getClass().getModule().isNamed(), "not running on the module-path");
-
-		ModuleSelector selector = DiscoverySelectors.selectModule(getClass().getModule().getName());
-		assertEquals(getClass().getModule().getName(), selector.getModuleName());
-
-		TestPlan testPlan = LauncherFactory.create().discover(request()
+		var selector = DiscoverySelectors.selectClass(getClass());
+		var testPlan = LauncherFactory.create().discover(request()
 				.selectors(selector)
 				.filters(includeEngines("junit-jupiter"))
 				.build());
 
-		TestIdentifier engine = testPlan.getRoots().iterator().next();
+		var engine = testPlan.getRoots().iterator().next();
 
 		assertEquals(1, testPlan.getChildren(engine).size()); // JupiterIntegrationTests.class
 		assertEquals(4, testPlan.getChildren(testPlan.getChildren(engine).iterator().next()).size()); // 4 test methods

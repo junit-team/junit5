@@ -37,29 +37,37 @@ class MultiReleaseJarTests {
 			">> BANNER >>", //
 			".", //
 			"'-- JUnit Jupiter [OK]", //
+			"  +-- ModuleUtilsTests [OK]", //
+			"  | +-- javaPlatformModuleSystemIsAvailable() [OK]", //
+			"  | +-- findAllClassesInModule() [OK]", //
+			"  | +-- findAllNonSystemBootModuleNames() [OK]", //
+			"  | '-- preconditions() [OK]", //
 			"  '-- JupiterIntegrationTests [OK]", //
 			"    +-- javaScriptingModuleIsAvailable() [OK]", //
-			"    +-- moduleIsNamed() [OK]", //
+			"    +-- moduleIsNamed() [A] Assumption failed: not running on the module-path", //
 			"    +-- packageName() [OK]", //
 			"    '-- resolve() [OK]", //
 			"", //
 			"Test run finished after \\d+ ms", //
-			"[         2 containers found      ]", //
+			"[         3 containers found      ]", //
 			"[         0 containers skipped    ]", //
-			"[         2 containers started    ]", //
+			"[         3 containers started    ]", //
 			"[         0 containers aborted    ]", //
-			"[         2 containers successful ]", //
+			"[         3 containers successful ]", //
 			"[         0 containers failed     ]", //
-			"[         4 tests found           ]", //
+			"[         8 tests found           ]", //
 			"[         0 tests skipped         ]", //
-			"[         4 tests started         ]", //
-			"[         0 tests aborted         ]", //
-			"[         4 tests successful      ]", //
+			"[         8 tests started         ]", //
+			"[         1 tests aborted         ]", //
+			"[         7 tests successful      ]", //
 			"[         0 tests failed          ]", //
 			"" //
 		);
 
 		var result = mvn(variant);
+
+		result.getOutputLines("out").forEach(System.out::println);
+		result.getOutputLines("err").forEach(System.err::println);
 
 		assertEquals(0, result.getExitCode(), result.toString());
 		assertEquals("", result.getOutput("err"));

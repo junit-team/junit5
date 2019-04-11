@@ -3,5 +3,5 @@
         "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 <suppressions>
     <suppress checks="JavadocPackage"
-              files="junit-platform-commons-java-9[\\/]src[\\/]main[\\/]java[\\/]org[\\/]junit[\\/]platform[\\/]commons[\\/]util[\\/]*"/>
+              files="junit-platform-commons[\\/]src[\\/]main[\\/]java9[\\/]org[\\/]junit[\\/]platform[\\/]commons[\\/]util[\\/]*"/>
 </suppressions>

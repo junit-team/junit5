@@ -82,7 +82,7 @@ if (project in mavenizedProjects) {
 		from(tasks.javadoc)
 	}
 
-	tasks.withType<Jar> {
+	tasks.withType<Jar>().configureEach {
 		from(rootDir) {
 			include("LICENSE.md", "LICENSE-notice.md")
 			into("META-INF")
@@ -143,43 +143,68 @@ tasks.jar {
 	}
 }
 
-tasks.compileJava {
+tasks.withType<JavaCompile>().configureEach {
 	options.encoding = "UTF-8"
+}
 
+val compileModule by tasks.registering(JavaCompile::class) {
+	destinationDir = file("$buildDir/classes/java/module")
+	source = fileTree("src/module/$javaModuleName")
+	sourceCompatibility = "9"
+	targetCompatibility = "9"
+	classpath = files()
+	options.compilerArgs.addAll(listOf(
+			// "-verbose",
+			// Suppress warnings for automatic modules: org.apiguardian.api, org.opentest4j
+			"-Xlint:all,-requires-automatic,-requires-transitive-automatic",
+			"--release", "9",
+			"--module-version", "${project.version}",
+			"--module-source-path", files(modularProjects.map { "${it.projectDir}/src/module" }).asPath
+	))
+	options.compilerArgumentProviders.add(ModulePathArgumentProvider())
+	options.compilerArgumentProviders.addAll(modularProjects.map { PatchModuleArgumentProvider(it) })
+}
+
+tasks.compileJava {
 	// See: https://docs.oracle.com/en/java/javase/11/tools/javac.html
 	options.compilerArgs.addAll(listOf(
 			"-Xlint", // Enables all recommended warnings.
 			"-Werror" // Terminates compilation when warnings occur.
 	))
+	if (modularProjects.contains(project)) {
+		finalizedBy(compileModule)
+	}
+}
+
+tasks.compileTestJava {
+	// See: https://docs.oracle.com/en/java/javase/11/tools/javac.html
+	options.compilerArgs.addAll(listOf(
+			"-Xlint", // Enables all recommended warnings.
+			"-Xlint:-overrides", // Disables "method overrides" warnings.
+			"-parameters" // Generates metadata for reflection on method parameters.
+	))
+}
+
+class ModulePathArgumentProvider : CommandLineArgumentProvider {
+	@get:Input val modulePath: Provider<Configuration> = configurations.compileClasspath
+	override fun asArguments(): List<String> = listOf("--module-path", modulePath.get().asPath)
+}
+
+class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvider {
+
+	@get:Input val module: String = javaModuleName(it)
+
+	@get:Input val patch: Provider<FileCollection> = provider {
+		if (it == project)
+			sourceSets["main"].output + configurations.compileClasspath.get()
+		else
+			files(it.sourceSets["main"].java.srcDirs)
+	}
+
+	override fun asArguments(): List<String> = listOf("--patch-module", "$module=${patch.get().asPath}")
 }
 
 afterEvaluate {
-
-	val modulePath = tasks.compileJava.get().classpath.asPath
-	val compileModule by tasks.registering(JavaCompile::class) {
-		destinationDir = file("$buildDir/classes/java/module")
-		source = fileTree("src/module/$javaModuleName").filter { it.path.endsWith(".java") }.asFileTree
-		sourceCompatibility = "9"
-		targetCompatibility = "9"
-		options.encoding = "UTF-8"
-		options.compilerArgs.addAll(listOf(
-				// "-verbose",
-				// Suppress warnings for automatic modules: org.apiguardian.api, org.opentest4j
-				"-Xlint:all,-requires-automatic,-requires-transitive-automatic",
-				"--release", "9",
-				"--module-version", "${project.version}",
-				"--module-source-path", files(modularProjects.map { "${it.projectDir}/src/module" }).asPath,
-				"--module-path", modulePath
-		))
-		modularProjects.forEach {
-			val module = javaModuleName(it)
-			val patch = if (it == project) (sourceSets["main"].output + configurations["compileClasspath"]).asPath else "${it.projectDir}/src/main/java"
-			options.compilerArgs.add("--patch-module")
-			options.compilerArgs.add("$module=$patch")
-		}
-		classpath = files()
-	}
-
 	tasks {
 		compileJava {
 			sourceCompatibility = extension.mainJavaVersion.majorVersion
@@ -189,21 +214,10 @@ afterEvaluate {
 			// Supported release targets are 6, 7, 8, 9, 10, and 11.
 			// Note that if --release is added then -target and -source are ignored.
 			options.compilerArgs.addAll(listOf("--release", extension.mainJavaVersion.majorVersion))
-			if (modularProjects.contains(project)) {
-				finalizedBy(compileModule)
-			}
 		}
 		compileTestJava {
-			options.encoding = "UTF-8"
 			sourceCompatibility = extension.testJavaVersion.majorVersion
 			targetCompatibility = extension.testJavaVersion.majorVersion
-
-			// See: https://docs.oracle.com/en/java/javase/11/tools/javac.html
-			options.compilerArgs.addAll(listOf(
-					"-Xlint", // Enables all recommended warnings.
-					"-Xlint:-overrides", // Disables "method overrides" warnings.
-					"-parameters" // Generates metadata for reflection on method parameters.
-			))
 		}
 	}
 }
