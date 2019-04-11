@@ -96,9 +96,9 @@ class DisplayNameGeneratorParameterConverterTests {
 
 		assertThat(displayNameGenerator).isInstanceOf(DisplayNameGenerator.Standard.class);
 		assertExpectedLogMessage(listener, Level.WARNING,
-			"No default display name generator class 'random-string' "
-					+ "set via the 'junit.jupiter.displayname.generator.default' "
-					+ "configuration parameter found. Falling back to default behaviour.");
+			"Failed to load default display name generator "
+					+ "class 'random-string' set via the 'junit.jupiter.displayname.generator.default' "
+					+ "configuration parameter. Falling back to default behaviour.");
 	}
 
 	@Test
@@ -110,10 +110,11 @@ class DisplayNameGeneratorParameterConverterTests {
 		DisplayNameGenerator displayNameGenerator = converter.get(configurationParameters, KEY);
 
 		assertThat(displayNameGenerator).isInstanceOf(DisplayNameGenerator.Standard.class);
-		assertExpectedLogMessage(listener, Level.WARNING, "Default display name generator class "
-				+ "'org.junit.jupiter.engine.config.DisplayNameGeneratorParameterConverterTests$TestClass' "
-				+ "set via the 'junit.jupiter.displayname.generator.default' configuration parameter is not of type "
-				+ "`org.junit.jupiter.api.DisplayNameGenerator`.Falling back to default behaviour.");
+		assertExpectedLogMessage(listener, Level.WARNING,
+			"Failed to load default display name generator class "
+					+ "'org.junit.jupiter.engine.config.DisplayNameGeneratorParameterConverterTests$TestClass' "
+					+ "set via the 'junit.jupiter.displayname.generator.default' configuration parameter. "
+					+ "Falling back to default behaviour.");
 	}
 
 	@Test
@@ -127,9 +128,9 @@ class DisplayNameGeneratorParameterConverterTests {
 
 		assertThat(displayNameGenerator).isInstanceOf(DisplayNameGenerator.Standard.class);
 		assertExpectedLogMessage(listener, Level.WARNING,
-			"No default display name generator class "
-					+ "'CustomDisplayNameGenerator' set via the 'junit.jupiter.displayname.generator.default' "
-					+ "configuration parameter found. Falling back to default behaviour.");
+			"Failed to load default display name generator class 'CustomDisplayNameGenerator' " +
+                    "set via the 'junit.jupiter.displayname.generator.default' configuration parameter. " +
+                    "Falling back to default behaviour.");
 	}
 
 	private void assertExpectedLogMessage(LogRecordListener listener, Level level, String expectedMessage) {
