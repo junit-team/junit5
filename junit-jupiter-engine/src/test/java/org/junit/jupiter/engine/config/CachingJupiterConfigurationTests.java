@@ -92,6 +92,7 @@ class CachingJupiterConfigurationTests {
 		CustomDisplayNameGenerator customDisplayNameGenerator = new CustomDisplayNameGenerator();
 		when(delegate.getDefaultDisplayNameGenerator()).thenReturn(customDisplayNameGenerator);
 
+		// call `cache.getDefaultDisplayNameGenerator()` twice to and verify only delegate method is called only once.
 		assertThat(cache.getDefaultDisplayNameGenerator()).isEqualTo(customDisplayNameGenerator);
 		assertThat(cache.getDefaultDisplayNameGenerator()).isEqualTo(customDisplayNameGenerator);
 
