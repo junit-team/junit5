@@ -164,7 +164,8 @@ afterEvaluate {
 		options.encoding = "UTF-8"
 		options.compilerArgs.addAll(listOf(
 				// "-verbose",
-				// "-Xlint:all,-module,-requires-transitive-automatic",
+				// Suppress warnings for automatic modules: org.apiguardian.api, org.opentest4j
+				"-Xlint:all,-requires-automatic,-requires-transitive-automatic",
 				"--release", "9",
 				"--module-version", "${project.version}",
 				"--module-source-path", files(modularProjects.map { "${it.projectDir}/src/module" }).asPath,

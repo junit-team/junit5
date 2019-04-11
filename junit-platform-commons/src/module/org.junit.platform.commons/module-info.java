@@ -16,7 +16,31 @@ module org.junit.platform.commons {
 	exports org.junit.platform.commons;
 	exports org.junit.platform.commons.annotation;
 	exports org.junit.platform.commons.function;
-	exports org.junit.platform.commons.logging;
+	exports org.junit.platform.commons.logging to
+			org.junit.jupiter.api,
+			org.junit.jupiter.engine,
+			org.junit.jupiter.migrationsupport,
+			org.junit.jupiter.params,
+			org.junit.platform.console,
+			org.junit.platform.engine,
+			org.junit.platform.launcher,
+			org.junit.platform.reporting,
+			org.junit.platform.runner,
+			org.junit.platform.suite.api,
+			org.junit.platform.testkit,
+			org.junit.vintage.engine;
 	exports org.junit.platform.commons.support;
-	exports org.junit.platform.commons.util;
+	exports org.junit.platform.commons.util to
+			org.junit.jupiter.api,
+			org.junit.jupiter.engine,
+			org.junit.jupiter.migrationsupport,
+			org.junit.jupiter.params,
+			org.junit.platform.console,
+			org.junit.platform.engine,
+			org.junit.platform.launcher,
+			org.junit.platform.reporting,
+			org.junit.platform.runner,
+			org.junit.platform.suite.api,
+			org.junit.platform.testkit,
+			org.junit.vintage.engine;
 }
