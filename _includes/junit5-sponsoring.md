@@ -79,3 +79,4 @@ Your donations will help to make that a reality!
 - olcbean
 - linux_china
 - Danny Preussler
+- Peter Quiel
