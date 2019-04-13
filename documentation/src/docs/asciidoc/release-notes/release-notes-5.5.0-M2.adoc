@@ -45,6 +45,8 @@ on GitHub.
 * Methods ordered with `MethodOrderer.Random` now execute using the `SAME_THREAD`
   concurrency mode instead of the `CONCURRENT` mode when no custom seed is provided.
 * New `emptyValue` attribute in `@CsvFileSource` and `@CsvSource`.
+* All methods in the `TestWatcher` API are now interface `default` methods with empty
+  implementations.
 
 
 [[release-notes-5.5.0-M2-junit-vintage]]
