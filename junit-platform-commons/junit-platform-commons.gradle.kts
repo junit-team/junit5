@@ -48,3 +48,9 @@ tasks {
 	}
 
 }
+
+eclipse {
+	classpath {
+		sourceSets -= mainRelease9
+	}
+}

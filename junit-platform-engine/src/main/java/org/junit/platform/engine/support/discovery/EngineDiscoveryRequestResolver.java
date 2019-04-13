@@ -22,7 +22,9 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
@@ -32,7 +34,6 @@ import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.support.discovery.SelectorResolver.Match;
 import org.junit.platform.engine.support.discovery.SelectorResolver.Resolution;
-import org.junit.platform.engine.support.filter.ClasspathScanningSupport;
 
 /**
  * Configurable test discovery implementation based on {@link SelectorResolver}
@@ -256,7 +257,20 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		DefaultInitializationContext(EngineDiscoveryRequest request, T engineDescriptor) {
 			this.request = request;
 			this.engineDescriptor = engineDescriptor;
-			this.classNameFilter = ClasspathScanningSupport.buildClassNamePredicate(request);
+			this.classNameFilter = buildClassNamePredicate(request);
+		}
+
+		/**
+		 * Build a {@link Predicate} for fully qualified class names to be used for
+		 * classpath scanning from an {@link EngineDiscoveryRequest}.
+		 *
+		 * @param request the request to build a predicate from
+		 */
+		private Predicate<String> buildClassNamePredicate(EngineDiscoveryRequest request) {
+			List<DiscoveryFilter<String>> filters = new ArrayList<>();
+			filters.addAll(request.getFiltersByType(ClassNameFilter.class));
+			filters.addAll(request.getFiltersByType(PackageNameFilter.class));
+			return Filter.composeFilters(filters).toPredicate();
 		}
 
 		@Override
