@@ -6,11 +6,9 @@ plugins {
 
 description = "JUnit Platform Commons"
 
-sourceSets {
-	create("mainRelease9") {
-		java {
-			setSrcDirs(setOf("src/main/java9"))
-		}
+val mainRelease9 by sourceSets.creating {
+	java {
+		setSrcDirs(setOf("src/main/java9"))
 	}
 }
 
@@ -20,8 +18,10 @@ configurations {
 	}
 }
 
+val mainRelease9Compile by configurations.getting
+
 dependencies {
-	add("mainRelease9Compile", sourceSets.main.get().output)
+	mainRelease9Compile(sourceSets.main.get().output)
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 }
 
@@ -39,7 +39,7 @@ tasks {
 			ToolProvider.findFirst("jar").get().run(System.out, System.err, "--update",
 					"--file", archiveFile.get().asFile.absolutePath,
 					"--release", "9",
-					"-C", "$buildDir/classes/java/mainRelease9", ".")
+					"-C", mainRelease9.output.classesDirs.singleFile.absolutePath, ".")
 		}
 	}
 
