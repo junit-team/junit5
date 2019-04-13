@@ -10,6 +10,7 @@
  */
 
 module org.junit.platform.testkit {
+	requires transitive org.apiguardian.api;
 	requires transitive org.assertj.core;
 	requires transitive org.junit.platform.launcher;
 	requires transitive org.opentest4j;

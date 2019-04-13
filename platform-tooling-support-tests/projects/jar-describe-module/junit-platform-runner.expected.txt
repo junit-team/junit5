@@ -2,4 +2,6 @@ org.junit.platform.runner@${platformVersion} jar:file:.+junit-platform-runner/bu
 exports org.junit.platform.runner
 requires java.base mandated
 requires junit transitive
+requires org.apiguardian.api transitive
 requires org.junit.platform.launcher transitive
+requires org.junit.platform.suite.api transitive

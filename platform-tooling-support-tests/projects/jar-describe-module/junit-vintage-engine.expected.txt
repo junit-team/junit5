@@ -1,6 +1,7 @@
 org.junit.vintage.engine@${vintageVersion} jar:file:.+junit-vintage-engine/build/libs/junit-vintage-engine-${jupiterVersion}.jar/!module-info.class
 requires java.base mandated
 requires junit transitive
+requires org.apiguardian.api transitive
 requires org.junit.platform.engine transitive
 provides org.junit.platform.engine.TestEngine with org.junit.vintage.engine.VintageTestEngine
 contains org.junit.vintage.engine

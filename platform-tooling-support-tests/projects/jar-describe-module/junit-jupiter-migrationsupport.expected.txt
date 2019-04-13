@@ -6,4 +6,5 @@ exports org.junit.jupiter.migrationsupport.rules.adapter
 exports org.junit.jupiter.migrationsupport.rules.member
 requires java.base mandated
 requires junit transitive
+requires org.apiguardian.api transitive
 requires org.junit.jupiter.api transitive

@@ -9,6 +9,7 @@
  */
 
 module org.junit.jupiter.migrationsupport {
+	requires transitive org.apiguardian.api;
 	requires transitive org.junit.jupiter.api;
 	requires transitive junit; // 4
 

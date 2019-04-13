@@ -1,7 +1,9 @@
 org.junit.jupiter.engine@${jupiterVersion} jar:file:.+junit-jupiter-engine/build/libs/junit-jupiter-engine-${jupiterVersion}.jar/!module-info.class
 requires java.base mandated
 requires java.scripting static
+requires org.apiguardian.api transitive
 requires org.junit.jupiter.api transitive
 requires org.junit.platform.engine transitive
+requires org.opentest4j transitive
 provides org.junit.platform.engine.TestEngine with org.junit.jupiter.engine.JupiterTestEngine
 contains org.junit.jupiter.engine

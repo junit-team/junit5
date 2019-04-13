@@ -9,6 +9,7 @@
  */
 
 module org.junit.platform.launcher {
+	requires transitive org.apiguardian.api;
 	requires transitive org.junit.platform.engine;
 
 	exports org.junit.platform.launcher;

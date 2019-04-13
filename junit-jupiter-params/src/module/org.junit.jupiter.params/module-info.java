@@ -10,6 +10,7 @@
  */
 
 module org.junit.jupiter.params {
+	requires transitive org.apiguardian.api;
 	requires transitive org.junit.jupiter.api;
 
 	exports org.junit.jupiter.params;

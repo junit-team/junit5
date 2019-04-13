@@ -10,9 +10,11 @@
  */
 
 module org.junit.jupiter.engine {
-	requires static java.scripting;
+	requires static java.scripting; // for evaluating @EnabledIf/@DisabledIf
+	requires transitive org.apiguardian.api;
 	requires transitive org.junit.jupiter.api;
 	requires transitive org.junit.platform.engine;
+	requires transitive org.opentest4j;
 
 	// exports org.junit.jupiter.engine; // Constants...
 

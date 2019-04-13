@@ -9,7 +9,9 @@
  */
 
 module org.junit.platform.engine {
+	requires transitive org.apiguardian.api;
 	requires transitive org.junit.platform.commons;
+	requires transitive org.opentest4j;
 
 	exports org.junit.platform.engine;
 	exports org.junit.platform.engine.discovery;

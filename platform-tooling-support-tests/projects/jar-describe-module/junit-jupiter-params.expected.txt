@@ -5,4 +5,5 @@ exports org.junit.jupiter.params.converter
 exports org.junit.jupiter.params.provider
 exports org.junit.jupiter.params.support
 requires java.base mandated
+requires org.apiguardian.api transitive
 requires org.junit.jupiter.api transitive

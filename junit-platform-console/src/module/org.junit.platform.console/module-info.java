@@ -9,5 +9,6 @@
  */
 
 module org.junit.platform.console {
+	requires transitive org.apiguardian.api;
 	requires transitive org.junit.platform.reporting;
 }

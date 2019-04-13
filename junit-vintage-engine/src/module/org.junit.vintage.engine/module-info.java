@@ -9,8 +9,9 @@
  */
 
 module org.junit.vintage.engine {
-	requires transitive org.junit.platform.engine;
 	requires transitive junit; // 4
+	requires transitive org.apiguardian.api;
+	requires transitive org.junit.platform.engine;
 
 	provides org.junit.platform.engine.TestEngine
 			with org.junit.vintage.engine.VintageTestEngine;
