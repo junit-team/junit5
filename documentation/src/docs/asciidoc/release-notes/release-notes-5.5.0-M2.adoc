@@ -25,7 +25,10 @@ on GitHub.
 
 * `AnnotationSupport.findRepeatableAnnotations()` now finds repeatable annotations used as
   meta-annotations on other repeatable annotations.
-
+* New overloaded variants of `Assertions.assertLinesMatch(...)` that accept a `String` or a
+  `Supplier<String>` for a custom failure message.
+* `Assertions.assertLinesMatch`'s failure message now emits each expected and actual line
+  in a dedicated line.
 
 [[release-notes-5.5.0-M2-junit-jupiter]]
 === JUnit Jupiter
