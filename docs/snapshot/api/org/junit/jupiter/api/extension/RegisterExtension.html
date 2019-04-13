@@ -142,9 +142,9 @@ public @interface <span class="memberNameLabel">RegisterExtension</span></pre>
  via <code>@ExtendWith</code>. Such <em>static</em> extensions are not limited in
  which extension APIs they can implement. Extensions registered via static
  fields may therefore implement class-level and instance-level extension APIs
- such as <a href="BeforeAllCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeAllCallback</code></a>, <a href="AfterAllCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterAllCallback</code></a>, and
- <a href="TestInstancePostProcessor.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstancePostProcessor</code></a> as well as method-level extension APIs
- such as <a href="BeforeEachCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeEachCallback</code></a>, etc.
+ such as <a href="BeforeAllCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeAllCallback</code></a>, <a href="AfterAllCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterAllCallback</code></a>,
+ <a href="TestInstanceFactory.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstanceFactory</code></a>, and <a href="TestInstancePostProcessor.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstancePostProcessor</code></a> as well as
+ method-level extension APIs such as <a href="BeforeEachCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeEachCallback</code></a>, etc.
 
  <h3>Instance Fields</h3>
 
@@ -154,14 +154,33 @@ public @interface <span class="memberNameLabel">RegisterExtension</span></pre>
  test instance (potentially injecting the instance of the extension to be
  used into the annotated field). Thus, if such an <em>instance</em> extension
  implements class-level or instance-level extension APIs such as
- <a href="BeforeAllCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeAllCallback</code></a>, <a href="AfterAllCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterAllCallback</code></a>, or
- <a href="TestInstancePostProcessor.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstancePostProcessor</code></a> those APIs will not be honored. By default,
- an instance extension will be registered <em>after</em> extensions that are
- registered at the method level via <code>@ExtendWith</code>; however, if the test
- class is configured with
+ <a href="BeforeAllCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeAllCallback</code></a>, <a href="AfterAllCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterAllCallback</code></a>,
+ <a href="TestInstanceFactory.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstanceFactory</code></a>, or <a href="TestInstancePostProcessor.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstancePostProcessor</code></a> those APIs
+ will not be honored. By default, an instance extension will be registered
+ <em>after</em> extensions that are registered at the method level via
+ <code>@ExtendWith</code>; however, if the test class is configured with
  <a href="../TestInstance.Lifecycle.html" title="enum in org.junit.jupiter.api"><code>@TestInstance(Lifecycle.PER_CLASS)</code></a>
  semantics, an instance extension will be registered <em>before</em> extensions
  that are registered at the method level via <code>@ExtendWith</code>.
+
+ <h3>Inheritance</h3>
+
+ <p><code>@RegisterExtension</code> fields are inherited from superclasses as long
+ as they are not <em>hidden</em> or <em>overridden</em>. Furthermore,
+ <code>@RegisterExtension</code> fields from superclasses will be registered before
+ <code>@RegisterExtension</code> fields in subclasses.
+
+ <h3>Registration Order</h3>
+
+ <p>By default, if multiple extensions are registered via
+ <code>@RegisterExtension</code>, they will be ordered using an algorithm that is
+ deterministic but intentionally nonobvious. This ensures that subsequent runs
+ of a test suite execute extensions in the same order, thereby allowing for
+ repeatable builds. However, there are times when extensions need to be
+ registered in an explicit order. To achieve that, annotate each
+ <code>@RegisterExtension</code> field with <a href="../Order.html" title="annotation in org.junit.jupiter.api"><code>@Order</code></a>.
+ Any <code>@RegisterExtension</code> field not annotated with <code>@Order</code> will
+ appear at the end of the sorted list.
 
  <h3>Example Usage</h3>
 
@@ -189,18 +208,6 @@ public @interface <span class="memberNameLabel">RegisterExtension</span></pre>
      }
  }</pre>
 
- <h3>Registration Order</h3>
-
- <p>By default, if multiple extensions are registered via
- <code>@RegisterExtension</code>, they will be ordered using an algorithm that is
- deterministic but intentionally nonobvious. This ensures that subsequent runs
- of a test suite execute extensions in the same order, thereby allowing for
- repeatable builds. However, there are times when extensions need to be
- registered in an explicit order. To achieve that, annotate each
- <code>@RegisterExtension</code> field with <a href="../Order.html" title="annotation in org.junit.jupiter.api"><code>@Order</code></a>.
- Any <code>@RegisterExtension</code> field not annotated with <code>@Order</code> will
- appear at the end of the sorted list.
-
  <h3>Supported Extension APIs</h3>
 
  <ul>
@@ -211,10 +218,12 @@ public @interface <span class="memberNameLabel">RegisterExtension</span></pre>
  <li><a href="AfterEachCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterEachCallback</code></a></li>
  <li><a href="BeforeTestExecutionCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeTestExecutionCallback</code></a></li>
  <li><a href="AfterTestExecutionCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterTestExecutionCallback</code></a></li>
+ <li><a href="TestInstanceFactory.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstanceFactory</code></a></li>
  <li><a href="TestInstancePostProcessor.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstancePostProcessor</code></a></li>
  <li><a href="ParameterResolver.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterResolver</code></a></li>
  <li><a href="TestExecutionExceptionHandler.html" title="interface in org.junit.jupiter.api.extension"><code>TestExecutionExceptionHandler</code></a></li>
  <li><a href="TestTemplateInvocationContextProvider.html" title="interface in org.junit.jupiter.api.extension"><code>TestTemplateInvocationContextProvider</code></a></li>
+ <li><a href="TestWatcher.html" title="interface in org.junit.jupiter.api.extension"><code>TestWatcher</code></a></li>
  </ul></div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>

@@ -278,7 +278,6 @@
 72fb96a413b3014e11de1f34cb0e413a  junit-platform-commons/src/main/java/org/junit/platform/commons/util/CloseablePath.java
 734fe9bee220261b8256f17bd65d55b9  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/package-info.java
 74b66b4cfbeed01ecd07dde67447389f  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodExtensionContext.java
-750f30c8cec4e45fce7bf21052f22785  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/RegisterExtension.java
 75109eb829d7bd6f879fc6e2e5d100b0  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/ClassNamePatternParameterConverter.java
 75b5833f19095f29bcf9ef200b83879c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/package-info.java
 769a572e04364756945b2e3824bbd498  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClasspathScanner.java
@@ -417,6 +416,7 @@ aa87b3e6180f9a5e202ec3a995659867  junit-platform-launcher/src/main/java/org/juni
 aa8fabf1606dce52dcd51e2c83e5d6dd  documentation/src/docs/asciidoc/user-guide/images/extensions_lifecycle.png
 aaa981df2823a75b1f70fc49660bda0f  documentation/src/test/java/example/registration/DocumentationDemo.java
 ab046c421c1abfc9cb11ebdcb69ed5ab  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTest.java
+ab147e33b3b38fc55eebf610356638a6  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/RegisterExtension.java
 ab72e7847b8203ddbb210e7d08a4315a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/package-info.java
 ab83ef64ae475dffa6ef688db027c5e0  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/package-info.java
 acf366874c55f05f04271cb9be4eef83  documentation/src/main/java/example/util/StringUtils.java
