@@ -58,7 +58,8 @@ class JarDescribeModuleTests {
 			fail("No such file: " + expected);
 		}
 		var expectedLines = Files.lines(expected).map(Helper::replaceVersionPlaceholders).collect(Collectors.toList());
-		assertLinesMatch(expectedLines, result.getOutputLines("out"));
+		var origin = Path.of("projects", "jar-describe-module", module + ".expected.txt").toUri();
+		assertLinesMatch(expectedLines, result.getOutputLines("out"), () -> String.format("%s\nError", origin));
 	}
 
 	@ParameterizedTest

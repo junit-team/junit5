@@ -1576,9 +1576,41 @@ public class Assertions {
 	 * >> M A N Y  M O R E  E N T R I E S >>
 	 * drwxr-xr-x  0 root root   512 Sep 22  2017 var
 	 * }</pre>
+	 * <p>Fails with a generated failure message describing the difference.
 	 */
 	public static void assertLinesMatch(List<String> expectedLines, List<String> actualLines) {
 		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} list of {@linkplain String}s matches {@code actual}
+	 * list.
+	 *
+	 * <p>Find a detailed description of the matching algorithm in {@link #assertLinesMatch(List, List)}.
+	 *
+	 * <p>Fails with the supplied failure {@code message} and the generated message.
+	 *
+	 * @see #assertLinesMatch(List, List)
+	 */
+	public static void assertLinesMatch(List<String> expectedLines, List<String> actualLines, String message) {
+		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines, message);
+	}
+
+	/**
+	 * <em>Assert</em> that {@code expected} list of {@linkplain String}s matches {@code actual}
+	 * list.
+	 *
+	 * <p>Find a detailed description of the matching algorithm in {@link #assertLinesMatch(List, List)}.
+	 *
+	 * <p>If necessary, a custom failure message will be retrieved lazily from the supplied
+	 * {@code messageSupplier}. Fails with the custom failure message prepended to
+	 * a generated failure message describing the difference.
+	 *
+	 * @see #assertLinesMatch(List, List)
+	 */
+	public static void assertLinesMatch(List<String> expectedLines, List<String> actualLines,
+			Supplier<String> messageSupplier) {
+		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines, messageSupplier);
 	}
 
 	// --- assertNotEquals -----------------------------------------------------
