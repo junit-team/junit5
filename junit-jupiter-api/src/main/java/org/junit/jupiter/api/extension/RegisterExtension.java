@@ -62,6 +62,13 @@ import org.apiguardian.api.API;
  * semantics, an instance extension will be registered <em>before</em> extensions
  * that are registered at the method level via {@code @ExtendWith}.
  *
+ * <h3>Inheritance</h3>
+ *
+ * <p>{@code @RegisterExtension} fields are inherited from superclasses as long
+ * as they are not <em>hidden</em> or <em>overridden</em>. Furthermore,
+ * {@code @RegisterExtension} fields from superclasses will be registered before
+ * {@code @RegisterExtension} fields in subclasses.
+ *
  * <h3>Example Usage</h3>
  *
  * <p>In the following example, the {@code docs} field in the test class is
