@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,7 +55,9 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
 class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
 	private static final List<String> testWatcherMethodNames = Arrays.stream(TestWatcher.class.getDeclaredMethods())//
-			.map(Method::getName).collect(toUnmodifiableList());
+			.filter(not(Method::isSynthetic))//
+			.map(Method::getName)//
+			.collect(toUnmodifiableList());
 
 	@BeforeEach
 	void clearResults() {
