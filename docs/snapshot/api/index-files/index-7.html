@@ -221,6 +221,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/script/Script.html#getAnnotationType()">getAnnotationType()</a></span> - Method in class org.junit.jupiter.engine.script.<a href="../org/junit/jupiter/engine/script/Script.html" title="class in org.junit.jupiter.engine.script">Script</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/ReflectiveInvocationContext.html#getArguments()">getArguments()</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/ReflectiveInvocationContext.html" title="interface in org.junit.jupiter.api.extension">ReflectiveInvocationContext</a></dt>
+<dd>
+<div class="block">Get the arguments of the executable in this invocation context.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/JupiterTestEngine.html#getArtifactId()">getArtifactId()</a></span> - Method in class org.junit.jupiter.engine.<a href="../org/junit/jupiter/engine/JupiterTestEngine.html" title="class in org.junit.jupiter.engine">JupiterTestEngine</a></dt>
 <dd>
 <div class="block">Returns <code>junit-jupiter-engine</code> as the artifact ID.</div>
@@ -494,6 +498,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/AnnotatedElement.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>AnnotatedElement</code></a> corresponding to the current extension
  context, if available.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/DynamicExtensionContext.html#getElement()">getElement()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/DynamicExtensionContext.html" title="class in org.junit.jupiter.engine.descriptor">DynamicExtensionContext</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/TestInstances.html#getEnclosingInstances()">getEnclosingInstances()</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a></dt>
 <dd>
 <div class="block">Get the enclosing test instances, excluding the innermost test instance,
@@ -554,6 +560,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Get the <code>executable</code> code block associated with this <code>DynamicTest</code>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/ReflectiveInvocationContext.html#getExecutable()">getExecutable()</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/ReflectiveInvocationContext.html" title="interface in org.junit.jupiter.api.extension">ReflectiveInvocationContext</a></dt>
+<dd>
+<div class="block">Get the method or constructor of this invocation context.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/config/CachingJupiterConfiguration.html#getExecutionConditionFilter()">getExecutionConditionFilter()</a></span> - Method in class org.junit.jupiter.engine.config.<a href="../org/junit/jupiter/engine/config/CachingJupiterConfiguration.html" title="class in org.junit.jupiter.engine.config">CachingJupiterConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/config/DefaultJupiterConfiguration.html#getExecutionConditionFilter()">getExecutionConditionFilter()</a></span> - Method in class org.junit.jupiter.engine.config.<a href="../org/junit/jupiter/engine/config/DefaultJupiterConfiguration.html" title="class in org.junit.jupiter.engine.config">DefaultJupiterConfiguration</a></dt>
@@ -565,6 +575,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Get the exception that was thrown during execution of the test or container
  associated with this <code>ExtensionContext</code>, if available.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/DynamicExtensionContext.html#getExecutionException()">getExecutionException()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/DynamicExtensionContext.html" title="class in org.junit.jupiter.engine.descriptor">DynamicExtensionContext</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html#getExecutionListener()">getExecutionListener()</a></span> - Method in class org.junit.jupiter.engine.execution.<a href="../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/JupiterEngineDescriptor.html#getExecutionMode()">getExecutionMode()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/JupiterEngineDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">JupiterEngineDescriptor</a></dt>
@@ -1131,6 +1143,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  that declares the <a href="../org/junit/jupiter/api/extension/ParameterContext.html#getParameter()"><code>Parameter</code></a> for this context will
  be invoked, if available.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/ReflectiveInvocationContext.html#getTarget()">getTarget()</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/ReflectiveInvocationContext.html" title="interface in org.junit.jupiter.api.extension">ReflectiveInvocationContext</a></dt>
+<dd>
+<div class="block">Get the target object of this invocation context, if available.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/ReflectiveInvocationContext.html#getTargetClass()">getTargetClass()</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/ReflectiveInvocationContext.html" title="interface in org.junit.jupiter.api.extension">ReflectiveInvocationContext</a></dt>
+<dd>
+<div class="block">Get the target class of this invocation context.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/testkit/engine/Execution.html#getTerminationInfo()">getTerminationInfo()</a></span> - Method in class org.junit.platform.testkit.engine.<a href="../org/junit/platform/testkit/engine/Execution.html" title="class in org.junit.platform.testkit.engine">Execution</a></dt>
 <dd>
 <div class="block">Get the <a href="../org/junit/platform/testkit/engine/TerminationInfo.html" title="class in org.junit.platform.testkit.engine"><code>TerminationInfo</code></a> for this <code>Execution</code>.</div>
@@ -1153,6 +1173,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a> associated with the current test or container, if available.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html#getTestClass()">getTestClass()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/ClassTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassTestDescriptor</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/DynamicExtensionContext.html#getTestClass()">getTestClass()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/DynamicExtensionContext.html" title="class in org.junit.jupiter.engine.descriptor">DynamicExtensionContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html#getTestClass()">getTestClass()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">MethodBasedTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
@@ -1183,16 +1205,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Get the test instance associated with the current test or container,
  if available.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/DynamicExtensionContext.html#getTestInstance()">getTestInstance()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/DynamicExtensionContext.html" title="class in org.junit.jupiter.engine.descriptor">DynamicExtensionContext</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/ExtensionContext.html#getTestInstanceLifecycle()">getTestInstanceLifecycle()</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a></dt>
 <dd>
 <div class="block">Get the <a href="../org/junit/jupiter/api/TestInstance.Lifecycle.html" title="enum in org.junit.jupiter.api"><code>TestInstance.Lifecycle</code></a> of the <a href="../org/junit/jupiter/api/extension/ExtensionContext.html#getTestInstance()">test
  instance</a> associated with the current test or container, if available.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/DynamicExtensionContext.html#getTestInstanceLifecycle()">getTestInstanceLifecycle()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/DynamicExtensionContext.html" title="class in org.junit.jupiter.engine.descriptor">DynamicExtensionContext</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/ExtensionContext.html#getTestInstances()">getTestInstances()</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a></dt>
 <dd>
 <div class="block">Get the test instances associated with the current test or container,
  if available.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/DynamicExtensionContext.html#getTestInstances()">getTestInstances()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/DynamicExtensionContext.html" title="class in org.junit.jupiter.engine.descriptor">DynamicExtensionContext</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/execution/TestInstancesProvider.html#getTestInstances(java.util.Optional)">getTestInstances(Optional&lt;ExtensionRegistry&gt;)</a></span> - Method in interface org.junit.jupiter.engine.execution.<a href="../org/junit/jupiter/engine/execution/TestInstancesProvider.html" title="interface in org.junit.jupiter.engine.execution">TestInstancesProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html#getTestInstancesProvider()">getTestInstancesProvider()</a></span> - Method in class org.junit.jupiter.engine.execution.<a href="../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></dt>
@@ -1205,6 +1233,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Get the <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> associated with the current test or container, if available.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/DynamicExtensionContext.html#getTestMethod()">getTestMethod()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/DynamicExtensionContext.html" title="class in org.junit.jupiter.engine.descriptor">DynamicExtensionContext</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html#getTestMethod()">getTestMethod()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">MethodBasedTestDescriptor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedMember.html#getTestRule()">getTestRule()</a></span> - Method in interface org.junit.jupiter.migrationsupport.rules.member.<a href="../org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedMember.html" title="interface in org.junit.jupiter.migrationsupport.rules.member">TestRuleAnnotatedMember</a></dt>

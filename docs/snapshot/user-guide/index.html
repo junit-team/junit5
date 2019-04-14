@@ -784,20 +784,21 @@ table.CodeRay td.code>pre{padding:0}
 </ul>
 </li>
 <li><a href="#extensions-exception-handling">5.9. Exception Handling</a></li>
-<li><a href="#extensions-test-templates">5.10. Providing Invocation Contexts for Test Templates</a></li>
-<li><a href="#extensions-keeping-state">5.11. Keeping State in Extensions</a></li>
-<li><a href="#extensions-supported-utilities">5.12. Supported Utilities in Extensions</a>
+<li><a href="#extensions-intercepting-invocations">5.10. Intercepting Invocations</a></li>
+<li><a href="#extensions-test-templates">5.11. Providing Invocation Contexts for Test Templates</a></li>
+<li><a href="#extensions-keeping-state">5.12. Keeping State in Extensions</a></li>
+<li><a href="#extensions-supported-utilities">5.13. Supported Utilities in Extensions</a>
 <ul class="sectlevel3">
-<li><a href="#extensions-supported-utilities-annotations">5.12.1. Annotation Support</a></li>
-<li><a href="#extensions-supported-utilities-classes">5.12.2. Class Support</a></li>
-<li><a href="#extensions-supported-utilities-reflection">5.12.3. Reflection Support</a></li>
-<li><a href="#extensions-supported-utilities-modifier">5.12.4. Modifier Support</a></li>
+<li><a href="#extensions-supported-utilities-annotations">5.13.1. Annotation Support</a></li>
+<li><a href="#extensions-supported-utilities-classes">5.13.2. Class Support</a></li>
+<li><a href="#extensions-supported-utilities-reflection">5.13.3. Reflection Support</a></li>
+<li><a href="#extensions-supported-utilities-modifier">5.13.4. Modifier Support</a></li>
 </ul>
 </li>
-<li><a href="#extensions-execution-order">5.13. Relative Execution Order of User Code and Extensions</a>
+<li><a href="#extensions-execution-order">5.14. Relative Execution Order of User Code and Extensions</a>
 <ul class="sectlevel3">
-<li><a href="#extensions-execution-order-overview">5.13.1. User and Extension Code</a></li>
-<li><a href="#extensions-execution-order-wrapping-behavior">5.13.2. Wrapping Behavior of Callbacks</a></li>
+<li><a href="#extensions-execution-order-overview">5.14.1. User and Extension Code</a></li>
+<li><a href="#extensions-execution-order-wrapping-behavior">5.14.2. Wrapping Behavior of Callbacks</a></li>
 </ul>
 </li>
 </ul>
@@ -6933,7 +6934,44 @@ but rethrow any other type of exception.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-test-templates"><a class="anchor" href="#extensions-test-templates"></a>5.10. Providing Invocation Contexts for Test Templates</h3>
+<h3 id="extensions-intercepting-invocations"><a class="anchor" href="#extensions-intercepting-invocations"></a>5.10. Intercepting Invocations</h3>
+<div class="paragraph">
+<p><code><a href="../api/org/junit/jupiter/api/extension/InvocationInterceptor.html">InvocationInterceptor</a></code> defines the API for <code>Extensions</code> that wish to intercept calls to
+test code.</p>
+</div>
+<div class="paragraph">
+<p>The following example shows an extension that executes all test methods in Swing&#8217;s Event
+Dispatch Thread.</p>
+</div>
+<div class="listingblock">
+<div class="title">An extension that executes tests in a user-defined thread</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">SwingEdtInterceptor</span> <span class="directive">implements</span> InvocationInterceptor {
+
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="type">void</span> interceptTestMethod(Invocation&lt;<span class="predefined-type">Void</span>&gt; invocation,
+            ReflectiveInvocationContext&lt;<span class="predefined-type">Method</span>&gt; invocationContext,
+            ExtensionContext extensionContext) <span class="directive">throws</span> <span class="predefined-type">Throwable</span> {
+        <span class="predefined-type">AtomicReference</span>&lt;<span class="predefined-type">Throwable</span>&gt; throwable = <span class="keyword">new</span> <span class="predefined-type">AtomicReference</span>&lt;&gt;();
+        <span class="predefined-type">SwingUtilities</span>.invokeAndWait(() -&gt; {
+            <span class="keyword">try</span> {
+                invocation.proceed();
+            }
+            <span class="keyword">catch</span> (<span class="predefined-type">Throwable</span> t) {
+                throwable.set(t);
+            }
+        });
+        <span class="predefined-type">Throwable</span> t = throwable.get();
+        <span class="keyword">if</span> (t != <span class="predefined-constant">null</span>) {
+            <span class="keyword">throw</span> t;
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="extensions-test-templates"><a class="anchor" href="#extensions-test-templates"></a>5.11. Providing Invocation Contexts for Test Templates</h3>
 <div class="paragraph">
 <p>A <code><a href="../api/org/junit/jupiter/api/TestTemplate.html">@TestTemplate</a></code> method can only be executed when at least one
 <code><a href="../api/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html">TestTemplateInvocationContextProvider</a></code> is registered. Each such provider is responsible
@@ -7023,7 +7061,7 @@ functionality.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-keeping-state"><a class="anchor" href="#extensions-keeping-state"></a>5.11. Keeping State in Extensions</h3>
+<h3 id="extensions-keeping-state"><a class="anchor" href="#extensions-keeping-state"></a>5.12. Keeping State in Extensions</h3>
 <div class="paragraph">
 <p>Usually, an extension is instantiated only once. So the question becomes relevant: How do
 you keep the state from one invocation of an extension to the next? The
@@ -7054,7 +7092,7 @@ an invocation of their <code>close()</code> method.
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-supported-utilities"><a class="anchor" href="#extensions-supported-utilities"></a>5.12. Supported Utilities in Extensions</h3>
+<h3 id="extensions-supported-utilities"><a class="anchor" href="#extensions-supported-utilities"></a>5.13. Supported Utilities in Extensions</h3>
 <div class="paragraph">
 <p>The <code>junit-platform-commons</code> artifact exposes a package named
 <code><a href="../api/org/junit/platform/commons/support/package-summary.html">org.junit.platform.commons.support</a></code> that contains <em>maintained</em> utility methods for working
@@ -7063,7 +7101,7 @@ with annotations, classes, reflection, and classpath scanning tasks. <code>TestE
 the behavior of the JUnit Platform.</p>
 </div>
 <div class="sect3">
-<h4 id="extensions-supported-utilities-annotations"><a class="anchor" href="#extensions-supported-utilities-annotations"></a>5.12.1. Annotation Support</h4>
+<h4 id="extensions-supported-utilities-annotations"><a class="anchor" href="#extensions-supported-utilities-annotations"></a>5.13.1. Annotation Support</h4>
 <div class="paragraph">
 <p><code>AnnotationSupport</code> provides static utility methods that operate on annotated elements
 (e.g., packages, annotations, classes, interfaces, constructors, methods, and fields).
@@ -7075,14 +7113,14 @@ interfaces and within class hierarchies to find annotations. Consult the Javadoc
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-supported-utilities-classes"><a class="anchor" href="#extensions-supported-utilities-classes"></a>5.12.2. Class Support</h4>
+<h4 id="extensions-supported-utilities-classes"><a class="anchor" href="#extensions-supported-utilities-classes"></a>5.13.2. Class Support</h4>
 <div class="paragraph">
 <p><code>ClassSupport</code> provides static utility methods for working with classes (i.e., instances
 of <code>java.lang.Class</code>). Consult the Javadoc for <code><a href="../api/org/junit/platform/commons/support/ClassSupport.html">ClassSupport</a></code> for further details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-supported-utilities-reflection"><a class="anchor" href="#extensions-supported-utilities-reflection"></a>5.12.3. Reflection Support</h4>
+<h4 id="extensions-supported-utilities-reflection"><a class="anchor" href="#extensions-supported-utilities-reflection"></a>5.13.3. Reflection Support</h4>
 <div class="paragraph">
 <p><code>ReflectionSupport</code> provides static utility methods that augment the standard JDK
 reflection and class-loading mechanisms. These include methods to scan the classpath in
@@ -7093,7 +7131,7 @@ details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="extensions-supported-utilities-modifier"><a class="anchor" href="#extensions-supported-utilities-modifier"></a>5.12.4. Modifier Support</h4>
+<h4 id="extensions-supported-utilities-modifier"><a class="anchor" href="#extensions-supported-utilities-modifier"></a>5.13.4. Modifier Support</h4>
 <div class="paragraph">
 <p><code>ModifierSupport</code> provides static utility methods for working with member and class
 modifiers&#8201;&#8212;&#8201;for example, to determine if a member is declared as <code>public</code>, <code>private</code>,
@@ -7103,7 +7141,7 @@ details.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="extensions-execution-order"><a class="anchor" href="#extensions-execution-order"></a>5.13. Relative Execution Order of User Code and Extensions</h3>
+<h3 id="extensions-execution-order"><a class="anchor" href="#extensions-execution-order"></a>5.14. Relative Execution Order of User Code and Extensions</h3>
 <div class="paragraph">
 <p>When executing a test class that contains one or more test methods, a number of extension
 callbacks are called in addition to the user-supplied test and lifecycle methods.</p>
@@ -7121,7 +7159,7 @@ See also: <a href="#writing-tests-test-execution-order">Test Execution Order</a>
 </table>
 </div>
 <div class="sect3">
-<h4 id="extensions-execution-order-overview"><a class="anchor" href="#extensions-execution-order-overview"></a>5.13.1. User and Extension Code</h4>
+<h4 id="extensions-execution-order-overview"><a class="anchor" href="#extensions-execution-order-overview"></a>5.14.1. User and Extension Code</h4>
 <div class="paragraph">
 <p>The following diagram illustrates the relative order of user-supplied code and extension
 code. User-supplied test and lifecycle methods are shown in orange, with callback code
@@ -7220,9 +7258,13 @@ steps are optional depending on the presence of user code or extension support f
 corresponding lifecycle callback. For further details on the various lifecycle callbacks
 please consult the respective Javadoc for each annotation and extension.</p>
 </div>
+<div class="paragraph">
+<p>All invocations of user code methods in the above table can additionally be intercepted
+by implementing <a href="#extensions-intercepting-invocations"><code>InvocationInterceptor</code></a>.</p>
+</div>
 </div>
 <div class="sect3">
-<h4 id="extensions-execution-order-wrapping-behavior"><a class="anchor" href="#extensions-execution-order-wrapping-behavior"></a>5.13.2. Wrapping Behavior of Callbacks</h4>
+<h4 id="extensions-execution-order-wrapping-behavior"><a class="anchor" href="#extensions-execution-order-wrapping-behavior"></a>5.14.2. Wrapping Behavior of Callbacks</h4>
 <div class="paragraph">
 <p>JUnit Jupiter always guarantees <em>wrapping</em> behavior for multiple registered extensions
 that implement lifecycle callbacks such as <code>BeforeAllCallback</code>, <code>AfterAllCallback</code>,
@@ -8534,6 +8576,21 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InvocationInterceptor</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.5</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Invocation</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.5</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ReflectiveInvocationContext</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.5</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ScriptEvaluationException</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.1</code></p></td>
 </tr>
@@ -9191,7 +9248,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-04-13 16:10:12 UTC
+Last updated 2019-04-14 13:11:48 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
