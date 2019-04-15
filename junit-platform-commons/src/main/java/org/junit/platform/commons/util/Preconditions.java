@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Collection of utilities for asserting preconditions for method and

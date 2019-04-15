@@ -44,6 +44,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Unit tests for {@link AnnotationUtils}.

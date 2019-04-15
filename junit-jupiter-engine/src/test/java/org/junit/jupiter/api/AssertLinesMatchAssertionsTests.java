@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.opentest4j.AssertionFailedError;
 
 /**

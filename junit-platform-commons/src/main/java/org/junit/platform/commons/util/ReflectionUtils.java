@@ -1020,7 +1020,7 @@ public final class ReflectionUtils {
 	/**
 	 * Get the sole declared {@link Constructor} for the supplied class.
 	 *
-	 * <p>Throws a {@link PreconditionViolationException} if the supplied
+	 * <p>Throws a {@link org.junit.platform.commons.PreconditionViolationException} if the supplied
 	 * class declares more than one constructor.
 	 *
 	 * @param clazz the class to get the constructor for

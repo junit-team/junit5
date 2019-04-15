@@ -22,11 +22,11 @@ import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.CollectionUtils;
-import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
