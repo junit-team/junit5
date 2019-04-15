@@ -1,5 +1,4 @@
->> 1 line header: No module descriptor found. Derived automatic module. >>
-
-org.junit.platform.suite.api@${platformVersion} automatic
+org.junit.platform.suite.api@${platformVersion} jar:file:.+junit-platform-suite-api/build/libs/junit-platform-suite-api-${platformVersion}.jar/!module-info.class
+exports org.junit.platform.suite.api
 requires java.base mandated
-contains org.junit.platform.suite.api
+requires org.apiguardian.api transitive

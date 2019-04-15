@@ -20,9 +20,6 @@ tasks {
 	jar {
 		enabled = false
 		manifest {
-			// Note: do not add `"Automatic-Module-Name": ...` because this artifact is not
-			// meant to be used on the Java 9 module path.
-			// See https://github.com/junit-team/junit5/issues/866#issuecomment-306017162
 			attributes("Main-Class" to "org.junit.platform.console.ConsoleLauncher")
 		}
 		dependsOn(shadowJar)

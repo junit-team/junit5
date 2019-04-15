@@ -1,10 +1,11 @@
->> 1 line header: No module descriptor found. Derived automatic module. >>
-
-org.junit.platform.commons@${platformVersion} automatic
+org.junit.platform.commons@${platformVersion} jar:file:.+junit-platform-commons/build/libs/junit-platform-commons-${platformVersion}.jar/!module-info.class
+exports org.junit.platform.commons
+exports org.junit.platform.commons.annotation
+exports org.junit.platform.commons.function
+exports org.junit.platform.commons.support
 requires java.base mandated
-contains org.junit.platform.commons
-contains org.junit.platform.commons.annotation
-contains org.junit.platform.commons.function
-contains org.junit.platform.commons.logging
-contains org.junit.platform.commons.support
-contains org.junit.platform.commons.util
+requires java.compiler
+requires java.logging
+requires org.apiguardian.api transitive
+qualified exports org.junit.platform.commons.logging to org.junit.jupiter.api org.junit.jupiter.engine org.junit.jupiter.migrationsupport org.junit.jupiter.params org.junit.platform.console org.junit.platform.engine org.junit.platform.launcher org.junit.platform.reporting org.junit.platform.runner org.junit.platform.suite.api org.junit.platform.testkit org.junit.vintage.engine
+qualified exports org.junit.platform.commons.util to org.junit.jupiter.api org.junit.jupiter.engine org.junit.jupiter.migrationsupport org.junit.jupiter.params org.junit.platform.console org.junit.platform.engine org.junit.platform.launcher org.junit.platform.reporting org.junit.platform.runner org.junit.platform.suite.api org.junit.platform.testkit org.junit.vintage.engine

@@ -7,10 +7,6 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 description = "JUnit Jupiter Engine"
 
-javaLibrary {
-	automaticModuleName = "org.junit.jupiter.engine"
-}
-
 tasks.compileTestGroovy {
 	sourceCompatibility = javaLibrary.testJavaVersion.majorVersion
 	targetCompatibility = javaLibrary.testJavaVersion.majorVersion

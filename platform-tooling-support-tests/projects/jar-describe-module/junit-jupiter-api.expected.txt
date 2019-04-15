@@ -1,10 +1,11 @@
->> 1 line header: No module descriptor found. Derived automatic module. >>
-
-org.junit.jupiter.api@${jupiterVersion} automatic
+org.junit.jupiter.api@${jupiterVersion} jar:file:.+junit-jupiter-api/build/libs/junit-jupiter-api-${jupiterVersion}.jar/!module-info.class
+exports org.junit.jupiter.api
+exports org.junit.jupiter.api.condition
+exports org.junit.jupiter.api.extension
+exports org.junit.jupiter.api.function
+exports org.junit.jupiter.api.io
+exports org.junit.jupiter.api.parallel
 requires java.base mandated
-contains org.junit.jupiter.api
-contains org.junit.jupiter.api.condition
-contains org.junit.jupiter.api.extension
-contains org.junit.jupiter.api.function
-contains org.junit.jupiter.api.io
-contains org.junit.jupiter.api.parallel
+requires org.apiguardian.api transitive
+requires org.junit.platform.commons transitive
+requires org.opentest4j transitive
