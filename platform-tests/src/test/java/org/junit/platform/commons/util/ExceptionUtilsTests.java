@@ -19,6 +19,7 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Unit tests for {@link ExceptionUtils}.

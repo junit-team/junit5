@@ -36,6 +36,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Unit tests for {@link CollectionUtils}.

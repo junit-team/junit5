@@ -31,6 +31,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;

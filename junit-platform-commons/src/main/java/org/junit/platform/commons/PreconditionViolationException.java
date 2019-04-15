@@ -15,21 +15,21 @@ import static org.apiguardian.api.API.Status.STABLE;
 import org.apiguardian.api.API;
 
 /**
- * Base class for all {@link RuntimeException RuntimeExceptions} thrown
- * by JUnit.
+ * Thrown if a <em>precondition</em> is violated.
  *
- * @since 1.0
+ * @since 1.5
  */
 @API(status = STABLE, since = "1.5")
-public class JUnitException extends RuntimeException {
+@SuppressWarnings({ "deprecation", "exports" })
+public class PreconditionViolationException extends org.junit.platform.commons.util.PreconditionViolationException {
 
 	private static final long serialVersionUID = 1L;
 
-	public JUnitException(String message) {
+	public PreconditionViolationException(String message) {
 		super(message);
 	}
 
-	public JUnitException(String message, Throwable cause) {
+	public PreconditionViolationException(String message, Throwable cause) {
 		super(message, cause);
 	}
 

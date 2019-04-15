@@ -27,7 +27,7 @@ import java.util.Map.Entry;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.discovery.ClassNameFilter;

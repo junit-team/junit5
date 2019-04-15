@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Unit tests for {@link FunctionUtils}.

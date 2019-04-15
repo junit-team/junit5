@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJav
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Unit tests for {@link EnabledOnJreCondition}.

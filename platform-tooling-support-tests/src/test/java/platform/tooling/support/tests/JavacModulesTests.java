@@ -142,25 +142,9 @@ class JavacModulesTests {
 		var out = new StringWriter();
 		var err = new StringWriter();
 
-		compileModules(temp, out, err, project -> project.mainSources);
+		var args = compileModules(temp, out, err, project -> project.mainSources);
 
-		assertTrue(err.toString().contains(
-			"[exports] class PreconditionViolationException in module org.junit.platform.commons may not be visible to all clients that require this module"));
-
-		assertTrue(err.toString().contains("junit-platform-engine"));
-		assertTrue(err.toString().contains("TestTag.java")); // :115
-		assertTrue(
-			err.toString().contains("public static TestTag create(String name) throws PreconditionViolationException"));
-
-		assertTrue(err.toString().contains("junit-platform-launcher"));
-		assertTrue(err.toString().contains("TestPlan.java")); // :169
-		assertTrue(err.toString().contains(
-			"public TestIdentifier getTestIdentifier(String uniqueId) throws PreconditionViolationException"));
-
-		assertTrue(err.toString().contains("junit-platform-engine"));
-		assertTrue(err.toString().contains("DiscoverySelectors.java")); // :363
-		assertTrue(err.toString().contains(
-			"public static MethodSelector selectMethod(String fullyQualifiedMethodName) throws PreconditionViolationException"));
+		assertTrue(err.toString().isBlank(), () -> err.toString() + "\n\n" + String.join("\n", args));
 
 		var listing = Helper.treeWalk(temp);
 		assertLinesMatch(List.of( //

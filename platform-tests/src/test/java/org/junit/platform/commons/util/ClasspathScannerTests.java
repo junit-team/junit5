@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.TrackLogRecords;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.LogRecordListener;
 

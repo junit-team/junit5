@@ -24,6 +24,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.opentest4j.ValueWrapper;
 
 /**
