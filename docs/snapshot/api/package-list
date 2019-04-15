@@ -38,7 +38,6 @@ org.junit.platform.engine.reporting
 org.junit.platform.engine.support.config
 org.junit.platform.engine.support.descriptor
 org.junit.platform.engine.support.discovery
-org.junit.platform.engine.support.filter
 org.junit.platform.engine.support.hierarchical
 org.junit.platform.launcher
 org.junit.platform.launcher.core
