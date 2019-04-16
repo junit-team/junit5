@@ -128,9 +128,9 @@ class DisplayNameGeneratorParameterConverterTests {
 
 		assertThat(displayNameGenerator).isInstanceOf(DisplayNameGenerator.Standard.class);
 		assertExpectedLogMessage(listener, Level.WARNING,
-			"Failed to load default display name generator class 'CustomDisplayNameGenerator' " +
-                    "set via the 'junit.jupiter.displayname.generator.default' configuration parameter. " +
-                    "Falling back to default behaviour.");
+			"Failed to load default display name generator class 'CustomDisplayNameGenerator' "
+					+ "set via the 'junit.jupiter.displayname.generator.default' configuration parameter. "
+					+ "Falling back to default behaviour.");
 	}
 
 	private void assertExpectedLogMessage(LogRecordListener listener, Level level, String expectedMessage) {
