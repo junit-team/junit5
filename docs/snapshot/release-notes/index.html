@@ -646,14 +646,6 @@ on GitHub.</p>
 <p><code>AnnotationSupport.findRepeatableAnnotations()</code> now finds repeatable annotations used as
 meta-annotations on other repeatable annotations.</p>
 </li>
-<li>
-<p>New overloaded variants of <code>Assertions.assertLinesMatch(&#8230;&#8203;)</code> that accept a <code>String</code> or a
-<code>Supplier&lt;String&gt;</code> for a custom failure message.</p>
-</li>
-<li>
-<p>`Assertions.assertLinesMatch&#8217;s failure message now emits each expected and actual line
-in a dedicated line.</p>
-</li>
 </ul>
 </div>
 </div>
@@ -687,6 +679,14 @@ retains references to instances of <code>DynamicTest</code> after they have been
 <h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
+<li>
+<p>New overloaded variants of <code>Assertions.assertLinesMatch(&#8230;&#8203;)</code> that accept a <code>String</code> or
+a <code>Supplier&lt;String&gt;</code> for a custom failure message.</p>
+</li>
+<li>
+<p>Failure messages for <code>Assertions.assertLinesMatch(&#8230;&#8203;)</code> now emit each expected and
+actual line in a dedicated line.</p>
+</li>
 <li>
 <p><code>MethodOrderer.Random</code> now generates a default random seed only once and prints it to
 the log in order to allow reproducible builds.</p>
@@ -992,7 +992,7 @@ in build tools</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-04-16 16:36:17 UTC
+Last updated 2019-04-16 17:48:29 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
