@@ -13,8 +13,8 @@ package org.junit.jupiter.api;
 import static java.lang.String.format;
 import static java.lang.String.join;
 import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
+import static org.junit.jupiter.api.AssertionUtils.failNotEqual;
 import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.commons.util.Preconditions.condition;
 import static org.junit.platform.commons.util.Preconditions.notNull;
 
@@ -169,7 +169,7 @@ class AssertLinesMatch {
 		String actual = newLine + join(newLine, actualLines) + newLine;
 		String prefix = buildPrefix(nullSafeGet(messageOrSupplier));
 		String message = prefix + format(format, args);
-		assertEquals(expected, actual, message);
+		failNotEqual(expected, actual, message);
 	}
 
 	static boolean isFastForwardLine(String line) {
