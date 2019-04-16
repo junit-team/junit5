@@ -45,6 +45,7 @@ val vintageProjects by extra(listOf(
 ))
 
 val mavenizedProjects by extra(platformProjects + jupiterProjects + vintageProjects)
+val modularProjects by extra(mavenizedProjects - listOf(project(":junit-platform-console-standalone")))
 
 val license by extra(License(
 		name = "Eclipse Public License v2.0",
@@ -60,7 +61,7 @@ val jacocoTestProjects = listOf(
 		project(":junit-vintage-engine"),
 		project(":platform-tests")
 )
-val jacocoCoveredProjects = mavenizedProjects - listOf(project(":junit-platform-console-standalone"))
+val jacocoCoveredProjects = modularProjects
 val jacocoClassesDir = file("$buildDir/jacoco/classes")
 
 allprojects {

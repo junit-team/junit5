@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.commons.util;
+package integration;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.ClassFilter;
+import org.junit.platform.commons.util.ModuleUtils;
+import org.junit.platform.commons.util.PreconditionViolationException;
 
 /**
  * Unit tests for {@link ModuleUtils}.

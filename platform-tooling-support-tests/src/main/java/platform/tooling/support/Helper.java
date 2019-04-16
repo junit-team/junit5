@@ -77,7 +77,6 @@ public class Helper {
 				.map(matcher -> matcher.group(1)) //
 				.filter(name -> name.startsWith("junit-")) //
 				.filter(name -> !name.equals("junit-bom")) //
-				.filter(name -> !name.equals("junit-platform-commons-java-9")) //
 				.filter(name -> !name.equals("junit-platform-console-standalone"))) {
 			return stream.collect(Collectors.toList());
 		}

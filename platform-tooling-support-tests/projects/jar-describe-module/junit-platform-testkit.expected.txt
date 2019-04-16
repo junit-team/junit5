@@ -1,5 +1,7 @@
->> 1 line header: No module descriptor found. Derived automatic module. >>
-
-org.junit.platform.testkit@${platformVersion} automatic
+org.junit.platform.testkit@${platformVersion} jar:file:.+junit-platform-testkit/build/libs/junit-platform-testkit-${platformVersion}.jar/!module-info.class
+exports org.junit.platform.testkit.engine
 requires java.base mandated
-contains org.junit.platform.testkit.engine
+requires org.apiguardian.api transitive
+requires org.assertj.core transitive
+requires org.junit.platform.launcher transitive
+requires org.opentest4j transitive

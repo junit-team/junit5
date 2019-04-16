@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-launcher</artifactId>
+            <artifactId>junit-platform-reporting</artifactId>
             <version>${junit.platform.version}</version>
             <scope>test</scope>
         </dependency>
@@ -43,10 +43,13 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>de.sormuras</groupId>
+                <groupId>de.sormuras.junit</groupId>
                 <artifactId>junit-platform-maven-plugin</artifactId>
-                <version>0.11.0</version>
+                <version>1.0.0-M5</version>
                 <extensions>true</extensions>
+                <configuration>
+                    <executor>JAVA</executor>
+                </configuration>
             </plugin>
         </plugins>
     </build>

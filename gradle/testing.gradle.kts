@@ -14,15 +14,14 @@ tasks.named<Test>("test").configure {
 }
 
 dependencies {
+	"testImplementation"(project(":junit-jupiter-api"))
+	"testImplementation"(project(":junit-jupiter-params"))
 	"testImplementation"("org.assertj:assertj-core:${Versions.assertJ}")
 	"testImplementation"("org.mockito:mockito-junit-jupiter:${Versions.mockito}") {
 		exclude(module = "junit-jupiter-engine")
 	}
 
 	if (project.name != "junit-jupiter-engine") {
-		"testImplementation"(project(":junit-jupiter-api"))
-		"testImplementation"(project(":junit-jupiter-params"))
-
 		"testRuntimeOnly"(project(":junit-jupiter-engine"))
 	}
 

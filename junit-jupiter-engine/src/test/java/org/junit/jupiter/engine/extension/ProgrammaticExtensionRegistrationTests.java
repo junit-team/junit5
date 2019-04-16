@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.allOf;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
@@ -20,6 +21,8 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.in
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.assertj.core.api.Condition;
@@ -29,6 +32,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -52,6 +56,8 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
  * @see OrderedProgrammaticExtensionRegistrationTests
  */
 class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTests {
+
+	private static final List<String> callSequence = new ArrayList<>();
 
 	@Test
 	void instanceLevel() {
@@ -81,6 +87,50 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	@Test
 	void classLevelFromInterface() {
 		assertOneTestSucceeded(ExtensionRegistrationFromInterfaceTestCase.class);
+	}
+
+	@Test
+	void instanceLevelWithInheritedAndHiddenExtensions() {
+		callSequence.clear();
+		Class<?> testClass = InstanceLevelExtensionRegistrationParentTestCase.class;
+		String parent = testClass.getSimpleName();
+		assertOneTestSucceeded(testClass);
+		assertThat(callSequence).containsExactly( //
+			parent + " :: extension1: before test", //
+			parent + " :: extension2: before test" //
+		);
+
+		callSequence.clear();
+		testClass = InstanceLevelExtensionRegistrationChildTestCase.class;
+		String child = testClass.getSimpleName();
+		assertOneTestSucceeded(testClass);
+		assertThat(callSequence).containsExactly( //
+			parent + " :: extension1: before test", //
+			child + " :: extension2: before test", //
+			child + " :: extension3: before test" //
+		);
+	}
+
+	@Test
+	void classLevelWithInheritedAndHiddenExtensions() {
+		callSequence.clear();
+		Class<?> testClass = ClassLevelExtensionRegistrationParentTestCase.class;
+		String parent = testClass.getSimpleName();
+		assertOneTestSucceeded(testClass);
+		assertThat(callSequence).containsExactly( //
+			parent + " :: extension1: before test", //
+			parent + " :: extension2: before test" //
+		);
+
+		callSequence.clear();
+		testClass = ClassLevelExtensionRegistrationChildTestCase.class;
+		String child = testClass.getSimpleName();
+		assertOneTestSucceeded(testClass);
+		assertThat(callSequence).containsExactly( //
+			parent + " :: extension1: before test", //
+			child + " :: extension2: before test", //
+			child + " :: extension3: before test" //
+		);
 	}
 
 	@Test
@@ -341,6 +391,73 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return this.wisdom;
 		}
+
+	}
+
+	static class ClassLevelExtensionRegistrationParentTestCase {
+
+		@RegisterExtension
+		static BeforeEachCallback extension1 = context -> callSequence.add(
+			ClassLevelExtensionRegistrationParentTestCase.class.getSimpleName() + " :: extension1: before "
+					+ context.getRequiredTestMethod().getName());
+
+		@RegisterExtension
+		static BeforeEachCallback extension2 = context -> callSequence.add(
+			ClassLevelExtensionRegistrationParentTestCase.class.getSimpleName() + " :: extension2: before "
+					+ context.getRequiredTestMethod().getName());
+
+		@Test
+		void test() {
+		}
+
+	}
+
+	static class ClassLevelExtensionRegistrationChildTestCase extends ClassLevelExtensionRegistrationParentTestCase {
+
+		// "Hides" ClassLevelExtensionRegistrationParentTestCase.extension2
+		@RegisterExtension
+		static BeforeEachCallback extension2 = context -> callSequence.add(
+			ClassLevelExtensionRegistrationChildTestCase.class.getSimpleName() + " :: extension2: before "
+					+ context.getRequiredTestMethod().getName());
+
+		@RegisterExtension
+		static BeforeEachCallback extension3 = context -> callSequence.add(
+			ClassLevelExtensionRegistrationChildTestCase.class.getSimpleName() + " :: extension3: before "
+					+ context.getRequiredTestMethod().getName());
+
+	}
+
+	static class InstanceLevelExtensionRegistrationParentTestCase {
+
+		@RegisterExtension
+		BeforeEachCallback extension1 = context -> callSequence.add(
+			InstanceLevelExtensionRegistrationParentTestCase.class.getSimpleName() + " :: extension1: before "
+					+ context.getRequiredTestMethod().getName());
+
+		@RegisterExtension
+		BeforeEachCallback extension2 = context -> callSequence.add(
+			InstanceLevelExtensionRegistrationParentTestCase.class.getSimpleName() + " :: extension2: before "
+					+ context.getRequiredTestMethod().getName());
+
+		@Test
+		void test() {
+		}
+
+	}
+
+	static class InstanceLevelExtensionRegistrationChildTestCase
+			extends InstanceLevelExtensionRegistrationParentTestCase {
+
+		// "Hides" InstanceLevelExtensionRegistrationParentTestCase.extension2
+		@RegisterExtension
+		BeforeEachCallback extension2 = context -> callSequence.add(
+			InstanceLevelExtensionRegistrationChildTestCase.class.getSimpleName() + " :: extension2: before "
+					+ context.getRequiredTestMethod().getName());
+
+		@RegisterExtension
+		BeforeEachCallback extension3 = context -> callSequence.add(
+			InstanceLevelExtensionRegistrationChildTestCase.class.getSimpleName() + " :: extension3: before "
+					+ context.getRequiredTestMethod().getName());
 
 	}
 

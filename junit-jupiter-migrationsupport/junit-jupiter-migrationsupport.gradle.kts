@@ -6,10 +6,6 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 description = "JUnit Jupiter Migration Support"
 
-javaLibrary {
-	automaticModuleName = "org.junit.jupiter.migrationsupport"
-}
-
 dependencies {
 	api("junit:junit:${Versions.junit4}")
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")

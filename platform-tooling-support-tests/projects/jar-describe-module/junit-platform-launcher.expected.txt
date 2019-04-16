@@ -1,8 +1,9 @@
->> 1 line header: No module descriptor found. Derived automatic module. >>
-
-org.junit.platform.launcher@${platformVersion} automatic
+org.junit.platform.launcher@${platformVersion} jar:file:.+junit-platform-launcher/build/libs/junit-platform-launcher-${platformVersion}.jar/!module-info.class
+exports org.junit.platform.launcher
+exports org.junit.platform.launcher.core
+exports org.junit.platform.launcher.listeners
 requires java.base mandated
-contains org.junit.platform.launcher
-contains org.junit.platform.launcher.core
-contains org.junit.platform.launcher.listeners
-contains org.junit.platform.launcher.tagexpression
+requires org.apiguardian.api transitive
+requires org.junit.platform.engine transitive
+uses org.junit.platform.engine.TestEngine
+uses org.junit.platform.launcher.TestExecutionListener
