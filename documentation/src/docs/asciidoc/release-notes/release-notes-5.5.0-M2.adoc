@@ -25,10 +25,6 @@ on GitHub.
 
 * `AnnotationSupport.findRepeatableAnnotations()` now finds repeatable annotations used as
   meta-annotations on other repeatable annotations.
-* New overloaded variants of `Assertions.assertLinesMatch(...)` that accept a `String` or a
-  `Supplier<String>` for a custom failure message.
-* `Assertions.assertLinesMatch`'s failure message now emits each expected and actual line
-  in a dedicated line.
 
 
 [[release-notes-5.5.0-M2-junit-jupiter]]
@@ -47,6 +43,10 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* New overloaded variants of `Assertions.assertLinesMatch(...)` that accept a `String` or
+  a `Supplier<String>` for a custom failure message.
+* Failure messages for `Assertions.assertLinesMatch(...)` now emit each expected and
+  actual line in a dedicated line.
 * `MethodOrderer.Random` now generates a default random seed only once and prints it to
   the log in order to allow reproducible builds.
 * Methods ordered with `MethodOrderer.Random` now execute using the `SAME_THREAD`
