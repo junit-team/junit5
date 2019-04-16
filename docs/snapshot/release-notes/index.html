@@ -665,7 +665,10 @@ in a dedicated line.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>Execution of dynamic tests registered via a <code>@TestFactory</code> method no longer results in
+an <code>OutOfMemoryError</code> if the executables in the dynamic tests retain references to
+objects consuming large amounts of memory. Technically speaking, JUnit Jupiter no longer
+retains references to instances of <code>DynamicTest</code> after they have been executed.</p>
 </li>
 </ul>
 </div>
@@ -989,7 +992,7 @@ in build tools</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-04-15 04:30:08 UTC
+Last updated 2019-04-16 16:36:17 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
