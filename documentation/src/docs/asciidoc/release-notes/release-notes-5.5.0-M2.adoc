@@ -30,12 +30,16 @@ on GitHub.
 * `Assertions.assertLinesMatch`'s failure message now emits each expected and actual line
   in a dedicated line.
 
+
 [[release-notes-5.5.0-M2-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
 
-* ❓
+* Execution of dynamic tests registered via a `@TestFactory` method no longer results in
+  an `OutOfMemoryError` if the executables in the dynamic tests retain references to
+  objects consuming large amounts of memory. Technically speaking, JUnit Jupiter no longer
+  retains references to instances of `DynamicTest` after they have been executed.
 
 ==== Deprecations and Breaking Changes
 
