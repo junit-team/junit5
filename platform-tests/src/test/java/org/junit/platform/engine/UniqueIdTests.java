@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.nio.file.Paths;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Nested;
@@ -279,6 +280,17 @@ class UniqueIdTests {
 
 			UniqueId newUniqueId = uniqueId.append("type", "bar").removeLastSegment();
 			assertEquals(uniqueId, newUniqueId);
+		}
+
+	}
+
+	@Nested
+	class ToPath {
+
+		@Test
+		void simpleId() {
+			UniqueId id = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]");
+			assertEquals(Paths.get("junit-jupiter", "MyClass", "myMethod"), id.toPath());
 		}
 
 	}

@@ -15,6 +15,8 @@ import static java.util.Collections.unmodifiableList;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.Serializable;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -231,6 +233,14 @@ public class UniqueId implements Cloneable, Serializable {
 	@Override
 	public String toString() {
 		return this.uniqueIdFormat.format(this);
+	}
+
+	public Path toPath() {
+		Path path = Paths.get("");
+		for (Segment segment : segments) {
+			path = path.resolve(segment.value);
+		}
+		return path;
 	}
 
 	/**

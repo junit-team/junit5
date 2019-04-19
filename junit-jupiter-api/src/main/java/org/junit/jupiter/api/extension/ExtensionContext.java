@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -291,6 +292,10 @@ public interface ExtensionContext {
 	 */
 	@API(status = STABLE, since = "5.1")
 	Optional<String> getConfigurationParameter(String key);
+
+	default Path publishData(String fileName) {
+		throw new UnsupportedOperationException("Not implemented");
+	}
 
 	/**
 	 * Publish a map of key-value pairs to be consumed by an

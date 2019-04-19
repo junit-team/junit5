@@ -10,6 +10,9 @@
 
 package org.junit.jupiter.engine.extension;
 
+import java.nio.file.Path;
+import java.util.Map;
+
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -29,7 +32,17 @@ class TestReporterParameterResolver implements ParameterResolver {
 
 	@Override
 	public TestReporter resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return extensionContext::publishReportEntry;
+		return new TestReporter() {
+			@Override
+			public void publishEntry(Map<String, String> map) {
+				extensionContext.publishReportEntry(map);
+			}
+
+			@Override
+			public Path publishData(String name) {
+				return extensionContext.publishData(name);
+			}
+		};
 	}
 
 }

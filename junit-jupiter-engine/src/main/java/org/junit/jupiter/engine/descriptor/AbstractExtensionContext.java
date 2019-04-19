@@ -13,6 +13,9 @@ package org.junit.jupiter.engine.descriptor;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -23,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ExtensionValuesStore;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -83,6 +87,20 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	@Override
 	public String getDisplayName() {
 		return getTestDescriptor().getDisplayName();
+	}
+
+	@Override
+	public Path publishData(String fileName) {
+		Path root = Paths.get(getConfigurationParameter("junit.platform.reporting.rootDirectory").orElse(
+			"build/junit-platform/reporting"));
+		Path base = root.resolve(this.testDescriptor.getUniqueId().toPath());
+		try {
+			Files.createDirectories(base);
+		}
+		catch (Exception e) {
+			throw new JUnitException("creating base failed: " + base, e);
+		}
+		return base.resolve(fileName);
 	}
 
 	@Override

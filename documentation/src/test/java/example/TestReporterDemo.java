@@ -10,6 +10,9 @@
 
 package example;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,6 +60,12 @@ class TestReporterDemo {
 			// deleteCompany();
 			testReporter.checkpoint("Company deleted");
 		}
+	}
+
+	@Test
+	void publishData(TestReporter testReporter) throws Exception {
+		Path data = testReporter.publishData("data.txt");
+		Files.write(data, Collections.singletonList("Hello Data!"));
 	}
 
 }
