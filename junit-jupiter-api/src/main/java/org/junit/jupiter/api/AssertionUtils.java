@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.api;
@@ -53,6 +53,20 @@ class AssertionUtils {
 
 	static void fail(String message, Object expected, Object actual) {
 		throw new AssertionFailedError(message, expected, actual);
+	}
+
+	/**
+	 * Typically used for {@code assertEquals()}.
+	 */
+	static void failNotEqual(Object expected, Object actual, String message) {
+		fail(format(expected, actual, message), expected, actual);
+	}
+
+	/**
+	 * Typically used for {@code assertEquals()}.
+	 */
+	static void failNotEqual(Object expected, Object actual, Supplier<String> messageSupplier) {
+		fail(format(expected, actual, nullSafeGet(messageSupplier)), expected, actual);
 	}
 
 	static String nullSafeGet(Supplier<String> messageSupplier) {

@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.engine;
@@ -171,6 +171,34 @@ public class UniqueId implements Cloneable, Serializable {
 		int size = this.segments.size();
 		int prefixSize = potentialPrefix.segments.size();
 		return size >= prefixSize && this.segments.subList(0, prefixSize).equals(potentialPrefix.segments);
+	}
+
+	/**
+	 * Construct a new {@code UniqueId} and removing the last {@link Segment} of
+	 * this {@code UniqueId}.
+	 *
+	 * <p>This {@code UniqueId} will not be modified.
+	 *
+	 * @throws org.junit.platform.commons.util.PreconditionViolationException
+	 * if this {@code UniqueId} contains a single segment
+	 * @return a new {@code UniqueId}; never {@code null}
+	 * @since 1.5
+	 */
+	@API(status = STABLE, since = "1.5")
+	public UniqueId removeLastSegment() {
+		Preconditions.condition(this.segments.size() > 1, "Cannot remove last remaining segment");
+		return new UniqueId(uniqueIdFormat, new ArrayList<>(segments.subList(0, segments.size() - 1)));
+	}
+
+	/**
+	 * Get the last {@link Segment} of this {@code UniqueId}.
+	 *
+	 * @return the last {@code Segment}; never {@code null}
+	 * @since 1.5
+	 */
+	@API(status = STABLE, since = "1.5")
+	public Segment getLastSegment() {
+		return this.segments.get(this.segments.size() - 1);
 	}
 
 	@Override

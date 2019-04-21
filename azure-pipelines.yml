@@ -1,0 +1,115 @@
+trigger:
+  branches:
+    include:
+    - master
+    - releases/*
+
+jobs:
+- job: linux_11
+  displayName: Linux (OpenJDK 11)
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+    - checkout: self
+      fetchDepth: 1
+    - template: src/azure/azure-gradle-step.yml
+      parameters:
+        publishTestResults: true
+
+- job: linux_12
+  displayName: Linux (OpenJDK 12)
+  pool:
+    vmImage: 'ubuntu-16.04'
+  container: openjdk:12
+  steps:
+    - checkout: self
+      fetchDepth: 1
+    - template: src/azure/azure-gradle-step.yml
+
+# BLOCKED BY https://github.com/gradle/gradle/issues/8681
+#- job: linux_13
+#  displayName: Linux (OpenJDK 13)
+#  pool:
+#    vmImage: 'ubuntu-16.04'
+#  container: openjdk:13
+#  steps:
+#    - checkout: self
+#      fetchDepth: 1
+#    - template: src/azure/azure-gradle-step.yml
+#      parameters:
+#        continueOnError: true
+
+- job: Mac
+  pool:
+    vmImage: 'macOS-10.13'
+  steps:
+    - checkout: self
+      fetchDepth: 1
+    - template: src/azure/azure-gradle-step.yml
+
+- job: Windows
+  pool:
+    vmImage: 'windows-2019'
+  steps:
+    - checkout: self
+      fetchDepth: 1
+    - template: src/azure/azure-gradle-step.yml
+
+- job: coverage
+  dependsOn: linux_11
+  displayName: Coverage
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+    - checkout: self
+      fetchDepth: 1
+    - bash: |
+        set -e
+        export JAVA_HOME="${JAVA_HOME_11_X64}"
+        ./gradlew --scan --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport
+        bash <(curl -s https://codecov.io/bash)
+      displayName: Coverage
+      env:
+        CODECOV_TOKEN: $(codecovToken)
+    - task: PublishCodeCoverageResults@1
+      displayName: Publish Coverage Results
+      inputs:
+        codeCoverageTool: 'JaCoCo'
+        summaryFileLocation: '**/build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml'
+        reportDirectory: '**/build/reports/jacoco/jacocoRootReport/html'
+
+- job: publish_artifacts
+  dependsOn: linux_11
+  displayName: Publish Snapshot Artifacts
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+    - checkout: self
+      fetchDepth: 1
+    - bash: |
+        set -e
+        export JAVA_HOME="${JAVA_HOME_11_X64}"
+        ./gradlew --scan publish -x check
+      displayName: Publish
+      env:
+        ORG_GRADLE_PROJECT_nexusUsername: $(nexusUsername)
+        ORG_GRADLE_PROJECT_nexusPassword: $(nexusPassword)
+  condition: and(succeeded(), and(eq(variables['System.PullRequest.IsFork'], False), and(eq(variables['Build.Reason'], 'IndividualCI'), or(startsWith(variables['Build.SourceBranch'], 'refs/heads/releases/'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))))
+
+- job: update_documentation
+  dependsOn: linux_11
+  displayName: Update Snapshot Documentation
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+    - checkout: self
+      fetchDepth: 1
+    - bash: |
+        set -e
+        export JAVA_HOME="${JAVA_HOME_11_X64}"
+        sudo apt-get install graphviz
+        ./src/publishDocumentationSnapshotOnlyIfNecessary.sh
+      displayName: Publish
+      env:
+        GRGIT_USER: $(githubToken)
+  condition: and(succeeded(), and(eq(variables['System.PullRequest.IsFork'], False), and(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))))

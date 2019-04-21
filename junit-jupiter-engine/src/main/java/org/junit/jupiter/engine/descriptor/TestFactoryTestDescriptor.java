@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.engine.descriptor;
@@ -25,8 +25,10 @@ import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
+import org.junit.jupiter.engine.execution.ExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.CollectionUtils;
@@ -48,9 +50,11 @@ import org.junit.platform.engine.support.descriptor.UriSource;
 @API(status = INTERNAL, since = "5.0")
 public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implements Filterable {
 
+	public static final String SEGMENT_TYPE = "test-factory";
 	public static final String DYNAMIC_CONTAINER_SEGMENT_TYPE = "dynamic-container";
 	public static final String DYNAMIC_TEST_SEGMENT_TYPE = "dynamic-test";
 
+	private static final ReflectiveInterceptorCall<Method, Object> interceptorCall = InvocationInterceptor::interceptTestFactoryMethod;
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 
 	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
@@ -88,7 +92,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 		context.getThrowableCollector().execute(() -> {
 			Object instance = extensionContext.getRequiredTestInstance();
 			Object testFactoryMethodResult = executableInvoker.invoke(getTestMethod(), instance, extensionContext,
-				context.getExtensionRegistry());
+				context.getExtensionRegistry(), interceptorCall);
 			TestSource defaultTestSource = getSource().orElseThrow(
 				() -> new JUnitException("Illegal state: TestSource must be present"));
 			try (Stream<DynamicNode> dynamicNodeStream = toDynamicNodeStream(testFactoryMethodResult)) {

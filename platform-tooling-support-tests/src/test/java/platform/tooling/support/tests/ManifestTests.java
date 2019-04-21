@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package platform.tooling.support.tests;
@@ -43,7 +43,7 @@ class ManifestTests {
 			assertValue(attributes, "Implementation-Title", module);
 			assertValue(attributes, "Implementation-Version", version);
 			assertValue(attributes, "Implementation-Vendor", "junit.org");
-			assertValue(attributes, "Automatic-Module-Name", "org." + module.replace('-', '.'));
+			assertValue(attributes, "Automatic-Module-Name", null);
 			switch (module) {
 				case "junit-platform-commons":
 					assertValue(attributes, "Multi-Release", "true");

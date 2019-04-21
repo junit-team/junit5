@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.params.provider;
@@ -45,7 +45,7 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 		settings.getFormat().setLineSeparator(LINE_SEPARATOR);
 		settings.getFormat().setQuote('\'');
 		settings.getFormat().setQuoteEscape('\'');
-		settings.setEmptyValue("");
+		settings.setEmptyValue(this.annotation.emptyValue());
 		settings.setAutoConfigurationEnabled(false);
 		CsvParser csvParser = new CsvParser(settings);
 		AtomicLong index = new AtomicLong(0);

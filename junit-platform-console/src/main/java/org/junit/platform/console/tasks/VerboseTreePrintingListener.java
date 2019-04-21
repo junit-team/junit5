@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.console.tasks;
@@ -120,7 +120,7 @@ class VerboseTreePrintingListener implements TestExecutionListener {
 	public void dynamicTestRegistered(TestIdentifier testIdentifier) {
 		printVerticals(theme.entry());
 		printf(Color.DYNAMIC, " %s", testIdentifier.getDisplayName());
-		printf(NONE, "%s", " dynamically registered%n");
+		printf(NONE, "%s%n", " dynamically registered");
 	}
 
 	@Override

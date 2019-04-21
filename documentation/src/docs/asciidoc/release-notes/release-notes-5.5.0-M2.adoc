@@ -1,0 +1,75 @@
+[[release-notes-5.5.0-M2]]
+== 5.5.0-M2️
+
+*Date of Release:* ❓
+
+*Scope:* ❓
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/37?closed=1+[5.5 M2] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.5.0-M2-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* `AnnotationSupport.findRepeatableAnnotations()` now finds repeatable annotations used as
+  meta-annotations on other repeatable annotations.
+
+
+[[release-notes-5.5.0-M2-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* Execution of dynamic tests registered via a `@TestFactory` method no longer results in
+  an `OutOfMemoryError` if the executables in the dynamic tests retain references to
+  objects consuming large amounts of memory. Technically speaking, JUnit Jupiter no longer
+  retains references to instances of `DynamicTest` after they have been executed.
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* New overloaded variants of `Assertions.assertLinesMatch(...)` that accept a `String` or
+  a `Supplier<String>` for a custom failure message.
+* Failure messages for `Assertions.assertLinesMatch(...)` now emit each expected and
+  actual line in a dedicated line.
+* `MethodOrderer.Random` now generates a default random seed only once and prints it to
+  the log in order to allow reproducible builds.
+* Methods ordered with `MethodOrderer.Random` now execute using the `SAME_THREAD`
+  concurrency mode instead of the `CONCURRENT` mode when no custom seed is provided.
+* New `emptyValue` attribute in `@CsvFileSource` and `@CsvSource`.
+* All methods in the `TestWatcher` API are now interface `default` methods with empty
+  implementations.
+* New `InvocationInterceptor` extension API (see
+  <<../user-guide/index.adoc#extensions-intercepting-invocations, User Guide>> for
+  details)
+
+
+[[release-notes-5.5.0-M2-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* ❓
+
+==== New Features and Improvements
+
+* ❓

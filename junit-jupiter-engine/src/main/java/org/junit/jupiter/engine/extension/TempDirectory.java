@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.engine.extension;
@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collections;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Predicate;
@@ -169,6 +170,10 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 
 		private SortedMap<Path, IOException> deleteAllFilesAndDirectories() throws IOException {
+			if (Files.notExists(dir)) {
+				return Collections.emptySortedMap();
+			}
+
 			SortedMap<Path, IOException> failures = new TreeMap<>();
 			Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
 

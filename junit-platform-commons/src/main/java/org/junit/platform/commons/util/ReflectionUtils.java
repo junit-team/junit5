@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.commons.util;
@@ -234,10 +234,12 @@ public final class ReflectionUtils {
 		return Modifier.isPrivate(member.getModifiers());
 	}
 
+	@API(status = INTERNAL, since = "1.4")
 	public static boolean isNotPrivate(Class<?> clazz) {
 		return !isPrivate(clazz);
 	}
 
+	@API(status = INTERNAL, since = "1.1")
 	public static boolean isNotPrivate(Member member) {
 		return !isPrivate(member);
 	}
@@ -257,6 +259,7 @@ public final class ReflectionUtils {
 		return Modifier.isStatic(clazz.getModifiers());
 	}
 
+	@API(status = INTERNAL, since = "1.4")
 	public static boolean isNotStatic(Class<?> clazz) {
 		return !isStatic(clazz);
 	}
@@ -266,6 +269,7 @@ public final class ReflectionUtils {
 		return Modifier.isStatic(member.getModifiers());
 	}
 
+	@API(status = INTERNAL, since = "1.1")
 	public static boolean isNotStatic(Member member) {
 		return !isStatic(member);
 	}

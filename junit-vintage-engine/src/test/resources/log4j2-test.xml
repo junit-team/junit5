@@ -8,6 +8,7 @@
 	<Loggers>
 		<Logger name="org.junit" level="warn" />
 		<Logger name="org.junit.vintage.engine" level="error" />
+		<Logger name="org.junit.platform.engine.support.discovery" level="error" />
 		<Root level="error">
 			<AppenderRef ref="Console" />
 		</Root>

@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.vintage.engine.descriptor;
@@ -49,7 +49,7 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 	public static final String SEGMENT_TYPE_TEST = "test";
 	public static final String SEGMENT_TYPE_DYNAMIC = "dynamic";
 
-	private final Description description;
+	protected Description description;
 
 	public VintageTestDescriptor(UniqueId uniqueId, Description description) {
 		this(uniqueId, description, generateDisplayName(description), toTestSource(description));

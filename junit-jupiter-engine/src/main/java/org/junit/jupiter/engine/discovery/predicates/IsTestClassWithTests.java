@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.engine.discovery.predicates;
@@ -33,7 +33,7 @@ public class IsTestClassWithTests implements Predicate<Class<?>> {
 
 	private static final IsTestTemplateMethod isTestTemplateMethod = new IsTestTemplateMethod();
 
-	private static final Predicate<Method> isTestOrTestFactoryOrTestTemplateMethod = isTestMethod.or(
+	public static final Predicate<Method> isTestOrTestFactoryOrTestTemplateMethod = isTestMethod.or(
 		isTestFactoryMethod).or(isTestTemplateMethod);
 
 	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();

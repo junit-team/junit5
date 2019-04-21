@@ -1,3 +1,7 @@
+plugins {
+	`kotlin-library-conventions`
+}
+
 description = "JUnit Jupiter API"
 
 dependencies {
@@ -7,12 +11,4 @@ dependencies {
 	api(project(":junit-platform-commons"))
 
 	compileOnly("org.jetbrains.kotlin:kotlin-stdlib")
-}
-
-tasks.jar {
-	manifest {
-		attributes(
-			"Automatic-Module-Name" to "org.junit.jupiter.api"
-		)
-	}
 }

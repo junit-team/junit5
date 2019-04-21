@@ -1,11 +1,9 @@
 plugins {
+	`kotlin-library-conventions`
 	id("com.github.johnrengelman.shadow")
 }
 
 apply(from = "$rootDir/gradle/testing.gradle.kts")
-
-// TODO workaround for shadow plugin, should be fixed by 4.0.4
-extra["testJavaVersion"] = JavaVersion.VERSION_1_10
 
 description = "JUnit Jupiter Params"
 
@@ -27,11 +25,6 @@ dependencies {
 
 tasks {
 	shadowJar {
-		// Generate shadow jar only if the underlying manifest was regenerated.
-		// See https://github.com/junit-team/junit5/issues/631
-		onlyIf {
-			(rootProject.extra["generateManifest"] as Boolean || !archivePath.exists())
-		}
 		archiveClassifier.set("")
 		configurations = listOf(project.configurations["shadowed"])
 		exclude("META-INF/maven/**")
@@ -49,8 +42,5 @@ tasks {
 	jar {
 		enabled = false
 		dependsOn(shadowJar)
-		manifest {
-			attributes("Automatic-Module-Name" to "org.junit.jupiter.params")
-		}
 	}
 }

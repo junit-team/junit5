@@ -1,4 +1,5 @@
 plugins {
+	`java-library-conventions`
 	id("me.champeau.gradle.jmh")
 }
 

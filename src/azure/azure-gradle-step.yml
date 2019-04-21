@@ -1,0 +1,23 @@
+parameters:
+  continueOnError: false
+  publishTestResults: false
+
+steps:
+  - bash: |
+      set -e
+      # when executing on an Azure Pipelines build agent (not in a container)
+      # default to java 11
+      if [ -n "${JAVA_HOME_11_X64}" ]; then
+        export JAVA_HOME="${JAVA_HOME_11_X64}"
+      fi
+      ./gradlew --version
+      ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
+    env:
+      LC_ALL: en_US.UTF-8
+    displayName: Test
+    continueOnError: ${{ parameters.continueOnError }}
+  - task: PublishTestResults@2
+    displayName: Publish Test Results
+    inputs:
+      testResultsFiles: '*/build/test-results/test/TEST-*.xml'
+    condition: eq(${{ parameters.publishTestResults }}, true)

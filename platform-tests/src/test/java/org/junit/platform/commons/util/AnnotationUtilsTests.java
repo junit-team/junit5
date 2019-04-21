@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.platform.commons.util;
@@ -255,6 +255,15 @@ class AnnotationUtilsTests {
 	@Test
 	void findInheritedRepeatableAnnotationsWithSingleComposedAnnotation() {
 		assertExtensionsFound(SingleComposedExtensionClass.class, "foo");
+	}
+
+	/**
+	 * @since 1.5
+	 */
+	@Test
+	void findInheritedRepeatableAnnotationsWithComposedAnnotationsInNestedContainer() {
+		assertExtensionsFound(MultipleFoos1.class, "foo");
+		assertExtensionsFound(MultipleFoos2.class, "foo");
 	}
 
 	@Test
@@ -610,7 +619,18 @@ class AnnotationUtilsTests {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited
 	@ExtendWith("foo")
+	@Repeatable(FooExtensions.class)
 	@interface ExtendWithFoo {
+
+		String info() default "";
+	}
+
+	@Target({ ElementType.TYPE, ElementType.METHOD })
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface FooExtensions {
+
+		ExtendWithFoo[] value();
 	}
 
 	@Target({ ElementType.TYPE, ElementType.METHOD })
@@ -764,6 +784,15 @@ class AnnotationUtilsTests {
 
 	@ExtendWithFoo
 	static class SingleComposedExtensionClass {
+	}
+
+	@ExtendWithFoo(info = "A")
+	@ExtendWithFoo(info = "B")
+	static class MultipleFoos1 {
+	}
+
+	@FooExtensions({ @ExtendWithFoo(info = "A"), @ExtendWithFoo(info = "B") })
+	static class MultipleFoos2 {
 	}
 
 	static class SubSingleComposedExtensionClass extends SingleComposedExtensionClass {

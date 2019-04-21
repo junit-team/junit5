@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.vintage.engine.execution;
@@ -47,7 +47,7 @@ class RunListenerAdapter extends RunListener {
 	@Override
 	public void testRunStarted(Description description) {
 		if (description.isSuite() && description.getAnnotation(Ignore.class) == null) {
-			fireExecutionStarted(testRun.getRunnerTestDescriptor());
+			fireExecutionStarted(testRun.getRunnerTestDescriptor(), EventType.REPORTED);
 		}
 	}
 
@@ -58,7 +58,7 @@ class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testStarted(Description description) {
-		testStarted(lookupOrRegisterTestDescriptor(description));
+		testStarted(lookupOrRegisterTestDescriptor(description), EventType.REPORTED);
 	}
 
 	@Override
@@ -81,8 +81,11 @@ class RunListenerAdapter extends RunListener {
 		RunnerTestDescriptor runnerTestDescriptor = testRun.getRunnerTestDescriptor();
 		if (testRun.isNotSkipped(runnerTestDescriptor)) {
 			if (testRun.isNotStarted(runnerTestDescriptor)) {
-				fireExecutionStarted(runnerTestDescriptor);
+				fireExecutionStarted(runnerTestDescriptor, EventType.SYNTHETIC);
 			}
+			testRun.getInProgressTestDescriptorsWithSyntheticStartEvents().stream() //
+					.filter(this::canFinish) //
+					.forEach(this::fireExecutionFinished);
 			if (testRun.isNotFinished(runnerTestDescriptor)) {
 				fireExecutionFinished(runnerTestDescriptor);
 			}
@@ -121,24 +124,19 @@ class RunListenerAdapter extends RunListener {
 			TestDescriptor testDescriptor) {
 		TestExecutionResult result = resultCreator.apply(failure.getException());
 		testRun.storeResult(testDescriptor, result);
-		if (testDescriptor.isContainer() && testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)) {
-			fireMissingContainerEvents(testDescriptor);
-		}
-	}
-
-	private void fireMissingContainerEvents(TestDescriptor testDescriptor) {
 		if (testRun.isNotStarted(testDescriptor)) {
-			testStarted(testDescriptor);
+			testStarted(testDescriptor, EventType.SYNTHETIC);
 		}
-		if (testRun.isNotFinished(testDescriptor)) {
+		if (testRun.isNotFinished(testDescriptor) && testDescriptor.isContainer()
+				&& testRun.isDescendantOfRunnerTestDescriptor(testDescriptor)) {
 			testFinished(testDescriptor);
 		}
 	}
 
 	private void testIgnored(TestDescriptor testDescriptor, String reason) {
+		fireExecutionFinishedForInProgressNonAncestorTestDescriptorsWithSyntheticStartEvents(testDescriptor);
 		fireExecutionStartedIncludingUnstartedAncestors(testDescriptor.getParent());
 		fireExecutionSkipped(testDescriptor, reason);
-		fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(testDescriptor.getParent());
 	}
 
 	private String determineReasonForIgnoredTest(Description description) {
@@ -151,27 +149,38 @@ class RunListenerAdapter extends RunListener {
 		listener.dynamicTestRegistered(testDescriptor);
 	}
 
-	private void testStarted(TestDescriptor testDescriptor) {
+	private void testStarted(TestDescriptor testDescriptor, EventType eventType) {
+		fireExecutionFinishedForInProgressNonAncestorTestDescriptorsWithSyntheticStartEvents(testDescriptor);
 		fireExecutionStartedIncludingUnstartedAncestors(testDescriptor.getParent());
-		fireExecutionStarted(testDescriptor);
+		fireExecutionStarted(testDescriptor, eventType);
+	}
+
+	private void fireExecutionFinishedForInProgressNonAncestorTestDescriptorsWithSyntheticStartEvents(
+			TestDescriptor testDescriptor) {
+		testRun.getInProgressTestDescriptorsWithSyntheticStartEvents().stream() //
+				.filter(it -> !isAncestor(it, testDescriptor) && canFinish(it)) //
+				.forEach(this::fireExecutionFinished);
+	}
+
+	private boolean isAncestor(TestDescriptor candidate, TestDescriptor testDescriptor) {
+		Optional<TestDescriptor> parent = testDescriptor.getParent();
+		if (!parent.isPresent()) {
+			return false;
+		}
+		if (parent.get().equals(candidate)) {
+			return true;
+		}
+		return isAncestor(candidate, parent.get());
 	}
 
 	private void testFinished(TestDescriptor descriptor) {
 		fireExecutionFinished(descriptor);
-		fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(descriptor.getParent());
 	}
 
 	private void fireExecutionStartedIncludingUnstartedAncestors(Optional<TestDescriptor> parent) {
 		if (parent.isPresent() && canStart(parent.get())) {
 			fireExecutionStartedIncludingUnstartedAncestors(parent.get().getParent());
-			fireExecutionStarted(parent.get());
-		}
-	}
-
-	private void fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(Optional<TestDescriptor> parent) {
-		if (parent.isPresent() && canFinish(parent.get())) {
-			fireExecutionFinished(parent.get());
-			fireExecutionFinishedIncludingAncestorsWithoutPendingChildren(parent.get().getParent());
+			fireExecutionStarted(parent.get(), EventType.SYNTHETIC);
 		}
 	}
 
@@ -192,8 +201,8 @@ class RunListenerAdapter extends RunListener {
 		listener.executionSkipped(testDescriptor, reason);
 	}
 
-	private void fireExecutionStarted(TestDescriptor testDescriptor) {
-		testRun.markStarted(testDescriptor);
+	private void fireExecutionStarted(TestDescriptor testDescriptor, EventType eventType) {
+		testRun.markStarted(testDescriptor, eventType);
 		listener.executionStarted(testDescriptor);
 	}
 

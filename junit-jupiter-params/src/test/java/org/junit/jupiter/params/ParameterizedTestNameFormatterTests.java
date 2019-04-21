@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.params;
@@ -113,6 +113,14 @@ class ParameterizedTestNameFormatterTests {
 		Object[] expected = Arrays.copyOf(actual, actual.length);
 		assertEquals("1, two, -128, [[2, 4], [3, 9]]", formatter.format(1, actual));
 		assertArrayEquals(expected, actual);
+	}
+
+	@Test
+	void formatDoesNotRaiseAnArrayStoreException() {
+		ParameterizedTestNameFormatter formatter = new ParameterizedTestNameFormatter("{0} -> {1}", "enigma");
+
+		Object[] arguments = new Number[] { 1, 2 };
+		assertEquals("1 -> 2", formatter.format(1, arguments));
 	}
 
 	@Test

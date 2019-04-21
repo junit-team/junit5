@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.params.provider;
@@ -76,7 +76,22 @@ public @interface CsvFileSource {
 	 * <p>Typically used to skip header lines.
 	 *
 	 * <p>Defaults to {@code 0}.
+	 *
+	 * @since 5.1
 	 */
+	@API(status = EXPERIMENTAL, since = "5.1")
 	int numLinesToSkip() default 0;
+
+	/**
+	 * The empty value to use when reading the CSV files.
+	 *
+	 * <p>This value replaces quoted empty strings read from the input.
+	 *
+	 * <p>Defaults to {@code ""}.
+	 *
+	 * @since 5.5
+	 */
+	@API(status = EXPERIMENTAL, since = "5.5")
+	String emptyValue() default "";
 
 }

@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package platform.tooling.support.tests;
@@ -58,7 +58,8 @@ class JarDescribeModuleTests {
 			fail("No such file: " + expected);
 		}
 		var expectedLines = Files.lines(expected).map(Helper::replaceVersionPlaceholders).collect(Collectors.toList());
-		assertLinesMatch(expectedLines, result.getOutputLines("out"));
+		var origin = Path.of("projects", "jar-describe-module", module + ".expected.txt").toUri();
+		assertLinesMatch(expectedLines, result.getOutputLines("out"), () -> String.format("%s\nError", origin));
 	}
 
 	@ParameterizedTest

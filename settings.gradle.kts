@@ -1,4 +1,8 @@
 pluginManagement {
+	repositories {
+		gradlePluginPortal()
+		maven(url = "https://jitpack.io")
+	}
 	resolutionStrategy {
 		eachPlugin {
 			when (requested.id.id) {
@@ -8,7 +12,7 @@ pluginManagement {
 				"com.diffplug.gradle.spotless" -> useVersion(Versions.spotlessPlugin)
 				"org.ajoberstar.git-publish" -> useVersion(Versions.gitPublishPlugin)
 				"org.jetbrains.kotlin.jvm" -> useVersion(Versions.kotlin)
-				"com.github.johnrengelman.shadow" -> useVersion(Versions.shadowPlugin)
+				"com.github.johnrengelman.shadow" -> useModule("com.github.sormuras:shadow:no-minimize-no-tracker-SNAPSHOT")
 				"org.asciidoctor.convert" -> useVersion(Versions.asciidoctorPlugin)
 				"me.champeau.gradle.jmh" -> useVersion(Versions.jmhPlugin)
 				"de.marcphilipp.nexus-publish" -> useVersion(Versions.nexusPublishPlugin)
@@ -32,7 +36,6 @@ include("junit-jupiter-engine")
 include("junit-jupiter-migrationsupport")
 include("junit-jupiter-params")
 include("junit-platform-commons")
-include("junit-platform-commons-java-9")
 include("junit-platform-console")
 include("junit-platform-console-standalone")
 include("junit-platform-engine")

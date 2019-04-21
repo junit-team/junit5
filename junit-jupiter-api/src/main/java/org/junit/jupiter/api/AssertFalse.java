@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.api;
@@ -37,13 +37,13 @@ class AssertFalse {
 
 	static void assertFalse(boolean condition, String message) {
 		if (condition) {
-			fail(buildPrefix(message) + EXPECTED_FALSE);
+			fail(buildPrefix(message) + EXPECTED_FALSE, false, true);
 		}
 	}
 
 	static void assertFalse(boolean condition, Supplier<String> messageSupplier) {
 		if (condition) {
-			fail(buildPrefix(nullSafeGet(messageSupplier)) + EXPECTED_FALSE);
+			fail(buildPrefix(nullSafeGet(messageSupplier)) + EXPECTED_FALSE, false, true);
 		}
 	}
 

@@ -1,6 +1,10 @@
-description = "${rootProject.description} (Bill of Materials)"
+plugins {
+	`java-platform`
+}
 
 apply(from = "$rootDir/gradle/publishing.gradle.kts")
+
+description = "${rootProject.description} (Bill of Materials)"
 
 dependencies {
 	constraints {
@@ -12,7 +16,7 @@ dependencies {
 }
 
 the<PublishingExtension>().publications.named<MavenPublication>("maven") {
-	from(components["javaLibraryPlatform"])
+	from(components["javaPlatform"])
 	pom {
 		description.set("This Bill of Materials POM can be used to ease dependency management " +
 				"when referencing multiple JUnit artifacts using Gradle or Maven.")
@@ -23,7 +27,7 @@ the<PublishingExtension>().publications.named<MavenPublication>("maven") {
 	}
 }
 
-tasks.withType<GenerateMavenPom> {
+tasks.withType<GenerateMavenPom>().configureEach {
 	doLast {
 		val xml = destination.readText()
 		require(xml.indexOf("<dependencies>") == xml.lastIndexOf("<dependencies>")) {

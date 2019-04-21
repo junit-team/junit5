@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.api.extension;
@@ -52,7 +52,8 @@ public class KitchenSinkExtension implements
 	TestTemplateInvocationContextProvider,
 
 	// Miscellaneous
-	TestWatcher
+	TestWatcher,
+	InvocationInterceptor
 
 // @formatter:on
 {

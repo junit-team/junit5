@@ -5,7 +5,7 @@
  * made available under the terms of the Eclipse Public License v2.0 which
  * accompanies this distribution and is available at
  *
- * http://www.eclipse.org/legal/epl-v20.html
+ * https://www.eclipse.org/legal/epl-v20.html
  */
 
 package org.junit.jupiter.params;
@@ -73,7 +73,7 @@ class ParameterizedTestNameFormatter {
 
 	private Object[] makeReadable(MessageFormat format, Object[] arguments) {
 		Format[] formats = format.getFormatsByArgumentIndex();
-		Object[] result = Arrays.copyOf(arguments, Math.min(arguments.length, formats.length));
+		Object[] result = Arrays.copyOf(arguments, Math.min(arguments.length, formats.length), Object[].class);
 		for (int i = 0; i < result.length; i++) {
 			if (formats[i] == null) {
 				result[i] = StringUtils.nullSafeToString(arguments[i]);
