@@ -14,7 +14,10 @@ package example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DependsOn;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 @TestMethodOrder(MethodOrderer.DependsOnAnnotation.class)
 class ExampleDependsOnAnnotationClassicTest {

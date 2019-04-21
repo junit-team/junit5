@@ -189,10 +189,11 @@ public interface MethodOrderer {
 			Map<String, Integer> dependencySize = new HashMap<>();
 
 			try {
-				// loop through all vertexes (methods) in graph
+				// run depth first search through all vertexes (methods) in graph to find dependencies
 				digraph.keySet().forEach(name -> depthFirstSearch(name, digraph, dependencySize));
 			}
 			catch (IllegalArgumentException exception) {
+				// cannot throw an exception here since MethodOrderer is not supposed to throw exception
 				logger.error(exception,
 					() -> "ERROR - Some arguments from @DependsOn annotations form cyclic dependencies, which would cause undefined behavior!");
 			}
