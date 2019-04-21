@@ -172,10 +172,13 @@ public interface MethodOrderer {
 	 */
 	class DependsOnAnnotation implements MethodOrderer {
 		private static final Logger logger = LoggerFactory.getLogger(Random.class);
+		// default value = 0 to make independent test run first, give it MAX_INT to make it run last
+		// Consider making this public, but not see any serious need yet
+		private static final int INDEPENDENT_TEST_PRIORITY = 0;
 
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
-			// Directed Acyclic Graph to represent order relationship between methods
+			// Directed Acyclic Graph (DAG) to represent order relationship between methods
 			// An edge from A -> B means method A should run after B
 			Map<String, String[]> digraph = context.getMethodDescriptors().stream().filter(
 				descriptor -> descriptor.isAnnotated(DependsOn.class)).collect(
@@ -194,9 +197,9 @@ public interface MethodOrderer {
 					() -> "ERROR - Some arguments from @DependsOn annotations form cyclic dependencies, which would cause undefined behavior!");
 			}
 
-			// default value = 0 to make independent test run first, give it MAX_INT to make it run last
 			context.getMethodDescriptors().sort(
-				Comparator.comparing(descriptor -> dependencySize.getOrDefault(descriptor.getMethod().getName(), 0)));
+				Comparator.comparing(descriptor -> dependencySize.getOrDefault(descriptor.getMethod().getName(),
+					INDEPENDENT_TEST_PRIORITY)));
 		}
 
 		/**
