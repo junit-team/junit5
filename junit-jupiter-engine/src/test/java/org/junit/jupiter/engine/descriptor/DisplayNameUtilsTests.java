@@ -37,6 +37,7 @@ class DisplayNameUtilsTests {
 
 	@Nested
 	class ClassDisplayNameTests {
+
 		@Test
 		void shouldGetDisplayNameFromDisplayNameAnnotation() {
 
@@ -69,14 +70,14 @@ class DisplayNameUtilsTests {
 
 		@Nested
 		class ClassDisplayNameSupplierTests {
-			private JupiterConfiguration jupiterConfiguration = mock(JupiterConfiguration.class);
+
+			private JupiterConfiguration configuration = mock(JupiterConfiguration.class);
 
 			@Test
 			void shouldGetDisplayNameFromDisplayNameGenerationAnnotation() {
-				when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(
-					new CustomDisplayNameGenerator());
+				when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 				Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForClass(
-					StandardDisplayNameTestCase.class, jupiterConfiguration);
+					StandardDisplayNameTestCase.class, configuration);
 
 				String name = StandardDisplayNameTestCase.class.getName();
 				String expectedClassName = name.substring(name.lastIndexOf(".") + 1);
@@ -85,20 +86,18 @@ class DisplayNameUtilsTests {
 
 			@Test
 			void shouldGetUnderscoreDisplayNameFromDisplayNameGenerationAnnotation() {
-				when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(
-					new CustomDisplayNameGenerator());
+				when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 				Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForClass(
-					Underscore_DisplayName_TestCase.class, jupiterConfiguration);
+					Underscore_DisplayName_TestCase.class, configuration);
 
 				assertThat(displayName.get()).isEqualTo("DisplayNameUtilsTests$Underscore DisplayName TestCase");
 			}
 
 			@Test
 			void shouldGetDisplayNameFromDefaultDisplayNameGenerator() {
-				when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(
-					new CustomDisplayNameGenerator());
+				when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 				Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForClass(MyTestCase.class,
-					jupiterConfiguration);
+					configuration);
 
 				assertThat(displayName.get()).isEqualTo("class-display-name");
 			}
@@ -107,22 +106,23 @@ class DisplayNameUtilsTests {
 
 	@Nested
 	class NestedClassDisplayNameTests {
-		private JupiterConfiguration jupiterConfiguration = mock(JupiterConfiguration.class);
+
+		private JupiterConfiguration configuration = mock(JupiterConfiguration.class);
 
 		@Test
 		void shouldGetDisplayNameFromDisplayNameGenerationAnnotation() {
-			when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
+			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 			Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForNestedClass(
-				StandardDisplayNameTestCase.class, jupiterConfiguration);
+				StandardDisplayNameTestCase.class, configuration);
 
 			assertThat(displayName.get()).isEqualTo(StandardDisplayNameTestCase.class.getSimpleName());
 		}
 
 		@Test
 		void shouldGetDisplayNameFromDefaultDisplayNameGenerator() {
-			when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
+			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 			Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForNestedClass(
-				NestedTestCase.class, jupiterConfiguration);
+				NestedTestCase.class, configuration);
 
 			assertThat(displayName.get()).isEqualTo("nested-class-display-name");
 		}
@@ -130,14 +130,15 @@ class DisplayNameUtilsTests {
 
 	@Nested
 	class MethodDisplayNameTests {
-		private JupiterConfiguration jupiterConfiguration = mock(JupiterConfiguration.class);
+
+		private JupiterConfiguration configuration = mock(JupiterConfiguration.class);
 
 		@Test
 		void shouldGetDisplayNameFromDisplayNameGenerationAnnotation() throws Exception {
-			when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
+			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 			Method method = MyTestCase.class.getDeclaredMethod("test1");
 			String displayName = DisplayNameUtils.determineDisplayNameForMethod(StandardDisplayNameTestCase.class,
-				method, jupiterConfiguration);
+				method, configuration);
 
 			assertThat(displayName).isEqualTo("test1()");
 		}
@@ -145,10 +146,10 @@ class DisplayNameUtilsTests {
 		@Test
 		void shouldGetDisplayNameFromDefaultNameGenerator() throws Exception {
 			Method method = MyTestCase.class.getDeclaredMethod("test1");
-			when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
+			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 
 			String displayName = DisplayNameUtils.determineDisplayNameForMethod(NotDisplayNameTestCase.class, method,
-				jupiterConfiguration);
+				configuration);
 
 			assertThat(displayName).isEqualTo("method-display-name");
 		}

@@ -111,4 +111,5 @@ class CachingJupiterConfigurationTests {
 		verify(delegate, times(2)).getRawConfigurationParameter("foo");
 		verifyNoMoreInteractions(delegate);
 	}
+
 }

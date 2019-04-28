@@ -92,4 +92,5 @@ class DefaultJupiterConfigurationTests {
 		Lifecycle lifecycle = new DefaultJupiterConfiguration(configParams).getDefaultTestInstanceLifecycle();
 		assertThat(lifecycle).isEqualTo(expected);
 	}
+
 }
