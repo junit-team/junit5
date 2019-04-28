@@ -70,7 +70,7 @@ footer {
 	color: darken($jumbotron-bg, 25%);
 }
 
-/* Sponsor card styles
+/* Sponsor card style: GOLD
 -------------------------------------------------- */
 .cardgold {
     width: 240px;
@@ -116,17 +116,18 @@ footer {
     letter-spacing: 0.25em;
 }
 
+/* Sponsor card style: SILVER
+-------------------------------------------------- */
 .cardsilver {
     width: 240px;
-    height: 240px;
     margin: 10px 16px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
     border-radius: 5px;
     text-align: center;
     font-size: small;
-    background-color: silver; /* For browsers that do not support gradients */
-    background-image: linear-gradient(to bottom right, silver, white); /* Standard syntax (must be last) */
+    background-color: silver;
+    background-image: linear-gradient(to bottom right, silver, white);
     cursor: pointer;
 }
 
@@ -145,18 +146,24 @@ footer {
 .cardsilver-center {
     display: block;
     width: 100%;
-    height: 100px;
+    height: 40px;
     overflow: hidden;
 }
 
 .cardsilver-bottom {
     display: block;
     width: 100%;
-    height: 40px;
     overflow: hidden;
     font-size: x-small;
 }
 
+.cardsilver-bottom h4 {
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+}
+
+/* Sponsor card style: BRONZE
+-------------------------------------------------- */
 .cardbronze {
     width: 240px;
     margin: 10px 16px;
