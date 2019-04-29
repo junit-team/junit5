@@ -430,7 +430,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <pre class="methodSignature">public static&nbsp;<a href="FileSelector.html" title="class in org.junit.platform.engine.discovery">FileSelector</a>&nbsp;selectFile&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;file)</pre>
 <div class="block">Create a <code>FileSelector</code> for the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">file</a>.
 
- <p>This method selects the file in its <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true#getCanonicalPath()" title="class or interface in java.io" class="externalLink">canonical</a> form and throws a <a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util"><code>PreconditionViolationException</code></a> if the
+ <p>This method selects the file in its <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true#getCanonicalPath()" title="class or interface in java.io" class="externalLink">canonical</a> form and throws a <a href="../../commons/PreconditionViolationException.html" title="class in org.junit.platform.commons"><code>PreconditionViolationException</code></a> if the
  file does not exist.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -474,7 +474,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <pre class="methodSignature">public static&nbsp;<a href="DirectorySelector.html" title="class in org.junit.platform.engine.discovery">DirectorySelector</a>&nbsp;selectDirectory&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;directory)</pre>
 <div class="block">Create a <code>DirectorySelector</code> for the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">directory</a>.
 
- <p>This method selects the directory in its <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true#getCanonicalPath()" title="class or interface in java.io" class="externalLink">canonical</a> form and throws a <a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util"><code>PreconditionViolationException</code></a> if the
+ <p>This method selects the directory in its <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true#getCanonicalPath()" title="class or interface in java.io" class="externalLink">canonical</a> form and throws a <a href="../../commons/PreconditionViolationException.html" title="class in org.junit.platform.commons"><code>PreconditionViolationException</code></a> if the
  directory does not exist.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -658,7 +658,7 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <li class="blockList">
 <h4>selectMethod</h4>
 <pre class="methodSignature">public static&nbsp;<a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a>&nbsp;selectMethod&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fullyQualifiedMethodName)
-                                   throws <a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
+                                   throws <a href="../../commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></pre>
 <div class="block">Create a <code>MethodSelector</code> for the supplied <em>fully qualified
  method name</em>.
 
@@ -701,7 +701,7 @@ public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/
 <dd><code>fullyQualifiedMethodName</code> - the fully qualified name of the method to select; never
  <code>null</code> or blank</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code></dd>
+<dd><code><a href="../../commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a></dd>
 </dl>

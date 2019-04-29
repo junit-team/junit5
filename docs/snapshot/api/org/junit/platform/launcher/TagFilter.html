@@ -235,7 +235,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>includeTags</h4>
 <pre class="methodSignature">public static&nbsp;<a href="PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&nbsp;includeTags&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;tagExpressions)
-                                       throws <a href="../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
+                                       throws <a href="../commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></pre>
 <div class="block">Create an <em>include</em> filter based on the supplied tag expressions.
 
  <p>Containers and tests will only be executed if their tags match at
@@ -245,7 +245,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>tagExpressions</code> - the included tag expressions; never <code>null</code> or
  empty</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied tag expressions
+<dd><code><a href="../commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></code> - if the supplied tag expressions
  array is <code>null</code> or empty, or if any individual tag expression is
  not syntactically valid</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
@@ -261,7 +261,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>includeTags</h4>
 <pre class="methodSignature">public static&nbsp;<a href="PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&nbsp;includeTags&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;tagExpressions)
-                                       throws <a href="../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
+                                       throws <a href="../commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></pre>
 <div class="block">Create an <em>include</em> filter based on the supplied tag expressions.
 
  <p>Containers and tests will only be executed if their tags match at
@@ -271,7 +271,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>tagExpressions</code> - the included tag expressions; never <code>null</code> or
  empty</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied tag expressions
+<dd><code><a href="../commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></code> - if the supplied tag expressions
  array is <code>null</code> or empty, or if any individual tag expression is
  not syntactically valid</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
@@ -287,7 +287,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>excludeTags</h4>
 <pre class="methodSignature">public static&nbsp;<a href="PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&nbsp;excludeTags&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;tagExpressions)
-                                       throws <a href="../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
+                                       throws <a href="../commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></pre>
 <div class="block">Create an <em>exclude</em> filter based on the supplied tag expressions.
 
  <p>Containers and tests will only be executed if their tags do
@@ -297,7 +297,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>tagExpressions</code> - the excluded tag expressions; never <code>null</code> or
  empty</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied tag expressions
+<dd><code><a href="../commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></code> - if the supplied tag expressions
  array is <code>null</code> or empty, or if any individual tag expression is
  not syntactically valid</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
@@ -313,7 +313,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>excludeTags</h4>
 <pre class="methodSignature">public static&nbsp;<a href="PostDiscoveryFilter.html" title="interface in org.junit.platform.launcher">PostDiscoveryFilter</a>&nbsp;excludeTags&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;tagExpressions)
-                                       throws <a href="../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
+                                       throws <a href="../commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></pre>
 <div class="block">Create an <em>exclude</em> filter based on the supplied tag expressions.
 
  <p>Containers and tests will only be executed if their tags do
@@ -323,7 +323,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>tagExpressions</code> - the excluded tag expressions; never <code>null</code> or
  empty</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied tag expressions
+<dd><code><a href="../commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></code> - if the supplied tag expressions
  array is <code>null</code> or empty, or if any individual tag expression is
  not syntactically valid</dd>
 <dt><span class="seeLabel">See Also:</span></dt>

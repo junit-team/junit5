@@ -231,12 +231,12 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li class="blockList">
 <h4>create</h4>
 <pre class="methodSignature">public static&nbsp;<a href="../Launcher.html" title="interface in org.junit.platform.launcher">Launcher</a>&nbsp;create()
-                       throws <a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
+                       throws <a href="../../commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></pre>
 <div class="block">Factory method for creating a new <a href="../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> using automatic
  registration for test engines and test execution listeners.</div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if no test engines are detected</dd>
+<dd><code><a href="../../commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></code> - if no test engines are detected</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="#create(org.junit.platform.launcher.core.LauncherConfig)"><code>create(LauncherConfig)</code></a></dd>
 </dl>
@@ -251,14 +251,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.3")
 public static&nbsp;<a href="../Launcher.html" title="interface in org.junit.platform.launcher">Launcher</a>&nbsp;create&#8203;(<a href="LauncherConfig.html" title="interface in org.junit.platform.launcher.core">LauncherConfig</a>&nbsp;config)
-                       throws <a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></pre>
+                       throws <a href="../../commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></pre>
 <div class="block">Factory method for creating a new <a href="../Launcher.html" title="interface in org.junit.platform.launcher"><code>Launcher</code></a> using the supplied
  <a href="LauncherConfig.html" title="interface in org.junit.platform.launcher.core"><code>LauncherConfig</code></a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>config</code> - the configuration for the launcher; never <code>null</code></dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../../commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied launcher
+<dd><code><a href="../../commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></code> - if the supplied launcher
  configuration is <code>null</code>, or if no test engines are detected or
  registered</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>

@@ -226,17 +226,18 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <pre class="methodSignature">public static&nbsp;void&nbsp;assertPackageNameIsValid&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;packageName)</pre>
 <div class="block">Assert that the supplied package name is valid in terms of Java syntax.
 
- <p>Note: this method does not actually verify if the named package exists in the classpath.
+ <p>Note: this method does not actually verify if the named package
+ exists in the classpath.
 
  <p>The default package is represented by an empty string (<code>""</code>).</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>packageName</code> - the package name to validate</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied package name is
- <code>null</code>, contains only whitespace, or contains parts that are not
- valid in terms of Java syntax (e.g., containing keywords such as
- <code>void</code>, <code>import</code>, etc.)</dd>
+<dd><code><a href="../PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></code> - if the
+ supplied package name is <code>null</code>, contains only whitespace, or
+ contains parts that are not valid in terms of Java syntax (e.g.,
+ containing keywords such as <code>void</code>, <code>import</code>, etc.)</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="https://docs.oracle.com/javase/8/docs/api/javax/lang/model/SourceVersion.html?is-external=true#isName(java.lang.CharSequence)" title="class or interface in javax.lang.model" class="externalLink"><code>SourceVersion.isName(CharSequence)</code></a></dd>
 </dl>
@@ -266,8 +267,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd>an <code>Optional</code> containing the attribute value; never
  <code>null</code> but potentially empty</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied type or function
- is <code>null</code></dd>
+<dd><code><a href="../PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></code> - if the
+ supplied type or function is <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true#getPackage()" title="class or interface in java.lang" class="externalLink"><code>Class.getPackage()</code></a>, 
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Package.html?is-external=true#getImplementationTitle()" title="class or interface in java.lang" class="externalLink"><code>Package.getImplementationTitle()</code></a>, 
@@ -298,8 +299,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd>an <code>Optional</code> containing the attribute value; never
  <code>null</code> but potentially empty</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="PreconditionViolationException.html" title="class in org.junit.platform.commons.util">PreconditionViolationException</a></code> - if the supplied type is
- <code>null</code> or the specified name is blank</dd>
+<dd><code><a href="../PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a></code> - if the
+ supplied type is <code>null</code> or the specified name is blank</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="https://docs.oracle.com/javase/8/docs/api/java/util/jar/Manifest.html?is-external=true#getMainAttributes()" title="class or interface in java.util.jar" class="externalLink"><code>Manifest.getMainAttributes()</code></a></dd>
 </dl>
