@@ -257,7 +257,6 @@
 67d8a8e00162be6fc52e0050d0bef698  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestInstance.java
 68710a9837ba700b70278a68918ce686  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/JupiterTestEngine.java
 687e0c2c2bc766a2bdb028d686f6e759  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/ClassSource.java
-69722b0cfaef4609d1ee3eb720481bd5  documentation/src/docs/asciidoc/release-notes/release-notes-5.5.0-M2.adoc
 69c8b885b62b12a7f8e993eb029ed0a4  documentation/src/test/java/example/ParameterizedTestDemo.java
 6a4fc6025deda930f868521dfc0051a8  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/SingleTestExecutor.java
 6b5cfcf4e3ecda01829b19b35914f1ce  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/TestExecutionSummary.java
@@ -461,6 +460,7 @@ b7f777294bbfc9bf97c53be3a32d2920  junit-jupiter-engine/src/main/java/org/junit/j
 b8b5e91d3761ab5226ad860d8b8d2544  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ShuntingYard.java
 b9aeba3af2484d42fb26d42c59f87bf0  junit-platform-engine/src/main/java/org/junit/platform/engine/DiscoverySelector.java
 b9ba4fc71e60ca4bacfd2608d7dab257  documentation/src/test/java/example/defaultmethods/StringTests.java
+b9fa70fa64e739bc069e60f49115909d  documentation/src/docs/asciidoc/release-notes/release-notes-5.5.0-M2.adoc
 ba5344cacee9047b28ab7c46a311bc30  junit-platform-commons/src/main/java/org/junit/platform/commons/support/package-info.java
 badae0f00441e1f3a332b0887e135936  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeExecutionAdvisor.java
 bc1f7c6b92f04fcd20dc8578642d197a  documentation/src/test/java/example/callbacks/Extension1.java
