@@ -154,7 +154,7 @@ fun <R> assertDoesNotThrow(message: String, executable: () -> R): R =
 /**
  * Example usage:
  * ```kotlin
- * val result = assertDoesNotThrow({ "Should not throw an exception }) {
+ * val result = assertDoesNotThrow({ "Should not throw an exception" }) {
  *     // Code block that is expected to not throw an exception
  * }
  * ```
