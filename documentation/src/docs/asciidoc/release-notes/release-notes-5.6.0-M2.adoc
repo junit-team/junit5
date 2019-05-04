@@ -40,6 +40,10 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* `@EnabledIfEnvironmentVariable`, `@DisabledIfEnvironmentVariable`,
+  `@EnabledIfSystemProperty`, and `@DisabledIfSystemProperty` may now be used as
+  _repeatable_ annotations. In other words, it is now possible to declare each of those
+  annotations multiple times on a test interface, test class, or test method.
 * `InvocationInterceptor` extensions may now explicitly `skip()` an intercepted
   invocation. This allows executing it by other means, e.g. in a forked JVM.
 
