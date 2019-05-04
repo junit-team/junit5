@@ -62,7 +62,7 @@ public class ConditionEvaluator {
 	private ConditionEvaluationResult evaluate(ExecutionCondition condition, ExtensionContext context) {
 		try {
 			ConditionEvaluationResult result = condition.evaluateExecutionCondition(context);
-			logResult(condition.getClass(), result);
+			logResult(condition.getClass(), result, context);
 			return result;
 		}
 		catch (Exception ex) {
@@ -70,8 +70,9 @@ public class ConditionEvaluator {
 		}
 	}
 
-	private void logResult(Class<?> conditionType, ConditionEvaluationResult result) {
-		logger.trace(() -> format("Evaluation of condition [%s] resulted in: %s", conditionType.getName(), result));
+	private void logResult(Class<?> conditionType, ConditionEvaluationResult result, ExtensionContext context) {
+		logger.trace(() -> format("Evaluation of condition [%s] on [%s] resulted in: %s", conditionType.getName(),
+			context.getElement().get(), result));
 	}
 
 	private ConditionEvaluationException evaluationException(Class<?> conditionType, Exception ex) {
