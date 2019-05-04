@@ -27,6 +27,8 @@ on GitHub.
 
 * `AnnotationSupport.findRepeatableAnnotations()` now finds repeatable annotations used as
   meta-annotations on other repeatable annotations.
+* New `AnnotationSupport.findRepeatableAnnotations()` variant that accepts a
+  `java.util.Optional<? extends AnnotatedElement>` argument.
 
 
 [[release-notes-5.5.0-M2-junit-jupiter]]

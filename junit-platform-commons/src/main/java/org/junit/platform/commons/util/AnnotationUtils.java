@@ -184,6 +184,20 @@ public final class AnnotationUtils {
 	}
 
 	/**
+	 * @since 1.5
+	 * @see org.junit.platform.commons.support.AnnotationSupport#findRepeatableAnnotations(Optional, Class)
+	 */
+	public static <A extends Annotation> List<A> findRepeatableAnnotations(Optional<? extends AnnotatedElement> element,
+			Class<A> annotationType) {
+
+		if (element == null || !element.isPresent()) {
+			return Collections.emptyList();
+		}
+
+		return findRepeatableAnnotations(element.get(), annotationType);
+	}
+
+	/**
 	 * @see org.junit.platform.commons.support.AnnotationSupport#findRepeatableAnnotations(AnnotatedElement, Class)
 	 */
 	public static <A extends Annotation> List<A> findRepeatableAnnotations(AnnotatedElement element,

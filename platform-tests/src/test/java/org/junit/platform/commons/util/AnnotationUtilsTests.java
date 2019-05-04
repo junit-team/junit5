@@ -184,8 +184,18 @@ class AnnotationUtilsTests {
 	}
 
 	@Test
+	void findRepeatableAnnotationsForNullOptionalAnnotatedElement() {
+		assertThat(findRepeatableAnnotations((Optional<AnnotatedElement>) null, Tag.class)).isEmpty();
+	}
+
+	@Test
+	void findRepeatableAnnotationsForEmptyOptionalAnnotatedElement() {
+		assertThat(findRepeatableAnnotations(Optional.empty(), Tag.class)).isEmpty();
+	}
+
+	@Test
 	void findRepeatableAnnotationsForNullAnnotatedElement() {
-		assertThat(findRepeatableAnnotations(null, Tag.class)).isEmpty();
+		assertThat(findRepeatableAnnotations((AnnotatedElement) null, Tag.class)).isEmpty();
 	}
 
 	@Test
