@@ -19,12 +19,16 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* Class `PreconditionViolationException` in concealed package
+ `org.junit.platform.commons.util` is now deprecated and substituted by an exception class
+  with the same name in exported package `org.junit.platform.commons`.
 
 ==== New Features and Improvements
 
 * `AnnotationSupport.findRepeatableAnnotations()` now finds repeatable annotations used as
   meta-annotations on other repeatable annotations.
+* New `AnnotationSupport.findRepeatableAnnotations()` variant that accepts a
+  `java.util.Optional<? extends AnnotatedElement>` argument.
 
 
 [[release-notes-5.5.0-M2-junit-jupiter]]
@@ -57,6 +61,8 @@ on GitHub.
 * New `InvocationInterceptor` extension API (see
   <<../user-guide/index.adoc#extensions-intercepting-invocations, User Guide>> for
   details)
+* New Kotlin friendly `assertDoesNotThrow` assertion added as top-level functions in the
+  `org.junit.jupiter.api` package
 * New `junit.jupiter.displayname.generator.default` configuration parameter to set the
   default `DisplayNameGenerator` that will be used unless `@DisplayName` or
   `@DisplayNameGeneration` are present.

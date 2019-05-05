@@ -21,6 +21,7 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.me
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.stream.Stream;
 
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestReporter;
@@ -39,9 +41,6 @@ import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
@@ -102,15 +101,17 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@ParameterizedTest
-	@EnumSource(InvocationType.class)
-	void callsInterceptors(InvocationType invocationType) {
+	@TestFactory
+	Stream<DynamicTest> callsInterceptors() {
 		var results = executeTestsForClass(TestCaseWithThreeInterceptors.class);
 
-		results.tests().assertStatistics(stats -> stats.failed(0).succeeded(4));
-		assertThat(getEvents(results, EnumSet.of(invocationType)).distinct()) //
-				.containsExactly("before:foo", "before:bar", "before:baz", "test", "after:baz", "after:bar",
-					"after:foo");
+		results.tests().assertStatistics(stats -> stats.failed(0).succeeded(3));
+		return Arrays.stream(InvocationType.values()) //
+				.map(invocationType -> dynamicTest(invocationType.name(), () -> {
+					assertThat(getEvents(results, EnumSet.of(invocationType)).distinct()) //
+							.containsExactly("before:foo", "before:bar", "before:baz", "test", "after:baz", "after:bar",
+								"after:foo");
+				}));
 	}
 
 	private Stream<String> getEvents(EngineExecutionResults results, EnumSet<InvocationType> types) {
@@ -143,9 +144,8 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 			publish(reporter, InvocationType.TEST_METHOD);
 		}
 
-		@ParameterizedTest
-		@ValueSource(ints = { 0, 1 })
-		void testTemplate(int i, TestReporter reporter) {
+		@RepeatedTest(1)
+		void testTemplate(TestReporter reporter) {
 			publish(reporter, InvocationType.TEST_TEMPLATE_METHOD);
 		}
 
@@ -244,11 +244,9 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 				throws Throwable {
 			assertEquals(testClass, invocationContext.getTargetClass());
 			assertThat(invocationContext.getTarget()).containsInstanceOf(testClass);
-			assertEquals(testClass.getDeclaredMethod("testTemplate", Integer.TYPE, TestReporter.class),
+			assertEquals(testClass.getDeclaredMethod("testTemplate", TestReporter.class),
 				invocationContext.getExecutable());
-			assertThat(invocationContext.getArguments()).hasSize(2);
-			assertThat(invocationContext.getArguments().get(0)).isInstanceOf(Integer.class);
-			assertThat(invocationContext.getArguments().get(1)).isInstanceOf(TestReporter.class);
+			assertThat(invocationContext.getArguments()).hasSize(1).hasOnlyElementsOfType(TestReporter.class);
 			reportAndProceed(invocation, extensionContext, InvocationType.TEST_TEMPLATE_METHOD);
 		}
 

@@ -30,6 +30,7 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Collection of utilities for working with {@link Collection Collections}.

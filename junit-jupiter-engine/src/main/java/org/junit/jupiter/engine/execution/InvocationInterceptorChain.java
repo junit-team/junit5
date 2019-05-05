@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.execution;
 import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
-import java.lang.reflect.Executable;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -28,8 +27,7 @@ import org.junit.platform.commons.util.ExceptionUtils;
 @API(status = INTERNAL, since = "5.5")
 public class InvocationInterceptorChain {
 
-	public <E extends Executable, T> T invoke(Invocation<T> invocation, ExtensionRegistry extensionRegistry,
-			InterceptorCall<T> call) {
+	public <T> T invoke(Invocation<T> invocation, ExtensionRegistry extensionRegistry, InterceptorCall<T> call) {
 		List<InvocationInterceptor> interceptors = extensionRegistry.getExtensions(InvocationInterceptor.class);
 		if (interceptors.isEmpty()) {
 			return proceed(invocation);
@@ -37,8 +35,9 @@ public class InvocationInterceptorChain {
 		return chainAndInvoke(invocation, call, interceptors);
 	}
 
-	private <E extends Executable, T> T chainAndInvoke(Invocation<T> invocation, InterceptorCall<T> call,
+	private <T> T chainAndInvoke(Invocation<T> invocation, InterceptorCall<T> call,
 			List<InvocationInterceptor> interceptors) {
+
 		ValidatingInvocation<T> validatingInvocation = new ValidatingInvocation<>(invocation, interceptors);
 		Invocation<T> chainedInvocation = chainInterceptors(validatingInvocation, call, interceptors);
 		T result = proceed(chainedInvocation);
@@ -46,8 +45,9 @@ public class InvocationInterceptorChain {
 		return result;
 	}
 
-	private <E extends Executable, T> Invocation<T> chainInterceptors(Invocation<T> invocation, InterceptorCall<T> call,
+	private <T> Invocation<T> chainInterceptors(Invocation<T> invocation, InterceptorCall<T> call,
 			List<InvocationInterceptor> interceptors) {
+
 		Invocation<T> result = invocation;
 		ListIterator<InvocationInterceptor> iterator = interceptors.listIterator(interceptors.size());
 		while (iterator.hasPrevious()) {
@@ -71,7 +71,7 @@ public class InvocationInterceptorChain {
 
 		T apply(InvocationInterceptor interceptor, Invocation<T> invocation) throws Throwable;
 
-		static <E extends Executable> InterceptorCall<Void> ofVoid(VoidInterceptorCall call) {
+		static InterceptorCall<Void> ofVoid(VoidInterceptorCall call) {
 			return ((interceptorChain, invocation) -> {
 				call.apply(interceptorChain, invocation);
 				return null;

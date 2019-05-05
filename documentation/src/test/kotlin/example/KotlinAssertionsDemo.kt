@@ -17,12 +17,22 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
 class KotlinAssertionsDemo {
 
-    val person = Person("Jane", "Doe")
-    val people = setOf(person, Person("John", "Doe"))
+    private val person = Person("Jane", "Doe")
+    private val people = setOf(person, Person("John", "Doe"))
+
+    @Test
+    fun `exception absence testing`() {
+        val calculator = Calculator()
+        val result = assertDoesNotThrow("Should not throw an exception") {
+            calculator.divide(0, 1)
+        }
+        assertEquals(0, result)
+    }
 
     @Test
     fun `expected exception testing`() {

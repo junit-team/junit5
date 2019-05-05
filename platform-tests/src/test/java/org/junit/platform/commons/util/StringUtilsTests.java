@@ -28,6 +28,7 @@ import static org.junit.platform.commons.util.StringUtils.replaceIsoControlChara
 import static org.junit.platform.commons.util.StringUtils.replaceWhitespaceCharacters;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Unit tests for {@link StringUtils}.

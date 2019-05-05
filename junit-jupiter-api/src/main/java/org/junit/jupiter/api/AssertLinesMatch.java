@@ -163,7 +163,6 @@ class AssertLinesMatch {
 		if (actualLines.size() > MAX_SNIPPET_LENGTH) {
 			actualLines.subList(0, MAX_SNIPPET_LENGTH);
 		}
-		// use standard assertEquals(Object, Object, message) to let IDEs present the textual difference
 		String newLine = System.lineSeparator();
 		String expected = newLine + join(newLine, expectedLines) + newLine;
 		String actual = newLine + join(newLine, actualLines) + newLine;
