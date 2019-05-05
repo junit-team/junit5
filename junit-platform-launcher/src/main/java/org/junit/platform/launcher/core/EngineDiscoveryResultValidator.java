@@ -30,7 +30,7 @@ class EngineDiscoveryResultValidator {
 	/**
 	 *  Perform common validation checks.
 	 *
-	 * @throws org.junit.platform.commons.util.PreconditionViolationException if any check fails
+	 * @throws org.junit.platform.commons.PreconditionViolationException if any check fails
 	 */
 	void validate(TestEngine testEngine, TestDescriptor root) {
 		Preconditions.notNull(root,

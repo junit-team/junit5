@@ -15,7 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.util.Objects;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;

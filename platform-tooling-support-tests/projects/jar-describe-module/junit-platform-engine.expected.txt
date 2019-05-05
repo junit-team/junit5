@@ -1,12 +1,12 @@
->> 1 line header: No module descriptor found. Derived automatic module. >>
-
-org.junit.platform.engine@${platformVersion} automatic
+org.junit.platform.engine@${platformVersion} jar:file:.+junit-platform-engine/build/libs/junit-platform-engine-${platformVersion}.jar/!module-info.class
+exports org.junit.platform.engine
+exports org.junit.platform.engine.discovery
+exports org.junit.platform.engine.reporting
+exports org.junit.platform.engine.support.config
+exports org.junit.platform.engine.support.descriptor
+exports org.junit.platform.engine.support.discovery
+exports org.junit.platform.engine.support.hierarchical
 requires java.base mandated
-contains org.junit.platform.engine
-contains org.junit.platform.engine.discovery
-contains org.junit.platform.engine.reporting
-contains org.junit.platform.engine.support.config
-contains org.junit.platform.engine.support.descriptor
-contains org.junit.platform.engine.support.discovery
-contains org.junit.platform.engine.support.filter
-contains org.junit.platform.engine.support.hierarchical
+requires org.apiguardian.api transitive
+requires org.junit.platform.commons transitive
+requires org.opentest4j transitive

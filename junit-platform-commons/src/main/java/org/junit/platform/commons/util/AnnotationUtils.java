@@ -29,6 +29,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
@@ -58,6 +59,9 @@ public final class AnnotationUtils {
 	private AnnotationUtils() {
 		/* no-op */
 	}
+
+	private static final ConcurrentHashMap<Class<? extends Annotation>, Boolean> repeatableAnnotationContainerCache = //
+		new ConcurrentHashMap<>(16);
 
 	/**
 	 * Determine if an annotation of {@code annotationType} is either
@@ -180,6 +184,20 @@ public final class AnnotationUtils {
 	}
 
 	/**
+	 * @since 1.5
+	 * @see org.junit.platform.commons.support.AnnotationSupport#findRepeatableAnnotations(Optional, Class)
+	 */
+	public static <A extends Annotation> List<A> findRepeatableAnnotations(Optional<? extends AnnotatedElement> element,
+			Class<A> annotationType) {
+
+		if (element == null || !element.isPresent()) {
+			return Collections.emptyList();
+		}
+
+		return findRepeatableAnnotations(element.get(), annotationType);
+	}
+
+	/**
 	 * @see org.junit.platform.commons.support.AnnotationSupport#findRepeatableAnnotations(AnnotatedElement, Class)
 	 */
 	public static <A extends Annotation> List<A> findRepeatableAnnotations(AnnotatedElement element,
@@ -260,6 +278,16 @@ public final class AnnotationUtils {
 					Annotation[] containedAnnotations = (Annotation[]) ReflectionUtils.invokeMethod(method, candidate);
 					found.addAll((Collection<? extends A>) asList(containedAnnotations));
 				}
+				// Nested container annotation?
+				else if (isRepeatableAnnotationContainer(candidateAnnotationType)) {
+					Method method = ReflectionUtils.tryToGetMethod(candidateAnnotationType, "value").toOptional().get();
+					Annotation[] containedAnnotations = (Annotation[]) ReflectionUtils.invokeMethod(method, candidate);
+
+					for (Annotation containedAnnotation : containedAnnotations) {
+						findRepeatableAnnotations(containedAnnotation.getClass(), annotationType, containerType,
+							inherited, found, visited);
+					}
+				}
 				// Otherwise search recursively through the meta-annotation hierarchy...
 				else {
 					findRepeatableAnnotations(candidateAnnotationType, annotationType, containerType, inherited, found,
@@ -267,6 +295,26 @@ public final class AnnotationUtils {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Determine if the supplied annotation type is a container for a repeatable
+	 * annotation.
+	 *
+	 * @since 1.5
+	 */
+	private static boolean isRepeatableAnnotationContainer(Class<? extends Annotation> candidateContainerType) {
+		return repeatableAnnotationContainerCache.computeIfAbsent(candidateContainerType, candidate -> {
+			// @formatter:off
+			Repeatable repeatable = Arrays.stream(candidate.getMethods())
+					.filter(attribute -> attribute.getName().equals("value") && attribute.getReturnType().isArray())
+					.findFirst()
+					.map(attribute -> attribute.getReturnType().getComponentType().getAnnotation(Repeatable.class))
+					.orElse(null);
+			// @formatter:on
+
+			return repeatable != null && candidate.equals(repeatable.value());
+		});
 	}
 
 	/**

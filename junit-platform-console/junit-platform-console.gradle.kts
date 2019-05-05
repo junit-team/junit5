@@ -1,5 +1,7 @@
+import java.util.spi.ToolProvider
+
 plugins {
-	`java-library`
+	`java-library-conventions`
 	id("com.github.johnrengelman.shadow")
 }
 
@@ -23,15 +25,17 @@ tasks {
 			include("LICENSE-picocli.md")
 			into("META-INF")
 		}
+		doLast {
+			ToolProvider.findFirst("jar").get().run(System.out, System.err, "--update",
+					"--file", archiveFile.get().asFile.absolutePath,
+					"--main-class", "org.junit.platform.console.ConsoleLauncher")
+		}
 	}
 	jar {
 		enabled = false
 		dependsOn(shadowJar)
 		manifest {
-			attributes(
-					"Main-Class" to "org.junit.platform.console.ConsoleLauncher",
-					"Automatic-Module-Name" to "org.junit.platform.console"
-			)
+			attributes("Main-Class" to "org.junit.platform.console.ConsoleLauncher")
 		}
 	}
 }

@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.EnumSource.Mode;
-import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * @since 5.0

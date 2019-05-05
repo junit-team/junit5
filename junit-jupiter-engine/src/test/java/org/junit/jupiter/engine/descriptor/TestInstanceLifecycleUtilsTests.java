@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.engine.config.DefaultJupiterConfiguration;
-import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 
 /**

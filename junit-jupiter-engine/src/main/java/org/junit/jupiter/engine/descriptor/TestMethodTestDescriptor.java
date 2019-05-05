@@ -27,6 +27,7 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.extension.TestWatcher;
@@ -34,6 +35,7 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.ExecutableInvoker;
+import org.junit.jupiter.engine.execution.ExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.logging.Logger;
@@ -71,15 +73,21 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	public static final String SEGMENT_TYPE = "method";
 	private static final ExecutableInvoker executableInvoker = new ExecutableInvoker();
 	private static final Logger logger = LoggerFactory.getLogger(TestMethodTestDescriptor.class);
+	private static final ReflectiveInterceptorCall<Method, Void> defaultInterceptorCall = ReflectiveInterceptorCall.ofVoidMethod(
+		InvocationInterceptor::interceptTestMethod);
+
+	private final ReflectiveInterceptorCall<Method, Void> interceptorCall;
 
 	public TestMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod,
 			JupiterConfiguration configuration) {
 		super(uniqueId, testClass, testMethod, configuration);
+		this.interceptorCall = defaultInterceptorCall;
 	}
 
 	TestMethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod,
-			JupiterConfiguration configuration) {
+			JupiterConfiguration configuration, ReflectiveInterceptorCall<Method, Void> interceptorCall) {
 		super(uniqueId, displayName, testClass, testMethod, configuration);
+		this.interceptorCall = interceptorCall;
 	}
 
 	@Override
@@ -182,7 +190,8 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			try {
 				Method testMethod = getTestMethod();
 				Object instance = extensionContext.getRequiredTestInstance();
-				executableInvoker.invoke(testMethod, instance, extensionContext, context.getExtensionRegistry());
+				executableInvoker.invoke(testMethod, instance, extensionContext, context.getExtensionRegistry(),
+					interceptorCall);
 			}
 			catch (Throwable throwable) {
 				BlacklistedExceptions.rethrowIfBlacklisted(throwable);

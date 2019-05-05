@@ -1,5 +1,5 @@
 plugins {
-	`java-library`
+	`java-library-conventions`
 }
 
 description = "JUnit Platform Runner"
@@ -10,12 +10,4 @@ dependencies {
 
 	api(project(":junit-platform-launcher"))
 	api(project(":junit-platform-suite-api"))
-}
-
-tasks.jar {
-	manifest {
-		attributes(
-			"Automatic-Module-Name" to "org.junit.platform.runner"
-		)
-	}
 }

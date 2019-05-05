@@ -51,32 +51,53 @@ public interface TestWatcher extends Extension {
 	/**
 	 * Invoked after a disabled test has been skipped.
 	 *
+	 * <p>The default implementation does nothing. Concrete implementations can
+	 * override this method as appropriate.
+	 *
 	 * @param context the current extension context; never {@code null}
-	 * @param reason the reason the test is disabled; never {@code null}
+	 * @param reason the reason the test is disabled; never {@code null} but
+	 * potentially <em>empty</em>
 	 */
-	void testDisabled(ExtensionContext context, Optional<String> reason);
+	default void testDisabled(ExtensionContext context, Optional<String> reason) {
+		/* no-op */
+	}
 
 	/**
 	 * Invoked after a test has completed successfully.
 	 *
+	 * <p>The default implementation does nothing. Concrete implementations can
+	 * override this method as appropriate.
+	 *
 	 * @param context the current extension context; never {@code null}
 	 */
-	void testSuccessful(ExtensionContext context);
+	default void testSuccessful(ExtensionContext context) {
+		/* no-op */
+	}
 
 	/**
 	 * Invoked after a test has been aborted.
 	 *
+	 * <p>The default implementation does nothing. Concrete implementations can
+	 * override this method as appropriate.
+	 *
 	 * @param context the current extension context; never {@code null}
 	 * @param cause the throwable responsible for the test being aborted; may be {@code null}
 	 */
-	void testAborted(ExtensionContext context, Throwable cause);
+	default void testAborted(ExtensionContext context, Throwable cause) {
+		/* no-op */
+	}
 
 	/**
 	 * Invoked after a test has failed.
 	 *
+	 * <p>The default implementation does nothing. Concrete implementations can
+	 * override this method as appropriate.
+	 *
 	 * @param context the current extension context; never {@code null}
 	 * @param cause the throwable that caused test failure; may be {@code null}
 	 */
-	void testFailed(ExtensionContext context, Throwable cause);
+	default void testFailed(ExtensionContext context, Throwable cause) {
+		/* no-op */
+	}
 
 }

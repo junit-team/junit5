@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;

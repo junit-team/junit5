@@ -127,9 +127,36 @@ public final class AnnotationSupport {
 	}
 
 	/**
-	 * Find all <em>repeatable</em> {@linkplain Annotation annotations} of
-	 * {@code annotationType} that are either <em>present</em>, <em>indirectly
-	 * present</em>, or <em>meta-present</em> on the supplied {@link AnnotatedElement}.
+	 * Find all <em>repeatable</em> {@linkplain Annotation annotations} of the
+	 * supplied {@code annotationType} that are either <em>present</em>,
+	 * <em>indirectly present</em>, or <em>meta-present</em> on the supplied
+	 * optional {@code element}.
+	 *
+	 * <p>See {@link #findRepeatableAnnotations(AnnotatedElement, Class)} for
+	 * details of the algorithm used.
+	 *
+	 * @param <A> the annotation type
+	 * @param element an {@link Optional} containing the element on which to
+	 * search for the annotation; may be {@code null} or <em>empty</em>
+	 * @param annotationType the repeatable annotation type to search for; never {@code null}
+	 * @return an immutable list of all such annotations found; never {@code null}
+	 * @since 1.5
+	 * @see java.lang.annotation.Repeatable
+	 * @see java.lang.annotation.Inherited
+	 * @see #findRepeatableAnnotations(AnnotatedElement, Class)
+	 */
+	@API(status = MAINTAINED, since = "1.5")
+	public static <A extends Annotation> List<A> findRepeatableAnnotations(Optional<? extends AnnotatedElement> element,
+			Class<A> annotationType) {
+
+		return AnnotationUtils.findRepeatableAnnotations(element, annotationType);
+	}
+
+	/**
+	 * Find all <em>repeatable</em> {@linkplain Annotation annotations} of the
+	 * supplied {@code annotationType} that are either <em>present</em>,
+	 * <em>indirectly present</em>, or <em>meta-present</em> on the supplied
+	 * {@link AnnotatedElement}.
 	 *
 	 * <p>This method extends the functionality of
 	 * {@link java.lang.reflect.AnnotatedElement#getAnnotationsByType(Class)}
@@ -153,10 +180,14 @@ public final class AnnotationSupport {
 	 * <p>If the supplied {@code element} is {@code null}, this method simply
 	 * returns an empty list.
 	 *
+	 * <p>As of JUnit Platform 1.5, the search algorithm will also find
+	 * repeatable annotations used as meta-annotations on other repeatable
+	 * annotations.
+	 *
 	 * @param <A> the annotation type
 	 * @param element the element to search on; may be {@code null}
 	 * @param annotationType the repeatable annotation type to search for; never {@code null}
-	 * @return the list of all such annotations found; neither {@code null} nor mutable
+	 * @return an immutable list of all such annotations found; never {@code null}
 	 * @see java.lang.annotation.Repeatable
 	 * @see java.lang.annotation.Inherited
 	 */

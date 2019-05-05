@@ -1,0 +1,34 @@
+[[release-notes-5.4.2]]
+== 5.4.2
+
+*Date of Release:* April 7, 2019
+
+*Scope:* Bug fixes since 5.4.1
+
+For a complete list of all _closed_ issues and pull requests for this release, consult
+the link:{junit5-repo}+/milestone/38?closed=1+[5.4.2] milestone page in the JUnit
+repository on GitHub.
+
+
+[[release-notes-5.4.2-junit-platform]]
+=== JUnit Platform
+
+No changes.
+
+
+[[release-notes-5.4.2-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* Parameterized tests no longer throw an `ArrayStoreException` when creating human-readable
+  test names.
+
+
+[[release-notes-5.4.2-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* Safeguard against `Runners` that only report tests as failed but not as started or
+  finished such as Spock in case of failures during data-provider preparation.

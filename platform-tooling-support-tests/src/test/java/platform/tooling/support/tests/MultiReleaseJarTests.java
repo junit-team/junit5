@@ -37,34 +37,45 @@ class MultiReleaseJarTests {
 			">> BANNER >>", //
 			".", //
 			"'-- JUnit Jupiter [OK]", //
+			"  +-- ModuleUtilsTests [OK]", //
+			"  | +-- javaPlatformModuleSystemIsAvailable() [OK]", //
+			"  | +-- findAllClassesInModule() [OK]", //
+			"  | +-- findAllNonSystemBootModuleNames() [OK]", //
+			"  | '-- preconditions() [OK]", //
 			"  '-- JupiterIntegrationTests [OK]", //
-			"    +-- javaPlatformModuleSystemIsAvailable() [OK]", //
 			"    +-- javaScriptingModuleIsAvailable() [OK]", //
-			"    +-- moduleIsNamed() [OK]", //
+			"    +-- moduleIsNamed() [A] Assumption failed: not running on the module-path", //
 			"    +-- packageName() [OK]", //
 			"    '-- resolve() [OK]", //
 			"", //
 			"Test run finished after \\d+ ms", //
-			"[         2 containers found      ]", //
+			"[         3 containers found      ]", //
 			"[         0 containers skipped    ]", //
-			"[         2 containers started    ]", //
+			"[         3 containers started    ]", //
 			"[         0 containers aborted    ]", //
-			"[         2 containers successful ]", //
+			"[         3 containers successful ]", //
 			"[         0 containers failed     ]", //
-			"[         5 tests found           ]", //
+			"[         8 tests found           ]", //
 			"[         0 tests skipped         ]", //
-			"[         5 tests started         ]", //
-			"[         0 tests aborted         ]", //
-			"[         5 tests successful      ]", //
+			"[         8 tests started         ]", //
+			"[         1 tests aborted         ]", //
+			"[         7 tests successful      ]", //
 			"[         0 tests failed          ]", //
 			"" //
 		);
 
-		var result = mvn(variant, expectedLines);
+		var result = mvn(variant);
+
+		result.getOutputLines("out").forEach(System.out::println);
+		result.getOutputLines("err").forEach(System.err::println);
 
 		assertEquals(0, result.getExitCode(), result.toString());
 		assertEquals("", result.getOutput("err"));
 		assertTrue(result.getOutputLines("out").contains("[INFO] BUILD SUCCESS"));
+
+		var workspace = Path.of("build/test-workspace/multi-release-jar", variant);
+		var actualLines = Files.readAllLines(workspace.resolve("target/junit-platform/console-launcher.out.log"));
+		assertLinesMatch(expectedLines, actualLines);
 	}
 
 	@Test
@@ -74,7 +85,6 @@ class MultiReleaseJarTests {
 			">> BANNER >>", ".", //
 			"'-- JUnit Jupiter [OK]", //
 			"  '-- JupiterIntegrationTests [OK]", //
-			"    +-- javaPlatformModuleSystemIsAvailable() [OK]", //
 			"    \\Q+-- javaScriptingModuleIsAvailable() [X] Failed to evaluate condition" //
 					+ " [org.junit.jupiter.engine.extension.ScriptExecutionCondition]:" //
 					+ " Class `javax.script.ScriptEngine` is not loadable," //
@@ -97,22 +107,29 @@ class MultiReleaseJarTests {
 			"[         0 containers aborted    ]", //
 			"[         2 containers successful ]", //
 			"[         0 containers failed     ]", //
-			"[         5 tests found           ]", //
+			"[         4 tests found           ]", //
 			"[         0 tests skipped         ]", //
-			"[         5 tests started         ]", //
+			"[         4 tests started         ]", //
 			"[         0 tests aborted         ]", //
-			"[         4 tests successful      ]", //
+			"[         3 tests successful      ]", //
 			"[         1 tests failed          ]", //
 			"" //
 		);
-		var result = mvn(variant, expectedLines);
+		var result = mvn(variant);
+
+		result.getOutputLines("out").forEach(System.out::println);
+		result.getOutputLines("err").forEach(System.err::println);
 
 		assertEquals(1, result.getExitCode(), result.toString());
 		assertEquals("", result.getOutput("err"));
 		assertTrue(result.getOutputLines("out").contains("[INFO] BUILD FAILURE"));
+
+		var workspace = Path.of("build/test-workspace/multi-release-jar", variant);
+		var actualLines = Files.readAllLines(workspace.resolve("target/junit-platform/console-launcher.out.log"));
+		assertLinesMatch(expectedLines, actualLines);
 	}
 
-	private Result mvn(String variant, List<String> expectedLines) throws Exception {
+	private Result mvn(String variant) {
 		var result = Request.builder() //
 				.setTool(Request.maven()) //
 				.setProject("multi-release-jar") //
@@ -122,10 +139,6 @@ class MultiReleaseJarTests {
 				.run();
 
 		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
-
-		var workspace = Path.of("build/test-workspace/multi-release-jar", variant);
-		var actualLines = Files.readAllLines(workspace.resolve("target/junit-platform/console-launcher.out.log"));
-		assertLinesMatch(expectedLines, actualLines);
 
 		return result;
 	}

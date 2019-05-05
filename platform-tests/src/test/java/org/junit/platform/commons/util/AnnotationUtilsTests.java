@@ -44,6 +44,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Unit tests for {@link AnnotationUtils}.
@@ -183,8 +184,18 @@ class AnnotationUtilsTests {
 	}
 
 	@Test
+	void findRepeatableAnnotationsForNullOptionalAnnotatedElement() {
+		assertThat(findRepeatableAnnotations((Optional<AnnotatedElement>) null, Tag.class)).isEmpty();
+	}
+
+	@Test
+	void findRepeatableAnnotationsForEmptyOptionalAnnotatedElement() {
+		assertThat(findRepeatableAnnotations(Optional.empty(), Tag.class)).isEmpty();
+	}
+
+	@Test
 	void findRepeatableAnnotationsForNullAnnotatedElement() {
-		assertThat(findRepeatableAnnotations(null, Tag.class)).isEmpty();
+		assertThat(findRepeatableAnnotations((AnnotatedElement) null, Tag.class)).isEmpty();
 	}
 
 	@Test
@@ -255,6 +266,15 @@ class AnnotationUtilsTests {
 	@Test
 	void findInheritedRepeatableAnnotationsWithSingleComposedAnnotation() {
 		assertExtensionsFound(SingleComposedExtensionClass.class, "foo");
+	}
+
+	/**
+	 * @since 1.5
+	 */
+	@Test
+	void findInheritedRepeatableAnnotationsWithComposedAnnotationsInNestedContainer() {
+		assertExtensionsFound(MultipleFoos1.class, "foo");
+		assertExtensionsFound(MultipleFoos2.class, "foo");
 	}
 
 	@Test
@@ -610,7 +630,18 @@ class AnnotationUtilsTests {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited
 	@ExtendWith("foo")
+	@Repeatable(FooExtensions.class)
 	@interface ExtendWithFoo {
+
+		String info() default "";
+	}
+
+	@Target({ ElementType.TYPE, ElementType.METHOD })
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@interface FooExtensions {
+
+		ExtendWithFoo[] value();
 	}
 
 	@Target({ ElementType.TYPE, ElementType.METHOD })
@@ -764,6 +795,15 @@ class AnnotationUtilsTests {
 
 	@ExtendWithFoo
 	static class SingleComposedExtensionClass {
+	}
+
+	@ExtendWithFoo(info = "A")
+	@ExtendWithFoo(info = "B")
+	static class MultipleFoos1 {
+	}
+
+	@FooExtensions({ @ExtendWithFoo(info = "A"), @ExtendWithFoo(info = "B") })
+	static class MultipleFoos2 {
 	}
 
 	static class SubSingleComposedExtensionClass extends SingleComposedExtensionClass {

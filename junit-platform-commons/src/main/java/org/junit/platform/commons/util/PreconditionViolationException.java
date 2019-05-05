@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.util;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -20,8 +20,10 @@ import org.junit.platform.commons.JUnitException;
  *
  * @since 1.0
  * @see Preconditions
+ * @deprecated Use {@linkplain org.junit.platform.commons.PreconditionViolationException} instead.
  */
-@API(status = INTERNAL, since = "1.0")
+@API(status = DEPRECATED, since = "1.5")
+@Deprecated
 public class PreconditionViolationException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;

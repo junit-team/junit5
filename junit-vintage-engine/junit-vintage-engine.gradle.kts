@@ -1,5 +1,5 @@
 plugins {
-	`java-library`
+	`java-library-conventions`
 }
 
 apply(from = "$rootDir/gradle/testing.gradle.kts")
@@ -17,12 +17,4 @@ dependencies {
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(path = ":junit-jupiter-engine", configuration = "testArtifacts"))
 	testImplementation(project(":junit-platform-testkit"))
-}
-
-tasks.jar {
-	manifest {
-		attributes(
-			"Automatic-Module-Name" to "org.junit.vintage.engine"
-		)
-	}
 }

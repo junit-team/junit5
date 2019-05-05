@@ -51,6 +51,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested1;
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested2;
