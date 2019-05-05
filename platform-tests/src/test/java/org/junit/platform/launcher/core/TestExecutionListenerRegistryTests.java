@@ -33,7 +33,7 @@ import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 @TrackLogRecords
-class TestExecutionListenerRegistryTest {
+class TestExecutionListenerRegistryTests {
 
 	private TestExecutionListenerRegistry registry = new TestExecutionListenerRegistry();
 	private TestExecutionListener compositeTestExecutionListener;
