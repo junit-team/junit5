@@ -43,12 +43,18 @@ abstract class DynamicNodeTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	@Override
-	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
-		return context.extend().withExtensionContext(null).build();
+	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
+		DynamicExtensionContext extensionContext = new DynamicExtensionContext(context.getExtensionContext(),
+			context.getExecutionListener(), this, context.getConfiguration());
+		// @formatter:off
+		return context.extend()
+				.withExtensionContext(extensionContext)
+				.build();
+		// @formatter:on
 	}
 
 	@Override
-	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
+	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) {
 		return SkipResult.doNotSkip();
 	}
 

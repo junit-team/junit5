@@ -20,8 +20,8 @@ import com.univocity.parsers.csv.CsvParserSettings;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.BlacklistedExceptions;
-import org.junit.platform.commons.util.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -45,7 +45,7 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 		settings.getFormat().setLineSeparator(LINE_SEPARATOR);
 		settings.getFormat().setQuote('\'');
 		settings.getFormat().setQuoteEscape('\'');
-		settings.setEmptyValue("");
+		settings.setEmptyValue(this.annotation.emptyValue());
 		settings.setAutoConfigurationEnabled(false);
 		CsvParser csvParser = new CsvParser(settings);
 		AtomicLong index = new AtomicLong(0);

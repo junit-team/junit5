@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.function.Executable;
-import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.opentest4j.AssertionFailedError;
 import org.opentest4j.MultipleFailuresError;
 

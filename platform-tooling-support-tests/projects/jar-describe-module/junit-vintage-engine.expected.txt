@@ -1,10 +1,7 @@
->> 1 line header: No module descriptor found. Derived automatic module. >>
-
-org.junit.vintage.engine@${vintageVersion} automatic
+org.junit.vintage.engine@${vintageVersion} jar:file:.+junit-vintage-engine/build/libs/junit-vintage-engine-${jupiterVersion}.jar/!module-info.class
 requires java.base mandated
-provides org.junit.platform.engine.TestEngine with org.junit.vintage.engine.[V|v]intage[T|t]est[E|e]ngine
+requires junit transitive
+requires org.apiguardian.api transitive
+requires org.junit.platform.engine transitive
+provides org.junit.platform.engine.TestEngine with org.junit.vintage.engine.VintageTestEngine
 contains org.junit.vintage.engine
-contains org.junit.vintage.engine.descriptor
-contains org.junit.vintage.engine.discovery
-contains org.junit.vintage.engine.execution
-contains org.junit.vintage.engine.support

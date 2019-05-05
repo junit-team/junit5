@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestTag;

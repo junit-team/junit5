@@ -19,8 +19,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -31,6 +33,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.execution.ExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -58,7 +61,8 @@ class ExecutableInvokerTests {
 
 		Class<ConstructorInjectionTestCase> outerClass = ConstructorInjectionTestCase.class;
 		Constructor<ConstructorInjectionTestCase> constructor = ReflectionUtils.getDeclaredConstructor(outerClass);
-		ConstructorInjectionTestCase outer = newInvoker().invoke(constructor, extensionContext, extensionRegistry);
+		ConstructorInjectionTestCase outer = newInvoker().invoke(constructor, Optional.empty(), extensionContext,
+			extensionRegistry, passthroughInterceptor());
 
 		assertNotNull(outer);
 		assertEquals(ENIGMA, outer.str);
@@ -66,8 +70,8 @@ class ExecutableInvokerTests {
 		Class<ConstructorInjectionTestCase.NestedTestCase> innerClass = ConstructorInjectionTestCase.NestedTestCase.class;
 		Constructor<ConstructorInjectionTestCase.NestedTestCase> innerConstructor = ReflectionUtils.getDeclaredConstructor(
 			innerClass);
-		ConstructorInjectionTestCase.NestedTestCase inner = newInvoker().invoke(innerConstructor, outer,
-			extensionContext, extensionRegistry);
+		ConstructorInjectionTestCase.NestedTestCase inner = newInvoker().invoke(innerConstructor, Optional.of(outer),
+			extensionContext, extensionRegistry, passthroughInterceptor());
 
 		assertNotNull(inner);
 		assertEquals(42, inner.num);
@@ -78,8 +82,8 @@ class ExecutableInvokerTests {
 		Constructor<ConstructorInjectionTestCase> constructor = ReflectionUtils.getDeclaredConstructor(
 			ConstructorInjectionTestCase.class);
 
-		Exception exception = assertThrows(ParameterResolutionException.class,
-			() -> newInvoker().invoke(constructor, extensionContext, extensionRegistry));
+		Exception exception = assertThrows(ParameterResolutionException.class, () -> newInvoker().invoke(constructor,
+			Optional.empty(), extensionContext, extensionRegistry, passthroughInterceptor()));
 
 		assertThat(exception.getMessage())//
 				.contains("No ParameterResolver registered for parameter [java.lang.String")//
@@ -88,9 +92,9 @@ class ExecutableInvokerTests {
 	}
 
 	@Test
-	void invokingMethodsWithoutParameterDoesNotDependOnExtensions() {
+	void invokingMethodsWithoutParameterDoesNotDependOnParameterResolvers() {
 		testMethodWithNoParameters();
-		extensionRegistry = null;
+		throwDuringParameterResolution(new RuntimeException("boom!"));
 
 		invokeMethod();
 
@@ -315,7 +319,12 @@ class ExecutableInvokerTests {
 	}
 
 	private void invokeMethod() {
-		newInvoker().invoke(this.method, this.instance, this.extensionContext, this.extensionRegistry);
+		newInvoker().invoke(this.method, this.instance, this.extensionContext, this.extensionRegistry,
+			passthroughInterceptor());
+	}
+
+	static <E extends Executable, T> ReflectiveInterceptorCall<E, T> passthroughInterceptor() {
+		return (interceptor, invocation, invocationContext, extensionContext) -> invocation.proceed();
 	}
 
 	// -------------------------------------------------------------------------

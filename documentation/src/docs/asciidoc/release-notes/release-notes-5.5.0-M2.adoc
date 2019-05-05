@@ -19,12 +19,16 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* Class `PreconditionViolationException` in concealed package
+ `org.junit.platform.commons.util` is now deprecated and substituted by an exception class
+  with the same name in exported package `org.junit.platform.commons`.
 
 ==== New Features and Improvements
 
 * `AnnotationSupport.findRepeatableAnnotations()` now finds repeatable annotations used as
   meta-annotations on other repeatable annotations.
+* New `AnnotationSupport.findRepeatableAnnotations()` variant that accepts a
+  `java.util.Optional<? extends AnnotatedElement>` argument.
 * Exceptions thrown by `TestExecutionListeners` no longer cause test execution to abort.
   Instead, they will be logged as warnings now.
 
@@ -34,7 +38,10 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Execution of dynamic tests registered via a `@TestFactory` method no longer results in
+  an `OutOfMemoryError` if the executables in the dynamic tests retain references to
+  objects consuming large amounts of memory. Technically speaking, JUnit Jupiter no longer
+  retains references to instances of `DynamicTest` after they have been executed.
 
 ==== Deprecations and Breaking Changes
 
@@ -42,10 +49,20 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* New overloaded variants of `Assertions.assertLinesMatch(...)` that accept a `String` or
+  a `Supplier<String>` for a custom failure message.
+* Failure messages for `Assertions.assertLinesMatch(...)` now emit each expected and
+  actual line in a dedicated line.
 * `MethodOrderer.Random` now generates a default random seed only once and prints it to
   the log in order to allow reproducible builds.
 * Methods ordered with `MethodOrderer.Random` now execute using the `SAME_THREAD`
   concurrency mode instead of the `CONCURRENT` mode when no custom seed is provided.
+* New `emptyValue` attribute in `@CsvFileSource` and `@CsvSource`.
+* All methods in the `TestWatcher` API are now interface `default` methods with empty
+  implementations.
+* New `InvocationInterceptor` extension API (see
+  <<../user-guide/index.adoc#extensions-intercepting-invocations, User Guide>> for
+  details)
 
 
 [[release-notes-5.5.0-M2-junit-vintage]]

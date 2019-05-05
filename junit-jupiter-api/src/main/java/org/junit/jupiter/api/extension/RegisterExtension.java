@@ -40,9 +40,9 @@ import org.apiguardian.api.API;
  * via {@code @ExtendWith}. Such <em>static</em> extensions are not limited in
  * which extension APIs they can implement. Extensions registered via static
  * fields may therefore implement class-level and instance-level extension APIs
- * such as {@link BeforeAllCallback}, {@link AfterAllCallback}, and
- * {@link TestInstancePostProcessor} as well as method-level extension APIs
- * such as {@link BeforeEachCallback}, etc.
+ * such as {@link BeforeAllCallback}, {@link AfterAllCallback},
+ * {@link TestInstanceFactory}, and {@link TestInstancePostProcessor} as well as
+ * method-level extension APIs such as {@link BeforeEachCallback}, etc.
  *
  * <h3>Instance Fields</h3>
  *
@@ -53,14 +53,33 @@ import org.apiguardian.api.API;
  * test instance (potentially injecting the instance of the extension to be
  * used into the annotated field). Thus, if such an <em>instance</em> extension
  * implements class-level or instance-level extension APIs such as
- * {@link BeforeAllCallback}, {@link AfterAllCallback}, or
- * {@link TestInstancePostProcessor} those APIs will not be honored. By default,
- * an instance extension will be registered <em>after</em> extensions that are
- * registered at the method level via {@code @ExtendWith}; however, if the test
- * class is configured with
+ * {@link BeforeAllCallback}, {@link AfterAllCallback},
+ * {@link TestInstanceFactory}, or {@link TestInstancePostProcessor} those APIs
+ * will not be honored. By default, an instance extension will be registered
+ * <em>after</em> extensions that are registered at the method level via
+ * {@code @ExtendWith}; however, if the test class is configured with
  * {@link org.junit.jupiter.api.TestInstance.Lifecycle @TestInstance(Lifecycle.PER_CLASS)}
  * semantics, an instance extension will be registered <em>before</em> extensions
  * that are registered at the method level via {@code @ExtendWith}.
+ *
+ * <h3>Inheritance</h3>
+ *
+ * <p>{@code @RegisterExtension} fields are inherited from superclasses as long
+ * as they are not <em>hidden</em> or <em>overridden</em>. Furthermore,
+ * {@code @RegisterExtension} fields from superclasses will be registered before
+ * {@code @RegisterExtension} fields in subclasses.
+ *
+ * <h3>Registration Order</h3>
+ *
+ * <p>By default, if multiple extensions are registered via
+ * {@code @RegisterExtension}, they will be ordered using an algorithm that is
+ * deterministic but intentionally nonobvious. This ensures that subsequent runs
+ * of a test suite execute extensions in the same order, thereby allowing for
+ * repeatable builds. However, there are times when extensions need to be
+ * registered in an explicit order. To achieve that, annotate each
+ * {@code @RegisterExtension} field with {@link org.junit.jupiter.api.Order @Order}.
+ * Any {@code @RegisterExtension} field not annotated with {@code @Order} will
+ * appear at the end of the sorted list.
  *
  * <h3>Example Usage</h3>
  *
@@ -88,18 +107,6 @@ import org.apiguardian.api.API;
  *     }
  * }</pre>
  *
- * <h3>Registration Order</h3>
- *
- * <p>By default, if multiple extensions are registered via
- * {@code @RegisterExtension}, they will be ordered using an algorithm that is
- * deterministic but intentionally nonobvious. This ensures that subsequent runs
- * of a test suite execute extensions in the same order, thereby allowing for
- * repeatable builds. However, there are times when extensions need to be
- * registered in an explicit order. To achieve that, annotate each
- * {@code @RegisterExtension} field with {@link org.junit.jupiter.api.Order @Order}.
- * Any {@code @RegisterExtension} field not annotated with {@code @Order} will
- * appear at the end of the sorted list.
- *
  * <h3>Supported Extension APIs</h3>
  *
  * <ul>
@@ -110,10 +117,12 @@ import org.apiguardian.api.API;
  * <li>{@link AfterEachCallback}</li>
  * <li>{@link BeforeTestExecutionCallback}</li>
  * <li>{@link AfterTestExecutionCallback}</li>
+ * <li>{@link TestInstanceFactory}</li>
  * <li>{@link TestInstancePostProcessor}</li>
  * <li>{@link ParameterResolver}</li>
  * <li>{@link TestExecutionExceptionHandler}</li>
  * <li>{@link TestTemplateInvocationContextProvider}</li>
+ * <li>{@link TestWatcher}</li>
  * </ul>
  *
  * @since 5.1

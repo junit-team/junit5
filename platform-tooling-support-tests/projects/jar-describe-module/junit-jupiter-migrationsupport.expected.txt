@@ -1,9 +1,10 @@
->> 1 line header: No module descriptor found. Derived automatic module. >>
-
-org.junit.jupiter.migrationsupport@${jupiterVersion} automatic
+org.junit.jupiter.migrationsupport@${jupiterVersion} jar:file:.+junit-jupiter-migrationsupport/build/libs/junit-jupiter-migrationsupport-${jupiterVersion}.jar/!module-info.class
+exports org.junit.jupiter.migrationsupport
+exports org.junit.jupiter.migrationsupport.conditions
+exports org.junit.jupiter.migrationsupport.rules
+exports org.junit.jupiter.migrationsupport.rules.adapter
+exports org.junit.jupiter.migrationsupport.rules.member
 requires java.base mandated
-contains org.junit.jupiter.migrationsupport
-contains org.junit.jupiter.migrationsupport.conditions
-contains org.junit.jupiter.migrationsupport.rules
-contains org.junit.jupiter.migrationsupport.rules.adapter
-contains org.junit.jupiter.migrationsupport.rules.member
+requires junit transitive
+requires org.apiguardian.api transitive
+requires org.junit.jupiter.api transitive

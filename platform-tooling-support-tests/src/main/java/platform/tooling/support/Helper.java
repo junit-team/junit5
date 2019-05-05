@@ -12,13 +12,18 @@ package platform.tooling.support;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
@@ -77,7 +82,6 @@ public class Helper {
 				.map(matcher -> matcher.group(1)) //
 				.filter(name -> name.startsWith("junit-")) //
 				.filter(name -> !name.equals("junit-bom")) //
-				.filter(name -> !name.equals("junit-platform-commons-java-9")) //
 				.filter(name -> !name.equals("junit-platform-console-standalone"))) {
 			return stream.collect(Collectors.toList());
 		}
@@ -152,5 +156,36 @@ public class Helper {
 			// ignore
 		}
 		return Optional.empty();
+	}
+
+	/** Load single JAR from Maven Central. */
+	public static void load(Path target, String group, String artifact, String version) throws Exception {
+		var jar = String.format("%s-%s.jar", artifact, version);
+		var mvn = "http://central.maven.org/maven2/";
+		var grp = group.replace('.', '/');
+		var url = new URL(mvn + String.join("/", grp, artifact, version, jar));
+		try (var stream = url.openStream()) {
+			Files.copy(stream, target.resolve(jar), StandardCopyOption.REPLACE_EXISTING);
+		}
+	}
+
+	/** Walk directory tree structure. */
+	public static List<String> treeWalk(Path root) {
+		var lines = new ArrayList<String>();
+		treeWalk(root, lines::add);
+		return lines;
+	}
+
+	/** Walk directory tree structure. */
+	public static void treeWalk(Path root, Consumer<String> out) {
+		try (var stream = Files.walk(root)) {
+			stream.map(root::relativize) //
+					.map(path -> path.toString().replace('\\', '/')) //
+					.sorted().filter(Predicate.not(String::isEmpty)) //
+					.forEach(out);
+		}
+		catch (Exception e) {
+			throw new Error("Walking tree failed: " + root, e);
+		}
 	}
 }

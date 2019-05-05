@@ -1,25 +1,9 @@
->> 1 line header: No module descriptor found. Derived automatic module. >>
-
-org.junit.jupiter.params@${jupiterVersion} automatic
+org.junit.jupiter.params@${jupiterVersion} jar:file:.+junit-jupiter-params/build/libs/junit-jupiter-params-${jupiterVersion}.jar/!module-info.class
+exports org.junit.jupiter.params
+exports org.junit.jupiter.params.aggregator
+exports org.junit.jupiter.params.converter
+exports org.junit.jupiter.params.provider
+exports org.junit.jupiter.params.support
 requires java.base mandated
-contains org.junit.jupiter.params
-contains org.junit.jupiter.params.aggregator
-contains org.junit.jupiter.params.converter
-contains org.junit.jupiter.params.provider
-contains org.junit.jupiter.params.shadow.com.univocity.parsers.annotations
-contains org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.helpers
-contains org.junit.jupiter.params.shadow.com.univocity.parsers.common
-contains org.junit.jupiter.params.shadow.com.univocity.parsers.common.beans
-contains org.junit.jupiter.params.shadow.com.univocity.parsers.common.fields
-contains org.junit.jupiter.params.shadow.com.univocity.parsers.common.input
-contains org.junit.jupiter.params.shadow.com.univocity.parsers.common.input.concurrent
-contains org.junit.jupiter.params.shadow.com.univocity.parsers.common.iterators
-contains org.junit.jupiter.params.shadow.com.univocity.parsers.common.processor
-contains org.junit.jupiter.params.shadow.com.univocity.parsers.common.processor.core
-contains org.junit.jupiter.params.shadow.com.univocity.parsers.common.record
-contains org.junit.jupiter.params.shadow.com.univocity.parsers.common.routine
-contains org.junit.jupiter.params.shadow.com.univocity.parsers.conversions
-contains org.junit.jupiter.params.shadow.com.univocity.parsers.csv
-contains org.junit.jupiter.params.shadow.com.univocity.parsers.fixed
-contains org.junit.jupiter.params.shadow.com.univocity.parsers.tsv
-contains org.junit.jupiter.params.support
+requires org.apiguardian.api transitive
+requires org.junit.jupiter.api transitive

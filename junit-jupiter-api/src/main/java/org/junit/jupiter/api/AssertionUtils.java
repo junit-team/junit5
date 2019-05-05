@@ -55,6 +55,20 @@ class AssertionUtils {
 		throw new AssertionFailedError(message, expected, actual);
 	}
 
+	/**
+	 * Typically used for {@code assertEquals()}.
+	 */
+	static void failNotEqual(Object expected, Object actual, String message) {
+		fail(format(expected, actual, message), expected, actual);
+	}
+
+	/**
+	 * Typically used for {@code assertEquals()}.
+	 */
+	static void failNotEqual(Object expected, Object actual, Supplier<String> messageSupplier) {
+		fail(format(expected, actual, nullSafeGet(messageSupplier)), expected, actual);
+	}
+
 	static String nullSafeGet(Supplier<String> messageSupplier) {
 		return (messageSupplier != null ? messageSupplier.get() : null);
 	}

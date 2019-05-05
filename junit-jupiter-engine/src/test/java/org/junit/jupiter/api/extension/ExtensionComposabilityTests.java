@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
+import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -49,6 +50,7 @@ class ExtensionComposabilityTests {
 		List<Method> expectedMethods = extensionApis.stream()
 				.map(Class::getDeclaredMethods)
 				.flatMap(Arrays::stream)
+				.filter(not(Method::isSynthetic))
 				.collect(toList());
 
 		List<String> expectedMethodSignatures = expectedMethods.stream()

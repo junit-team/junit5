@@ -11,10 +11,8 @@
 package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.AssertionUtils.doublesAreEqual;
-import static org.junit.jupiter.api.AssertionUtils.fail;
+import static org.junit.jupiter.api.AssertionUtils.failNotEqual;
 import static org.junit.jupiter.api.AssertionUtils.floatsAreEqual;
-import static org.junit.jupiter.api.AssertionUtils.format;
-import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 import static org.junit.jupiter.api.AssertionUtils.objectsAreEqual;
 
 import java.util.function.Supplier;
@@ -189,14 +187,6 @@ class AssertEquals {
 		if (!objectsAreEqual(expected, actual)) {
 			failNotEqual(expected, actual, messageSupplier);
 		}
-	}
-
-	private static void failNotEqual(Object expected, Object actual, String message) {
-		fail(format(expected, actual, message), expected, actual);
-	}
-
-	private static void failNotEqual(Object expected, Object actual, Supplier<String> messageSupplier) {
-		fail(format(expected, actual, nullSafeGet(messageSupplier)), expected, actual);
 	}
 
 }

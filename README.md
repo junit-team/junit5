@@ -85,7 +85,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 
 - **Group ID**: `org.junit.platform`
 - **Version**: `1.4.2`, `5.5.0-M1`, or `1.5.0-SNAPSHOT`
-- **Artifact IDs** and **Automatic-Module-Name**:
+- **Artifact IDs** and Java **module** name:
   - `junit-platform-commons` (`org.junit.platform.commons`)
   - `junit-platform-console` (`org.junit.platform.console`)
   - `junit-platform-console-standalone` (*N/A*)
@@ -100,7 +100,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 
 - **Group ID**: `org.junit.jupiter`
 - **Version**: `5.4.2`, `5.5.0-M1`, or `5.5.0-SNAPSHOT`
-- **Artifact IDs** and **Automatic-Module-Name**:
+- **Artifact IDs** and Java **module** name:
   - `junit-jupiter` (`org.junit.jupiter`)
   - `junit-jupiter-api` (`org.junit.jupiter.api`)
   - `junit-jupiter-engine` (`org.junit.jupiter.engine`)
@@ -111,7 +111,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 
 - **Group ID**: `org.junit.vintage`
 - **Version**: `5.4.2`, `5.5.0-M1`, or `5.5.0-SNAPSHOT`
-- **Artifact ID** and **Automatic-Module-Name**:
+- **Artifact ID** and Java **module** name:
   - `junit-vintage-engine` (`org.junit.vintage.engine`)
 
 ### Bill of Materials (BOM)
@@ -120,29 +120,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 - **Artifact ID** `junit-bom`
 - **Version**: `5.4.2`, `5.5.0-M1`, or `5.5.0-SNAPSHOT`
 
-## Java Module Names
 
-All published JAR artifacts contain an [Automatic-Module-Name] manifest attribute
-whose value is used as the name of the automatic module defined by that JAR file
-when it is placed on the module path. The automatic module names are listed above
-in the [Dependency Metadata](#dependency-metadata) section.
-
-This allows test module authors to require well-known JUnit module names as
-can be seen in the following example.
-
-
-```
-open module test.mylib {
-  requires mylib;
-  requires org.junit.jupiter.api;
-}
-```
-
-The `junit-platform-console-standalone` JAR does not provide an automatic module name
-as it is not intended to be used as a module.
-
-
-[Automatic-Module-Name]: http://mail.openjdk.java.net/pipermail/jpms-spec-experts/2017-April/000667.html
 [Codecov]: https://codecov.io/gh/junit-team/junit5
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
 [Gitter]: https://gitter.im/junit-team/junit5

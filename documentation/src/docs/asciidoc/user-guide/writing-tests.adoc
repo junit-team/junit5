@@ -1134,9 +1134,9 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvSource_example]
 
 `@CsvSource` uses a single quote `'` as its quote character. See the `'lemon, lime'` value
 in the example above and in the table below. An empty, quoted value `''` results in an
-empty `String`; whereas, an entirely _empty_ value is interpreted as a `null` reference.
-An `ArgumentConversionException` is raised if the target type of a `null` reference is a
-primitive type.
+empty `String` unless the `emptyValue` attribute is set; whereas, an entirely _empty_
+value is interpreted as a `null` reference. An `ArgumentConversionException` is raised if
+the target type of a `null` reference is a primitive type.
 
 [cols="50,50"]
 |===
@@ -1167,10 +1167,10 @@ include::{testResourcesDir}/two-column.csv[]
 
 NOTE: In contrast to the syntax used in `@CsvSource`, `@CsvFileSource` uses a double
 quote `"` as the quote character. See the `"United States of America"` value in the
-example above. An empty, quoted value `""` results in an empty `String`; whereas, an
-entirely _empty_ value is interpreted as a `null` reference. An
-`ArgumentConversionException` is raised if the target type of a `null` reference is a
-primitive type.
+example above. An empty, quoted value `""` results in an empty `String` unless the
+`emptyValue` attribute is set; whereas, an entirely _empty_ value is interpreted as a
+`null` reference. An `ArgumentConversionException` is raised if the target type of a
+`null` reference is a primitive type.
 
 [[writing-tests-parameterized-tests-sources-ArgumentsSource]]
 ===== @ArgumentsSource

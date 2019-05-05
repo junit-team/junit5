@@ -17,7 +17,7 @@ import java.io.Serializable;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Unit tests for {@link PackageSource}.

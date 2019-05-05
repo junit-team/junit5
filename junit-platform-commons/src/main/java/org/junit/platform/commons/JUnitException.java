@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 
@@ -20,7 +20,7 @@ import org.apiguardian.api.API;
  *
  * @since 1.0
  */
-@API(status = INTERNAL, since = "1.0")
+@API(status = STABLE, since = "1.5")
 public class JUnitException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
