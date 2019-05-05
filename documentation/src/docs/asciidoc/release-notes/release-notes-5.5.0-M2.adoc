@@ -29,6 +29,8 @@ on GitHub.
   meta-annotations on other repeatable annotations.
 * New `AnnotationSupport.findRepeatableAnnotations()` variant that accepts a
   `java.util.Optional<? extends AnnotatedElement>` argument.
+* Exceptions thrown by `TestExecutionListeners` no longer cause test execution to abort.
+  Instead, they will be logged as warnings now.
 
 
 [[release-notes-5.5.0-M2-junit-jupiter]]

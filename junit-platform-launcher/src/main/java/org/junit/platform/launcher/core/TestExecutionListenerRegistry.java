@@ -15,7 +15,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -26,6 +30,7 @@ import org.junit.platform.launcher.TestPlan;
  * @since 1.0
  */
 class TestExecutionListenerRegistry {
+	private static final Logger logger = LoggerFactory.getLogger(TestExecutionListenerRegistry.class);
 
 	private final List<TestExecutionListener> testExecutionListeners = new ArrayList<>();
 	private final List<EagerTestExecutionListener> eagerTestExecutionListeners = new ArrayList<>();
@@ -55,12 +60,18 @@ class TestExecutionListenerRegistry {
 		// @formatter:on
 	}
 
-	private void notifyTestExecutionListeners(Consumer<TestExecutionListener> consumer) {
-		this.testExecutionListeners.forEach(consumer);
-	}
-
-	private void notifyEagerTestExecutionListeners(Consumer<EagerTestExecutionListener> consumer) {
-		this.eagerTestExecutionListeners.forEach(consumer);
+	private <T extends TestExecutionListener> void notifyEach(List<T> listeners, Consumer<T> consumer,
+			Supplier<String> description) {
+		listeners.forEach(listener -> {
+			try {
+				consumer.accept(listener);
+			}
+			catch (Throwable throwable) {
+				BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+				logger.warn(throwable, () -> String.format("TestExecutionListener [%s] threw exception for method: %s",
+					listener.getClass().getName(), description.get()));
+			}
+		});
 	}
 
 	TestExecutionListener getCompositeTestExecutionListener() {
@@ -71,40 +82,50 @@ class TestExecutionListenerRegistry {
 
 		@Override
 		public void dynamicTestRegistered(TestIdentifier testIdentifier) {
-			notifyTestExecutionListeners(listener -> listener.dynamicTestRegistered(testIdentifier));
+			notifyEach(testExecutionListeners, listener -> listener.dynamicTestRegistered(testIdentifier),
+				() -> "dynamicTestRegistered(" + testIdentifier + ")");
 		}
 
 		@Override
 		public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-			notifyTestExecutionListeners(listener -> listener.executionSkipped(testIdentifier, reason));
+			notifyEach(testExecutionListeners, listener -> listener.executionSkipped(testIdentifier, reason),
+				() -> "executionSkipped(" + testIdentifier + ", " + reason + ")");
 		}
 
 		@Override
 		public void executionStarted(TestIdentifier testIdentifier) {
-			notifyEagerTestExecutionListeners(listener -> listener.executionJustStarted(testIdentifier));
-			notifyTestExecutionListeners(listener -> listener.executionStarted(testIdentifier));
+			notifyEach(eagerTestExecutionListeners, listener -> listener.executionJustStarted(testIdentifier),
+				() -> "executionJustStarted(" + testIdentifier + ")");
+			notifyEach(testExecutionListeners, listener -> listener.executionStarted(testIdentifier),
+				() -> "executionStarted(" + testIdentifier + ")");
 		}
 
 		@Override
 		public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-			notifyEagerTestExecutionListeners(
-				listener -> listener.executionJustFinished(testIdentifier, testExecutionResult));
-			notifyTestExecutionListeners(listener -> listener.executionFinished(testIdentifier, testExecutionResult));
+			notifyEach(eagerTestExecutionListeners,
+				listener -> listener.executionJustFinished(testIdentifier, testExecutionResult),
+				() -> "executionJustFinished(" + testIdentifier + ", " + testExecutionResult + ")");
+			notifyEach(testExecutionListeners,
+				listener -> listener.executionFinished(testIdentifier, testExecutionResult),
+				() -> "executionFinished(" + testIdentifier + ", " + testExecutionResult + ")");
 		}
 
 		@Override
 		public void testPlanExecutionStarted(TestPlan testPlan) {
-			notifyTestExecutionListeners(listener -> listener.testPlanExecutionStarted(testPlan));
+			notifyEach(testExecutionListeners, listener -> listener.testPlanExecutionStarted(testPlan),
+				() -> "testPlanExecutionStarted(" + testPlan + ")");
 		}
 
 		@Override
 		public void testPlanExecutionFinished(TestPlan testPlan) {
-			notifyTestExecutionListeners(listener -> listener.testPlanExecutionFinished(testPlan));
+			notifyEach(testExecutionListeners, listener -> listener.testPlanExecutionFinished(testPlan),
+				() -> "testPlanExecutionFinished(" + testPlan + ")");
 		}
 
 		@Override
 		public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
-			notifyTestExecutionListeners(listener -> listener.reportingEntryPublished(testIdentifier, entry));
+			notifyEach(testExecutionListeners, listener -> listener.reportingEntryPublished(testIdentifier, entry),
+				() -> "reportingEntryPublished(" + testIdentifier + ", " + entry + ")");
 		}
 
 	}
