@@ -61,6 +61,8 @@ on GitHub.
 * New `InvocationInterceptor` extension API (see
   <<../user-guide/index.adoc#extensions-intercepting-invocations, User Guide>> for
   details)
+* New Kotlin friendly `assertDoesNotThrow` assertion added as top-level functions in the
+  `org.junit.jupiter.api` package
 
 
 [[release-notes-5.5.0-M2-junit-vintage]]
