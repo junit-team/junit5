@@ -1630,12 +1630,22 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.assertAll</span>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.assertDoesNotThrow</span>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.assertThrows</span>
 
 <span class="type">class</span> <span class="class">KotlinAssertionsDemo</span> {
 
-    val person = Person(<span class="string"><span class="delimiter">&quot;</span><span class="content">Jane</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span>)
-    val people = setOf(person, Person(<span class="string"><span class="delimiter">&quot;</span><span class="content">John</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span>))
+    <span class="directive">private</span> val person = Person(<span class="string"><span class="delimiter">&quot;</span><span class="content">Jane</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span>)
+    <span class="directive">private</span> val people = setOf(person, Person(<span class="string"><span class="delimiter">&quot;</span><span class="content">John</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span>))
+
+    <span class="annotation">@Test</span>
+    fun <span class="error">`</span>exception absence testing<span class="error">`</span>() {
+        val calculator = Calculator()
+        val result = assertDoesNotThrow(<span class="string"><span class="delimiter">&quot;</span><span class="content">Should not throw an exception</span><span class="delimiter">&quot;</span></span>) {
+            calculator.divide(<span class="integer">0</span>, <span class="integer">1</span>)
+        }
+        assertEquals(<span class="integer">0</span>, result)
+    }
 
     <span class="annotation">@Test</span>
     fun <span class="error">`</span>expected exception testing<span class="error">`</span>() {
@@ -9253,7 +9263,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-05-04 17:55:34 UTC
+Last updated 2019-05-05 12:53:13 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
