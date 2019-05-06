@@ -28,10 +28,10 @@ import platform.tooling.support.Request;
 class AntStarterTests {
 
 	@Test
-	void ant_1_10_4() {
+	void ant_1_10_5() {
 		var standalone = Paths.get("..", "junit-platform-console-standalone", "build", "libs");
 		var result = Request.builder() //
-				.setTool(Ant.install("1.10.4", Paths.get("build", "test-tools"))) //
+				.setTool(Ant.install("1.10.5", Paths.get("build", "test-tools"))) //
 				.setProject("ant-starter") //
 				.addArguments("-verbose", "-lib", standalone.toAbsolutePath()) //
 				.build() //
