@@ -52,6 +52,26 @@ Your donations will help to make that a reality!
   </ul>
 </div>
 
+[//]: # (First line of Silver Sponsor Badges)
+<div align="center">
+  <ul class="list-inline">
+    <li>
+      <div class="cardsilver" onclick="location.href='http://www.micromata.de';">
+        <div class="cardsilver-image">
+          <img style="width:80%" src="assets/img/sponsor-logo-Micromata.svg" alt="MICROMATA">
+        </div>
+        <div class="cardsilver-center">
+          <h4>MICROMATA</h4>
+        </div>
+        <div class="cardsilver-bottom">
+          <h4>Silver Sponsor</h4>
+          <p>Since May 2019</p>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
 [//]: # (First line of Bronze Sponsor Badges)
 <div align="center">
   <ul class="list-inline">
