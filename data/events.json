@@ -599,5 +599,16 @@
     "speakers": [
       "marcphilipp"
     ]
+  },
+  {
+    "title": "JUnit : il serait temps de passer la 5ème !",
+    "event": "Voxxed Days Luxembourg",
+    "date": "2019-06-20",
+    "location": "Mondorf-les-Bains, Luxembourg",
+    "link": "https://cfp-voxxed-lux.yajug.org/talk/MCB-0767",
+    "speakers": [
+      "juliettederancourt",
+      "julientopcu"
+    ]
   }
 ]
