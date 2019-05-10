@@ -23,6 +23,9 @@ import java.util.Spliterator;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
+import com.univocity.parsers.common.DefaultConversionProcessor;
+import com.univocity.parsers.common.processor.ObjectRowListProcessor;
+import com.univocity.parsers.conversions.Conversions;
 import com.univocity.parsers.csv.CsvParser;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -116,11 +119,14 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 
 		private final CsvFileSource annotation;
 
+		private final DefaultConversionProcessor conversionProcessor;
+
 		private Object[] nextCsvRecord;
 
 		CsvParserIterator(CsvParser csvParser, CsvFileSource annotation) {
 			this.csvParser = csvParser;
 			this.annotation = annotation;
+			this.conversionProcessor = getConversionProcessor();
 			advance();
 		}
 
@@ -137,12 +143,28 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 		}
 
 		private void advance() {
+			String[] parsedLine = null;
 			try {
-				this.nextCsvRecord = this.csvParser.parseNext();
+				parsedLine = this.csvParser.parseNext();
+				if (parsedLine != null) {
+					parsedLine = Arrays.copyOf(this.conversionProcessor.applyConversions(parsedLine, null),
+						parsedLine.length, String[].class);
+				}
 			}
 			catch (Throwable throwable) {
 				handleCsvException(throwable, this.annotation);
 			}
+
+			this.nextCsvRecord = parsedLine;
+		}
+
+		private DefaultConversionProcessor getConversionProcessor() {
+			ObjectRowListProcessor processor = new ObjectRowListProcessor();
+			if (this.annotation.nullSymbols().length > 0) {
+				processor.convertAll(Conversions.toNull(this.annotation.nullSymbols()));
+			}
+
+			return processor;
 		}
 	}
 

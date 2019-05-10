@@ -114,28 +114,36 @@ class CsvArgumentsProviderTests {
 	@Test
 	void throwsExceptionIfBothDelimitersAreSimultaneouslySet() {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments(",", ',', "", "foo"));
+			() -> provideArguments(",", ',', "", new String[] {}, "foo"));
 
 		assertThat(exception)//
 				.hasMessageStartingWith("The delimiter and delimiterString attributes cannot be set simultaneously in")//
 				.hasMessageContaining("CsvSource");
 	}
 
+	@Test
+	void emptyValueIsAnEmptyWithCustomNullSymbolString() {
+		Stream<Object[]> arguments = provideArguments("", ',', "", new String[] { "empty" }, "vacio , , empty , ''");
+
+		assertThat(arguments).containsExactly(new String[] { "vacio", null, null, "" });
+	}
+
 	private Stream<Object[]> provideArguments(char delimiter, String emptyValue, String... value) {
-		return provideArguments("", delimiter, emptyValue, value);
+		return provideArguments("", delimiter, emptyValue, new String[] {}, value);
 	}
 
 	private Stream<Object[]> provideArguments(String delimiterString, String emptyValue, String... value) {
-		return provideArguments(delimiterString, '\0', emptyValue, value);
+		return provideArguments(delimiterString, '\0', emptyValue, new String[] {}, value);
 	}
 
 	private Stream<Object[]> provideArguments(String delimiterString, char delimiter, String emptyValue,
-			String... value) {
+			String[] nullSymbols, String... value) {
 		CsvSource annotation = mock(CsvSource.class);
 		when(annotation.value()).thenReturn(value);
 		when(annotation.delimiter()).thenReturn(delimiter);
 		when(annotation.delimiterString()).thenReturn(delimiterString);
 		when(annotation.emptyValue()).thenReturn(emptyValue);
+		when(annotation.nullSymbols()).thenReturn(nullSymbols);
 
 		CsvArgumentsProvider provider = new CsvArgumentsProvider();
 		provider.accept(annotation);

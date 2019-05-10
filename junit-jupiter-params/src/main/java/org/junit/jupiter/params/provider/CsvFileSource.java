@@ -113,4 +113,14 @@ public @interface CsvFileSource {
 	@API(status = EXPERIMENTAL, since = "5.5")
 	String emptyValue() default "";
 
+	/**
+	 * A List of Strings that should be interpreted as {@code null}.
+	 *
+	 * <p>Defaults to {@code {}}.
+	 *
+	 * @since 5.6
+	 */
+	@API(status = EXPERIMENTAL, since = "5.6")
+	String[] nullSymbols() default {};
+
 }
