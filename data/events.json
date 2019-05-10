@@ -591,6 +591,16 @@
     ]
   },
   {
+    "title": "JUnit 5 - Platform & Jupiter API",
+    "event": "JUG Koblenz Meetup",
+    "date": "2019-05-29",
+    "location": "Koblenz, Germany",
+    "link": "https://www.meetup.com/Java-User-Group-Koblenz/events/261282474/",
+    "speakers": [
+      "sormuras"
+    ]
+  },
+  {
     "title": "Neues von JUnit 5.x: From Revolution to Continuous Evolution",
     "event": "Entwicklertag Karlsruhe",
     "date": "2019-06-03",
