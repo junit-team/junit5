@@ -5359,11 +5359,11 @@ following.</p>
     <span class="tag">&lt;plugins&gt;</span>
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.22.2<span class="tag">&lt;/version&gt;</span>
         <span class="tag">&lt;/plugin&gt;</span>
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.22.2<span class="tag">&lt;/version&gt;</span>
         <span class="tag">&lt;/plugin&gt;</span>
     <span class="tag">&lt;/plugins&gt;</span>
 <span class="tag">&lt;/build&gt;</span>
@@ -5399,11 +5399,11 @@ long as you configure <code>test</code> scoped dependencies on JUnit 4 and the J
     <span class="tag">&lt;plugins&gt;</span>
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.22.2<span class="tag">&lt;/version&gt;</span>
         <span class="tag">&lt;/plugin&gt;</span>
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.22.2<span class="tag">&lt;/version&gt;</span>
         <span class="tag">&lt;/plugin&gt;</span>
     <span class="tag">&lt;/plugins&gt;</span>
 <span class="tag">&lt;/build&gt;</span>
@@ -5466,7 +5466,7 @@ from excluding static member classes, you can override its exclude rules as foll
     <span class="tag">&lt;plugins&gt;</span>
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.22.2<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;configuration&gt;</span>
                 <span class="tag">&lt;excludes&gt;</span>
                     <span class="tag">&lt;exclude</span><span class="tag">/&gt;</span>
@@ -5507,7 +5507,7 @@ the following configuration properties.</p>
     <span class="tag">&lt;plugins&gt;</span>
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.22.2<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;configuration&gt;</span>
                 <span class="tag">&lt;groups&gt;</span>acceptance | !feature-a<span class="tag">&lt;/groups&gt;</span>
                 <span class="tag">&lt;excludedGroups&gt;</span>integration, regression<span class="tag">&lt;/excludedGroups&gt;</span>
@@ -5534,7 +5534,7 @@ below) or via the <code>junit-platform.properties</code> file.</p>
     <span class="tag">&lt;plugins&gt;</span>
         <span class="tag">&lt;plugin&gt;</span>
             <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
-            <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;version&gt;</span>2.22.2<span class="tag">&lt;/version&gt;</span>
             <span class="tag">&lt;configuration&gt;</span>
                 <span class="tag">&lt;properties&gt;</span>
                     <span class="tag">&lt;configurationParameters&gt;</span>
@@ -5569,24 +5569,13 @@ constructs such as
 for allowing users to select the tests that they want executed by test engines. This
 gives the task a consistent and natural feel when compared to many other core Ant tasks.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-The version of the <code>junitlauncher</code> task shipped in Ant 1.10.3 provides basic,
-minimal support for launching the JUnit Platform. Additional enhancements (including
-support for forking the tests in a separate JVM) will be available in subsequent releases
-of Ant.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>Starting with version <code>1.10.6</code> of Ant, the <code>junitlauncher</code> task supports
+<a href="https://ant.apache.org/manual/Tasks/junitlauncher.html#fork">forking the tests in a separate JVM</a>.</p>
 </div>
 <div class="paragraph">
 <p>The <code>build.xml</code> file in the <code><a href="https://github.com/junit-team/junit5-samples/tree/master/junit5-jupiter-starter-ant">junit5-jupiter-starter-ant</a></code> project demonstrates how to use
-it and can serve as a starting point.</p>
+the task and can serve as a starting point.</p>
 </div>
 <div class="sect4">
 <h5 id="basic-usage"><a class="anchor" href="#basic-usage"></a>Basic Usage</h5>
@@ -9263,7 +9252,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-05-05 13:52:44 UTC
+Last updated 2019-05-11 12:33:49 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

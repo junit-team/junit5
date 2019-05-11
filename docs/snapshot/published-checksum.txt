@@ -236,7 +236,6 @@
 5beeebeb56b5d1f68ce917275a7a5b68  junit-vintage-engine/src/main/java/org/junit/vintage/engine/package-info.java
 5c26dc1d99e858cceddd0ec89e831637  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeEngines.java
 5c7943bb50c093b70ef739c71272777c  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ReflectionSupport.java
-5d175c7c1151cbb1bdd03c0f3fa8db52  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 5d29856263ab78318ee15452552ae0e7  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/FileSystemSource.java
 5dd8098db2c78876fd940257e9c8ffdf  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NopLock.java
 5dde3a4d1c2572e8ac4bd043789951c3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/io/TempDir.java
@@ -554,6 +553,7 @@ e08338a4b0be66fdc0940dc820de7648  junit-jupiter-api/src/main/java/org/junit/jupi
 e144bc7b5cab05c54cf7395f030a424a  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/DiscoverySelectors.java
 e1479a60e5d40c0118c03ab346a37289  documentation/src/test/java/example/DisabledTestsDemo.java
 e1c654ba496152fadbfe4869fbd580e5  junit-platform-engine/src/main/java/org/junit/platform/engine/UniqueId.java
+e284feddf0049d5a522bca7cf3a53e10  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 e30913fca8d49f547d448409bc09009a  documentation/src/test/java/example/timing/TimingExtensionTests.java
 e4261fb21de052929bb730322153d26f  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ClassFileVisitor.java
 e478b9ef24582f804dc6ced1d48412da  documentation/src/test/java/example/SharedResourcesDemo.java
