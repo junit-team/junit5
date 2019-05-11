@@ -120,16 +120,8 @@ public class Helper {
 			() -> System.getenv("JAVA_" + version) //
 		);
 		var home = sources.stream().map(Supplier::get).filter(Objects::nonNull).findFirst();
-		if (home.isPresent()) {
-			return Optional.of(Path.of(home.get()));
-		}
-		// Try to inspect Maven Toolchains configuration file...
-		var jdkHome = getJdkHomeFromMavenToolchains(version);
-		if (jdkHome.isPresent()) {
-			return jdkHome;
-		}
-		// Still here? Return an empty optional.
-		return Optional.empty();
+		// If no java home set then inspect Maven Toolchains configuration file...
+		return home.map(h -> Path.of(h)).or(() -> getJdkHomeFromMavenToolchains(version));
 	}
 
 	// https://maven.apache.org/guides/mini/guide-using-toolchains.html
