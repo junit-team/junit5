@@ -10,19 +10,16 @@
 package org.junit.jupiter.api
 
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith
 import org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DynamicContainer.dynamicContainer
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.opentest4j.AssertionFailedError
 import org.opentest4j.MultipleFailuresError
-import java.lang.AssertionError
-
 import java.util.stream.Stream
-
 import kotlin.reflect.KClass
 
 /**
@@ -81,41 +78,31 @@ class KotlinAssertionsTests {
         )),
         dynamicContainer("fails when an exception is thrown", Stream.of(
             dynamicTest("for no arguments variant") {
-                try {
+                val exception = assertThrows<AssertionError> {
                     assertDoesNotThrow {
                         fail("fail")
                     }
-                    expectAssertionFailedError()
-                } catch (exception: AssertionError) {
-                    assertMessageEquals(exception,
-                        "Unexpected exception thrown: org.opentest4j.AssertionFailedError: fail")
                 }
+                assertMessageEquals(exception,
+                    "Unexpected exception thrown: org.opentest4j.AssertionFailedError: fail")
             },
             dynamicTest("for message variant") {
-                try {
+                val exception = assertThrows<AssertionError> {
                     assertDoesNotThrow("Does not throw") {
                         fail("fail")
                     }
-                    expectAssertionFailedError()
-                } catch (exception: AssertionError) {
-                    assertMessageEquals(
-                        exception,
-                        "Does not throw ==> Unexpected exception thrown: org.opentest4j.AssertionFailedError: fail"
-                    )
                 }
+                assertMessageEquals(exception,
+                    "Does not throw ==> Unexpected exception thrown: org.opentest4j.AssertionFailedError: fail")
             },
             dynamicTest("for message supplier variant") {
-                try {
+                val exception = assertThrows<AssertionError> {
                     assertDoesNotThrow({ "Does not throw" }) {
                         fail("fail")
                     }
-                    expectAssertionFailedError()
-                } catch (exception: AssertionError) {
-                    assertMessageEquals(
-                        exception,
-                        "Does not throw ==> Unexpected exception thrown: org.opentest4j.AssertionFailedError: fail"
-                    )
                 }
+                assertMessageEquals(exception,
+                    "Does not throw ==> Unexpected exception thrown: org.opentest4j.AssertionFailedError: fail")
             }
         ))
     )
