@@ -201,7 +201,12 @@ tasks {
 				splitIndex(true)
 				addBooleanOption("Xdoclint:none", true)
 				addBooleanOption("html5", true)
-				addBooleanOption("-no-module-directories", true)
+				// Javadoc 13 removed support for `--no-module-directories`
+				// https://bugs.openjdk.java.net/browse/JDK-8215580
+				val javaVersion = JavaVersion.current()
+				if (javaVersion.isJava11 || javaVersion.isJava12) {
+					addBooleanOption("-no-module-directories", true)
+				}
 				addMultilineStringsOption("tag").value = listOf(
 						"apiNote:a:API Note:",
 						"implNote:a:Implementation Note:"
