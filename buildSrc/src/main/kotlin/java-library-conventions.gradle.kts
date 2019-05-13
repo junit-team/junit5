@@ -61,7 +61,7 @@ if (project in mavenizedProjects) {
 				addBooleanOption("Xdoclint:html,syntax", true)
 				addBooleanOption("html5", true)
 				// Javadoc 13 removed support for `--no-module-directories`
-				// https://bugs.openjdk.java.net/browse/JDK-8215580				
+				// https://bugs.openjdk.java.net/browse/JDK-8215580
 				if (javaVersion.isJava11 || javaVersion.isJava12) {
 					addBooleanOption("-no-module-directories", true)
 				}
