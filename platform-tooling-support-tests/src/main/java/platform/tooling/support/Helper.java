@@ -150,6 +150,14 @@ public class Helper {
 		return Optional.empty();
 	}
 
+	/** Load, here copy, modular jar files to the given target directory. */
+	public static void loadAllJUnitModules(Path target) throws Exception {
+		for (var module : loadModuleDirectoryNames()) {
+			var jar = createJarPath(module);
+			Files.copy(jar, target.resolve(jar.getFileName()));
+		}
+	}
+
 	/** Load single JAR from Maven Central. */
 	public static void load(Path target, String group, String artifact, String version) throws Exception {
 		var jar = String.format("%s-%s.jar", artifact, version);

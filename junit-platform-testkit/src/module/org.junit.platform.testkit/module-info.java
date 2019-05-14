@@ -10,6 +10,10 @@
  */
 
 module org.junit.platform.testkit {
+	// missing "requires java.instrument" in "org.assertj.core" module
+	// https://github.com/joel-costigliola/assertj-core/issues/1504
+	requires java.instrument;
+
 	requires transitive org.apiguardian.api;
 	requires transitive org.assertj.core;
 	requires transitive org.junit.platform.launcher;
@@ -17,4 +21,6 @@ module org.junit.platform.testkit {
 
 	// exports org.junit.platform.testkit; empty package
 	exports org.junit.platform.testkit.engine;
+
+	uses org.junit.platform.engine.TestEngine;
 }

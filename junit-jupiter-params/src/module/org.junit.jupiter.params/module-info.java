@@ -18,4 +18,8 @@ module org.junit.jupiter.params {
 	exports org.junit.jupiter.params.converter;
 	exports org.junit.jupiter.params.provider;
 	exports org.junit.jupiter.params.support;
+
+	opens org.junit.jupiter.params to org.junit.platform.commons;
+	opens org.junit.jupiter.params.converter to org.junit.platform.commons;
+	opens org.junit.jupiter.params.provider to org.junit.platform.commons;
 }
