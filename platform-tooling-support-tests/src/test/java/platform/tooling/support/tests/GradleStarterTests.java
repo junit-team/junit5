@@ -39,7 +39,7 @@ class GradleStarterTests {
 
 		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
-		assertEquals(0, result.getExitCode());
+		assertEquals(0, result.getExitCode(), result.toString());
 		assertTrue(result.getOutputLines("out").stream().anyMatch(line -> line.contains("BUILD SUCCESSFUL")));
 	}
 }
