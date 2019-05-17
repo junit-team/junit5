@@ -31,6 +31,8 @@ dependencies {
 }
 
 tasks.test {
+	inputs.dir("projects")
+
 	// Opt-in via system property: '-Dplatform.tooling.support.tests.enabled=true'
 	enabled = System.getProperty("platform.tooling.support.tests.enabled")?.toBoolean() ?: false
 
