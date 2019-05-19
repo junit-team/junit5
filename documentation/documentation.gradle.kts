@@ -45,11 +45,11 @@ dependencies {
 
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
 
-	testRuntimeOnly("org.apache.logging.log4j:log4j-core:${Versions.log4j}")
-	testRuntimeOnly("org.apache.logging.log4j:log4j-jul:${Versions.log4j}")
+	testRuntimeOnly("org.apache.logging.log4j:log4j-core")
+	testRuntimeOnly("org.apache.logging.log4j:log4j-jul")
 
 	// for ApiReportGenerator
-	testImplementation("io.github.classgraph:classgraph:${Versions.classgraph}")
+	testImplementation("io.github.classgraph:classgraph")
 }
 
 asciidoctorj {

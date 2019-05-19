@@ -14,8 +14,8 @@ tasks.named<Test>("test").configure {
 }
 
 dependencies {
-	"testImplementation"("org.assertj:assertj-core:${Versions.assertJ}")
-	"testImplementation"("org.mockito:mockito-junit-jupiter:${Versions.mockito}") {
+	"testImplementation"("org.assertj:assertj-core")
+	"testImplementation"("org.mockito:mockito-junit-jupiter") {
 		exclude(module = "junit-jupiter-engine")
 	}
 
@@ -28,6 +28,6 @@ dependencies {
 
 	"testRuntimeOnly"(project(":junit-platform-launcher"))
 
-	"testRuntimeOnly"("org.apache.logging.log4j:log4j-core:${Versions.log4j}")
-	"testRuntimeOnly"("org.apache.logging.log4j:log4j-jul:${Versions.log4j}")
+	"testRuntimeOnly"("org.apache.logging.log4j:log4j-core")
+	"testRuntimeOnly"("org.apache.logging.log4j:log4j-jul")
 }

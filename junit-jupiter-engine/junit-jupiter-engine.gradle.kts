@@ -26,7 +26,7 @@ artifacts {
 }
 
 dependencies {
-	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
+	api("org.apiguardian:apiguardian-api")
 
 	api(project(":junit-platform-engine"))
 	api(project(":junit-jupiter-api"))
@@ -35,5 +35,5 @@ dependencies {
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(":junit-platform-testkit"))
 	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
-	testImplementation("org.codehaus.groovy:groovy-all:${Versions.groovy}")
+	testImplementation("org.codehaus.groovy:groovy-all")
 }

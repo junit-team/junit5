@@ -5,5 +5,5 @@ plugins {
 description = "JUnit Platform Suite API"
 
 dependencies {
-	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
+	api("org.apiguardian:apiguardian-api")
 }
