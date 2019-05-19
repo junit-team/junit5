@@ -13,27 +13,48 @@ package com.example.project
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.fail
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor
 import org.junit.jupiter.params.aggregator.get
-import org.junit.jupiter.params.provider.ValueSource
+import org.junit.jupiter.params.provider.CsvSource
+import org.opentest4j.AssertionFailedError
 
 class ExtensionFunctionsTests {
 
     @Test
-    fun assertions() {
-        assertAll({
-            assertThrows<IllegalArgumentException> {
-                throw IllegalArgumentException()
-            }
-        })
+    fun `assertDoesNotThrow() and assertAll`() {
+        assertDoesNotThrow {
+            assertAll(setOf {})
+        }
+        assertDoesNotThrow("message") {
+            assertAll("header", setOf {})
+        }
+        assertDoesNotThrow({ "message" }) {
+            assertAll({})
+            assertAll("header", {})
+        }
+    }
+
+    @Test
+    fun `fail() and assertThrows`() {
+        assertThrows<AssertionFailedError> {
+            fail("message")
+        }
+        assertThrows<AssertionFailedError>("message") {
+            fail { "message" }
+        }
+        assertThrows<AssertionFailedError>({ "message" }) {
+            fail(IllegalArgumentException())
+        }
     }
 
     @ParameterizedTest
-    @ValueSource(ints = [1])
+    @CsvSource("1")
     fun accessor(accessor: ArgumentsAccessor) {
-        val value: Int = accessor.get<Int>(0)
+        val value = accessor.get<Int>(0)
         assertEquals(1, value)
     }
 }
