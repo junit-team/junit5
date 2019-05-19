@@ -61,7 +61,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			"TEST: test with underscores", //
 			"TEST: testUsingCamelCase and also UnderScores", //
 			"TEST: testUsingCamelCase and also UnderScores keepingParameterTypeNamesIntact (TestInfo)", //
-			"TEST: testUsingCamelCaseStyle"
+			"TEST: testUsingCamelCaseStyle" //
 		);
 		check(UnderscoreStyleTestCase.class, expectedDisplayNames);
 		check(UnderscoreStyleInheritedFromSuperClassTestCase.class, expectedDisplayNames);
