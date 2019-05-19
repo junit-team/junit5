@@ -56,12 +56,13 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		var expectedDisplayNames = List.of( //
 			"CONTAINER: DisplayNameGenerationTests\\$UnderscoreStyle.*", //
 			"TEST: @DisplayName prevails", //
-			"TEST: test with underscores()", //
-			"TEST: test()", //
-			"TEST: test(TestInfo)", //
-			"TEST: testUsingCamelCase and also UnderScores keepingParameterTypeNamesIntact(TestInfo)", //
-			"TEST: testUsingCamelCase and also UnderScores()", //
-			"TEST: testUsingCamelCaseStyle()");
+			"TEST: test", //
+			"TEST: test (TestInfo)", //
+			"TEST: test with underscores", //
+			"TEST: testUsingCamelCase and also UnderScores", //
+			"TEST: testUsingCamelCase and also UnderScores keepingParameterTypeNamesIntact (TestInfo)", //
+			"TEST: testUsingCamelCaseStyle"
+		);
 		check(UnderscoreStyleTestCase.class, expectedDisplayNames);
 		check(UnderscoreStyleInheritedFromSuperClassTestCase.class, expectedDisplayNames);
 	}
@@ -86,13 +87,13 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			"CONTAINER: A new stack", //
 			"CONTAINER: A stack", //
 			"CONTAINER: After pushing an element to an empty stack", //
-			"TEST: is empty()", //
-			"TEST: is instantiated using its noarg constructor()", //
-			"TEST: peek returns that element without removing it from the stack()", //
-			"TEST: pop returns that element and leaves an empty stack()", //
-			"TEST: the stack is no longer empty()", //
-			"TEST: throws an EmptyStackException when peeked()", //
-			"TEST: throws an EmptyStackException when popped()" //
+			"TEST: is empty", //
+			"TEST: is instantiated using its noarg constructor", //
+			"TEST: peek returns that element without removing it from the stack", //
+			"TEST: pop returns that element and leaves an empty stack", //
+			"TEST: the stack is no longer empty", //
+			"TEST: throws an EmptyStackException when peeked", //
+			"TEST: throws an EmptyStackException when popped" //
 		));
 	}
 

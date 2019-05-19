@@ -125,12 +125,19 @@ public interface DisplayNameGenerator {
 
 		@Override
 		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
-			// don't replace underscores in parameter type names
-			return replaceUnderscores(testMethod.getName()) + parameterTypesAsString(testMethod);
+			String displayName = replaceUnderscores(testMethod.getName());
+			if (hasParameters(testMethod)) {
+				displayName += ' ' + parameterTypesAsString(testMethod);
+			}
+			return displayName;
 		}
 
 		private String replaceUnderscores(String name) {
 			return name.replace('_', ' ');
+		}
+
+		private boolean hasParameters(Method method) {
+			return method.getParameterTypes().length > 0;
 		}
 	}
 
