@@ -8,11 +8,11 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 description = "JUnit Jupiter Params"
 
 dependencies {
-	api("org.apiguardian:apiguardian-api")
+	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 
 	api(project(":junit-jupiter-api"))
 
-	shadowed("com.univocity:univocity-parsers")
+	shadowed("com.univocity:univocity-parsers:${Versions.univocity}")
 
 	testImplementation(project(":junit-platform-testkit"))
 	testImplementation(project(":junit-jupiter-engine"))

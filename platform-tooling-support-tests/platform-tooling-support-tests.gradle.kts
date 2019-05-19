@@ -9,23 +9,23 @@ javaLibrary {
 }
 
 dependencies {
-	implementation("de.sormuras:bartholdy") {
+	implementation("de.sormuras:bartholdy:${Versions.bartholdy}") {
 		because("manage external tool installations")
 	}
-	implementation("commons-io:commons-io") {
+	implementation("commons-io:commons-io:${Versions.commonsIo}") {
 		because("moving/deleting directory trees")
 	}
 
-	testImplementation("org.assertj:assertj-core") {
+	testImplementation("org.assertj:assertj-core:${Versions.assertJ}") {
 		because("more assertions")
 	}
-	testImplementation("com.tngtech.archunit:archunit-junit5-api") {
+	testImplementation("com.tngtech.archunit:archunit-junit5-api:${Versions.archunit}") {
 		because("checking the architecture of JUnit 5")
 	}
-	testRuntimeOnly("com.tngtech.archunit:archunit-junit5-engine") {
+	testRuntimeOnly("com.tngtech.archunit:archunit-junit5-engine:${Versions.archunit}") {
 		because("contains the ArchUnit TestEngine implementation")
 	}
-	testRuntimeOnly("org.slf4j:slf4j-jdk14") {
+	testRuntimeOnly("org.slf4j:slf4j-jdk14:${Versions.slf4j}") {
 		because("provide appropriate SLF4J binding")
 	}
 }

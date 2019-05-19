@@ -88,31 +88,6 @@ allprojects {
 		}
 	}
 
-	configurations.all {
-		resolutionStrategy.eachDependency {
-			when (requested.group) {
-				"com.tngtech.archunit" -> useVersion(Versions.archunit)
-				"com.univocity" -> useVersion(Versions.univocity)
-				"commons-io" -> useVersion(Versions.commonsIo)
-				"de.sormuras" -> when (requested.module.name) {
-					"bartholdy" -> useVersion(Versions.bartholdy)
-					"java-compiler-script-engine" -> useVersion(Versions.javaCompilerScriptEngine)
-				}
-				"info.picocli" -> useVersion(Versions.picocli)
-				"io.github.classgraph" -> useVersion(Versions.classgraph)
-				"junit" -> useVersion(Versions.junit4)
-				"org.apache.logging.log4j" -> useVersion(Versions.log4j)
-				"org.apiguardian" -> useVersion(Versions.apiGuardian)
-				"org.assertj" -> useVersion(Versions.assertJ)
-				"org.codehaus.groovy" -> useVersion(Versions.groovy)
-				"org.mockito" -> useVersion(Versions.mockito)
-				"org.openjdk.jmh" -> useVersion(Versions.jmh)
-				"org.opentest4j" -> useVersion(Versions.ota4j)
-				"org.slf4j" -> useVersion(Versions.slf4j)
-			}
-		}
-	}
-
 	tasks {
 		dependencyUpdates {
 			resolutionStrategy {

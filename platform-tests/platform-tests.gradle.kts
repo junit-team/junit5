@@ -16,22 +16,22 @@ dependencies {
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(":junit-platform-testkit"))
 	testImplementation(project(path = ":junit-jupiter-engine", configuration = "testArtifacts"))
-	testImplementation("org.apiguardian:apiguardian-api")
+	testImplementation("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(":junit-vintage-engine"))
-	testRuntimeOnly("de.sormuras:java-compiler-script-engine") {
+	testRuntimeOnly("de.sormuras:java-compiler-script-engine:${Versions.javaCompilerScriptEngine}") {
 		because("Tests annotated with @EnabledIf(engine = 'java', ...) need it.")
 	}
 	testRuntimeOnly(localGroovy()) // because `ReflectionUtilsTests.findNestedClassesWithInvalidNestedClassFile` needs it
 
 	// --- http://openjdk.java.net/projects/code-tools/jmh/ -----------------------
-	jmh("org.openjdk.jmh:jmh-core") {
+	jmh("org.openjdk.jmh:jmh-core:${Versions.jmh}") {
 		exclude(module = "jopt-simple")
 	}
-	jmhAnnotationProcessor("org.openjdk.jmh:jmh-generator-annprocess")
+	jmhAnnotationProcessor("org.openjdk.jmh:jmh-generator-annprocess:${Versions.jmh}")
 	jmh(project(":junit-jupiter-api"))
-	jmh("junit:junit")
+	jmh("junit:junit:${Versions.junit4}")
 }
 
 jmh {

@@ -1,11 +1,7 @@
 pluginManagement {
 	repositories {
 		gradlePluginPortal()
-		maven(url = "https://jitpack.io") {
-			content {
-				includeGroup("com.github.sormuras")
-			}
-		}
+		maven(url = "https://jitpack.io")
 	}
 	resolutionStrategy {
 		eachPlugin {
