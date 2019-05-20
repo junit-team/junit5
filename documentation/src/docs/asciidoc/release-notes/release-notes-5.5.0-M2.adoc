@@ -65,6 +65,8 @@ on GitHub.
   details)
 * New Kotlin friendly `assertDoesNotThrow` assertion added as top-level functions in the
   `org.junit.jupiter.api` package
+* Remove extra parentheses when generating a display name with ReplaceUnderscores for a
+  test method without parameters.
 
 
 [[release-notes-5.5.0-M2-junit-vintage]]
