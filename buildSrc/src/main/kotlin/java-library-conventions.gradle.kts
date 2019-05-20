@@ -173,7 +173,7 @@ val compileModule by tasks.registering(JavaCompile::class) {
 tasks.compileJava {
 	// See: https://docs.oracle.com/en/java/javase/11/tools/javac.html
 	options.compilerArgs.addAll(listOf(
-			"-Xlint", // Enables all recommended warnings.
+			"-Xlint:all,-deprecation", // Enables all recommended warnings.
 			"-Werror" // Terminates compilation when warnings occur.
 	))
 	if (modularProjects.contains(project)) {

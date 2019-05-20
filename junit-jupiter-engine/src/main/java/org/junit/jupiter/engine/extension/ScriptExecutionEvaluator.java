@@ -35,6 +35,7 @@ import org.junit.jupiter.engine.script.ScriptExecutionManager;
  *
  * @since 5.1
  */
+@Deprecated
 class ScriptExecutionEvaluator implements ScriptExecutionCondition.Evaluator {
 
 	private static final ConditionEvaluationResult ENABLED_ALL = enabled("All results are enabled");

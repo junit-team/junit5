@@ -41,6 +41,7 @@ import org.junit.jupiter.engine.script.ScriptExecutionManager;
  *
  * @since 5.1
  */
+@Deprecated
 class ScriptExecutionEvaluatorTests extends AbstractJupiterTestEngineTests {
 
 	private final Bindings bindings = createDefaultContextBindings();

@@ -48,7 +48,10 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* Script-based condition APIs and their supporting implementations are deprecated with
+  the intent to remove them in JUnit Jupiter 5.6. Users should instead rely on a
+  combination of other built-in conditions or create and use a custom implementation of
+  `ExecutionCondition` to evaluate the same conditions.
 
 ==== New Features and Improvements
 
