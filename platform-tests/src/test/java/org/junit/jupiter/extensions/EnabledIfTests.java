@@ -32,6 +32,7 @@ import org.junit.jupiter.api.condition.EnabledIf;
  *
  * @since 1.1
  */
+@Deprecated
 @EnabledIf("true")
 class EnabledIfTests {
 

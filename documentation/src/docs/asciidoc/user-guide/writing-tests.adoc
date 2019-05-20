@@ -413,15 +413,14 @@ include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_env
 [[writing-tests-conditional-execution-scripts]]
 ==== Script-based Conditions
 
+WARNING: Conditional test execution via `{EnabledIf}` and `{DisabledIf}` is _deprecated_
+for removal in a future release of JUnit Jupiter.
+
 JUnit Jupiter provides the ability to either _enable_ or _disable_ a container or test
 depending on the evaluation of a script configured via the `{EnabledIf}` or
 `{DisabledIf}` annotation. Scripts can be written in JavaScript, Groovy, or any other
 scripting language for which there is support for the Java Scripting API, defined by JSR
 223.
-
-WARNING: Conditional test execution via `{EnabledIf}` and `{DisabledIf}` is currently an
-_experimental_ feature. Consult the table in <<api-evolution-experimental-apis>> for
-details.
 
 TIP: If the logic of your script depends only on the current operating system, the
 current Java Runtime Environment version, a particular JVM system property, or a

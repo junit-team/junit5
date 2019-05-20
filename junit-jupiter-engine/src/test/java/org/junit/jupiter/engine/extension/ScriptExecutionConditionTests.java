@@ -42,6 +42,7 @@ import org.mockito.Mockito;
  *
  * @since 5.1
  */
+@Deprecated
 class ScriptExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 	@Test

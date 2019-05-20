@@ -37,6 +37,7 @@ import org.junit.platform.commons.PreconditionViolationException;
  *
  * @since 5.1
  */
+@Deprecated
 class ScriptExecutionManagerTests {
 
 	private final Bindings bindings = createDefaultContextBindings();

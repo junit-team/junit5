@@ -30,6 +30,7 @@ import org.junit.platform.commons.JUnitException;
  *
  * @since 5.1
  */
+@Deprecated
 class ScriptTests {
 
 	@Test
