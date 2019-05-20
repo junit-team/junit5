@@ -132,12 +132,12 @@ public interface DisplayNameGenerator {
 			return displayName;
 		}
 
-		private String replaceUnderscores(String name) {
+		private static String replaceUnderscores(String name) {
 			return name.replace('_', ' ');
 		}
 
-		private boolean hasParameters(Method method) {
-			return method.getParameterTypes().length > 0;
+		private static boolean hasParameters(Method method) {
+			return method.getParameterCount() > 0;
 		}
 	}
 
