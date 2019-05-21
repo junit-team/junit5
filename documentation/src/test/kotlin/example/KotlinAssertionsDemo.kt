@@ -10,15 +10,18 @@
 package example
 
 // tag::user_guide[]
+
 import example.domain.Person
 import example.util.Calculator
-
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.assertTimeout
+import org.junit.jupiter.api.assertTimeoutPreemptively
+import java.time.Duration
 
 class KotlinAssertionsDemo {
 
@@ -68,6 +71,28 @@ class KotlinAssertionsDemo {
         assertAll("People with last name of Doe",
             people.map { { assertEquals("Doe", it.lastName) } }
         )
+    }
+
+    @Test
+    fun `timeout not exceeded testing`() {
+        val fibonacciCalculator = FibonacciCalculator()
+        val result = assertTimeout(Duration.ofMillis(50)) {
+            fibonacciCalculator.fib(14)
+        }
+        assertEquals(377, result)
+    }
+
+    // end::user_guide[]
+    @extensions.ExpectToFail
+    // tag::user_guide[]
+    @Test
+    fun `timeout exceeded with preemptive termination`() {
+        // The following assertion fails with an error message similar to:
+        // execution timed out after 10 ms
+        assertTimeoutPreemptively(Duration.ofMillis(10)) {
+            // Simulate task that takes more than 10 ms.
+            Thread.sleep(100)
+        }
     }
 }
 // end::user_guide[]
