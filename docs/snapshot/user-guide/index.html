@@ -1677,13 +1677,15 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">import</span> <span class="include">example.domain.Person</span>
 <span class="keyword">import</span> <span class="include">example.util.Calculator</span>
-
-<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>
-<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.assertAll</span>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.assertAll</span>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.assertDoesNotThrow</span>
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.assertThrows</span>
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.assertTimeout</span>
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.assertTimeoutPreemptively</span>
+<span class="keyword">import</span> <span class="include">java.time.Duration</span>
 
 <span class="type">class</span> <span class="class">KotlinAssertionsDemo</span> {
 
@@ -1733,6 +1735,25 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
         assertAll(<span class="string"><span class="delimiter">&quot;</span><span class="content">People with last name of Doe</span><span class="delimiter">&quot;</span></span>,
             people.map { { assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Doe</span><span class="delimiter">&quot;</span></span>, <span class="local-variable">it</span>.lastName) } }
         )
+    }
+
+    <span class="annotation">@Test</span>
+    fun <span class="error">`</span>timeout not exceeded testing<span class="error">`</span>() {
+        val fibonacciCalculator = FibonacciCalculator()
+        val result = assertTimeout(<span class="predefined-type">Duration</span>.ofMillis(<span class="integer">50</span>)) {
+            fibonacciCalculator.fib(<span class="integer">14</span>)
+        }
+        assertEquals(<span class="integer">377</span>, result)
+    }
+
+    <span class="annotation">@Test</span>
+    fun <span class="error">`</span>timeout exceeded with preemptive termination<span class="error">`</span>() {
+        <span class="comment">// The following assertion fails with an error message similar to:</span>
+        <span class="comment">// execution timed out after 10 ms</span>
+        assertTimeoutPreemptively(<span class="predefined-type">Duration</span>.ofMillis(<span class="integer">10</span>)) {
+            <span class="comment">// Simulate task that takes more than 10 ms.</span>
+            <span class="predefined-type">Thread</span>.sleep(<span class="integer">100</span>)
+        }
     }
 }</code></pre>
 </div>
@@ -9307,7 +9328,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-05-23 16:00:53 UTC
+Last updated 2019-05-23 19:31:15 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
