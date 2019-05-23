@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.engine.descriptor.CustomDisplayNameGenerator;
 
 class CachingJupiterConfigurationTests {
 
@@ -83,6 +84,19 @@ class CachingJupiterConfigurationTests {
 		assertThat(cache.isParallelExecutionEnabled()).isEqualTo(true);
 
 		verify(delegate, times(1)).isParallelExecutionEnabled();
+		verifyNoMoreInteractions(delegate);
+	}
+
+	@Test
+	void cachesDefaultDisplayNameGenerator() {
+		CustomDisplayNameGenerator customDisplayNameGenerator = new CustomDisplayNameGenerator();
+		when(delegate.getDefaultDisplayNameGenerator()).thenReturn(customDisplayNameGenerator);
+
+		// call `cache.getDefaultDisplayNameGenerator()` twice to and verify only delegate method is called only once.
+		assertThat(cache.getDefaultDisplayNameGenerator()).isEqualTo(customDisplayNameGenerator);
+		assertThat(cache.getDefaultDisplayNameGenerator()).isEqualTo(customDisplayNameGenerator);
+
+		verify(delegate, times(1)).getDefaultDisplayNameGenerator();
 		verifyNoMoreInteractions(delegate);
 	}
 

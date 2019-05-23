@@ -68,6 +68,9 @@ on GitHub.
 * New `InvocationInterceptor` extension API (see
   <<../user-guide/index.adoc#extensions-intercepting-invocations, User Guide>> for
   details).
+* New `junit.jupiter.displayname.generator.default` configuration parameter to set the
+  default `DisplayNameGenerator` that will be used unless `@DisplayName` or
+  `@DisplayNameGeneration` are present.
 
 
 [[release-notes-5.5.0-M2-junit-vintage]]

@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -72,4 +73,9 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 			key -> delegate.getExecutionConditionFilter());
 	}
 
+	@Override
+	public DisplayNameGenerator getDefaultDisplayNameGenerator() {
+		return (DisplayNameGenerator) cache.computeIfAbsent(DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME,
+			key -> delegate.getDefaultDisplayNameGenerator());
+	}
 }

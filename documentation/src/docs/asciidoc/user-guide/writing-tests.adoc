@@ -167,6 +167,40 @@ include::{testDir}/example/DisplayNameGeneratorDemo.java[tags=user_guide]
       '-- Year 2048 is a leap year. [OK]
 ```
 
+[[writing-tests-display-name-generator-default]]
+==== Setting the Default Display Name Generator
+
+You can use the `junit.jupiter.displayname.generator.default`
+<<running-tests-config-params, configuration parameter>> to specify the fully qualified
+class name of the `DisplayNameGenerator` you would like to use by default. Just like for
+display name generators configured via the `@DisplayNameGeneration` annotation, the
+supplied class has to implement the `DisplayNameGenerator` interface. The default display
+name generator will be used for all tests unless the `@DisplayNameGeneration` annotation
+is present on an enclosing test class.
+
+For example, to use the `ReplaceUnderscores` display name generator by default, you should
+set the configuration parameter to the corresponding fully qualified class name (e.g., in
+`src/test/resources/junit-platform.properties`):
+
+[source,properties,indent=0]
+----
+junit.jupiter.displayname.generator.default = \
+    org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores
+----
+
+Similarly, you can specify the fully qualified name of any custom class that implements
+`DisplayNameGenerator`.
+
+Summing up, the display name for a test class or method is determined according to the
+following precedence:
+
+1. value of the `@DisplayName` annotation, if present
+2. by calling the `DisplayNameGenerator` specified in the `@DisplayNameGeneration`
+   annotation, if present
+3. by calling the default `DisplayNameGenerator` configured via the configuration
+   parameter, if present
+4. by calling `org.junit.jupiter.api.DisplayNameGenerator.Standard`
+
 [[writing-tests-assertions]]
 === Assertions
 

@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -35,6 +36,9 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 
 	private static final EnumConfigurationParameterConverter<Lifecycle> lifecycleConverter = //
 		new EnumConfigurationParameterConverter<>(Lifecycle.class, "test instance lifecycle mode");
+
+	private static final DisplayNameGeneratorParameterConverter displayNameGeneratorConverter = //
+		new DisplayNameGeneratorParameterConverter();
 
 	private final ConfigurationParameters configurationParameters;
 
@@ -77,4 +81,9 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 			DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME);
 	}
 
+	@Override
+	public DisplayNameGenerator getDefaultDisplayNameGenerator() {
+		return displayNameGeneratorConverter.get(configurationParameters, DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME,
+			DisplayNameGenerator.Standard::new);
+	}
 }

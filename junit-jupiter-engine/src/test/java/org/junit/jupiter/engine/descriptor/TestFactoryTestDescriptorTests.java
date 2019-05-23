@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -116,9 +117,13 @@ class TestFactoryTestDescriptorTests {
 		private ExtensionContext extensionContext;
 		private TestFactoryTestDescriptor descriptor;
 		private boolean isClosed;
+		private JupiterConfiguration jupiterConfiguration;
 
 		@BeforeEach
 		void before() throws Exception {
+			jupiterConfiguration = mock(JupiterConfiguration.class);
+			when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(new DisplayNameGenerator.Standard());
+
 			extensionContext = mock(ExtensionContext.class);
 			isClosed = false;
 
@@ -131,7 +136,7 @@ class TestFactoryTestDescriptorTests {
 
 			Method testMethod = CustomStreamTestCase.class.getDeclaredMethod("customStream");
 			descriptor = new TestFactoryTestDescriptor(UniqueId.forEngine("engine"), CustomStreamTestCase.class,
-				testMethod, mock(JupiterConfiguration.class));
+				testMethod, jupiterConfiguration);
 			when(extensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
 		}
 
