@@ -70,7 +70,7 @@ on GitHub.
   details).
 * New `junit.jupiter.displayname.generator.default` configuration parameter to set the
   default `DisplayNameGenerator` that will be used unless `@DisplayName` or
-  `@DisplayNameGeneration` are present.
+  `@DisplayNameGeneration` is present.
 
 
 [[release-notes-5.5.0-M2-junit-vintage]]

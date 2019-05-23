@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.config;
 
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -92,9 +92,9 @@ class CachingJupiterConfigurationTests {
 		CustomDisplayNameGenerator customDisplayNameGenerator = new CustomDisplayNameGenerator();
 		when(delegate.getDefaultDisplayNameGenerator()).thenReturn(customDisplayNameGenerator);
 
-		// call `cache.getDefaultDisplayNameGenerator()` twice to and verify only delegate method is called only once.
-		assertThat(cache.getDefaultDisplayNameGenerator()).isEqualTo(customDisplayNameGenerator);
-		assertThat(cache.getDefaultDisplayNameGenerator()).isEqualTo(customDisplayNameGenerator);
+		// call `cache.getDefaultDisplayNameGenerator()` twice to verify the delegate method is called only once.
+		assertThat(cache.getDefaultDisplayNameGenerator()).isSameAs(customDisplayNameGenerator);
+		assertThat(cache.getDefaultDisplayNameGenerator()).isSameAs(customDisplayNameGenerator);
 
 		verify(delegate, times(1)).getDefaultDisplayNameGenerator();
 		verifyNoMoreInteractions(delegate);

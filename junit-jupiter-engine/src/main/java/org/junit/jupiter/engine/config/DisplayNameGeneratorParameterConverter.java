@@ -52,7 +52,7 @@ class DisplayNameGeneratorParameterConverter {
 		logger.warn(cause,
 			() -> String.format(
 				"Failed to load default display name generator class '%s' set via the '%s' configuration parameter."
-						+ " Falling back to default behaviour.",
+						+ " Falling back to default behavior.",
 				className, key));
 	}
 

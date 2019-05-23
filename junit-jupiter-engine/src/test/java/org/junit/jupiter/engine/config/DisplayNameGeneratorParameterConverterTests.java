@@ -27,6 +27,9 @@ import org.junit.jupiter.engine.descriptor.CustomDisplayNameGenerator;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.ConfigurationParameters;
 
+/**
+ * @since 5.5
+ */
 @TrackLogRecords
 class DisplayNameGeneratorParameterConverterTests {
 
@@ -103,7 +106,7 @@ class DisplayNameGeneratorParameterConverterTests {
 		assertExpectedLogMessage(listener, Level.WARNING,
 			"Failed to load default display name generator "
 					+ "class 'random-string' set via the 'junit.jupiter.displayname.generator.default' "
-					+ "configuration parameter. Falling back to default behaviour.");
+					+ "configuration parameter. Falling back to default behavior.");
 	}
 
 	@Test
@@ -119,7 +122,7 @@ class DisplayNameGeneratorParameterConverterTests {
 		assertExpectedLogMessage(listener, Level.WARNING,
 			"Failed to load default display name generator class 'java.lang.Object' "
 					+ "set via the 'junit.jupiter.displayname.generator.default' configuration parameter. "
-					+ "Falling back to default behaviour.");
+					+ "Falling back to default behavior.");
 	}
 
 	@Test
@@ -136,7 +139,7 @@ class DisplayNameGeneratorParameterConverterTests {
 		assertExpectedLogMessage(listener, Level.WARNING,
 			"Failed to load default display name generator class 'CustomDisplayNameGenerator' "
 					+ "set via the 'junit.jupiter.displayname.generator.default' configuration parameter. "
-					+ "Falling back to default behaviour.");
+					+ "Falling back to default behavior.");
 	}
 
 	private void assertExpectedLogMessage(LogRecordListener listener, Level level, String expectedMessage) {
