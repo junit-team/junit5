@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
 import org.junit.platform.commons.PreconditionViolationException;
 
 /**
@@ -49,7 +48,7 @@ class MethodSourceTests extends AbstractTestSourceTests {
 	}
 
 	@Test
-	void equalsAndHashCodeForMethodSource(TestInfo testInfo) throws Exception {
+	void equalsAndHashCodeForMethodSource() throws Exception {
 		Method method1 = getMethod("method1");
 		Method method2 = getMethod("method2");
 		assertEqualsAndHashCode(MethodSource.from(method1), MethodSource.from(method1), MethodSource.from(method2));
@@ -95,7 +94,7 @@ class MethodSourceTests extends AbstractTestSourceTests {
 	}
 
 	@Test
-	void instantiationWithClassAndMethodAsStringAndParamsAsClassVarargsShouldResultInACorrectObject() throws Exception {
+	void instantiationWithClassAndMethodAsStringAndParamsAsClassVarargsShouldResultInACorrectObject() {
 		MethodSource source = MethodSource.from(String.class.getName(), "lastIndexOf", String.class, int.class);
 		assertEquals(String.class.getName(), source.getClassName());
 		assertEquals("lastIndexOf", source.getMethodName());
@@ -210,9 +209,11 @@ class MethodSourceTests extends AbstractTestSourceTests {
 		return getClass().getDeclaredMethod(name, String.class);
 	}
 
+	@SuppressWarnings("unused")
 	void method1(String text) {
 	}
 
+	@SuppressWarnings("unused")
 	void method2(String text) {
 	}
 
