@@ -52,7 +52,8 @@ public class MethodSource implements TestSource {
 	 *
 	 * @param className the class name; must not be {@code null} or blank
 	 * @param methodName the method name; must not be {@code null} or blank
-	 * @param methodParameterTypes the method parameter types as a string
+	 * @param methodParameterTypes a comma-separated list of fully qualified
+	 * class names representing the method parameter types
 	 */
 	public static MethodSource from(String className, String methodName, String methodParameterTypes) {
 		return new MethodSource(className, methodName, methodParameterTypes);
