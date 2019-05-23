@@ -31,6 +31,7 @@ on GitHub.
   `java.util.Optional<? extends AnnotatedElement>` argument.
 * Exceptions thrown by `TestExecutionListeners` no longer cause test execution to abort.
   Instead, they will be logged as warnings now.
+* New `MethodSource.from()` variant that accepts `String, String, Class<?>...` as arguments.
 
 
 [[release-notes-5.5.0-M2-junit-jupiter]]
