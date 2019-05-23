@@ -45,7 +45,10 @@ class TimeoutInvocation<T> implements Invocation<T> {
 			failure = t;
 		}
 		finally {
-			future.cancel(true);
+			boolean cancelled = future.cancel(false);
+			if (!cancelled) {
+				future.get();
+			}
 			if (interruptTask.executed) {
 				Thread.interrupted();
 				failure = createTimeoutException(failure);
