@@ -95,6 +95,14 @@ class MethodSourceTests extends AbstractTestSourceTests {
 	}
 
 	@Test
+	void instantiationWithClassAndMethodAsStringAndParamsAsClassVarargsShouldResultInACorrectObject() throws Exception {
+		MethodSource source = MethodSource.from(String.class.getName(), "lastIndexOf", String.class, int.class);
+		assertEquals(String.class.getName(), source.getClassName());
+		assertEquals("lastIndexOf", source.getMethodName());
+		assertEquals("java.lang.String, int", source.getMethodParameterTypes());
+	}
+
+	@Test
 	void twoEqualMethodsShouldHaveEqualMethodSourceObjects() {
 		assertEquals(MethodSource.from("TestClass1", "testMethod1"), MethodSource.from("TestClass1", "testMethod1"));
 	}
