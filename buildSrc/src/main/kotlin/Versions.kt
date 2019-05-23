@@ -38,7 +38,7 @@ object Versions {
     // Asciidoctor
     val asciidoctorDiagram = "1.5.9"
     val asciidoctorJ = "1.5.7"
-    val asciidoctorPdf = "1.5.0-alpha.16"
+    val asciidoctorPdf = "1.5.0-alpha.17"
     val asciidoctorPlugin = "1.5.8.1"
     val jruby = "9.1.17.0"
 
