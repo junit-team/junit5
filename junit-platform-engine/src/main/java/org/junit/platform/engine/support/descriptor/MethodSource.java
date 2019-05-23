@@ -68,6 +68,7 @@ public class MethodSource implements TestSource {
 	 * @param methodParameterTypes a varargs array of classes representing the method parameter types
 	 * @since 1.5
 	 */
+	@API(status = STABLE, since = "1.5")
 	public static MethodSource from(String className, String methodName, Class<?>... methodParameterTypes) {
 		return new MethodSource(className, methodName, nullSafeToString(methodParameterTypes));
 	}
