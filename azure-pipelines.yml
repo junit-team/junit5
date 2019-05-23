@@ -1,9 +1,3 @@
-trigger:
-  branches:
-    include:
-    - master
-    - releases/*
-
 jobs:
 - job: linux_11
   displayName: Linux (OpenJDK 11)
