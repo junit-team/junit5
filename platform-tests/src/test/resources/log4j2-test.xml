@@ -11,6 +11,7 @@
 		<Logger name="org.junit.platform.engine.support.descriptor.DemoClassTestDescriptor" level="error" />
 		<Logger name="org.junit.platform.launcher.core.DefaultLauncher" level="error" />
 		<Logger name="org.junit.platform.launcher.core.InternalTestPlan" level="error" />
+		<Logger name="org.junit.platform.launcher.core.TestExecutionListenerRegistry" level="error" />
 		<Logger name="org.junit.ApiReportGenerator" level="error" />
 		<Logger name="org.junit.vintage.engine" level="error" />
 		<Logger name="org.junit.jupiter.engine" level="error" />

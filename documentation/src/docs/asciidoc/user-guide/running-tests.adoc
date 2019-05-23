@@ -449,13 +449,11 @@ link:https://ant.apache.org/manual/Types/resources.html#collection[resource coll
 for allowing users to select the tests that they want executed by test engines. This
 gives the task a consistent and natural feel when compared to many other core Ant tasks.
 
-NOTE: The version of the `junitlauncher` task shipped in Ant 1.10.3 provides basic,
-minimal support for launching the JUnit Platform. Additional enhancements (including
-support for forking the tests in a separate JVM) will be available in subsequent releases
-of Ant.
+Starting with version `1.10.6` of Ant, the `junitlauncher` task supports
+link:https://ant.apache.org/manual/Tasks/junitlauncher.html#fork[forking the tests in a separate JVM].
 
 The `build.xml` file in the `{junit5-jupiter-starter-ant}` project demonstrates how to use
-it and can serve as a starting point.
+the task and can serve as a starting point.
 
 ===== Basic Usage
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ant-starter" default="build" basedir=".">
 
-    <fail message="Ant 1.10.4+ is required!">
+    <fail message="Ant 1.10.6+ is required!">
         <condition>
             <not>
-                <antversion atleast="1.10.4"/>
+                <antversion atleast="1.10.6"/>
             </not>
         </condition>
     </fail>

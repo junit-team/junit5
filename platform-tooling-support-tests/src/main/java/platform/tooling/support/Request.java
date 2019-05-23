@@ -37,7 +37,7 @@ public class Request {
 	private static final Path TOOLS = Paths.get("build", "test-tools");
 	public static final Path WORKSPACE = Paths.get("build", "test-workspace");
 
-	private static final String MAVEN_VERSION = "3.6.0";
+	private static final String MAVEN_VERSION = "3.6.1";
 
 	public static Builder builder() {
 		return new Builder();
