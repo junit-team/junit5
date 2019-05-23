@@ -386,7 +386,6 @@
 9d016e6a22e9c766fd77b679afb084d5  documentation/src/test/java/extensions/ExpectToFail.java
 9d44a6afe224de1845e8e24f1097b4dd  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnOs.java
 9d603ba0b8b6d62c06d9ab95bf70eff7  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/PackageSource.java
-9d6304fff7d20a30ec04cda81e9c1a8c  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/MethodSource.java
 9d73eb469352f3a1417690bff98d1b08  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.java
 9da9b50df5ff77b2421caca2648c6220  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreePrintingListener.java
 9e29596735bc95f96fcb9b6c9c78340a  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LoggerFactory.java
@@ -424,6 +423,7 @@ a7ff870938018642f94c02e5fc9b8cae  documentation/src/test/java/example/callbacks/
 a83b7248efb36b4d2b242b97690080ad  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/BeforeEachMethodAdapter.java
 a85a4b9321a0da337d9a344eebd52f05  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicExtensionContext.java
 a93801a84f5bf1ec8fd8e6ab1e960501  junit-platform-commons/src/main/java/org/junit/platform/commons/function/package-info.java
+a98f3eff4a756127b739893edc52273a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/MethodSource.java
 aa87b3e6180f9a5e202ec3a995659867  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ServiceLoaderTestExecutionListenerRegistry.java
 aa8fabf1606dce52dcd51e2c83e5d6dd  documentation/src/docs/asciidoc/user-guide/images/extensions_lifecycle.png
 aaa981df2823a75b1f70fc49660bda0f  documentation/src/test/java/example/registration/DocumentationDemo.java
