@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.descriptor.MethodSourceUtils.METHOD_SCHEME;
 import static org.junit.platform.engine.support.descriptor.ClasspathResourceSource.CLASSPATH_SCHEME;
 
 import java.lang.reflect.Method;
@@ -165,7 +166,13 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	 */
 	static TestSource fromUri(URI uri) {
 		Preconditions.notNull(uri, "URI must not be null");
-		return CLASSPATH_SCHEME.equals(uri.getScheme()) ? ClasspathResourceSource.from(uri) : UriSource.from(uri);
+		if (CLASSPATH_SCHEME.equals(uri.getScheme())) {
+			return ClasspathResourceSource.from(uri);
+		} else if (METHOD_SCHEME.equals(uri.getScheme())) {
+			return MethodSourceUtils.fromUri(uri);
+		} else {
+			return UriSource.from(uri);
+		}
 	}
 
 	/**

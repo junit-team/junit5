@@ -37,6 +37,7 @@ import org.junit.platform.engine.support.descriptor.ClasspathResourceSource;
 import org.junit.platform.engine.support.descriptor.DirectorySource;
 import org.junit.platform.engine.support.descriptor.FilePosition;
 import org.junit.platform.engine.support.descriptor.FileSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.engine.support.descriptor.UriSource;
 import org.junit.platform.engine.support.hierarchical.Node;
 import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
@@ -108,6 +109,18 @@ class TestFactoryTestDescriptorTests {
 			assertThat(source.getUri()).isEqualTo(uri);
 		}
 
+		@Test
+		void methodSourceFromUri() {
+			URI uri = URI.create("method:org.junit.Foo#bar(java.lang.String,%20java.lang.String[])");
+			TestSource testSource = TestFactoryTestDescriptor.fromUri(uri);
+
+			assertThat(testSource).isInstanceOf(MethodSource.class);
+			assertThat(testSource.getClass().getSimpleName()).isEqualTo("MethodSource");
+			MethodSource source = (MethodSource) testSource;
+			assertThat(source.getClassName()).isEqualTo("org.junit.Foo");
+			assertThat(source.getMethodName()).isEqualTo("bar");
+			assertThat(source.getMethodParameterTypes()).isEqualTo("java.lang.String, java.lang.String[]");
+		}
 	}
 
 	@Nested
