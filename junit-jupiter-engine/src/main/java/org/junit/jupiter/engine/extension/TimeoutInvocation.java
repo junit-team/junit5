@@ -16,6 +16,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
+import org.junit.platform.commons.util.BlacklistedExceptions;
 
 class TimeoutInvocation<T> implements Invocation<T> {
 
@@ -42,6 +43,7 @@ class TimeoutInvocation<T> implements Invocation<T> {
 			result = delegate.proceed();
 		}
 		catch (Throwable t) {
+			BlacklistedExceptions.rethrowIfBlacklisted(t);
 			failure = t;
 		}
 		finally {

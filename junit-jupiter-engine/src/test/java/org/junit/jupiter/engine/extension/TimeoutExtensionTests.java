@@ -14,6 +14,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
 import static org.junit.jupiter.engine.config.JupiterConfiguration.DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
@@ -232,6 +233,11 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		}));
 	}
 
+	@Test
+	void doesNotSwallowBlacklistedExceptions() {
+		assertThrows(OutOfMemoryError.class, () -> executeTestsForClass(BlacklistedExceptionTestCase.class));
+	}
+
 	private Execution findExecution(Events events, String displayName) {
 		return getOnlyElement(events //
 				.executions() //
@@ -377,6 +383,15 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		@AfterAll
 		static void afterAll() throws Exception {
 			Thread.sleep(10);
+		}
+	}
+
+	static class BlacklistedExceptionTestCase {
+		@Test
+		@Timeout(value = 1, unit = NANOSECONDS)
+		void test() {
+			new UninterruptibleInvocation(10, MILLISECONDS).proceed();
+			throw new OutOfMemoryError();
 		}
 	}
 
