@@ -15,6 +15,7 @@ import org.apiguardian.api.API
 import org.apiguardian.api.API.Status.EXPERIMENTAL
 import org.junit.jupiter.api.function.Executable
 import org.junit.jupiter.api.function.ThrowingSupplier
+import java.time.Duration
 import java.util.function.Supplier
 import java.util.stream.Stream
 
@@ -164,3 +165,87 @@ fun <R> assertDoesNotThrow(message: String, executable: () -> R): R =
 @API(status = EXPERIMENTAL, since = "5.5")
 fun <R> assertDoesNotThrow(message: () -> String, executable: () -> R): R =
     Assertions.assertDoesNotThrow(ThrowingSupplier(executable), Supplier(message))
+
+/**
+ * Example usage:
+ * ```kotlin
+ * val result = assertTimeout(Duration.seconds(1)) {
+ *     // Code block that is being timed.
+ * }
+ * ```
+ * @see Assertions.assertTimeout
+ * @paramR the result of the [executable].
+ */
+@API(status = EXPERIMENTAL, since = "5.5")
+fun <R> assertTimeout(timeout: Duration, executable: () -> R): R =
+    Assertions.assertTimeout(timeout, executable)
+
+/**
+ * Example usage:
+ * ```kotlin
+ * val result = assertTimeout(Duration.seconds(1), "Should only take one second") {
+ *     // Code block that is being timed.
+ * }
+ * ```
+ * @see Assertions.assertTimeout
+ * @paramR the result of the [executable].
+ */
+@API(status = EXPERIMENTAL, since = "5.5")
+fun <R> assertTimeout(timeout: Duration, message: String, executable: () -> R): R =
+    Assertions.assertTimeout(timeout, executable, message)
+
+/**
+ * Example usage:
+ * ```kotlin
+ * val result = assertTimeout(Duration.seconds(1), { "Should only take one second" }) {
+ *     // Code block that is being timed.
+ * }
+ * ```
+ * @see Assertions.assertTimeout
+ * @paramR the result of the [executable].
+ */
+@API(status = EXPERIMENTAL, since = "5.5")
+fun <R> assertTimeout(timeout: Duration, message: () -> String, executable: () -> R): R =
+    Assertions.assertTimeout(timeout, executable, message)
+
+/**
+ * Example usage:
+ * ```kotlin
+ * val result = assertTimeoutPreemptively(Duration.seconds(1)) {
+ *     // Code block that is being timed.
+ * }
+ * ```
+ * @see Assertions.assertTimeoutPreemptively
+ * @paramR the result of the [executable].
+ */
+@API(status = EXPERIMENTAL, since = "5.5")
+fun <R> assertTimeoutPreemptively(timeout: Duration, executable: () -> R): R =
+    Assertions.assertTimeoutPreemptively(timeout, executable)
+
+/**
+ * Example usage:
+ * ```kotlin
+ * val result = assertTimeoutPreemptively(Duration.seconds(1), "Should only take one second") {
+ *     // Code block that is being timed.
+ * }
+ * ```
+ * @see Assertions.assertTimeoutPreemptively
+ * @paramR the result of the [executable].
+ */
+@API(status = EXPERIMENTAL, since = "5.5")
+fun <R> assertTimeoutPreemptively(timeout: Duration, message: String, executable: () -> R): R =
+    Assertions.assertTimeoutPreemptively(timeout, executable, message)
+
+/**
+ * Example usage:
+ * ```kotlin
+ * val result = assertTimeoutPreemptively(Duration.seconds(1), { "Should only take one second" }) {
+ *     // Code block that is being timed.
+ * }
+ * ```
+ * @see Assertions.assertTimeoutPreemptively
+ * @paramR the result of the [executable].
+ */
+@API(status = EXPERIMENTAL, since = "5.5")
+fun <R> assertTimeoutPreemptively(timeout: Duration, message: () -> String, executable: () -> R): R =
+    Assertions.assertTimeoutPreemptively(timeout, executable, message)
