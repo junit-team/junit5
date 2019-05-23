@@ -13,12 +13,12 @@ package org.junit.jupiter.api;
 import static java.lang.String.format;
 import static java.lang.String.join;
 import static org.junit.jupiter.api.AssertionUtils.buildPrefix;
-import static org.junit.jupiter.api.AssertionUtils.failNotEqual;
 import static org.junit.jupiter.api.AssertionUtils.nullSafeGet;
 import static org.junit.platform.commons.util.Preconditions.condition;
 import static org.junit.platform.commons.util.Preconditions.notNull;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
@@ -37,6 +37,7 @@ class AssertLinesMatch {
 	}
 
 	private final static int MAX_SNIPPET_LENGTH = 21;
+	private final static int MAX_LINES_IN_FAILURE_MESSAGE = 42;
 
 	static void assertLinesMatch(List<String> expectedLines, List<String> actualLines) {
 		assertLinesMatch(expectedLines, actualLines, (Object) null);
@@ -157,18 +158,24 @@ class AssertLinesMatch {
 
 	private static void fail(List<String> expectedLines, List<String> actualLines, Object messageOrSupplier,
 			String format, Object... args) {
-		if (expectedLines.size() > MAX_SNIPPET_LENGTH) {
-			expectedLines.subList(0, MAX_SNIPPET_LENGTH);
-		}
-		if (actualLines.size() > MAX_SNIPPET_LENGTH) {
-			actualLines.subList(0, MAX_SNIPPET_LENGTH);
-		}
+		List<String> expectedLinesForMessage = truncateForFailureMessage(expectedLines);
+		List<String> actualLinesForMessage = truncateForFailureMessage(actualLines);
 		String newLine = System.lineSeparator();
-		String expected = newLine + join(newLine, expectedLines) + newLine;
-		String actual = newLine + join(newLine, actualLines) + newLine;
-		String prefix = buildPrefix(nullSafeGet(messageOrSupplier));
-		String message = prefix + format(format, args);
-		failNotEqual(expected, actual, message);
+		String message = AssertionUtils.format( //
+			newLine + join(newLine, expectedLinesForMessage) + newLine, // expected
+			newLine + join(newLine, actualLinesForMessage) + newLine, // actual
+			buildPrefix(nullSafeGet(messageOrSupplier)) + format(format, args));
+		AssertionUtils.fail(message, join(newLine, expectedLines), join(newLine, actualLines));
+	}
+
+	private static List<String> truncateForFailureMessage(List<String> lines) {
+		int diff = lines.size() - MAX_LINES_IN_FAILURE_MESSAGE;
+		if (diff <= 0) {
+			return lines;
+		}
+		List<String> truncatedLines = new ArrayList<>(lines.subList(0, MAX_LINES_IN_FAILURE_MESSAGE));
+		truncatedLines.add(format("[omitted %d line(s)]", diff));
+		return truncatedLines;
 	}
 
 	static boolean isFastForwardLine(String line) {

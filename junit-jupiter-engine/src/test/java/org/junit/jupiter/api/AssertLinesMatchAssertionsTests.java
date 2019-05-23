@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.junit.platform.commons.PreconditionViolationException;
 import org.opentest4j.AssertionFailedError;
@@ -275,6 +277,26 @@ class AssertLinesMatchAssertionsTests {
 			() -> assertFalse(AssertLinesMatch.matches("12", "123")),
 			() -> assertFalse(AssertLinesMatch.matches("..+", "1")),
 			() -> assertFalse(AssertLinesMatch.matches("\\d\\d+", "1")));
+	}
+
+	@Test
+	void largeListsThatDoNotMatchAreTruncated() {
+		var expectedLines = IntStream.range(1, 999).boxed().map(Object::toString).collect(Collectors.toList());
+		var actualLines = IntStream.range(0, 1000).boxed().map(Object::toString).collect(Collectors.toList());
+		var exception = assertThrows(AssertionError.class,
+			() -> assertLinesMatch(expectedLines, actualLines, "custom message"));
+		assertLinesMatch(List.of("custom message ==> expected line #1:`1` doesn't match ==> expected: <", //
+			"1", "2", "3", //
+			">> MANY EXPECTED INTEGERS >>", //
+			"40", "41", "42", //
+			"[omitted 956 line(s)]", //
+			"> but was: <", //
+			"0", "1", "2", //
+			">> MANY ACTUAL INTEGERS >>", //
+			"39", "40", "41", //
+			"[omitted 958 line(s)]", //
+			">"), //
+			exception.getMessage().lines().collect(Collectors.toList()));
 	}
 
 	/**
