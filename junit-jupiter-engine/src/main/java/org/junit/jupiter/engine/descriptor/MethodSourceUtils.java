@@ -11,8 +11,6 @@
 package org.junit.jupiter.engine.descriptor;
 
 import java.net.URI;
-import java.util.Optional;
-import java.util.function.Supplier;
 
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -29,12 +27,12 @@ class MethodSourceUtils {
 		Preconditions.notNull(uri, "URI must not be null");
 		Preconditions.condition(METHOD_SCHEME.equals(uri.getScheme()),
 			() -> "URI [" + uri + "] must have [" + METHOD_SCHEME + "] scheme");
-
-		Supplier<IllegalArgumentException> illegalArgumentExceptionSupplier = () -> new IllegalArgumentException(
-			"Invalid method URI");
-		String schemeSpecificPart = Optional.ofNullable(uri.getSchemeSpecificPart()).orElseThrow(
-			illegalArgumentExceptionSupplier);
-		String fragment = Optional.ofNullable(uri.getFragment()).orElseThrow(illegalArgumentExceptionSupplier);
+		String schemeSpecificPart = uri.getSchemeSpecificPart();
+		Preconditions.notNull(schemeSpecificPart,
+			"Invalid method URI. Consult the Javadoc for org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod(String) for details on the supported format.");
+		String fragment = uri.getFragment();
+		Preconditions.notNull(fragment,
+			"Invalid method URI. Consult the Javadoc for org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod(String) for details on the supported format.");
 
 		String fullyQualifiedMethodName = schemeSpecificPart + "#" + fragment;
 		String[] methodSpec = ReflectionUtils.parseFullyQualifiedMethodName(fullyQualifiedMethodName);
