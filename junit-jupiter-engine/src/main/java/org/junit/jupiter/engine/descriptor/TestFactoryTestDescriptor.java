@@ -168,9 +168,11 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 		Preconditions.notNull(uri, "URI must not be null");
 		if (CLASSPATH_SCHEME.equals(uri.getScheme())) {
 			return ClasspathResourceSource.from(uri);
-		} else if (METHOD_SCHEME.equals(uri.getScheme())) {
+		}
+		else if (METHOD_SCHEME.equals(uri.getScheme())) {
 			return MethodSourceUtils.fromUri(uri);
-		} else {
+		}
+		else {
 			return UriSource.from(uri);
 		}
 	}

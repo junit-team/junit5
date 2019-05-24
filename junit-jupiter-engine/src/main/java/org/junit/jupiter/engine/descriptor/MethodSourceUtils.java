@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.engine.support.descriptor.MethodSource;
-
 import java.net.URI;
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 
 /**
  * @since 5.5
@@ -28,10 +28,12 @@ class MethodSourceUtils {
 	static MethodSource fromUri(URI uri) {
 		Preconditions.notNull(uri, "URI must not be null");
 		Preconditions.condition(METHOD_SCHEME.equals(uri.getScheme()),
-				() -> "URI [" + uri + "] must have [" + METHOD_SCHEME + "] scheme");
+			() -> "URI [" + uri + "] must have [" + METHOD_SCHEME + "] scheme");
 
-		Supplier<IllegalArgumentException> illegalArgumentExceptionSupplier = () -> new IllegalArgumentException("Invalid method URI");
-		String schemeSpecificPart = Optional.ofNullable(uri.getSchemeSpecificPart()).orElseThrow(illegalArgumentExceptionSupplier);
+		Supplier<IllegalArgumentException> illegalArgumentExceptionSupplier = () -> new IllegalArgumentException(
+			"Invalid method URI");
+		String schemeSpecificPart = Optional.ofNullable(uri.getSchemeSpecificPart()).orElseThrow(
+			illegalArgumentExceptionSupplier);
 		String fragment = Optional.ofNullable(uri.getFragment()).orElseThrow(illegalArgumentExceptionSupplier);
 
 		String fullyQualifiedMethodName = schemeSpecificPart + "#" + fragment;
