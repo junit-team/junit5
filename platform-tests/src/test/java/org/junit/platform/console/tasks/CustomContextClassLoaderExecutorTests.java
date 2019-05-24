@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +26,7 @@ class CustomContextClassLoaderExecutorTests {
 	@Test
 	void invokeWithoutCustomClassLoaderDoesNotSetClassLoader() throws Exception {
 		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
-		CustomContextClassLoaderExecutor executor = new CustomContextClassLoaderExecutor(Optional.empty());
+		CustomContextClassLoaderExecutor executor = new CustomContextClassLoaderExecutor(null);
 
 		int result = executor.invoke(() -> {
 			assertSame(originalClassLoader, Thread.currentThread().getContextClassLoader());
@@ -41,9 +40,8 @@ class CustomContextClassLoaderExecutorTests {
 	@Test
 	void invokeWithCustomClassLoaderSetsCustomAndResetsToOriginal() throws Exception {
 		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
-		ClassLoader customClassLoader = URLClassLoader.newInstance(new URL[0]);
-		CustomContextClassLoaderExecutor executor = new CustomContextClassLoaderExecutor(
-			Optional.of(customClassLoader));
+		URLClassLoader customClassLoader = URLClassLoader.newInstance(new URL[0]);
+		CustomContextClassLoaderExecutor executor = new CustomContextClassLoaderExecutor(customClassLoader);
 
 		int result = executor.invoke(() -> {
 			assertSame(customClassLoader, Thread.currentThread().getContextClassLoader());

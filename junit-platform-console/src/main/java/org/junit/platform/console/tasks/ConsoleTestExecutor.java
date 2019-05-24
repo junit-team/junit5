@@ -55,7 +55,8 @@ public class ConsoleTestExecutor {
 	}
 
 	public TestExecutionSummary execute(PrintWriter out) throws Exception {
-		return new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> executeTests(out));
+		URLClassLoader customClassLoaderOrNull = createCustomClassLoader();
+		return new CustomContextClassLoaderExecutor(customClassLoaderOrNull).invoke(() -> executeTests(out));
 	}
 
 	private TestExecutionSummary executeTests(PrintWriter out) {
@@ -73,15 +74,14 @@ public class ConsoleTestExecutor {
 		return summary;
 	}
 
-	private Optional<ClassLoader> createCustomClassLoader() {
+	private URLClassLoader createCustomClassLoader() {
 		List<Path> additionalClasspathEntries = options.getAdditionalClasspathEntries();
-		if (!additionalClasspathEntries.isEmpty()) {
-			URL[] urls = additionalClasspathEntries.stream().map(this::toURL).toArray(URL[]::new);
-			ClassLoader parentClassLoader = ClassLoaderUtils.getDefaultClassLoader();
-			ClassLoader customClassLoader = URLClassLoader.newInstance(urls, parentClassLoader);
-			return Optional.of(customClassLoader);
+		if (additionalClasspathEntries.isEmpty()) {
+			return null;
 		}
-		return Optional.empty();
+		URL[] urls = additionalClasspathEntries.stream().map(this::toURL).toArray(URL[]::new);
+		ClassLoader parentClassLoader = ClassLoaderUtils.getDefaultClassLoader();
+		return URLClassLoader.newInstance(urls, parentClassLoader);
 	}
 
 	private URL toURL(Path path) {

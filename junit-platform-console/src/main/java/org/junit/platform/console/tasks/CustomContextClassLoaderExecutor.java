@@ -10,38 +10,46 @@
 
 package org.junit.platform.console.tasks;
 
-import java.util.Optional;
+import java.net.URLClassLoader;
 import java.util.concurrent.Callable;
+
+import org.junit.platform.commons.util.BlacklistedExceptions;
 
 /**
  * @since 1.0
  */
 class CustomContextClassLoaderExecutor {
 
-	private final Optional<ClassLoader> customClassLoader;
+	private final URLClassLoader customClassLoaderOrNull;
 
-	CustomContextClassLoaderExecutor(Optional<ClassLoader> customClassLoader) {
-		this.customClassLoader = customClassLoader;
+	CustomContextClassLoaderExecutor(URLClassLoader customClassLoaderOrNull) {
+		this.customClassLoaderOrNull = customClassLoaderOrNull;
 	}
 
 	<T> T invoke(Callable<T> callable) throws Exception {
-		if (customClassLoader.isPresent()) {
+		if (customClassLoaderOrNull != null) {
 			// Only get/set context class loader when necessary to prevent problems with
 			// security managers
-			return replaceThreadContextClassLoaderAndInvoke(customClassLoader.get(), callable);
+			return replaceThreadContextClassLoaderAndInvoke(callable);
 		}
 		return callable.call();
 	}
 
-	private <T> T replaceThreadContextClassLoaderAndInvoke(ClassLoader customClassLoader, Callable<T> callable)
-			throws Exception {
+	private <T> T replaceThreadContextClassLoaderAndInvoke(Callable<T> callable) throws Exception {
 		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
 		try {
-			Thread.currentThread().setContextClassLoader(customClassLoader);
+			Thread.currentThread().setContextClassLoader(customClassLoaderOrNull);
 			return callable.call();
 		}
 		finally {
 			Thread.currentThread().setContextClassLoader(originalClassLoader);
+			try {
+				customClassLoaderOrNull.close();
+			}
+			catch (Throwable t) {
+				BlacklistedExceptions.rethrowIfBlacklisted(t);
+				// Ignore or log unchecked exceptions and errors?
+			}
 		}
 	}
 
