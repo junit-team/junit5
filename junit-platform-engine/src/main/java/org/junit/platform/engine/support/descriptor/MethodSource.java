@@ -65,7 +65,8 @@ public class MethodSource implements TestSource {
 	 *
 	 * @param className the class name; must not be {@code null} or blank
 	 * @param methodName the method name; must not be {@code null} or blank
-	 * @param methodParameterTypes a varargs array of classes representing the method parameter types
+	 * @param methodParameterTypes a varargs array of classes representing the
+	 * method parameter types
 	 * @since 1.5
 	 */
 	@API(status = STABLE, since = "1.5")
