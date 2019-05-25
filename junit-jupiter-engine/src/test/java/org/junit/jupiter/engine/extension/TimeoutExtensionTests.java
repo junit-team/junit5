@@ -45,6 +45,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
 import org.junit.platform.testkit.engine.Execution;
@@ -265,6 +266,17 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 					"$NestedClassWithOuterSetupMethodTestCase#setUp() timed out after 10 milliseconds");
 	}
 
+	@Test
+	@DisplayName("reports illegal timeout durations")
+	void reportsIllegalTimeoutDurations() {
+		EngineExecutionResults results = executeTestsForClass(IllegalTimeoutDurationTestCase.class);
+
+		Execution execution = findExecution(results.tests(), "testMethod()");
+		assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
+				.isInstanceOf(PreconditionViolationException.class) //
+				.hasMessage("timeout duration must be a positive number: 0");
+	}
+
 	private Execution findExecution(Events events, String displayName) {
 		return getOnlyElement(events //
 				.executions() //
@@ -461,6 +473,15 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 			void testMethod() {
 			}
 
+		}
+
+	}
+
+	static class IllegalTimeoutDurationTestCase {
+
+		@Test
+		@Timeout(0)
+		void testMethod() {
 		}
 
 	}

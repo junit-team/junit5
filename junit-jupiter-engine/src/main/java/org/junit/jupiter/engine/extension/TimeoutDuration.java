@@ -26,9 +26,9 @@ class TimeoutDuration {
 	private final TimeUnit unit;
 
 	TimeoutDuration(long value, TimeUnit unit) {
-		Preconditions.condition(value > 0, () -> "value must be greater than 0: " + value);
+		Preconditions.condition(value > 0, () -> "timeout duration must be a positive number: " + value);
 		this.value = value;
-		this.unit = Preconditions.notNull(unit, "unit must not be null");
+		this.unit = Preconditions.notNull(unit, "timeout unit must not be null");
 	}
 
 	public long getValue() {
