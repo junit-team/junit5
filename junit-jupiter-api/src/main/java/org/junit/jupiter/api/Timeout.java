@@ -34,7 +34,7 @@ import org.apiguardian.api.API;
 @Inherited
 @API(status = EXPERIMENTAL, since = "5.5")
 public @interface Timeout {
-	int value();
+	long value();
 
 	TimeUnit unit() default TimeUnit.SECONDS;
 }
