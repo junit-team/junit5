@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 
 class TimeoutDurationParser {
 
-	private static final Pattern PATTERN = Pattern.compile("([1-9]\\d*)((?:[nμm]?s)|m|h|d)?",
+	private static final Pattern PATTERN = Pattern.compile("([1-9]\\d*) ?((?:[nμm]?s)|m|h|d)?",
 		CASE_INSENSITIVE | UNICODE_CASE);
 	private static final Map<String, TimeUnit> UNITS_BY_ABBREVIATION;
 
@@ -56,7 +56,7 @@ class TimeoutDurationParser {
 					: UNITS_BY_ABBREVIATION.get(unitAbbreviation.toLowerCase(Locale.ENGLISH));
 			return new TimeoutDuration(value, unit);
 		}
-		throw new DateTimeParseException("Timeout duration is not in the expected format (<number>[ns|μs|ms|s|m|h|d])",
+		throw new DateTimeParseException("Timeout duration is not in the expected format (<number> [ns|μs|ms|s|m|h|d])",
 			text, 0);
 	}
 

@@ -17,13 +17,18 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import java.time.format.DateTimeParseException;
+import java.util.Map;
+import java.util.stream.Stream;
 
+import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
 class TimeoutDurationParserTests {
 
@@ -34,26 +39,32 @@ class TimeoutDurationParserTests {
 		assertEquals(new TimeoutDuration(42, SECONDS), parser.parse("42"));
 	}
 
-	@Test
-	void parsesLowerCaseDurations() {
-		assertAll(() -> assertEquals(new TimeoutDuration(42, NANOSECONDS), parser.parse("42ns")),
-			() -> assertEquals(new TimeoutDuration(42, MICROSECONDS), parser.parse("42μs")),
-			() -> assertEquals(new TimeoutDuration(42, MILLISECONDS), parser.parse("42ms")),
-			() -> assertEquals(new TimeoutDuration(42, SECONDS), parser.parse("42s")),
-			() -> assertEquals(new TimeoutDuration(42, MINUTES), parser.parse("42m")),
-			() -> assertEquals(new TimeoutDuration(42, HOURS), parser.parse("42h")),
-			() -> assertEquals(new TimeoutDuration(42, DAYS), parser.parse("42d")));
-	}
-
-	@Test
-	void parsesUpperCaseDurations() {
-		assertAll(() -> assertEquals(new TimeoutDuration(42, NANOSECONDS), parser.parse("42NS")),
-			() -> assertEquals(new TimeoutDuration(42, MICROSECONDS), parser.parse("42ΜS")),
-			() -> assertEquals(new TimeoutDuration(42, MILLISECONDS), parser.parse("42MS")),
-			() -> assertEquals(new TimeoutDuration(42, SECONDS), parser.parse("42S")),
-			() -> assertEquals(new TimeoutDuration(42, MINUTES), parser.parse("42M")),
-			() -> assertEquals(new TimeoutDuration(42, HOURS), parser.parse("42H")),
-			() -> assertEquals(new TimeoutDuration(42, DAYS), parser.parse("42D")));
+	@TestFactory
+	Stream<DynamicNode> parsesNumbersWithUnits() {
+		var unitsWithRepresentations = Map.of( //
+			NANOSECONDS, "ns", //
+			MICROSECONDS, "μs", //
+			MILLISECONDS, "ms", //
+			SECONDS, "s", //
+			MINUTES, "m", //
+			HOURS, "h", //
+			DAYS, "d");
+		return unitsWithRepresentations.entrySet().stream() //
+				.map(entry -> {
+					var unit = entry.getKey();
+					var plainRepresentation = entry.getValue();
+					var representations = Stream.of( //
+						plainRepresentation, //
+						" " + plainRepresentation, //
+						plainRepresentation.toUpperCase(), //
+						" " + plainRepresentation.toUpperCase());
+					return dynamicContainer(unit.name().toLowerCase(),
+						representations.map(representation -> dynamicTest("\"" + representation + "\"", () -> {
+							var expected = new TimeoutDuration(42, unit);
+							var actual = parser.parse("42" + representation);
+							assertEquals(expected, actual);
+						})));
+				});
 	}
 
 	@Test
