@@ -16,6 +16,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -46,7 +47,7 @@ class TimeoutInvocationTests {
 		}
 		finally {
 			executor.shutdown();
-			executor.awaitTermination(5, SECONDS);
+			assertTrue(executor.awaitTermination(5, SECONDS));
 		}
 	}
 }
