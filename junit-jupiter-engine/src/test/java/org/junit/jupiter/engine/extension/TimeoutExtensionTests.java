@@ -105,25 +105,29 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 				.hasMessage("testFactoryMethod() timed out after 10 milliseconds");
 	}
 
-	@Test
+	@TestFactory
 	@DisplayName("is applied on testable methods in annotated classes")
-	void appliesTimeoutOnTestableMethodsInAnnotatedClasses() {
-		EngineExecutionResults results = executeTests(request() //
-				.selectors(selectClass(TimeoutAnnotatedClassTestCase.class)) //
-				.configurationParameter(DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
-				.configurationParameter(DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
-				.configurationParameter(DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
-				.build());
+	Stream<DynamicTest> appliesTimeoutOnTestableMethodsInAnnotatedClasses() {
+		return Stream.of(TimeoutAnnotatedClassTestCase.class, InheritedTimeoutAnnotatedClassTestCase.class).map(
+			testClass -> dynamicTest(testClass.getSimpleName(), () -> {
+				EngineExecutionResults results = executeTests(request() //
+						.selectors(selectClass(testClass)) //
+						.configurationParameter(DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
+						.configurationParameter(DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
+						.configurationParameter(DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
+						.build());
 
-		Stream.of("testMethod()", "repetition 1", "repetition 2", "testFactoryMethod()").forEach(displayName -> {
-			Execution execution = findExecution(results.all(), displayName);
-			assertThat(execution.getDuration()) //
-					.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
-					.isLessThan(Duration.ofSeconds(1));
-			assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
-					.isInstanceOf(TimeoutException.class) //
-					.hasMessageEndingWith("timed out after 10000000 nanoseconds");
-		});
+				Stream.of("testMethod()", "repetition 1", "repetition 2", "testFactoryMethod()").forEach(
+					displayName -> {
+						Execution execution = findExecution(results.all(), displayName);
+						assertThat(execution.getDuration()) //
+								.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
+								.isLessThan(Duration.ofSeconds(1));
+						assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
+								.isInstanceOf(TimeoutException.class) //
+								.hasMessageEndingWith("timed out after 10000000 nanoseconds");
+					});
+			}));
 	}
 
 	@Test
@@ -338,6 +342,9 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 				return Stream.empty();
 			}
 		}
+	}
+
+	static class InheritedTimeoutAnnotatedClassTestCase extends TimeoutAnnotatedClassTestCase {
 	}
 
 	static class UninterruptibleMethodTestCase {
