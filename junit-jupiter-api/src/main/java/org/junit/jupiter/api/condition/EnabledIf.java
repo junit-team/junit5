@@ -27,7 +27,7 @@ import org.apiguardian.api.API;
  * <p>The decision is made by interpreting the return value of the supplied
  * {@linkplain #value script}, according to the following table.
  *
- * <table border="1">
+ * <table class="plain">
  * <tr>
  *   <th>Return Type</th>
  *   <th>Evaluation Result</th>
