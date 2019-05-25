@@ -18,6 +18,9 @@ import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
 
+/**
+ * @since 5.5
+ */
 class UninterruptibleInvocation implements Invocation<Void> {
 
 	private final long duration;

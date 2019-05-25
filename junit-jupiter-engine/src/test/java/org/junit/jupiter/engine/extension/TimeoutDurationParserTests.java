@@ -30,6 +30,9 @@ import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
+/**
+ * @since 5.5
+ */
 class TimeoutDurationParserTests {
 
 	private final TimeoutDurationParser parser = new TimeoutDurationParser();

@@ -25,6 +25,9 @@ import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 
+/**
+ * @since 5.5
+ */
 class TimeoutInvocationTests {
 
 	@Test

@@ -16,6 +16,9 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Timeout;
 import org.junit.platform.commons.util.Preconditions;
 
+/**
+ * @since 5.5
+ */
 class TimeoutDuration {
 
 	static TimeoutDuration from(Timeout timeout) {

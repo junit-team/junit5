@@ -18,6 +18,9 @@ import java.util.function.Supplier;
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
 import org.junit.platform.commons.util.BlacklistedExceptions;
 
+/**
+ * @since 5.5
+ */
 class TimeoutInvocation<T> implements Invocation<T> {
 
 	private final Invocation<T> delegate;

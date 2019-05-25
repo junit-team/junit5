@@ -30,6 +30,9 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 
+/**
+ * @since 5.5
+ */
 class TimeoutConfiguration {
 
 	private static final Logger logger = LoggerFactory.getLogger(TimeoutConfiguration.class);

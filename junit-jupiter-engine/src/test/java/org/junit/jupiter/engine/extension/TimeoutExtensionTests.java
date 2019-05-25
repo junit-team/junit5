@@ -50,6 +50,9 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
 import org.junit.platform.testkit.engine.Execution;
 
+/**
+ * @since 5.5
+ */
 @DisplayName("@Timeout")
 class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 

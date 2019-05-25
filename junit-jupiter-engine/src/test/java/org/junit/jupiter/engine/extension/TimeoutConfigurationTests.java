@@ -40,6 +40,9 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.platform.commons.logging.LogRecordListener;
 
+/**
+ * @since 5.5
+ */
 class TimeoutConfigurationTests {
 
 	ExtensionContext extensionContext = mock(ExtensionContext.class);

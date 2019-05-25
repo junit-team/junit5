@@ -30,6 +30,9 @@ import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
+/**
+ * @since 5.5
+ */
 class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, InvocationInterceptor {
 
 	private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(Timeout.class);
@@ -102,17 +105,14 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	private void interceptLifecycleMethod(Invocation<Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext,
 			TimeoutProvider defaultTimeoutProvider) throws Throwable {
-		TimeoutDuration timeoutConfiguration = readTimeoutFromAnnotation(
-			Optional.of(invocationContext.getExecutable())).orElse(null);
-		intercept(invocation, invocationContext, extensionContext, timeoutConfiguration, defaultTimeoutProvider);
+		TimeoutDuration timeout = readTimeoutFromAnnotation(Optional.of(invocationContext.getExecutable())).orElse(
+			null);
+		intercept(invocation, invocationContext, extensionContext, timeout, defaultTimeoutProvider);
 	}
 
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	private Optional<TimeoutDuration> readTimeoutFromAnnotation(Optional<AnnotatedElement> executable) {
-		return findTimeoutAnnotation(executable).map(TimeoutDuration::from);
-	}
-
-	private Optional<Timeout> findTimeoutAnnotation(Optional<AnnotatedElement> element) {
-		return AnnotationSupport.findAnnotation(element, Timeout.class);
+		return AnnotationSupport.findAnnotation(executable, Timeout.class).map(TimeoutDuration::from);
 	}
 
 	private <T> T interceptTestableMethod(Invocation<T> invocation,
@@ -168,7 +168,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	private interface TimeoutProvider extends Function<TimeoutConfiguration, Optional<TimeoutDuration>> {
 	}
 
-	static class ExecutorResource implements CloseableResource {
+	private static class ExecutorResource implements CloseableResource {
 
 		private final ScheduledExecutorService executor;
 
@@ -180,7 +180,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 			});
 		}
 
-		public ScheduledExecutorService get() {
+		ScheduledExecutorService get() {
 			return executor;
 		}
 

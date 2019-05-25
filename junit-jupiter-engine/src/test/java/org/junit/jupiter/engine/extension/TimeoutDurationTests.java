@@ -16,6 +16,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * @since 5.5
+ */
 class TimeoutDurationTests {
 
 	@Test
