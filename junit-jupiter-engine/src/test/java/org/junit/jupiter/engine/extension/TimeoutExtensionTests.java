@@ -250,6 +250,21 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		results.all().assertStatistics(stats -> stats.failed(0));
 	}
 
+	@Test
+	@DisplayName("includes fully qualified class name if method is not in the test class")
+	void includesClassNameIfMethodIsNotInTestClass() {
+		EngineExecutionResults results = executeTestsForClass(NestedClassWithOuterSetupMethodTestCase.class);
+
+		Execution execution = findExecution(results.tests(), "testMethod()");
+		assertThat(execution.getDuration()) //
+				.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
+				.isLessThan(Duration.ofSeconds(1));
+		assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
+				.isInstanceOf(TimeoutException.class) //
+				.hasMessageEndingWith(
+					"$NestedClassWithOuterSetupMethodTestCase#setUp() timed out after 10 milliseconds");
+	}
+
 	private Execution findExecution(Events events, String displayName) {
 		return getOnlyElement(events //
 				.executions() //
@@ -425,6 +440,29 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 			return Stream.of(dynamicTest("dynamicTest", () -> {
 			}));
 		}
+	}
+
+	static class NestedClassWithOuterSetupMethodTestCase {
+
+		@Timeout(value = 10, unit = MILLISECONDS)
+		@BeforeEach
+		void setUp() throws Exception {
+			Thread.sleep(1000);
+		}
+
+		@Nested
+		class NestedClass {
+
+			@BeforeEach
+			void setUp() {
+			}
+
+			@Test
+			void testMethod() {
+			}
+
+		}
+
 	}
 
 }
