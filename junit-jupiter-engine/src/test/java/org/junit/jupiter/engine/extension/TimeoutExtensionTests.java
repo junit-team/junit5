@@ -224,7 +224,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 			DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME, "testFactory()", //
 			DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME, "afterEach()", //
 			DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME, "afterAll()" //
-		).entrySet().stream().map(entry -> dynamicTest("Uses " + entry.getKey() + " config param", () -> {
+		).entrySet().stream().map(entry -> dynamicTest("uses " + entry.getKey() + " config param", () -> {
 			EngineExecutionResults results = executeTests(request() //
 					.selectors(selectClass(PlainTestCase.class)) //
 					.configurationParameter(entry.getKey(), "1ns") //
@@ -238,8 +238,16 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	@DisplayName("does not swallow blacklisted exceptions")
 	void doesNotSwallowBlacklistedExceptions() {
 		assertThrows(OutOfMemoryError.class, () -> executeTestsForClass(BlacklistedExceptionTestCase.class));
+	}
+
+	@Test
+	@DisplayName("does not affect tests that don't exceed the timeout")
+	void doesNotAffectTestsThatDoNotExceedTimeoutDuration() {
+		var results = executeTestsForClass(NonTimeoutExceedingTestCase.class);
+		results.all().assertStatistics(stats -> stats.failed(0));
 	}
 
 	private Execution findExecution(Events events, String displayName) {
@@ -399,6 +407,23 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		void test() {
 			new UninterruptibleInvocation(10, MILLISECONDS).proceed();
 			throw new OutOfMemoryError();
+		}
+	}
+
+	@Timeout(10)
+	static class NonTimeoutExceedingTestCase {
+		@Test
+		void testMethod() {
+		}
+
+		@RepeatedTest(1)
+		void testTemplateMethod() {
+		}
+
+		@TestFactory
+		Stream<DynamicTest> testFactoryMethod() {
+			return Stream.of(dynamicTest("dynamicTest", () -> {
+			}));
 		}
 	}
 
