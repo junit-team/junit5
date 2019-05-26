@@ -1031,10 +1031,9 @@ for parameterized tests that accept a single argument.
 * `{NullAndEmptySource}`: a _composed annotation_ that combines the functionality of
   `@NullSource` and `@EmptySource`.
 
-If you need to supply multiple varying types of _empty_ or _blank_ strings to a
-parameterized test, you can achieve that using
-<<writing-tests-parameterized-tests-sources-ValueSource>> -- for example,
-`@ValueSource(strings = {" ", " ", "\t", "\n"})`.
+If you need to supply multiple varying types of _blank_ strings to a parameterized test,
+you can achieve that using <<writing-tests-parameterized-tests-sources-ValueSource>> --
+for example, `@ValueSource(strings = {"{nbsp}", "{nbsp}{nbsp}{nbsp}", "\t", "\n"})`.
 
 You can also combine `@NullSource`, `@EmptySource`, and `@ValueSource` to test a wider
 range of `null`, _empty_, and _blank_ input. The following example demonstrates how to
