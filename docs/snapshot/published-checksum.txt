@@ -159,6 +159,7 @@
 3a6cc345134eca7d57466d889cec6753  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectClasses.java
 3ae2793fb4efb09eaacda03f7a919f5d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertDoesNotThrow.java
 3ba58c6d2d405f840de3475e8c5a4df0  junit-platform-engine/src/main/java/org/junit/platform/engine/TestEngine.java
+3c4fa8ef70a9e94c441d64666487c12c  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 3c850f92637cd71e4dc00fdad930561b  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/MethodSelectorResolver.java
 3ca1dbe934d8a3e75af2fbff74d08773  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/package-info.java
 3cf53b81113a173895646595a4965fbe  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EnumArgumentsProvider.java
@@ -510,7 +511,6 @@ cfd9aaa093cccbeff33923d4092e2c10  junit-jupiter-api/src/main/java/org/junit/jupi
 d02019eeb797fae6d4ff2ad9af2ee35d  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Events.java
 d08c6cdbb789a5b0bae201dced8c16c2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java
 d0b3e7fb613c10d92c643827d2e37943  documentation/src/test/java/example/testinterface/TestLifecycleLogger.java
-d0c54806aaea3d1174945034ea6d5545  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 d1ab7eedb6800a6aac9ff86a4c1c4013  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/package-info.java
 d1e1e92249548eef17b15bf4fcb1163d  junit-platform-engine/src/main/java/org/junit/platform/engine/support/config/PrefixedConfigurationParameters.java
 d240f5dcaf14479dd7461d492c682def  documentation/src/test/java/example/testinterface/TestInterfaceDemo.java

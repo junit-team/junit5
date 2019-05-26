@@ -3455,10 +3455,8 @@ object arrays (e.g.,<code>String[]</code>, <code>Integer[][]</code>, etc.).</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>If you need to supply multiple varying types of <em>empty</em> or <em>blank</em> strings to a
-parameterized test, you can achieve that using
-<a href="#writing-tests-parameterized-tests-sources-ValueSource">@ValueSource</a>&#8201;&#8212;&#8201;for example,
-<code>@ValueSource(strings = {" ", " ", "\t", "\n"})</code>.</p>
+<p>If you need to supply multiple varying types of <em>blank</em> strings to a parameterized test,
+you can achieve that using <a href="#writing-tests-parameterized-tests-sources-ValueSource">@ValueSource</a>&#8201;&#8212;&#8201;for example, <code>@ValueSource(strings = {"&#160;", "&#160;&#160;&#160;", "\t", "\n"})</code>.</p>
 </div>
 <div class="paragraph">
 <p>You can also combine <code>@NullSource</code>, <code>@EmptySource</code>, and <code>@ValueSource</code> to test a wider
@@ -9328,7 +9326,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-05-25 15:01:40 UTC
+Last updated 2019-05-26 15:18:47 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
