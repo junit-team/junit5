@@ -520,7 +520,6 @@ d3cb378014cdac07c5f1cf5f8d91b238  junit-platform-engine/src/main/java/org/junit/
 d41741da59f9590dd6190112d0abb288  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeTags.java
 d458fbd87aef43d37a319e18f28e6d21  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnJreCondition.java
 d48ca497e27808531a970f7782107993  junit-vintage-engine/src/main/java/org/junit/vintage/engine/support/package-info.java
-d4c8277a85b518ea91022d15cdc37cbc  documentation/src/docs/asciidoc/release-notes/release-notes-5.5.0-RC1.adoc
 d4ce47495afb2233161e3f4241bc9f98  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/package-info.java
 d4fe811c167b6bbaf3f427b4a26faa0b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/package-info.java
 d5ad236ebffb7ae89a8a2fd0747ce860  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Stack.java
@@ -552,6 +551,7 @@ de947eb1e03d2cfcbbc1c718b863c2ca  junit-jupiter-api/src/main/java/org/junit/jupi
 def4b4d4f6f02cc9cce2cbc0ccb6ba08  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertThrows.java
 df067967f8d3c60d2f7435b2b59848c0  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ArgumentsProvider.java
 dfecaf2aaa0fd5ed93788c4cf820a84f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestTemplate.java
+dff9ef632129bc22f0ab4471c3435a50  documentation/src/docs/asciidoc/release-notes/release-notes-5.5.0-RC1.adoc
 e009a7d9da20c57bb9a187202d9541df  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/PackageSelector.java
 e022cdd362fafaaad7ee18cc033c5083  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/StreamInterceptor.java
 e07a878876e4f7dcd3474f35f60e3aa8  junit-platform-engine/src/main/java/org/junit/platform/engine/reporting/package-info.java
