@@ -21,13 +21,16 @@ import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnno
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
@@ -37,6 +40,8 @@ import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.util.BlacklistedExceptions;
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
@@ -45,6 +50,7 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
 import org.junit.platform.engine.support.hierarchical.Node;
+import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
  * @since 5.0
@@ -93,6 +99,28 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 				.map(TestTag::create)
 				.collect(collectingAndThen(toCollection(LinkedHashSet::new), Collections::unmodifiableSet));
 		// @formatter:on
+	}
+
+	/**
+	 * Invokes handlers on the {@code Throwable} one by one until none are left or the throwable to handle
+	 * has been swallowed.
+	 */
+	void invokeExecutionExceptionHandlers(Throwable throwable, List<? extends Extension> handlers,
+			BiFunction<Throwable, Extension, ThrowableCollector.Executable> generator) {
+		// No handlers left?
+		if (handlers.isEmpty()) {
+			ExceptionUtils.throwAsUncheckedException(throwable);
+		}
+
+		try {
+			// Invoke next available handler
+			ThrowableCollector.Executable executable = generator.apply(throwable, handlers.remove(0));
+			executable.execute();
+		}
+		catch (Throwable handledThrowable) {
+			BlacklistedExceptions.rethrowIfBlacklisted(handledThrowable);
+			invokeExecutionExceptionHandlers(handledThrowable, handlers, generator);
+		}
 	}
 
 	// --- Node ----------------------------------------------------------------

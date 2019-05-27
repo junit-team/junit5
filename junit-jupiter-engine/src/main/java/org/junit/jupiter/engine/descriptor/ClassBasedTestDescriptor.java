@@ -39,6 +39,7 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
+import org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestInstances;
@@ -364,12 +365,28 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
 		for (Method method : this.beforeAllMethods) {
-			throwableCollector.execute(() -> executableInvoker.invoke(method, testInstance, extensionContext, registry,
-				ReflectiveInterceptorCall.ofVoidMethod(InvocationInterceptor::interceptBeforeAllMethod)));
+			throwableCollector.execute(() -> {
+				try {
+					executableInvoker.invoke(method, testInstance, extensionContext, registry,
+						ReflectiveInterceptorCall.ofVoidMethod(InvocationInterceptor::interceptBeforeAllMethod));
+				}
+				catch (Throwable throwable) {
+					invokeBeforeAllExecutionExceptionHandlers(registry, extensionContext, throwable);
+				}
+			});
 			if (throwableCollector.isNotEmpty()) {
 				break;
 			}
 		}
+	}
+
+	private void invokeBeforeAllExecutionExceptionHandlers(ExtensionRegistry registry, ExtensionContext context,
+			Throwable throwable) {
+
+		invokeExecutionExceptionHandlers(throwable,
+			registry.getReversedExtensions(LifecycleMethodExecutionExceptionHandler.class),
+			(ex, handler) -> () -> ((LifecycleMethodExecutionExceptionHandler) handler).handleBeforeAllMethodExecutionException(
+				context, ex));
 	}
 
 	private void invokeAfterAllMethods(JupiterEngineExecutionContext context) {
@@ -378,9 +395,24 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
-		this.afterAllMethods.forEach(
-			method -> throwableCollector.execute(() -> executableInvoker.invoke(method, testInstance, extensionContext,
-				registry, ReflectiveInterceptorCall.ofVoidMethod(InvocationInterceptor::interceptAfterAllMethod))));
+		this.afterAllMethods.forEach(method -> throwableCollector.execute(() -> {
+			try {
+				executableInvoker.invoke(method, testInstance, extensionContext, registry,
+					ReflectiveInterceptorCall.ofVoidMethod(InvocationInterceptor::interceptAfterAllMethod));
+			}
+			catch (Throwable throwable) {
+				invokeAfterAllExecutionExceptionHandlers(registry, extensionContext, throwable);
+			}
+		}));
+	}
+
+	private void invokeAfterAllExecutionExceptionHandlers(ExtensionRegistry registry, ExtensionContext context,
+			Throwable throwable) {
+
+		invokeExecutionExceptionHandlers(throwable,
+			registry.getReversedExtensions(LifecycleMethodExecutionExceptionHandler.class),
+			(ex, handler) -> () -> ((LifecycleMethodExecutionExceptionHandler) handler).handleAfterAllMethodExecutionException(
+				context, ex));
 	}
 
 	private void invokeAfterAllCallbacks(JupiterEngineExecutionContext context) {

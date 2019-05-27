@@ -40,6 +40,9 @@ public class KitchenSinkExtension implements
 		AfterEachCallback,
 	AfterAllCallback,
 
+	// Lifecycle methods exception handling
+	LifecycleMethodExecutionExceptionHandler,
+
 	// Dependency Injection
 	TestInstanceFactory,
 	TestInstancePostProcessor,
@@ -86,6 +89,24 @@ public class KitchenSinkExtension implements
 
 	@Override
 	public void afterAll(ExtensionContext context) {
+	}
+
+	// --- Lifecycle methods exception handling
+
+	@Override
+	public void handleBeforeAllMethodExecutionException(ExtensionContext context, Throwable throwable) {
+	}
+
+	@Override
+	public void handleBeforeEachMethodExecutionException(ExtensionContext context, Throwable throwable) {
+	}
+
+	@Override
+	public void handleAfterEachMethodExecutionException(ExtensionContext context, Throwable throwable) {
+	}
+
+	@Override
+	public void handleAfterAllMethodExecutionException(ExtensionContext context, Throwable throwable) {
 	}
 
 	// --- Dependency Injection ------------------------------------------------

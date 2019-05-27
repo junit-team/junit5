@@ -87,6 +87,10 @@ on GitHub.
 * New `InvocationInterceptor` extension API (see
   <<../user-guide/index.adoc#extensions-intercepting-invocations, User Guide>> for
   details).
+* New `LifecycleMethodExecutionExceptionHandler` extension API for handling exceptions
+  thrown during the execution of `@BeforeAll`, `@BeforeEach`, `@AfterEach`, and
+  `@AfterAll` lifecycle methods (see
+  <<../user-guide/index.adoc#extensions-exception-handling, User Guide>> for details).
 * A custom test source for a `DynamicContainer` or `DynamicTest` may now be a method URI
   -- for example, `method:org.example.MyTestClass#myTestMethod()`.
 * New `junit.jupiter.execution.parallel.mode.classes.default` configuration parameter
