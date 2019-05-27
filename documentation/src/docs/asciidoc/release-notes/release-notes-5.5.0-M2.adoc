@@ -15,7 +15,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Close custom class loader created for `--class-path` options passed to the
+  `ConsoleLauncher` after usage to gracefully free file handles.
 
 ==== Deprecations and Breaking Changes
 

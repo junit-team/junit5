@@ -42,6 +42,9 @@ class CustomContextClassLoaderExecutor {
 		}
 		finally {
 			Thread.currentThread().setContextClassLoader(originalClassLoader);
+			if (customClassLoader instanceof AutoCloseable) {
+				((AutoCloseable) customClassLoader).close();
+			}
 		}
 	}
 
