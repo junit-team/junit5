@@ -20,4 +20,6 @@ module org.junit.jupiter.engine {
 
 	provides org.junit.platform.engine.TestEngine
 			with org.junit.jupiter.engine.JupiterTestEngine;
+
+	opens org.junit.jupiter.engine.extension to org.junit.platform.commons;
 }

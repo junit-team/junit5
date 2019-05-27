@@ -13,6 +13,7 @@ package platform.tooling.support.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -139,10 +140,16 @@ class ModularUserGuideTests {
 
 		var builder = new ProcessBuilder(command).directory(temp.toFile());
 		// var java = builder.inheritIO().start(); // show "console" output and errors
-		var java = builder.redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.DISCARD).start();
+		var java = builder.start();
 		var code = java.waitFor();
 
-		assertEquals(0, code, out.toString());
+		if (code != 0) {
+			System.out.println(out);
+			System.err.println(err);
+			System.out.println(new String(java.getInputStream().readAllBytes()));
+			System.err.println(new String(java.getErrorStream().readAllBytes()));
+			fail("Unexpected exit code: " + code);
+		}
 		return command;
 	}
 
