@@ -12,16 +12,25 @@ package org.junit.jupiter.engine.descriptor;
 
 import java.net.URI;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 /**
+ * Jupiter internal support for creating {@link MethodSource} from {@link URI}.
+ *
  * @since 5.5
+ * @see MethodSource
+ * @see MethodSelector
  */
-class MethodSourceUtils {
+@API(status = INTERNAL, since = "5.5")
+class MethodSourceSupport {
 
 	static final String METHOD_SCHEME = "method";
 

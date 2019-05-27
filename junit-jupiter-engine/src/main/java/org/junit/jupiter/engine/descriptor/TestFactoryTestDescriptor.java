@@ -11,7 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.jupiter.engine.descriptor.MethodSourceUtils.METHOD_SCHEME;
+import static org.junit.jupiter.engine.descriptor.MethodSourceSupport.METHOD_SCHEME;
 import static org.junit.platform.engine.support.descriptor.ClasspathResourceSource.CLASSPATH_SCHEME;
 
 import java.lang.reflect.Method;
@@ -170,7 +170,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 			return ClasspathResourceSource.from(uri);
 		}
 		else if (METHOD_SCHEME.equals(uri.getScheme())) {
-			return MethodSourceUtils.from(uri);
+			return MethodSourceSupport.from(uri);
 		}
 		return UriSource.from(uri);
 	}
