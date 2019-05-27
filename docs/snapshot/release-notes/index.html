@@ -556,11 +556,11 @@ table.CodeRay td.code>pre{padding:0}
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#release-notes-5.5.0-M2">5.5.0-M2️</a>
+<li><a href="#release-notes-5.5.0-RC1">5.5.0-RC1</a>
 <ul class="sectlevel2">
-<li><a href="#release-notes-5.5.0-M2-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.5.0-M2-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.5.0-M2-junit-vintage">JUnit Vintage</a></li>
+<li><a href="#release-notes-5.5.0-RC1-junit-platform">JUnit Platform</a></li>
+<li><a href="#release-notes-5.5.0-RC1-junit-jupiter">JUnit Jupiter</a></li>
+<li><a href="#release-notes-5.5.0-RC1-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
 <li><a href="#release-notes-5.5.0-M1">5.5.0-M1</a>
@@ -603,7 +603,7 @@ authors as well as build tool and IDE vendors.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="release-notes-5.5.0-M2"><a class="anchor" href="#release-notes-5.5.0-M2"></a>5.5.0-M2️</h2>
+<h2 id="release-notes-5.5.0-RC1"><a class="anchor" href="#release-notes-5.5.0-RC1"></a>5.5.0-RC1</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><strong>Date of Release:</strong> ❓</p>
@@ -613,18 +613,18 @@ authors as well as build tool and IDE vendors.</p>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/37?closed=1">5.5 M2</a> milestone page in the JUnit repository
+<a href="https://github.com/junit-team/junit5/milestone/37?closed=1">5.5 RC1</a> milestone page in the JUnit repository
 on GitHub.</p>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.5.0-M2-junit-platform"><a class="anchor" href="#release-notes-5.5.0-M2-junit-platform"></a>JUnit Platform</h3>
+<h3 id="release-notes-5.5.0-RC1-junit-platform"><a class="anchor" href="#release-notes-5.5.0-RC1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
 <h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>Close custom class loader created for <code>--class-path</code> options passed to the
-<code>ConsoleLauncher</code> after usage to gracefully free file handles.</p>
+<p>A custom <code>ClassLoader</code> created for additional <code>--class-path</code> entries passed to the
+<code>ConsoleLauncher</code> will now be closed after usage to gracefully free file handles.</p>
 </li>
 </ul>
 </div>
@@ -634,9 +634,9 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Class <code>PreconditionViolationException</code> in concealed package
-<code>org.junit.platform.commons.util</code> is now deprecated and substituted by an exception class
- with the same name in exported package <code>org.junit.platform.commons</code>.</p>
+<p>The internal <code>PreconditionViolationException</code> class in concealed package
+<code>org.junit.platform.commons.util</code> is now deprecated and has been replaced by an
+exception class with the same name in exported package <code>org.junit.platform.commons</code>.</p>
 </li>
 </ul>
 </div>
@@ -666,7 +666,7 @@ arguments.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.5.0-M2-junit-jupiter"><a class="anchor" href="#release-notes-5.5.0-M2-junit-jupiter"></a>JUnit Jupiter</h3>
+<h3 id="release-notes-5.5.0-RC1-junit-jupiter"><a class="anchor" href="#release-notes-5.5.0-RC1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
 <h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
 <div class="ulist">
@@ -741,7 +741,7 @@ default <code>DisplayNameGenerator</code> that will be used unless <code>@Displa
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.5.0-M2-junit-vintage"><a class="anchor" href="#release-notes-5.5.0-M2-junit-vintage"></a>JUnit Vintage</h3>
+<h3 id="release-notes-5.5.0-RC1-junit-vintage"><a class="anchor" href="#release-notes-5.5.0-RC1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
 <h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
 <div class="ulist">
@@ -1021,7 +1021,7 @@ in build tools</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-05-27 08:30:30 UTC
+Last updated 2019-05-27 09:17:07 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
