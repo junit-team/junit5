@@ -1,28 +1,28 @@
-[[release-notes-5.5.0-M2]]
-== 5.5.0-M2️
+[[release-notes-5.5.0-RC1]]
+== 5.5.0-RC1
 
 *Date of Release:* ❓
 
 *Scope:* ❓
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/37?closed=1+[5.5 M2] milestone page in the JUnit repository
+link:{junit5-repo}+/milestone/37?closed=1+[5.5 RC1] milestone page in the JUnit repository
 on GitHub.
 
 
-[[release-notes-5.5.0-M2-junit-platform]]
+[[release-notes-5.5.0-RC1-junit-platform]]
 === JUnit Platform
 
 ==== Bug Fixes
 
-* Close custom class loader created for `--class-path` options passed to the
-  `ConsoleLauncher` after usage to gracefully free file handles.
+* A custom `ClassLoader` created for additional `--class-path` entries passed to the
+  `ConsoleLauncher` will now be closed after usage to gracefully free file handles.
 
 ==== Deprecations and Breaking Changes
 
-* Class `PreconditionViolationException` in concealed package
- `org.junit.platform.commons.util` is now deprecated and substituted by an exception class
-  with the same name in exported package `org.junit.platform.commons`.
+* The internal `PreconditionViolationException` class in concealed package
+  `org.junit.platform.commons.util` is now deprecated and has been replaced by an
+  exception class with the same name in exported package `org.junit.platform.commons`.
 
 ==== New Features and Improvements
 
@@ -36,7 +36,7 @@ on GitHub.
   arguments.
 
 
-[[release-notes-5.5.0-M2-junit-jupiter]]
+[[release-notes-5.5.0-RC1-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
@@ -76,7 +76,7 @@ on GitHub.
   `@DisplayNameGeneration` is present.
 
 
-[[release-notes-5.5.0-M2-junit-vintage]]
+[[release-notes-5.5.0-RC1-junit-vintage]]
 === JUnit Vintage
 
 ==== Bug Fixes
