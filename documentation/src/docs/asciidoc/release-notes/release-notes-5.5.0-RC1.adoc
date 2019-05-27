@@ -92,4 +92,5 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* `junit:junit` is now a compile-scoped dependency of junit-vintage-engine to allow for
+  easier dependency declaration in Maven POMs.
