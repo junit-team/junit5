@@ -68,6 +68,22 @@ import org.apiguardian.api.API;
  * overrides {@code junit.jupiter.execution.timeout.testable.method.default}
  * which overrides {@code junit.jupiter.execution.timeout.default}.
  *
+ * <p>Values must be in the following, case-insensitive format:
+ * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
+ * unit may be omitted. Specifying no unit is equivalent to using seconds.
+ *
+ * <table class="plain">
+ * <tr><th> Value         </th><th> Equivalent annotation                             </th></tr>
+ * <tr><td> {@code 42}    </td><td> {@code @Timeout(42)}                              </td></tr>
+ * <tr><td> {@code 42 ns} </td><td> {@code @Timeout(value = 42, unit = NANOSECONDS)}  </td></tr>
+ * <tr><td> {@code 42 μs} </td><td> {@code @Timeout(value = 42, unit = MICROSECONDS)} </td></tr>
+ * <tr><td> {@code 42 ms} </td><td> {@code @Timeout(value = 42, unit = MILLISECONDS)} </td></tr>
+ * <tr><td> {@code 42 s}  </td><td> {@code @Timeout(value = 42, unit = SECONDS)}      </td></tr>
+ * <tr><td> {@code 42 m}  </td><td> {@code @Timeout(value = 42, unit = MINUTES)}      </td></tr>
+ * <tr><td> {@code 42 h}  </td><td> {@code @Timeout(value = 42, unit = HOURS)}        </td></tr>
+ * <tr><td> {@code 42 d}  </td><td> {@code @Timeout(value = 42, unit = DAYS)}         </td></tr>
+ * </table>
+ *
  * @since 5.5
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })

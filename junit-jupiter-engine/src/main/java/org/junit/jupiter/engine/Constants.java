@@ -198,7 +198,7 @@ public final class Constants {
 	 *
 	 * <h3>Supported Values</h3>
 	 *
-	 * <p>Value must be in the following, case-insensitive format:
+	 * <p>Values must be in the following, case-insensitive format:
 	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
 	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
 	 *
@@ -232,7 +232,7 @@ public final class Constants {
 	 *
 	 * <h3>Supported Values</h3>
 	 *
-	 * <p>Value must be in the following, case-insensitive format:
+	 * <p>Values must be in the following, case-insensitive format:
 	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
 	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
 	 *
@@ -268,7 +268,7 @@ public final class Constants {
 	 *
 	 * <h3>Supported Values</h3>
 	 *
-	 * <p>Value must be in the following, case-insensitive format:
+	 * <p>Values must be in the following, case-insensitive format:
 	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
 	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
 	 *
@@ -304,7 +304,7 @@ public final class Constants {
 	 *
 	 * <h3>Supported Values</h3>
 	 *
-	 * <p>Value must be in the following, case-insensitive format:
+	 * <p>Values must be in the following, case-insensitive format:
 	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
 	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
 	 *
@@ -340,7 +340,7 @@ public final class Constants {
 	 *
 	 * <h3>Supported Values</h3>
 	 *
-	 * <p>Value must be in the following, case-insensitive format:
+	 * <p>Values must be in the following, case-insensitive format:
 	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
 	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
 	 *
@@ -374,7 +374,7 @@ public final class Constants {
 	 *
 	 * <h3>Supported Values</h3>
 	 *
-	 * <p>Value must be in the following, case-insensitive format:
+	 * <p>Values must be in the following, case-insensitive format:
 	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
 	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
 	 *
@@ -409,7 +409,7 @@ public final class Constants {
 	 *
 	 * <h3>Supported Values</h3>
 	 *
-	 * <p>Value must be in the following, case-insensitive format:
+	 * <p>Values must be in the following, case-insensitive format:
 	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
 	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
 	 *
@@ -444,7 +444,7 @@ public final class Constants {
 	 *
 	 * <h3>Supported Values</h3>
 	 *
-	 * <p>Value must be in the following, case-insensitive format:
+	 * <p>Values must be in the following, case-insensitive format:
 	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
 	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
 	 *
@@ -479,7 +479,7 @@ public final class Constants {
 	 *
 	 * <h3>Supported Values</h3>
 	 *
-	 * <p>Value must be in the following, case-insensitive format:
+	 * <p>Values must be in the following, case-insensitive format:
 	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
 	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
 	 *
@@ -514,7 +514,7 @@ public final class Constants {
 	 *
 	 * <h3>Supported Values</h3>
 	 *
-	 * <p>Value must be in the following, case-insensitive format:
+	 * <p>Values must be in the following, case-insensitive format:
 	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
 	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
 	 *
