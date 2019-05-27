@@ -24,6 +24,24 @@ import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigura
 /**
  * Collection of constants related to the {@link JupiterTestEngine}.
  *
+ * <h3 id="supported-values-timeouts">Supported Values for Timeouts</h3>
+ *
+ * <p>Values for timeouts must be in the following, case-insensitive format:
+ * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
+ * unit may be omitted. Specifying no unit is equivalent to using seconds.
+ *
+ * <table class="plain">
+ * <tr><th> Value         </th><th> Equivalent annotation                             </th></tr>
+ * <tr><td> {@code 42}    </td><td> {@code @Timeout(42)}                              </td></tr>
+ * <tr><td> {@code 42 ns} </td><td> {@code @Timeout(value = 42, unit = NANOSECONDS)}  </td></tr>
+ * <tr><td> {@code 42 μs} </td><td> {@code @Timeout(value = 42, unit = MICROSECONDS)} </td></tr>
+ * <tr><td> {@code 42 ms} </td><td> {@code @Timeout(value = 42, unit = MILLISECONDS)} </td></tr>
+ * <tr><td> {@code 42 s}  </td><td> {@code @Timeout(value = 42, unit = SECONDS)}      </td></tr>
+ * <tr><td> {@code 42 m}  </td><td> {@code @Timeout(value = 42, unit = MINUTES)}      </td></tr>
+ * <tr><td> {@code 42 h}  </td><td> {@code @Timeout(value = 42, unit = HOURS)}        </td></tr>
+ * <tr><td> {@code 42 d}  </td><td> {@code @Timeout(value = 42, unit = DAYS)}         </td></tr>
+ * </table>
+ *
  * @see org.junit.platform.engine.ConfigurationParameters
  * @since 5.0
  */
@@ -196,23 +214,8 @@ public final class Constants {
 	 * annotation present on the method or an enclosing test class (for testable
 	 * methods).
 	 *
-	 * <h3>Supported Values</h3>
-	 *
-	 * <p>Values must be in the following, case-insensitive format:
-	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
-	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
-	 *
-	 * <table class="plain">
-	 * <tr><th> Value         </th><th> Equivalent annotation                             </th></tr>
-	 * <tr><td> {@code 42}    </td><td> {@code @Timeout(42)}                              </td></tr>
-	 * <tr><td> {@code 42 ns} </td><td> {@code @Timeout(value = 42, unit = NANOSECONDS)}  </td></tr>
-	 * <tr><td> {@code 42 μs} </td><td> {@code @Timeout(value = 42, unit = MICROSECONDS)} </td></tr>
-	 * <tr><td> {@code 42 ms} </td><td> {@code @Timeout(value = 42, unit = MILLISECONDS)} </td></tr>
-	 * <tr><td> {@code 42 s}  </td><td> {@code @Timeout(value = 42, unit = SECONDS)}      </td></tr>
-	 * <tr><td> {@code 42 m}  </td><td> {@code @Timeout(value = 42, unit = MINUTES)}      </td></tr>
-	 * <tr><td> {@code 42 h}  </td><td> {@code @Timeout(value = 42, unit = HOURS)}        </td></tr>
-	 * <tr><td> {@code 42 d}  </td><td> {@code @Timeout(value = 42, unit = DAYS)}         </td></tr>
-	 * </table>
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
 	 *
 	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
@@ -230,23 +233,8 @@ public final class Constants {
 	 * <p>This property overrides the {@value #DEFAULT_TIMEOUT_PROPERTY_NAME}
 	 * property.
 	 *
-	 * <h3>Supported Values</h3>
-	 *
-	 * <p>Values must be in the following, case-insensitive format:
-	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
-	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
-	 *
-	 * <table class="plain">
-	 * <tr><th> Value         </th><th> Equivalent annotation                             </th></tr>
-	 * <tr><td> {@code 42}    </td><td> {@code @Timeout(42)}                              </td></tr>
-	 * <tr><td> {@code 42 ns} </td><td> {@code @Timeout(value = 42, unit = NANOSECONDS)}  </td></tr>
-	 * <tr><td> {@code 42 μs} </td><td> {@code @Timeout(value = 42, unit = MICROSECONDS)} </td></tr>
-	 * <tr><td> {@code 42 ms} </td><td> {@code @Timeout(value = 42, unit = MILLISECONDS)} </td></tr>
-	 * <tr><td> {@code 42 s}  </td><td> {@code @Timeout(value = 42, unit = SECONDS)}      </td></tr>
-	 * <tr><td> {@code 42 m}  </td><td> {@code @Timeout(value = 42, unit = MINUTES)}      </td></tr>
-	 * <tr><td> {@code 42 h}  </td><td> {@code @Timeout(value = 42, unit = HOURS)}        </td></tr>
-	 * <tr><td> {@code 42 d}  </td><td> {@code @Timeout(value = 42, unit = DAYS)}         </td></tr>
-	 * </table>
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
 	 *
 	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
@@ -266,23 +254,8 @@ public final class Constants {
 	 * <p>This property overrides the
 	 * {@value #DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME} property.
 	 *
-	 * <h3>Supported Values</h3>
-	 *
-	 * <p>Values must be in the following, case-insensitive format:
-	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
-	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
-	 *
-	 * <table class="plain">
-	 * <tr><th> Value         </th><th> Equivalent annotation                             </th></tr>
-	 * <tr><td> {@code 42}    </td><td> {@code @Timeout(42)}                              </td></tr>
-	 * <tr><td> {@code 42 ns} </td><td> {@code @Timeout(value = 42, unit = NANOSECONDS)}  </td></tr>
-	 * <tr><td> {@code 42 μs} </td><td> {@code @Timeout(value = 42, unit = MICROSECONDS)} </td></tr>
-	 * <tr><td> {@code 42 ms} </td><td> {@code @Timeout(value = 42, unit = MILLISECONDS)} </td></tr>
-	 * <tr><td> {@code 42 s}  </td><td> {@code @Timeout(value = 42, unit = SECONDS)}      </td></tr>
-	 * <tr><td> {@code 42 m}  </td><td> {@code @Timeout(value = 42, unit = MINUTES)}      </td></tr>
-	 * <tr><td> {@code 42 h}  </td><td> {@code @Timeout(value = 42, unit = HOURS)}        </td></tr>
-	 * <tr><td> {@code 42 d}  </td><td> {@code @Timeout(value = 42, unit = DAYS)}         </td></tr>
-	 * </table>
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
 	 *
 	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
@@ -302,23 +275,8 @@ public final class Constants {
 	 * <p>This property overrides the
 	 * {@value #DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME} property.
 	 *
-	 * <h3>Supported Values</h3>
-	 *
-	 * <p>Values must be in the following, case-insensitive format:
-	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
-	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
-	 *
-	 * <table class="plain">
-	 * <tr><th> Value         </th><th> Equivalent annotation                             </th></tr>
-	 * <tr><td> {@code 42}    </td><td> {@code @Timeout(42)}                              </td></tr>
-	 * <tr><td> {@code 42 ns} </td><td> {@code @Timeout(value = 42, unit = NANOSECONDS)}  </td></tr>
-	 * <tr><td> {@code 42 μs} </td><td> {@code @Timeout(value = 42, unit = MICROSECONDS)} </td></tr>
-	 * <tr><td> {@code 42 ms} </td><td> {@code @Timeout(value = 42, unit = MILLISECONDS)} </td></tr>
-	 * <tr><td> {@code 42 s}  </td><td> {@code @Timeout(value = 42, unit = SECONDS)}      </td></tr>
-	 * <tr><td> {@code 42 m}  </td><td> {@code @Timeout(value = 42, unit = MINUTES)}      </td></tr>
-	 * <tr><td> {@code 42 h}  </td><td> {@code @Timeout(value = 42, unit = HOURS)}        </td></tr>
-	 * <tr><td> {@code 42 d}  </td><td> {@code @Timeout(value = 42, unit = DAYS)}         </td></tr>
-	 * </table>
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
 	 *
 	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
@@ -338,23 +296,8 @@ public final class Constants {
 	 * <p>This property overrides the
 	 * {@value #DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME} property.
 	 *
-	 * <h3>Supported Values</h3>
-	 *
-	 * <p>Values must be in the following, case-insensitive format:
-	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
-	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
-	 *
-	 * <table class="plain">
-	 * <tr><th> Value         </th><th> Equivalent annotation                             </th></tr>
-	 * <tr><td> {@code 42}    </td><td> {@code @Timeout(42)}                              </td></tr>
-	 * <tr><td> {@code 42 ns} </td><td> {@code @Timeout(value = 42, unit = NANOSECONDS)}  </td></tr>
-	 * <tr><td> {@code 42 μs} </td><td> {@code @Timeout(value = 42, unit = MICROSECONDS)} </td></tr>
-	 * <tr><td> {@code 42 ms} </td><td> {@code @Timeout(value = 42, unit = MILLISECONDS)} </td></tr>
-	 * <tr><td> {@code 42 s}  </td><td> {@code @Timeout(value = 42, unit = SECONDS)}      </td></tr>
-	 * <tr><td> {@code 42 m}  </td><td> {@code @Timeout(value = 42, unit = MINUTES)}      </td></tr>
-	 * <tr><td> {@code 42 h}  </td><td> {@code @Timeout(value = 42, unit = HOURS)}        </td></tr>
-	 * <tr><td> {@code 42 d}  </td><td> {@code @Timeout(value = 42, unit = DAYS)}         </td></tr>
-	 * </table>
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
 	 *
 	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
@@ -372,23 +315,8 @@ public final class Constants {
 	 * <p>This property overrides the {@value #DEFAULT_TIMEOUT_PROPERTY_NAME}
 	 * property.
 	 *
-	 * <h3>Supported Values</h3>
-	 *
-	 * <p>Values must be in the following, case-insensitive format:
-	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
-	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
-	 *
-	 * <table class="plain">
-	 * <tr><th> Value         </th><th> Equivalent annotation                             </th></tr>
-	 * <tr><td> {@code 42}    </td><td> {@code @Timeout(42)}                              </td></tr>
-	 * <tr><td> {@code 42 ns} </td><td> {@code @Timeout(value = 42, unit = NANOSECONDS)}  </td></tr>
-	 * <tr><td> {@code 42 μs} </td><td> {@code @Timeout(value = 42, unit = MICROSECONDS)} </td></tr>
-	 * <tr><td> {@code 42 ms} </td><td> {@code @Timeout(value = 42, unit = MILLISECONDS)} </td></tr>
-	 * <tr><td> {@code 42 s}  </td><td> {@code @Timeout(value = 42, unit = SECONDS)}      </td></tr>
-	 * <tr><td> {@code 42 m}  </td><td> {@code @Timeout(value = 42, unit = MINUTES)}      </td></tr>
-	 * <tr><td> {@code 42 h}  </td><td> {@code @Timeout(value = 42, unit = HOURS)}        </td></tr>
-	 * <tr><td> {@code 42 d}  </td><td> {@code @Timeout(value = 42, unit = DAYS)}         </td></tr>
-	 * </table>
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
 	 *
 	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
@@ -407,23 +335,8 @@ public final class Constants {
 	 * <p>This property overrides the
 	 * {@value #DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME} property.
 	 *
-	 * <h3>Supported Values</h3>
-	 *
-	 * <p>Values must be in the following, case-insensitive format:
-	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
-	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
-	 *
-	 * <table class="plain">
-	 * <tr><th> Value         </th><th> Equivalent annotation                             </th></tr>
-	 * <tr><td> {@code 42}    </td><td> {@code @Timeout(42)}                              </td></tr>
-	 * <tr><td> {@code 42 ns} </td><td> {@code @Timeout(value = 42, unit = NANOSECONDS)}  </td></tr>
-	 * <tr><td> {@code 42 μs} </td><td> {@code @Timeout(value = 42, unit = MICROSECONDS)} </td></tr>
-	 * <tr><td> {@code 42 ms} </td><td> {@code @Timeout(value = 42, unit = MILLISECONDS)} </td></tr>
-	 * <tr><td> {@code 42 s}  </td><td> {@code @Timeout(value = 42, unit = SECONDS)}      </td></tr>
-	 * <tr><td> {@code 42 m}  </td><td> {@code @Timeout(value = 42, unit = MINUTES)}      </td></tr>
-	 * <tr><td> {@code 42 h}  </td><td> {@code @Timeout(value = 42, unit = HOURS)}        </td></tr>
-	 * <tr><td> {@code 42 d}  </td><td> {@code @Timeout(value = 42, unit = DAYS)}         </td></tr>
-	 * </table>
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
 	 *
 	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
@@ -442,23 +355,8 @@ public final class Constants {
 	 * <p>This property overrides the
 	 * {@value #DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME} property.
 	 *
-	 * <h3>Supported Values</h3>
-	 *
-	 * <p>Values must be in the following, case-insensitive format:
-	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
-	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
-	 *
-	 * <table class="plain">
-	 * <tr><th> Value         </th><th> Equivalent annotation                             </th></tr>
-	 * <tr><td> {@code 42}    </td><td> {@code @Timeout(42)}                              </td></tr>
-	 * <tr><td> {@code 42 ns} </td><td> {@code @Timeout(value = 42, unit = NANOSECONDS)}  </td></tr>
-	 * <tr><td> {@code 42 μs} </td><td> {@code @Timeout(value = 42, unit = MICROSECONDS)} </td></tr>
-	 * <tr><td> {@code 42 ms} </td><td> {@code @Timeout(value = 42, unit = MILLISECONDS)} </td></tr>
-	 * <tr><td> {@code 42 s}  </td><td> {@code @Timeout(value = 42, unit = SECONDS)}      </td></tr>
-	 * <tr><td> {@code 42 m}  </td><td> {@code @Timeout(value = 42, unit = MINUTES)}      </td></tr>
-	 * <tr><td> {@code 42 h}  </td><td> {@code @Timeout(value = 42, unit = HOURS)}        </td></tr>
-	 * <tr><td> {@code 42 d}  </td><td> {@code @Timeout(value = 42, unit = DAYS)}         </td></tr>
-	 * </table>
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
 	 *
 	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
@@ -477,23 +375,8 @@ public final class Constants {
 	 * <p>This property overrides the
 	 * {@value #DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME} property.
 	 *
-	 * <h3>Supported Values</h3>
-	 *
-	 * <p>Values must be in the following, case-insensitive format:
-	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
-	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
-	 *
-	 * <table class="plain">
-	 * <tr><th> Value         </th><th> Equivalent annotation                             </th></tr>
-	 * <tr><td> {@code 42}    </td><td> {@code @Timeout(42)}                              </td></tr>
-	 * <tr><td> {@code 42 ns} </td><td> {@code @Timeout(value = 42, unit = NANOSECONDS)}  </td></tr>
-	 * <tr><td> {@code 42 μs} </td><td> {@code @Timeout(value = 42, unit = MICROSECONDS)} </td></tr>
-	 * <tr><td> {@code 42 ms} </td><td> {@code @Timeout(value = 42, unit = MILLISECONDS)} </td></tr>
-	 * <tr><td> {@code 42 s}  </td><td> {@code @Timeout(value = 42, unit = SECONDS)}      </td></tr>
-	 * <tr><td> {@code 42 m}  </td><td> {@code @Timeout(value = 42, unit = MINUTES)}      </td></tr>
-	 * <tr><td> {@code 42 h}  </td><td> {@code @Timeout(value = 42, unit = HOURS)}        </td></tr>
-	 * <tr><td> {@code 42 d}  </td><td> {@code @Timeout(value = 42, unit = DAYS)}         </td></tr>
-	 * </table>
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
 	 *
 	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
@@ -512,23 +395,8 @@ public final class Constants {
 	 * <p>This property overrides the
 	 * {@value #DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME} property.
 	 *
-	 * <h3>Supported Values</h3>
-	 *
-	 * <p>Values must be in the following, case-insensitive format:
-	 * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
-	 * unit may be omitted. Specifying no unit is equivalent to using seconds.
-	 *
-	 * <table class="plain">
-	 * <tr><th> Value         </th><th> Equivalent annotation                             </th></tr>
-	 * <tr><td> {@code 42}    </td><td> {@code @Timeout(42)}                              </td></tr>
-	 * <tr><td> {@code 42 ns} </td><td> {@code @Timeout(value = 42, unit = NANOSECONDS)}  </td></tr>
-	 * <tr><td> {@code 42 μs} </td><td> {@code @Timeout(value = 42, unit = MICROSECONDS)} </td></tr>
-	 * <tr><td> {@code 42 ms} </td><td> {@code @Timeout(value = 42, unit = MILLISECONDS)} </td></tr>
-	 * <tr><td> {@code 42 s}  </td><td> {@code @Timeout(value = 42, unit = SECONDS)}      </td></tr>
-	 * <tr><td> {@code 42 m}  </td><td> {@code @Timeout(value = 42, unit = MINUTES)}      </td></tr>
-	 * <tr><td> {@code 42 h}  </td><td> {@code @Timeout(value = 42, unit = HOURS)}        </td></tr>
-	 * <tr><td> {@code 42 d}  </td><td> {@code @Timeout(value = 42, unit = DAYS)}         </td></tr>
-	 * </table>
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
 	 *
 	 * @see org.junit.jupiter.api.Timeout
 	 * @since 5.5
