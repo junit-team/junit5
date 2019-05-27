@@ -2111,13 +2111,6 @@ value supplied via the <code>matches</code> attribute will be interpreted as a r
 </div>
 <div class="sect3">
 <h4 id="writing-tests-conditional-execution-scripts"><a class="anchor" href="#writing-tests-conditional-execution-scripts"></a>2.7.5. Script-based Conditions</h4>
-<div class="paragraph">
-<p>JUnit Jupiter provides the ability to either <em>enable</em> or <em>disable</em> a container or test
-depending on the evaluation of a script configured via the <code><a href="../api/org/junit/jupiter/api/condition/EnabledIf.html">@EnabledIf</a></code> or
-<code><a href="../api/org/junit/jupiter/api/condition/DisabledIf.html">@DisabledIf</a></code> annotation. Scripts can be written in JavaScript, Groovy, or any other
-scripting language for which there is support for the Java Scripting API, defined by JSR
-223.</p>
-</div>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -2125,12 +2118,18 @@ scripting language for which there is support for the Java Scripting API, define
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Conditional test execution via <code><a href="../api/org/junit/jupiter/api/condition/EnabledIf.html">@EnabledIf</a></code> and <code><a href="../api/org/junit/jupiter/api/condition/DisabledIf.html">@DisabledIf</a></code> is currently an
-<em>experimental</em> feature. Consult the table in <a href="#api-evolution-experimental-apis">Experimental APIs</a> for
-details.
+Conditional test execution via <code><a href="../api/org/junit/jupiter/api/condition/EnabledIf.html">@EnabledIf</a></code> and <code><a href="../api/org/junit/jupiter/api/condition/DisabledIf.html">@DisabledIf</a></code> is <em>deprecated</em>
+for removal in a future release of JUnit Jupiter.
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>JUnit Jupiter provides the ability to either <em>enable</em> or <em>disable</em> a container or test
+depending on the evaluation of a script configured via the <code><a href="../api/org/junit/jupiter/api/condition/EnabledIf.html">@EnabledIf</a></code> or
+<code><a href="../api/org/junit/jupiter/api/condition/DisabledIf.html">@DisabledIf</a></code> annotation. Scripts can be written in JavaScript, Groovy, or any other
+scripting language for which there is support for the Java Scripting API, defined by JSR
+223.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -8638,16 +8637,6 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.condition</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DisabledIf</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.1</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.condition</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EnabledIf</code> <em>(annotation)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.1</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>InvocationInterceptor</code> <em>(interface)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.5</code></p></td>
@@ -9067,6 +9056,16 @@ since such APIs will likely be removed in an upcoming release.</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.condition</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DisabledIf</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.5</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.condition</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EnabledIf</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.5</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.commons.util</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>PreconditionViolationException</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.5</code></p></td>
@@ -9326,7 +9325,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-05-27 09:17:07 UTC
+Last updated 2019-05-27 11:18:50 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
