@@ -170,7 +170,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 			return ClasspathResourceSource.from(uri);
 		}
 		else if (METHOD_SCHEME.equals(uri.getScheme())) {
-			return MethodSourceUtils.fromUri(uri);
+			return MethodSourceUtils.from(uri);
 		}
 		return UriSource.from(uri);
 	}
