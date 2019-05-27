@@ -1647,16 +1647,16 @@ omitted. Specifying no unit is equivalent to using seconds.
 .Example timeout configuration parameter values
 [cols="20,80"]
 |===
-| Parameter value   | Equivalent annotation
+| Parameter value | Equivalent annotation
 
-| `42`              | `@Timeout(42)`
-| `42 ns`           | `@Timeout(value = 42, unit = NANOSECONDS)`
-| `42 μs`           | `@Timeout(value = 42, unit = MICROSECONDS)`
-| `42 ms`           | `@Timeout(value = 42, unit = MILLISECONDS)`
-| `42 s`            | `@Timeout(value = 42, unit = SECONDS)`
-| `42 m`            | `@Timeout(value = 42, unit = MINUTES)`
-| `42 h`            | `@Timeout(value = 42, unit = HOURS)`
-| `42 d`            | `@Timeout(value = 42, unit = DAYS)`
+| `42`            | `@Timeout(42)`
+| `42 ns`         | `@Timeout(value = 42, unit = NANOSECONDS)`
+| `42 μs`         | `@Timeout(value = 42, unit = MICROSECONDS)`
+| `42 ms`         | `@Timeout(value = 42, unit = MILLISECONDS)`
+| `42 s`          | `@Timeout(value = 42, unit = SECONDS)`
+| `42 m`          | `@Timeout(value = 42, unit = MINUTES)`
+| `42 h`          | `@Timeout(value = 42, unit = HOURS)`
+| `42 d`          | `@Timeout(value = 42, unit = DAYS)`
 |===
 
 
