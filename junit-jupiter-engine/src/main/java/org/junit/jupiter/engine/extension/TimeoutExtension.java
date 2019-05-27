@@ -37,15 +37,21 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 
 	private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(Timeout.class);
 	private static final String TESTABLE_METHOD_TIMEOUT_KEY = "testable_method_timeout_from_annotation";
+	private static final String GLOBAL_TIMEOUT_CONFIG_KEY = "global_timeout_config";
 
 	@Override
 	public void beforeAll(ExtensionContext context) {
-		readAndStoreTimeout(context);
+		readAndStoreTimeoutSoChildrenInheritIt(context);
 	}
 
 	@Override
 	public void beforeEach(ExtensionContext context) {
-		readAndStoreTimeout(context);
+		readAndStoreTimeoutSoChildrenInheritIt(context);
+	}
+
+	private void readAndStoreTimeoutSoChildrenInheritIt(ExtensionContext context) {
+		readTimeoutFromAnnotation(context.getElement()).ifPresent(
+			timeout -> context.getStore(NAMESPACE).put(TESTABLE_METHOD_TIMEOUT_KEY, timeout));
 	}
 
 	@Override
@@ -97,11 +103,6 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 			TimeoutConfiguration::getDefaultAfterAllMethodTimeout);
 	}
 
-	private void readAndStoreTimeout(ExtensionContext context) {
-		readTimeoutFromAnnotation(context.getElement()).ifPresent(
-			timeout -> context.getStore(NAMESPACE).put(TESTABLE_METHOD_TIMEOUT_KEY, timeout));
-	}
-
 	private void interceptLifecycleMethod(Invocation<Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext,
 			TimeoutProvider defaultTimeoutProvider) throws Throwable {
@@ -111,8 +112,8 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	}
 
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-	private Optional<TimeoutDuration> readTimeoutFromAnnotation(Optional<AnnotatedElement> executable) {
-		return AnnotationSupport.findAnnotation(executable, Timeout.class).map(TimeoutDuration::from);
+	private Optional<TimeoutDuration> readTimeoutFromAnnotation(Optional<AnnotatedElement> element) {
+		return AnnotationSupport.findAnnotation(element, Timeout.class).map(TimeoutDuration::from);
 	}
 
 	private <T> T interceptTestableMethod(Invocation<T> invocation,
@@ -138,7 +139,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 
 	private TimeoutConfiguration getGlobalTimeoutConfiguration(ExtensionContext extensionContext) {
 		ExtensionContext root = extensionContext.getRoot();
-		return root.getStore(NAMESPACE).getOrComputeIfAbsent("global_timeout_config",
+		return root.getStore(NAMESPACE).getOrComputeIfAbsent(GLOBAL_TIMEOUT_CONFIG_KEY,
 			key -> new TimeoutConfiguration(root), TimeoutConfiguration.class);
 	}
 

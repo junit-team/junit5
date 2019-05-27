@@ -39,7 +39,7 @@ class TimeoutConfiguration {
 
 	private final TimeoutDurationParser parser = new TimeoutDurationParser();
 	private final Map<String, Optional<TimeoutDuration>> cache = new ConcurrentHashMap<>();
-	private ExtensionContext extensionContext;
+	private final ExtensionContext extensionContext;
 
 	TimeoutConfiguration(ExtensionContext extensionContext) {
 		this.extensionContext = extensionContext;
