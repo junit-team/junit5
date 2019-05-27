@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.net.URI;
 
 import org.apiguardian.api.API;
@@ -19,8 +21,6 @@ import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.support.descriptor.MethodSource;
-
-import static org.apiguardian.api.API.Status.INTERNAL;
 
 /**
  * Jupiter internal support for creating {@link MethodSource} from {@link URI}.
