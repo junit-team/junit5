@@ -80,7 +80,7 @@ class AvailableOptions {
 	private List<Path> additionalClasspathEntries2 = new ArrayList<>();
 
 	@Option(names = "--fail-if-no-tests", description = "Fail and return exit status code 2 if no tests are found.")
-	private boolean failIfNoTests; // no single-dash equivelent: was introduced in 5.3-M1
+	private boolean failIfNoTests; // no single-dash equivalent: was introduced in 5.3-M1
 
 	// --- Reports ---------------------------------------------------------
 
