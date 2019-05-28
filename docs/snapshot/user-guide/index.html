@@ -661,15 +661,16 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests-dynamic-tests-examples">2.17.1. Dynamic Test Examples</a></li>
 </ul>
 </li>
-<li><a href="#writing-tests-parallel-execution">2.18. Parallel Execution</a>
+<li><a href="#writing-tests-declarative-timeouts">2.18. Timeouts</a></li>
+<li><a href="#writing-tests-parallel-execution">2.19. Parallel Execution</a>
 <ul class="sectlevel3">
-<li><a href="#writing-tests-parallel-execution-config">2.18.1. Configuration</a></li>
-<li><a href="#writing-tests-parallel-execution-synchronization">2.18.2. Synchronization</a></li>
+<li><a href="#writing-tests-parallel-execution-config">2.19.1. Configuration</a></li>
+<li><a href="#writing-tests-parallel-execution-synchronization">2.19.2. Synchronization</a></li>
 </ul>
 </li>
-<li><a href="#writing-tests-built-in-extensions">2.19. Built-in Extensions</a>
+<li><a href="#writing-tests-built-in-extensions">2.20. Built-in Extensions</a>
 <ul class="sectlevel3">
-<li><a href="#writing-tests-built-in-extensions-TempDirectory">2.19.1. The TempDirectory Extension</a></li>
+<li><a href="#writing-tests-built-in-extensions-TempDirectory">2.20.1. The TempDirectory Extension</a></li>
 </ul>
 </li>
 </ul>
@@ -1118,6 +1119,10 @@ in the <code>junit-jupiter-api</code> module.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Disabled</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Used to <a href="#writing-tests-disabling">disable</a> a test class or test method; analogous to JUnit 4&#8217;s <code>@Ignore</code>. Such annotations are not <em>inherited</em>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to fail a test, test factory, test template, or lifecycle method if its execution exceeds a given duration. Such annotations are <em>inherited</em>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ExtendWith</code></p></td>
@@ -1641,11 +1646,12 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-<div class="title">Preemptive Timeouts</div>
+<div class="title">Preemptive Timeouts with <code>assertTimeoutPreemptively()</code></div>
 <div class="paragraph">
-<p>The various <code>assertTimeoutPreemptively()</code> methods in the <code>Assertions</code> class execute the
-provided <code>executable</code> or <code>supplier</code> in a different thread than that of the calling code.
-This behavior can lead to undesirable side effects if the code that is executed within the
+<p>Contrary to <a href="#writing-tests-declarative-timeouts">declarative timeouts</a>, the various
+<code>assertTimeoutPreemptively()</code> methods in the <code>Assertions</code> class execute the provided
+<code>executable</code> or <code>supplier</code> in a different thread than that of the calling code. This
+behavior can lead to undesirable side effects if the code that is executed within the
 <code>executable</code> or <code>supplier</code> relies on <code>java.lang.ThreadLocal</code> storage.</p>
 </div>
 <div class="paragraph">
@@ -4599,7 +4605,183 @@ expressiveness and power of dynamic tests.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-parallel-execution"><a class="anchor" href="#writing-tests-parallel-execution"></a>2.18. Parallel Execution</h3>
+<h3 id="writing-tests-declarative-timeouts"><a class="anchor" href="#writing-tests-declarative-timeouts"></a>2.18. Timeouts</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="title">Declarative timeouts are an experimental feature</div>
+You&#8217;re invited to give it a try and provide feedback to the JUnit team so they
+can improve and eventually <a href="#api-evolution">promote</a> this feature.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>@Timeout</code> annotation allows to declare that a test, test factory, test template, or
+lifecycle method should fail if its execution time exceeds a given duration, and
+optionally a time unit (seconds are used by default).</p>
+</div>
+<div class="paragraph">
+<p>The following example shows how <code>@Timeout</code> is applied to lifecycle and test methods.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">class</span> <span class="class">TimeoutDemo</span> {
+
+    <span class="annotation">@BeforeEach</span>
+    <span class="annotation">@Timeout</span>(<span class="integer">5</span>)
+    <span class="type">void</span> setUp() {
+        <span class="comment">// fails if execution time exceeds 5 seconds</span>
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="annotation">@Timeout</span>(value = <span class="integer">100</span>, unit = <span class="predefined-type">TimeUnit</span>.MILLISECONDS)
+    <span class="type">void</span> failsIfExecutionTimeExceedsFiveSeconds() {
+        <span class="comment">// fails if execution time exceeds 100 milliseconds</span>
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Contrary to the <code>assertTimeoutPreemptively()</code> assertion, the execution of the annotated
+method proceeds in the main thread of the test. If the timeout is exceeded, the main
+thread is interrupted from another thread. This is done to ensure interoperability with
+frameworks such as Spring that make extensive use of mechanisms that are sensitive to the
+currently running thread (e.g. <code>ThreadLocals</code>).</p>
+</div>
+<div class="paragraph">
+<p>To apply the same timeout to all test methods within a test class and all its <code>@Nested</code>
+classes, you can declare the <code>@Timeout</code> annotation on the class level. It will then be
+applied to all test, test factory, and test template methods within that class and its
+<code>@Nested</code> classes unless overridden by a <code>@Timeout</code> annotation on a method or <code>@Nested</code>
+class. Please note that <code>@Timeout</code> annotations declared on the class level are not
+applied to lifecycle methods.</p>
+</div>
+<div class="paragraph">
+<p>Declaring <code>@Timeout</code> on a test factory method checks that the method returns within the
+specified duration but does verify the execution time of the returned <code>DynamicTests</code>.
+Please use <code>assertTimeout()</code>/<code>assertTimeoutPreemptively()</code> for that purpose.</p>
+</div>
+<div class="paragraph">
+<p>If <code>@Timeout</code> is present on a test template method, such as a method annotated with
+<code>@RepeatedTest</code> or <code>@ParameterizedTest</code>, each invocation is checked to finish within the
+given timeout.</p>
+</div>
+<div class="paragraph">
+<p>The following <a href="#running-tests-config-params">configuration parameters</a> can be used to
+specify global timeouts for all methods of a certain category unless they or an enclosing
+test class is annotated with <code>@Timeout</code>:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>junit.jupiter.execution.timeout.default</code></dt>
+<dd>
+<p>Default timeout for all testable and lifecycle methods</p>
+</dd>
+<dt class="hdlist1"><code>junit.jupiter.execution.timeout.testable.method.default</code></dt>
+<dd>
+<p>Default timeout for all testable methods</p>
+</dd>
+<dt class="hdlist1"><code>junit.jupiter.execution.timeout.test.method.default</code></dt>
+<dd>
+<p>Default timeout for <code>@Test</code> methods</p>
+</dd>
+<dt class="hdlist1"><code>junit.jupiter.execution.timeout.testtemplate.method.default</code></dt>
+<dd>
+<p>Default timeout for <code>@TestTemplate</code> methods</p>
+</dd>
+<dt class="hdlist1"><code>junit.jupiter.execution.timeout.testfactory.method.default</code></dt>
+<dd>
+<p>Default timeout for <code>@TestFactory</code> methods</p>
+</dd>
+<dt class="hdlist1"><code>junit.jupiter.execution.timeout.lifecycle.method.default</code></dt>
+<dd>
+<p>Default timeout for all lifecycle methods</p>
+</dd>
+<dt class="hdlist1"><code>junit.jupiter.execution.timeout.beforeall.method.default</code></dt>
+<dd>
+<p>Default timeout for <code>@BeforeAll</code> methods</p>
+</dd>
+<dt class="hdlist1"><code>junit.jupiter.execution.timeout.beforeeach.method.default</code></dt>
+<dd>
+<p>Default timeout for <code>@BeforeEach</code> methods</p>
+</dd>
+<dt class="hdlist1"><code>junit.jupiter.execution.timeout.aftereach.method.default</code></dt>
+<dd>
+<p>Default timeout for <code>@AfterEach</code> methods</p>
+</dd>
+<dt class="hdlist1"><code>junit.jupiter.execution.timeout.afterall.method.default</code></dt>
+<dd>
+<p>Default timeout for <code>@AfterAll</code> methods</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>More specific configuration parameters override less specific ones. For example,
+<code>junit.jupiter.execution.timeout.test.method.default</code> overrides
+<code>junit.jupiter.execution.timeout.testable.method.default</code> which overrides
+<code>junit.jupiter.execution.timeout.default</code>.</p>
+</div>
+<div class="paragraph">
+<p>The values of such configuration parameters must be in the following, case-insensitive
+format: <code>&lt;number&gt; [ns|μs|ms|s|m|h|d]</code>. The space between the number and the unit may be
+omitted. Specifying no unit is equivalent to using seconds.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Example timeout configuration parameter values</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter value</th>
+<th class="tableblock halign-left valign-top">Equivalent annotation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>42</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Timeout(42)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>42 ns</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Timeout(value = 42, unit = NANOSECONDS)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>42 μs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Timeout(value = 42, unit = MICROSECONDS)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>42 ms</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Timeout(value = 42, unit = MILLISECONDS)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>42 s</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Timeout(value = 42, unit = SECONDS)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>42 m</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Timeout(value = 42, unit = MINUTES)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>42 h</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Timeout(value = 42, unit = HOURS)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>42 d</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Timeout(value = 42, unit = DAYS)</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="writing-tests-parallel-execution"><a class="anchor" href="#writing-tests-parallel-execution"></a>2.19. Parallel Execution</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -4674,7 +4856,7 @@ mechanism. Please note that <a href="#running-tests-capturing-output">Capturing 
 separately.</p>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parallel-execution-config"><a class="anchor" href="#writing-tests-parallel-execution-config"></a>2.18.1. Configuration</h4>
+<h4 id="writing-tests-parallel-execution-config"><a class="anchor" href="#writing-tests-parallel-execution-config"></a>2.19.1. Configuration</h4>
 <div class="paragraph">
 <p>Properties such as the desired parallelism and the maximum pool size can be configured
 using a <code><a href="../api/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.html">ParallelExecutionConfigurationStrategy</a></code>. The JUnit Platform provides two
@@ -4731,7 +4913,7 @@ your own means of controlling concurrency.
 </div>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-parallel-execution-synchronization"><a class="anchor" href="#writing-tests-parallel-execution-synchronization"></a>2.18.2. Synchronization</h4>
+<h4 id="writing-tests-parallel-execution-synchronization"><a class="anchor" href="#writing-tests-parallel-execution-synchronization"></a>2.19.2. Synchronization</h4>
 <div class="paragraph">
 <p>In addition to controlling the execution mode using the <code><a href="../api/org/junit/jupiter/api/parallel/Execution.html">@Execution</a></code> annotation, JUnit
 Jupiter provides another annotation-based declarative synchronization mechanism. The
@@ -4802,7 +4984,7 @@ to the same shared resource is running.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="writing-tests-built-in-extensions"><a class="anchor" href="#writing-tests-built-in-extensions"></a>2.19. Built-in Extensions</h3>
+<h3 id="writing-tests-built-in-extensions"><a class="anchor" href="#writing-tests-built-in-extensions"></a>2.20. Built-in Extensions</h3>
 <div class="paragraph">
 <p>While the JUnit team encourages reusable extensions to be packaged and maintained in
 separate libraries, the JUnit Jupiter API artifact includes a few user-facing extension
@@ -4810,7 +4992,7 @@ implementations that are considered so generally useful that users shouldn&#8217
 another dependency.</p>
 </div>
 <div class="sect3">
-<h4 id="writing-tests-built-in-extensions-TempDirectory"><a class="anchor" href="#writing-tests-built-in-extensions-TempDirectory"></a>2.19.1. The TempDirectory Extension</h4>
+<h4 id="writing-tests-built-in-extensions-TempDirectory"><a class="anchor" href="#writing-tests-built-in-extensions-TempDirectory"></a>2.20.1. The TempDirectory Extension</h4>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -6164,7 +6346,7 @@ those supplied via the configuration file.
 <code>(</code> and <code>)</code> can be used to adjust for operator precedence.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Operators (in descending order of precedence)</caption>
+<caption class="title">Table 2. Operators (in descending order of precedence)</caption>
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -8637,6 +8819,11 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Timeout</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.5</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api.extension</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>InvocationInterceptor</code> <em>(interface)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.5</code></p></td>
@@ -9325,7 +9512,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-05-28 13:03:13 UTC
+Last updated 2019-05-28 18:04:29 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

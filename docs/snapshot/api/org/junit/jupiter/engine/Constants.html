@@ -131,7 +131,25 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.0")
 public final class <span class="typeNameLabel">Constants</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
-<div class="block">Collection of constants related to the <a href="JupiterTestEngine.html" title="class in org.junit.jupiter.engine"><code>JupiterTestEngine</code></a>.</div>
+<div class="block">Collection of constants related to the <a href="JupiterTestEngine.html" title="class in org.junit.jupiter.engine"><code>JupiterTestEngine</code></a>.
+
+ <h3 id="supported-values-timeouts">Supported Values for Timeouts</h3>
+
+ <p>Values for timeouts must be in the following, case-insensitive format:
+ <code>&lt;number&gt; [ns|μs|ms|s|m|h|d]</code>. The space between the number and the
+ unit may be omitted. Specifying no unit is equivalent to using seconds.
+
+ <table class="plain">
+ <tr><th> Value         </th><th> Equivalent annotation                             </th></tr>
+ <tr><td> <code>42</code>    </td><td> <code>@Timeout(42)</code>                              </td></tr>
+ <tr><td> <code>42 ns</code> </td><td> <code>@Timeout(value = 42, unit = NANOSECONDS)</code>  </td></tr>
+ <tr><td> <code>42 μs</code> </td><td> <code>@Timeout(value = 42, unit = MICROSECONDS)</code> </td></tr>
+ <tr><td> <code>42 ms</code> </td><td> <code>@Timeout(value = 42, unit = MILLISECONDS)</code> </td></tr>
+ <tr><td> <code>42 s</code>  </td><td> <code>@Timeout(value = 42, unit = SECONDS)</code>      </td></tr>
+ <tr><td> <code>42 m</code>  </td><td> <code>@Timeout(value = 42, unit = MINUTES)</code>      </td></tr>
+ <tr><td> <code>42 h</code>  </td><td> <code>@Timeout(value = 42, unit = HOURS)</code>        </td></tr>
+ <tr><td> <code>42 d</code>  </td><td> <code>@Timeout(value = 42, unit = DAYS)</code>         </td></tr>
+ </table></div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.0</dd>
@@ -174,6 +192,38 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME">DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME</a></span></code></th>
+<td class="colLast">
+<div class="block">Property name used to set the default timeout for all
+ <a href="../api/AfterAll.html" title="annotation in org.junit.jupiter.api"><code>@AfterAll</code></a> methods.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME">DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME</a></span></code></th>
+<td class="colLast">
+<div class="block">Property name used to set the default timeout for all
+ <a href="../api/AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> methods.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME">DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME</a></span></code></th>
+<td class="colLast">
+<div class="block">Property name used to set the default timeout for all
+ <a href="../api/BeforeAll.html" title="annotation in org.junit.jupiter.api"><code>@BeforeAll</code></a> methods.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME">DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME</a></span></code></th>
+<td class="colLast">
+<div class="block">Property name used to set the default timeout for all
+ <a href="../api/BeforeEach.html" title="annotation in org.junit.jupiter.api"><code>@BeforeEach</code></a> methods.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME">DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME</a></span></code></th>
 <td class="colLast">
 <div class="block">Property name used to set the default display name generator class name: "junit.jupiter.displayname.generator.default"</div>
@@ -181,9 +231,24 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME">DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME</a></span></code></th>
+<td class="colLast">
+<div class="block">Property name used to set the default timeout for all lifecycle methods.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_PARALLEL_EXECUTION_MODE">DEFAULT_PARALLEL_EXECUTION_MODE</a></span></code></th>
 <td class="colLast">
 <div class="block">Property name used to set the default parallel test execution mode: "junit.jupiter.execution.parallel.mode.default"</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME">DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME</a></span></code></th>
+<td class="colLast">
+<div class="block">Property name used to set the default timeout for all
+ <a href="../api/TestFactory.html" title="annotation in org.junit.jupiter.api"><code>@TestFactory</code></a> methods.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -191,6 +256,37 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME">DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME</a></span></code></th>
 <td class="colLast">
 <div class="block">Property name used to set the default test instance lifecycle mode: "junit.jupiter.testinstance.lifecycle.default"</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME">DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME</a></span></code></th>
+<td class="colLast">
+<div class="block">Property name used to set the default timeout for all
+ <a href="../api/Test.html" title="annotation in org.junit.jupiter.api"><code>@Test</code></a> methods.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME">DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME</a></span></code></th>
+<td class="colLast">
+<div class="block">Property name used to set the default timeout for all
+ <a href="../api/TestTemplate.html" title="annotation in org.junit.jupiter.api"><code>@TestTemplate</code></a> methods.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME">DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME</a></span></code></th>
+<td class="colLast">
+<div class="block">Property name used to set the default timeout for all testable methods.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_TIMEOUT_PROPERTY_NAME">DEFAULT_TIMEOUT_PROPERTY_NAME</a></span></code></th>
+<td class="colLast">
+<div class="block">Property name used to set the default timeout for all testable and
+ lifecycle methods.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -512,7 +608,7 @@ public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java
 <a id="PARALLEL_CONFIG_CUSTOM_CLASS_PROPERTY_NAME">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>PARALLEL_CONFIG_CUSTOM_CLASS_PROPERTY_NAME</h4>
 <pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
@@ -526,6 +622,305 @@ public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java
 <dd>5.3</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../constant-values.html#org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_CUSTOM_CLASS_PROPERTY_NAME">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a id="DEFAULT_TIMEOUT_PROPERTY_NAME">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>DEFAULT_TIMEOUT_PROPERTY_NAME</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.5")
+public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> DEFAULT_TIMEOUT_PROPERTY_NAME</pre>
+<div class="block">Property name used to set the default timeout for all testable and
+ lifecycle methods.
+
+ <p>The value of this property will be used unless overridden by a more
+ specific property or a <a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>@Timeout</code></a>
+ annotation present on the method or an enclosing test class (for testable
+ methods).
+
+ <p>Please refer to the <a href="#supported-values-timeouts">class
+ description</a> for the definition of supported values.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.5</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>Timeout</code></a>, 
+<a href="../../../../constant-values.html#org.junit.jupiter.engine.Constants.DEFAULT_TIMEOUT_PROPERTY_NAME">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a id="DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.5")
+public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME</pre>
+<div class="block">Property name used to set the default timeout for all testable methods.
+
+ <p>The value of this property will be used unless overridden by a more
+ specific property or a <a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>@Timeout</code></a>
+ annotation present on the testable method or an enclosing test class.
+
+ <p>This property overrides the <a href="#DEFAULT_TIMEOUT_PROPERTY_NAME">"junit.jupiter.execution.timeout.default"</a>
+ property.
+
+ <p>Please refer to the <a href="#supported-values-timeouts">class
+ description</a> for the definition of supported values.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.5</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>Timeout</code></a>, 
+<a href="../../../../constant-values.html#org.junit.jupiter.engine.Constants.DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a id="DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.5")
+public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME</pre>
+<div class="block">Property name used to set the default timeout for all
+ <a href="../api/Test.html" title="annotation in org.junit.jupiter.api"><code>@Test</code></a> methods.
+
+ <p>The value of this property will be used unless overridden by a
+ <a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>@Timeout</code></a> annotation present on the
+ <a href="../api/Test.html" title="annotation in org.junit.jupiter.api"><code>@Test</code></a> method or an enclosing test
+ class.
+
+ <p>This property overrides the
+ <a href="#DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME">"junit.jupiter.execution.timeout.testable.method.default"</a> property.
+
+ <p>Please refer to the <a href="#supported-values-timeouts">class
+ description</a> for the definition of supported values.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.5</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>Timeout</code></a>, 
+<a href="../../../../constant-values.html#org.junit.jupiter.engine.Constants.DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a id="DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.5")
+public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME</pre>
+<div class="block">Property name used to set the default timeout for all
+ <a href="../api/TestTemplate.html" title="annotation in org.junit.jupiter.api"><code>@TestTemplate</code></a> methods.
+
+ <p>The value of this property will be used unless overridden by a
+ <a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>@Timeout</code></a> annotation present on the
+ <a href="../api/TestTemplate.html" title="annotation in org.junit.jupiter.api"><code>@TestTemplate</code></a> method or an
+ enclosing test class.
+
+ <p>This property overrides the
+ <a href="#DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME">"junit.jupiter.execution.timeout.testable.method.default"</a> property.
+
+ <p>Please refer to the <a href="#supported-values-timeouts">class
+ description</a> for the definition of supported values.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.5</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>Timeout</code></a>, 
+<a href="../../../../constant-values.html#org.junit.jupiter.engine.Constants.DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a id="DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.5")
+public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME</pre>
+<div class="block">Property name used to set the default timeout for all
+ <a href="../api/TestFactory.html" title="annotation in org.junit.jupiter.api"><code>@TestFactory</code></a> methods.
+
+ <p>The value of this property will be used unless overridden by a
+ <a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>@Timeout</code></a> annotation present on the
+ <a href="../api/TestFactory.html" title="annotation in org.junit.jupiter.api"><code>@TestFactory</code></a> method or an
+ enclosing test class.
+
+ <p>This property overrides the
+ <a href="#DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME">"junit.jupiter.execution.timeout.testable.method.default"</a> property.
+
+ <p>Please refer to the <a href="#supported-values-timeouts">class
+ description</a> for the definition of supported values.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.5</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>Timeout</code></a>, 
+<a href="../../../../constant-values.html#org.junit.jupiter.engine.Constants.DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a id="DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.5")
+public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME</pre>
+<div class="block">Property name used to set the default timeout for all lifecycle methods.
+
+ <p>The value of this property will be used unless overridden by a more
+ specific property or a <a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>@Timeout</code></a>
+ annotation present on the lifecycle method.
+
+ <p>This property overrides the <a href="#DEFAULT_TIMEOUT_PROPERTY_NAME">"junit.jupiter.execution.timeout.default"</a>
+ property.
+
+ <p>Please refer to the <a href="#supported-values-timeouts">class
+ description</a> for the definition of supported values.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.5</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>Timeout</code></a>, 
+<a href="../../../../constant-values.html#org.junit.jupiter.engine.Constants.DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a id="DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.5")
+public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME</pre>
+<div class="block">Property name used to set the default timeout for all
+ <a href="../api/BeforeAll.html" title="annotation in org.junit.jupiter.api"><code>@BeforeAll</code></a> methods.
+
+ <p>The value of this property will be used unless overridden by a
+ <a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>@Timeout</code></a> annotation present on the
+ <a href="../api/BeforeAll.html" title="annotation in org.junit.jupiter.api"><code>@BeforeAll</code></a> method.
+
+ <p>This property overrides the
+ <a href="#DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME">"junit.jupiter.execution.timeout.lifecycle.method.default"</a> property.
+
+ <p>Please refer to the <a href="#supported-values-timeouts">class
+ description</a> for the definition of supported values.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.5</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>Timeout</code></a>, 
+<a href="../../../../constant-values.html#org.junit.jupiter.engine.Constants.DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a id="DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.5")
+public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME</pre>
+<div class="block">Property name used to set the default timeout for all
+ <a href="../api/BeforeEach.html" title="annotation in org.junit.jupiter.api"><code>@BeforeEach</code></a> methods.
+
+ <p>The value of this property will be used unless overridden by a
+ <a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>@Timeout</code></a> annotation present on the
+ <a href="../api/BeforeEach.html" title="annotation in org.junit.jupiter.api"><code>@BeforeEach</code></a> method.
+
+ <p>This property overrides the
+ <a href="#DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME">"junit.jupiter.execution.timeout.lifecycle.method.default"</a> property.
+
+ <p>Please refer to the <a href="#supported-values-timeouts">class
+ description</a> for the definition of supported values.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.5</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>Timeout</code></a>, 
+<a href="../../../../constant-values.html#org.junit.jupiter.engine.Constants.DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a id="DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.5")
+public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME</pre>
+<div class="block">Property name used to set the default timeout for all
+ <a href="../api/AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> methods.
+
+ <p>The value of this property will be used unless overridden by a
+ <a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>@Timeout</code></a> annotation present on the
+ <a href="../api/AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> method.
+
+ <p>This property overrides the
+ <a href="#DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME">"junit.jupiter.execution.timeout.lifecycle.method.default"</a> property.
+
+ <p>Please refer to the <a href="#supported-values-timeouts">class
+ description</a> for the definition of supported values.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.5</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>Timeout</code></a>, 
+<a href="../../../../constant-values.html#org.junit.jupiter.engine.Constants.DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a id="DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.5")
+public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME</pre>
+<div class="block">Property name used to set the default timeout for all
+ <a href="../api/AfterAll.html" title="annotation in org.junit.jupiter.api"><code>@AfterAll</code></a> methods.
+
+ <p>The value of this property will be used unless overridden by a
+ <a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>@Timeout</code></a> annotation present on the
+ <a href="../api/AfterAll.html" title="annotation in org.junit.jupiter.api"><code>@AfterAll</code></a> method.
+
+ <p>This property overrides the
+ <a href="#DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME">"junit.jupiter.execution.timeout.lifecycle.method.default"</a> property.
+
+ <p>Please refer to the <a href="#supported-values-timeouts">class
+ description</a> for the definition of supported values.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.5</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>Timeout</code></a>, 
+<a href="../../../../constant-values.html#org.junit.jupiter.engine.Constants.DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME">Constant Field Values</a></dd>
 </dl>
 </li>
 </ul>
