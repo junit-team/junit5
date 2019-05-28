@@ -715,6 +715,11 @@ assertions have been added as top-level functions in the <code>org.junit.jupiter
 declare any parameters.</p>
 </li>
 <li>
+<p>New <code>junit.jupiter.displayname.generator.default</code> configuration parameter to set the
+default <code>DisplayNameGenerator</code> that will be used unless <code>@DisplayName</code> or
+<code>@DisplayNameGeneration</code> is present.</p>
+</li>
+<li>
 <p><code>MethodOrderer.Random</code> now generates a default random seed only once and prints it to
 the log in order to allow reproducible builds.</p>
 </li>
@@ -734,11 +739,6 @@ implementations.</p>
 <a href="../user-guide/index.html#extensions-intercepting-invocations">User Guide</a> for
 details).</p>
 </li>
-<li>
-<p>New <code>junit.jupiter.displayname.generator.default</code> configuration parameter to set the
-default <code>DisplayNameGenerator</code> that will be used unless <code>@DisplayName</code> or
-<code>@DisplayNameGeneration</code> is present.</p>
-</li>
 </ul>
 </div>
 </div>
@@ -746,32 +746,12 @@ default <code>DisplayNameGenerator</code> that will be used unless <code>@Displa
 <div class="sect2">
 <h3 id="release-notes-5.5.0-RC1-junit-vintage"><a class="anchor" href="#release-notes-5.5.0-RC1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-3"><a class="anchor" href="#deprecations-and-breaking-changes-3"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
 <h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
-<p><code>junit:junit</code> is now a compile-scoped dependency of junit-vintage-engine to allow for
-easier dependency declaration in Maven POMs.</p>
+<p><code>junit:junit</code> is now a compile-scoped dependency of <code>junit-vintage-engine</code> to allow for
+easier dependency management in Maven POMs.</p>
 </li>
 </ul>
 </div>
@@ -859,7 +839,7 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.2-junit-jupiter"><a class="anchor" href="#release-notes-5.4.2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -873,7 +853,7 @@ test names.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.2-junit-vintage"><a class="anchor" href="#release-notes-5.4.2-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -913,7 +893,7 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.1-junit-platform"><a class="anchor" href="#release-notes-5.4.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -928,7 +908,7 @@ initialization.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.1-junit-jupiter"><a class="anchor" href="#release-notes-5.4.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -942,7 +922,7 @@ a temporary directory supplied via <code>@TempDir</code>.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.1-junit-vintage"><a class="anchor" href="#release-notes-5.4.1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1025,7 +1005,7 @@ in build tools</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-05-27 20:07:33 UTC
+Last updated 2019-05-28 13:03:13 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
