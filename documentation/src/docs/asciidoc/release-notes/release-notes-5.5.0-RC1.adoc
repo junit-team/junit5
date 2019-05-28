@@ -55,6 +55,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Support for declarative timeouts using `@Timeout` or configuration parameters (see
+  <<../user-guide/index.adoc#writing-tests-declarative-timeouts, User Guide>> for details)
 * New overloaded variants of `Assertions.assertLinesMatch(...)` that accept a `String` or
   a `Supplier<String>` for a custom failure message.
 * Failure messages for `Assertions.assertLinesMatch(...)` now emit each expected and

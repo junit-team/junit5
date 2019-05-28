@@ -24,6 +24,24 @@ import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigura
 /**
  * Collection of constants related to the {@link JupiterTestEngine}.
  *
+ * <h3 id="supported-values-timeouts">Supported Values for Timeouts</h3>
+ *
+ * <p>Values for timeouts must be in the following, case-insensitive format:
+ * {@code <number> [ns|μs|ms|s|m|h|d]}. The space between the number and the
+ * unit may be omitted. Specifying no unit is equivalent to using seconds.
+ *
+ * <table class="plain">
+ * <tr><th> Value         </th><th> Equivalent annotation                             </th></tr>
+ * <tr><td> {@code 42}    </td><td> {@code @Timeout(42)}                              </td></tr>
+ * <tr><td> {@code 42 ns} </td><td> {@code @Timeout(value = 42, unit = NANOSECONDS)}  </td></tr>
+ * <tr><td> {@code 42 μs} </td><td> {@code @Timeout(value = 42, unit = MICROSECONDS)} </td></tr>
+ * <tr><td> {@code 42 ms} </td><td> {@code @Timeout(value = 42, unit = MILLISECONDS)} </td></tr>
+ * <tr><td> {@code 42 s}  </td><td> {@code @Timeout(value = 42, unit = SECONDS)}      </td></tr>
+ * <tr><td> {@code 42 m}  </td><td> {@code @Timeout(value = 42, unit = MINUTES)}      </td></tr>
+ * <tr><td> {@code 42 h}  </td><td> {@code @Timeout(value = 42, unit = HOURS)}        </td></tr>
+ * <tr><td> {@code 42 d}  </td><td> {@code @Timeout(value = 42, unit = DAYS)}         </td></tr>
+ * </table>
+ *
  * @see org.junit.platform.engine.ConfigurationParameters
  * @since 5.0
  */
@@ -186,6 +204,205 @@ public final class Constants {
 	@API(status = EXPERIMENTAL, since = "5.3")
 	public static final String PARALLEL_CONFIG_CUSTOM_CLASS_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
 			+ CONFIG_CUSTOM_CLASS_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the default timeout for all testable and
+	 * lifecycle methods.
+	 *
+	 * <p>The value of this property will be used unless overridden by a more
+	 * specific property or a {@link org.junit.jupiter.api.Timeout @Timeout}
+	 * annotation present on the method or an enclosing test class (for testable
+	 * methods).
+	 *
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
+	 *
+	 * @see org.junit.jupiter.api.Timeout
+	 * @since 5.5
+	 */
+	@API(status = EXPERIMENTAL, since = "5.5")
+	public static final String DEFAULT_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TIMEOUT_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the default timeout for all testable methods.
+	 *
+	 * <p>The value of this property will be used unless overridden by a more
+	 * specific property or a {@link org.junit.jupiter.api.Timeout @Timeout}
+	 * annotation present on the testable method or an enclosing test class.
+	 *
+	 * <p>This property overrides the {@value #DEFAULT_TIMEOUT_PROPERTY_NAME}
+	 * property.
+	 *
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
+	 *
+	 * @see org.junit.jupiter.api.Timeout
+	 * @since 5.5
+	 */
+	@API(status = EXPERIMENTAL, since = "5.5")
+	public static final String DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the default timeout for all
+	 * {@link org.junit.jupiter.api.Test @Test} methods.
+	 *
+	 * <p>The value of this property will be used unless overridden by a
+	 * {@link org.junit.jupiter.api.Timeout @Timeout} annotation present on the
+	 * {@link org.junit.jupiter.api.Test @Test} method or an enclosing test
+	 * class.
+	 *
+	 * <p>This property overrides the
+	 * {@value #DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME} property.
+	 *
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
+	 *
+	 * @see org.junit.jupiter.api.Timeout
+	 * @since 5.5
+	 */
+	@API(status = EXPERIMENTAL, since = "5.5")
+	public static final String DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the default timeout for all
+	 * {@link org.junit.jupiter.api.TestTemplate @TestTemplate} methods.
+	 *
+	 * <p>The value of this property will be used unless overridden by a
+	 * {@link org.junit.jupiter.api.Timeout @Timeout} annotation present on the
+	 * {@link org.junit.jupiter.api.TestTemplate @TestTemplate} method or an
+	 * enclosing test class.
+	 *
+	 * <p>This property overrides the
+	 * {@value #DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME} property.
+	 *
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
+	 *
+	 * @see org.junit.jupiter.api.Timeout
+	 * @since 5.5
+	 */
+	@API(status = EXPERIMENTAL, since = "5.5")
+	public static final String DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the default timeout for all
+	 * {@link org.junit.jupiter.api.TestFactory @TestFactory} methods.
+	 *
+	 * <p>The value of this property will be used unless overridden by a
+	 * {@link org.junit.jupiter.api.Timeout @Timeout} annotation present on the
+	 * {@link org.junit.jupiter.api.TestFactory @TestFactory} method or an
+	 * enclosing test class.
+	 *
+	 * <p>This property overrides the
+	 * {@value #DEFAULT_TESTABLE_METHOD_TIMEOUT_PROPERTY_NAME} property.
+	 *
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
+	 *
+	 * @see org.junit.jupiter.api.Timeout
+	 * @since 5.5
+	 */
+	@API(status = EXPERIMENTAL, since = "5.5")
+	public static final String DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the default timeout for all lifecycle methods.
+	 *
+	 * <p>The value of this property will be used unless overridden by a more
+	 * specific property or a {@link org.junit.jupiter.api.Timeout @Timeout}
+	 * annotation present on the lifecycle method.
+	 *
+	 * <p>This property overrides the {@value #DEFAULT_TIMEOUT_PROPERTY_NAME}
+	 * property.
+	 *
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
+	 *
+	 * @see org.junit.jupiter.api.Timeout
+	 * @since 5.5
+	 */
+	@API(status = EXPERIMENTAL, since = "5.5")
+	public static final String DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the default timeout for all
+	 * {@link org.junit.jupiter.api.BeforeAll @BeforeAll} methods.
+	 *
+	 * <p>The value of this property will be used unless overridden by a
+	 * {@link org.junit.jupiter.api.Timeout @Timeout} annotation present on the
+	 * {@link org.junit.jupiter.api.BeforeAll @BeforeAll} method.
+	 *
+	 * <p>This property overrides the
+	 * {@value #DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME} property.
+	 *
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
+	 *
+	 * @see org.junit.jupiter.api.Timeout
+	 * @since 5.5
+	 */
+	@API(status = EXPERIMENTAL, since = "5.5")
+	public static final String DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the default timeout for all
+	 * {@link org.junit.jupiter.api.BeforeEach @BeforeEach} methods.
+	 *
+	 * <p>The value of this property will be used unless overridden by a
+	 * {@link org.junit.jupiter.api.Timeout @Timeout} annotation present on the
+	 * {@link org.junit.jupiter.api.BeforeEach @BeforeEach} method.
+	 *
+	 * <p>This property overrides the
+	 * {@value #DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME} property.
+	 *
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
+	 *
+	 * @see org.junit.jupiter.api.Timeout
+	 * @since 5.5
+	 */
+	@API(status = EXPERIMENTAL, since = "5.5")
+	public static final String DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the default timeout for all
+	 * {@link org.junit.jupiter.api.AfterEach @AfterEach} methods.
+	 *
+	 * <p>The value of this property will be used unless overridden by a
+	 * {@link org.junit.jupiter.api.Timeout @Timeout} annotation present on the
+	 * {@link org.junit.jupiter.api.AfterEach @AfterEach} method.
+	 *
+	 * <p>This property overrides the
+	 * {@value #DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME} property.
+	 *
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
+	 *
+	 * @see org.junit.jupiter.api.Timeout
+	 * @since 5.5
+	 */
+	@API(status = EXPERIMENTAL, since = "5.5")
+	public static final String DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the default timeout for all
+	 * {@link org.junit.jupiter.api.AfterAll @AfterAll} methods.
+	 *
+	 * <p>The value of this property will be used unless overridden by a
+	 * {@link org.junit.jupiter.api.Timeout @Timeout} annotation present on the
+	 * {@link org.junit.jupiter.api.AfterAll @AfterAll} method.
+	 *
+	 * <p>This property overrides the
+	 * {@value #DEFAULT_LIFECYCLE_METHOD_TIMEOUT_PROPERTY_NAME} property.
+	 *
+	 * <p>Please refer to the <a href="#supported-values-timeouts">class
+	 * description</a> for the definition of supported values.
+	 *
+	 * @see org.junit.jupiter.api.Timeout
+	 * @since 5.5
+	 */
+	@API(status = EXPERIMENTAL, since = "5.5")
+	public static final String DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
 
 	private Constants() {
 		/* no-op */

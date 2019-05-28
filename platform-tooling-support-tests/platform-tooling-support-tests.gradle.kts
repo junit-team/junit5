@@ -22,6 +22,9 @@ dependencies {
 	testImplementation("com.tngtech.archunit:archunit-junit5-api:${Versions.archunit}") {
 		because("checking the architecture of JUnit 5")
 	}
+	testImplementation("org.codehaus.groovy:groovy-all:${Versions.groovy}") {
+		because("it provides convenience methods to handle process output")
+	}
 	testRuntimeOnly("com.tngtech.archunit:archunit-junit5-engine:${Versions.archunit}") {
 		because("contains the ArchUnit TestEngine implementation")
 	}
