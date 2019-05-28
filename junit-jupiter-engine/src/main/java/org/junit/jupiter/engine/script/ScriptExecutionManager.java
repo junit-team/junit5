@@ -32,6 +32,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 5.1
  */
 @API(status = INTERNAL, since = "5.1")
+@Deprecated
 public class ScriptExecutionManager {
 
 	private final ScriptEngineManager scriptEngineManager = new ScriptEngineManager();

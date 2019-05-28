@@ -22,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * @since 5.1
  */
 @API(status = INTERNAL, since = "5.1")
+@Deprecated
 public interface ScriptAccessor {
 
 	/**

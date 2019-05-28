@@ -5,7 +5,8 @@ after answering yourself: **"What kind of issue is this?"**_
 
 - ( ) **Question.** This issue tracker is not the place for questions.
 If you want to ask how to do something, or to understand why
-something isn't working the way you expect it to, use Stack Overflow.
+something isn't working the way you expect it to, please first use Stack
+Overflow or Gitter.
 https://stackoverflow.com/questions/tagged/junit5
 
 - ( ) **Bug report.** Please provide us the version of JUnit 5 you are

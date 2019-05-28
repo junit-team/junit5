@@ -13,6 +13,7 @@ package platform.tooling.support.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.spi.ToolProvider;
 
+import org.codehaus.groovy.runtime.ProcessGroovyMethods;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import platform.tooling.support.Helper;
@@ -138,11 +140,15 @@ class ModularUserGuideTests {
 		// command.forEach(System.out::println);
 
 		var builder = new ProcessBuilder(command).directory(temp.toFile());
-		// var java = builder.inheritIO().start(); // show "console" output and errors
-		var java = builder.redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.DISCARD).start();
-		var code = java.waitFor();
+		var java = builder.start();
+		ProcessGroovyMethods.waitForProcessOutput(java, out, err);
+		var code = java.exitValue();
 
-		assertEquals(0, code, out.toString());
+		if (code != 0) {
+			System.out.println(out);
+			System.err.println(err);
+			fail("Unexpected exit code: " + code);
+		}
 		return command;
 	}
 

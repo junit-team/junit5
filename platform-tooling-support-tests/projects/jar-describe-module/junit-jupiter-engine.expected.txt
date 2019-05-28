@@ -6,4 +6,5 @@ requires org.junit.jupiter.api transitive
 requires org.junit.platform.engine transitive
 requires org.opentest4j transitive
 provides org.junit.platform.engine.TestEngine with org.junit.jupiter.engine.JupiterTestEngine
+qualified opens org.junit.jupiter.engine.extension to org.junit.platform.commons
 contains org.junit.jupiter.engine

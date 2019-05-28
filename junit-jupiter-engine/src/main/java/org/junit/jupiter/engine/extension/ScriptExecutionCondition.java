@@ -35,6 +35,7 @@ import org.junit.platform.commons.util.BlacklistedExceptions;
  * @see EnabledIf
  * @see #evaluateExecutionCondition(ExtensionContext)
  */
+@Deprecated
 class ScriptExecutionCondition implements ExecutionCondition {
 
 	private static final ConditionEvaluationResult ENABLED_NO_ELEMENT = enabled("AnnotatedElement not present");

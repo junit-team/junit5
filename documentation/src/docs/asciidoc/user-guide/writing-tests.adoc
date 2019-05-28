@@ -40,6 +40,7 @@ in the `junit-jupiter-api` module.
 | `@Nested`                | Denotes that the annotated class is a non-static <<writing-tests-nested,nested test class>>. `@BeforeAll` and `@AfterAll` methods cannot be used directly in a `@Nested` test class unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used. Such annotations are not _inherited_.
 | `@Tag`                   | Used to declare <<writing-tests-tagging-and-filtering,tags for filtering tests>>, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4. Such annotations are _inherited_ at the class level but not at the method level.
 | `@Disabled`              | Used to <<writing-tests-disabling,disable>> a test class or test method; analogous to JUnit 4's `@Ignore`. Such annotations are not _inherited_.
+| `@Timeout`               | Used to fail a test, test factory, test template, or lifecycle method if its execution exceeds a given duration. Such annotations are _inherited_.
 | `@ExtendWith`            | Used to <<extensions-registration-declarative,register extensions declaratively>>. Such annotations are _inherited_.
 | `@RegisterExtension`     | Used to <<extensions-registration-programmatic,register extensions programmatically>> via fields. Such fields are _inherited_ unless they are _shadowed_.
 | `@TempDir`               | Used to supply a <<writing-tests-built-in-extensions-TempDirectory,temporary directory>> via field injection or parameter injection in a lifecycle method or test method; located in the `org.junit.jupiter.api.io` package.
@@ -217,11 +218,12 @@ include::{testDir}/example/AssertionsDemo.java[tags=user_guide]
 
 [[writing-tests-assertions-preemptive-timeouts]]
 [WARNING]
-.Preemptive Timeouts
+.Preemptive Timeouts with `assertTimeoutPreemptively()`
 ====
-The various `assertTimeoutPreemptively()` methods in the `Assertions` class execute the
-provided `executable` or `supplier` in a different thread than that of the calling code.
-This behavior can lead to undesirable side effects if the code that is executed within the
+Contrary to <<writing-tests-declarative-timeouts, declarative timeouts>>, the various
+`assertTimeoutPreemptively()` methods in the `Assertions` class execute the provided
+`executable` or `supplier` in a different thread than that of the calling code. This
+behavior can lead to undesirable side effects if the code that is executed within the
 `executable` or `supplier` relies on `java.lang.ThreadLocal` storage.
 
 One common example of this is the transactional testing support in the Spring Framework.
@@ -413,15 +415,14 @@ include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_env
 [[writing-tests-conditional-execution-scripts]]
 ==== Script-based Conditions
 
+WARNING: Conditional test execution via `{EnabledIf}` and `{DisabledIf}` is _deprecated_
+for removal in a future release of JUnit Jupiter.
+
 JUnit Jupiter provides the ability to either _enable_ or _disable_ a container or test
 depending on the evaluation of a script configured via the `{EnabledIf}` or
 `{DisabledIf}` annotation. Scripts can be written in JavaScript, Groovy, or any other
 scripting language for which there is support for the Java Scripting API, defined by JSR
 223.
-
-WARNING: Conditional test execution via `{EnabledIf}` and `{DisabledIf}` is currently an
-_experimental_ feature. Consult the table in <<api-evolution-experimental-apis>> for
-details.
 
 TIP: If the logic of your script depends only on the current operating system, the
 current Java Runtime Environment version, a particular JVM system property, or a
@@ -1031,10 +1032,9 @@ for parameterized tests that accept a single argument.
 * `{NullAndEmptySource}`: a _composed annotation_ that combines the functionality of
   `@NullSource` and `@EmptySource`.
 
-If you need to supply multiple varying types of _empty_ or _blank_ strings to a
-parameterized test, you can achieve that using
-<<writing-tests-parameterized-tests-sources-ValueSource>> -- for example,
-`@ValueSource(strings = {" ", " ", "\t", "\n"})`.
+If you need to supply multiple varying types of _blank_ strings to a parameterized test,
+you can achieve that using <<writing-tests-parameterized-tests-sources-ValueSource>> --
+for example, `@ValueSource(strings = {"{nbsp}", "{nbsp}{nbsp}{nbsp}", "\t", "\n"})`.
 
 You can also combine `@NullSource`, `@EmptySource`, and `@ValueSource` to test a wider
 range of `null`, _empty_, and _blank_ input. The following example demonstrates how to
@@ -1569,6 +1569,95 @@ The last method generates a nested hierarchy of dynamic tests utilizing
 ----
 include::{testDir}/example/DynamicTestsDemo.java[tags=user_guide]
 ----
+
+
+[[writing-tests-declarative-timeouts]]
+=== Timeouts
+
+.Declarative timeouts are an experimental feature
+WARNING: You're invited to give it a try and provide feedback to the JUnit team so they
+can improve and eventually <<api-evolution, promote>> this feature.
+
+The `@Timeout` annotation allows to declare that a test, test factory, test template, or
+lifecycle method should fail if its execution time exceeds a given duration, and
+optionally a time unit (seconds are used by default).
+
+The following example shows how `@Timeout` is applied to lifecycle and test methods.
+
+[source,java]
+----
+include::{testDir}/example/TimeoutDemo.java[tags=user_guide]
+----
+
+Contrary to the `assertTimeoutPreemptively()` assertion, the execution of the annotated
+method proceeds in the main thread of the test. If the timeout is exceeded, the main
+thread is interrupted from another thread. This is done to ensure interoperability with
+frameworks such as Spring that make extensive use of mechanisms that are sensitive to the
+currently running thread (e.g. `ThreadLocals`).
+
+To apply the same timeout to all test methods within a test class and all its `@Nested`
+classes, you can declare the `@Timeout` annotation on the class level. It will then be
+applied to all test, test factory, and test template methods within that class and its
+`@Nested` classes unless overridden by a `@Timeout` annotation on a method or `@Nested`
+class. Please note that `@Timeout` annotations declared on the class level are not
+applied to lifecycle methods.
+
+Declaring `@Timeout` on a test factory method checks that the method returns within the
+specified duration but does verify the execution time of the returned `DynamicTests`.
+Please use `assertTimeout()`/`assertTimeoutPreemptively()` for that purpose.
+
+If `@Timeout` is present on a test template method, such as a method annotated with
+`@RepeatedTest` or `@ParameterizedTest`, each invocation is checked to finish within the
+given timeout.
+
+The following <<running-tests-config-params, configuration parameters>> can be used to
+specify global timeouts for all methods of a certain category unless they or an enclosing
+test class is annotated with `@Timeout`:
+
+`junit.jupiter.execution.timeout.default`::
+    Default timeout for all testable and lifecycle methods
+`junit.jupiter.execution.timeout.testable.method.default`::
+    Default timeout for all testable methods
+`junit.jupiter.execution.timeout.test.method.default`::
+    Default timeout for `@Test` methods
+`junit.jupiter.execution.timeout.testtemplate.method.default`::
+    Default timeout for `@TestTemplate` methods
+`junit.jupiter.execution.timeout.testfactory.method.default`::
+    Default timeout for `@TestFactory` methods
+`junit.jupiter.execution.timeout.lifecycle.method.default`::
+    Default timeout for all lifecycle methods
+`junit.jupiter.execution.timeout.beforeall.method.default`::
+    Default timeout for `@BeforeAll` methods
+`junit.jupiter.execution.timeout.beforeeach.method.default`::
+    Default timeout for `@BeforeEach` methods
+`junit.jupiter.execution.timeout.aftereach.method.default`::
+    Default timeout for `@AfterEach` methods
+`junit.jupiter.execution.timeout.afterall.method.default`::
+    Default timeout for `@AfterAll` methods
+
+More specific configuration parameters override less specific ones. For example,
+`junit.jupiter.execution.timeout.test.method.default` overrides
+`junit.jupiter.execution.timeout.testable.method.default` which overrides
+`junit.jupiter.execution.timeout.default`.
+
+The values of such configuration parameters must be in the following, case-insensitive
+format: `<number> [ns|μs|ms|s|m|h|d]`. The space between the number and the unit may be
+omitted. Specifying no unit is equivalent to using seconds.
+
+.Example timeout configuration parameter values
+[cols="20,80"]
+|===
+| Parameter value | Equivalent annotation
+
+| `42`            | `@Timeout(42)`
+| `42 ns`         | `@Timeout(value = 42, unit = NANOSECONDS)`
+| `42 μs`         | `@Timeout(value = 42, unit = MICROSECONDS)`
+| `42 ms`         | `@Timeout(value = 42, unit = MILLISECONDS)`
+| `42 s`          | `@Timeout(value = 42, unit = SECONDS)`
+| `42 m`          | `@Timeout(value = 42, unit = MINUTES)`
+| `42 h`          | `@Timeout(value = 42, unit = HOURS)`
+| `42 d`          | `@Timeout(value = 42, unit = DAYS)`
+|===
 
 
 [[writing-tests-parallel-execution]]

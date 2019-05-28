@@ -340,7 +340,7 @@ public final class DiscoverySelectors {
 	 *
 	 * <h3>Examples</h3>
 	 *
-	 * <table border="1">
+	 * <table class="plain">
 	 * <tr><th>Method</th><th>Fully Qualified Method Name</th></tr>
 	 * <tr><td>{@code java.lang.String.chars()}</td><td>{@code java.lang.String#chars}</td></tr>
 	 * <tr><td>{@code java.lang.String.chars()}</td><td>{@code java.lang.String#chars()}</td></tr>

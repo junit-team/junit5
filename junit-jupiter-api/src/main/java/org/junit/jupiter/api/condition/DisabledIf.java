@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.condition;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -27,7 +27,7 @@ import org.apiguardian.api.API;
  * <p>The decision is made by interpreting the return value of the supplied
  * {@linkplain #value script}, according to the following table.
  *
- * <table border="1">
+ * <table class="plain">
  * <tr>
  *   <th>Return Type</th>
  *   <th>Evaluation Result</th>
@@ -116,6 +116,13 @@ import org.apiguardian.api.API;
  * this annotation may be used in conjunction with other {@code @Enabled*} or
  * {@code @Disabled*} annotations in this package.
  *
+ * @deprecated Script-based condition APIs and their supporting implementations
+ * are deprecated with the intent to remove them in JUnit Jupiter 5.6. Users
+ * should instead rely on a combination of other built-in conditions or create
+ * and use a custom implementation of
+ * {@link org.junit.jupiter.api.extension.ExecutionCondition ExecutionCondition}
+ * to evaluate the same conditions.
+ *
  * @since 5.1
  * @see org.junit.jupiter.api.condition.EnabledIf
  * @see org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable
@@ -133,7 +140,8 @@ import org.apiguardian.api.API;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = EXPERIMENTAL, since = "5.1")
+@API(status = DEPRECATED, since = "5.5")
+@Deprecated
 public @interface DisabledIf {
 
 	/**

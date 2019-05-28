@@ -27,6 +27,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @see ScriptExecutionManager
  */
 @API(status = INTERNAL, since = "5.1")
+@Deprecated
 public final class Script {
 
 	/**
