@@ -79,6 +79,10 @@ on GitHub.
 * New `InvocationInterceptor` extension API (see
   <<../user-guide/index.adoc#extensions-intercepting-invocations, User Guide>> for
   details).
+* New extension APIs for handling exceptions during execution of lifecycle methods:
+  `@BeforeAll`, `@BeforeEach`, `@AfterEach` and `@AfterAll` (see
+  <<../user-guide/index.adoc#extensions-exception-handling, User Guide>> for
+  details)
 * Added support for method URIs, e.g. `method:org.junit.Foo#bar()`, to `DynamicContainer`
   and `DynamicTest` factory methods.
 
