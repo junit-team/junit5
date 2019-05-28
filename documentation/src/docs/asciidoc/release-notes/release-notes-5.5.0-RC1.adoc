@@ -79,6 +79,8 @@ on GitHub.
 * New `InvocationInterceptor` extension API (see
   <<../user-guide/index.adoc#extensions-intercepting-invocations, User Guide>> for
   details).
+* Added support for method URIs, e.g. `method:org.junit.Foo#bar()`, to `DynamicContainer`
+  and `DynamicTest` factory methods.
 
 
 [[release-notes-5.5.0-RC1-junit-vintage]]
