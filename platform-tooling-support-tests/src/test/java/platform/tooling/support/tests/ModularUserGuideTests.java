@@ -138,16 +138,13 @@ class ModularUserGuideTests {
 		// System.out.println("______________");
 		// command.forEach(System.out::println);
 
-		var builder = new ProcessBuilder(command).directory(temp.toFile());
-		// var java = builder.inheritIO().start(); // show "console" output and errors
+		var builder = new ProcessBuilder(command).directory(temp.toFile()).inheritIO();
 		var java = builder.start();
 		var code = java.waitFor();
 
 		if (code != 0) {
 			System.out.println(out);
 			System.err.println(err);
-			System.out.println(new String(java.getInputStream().readAllBytes()));
-			System.err.println(new String(java.getErrorStream().readAllBytes()));
 			fail("Unexpected exit code: " + code);
 		}
 		return command;
