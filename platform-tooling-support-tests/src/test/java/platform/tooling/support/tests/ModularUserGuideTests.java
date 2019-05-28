@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.spi.ToolProvider;
 
+import org.codehaus.groovy.runtime.ProcessGroovyMethods;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import platform.tooling.support.Helper;
@@ -138,9 +139,10 @@ class ModularUserGuideTests {
 		// System.out.println("______________");
 		// command.forEach(System.out::println);
 
-		var builder = new ProcessBuilder(command).directory(temp.toFile()).inheritIO();
+		var builder = new ProcessBuilder(command).directory(temp.toFile());
 		var java = builder.start();
-		var code = java.waitFor();
+		ProcessGroovyMethods.waitForProcessOutput(java, out, err);
+		var code = java.exitValue();
 
 		if (code != 0) {
 			System.out.println(out);
