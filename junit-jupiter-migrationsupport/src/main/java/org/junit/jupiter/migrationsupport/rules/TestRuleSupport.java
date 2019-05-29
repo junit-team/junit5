@@ -98,6 +98,7 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 		invokeAppropriateMethodOnRuleAnnotatedMembers(context, NO_OP, GenericBeforeAndAfterAdvice::before);
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Override
 	public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 		long numRuleAnnotatedMembers = invokeAppropriateMethodOnRuleAnnotatedMembers(context, Collections::reverse,
