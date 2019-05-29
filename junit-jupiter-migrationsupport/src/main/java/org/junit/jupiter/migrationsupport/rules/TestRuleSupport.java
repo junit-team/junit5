@@ -62,6 +62,7 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 	 * @see org.junit.runners.BlockJUnit4ClassRunner#withRules
 	 * @see org.junit.rules.RunRules
 	 */
+	@SuppressWarnings("JavadocReference")
 	private List<TestRuleAnnotatedMember> findRuleAnnotatedMembers(Object testInstance) {
 		List<TestRuleAnnotatedMember> result = new ArrayList<>();
 		// @formatter:off
