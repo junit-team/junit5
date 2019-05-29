@@ -93,7 +93,7 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 	}
 
 	@Override
-	public void beforeEach(ExtensionContext context) throws Exception {
+	public void beforeEach(ExtensionContext context) {
 		invokeAppropriateMethodOnRuleAnnotatedMembers(context, NO_OP, GenericBeforeAndAfterAdvice::before);
 	}
 
@@ -118,7 +118,7 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 	}
 
 	@Override
-	public void afterEach(ExtensionContext context) throws Exception {
+	public void afterEach(ExtensionContext context) {
 		invokeAppropriateMethodOnRuleAnnotatedMembers(context, Collections::reverse,
 			GenericBeforeAndAfterAdvice::after);
 	}
