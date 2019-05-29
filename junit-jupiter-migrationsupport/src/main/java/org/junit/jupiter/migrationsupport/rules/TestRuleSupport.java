@@ -131,11 +131,11 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 		// @formatter:off
 		return Stream.of(getRuleAnnotatedMembers(context))
 				.map(ArrayList::new)
-				.peek(ordering::accept)
+				.peek(ordering)
 				.flatMap(Collection::stream)
 				.filter(annotatedMember -> this.ruleType.isInstance(annotatedMember.getTestRule()))
 				.map(this.adapterGenerator)
-				.peek(methodCaller::accept)
+				.peek(methodCaller)
 				.count();
 		// @formatter:on
 	}
