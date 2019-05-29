@@ -24,6 +24,7 @@ import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_FACTORY_METHOD_TIM
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -44,6 +45,7 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
@@ -143,6 +145,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		assertThat(execution.getDuration()) //
 				.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
 				.isLessThan(Duration.ofSeconds(1));
+		assertThat(execution.getTerminationInfo().getExecutionResult().getStatus()).isEqualTo(FAILED);
 		assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
 				.isInstanceOf(TimeoutException.class) //
 				.hasMessage("uninterruptibleMethod() timed out after 1 millisecond");
@@ -389,7 +392,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@Timeout(value = 1, unit = MILLISECONDS)
 		void uninterruptibleMethod() {
-			new UninterruptibleInvocation(50, MILLISECONDS).proceed();
+			new UninterruptibleInvocation(OS.WINDOWS.isCurrentOs() ? 500 : 50, MILLISECONDS).proceed();
 		}
 	}
 
