@@ -20,7 +20,7 @@ import java.util.Optional;
 import org.apiguardian.api.API;
 
 /**
- * {@link MethodDescriptor} encapsulates functionality for a given {@link Method}.
+ * {@code MethodDescriptor} encapsulates functionality for a given {@link Method}.
  *
  * @since 5.4
  * @see MethodOrdererContext
