@@ -49,5 +49,7 @@ class RecordStateOnErrorExtension implements LifecycleMethodExecutionExceptionHa
     private void memoryDumpForFurtherInvestigation(String error) {
 
     }
+	// tag::user_guide[]
 }
+// end::user_guide[]
 // @formatter:on

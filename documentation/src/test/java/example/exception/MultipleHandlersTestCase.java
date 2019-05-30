@@ -21,7 +21,7 @@ import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 // @formatter:off
 // tag::user_guide[]
 // Register handlers for @Test, @BeforeEach, @AfterEach as well as @BeforeAll and @AfterAll
-@ExtendWith({ThirdExecutedHandler.class})
+@ExtendWith(ThirdExecutedHandler.class)
 class MultipleHandlersTestCase {
 
     // Register handlers for @Test, @BeforeEach, @AfterEach only
@@ -56,5 +56,7 @@ class MultipleHandlersTestCase {
             throw ex;
         }
     }
+	// tag::user_guide[]
 }
+// end::user_guide[]
 // @formatter:on

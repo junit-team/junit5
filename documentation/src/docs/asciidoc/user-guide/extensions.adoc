@@ -473,7 +473,7 @@ while handlers for `BeforeEach` and `AfterEach` may be also registered for indiv
 test methods.
 
 [source,java,indent=0]
-.An exception handling extension that records application state on error
+.Registering multiple exception handling extensions
 ----
 include::{testDir}/example/exception/MultipleHandlersTestCase.java[tags=user_guide]
 ----
