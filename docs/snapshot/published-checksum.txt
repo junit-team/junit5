@@ -489,7 +489,6 @@ c383857b441cc73ae2736fabf0c0fd43  documentation/src/test/java/example/StandardTe
 c3e52893edc04ff223f7630d4aa4957a  documentation/src/docs/asciidoc/user-guide/advanced-topics.adoc
 c3e6f8dc7ee8d401b88d0366175075a5  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/VintageDiscoverer.java
 c3e8aa02a80117b5853b0c9339864ad6  documentation/src/test/java/example/Fast.java
-c4a5434b6c51c83099888a6d4f695036  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/TestRuleSupport.java
 c4df8d60b158bdcb7ff588755d7aedbc  documentation/src/test/java/org/junit/api/tools/MarkdownApiReportWriter.java
 c5bc9421a3ed8835262e6133e6f6cbce  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ServiceLoaderTestEngineRegistry.java
 c5fd94eb42abd9688f878f1e7ba2761b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/OS.java
@@ -585,6 +584,7 @@ eaa4188a41a4ec440c3a15e5139a3f67  junit-platform-console/src/main/java/org/junit
 eb6ece23077de314a4f6bdd14fe230f1  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/IgnoringRunnerDecorator.java
 eb8bcf457f9a0e5e28662054d6dafbd5  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestInstanceLifecycleUtils.java
 eca9c7a1b5a6b4564c1772333aaca6ca  documentation/src/test/java/example/callbacks/BrokenLifecycleMethodConfigDemo.java
+ecf2236c459f0390c8644d2f411adb7d  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/TestRuleSupport.java
 ecf8efaa00479fb747727965a2f27c58  junit-platform-commons/src/main/java/org/junit/platform/commons/util/CollectionUtils.java
 ee8cdba171d90c80addd7d4778804b43  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/AbstractTestRuleAdapter.java
 ee9b252abfcc35525aa2fc38d3a3b3f3  documentation/src/docs/asciidoc/user-guide/overview.adoc
