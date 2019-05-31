@@ -54,21 +54,21 @@ public class Helper {
 		}
 	}
 
-	public static String version(String module) {
-		return version(module, "<no default version specified>");
+	public static String version(String moduleOrSystemProperty) {
+		return version(moduleOrSystemProperty, "<no default version specified>");
 	}
 
-	public static String version(String module, String defaultVersion) {
-		if (module.startsWith("junit-jupiter")) {
+	public static String version(String moduleOrSystemProperty, String defaultVersion) {
+		if (moduleOrSystemProperty.startsWith("junit-jupiter")) {
 			return gradleProperties.getProperty("version");
 		}
-		if (module.startsWith("junit-platform")) {
+		if (moduleOrSystemProperty.startsWith("junit-platform")) {
 			return gradleProperties.getProperty("platformVersion");
 		}
-		if (module.startsWith("junit-vintage")) {
+		if (moduleOrSystemProperty.startsWith("junit-vintage")) {
 			return gradleProperties.getProperty("vintageVersion");
 		}
-		return System.getProperty("Versions" + module, defaultVersion);
+		return System.getProperty("Versions." + moduleOrSystemProperty, defaultVersion);
 	}
 
 	public static String replaceVersionPlaceholders(String line) {
