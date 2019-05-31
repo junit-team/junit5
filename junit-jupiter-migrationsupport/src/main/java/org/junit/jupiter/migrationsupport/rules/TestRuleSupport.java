@@ -62,6 +62,7 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 	 * @see org.junit.runners.BlockJUnit4ClassRunner#withRules
 	 * @see org.junit.rules.RunRules
 	 */
+	@SuppressWarnings("JavadocReference")
 	private List<TestRuleAnnotatedMember> findRuleAnnotatedMembers(Object testInstance) {
 		List<TestRuleAnnotatedMember> result = new ArrayList<>();
 		// @formatter:off
@@ -93,10 +94,11 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 	}
 
 	@Override
-	public void beforeEach(ExtensionContext context) throws Exception {
+	public void beforeEach(ExtensionContext context) {
 		invokeAppropriateMethodOnRuleAnnotatedMembers(context, NO_OP, GenericBeforeAndAfterAdvice::before);
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Override
 	public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
 		long numRuleAnnotatedMembers = invokeAppropriateMethodOnRuleAnnotatedMembers(context, Collections::reverse,
@@ -118,7 +120,7 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 	}
 
 	@Override
-	public void afterEach(ExtensionContext context) throws Exception {
+	public void afterEach(ExtensionContext context) {
 		invokeAppropriateMethodOnRuleAnnotatedMembers(context, Collections::reverse,
 			GenericBeforeAndAfterAdvice::after);
 	}
@@ -131,11 +133,11 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 		// @formatter:off
 		return Stream.of(getRuleAnnotatedMembers(context))
 				.map(ArrayList::new)
-				.peek(ordering::accept)
+				.peek(ordering)
 				.flatMap(Collection::stream)
 				.filter(annotatedMember -> this.ruleType.isInstance(annotatedMember.getTestRule()))
 				.map(this.adapterGenerator)
-				.peek(methodCaller::accept)
+				.peek(methodCaller)
 				.count();
 		// @formatter:on
 	}
