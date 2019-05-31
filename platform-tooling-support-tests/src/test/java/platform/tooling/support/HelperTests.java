@@ -13,7 +13,6 @@ package platform.tooling.support;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -52,9 +51,6 @@ class HelperTests {
 		assertNotNull(Helper.version("junit-jupiter"));
 		assertNotNull(Helper.version("junit-vintage"));
 		assertNotNull(Helper.version("junit-platform"));
-
-		Error error = assertThrows(AssertionError.class, () -> Helper.version("foo"));
-		assertEquals("module name is unknown: foo", error.getMessage());
 	}
 
 	@Test

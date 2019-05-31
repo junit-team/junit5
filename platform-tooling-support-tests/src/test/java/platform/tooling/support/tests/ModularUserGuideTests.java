@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static platform.tooling.support.Versions.version;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -68,11 +67,11 @@ class ModularUserGuideTests {
 		args.add(temp.resolve("destination").toString());
 
 		var lib = Files.createDirectories(temp.resolve("lib"));
-		Helper.load(lib, "junit", "junit", version("junit4", "4.12"));
-		Helper.load(lib, "org.assertj", "assertj-core", version("assertJ", "3.12.2"));
-		Helper.load(lib, "org.apiguardian", "apiguardian-api", version("apiGuardian", "1.0.0"));
-		Helper.load(lib, "org.hamcrest", "hamcrest", version("hamcrest", "2.1"));
-		Helper.load(lib, "org.opentest4j", "opentest4j", "1.1.1"); // TODO version("ota4j", "1.1.1")
+		Helper.load(lib, "junit", "junit", Helper.version("junit4", "4.12"));
+		Helper.load(lib, "org.assertj", "assertj-core", Helper.version("assertJ", "3.12.2"));
+		Helper.load(lib, "org.apiguardian", "apiguardian-api", Helper.version("apiGuardian", "1.0.0"));
+		Helper.load(lib, "org.hamcrest", "hamcrest", Helper.version("hamcrest", "2.1"));
+		Helper.load(lib, "org.opentest4j", "opentest4j", "1.1.1"); // TODO Helper.version("ota4j", "1.1.1")
 		Helper.loadAllJUnitModules(lib);
 		args.add("--module-path");
 		args.add(lib.toString());

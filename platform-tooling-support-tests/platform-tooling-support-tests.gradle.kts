@@ -58,6 +58,12 @@ tasks.test {
 		//   Received a completed event for test with unknown id "10.5".
 		//   Registered test ids: "[:platform-tooling-support-tests:test, 10.1]"
 		// systemProperty("junit.jupiter.execution.parallel.enabled", "true")
+
+		// Pass version constants (declared in Versions.kt) to tests as system properties
+		systemProperty("Versions.apiGuardian", Versions.apiGuardian)
+		systemProperty("Versions.assertJ", Versions.assertJ)
+		systemProperty("Versions.junit4", Versions.junit4)
+		systemProperty("Versions.ota4j", Versions.ota4j)
 	}
 
 	filter {

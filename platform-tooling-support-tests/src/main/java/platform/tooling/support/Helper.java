@@ -55,6 +55,10 @@ public class Helper {
 	}
 
 	public static String version(String module) {
+		return version(module, "<no default version specified>");
+	}
+
+	public static String version(String module, String defaultVersion) {
 		if (module.startsWith("junit-jupiter")) {
 			return gradleProperties.getProperty("version");
 		}
@@ -64,7 +68,7 @@ public class Helper {
 		if (module.startsWith("junit-vintage")) {
 			return gradleProperties.getProperty("vintageVersion");
 		}
-		throw new AssertionError("module name is unknown: " + module);
+		return System.getProperty("Versions" + module, defaultVersion);
 	}
 
 	public static String replaceVersionPlaceholders(String line) {
