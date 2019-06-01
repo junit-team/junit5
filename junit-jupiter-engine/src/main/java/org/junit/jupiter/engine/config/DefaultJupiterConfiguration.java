@@ -69,6 +69,12 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
+	public ExecutionMode getDefaultClassesExecutionMode() {
+		return executionModeConverter.get(configurationParameters, DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME,
+			getDefaultExecutionMode());
+	}
+
+	@Override
 	public Lifecycle getDefaultTestInstanceLifecycle() {
 		return lifecycleConverter.get(configurationParameters, DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME,
 			Lifecycle.PER_METHOD);

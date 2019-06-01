@@ -29,6 +29,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsNestedTestClass;
@@ -90,8 +91,8 @@ class ClassSelectorResolver implements SelectorResolver {
 		if (NestedClassTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
 			String simpleClassName = lastSegment.getValue();
 			return toResolution(context.addToParent(() -> selectUniqueId(uniqueId.removeLastSegment()), parent -> {
-				if (parent instanceof ClassTestDescriptor) {
-					Class<?> parentTestClass = ((ClassTestDescriptor) parent).getTestClass();
+				if (parent instanceof ClassBasedTestDescriptor) {
+					Class<?> parentTestClass = ((ClassBasedTestDescriptor) parent).getTestClass();
 					// TODO add test for resolving unique id of inherited nested test class
 					return ReflectionUtils.findNestedClasses(parentTestClass,
 						isNestedTestClass.and(
@@ -116,7 +117,7 @@ class ClassSelectorResolver implements SelectorResolver {
 			configuration);
 	}
 
-	private Resolution toResolution(Optional<ClassTestDescriptor> testDescriptor) {
+	private Resolution toResolution(Optional<? extends ClassBasedTestDescriptor> testDescriptor) {
 		return testDescriptor.map(it -> {
 			Class<?> testClass = it.getTestClass();
 			// @formatter:off

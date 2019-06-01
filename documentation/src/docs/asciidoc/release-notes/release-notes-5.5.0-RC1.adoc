@@ -81,6 +81,10 @@ on GitHub.
   details).
 * Added support for method URIs, e.g. `method:org.junit.Foo#bar()`, to `DynamicContainer`
   and `DynamicTest` factory methods.
+* New `junit.jupiter.execution.parallel.mode.classes.default` configuration parameter
+  allows to run top-level classes in parallel but their methods sequentially or vice versa
+  (see <<../user-guide/index.adoc#writing-tests-parallel-execution, User Guide>> for
+  details).
 
 
 [[release-notes-5.5.0-RC1-junit-vintage]]

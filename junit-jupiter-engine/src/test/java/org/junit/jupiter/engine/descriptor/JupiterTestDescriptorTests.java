@@ -34,6 +34,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.JupiterTestDescriptorTests.StaticTestCase.StaticTestCaseLevel2;
 import org.junit.platform.engine.TestSource;
@@ -57,6 +58,7 @@ class JupiterTestDescriptorTests {
 	@BeforeEach
 	void setUp() {
 		when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new DisplayNameGenerator.Standard());
+		when(configuration.getDefaultExecutionMode()).thenReturn(ExecutionMode.SAME_THREAD);
 	}
 
 	@Test
@@ -225,7 +227,7 @@ class JupiterTestDescriptorTests {
 	void shouldTakeCustomMethodNameDescriptorFromConfigurationIfPresent() {
 		when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 
-		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, getClass(), configuration);
+		ClassBasedTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, getClass(), configuration);
 		assertEquals("class-display-name", descriptor.getDisplayName());
 		assertEquals(getClass().getName(), descriptor.getLegacyReportingName());
 
@@ -244,7 +246,7 @@ class JupiterTestDescriptorTests {
 
 	@Test
 	void defaultDisplayNamesForTestClasses() {
-		ClassTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, getClass(), configuration);
+		ClassBasedTestDescriptor descriptor = new ClassTestDescriptor(uniqueId, getClass(), configuration);
 		assertEquals(getClass().getSimpleName(), descriptor.getDisplayName());
 		assertEquals(getClass().getName(), descriptor.getLegacyReportingName());
 

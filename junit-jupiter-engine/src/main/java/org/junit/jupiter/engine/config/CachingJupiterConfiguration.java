@@ -61,6 +61,12 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
+	public ExecutionMode getDefaultClassesExecutionMode() {
+		return (ExecutionMode) cache.computeIfAbsent(DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME,
+			key -> delegate.getDefaultClassesExecutionMode());
+	}
+
+	@Override
 	public TestInstance.Lifecycle getDefaultTestInstanceLifecycle() {
 		return (TestInstance.Lifecycle) cache.computeIfAbsent(DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME,
 			key -> delegate.getDefaultTestInstanceLifecycle());

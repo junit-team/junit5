@@ -1715,6 +1715,33 @@ declarative <<writing-tests-parallel-execution-synchronization, synchronization>
 mechanism. Please note that <<running-tests-capturing-output>> needs to be enabled
 separately.
 
+In addition, you can configure the default execution mode for top-level classes by setting
+the `junit.jupiter.execution.parallel.mode.classes.default` configuration parameter. By
+combining both configuration parameters, you can configure classes to run in parallel but
+their methods in the same thread:
+
+[source,properties]
+.Configuration parameters to execute top-level classes in parallel but methods in same thread
+----
+junit.jupiter.execution.parallel.enabled = true
+junit.jupiter.execution.parallel.mode.default = same_thread
+junit.jupiter.execution.parallel.mode.classes.default = concurrent
+----
+
+The opposite combination will run all methods within one class in parallel, but top-level
+classes will run sequentially:
+
+[source,properties]
+.Configuration parameters to execute top-level classes in sequentially but their methods in parallel
+----
+junit.jupiter.execution.parallel.enabled = true
+junit.jupiter.execution.parallel.mode.default = concurrent
+junit.jupiter.execution.parallel.mode.classes.default = same_thread
+----
+
+Not configuring a value for `junit.jupiter.execution.parallel.mode.classes.default` is
+equivalent to using the same value as for `junit.jupiter.execution.parallel.mode.default`.
+
 [[writing-tests-parallel-execution-config]]
 ==== Configuration
 

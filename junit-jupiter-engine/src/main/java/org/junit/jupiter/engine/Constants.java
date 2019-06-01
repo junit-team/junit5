@@ -135,7 +135,7 @@ public final class Constants {
 	public static final String PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME = JupiterConfiguration.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 
 	/**
-	 * Property name used to set the default parallel test execution mode: {@value}
+	 * Property name used to set the default test execution mode: {@value}
 	 *
 	 * <p>This setting is only effective if parallel execution is enabled.
 	 *
@@ -153,6 +153,27 @@ public final class Constants {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.4")
 	public static final String DEFAULT_PARALLEL_EXECUTION_MODE = JupiterConfiguration.DEFAULT_EXECUTION_MODE_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the default test execution mode for top-level
+	 * classes: {@value}
+	 *
+	 * <p>This setting is only effective if parallel execution is enabled.
+	 *
+	 * <h3>Supported Values</h3>
+	 *
+	 * <p>Supported values include names of enum constants defined in
+	 * {@link org.junit.jupiter.api.parallel.ExecutionMode}, ignoring case.
+	 *
+	 * <p>If not specified, it will be resolve into the same value as
+	 * {@link #DEFAULT_PARALLEL_EXECUTION_MODE}.
+	 *
+	 * @see org.junit.jupiter.api.parallel.Execution
+	 * @see org.junit.jupiter.api.parallel.ExecutionMode
+	 * @since 5.4
+	 */
+	@API(status = EXPERIMENTAL, since = "5.5")
+	public static final String DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME = JupiterConfiguration.DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME;
 
 	static final String PARALLEL_CONFIG_PREFIX = "junit.jupiter.execution.parallel.config.";
 
