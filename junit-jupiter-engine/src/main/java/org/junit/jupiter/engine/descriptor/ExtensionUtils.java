@@ -14,7 +14,8 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
-import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
+import static org.junit.platform.commons.util.ReflectionUtils.isNotPrivate;
+import static org.junit.platform.commons.util.ReflectionUtils.isNotStatic;
 import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 import static org.junit.platform.commons.util.ReflectionUtils.tryToReadFieldValue;
 
@@ -43,8 +44,8 @@ import org.junit.platform.commons.util.Preconditions;
  */
 final class ExtensionUtils {
 
-	private static final Predicate<Field> isStaticExtension = new IsStaticExtensionField();
-	private static final Predicate<Field> isNonStaticExtension = new IsNonStaticExtensionField();
+	static final Predicate<Field> isNonPrivateStaticField = field -> isNotPrivate(field) && isStatic(field);
+	static final Predicate<Field> isNonPrivateInstanceField = field -> isNotPrivate(field) && isNotStatic(field);
 
 	private ExtensionUtils() {
 		/* no-op */
@@ -65,8 +66,8 @@ final class ExtensionUtils {
 	static ExtensionRegistry populateNewExtensionRegistryFromExtendWithAnnotation(ExtensionRegistry parentRegistry,
 			AnnotatedElement annotatedElement) {
 
-		Preconditions.notNull(annotatedElement, "AnnotatedElement must not be null");
 		Preconditions.notNull(parentRegistry, "Parent ExtensionRegistry must not be null");
+		Preconditions.notNull(annotatedElement, "AnnotatedElement must not be null");
 
 		// @formatter:off
 		List<Class<? extends Extension>> extensionTypes = findRepeatableAnnotations(annotatedElement, ExtendWith.class).stream()
@@ -91,10 +92,10 @@ final class ExtensionUtils {
 	 * when searching for {@code static} fields in the class
 	 */
 	static void registerExtensionsFromFields(ExtensionRegistry registry, Class<?> clazz, Object instance) {
-		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(registry, "ExtensionRegistry must not be null");
+		Preconditions.notNull(clazz, "Class must not be null");
 
-		Predicate<Field> predicate = (instance == null) ? isStaticExtension : isNonStaticExtension;
+		Predicate<Field> predicate = (instance == null ? isNonPrivateStaticField : isNonPrivateInstanceField);
 
 		// Ensure that the list is modifiable, since findAnnotatedFields() returns an unmodifiable list.
 		List<Field> fields = new ArrayList<>(findAnnotatedFields(clazz, RegisterExtension.class, predicate));
@@ -104,11 +105,10 @@ final class ExtensionUtils {
 
 		fields.forEach(field -> {
 			tryToReadFieldValue(field, instance).ifSuccess(value -> {
-				Preconditions.notNull(value, () -> String.format(
-					"Failed to register extension via @RegisterExtension field [%s]: field must not be null when evaluated.",
-					field));
-				Extension extension = (Extension) value;
-				registry.registerExtension(extension, field);
+				Preconditions.condition(value instanceof Extension, () -> String.format(
+					"Failed to register extension via @RegisterExtension field [%s]: field value's type [%s] must implement an [%s] API.",
+					field, (value != null ? value.getClass().getName() : null), Extension.class.getName()));
+				registry.registerExtension((Extension) value, field);
 			});
 		});
 	}
@@ -124,42 +124,6 @@ final class ExtensionUtils {
 	 */
 	private static int getOrder(Field field) {
 		return findAnnotation(field, Order.class).map(Order::value).orElse(Integer.MAX_VALUE);
-	}
-
-	static class IsNonStaticExtensionField implements Predicate<Field> {
-
-		@Override
-		public boolean test(Field field) {
-			// Please do not collapse the following into a single statement.
-			if (isStatic(field)) {
-				return false;
-			}
-			if (isPrivate(field)) {
-				return false;
-			}
-			if (!Extension.class.isAssignableFrom(field.getType())) {
-				return false;
-			}
-			return true;
-		}
-	}
-
-	static class IsStaticExtensionField implements Predicate<Field> {
-
-		@Override
-		public boolean test(Field field) {
-			// Please do not collapse the following into a single statement.
-			if (!isStatic(field)) {
-				return false;
-			}
-			if (isPrivate(field)) {
-				return false;
-			}
-			if (!Extension.class.isAssignableFrom(field.getType())) {
-				return false;
-			}
-			return true;
-		}
 	}
 
 }

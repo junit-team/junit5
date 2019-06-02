@@ -18,11 +18,8 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.Extension;
-import org.junit.jupiter.engine.descriptor.ExtensionUtils.IsNonStaticExtensionField;
-import org.junit.jupiter.engine.descriptor.ExtensionUtils.IsStaticExtensionField;
 
 /**
  * Unit tests for {@link ExtensionUtils}.
@@ -31,42 +28,43 @@ import org.junit.jupiter.engine.descriptor.ExtensionUtils.IsStaticExtensionField
  */
 class ExtensionUtilsTests {
 
-	private final Predicate<Field> isStaticExtension = new IsStaticExtensionField();
-	private final Predicate<Field> isInstanceExtension = new IsNonStaticExtensionField();
-
-	static Object staticObject = new Object();
-	Object instanceObject = new Object();
-
-	@SuppressWarnings("unused")
-	private static Extension privateStaticExtension = new DummyExtension();
-	@SuppressWarnings("unused")
-	private Extension privateInstanceExtension = new DummyExtension();
+	private static final Predicate<Field> isPotentialStaticExtension = ExtensionUtils.isNonPrivateStaticField;
+	private static final Predicate<Field> isPotentialInstanceExtension = ExtensionUtils.isNonPrivateInstanceField;
 
 	static Extension staticExtension = new DummyExtension();
 	Extension instanceExtension = new DummyExtension();
 
-	@Test
-	void isStaticExtension() {
-		assertThat(isStaticExtension).accepts(field("staticExtension"));
+	static Object staticObject = new DummyExtension();
+	Object instanceObject = new DummyExtension();
+
+	@SuppressWarnings("unused")
+	private static Extension privateStaticExtension = new DummyExtension();
+
+	@SuppressWarnings("unused")
+	private Extension privateInstanceExtension = new DummyExtension();
+
+	@TestFactory
+	Stream<DynamicTest> isPotentialStaticExtension() {
+		return Stream.of("staticExtension", "staticObject")//
+				.map(name -> dynamicTest(name, () -> assertThat(isPotentialStaticExtension).accepts(field(name))));
 	}
 
 	@TestFactory
 	Stream<DynamicTest> isNotStaticExtension() {
-		return Stream.of("privateStaticExtension", "staticObject", "instanceObject", "instanceExtension")//
-				.map(name -> dynamicTest(name, () -> assertThat(isStaticExtension).rejects(field(name))));
+		return Stream.of("privateStaticExtension", "instanceObject", "instanceExtension")//
+				.map(name -> dynamicTest(name, () -> assertThat(isPotentialStaticExtension).rejects(field(name))));
 	}
 
-	@Test
-	void isInstanceExtension() {
-		assertThat(isInstanceExtension).accepts(field("instanceExtension"));
+	@TestFactory
+	Stream<DynamicTest> isPotentialInstanceExtension() {
+		return Stream.of("instanceExtension", "instanceObject")//
+				.map(name -> dynamicTest(name, () -> assertThat(isPotentialInstanceExtension).accepts(field(name))));
 	}
 
 	@TestFactory
 	Stream<DynamicTest> isNotInstanceExtension() {
-		// @formatter:off
-		return Stream.of("privateStaticExtension", "staticObject", "instanceObject", "privateInstanceExtension")
-				.map(name -> dynamicTest(name, () -> assertThat(isInstanceExtension).rejects(field(name))));
-		// @formatter:on
+		return Stream.of("privateStaticExtension", "staticObject", "privateInstanceExtension")//
+				.map(name -> dynamicTest(name, () -> assertThat(isPotentialInstanceExtension).rejects(field(name))));
 	}
 
 	private Field field(String name) {

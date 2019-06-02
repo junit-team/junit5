@@ -71,6 +71,11 @@ on GitHub.
   `@DisplayNameGeneration` is present.
 * `MethodOrderer.Random` now generates a default random seed only once and prints it to
   the log in order to allow reproducible builds.
+* The declared field type for an extension registered via `@RegisterExtension` is no
+  longer required to implement an `Extension` API. It is now sufficient if the extension
+  implementation can be assigned to the declared field type. This provides extension
+  authors greater flexibility as well as the ability to hide implementation details of the
+  user facing extension API.
 * Methods ordered with `MethodOrderer.Random` now execute using the `SAME_THREAD`
   concurrency mode instead of the `CONCURRENT` mode when no custom seed is provided.
 * New `emptyValue` attribute in `@CsvFileSource` and `@CsvSource`.
