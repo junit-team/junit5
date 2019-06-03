@@ -11,8 +11,8 @@ object Versions {
     val apiGuardian = "1.0.0"
     val junit4 = "4.12"
     val ota4j = "1.2.0-SNAPSHOT"
-    val picocli = "3.9.5"
-    val univocity = "2.8.1"
+    val picocli = "3.9.6"
+    val univocity = "2.8.2"
 
     // Test Dependencies
     val archunit = "0.10.2"
