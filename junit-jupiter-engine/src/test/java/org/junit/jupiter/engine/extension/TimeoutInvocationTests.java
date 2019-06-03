@@ -23,6 +23,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeoutException;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 
 /**
@@ -33,7 +34,8 @@ class TimeoutInvocationTests {
 	@Test
 	void resetsInterruptFlag() {
 		var exception = assertThrows(TimeoutException.class, () -> withExecutor(executor -> {
-			var uninterruptibleInvocation = new UninterruptibleInvocation(100, MILLISECONDS);
+			var uninterruptibleInvocation = new UninterruptibleInvocation(OS.WINDOWS.isCurrentOs() ? 500 : 100,
+				MILLISECONDS);
 			var duration = new TimeoutDuration(1, NANOSECONDS);
 			var timeoutInvocation = new TimeoutInvocation<>(uninterruptibleInvocation, duration, executor,
 				() -> "execution");
