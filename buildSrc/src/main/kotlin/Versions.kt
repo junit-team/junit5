@@ -26,12 +26,12 @@ object Versions {
     val slf4j = "1.7.26"
 
     // Plugins
-    val buildScanPlugin = "2.2.1"
+    val buildScanPlugin = "2.3"
     val gitPublishPlugin = "2.1.1"
     val jmhPlugin = "0.4.8"
     val nexusPublishPlugin = "0.2.0"
     val shadowPlugin = "4.0.1"
-    val spotlessPlugin = "3.18.0"
+    val spotlessPlugin = "3.23.0"
     val versioningPlugin = "2.8.2"
     val versionsPlugin = "0.21.0"
 
