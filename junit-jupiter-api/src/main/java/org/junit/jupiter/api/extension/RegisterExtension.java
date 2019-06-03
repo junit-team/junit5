@@ -111,6 +111,7 @@ import org.apiguardian.api.API;
  *
  * <ul>
  * <li>{@link ExecutionCondition}</li>
+ * <li>{@link InvocationInterceptor}</li>
  * <li>{@link BeforeAllCallback}</li>
  * <li>{@link AfterAllCallback}</li>
  * <li>{@link BeforeEachCallback}</li>
