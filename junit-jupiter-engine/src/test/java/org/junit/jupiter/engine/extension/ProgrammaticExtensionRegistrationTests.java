@@ -163,11 +163,20 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	 * @since 5.5
 	 */
 	@Test
-	void instanceLevelWithNonExtensionFieldValue() {
-		Class<?> testClass = InstanceLevelExtensionRegistrationWithNonExtensionFieldValueTestCase.class;
-
+	void instanceLevelWithPrivateField() {
+		Class<?> testClass = InstanceLevelExtensionRegistrationWithPrivateFieldTestCase.class;
 		executeTestsForClass(testClass).tests().assertThatEvents().haveExactly(1, finishedWithFailure(
-			instanceOf(PreconditionViolationException.class), message(expectedMessage(testClass, String.class))));
+			instanceOf(PreconditionViolationException.class), message(expectedNotPrivateMessage(testClass))));
+	}
+
+	/**
+	 * @since 5.5
+	 */
+	@Test
+	void classLevelWithPrivateField() {
+		Class<?> testClass = ClassLevelExtensionRegistrationWithPrivateFieldTestCase.class;
+		executeTestsForClass(testClass).containers().assertThatEvents().haveExactly(1, finishedWithFailure(
+			instanceOf(PreconditionViolationException.class), message(expectedNotPrivateMessage(testClass))));
 	}
 
 	@Test
@@ -184,6 +193,33 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 
 		executeTestsForClass(testClass).containers().assertThatEvents().haveExactly(1, finishedWithFailure(
 			instanceOf(PreconditionViolationException.class), message(expectedMessage(testClass, null))));
+	}
+
+	/**
+	 * @since 5.5
+	 */
+	@Test
+	void instanceLevelWithNonExtensionFieldValue() {
+		Class<?> testClass = InstanceLevelExtensionRegistrationWithNonExtensionFieldValueTestCase.class;
+
+		executeTestsForClass(testClass).tests().assertThatEvents().haveExactly(1, finishedWithFailure(
+			instanceOf(PreconditionViolationException.class), message(expectedMessage(testClass, String.class))));
+	}
+
+	/**
+	 * @since 5.5
+	 */
+	@Test
+	void classLevelWithNonExtensionFieldValue() {
+		Class<?> testClass = ClassLevelExtensionRegistrationWithNonExtensionFieldValueTestCase.class;
+
+		executeTestsForClass(testClass).containers().assertThatEvents().haveExactly(1, finishedWithFailure(
+			instanceOf(PreconditionViolationException.class), message(expectedMessage(testClass, String.class))));
+	}
+
+	private String expectedNotPrivateMessage(Class<?> testClass) {
+		return "Failed to register extension via @RegisterExtension field [" + field(testClass)
+				+ "]: field must not be private.";
 	}
 
 	private String expectedMessage(Class<?> testClass, Class<?> valueType) {
@@ -379,7 +415,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	interface ClassLevelExtensionRegistrationInterface {
 
 		@RegisterExtension
-		static final CrystalBall crystalBall = new CrystalBall("Outlook good");
+		static CrystalBall crystalBall = new CrystalBall("Outlook good");
 
 		@BeforeAll
 		static void beforeAll(String wisdom) {
@@ -553,6 +589,20 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 
 	}
 
+	static class InstanceLevelExtensionRegistrationWithPrivateFieldTestCase extends AbstractTestCase {
+
+		@RegisterExtension
+		private Extension extension;
+
+	}
+
+	static class ClassLevelExtensionRegistrationWithPrivateFieldTestCase extends AbstractTestCase {
+
+		@RegisterExtension
+		private static Extension extension;
+
+	}
+
 	static class InstanceLevelExtensionRegistrationWithNullFieldTestCase extends AbstractTestCase {
 
 		@RegisterExtension
@@ -571,6 +621,13 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 
 		@RegisterExtension
 		Object extension = "not an extension type";
+
+	}
+
+	static class ClassLevelExtensionRegistrationWithNonExtensionFieldValueTestCase extends AbstractTestCase {
+
+		@RegisterExtension
+		static Object extension = "not an extension type";
 
 	}
 

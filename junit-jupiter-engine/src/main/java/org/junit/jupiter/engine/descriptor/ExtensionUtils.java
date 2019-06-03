@@ -15,8 +15,6 @@ import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedField
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.ReflectionUtils.isNotPrivate;
-import static org.junit.platform.commons.util.ReflectionUtils.isNotStatic;
-import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
 import static org.junit.platform.commons.util.ReflectionUtils.tryToReadFieldValue;
 
 import java.lang.reflect.AnnotatedElement;
@@ -33,6 +31,7 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Collection of utilities for working with extensions and the extension registry.
@@ -43,9 +42,6 @@ import org.junit.platform.commons.util.Preconditions;
  * @see RegisterExtension
  */
 final class ExtensionUtils {
-
-	static final Predicate<Field> isNonPrivateStaticField = field -> isNotPrivate(field) && isStatic(field);
-	static final Predicate<Field> isNonPrivateInstanceField = field -> isNotPrivate(field) && isNotStatic(field);
 
 	private ExtensionUtils() {
 		/* no-op */
@@ -95,7 +91,7 @@ final class ExtensionUtils {
 		Preconditions.notNull(registry, "ExtensionRegistry must not be null");
 		Preconditions.notNull(clazz, "Class must not be null");
 
-		Predicate<Field> predicate = (instance == null ? isNonPrivateStaticField : isNonPrivateInstanceField);
+		Predicate<Field> predicate = (instance == null ? ReflectionUtils::isStatic : ReflectionUtils::isNotStatic);
 
 		// Ensure that the list is modifiable, since findAnnotatedFields() returns an unmodifiable list.
 		List<Field> fields = new ArrayList<>(findAnnotatedFields(clazz, RegisterExtension.class, predicate));
@@ -104,6 +100,10 @@ final class ExtensionUtils {
 		fields.sort(orderComparator);
 
 		fields.forEach(field -> {
+			Preconditions.condition(isNotPrivate(field),
+				() -> String.format(
+					"Failed to register extension via @RegisterExtension field [%s]: field must not be private.",
+					field));
 			tryToReadFieldValue(field, instance).ifSuccess(value -> {
 				Preconditions.condition(value instanceof Extension, () -> String.format(
 					"Failed to register extension via @RegisterExtension field [%s]: field value's type [%s] must implement an [%s] API.",
