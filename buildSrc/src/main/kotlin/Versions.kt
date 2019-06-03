@@ -15,14 +15,14 @@ object Versions {
     val univocity = "2.8.1"
 
     // Test Dependencies
-    val archunit = "0.10.1"
+    val archunit = "0.10.2"
     val assertJ = "3.12.2"
     val bartholdy = "0.2.3"
-    val classgraph = "4.8.22"
+    val classgraph = "4.8.37"
     val commonsIo = "2.6"
     val javaCompilerScriptEngine = "0.1.2"
     val log4j = "2.11.2"
-    val mockito = "2.25.1"
+    val mockito = "2.28.2"
     val slf4j = "1.7.26"
 
     // Plugins
