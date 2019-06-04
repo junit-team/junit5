@@ -620,5 +620,35 @@
       "juliettederancourt",
       "julientopcu"
     ]
+  },
+  {
+    "title": "JUnit 5 - Testing In The Modular World",
+    "event": "JavaZone 2019",
+    "date": "2019-09-12",
+    "location": "Oslo, Norway",
+    "link": "https://2019.javazone.no",
+    "speakers": [
+      "sormuras"
+    ]
+  },
+  {
+    "title": "JUnit 5 - Testing In The Modular World",
+    "event": "Accento 2019",
+    "date": "2019-09-24",
+    "location": "Karlsruhe, Germany",
+    "link": "https://accento.dev",
+    "speakers": [
+      "sormuras"
+    ]
+  },
+  {
+    "title": "JUnit 5 - Testing In The Modular World",
+    "event": "JCON 2019",
+    "date": "2019-09-26",
+    "location": "Düsseldorf, Germany",
+    "link": "https://jcon.one",
+    "speakers": [
+      "sormuras"
+    ]
   }
 ]
