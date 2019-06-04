@@ -4,7 +4,7 @@ import java.time.format.DateTimeFormatter
 plugins {
 	id("com.gradle.build-scan")
 	id("net.nemerosa.versioning")
-	id("com.github.ben-manes.versions")
+	id("com.github.ben-manes.versions") // gradle dependencyUpdates
 	id("com.diffplug.gradle.spotless")
 	id("de.marcphilipp.nexus-publish") apply false
 }
@@ -69,7 +69,6 @@ allprojects {
 	apply(plugin = "eclipse")
 	apply(plugin = "idea")
 	apply(plugin = "com.diffplug.gradle.spotless")
-	apply(plugin = "com.github.ben-manes.versions") // gradle dependencyUpdates
 
 	if (enableJaCoCo) {
 		apply(plugin = "jacoco")
@@ -84,23 +83,6 @@ allprojects {
 		maven(url = "https://oss.sonatype.org/content/repositories/snapshots") {
 			mavenContent {
 				snapshotsOnly()
-			}
-		}
-	}
-
-	tasks {
-		dependencyUpdates {
-			resolutionStrategy {
-				componentSelection {
-					all {
-						val rejected = listOf("alpha", "beta", "rc", "cr", "m", "preview", "b", "ea")
-								.map { qualifier -> Regex("(?i).*[.-]$qualifier[.\\d-+]*") }
-								.any { it.matches(candidate.version) }
-						if (rejected) {
-							reject("Release candidate")
-						}
-					}
-				}
 			}
 		}
 	}
@@ -179,6 +161,23 @@ rootProject.apply {
 			target("**/*.adoc", "**/*.md")
 			trimTrailingWhitespace()
 			endWithNewline()
+		}
+	}
+
+	tasks {
+		dependencyUpdates {
+			resolutionStrategy {
+				componentSelection {
+					all {
+						val rejected = listOf("alpha", "beta", "rc", "cr", "m", "preview", "b", "ea")
+								.map { qualifier -> Regex("(?i).*[.-]$qualifier[.\\d-+]*") }
+								.any { it.matches(candidate.version) }
+						if (rejected) {
+							reject("Release candidate")
+						}
+					}
+				}
+			}
 		}
 	}
 
