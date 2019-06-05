@@ -166,7 +166,7 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Optional<ExtensionContext> getParent() {
-				return null;
+				return Optional.empty();
 			}
 
 			@Override
@@ -191,12 +191,12 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Optional<AnnotatedElement> getElement() {
-				return null;
+				return Optional.empty();
 			}
 
 			@Override
 			public Optional<Class<?>> getTestClass() {
-				return null;
+				return Optional.empty();
 			}
 
 			@Override

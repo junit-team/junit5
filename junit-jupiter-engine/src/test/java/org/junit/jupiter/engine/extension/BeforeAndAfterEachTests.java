@@ -48,7 +48,7 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 	void resetCallSequence() {
 		callSequence.clear();
 		beforeEachMethodCallSequence.clear();
-		actualExceptionInAfterEachCallback = null;
+		actualExceptionInAfterEachCallback = Optional.empty();
 	}
 
 	@Test
