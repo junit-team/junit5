@@ -68,21 +68,17 @@ class AssertionTestUtils {
 
 	static void assertExpectedAndActualValues(AssertionFailedError ex, Object expected, Object actual)
 			throws AssertionError {
-		if (wrapsNotEqualValue(ex.getExpected(), expected)) {
+		if (!wrapsEqualValue(ex.getExpected(), expected)) {
 			throw new AssertionError("Expected value in AssertionFailedError should equal ["
 					+ ValueWrapper.create(expected) + "], but was [" + ex.getExpected() + "].");
 		}
-		if (wrapsNotEqualValue(ex.getActual(), actual)) {
+		if (!wrapsEqualValue(ex.getActual(), actual)) {
 			throw new AssertionError("Actual value in AssertionFailedError should equal [" + ValueWrapper.create(actual)
 					+ "], but was [" + ex.getActual() + "].");
 		}
 	}
 
-	private static boolean wrapsNotEqualValue(ValueWrapper wrapper, Object value) {
-		return wrapsEqualValue(wrapper, value);
-	}
-
-	private static boolean wrapsEqualValue(ValueWrapper wrapper, Object value) {
+	static boolean wrapsEqualValue(ValueWrapper wrapper, Object value) {
 		if (value == null || value instanceof Serializable) {
 			return Objects.equals(value, wrapper.getValue());
 		}
