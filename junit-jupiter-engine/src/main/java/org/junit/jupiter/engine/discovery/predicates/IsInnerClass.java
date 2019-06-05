@@ -32,11 +32,7 @@ public class IsInnerClass implements Predicate<Class<?>> {
 		if (isPrivate(candidate)) {
 			return false;
 		}
-		if (!isInnerClass(candidate)) {
-			return false;
-		}
-
-		return true;
+		return isInnerClass(candidate);
 	}
 
 }

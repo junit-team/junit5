@@ -85,7 +85,7 @@ class TestInfoParameterResolver implements ParameterResolver {
 		}
 
 		private static Object nullSafeGet(Optional<?> optional) {
-			return optional != null ? optional.orElse(null) : null;
+			return optional.isPresent() ? optional.orElse(null) : null;
 		}
 
 	}

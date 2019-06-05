@@ -30,11 +30,7 @@ class IsPotentialJUnit4TestClass implements Predicate<Class<?>> {
 		if (isAbstract(candidate)) {
 			return false;
 		}
-		if (isInnerClass(candidate)) {
-			return false;
-		}
-
-		return true;
+		return !isInnerClass(candidate);
 	}
 
 }
