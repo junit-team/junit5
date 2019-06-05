@@ -90,7 +90,7 @@ public @interface TestInstance {
 		 *
 		 * @see #PER_CLASS
 		 */
-		PER_METHOD;
+		PER_METHOD
 
 	}
 

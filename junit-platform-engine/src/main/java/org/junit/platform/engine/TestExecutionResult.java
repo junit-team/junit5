@@ -53,7 +53,7 @@ public class TestExecutionResult {
 		/**
 		 * Indicates that the execution of a test or container <em>failed</em>.
 		 */
-		FAILED;
+		FAILED
 
 	}
 

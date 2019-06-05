@@ -60,6 +60,6 @@ public enum EventType {
 	 *
 	 * @see org.junit.platform.engine.EngineExecutionListener#reportingEntryPublished(TestDescriptor, ReportEntry)
 	 */
-	REPORTING_ENTRY_PUBLISHED;
+	REPORTING_ENTRY_PUBLISHED
 
 }
