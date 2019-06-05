@@ -214,7 +214,7 @@ class ConsoleDetailsTests {
 			ConsoleLauncherWrapperResult result = wrapper.execute(Optional.empty(), args);
 
 			Optional<URI> optionalUri = toUri(dirName, outName);
-			if (optionalUri.isEmpty()) {
+			if (!optionalUri.isPresent()) {
 				if (Boolean.getBoolean("org.junit.platform.console.ConsoleDetailsTests.writeResultOut")) {
 					// do not use Files.createTempDirectory(prefix) as we want one folder for one container
 					Path temp = Paths.get(System.getProperty("java.io.tmpdir"), dirName.replace('/', '-'));

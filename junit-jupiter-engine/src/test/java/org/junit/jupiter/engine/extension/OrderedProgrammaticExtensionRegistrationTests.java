@@ -234,15 +234,15 @@ class OrderedProgrammaticExtensionRegistrationTests extends AbstractJupiterTestE
 
 		// @Order(3)
 		@RegisterExtension
-		Extension extension1 = new BeforeEachExtension(1);
+		static Extension extension1 = new BeforeEachExtension(1);
 
 		// @Order(2)
 		@RegisterExtension
-		Extension extension2 = new BeforeEachExtension(2);
+		static Extension extension2 = new BeforeEachExtension(2);
 
 		@Order(1)
 		@RegisterExtension
-		Extension extension3 = new BeforeEachExtension(3);
+		static Extension extension3 = new BeforeEachExtension(3);
 
 	}
 

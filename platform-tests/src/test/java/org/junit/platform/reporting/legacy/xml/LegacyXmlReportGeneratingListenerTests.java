@@ -424,7 +424,7 @@ class LegacyXmlReportGeneratingListenerTests {
 
 	private String readValidXmlFile(Path xmlFile) throws Exception {
 		assertTrue(Files.exists(xmlFile), () -> "File does not exist: " + xmlFile);
-		String content = Files.readString(xmlFile);
+		String content = new String(Files.readAllBytes(xmlFile), UTF_8);
 		assertValidAccordingToJenkinsSchema(content);
 		return content;
 	}

@@ -389,8 +389,8 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 	@SafeVarargs
 	@SuppressWarnings({ "unchecked", "varargs", "rawtypes" })
-	private Condition<? super Event>[] wrappedInContainerEvents(Class<MyTestTemplateTestCase> clazz,
-																Condition<? super Event>... wrappedConditions) {
+	private final Condition<? super Event>[] wrappedInContainerEvents(Class<MyTestTemplateTestCase> clazz,
+			Condition<? super Event>... wrappedConditions) {
 
 		List<Condition<? super Event>> conditions = new ArrayList<>();
 		conditions.add(event(engine(), started()));
@@ -493,7 +493,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 	static class TestTemplateTestClassWithBeforeAndAfterEach {
 
-		private static final List<String> lifecycleEvents = new ArrayList<>();
+		private static List<String> lifecycleEvents = new ArrayList<>();
 
 		@BeforeAll
 		static void beforeAll(TestInfo testInfo) {
@@ -524,7 +524,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 	static class TestTemplateTestClassWithDynamicLifecycleCallbacks {
 
-		private static final List<String> lifecycleEvents = new ArrayList<>();
+		private static List<String> lifecycleEvents = new ArrayList<>();
 
 		@ExtendWith(InvocationContextProviderWithDynamicLifecycleCallbacks.class)
 		@TestTemplate
