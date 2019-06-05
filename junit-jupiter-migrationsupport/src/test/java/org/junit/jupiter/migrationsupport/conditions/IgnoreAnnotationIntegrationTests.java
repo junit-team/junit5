@@ -51,7 +51,7 @@ class IgnoreAnnotationIntegrationTests {
 	@TestInstance(PER_CLASS)
 	private static abstract class BaseNestedTestCase {
 
-		private static List<String> tests = new ArrayList<>();
+		private static final List<String> tests = new ArrayList<>();
 
 		@BeforeAll
 		void clearTracking() {

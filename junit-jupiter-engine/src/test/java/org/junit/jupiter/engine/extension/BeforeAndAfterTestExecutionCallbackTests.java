@@ -42,7 +42,7 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
  */
 class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngineTests {
 
-	private static List<String> callSequence = new ArrayList<>();
+	private static final List<String> callSequence = new ArrayList<>();
 
 	private static Optional<Throwable> actualExceptionInAfterTestExecution;
 

@@ -33,7 +33,7 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
  */
 class BridgeMethodTests extends AbstractJupiterTestEngineTests {
 
-	static List<String> sequence = new ArrayList<>();
+	static final List<String> sequence = new ArrayList<>();
 
 	@Test
 	void childrenHaveBridgeMethods() throws Exception {

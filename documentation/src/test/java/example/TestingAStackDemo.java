@@ -66,7 +66,7 @@ class TestingAStackDemo {
 		@DisplayName("after pushing an element")
 		class AfterPushing {
 
-			String anElement = "an element";
+			final String anElement = "an element";
 
 			@BeforeEach
 			void pushAnElement() {

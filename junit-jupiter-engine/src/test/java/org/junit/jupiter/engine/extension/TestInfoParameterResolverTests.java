@@ -35,7 +35,7 @@ import org.junit.jupiter.api.TestInfo;
 @Tag("class-tag")
 class TestInfoParameterResolverTests {
 
-	private static List<String> allDisplayNames = Arrays.asList("defaultDisplayName(TestInfo)", "custom display name",
+	private static final List<String> allDisplayNames = Arrays.asList("defaultDisplayName(TestInfo)", "custom display name",
 		"getTags(TestInfo)", "customDisplayNameThatIsEmpty(TestInfo)");
 
 	@Test

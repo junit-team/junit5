@@ -217,7 +217,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			@Nested
 			class After_pushing_an_element_to_an_empty_stack {
 
-				String anElement = "an element";
+				final String anElement = "an element";
 
 				@BeforeEach
 				void pushAnElement() {

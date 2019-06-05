@@ -79,11 +79,11 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
 @API(status = STABLE, since = "1.0")
 public final class LauncherDiscoveryRequestBuilder {
 
-	private List<DiscoverySelector> selectors = new ArrayList<>();
-	private List<EngineFilter> engineFilters = new ArrayList<>();
-	private List<DiscoveryFilter<?>> discoveryFilters = new ArrayList<>();
-	private List<PostDiscoveryFilter> postDiscoveryFilters = new ArrayList<>();
-	private Map<String, String> configurationParameters = new HashMap<>();
+	private final List<DiscoverySelector> selectors = new ArrayList<>();
+	private final List<EngineFilter> engineFilters = new ArrayList<>();
+	private final List<DiscoveryFilter<?>> discoveryFilters = new ArrayList<>();
+	private final List<PostDiscoveryFilter> postDiscoveryFilters = new ArrayList<>();
+	private final Map<String, String> configurationParameters = new HashMap<>();
 
 	/**
 	 * Create a new {@code LauncherDiscoveryRequestBuilder}.

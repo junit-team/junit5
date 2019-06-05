@@ -865,7 +865,7 @@ class AnnotationUtilsTests {
 	static class SuperclassWithAnnotatedField {
 
 		@Annotation1
-		String superField = "super";
+		final String superField = "super";
 	}
 
 	static class ClassWithAnnotatedFields extends SuperclassWithAnnotatedField implements InterfaceWithAnnotatedField {
@@ -874,34 +874,34 @@ class AnnotationUtilsTests {
 		protected Object field0 = "?";
 
 		@Annotation1
-		protected String field1 = "foo";
+		protected final String field1 = "foo";
 
 		@Annotation2
-		protected String field2 = "bar";
+		protected final String field2 = "bar";
 
 		@Annotation1
 		@Annotation2
-		protected String field3 = "baz";
+		protected final String field3 = "baz";
 
 	}
 
 	static class ClassWithShadowedAnnotatedFields extends ClassWithAnnotatedFields {
 
 		@Annotation3
-		String interfaceField = "interface-shadow";
+		final String interfaceField = "interface-shadow";
 
 		@Annotation1
-		String superField = "super-shadow";
+		final String superField = "super-shadow";
 
 		@Annotation1
-		protected String field1 = "foo-shadow";
+		protected final String field1 = "foo-shadow";
 
 		@Annotation2
-		protected String field2 = "bar-shadow";
+		protected final String field2 = "bar-shadow";
 
 		@Annotation1
 		@Annotation2
-		protected String field3 = "baz-shadow";
+		protected final String field3 = "baz-shadow";
 
 	}
 

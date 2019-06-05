@@ -166,7 +166,7 @@ class LauncherConfigurationParametersTests {
 	static class Something {
 
 		// `public` is needed for simple "Class#getField(String)" to work
-		public String thing = "body.";
+		public final String thing = "body.";
 
 		@Test
 		void some() {

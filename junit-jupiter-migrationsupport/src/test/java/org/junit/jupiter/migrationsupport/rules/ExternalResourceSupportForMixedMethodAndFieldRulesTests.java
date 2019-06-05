@@ -28,9 +28,9 @@ import org.junit.rules.ExternalResource;
 @ExtendWith(ExternalResourceSupport.class)
 public class ExternalResourceSupportForMixedMethodAndFieldRulesTests {
 
-	private static List<String> initEvents = new ArrayList<>();
-	private static List<String> beforeEvents = new ArrayList<>();
-	private static List<String> afterEvents = new ArrayList<>();
+	private static final List<String> initEvents = new ArrayList<>();
+	private static final List<String> beforeEvents = new ArrayList<>();
+	private static final List<String> afterEvents = new ArrayList<>();
 
 	@BeforeAll
 	static void clear() {

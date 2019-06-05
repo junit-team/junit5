@@ -74,10 +74,10 @@ class AvailableOptions {
 	@Option(names = { "-cp", "--classpath",
 			"--class-path" }, split = ";|:", paramLabel = "PATH", arity = "1", description = "Provide additional classpath entries "
 					+ "-- for example, for adding engines and their dependencies. This option can be repeated.")
-	private List<Path> additionalClasspathEntries = new ArrayList<>();
+	private final List<Path> additionalClasspathEntries = new ArrayList<>();
 
 	@Option(names = { "--cp", "-classpath", "-class-path" }, split = ";|:", hidden = true)
-	private List<Path> additionalClasspathEntries2 = new ArrayList<>();
+	private final List<Path> additionalClasspathEntries2 = new ArrayList<>();
 
 	@Option(names = "--fail-if-no-tests", description = "Fail and return exit status code 2 if no tests are found.")
 	private boolean failIfNoTests; // no single-dash equivalent: was introduced in 5.3-M1
@@ -100,10 +100,10 @@ class AvailableOptions {
 
 	@Option(names = { "-o",
 			"--select-module" }, paramLabel = "NAME", arity = "1", description = "EXPERIMENTAL: Select single module for test discovery. This option can be repeated.")
-	private List<String> selectedModules = new ArrayList<>();
+	private final List<String> selectedModules = new ArrayList<>();
 
 	@Option(names = { "--o", "-select-module" }, arity = "1", hidden = true)
-	private List<String> selectedModules2 = new ArrayList<>();
+	private final List<String> selectedModules2 = new ArrayList<>();
 
 	// --- Selectors -------------------------------------------------------
 
@@ -113,59 +113,59 @@ class AvailableOptions {
 					+ "entries supplied via -" + CP_OPTION + " (directories and JAR files) are scanned. " //
 					+ "Explicit classpath roots that are not on the classpath will be silently ignored. " //
 					+ "This option can be repeated.")
-	private List<Path> selectedClasspathEntries = new ArrayList<>();
+	private final List<Path> selectedClasspathEntries = new ArrayList<>();
 
 	@Option(names = { "-scan-class-path", "-scan-classpath" }, split = ";|:", arity = "0..1", hidden = true)
-	private List<Path> selectedClasspathEntries2 = new ArrayList<>();
+	private final List<Path> selectedClasspathEntries2 = new ArrayList<>();
 
 	@Option(names = { "-u",
 			"--select-uri" }, paramLabel = "URI", arity = "1", description = "Select a URI for test discovery. This option can be repeated.")
-	private List<URI> selectedUris = new ArrayList<>();
+	private final List<URI> selectedUris = new ArrayList<>();
 
 	@Option(names = { "--u", "-select-uri" }, arity = "1", hidden = true)
-	private List<URI> selectedUris2 = new ArrayList<>();
+	private final List<URI> selectedUris2 = new ArrayList<>();
 
 	@Option(names = { "-f",
 			"--select-file" }, paramLabel = "FILE", arity = "1", description = "Select a file for test discovery. This option can be repeated.")
-	private List<String> selectedFiles = new ArrayList<>();
+	private final List<String> selectedFiles = new ArrayList<>();
 
 	@Option(names = { "--f", "-select-file" }, arity = "1", hidden = true)
-	private List<String> selectedFiles2 = new ArrayList<>();
+	private final List<String> selectedFiles2 = new ArrayList<>();
 
 	@Option(names = { "-d",
 			"--select-directory" }, paramLabel = "DIR", arity = "1", description = "Select a directory for test discovery. This option can be repeated.")
-	private List<String> selectedDirectories = new ArrayList<>();
+	private final List<String> selectedDirectories = new ArrayList<>();
 
 	@Option(names = { "--d", "-select-directory" }, arity = "1", hidden = true)
-	private List<String> selectedDirectories2 = new ArrayList<>();
+	private final List<String> selectedDirectories2 = new ArrayList<>();
 
 	@Option(names = { "-p",
 			"--select-package" }, paramLabel = "PKG", arity = "1", description = "Select a package for test discovery. This option can be repeated.")
-	private List<String> selectedPackages = new ArrayList<>();
+	private final List<String> selectedPackages = new ArrayList<>();
 
 	@Option(names = { "--p", "-select-package" }, arity = "1", hidden = true)
-	private List<String> selectedPackages2 = new ArrayList<>();
+	private final List<String> selectedPackages2 = new ArrayList<>();
 
 	@Option(names = { "-c",
 			"--select-class" }, paramLabel = "CLASS", arity = "1", description = "Select a class for test discovery. This option can be repeated.")
-	private List<String> selectedClasses = new ArrayList<>();
+	private final List<String> selectedClasses = new ArrayList<>();
 
 	@Option(names = { "--c", "-select-class" }, arity = "1", hidden = true)
-	private List<String> selectedClasses2 = new ArrayList<>();
+	private final List<String> selectedClasses2 = new ArrayList<>();
 
 	@Option(names = { "-m",
 			"--select-method" }, paramLabel = "NAME", arity = "1", description = "Select a method for test discovery. This option can be repeated.")
-	private List<String> selectedMethods = new ArrayList<>();
+	private final List<String> selectedMethods = new ArrayList<>();
 
 	@Option(names = { "--m", "-select-method" }, arity = "1", hidden = true)
-	private List<String> selectedMethods2 = new ArrayList<>();
+	private final List<String> selectedMethods2 = new ArrayList<>();
 
 	@Option(names = { "-r",
 			"--select-resource" }, paramLabel = "RESOURCE", arity = "1", description = "Select a classpath resource for test discovery. This option can be repeated.")
-	private List<String> selectedClasspathResources = new ArrayList<>();
+	private final List<String> selectedClasspathResources = new ArrayList<>();
 
 	@Option(names = { "--r", "-select-resource" }, arity = "1", hidden = true)
-	private List<String> selectedClasspathResources2 = new ArrayList<>();
+	private final List<String> selectedClasspathResources2 = new ArrayList<>();
 
 	// --- Filters ---------------------------------------------------------
 
@@ -175,70 +175,70 @@ class AvailableOptions {
 					+ "names that begin with \"Test\" or end with \"Test\" or \"Tests\". " //
 					+ "When this option is repeated, all patterns will be combined using OR semantics. " //
 					+ "Default: ${DEFAULT-VALUE}")
-	private List<String> includeClassNamePatterns = new ArrayList<>(
+	private final List<String> includeClassNamePatterns = new ArrayList<>(
 		Arrays.asList(ClassNameFilter.STANDARD_INCLUDE_PATTERN));
 
 	@Option(names = { "--n", "-include-classname" }, arity = "1", hidden = true)
-	private List<String> includeClassNamePatterns2 = new ArrayList<>();
+	private final List<String> includeClassNamePatterns2 = new ArrayList<>();
 
 	@Option(names = { "-N",
 			"--exclude-classname" }, paramLabel = "PATTERN", arity = "1", description = "Provide a regular expression to exclude those classes whose fully qualified names match. " //
 					+ "When this option is repeated, all patterns will be combined using OR semantics.")
-	private List<String> excludeClassNamePatterns = new ArrayList<>();
+	private final List<String> excludeClassNamePatterns = new ArrayList<>();
 
 	@Option(names = { "--N", "-exclude-classname" }, arity = "1", hidden = true)
-	private List<String> excludeClassNamePatterns2 = new ArrayList<>();
+	private final List<String> excludeClassNamePatterns2 = new ArrayList<>();
 
 	@Option(names = {
 			"--include-package" }, paramLabel = "PKG", arity = "1", description = "Provide a package to be included in the test run. This option can be repeated.")
-	private List<String> includePackages = new ArrayList<>();
+	private final List<String> includePackages = new ArrayList<>();
 
 	@Option(names = { "-include-package" }, arity = "1", hidden = true)
-	private List<String> includePackages2 = new ArrayList<>();
+	private final List<String> includePackages2 = new ArrayList<>();
 
 	@Option(names = {
 			"--exclude-package" }, paramLabel = "PKG", arity = "1", description = "Provide a package to be excluded from the test run. This option can be repeated.")
-	private List<String> excludePackages = new ArrayList<>();
+	private final List<String> excludePackages = new ArrayList<>();
 
 	@Option(names = { "-exclude-package" }, arity = "1", hidden = true)
-	private List<String> excludePackages2 = new ArrayList<>();
+	private final List<String> excludePackages2 = new ArrayList<>();
 
 	@Option(names = { "-t",
 			"--include-tag" }, paramLabel = "TAG", arity = "1", description = "Provide a tag or tag expression to include only tests whose tags match. "
 					+ //
 					"When this option is repeated, all patterns will be combined using OR semantics.")
-	private List<String> includedTags = new ArrayList<>();
+	private final List<String> includedTags = new ArrayList<>();
 
 	@Option(names = { "--t", "-include-tag" }, arity = "1", hidden = true)
-	private List<String> includedTags2 = new ArrayList<>();
+	private final List<String> includedTags2 = new ArrayList<>();
 
 	@Option(names = { "-T",
 			"--exclude-tag" }, paramLabel = "TAG", arity = "1", description = "Provide a tag or tag expression to exclude those tests whose tags match. "
 					+ //
 					"When this option is repeated, all patterns will be combined using OR semantics.")
-	private List<String> excludedTags = new ArrayList<>();
+	private final List<String> excludedTags = new ArrayList<>();
 
 	@Option(names = { "--T", "-exclude-tag" }, arity = "1", hidden = true)
-	private List<String> excludedTags2 = new ArrayList<>();
+	private final List<String> excludedTags2 = new ArrayList<>();
 
 	@Option(names = { "-e",
 			"--include-engine" }, paramLabel = "ID", arity = "1", description = "Provide the ID of an engine to be included in the test run. This option can be repeated.")
-	private List<String> includedEngines = new ArrayList<>();
+	private final List<String> includedEngines = new ArrayList<>();
 
 	@Option(names = { "--e", "-include-engine" }, arity = "1", hidden = true)
-	private List<String> includedEngines2 = new ArrayList<>();
+	private final List<String> includedEngines2 = new ArrayList<>();
 
 	@Option(names = { "-E",
 			"--exclude-engine" }, paramLabel = "ID", arity = "1", description = "Provide the ID of an engine to be excluded from the test run. This option can be repeated.")
-	private List<String> excludedEngines = new ArrayList<>();
+	private final List<String> excludedEngines = new ArrayList<>();
 
 	@Option(names = { "--E", "-exclude-engine" }, arity = "1", hidden = true)
-	private List<String> excludedEngines2 = new ArrayList<>();
+	private final List<String> excludedEngines2 = new ArrayList<>();
 
 	// --- Configuration Parameters ----------------------------------------
 
 	// Implementation note: the @Option annotation is on a setter method to allow validation.
-	private Map<String, String> configurationParameters = new LinkedHashMap<>();
+	private final Map<String, String> configurationParameters = new LinkedHashMap<>();
 
 	@Spec
 	private CommandSpec spec;

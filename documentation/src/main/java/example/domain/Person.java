@@ -18,8 +18,8 @@ public class Person {
 		F, M
 	}
 
-	private String firstName;
-	private String lastName;
+	private final String firstName;
+	private final String lastName;
 	private Gender gender;
 	private LocalDate dateOfBirth;
 

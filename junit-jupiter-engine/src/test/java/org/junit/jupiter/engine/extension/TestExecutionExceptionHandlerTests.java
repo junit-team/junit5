@@ -46,7 +46,7 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
  */
 class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests {
 
-	static List<String> handlerCalls = new ArrayList<>();
+	static final List<String> handlerCalls = new ArrayList<>();
 
 	@BeforeEach
 	void resetStatics() {
