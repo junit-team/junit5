@@ -493,7 +493,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 	static class TestTemplateTestClassWithBeforeAndAfterEach {
 
-		private static List<String> lifecycleEvents = new ArrayList<>();
+		private static final List<String> lifecycleEvents = new ArrayList<>();
 
 		@BeforeAll
 		static void beforeAll(TestInfo testInfo) {
@@ -524,7 +524,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 	static class TestTemplateTestClassWithDynamicLifecycleCallbacks {
 
-		private static List<String> lifecycleEvents = new ArrayList<>();
+		private static final List<String> lifecycleEvents = new ArrayList<>();
 
 		@ExtendWith(InvocationContextProviderWithDynamicLifecycleCallbacks.class)
 		@TestTemplate
