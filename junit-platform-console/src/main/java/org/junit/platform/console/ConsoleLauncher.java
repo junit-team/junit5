@@ -68,7 +68,7 @@ public class ConsoleLauncher {
 
 	ConsoleLauncherExecutionResult execute(String... args) {
 
-		CommandLineOptions options = null;
+		CommandLineOptions options;
 		try {
 			options = commandLineOptionsParser.parse(args);
 		}
