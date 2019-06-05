@@ -9,7 +9,7 @@
 title: JUnit 5
 email: team@junit.org
 baseurl: "/junit5" # the subpath of your site, e.g. /blog
-url: "http://junit.org" # the base hostname & protocol for your site
+url: "https://junit.org" # the base hostname & protocol for your site
 twitter_username: junitteam
 github_username:  junit-team
 repository: junit-team.github.io

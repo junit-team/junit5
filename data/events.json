@@ -370,13 +370,33 @@
     ]
   },
   {
-    "title": "JUnit 5 — The New Testing Framework for Java and Platform for the JVM",
-    "event": "Istanbul Tech Talks",
-    "date": "2018-04-17",
-    "location": "Istanbul, Turkey",
-    "link": "http://www.istanbultechtalks.com/",
+    "title": "Introduccion y novedades de JUnit 5",
+    "event": "MadridJUG (Java User Group) Meetup",
+    "date": "2018-01-16",
+    "location": "Madrid, Spain",
+    "link": "https://www.meetup.com/MadridJUG/events/246018603/",
     "speakers": [
-      "marcphilipp"
+      "bonigarcia"
+    ]
+  },
+  {
+    "title": "Welcome to JUnit 5",
+    "event": "Indy.Code()",
+    "date": "2018-04-18",
+    "location": "Indianapolis, Indiana",
+    "link": "https://indycode.amegala.com/",
+    "speakers": [
+      "billykorando"
+    ]
+  },
+  {
+    "title": "Transitioning to JUnit 5",
+    "event": "Kansas City JUG",
+    "date": "2018-04-18",
+    "location": "Olathe, Kansas",
+    "link": "https://www.meetup.com/KansasCityJUG/events/245085280/",
+    "speakers": [
+      "dalehighfill"
     ]
   },
   {
@@ -397,6 +417,238 @@
     "link": "https://2018.geecon.org/speakers/info.html?id=354",
     "speakers": [
       "marcphilipp"
+    ]
+  },
+  {
+    "title": "Testing In The Modular World - JPMS and JUnit 5",
+    "event": "Heisenbug Conference",
+    "date": "2018-05-17",
+    "location": "St. Petersburg, Russia",
+    "link": "https://heisenbug-piter.ru/en/talks/2018/spb/6xyulhpxpqqasqak2am2gs/",
+    "speakers": [
+      "sormuras"
+    ]
+  },
+  {
+    "title": "JUnit, give me five!",
+    "event": "Heisenbug Conference",
+    "date": "2018-05-17",
+    "location": "St. Petersburg, Russia",
+    "link": "https://heisenbug-piter.ru/en/talks/2018/spb/sncgtn5gisoswks6owgwq/",
+    "speakers": [
+      "dtuchs"
+    ]
+  },
+  {
+    "title": "Welcome to JUnit 5",
+    "event": "Spring I/O",
+    "date": "2018-05-24",
+    "location": "Barcelona, Spain",
+    "link": "https://2018.springio.net/",
+    "speakers": [
+      "billykorando"
+    ]
+  },
+  {
+    "title": "Welcome to JUnit 5",
+    "event": "SpringCon.Tech",
+    "date": "2018-06-05",
+    "location": "New Orleans, Louisana",
+    "link": "http://springcon.tech/",
+    "speakers": [
+      "billykorando"
+    ]
+  },
+  {
+    "title": "JUnit 5: the next gen of testing, don't stay behind",
+    "event": "Droidcon New York",
+    "date": "2018-08-28",
+    "location": "New York",
+    "link": "https://www.nyc.droidcon.com/sessions",
+    "speakers": [
+      "dpreussler"
+    ]
+  },
+  {
+    "title": "JUnit 5 the Next Step in Automated Testing",
+    "event": "SpringOne Platform",
+    "date": "2018-09-25",
+    "location": "Washington, D.C.",
+    "link": "https://springoneplatform.io/2018/sessions/junit-5-the-next-step-in-automated-testing",
+    "speakers": [
+      "sbrannen"
+    ]
+  },
+  {
+    "title": "Spock vs JUnit 5 - Clash of the Titans",
+    "event": "JDD",
+    "date": "2018-10-08",
+    "location": "Cracow, Poland",
+    "link": "https://jdd.org.pl/lecture.html#id=47734",
+    "speakers": [
+      "szpak"
+    ]
+  },
+  {
+    "title": "JUnit 5: Platform & Jupiter API",
+    "event": "JUG Bonn",
+    "date": "2018-11-06",
+    "location": "Bonn, Germany",
+    "link": "https://www.meetup.com/JUG-Bonn/events/251268745",
+    "speakers": [
+      "sormuras"
+    ]
+  },
+  {
+    "title": "JUnit 5: More than just a Testing Framework for Java",
+    "event": "WJAX",
+    "date": "2018-11-07",
+    "location": "Munich, Germany",
+    "link": "https://jax.de/core-java-jvm-languages/junit-5-more-than-just-a-testing-framework-for-java/",
+    "speakers": [
+      "marcphilipp"
+    ]
+  },
+  {
+    "title": "Spock vs JUnit 5 - Clash of the Titans",
+    "event": "Jfokus",
+    "date": "2019-02-06",
+    "location": "Stockholm, Sweden",
+    "link": "https://www.jfokus.se/jfokus19/talks/2481",
+    "speakers": [
+      "szpak"
+    ]
+  },
+  {
+    "title": "News from JUnit 5.x: From Revolution to Continuous Evolution",
+    "event": "JavaLand",
+    "date": "2019-03-19",
+    "location": "Brühl, Germany",
+    "link": "https://programm.javaland.eu/2019/#/scheduledEvent/569927",
+    "speakers": [
+      "marcphilipp"
+    ]
+  },
+  {
+    "title": "Spock vs JUnit 5 - Clash of the Titans",
+    "event": "Greach",
+    "date": "2019-03-29",
+    "location": "Madrid, Spain",
+    "link": "https://agenda.greachconf.com/talk/spock-vs-junit5-clash-of-the-titans",
+    "speakers": [
+      "szpak"
+    ]
+  },
+  {
+    "title": "JUnit 5 and Android",
+    "event": "Testing Droids, GDG Hamburg",
+    "date": "2019-4-02",
+    "location": "Hamburg, Germany",
+    "link": "https://www.meetup.com/de-DE/GDG-Hamburg-Android/events/259737272/",
+    "speakers": [
+      "dpreussler"
+    ]
+  },
+  {
+    "title": "JUnit : il serait temps de passer la 5ème !",
+    "event": "Devoxx France",
+    "date": "2019-04-18",
+    "location": "Paris, France",
+    "link": "https://cfp.devoxx.fr/2019/talk/TPC-2275",
+    "speakers": [
+      "juliettederancourt",
+      "julientopcu"
+    ]
+  },
+  {
+    "title": "News from JUnit 5.x: From Revolution to Continuous Evolution",
+    "event": "JEEConf",
+    "date": "2019-04-27",
+    "location": "Kyiv, Ukraine",
+    "link": "https://jeeconf.com/program/news-from-junit-5-x-from-revolution-to-continuous-evolution/",
+    "speakers": [
+      "marcphilipp"
+    ]
+  },
+  {
+    "title": "JUnit 5: What's new and What's Coming",
+    "event": "Spring I/O",
+    "date": "2019-05-16",
+    "location": "Barcelona, Spain",
+    "link": "https://2019.springio.net/sessions/junit-5-whats-new-and-whats-coming",
+    "speakers": [
+      "sbrannen"
+    ]
+  },
+  {
+    "title": "JUnit 5 - Next Generation Testing on the JVM (workshop)",
+    "event": "DevSum 19",
+    "date": "2019-05-22",
+    "location": "Stockholm, Sweden",
+    "link": "https://www.devsum.se/sessions/junit-5-next-generation-testing-on-the-jvm/",
+    "speakers": [
+      "nicolaiparlog"
+    ]
+  },
+  {
+    "title": "JUnit 5 - Platform & Jupiter API",
+    "event": "JUG Koblenz Meetup",
+    "date": "2019-05-29",
+    "location": "Koblenz, Germany",
+    "link": "https://www.meetup.com/Java-User-Group-Koblenz/events/261282474/",
+    "speakers": [
+      "sormuras"
+    ]
+  },
+  {
+    "title": "Neues von JUnit 5.x: From Revolution to Continuous Evolution",
+    "event": "Entwicklertag Karlsruhe",
+    "date": "2019-06-03",
+    "location": "Karlsruhe, Germany",
+    "link": "https://entwicklertag.de/karlsruhe/2019/neues-von-junit-5x",
+    "speakers": [
+      "marcphilipp"
+    ]
+  },
+  {
+    "title": "JUnit : il serait temps de passer la 5ème !",
+    "event": "Voxxed Days Luxembourg",
+    "date": "2019-06-20",
+    "location": "Mondorf-les-Bains, Luxembourg",
+    "link": "https://cfp-voxxed-lux.yajug.org/talk/MCB-0767",
+    "speakers": [
+      "juliettederancourt",
+      "julientopcu"
+    ]
+  },
+  {
+    "title": "JUnit 5 - Testing In The Modular World",
+    "event": "JavaZone 2019",
+    "date": "2019-09-12",
+    "location": "Oslo, Norway",
+    "link": "https://2019.javazone.no",
+    "speakers": [
+      "sormuras"
+    ]
+  },
+  {
+    "title": "JUnit 5 - Testing In The Modular World",
+    "event": "Accento 2019",
+    "date": "2019-09-24",
+    "location": "Karlsruhe, Germany",
+    "link": "https://accento.dev",
+    "speakers": [
+      "sormuras"
+    ]
+  },
+  {
+    "title": "JUnit 5 - Testing In The Modular World",
+    "event": "JCON 2019",
+    "date": "2019-09-26",
+    "location": "Düsseldorf, Germany",
+    "link": "https://jcon.one",
+    "speakers": [
+      "sormuras"
     ]
   }
 ]

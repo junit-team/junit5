@@ -1,30 +1,29 @@
 /*
- * Copyright (c) 2015, 2017, Oracle and/or its affiliates. All rights reserved.
- * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ * Copyright (c) 2015, 2018, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
  *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
  *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
  */
 
 var noResult = {l: "No results found"};
-var category = "category";
 var catModules = "Modules";
 var catPackages = "Packages";
 var catTypes = "Types";
@@ -33,41 +32,6 @@ var catSearchTags = "SearchTags";
 var highlight = "<span class=\"resultHighlight\">$&</span>";
 var camelCaseRegexp = "";
 var secondaryMatcher = "";
-function getName(name) {
-    var anchor = "";
-    var ch = '';
-    for (i = 0; i < name.length; i++) {
-        ch = name.charAt(i);
-        switch (ch) {
-            case '(':
-            case ')':
-            case '<':
-            case '>':
-            case ',':
-                anchor += "-";
-                break;
-            case ' ':
-            case '[':
-                break;
-            case ']':
-                anchor += ":A";
-                break;
-            case '$':
-                if (i == 0)
-                    anchor += "Z:Z";
-                anchor += ":D";
-                break;
-            case '_':
-                if (i == 0)
-                    anchor += "Z:Z";
-                anchor += ch;
-                break;
-            default:
-                anchor += ch;
-        }
-    }
-    return anchor;
-}
 function getHighlightedText(item) {
     var ccMatcher = new RegExp(camelCaseRegexp);
     var label = item.replace(ccMatcher, highlight);
@@ -76,8 +40,30 @@ function getHighlightedText(item) {
     }
     return label;
 }
+function getURLPrefix(ui) {
+    var urlPrefix="";
+    if (useModuleDirectories) {
+        var slash = "/";
+        if (ui.item.category === catModules) {
+            return ui.item.l + slash;
+        } else if (ui.item.category === catPackages && ui.item.m) {
+            return ui.item.m + slash;
+        } else if ((ui.item.category === catTypes && ui.item.p) || ui.item.category === catMembers) {
+            $.each(packageSearchIndex, function(index, item) {
+                if (ui.item.p == item.l) {
+                    urlPrefix = item.m + slash;
+                }
+            });
+            return urlPrefix;
+        } else {
+            return urlPrefix;
+        }
+    }
+    return urlPrefix;
+}
 var watermark = 'Search';
 $(function() {
+    $("#search").val('');
     $("#search").prop("disabled", false);
     $("#reset").prop("disabled", false);
     $("#search").val(watermark).addClass('watermark');
@@ -86,7 +72,7 @@ $(function() {
             $(this).val(watermark).addClass('watermark');
         }
     });
-    $("#search").keydown(function() {
+    $("#search").on('click keydown', function() {
         if ($(this).val() == watermark) {
             $(this).val('').removeClass('watermark');
         }
@@ -131,7 +117,9 @@ $.widget("custom.catcomplete", $.ui.autocomplete, {
                     ? getHighlightedText(item.m + "/" + item.l)
                     : getHighlightedText(item.l);
         } else if (item.category === catTypes) {
-            label = getHighlightedText(item.p + "." + item.l);
+            label = (item.p)
+                    ? getHighlightedText(item.p + "." + item.l)
+                    : getHighlightedText(item.l);
         } else if (item.category === catMembers) {
             label = getHighlightedText(item.p + "." + (item.c + "." + item.l));
         } else if (item.category === catSearchTags) {
@@ -181,25 +169,7 @@ $(function() {
                 return e.l.substring(e.l.lastIndexOf(".") + 1);
             }
 
-            // Sort array items by short name (as opposed to fully qualified name).
-            // Additionally, sort by the nested type name, when present,
-            // as opposed to top level short name.
-            function sortAndConcatResults(a1, a2) {
-                var sortingKey;
-                var sortArray = function(e1, e2) {
-                    var l = sortingKey(e1);
-                    var m = sortingKey(e2);
-                    if (l < m)
-                        return -1;
-                    if (l > m)
-                        return 1;
-                    return 0;
-                };
-                sortingKey = function(e) {
-                    return nestedName(e).toUpperCase();
-                };
-                a1.sort(sortArray);
-                a2.sort(sortArray);
+            function concatResults(a1, a2) {
                 a1 = a1.concat(a2);
                 a2.length = 0;
                 return a1;
@@ -208,85 +178,85 @@ $(function() {
             if (moduleSearchIndex) {
                 var mdleCount = 0;
                 $.each(moduleSearchIndex, function(index, item) {
-                    item[category] = catModules;
+                    item.category = catModules;
                     if (exactMatcher.test(item.l)) {
-                        result.unshift(item);
+                        result.push(item);
                         mdleCount++;
                     } else if (camelCaseMatcher.test(item.l)) {
-                        result.unshift(item);
+                        result.push(item);
                     } else if (secondaryMatcher.test(item.l)) {
                         secondaryresult.push(item);
                     }
                 });
                 displayCount = mdleCount;
-                result = sortAndConcatResults(result, secondaryresult);
+                result = concatResults(result, secondaryresult);
             }
             if (packageSearchIndex) {
                 var pCount = 0;
                 var pkg = "";
                 $.each(packageSearchIndex, function(index, item) {
-                    item[category] = catPackages;
+                    item.category = catPackages;
                     pkg = (item.m)
                             ? (item.m + "/" + item.l)
                             : item.l;
                     if (exactMatcher.test(item.l)) {
-                        presult.unshift(item);
+                        presult.push(item);
                         pCount++;
                     } else if (camelCaseMatcher.test(pkg)) {
-                        presult.unshift(item);
+                        presult.push(item);
                     } else if (secondaryMatcher.test(pkg)) {
                         secondaryresult.push(item);
                     }
                 });
-                result = result.concat(sortAndConcatResults(presult, secondaryresult));
+                result = result.concat(concatResults(presult, secondaryresult));
                 displayCount = (pCount > displayCount) ? pCount : displayCount;
             }
             if (typeSearchIndex) {
                 var tCount = 0;
                 $.each(typeSearchIndex, function(index, item) {
-                    item[category] = catTypes;
+                    item.category = catTypes;
                     var s = nestedName(item);
                     if (exactMatcher.test(s)) {
-                        tresult.unshift(item);
+                        tresult.push(item);
                         tCount++;
                     } else if (camelCaseMatcher.test(s)) {
-                        tresult.unshift(item);
+                        tresult.push(item);
                     } else if (secondaryMatcher.test(item.p + "." + item.l)) {
                         secondaryresult.push(item);
                     }
                 });
-                result = result.concat(sortAndConcatResults(tresult, secondaryresult));
+                result = result.concat(concatResults(tresult, secondaryresult));
                 displayCount = (tCount > displayCount) ? tCount : displayCount;
             }
             if (memberSearchIndex) {
                 var mCount = 0;
                 $.each(memberSearchIndex, function(index, item) {
-                    item[category] = catMembers;
+                    item.category = catMembers;
                     var s = nestedName(item);
                     if (exactMatcher.test(s)) {
-                        mresult.unshift(item);
+                        mresult.push(item);
                         mCount++;
                     } else if (camelCaseMatcher.test(s)) {
-                        mresult.unshift(item);
+                        mresult.push(item);
                     } else if (secondaryMatcher.test(item.c + "." + item.l)) {
                         secondaryresult.push(item);
                     }
                 });
-                result = result.concat(sortAndConcatResults(mresult, secondaryresult));
+                result = result.concat(concatResults(mresult, secondaryresult));
                 displayCount = (mCount > displayCount) ? mCount : displayCount;
             }
             if (tagSearchIndex) {
                 var tgCount = 0;
                 $.each(tagSearchIndex, function(index, item) {
-                    item[category] = catSearchTags;
+                    item.category = catSearchTags;
                     if (exactMatcher.test(item.l)) {
-                        tgresult.unshift(item);
+                        tgresult.push(item);
                         tgCount++;
                     } else if (secondaryMatcher.test(item.l)) {
                         secondaryresult.push(item);
                     }
                 });
-                result = result.concat(sortAndConcatResults(tgresult, secondaryresult));
+                result = result.concat(concatResults(tgresult, secondaryresult));
                 displayCount = (tgCount > displayCount) ? tgCount : displayCount;
             }
             displayCount = (displayCount > 500) ? displayCount : 500;
@@ -313,27 +283,37 @@ $(function() {
         },
         select: function(event, ui) {
             if (ui.item.l !== noResult.l) {
-                var url = "";
+                var url = getURLPrefix(ui);
                 if (ui.item.category === catModules) {
-                    url = ui.item.l + "-summary.html";
-                } else if (ui.item.category === catPackages) {
-                    url = ui.item.l.replace(/\./g, '/') + "/package-summary.html";
-                } else if (ui.item.category === catTypes) {
-                    if (ui.item.p === "<Unnamed>") {
-                        url = ui.item.l + ".html";
+                    if (useModuleDirectories) {
+                        url += "module-summary.html";
                     } else {
-                        url = ui.item.p.replace(/\./g, '/') + "/" + ui.item.l + ".html";
+                        url = ui.item.l + "-summary.html";
+                    }
+                } else if (ui.item.category === catPackages) {
+                    if (ui.item.url) {
+                        url = ui.item.url;
+                    } else {
+                    url += ui.item.l.replace(/\./g, '/') + "/package-summary.html";
+                    }
+                } else if (ui.item.category === catTypes) {
+                    if (ui.item.url) {
+                        url = ui.item.url;
+                    } else if (ui.item.p === "<Unnamed>") {
+                        url += ui.item.l + ".html";
+                    } else {
+                        url += ui.item.p.replace(/\./g, '/') + "/" + ui.item.l + ".html";
                     }
                 } else if (ui.item.category === catMembers) {
                     if (ui.item.p === "<Unnamed>") {
-                        url = ui.item.c + ".html" + "#";
+                        url += ui.item.c + ".html" + "#";
                     } else {
-                        url = ui.item.p.replace(/\./g, '/') + "/" + ui.item.c + ".html" + "#";
+                        url += ui.item.p.replace(/\./g, '/') + "/" + ui.item.c + ".html" + "#";
                     }
                     if (ui.item.url) {
                         url += ui.item.url;
                     } else {
-                        url += getName(ui.item.l);
+                        url += ui.item.l;
                     }
                 } else if (ui.item.category === catSearchTags) {
                     url += ui.item.u;

@@ -4,10 +4,10 @@ title: JUnit 5
 ---
 
 <div class="jumbotron">
-  <h1>The new major version of the programmer-friendly testing framework for Java&nbsp;8 and beyond</h1>
+  <h1>The new major version of the programmer-friendly testing framework for Java</h1>
   <ul class="list-inline">
     <li><a class="btn btn-primary btn-lg" href="{{ site.baseurl }}/docs/current/user-guide" role="button">
-      <i class="fa fa-book fa-lg" aria-hidden="true"></i>&nbsp;
+      <i class="fas fa-book"></i>&nbsp;
       User Guide
     </a></li>
     <li><a class="btn btn-primary btn-lg" href="{{ site.baseurl }}/docs/current/api" role="button">
@@ -15,12 +15,16 @@ title: JUnit 5
       Javadoc
     </a></li>
     <li><a class="btn btn-primary btn-lg" href="https://github.com/junit-team/junit5/" role="button">
-      <i class="fa fa-github fa-lg" aria-hidden="true"></i>&nbsp;
+      <i class="fab fa-github fa-lg"></i>&nbsp;
       Code &amp; Issues
     </a></li>
     <li><a class="btn btn-primary btn-lg" href="http://stackoverflow.com/questions/tagged/junit5" role="button">
-      <i class="fa fa-stack-overflow fa-lg" aria-hidden="true"></i>&nbsp;
+      <i class="fab fa-stack-overflow fa-lg"></i>&nbsp;
       Q&thinsp;&amp;&thinsp;A
+    </a></li>
+    <li><a class="btn btn-danger btn-lg" href="https://steadyhq.com/en/junit" role="button">
+      <i class="fas fa-heart"></i>&nbsp;
+      Support JUnit
     </a></li>
   </ul>
 </div>
@@ -29,9 +33,31 @@ title: JUnit 5
   <div class="col-md-8 col-sm-6">
     {% capture junit5-intro %}{% include junit5-intro.md %}{% endcapture %}
     {{ junit5-intro | markdownify }}
+    {% capture junit5-sponsoring %}{% include junit5-sponsoring.md %}{% endcapture %}
+    {{ junit5-sponsoring | markdownify }}
   </div>
-  <div id="events" class="col-md-4 col-sm-6">
+  <div class="col-md-4 col-sm-6">
+    <h2>Current Versions</h2>
+      <div>
+        <a href="https://search.maven.org/search?q=g:org.junit.jupiter%20AND%20v:5.4.2">
+          <img alt="JUnit Jupiter version" src="https://img.shields.io/maven-central/v/org.junit.jupiter/junit-jupiter/5.4.svg?color=25a162&label=JUnit%20Jupiter">
+        </a><br />
+        <a href="https://search.maven.org/search?q=g:org.junit.vintage%20AND%20v:5.4.2">
+          <img alt="JUnit Vintage version" src="https://img.shields.io/maven-central/v/org.junit.vintage/junit-vintage-engine/5.4.svg?colorB=25a162&label=JUnit%20Vintage">
+        </a><br />
+        <a href="https://search.maven.org/search?q=g:org.junit.platform%20AND%20v:1.4.2">
+          <img alt="JUnit Platform version" src="https://img.shields.io/maven-central/v/org.junit.platform/junit-platform-commons/1.4.svg?colorB=25a162&label=JUnit%20Platform">
+        </a>
+      </div>
     <h2>Upcoming Events</h2>
-    <script defer type="text/javascript" src="{{ site.baseurl }}/assets/js/events.js"></script>
+    <div id="events">
+      <script defer type="text/javascript" src="{{ site.baseurl }}/assets/js/events.js"></script>
+    </div>
+    <div>
+      <a class="btn btn-default btn-xs" href="https://github.com/junit-team/junit5/wiki/Adding-your-talk-to-the-JUnit-website" role="button">
+        <i class="fas fa-plus"></i>&nbsp;
+        Add your talk
+      </a>
+    </div>
   </div>
 </div>

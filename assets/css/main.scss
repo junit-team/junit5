@@ -58,7 +58,7 @@ html {
 	min-height: 100%;
 }
 body {
-	margin-bottom: $footer_height;
+	margin-bottom: $footer_height * 2;
 }
 footer {
 	padding-top: ($footer_height - ($line-height-base * $font-size-base)) / 2;
@@ -68,4 +68,142 @@ footer {
 	height: $footer_height;
 	background-color: $jumbotron-bg;
 	color: darken($jumbotron-bg, 25%);
+}
+
+/* Sponsor card style: GOLD
+-------------------------------------------------- */
+.cardgold {
+    width: 240px;
+    margin: 10px 16px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 5px;
+    text-align: center;
+    font-size: small;
+    background-color: gold; /* For browsers that do not support gradients */
+    background-image: linear-gradient(to bottom right, gold, white); /* Standard syntax (must be last) */
+    cursor: pointer;
+}
+
+.cardgold:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.cardgold-image {
+    display: block;
+    width: 100%;
+    height: 120px;
+    line-height: 120px;
+    overflow: hidden;
+}
+
+.cardgold-center {
+    display: block;
+    width: 100%;
+    height: 120px;
+    overflow: hidden;
+}
+
+.cardgold-bottom {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    font-size: x-small;
+}
+
+.cardgold-bottom h4 {
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+}
+
+/* Sponsor card style: SILVER
+-------------------------------------------------- */
+.cardsilver {
+    width: 240px;
+    margin: 10px 16px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 5px;
+    text-align: center;
+    font-size: small;
+    background-color: silver;
+    background-image: linear-gradient(to bottom right, silver, white);
+    cursor: pointer;
+}
+
+.cardsilver:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.cardsilver-image {
+    display: block;
+    width: 100%;
+    height: 100px;
+    line-height: 100px;
+    overflow: hidden;
+}
+
+.cardsilver-center {
+    display: block;
+    width: 100%;
+    height: 40px;
+    overflow: hidden;
+}
+
+.cardsilver-bottom {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    font-size: x-small;
+}
+
+.cardsilver-bottom h4 {
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+}
+
+/* Sponsor card style: BRONZE
+-------------------------------------------------- */
+.cardbronze {
+    width: 240px;
+    margin: 10px 16px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 5px;
+    text-align: center;
+    font-size: small;
+    background-color: chocolate; /* For browsers that do not support gradients */
+    background-image: linear-gradient(to bottom right, white, chocolate); /* Standard syntax (must be last) */
+    cursor: pointer;
+}
+
+.cardbronze:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.cardbronze-image {
+    display: block;
+    width: 100%;
+    height: 80px;
+    line-height: 80px;
+    overflow: hidden;
+}
+
+.cardbronze-center {
+    display: block;
+    width: 100%;
+    height: 40px;
+    overflow: hidden;
+}
+
+.cardbronze-bottom {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    font-size: x-small;
+}
+
+.cardbronze-bottom h4 {
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
 }
