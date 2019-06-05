@@ -80,9 +80,14 @@ public class Person {
 			return false;
 		}
 		if (lastName == null) {
-			return other.lastName == null;
+			if (other.lastName != null) {
+				return false;
+			}
 		}
-		else return lastName.equals(other.lastName);
+		else if (!lastName.equals(other.lastName)) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
