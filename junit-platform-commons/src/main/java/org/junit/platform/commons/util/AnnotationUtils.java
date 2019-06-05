@@ -172,7 +172,7 @@ public final class AnnotationUtils {
 
 		for (Annotation candidateAnnotation : candidates) {
 			Class<? extends Annotation> candidateAnnotationType = candidateAnnotation.annotationType();
-			if (!isInJavaLangAnnotationPackage(candidateAnnotationType) && visited.add(candidateAnnotation)) {
+			if (isNotInJavaLangAnnotationPackage(candidateAnnotationType) && visited.add(candidateAnnotation)) {
 				Optional<A> metaAnnotation = findAnnotation(candidateAnnotationType, annotationType, inherited,
 					visited);
 				if (metaAnnotation.isPresent()) {
@@ -260,7 +260,7 @@ public final class AnnotationUtils {
 
 		for (Annotation candidate : candidates) {
 			Class<? extends Annotation> candidateAnnotationType = candidate.annotationType();
-			if (!isInJavaLangAnnotationPackage(candidateAnnotationType) && visited.add(candidate)) {
+			if (isNotInJavaLangAnnotationPackage(candidateAnnotationType) && visited.add(candidate)) {
 				// Exact match?
 				if (candidateAnnotationType.equals(annotationType)) {
 					found.add(annotationType.cast(candidate));
@@ -381,6 +381,10 @@ public final class AnnotationUtils {
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 
 		return ReflectionUtils.findMethods(clazz, method -> isAnnotated(method, annotationType), traversalMode);
+	}
+
+	private static boolean isNotInJavaLangAnnotationPackage(Class<? extends Annotation> annotationType) {
+		return !isInJavaLangAnnotationPackage(annotationType);
 	}
 
 	private static boolean isInJavaLangAnnotationPackage(Class<? extends Annotation> annotationType) {

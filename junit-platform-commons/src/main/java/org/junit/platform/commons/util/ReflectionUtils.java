@@ -1093,10 +1093,10 @@ public final class ReflectionUtils {
 				.filter(field -> !field.isSynthetic())
 				.collect(toList());
 		List<Field> superclassFields = getSuperclassFields(clazz, traversalMode).stream()
-				.filter(field -> !isFieldShadowedByLocalFields(field, localFields))
+				.filter(field -> isNotFieldShadowedByLocalFields(field, localFields))
 				.collect(toList());
 		List<Field> interfaceFields = getInterfaceFields(clazz, traversalMode).stream()
-				.filter(field -> !isFieldShadowedByLocalFields(field, localFields))
+				.filter(field -> isNotFieldShadowedByLocalFields(field, localFields))
 				.collect(toList());
 		// @formatter:on
 
@@ -1298,10 +1298,10 @@ public final class ReflectionUtils {
 				.filter(method -> !method.isSynthetic())
 				.collect(toList());
 		List<Method> superclassMethods = getSuperclassMethods(clazz, traversalMode).stream()
-				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
+				.filter(method -> isNotMethodShadowedByLocalMethods(method, localMethods))
 				.collect(toList());
 		List<Method> interfaceMethods = getInterfaceMethods(clazz, traversalMode).stream()
-				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
+				.filter(method -> isNotMethodShadowedByLocalMethods(method, localMethods))
 				.collect(toList());
 		// @formatter:on
 
@@ -1446,7 +1446,7 @@ public final class ReflectionUtils {
 					.collect(toList());
 
 			List<Method> superinterfaceMethods = getInterfaceMethods(ifc, traversalMode).stream()
-					.filter(method -> !isMethodShadowedByLocalMethods(method, localInterfaceMethods))
+					.filter(method -> isNotMethodShadowedByLocalMethods(method, localInterfaceMethods))
 					.collect(toList());
 			// @formatter:on
 
@@ -1468,7 +1468,7 @@ public final class ReflectionUtils {
 
 			// @formatter:off
 			List<Field> superinterfaceFields = getInterfaceFields(ifc, traversalMode).stream()
-					.filter(field -> !isFieldShadowedByLocalFields(field, localInterfaceFields))
+					.filter(field -> isNotFieldShadowedByLocalFields(field, localInterfaceFields))
 					.collect(toList());
 			// @formatter:on
 
@@ -1491,6 +1491,10 @@ public final class ReflectionUtils {
 		return findAllFieldsInHierarchy(superclass, traversalMode);
 	}
 
+	private static boolean isNotFieldShadowedByLocalFields(Field field, List<Field> localFields) {
+		return isFieldShadowedByLocalFields(field, localFields);
+	}
+
 	private static boolean isFieldShadowedByLocalFields(Field field, List<Field> localFields) {
 		return localFields.stream().anyMatch(local -> local.getName().equals(field.getName()));
 	}
@@ -1501,6 +1505,10 @@ public final class ReflectionUtils {
 			return Collections.emptyList();
 		}
 		return findAllMethodsInHierarchy(superclass, traversalMode);
+	}
+
+	private static boolean isNotMethodShadowedByLocalMethods(Method method, List<Method> localMethods) {
+		return isMethodShadowedByLocalMethods(method, localMethods);
 	}
 
 	private static boolean isMethodShadowedByLocalMethods(Method method, List<Method> localMethods) {

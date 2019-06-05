@@ -53,12 +53,12 @@ class DiscoveryRequestCreator {
 
 	private List<? extends DiscoverySelector> createDiscoverySelectors(CommandLineOptions options) {
 		if (options.isScanClasspath()) {
-			Preconditions.condition(!options.hasExplicitSelectors(),
+			Preconditions.condition(options.hasNotExplicitSelectors(),
 				"Scanning the classpath and using explicit selectors at the same time is not supported");
 			return createClasspathRootSelectors(options);
 		}
 		if (options.isScanModulepath()) {
-			Preconditions.condition(!options.hasExplicitSelectors(),
+			Preconditions.condition(options.hasNotExplicitSelectors(),
 				"Scanning the module-path and using explicit selectors at the same time is not supported");
 			return selectModules(ModuleUtils.findAllNonSystemBootModuleNames());
 		}

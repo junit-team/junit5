@@ -218,9 +218,13 @@ public class CommandLineOptions {
 		this.selectedClasspathResources = selectedClasspathResources;
 	}
 
+	public boolean hasNotExplicitSelectors() {
+		return !hasExplicitSelectors();
+	}
+
 	public boolean hasExplicitSelectors() {
 		return Stream.of(selectedUris, selectedFiles, selectedDirectories, selectedPackages, selectedClasses,
-			selectedMethods, selectedClasspathResources).anyMatch(selectors -> !selectors.isEmpty());
+				selectedMethods, selectedClasspathResources).anyMatch(selectors -> !selectors.isEmpty());
 	}
 
 	public List<String> getIncludedClassNamePatterns() {
