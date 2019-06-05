@@ -102,5 +102,11 @@
     "twitter_username": "JulienTopcu",
     "link": "https://beyondxscratch.com",
     "picture": "https://secure.gravatar.com/avatar/610f3914d9b392b389657823719f09dd?s=460"
+  },
+  "svenruppert": {
+    "name": "Sven Ruppert",
+    "twitter_username": "SvenRuppert",
+    "link": "https://www.sven-ruppert.de",
+    "picture": "https://avatars3.githubusercontent.com/u/2665330?s=96&v=4"
   }
 }
