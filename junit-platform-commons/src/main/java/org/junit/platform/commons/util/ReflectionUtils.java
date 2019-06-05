@@ -1546,10 +1546,7 @@ public final class ReflectionUtils {
 			}
 		}
 		// lower is sub-signature of upper: check for generics in upper method
-		if (isGeneric(candidate)) {
-			return true;
-		}
-		return false;
+		return isGeneric(candidate);
 	}
 
 	static boolean isGeneric(Method method) {
