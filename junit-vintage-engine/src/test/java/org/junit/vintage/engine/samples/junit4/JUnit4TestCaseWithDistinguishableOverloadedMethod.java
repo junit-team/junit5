@@ -12,28 +12,23 @@ package org.junit.vintage.engine.samples.junit4;
 
 import static org.junit.Assert.fail;
 
-import org.junit.experimental.theories.DataPoint;
+import org.junit.Test;
 import org.junit.experimental.theories.Theories;
-import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
 /**
- * @since 4.12
+ * @since 5.5
  */
 @RunWith(Theories.class)
-public class JUnit4TestCaseWithOverloadedMethod {
+public class JUnit4TestCaseWithDistinguishableOverloadedMethod {
 
-	@DataPoint
-	public static int MAGIC_NUMBER = 42;
-
-	@Theory
-	public void theory(int i) {
-		fail("failing theory with single parameter");
+	@Test
+	public void test() {
+		test("foo");
 	}
 
-	@Theory
-	public void theory(int i, int j) {
-		fail("failing theory with two parameters");
+	private void test(String message) {
+		fail(message);
 	}
 
 }

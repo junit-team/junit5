@@ -12,8 +12,8 @@ package org.junit.vintage.engine.descriptor;
 
 import static java.util.Arrays.stream;
 import static java.util.function.Predicate.isEqual;
+import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import static org.junit.platform.commons.util.StringUtils.isNotBlank;
@@ -28,6 +28,7 @@ import java.util.Set;
 
 import org.apiguardian.api.API;
 import org.junit.experimental.categories.Category;
+import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
@@ -148,9 +149,9 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 		if (testClass != null) {
 			String methodName = description.getMethodName();
 			if (methodName != null) {
-				MethodSource methodSource = toMethodSource(testClass, methodName);
-				if (methodSource != null) {
-					return methodSource;
+				Method method = findMethod(testClass, methodName);
+				if (method != null) {
+					return MethodSource.from(testClass, method);
 				}
 			}
 			return ClassSource.from(testClass);
@@ -158,15 +159,23 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 		return null;
 	}
 
-	private static MethodSource toMethodSource(Class<?> testClass, String methodName) {
+	private static Method findMethod(Class<?> testClass, String methodName) {
 		if (methodName.contains("[") && methodName.endsWith("]")) {
 			// special case for parameterized tests
-			return toMethodSource(testClass, methodName.substring(0, methodName.indexOf("[")));
+			return findMethod(testClass, methodName.substring(0, methodName.indexOf("[")));
 		}
-		else {
-			List<Method> methods = findMethods(testClass, where(Method::getName, isEqual(methodName)));
-			return (methods.size() == 1) ? MethodSource.from(testClass, getOnlyElement(methods)) : null;
+		List<Method> methods = findMethods(testClass, where(Method::getName, isEqual(methodName)));
+		if (methods.isEmpty()) {
+			return null;
 		}
+		if (methods.size() == 1) {
+			return methods.get(0);
+		}
+		methods = methods.stream().filter(ModifierSupport::isPublic).collect(toList());
+		if (methods.size() == 1) {
+			return methods.get(0);
+		}
+		return null;
 	}
 
 }

@@ -99,3 +99,5 @@ on GitHub.
 
 * `junit:junit` is now a compile-scoped dependency of `junit-vintage-engine` to allow for
   easier dependency management in Maven POMs.
+* Methods that are `public` are now preferred over other methods with the same name in the
+  same test class when creating `MethodSources` for JUnit 4 `Descriptions`.

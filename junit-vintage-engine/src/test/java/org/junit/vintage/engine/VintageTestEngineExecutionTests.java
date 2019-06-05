@@ -69,7 +69,7 @@ import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithErrorInAfterCla
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithErrorInBeforeClass;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithExceptionThrowingRunner;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithFailingDescriptionThatIsNotReportedAsFinished;
-import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithOverloadedMethod;
+import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithIndistinguishableOverloadedMethod;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithRunnerWithCustomUniqueIds;
 import org.junit.vintage.engine.samples.junit4.MalformedJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.ParameterizedTestCase;
@@ -282,15 +282,19 @@ class VintageTestEngineExecutionTests {
 
 	@Test
 	void executesJUnit4TestCaseWithOverloadedMethod() {
-		Class<?> testClass = JUnit4TestCaseWithOverloadedMethod.class;
+		Class<?> testClass = JUnit4TestCaseWithIndistinguishableOverloadedMethod.class;
 
 		execute(testClass).assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
-			event(test("theory(" + JUnit4TestCaseWithOverloadedMethod.class.getName() + ")[0]"), started()), //
-			event(test("theory(" + JUnit4TestCaseWithOverloadedMethod.class.getName() + ")[0]"), finishedWithFailure()), //
-			event(test("theory(" + JUnit4TestCaseWithOverloadedMethod.class.getName() + ")[1]"), started()), //
-			event(test("theory(" + JUnit4TestCaseWithOverloadedMethod.class.getName() + ")[1]"), finishedWithFailure()), //
+			event(test("theory(" + JUnit4TestCaseWithIndistinguishableOverloadedMethod.class.getName() + ")[0]"),
+				started()), //
+			event(test("theory(" + JUnit4TestCaseWithIndistinguishableOverloadedMethod.class.getName() + ")[0]"),
+				finishedWithFailure()), //
+			event(test("theory(" + JUnit4TestCaseWithIndistinguishableOverloadedMethod.class.getName() + ")[1]"),
+				started()), //
+			event(test("theory(" + JUnit4TestCaseWithIndistinguishableOverloadedMethod.class.getName() + ")[1]"),
+				finishedWithFailure()), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
