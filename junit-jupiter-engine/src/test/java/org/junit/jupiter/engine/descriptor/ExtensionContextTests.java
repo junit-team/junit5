@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.DefaultJupiterConfiguration;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.DefaultTestInstances;
@@ -62,6 +63,7 @@ public class ExtensionContextTests {
 	@BeforeEach
 	void setUp() {
 		when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new DisplayNameGenerator.Standard());
+		when(configuration.getDefaultExecutionMode()).thenReturn(ExecutionMode.SAME_THREAD);
 	}
 
 	@Test
@@ -91,7 +93,7 @@ public class ExtensionContextTests {
 	@Test
 	@SuppressWarnings("resource")
 	void fromClassTestDescriptor() {
-		ClassTestDescriptor nestedClassDescriptor = nestedClassDescriptor();
+		NestedClassTestDescriptor nestedClassDescriptor = nestedClassDescriptor();
 		ClassTestDescriptor outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
 
 		ClassExtensionContext outerExtensionContext = new ClassExtensionContext(null, null, outerClassDescriptor,
@@ -119,7 +121,7 @@ public class ExtensionContextTests {
 	@Test
 	@SuppressWarnings("resource")
 	void tagsCanBeRetrievedInExtensionContext() {
-		ClassTestDescriptor nestedClassDescriptor = nestedClassDescriptor();
+		NestedClassTestDescriptor nestedClassDescriptor = nestedClassDescriptor();
 		ClassTestDescriptor outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
 		TestMethodTestDescriptor methodTestDescriptor = methodDescriptor();
 		outerClassDescriptor.addChild(methodTestDescriptor);
@@ -274,7 +276,7 @@ public class ExtensionContextTests {
 			() -> assertEquals(expected, context.getConfigurationParameter(key))));
 	}
 
-	private ClassTestDescriptor nestedClassDescriptor() {
+	private NestedClassTestDescriptor nestedClassDescriptor() {
 		return new NestedClassTestDescriptor(UniqueId.root("nested-class", "NestedClass"), OuterClass.NestedClass.class,
 			configuration);
 	}

@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
+import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
 import org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor;
 import org.junit.platform.commons.logging.Logger;
@@ -46,14 +46,14 @@ class MethodOrderingVisitor implements TestDescriptor.Visitor {
 
 	@Override
 	public void visit(TestDescriptor testDescriptor) {
-		if (testDescriptor instanceof ClassTestDescriptor) {
-			ClassTestDescriptor classTestDescriptor = (ClassTestDescriptor) testDescriptor;
+		if (testDescriptor instanceof ClassBasedTestDescriptor) {
+			ClassBasedTestDescriptor classBasedTestDescriptor = (ClassBasedTestDescriptor) testDescriptor;
 			try {
-				orderContainedMethods(classTestDescriptor, classTestDescriptor.getTestClass());
+				orderContainedMethods(classBasedTestDescriptor, classBasedTestDescriptor.getTestClass());
 			}
 			catch (Throwable t) {
 				BlacklistedExceptions.rethrowIfBlacklisted(t);
-				logger.error(t, () -> "Failed to order methods for " + classTestDescriptor.getTestClass());
+				logger.error(t, () -> "Failed to order methods for " + classBasedTestDescriptor.getTestClass());
 			}
 		}
 	}
@@ -61,13 +61,13 @@ class MethodOrderingVisitor implements TestDescriptor.Visitor {
 	/**
 	 * @since 5.4
 	 */
-	private void orderContainedMethods(ClassTestDescriptor classTestDescriptor, Class<?> testClass) {
+	private void orderContainedMethods(ClassBasedTestDescriptor classBasedTestDescriptor, Class<?> testClass) {
 		findAnnotation(testClass, TestMethodOrder.class)//
 				.map(TestMethodOrder::value)//
 				.map(ReflectionUtils::newInstance)//
 				.ifPresent(methodOrderer -> {
 
-					Set<? extends TestDescriptor> children = classTestDescriptor.getChildren();
+					Set<? extends TestDescriptor> children = classBasedTestDescriptor.getChildren();
 
 					List<TestDescriptor> nonMethodTestDescriptors = children.stream()//
 							.filter(testDescriptor -> !(testDescriptor instanceof MethodBasedTestDescriptor))//
@@ -105,15 +105,15 @@ class MethodOrderingVisitor implements TestDescriptor.Visitor {
 
 					// Currently no way to removeAll or addAll children at once.
 					Stream.concat(sortedMethodTestDescriptors.stream(), nonMethodTestDescriptors.stream())//
-							.forEach(classTestDescriptor::removeChild);
+							.forEach(classBasedTestDescriptor::removeChild);
 					Stream.concat(sortedMethodTestDescriptors.stream(), nonMethodTestDescriptors.stream())//
-							.forEach(classTestDescriptor::addChild);
+							.forEach(classBasedTestDescriptor::addChild);
 
 					// Note: MethodOrderer#getDefaultExecutionMode() is guaranteed
 					// to be invoked after MethodOrderer#orderMethods().
 					methodOrderer.getDefaultExecutionMode()//
 							.map(JupiterTestDescriptor::toExecutionMode)//
-							.ifPresent(classTestDescriptor::setDefaultChildExecutionMode);
+							.ifPresent(classBasedTestDescriptor::setDefaultChildExecutionMode);
 				});
 	}
 

@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
+import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
 import org.junit.jupiter.engine.descriptor.Filterable;
 import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
@@ -177,7 +177,7 @@ class MethodSelectorResolver implements SelectorResolver {
 			if (segmentType.equals(lastSegment.getType())) {
 				return context.addToParent(() -> selectUniqueId(uniqueId.removeLastSegment()), parent -> {
 					String methodSpecPart = lastSegment.getValue();
-					Class<?> testClass = ((ClassTestDescriptor) parent).getTestClass();
+					Class<?> testClass = ((ClassBasedTestDescriptor) parent).getTestClass();
 					// @formatter:off
 					return methodFinder.findMethod(methodSpecPart, testClass)
 							.filter(methodPredicate)

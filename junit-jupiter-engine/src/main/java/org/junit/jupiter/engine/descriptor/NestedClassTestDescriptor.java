@@ -38,18 +38,12 @@ import org.junit.platform.engine.UniqueId;
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")
-public class NestedClassTestDescriptor extends ClassTestDescriptor {
+public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 
 	public static final String SEGMENT_TYPE = "nested-class";
-	/**
-	 * Set of local class-level tags; does not contain tags from parent.
-	 */
-	private final Set<TestTag> tags;
 
 	public NestedClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, JupiterConfiguration configuration) {
 		super(uniqueId, testClass, createDisplayNameSupplierForNestedClass(testClass, configuration), configuration);
-
-		this.tags = getTags(testClass);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------

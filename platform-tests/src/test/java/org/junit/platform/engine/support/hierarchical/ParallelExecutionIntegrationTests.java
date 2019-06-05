@@ -18,11 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
+import static org.junit.jupiter.engine.Constants.DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE;
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
@@ -60,9 +62,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Event;
 
@@ -73,7 +77,7 @@ class ParallelExecutionIntegrationTests {
 
 	@Test
 	void successfulParallelTest(TestReporter reporter) {
-		List<Event> events = execute(3, SuccessfulParallelTestCase.class);
+		List<Event> events = executeConcurrently(3, SuccessfulParallelTestCase.class);
 
 		List<Instant> startedTimestamps = getTimestampsFor(events, event(test(), started()));
 		List<Instant> finishedTimestamps = getTimestampsFor(events, event(test(), finishedSuccessfully()));
@@ -89,13 +93,13 @@ class ParallelExecutionIntegrationTests {
 
 	@Test
 	void failingTestWithoutLock() {
-		List<Event> events = execute(3, FailingWithoutLockTestCase.class);
+		List<Event> events = executeConcurrently(3, FailingWithoutLockTestCase.class);
 		assertThat(events.stream().filter(event(test(), finishedWithFailure())::matches)).hasSize(2);
 	}
 
 	@Test
 	void successfulTestWithMethodLock() {
-		List<Event> events = execute(3, SuccessfulWithMethodLockTestCase.class);
+		List<Event> events = executeConcurrently(3, SuccessfulWithMethodLockTestCase.class);
 
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
 		assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
@@ -103,7 +107,7 @@ class ParallelExecutionIntegrationTests {
 
 	@Test
 	void successfulTestWithClassLock() {
-		List<Event> events = execute(3, SuccessfulWithClassLockTestCase.class);
+		List<Event> events = executeConcurrently(3, SuccessfulWithClassLockTestCase.class);
 
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
 		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
@@ -111,7 +115,7 @@ class ParallelExecutionIntegrationTests {
 
 	@Test
 	void testCaseWithFactory() {
-		List<Event> events = execute(3, TestCaseWithTestFactory.class);
+		List<Event> events = executeConcurrently(3, TestCaseWithTestFactory.class);
 
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
 		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
@@ -124,7 +128,7 @@ class ParallelExecutionIntegrationTests {
 		var smilingLoader = new URLClassLoader("(-:", new URL[0], ClassLoader.getSystemClassLoader());
 		currentThread.setContextClassLoader(smilingLoader);
 		try {
-			var events = execute(3, SuccessfulWithMethodLockTestCase.class);
+			var events = executeConcurrently(3, SuccessfulWithMethodLockTestCase.class);
 
 			assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
 			assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
@@ -137,7 +141,7 @@ class ParallelExecutionIntegrationTests {
 
 	@RepeatedTest(10)
 	void mixingClassAndMethodLevelLocks() {
-		List<Event> events = execute(4, TestCaseWithSortedLocks.class, TestCaseWithUnsortedLocks.class);
+		List<Event> events = executeConcurrently(4, TestCaseWithSortedLocks.class, TestCaseWithUnsortedLocks.class);
 
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(6);
 		assertThat(ThreadReporter.getThreadNames(events).count()).isLessThanOrEqualTo(2);
@@ -145,7 +149,7 @@ class ParallelExecutionIntegrationTests {
 
 	@RepeatedTest(10)
 	void locksOnNestedTests() {
-		List<Event> events = execute(3, TestCaseWithNestedLocks.class);
+		List<Event> events = executeConcurrently(3, TestCaseWithNestedLocks.class);
 
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(6);
 		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
@@ -153,7 +157,7 @@ class ParallelExecutionIntegrationTests {
 
 	@Test
 	void afterHooksAreCalledAfterConcurrentDynamicTestsAreFinished() {
-		List<Event> events = execute(3, ConcurrentDynamicTestCase.class);
+		List<Event> events = executeConcurrently(3, ConcurrentDynamicTestCase.class);
 
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(1);
 		Map<String, Instant> timestampedEvents = ConcurrentDynamicTestCase.events;
@@ -166,17 +170,58 @@ class ParallelExecutionIntegrationTests {
 	 */
 	@Test
 	void threadInterruptedByUserCode() {
-		List<Event> events = execute(3, InterruptedThreadTestCase.class);
+		List<Event> events = executeConcurrently(3, InterruptedThreadTestCase.class);
 
-		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).size().isEqualTo(4);
+		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(4);
 	}
 
 	@Test
 	void executesTestTemplatesWithResourceLocksInSameThread() {
-		List<Event> events = execute(2, ConcurrentTemplateTestCase.class);
+		List<Event> events = executeConcurrently(2, ConcurrentTemplateTestCase.class);
 
-		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).size().isEqualTo(10);
+		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(10);
 		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
+	}
+
+	@Test
+	void executesClassesInParallelIfEnabledViaConfigurationParameter() {
+		var configParams = Map.of(DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME, "concurrent");
+		var results = executeWithFixedParallelism(3, configParams, TestCaseA.class, TestCaseB.class, TestCaseC.class);
+
+		results.tests().assertStatistics(stats -> stats.succeeded(9));
+		assertThat(ThreadReporter.getThreadNames(results.all().list())).hasSize(3);
+		TestDescriptor testClassA = findFirstTestDescriptor(results, container(TestCaseA.class));
+		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassA))).hasSize(1);
+		TestDescriptor testClassB = findFirstTestDescriptor(results, container(TestCaseB.class));
+		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassB))).hasSize(1);
+		TestDescriptor testClassC = findFirstTestDescriptor(results, container(TestCaseC.class));
+		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassC))).hasSize(1);
+	}
+
+	@Test
+	void executesMethodsInParallelIfEnabledViaConfigurationParameter() {
+		var configParams = Map.of( //
+			DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent", //
+			DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME, "same_thread");
+		var results = executeWithFixedParallelism(3, configParams, TestCaseA.class, TestCaseB.class, TestCaseC.class);
+
+		results.tests().assertStatistics(stats -> stats.succeeded(9));
+		assertThat(ThreadReporter.getThreadNames(results.all().list())).hasSizeGreaterThanOrEqualTo(3);
+		TestDescriptor testClassA = findFirstTestDescriptor(results, container(TestCaseA.class));
+		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassA))).hasSize(3);
+		TestDescriptor testClassB = findFirstTestDescriptor(results, container(TestCaseB.class));
+		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassB))).hasSize(3);
+		TestDescriptor testClassC = findFirstTestDescriptor(results, container(TestCaseC.class));
+		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassC))).hasSize(3);
+	}
+
+	private List<Event> getEventsOfChildren(EngineExecutionResults results, TestDescriptor container) {
+		return results.tests().filter(
+			event -> event.getTestDescriptor().getParent().orElseThrow().equals(container)).collect(toList());
+	}
+
+	private TestDescriptor findFirstTestDescriptor(EngineExecutionResults results, Condition<Event> condition) {
+		return results.all().filter(condition::matches).map(Event::getTestDescriptor).findFirst().orElseThrow();
 	}
 
 	private List<Instant> getTimestampsFor(List<Event> events, Condition<Event> condition) {
@@ -188,17 +233,23 @@ class ParallelExecutionIntegrationTests {
 		// @formatter:on
 	}
 
-	private List<Event> execute(int parallelism, Class<?>... testClasses) {
+	private List<Event> executeConcurrently(int parallelism, Class<?>... testClasses) {
+		return executeWithFixedParallelism(parallelism, Map.of(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent"),
+			testClasses).all().list();
+	}
+
+	private EngineExecutionResults executeWithFixedParallelism(int parallelism, Map<String, String> configParams,
+			Class<?>... testClasses) {
 		// @formatter:off
 		LauncherDiscoveryRequest discoveryRequest = request()
 				.selectors(Arrays.stream(testClasses).map(DiscoverySelectors::selectClass).collect(toList()))
 				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, String.valueOf(true))
-				.configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent")
 				.configurationParameter(PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME, "fixed")
 				.configurationParameter(PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, String.valueOf(parallelism))
+				.configurationParameters(configParams)
 				.build();
 		// @formatter:on
-		return EngineTestKit.execute("junit-jupiter", discoveryRequest).all().list();
+		return EngineTestKit.execute("junit-jupiter", discoveryRequest);
 	}
 
 	// -------------------------------------------------------------------------
@@ -512,6 +563,33 @@ class ParallelExecutionIntegrationTests {
 		void repeatedTest() throws Exception {
 			Thread.sleep(100);
 		}
+	}
+
+	@ExtendWith(ThreadReporter.class)
+	static class SimpleTestCase {
+		@Test
+		void test1() throws Exception {
+			Thread.sleep(10);
+		}
+
+		@Test
+		void test2() throws Exception {
+			Thread.sleep(10);
+		}
+
+		@Test
+		void test3() throws Exception {
+			Thread.sleep(10);
+		}
+	}
+
+	static class TestCaseA extends SimpleTestCase {
+	}
+
+	static class TestCaseB extends SimpleTestCase {
+	}
+
+	static class TestCaseC extends SimpleTestCase {
 	}
 
 	private static void incrementBlockAndCheck(AtomicInteger sharedResource, CountDownLatch countDownLatch)

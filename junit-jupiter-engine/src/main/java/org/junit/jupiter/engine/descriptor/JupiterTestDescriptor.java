@@ -98,7 +98,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	// --- Node ----------------------------------------------------------------
 
 	@Override
-	public final ExecutionMode getExecutionMode() {
+	public ExecutionMode getExecutionMode() {
 		Optional<ExecutionMode> executionMode = getExplicitExecutionMode();
 		if (executionMode.isPresent()) {
 			return executionMode.get();

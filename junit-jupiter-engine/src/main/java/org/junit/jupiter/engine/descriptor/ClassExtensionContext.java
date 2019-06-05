@@ -24,7 +24,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 /**
  * @since 5.0
  */
-final class ClassExtensionContext extends AbstractExtensionContext<ClassTestDescriptor> {
+final class ClassExtensionContext extends AbstractExtensionContext<ClassBasedTestDescriptor> {
 
 	private final Lifecycle lifecycle;
 
@@ -35,17 +35,17 @@ final class ClassExtensionContext extends AbstractExtensionContext<ClassTestDesc
 	/**
 	 * Create a new {@code ClassExtensionContext} with {@link Lifecycle#PER_METHOD}.
 	 *
-	 * @see #ClassExtensionContext(ExtensionContext, EngineExecutionListener, ClassTestDescriptor, Lifecycle, JupiterConfiguration, ThrowableCollector)
+	 * @see #ClassExtensionContext(ExtensionContext, EngineExecutionListener, ClassBasedTestDescriptor, Lifecycle, JupiterConfiguration, ThrowableCollector)
 	 */
 	ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			ClassTestDescriptor testDescriptor, JupiterConfiguration configuration,
+			ClassBasedTestDescriptor testDescriptor, JupiterConfiguration configuration,
 			ThrowableCollector throwableCollector) {
 
 		this(parent, engineExecutionListener, testDescriptor, Lifecycle.PER_METHOD, configuration, throwableCollector);
 	}
 
 	ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			ClassTestDescriptor testDescriptor, Lifecycle lifecycle, JupiterConfiguration configuration,
+			ClassBasedTestDescriptor testDescriptor, Lifecycle lifecycle, JupiterConfiguration configuration,
 			ThrowableCollector throwableCollector) {
 
 		super(parent, engineExecutionListener, testDescriptor, configuration);

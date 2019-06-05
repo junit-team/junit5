@@ -86,6 +86,10 @@ on GitHub.
   details).
 * A custom test source for a `DynamicContainer` or `DynamicTest` may now be a method URI
   -- for example, `method:org.example.MyTestClass#myTestMethod()`.
+* New `junit.jupiter.execution.parallel.mode.classes.default` configuration parameter
+  allows to run top-level classes in parallel but their methods sequentially or vice versa
+  (see <<../user-guide/index.adoc#writing-tests-parallel-execution, User Guide>> for
+  details).
 
 
 [[release-notes-5.5.0-RC1-junit-vintage]]

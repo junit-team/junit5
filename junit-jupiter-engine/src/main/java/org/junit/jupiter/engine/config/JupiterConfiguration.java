@@ -30,6 +30,7 @@ public interface JupiterConfiguration {
 	String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = "junit.jupiter.conditions.deactivate";
 	String PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME = "junit.jupiter.execution.parallel.enabled";
 	String DEFAULT_EXECUTION_MODE_PROPERTY_NAME = "junit.jupiter.execution.parallel.mode.default";
+	String DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME = "junit.jupiter.execution.parallel.mode.classes.default";
 	String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.enabled";
 	String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = "junit.jupiter.testinstance.lifecycle.default";
 	String DEACTIVATE_ALL_CONDITIONS_PATTERN = ClassNamePatternParameterConverter.DEACTIVATE_ALL_PATTERN;
@@ -53,6 +54,8 @@ public interface JupiterConfiguration {
 	boolean isExtensionAutoDetectionEnabled();
 
 	ExecutionMode getDefaultExecutionMode();
+
+	ExecutionMode getDefaultClassesExecutionMode();
 
 	TestInstance.Lifecycle getDefaultTestInstanceLifecycle();
 
