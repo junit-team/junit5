@@ -592,7 +592,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 	@SafeVarargs
 	@SuppressWarnings("varargs")
-	private final Map.Entry<Class<?>, Integer>[] instanceCounts(Map.Entry<Class<?>, Integer>... entries) {
+	private Map.Entry<Class<?>, Integer>[] instanceCounts(Map.Entry<Class<?>, Integer>... entries) {
 		return entries;
 	}
 

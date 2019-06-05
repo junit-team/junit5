@@ -153,7 +153,7 @@ public class EngineFilter implements Filter<TestEngine> {
 
 		private final String verb;
 
-		private Type(String verb) {
+		Type(String verb) {
 			this.verb = verb;
 		}
 
