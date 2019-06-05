@@ -30,6 +30,7 @@ import org.apiguardian.api.API;
  * <h3>Supported Extension APIs</h3>
  * <ul>
  * <li>{@link ExecutionCondition}</li>
+ * <li>{@link InvocationInterceptor}</li>
  * <li>{@link BeforeAllCallback}</li>
  * <li>{@link AfterAllCallback}</li>
  * <li>{@link BeforeEachCallback}</li>
