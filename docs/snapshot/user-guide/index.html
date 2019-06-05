@@ -4855,6 +4855,36 @@ declarative <a href="#writing-tests-parallel-execution-synchronization">synchron
 mechanism. Please note that <a href="#running-tests-capturing-output">Capturing Standard Output/Error</a> needs to be enabled
 separately.</p>
 </div>
+<div class="paragraph">
+<p>In addition, you can configure the default execution mode for top-level classes by setting
+the <code>junit.jupiter.execution.parallel.mode.classes.default</code> configuration parameter. By
+combining both configuration parameters, you can configure classes to run in parallel but
+their methods in the same thread:</p>
+</div>
+<div class="listingblock">
+<div class="title">Configuration parameters to execute top-level classes in parallel but methods in same thread</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties">junit.jupiter.execution.parallel.enabled = true
+junit.jupiter.execution.parallel.mode.default = same_thread
+junit.jupiter.execution.parallel.mode.classes.default = concurrent</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The opposite combination will run all methods within one class in parallel, but top-level
+classes will run sequentially:</p>
+</div>
+<div class="listingblock">
+<div class="title">Configuration parameters to execute top-level classes in sequentially but their methods in parallel</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties">junit.jupiter.execution.parallel.enabled = true
+junit.jupiter.execution.parallel.mode.default = concurrent
+junit.jupiter.execution.parallel.mode.classes.default = same_thread</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Not configuring a value for <code>junit.jupiter.execution.parallel.mode.classes.default</code> is
+equivalent to using the same value as for <code>junit.jupiter.execution.parallel.mode.default</code>.</p>
+</div>
 <div class="sect3">
 <h4 id="writing-tests-parallel-execution-config"><a class="anchor" href="#writing-tests-parallel-execution-config"></a>2.19.1. Configuration</h4>
 <div class="paragraph">
@@ -9512,7 +9542,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-06-03 08:26:21 UTC
+Last updated 2019-06-05 18:07:30 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

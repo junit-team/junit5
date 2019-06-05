@@ -131,7 +131,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">org.junit.jupiter.engine.descriptor.JupiterTestDescriptor</a></li>
 <li>
 <ul class="inheritance">
-<li><a href="ClassTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">org.junit.jupiter.engine.descriptor.ClassTestDescriptor</a></li>
+<li><a href="ClassBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor</a></li>
 <li>
 <ul class="inheritance">
 <li>org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor</li>
@@ -155,7 +155,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#INTERNAL" title="class or interface in org.apiguardian.api" class="externalLink">INTERNAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.0")
 public class <span class="typeNameLabel">NestedClassTestDescriptor</span>
-extends <a href="ClassTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassTestDescriptor</a></pre>
+extends <a href="ClassBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassBasedTestDescriptor</a></pre>
 <div class="block"><a href="../../../platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> for tests based on nested (but not static) Java classes.
 
  <h3>Default Display Names</h3>
@@ -217,11 +217,11 @@ extends <a href="ClassTestDescriptor.html" title="class in org.junit.jupiter.eng
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a id="fields.inherited.from.class.org.junit.jupiter.engine.descriptor.ClassTestDescriptor">
+<li class="blockList"><a id="fields.inherited.from.class.org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor">
 <!--   -->
 </a>
-<h3>Fields inherited from class&nbsp;org.junit.jupiter.engine.descriptor.<a href="ClassTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassTestDescriptor</a></h3>
-<code><a href="ClassTestDescriptor.html#lifecycle">lifecycle</a></code></li>
+<h3>Fields inherited from class&nbsp;org.junit.jupiter.engine.descriptor.<a href="ClassBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassBasedTestDescriptor</a></h3>
+<code><a href="ClassBasedTestDescriptor.html#lifecycle">lifecycle</a>, <a href="ClassBasedTestDescriptor.html#tags">tags</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="fields.inherited.from.class.org.junit.jupiter.engine.descriptor.JupiterTestDescriptor">
@@ -293,11 +293,11 @@ extends <a href="ClassTestDescriptor.html" title="class in org.junit.jupiter.eng
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a id="methods.inherited.from.class.org.junit.jupiter.engine.descriptor.ClassTestDescriptor">
+<li class="blockList"><a id="methods.inherited.from.class.org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor">
 <!--   -->
 </a>
-<h3>Methods inherited from class&nbsp;org.junit.jupiter.engine.descriptor.<a href="ClassTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassTestDescriptor</a></h3>
-<code><a href="ClassTestDescriptor.html#after(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">after</a>, <a href="ClassTestDescriptor.html#before(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">before</a>, <a href="ClassTestDescriptor.html#getDefaultChildExecutionMode()">getDefaultChildExecutionMode</a>, <a href="ClassTestDescriptor.html#getExclusiveResources()">getExclusiveResources</a>, <a href="ClassTestDescriptor.html#getExplicitExecutionMode()">getExplicitExecutionMode</a>, <a href="ClassTestDescriptor.html#getLegacyReportingName()">getLegacyReportingName</a>, <a href="ClassTestDescriptor.html#getTestClass()">getTestClass</a>, <a href="ClassTestDescriptor.html#getType()">getType</a>, <a href="ClassTestDescriptor.html#instantiateTestClass(java.util.Optional,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a>, <a href="ClassTestDescriptor.html#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">prepare</a>, <a href="ClassTestDescriptor.html#setDefaultChildExecutionMode(org.junit.platform.engine.support.hierarchical.Node.ExecutionMode)">setDefaultChildExecutionMode</a></code></li>
+<h3>Methods inherited from class&nbsp;org.junit.jupiter.engine.descriptor.<a href="ClassBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassBasedTestDescriptor</a></h3>
+<code><a href="ClassBasedTestDescriptor.html#after(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">after</a>, <a href="ClassBasedTestDescriptor.html#before(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">before</a>, <a href="ClassBasedTestDescriptor.html#getDefaultChildExecutionMode()">getDefaultChildExecutionMode</a>, <a href="ClassBasedTestDescriptor.html#getExclusiveResources()">getExclusiveResources</a>, <a href="ClassBasedTestDescriptor.html#getExplicitExecutionMode()">getExplicitExecutionMode</a>, <a href="ClassBasedTestDescriptor.html#getLegacyReportingName()">getLegacyReportingName</a>, <a href="ClassBasedTestDescriptor.html#getTestClass()">getTestClass</a>, <a href="ClassBasedTestDescriptor.html#getType()">getType</a>, <a href="ClassBasedTestDescriptor.html#instantiateTestClass(java.util.Optional,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a>, <a href="ClassBasedTestDescriptor.html#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">prepare</a>, <a href="ClassBasedTestDescriptor.html#setDefaultChildExecutionMode(org.junit.platform.engine.support.hierarchical.Node.ExecutionMode)">setDefaultChildExecutionMode</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.org.junit.jupiter.engine.descriptor.JupiterTestDescriptor">
@@ -407,7 +407,7 @@ extends <a href="ClassTestDescriptor.html" title="class in org.junit.jupiter.eng
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../platform/engine/TestDescriptor.html#getTags()">getTags</a></code>&nbsp;in interface&nbsp;<code><a href="../../../platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a></code></dd>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="ClassTestDescriptor.html#getTags()">getTags</a></code>&nbsp;in class&nbsp;<code><a href="ClassTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassTestDescriptor</a></code></dd>
+<dd><code><a href="../../../platform/engine/support/descriptor/AbstractTestDescriptor.html#getTags()">getTags</a></code>&nbsp;in class&nbsp;<code><a href="../../../platform/engine/support/descriptor/AbstractTestDescriptor.html" title="class in org.junit.platform.engine.support.descriptor">AbstractTestDescriptor</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the set of tags associated with this descriptor; never <code>null</code>
  but potentially empty</dd>
@@ -426,8 +426,8 @@ extends <a href="ClassTestDescriptor.html" title="class in org.junit.jupiter.eng
                                              <a href="../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
                                              <a href="../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</pre>
 <dl>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="ClassTestDescriptor.html#instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></code>&nbsp;in class&nbsp;<code><a href="ClassTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassTestDescriptor</a></code></dd>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="ClassBasedTestDescriptor.html#instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></code>&nbsp;in class&nbsp;<code><a href="ClassBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassBasedTestDescriptor</a></code></dd>
 </dl>
 </li>
 </ul>

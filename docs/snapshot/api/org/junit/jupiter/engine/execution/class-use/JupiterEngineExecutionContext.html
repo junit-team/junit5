@@ -167,7 +167,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ClassTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/ClassTestDescriptor.html#before(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">before</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ClassBasedTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/ClassBasedTestDescriptor.html#before(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">before</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -184,7 +184,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ClassTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/ClassTestDescriptor.html#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">prepare</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ClassBasedTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/ClassBasedTestDescriptor.html#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">prepare</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -221,7 +221,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ClassTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/ClassTestDescriptor.html#after(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">after</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ClassBasedTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/ClassBasedTestDescriptor.html#after(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">after</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -231,7 +231,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ClassTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/ClassTestDescriptor.html#before(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">before</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ClassBasedTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/ClassBasedTestDescriptor.html#before(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">before</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -257,32 +257,39 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>protected abstract <a href="../../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ClassBasedTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/ClassBasedTestDescriptor.html#instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;parentExecutionContext,
+                    <a href="../../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
+                    <a href="../../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>protected <a href="../../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ClassTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/ClassTestDescriptor.html#instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;parentExecutionContext,
                     <a href="../../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
                     <a href="../../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected <a href="../../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">NestedClassTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/NestedClassTestDescriptor.html#instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;parentExecutionContext,
                     <a href="../../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
                     <a href="../../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestFactoryTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/TestFactoryTestDescriptor.html#invokeTestMethod(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">invokeTestMethod</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context,
                 <a href="../../../../platform/engine/support/hierarchical/Node.DynamicTestExecutor.html" title="interface in org.junit.platform.engine.support.hierarchical">Node.DynamicTestExecutor</a>&nbsp;dynamicTestExecutor)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestMethodTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/TestMethodTestDescriptor.html#invokeTestMethod(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">invokeTestMethod</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context,
                 <a href="../../../../platform/engine/support/hierarchical/Node.DynamicTestExecutor.html" title="interface in org.junit.platform.engine.support.hierarchical">Node.DynamicTestExecutor</a>&nbsp;dynamicTestExecutor)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestFactoryTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/TestFactoryTestDescriptor.html#nodeFinished(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">nodeFinished</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context,
             <a href="../../../../platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor,
@@ -293,7 +300,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  containers.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestMethodTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/TestMethodTestDescriptor.html#nodeFinished(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">nodeFinished</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context,
             <a href="../../../../platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor,
@@ -306,7 +313,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  <a href="../../../../platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>, in reverse registration order.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestFactoryTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/TestFactoryTestDescriptor.html#nodeSkipped(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.support.hierarchical.Node.SkipResult)">nodeSkipped</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context,
            <a href="../../../../platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor,
@@ -317,7 +324,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  containers.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestMethodTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/TestMethodTestDescriptor.html#nodeSkipped(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.support.hierarchical.Node.SkipResult)">nodeSkipped</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context,
            <a href="../../../../platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;descriptor,
@@ -327,44 +334,44 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  registered <a href="../../../api/extension/TestWatcher.html" title="interface in org.junit.jupiter.api.extension"><code>TestWatcher</code></a>, in registration order.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>protected <a href="../../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestMethodTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/TestMethodTestDescriptor.html#populateNewExtensionRegistry(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">populateNewExtensionRegistry</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected <a href="../../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestTemplateInvocationTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/TestTemplateInvocationTestDescriptor.html#populateNewExtensionRegistry(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">populateNewExtensionRegistry</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ClassTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/ClassTestDescriptor.html#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">prepare</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ClassBasedTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/ClassBasedTestDescriptor.html#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">prepare</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">JupiterEngineDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/JupiterEngineDescriptor.html#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">prepare</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>abstract <a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">JupiterTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/JupiterTestDescriptor.html#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">prepare</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">
 <div class="block">Must be overridden and return a new context so cleanUp() does not accidentally close the parent context.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestMethodTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/TestMethodTestDescriptor.html#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">prepare</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestTemplateTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/TestTemplateTestDescriptor.html#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">prepare</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../platform/engine/support/hierarchical/Node.SkipResult.html" title="class in org.junit.platform.engine.support.hierarchical">Node.SkipResult</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">JupiterTestDescriptor.</span><code><span class="memberNameLink"><a href="../../descriptor/JupiterTestDescriptor.html#shouldBeSkipped(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">shouldBeSkipped</a></span>&#8203;(<a href="../JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>

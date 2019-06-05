@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10};
+var data = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -131,7 +131,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">org.junit.jupiter.engine.descriptor.JupiterTestDescriptor</a></li>
 <li>
 <ul class="inheritance">
+<li><a href="ClassBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor</a></li>
+<li>
+<ul class="inheritance">
 <li>org.junit.jupiter.engine.descriptor.ClassTestDescriptor</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -146,15 +151,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt>All Implemented Interfaces:</dt>
 <dd><code><a href="../../../platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical">Node</a>&lt;<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&gt;</code>, <code><a href="../../../platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a></code></dd>
 </dl>
-<dl>
-<dt>Direct Known Subclasses:</dt>
-<dd><code><a href="NestedClassTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">NestedClassTestDescriptor</a></code></dd>
-</dl>
 <hr>
 <pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#INTERNAL" title="class or interface in org.apiguardian.api" class="externalLink">INTERNAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.0")
 public class <span class="typeNameLabel">ClassTestDescriptor</span>
-extends <a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">JupiterTestDescriptor</a></pre>
+extends <a href="ClassBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassBasedTestDescriptor</a></pre>
 <div class="block"><a href="../../../platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> for tests based on Java classes.
 
  <h3>Default Display Names</h3>
@@ -211,16 +212,18 @@ extends <a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.e
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>protected <a href="../../api/TestInstance.Lifecycle.html" title="enum in org.junit.jupiter.api">TestInstance.Lifecycle</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lifecycle">lifecycle</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#SEGMENT_TYPE">SEGMENT_TYPE</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a id="fields.inherited.from.class.org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor">
+<!--   -->
+</a>
+<h3>Fields inherited from class&nbsp;org.junit.jupiter.engine.descriptor.<a href="ClassBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassBasedTestDescriptor</a></h3>
+<code><a href="ClassBasedTestDescriptor.html#lifecycle">lifecycle</a>, <a href="ClassBasedTestDescriptor.html#tags">tags</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a id="fields.inherited.from.class.org.junit.jupiter.engine.descriptor.JupiterTestDescriptor">
 <!--   -->
@@ -276,98 +279,41 @@ extends <a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.e
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#after(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">after</a></span>&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
+<td class="colFirst"><code><a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getExecutionMode()">getExecutionMode</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Execute the <em>after</em> behavior of this node.</div>
+<div class="block">Get the preferred of <a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">execution mode</a> for
+ parallel execution of this node.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#before(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">before</a></span>&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
-<td class="colLast">
-<div class="block">Execute the <em>before</em> behavior of this node.</div>
-</td>
-</tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDefaultChildExecutionMode()">getDefaultChildExecutionMode</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">ExclusiveResource</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getExclusiveResources()">getExclusiveResources</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Get the set of <a href="../../../platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">exclusive resources</a>
- required to execute this node.</div>
-</td>
-</tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getExplicitExecutionMode()">getExplicitExecutionMode</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr id="i5" class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLegacyReportingName()">getLegacyReportingName</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Get the name of this descriptor in a format that is suitable for legacy
- reporting infrastructure &mdash; for example, for reporting systems built
- on the Ant-based XML reporting format for JUnit 4.</div>
-</td>
-</tr>
-<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../platform/engine/TestTag.html" title="class in org.junit.platform.engine">TestTag</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTags()">getTags</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the set of <a href="../../../platform/engine/TestTag.html" title="class in org.junit.platform.engine">tags</a> associated with this descriptor.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestClass()">getTestClass</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr id="i8" class="altColor">
-<td class="colFirst"><code><a href="../../../platform/engine/TestDescriptor.Type.html" title="enum in org.junit.platform.engine">TestDescriptor.Type</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getType()">getType</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Determine the <a href="../../../platform/engine/TestDescriptor.Type.html" title="enum in org.junit.platform.engine"><code>TestDescriptor.Type</code></a> of this descriptor.</div>
-</td>
-</tr>
-<tr id="i9" class="rowColor">
-<td class="colFirst"><code>protected <a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#instantiateTestClass(java.util.Optional,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&gt;&nbsp;outerInstances,
-                    <a href="../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
-                    <a href="../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr id="i10" class="altColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>protected <a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;parentExecutionContext,
                     <a href="../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
                     <a href="../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
-<td class="colFirst"><code><a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">prepare</a></span>&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
-<td class="colLast">
-<div class="block">Must be overridden and return a new context so cleanUp() does not accidentally close the parent context.</div>
-</td>
-</tr>
-<tr id="i12" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setDefaultChildExecutionMode(org.junit.platform.engine.support.hierarchical.Node.ExecutionMode)">setDefaultChildExecutionMode</a></span>&#8203;(<a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a>&nbsp;defaultChildExecutionMode)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a id="methods.inherited.from.class.org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;org.junit.jupiter.engine.descriptor.<a href="ClassBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassBasedTestDescriptor</a></h3>
+<code><a href="ClassBasedTestDescriptor.html#after(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">after</a>, <a href="ClassBasedTestDescriptor.html#before(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">before</a>, <a href="ClassBasedTestDescriptor.html#getDefaultChildExecutionMode()">getDefaultChildExecutionMode</a>, <a href="ClassBasedTestDescriptor.html#getExclusiveResources()">getExclusiveResources</a>, <a href="ClassBasedTestDescriptor.html#getExplicitExecutionMode()">getExplicitExecutionMode</a>, <a href="ClassBasedTestDescriptor.html#getLegacyReportingName()">getLegacyReportingName</a>, <a href="ClassBasedTestDescriptor.html#getTestClass()">getTestClass</a>, <a href="ClassBasedTestDescriptor.html#getType()">getType</a>, <a href="ClassBasedTestDescriptor.html#instantiateTestClass(java.util.Optional,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a>, <a href="ClassBasedTestDescriptor.html#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">prepare</a>, <a href="ClassBasedTestDescriptor.html#setDefaultChildExecutionMode(org.junit.platform.engine.support.hierarchical.Node.ExecutionMode)">setDefaultChildExecutionMode</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.org.junit.jupiter.engine.descriptor.JupiterTestDescriptor">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;org.junit.jupiter.engine.descriptor.<a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">JupiterTestDescriptor</a></h3>
-<code><a href="JupiterTestDescriptor.html#cleanUp(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">cleanUp</a>, <a href="JupiterTestDescriptor.html#getExclusiveResourcesFromAnnotation(java.lang.reflect.AnnotatedElement)">getExclusiveResourcesFromAnnotation</a>, <a href="JupiterTestDescriptor.html#getExecutionMode()">getExecutionMode</a>, <a href="JupiterTestDescriptor.html#getExecutionModeFromAnnotation(java.lang.reflect.AnnotatedElement)">getExecutionModeFromAnnotation</a>, <a href="JupiterTestDescriptor.html#getTags(java.lang.reflect.AnnotatedElement)">getTags</a>, <a href="JupiterTestDescriptor.html#shouldBeSkipped(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">shouldBeSkipped</a>, <a href="JupiterTestDescriptor.html#toExecutionMode(org.junit.jupiter.api.parallel.ExecutionMode)">toExecutionMode</a></code></li>
+<code><a href="JupiterTestDescriptor.html#cleanUp(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">cleanUp</a>, <a href="JupiterTestDescriptor.html#getExclusiveResourcesFromAnnotation(java.lang.reflect.AnnotatedElement)">getExclusiveResourcesFromAnnotation</a>, <a href="JupiterTestDescriptor.html#getExecutionModeFromAnnotation(java.lang.reflect.AnnotatedElement)">getExecutionModeFromAnnotation</a>, <a href="JupiterTestDescriptor.html#getTags(java.lang.reflect.AnnotatedElement)">getTags</a>, <a href="JupiterTestDescriptor.html#shouldBeSkipped(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">shouldBeSkipped</a>, <a href="JupiterTestDescriptor.html#toExecutionMode(org.junit.jupiter.api.parallel.ExecutionMode)">toExecutionMode</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.org.junit.platform.engine.support.descriptor.AbstractTestDescriptor">
@@ -416,7 +362,7 @@ extends <a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.e
 <a id="SEGMENT_TYPE">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>SEGMENT_TYPE</h4>
 <pre>public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> SEGMENT_TYPE</pre>
@@ -424,15 +370,6 @@ extends <a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.e
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../constant-values.html#org.junit.jupiter.engine.descriptor.ClassTestDescriptor.SEGMENT_TYPE">Constant Field Values</a></dd>
 </dl>
-</li>
-</ul>
-<a id="lifecycle">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>lifecycle</h4>
-<pre>protected final&nbsp;<a href="../../api/TestInstance.Lifecycle.html" title="enum in org.junit.jupiter.api">TestInstance.Lifecycle</a> lifecycle</pre>
 </li>
 </ul>
 </li>
@@ -488,194 +425,43 @@ extends <a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.e
 </dl>
 </li>
 </ul>
-<a id="getTestClass()">
+<a id="getExecutionMode()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getTestClass</h4>
-<pre class="methodSignature">public final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;getTestClass()</pre>
-</li>
-</ul>
-<a id="getType()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getType</h4>
-<pre class="methodSignature">public&nbsp;<a href="../../../platform/engine/TestDescriptor.Type.html" title="enum in org.junit.platform.engine">TestDescriptor.Type</a>&nbsp;getType()</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../platform/engine/TestDescriptor.html#getType()">TestDescriptor</a></code></span></div>
-<div class="block">Determine the <a href="../../../platform/engine/TestDescriptor.Type.html" title="enum in org.junit.platform.engine"><code>TestDescriptor.Type</code></a> of this descriptor.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the descriptor type; never <code>null</code>.</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../platform/engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a>, 
-<a href="../../../platform/engine/TestDescriptor.html#isTest()"><code>TestDescriptor.isTest()</code></a></dd>
-</dl>
-</li>
-</ul>
-<a id="getLegacyReportingName()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getLegacyReportingName</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getLegacyReportingName()</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../platform/engine/TestDescriptor.html#getLegacyReportingName()">TestDescriptor</a></code></span></div>
-<div class="block">Get the name of this descriptor in a format that is suitable for legacy
- reporting infrastructure &mdash; for example, for reporting systems built
- on the Ant-based XML reporting format for JUnit 4.
+<h4>getExecutionMode</h4>
+<pre class="methodSignature">public&nbsp;<a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a>&nbsp;getExecutionMode()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../platform/engine/support/hierarchical/Node.html#getExecutionMode()">Node</a></code></span></div>
+<div class="block">Get the preferred of <a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">execution mode</a> for
+ parallel execution of this node.
 
- <p>The default implementation simply delegates to <a href="../../../platform/engine/TestDescriptor.html#getDisplayName()"><code>TestDescriptor.getDisplayName()</code></a>.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the legacy reporting name; never <code>null</code> or blank</dd>
-</dl>
-</li>
-</ul>
-<a id="getExplicitExecutionMode()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getExplicitExecutionMode</h4>
-<pre class="methodSignature">protected&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a>&gt;&nbsp;getExplicitExecutionMode()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="JupiterTestDescriptor.html#getExplicitExecutionMode()">getExplicitExecutionMode</a></code>&nbsp;in class&nbsp;<code><a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">JupiterTestDescriptor</a></code></dd>
-</dl>
-</li>
-</ul>
-<a id="getDefaultChildExecutionMode()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getDefaultChildExecutionMode</h4>
-<pre class="methodSignature">protected&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a>&gt;&nbsp;getDefaultChildExecutionMode()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="JupiterTestDescriptor.html#getDefaultChildExecutionMode()">getDefaultChildExecutionMode</a></code>&nbsp;in class&nbsp;<code><a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">JupiterTestDescriptor</a></code></dd>
-</dl>
-</li>
-</ul>
-<a id="setDefaultChildExecutionMode(org.junit.platform.engine.support.hierarchical.Node.ExecutionMode)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setDefaultChildExecutionMode</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;setDefaultChildExecutionMode&#8203;(<a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical">Node.ExecutionMode</a>&nbsp;defaultChildExecutionMode)</pre>
-</li>
-</ul>
-<a id="getExclusiveResources()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getExclusiveResources</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">ExclusiveResource</a>&gt;&nbsp;getExclusiveResources()</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../platform/engine/support/hierarchical/Node.html#getExclusiveResources()">Node</a></code></span></div>
-<div class="block">Get the set of <a href="../../../platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical">exclusive resources</a>
- required to execute this node.
-
- <p>The default implementation returns an empty set.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the set of exclusive resources required by this node; never
- <code>null</code> but potentially empty</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../platform/engine/support/hierarchical/ExclusiveResource.html" title="class in org.junit.platform.engine.support.hierarchical"><code>ExclusiveResource</code></a></dd>
-</dl>
-</li>
-</ul>
-<a id="prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>prepare</h4>
-<pre class="methodSignature">public&nbsp;<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;prepare&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="JupiterTestDescriptor.html#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">JupiterTestDescriptor</a></code></span></div>
-<div class="block">Must be overridden and return a new context so cleanUp() does not accidentally close the parent context.</div>
+ <p>The default implementation returns <a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html#CONCURRENT"><code>Node.ExecutionMode.CONCURRENT</code></a>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../platform/engine/support/hierarchical/Node.html#prepare(C)">prepare</a></code>&nbsp;in interface&nbsp;<code><a href="../../../platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical">Node</a>&lt;<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&gt;</code></dd>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="JupiterTestDescriptor.html#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">prepare</a></code>&nbsp;in class&nbsp;<code><a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">JupiterTestDescriptor</a></code></dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../platform/engine/support/hierarchical/Node.html#cleanUp(C)"><code>Node.cleanUp(EngineExecutionContext)</code></a></dd>
-</dl>
-</li>
-</ul>
-<a id="before(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>before</h4>
-<pre class="methodSignature">public&nbsp;<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;before&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../platform/engine/support/hierarchical/Node.html#before(C)">Node</a></code></span></div>
-<div class="block">Execute the <em>before</em> behavior of this node.
-
- <p>This method will be called once <em>before</em> <a href="../../../platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execution</a> of this node.
-
- <p>The default implementation returns the supplied <code>context</code> unmodified.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>context</code> - the context to execute in</dd>
+<dd><code><a href="../../../platform/engine/support/hierarchical/Node.html#getExecutionMode()">getExecutionMode</a></code>&nbsp;in interface&nbsp;<code><a href="../../../platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical">Node</a>&lt;<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&gt;</code></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="JupiterTestDescriptor.html#getExecutionMode()">getExecutionMode</a></code>&nbsp;in class&nbsp;<code><a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">JupiterTestDescriptor</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new context to be used for children of this node; never
- <code>null</code></dd>
+<dd>the preferred execution mode of this node; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)"><code>Node.execute(EngineExecutionContext, DynamicTestExecutor)</code></a>, 
-<a href="../../../platform/engine/support/hierarchical/Node.html#after(C)"><code>Node.after(EngineExecutionContext)</code></a></dd>
-</dl>
-</li>
-</ul>
-<a id="after(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>after</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;after&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../platform/engine/support/hierarchical/Node.html#after(C)">Node</a></code></span></div>
-<div class="block">Execute the <em>after</em> behavior of this node.
-
- <p>This method will be called once <em>after</em> <a href="../../../platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">execution</a> of this node.
-
- <p>The default implementation does nothing.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>context</code> - the context to execute in</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../platform/engine/support/hierarchical/Node.html#before(C)"><code>Node.before(C)</code></a>, 
-<a href="../../../platform/engine/support/hierarchical/Node.html#execute(C,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)"><code>Node.execute(C, org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)</code></a></dd>
+<dd><a href="../../../platform/engine/support/hierarchical/Node.ExecutionMode.html" title="enum in org.junit.platform.engine.support.hierarchical"><code>Node.ExecutionMode</code></a></dd>
 </dl>
 </li>
 </ul>
 <a id="instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>instantiateTestClass</h4>
 <pre class="methodSignature">protected&nbsp;<a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&nbsp;instantiateTestClass&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;parentExecutionContext,
                                              <a href="../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
                                              <a href="../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</pre>
-</li>
-</ul>
-<a id="instantiateTestClass(java.util.Optional,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>instantiateTestClass</h4>
-<pre class="methodSignature">protected&nbsp;<a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&nbsp;instantiateTestClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&gt;&nbsp;outerInstances,
-                                             <a href="../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
-                                             <a href="../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="ClassBasedTestDescriptor.html#instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></code>&nbsp;in class&nbsp;<code><a href="ClassBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassBasedTestDescriptor</a></code></dd>
+</dl>
 </li>
 </ul>
 </li>
