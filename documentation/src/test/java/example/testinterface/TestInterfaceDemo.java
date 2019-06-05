@@ -10,11 +10,9 @@
 
 package example.testinterface;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
 
-import java.util.logging.Logger;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 // @formatter:off
 // tag::user_guide[]
