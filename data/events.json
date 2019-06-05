@@ -631,6 +631,16 @@
       "sormuras"
     ]
   },
+    {
+    "title": "JUnit 5 - From @Test up to your own TestEngine [TUT2591]",
+    "event": "Oracle Code One 2019",
+    "date": "2019-09-16",
+    "location": "San Francisco, US",
+    "link": "https://events.rainfocus.com/widget/oracle/oow19/catalogcodeone19?search=%22Sven%20Ruppert%22",
+    "speakers": [
+      "svenruppert"
+    ]
+  },
   {
     "title": "JUnit 5 - Testing In The Modular World",
     "event": "Accento 2019",
