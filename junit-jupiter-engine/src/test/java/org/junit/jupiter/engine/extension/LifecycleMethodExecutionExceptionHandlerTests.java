@@ -45,12 +45,12 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
- * Tests that verify the support for lifecycle methods execution exception handling
+ * Tests that verify the support for lifecycle method execution exception handling
  * via {@link LifecycleMethodExecutionExceptionHandler}
  *
  * @since 5.5
  */
-class LifecycleMethodExecutionExceptionHandlersTests extends AbstractJupiterTestEngineTests {
+class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests {
 
 	private static List<String> handlerCalls = new ArrayList<>();
 	private static boolean throwExceptionBeforeAll;
@@ -350,6 +350,7 @@ class LifecycleMethodExecutionExceptionHandlersTests extends AbstractJupiterTest
 	@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 	static class MultipleHandlersTestCase extends BaseTestCase {
 
+		@Override
 		@ExtendWith(ConvertExceptionHandler.class)
 		@Order(1)
 		@Test

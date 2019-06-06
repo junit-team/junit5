@@ -31,7 +31,6 @@ import org.apiguardian.api.API;
  * constructor requirements.
  *
  * @see LifecycleMethodExecutionExceptionHandler
- *
  * @since 5.0
  */
 @FunctionalInterface

@@ -24,7 +24,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
@@ -37,6 +36,7 @@ import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -50,7 +50,6 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
 import org.junit.platform.engine.support.hierarchical.Node;
-import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
  * @since 5.0
@@ -63,7 +62,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
-	protected final JupiterConfiguration configuration;
+	final JupiterConfiguration configuration;
 
 	JupiterTestDescriptor(UniqueId uniqueId, AnnotatedElement element, Supplier<String> displayNameSupplier,
 			TestSource source, JupiterConfiguration configuration) {
@@ -78,7 +77,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	// --- TestDescriptor ------------------------------------------------------
 
-	protected static Set<TestTag> getTags(AnnotatedElement element) {
+	static Set<TestTag> getTags(AnnotatedElement element) {
 		// @formatter:off
 		return findRepeatableAnnotations(element, Tag.class).stream()
 				.map(Tag::value)
@@ -102,11 +101,18 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	}
 
 	/**
-	 * Invokes handlers on the {@code Throwable} one by one until none are left or the throwable to handle
-	 * has been swallowed.
+	 * Invoke exception handlers for the supplied {@code Throwable} one by one until
+	 * none are left or the throwable to handle has been swallowed.
 	 */
-	void invokeExecutionExceptionHandlers(Throwable throwable, List<? extends Extension> handlers,
-			BiFunction<Throwable, Extension, ThrowableCollector.Executable> generator) {
+	<T extends Extension> void invokeExecutionExceptionHandlers(Class<T> handlerType, ExtensionRegistry registry,
+			Throwable throwable, ExceptionHandlerInvoker<T> handlerInvoker) {
+
+		invokeExecutionExceptionHandlers(registry.getReversedExtensions(handlerType), throwable, handlerInvoker);
+	}
+
+	private <T extends Extension> void invokeExecutionExceptionHandlers(List<T> handlers, Throwable throwable,
+			ExceptionHandlerInvoker<T> handlerInvoker) {
+
 		// No handlers left?
 		if (handlers.isEmpty()) {
 			ExceptionUtils.throwAsUncheckedException(throwable);
@@ -114,12 +120,11 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 		try {
 			// Invoke next available handler
-			ThrowableCollector.Executable executable = generator.apply(throwable, handlers.remove(0));
-			executable.execute();
+			handlerInvoker.invoke(handlers.remove(0), throwable);
 		}
 		catch (Throwable handledThrowable) {
 			BlacklistedExceptions.rethrowIfBlacklisted(handledThrowable);
-			invokeExecutionExceptionHandlers(handledThrowable, handlers, generator);
+			invokeExecutionExceptionHandlers(handlers, handledThrowable, handlerInvoker);
 		}
 	}
 
@@ -147,15 +152,15 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		return toExecutionMode(configuration.getDefaultExecutionMode());
 	}
 
-	protected Optional<ExecutionMode> getExplicitExecutionMode() {
+	Optional<ExecutionMode> getExplicitExecutionMode() {
 		return Optional.empty();
 	}
 
-	protected Optional<ExecutionMode> getDefaultChildExecutionMode() {
+	Optional<ExecutionMode> getDefaultChildExecutionMode() {
 		return Optional.empty();
 	}
 
-	protected Optional<ExecutionMode> getExecutionModeFromAnnotation(AnnotatedElement element) {
+	Optional<ExecutionMode> getExecutionModeFromAnnotation(AnnotatedElement element) {
 		// @formatter:off
 		return findAnnotation(element, Execution.class)
 				.map(Execution::value)
@@ -173,7 +178,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		throw new JUnitException("Unknown ExecutionMode: " + mode);
 	}
 
-	protected Set<ExclusiveResource> getExclusiveResourcesFromAnnotation(AnnotatedElement element) {
+	Set<ExclusiveResource> getExclusiveResourcesFromAnnotation(AnnotatedElement element) {
 		// @formatter:off
 		return findRepeatableAnnotations(element, ResourceLock.class).stream()
 				.map(resource -> new ExclusiveResource(resource.value(), toLockMode(resource.mode())))
@@ -215,6 +220,13 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	@Override
 	public void cleanUp(JupiterEngineExecutionContext context) throws Exception {
 		context.close();
+	}
+
+	@FunctionalInterface
+	interface ExceptionHandlerInvoker<T extends Extension> {
+
+		void invoke(T t, Throwable throwable) throws Throwable;
+
 	}
 
 }
