@@ -1,9 +1,16 @@
 [[release-notes-5.5.0-RC1]]
 == 5.5.0-RC1
 
-*Date of Release:* ❓
+*Date of Release:* June 6, 2019
 
-*Scope:* ❓
+*Scope:*
+
+* Declarative `@Timeout` support
+* New `InvocationInterceptor` extension API
+* New `LifecycleMethodExecutionExceptionHandler` extension API
+* Additional Kotlin friendly assertions
+* Explicit Java module descriptors
+* Deprecation of script-based conditions (`@EnabledIf`/`@DisabledIf`)
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/37?closed=1+[5.5 RC1] milestone page in the JUnit repository
