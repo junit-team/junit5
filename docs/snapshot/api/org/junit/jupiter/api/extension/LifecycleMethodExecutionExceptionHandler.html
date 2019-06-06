@@ -129,26 +129,44 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code><a href="Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a></code></dd>
 </dl>
 <hr>
-<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#STABLE" title="class or interface in org.apiguardian.api" class="externalLink">STABLE</a>,
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.0.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.5")
 public interface <span class="typeNameLabel">LifecycleMethodExecutionExceptionHandler</span>
 extends <a href="Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a></pre>
 <div class="block"><code>LifecycleMethodExecutionExceptionHandler</code> defines the API for
  <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that wish to handle exceptions thrown during
- execution of lifecycle methods (annotated with <code>@BeforeAll</code>,
- <code>@BeforeEach</code>, <code>@AfterEach</code> and <code>@AfterAll</code>.
+ the execution of <code>@BeforeAll</code>, <code>@BeforeEach</code>, <code>@AfterEach</code>,
+ and <code>@AfterAll</code> lifecycle methods.
 
  <p>Common use cases include swallowing an exception if it's anticipated,
- logging or rolling back a transaction in certain error scenarios.
+ logging errors, or rolling back a transaction in certain error scenarios.
 
- <p>This extension needs to be declared on a class level if class level methods
- (<code>@BeforeAll</code>, <code>@AfterAll</code>) are to be covered. If declared on Test
- level, only handlers for <code>@BeforeEach</code> and <code>@AfterEach</code> will execute
+ <p>Implementations of this extension API must be registered at the class level
+ if exceptions thrown from <code>@BeforeAll</code> or <code>@AfterAll</code> methods are
+ to be handled. When registered at the test level, only exceptions thrown from
+ <code>@BeforeEach</code> or <code>@AfterEach</code> methods will be handled.
 
  <h3>Constructor Requirements</h3>
 
  <p>Consult the documentation in <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extension</code></a> for details on constructor
- requirements.</div>
+ requirements.
+
+ <h3 id="implementation-guidelines">Implementation Guidelines</h3>
+
+ <p>An implementation of an exception handler method defined in this API must
+ perform one of the following.
+
+ <ol>
+ <li>Rethrow the supplied <code>Throwable</code> <em>as is</em>, which is the default implementation.</li>
+ <li>Swallow the supplied <code>Throwable</code>, thereby preventing propagation.</li>
+ <li>Throw a new exception, potentially wrapping the supplied <code>Throwable</code>.</li>
+ </ol>
+
+ <p>If the supplied <code>Throwable</code> is swallowed by a handler method, subsequent
+ handler methods for the same lifecycle will not be invoked; otherwise, the
+ corresponding handler method of the next registered
+ <code>LifecycleMethodExecutionExceptionHandler</code> (if there is one) will be
+ invoked with any <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a> thrown by the previous handler.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.5</dd>
@@ -180,7 +198,8 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#handleAfterAllMethodExecutionException(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)">handleAfterAllMethodExecutionException</a></span>&#8203;(<a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
                                       <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&nbsp;throwable)</code></th>
 <td class="colLast">
-<div class="block">Handle the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>throwable</code></a>.</div>
+<div class="block">Handle the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a> that was thrown during execution of
+ a <code>@AfterAll</code> lifecycle method.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -188,7 +207,8 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#handleAfterEachMethodExecutionException(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)">handleAfterEachMethodExecutionException</a></span>&#8203;(<a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
                                        <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&nbsp;throwable)</code></th>
 <td class="colLast">
-<div class="block">Handle the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>throwable</code></a>.</div>
+<div class="block">Handle the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a> that was thrown during execution of
+ a <code>@AfterEach</code> lifecycle method.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
@@ -196,7 +216,8 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#handleBeforeAllMethodExecutionException(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)">handleBeforeAllMethodExecutionException</a></span>&#8203;(<a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
                                        <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&nbsp;throwable)</code></th>
 <td class="colLast">
-<div class="block">Handle the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>throwable</code></a>.</div>
+<div class="block">Handle the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a> that was thrown during execution of
+ a <code>@BeforeAll</code> lifecycle method.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -204,7 +225,8 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#handleBeforeEachMethodExecutionException(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)">handleBeforeEachMethodExecutionException</a></span>&#8203;(<a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
                                         <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&nbsp;throwable)</code></th>
 <td class="colLast">
-<div class="block">Handle the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>throwable</code></a>.</div>
+<div class="block">Handle the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a> that was thrown during execution of
+ a <code>@BeforeEach</code> lifecycle method.</div>
 </td>
 </tr>
 </table>
@@ -233,20 +255,11 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <pre class="methodSignature">default&nbsp;void&nbsp;handleBeforeAllMethodExecutionException&#8203;(<a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
                                                      <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&nbsp;throwable)
                                               throws <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a></pre>
-<div class="block">Handle the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>throwable</code></a>.
+<div class="block">Handle the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a> that was thrown during execution of
+ a <code>@BeforeAll</code> lifecycle method.
 
- <p>Implementors must perform one of the following.
- <ol>
- <li>Rethrow the supplied <code>throwable</code> <em>as is</em> which is the default implementation</li>
- <li>Swallow the supplied <code>throwable</code>, thereby preventing propagation.</li>
- <li>Throw a new exception, potentially wrapping the supplied <code>throwable</code>.</li>
- </ol>
-
- <p>If the supplied <code>throwable</code> is swallowed, subsequent
- <code>LifecycleMethodExecutionExceptionHandler</code> will not be invoked;
- otherwise, the next registered <code>LifecycleMethodExecutionExceptionHandler</code>
- (if there is one) will be invoked with any <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a> thrown by
- this handler.</div>
+ <p>Please refer to the class-level Javadoc for
+ <a href="#implementation-guidelines">Implementation Guidelines</a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>context</code> - the current extension context; never <code>null</code></dd>
@@ -265,20 +278,11 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <pre class="methodSignature">default&nbsp;void&nbsp;handleBeforeEachMethodExecutionException&#8203;(<a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
                                                       <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&nbsp;throwable)
                                                throws <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a></pre>
-<div class="block">Handle the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>throwable</code></a>.
+<div class="block">Handle the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a> that was thrown during execution of
+ a <code>@BeforeEach</code> lifecycle method.
 
- <p>Implementors must perform one of the following.
- <ol>
- <li>Rethrow the supplied <code>throwable</code> <em>as is</em> which is the default implementation</li>
- <li>Swallow the supplied <code>throwable</code>, thereby preventing propagation.</li>
- <li>Throw a new exception, potentially wrapping the supplied <code>throwable</code>.</li>
- </ol>
-
- <p>If the supplied <code>throwable</code> is swallowed, subsequent
- <code>LifecycleMethodExecutionExceptionHandler</code>
- will not be invoked; otherwise, the next registered
- <code>LifecycleMethodExecutionExceptionHandler</code> (if there is one)
- will be invoked with any <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a> thrown by this handler.</div>
+ <p>Please refer to the class-level Javadoc for
+ <a href="#implementation-guidelines">Implementation Guidelines</a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>context</code> - the current extension context; never <code>null</code></dd>
@@ -297,20 +301,11 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <pre class="methodSignature">default&nbsp;void&nbsp;handleAfterEachMethodExecutionException&#8203;(<a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
                                                      <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&nbsp;throwable)
                                               throws <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a></pre>
-<div class="block">Handle the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>throwable</code></a>.
+<div class="block">Handle the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a> that was thrown during execution of
+ a <code>@AfterEach</code> lifecycle method.
 
- <p>Implementors must perform one of the following.
- <ol>
- <li>Rethrow the supplied <code>throwable</code> <em>as is</em> which is the default implementation</li>
- <li>Swallow the supplied <code>throwable</code>, thereby preventing propagation.</li>
- <li>Throw a new exception, potentially wrapping the supplied <code>throwable</code>.</li>
- </ol>
-
- <p>If the supplied <code>throwable</code> is swallowed, subsequent
- <code>LifecycleMethodExecutionExceptionHandler</code> will not be invoked;
- otherwise, the next registered <code>LifecycleMethodExecutionExceptionHandler</code>
- (if there is one) will be invoked with any <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a> thrown by
- this handler.</div>
+ <p>Please refer to the class-level Javadoc for
+ <a href="#implementation-guidelines">Implementation Guidelines</a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>context</code> - the current extension context; never <code>null</code></dd>
@@ -329,19 +324,11 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <pre class="methodSignature">default&nbsp;void&nbsp;handleAfterAllMethodExecutionException&#8203;(<a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
                                                     <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&nbsp;throwable)
                                              throws <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a></pre>
-<div class="block">Handle the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>throwable</code></a>.
+<div class="block">Handle the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a> that was thrown during execution of
+ a <code>@AfterAll</code> lifecycle method.
 
- <p>Implementors must perform one of the following.
- <ol>
- <li>Rethrow the supplied <code>throwable</code> <em>as is</em> which is the default implementation</li>
- <li>Swallow the supplied <code>throwable</code>, thereby preventing propagation.</li>
- <li>Throw a new exception, potentially wrapping the supplied <code>throwable</code>.</li>
- </ol>
-
- <p>If the supplied <code>throwable</code> is swallowed, subsequent
- <code>LifecycleMethodExecutionExceptionHandler</code> will not be invoked; otherwise,
- the next registered <code>LifecycleMethodExecutionExceptionHandler</code> (if there
- is one) will be invoked with any <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a> thrown by this handler.</div>
+ <p>Please refer to the class-level Javadoc for
+ <a href="#implementation-guidelines">Implementation Guidelines</a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>context</code> - the current extension context; never <code>null</code></dd>
