@@ -567,7 +567,7 @@ public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java
  <p>Supported values include names of enum constants defined in
  <a href="../api/parallel/ExecutionMode.html" title="enum in org.junit.jupiter.api.parallel"><code>ExecutionMode</code></a>, ignoring case.
 
- <p>If not specified, it will be resolve into the same value as
+ <p>If not specified, it will be resolved into the same value as
  <a href="#DEFAULT_PARALLEL_EXECUTION_MODE"><code>DEFAULT_PARALLEL_EXECUTION_MODE</code></a>.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -613,7 +613,7 @@ public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java
 <div class="block">Property name used to set the desired parallelism for the <code>fixed</code>
  configuration strategy: "junit.jupiter.execution.parallel.config.fixed.parallelism"
 
- <p>No default value; must be an integer.</div>
+ <p>No default value; must be a positive integer.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.3</dd>
@@ -635,7 +635,7 @@ public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java
  available processors/cores to determine the desired parallelism for the
  <code>dynamic</code> configuration strategy: "junit.jupiter.execution.parallel.config.dynamic.factor"
 
- <p>Value must be a decimal number; defaults to <code>1</code>.</div>
+ <p>Value must be a positive decimal number; defaults to <code>1</code>.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.3</dd>
@@ -678,7 +678,7 @@ public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java
 
  <p>The value of this property will be used unless overridden by a more
  specific property or a <a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>@Timeout</code></a>
- annotation present on the method or an enclosing test class (for testable
+ annotation present on the method or on an enclosing test class (for testable
  methods).
 
  <p>Please refer to the <a href="#supported-values-timeouts">class
@@ -705,7 +705,7 @@ public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java
 
  <p>The value of this property will be used unless overridden by a more
  specific property or a <a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>@Timeout</code></a>
- annotation present on the testable method or an enclosing test class.
+ annotation present on the testable method or on an enclosing test class.
 
  <p>This property overrides the <a href="#DEFAULT_TIMEOUT_PROPERTY_NAME">"junit.jupiter.execution.timeout.default"</a>
  property.
@@ -735,7 +735,7 @@ public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java
 
  <p>The value of this property will be used unless overridden by a
  <a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>@Timeout</code></a> annotation present on the
- <a href="../api/Test.html" title="annotation in org.junit.jupiter.api"><code>@Test</code></a> method or an enclosing test
+ <a href="../api/Test.html" title="annotation in org.junit.jupiter.api"><code>@Test</code></a> method or on an enclosing test
  class.
 
  <p>This property overrides the
@@ -766,7 +766,7 @@ public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java
 
  <p>The value of this property will be used unless overridden by a
  <a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>@Timeout</code></a> annotation present on the
- <a href="../api/TestTemplate.html" title="annotation in org.junit.jupiter.api"><code>@TestTemplate</code></a> method or an
+ <a href="../api/TestTemplate.html" title="annotation in org.junit.jupiter.api"><code>@TestTemplate</code></a> method or on an
  enclosing test class.
 
  <p>This property overrides the
@@ -797,7 +797,7 @@ public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java
 
  <p>The value of this property will be used unless overridden by a
  <a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>@Timeout</code></a> annotation present on the
- <a href="../api/TestFactory.html" title="annotation in org.junit.jupiter.api"><code>@TestFactory</code></a> method or an
+ <a href="../api/TestFactory.html" title="annotation in org.junit.jupiter.api"><code>@TestFactory</code></a> method or on an
  enclosing test class.
 
  <p>This property overrides the

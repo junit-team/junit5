@@ -4882,8 +4882,9 @@ junit.jupiter.execution.parallel.mode.classes.default = same_thread</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Not configuring a value for <code>junit.jupiter.execution.parallel.mode.classes.default</code> is
-equivalent to using the same value as for <code>junit.jupiter.execution.parallel.mode.default</code>.</p>
+<p>If the <code>junit.jupiter.execution.parallel.mode.classes.default</code> configuration parameter is
+not explicitly set, the value for <code>junit.jupiter.execution.parallel.mode.default</code> will be
+used instead.</p>
 </div>
 <div class="sect3">
 <h4 id="writing-tests-parallel-execution-config"><a class="anchor" href="#writing-tests-parallel-execution-config"></a>2.19.1. Configuration</h4>
@@ -9542,7 +9543,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-06-05 18:35:03 UTC
+Last updated 2019-06-06 07:16:03 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
