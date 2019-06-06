@@ -2,7 +2,7 @@
 
 This repository is the home of the next generation of JUnit, _JUnit 5_.
 
-[![Support us on Steady](https://img.shields.io/badge/support_us-on_Steady-ff7264.svg)](https://steadyhq.com/en/junit)
+[![Support JUnit](https://img.shields.io/badge/%F0%9F%92%9A-Support%20JUnit-brightgreen.svg)](https://junit.org/sponsoring)
 
 ## Latest Releases
 
