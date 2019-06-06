@@ -742,6 +742,11 @@ authors greater flexibility as well as the ability to hide implementation detail
 user facing extension API.</p>
 </li>
 <li>
+<p>Private fields annotated with <code>@RegisterExtension</code> are no longer silently ignored.
+Instead the corresponding test class or test method will now fail with an exception
+informing the user of the configuration error.</p>
+</li>
+<li>
 <p>All methods in the <code>TestWatcher</code> API are now interface <code>default</code> methods with empty
 implementations.</p>
 </li>
@@ -1029,7 +1034,7 @@ in build tools</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-06-06 07:16:03 UTC
+Last updated 2019-06-06 08:25:28 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

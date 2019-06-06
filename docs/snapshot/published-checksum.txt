@@ -264,7 +264,6 @@
 68710a9837ba700b70278a68918ce686  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/JupiterTestEngine.java
 687e0c2c2bc766a2bdb028d686f6e759  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/ClassSource.java
 69c8b885b62b12a7f8e993eb029ed0a4  documentation/src/test/java/example/ParameterizedTestDemo.java
-69f98c3dbf42c1a1327dbf1bb63df4b6  documentation/src/docs/asciidoc/release-notes/release-notes-5.5.0-RC1.adoc
 6a4fc6025deda930f868521dfc0051a8  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/SingleTestExecutor.java
 6b5cfcf4e3ecda01829b19b35914f1ce  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/TestExecutionSummary.java
 6b6e614cf7305c2210fa55ddea250b54  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Tags.java
@@ -485,6 +484,7 @@ c1b3b5a55a5ee67adb70b68246019278  junit-platform-console/src/main/java/org/junit
 c2aeeb5dbd7e3ed52d6a7348b8d5a93b  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/AfterEachMethodAdapter.java
 c3688201bf2478ac367a27021cc6f4d3  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/package-info.java
 c383857b441cc73ae2736fabf0c0fd43  documentation/src/test/java/example/StandardTests.java
+c3d3e5f596000ad3b8b5e3ac40142e24  documentation/src/docs/asciidoc/release-notes/release-notes-5.5.0-RC1.adoc
 c3e52893edc04ff223f7630d4aa4957a  documentation/src/docs/asciidoc/user-guide/advanced-topics.adoc
 c3e6f8dc7ee8d401b88d0366175075a5  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/VintageDiscoverer.java
 c3e8aa02a80117b5853b0c9339864ad6  documentation/src/test/java/example/Fast.java
