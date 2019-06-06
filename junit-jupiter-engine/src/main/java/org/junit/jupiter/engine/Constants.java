@@ -165,7 +165,7 @@ public final class Constants {
 	 * <p>Supported values include names of enum constants defined in
 	 * {@link org.junit.jupiter.api.parallel.ExecutionMode}, ignoring case.
 	 *
-	 * <p>If not specified, it will be resolve into the same value as
+	 * <p>If not specified, it will be resolved into the same value as
 	 * {@link #DEFAULT_PARALLEL_EXECUTION_MODE}.
 	 *
 	 * @see org.junit.jupiter.api.parallel.Execution
@@ -194,7 +194,7 @@ public final class Constants {
 	 * Property name used to set the desired parallelism for the {@code fixed}
 	 * configuration strategy: {@value}
 	 *
-	 * <p>No default value; must be an integer.
+	 * <p>No default value; must be a positive integer.
 	 *
 	 * @since 5.3
 	 */
@@ -207,7 +207,7 @@ public final class Constants {
 	 * available processors/cores to determine the desired parallelism for the
 	 * {@code dynamic} configuration strategy: {@value}
 	 *
-	 * <p>Value must be a decimal number; defaults to {@code 1}.
+	 * <p>Value must be a positive decimal number; defaults to {@code 1}.
 	 *
 	 * @since 5.3
 	 */
@@ -232,7 +232,7 @@ public final class Constants {
 	 *
 	 * <p>The value of this property will be used unless overridden by a more
 	 * specific property or a {@link org.junit.jupiter.api.Timeout @Timeout}
-	 * annotation present on the method or an enclosing test class (for testable
+	 * annotation present on the method or on an enclosing test class (for testable
 	 * methods).
 	 *
 	 * <p>Please refer to the <a href="#supported-values-timeouts">class
@@ -249,7 +249,7 @@ public final class Constants {
 	 *
 	 * <p>The value of this property will be used unless overridden by a more
 	 * specific property or a {@link org.junit.jupiter.api.Timeout @Timeout}
-	 * annotation present on the testable method or an enclosing test class.
+	 * annotation present on the testable method or on an enclosing test class.
 	 *
 	 * <p>This property overrides the {@value #DEFAULT_TIMEOUT_PROPERTY_NAME}
 	 * property.
@@ -269,7 +269,7 @@ public final class Constants {
 	 *
 	 * <p>The value of this property will be used unless overridden by a
 	 * {@link org.junit.jupiter.api.Timeout @Timeout} annotation present on the
-	 * {@link org.junit.jupiter.api.Test @Test} method or an enclosing test
+	 * {@link org.junit.jupiter.api.Test @Test} method or on an enclosing test
 	 * class.
 	 *
 	 * <p>This property overrides the
@@ -290,7 +290,7 @@ public final class Constants {
 	 *
 	 * <p>The value of this property will be used unless overridden by a
 	 * {@link org.junit.jupiter.api.Timeout @Timeout} annotation present on the
-	 * {@link org.junit.jupiter.api.TestTemplate @TestTemplate} method or an
+	 * {@link org.junit.jupiter.api.TestTemplate @TestTemplate} method or on an
 	 * enclosing test class.
 	 *
 	 * <p>This property overrides the
@@ -311,7 +311,7 @@ public final class Constants {
 	 *
 	 * <p>The value of this property will be used unless overridden by a
 	 * {@link org.junit.jupiter.api.Timeout @Timeout} annotation present on the
-	 * {@link org.junit.jupiter.api.TestFactory @TestFactory} method or an
+	 * {@link org.junit.jupiter.api.TestFactory @TestFactory} method or on an
 	 * enclosing test class.
 	 *
 	 * <p>This property overrides the

@@ -1739,8 +1739,9 @@ junit.jupiter.execution.parallel.mode.default = concurrent
 junit.jupiter.execution.parallel.mode.classes.default = same_thread
 ----
 
-Not configuring a value for `junit.jupiter.execution.parallel.mode.classes.default` is
-equivalent to using the same value as for `junit.jupiter.execution.parallel.mode.default`.
+If the `junit.jupiter.execution.parallel.mode.classes.default` configuration parameter is
+not explicitly set, the value for `junit.jupiter.execution.parallel.mode.default` will be
+used instead.
 
 [[writing-tests-parallel-execution-config]]
 ==== Configuration
