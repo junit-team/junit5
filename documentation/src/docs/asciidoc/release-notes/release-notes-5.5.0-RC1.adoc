@@ -79,6 +79,9 @@ on GitHub.
   implementation can be assigned to the declared field type. This provides extension
   authors greater flexibility as well as the ability to hide implementation details of the
   user facing extension API.
+* Private fields annotated with `@RegisterExtension` are no longer silently ignored.
+  Instead the corresponding test class or test method will now fail with an exception
+  informing the user of the configuration error.
 * All methods in the `TestWatcher` API are now interface `default` methods with empty
   implementations.
 * New `InvocationInterceptor` extension API (see
