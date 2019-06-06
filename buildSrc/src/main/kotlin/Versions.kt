@@ -8,7 +8,7 @@ object Versions {
     val groovy = "2.5.7"
 
     // Dependencies
-    val apiGuardian = "1.0.0"
+    val apiGuardian = "1.1.0-SNAPSHOT"
     val junit4 = "4.12"
     val ota4j = "1.2.0-SNAPSHOT"
     val picocli = "3.9.6"
