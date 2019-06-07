@@ -267,8 +267,8 @@ public interface MethodOrderer {
 		}
 
 		private static final Comparator<MethodDescriptor> COMPARATOR = Comparator //
-			.comparing(ClassFileMethodOrderer::getMethodIndex) //
-			.thenComparing(descriptor -> parameterList(descriptor.getMethod()));
+				.comparing(ClassFileMethodOrderer::getMethodIndex) //
+				.thenComparing(descriptor -> parameterList(descriptor.getMethod()));
 
 		private static int getMethodIndex(MethodDescriptor methodDescriptor) {
 			Method method = methodDescriptor.getMethod();
@@ -284,14 +284,17 @@ public interface MethodOrderer {
 			return toByte(length >> 8) + toByte(length) + methodName;
 		}
 
-		private static String toByte(int character) { return Character.toString((char) character); }
+		private static String toByte(int character) {
+			return Character.toString((char) character);
+		}
 
 		private static byte[] read(Class<?> type) {
 			// the simple name doesn't include any containing classes
 			String typeName = type.getName().substring(type.getPackage().getName().length() + 1);
 			try (InputStream inputStream = type.getResourceAsStream(typeName + ".class")) {
 				return (inputStream == null) ? new byte[0] : readAllBytes(inputStream);
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				return new byte[0];
 			}
 		}
