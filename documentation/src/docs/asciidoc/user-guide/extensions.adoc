@@ -635,7 +635,7 @@ The following table further explains the sixteen steps in the
 | 3
 | interface `org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
 #handleBeforeAllMethodExecutionException`
-| extension code for handling exceptions thrown during a method annotated with `@BeforeAll`
+| extension code for handling exceptions thrown from `@BeforeAll` methods
 
 | 4
 | interface `org.junit.jupiter.api.extension.BeforeEachCallback`
@@ -648,7 +648,7 @@ The following table further explains the sixteen steps in the
 | 6
 | interface `org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
 #handleBeforeEachMethodExecutionException`
-| extension code for handling exceptions thrown during a method annotated with `@BeforeEach`
+| extension code for handling exceptions thrown from `@BeforeEach` methods
 
 | 7
 | interface `org.junit.jupiter.api.extension.BeforeTestExecutionCallback`
@@ -673,7 +673,7 @@ The following table further explains the sixteen steps in the
 | 12
 | interface `org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
 #handleAfterEachMethodExecutionException`
-| extension code for handling exceptions thrown during a method annotated with `@AfterEach`
+| extension code for handling exceptions thrown from `@AfterEach` methods
 
 | 13
 | interface `org.junit.jupiter.api.extension.AfterEachCallback`
@@ -686,7 +686,7 @@ The following table further explains the sixteen steps in the
 | 15
 | interface `org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
 #handleAfterAllMethodExecutionException`
-| extension code for handling exceptions thrown during a method annotated with `@AfterAll`
+| extension code for handling exceptions thrown from `@AfterAll` methods
 
 | 16
 | interface `org.junit.jupiter.api.extension.AfterAllCallback`
