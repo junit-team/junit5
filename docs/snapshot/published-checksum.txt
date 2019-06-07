@@ -31,6 +31,7 @@
 08b7190675fc3149adf4222d965c8775  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.java
 08c163163cb4eba44263999e2db35736  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Disabled.java
 08d5f44eaeaf064b6a81b43bdf15fdb4  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/TagExpressions.java
+08ecceac1536370f02111636d6c5309e  documentation/src/docs/asciidoc/user-guide/extensions.adoc
 08fb1caa2ce2edb080cb28d890708467  documentation/src/docs/asciidoc/release-notes/index.adoc
 0906bc2a5b59079efd51ee6e121a3f97  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ClassSupport.java
 09bc9a2cfde202c1f00b20ef5c6a9b0a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterAllCallback.java
@@ -550,7 +551,6 @@ dc7a42b43acf0c377d1459a167abf5d5  junit-jupiter-engine/src/main/java/org/junit/j
 dc7e006ad0ba32a468c5535174f59793  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ParseResult.java
 dca6da471ddade4325725706788f060b  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/package-info.java
 dd06cf010fd6022e2929129ae8123bbf  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/ExtensionUtils.java
-dd4212830941b786c6025a932b5fcbe2  documentation/src/docs/asciidoc/user-guide/extensions.adoc
 ddc2c8c5aac34e0cbe93ef3c21d71c04  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/script/Script.java
 ddc9b2dbd7940d12e0a9d2c2b057f71f  documentation/src/test/java/example/TestReporterDemo.java
 de07242d453d9192a23818bfb5c92711  junit-platform-engine/src/main/java/org/junit/platform/engine/reporting/ReportEntry.java
