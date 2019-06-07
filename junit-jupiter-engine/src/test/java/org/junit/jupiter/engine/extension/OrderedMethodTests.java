@@ -259,7 +259,7 @@ class OrderedMethodTests {
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
 		assertThat(callSequence).containsExactly("AAA()", "c()", "b()", "AAA(org.junit.jupiter.api.TestInfo)",
-			"AAA(org.junit.jupiter.api.TestReporter)", "a1()", "a2()", "zzz()");
+			"AAA(org.junit.jupiter.api.TestReporter)", "a1()", "a()", "a2()", "zzz()");
 		assertThat(threadNames).hasSize(1);
 	}
 
@@ -568,6 +568,10 @@ class OrderedMethodTests {
 
 		@Test
 		void a1() {
+		}
+
+		@Test
+		void a() {
 		}
 
 		@Test
