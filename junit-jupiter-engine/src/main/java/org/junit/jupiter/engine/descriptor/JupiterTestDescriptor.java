@@ -222,6 +222,9 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		context.close();
 	}
 
+	/**
+	 * @since 5.5
+	 */
 	@FunctionalInterface
 	interface ExceptionHandlerInvoker<T extends Extension> {
 
