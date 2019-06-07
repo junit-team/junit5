@@ -259,7 +259,7 @@ public interface MethodOrderer {
 	 */
 	class ClassFileMethodOrderer implements MethodOrderer {
 
-		private static final Map<Class, String> CACHE = new HashMap<>();
+		private static final Map<Class<?>, String> CACHE = new HashMap<>();
 
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
@@ -286,7 +286,7 @@ public interface MethodOrderer {
 
 		private static String toByte(int character) { return Character.toString((char) character); }
 
-		private static byte[] read(Class type) {
+		private static byte[] read(Class<?> type) {
 			// the simple name doesn't include any containing classes
 			String typeName = type.getName().substring(type.getPackage().getName().length() + 1);
 			try (InputStream inputStream = type.getResourceAsStream(typeName + ".class")) {
