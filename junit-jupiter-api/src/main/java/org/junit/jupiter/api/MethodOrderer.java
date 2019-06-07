@@ -250,7 +250,8 @@ public interface MethodOrderer {
 	}
 
 	/**
-	 * {@code MethodOrderer} that sorts methods based on their position in the class file.
+	 * {@code MethodOrderer} that sorts methods based on their position in the class file,
+	 * which is the order in the source file.
 	 *
 	 * <p>If two methods have the same name, {@code String} representations of
 	 * their formal parameter lists will be used as a fallback for comparing the

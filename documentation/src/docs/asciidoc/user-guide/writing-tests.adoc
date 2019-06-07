@@ -513,6 +513,8 @@ following built-in `MethodOrderer` implementations.
 
 * `{Alphanumeric}`: sorts test methods _alphanumerically_ based on their names and formal
   parameter lists.
+* `{ClassFileMethodOrderer}`: sorts methods based on their _position_ in the source file.
+  If two methods have the same name, their formal parameter lists will be used.
 * `{OrderAnnotation}`: sorts test methods _numerically_ based on values specified via the
   `{Order}` annotation.
 * `{Random}`: orders test methods _pseudo-randomly_ and supports configuration of a custom
