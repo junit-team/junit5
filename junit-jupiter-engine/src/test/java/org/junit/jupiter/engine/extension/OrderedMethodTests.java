@@ -34,6 +34,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodDescriptor;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
+import org.junit.jupiter.api.MethodOrderer.ClassFileMethodOrderer;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.MethodOrderer.Random;
 import org.junit.jupiter.api.MethodOrdererContext;
@@ -249,6 +250,17 @@ class OrderedMethodTests {
 				+ "] which will be retained with arbitrary ordering.";
 
 		assertExpectedLogMessage(listener, expectedMessage);
+	}
+
+	@Test
+	void classFileOrdered() {
+		var tests = executeTestsInParallel(ClassFileMethodOrderedTestCase.class);
+
+		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+		assertThat(callSequence).containsExactly("AAA()", "c()", "b()", "AAA(org.junit.jupiter.api.TestInfo)",
+			"AAA(org.junit.jupiter.api.TestReporter)", "a1()", "a2()", "zzz()");
+		assertThat(threadNames).hasSize(1);
 	}
 
 	private void assertExpectedLogMessage(LogRecordListener listener, String expectedMessage) {
@@ -522,6 +534,48 @@ class OrderedMethodTests {
 		public void orderMethods(MethodOrdererContext context) {
 			context.getMethodDescriptors().remove(0);
 			context.getMethodDescriptors().remove(0);
+		}
+	}
+
+	@TestMethodOrder(ClassFileMethodOrderer.class)
+	static class ClassFileMethodOrderedTestCase extends BaseTestCase {
+
+		@BeforeEach
+		void trackInvocations(TestInfo testInfo) {
+			var method = testInfo.getTestMethod().get();
+			var signature = String.format("%s(%s)", method.getName(),
+				ClassUtils.nullSafeToString(method.getParameterTypes()));
+
+			callSequence.add(signature);
+			threadNames.add(Thread.currentThread().getName());
+		}
+
+		@TestFactory
+		DynamicTest b() {
+			return dynamicTest("dynamic", () -> {
+			});
+		}
+
+		@Test
+		@SuppressWarnings("unused")
+		void AAA(TestReporter testReporter) {
+		}
+
+		@Test
+		@SuppressWarnings("unused")
+		void AAA(TestInfo testInfo) {
+		}
+
+		@Test
+		void a1() {
+		}
+
+		@Test
+		void a2() {
+		}
+
+		@RepeatedTest(1)
+		void zzz() {
 		}
 	}
 

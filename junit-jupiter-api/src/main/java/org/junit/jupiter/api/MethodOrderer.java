@@ -10,12 +10,19 @@
 
 package org.junit.jupiter.api;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Comparator.comparingInt;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
@@ -239,6 +246,73 @@ public interface MethodOrderer {
 				}
 				return seed;
 			});
+		}
+	}
+
+	/**
+	 * {@code MethodOrderer} that sorts methods based on their position in the class file.
+	 *
+	 * <p>If two methods have the same name, {@code String} representations of
+	 * their formal parameter lists will be used as a fallback for comparing the
+	 * methods.
+	 */
+	class ClassFileMethodOrderer implements MethodOrderer {
+
+		private static final Map<Class, String> CACHE = new HashMap<>();
+
+		@Override
+		public void orderMethods(MethodOrdererContext context) {
+			context.getMethodDescriptors().sort(COMPARATOR);
+		}
+
+		private static final Comparator<MethodDescriptor> COMPARATOR = Comparator //
+			.comparing(ClassFileMethodOrderer::getMethodIndex) //
+			.thenComparing(descriptor -> parameterList(descriptor.getMethod()));
+
+		private static int getMethodIndex(MethodDescriptor methodDescriptor) {
+			Method method = methodDescriptor.getMethod();
+			String pattern = toStringWithLengthPrefix(method);
+			String classFile = CACHE.computeIfAbsent(method.getDeclaringClass(), cls -> new String(read(cls), UTF_8));
+
+			return classFile.indexOf(pattern);
+		}
+
+		private static String toStringWithLengthPrefix(Method method) {
+			String methodName = method.getName();
+			int length = methodName.length();
+			return toByte(length >> 8) + toByte(length) + methodName;
+		}
+
+		private static String toByte(int character) { return Character.toString((char) character); }
+
+		private static byte[] read(Class type) {
+			// the simple name doesn't include any containing classes
+			String typeName = type.getName().substring(type.getPackage().getName().length() + 1);
+			try (InputStream inputStream = type.getResourceAsStream(typeName + ".class")) {
+				return (inputStream == null) ? new byte[0] : readAllBytes(inputStream);
+			} catch (IOException e) {
+				return new byte[0];
+			}
+		}
+
+		private static byte[] readAllBytes(InputStream in) throws IOException {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			copy(in, out);
+			return out.toByteArray();
+		}
+
+		public static void copy(InputStream in, OutputStream out) throws IOException {
+			byte[] buf = new byte[8192];
+			while (true) {
+				int n = in.read(buf);
+				if (n < 0)
+					break;
+				out.write(buf, 0, n);
+			}
+		}
+
+		private static String parameterList(Method method) {
+			return ClassUtils.nullSafeToString(method.getParameterTypes());
 		}
 	}
 
