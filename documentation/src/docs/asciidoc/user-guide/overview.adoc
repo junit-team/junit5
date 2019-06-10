@@ -11,13 +11,6 @@ This document is also available as a link:index.pdf[PDF download].
 endif::backend-html5[]
 endif::linkToPdf[]
 
-[TIP]
-.Translations
-====
-This document is also available in http://sjyuan.cc/junit5/user-guide-cn[Simplified Chinese]
-and https://udzuki.jp/public/junit5-user-guide-ja[Japanese].
-====
-
 [[overview-what-is-junit-5]]
 === What is JUnit 5?
 
