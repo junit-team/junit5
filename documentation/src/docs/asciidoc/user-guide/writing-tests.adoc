@@ -1659,6 +1659,25 @@ omitted. Specifying no unit is equivalent to using seconds.
 | `42 d`          | `@Timeout(value = 42, unit = DAYS)`
 |===
 
+==== Use @Timeout for polling tests
+
+It is common to write tests waiting for some updates.
+In some cases you can rewrite the logic to use a `CountDownLatch` or any other synchronization mecanism but sometimes it is not possible - generally when depending on an external system.
+These tests require some timeout to ensure they don't hang the test suite forever and the test fails if the waiting condition "never" happens.
+With `@Timeout` it becomes very easy to write such tests since the test itself just require to become an infinite loop:
+
+[source,java]
+----
+@Timeout(5) // 5s
+void waitUntil() {
+    while (!isConditionTrue()) {
+        sleep(250); // use some adapted retry duration
+    }
+    // if needed asserts on the result of the awaited condition
+}
+----
+
+Such a simple usage enables to implement "test when" or "wait until" logic very easily.
 
 [[writing-tests-parallel-execution]]
 === Parallel Execution
