@@ -622,6 +622,16 @@
     ]
   },
   {
+    "title": "JUnit 5 - Platform & Jupiter API",
+    "event": "JUG Mainz",
+    "date": "2019-07-17",
+    "location": "Mainz, Germany",
+    "link": "https://www.meetup.com/JUG-Mainz/events/262059653",
+    "speakers": [
+      "sormuras"
+    ]
+  },  
+  {
     "title": "JUnit 5 - Testing In The Modular World",
     "event": "JavaZone 2019",
     "date": "2019-09-12",
@@ -632,7 +642,7 @@
     ]
   },
     {
-    "title": "JUnit 5 - From @Test up to your own TestEngine [TUT2591]",
+    "title": "JUnit 5 - From @Test up to your own TestEngine",
     "event": "Oracle Code One 2019",
     "date": "2019-09-16",
     "location": "San Francisco, US",
