@@ -188,7 +188,7 @@ set the configuration parameter to the corresponding fully qualified class name 
 [source,properties,indent=0]
 ----
 junit.jupiter.displayname.generator.default = \
-    org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores
+    org.junit.jupiter.api.DisplayNameGenerator$ReplaceUnderscores
 ----
 
 Similarly, you can specify the fully qualified name of any custom class that implements
