@@ -1284,15 +1284,20 @@ integral types: `byte`, `short`, `int`, `long`, and their boxed counterparts.
 | `java.net.URL`             | `"http://junit.org/"`                    -> `new URL("http://junit.org/")`
 | `java.nio.charset.Charset` | `"UTF-8"`                                -> `Charset.forName("UTF-8")`
 | `java.nio.file.Path`       | `"/path/to/file"`                        -> `Paths.get("/path/to/file")`
+| `java.time.Duration`       | `"PT3S"`                                 -> `Duration.ofSeconds(3)`
 | `java.time.Instant`        | `"1970-01-01T00:00:00Z"`                 -> `Instant.ofEpochMilli(0)`
 | `java.time.LocalDateTime`  | `"2017-03-14T12:34:56.789"`              -> `LocalDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000)`
 | `java.time.LocalDate`      | `"2017-03-14"`                           -> `LocalDate.of(2017, 3, 14)`
 | `java.time.LocalTime`      | `"12:34:56.789"`                         -> `LocalTime.of(12, 34, 56, 789_000_000)`
+| `java.time.MonthDay`       | `"--03-14"`                              -> `MonthDay.of(3, 14)`
 | `java.time.OffsetDateTime` | `"2017-03-14T12:34:56.789Z"`             -> `OffsetDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC)`
 | `java.time.OffsetTime`     | `"12:34:56.789Z"`                        -> `OffsetTime.of(12, 34, 56, 789_000_000, ZoneOffset.UTC)`
+| `java.time.Period`         | `"P2M6D"`                                -> `Period.of(0, 2, 6)`
 | `java.time.YearMonth`      | `"2017-03"`                              -> `YearMonth.of(2017, 3)`
 | `java.time.Year`           | `"2017"`                                 -> `Year.of(2017)`
 | `java.time.ZonedDateTime`  | `"2017-03-14T12:34:56.789Z"`             -> `ZonedDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC)`
+| `java.time.ZoneId`         | `"Europe/Berlin"                         -> `ZoneId.of("Europe/Berlin")`
+| `java.time.ZoneOffset`     | `"+02:30"`                               -> `ZoneOffset.ofHoursMinutes(2, 30)`
 | `java.util.Currency`       | `"JPY"`                                  -> `Currency.getInstance("JPY")`
 | `java.util.Locale`         | `"en"`                                   -> `new Locale("en")`
 | `java.util.UUID`           | `"d043e930-7b3b-48e3-bdbe-5a3ccfb833db"` -> `UUID.fromString("d043e930-7b3b-48e3-bdbe-5a3ccfb833db")`
