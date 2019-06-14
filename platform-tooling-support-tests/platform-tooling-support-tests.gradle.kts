@@ -24,6 +24,7 @@ dependencies {
 	}
 	testImplementation("org.codehaus.groovy:groovy-all:${Versions.groovy}") {
 		because("it provides convenience methods to handle process output")
+		exclude(group = "org.junit.platform", module = "junit-platform-launcher")
 	}
 	testRuntimeOnly("com.tngtech.archunit:archunit-junit5-engine:${Versions.archunit}") {
 		because("contains the ArchUnit TestEngine implementation")
