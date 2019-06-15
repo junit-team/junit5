@@ -158,6 +158,7 @@
 3a6cc345134eca7d57466d889cec6753  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectClasses.java
 3ae2793fb4efb09eaacda03f7a919f5d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertDoesNotThrow.java
 3ba58c6d2d405f840de3475e8c5a4df0  junit-platform-engine/src/main/java/org/junit/platform/engine/TestEngine.java
+3c545d010649e83adbae6e666e315e86  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 3c850f92637cd71e4dc00fdad930561b  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/MethodSelectorResolver.java
 3ca1dbe934d8a3e75af2fbff74d08773  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/package-info.java
 3cf53b81113a173895646595a4965fbe  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EnumArgumentsProvider.java
@@ -453,7 +454,6 @@ ae3ad87fb1bf944fe0b32847c59b0839  documentation/src/docs/asciidoc/user-guide/ima
 ae749e4e7afdcac3588de36766eb667d  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/Logger.java
 af5b8848b42d1d6bafef6857d7f49c14  documentation/src/test/java/example/defaultmethods/EqualsContract.java
 afc93b70f013c2ba9ded6b44cf06777a  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/IsPotentialJUnit4TestClass.java
-affe76bd55e1d01e6f05a35c501cc73a  documentation/src/docs/asciidoc/user-guide/writing-tests.adoc
 b07e4ab801c4048fe731606d56f979d5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestMethodOrder.java
 b0a079d25f31e9b0650277b805a786a6  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClassSelector.java
 b10448700933938e79543044b4908be7  documentation/src/test/kotlin/example/registration/KotlinWebServerDemo.kt
