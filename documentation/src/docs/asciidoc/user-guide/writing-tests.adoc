@@ -1296,7 +1296,7 @@ integral types: `byte`, `short`, `int`, `long`, and their boxed counterparts.
 | `java.time.YearMonth`      | `"2017-03"`                              -> `YearMonth.of(2017, 3)`
 | `java.time.Year`           | `"2017"`                                 -> `Year.of(2017)`
 | `java.time.ZonedDateTime`  | `"2017-03-14T12:34:56.789Z"`             -> `ZonedDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC)`
-| `java.time.ZoneId`         | `"Europe/Berlin"                         -> `ZoneId.of("Europe/Berlin")`
+| `java.time.ZoneId`         | `"Europe/Berlin"`                        -> `ZoneId.of("Europe/Berlin")`
 | `java.time.ZoneOffset`     | `"+02:30"`                               -> `ZoneOffset.ofHoursMinutes(2, 30)`
 | `java.util.Currency`       | `"JPY"`                                  -> `Currency.getInstance("JPY")`
 | `java.util.Locale`         | `"en"`                                   -> `new Locale("en")`
