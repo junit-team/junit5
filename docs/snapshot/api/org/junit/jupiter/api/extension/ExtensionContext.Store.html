@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":18,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6};
+var data = {"i0":6,"i1":6,"i2":18,"i3":6,"i4":6,"i5":18,"i6":6,"i7":6,"i8":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -227,6 +227,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr id="i5" class="rowColor">
+<td class="colFirst"><code>default &lt;V&gt;&nbsp;V</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getOrDefault(java.lang.Object,java.lang.Class,V)">getOrDefault</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key,
+            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;V&gt;&nbsp;requiredType,
+            V&nbsp;defaultValue)</code></th>
+<td class="colLast">
+<div class="block">Get the value of the specified required type that is stored under
+ the supplied <code>key</code>, or the supplied <code>defaultValue</code> if no
+ value is found for the supplied <code>key</code> in this store or in an
+ ancestor.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#put(java.lang.Object,java.lang.Object)">put</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key,
    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
@@ -234,14 +246,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Store a <code>value</code> for later retrieval under the supplied <code>key</code>.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#remove(java.lang.Object)">remove</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key)</code></th>
 <td class="colLast">
 <div class="block">Remove the value that was previously stored under the supplied <code>key</code>.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>&lt;V&gt;&nbsp;V</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#remove(java.lang.Object,java.lang.Class)">remove</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key,
       <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;V&gt;&nbsp;requiredType)</code></th>
@@ -289,7 +301,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value; potentially <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="#get(java.lang.Object,java.lang.Class)"><code>get(Object, Class)</code></a></dd>
+<dd><a href="#get(java.lang.Object,java.lang.Class)"><code>get(Object, Class)</code></a>, 
+<a href="#getOrDefault(java.lang.Object,java.lang.Class,V)"><code>getOrDefault(Object, Class, Object)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -317,7 +330,46 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value; potentially <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="#get(java.lang.Object)"><code>get(Object)</code></a></dd>
+<dd><a href="#get(java.lang.Object)"><code>get(Object)</code></a>, 
+<a href="#getOrDefault(java.lang.Object,java.lang.Class,V)"><code>getOrDefault(Object, Class, Object)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="getOrDefault(java.lang.Object,java.lang.Class,java.lang.Object)">
+<!--   -->
+</a><a id="getOrDefault(java.lang.Object,java.lang.Class,V)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getOrDefault</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#STABLE" title="class or interface in org.apiguardian.api" class="externalLink">STABLE</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.5")
+default&nbsp;&lt;V&gt;&nbsp;V&nbsp;getOrDefault&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;key,
+                           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;V&gt;&nbsp;requiredType,
+                           V&nbsp;defaultValue)</pre>
+<div class="block">Get the value of the specified required type that is stored under
+ the supplied <code>key</code>, or the supplied <code>defaultValue</code> if no
+ value is found for the supplied <code>key</code> in this store or in an
+ ancestor.
+
+ <p>If no value is stored in the current <a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>
+ for the supplied <code>key</code>, ancestors of the context will be queried
+ for a value with the same <code>key</code> in the <code>Namespace</code> used
+ to create this store.</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>V</code> - the value type</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>key</code> - the key; never <code>null</code></dd>
+<dd><code>requiredType</code> - the required type of the value; never <code>null</code></dd>
+<dd><code>defaultValue</code> - the default value</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the value; potentially <code>null</code></dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.5</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#get(java.lang.Object,java.lang.Class)"><code>get(Object, Class)</code></a></dd>
 </dl>
 </li>
 </ul>
