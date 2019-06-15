@@ -24,7 +24,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
  *
  * @since 5.0
  */
-class ExtensionStoreConcurrencyTests {
+class ExtensionContextStoreConcurrencyTests {
 
 	private final AtomicInteger count = new AtomicInteger();
 
