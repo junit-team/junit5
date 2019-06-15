@@ -3946,6 +3946,10 @@ integral types: <code>byte</code>, <code>short</code>, <code>int</code>, <code>l
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"/path/to/file"</code>                        &#8594; <code>Paths.get("/path/to/file")</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.Duration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"PT3S"</code>                                 &#8594; <code>Duration.ofSeconds(3)</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.Instant</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"1970-01-01T00:00:00Z"</code>                 &#8594; <code>Instant.ofEpochMilli(0)</code></p></td>
 </tr>
@@ -3962,12 +3966,20 @@ integral types: <code>byte</code>, <code>short</code>, <code>int</code>, <code>l
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"12:34:56.789"</code>                         &#8594; <code>LocalTime.of(12, 34, 56, 789_000_000)</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.MonthDay</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"--03-14"</code>                              &#8594; <code>MonthDay.of(3, 14)</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.OffsetDateTime</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"2017-03-14T12:34:56.789Z"</code>             &#8594; <code>OffsetDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC)</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.OffsetTime</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"12:34:56.789Z"</code>                        &#8594; <code>OffsetTime.of(12, 34, 56, 789_000_000, ZoneOffset.UTC)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.Period</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"P2M6D"</code>                                &#8594; <code>Period.of(0, 2, 6)</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.YearMonth</code></p></td>
@@ -3980,6 +3992,14 @@ integral types: <code>byte</code>, <code>short</code>, <code>int</code>, <code>l
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.ZonedDateTime</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"2017-03-14T12:34:56.789Z"</code>             &#8594; <code>ZonedDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.ZoneId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"Europe/Berlin"                         &#8594; `ZoneId.of("Europe/Berlin")</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.time.ZoneOffset</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"+02:30"</code>                               &#8594; <code>ZoneOffset.ofHoursMinutes(2, 30)</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.Currency</code></p></td>
@@ -9637,7 +9657,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-06-15 19:06:08 UTC
+Last updated 2019-06-15 19:15:40 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
