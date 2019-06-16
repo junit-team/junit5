@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJav
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava11;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava12;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava13;
+import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava14;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava8;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava9;
 
@@ -126,12 +127,22 @@ class DisabledOnJreConditionTests extends AbstractExecutionConditionTests {
 	}
 
 	/**
+	 * @see DisabledOnJreIntegrationTests#java14()
+	 */
+	@Test
+	void java14() {
+		evaluateCondition();
+		assertDisabledOnCurrentJreIf(onJava14());
+	}
+
+	/**
 	 * @see DisabledOnJreIntegrationTests#other()
 	 */
 	@Test
 	void other() {
 		evaluateCondition();
-		assertDisabledOnCurrentJreIf(!(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13()));
+		assertDisabledOnCurrentJreIf(
+			!(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14()));
 	}
 
 	private void assertDisabledOnCurrentJreIf(boolean condition) {

@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.condition.JRE.JAVA_10;
 import static org.junit.jupiter.api.condition.JRE.JAVA_11;
 import static org.junit.jupiter.api.condition.JRE.JAVA_12;
 import static org.junit.jupiter.api.condition.JRE.JAVA_13;
+import static org.junit.jupiter.api.condition.JRE.JAVA_14;
 import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.jupiter.api.condition.JRE.JAVA_9;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
@@ -44,7 +45,7 @@ class EnabledOnJreIntegrationTests {
 	}
 
 	@Test
-	@EnabledOnJre({ JAVA_8, JAVA_9, JAVA_10, JAVA_11, JAVA_12, JAVA_13, OTHER })
+	@EnabledOnJre({ JAVA_8, JAVA_9, JAVA_10, JAVA_11, JAVA_12, JAVA_13, JAVA_14, OTHER })
 	void enabledOnAllJavaVersions() {
 	}
 
@@ -85,9 +86,15 @@ class EnabledOnJreIntegrationTests {
 	}
 
 	@Test
+	@EnabledOnJre(JAVA_14)
+	void java14() {
+		assertTrue(onJava14());
+	}
+
+	@Test
 	@EnabledOnJre(OTHER)
 	void other() {
-		assertFalse(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13());
+		assertFalse(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14());
 	}
 
 	static boolean onJava8() {
@@ -112,6 +119,10 @@ class EnabledOnJreIntegrationTests {
 
 	static boolean onJava13() {
 		return JAVA_VERSION.startsWith("13");
+	}
+
+	static boolean onJava14() {
+		return JAVA_VERSION.startsWith("14");
 	}
 
 }
