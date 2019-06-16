@@ -59,7 +59,7 @@ class DiscoverySelectorsTests {
 		assertThrows(PreconditionViolationException.class, () -> selectUri("   "));
 		assertThrows(PreconditionViolationException.class, () -> selectUri("foo:"));
 
-		String uri = "http://junit.org";
+		String uri = "https://junit.org";
 
 		UriSelector selector = selectUri(uri);
 		assertEquals(uri, selector.getUri().toString());
@@ -70,7 +70,7 @@ class DiscoverySelectorsTests {
 		assertThrows(PreconditionViolationException.class, () -> selectUri((URI) null));
 		assertThrows(PreconditionViolationException.class, () -> selectUri("   "));
 
-		URI uri = new URI("http://junit.org");
+		URI uri = new URI("https://junit.org");
 
 		UriSelector selector = selectUri(uri);
 		assertEquals(uri, selector.getUri());

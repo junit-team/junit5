@@ -25,9 +25,9 @@ class UriSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void equalsAndHashCode() throws Exception {
-		var selector1 = new UriSelector(new URI("http://junit.org"));
-		var selector2 = new UriSelector(new URI("http://junit.org"));
-		var selector3 = new UriSelector(new URI("http://example.org"));
+		var selector1 = new UriSelector(new URI("https://junit.org"));
+		var selector2 = new UriSelector(new URI("https://junit.org"));
+		var selector3 = new UriSelector(new URI("https://example.org"));
 
 		assertEqualsAndHashCode(selector1, selector2, selector3);
 	}

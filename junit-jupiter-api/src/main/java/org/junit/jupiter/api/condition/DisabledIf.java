@@ -179,7 +179,7 @@ public @interface DisabledIf {
 	 *
 	 * @return script engine name
 	 * @see javax.script.ScriptEngineManager#getEngineByName(String)
-	 * @see <a href="http://www.oracle.com/technetwork/articles/java/jf14-nashorn-2126515.html">Oracle Nashorn</a>
+	 * @see <a href="https://www.oracle.com/technetwork/articles/java/jf14-nashorn-2126515.html">Oracle Nashorn</a>
 	 */
 	String engine() default "Nashorn";
 

@@ -51,7 +51,7 @@ tasks {
 					"Engine-Version-junit-jupiter" to jupiterVersion,
 					"Engine-Version-junit-vintage" to vintageVersion,
 					// Version-aware binaries are already included - set Multi-Release flag here.
-					// See http://openjdk.java.net/jeps/238 for details
+					// See https://openjdk.java.net/jeps/238 for details
 					// Note: the "jar --update ... --release X" command does not work with the
 					// shadowed JAR as it contains nested classes that do comply multi-release jars.
 					"Multi-Release" to true

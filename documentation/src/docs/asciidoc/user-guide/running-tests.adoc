@@ -241,7 +241,7 @@ native support instead.
 
 Starting with https://issues.apache.org/jira/browse/SUREFIRE-1330[version 2.22.0], Maven
 Surefire and Maven Failsafe provide
-http://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html[native support]
+https://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html[native support]
 for executing tests on the JUnit Platform. The `pom.xml` file in the
 `{junit5-jupiter-starter-maven}` project demonstrates how to use the Maven Surefire plugin
 and can serve as a starting point for configuring your Maven build.

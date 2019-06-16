@@ -21,7 +21,7 @@ public class WebServerExtension implements BeforeAllCallback {
 	}
 
 	public String getServerUrl() {
-		return "http://example.org:8181";
+		return "https://example.org:8181";
 	}
 
 	public static Builder builder() {

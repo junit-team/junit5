@@ -264,9 +264,9 @@ are therefore free to use the assertion library of their choice.
 For example, the combination of _matchers_ and a fluent API can be used to make
 assertions more descriptive and readable. However, JUnit Jupiter's `{Assertions}` class
 does not provide an
-http://junit.org/junit4/javadoc/latest/org/junit/Assert.html#assertThat[`assertThat()`]
+https://junit.org/junit4/javadoc/latest/org/junit/Assert.html#assertThat[`assertThat()`]
 method like the one found in JUnit 4's `org.junit.Assert` class which accepts a Hamcrest
-http://junit.org/junit4/javadoc/latest/org/hamcrest/Matcher.html[`Matcher`]. Instead,
+https://junit.org/junit4/javadoc/latest/org/hamcrest/Matcher.html[`Matcher`]. Instead,
 developers are encouraged to use the built-in support for matchers provided by third-party
 assertion libraries.
 
@@ -1280,8 +1280,8 @@ integral types: `byte`, `short`, `int`, `long`, and their boxed counterparts.
 | `java.lang.Class`          | `"char[]"`                               -> `char[].class` _(array types are supported)_
 | `java.math.BigDecimal`     | `"123.456e789"`                          -> `new BigDecimal("123.456e789")`
 | `java.math.BigInteger`     | `"1234567890123456789"`                  -> `new BigInteger("1234567890123456789")`
-| `java.net.URI`             | `"http://junit.org/"`                    -> `URI.create("http://junit.org/")`
-| `java.net.URL`             | `"http://junit.org/"`                    -> `new URL("http://junit.org/")`
+| `java.net.URI`             | `"https://junit.org/"`                   -> `URI.create("https://junit.org/")`
+| `java.net.URL`             | `"https://junit.org/"`                   -> `new URL("https://junit.org/")`
 | `java.nio.charset.Charset` | `"UTF-8"`                                -> `Charset.forName("UTF-8")`
 | `java.nio.file.Path`       | `"/path/to/file"`                        -> `Paths.get("/path/to/file")`
 | `java.time.Duration`       | `"PT3S"`                                 -> `Duration.ofSeconds(3)`

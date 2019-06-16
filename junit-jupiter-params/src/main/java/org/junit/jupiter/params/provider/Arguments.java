@@ -33,7 +33,7 @@ import org.junit.platform.commons.util.Preconditions;
  * <ul>
  *   <li>The standard collections</li>
  *   <li>Tuples from third-party libraries, e.g.,
- *   <a href="http://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/tuple/package-summary.html">Commons Lang</a>,
+ *   <a href="https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/tuple/package-summary.html">Commons Lang</a>,
  *   or <a href="https://www.javatuples.org">javatuples</a></li>
  *   <li>Your own data class</li>
  * </ul>

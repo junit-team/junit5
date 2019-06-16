@@ -322,7 +322,7 @@ class PicocliCommandLineOptionsParserTests {
 				() -> assertEquals(singletonList(new URI("file:///foo.txt")), type.parseArgLine("-select-uri=file:///foo.txt").getSelectedUris()),
 				() -> assertEquals(singletonList(new URI("file:///foo.txt")), type.parseArgLine("--select-uri file:///foo.txt").getSelectedUris()),
 				() -> assertEquals(singletonList(new URI("file:///foo.txt")), type.parseArgLine("--select-uri=file:///foo.txt").getSelectedUris()),
-				() -> assertEquals(asList(new URI("file:///foo.txt"), new URI("http://localhost")), type.parseArgLine("-u file:///foo.txt -u http://localhost").getSelectedUris())
+				() -> assertEquals(asList(new URI("file:///foo.txt"), new URI("https://example")), type.parseArgLine("-u file:///foo.txt -u https://example").getSelectedUris())
 		);
 		// @formatter:on
 	}

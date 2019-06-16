@@ -171,12 +171,13 @@ class DefaultArgumentConverterTests {
 
 	@Test
 	void convertsStringToURI() {
-		assertConverts("http://java.sun.com/j2se/1.3/", URI.class, URI.create("http://java.sun.com/j2se/1.3/"));
+		assertConverts("https://docs.oracle.com/en/java/javase/12/", URI.class,
+			URI.create("https://docs.oracle.com/en/java/javase/12/"));
 	}
 
 	@Test
 	void convertsStringToURL() throws Exception {
-		assertConverts("http://junit.org/junit5", URL.class, new URL("http://junit.org/junit5"));
+		assertConverts("https://junit.org/junit5", URL.class, new URL("https://junit.org/junit5"));
 	}
 
 	// --- java.time -----------------------------------------------------------

@@ -100,7 +100,7 @@ class TestFactoryTestDescriptorTests {
 			File file = new File("src/test/resources");
 			assertThat(file).isDirectory();
 
-			URI uri = URI.create("http://example.com?foo=bar&line=42");
+			URI uri = URI.create("https://example.com?foo=bar&line=42");
 			TestSource testSource = TestFactoryTestDescriptor.fromUri(uri);
 
 			assertThat(testSource).isInstanceOf(UriSource.class);

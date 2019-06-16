@@ -125,7 +125,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
 [Gitter]: https://gitter.im/junit-team/junit5
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
-[JaCoCo]: http://www.eclemma.org/jacoco/
+[JaCoCo]: https://www.eclemma.org/jacoco/
 [Javadoc]: https://junit.org/junit5/docs/current/api/
 [JDK 11]: https://jdk.java.net/11/
 [Release Notes]: https://junit.org/junit5/docs/current/release-notes/

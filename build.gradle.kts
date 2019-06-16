@@ -7,6 +7,7 @@ plugins {
 	id("com.github.ben-manes.versions") // gradle dependencyUpdates
 	id("com.diffplug.gradle.spotless")
 	id("de.marcphilipp.nexus-publish") apply false
+	id("io.spring.nohttp") version "0.0.2.RELEASE"
 }
 
 buildScan {
@@ -49,7 +50,7 @@ val modularProjects by extra(mavenizedProjects - listOf(project(":junit-platform
 
 val license by extra(License(
 		name = "Eclipse Public License v2.0",
-		url = uri("http://www.eclipse.org/legal/epl-v20.html"),
+		url = uri("https://www.eclipse.org/legal/epl-v20.html"),
 		headerFile = file("src/spotless/eclipse-public-license-2.0.java")
 ))
 
@@ -162,6 +163,12 @@ rootProject.apply {
 			trimTrailingWhitespace()
 			endWithNewline()
 		}
+	}
+
+	nohttp {
+		// The following doesn't compile with the Kotlin DSL.
+		// source.exclude("**/buildSrc/build/**/kotlin-dsl*/**")
+		whitelistFile = project.file("src/nohttp/whitelist.lines")
 	}
 
 	tasks {
