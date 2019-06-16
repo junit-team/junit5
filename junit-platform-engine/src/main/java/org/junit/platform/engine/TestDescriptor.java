@@ -31,6 +31,23 @@ import org.junit.platform.commons.util.Preconditions;
 public interface TestDescriptor {
 
 	/**
+	 * Determine if the supplied descriptor (or any of its descendants)
+	 * {@linkplain TestDescriptor#isTest() is a test} or
+	 * {@linkplain TestDescriptor#mayRegisterTests() may potentially register
+	 * tests dynamically}.
+	 *
+	 * @param testDescriptor the {@code TestDescriptor} to check for tests; never
+	 * {@code null}
+	 * @return {@code true} if the descriptor is a test, contains tests, or may
+	 * later register tests dynamically
+	 */
+	static boolean containsTests(TestDescriptor testDescriptor) {
+		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
+		return testDescriptor.isTest() || testDescriptor.mayRegisterTests()
+				|| testDescriptor.getChildren().stream().anyMatch(TestDescriptor::containsTests);
+	}
+
+	/**
 	 * Get the unique identifier (UID) for this descriptor.
 	 *
 	 * <p>Uniqueness must be guaranteed across an entire test plan,
@@ -196,23 +213,6 @@ public interface TestDescriptor {
 	}
 
 	/**
-	 * Determine if the supplied descriptor (or any of its descendants)
-	 * {@linkplain TestDescriptor#isTest() is a test} or
-	 * {@linkplain TestDescriptor#mayRegisterTests() may potentially register
-	 * tests dynamically}.
-	 *
-	 * @param testDescriptor the {@code TestDescriptor} to check for tests; never
-	 * {@code null}
-	 * @return {@code true} if the descriptor is a test, contains tests, or may
-	 * later register tests dynamically
-	 */
-	static boolean containsTests(TestDescriptor testDescriptor) {
-		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
-		return testDescriptor.isTest() || testDescriptor.mayRegisterTests()
-				|| testDescriptor.getChildren().stream().anyMatch(TestDescriptor::containsTests);
-	}
-
-	/**
 	 * Remove this descriptor from the hierarchy unless it is a root or contains
 	 * tests.
 	 *
@@ -252,21 +252,14 @@ public interface TestDescriptor {
 	}
 
 	/**
-	 * Visitor for the tree-like {@link TestDescriptor} structure.
+	 * Get the value of the Requirement annotation.
 	 *
-	 * @see TestDescriptor#accept(Visitor)
+	 * <p>The <em>Requirement</em> annotation can be used to show if a test was written to ensure the correct
+	 * implementation of a requirement.
+	 *
+	 * @return the id of the requirement; max be {@code null} when not set or blank
 	 */
-	@FunctionalInterface
-	interface Visitor {
-
-		/**
-		 * Visit a {@link TestDescriptor}.
-		 *
-		 * @param descriptor the {@code TestDescriptor} to visit; never {@code null}
-		 */
-		void visit(TestDescriptor descriptor);
-
-	}
+	String getRequirement();
 
 	/**
 	 * Supported types for {@link TestDescriptor TestDescriptors}.
@@ -303,6 +296,23 @@ public interface TestDescriptor {
 		public boolean isTest() {
 			return this == TEST || this == CONTAINER_AND_TEST;
 		}
+
+	}
+
+	/**
+	 * Visitor for the tree-like {@link TestDescriptor} structure.
+	 *
+	 * @see TestDescriptor#accept(Visitor)
+	 */
+	@FunctionalInterface
+	interface Visitor {
+
+		/**
+		 * Visit a {@link TestDescriptor}.
+		 *
+		 * @param descriptor the {@code TestDescriptor} to visit; never {@code null}
+		 */
+		void visit(TestDescriptor descriptor);
 
 	}
 
