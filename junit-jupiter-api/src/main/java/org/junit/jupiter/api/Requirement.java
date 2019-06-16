@@ -17,7 +17,8 @@ import java.lang.annotation.*;
 import org.apiguardian.api.API;
 
 /**
- * {@code @Requirement} marks a test to show that was written to ensure the correct implementation of the annotated requirement.
+ * {@code @Requirement} marks a test to show that it was written to ensure the correct
+ * implementation of the annotated requirement.
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
@@ -25,5 +26,10 @@ import org.apiguardian.api.API;
 @API(status = EXPERIMENTAL)
 public @interface Requirement {
 
+	/**
+	 * The id of the requirement.
+	 * 
+	 * @return requirements id
+	 */
 	String id();
 }
