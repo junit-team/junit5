@@ -38,6 +38,7 @@ import org.apiguardian.api.API;
  * @see AfterAll
  * @see DisplayName
  * @see Tag
+ * @see Requirement
  */
 @API(status = STABLE, since = "5.0")
 public interface TestInfo {
@@ -106,5 +107,10 @@ public interface TestInfo {
 	 * Get the {@link Method} associated with the current test or container, if available.
 	 */
 	Optional<Method> getTestMethod();
+
+	/**
+	 * Get the id of the {@link Requirement} associated with the current test, if available.
+	 */
+	String getRequirement();
 
 }
