@@ -15,13 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
@@ -359,31 +353,16 @@ public interface ExtensionContext {
 	Store getStore(Namespace namespace);
 
 	/**
+	 * Get the value of the {@Link Requirement} annotation of the test case.
+	 * 
+	 * @return the value of the annotation. Returns {@code null} when no annotation was set or its value is null/blank.
+	 */
+	String getRequirement();
+
+	/**
 	 * {@code Store} provides methods for extensions to save and retrieve data.
 	 */
 	interface Store {
-
-		/**
-		 * Classes implementing this interface indicate that they want to {@link #close}
-		 * some underlying resource or resources when the enclosing {@link Store Store}
-		 * is closed.
-		 *
-		 * <p>Note that the {@code CloseableResource} API is only honored for
-		 * objects stored within an extension context {@link Store Store}.
-		 *
-		 * @since 5.1
-		 */
-		@API(status = STABLE, since = "5.1")
-		interface CloseableResource {
-
-			/**
-			 * Close underlying resources.
-			 *
-			 * @throws Throwable any throwable will be caught and rethrown
-			 */
-			void close() throws Throwable;
-
-		}
 
 		/**
 		 * Get the value that is stored under the supplied {@code key}.
@@ -590,6 +569,28 @@ public interface ExtensionContext {
 		 */
 		<V> V remove(Object key, Class<V> requiredType);
 
+		/**
+		 * Classes implementing this interface indicate that they want to {@link #close}
+		 * some underlying resource or resources when the enclosing {@link Store Store}
+		 * is closed.
+		 *
+		 * <p>Note that the {@code CloseableResource} API is only honored for
+		 * objects stored within an extension context {@link Store Store}.
+		 *
+		 * @since 5.1
+		 */
+		@API(status = STABLE, since = "5.1")
+		interface CloseableResource {
+
+			/**
+			 * Close underlying resources.
+			 *
+			 * @throws Throwable any throwable will be caught and rethrown
+			 */
+			void close() throws Throwable;
+
+		}
+
 	}
 
 	/**
@@ -607,6 +608,11 @@ public interface ExtensionContext {
 		 * all extensions.
 		 */
 		public static final Namespace GLOBAL = Namespace.create(new Object());
+		private final List<?> parts;
+
+		private Namespace(Object... parts) {
+			this.parts = new ArrayList<>(Arrays.asList(parts));
+		}
 
 		/**
 		 * Create a namespace which restricts access to data to all extensions
@@ -620,12 +626,6 @@ public interface ExtensionContext {
 			Preconditions.notEmpty(parts, "parts array must not be null or empty");
 			Preconditions.containsNoNullElements(parts, "individual parts must not be null");
 			return new Namespace(parts);
-		}
-
-		private final List<?> parts;
-
-		private Namespace(Object... parts) {
-			this.parts = new ArrayList<>(Arrays.asList(parts));
 		}
 
 		@Override
