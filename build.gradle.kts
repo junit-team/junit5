@@ -166,9 +166,8 @@ rootProject.apply {
 	}
 
 	nohttp {
-		// The following doesn't compile with the Kotlin DSL.
-		// source.exclude("**/buildSrc/build/**/kotlin-dsl*/**")
-		whitelistFile = project.file("src/nohttp/whitelist.lines")
+		// Must cast, since `source` is only exposed as a FileTree
+		(source as ConfigurableFileTree).exclude("buildSrc/build/generated-sources/**")
 	}
 
 	tasks {
