@@ -37,14 +37,6 @@ import org.junit.platform.engine.UniqueId;
 @API(status = STABLE, since = "1.0")
 public abstract class AbstractTestDescriptor implements TestDescriptor {
 
-	private final UniqueId uniqueId;
-
-	private final String displayName;
-
-	private final TestSource source;
-
-	private TestDescriptor parent;
-
 	/**
 	 * The synchronized set of children associated with this {@code TestDescriptor}.
 	 *
@@ -57,6 +49,11 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	 * set should be used instead of a set local to the subclass.
 	 */
 	protected final Set<TestDescriptor> children = Collections.synchronizedSet(new LinkedHashSet<>(16));
+	private final UniqueId uniqueId;
+	private final String displayName;
+	private final TestSource source;
+	private TestDescriptor parent;
+	private String requirement;
 
 	/**
 	 * Create a new {@code AbstractTestDescriptor} with the supplied
@@ -69,7 +66,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	 * @see #AbstractTestDescriptor(UniqueId, String, TestSource)
 	 */
 	protected AbstractTestDescriptor(UniqueId uniqueId, String displayName) {
-		this(uniqueId, displayName, null);
+		this(uniqueId, displayName, null, null);
 	}
 
 	/**
@@ -85,9 +82,27 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	 * @see #AbstractTestDescriptor(UniqueId, String)
 	 */
 	protected AbstractTestDescriptor(UniqueId uniqueId, String displayName, TestSource source) {
+		this(uniqueId, displayName, source, null);
+	}
+
+	/**
+	 * Create a new {@code AbstractTestDescriptor} with the supplied
+	 * {@link UniqueId}, display name, and source.
+	 *
+	 * @param uniqueId the unique ID of this {@code TestDescriptor}; never
+	 * {@code null}
+	 * @param displayName the display name for this {@code TestDescriptor};
+	 * never {@code null} or blank
+	 * @param source the source of the test or container described by this
+	 * {@code TestDescriptor}; can be {@code null}
+	 * @param requirement the annotated requirement of the test; can be {@code null}   
+	 * @see #AbstractTestDescriptor(UniqueId, String, TestSource)
+	 */
+	protected AbstractTestDescriptor(UniqueId uniqueId, String displayName, TestSource source, String requirement) {
 		this.uniqueId = Preconditions.notNull(uniqueId, "UniqueId must not be null");
 		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or blank");
 		this.source = source;
+		this.requirement = requirement;
 	}
 
 	@Override
@@ -108,6 +123,11 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	@Override
 	public Optional<TestSource> getSource() {
 		return Optional.ofNullable(this.source);
+	}
+
+	@Override
+	public String getRequirement() {
+		return this.requirement;
 	}
 
 	@Override
