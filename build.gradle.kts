@@ -7,7 +7,7 @@ plugins {
 	id("com.github.ben-manes.versions") // gradle dependencyUpdates
 	id("com.diffplug.gradle.spotless")
 	id("de.marcphilipp.nexus-publish") apply false
-	id("io.spring.nohttp") version "0.0.2.RELEASE"
+	id("io.spring.nohttp")
 }
 
 buildScan {

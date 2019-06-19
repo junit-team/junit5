@@ -16,6 +16,7 @@ pluginManagement {
 				"org.asciidoctor.convert" -> useVersion(Versions.asciidoctorPlugin)
 				"me.champeau.gradle.jmh" -> useVersion(Versions.jmhPlugin)
 				"de.marcphilipp.nexus-publish" -> useVersion(Versions.nexusPublishPlugin)
+				"io.spring.nohttp" -> useVersion(Versions.noHttpPlugin)
 			}
 		}
 	}

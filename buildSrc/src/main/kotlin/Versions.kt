@@ -34,6 +34,7 @@ object Versions {
     val spotlessPlugin = "3.23.0"
     val versioningPlugin = "2.8.2"
     val versionsPlugin = "0.21.0"
+    val noHttpPlugin = "0.0.3.RELEASE"
 
     // Asciidoctor
     val asciidoctorDiagram = "1.5.9"
