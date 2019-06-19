@@ -30,6 +30,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -42,6 +43,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.jupiter.engine.execution.injection.sample.LongParameterResolver;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -269,6 +271,13 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	@Test
 	void propagatesErrorThrownDuringInitializationOfInstanceField() {
 		assertTestFails(InstanceLevelExplosiveErrorTestCase.class, allOf(instanceOf(Error.class), message("boom")));
+	}
+
+	@Test
+	void storesExtensionInRegistryOfNestedTestMethods() {
+		var results = executeTestsForClass(TwoNestedClassesTestCase.class);
+
+		results.tests().assertStatistics(stats -> stats.succeeded(4));
 	}
 
 	private void assertClassFails(Class<?> testClass, Condition<Throwable> causeCondition) {
@@ -707,6 +716,43 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 					}
 				});
 			// @formatter:on
+		}
+
+	}
+
+	static class TwoNestedClassesTestCase {
+
+		@RegisterExtension
+		Extension extension = new LongParameterResolver();
+
+		@Nested
+		class A {
+
+			@Test
+			void first(Long n) {
+				assertEquals(42L, n);
+			}
+
+			@Test
+			void second(Long n) {
+				assertEquals(42L, n);
+			}
+
+		}
+
+		@Nested
+		class B {
+
+			@Test
+			void first(Long n) {
+				assertEquals(42L, n);
+			}
+
+			@Test
+			void second(Long n) {
+				assertEquals(42L, n);
+			}
+
 		}
 
 	}

@@ -22,7 +22,7 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
@@ -63,8 +63,8 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 	}
 
 	@Override
-	protected ExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {
-		ExtensionRegistry registry = super.populateNewExtensionRegistry(context);
+	protected MutableExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {
+		MutableExtensionRegistry registry = super.populateNewExtensionRegistry(context);
 		invocationContext.getAdditionalExtensions().forEach(
 			extension -> registry.registerExtension(extension, invocationContext));
 		return registry;

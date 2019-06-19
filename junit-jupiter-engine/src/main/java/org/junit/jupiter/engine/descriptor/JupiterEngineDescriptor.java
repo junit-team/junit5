@@ -12,13 +12,12 @@ package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.JupiterTestDescriptor.toExecutionMode;
-import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryWithDefaultExtensions;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
@@ -49,7 +48,8 @@ public class JupiterEngineDescriptor extends EngineDescriptor implements Node<Ju
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
-		ExtensionRegistry extensionRegistry = createRegistryWithDefaultExtensions(context.getConfiguration());
+		MutableExtensionRegistry extensionRegistry = MutableExtensionRegistry.createRegistryWithDefaultExtensions(
+			context.getConfiguration());
 		EngineExecutionListener executionListener = context.getExecutionListener();
 		ExtensionContext extensionContext = new JupiterEngineExtensionContext(executionListener, this,
 			context.getConfiguration());

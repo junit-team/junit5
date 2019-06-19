@@ -30,7 +30,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClasspathResourceSource;
@@ -144,7 +144,7 @@ class TestFactoryTestDescriptorTests {
 					.extend() //
 					.withThrowableCollector(new OpenTest4JAwareThrowableCollector()) //
 					.withExtensionContext(extensionContext) //
-					.withExtensionRegistry(mock(ExtensionRegistry.class)) //
+					.withExtensionRegistry(mock(MutableExtensionRegistry.class)) //
 					.build();
 
 			Method testMethod = CustomStreamTestCase.class.getDeclaredMethod("customStream");

@@ -12,11 +12,11 @@ package org.junit.jupiter.engine.execution;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
-import java.util.Optional;
-
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.TestInstances;
+import org.junit.jupiter.engine.extension.ExtensionRegistrar;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 
 /**
  * @since 5.0
@@ -25,6 +25,10 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 @API(status = INTERNAL, since = "5.0")
 public interface TestInstancesProvider {
 
-	TestInstances getTestInstances(Optional<ExtensionRegistry> childExtensionRegistry);
+	default TestInstances getTestInstances(MutableExtensionRegistry extensionRegistry) {
+		return getTestInstances(extensionRegistry, extensionRegistry);
+	}
+
+	TestInstances getTestInstances(ExtensionRegistry extensionRegistry, ExtensionRegistrar extensionRegistrar);
 
 }

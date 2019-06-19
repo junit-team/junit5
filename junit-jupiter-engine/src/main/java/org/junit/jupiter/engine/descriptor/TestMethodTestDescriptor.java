@@ -38,6 +38,7 @@ import org.junit.jupiter.engine.execution.ExecutableInvoker;
 import org.junit.jupiter.engine.execution.ExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.BlacklistedExceptions;
@@ -96,13 +97,13 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	// --- Node ----------------------------------------------------------------
 
 	@Override
-	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
-		ExtensionRegistry registry = populateNewExtensionRegistry(context);
+	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
+		MutableExtensionRegistry registry = populateNewExtensionRegistry(context);
 		ThrowableCollector throwableCollector = createThrowableCollector();
 		MethodExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, context.getConfiguration(), throwableCollector);
 		throwableCollector.execute(() -> {
-			TestInstances testInstances = context.getTestInstancesProvider().getTestInstances(Optional.of(registry));
+			TestInstances testInstances = context.getTestInstancesProvider().getTestInstances(registry);
 			extensionContext.setTestInstances(testInstances);
 		});
 
@@ -115,7 +116,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		// @formatter:on
 	}
 
-	protected ExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {
+	protected MutableExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {
 		return populateNewExtensionRegistryFromExtendWithAnnotation(context.getExtensionRegistry(), getTestMethod());
 	}
 

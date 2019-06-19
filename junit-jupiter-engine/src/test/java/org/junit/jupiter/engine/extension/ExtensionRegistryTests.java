@@ -16,8 +16,8 @@ import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryFrom;
-import static org.junit.jupiter.engine.extension.ExtensionRegistry.createRegistryWithDefaultExtensions;
+import static org.junit.jupiter.engine.extension.MutableExtensionRegistry.createRegistryFrom;
+import static org.junit.jupiter.engine.extension.MutableExtensionRegistry.createRegistryWithDefaultExtensions;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -35,7 +35,7 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 
 /**
- * Tests for the {@link ExtensionRegistry}.
+ * Tests for the {@link MutableExtensionRegistry}.
  *
  * @since 5.0
  */
@@ -45,7 +45,7 @@ class ExtensionRegistryTests {
 
 	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
 
-	private ExtensionRegistry registry = createRegistryWithDefaultExtensions(configuration);
+	private MutableExtensionRegistry registry = createRegistryWithDefaultExtensions(configuration);
 
 	@Test
 	void newRegistryWithoutParentHasDefaultExtensions() {
@@ -101,10 +101,10 @@ class ExtensionRegistryTests {
 
 	@Test
 	void extensionsAreInheritedFromParent() {
-		ExtensionRegistry parent = registry;
+		MutableExtensionRegistry parent = registry;
 		parent.registerExtension(MyExtension.class);
 
-		ExtensionRegistry child = createRegistryFrom(parent, singletonList(YourExtension.class));
+		MutableExtensionRegistry child = createRegistryFrom(parent, singletonList(YourExtension.class));
 		assertExtensionRegistered(child, MyExtension.class);
 		assertExtensionRegistered(child, YourExtension.class);
 		assertEquals(2, countExtensions(child, MyExtensionApi.class));
@@ -117,11 +117,11 @@ class ExtensionRegistryTests {
 
 	@Test
 	void registeringSameExtensionImplementationInParentAndChildDoesNotResultInDuplicate() {
-		ExtensionRegistry parent = registry;
+		MutableExtensionRegistry parent = registry;
 		parent.registerExtension(MyExtension.class);
 		assertEquals(1, countExtensions(parent, MyExtensionApi.class));
 
-		ExtensionRegistry child = createRegistryFrom(parent, asList(MyExtension.class, YourExtension.class));
+		MutableExtensionRegistry child = createRegistryFrom(parent, asList(MyExtension.class, YourExtension.class));
 		assertExtensionRegistered(child, MyExtension.class);
 		assertExtensionRegistered(child, YourExtension.class);
 		assertEquals(2, countExtensions(child, MyExtensionApi.class));

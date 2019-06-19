@@ -15,7 +15,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -71,7 +71,7 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 		return this.state.testInstancesProvider;
 	}
 
-	public ExtensionRegistry getExtensionRegistry() {
+	public MutableExtensionRegistry getExtensionRegistry() {
 		return this.state.extensionRegistry;
 	}
 
@@ -125,7 +125,7 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 		final EngineExecutionListener executionListener;
 		final JupiterConfiguration configuration;
 		TestInstancesProvider testInstancesProvider;
-		ExtensionRegistry extensionRegistry;
+		MutableExtensionRegistry extensionRegistry;
 		ExtensionContext extensionContext;
 		ThrowableCollector throwableCollector;
 
@@ -160,7 +160,7 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 			return this;
 		}
 
-		public Builder withExtensionRegistry(ExtensionRegistry extensionRegistry) {
+		public Builder withExtensionRegistry(MutableExtensionRegistry extensionRegistry) {
 			newState().extensionRegistry = extensionRegistry;
 			return this;
 		}

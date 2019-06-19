@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.EngineExecutionListener;
 
@@ -52,7 +52,8 @@ class JupiterEngineExecutionContextTests {
 	@Test
 	void extendWithAllAttributes() {
 		ExtensionContext extensionContext = mock(ExtensionContext.class);
-		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configuration);
+		MutableExtensionRegistry extensionRegistry = MutableExtensionRegistry.createRegistryWithDefaultExtensions(
+			configuration);
 		TestInstancesProvider testInstancesProvider = mock(TestInstancesProvider.class);
 		JupiterEngineExecutionContext newContext = originalContext.extend() //
 				.withExtensionContext(extensionContext) //
@@ -68,7 +69,8 @@ class JupiterEngineExecutionContextTests {
 	@Test
 	void canOverrideAttributeWhenContextIsExtended() {
 		ExtensionContext extensionContext = mock(ExtensionContext.class);
-		ExtensionRegistry extensionRegistry = ExtensionRegistry.createRegistryWithDefaultExtensions(configuration);
+		MutableExtensionRegistry extensionRegistry = MutableExtensionRegistry.createRegistryWithDefaultExtensions(
+			configuration);
 		TestInstancesProvider testInstancesProvider = mock(TestInstancesProvider.class);
 		ExtensionContext newExtensionContext = mock(ExtensionContext.class);
 
