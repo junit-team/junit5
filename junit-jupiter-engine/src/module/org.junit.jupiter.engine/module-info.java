@@ -18,6 +18,8 @@ module org.junit.jupiter.engine {
 
 	// exports org.junit.jupiter.engine; // Constants...
 
+	uses org.junit.jupiter.api.extension.Extension;
+
 	provides org.junit.platform.engine.TestEngine
 			with org.junit.jupiter.engine.JupiterTestEngine;
 
