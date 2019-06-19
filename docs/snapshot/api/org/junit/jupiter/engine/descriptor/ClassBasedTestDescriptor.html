@@ -295,14 +295,15 @@ extends <a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.e
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>protected <a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#instantiateTestClass(java.util.Optional,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&gt;&nbsp;outerInstances,
-                    <a href="../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
+                    <a href="../extension/ExtensionRegistry.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
                     <a href="../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>protected abstract <a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;parentExecutionContext,
-                    <a href="../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.extension.ExtensionRegistrar,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;parentExecutionContext,
+                    <a href="../extension/ExtensionRegistry.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
+                    <a href="../extension/ExtensionRegistrar.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistrar</a>&nbsp;registrar,
                     <a href="../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -558,14 +559,15 @@ extends <a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.e
 </dl>
 </li>
 </ul>
-<a id="instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.api.extension.ExtensionContext)">
+<a id="instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.extension.ExtensionRegistrar,org.junit.jupiter.api.extension.ExtensionContext)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>instantiateTestClass</h4>
 <pre class="methodSignature">protected abstract&nbsp;<a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&nbsp;instantiateTestClass&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;parentExecutionContext,
-                                                      <a href="../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
+                                                      <a href="../extension/ExtensionRegistry.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
+                                                      <a href="../extension/ExtensionRegistrar.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistrar</a>&nbsp;registrar,
                                                       <a href="../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</pre>
 </li>
 </ul>
@@ -576,7 +578,7 @@ extends <a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.e
 <li class="blockList">
 <h4>instantiateTestClass</h4>
 <pre class="methodSignature">protected&nbsp;<a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&nbsp;instantiateTestClass&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&gt;&nbsp;outerInstances,
-                                             <a href="../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
+                                             <a href="../extension/ExtensionRegistry.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
                                              <a href="../../api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</pre>
 </li>
 </ul>

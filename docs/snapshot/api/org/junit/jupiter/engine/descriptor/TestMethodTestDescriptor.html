@@ -321,7 +321,7 @@ extends <a href="MethodBasedTestDescriptor.html" title="class in org.junit.jupit
 </td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code>protected <a href="../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
+<td class="colFirst"><code>protected <a href="../extension/MutableExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">MutableExtensionRegistry</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#populateNewExtensionRegistry(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">populateNewExtensionRegistry</a></span>&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -460,8 +460,7 @@ extends <a href="MethodBasedTestDescriptor.html" title="class in org.junit.jupit
 <ul class="blockList">
 <li class="blockList">
 <h4>prepare</h4>
-<pre class="methodSignature">public&nbsp;<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;prepare&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)
-                                      throws <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a></pre>
+<pre class="methodSignature">public&nbsp;<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;prepare&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="JupiterTestDescriptor.html#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">JupiterTestDescriptor</a></code></span></div>
 <div class="block">Must be overridden and return a new context so cleanUp() does not accidentally close the parent context.</div>
 <dl>
@@ -469,8 +468,6 @@ extends <a href="MethodBasedTestDescriptor.html" title="class in org.junit.jupit
 <dd><code><a href="../../../platform/engine/support/hierarchical/Node.html#prepare(C)">prepare</a></code>&nbsp;in interface&nbsp;<code><a href="../../../platform/engine/support/hierarchical/Node.html" title="interface in org.junit.platform.engine.support.hierarchical">Node</a>&lt;<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&gt;</code></dd>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="JupiterTestDescriptor.html#prepare(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext)">prepare</a></code>&nbsp;in class&nbsp;<code><a href="JupiterTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">JupiterTestDescriptor</a></code></dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a></code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../platform/engine/support/hierarchical/Node.html#cleanUp(C)"><code>Node.cleanUp(EngineExecutionContext)</code></a></dd>
 </dl>
@@ -482,7 +479,7 @@ extends <a href="MethodBasedTestDescriptor.html" title="class in org.junit.jupit
 <ul class="blockList">
 <li class="blockList">
 <h4>populateNewExtensionRegistry</h4>
-<pre class="methodSignature">protected&nbsp;<a href="../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;populateNewExtensionRegistry&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</pre>
+<pre class="methodSignature">protected&nbsp;<a href="../extension/MutableExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">MutableExtensionRegistry</a>&nbsp;populateNewExtensionRegistry&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context)</pre>
 </li>
 </ul>
 <a id="execute(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.support.hierarchical.Node.DynamicTestExecutor)">

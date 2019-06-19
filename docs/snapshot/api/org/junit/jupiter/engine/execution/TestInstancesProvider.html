@@ -27,8 +27,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
+var data = {"i0":6,"i1":18};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -151,7 +151,7 @@ public interface <span class="typeNameLabel">TestInstancesProvider</span></pre>
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t5" class="tableTab"><span><a href="javascript:show(16);">Default Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -159,7 +159,13 @@ public interface <span class="typeNameLabel">TestInstancesProvider</span></pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestInstances(java.util.Optional)">getTestInstances</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&gt;&nbsp;childExtensionRegistry)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestInstances(org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.extension.ExtensionRegistrar)">getTestInstances</a></span>&#8203;(<a href="../extension/ExtensionRegistry.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry,
+                <a href="../extension/ExtensionRegistrar.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistrar</a>&nbsp;extensionRegistrar)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>default <a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTestInstances(org.junit.jupiter.engine.extension.MutableExtensionRegistry)">getTestInstances</a></span>&#8203;(<a href="../extension/MutableExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">MutableExtensionRegistry</a>&nbsp;extensionRegistry)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -179,13 +185,23 @@ public interface <span class="typeNameLabel">TestInstancesProvider</span></pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="getTestInstances(java.util.Optional)">
+<a id="getTestInstances(org.junit.jupiter.engine.extension.MutableExtensionRegistry)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTestInstances</h4>
+<pre class="methodSignature">default&nbsp;<a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&nbsp;getTestInstances&#8203;(<a href="../extension/MutableExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">MutableExtensionRegistry</a>&nbsp;extensionRegistry)</pre>
+</li>
+</ul>
+<a id="getTestInstances(org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.extension.ExtensionRegistrar)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getTestInstances</h4>
-<pre class="methodSignature"><a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&nbsp;getTestInstances&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="../extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&gt;&nbsp;childExtensionRegistry)</pre>
+<pre class="methodSignature"><a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a>&nbsp;getTestInstances&#8203;(<a href="../extension/ExtensionRegistry.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;extensionRegistry,
+                               <a href="../extension/ExtensionRegistrar.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistrar</a>&nbsp;extensionRegistrar)</pre>
 </li>
 </ul>
 </li>

@@ -629,7 +629,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html#getExtensionRegistry()">getExtensionRegistry()</a></span> - Method in class org.junit.jupiter.engine.execution.<a href="../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/extension/ExtensionRegistry.html#getExtensions(java.lang.Class)">getExtensions(Class&lt;E&gt;)</a></span> - Method in class org.junit.jupiter.engine.extension.<a href="../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/extension/ExtensionRegistry.html#getExtensions(java.lang.Class)">getExtensions(Class&lt;E&gt;)</a></span> - Method in interface org.junit.jupiter.engine.extension.<a href="../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistry</a></dt>
 <dd>
 <div class="block">Get all <code>Extensions</code> of the specified type that are present
  in this registry or one of its ancestors.</div>
@@ -1033,7 +1033,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Get the <a href="../org/junit/platform/engine/support/hierarchical/ResourceLock.html" title="interface in org.junit.platform.engine.support.hierarchical">resource lock</a> of this task.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/extension/ExtensionRegistry.html#getReversedExtensions(java.lang.Class)">getReversedExtensions(Class&lt;E&gt;)</a></span> - Method in class org.junit.jupiter.engine.extension.<a href="../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/extension/ExtensionRegistry.html#getReversedExtensions(java.lang.Class)">getReversedExtensions(Class&lt;E&gt;)</a></span> - Method in interface org.junit.jupiter.engine.extension.<a href="../org/junit/jupiter/engine/extension/ExtensionRegistry.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistry</a></dt>
 <dd>
 <div class="block">Get all <code>Extensions</code> of the specified type that are present
  in this registry or one of its ancestors, in reverse order.</div>
@@ -1249,7 +1249,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/descriptor/DynamicExtensionContext.html#getTestInstances()">getTestInstances()</a></span> - Method in class org.junit.jupiter.engine.descriptor.<a href="../org/junit/jupiter/engine/descriptor/DynamicExtensionContext.html" title="class in org.junit.jupiter.engine.descriptor">DynamicExtensionContext</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/execution/TestInstancesProvider.html#getTestInstances(java.util.Optional)">getTestInstances(Optional&lt;ExtensionRegistry&gt;)</a></span> - Method in interface org.junit.jupiter.engine.execution.<a href="../org/junit/jupiter/engine/execution/TestInstancesProvider.html" title="interface in org.junit.jupiter.engine.execution">TestInstancesProvider</a></dt>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/execution/TestInstancesProvider.html#getTestInstances(org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.extension.ExtensionRegistrar)">getTestInstances(ExtensionRegistry, ExtensionRegistrar)</a></span> - Method in interface org.junit.jupiter.engine.execution.<a href="../org/junit/jupiter/engine/execution/TestInstancesProvider.html" title="interface in org.junit.jupiter.engine.execution">TestInstancesProvider</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/execution/TestInstancesProvider.html#getTestInstances(org.junit.jupiter.engine.extension.MutableExtensionRegistry)">getTestInstances(MutableExtensionRegistry)</a></span> - Method in interface org.junit.jupiter.engine.execution.<a href="../org/junit/jupiter/engine/execution/TestInstancesProvider.html" title="interface in org.junit.jupiter.engine.execution">TestInstancesProvider</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html#getTestInstancesProvider()">getTestInstancesProvider()</a></span> - Method in class org.junit.jupiter.engine.execution.<a href="../org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></dt>
 <dd>&nbsp;</dd>

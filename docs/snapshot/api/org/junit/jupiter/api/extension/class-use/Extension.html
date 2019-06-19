@@ -356,7 +356,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code>&lt;E extends <a href="../Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;E&gt;</code></td>
+<td class="colFirst"><code>default &lt;E extends <a href="../Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;E&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExtensionRegistry.</span><code><span class="memberNameLink"><a href="../../../engine/extension/ExtensionRegistry.html#getExtensions(java.lang.Class)">getExtensions</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;E&gt;&nbsp;extensionType)</code></th>
 <td class="colLast">
 <div class="block">Get all <code>Extensions</code> of the specified type that are present
@@ -364,7 +364,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>&lt;E extends <a href="../Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;E&gt;</code></td>
+<td class="colFirst"><code>default &lt;E extends <a href="../Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;E&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExtensionRegistry.</span><code><span class="memberNameLink"><a href="../../../engine/extension/ExtensionRegistry.html#getReversedExtensions(java.lang.Class)">getReversedExtensions</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;E&gt;&nbsp;extensionType)</code></th>
 <td class="colLast">
 <div class="block">Get all <code>Extensions</code> of the specified type that are present
@@ -379,6 +379,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  in this registry or one of its ancestors.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><code>&lt;E extends <a href="../Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;E&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">MutableExtensionRegistry.</span><code><span class="memberNameLink"><a href="../../../engine/extension/MutableExtensionRegistry.html#stream(java.lang.Class)">stream</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;E&gt;&nbsp;extensionType)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
 </tbody>
 </table>
 <table class="useSummary">
@@ -391,12 +396,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tbody>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExtensionRegistry.</span><code><span class="memberNameLink"><a href="../../../engine/extension/ExtensionRegistry.html#registerExtension(org.junit.jupiter.api.extension.Extension,java.lang.Object)">registerExtension</a></span>&#8203;(<a href="../Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&nbsp;extension,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExtensionRegistrar.</span><code><span class="memberNameLink"><a href="../../../engine/extension/ExtensionRegistrar.html#registerExtension(org.junit.jupiter.api.extension.Extension,java.lang.Object)">registerExtension</a></span>&#8203;(<a href="../Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&nbsp;extension,
                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;source)</code></th>
 <td class="colLast">
-<div class="block">Register the supplied <a href="../Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extension</code></a> in this registry, without checking
- if an extension of that type already exists in this registry.</div>
+<div class="block">Register the supplied <a href="../Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extension</code></a>, without checking if an extension
+ of that type already exists.</div>
 </td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">MutableExtensionRegistry.</span><code><span class="memberNameLink"><a href="../../../engine/extension/MutableExtensionRegistry.html#registerExtension(org.junit.jupiter.api.extension.Extension,java.lang.Object)">registerExtension</a></span>&#8203;(<a href="../Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&nbsp;extension,
+                 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;source)</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -409,8 +420,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tbody>
 <tr class="altColor">
-<td class="colFirst"><code>static <a href="../../../engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExtensionRegistry.</span><code><span class="memberNameLink"><a href="../../../engine/extension/ExtensionRegistry.html#createRegistryFrom(org.junit.jupiter.engine.extension.ExtensionRegistry,java.util.List)">createRegistryFrom</a></span>&#8203;(<a href="../../../engine/extension/ExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;parentRegistry,
+<td class="colFirst"><code>static <a href="../../../engine/extension/MutableExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">MutableExtensionRegistry</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">MutableExtensionRegistry.</span><code><span class="memberNameLink"><a href="../../../engine/extension/MutableExtensionRegistry.html#createRegistryFrom(org.junit.jupiter.engine.extension.MutableExtensionRegistry,java.util.List)">createRegistryFrom</a></span>&#8203;(<a href="../../../engine/extension/MutableExtensionRegistry.html" title="class in org.junit.jupiter.engine.extension">MutableExtensionRegistry</a>&nbsp;parentRegistry,
                   <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="../Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&gt;&gt;&nbsp;extensionTypes)</code></th>
 <td class="colLast">
 <div class="block">Factory for creating and populating a new registry from a list of
