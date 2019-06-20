@@ -1581,22 +1581,30 @@ include::{testDir}/example/DynamicTestsDemo.java[tags=user_guide]
 The JUnit Platform provides `TestSource`, a representation of the source of a test or
 container used to navigate to its location by IDEs and build tools.
 
-Test sources for dynamic tests can be constructed from URIs.
+The `TestSource` for a dynamic test or dynamic container can be constructed from a
+`java.net.URI` which can be supplied via the `DynamicTest.dynamicTest(String, URI,
+Executable)` or `DynamicContainer.dynamicContainer(String, URI, Stream)` factory method,
+respectively. The `URI` will be converted to one of the following `TestSource`
+implementations.
 
 `ClasspathResourceSource` ::
-  Use the `classpath` scheme -- for example, `classpath:/test/foo.xml?line=20,column=2`.
+  If the `URI` contains the `classpath` scheme -- for example,
+  `classpath:/test/foo.xml?line=20,column=2`.
 
 `DirectorySource` ::
-  Use file system path.
+  If the `URI` represents a directory present in the file system.
 
 `FileSource` ::
-  Use file system path.
+  If the `URI` represents a file present in the file system.
 
 `MethodSource` ::
-  Use the `method` scheme and the fully qualified method name (FQMN) -- for example,
-  `method:org.junit.Foo#bar(java.lang.String, java.lang.String[])`. Please refer to the
-  Javadoc for `DiscoverySelectors.selectMethod(String)` for the supported formats for a
-  FQMN.
+  If the `URI` contains the `method` scheme and the fully qualified method name (FQMN) --
+  for example, `method:org.junit.Foo#bar(java.lang.String, java.lang.String[])`. Please
+  refer to the Javadoc for `DiscoverySelectors.selectMethod(String)` for the supported
+  formats for a FQMN.
+
+`UriSource` ::
+  If none of the above `TestSource` implementations are applicable.
 
 
 [[writing-tests-declarative-timeouts]]
