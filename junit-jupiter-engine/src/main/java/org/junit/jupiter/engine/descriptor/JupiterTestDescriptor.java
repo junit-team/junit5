@@ -70,6 +70,11 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		this.configuration = configuration;
 	}
 
+	JupiterTestDescriptor(UniqueId uniqueId, String displayName, TestSource source,
+			JupiterConfiguration configuration) {
+		this(uniqueId, displayName, source, configuration, null);
+	}
+
 	// --- TestDescriptor ------------------------------------------------------
 
 	static Set<TestTag> getTags(AnnotatedElement element) {
