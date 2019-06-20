@@ -4615,28 +4615,36 @@ expressiveness and power of dynamic tests.</p>
 container used to navigate to its location by IDEs and build tools.</p>
 </div>
 <div class="paragraph">
-<p>Test sources for dynamic tests can be constructed from URIs.</p>
+<p>The <code>TestSource</code> for a dynamic test or dynamic container can be constructed from a
+<code>java.net.URI</code> which can be supplied via the <code>DynamicTest.dynamicTest(String, URI,
+Executable)</code> or <code>DynamicContainer.dynamicContainer(String, URI, Stream)</code> factory method,
+respectively. The <code>URI</code> will be converted to one of the following <code>TestSource</code>
+implementations.</p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1"><code>ClasspathResourceSource</code> </dt>
 <dd>
-<p>Use the <code>classpath</code> scheme&#8201;&#8212;&#8201;for example, <code>classpath:/test/foo.xml?line=20,column=2</code>.</p>
+<p>If the <code>URI</code> contains the <code>classpath</code> scheme&#8201;&#8212;&#8201;for example,
+<code>classpath:/test/foo.xml?line=20,column=2</code>.</p>
 </dd>
 <dt class="hdlist1"><code>DirectorySource</code> </dt>
 <dd>
-<p>Use file system path.</p>
+<p>If the <code>URI</code> represents a directory present in the file system.</p>
 </dd>
 <dt class="hdlist1"><code>FileSource</code> </dt>
 <dd>
-<p>Use file system path.</p>
+<p>If the <code>URI</code> represents a file present in the file system.</p>
 </dd>
 <dt class="hdlist1"><code>MethodSource</code> </dt>
 <dd>
-<p>Use the <code>method</code> scheme and the fully qualified method name (FQMN)&#8201;&#8212;&#8201;for example,
-<code>method:org.junit.Foo#bar(java.lang.String, java.lang.String[])</code>. Please refer to the
-Javadoc for <code>DiscoverySelectors.selectMethod(String)</code> for the supported formats for a
-FQMN.</p>
+<p>If the <code>URI</code> contains the <code>method</code> scheme and the fully qualified method name (FQMN)&#8201;&#8212;&#8201;for example, <code>method:org.junit.Foo#bar(java.lang.String, java.lang.String[])</code>. Please
+refer to the Javadoc for <code>DiscoverySelectors.selectMethod(String)</code> for the supported
+formats for a FQMN.</p>
+</dd>
+<dt class="hdlist1"><code>UriSource</code> </dt>
+<dd>
+<p>If none of the above <code>TestSource</code> implementations are applicable.</p>
 </dd>
 </dl>
 </div>
@@ -9691,7 +9699,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-06-20 09:07:09 UTC
+Last updated 2019-06-20 09:22:15 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
