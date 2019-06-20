@@ -13,11 +13,7 @@ package org.junit.jupiter.engine.descriptor;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
@@ -81,6 +77,11 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	@Override
 	public String getDisplayName() {
 		return getTestDescriptor().getDisplayName();
+	}
+
+	@Override
+	public String getRequirement() {
+		return getTestDescriptor().getRequirement();
 	}
 
 	@Override
