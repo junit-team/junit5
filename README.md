@@ -84,7 +84,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 ### JUnit Platform
 
 - **Group ID**: `org.junit.platform`
-- **Version**: `1.4.2`, `5.5.0-RC2`, or `1.5.0-SNAPSHOT`
+- **Version**: `1.4.2`, `1.5.0-RC2`, or `1.5.0-SNAPSHOT`
 - **Artifact IDs** and Java **module** name:
   - `junit-platform-commons` (`org.junit.platform.commons`)
   - `junit-platform-console` (`org.junit.platform.console`)
