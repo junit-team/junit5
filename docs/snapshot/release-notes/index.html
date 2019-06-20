@@ -556,13 +556,6 @@ table.CodeRay td.code>pre{padding:0}
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#release-notes-5.5.0-RC2">5.5.0-RC2</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.5.0-RC2-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.5.0-RC2-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.5.0-RC2-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
 <li><a href="#release-notes-5.5.0-RC1">5.5.0-RC1</a>
 <ul class="sectlevel2">
 <li><a href="#release-notes-5.5.0-RC1-junit-platform">JUnit Platform</a></li>
@@ -610,66 +603,6 @@ authors as well as build tool and IDE vendors.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="release-notes-5.5.0-RC2"><a class="anchor" href="#release-notes-5.5.0-RC2"></a>5.5.0-RC2</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> June 20, 2019</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong> Feature improvements and bug fixes since RC1</p>
-</div>
-<div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/41?closed=1">5.5 RC2</a> milestone page in the JUnit repository
-on GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.0-RC2-junit-platform"><a class="anchor" href="#release-notes-5.5.0-RC2-junit-platform"></a>JUnit Platform</h3>
-<div class="paragraph">
-<p>No changes.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.0-RC2-junit-jupiter"><a class="anchor" href="#release-notes-5.5.0-RC2-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Extensions registered programmatically using <code>@RegisterExtension</code> on fields of test
-classes now work correctly for tests in contained <code>@Nested</code> test classes. Previously,
-such extensions were registered multiple times for each test method in @Nested` classes.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Parameterized tests now support implicit conversion from a <code>String</code> to the following
-<code>java.time</code> types for : <code>Duration</code>, <code>Period</code>, <code>MonthDay</code>, <code>ZoneId</code>, and <code>ZoneOffset</code>.</p>
-</li>
-<li>
-<p>A new <code>getOrDefault()</code> convenience method has been added to <code>ExtensionContext.Store</code>.</p>
-</li>
-<li>
-<p>The <code>JRE</code> enum now supports Java 14.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.0-RC2-junit-vintage"><a class="anchor" href="#release-notes-5.5.0-RC2-junit-vintage"></a>JUnit Vintage</h3>
-<div class="paragraph">
-<p>No changes.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="release-notes-5.5.0-RC1"><a class="anchor" href="#release-notes-5.5.0-RC1"></a>5.5.0-RC1</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -708,7 +641,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.5.0-RC1-junit-platform"><a class="anchor" href="#release-notes-5.5.0-RC1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
+<h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -731,7 +664,7 @@ exception class with the same name in exported package <code>org.junit.platform.
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -757,7 +690,7 @@ arguments.</p>
 <div class="sect2">
 <h3 id="release-notes-5.5.0-RC1-junit-jupiter"><a class="anchor" href="#release-notes-5.5.0-RC1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -783,7 +716,7 @@ combination of other built-in conditions or create and use a custom implementati
 </div>
 </div>
 <div class="sect3">
-<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-2"><a class="anchor" href="#new-features-and-improvements-2"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -866,7 +799,7 @@ details).</p>
 <div class="sect2">
 <h3 id="release-notes-5.5.0-RC1-junit-vintage"><a class="anchor" href="#release-notes-5.5.0-RC1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-3"><a class="anchor" href="#new-features-and-improvements-3"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -900,7 +833,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.5.0-M1-junit-platform"><a class="anchor" href="#release-notes-5.5.0-M1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -917,7 +850,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.5.0-M1-junit-jupiter"><a class="anchor" href="#release-notes-5.5.0-M1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
+<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -963,7 +896,7 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.2-junit-jupiter"><a class="anchor" href="#release-notes-5.4.2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -977,7 +910,7 @@ test names.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.2-junit-vintage"><a class="anchor" href="#release-notes-5.4.2-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1017,7 +950,7 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.1-junit-platform"><a class="anchor" href="#release-notes-5.4.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1032,7 +965,7 @@ initialization.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.1-junit-jupiter"><a class="anchor" href="#release-notes-5.4.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1046,7 +979,7 @@ a temporary directory supplied via <code>@TempDir</code>.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.1-junit-vintage"><a class="anchor" href="#release-notes-5.4.1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1129,7 +1062,7 @@ in build tools</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-06-20 08:46:36 UTC
+Last updated 2019-06-20 08:52:21 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
