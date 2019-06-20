@@ -658,11 +658,8 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#writing-tests-test-templates">2.16. Test Templates</a></li>
 <li><a href="#writing-tests-dynamic-tests">2.17. Dynamic Tests</a>
 <ul class="sectlevel3">
-<li><a href="#writing-tests-dynamic-tests-examples">2.17.1. Dynamic Test Examples</a>
-<ul class="sectlevel4">
-<li><a href="#writing-tests-uris-test-source-examples">URI Test Source Examples</a></li>
-</ul>
-</li>
+<li><a href="#writing-tests-dynamic-tests-examples">2.17.1. Dynamic Test Examples</a></li>
+<li><a href="#writing-tests-dynamic-tests-uri-test-source">2.17.2. URI Test Sources for Dynamic Tests</a></li>
 </ul>
 </li>
 <li><a href="#writing-tests-declarative-timeouts">2.18. Timeouts</a></li>
@@ -4610,33 +4607,38 @@ expressiveness and power of dynamic tests.</p>
 }</code></pre>
 </div>
 </div>
-<div class="sect4">
-<h5 id="writing-tests-uris-test-source-examples"><a class="anchor" href="#writing-tests-uris-test-source-examples"></a>URI Test Source Examples</h5>
+</div>
+<div class="sect3">
+<h4 id="writing-tests-dynamic-tests-uri-test-source"><a class="anchor" href="#writing-tests-dynamic-tests-uri-test-source"></a>2.17.2. URI Test Sources for Dynamic Tests</h4>
 <div class="paragraph">
-<p>The JUnit Platform provides <code>TestSource</code>, a representation of the source of a test
-or container used to navigate to its location by IDEs and build tools.</p>
+<p>The JUnit Platform provides <code>TestSource</code>, a representation of the source of a test or
+container used to navigate to its location by IDEs and build tools.</p>
 </div>
 <div class="paragraph">
-<p>Test sources can be constructed using URIs :</p>
+<p>Test sources for dynamic tests can be constructed from URIs.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>ClasspathResourceSource</code>
-Use the <code>classpath</code> scheme, for example: <code>classpath:/test/foo.xml?line=20,column=2</code></p>
-</li>
-<li>
-<p><code>DirectorySource</code> and <code>FileSource</code>
-Use file system paths.</p>
-</li>
-<li>
-<p><code>MethodSource</code>
-Use the <code>method</code> scheme and the fully-qualified-method-name ex
-<code>method:org.junit.Foo#bar(java.lang.String, java.lang.String[])</code>. Please refer to the Javadoc for
-<code>DiscoverySelectors.selectMethod(String)</code> for the supported formats for a FQMN.</p>
-</li>
-</ul>
-</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>ClasspathResourceSource</code> </dt>
+<dd>
+<p>Use the <code>classpath</code> scheme&#8201;&#8212;&#8201;for example, <code>classpath:/test/foo.xml?line=20,column=2</code>.</p>
+</dd>
+<dt class="hdlist1"><code>DirectorySource</code> </dt>
+<dd>
+<p>Use file system path.</p>
+</dd>
+<dt class="hdlist1"><code>FileSource</code> </dt>
+<dd>
+<p>Use file system path.</p>
+</dd>
+<dt class="hdlist1"><code>MethodSource</code> </dt>
+<dd>
+<p>Use the <code>method</code> scheme and the fully qualified method name (FQMN)&#8201;&#8212;&#8201;for example,
+<code>method:org.junit.Foo#bar(java.lang.String, java.lang.String[])</code>. Please refer to the
+Javadoc for <code>DiscoverySelectors.selectMethod(String)</code> for the supported formats for a
+FQMN.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -9689,7 +9691,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-06-20 08:55:45 UTC
+Last updated 2019-06-20 09:07:09 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
