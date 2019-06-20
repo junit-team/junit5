@@ -5087,9 +5087,9 @@ can improve and eventually <a href="#api-evolution">promote</a> this feature.
 <div class="paragraph">
 <p>The built-in <code><a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java">TempDirectory</a></code> extension is used to create and clean up a temporary
 directory for an individual test or all tests in a test class. It is registered by
-default. To use it, annotate a field of type <code>java.nio.file.Path</code> or <code>java.io.File</code> with
-<code><a href="../api/org/junit/jupiter/api/io/TempDir.html">@TempDir</a></code> or add a parameter of type <code>java.nio.file.Path</code> or <code>java.io.File</code> annotated
-with <code>@TempDir</code> to a lifecycle method or test method.</p>
+default. To use it, annotate a non-private field of type <code>java.nio.file.Path</code> or
+<code>java.io.File</code> with <code><a href="../api/org/junit/jupiter/api/io/TempDir.html">@TempDir</a></code> or add a parameter of type <code>java.nio.file.Path</code> or
+<code>java.io.File</code> annotated with <code>@TempDir</code> to a lifecycle method or test method.</p>
 </div>
 <div class="paragraph">
 <p>For example, the following test declares a parameter annotated with <code>@TempDir</code> for a
@@ -5118,7 +5118,7 @@ its content.</p>
 <td class="content">
 <code>@TempDir</code> is not supported on constructor parameters. If you wish to retain a
 single reference to a temp directory across lifecycle methods and the current test method,
-please use field injection, by annotating an instance field with <code>@TempDir</code>.
+please use field injection, by annotating a non-private instance field with <code>@TempDir</code>.
 </td>
 </tr>
 </table>
@@ -9699,7 +9699,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-06-20 11:52:46 UTC
+Last updated 2019-06-20 12:49:01 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
