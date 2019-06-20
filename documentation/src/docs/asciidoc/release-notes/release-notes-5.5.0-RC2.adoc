@@ -3,7 +3,7 @@
 
 *Date of Release:* June 20, 2019
 
-*Scope:* Feature improvements and bug fixes since RC1
+*Scope:* minor improvements and bug fixes since 5.5 RC1
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/41?closed=1+[5.5 RC2] milestone page in the JUnit repository
@@ -28,9 +28,9 @@ No changes.
 ==== New Features and Improvements
 
 * Parameterized tests now support implicit conversion from a `String` to the following
-  `java.time` types for : `Duration`, `Period`, `MonthDay`, `ZoneId`, and `ZoneOffset`.
-* A new `getOrDefault()` convenience method has been added to `ExtensionContext.Store`.
+  `java.time` types: `Duration`, `Period`, `MonthDay`, `ZoneId`, and `ZoneOffset`.
 * The `JRE` enum now supports Java 14.
+* A new `getOrDefault()` convenience method has been added to `ExtensionContext.Store`.
 
 
 [[release-notes-5.5.0-RC2-junit-vintage]]
