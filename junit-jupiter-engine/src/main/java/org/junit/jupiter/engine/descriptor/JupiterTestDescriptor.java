@@ -10,20 +10,14 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayName;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
@@ -66,12 +60,13 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	JupiterTestDescriptor(UniqueId uniqueId, AnnotatedElement element, Supplier<String> displayNameSupplier,
 			TestSource source, JupiterConfiguration configuration) {
-		this(uniqueId, determineDisplayName(element, displayNameSupplier), source, configuration);
+		this(uniqueId, determineDisplayName(element, displayNameSupplier), source, configuration,
+			RequirementUtils.determineRequirementId(element));
 	}
 
-	JupiterTestDescriptor(UniqueId uniqueId, String displayName, TestSource source,
-			JupiterConfiguration configuration) {
-		super(uniqueId, displayName, source);
+	JupiterTestDescriptor(UniqueId uniqueId, String displayName, TestSource source, JupiterConfiguration configuration,
+			String requirement) {
+		super(uniqueId, displayName, source, requirement);
 		this.configuration = configuration;
 	}
 
@@ -100,6 +95,28 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		// @formatter:on
 	}
 
+	public static ExecutionMode toExecutionMode(org.junit.jupiter.api.parallel.ExecutionMode mode) {
+		switch (mode) {
+			case CONCURRENT:
+				return ExecutionMode.CONCURRENT;
+			case SAME_THREAD:
+				return ExecutionMode.SAME_THREAD;
+		}
+		throw new JUnitException("Unknown ExecutionMode: " + mode);
+	}
+
+	private static LockMode toLockMode(ResourceAccessMode mode) {
+		switch (mode) {
+			case READ:
+				return LockMode.READ;
+			case READ_WRITE:
+				return LockMode.READ_WRITE;
+		}
+		throw new JUnitException("Unknown ResourceAccessMode: " + mode);
+	}
+
+	// --- Node ----------------------------------------------------------------
+
 	/**
 	 * Invoke exception handlers for the supplied {@code Throwable} one by one until
 	 * none are left or the throwable to handle has been swallowed.
@@ -127,8 +144,6 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 			invokeExecutionExceptionHandlers(handlers, handledThrowable, handlerInvoker);
 		}
 	}
-
-	// --- Node ----------------------------------------------------------------
 
 	@Override
 	public ExecutionMode getExecutionMode() {
@@ -168,32 +183,12 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		// @formatter:on
 	}
 
-	public static ExecutionMode toExecutionMode(org.junit.jupiter.api.parallel.ExecutionMode mode) {
-		switch (mode) {
-			case CONCURRENT:
-				return ExecutionMode.CONCURRENT;
-			case SAME_THREAD:
-				return ExecutionMode.SAME_THREAD;
-		}
-		throw new JUnitException("Unknown ExecutionMode: " + mode);
-	}
-
 	Set<ExclusiveResource> getExclusiveResourcesFromAnnotation(AnnotatedElement element) {
 		// @formatter:off
 		return findRepeatableAnnotations(element, ResourceLock.class).stream()
 				.map(resource -> new ExclusiveResource(resource.value(), toLockMode(resource.mode())))
 				.collect(toSet());
 		// @formatter:on
-	}
-
-	private static LockMode toLockMode(ResourceAccessMode mode) {
-		switch (mode) {
-			case READ:
-				return LockMode.READ;
-			case READ_WRITE:
-				return LockMode.READ_WRITE;
-		}
-		throw new JUnitException("Unknown ResourceAccessMode: " + mode);
 	}
 
 	@Override
