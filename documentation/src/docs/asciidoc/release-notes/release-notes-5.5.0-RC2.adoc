@@ -23,7 +23,7 @@ No changes.
 
 * Extensions registered programmatically using `@RegisterExtension` on fields of test
   classes now work correctly for tests in contained `@Nested` test classes. Previously,
-  such extensions were registered multiple times for each test method in @Nested` classes.
+  such extensions were registered multiple times for each test method in `@Nested` classes.
 
 ==== New Features and Improvements
 
