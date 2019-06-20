@@ -118,6 +118,7 @@
 2b963925ddef935fe62c2a1fead699be  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/package-info.java
 2ba206e4ab4fc1429e9d6b05f85bc5ff  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/package-info.java
 2c124044d893956651e0d137904c3ba7  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrderer.java
+2c4f1985d497ac454a3fd536433e4750  documentation/src/docs/asciidoc/release-notes/release-notes-5.5.0-RC2.adoc
 2cdbd43e4b162e15d3146ecfedcb1aba  documentation/src/main/java/example/util/ListWriter.java
 2d15dcf1d77829753f6865844023ee0d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AfterEach.java
 2d47a259c30329fb47d414501fb60579  documentation/src/docs/asciidoc/release-notes/release-notes-5.4.2.adoc
@@ -627,7 +628,6 @@ f85bc2a2e91d9ab0bfd4934ee854c13e  junit-platform-launcher/src/main/java/org/juni
 f874851e8b169452a8ea8c067ff2f970  documentation/src/test/java/example/exception/RecordStateOnErrorExtension.java
 f8cf63e42adc85fa84405ea95fd2cc66  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ParseStatus.java
 f8ff9545052f8b24e7ecf57c786fb820  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/package-info.java
-f93cbe58cb448c01e09e58c99a485762  documentation/src/docs/asciidoc/release-notes/release-notes-5.5.0-RC2.adoc
 f950f38093eb0601447ced8e9c2ec835  junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatformTestTree.java
 f9cebc3b1e61f67c4584abd8965e1d6c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/package-info.java
 fa327deaa29de45d6a9a1aaa7c1d2857  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageTestDescriptor.java
