@@ -44,12 +44,18 @@ class TestInfoParameterResolver implements ParameterResolver {
 		private final Set<String> tags;
 		private final Optional<Class<?>> testClass;
 		private final Optional<Method> testMethod;
+		private final String requirement;
 
 		DefaultTestInfo(ExtensionContext extensionContext) {
 			this.displayName = extensionContext.getDisplayName();
 			this.tags = extensionContext.getTags();
 			this.testClass = extensionContext.getTestClass();
 			this.testMethod = extensionContext.getTestMethod();
+			this.requirement = extensionContext.getRequirement();
+		}
+
+		private static Object nullSafeGet(Optional<?> optional) {
+			return optional != null ? optional.orElse(null) : null;
 		}
 
 		@Override
@@ -73,6 +79,11 @@ class TestInfoParameterResolver implements ParameterResolver {
 		}
 
 		@Override
+		public String getRequirement() {
+			return this.requirement;
+		}
+
+		@Override
 		public String toString() {
 			// @formatter:off
 			return new ToStringBuilder(this)
@@ -80,12 +91,9 @@ class TestInfoParameterResolver implements ParameterResolver {
 					.append("tags", this.tags)
 					.append("testClass", nullSafeGet(this.testClass))
 					.append("testMethod", nullSafeGet(this.testMethod))
+					.append("requirement", this.requirement)
 					.toString();
 			// @formatter:on
-		}
-
-		private static Object nullSafeGet(Optional<?> optional) {
-			return optional != null ? optional.orElse(null) : null;
 		}
 
 	}
