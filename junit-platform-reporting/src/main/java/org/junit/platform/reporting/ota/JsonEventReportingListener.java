@@ -15,6 +15,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 import static java.util.stream.Collectors.toSet;
 
 import java.io.BufferedWriter;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.InetAddress;
@@ -42,21 +43,18 @@ import org.junit.platform.launcher.TestPlan;
 
 public class JsonEventReportingListener implements TestExecutionListener {
 
-	private final ObjectMapper objectMapper;
-	private BufferedWriter writer;
-	private Path reportsDir;
+	private final ObjectMapper objectMapper = new ObjectMapper().disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
+	private final JsonEventConsumer consumer;
 	private Event currentTestPlanEvent;
 
-	public JsonEventReportingListener(Path reportsDir) {
-		this.reportsDir = reportsDir;
-		objectMapper = new ObjectMapper().disable(JsonGenerator.Feature.AUTO_CLOSE_TARGET);
+	public JsonEventReportingListener(JsonEventConsumer consumer) {
+		this.consumer = consumer;
 	}
 
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
-		Path jsonFile = reportsDir.resolve("events.json");
 		try {
-			writer = Files.newBufferedWriter(jsonFile);
+			consumer.open();
 		}
 		catch (IOException e) {
 			throw new UncheckedIOException(e);
@@ -84,7 +82,7 @@ public class JsonEventReportingListener implements TestExecutionListener {
 	public void testPlanExecutionFinished(TestPlan testPlan) {
 		write(createTestPlanExecutionFinishedEvent());
 		try {
-			writer.close();
+			consumer.close();
 		}
 		catch (IOException e) {
 			throw new UncheckedIOException(e);
@@ -95,6 +93,7 @@ public class JsonEventReportingListener implements TestExecutionListener {
 	private Event createTestPlanExecutionStartedEvent() {
 		TestPlanEvent event = new TestPlanEvent(EventType.start);
 		event.id = "testrun_" + System.currentTimeMillis();
+		event.name = "test run";
 		event.tags = new HashSet<>(Arrays.asList("foo", "bar"));
 		try {
 			event.host = InetAddress.getLocalHost().getHostName();
@@ -136,13 +135,47 @@ public class JsonEventReportingListener implements TestExecutionListener {
 		return event;
 	}
 
-	private synchronized void write(Event event) {
+	private void write(Event event) {
 		try {
-			objectMapper.writeValue(writer, event);
-			writer.newLine();
+			consumer.accept(objectMapper, event);
 		}
 		catch (IOException e) {
 			throw new UncheckedIOException(e);
+		}
+	}
+
+	interface JsonEventConsumer extends Closeable {
+
+		void open() throws IOException;
+
+		void accept(ObjectMapper objectMapper, Event event) throws IOException;
+
+	}
+
+	public static class FileJsonEventConsumer implements JsonEventConsumer {
+
+		private final Path reportsDir;
+		private BufferedWriter writer;
+
+		public FileJsonEventConsumer(Path reportsDir) {
+			this.reportsDir = reportsDir;
+		}
+
+		@Override
+		public void open() throws IOException {
+			Path jsonFile = reportsDir.resolve("events.json");
+			writer = Files.newBufferedWriter(jsonFile);
+		}
+
+		@Override
+		public void close() throws IOException {
+			writer.close();
+		}
+
+		@Override
+		public synchronized void accept(ObjectMapper objectMapper, Event event) throws IOException {
+			objectMapper.writeValue(writer, event);
+			writer.newLine();
 		}
 	}
 
@@ -154,6 +187,7 @@ public class JsonEventReportingListener implements TestExecutionListener {
 		String id;
 		String parent;
 		Set<String> tags;
+		String name;
 
 		Event(EventType type) {
 			this.type = type;
@@ -170,8 +204,6 @@ public class JsonEventReportingListener implements TestExecutionListener {
 	}
 
 	static class ExecutionStartedEvent extends Event {
-		String name;
-
 		ExecutionStartedEvent() {
 			super(EventType.start);
 		}

@@ -34,8 +34,10 @@ import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
+import org.junit.platform.reporting.jaeger.JaegerExecutionListener;
 import org.junit.platform.reporting.legacy.xml.LegacyXmlReportGeneratingListener;
 import org.junit.platform.reporting.ota.JsonEventReportingListener;
+import org.junit.platform.reporting.ota.JsonEventReportingListener.FileJsonEventConsumer;
 
 /**
  * @since 1.0
@@ -127,7 +129,8 @@ public class ConsoleTestExecutor {
 	private Stream<TestExecutionListener> createReportingListeners(PrintWriter out) {
 		return options.getReportsDir().map(
 			reportsDir -> Stream.of(new LegacyXmlReportGeneratingListener(reportsDir, out),
-				new JsonEventReportingListener(reportsDir))).orElse(Stream.empty());
+				new JsonEventReportingListener(new FileJsonEventConsumer(reportsDir)),
+				new JaegerExecutionListener())).orElse(Stream.empty());
 	}
 
 	private void printSummary(TestExecutionSummary summary, PrintWriter out) {
