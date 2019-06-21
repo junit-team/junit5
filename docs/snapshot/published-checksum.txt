@@ -43,7 +43,6 @@
 0bfa89bb7e76f867290a5929970d2ca2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.java
 0c0af5c28b3119df23cad4c0927657f3  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerTestDescriptor.java
 0c8d71237a173fcd4de311f73db2e17e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnOsCondition.java
-0d8e4ea75f8a9d6c67e896e88c1c4024  documentation/src/test/resources/junit-platform.properties
 0dcfee91bc9c8b81e928ee7bf9f37c68  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeClassNamePatterns.java
 0def4951ed2f2b504a6bc3f84f881ee0  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertAll.java
 0ef5758649a84a2538213110bc3caf45  documentation/src/test/java/example/testinterface/TimeExecutionLogger.java
@@ -606,6 +605,7 @@ f0199a36bd738d15424a6f2a49c330f2  junit-jupiter-engine/src/main/java/org/junit/j
 f02b067dd26ff65062706c42c2aff2c6  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/package-info.java
 f05ceece99c3f6a17e792a23bfb1a96e  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/SelectorResolver.java
 f074fdf84b78c55ac9b811c35400d5d0  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/support/JupiterThrowableCollectorFactory.java
+f0e99c406aca4a90f3d507998a84d14e  documentation/src/test/resources/junit-platform.properties
 f0ecbc91a2fc19dde470f8b74c8a693e  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutDuration.java
 f12fee46a02272acb6e6b4a8fe9ab92a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.java
 f2d861a7d82c55a019f6b2735dfbd0f6  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/ClassContainerSelectorResolver.java
