@@ -20,6 +20,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -34,6 +35,7 @@ import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.junit.platform.reporting.legacy.xml.LegacyXmlReportGeneratingListener;
+import org.junit.platform.reporting.ota.JsonEventReportingListener;
 
 /**
  * @since 1.0
@@ -99,8 +101,8 @@ public class ConsoleTestExecutor {
 		launcher.registerTestExecutionListeners(summaryListener);
 		// optionally, register test plan execution details printing listener
 		createDetailsPrintingListener(out).ifPresent(launcher::registerTestExecutionListeners);
-		// optionally, register XML reports writing listener
-		createXmlWritingListener(out).ifPresent(launcher::registerTestExecutionListeners);
+		// optionally, register reporting listeners
+		createReportingListeners(out).forEach(launcher::registerTestExecutionListeners);
 		return summaryListener;
 	}
 
@@ -122,8 +124,10 @@ public class ConsoleTestExecutor {
 		}
 	}
 
-	private Optional<TestExecutionListener> createXmlWritingListener(PrintWriter out) {
-		return options.getReportsDir().map(reportsDir -> new LegacyXmlReportGeneratingListener(reportsDir, out));
+	private Stream<TestExecutionListener> createReportingListeners(PrintWriter out) {
+		return options.getReportsDir().map(
+			reportsDir -> Stream.of(new LegacyXmlReportGeneratingListener(reportsDir, out),
+				new JsonEventReportingListener(reportsDir))).orElse(Stream.empty());
 	}
 
 	private void printSummary(TestExecutionSummary summary, PrintWriter out) {
