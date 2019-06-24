@@ -95,7 +95,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	 * never {@code null} or blank
 	 * @param source the source of the test or container described by this
 	 * {@code TestDescriptor}; can be {@code null}
-	 * @param requirement the annotated requirement of the test; can be {@code null}   
+	 * @param requirement the annotated requirement of the test; can be {@code null}
 	 * @see #AbstractTestDescriptor(UniqueId, String, TestSource)
 	 */
 	protected AbstractTestDescriptor(UniqueId uniqueId, String displayName, TestSource source, String requirement) {

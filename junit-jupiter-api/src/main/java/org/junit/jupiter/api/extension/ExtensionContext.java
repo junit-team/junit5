@@ -15,7 +15,13 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
@@ -354,7 +360,7 @@ public interface ExtensionContext {
 
 	/**
 	 * Get the value of the {@Link Requirement} annotation of the test case.
-	 * 
+	 *
 	 * @return the value of the annotation. Returns {@code null} when no annotation was set or its value is null/blank.
 	 */
 	String getRequirement();
