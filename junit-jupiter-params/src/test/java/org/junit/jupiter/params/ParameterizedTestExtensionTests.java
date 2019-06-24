@@ -232,6 +232,11 @@ class ParameterizedTestExtensionTests {
 			public Store getStore(Namespace namespace) {
 				return new NamespaceAwareStore(store, namespace);
 			}
+
+			@Override
+			public String getRequirement() {
+				return null;
+			}
 		};
 	}
 
