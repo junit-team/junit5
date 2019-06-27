@@ -10,20 +10,20 @@
 
 package org.junit.platform.engine.support.descriptor;
 
-import org.apiguardian.api.API;
-import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.TestSource;
-import org.junit.platform.engine.TestTag;
-import org.junit.platform.engine.UniqueId;
+import static java.util.Collections.emptySet;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static java.util.Collections.emptySet;
-import static org.apiguardian.api.API.Status.STABLE;
+import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.TestTag;
+import org.junit.platform.engine.UniqueId;
 
 /**
  * Abstract base implementation of {@link TestDescriptor} that may be used by
