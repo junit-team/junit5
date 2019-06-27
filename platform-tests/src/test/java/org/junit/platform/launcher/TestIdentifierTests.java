@@ -57,7 +57,8 @@ class TestIdentifierTests {
 	void serialization() throws Exception {
 		TestIdentifier identifier = serializeAndDeserialize(//
 			new TestIdentifier("uniqueId", "displayName", ClassSource.from(TestIdentifierTests.class),
-				singleton(TestTag.create("aTag")), TestDescriptor.Type.TEST, "parentId", "reportingName"));
+				singleton(TestTag.create("aTag")), TestDescriptor.Type.TEST, "parentId", "reportingName",
+				"requirement"));
 
 		assertEquals("uniqueId", identifier.getUniqueId());
 		assertEquals("displayName", identifier.getDisplayName());
@@ -68,6 +69,7 @@ class TestIdentifierTests {
 		assertTrue(identifier.isTest());
 		assertFalse(identifier.isContainer());
 		assertThat(identifier.getParentId()).contains("parentId");
+		assertEquals("requirement", identifier.getRequirement());
 	}
 
 }

@@ -47,6 +47,7 @@ public final class TestIdentifier implements Serializable {
 	private final TestSource source;
 	private final Set<TestTag> tags;
 	private final Type type;
+	private final String requirement;
 
 	/**
 	 * Factory for creating a new {@link TestIdentifier} from a {@link TestDescriptor}.
@@ -62,11 +63,13 @@ public final class TestIdentifier implements Serializable {
 		String parentId = testDescriptor.getParent().map(
 			parentDescriptor -> parentDescriptor.getUniqueId().toString()).orElse(null);
 		String legacyReportingName = testDescriptor.getLegacyReportingName();
-		return new TestIdentifier(uniqueId, displayName, source, tags, type, parentId, legacyReportingName);
+		String requirement = testDescriptor.getRequirement();
+		return new TestIdentifier(uniqueId, displayName, source, tags, type, parentId, legacyReportingName,
+			requirement);
 	}
 
 	TestIdentifier(String uniqueId, String displayName, TestSource source, Set<TestTag> tags, Type type,
-			String parentId, String legacyReportingName) {
+			String parentId, String legacyReportingName, String requirement) {
 		Preconditions.notNull(type, "TestDescriptor.Type must not be null");
 		this.uniqueId = uniqueId;
 		this.parentId = parentId;
@@ -75,6 +78,7 @@ public final class TestIdentifier implements Serializable {
 		this.tags = unmodifiableSet(new LinkedHashSet<>(tags));
 		this.type = type;
 		this.legacyReportingName = legacyReportingName;
+		this.requirement = requirement;
 	}
 
 	/**
@@ -187,6 +191,15 @@ public final class TestIdentifier implements Serializable {
 		return this.tags;
 	}
 
+	/**
+	 * Get the value of the annotated requirement.
+	 *
+	 * @see TestDescriptor#getRequirement()
+	 */
+	public String getRequirement() {
+		return this.requirement;
+	};
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof TestIdentifier) {
@@ -212,6 +225,7 @@ public final class TestIdentifier implements Serializable {
 				.append("source", this.source)
 				.append("tags", this.tags)
 				.append("type", this.type)
+				.append("requirement", this.requirement)
 				.toString();
 		// @formatter:on
 	}
