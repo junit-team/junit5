@@ -102,3 +102,4 @@ Your donations will help to make that a reality!
 - Peter Quiel
 - Shuming Iin
 - Zerocode
+- Simon Schrottner
