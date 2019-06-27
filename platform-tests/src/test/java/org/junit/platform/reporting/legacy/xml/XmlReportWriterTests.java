@@ -219,6 +219,49 @@ class XmlReportWriterTests {
 		//@formatter:on
 	}
 
+	@Test
+	void writesRequirementAttribute() throws Exception {
+		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", "test");
+		TestDescriptorStub testDescriptor = new TestDescriptorStub(uniqueId, "requirementTest", "Req-123");
+		engineDescriptor.addChild(testDescriptor);
+		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+
+		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+		ReportEntry reportEntry = ReportEntry.from(Map.of( //
+			STDOUT_REPORT_ENTRY_KEY, "normal output", //
+			STDERR_REPORT_ENTRY_KEY, "error output", //
+			"foo", "bar"));
+		reportData.addReportEntry(TestIdentifier.from(testDescriptor), reportEntry);
+		reportData.addReportEntry(TestIdentifier.from(testDescriptor), ReportEntry.from(Map.of("baz", "qux")));
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), successful());
+
+		String content = writeXmlReport(testPlan, reportData);
+
+		assertValidAccordingToJenkinsSchema(content);
+		//@formatter:off
+		assertThat(content)
+			.containsSubsequence(
+				"<system-out>",
+					"unique-id: ", "test:test",
+					"display-name: requirementTest",
+					"requirement: Req-123",
+				"</system-out>",
+				"<system-out>",
+					"Report Entry #1 (timestamp: ",
+					"- foo: bar",
+					"Report Entry #2 (timestamp: ",
+					"- baz: qux",
+				"</system-out>",
+				"<system-out>",
+					"normal output",
+				"</system-out>",
+				"<system-err>",
+					"error output",
+				"</system-err>")
+			.doesNotContain(STDOUT_REPORT_ENTRY_KEY, STDERR_REPORT_ENTRY_KEY);
+		//@formatter:on
+	}
+
 	private String writeXmlReport(TestPlan testPlan, XmlReportData reportData) throws Exception {
 		StringWriter out = new StringWriter();
 		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);

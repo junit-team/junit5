@@ -147,6 +147,12 @@ class XmlReportWriter {
 		writer.writeAttribute("name", getName(testIdentifier));
 		writer.writeAttribute("classname", getClassName(testIdentifier));
 		writer.writeAttribute("time", getTime(testIdentifier, numberFormat));
+
+		String requirement = getRequirement(testIdentifier);
+		if (null != requirement) {
+			writer.writeAttribute("requirement", requirement);
+		}
+
 		newLine(writer);
 
 		writeSkippedOrErrorOrFailureElement(testIdentifier, writer);
@@ -164,6 +170,10 @@ class XmlReportWriter {
 
 	private String getName(TestIdentifier testIdentifier) {
 		return testIdentifier.getLegacyReportingName();
+	}
+
+	private String getRequirement(TestIdentifier testIdentifier) {
+		return testIdentifier.getRequirement();
 	}
 
 	private String getClassName(TestIdentifier testIdentifier) {
@@ -276,8 +286,17 @@ class XmlReportWriter {
 	}
 
 	private String formatNonStandardAttributesAsString(TestIdentifier testIdentifier) {
-		return "unique-id: " + testIdentifier.getUniqueId() //
+		String nonStandardAttributesString = "unique-id: " + testIdentifier.getUniqueId() //
 				+ "\ndisplay-name: " + testIdentifier.getDisplayName();
+
+		String requirement = testIdentifier.getRequirement();
+
+		if (null != requirement) {
+			return nonStandardAttributesString //
+					+ "\nrequirement: " + requirement;
+		}
+
+		return nonStandardAttributesString;
 	}
 
 	private void writeOutputElements(String elementName, List<String> elements, XMLStreamWriter writer)
