@@ -10,20 +10,20 @@
 
 package org.junit.platform.engine.support.descriptor;
 
-import static java.util.Collections.emptySet;
-import static org.apiguardian.api.API.Status.STABLE;
-
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.Set;
-
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
+
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Optional;
+import java.util.Set;
+
+import static java.util.Collections.emptySet;
+import static org.apiguardian.api.API.Status.STABLE;
 
 /**
  * Abstract base implementation of {@link TestDescriptor} that may be used by
@@ -83,6 +83,21 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	 */
 	protected AbstractTestDescriptor(UniqueId uniqueId, String displayName, TestSource source) {
 		this(uniqueId, displayName, source, null);
+	}
+
+	/**
+	 * Create a new {@code AbstractTestDescriptor} with the supplied
+	 * {@link UniqueId}, display name, and source.
+	 *
+	 * @param uniqueId the unique ID of this {@code TestDescriptor}; never
+	 * {@code null}
+	 * @param displayName the display name for this {@code TestDescriptor};
+	 * never {@code null} or blank
+	 * @param requirement the annotated requirement of the test; can be {@code null}
+	 * @see #AbstractTestDescriptor(UniqueId, String)
+	 */
+	protected AbstractTestDescriptor(UniqueId uniqueId, String displayName, String requirement) {
+		this(uniqueId, displayName, null, requirement);
 	}
 
 	/**

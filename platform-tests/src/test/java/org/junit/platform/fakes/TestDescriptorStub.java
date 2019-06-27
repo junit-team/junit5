@@ -22,6 +22,10 @@ public class TestDescriptorStub extends AbstractTestDescriptor {
 		super(uniqueId, displayName);
 	}
 
+	public TestDescriptorStub(UniqueId uniqueId, String displayName, String requirement) {
+		super(uniqueId, displayName, requirement);
+	}
+
 	@Override
 	public Type getType() {
 		return getChildren().isEmpty() ? Type.TEST : Type.CONTAINER;
