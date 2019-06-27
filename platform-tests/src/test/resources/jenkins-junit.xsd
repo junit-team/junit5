@@ -75,6 +75,7 @@
             <xs:attribute name="time" type="xs:string" use="optional"/>
             <xs:attribute name="classname" type="xs:string" use="optional"/>
             <xs:attribute name="status" type="xs:string" use="optional"/>
+            <xs:attribute name="requirement" type="xs:string" use="optional"/>
         </xs:complexType>
     </xs:element>
 
