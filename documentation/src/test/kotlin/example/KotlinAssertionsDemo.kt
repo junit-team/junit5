@@ -76,7 +76,7 @@ class KotlinAssertionsDemo {
     @Test
     fun `timeout not exceeded testing`() {
         val fibonacciCalculator = FibonacciCalculator()
-        val result = assertTimeout(Duration.ofMillis(50)) {
+        val result = assertTimeout(Duration.ofMillis(100)) {
             fibonacciCalculator.fib(14)
         }
         assertEquals(377, result)
