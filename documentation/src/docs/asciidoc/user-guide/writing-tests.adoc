@@ -1,6 +1,5 @@
 [[writing-tests]]
 == Writing Tests
-:testDir: /media/data/home/rmannibucau/1_dev/junit5/documentation/src/test/java
 
 The following example provides a glimpse at the minimum requirements for writing a test in
 JUnit Jupiter. Subsequent sections of this chapter will provide further details on all
