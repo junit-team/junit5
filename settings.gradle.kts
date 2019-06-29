@@ -1,7 +1,11 @@
 pluginManagement {
 	repositories {
 		gradlePluginPortal()
-		maven(url = "https://jitpack.io")
+		maven(url = "https://jitpack.io") {
+			content {
+				includeModule("com.github.johnrengelman", "shadow")
+			}
+		}
 	}
 	resolutionStrategy {
 		eachPlugin {
@@ -12,7 +16,7 @@ pluginManagement {
 				"com.diffplug.gradle.spotless" -> useVersion(Versions.spotlessPlugin)
 				"org.ajoberstar.git-publish" -> useVersion(Versions.gitPublishPlugin)
 				"org.jetbrains.kotlin.jvm" -> useVersion(Versions.kotlin)
-				"com.github.johnrengelman.shadow" -> useModule("com.github.johnrengelman:shadow:master-SNAPSHOT")
+				"com.github.johnrengelman.shadow" -> useModule("com.github.johnrengelman:shadow:1af0fde650")
 				"org.asciidoctor.convert" -> useVersion(Versions.asciidoctorPlugin)
 				"me.champeau.gradle.jmh" -> useVersion(Versions.jmhPlugin)
 				"de.marcphilipp.nexus-publish" -> useVersion(Versions.nexusPublishPlugin)
