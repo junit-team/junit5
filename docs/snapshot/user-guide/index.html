@@ -1731,7 +1731,7 @@ functions in the <code>org.junit.jupiter.api</code> package.</p>
     <span class="annotation">@Test</span>
     fun <span class="error">`</span>timeout not exceeded testing<span class="error">`</span>() {
         val fibonacciCalculator = FibonacciCalculator()
-        val result = assertTimeout(<span class="predefined-type">Duration</span>.ofMillis(<span class="integer">50</span>)) {
+        val result = assertTimeout(<span class="predefined-type">Duration</span>.ofMillis(<span class="integer">100</span>)) {
             fibonacciCalculator.fib(<span class="integer">14</span>)
         }
         assertEquals(<span class="integer">377</span>, result)
@@ -9699,7 +9699,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-06-28 11:23:56 UTC
+Last updated 2019-06-29 08:21:36 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

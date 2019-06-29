@@ -296,6 +296,7 @@
 75109eb829d7bd6f879fc6e2e5d100b0  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/ClassNamePatternParameterConverter.java
 757bb07effa81cc601d97c2840586366  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateInvocationTestDescriptor.java
 75b5833f19095f29bcf9ef200b83879c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/package-info.java
+76842c2e5950dae144408e9052ad8b5f  documentation/src/test/kotlin/example/KotlinAssertionsDemo.kt
 770a2d1e66c3001e1307b3b2141e786f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Order.java
 7766e7689d738aab5359bb82987473d9  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Timeout.java
 78256810122c8fab15681f490e1aa08e  junit-platform-commons/src/main/java/org/junit/platform/commons/package-info.java
@@ -338,7 +339,6 @@
 855e13355685519e5fc57adcac2130ba  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/conditions/package-info.java
 8568f6e74ae984b30b5b50ab9b5b4875  documentation/src/test/java/example/defaultmethods/Testable.java
 857fddf88191abc41b12a55c4c4f1864  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/MutableTestExecutionSummary.java
-867dbe9015a1380df142bb40dfa1728a  documentation/src/test/kotlin/example/KotlinAssertionsDemo.kt
 86a2e992c9a57d0134478e2fc178b3cf  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathResourceSelector.java
 8742585ff247e86caf18b81bdf611b7f  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EmptySource.java
 8793996cae52ab3aa4a24b32a1905a73  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/DiscoverySelectors.java
