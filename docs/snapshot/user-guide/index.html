@@ -4928,6 +4928,18 @@ junit.jupiter.execution.parallel.mode.classes.default = same_thread</code></pre>
 </div>
 </div>
 <div class="paragraph">
+<p>The following diagram illustrates how the execution of two top-level test classes <code>A</code> and
+<code>B</code> with two test methods per class behaves for all four combinations of
+<code>junit.jupiter.execution.parallel.mode.default</code> and
+<code>junit.jupiter.execution.parallel.mode.classes.default</code> (see labels in first column).</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/writing-tests_execution_mode.svg" alt="writing tests execution mode">
+</div>
+<div class="title">Default execution mode configuration combinations</div>
+</div>
+<div class="paragraph">
 <p>If the <code>junit.jupiter.execution.parallel.mode.classes.default</code> configuration parameter is
 not explicitly set, the value for <code>junit.jupiter.execution.parallel.mode.default</code> will be
 used instead.</p>
@@ -9699,7 +9711,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-06-29 08:21:36 UTC
+Last updated 2019-06-30 04:50:38 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
