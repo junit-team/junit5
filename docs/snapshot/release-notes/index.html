@@ -556,25 +556,11 @@ table.CodeRay td.code>pre{padding:0}
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#release-notes-5.5.0-RC2">5.5.0-RC2</a>
+<li><a href="#release-notes-5.5.0">5.5.0</a>
 <ul class="sectlevel2">
-<li><a href="#release-notes-5.5.0-RC2-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.5.0-RC2-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.5.0-RC2-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
-<li><a href="#release-notes-5.5.0-RC1">5.5.0-RC1</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.5.0-RC1-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.5.0-RC1-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.5.0-RC1-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
-<li><a href="#release-notes-5.5.0-M1">5.5.0-M1</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.5.0-M1-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.5.0-M1-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.5.0-M1-junit-vintage">JUnit Vintage</a></li>
+<li><a href="#release-notes-5.5.0-junit-platform">JUnit Platform</a></li>
+<li><a href="#release-notes-5.5.0-junit-jupiter">JUnit Jupiter</a></li>
+<li><a href="#release-notes-5.5.0-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
 <li><a href="#release-notes-5.4.2">5.4.2</a>
@@ -610,70 +596,10 @@ authors as well as build tool and IDE vendors.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="release-notes-5.5.0-RC2"><a class="anchor" href="#release-notes-5.5.0-RC2"></a>5.5.0-RC2</h2>
+<h2 id="release-notes-5.5.0"><a class="anchor" href="#release-notes-5.5.0"></a>5.5.0</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Date of Release:</strong> June 20, 2019</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong> minor improvements and bug fixes since 5.5 RC1</p>
-</div>
-<div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/41?closed=1">5.5 RC2</a> milestone page in the JUnit repository
-on GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.0-RC2-junit-platform"><a class="anchor" href="#release-notes-5.5.0-RC2-junit-platform"></a>JUnit Platform</h3>
-<div class="paragraph">
-<p>No changes.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.0-RC2-junit-jupiter"><a class="anchor" href="#release-notes-5.5.0-RC2-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Extensions registered programmatically using <code>@RegisterExtension</code> on fields of test
-classes now work correctly for tests in contained <code>@Nested</code> test classes. Previously,
-such extensions were registered multiple times for each test method in <code>@Nested</code> classes.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Parameterized tests now support implicit conversion from a <code>String</code> to the following
-<code>java.time</code> types: <code>Duration</code>, <code>Period</code>, <code>MonthDay</code>, <code>ZoneId</code>, and <code>ZoneOffset</code>.</p>
-</li>
-<li>
-<p>The <code>JRE</code> enum now supports Java 14.</p>
-</li>
-<li>
-<p>A new <code>getOrDefault()</code> convenience method has been added to <code>ExtensionContext.Store</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.0-RC2-junit-vintage"><a class="anchor" href="#release-notes-5.5.0-RC2-junit-vintage"></a>JUnit Vintage</h3>
-<div class="paragraph">
-<p>No changes.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="release-notes-5.5.0-RC1"><a class="anchor" href="#release-notes-5.5.0-RC1"></a>5.5.0-RC1</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> June 6, 2019</p>
+<p><strong>Date of Release:</strong> June 30, 2019</p>
 </div>
 <div class="paragraph">
 <p><strong>Scope:</strong></p>
@@ -690,25 +616,45 @@ such extensions were registered multiple times for each test method in <code>@Ne
 <p>New <code>LifecycleMethodExecutionExceptionHandler</code> extension API</p>
 </li>
 <li>
-<p>Additional Kotlin friendly assertions</p>
+<p>Deprecation of script-based conditions (<code>@EnabledIf</code> and <code>@DisabledIf</code>)</p>
+</li>
+<li>
+<p>Configurable test discovery implementation for <code>TestEngine</code> authors</p>
 </li>
 <li>
 <p>Explicit Java module descriptors</p>
 </li>
 <li>
-<p>Deprecation of script-based conditions (<code>@EnabledIf</code>/<code>@DisabledIf</code>)</p>
+<p>Various minor improvements and bug fixes</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/37?closed=1">5.5 RC1</a> milestone page in the JUnit repository
+<a href="https://github.com/junit-team/junit5/milestone/34?closed=1">5.5 M1</a>,
+<a href="https://github.com/junit-team/junit5/milestone/37?closed=1">5.5 RC1</a>,
+<a href="https://github.com/junit-team/junit5/milestone/41?closed=1">5.5 RC2</a>, and
+<a href="https://github.com/junit-team/junit5/milestone/40?closed=1">5.4 GA</a> milestone pages in the JUnit repository
 on GitHub.</p>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.5.0-RC1-junit-platform"><a class="anchor" href="#release-notes-5.5.0-RC1-junit-platform"></a>JUnit Platform</h3>
+<h3 id="release-notes-5.5.0-junit-platform"><a class="anchor" href="#release-notes-5.5.0-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
+<h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Configurable test discovery implementation that can be reused by different test engines
+(see Javadoc of the <code><a href="../api/org/junit/platform/engine/support/discovery/package-summary.html">org.junit.platform.engine.support.discovery</a></code> package).</p>
+</li>
+<li>
+<p>New <code>isFinal()</code> and <code>isNotFinal()</code> methods in <code>ModifierSupport</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -743,8 +689,8 @@ meta-annotations on other repeatable annotations.</p>
 <code>java.util.Optional&lt;? extends AnnotatedElement&gt;</code> argument.</p>
 </li>
 <li>
-<p>Exceptions thrown by <code>TestExecutionListeners</code> no longer cause test execution to abort.
-Instead, they will be logged as warnings now.</p>
+<p>An exception thrown by a <code>TestExecutionListener</code> no longer causes test execution to
+abort. Instead, such exceptions will be logged as warnings now.</p>
 </li>
 <li>
 <p>New <code>MethodSource.from()</code> variant that accepts <code>String, String, Class&lt;?&gt;&#8230;&#8203;</code> as
@@ -755,9 +701,9 @@ arguments.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.5.0-RC1-junit-jupiter"><a class="anchor" href="#release-notes-5.5.0-RC1-junit-jupiter"></a>JUnit Jupiter</h3>
+<h3 id="release-notes-5.5.0-junit-jupiter"><a class="anchor" href="#release-notes-5.5.0-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-2"><a class="anchor" href="#bug-fixes-2"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -765,6 +711,11 @@ arguments.</p>
 an <code>OutOfMemoryError</code> if the executables in the dynamic tests retain references to
 objects consuming large amounts of memory. Technically speaking, JUnit Jupiter no longer
 retains references to instances of <code>DynamicTest</code> after they have been executed.</p>
+</li>
+<li>
+<p>Extensions registered programmatically using <code>@RegisterExtension</code> on fields of test
+classes now work correctly for tests in contained <code>@Nested</code> test classes. Previously,
+such extensions were registered multiple times for each test method in <code>@Nested</code> classes.</p>
 </li>
 </ul>
 </div>
@@ -774,10 +725,10 @@ retains references to instances of <code>DynamicTest</code> after they have been
 <div class="ulist">
 <ul>
 <li>
-<p>Script-based condition APIs and their supporting implementations are deprecated with
-the intent to remove them in JUnit Jupiter 5.6. Users should instead rely on a
-combination of other built-in conditions or create and use a custom implementation of
-<code>ExecutionCondition</code> to evaluate the same conditions.</p>
+<p>Script-based condition APIs and their supporting implementations are deprecated with the
+intent to remove them in JUnit Jupiter 5.6. Users should instead rely on a combination
+of other built-in conditions or create and use a custom implementation of
+<code>ExecutionCondition</code> to support the same conditions.</p>
 </li>
 </ul>
 </div>
@@ -788,7 +739,14 @@ combination of other built-in conditions or create and use a custom implementati
 <ul>
 <li>
 <p>Support for declarative timeouts using <code>@Timeout</code> or configuration parameters (see
-<a href="../user-guide/index.html#writing-tests-declarative-timeouts">User Guide</a> for details)</p>
+<a href="../user-guide/index.html#writing-tests-declarative-timeouts">User Guide</a> for details).</p>
+</li>
+<li>
+<p>The <code>JRE</code> enum used with <code>@EnabledOnJre</code> and <code>@DisabledOnJre</code> now supports Java 14.</p>
+</li>
+<li>
+<p>Expected and actual values are now supplied for failed <code>boolean</code> assertions for enhanced
+IDE and reporting support&#8201;&#8212;&#8201;for example, when <code>assertTrue()</code> or <code>assertFalse()</code> fails.</p>
 </li>
 <li>
 <p>New overloaded variants of <code>Assertions.assertLinesMatch(&#8230;&#8203;)</code> that accept a <code>String</code> or
@@ -799,8 +757,17 @@ a <code>Supplier&lt;String&gt;</code> for a custom failure message.</p>
 actual line in a dedicated line.</p>
 </li>
 <li>
-<p>New Kotlin friendly <code>assertDoesNotThrow</code>, <code>assertTimeout</code>, and <code>assertTimeoutPreemptively</code>
-assertions have been added as top-level functions in the <code>org.junit.jupiter.api</code> package.</p>
+<p>New Kotlin-friendly <code>assertDoesNotThrow()</code>, <code>assertTimeout()</code>, and
+<code>assertTimeoutPreemptively()</code> assertions have been added as top-level functions in the
+<code>org.junit.jupiter.api</code> package.</p>
+</li>
+<li>
+<p>Parameterized tests now support implicit conversion from a <code>String</code> to the following
+<code>java.time</code> types: <code>Duration</code>, <code>Period</code>, <code>MonthDay</code>, <code>ZoneId</code>, and <code>ZoneOffset</code>.</p>
+</li>
+<li>
+<p><code>@ValueSource</code> now additionally supports literal values of type <code>boolean</code> for
+parameterized tests.</p>
 </li>
 <li>
 <p>New <code>emptyValue</code> attribute in <code>@CsvSource</code> and <code>@CsvFileSource</code>.</p>
@@ -814,6 +781,12 @@ declare any parameters.</p>
 <p>New <code>junit.jupiter.displayname.generator.default</code> configuration parameter to set the
 default <code>DisplayNameGenerator</code> that will be used unless <code>@DisplayName</code> or
 <code>@DisplayNameGeneration</code> is present.</p>
+</li>
+<li>
+<p>New <code>junit.jupiter.execution.parallel.mode.classes.default</code> configuration parameter
+allows to run top-level classes in parallel but their methods sequentially or vice versa
+(see <a href="../user-guide/index.html#writing-tests-parallel-execution">User Guide</a> for
+details).</p>
 </li>
 <li>
 <p><code>MethodOrderer.Random</code> now generates a default random seed only once and prints it to
@@ -836,10 +809,6 @@ Instead the corresponding test class or test method will now fail with an except
 informing the user of the configuration error.</p>
 </li>
 <li>
-<p>All methods in the <code>TestWatcher</code> API are now interface <code>default</code> methods with empty
-implementations.</p>
-</li>
-<li>
 <p>New <code>InvocationInterceptor</code> extension API (see
 <a href="../user-guide/index.html#extensions-intercepting-invocations">User Guide</a> for
 details).</p>
@@ -851,20 +820,21 @@ thrown during the execution of <code>@BeforeAll</code>, <code>@BeforeEach</code>
 <a href="../user-guide/index.html#extensions-exception-handling">User Guide</a> for details).</p>
 </li>
 <li>
+<p>All methods in the <code>TestWatcher</code> API are now interface <code>default</code> methods with empty
+implementations.</p>
+</li>
+<li>
 <p>A custom test source for a <code>DynamicContainer</code> or <code>DynamicTest</code> may now be a method URI&#8201;&#8212;&#8201;for example, <code>method:org.example.MyTestClass#myTestMethod()</code>.</p>
 </li>
 <li>
-<p>New <code>junit.jupiter.execution.parallel.mode.classes.default</code> configuration parameter
-allows to run top-level classes in parallel but their methods sequentially or vice versa
-(see <a href="../user-guide/index.html#writing-tests-parallel-execution">User Guide</a> for
-details).</p>
+<p>A new <code>getOrDefault()</code> convenience method has been added to <code>ExtensionContext.Store</code>.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-5.5.0-RC1-junit-vintage"><a class="anchor" href="#release-notes-5.5.0-RC1-junit-vintage"></a>JUnit Vintage</h3>
+<h3 id="release-notes-5.5.0-junit-vintage"><a class="anchor" href="#release-notes-5.5.0-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
 <h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
 <div class="ulist">
@@ -879,63 +849,6 @@ same test class when creating a <code>MethodSource</code> for a JUnit 4 <code>De
 </li>
 </ul>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="release-notes-5.5.0-M1"><a class="anchor" href="#release-notes-5.5.0-M1"></a>5.5.0-M1</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> March 19, 2019</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong> Configurable test discovery implementation</p>
-</div>
-<div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/34?closed=1">5.5 M1</a> milestone page in the JUnit repository
-on GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.0-M1-junit-platform"><a class="anchor" href="#release-notes-5.5.0-M1-junit-platform"></a>JUnit Platform</h3>
-<div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Configurable test discovery implementation that can be reused by different test engines
-(see Javadoc of the <code><a href="../api/org/junit/platform/engine/support/discovery/package-summary.html">org.junit.platform.engine.support.discovery</a></code> package).</p>
-</li>
-<li>
-<p>New <code>isFinal()</code> and <code>isNotFinal()</code> methods in <code>ModifierSupport</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.0-M1-junit-jupiter"><a class="anchor" href="#release-notes-5.5.0-M1-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Expected and actual values are now supplied for failed <code>boolean</code> assertions for enhanced
-IDE and reporting support&#8201;&#8212;&#8201;for example, when <code>assertTrue()</code> or <code>assertFalse()</code> fails.</p>
-</li>
-<li>
-<p><code>@ValueSource</code> now additionally supports literal values of type <code>boolean</code> for
-parameterized tests.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.0-M1-junit-vintage"><a class="anchor" href="#release-notes-5.5.0-M1-junit-vintage"></a>JUnit Vintage</h3>
-<div class="paragraph">
-<p>No changes.</p>
 </div>
 </div>
 </div>
@@ -963,12 +876,12 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.2-junit-jupiter"><a class="anchor" href="#release-notes-5.4.2-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-3"><a class="anchor" href="#bug-fixes-3"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>Parameterized tests no longer throw an <code>ArrayStoreException</code> when creating human-readable
-test names.</p>
+<p>Parameterized tests no longer throw an <code>ArrayStoreException</code> when creating
+human-readable display names.</p>
 </li>
 </ul>
 </div>
@@ -977,12 +890,12 @@ test names.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.2-junit-vintage"><a class="anchor" href="#release-notes-5.4.2-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>Safeguard against <code>Runners</code> that only report tests as failed but not as started or
-finished such as Spock in case of failures during data-provider preparation.</p>
+<p>Safeguard against a <code>Runner</code> that only reports tests as failed but not as started or
+finished, such as Spock in case of failures during data-provider preparation.</p>
 </li>
 </ul>
 </div>
@@ -1017,7 +930,7 @@ repository on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.1-junit-platform"><a class="anchor" href="#release-notes-5.4.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1032,7 +945,7 @@ initialization.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.1-junit-jupiter"><a class="anchor" href="#release-notes-5.4.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1046,7 +959,7 @@ a temporary directory supplied via <code>@TempDir</code>.</p>
 <div class="sect2">
 <h3 id="release-notes-5.4.1-junit-vintage"><a class="anchor" href="#release-notes-5.4.1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1129,7 +1042,7 @@ in build tools</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-06-30 04:50:38 UTC
+Last updated 2019-06-30 09:48:42 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

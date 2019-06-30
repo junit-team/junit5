@@ -7371,7 +7371,9 @@ Dispatch Thread.</p>
     <span class="directive">public</span> <span class="type">void</span> interceptTestMethod(Invocation&lt;<span class="predefined-type">Void</span>&gt; invocation,
             ReflectiveInvocationContext&lt;<span class="predefined-type">Method</span>&gt; invocationContext,
             ExtensionContext extensionContext) <span class="directive">throws</span> <span class="predefined-type">Throwable</span> {
+
         <span class="predefined-type">AtomicReference</span>&lt;<span class="predefined-type">Throwable</span>&gt; throwable = <span class="keyword">new</span> <span class="predefined-type">AtomicReference</span>&lt;&gt;();
+
         <span class="predefined-type">SwingUtilities</span>.invokeAndWait(() -&gt; {
             <span class="keyword">try</span> {
                 invocation.proceed();
@@ -9711,7 +9713,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.5.0-SNAPSHOT<br>
-Last updated 2019-06-30 04:50:38 UTC
+Last updated 2019-06-30 09:48:42 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
