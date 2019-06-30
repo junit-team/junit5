@@ -27,7 +27,9 @@ public class SwingEdtInterceptor implements InvocationInterceptor {
 	public void interceptTestMethod(Invocation<Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext,
 			ExtensionContext extensionContext) throws Throwable {
+
 		AtomicReference<Throwable> throwable = new AtomicReference<>();
+
 		SwingUtilities.invokeAndWait(() -> {
 			try {
 				invocation.proceed();

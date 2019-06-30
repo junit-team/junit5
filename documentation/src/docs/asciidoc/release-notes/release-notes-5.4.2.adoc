@@ -21,8 +21,8 @@ No changes.
 
 ==== Bug Fixes
 
-* Parameterized tests no longer throw an `ArrayStoreException` when creating human-readable
-  test names.
+* Parameterized tests no longer throw an `ArrayStoreException` when creating
+  human-readable display names.
 
 
 [[release-notes-5.4.2-junit-vintage]]
@@ -30,5 +30,5 @@ No changes.
 
 ==== Bug Fixes
 
-* Safeguard against `Runners` that only report tests as failed but not as started or
-  finished such as Spock in case of failures during data-provider preparation.
+* Safeguard against a `Runner` that only reports tests as failed but not as started or
+  finished, such as Spock in case of failures during data-provider preparation.
