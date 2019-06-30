@@ -111,7 +111,7 @@ class StandaloneTests {
 		var jar = root.resolve(Helper.createJarPath("junit-platform-console-standalone"));
 		var path = new ArrayList<String>();
 		// path.add("bin"); // "exploded" test classes are found, see also test() above
-		path.add(Request.WORKSPACE.resolve("standalone/jar/tests.jar").toString());
+		path.add(Request.WORKSPACE.resolve("standalone/jar/tests.jar").toAbsolutePath().toString());
 		path.add(jar.toString());
 		var result = Request.builder() //
 				.setTool(new Java()) //
