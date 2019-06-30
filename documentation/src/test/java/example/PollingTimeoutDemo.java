@@ -10,20 +10,24 @@
 
 package example;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-class PollingTimeout {
+class PollingTimeoutDemo {
+
 	// tag::user_guide[]
-	@Timeout(5) // 5s
-	void waitUntil() throws InterruptedException {
-		while (!isConditionTrue()) {
-			Thread.sleep(250); // use some adapted retry duration
+	@Test
+	@Timeout(5) // Poll at most 5 seconds
+	void pollUntil() throws InterruptedException {
+		while (asynchronousResultNotAvailable()) {
+			Thread.sleep(250); // custom poll interval
 		}
-		// if needed asserts on the result of the awaited condition
+		// Obtain the asynchronous result and perform assertions
 	}
 	// end::user_guide[]
 
-	private boolean isConditionTrue() {
-		return true;
+	private boolean asynchronousResultNotAvailable() {
+		return false;
 	}
+
 }

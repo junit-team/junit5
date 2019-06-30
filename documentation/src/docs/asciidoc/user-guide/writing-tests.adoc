@@ -1695,25 +1695,33 @@ omitted. Specifying no unit is equivalent to using seconds.
 | `42 d`          | `@Timeout(value = 42, unit = DAYS)`
 |===
 
-==== Use @Timeout for polling tests
 
-It is common to write tests waiting for some updates.
-In some cases you can rewrite the logic to use a `CountDownLatch` or any other synchronization
-mechanism but sometimes it is not possible - generally when depending on an external system.
-These tests require some timeout to ensure they don't hang the test suite forever and
-the test fails if the waiting condition "never" happens.
-With `@Timeout` it becomes very easy to write such tests since the test itself just require
-to become an infinite loop:
+[[writing-tests-declarative-timeouts-polling]]
+==== Using @Timeout for Polling Tests
+
+When dealing with asynchronous code, it is common to write tests that poll while waiting
+for something to happen before performing any assertions. In some cases you can rewrite
+the logic to use a `CountDownLatch` or another synchronization mechanism, but sometimes
+that is not possible — for example, if the subject under test sends a message to a channel
+in an external message broker and assertions cannot be performed until the message has
+been successfully sent through the channel. Asynchronous tests like these require some
+form of timeout to ensure they don't hang the test suite by executing indefinitely, as
+would be the case if an asynchronous message never gets successfully delivered.
+
+By configuring a timeout for an asynchronous test that polls, you can ensure that the test
+does not execute indefinitely. The following example demonstrates how to achieve this with
+JUnit Jupiter's `@Timeout` annotation. This technique can be used to implement "poll
+until" logic very easily.
 
 [source,java]
 ----
-include::{testDir}/example/PollingTimeout.java[tags=user_guide,indent=0]
+include::{testDir}/example/PollingTimeoutDemo.java[tags=user_guide,indent=0]
 ----
 
-Such a simple usage enables to implement "test when" or "wait until" logic very easily.
-
-Alternatively, you can use a library handling for you the awaiting like the well-known
+NOTE: If you need more control over polling intervals and greater flexibility with
+asynchronous tests, consider using a dedicated library such as
 link:https://github.com/awaitility/awaitility[Awaitility].
+
 
 [[writing-tests-parallel-execution]]
 === Parallel Execution
