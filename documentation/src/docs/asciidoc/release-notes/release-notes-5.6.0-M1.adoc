@@ -35,7 +35,11 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* `@EnabledIf`/`@DisabledIf` are removed from Jupiter's API.
+  Script-based condition APIs and their supporting implementations were deprecated with
+  the intent to remove them in JUnit Jupiter 5.5. Users must now rely on a combination of
+  other built-in conditions or create and use a custom implementation of
+  `ExecutionCondition` to evaluate the same conditions.
 
 ==== New Features and Improvements
 
