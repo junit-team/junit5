@@ -412,52 +412,6 @@ value supplied via the `matches` attribute will be interpreted as a regular expr
 include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_environment_variable]
 ----
 
-[[writing-tests-conditional-execution-scripts]]
-==== Script-based Conditions
-
-WARNING: Conditional test execution via `{EnabledIf}` and `{DisabledIf}` is _deprecated_
-for removal in a future release of JUnit Jupiter.
-
-JUnit Jupiter provides the ability to either _enable_ or _disable_ a container or test
-depending on the evaluation of a script configured via the `{EnabledIf}` or
-`{DisabledIf}` annotation. Scripts can be written in JavaScript, Groovy, or any other
-scripting language for which there is support for the Java Scripting API, defined by JSR
-223.
-
-TIP: If the logic of your script depends only on the current operating system, the
-current Java Runtime Environment version, a particular JVM system property, or a
-particular environment variable, you should consider using one of the built-in
-annotations dedicated to that purpose. See the previous sections of this chapter for
-further details.
-
-NOTE: If you find yourself using the same script-based condition many times, consider
-writing a dedicated <<extensions-conditions, ExecutionCondition>> extension in order to
-implement the condition in a faster, type-safe, and more maintainable manner.
-
-[source,java,indent=0]
-----
-include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_scripts]
-----
-
-[[writing-tests-conditional-execution-scripts-bindings]]
-===== Script Bindings
-
-The following names are bound to each script context and therefore usable within the
-script. An _accessor_ provides access to a map-like structure via a simple `String
-get(String name)` method.
-
-[cols="25,25,75"]
-|===
-| Name                          | Type          | Description
-
-| `systemEnvironment`           | _accessor_    | Operating system environment variable accessor.
-| `systemProperty`              | _accessor_    | JVM system property accessor.
-| `junitConfigurationParameter` | _accessor_    | Configuration parameter accessor.
-| `junitDisplayName`            | `String`      | Display name of the test or container.
-| `junitTags`                   | `Set<String>` | All tags assigned to the test or container.
-| `junitUniqueId`               | `String`      | Unique ID of the test or container.
-|===
-
 
 [[writing-tests-tagging-and-filtering]]
 === Tagging and Filtering
