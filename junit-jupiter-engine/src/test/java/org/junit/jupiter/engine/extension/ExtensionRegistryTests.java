@@ -41,7 +41,7 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
  */
 class ExtensionRegistryTests {
 
-	private static final int NUM_DEFAULT_EXTENSIONS = 7;
+	private static final int NUM_DEFAULT_EXTENSIONS = 6;
 
 	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
 
@@ -161,7 +161,6 @@ class ExtensionRegistryTests {
 
 	private void assertDefaultGlobalExtensionsAreRegistered(long bacCount) {
 		assertExtensionRegistered(registry, DisabledCondition.class);
-		assertExtensionRegistered(registry, ScriptExecutionCondition.class);
 		assertExtensionRegistered(registry, TempDirectory.class);
 		assertExtensionRegistered(registry, TimeoutExtension.class);
 		assertExtensionRegistered(registry, RepeatedTestExtension.class);
@@ -171,7 +170,7 @@ class ExtensionRegistryTests {
 		assertEquals(bacCount, countExtensions(registry, BeforeAllCallback.class));
 		assertEquals(2, countExtensions(registry, BeforeEachCallback.class));
 		assertEquals(3, countExtensions(registry, ParameterResolver.class));
-		assertEquals(2, countExtensions(registry, ExecutionCondition.class));
+		assertEquals(1, countExtensions(registry, ExecutionCondition.class));
 		assertEquals(1, countExtensions(registry, TestTemplateInvocationContextProvider.class));
 		assertEquals(1, countExtensions(registry, InvocationInterceptor.class));
 	}
