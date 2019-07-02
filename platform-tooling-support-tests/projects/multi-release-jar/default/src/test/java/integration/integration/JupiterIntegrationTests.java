@@ -19,7 +19,6 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.launcher.TestIdentifier;
@@ -51,13 +50,7 @@ class JupiterIntegrationTests {
 		var engine = testPlan.getRoots().iterator().next();
 
 		assertEquals(1, testPlan.getChildren(engine).size()); // JupiterIntegrationTests.class
-		assertEquals(4, testPlan.getChildren(testPlan.getChildren(engine).iterator().next()).size()); // 4 test methods
-	}
-
-	@Test
-	@EnabledIf("1 == 1")
-	void javaScriptingModuleIsAvailable() {
-		/* empty */
+		assertEquals(3, testPlan.getChildren(testPlan.getChildren(engine).iterator().next()).size()); // 3 test methods
 	}
 
 }
