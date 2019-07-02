@@ -49,17 +49,11 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 	private static final List<Extension> DEFAULT_EXTENSIONS = Collections.unmodifiableList(Arrays.asList(//
 		new DisabledCondition(), //
-		newScriptExecutionCondition(), //
 		new TempDirectory(), //
 		new TimeoutExtension(), //
 		new RepeatedTestExtension(), //
 		new TestInfoParameterResolver(), //
 		new TestReporterParameterResolver()));
-
-	@SuppressWarnings("deprecation")
-	private static Extension newScriptExecutionCondition() {
-		return new ScriptExecutionCondition();
-	}
 
 	/**
 	 * Factory for creating and populating a new root registry with the default
