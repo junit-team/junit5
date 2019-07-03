@@ -98,34 +98,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h1 title="Deprecated API" class="title">Deprecated API</h1>
 <h2 title="Contents">Contents</h2>
 <ul>
-<li><a href="#interface">Interfaces</a></li>
 <li><a href="#class">Classes</a></li>
 <li><a href="#exception">Exceptions</a></li>
-<li><a href="#annotation.type">Annotation Types</a></li>
 <li><a href="#method">Methods</a></li>
 </ul>
 </div>
-<div class="contentContainer"><a id="interface">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<table class="deprecatedSummary">
-<caption><span>Interfaces</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Interface</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="org/junit/jupiter/engine/script/ScriptAccessor.html" title="interface in org.junit.jupiter.engine.script">org.junit.jupiter.engine.script.ScriptAccessor</a></th>
-<td class="colLast"></td>
-</tr>
-</tbody>
-</table>
-</li>
-</ul>
-<a id="class">
+<div class="contentContainer"><a id="class">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -137,14 +115,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tbody>
-<tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="org/junit/jupiter/engine/script/Script.html" title="class in org.junit.jupiter.engine.script">org.junit.jupiter.engine.script.Script</a></th>
-<td class="colLast"></td>
-</tr>
-<tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="org/junit/jupiter/engine/script/ScriptExecutionManager.html" title="class in org.junit.jupiter.engine.script">org.junit.jupiter.engine.script.ScriptExecutionManager</a></th>
-<td class="colLast"></td>
-</tr>
 <tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org/junit/platform/engine/support/filter/ClasspathScanningSupport.html" title="class in org.junit.platform.engine.support.filter">org.junit.platform.engine.support.filter.ClasspathScanningSupport</a></th>
 <td class="colLast">
@@ -178,44 +148,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colDeprecatedItemName" scope="row"><a href="org/junit/platform/commons/util/PreconditionViolationException.html" title="class in org.junit.platform.commons.util">org.junit.platform.commons.util.PreconditionViolationException</a></th>
 <td class="colLast">
 <div class="deprecationComment">Use <a href="org/junit/platform/commons/PreconditionViolationException.html" title="class in org.junit.platform.commons">PreconditionViolationException</a> instead.</div>
-</td>
-</tr>
-</tbody>
-</table>
-</li>
-</ul>
-<a id="annotation.type">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<table class="deprecatedSummary">
-<caption><span>Annotation Types</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Annotation Type</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="org/junit/jupiter/api/condition/DisabledIf.html" title="annotation in org.junit.jupiter.api.condition">org.junit.jupiter.api.condition.DisabledIf</a></th>
-<td class="colLast">
-<div class="deprecationComment">Script-based condition APIs and their supporting implementations
- are deprecated with the intent to remove them in JUnit Jupiter 5.6. Users
- should instead rely on a combination of other built-in conditions or create
- and use a custom implementation of
- <a href="org/junit/jupiter/api/extension/ExecutionCondition.html" title="interface in org.junit.jupiter.api.extension"><code>ExecutionCondition</code></a>
- to evaluate the same conditions.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="org/junit/jupiter/api/condition/EnabledIf.html" title="annotation in org.junit.jupiter.api.condition">org.junit.jupiter.api.condition.EnabledIf</a></th>
-<td class="colLast">
-<div class="deprecationComment">Script-based condition APIs and their supporting implementations
- are deprecated with the intent to remove them in JUnit Jupiter 5.6. Users
- should instead rely on a combination of other built-in conditions or create
- and use a custom implementation of
- <a href="org/junit/jupiter/api/extension/ExecutionCondition.html" title="interface in org.junit.jupiter.api.extension"><code>ExecutionCondition</code></a>
- to evaluate the same conditions.</div>
 </td>
 </tr>
 </tbody>

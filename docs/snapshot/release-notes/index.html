@@ -644,7 +644,11 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p><code>@EnabledIf</code>/<code>@DisabledIf</code> are removed from Jupiter&#8217;s API.
+Script-based condition APIs and their supporting implementations were deprecated with
+the intent to remove them in JUnit Jupiter 5.5. Users must now rely on a combination of
+other built-in conditions or create and use a custom implementation of
+<code>ExecutionCondition</code> to evaluate the same conditions.</p>
 </li>
 </ul>
 </div>
@@ -739,7 +743,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-07-01 09:41:22 UTC
+Last updated 2019-07-03 12:02:08 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
