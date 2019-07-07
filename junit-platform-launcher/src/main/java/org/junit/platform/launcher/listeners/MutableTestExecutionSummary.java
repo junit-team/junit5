@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
@@ -186,10 +186,8 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 
 	@Override
 	public void printFailuresTo(PrintWriter writer, int maxStackTraceLines) {
-		Objects.requireNonNull(writer);
-		if (maxStackTraceLines < 0) {
-			throw new IllegalArgumentException("Invalid negative value for maxStackTraceLines");
-		}
+		Preconditions.notNull(writer, "Writer must not be null");
+		Preconditions.condition(maxStackTraceLines >= 0, "Invalid negative value for maxStackTraceLines");
 
 		if (getTotalFailureCount() > 0) {
 			writer.printf("%nFailures (%d):%n", getTotalFailureCount());
