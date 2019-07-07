@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
@@ -32,7 +33,6 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 
 	private static final String TAB = "  ";
 	private static final String DOUBLE_TAB = TAB + TAB;
-	private static final int MAX_STACKTRACE_LINES = 10;
 
 	private static final String CAUSED_BY = "Caused by: ";
 	private static final String SUPPRESSED = "Suppressed: ";
@@ -186,13 +186,21 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 
 	@Override
 	public void printFailuresTo(PrintWriter writer) {
+		printFailuresTo(writer, 10);
+	}
+
+	@Override
+	public void printFailuresTo(PrintWriter writer, int maxStackTraceLines) {
+		Preconditions.notNull(writer, "Writer must not be null");
+		Preconditions.condition(maxStackTraceLines >= 0, "maxStackTraceLines must be a positive number");
+
 		if (getTotalFailureCount() > 0) {
 			writer.printf("%nFailures (%d):%n", getTotalFailureCount());
 			this.failures.forEach(failure -> {
 				writer.printf("%s%s%n", TAB, describeTest(failure.getTestIdentifier()));
 				printSource(writer, failure.getTestIdentifier());
 				writer.printf("%s=> %s%n", DOUBLE_TAB, failure.getException());
-				printStackTrace(writer, failure.getException(), MAX_STACKTRACE_LINES);
+				printStackTrace(writer, failure.getException(), maxStackTraceLines);
 			});
 			writer.flush();
 		}
