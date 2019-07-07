@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -32,7 +33,6 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 
 	private static final String TAB = "  ";
 	private static final String DOUBLE_TAB = TAB + TAB;
-	private static final int MAX_STACKTRACE_LINES = 10;
 
 	private static final String CAUSED_BY = "Caused by: ";
 	private static final String SUPPRESSED = "Suppressed: ";
@@ -185,14 +185,19 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	}
 
 	@Override
-	public void printFailuresTo(PrintWriter writer) {
+	public void printFailuresTo(PrintWriter writer, int maxStackTraceLines) {
+		Objects.requireNonNull(writer);
+		if (maxStackTraceLines < 0) {
+			throw new IllegalArgumentException("Invalid negative value for maxStackTraceLines");
+		}
+
 		if (getTotalFailureCount() > 0) {
 			writer.printf("%nFailures (%d):%n", getTotalFailureCount());
 			this.failures.forEach(failure -> {
 				writer.printf("%s%s%n", TAB, describeTest(failure.getTestIdentifier()));
 				printSource(writer, failure.getTestIdentifier());
 				writer.printf("%s=> %s%n", DOUBLE_TAB, failure.getException());
-				printStackTrace(writer, failure.getException(), MAX_STACKTRACE_LINES);
+				printStackTrace(writer, failure.getException(), maxStackTraceLines);
 			});
 			writer.flush();
 		}
