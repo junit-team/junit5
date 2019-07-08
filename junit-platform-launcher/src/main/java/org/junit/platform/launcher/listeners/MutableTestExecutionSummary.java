@@ -185,9 +185,14 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 	}
 
 	@Override
+	public void printFailuresTo(PrintWriter writer) {
+		printFailuresTo(writer, 10);
+	}
+
+	@Override
 	public void printFailuresTo(PrintWriter writer, int maxStackTraceLines) {
 		Preconditions.notNull(writer, "Writer must not be null");
-		Preconditions.condition(maxStackTraceLines >= 0, "Invalid negative value for maxStackTraceLines");
+		Preconditions.condition(maxStackTraceLines >= 0, "maxStackTraceLines must be a positive number");
 
 		if (getTotalFailureCount() > 0) {
 			writer.printf("%nFailures (%d):%n", getTotalFailureCount());

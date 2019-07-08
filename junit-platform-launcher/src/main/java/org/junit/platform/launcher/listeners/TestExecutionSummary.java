@@ -125,19 +125,20 @@ public interface TestExecutionSummary {
 	 * Print failed containers and tests, including sources and exception
 	 * messages, to the supplied {@link PrintWriter}.
 	 *
+	 * @param writer on which the printing is done; never {@code null}
 	 * @see #printTo(PrintWriter)
 	 */
-	default void printFailuresTo(PrintWriter writer) {
-		printFailuresTo(writer, 10);
-	}
+	void printFailuresTo(PrintWriter writer);
 
 	/**
 	 * Print failed containers and tests, including sources and exception
 	 * messages, to the supplied {@link PrintWriter}.
-	 * The maximum number of lines to print for the exception stack traces
+	 * <p>The maximum number of lines to print for the exception stack traces
 	 * (if any) can be specified with the given {@code maxStackTraceLines}
 	 * parameter.
 	 *
+	 * @param writer on which the printing is done; never {@code null}
+	 * @param maxStackTraceLines maximum number of lines to print; must be positive
 	 * @see #printTo(PrintWriter)
 	 */
 	void printFailuresTo(PrintWriter writer, int maxStackTraceLines);
