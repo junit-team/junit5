@@ -22,7 +22,7 @@ object Versions {
     val commonsIo = "2.6"
     val javaCompilerScriptEngine = "0.1.2"
     val log4j = "2.11.2"
-    val mockito = "2.28.2"
+    val mockito = "3.0.0"
     val slf4j = "1.7.26"
 
     // Plugins
