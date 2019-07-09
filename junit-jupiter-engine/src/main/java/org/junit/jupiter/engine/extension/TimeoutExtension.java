@@ -173,6 +173,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 
 		private final ScheduledExecutorService executor;
 
+		@SuppressWarnings("unused")
 		ExecutorResource() {
 			executor = Executors.newSingleThreadScheduledExecutor(runnable -> {
 				Thread thread = new Thread(runnable, "junit-jupiter-timeout-watcher");
