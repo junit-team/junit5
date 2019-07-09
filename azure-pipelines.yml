@@ -1,15 +1,4 @@
 jobs:
-- job: linux_11
-  displayName: Linux (OpenJDK 11)
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-    - checkout: self
-      fetchDepth: 10
-    - template: src/azure/azure-gradle-step.yml
-      parameters:
-        publishTestResults: true
-
 - job: linux_12
   displayName: Linux (OpenJDK 12)
   pool:
@@ -19,6 +8,8 @@ jobs:
     - checkout: self
       fetchDepth: 10
     - template: src/azure/azure-gradle-step.yml
+      parameters:
+        publishTestResults: true
 
 - job: linux_13
   displayName: Linux (OpenJDK 13)
@@ -59,12 +50,15 @@ jobs:
   pool:
     vmImage: 'windows-2019'
   steps:
+    - bash: choco install openjdk --version 12.0.1
     - checkout: self
       fetchDepth: 10
     - template: src/azure/azure-gradle-step.yml
+      parameters:
+        javahome: 'C:\Program Files\OpenJDK\jdk-12.0.1'
 
 - job: coverage
-  dependsOn: linux_11
+  dependsOn: linux_12
   displayName: Coverage
   pool:
     vmImage: 'ubuntu-16.04'
@@ -73,7 +67,8 @@ jobs:
       fetchDepth: 10
     - bash: |
         set -e
-        export JAVA_HOME="${JAVA_HOME_11_X64}"
+        export JAVA_HOME="${JAVA_HOME_12_X64}"
+        export PATH="${JAVA_HOME}/bin:${PATH}"
         ./gradlew --scan --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport
         bash <(curl -s https://codecov.io/bash)
       displayName: Coverage
@@ -87,7 +82,7 @@ jobs:
         reportDirectory: '**/build/reports/jacoco/jacocoRootReport/html'
 
 - job: publish_artifacts
-  dependsOn: linux_11
+  dependsOn: linux_12
   displayName: Publish Snapshot Artifacts
   pool:
     vmImage: 'ubuntu-16.04'
@@ -96,7 +91,8 @@ jobs:
       fetchDepth: 10
     - bash: |
         set -e
-        export JAVA_HOME="${JAVA_HOME_11_X64}"
+        export JAVA_HOME="${JAVA_HOME_12_X64}"
+        export PATH="${JAVA_HOME}/bin:${PATH}"
         ./gradlew --scan publish -x check
       displayName: Publish
       env:
@@ -105,7 +101,7 @@ jobs:
   condition: and(succeeded(), and(eq(variables['System.PullRequest.IsFork'], False), and(eq(variables['Build.Reason'], 'IndividualCI'), or(startsWith(variables['Build.SourceBranch'], 'refs/heads/releases/'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))))
 
 - job: update_documentation
-  dependsOn: linux_11
+  dependsOn: linux_12
   displayName: Update Snapshot Documentation
   pool:
     vmImage: 'ubuntu-16.04'
@@ -114,7 +110,8 @@ jobs:
       fetchDepth: 10
     - bash: |
         set -e
-        export JAVA_HOME="${JAVA_HOME_11_X64}"
+        export JAVA_HOME="${JAVA_HOME_12_X64}"
+        export PATH="${JAVA_HOME}/bin:${PATH}"
         sudo apt-get install graphviz
         ./src/publishDocumentationSnapshotOnlyIfNecessary.sh
       displayName: Publish

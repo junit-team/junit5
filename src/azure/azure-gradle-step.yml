@@ -6,9 +6,13 @@ steps:
   - bash: |
       set -e
       # when executing on an Azure Pipelines build agent (not in a container)
-      # default to java 11
-      if [ -n "${JAVA_HOME_11_X64}" ]; then
-        export JAVA_HOME="${JAVA_HOME_11_X64}"
+      # default to Java 12
+      if [ -n "${JAVA_HOME_12_X64}" ]; then
+        export JAVA_HOME="${JAVA_HOME_12_X64}"
+      fi
+      if [ -n "${{ parameters.javahome }}" ]; then
+        export JAVA_HOME="${{ parameters.javahome }}"
+        export PATH="$JAVA_HOME/bin:$PATH"
       fi
       ./gradlew --version
       ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build

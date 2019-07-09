@@ -54,7 +54,7 @@ build scan for JUnit 5 can be viewed [here](https://scans.gradle.com/s/bl3pw4mrb
 
 ## Building from Source
 
-You need [JDK 11] to build JUnit 5.
+You need [JDK 12] to build JUnit 5.
 
 All modules can be _built_ with the [Gradle Wrapper] using the following command.
 
@@ -127,7 +127,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: https://www.eclemma.org/jacoco/
 [Javadoc]: https://junit.org/junit5/docs/current/api/
-[JDK 11]: https://jdk.java.net/11/
+[JDK 12]: https://jdk.java.net/12/
 [Release Notes]: https://junit.org/junit5/docs/current/release-notes/
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
 [User Guide]: https://junit.org/junit5/docs/current/user-guide/

@@ -62,7 +62,7 @@ if (project in mavenizedProjects) {
 				addBooleanOption("html5", true)
 				// Javadoc 13 removed support for `--no-module-directories`
 				// https://bugs.openjdk.java.net/browse/JDK-8215580
-				if (javaVersion.isJava11 || javaVersion.isJava12) {
+				if (javaVersion.isJava12) {
 					addBooleanOption("-no-module-directories", true)
 				}
 				addMultilineStringsOption("tag").value = listOf(
@@ -171,7 +171,7 @@ val compileModule by tasks.registering(JavaCompile::class) {
 }
 
 tasks.compileJava {
-	// See: https://docs.oracle.com/en/java/javase/11/tools/javac.html
+	// See: https://docs.oracle.com/en/java/javase/12/tools/javac.html
 	options.compilerArgs.addAll(listOf(
 			"-Xlint:all", // Enables all recommended warnings.
 			"-Werror" // Terminates compilation when warnings occur.
@@ -182,7 +182,7 @@ tasks.compileJava {
 }
 
 tasks.compileTestJava {
-	// See: https://docs.oracle.com/en/java/javase/11/tools/javac.html
+	// See: https://docs.oracle.com/en/java/javase/12/tools/javac.html
 	options.compilerArgs.addAll(listOf(
 			"-Xlint", // Enables all recommended warnings.
 			"-Xlint:-overrides", // Disables "method overrides" warnings.
@@ -216,7 +216,7 @@ afterEvaluate {
 			targetCompatibility = extension.mainJavaVersion.majorVersion // needed by asm
 			// --release release
 			// Compiles against the public, supported and documented API for a specific VM version.
-			// Supported release targets are 6, 7, 8, 9, 10, and 11.
+			// Supported release targets are 7, 8, 9, 10, 11, 12
 			// Note that if --release is added then -target and -source are ignored.
 			options.compilerArgs.addAll(listOf("--release", extension.mainJavaVersion.majorVersion))
 		}
