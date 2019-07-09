@@ -8402,7 +8402,7 @@ For details on what statistics are available, consult the Javadoc for <code><a h
             .engine(<span class="string"><span class="delimiter">&quot;</span><span class="content">junit-jupiter</span><span class="delimiter">&quot;</span></span>) <i class="conum" data-value="1"></i><b>(1)</b>
             .selectors(selectClass(ExampleTestCase.class)) <i class="conum" data-value="2"></i><b>(2)</b>
             .execute() <i class="conum" data-value="3"></i><b>(3)</b>
-            .containers() <i class="conum" data-value="4"></i><b>(4)</b>
+            .containerEvents() <i class="conum" data-value="4"></i><b>(4)</b>
             .assertStatistics(stats -&gt; stats.started(<span class="integer">2</span>).succeeded(<span class="integer">2</span>)); <i class="conum" data-value="5"></i><b>(5)</b>
     }
 
@@ -8412,7 +8412,7 @@ For details on what statistics are available, consult the Javadoc for <code><a h
             .engine(<span class="string"><span class="delimiter">&quot;</span><span class="content">junit-jupiter</span><span class="delimiter">&quot;</span></span>) <i class="conum" data-value="1"></i><b>(1)</b>
             .selectors(selectClass(ExampleTestCase.class)) <i class="conum" data-value="2"></i><b>(2)</b>
             .execute() <i class="conum" data-value="3"></i><b>(3)</b>
-            .tests() <i class="conum" data-value="6"></i><b>(6)</b>
+            .testEvents() <i class="conum" data-value="6"></i><b>(6)</b>
             .assertStatistics(stats -&gt;
                 stats.skipped(<span class="integer">1</span>).started(<span class="integer">3</span>).succeeded(<span class="integer">1</span>).aborted(<span class="integer">1</span>).failed(<span class="integer">1</span>)); <i class="conum" data-value="7"></i><b>(7)</b>
     }
@@ -8522,7 +8522,7 @@ events, consult the Javadoc for <code><a href="../api/org/junit/platform/testkit
             .engine(<span class="string"><span class="delimiter">&quot;</span><span class="content">junit-jupiter</span><span class="delimiter">&quot;</span></span>) <i class="conum" data-value="1"></i><b>(1)</b>
             .selectors(selectMethod(ExampleTestCase.class, methodName)) <i class="conum" data-value="2"></i><b>(2)</b>
             .execute() <i class="conum" data-value="3"></i><b>(3)</b>
-            .tests(); <i class="conum" data-value="4"></i><b>(4)</b>
+            .testEvents(); <i class="conum" data-value="4"></i><b>(4)</b>
 
         testEvents.assertStatistics(stats -&gt; stats.skipped(<span class="integer">1</span>)); <i class="conum" data-value="6"></i><b>(6)</b>
 
@@ -8608,7 +8608,7 @@ events and execution results, consult the Javadoc for <code><a href="../api/org/
         EngineTestKit.engine(<span class="string"><span class="delimiter">&quot;</span><span class="content">junit-jupiter</span><span class="delimiter">&quot;</span></span>) <i class="conum" data-value="1"></i><b>(1)</b>
             .selectors(selectClass(ExampleTestCase.class)) <i class="conum" data-value="2"></i><b>(2)</b>
             .execute() <i class="conum" data-value="3"></i><b>(3)</b>
-            .tests() <i class="conum" data-value="4"></i><b>(4)</b>
+            .testEvents() <i class="conum" data-value="4"></i><b>(4)</b>
             .assertThatEvents().haveExactly(<span class="integer">1</span>, <i class="conum" data-value="5"></i><b>(5)</b>
                 event(test(<span class="string"><span class="delimiter">&quot;</span><span class="content">failingTest</span><span class="delimiter">&quot;</span></span>),
                     finishedWithFailure(
@@ -8701,7 +8701,7 @@ reliable.</p>
         EngineTestKit.engine(<span class="string"><span class="delimiter">&quot;</span><span class="content">junit-jupiter</span><span class="delimiter">&quot;</span></span>) <i class="conum" data-value="1"></i><b>(1)</b>
             .selectors(selectClass(ExampleTestCase.class)) <i class="conum" data-value="2"></i><b>(2)</b>
             .execute() <i class="conum" data-value="3"></i><b>(3)</b>
-            .all() <i class="conum" data-value="4"></i><b>(4)</b>
+            .allEvents() <i class="conum" data-value="4"></i><b>(4)</b>
             .debug(writer) <i class="conum" data-value="5"></i><b>(5)</b>
             .assertEventsMatchExactly( <i class="conum" data-value="6"></i><b>(6)</b>
                 event(engine(), started()),
@@ -9591,7 +9591,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-07-06 15:13:02 UTC
+Last updated 2019-07-09 13:15:37 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

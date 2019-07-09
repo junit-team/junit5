@@ -27,8 +27,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var data = {"i0":42,"i1":10,"i2":10,"i3":42,"i4":10,"i5":42};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -144,9 +144,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.4</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="#all()"><code>all()</code></a>, 
-<a href="#containers()"><code>containers()</code></a>, 
-<a href="#tests()"><code>tests()</code></a>, 
+<dd><a href="#allEvents()"><code>allEvents()</code></a>, 
+<a href="#containerEvents()"><code>containerEvents()</code></a>, 
+<a href="#testEvents()"><code>testEvents()</code></a>, 
 <code>ExecutionRecorder</code>, 
 <a href="Events.html" title="class in org.junit.platform.testkit.engine"><code>Events</code></a>, 
 <a href="Executions.html" title="class in org.junit.platform.testkit.engine"><code>Executions</code></a></dd>
@@ -165,7 +165,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -175,21 +175,48 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#all()">all</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get all recorded events.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">This method will be removed in 1.7; use <a href="#allEvents()"><code>allEvents()</code></a> instead.</div>
+</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#containers()">containers</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#allEvents()">allEvents</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get recorded events for containers.</div>
+<div class="block">Get all recorded events.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tests()">tests</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#containerEvents()">containerEvents</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Get recorded events for containers.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#containers()">containers</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">This method will be removed in 1.7; use <a href="#containerEvents()"><code>containerEvents()</code></a> instead.</div>
+</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#testEvents()">testEvents</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get recorded events for tests.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tests()">tests</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">This method will be removed in 1.7; use <a href="#testEvents()"><code>testEvents()</code></a> instead.</div>
+</div>
 </td>
 </tr>
 </table>
@@ -216,14 +243,60 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="allEvents()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>allEvents</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.6")
+public&nbsp;<a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a>&nbsp;allEvents()</pre>
+<div class="block">Get all recorded events.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.6</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#containerEvents()"><code>containerEvents()</code></a>, 
+<a href="#testEvents()"><code>testEvents()</code></a></dd>
+</dl>
+</li>
+</ul>
 <a id="all()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>all</h4>
-<pre class="methodSignature">public&nbsp;<a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a>&nbsp;all()</pre>
+<pre class="methodSignature"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>
+<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#DEPRECATED" title="class or interface in org.apiguardian.api" class="externalLink">DEPRECATED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.6")
+public&nbsp;<a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a>&nbsp;all()</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">This method will be removed in 1.7; use <a href="#allEvents()"><code>allEvents()</code></a> instead.</div>
+</div>
 <div class="block">Get all recorded events.</div>
+</li>
+</ul>
+<a id="containerEvents()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>containerEvents</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.6")
+public&nbsp;<a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a>&nbsp;containerEvents()</pre>
+<div class="block">Get recorded events for containers.
+
+ <p>In this context, the word "container" applies to <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptors</code></a> that return <code>true</code> from <a href="../../engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a>.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.6</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#allEvents()"><code>allEvents()</code></a>, 
+<a href="#testEvents()"><code>testEvents()</code></a></dd>
+</dl>
 </li>
 </ul>
 <a id="containers()">
@@ -232,10 +305,37 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockList">
 <li class="blockList">
 <h4>containers</h4>
-<pre class="methodSignature">public&nbsp;<a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a>&nbsp;containers()</pre>
+<pre class="methodSignature"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>
+<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#DEPRECATED" title="class or interface in org.apiguardian.api" class="externalLink">DEPRECATED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.6")
+public&nbsp;<a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a>&nbsp;containers()</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">This method will be removed in 1.7; use <a href="#containerEvents()"><code>containerEvents()</code></a> instead.</div>
+</div>
 <div class="block">Get recorded events for containers.
 
  <p>In this context, the word "container" applies to <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptors</code></a> that return <code>true</code> from <a href="../../engine/TestDescriptor.html#isContainer()"><code>TestDescriptor.isContainer()</code></a>.</div>
+</li>
+</ul>
+<a id="testEvents()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>testEvents</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.6")
+public&nbsp;<a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a>&nbsp;testEvents()</pre>
+<div class="block">Get recorded events for tests.
+
+ <p>In this context, the word "test" applies to <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptors</code></a> that return <code>true</code> from <a href="../../engine/TestDescriptor.html#isTest()"><code>TestDescriptor.isTest()</code></a>.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.6</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#allEvents()"><code>allEvents()</code></a>, 
+<a href="#containerEvents()"><code>containerEvents()</code></a></dd>
+</dl>
 </li>
 </ul>
 <a id="tests()">
@@ -244,7 +344,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockListLast">
 <li class="blockList">
 <h4>tests</h4>
-<pre class="methodSignature">public&nbsp;<a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a>&nbsp;tests()</pre>
+<pre class="methodSignature"><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>
+<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#DEPRECATED" title="class or interface in org.apiguardian.api" class="externalLink">DEPRECATED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.6")
+public&nbsp;<a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a>&nbsp;tests()</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
+<div class="deprecationComment">This method will be removed in 1.7; use <a href="#testEvents()"><code>testEvents()</code></a> instead.</div>
+</div>
 <div class="block">Get recorded events for tests.
 
  <p>In this context, the word "test" applies to <a href="../../engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptors</code></a> that return <code>true</code> from <a href="../../engine/TestDescriptor.html#isTest()"><code>TestDescriptor.isTest()</code></a>.</div>
