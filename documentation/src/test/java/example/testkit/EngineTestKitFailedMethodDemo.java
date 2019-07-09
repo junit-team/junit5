@@ -32,7 +32,7 @@ class EngineTestKitFailedMethodDemo {
 		EngineTestKit.engine("junit-jupiter") // <1>
 			.selectors(selectClass(ExampleTestCase.class)) // <2>
 			.execute() // <3>
-			.tests() // <4>
+			.testEvents() // <4>
 			.assertThatEvents().haveExactly(1, // <5>
 				event(test("failingTest"),
 					finishedWithFailure(

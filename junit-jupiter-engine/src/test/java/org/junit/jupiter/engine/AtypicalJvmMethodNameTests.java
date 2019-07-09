@@ -32,14 +32,14 @@ class AtypicalJvmMethodNameTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void kotlinTestWithMethodNameContainingSpecialCharacters() {
 		EngineExecutionResults executionResults = executeTestsForClass(ArbitraryNamingKotlinTestCase.class);
-		assertThat(executionResults.tests().started().count()).isEqualTo(2);
+		assertThat(executionResults.testEvents().started().count()).isEqualTo(2);
 
-		TestDescriptor testDescriptor1 = executionResults.tests().succeeded().list().get(0).getTestDescriptor();
+		TestDescriptor testDescriptor1 = executionResults.testEvents().succeeded().list().get(0).getTestDescriptor();
 		assertAll(//
 			() -> assertEquals(METHOD_NAME + "()", testDescriptor1.getDisplayName()), //
 			() -> assertEquals(METHOD_NAME + "()", testDescriptor1.getLegacyReportingName()));
 
-		TestDescriptor testDescriptor2 = executionResults.tests().succeeded().list().get(1).getTestDescriptor();
+		TestDescriptor testDescriptor2 = executionResults.testEvents().succeeded().list().get(1).getTestDescriptor();
 		assertAll(//
 			() -> assertEquals("test name ends with parentheses()()", testDescriptor2.getDisplayName()), //
 			() -> assertEquals("test name ends with parentheses()()", testDescriptor2.getLegacyReportingName()));

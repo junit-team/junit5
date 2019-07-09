@@ -152,7 +152,7 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private Events executeTest(String methodName) {
-		return executeTests(selectMethod(TestCase.class, methodName)).all();
+		return executeTests(selectMethod(TestCase.class, methodName)).allEvents();
 	}
 
 	static class TestCase {

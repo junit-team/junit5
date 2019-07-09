@@ -56,8 +56,8 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 			selectClass(SecondOfTwoTestCases.class)).build();
 
 		EngineExecutionResults executionResults = executeTests(request);
-		Events containers = executionResults.containers();
-		Events tests = executionResults.tests();
+		Events containers = executionResults.containerEvents();
+		Events tests = executionResults.testEvents();
 
 		assertEquals(6, tests.started().count(), "# tests started");
 		assertEquals(5, tests.succeeded().count(), "# tests succeeded");
@@ -70,8 +70,8 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void allTestsInClassAreRunWithBeforeEachAndAfterEachMethods() {
 		EngineExecutionResults executionResults = executeTestsForClass(MyStandardTestCase.class);
-		Events containers = executionResults.containers();
-		Events tests = executionResults.tests();
+		Events containers = executionResults.containerEvents();
+		Events tests = executionResults.testEvents();
 
 		assertEquals(2, containers.started().count(), "# containers started");
 		assertEquals(2, containers.finished().count(), "# containers finished");
@@ -89,8 +89,8 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void testsFailWhenBeforeEachFails() {
 		EngineExecutionResults executionResults = executeTestsForClass(TestCaseWithFailingBefore.class);
-		Events containers = executionResults.containers();
-		Events tests = executionResults.tests();
+		Events containers = executionResults.containerEvents();
+		Events tests = executionResults.testEvents();
 
 		assertEquals(2, tests.started().count(), "# tests started");
 		assertEquals(0, tests.succeeded().count(), "# tests succeeded");
@@ -105,8 +105,8 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void testsFailWhenAfterEachFails() {
 		EngineExecutionResults executionResults = executeTestsForClass(TestCaseWithFailingAfter.class);
-		Events containers = executionResults.containers();
-		Events tests = executionResults.tests();
+		Events containers = executionResults.containerEvents();
+		Events tests = executionResults.testEvents();
 
 		assertEquals(1, tests.started().count(), "# tests started");
 		assertEquals(0, tests.succeeded().count(), "# tests succeeded");

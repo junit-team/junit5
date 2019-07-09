@@ -188,8 +188,8 @@ class ParallelExecutionIntegrationTests {
 		var configParams = Map.of(DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME, "concurrent");
 		var results = executeWithFixedParallelism(3, configParams, TestCaseA.class, TestCaseB.class, TestCaseC.class);
 
-		results.tests().assertStatistics(stats -> stats.succeeded(9));
-		assertThat(ThreadReporter.getThreadNames(results.all().list())).hasSize(3);
+		results.testEvents().assertStatistics(stats -> stats.succeeded(9));
+		assertThat(ThreadReporter.getThreadNames(results.allEvents().list())).hasSize(3);
 		TestDescriptor testClassA = findFirstTestDescriptor(results, container(TestCaseA.class));
 		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassA))).hasSize(1);
 		TestDescriptor testClassB = findFirstTestDescriptor(results, container(TestCaseB.class));
@@ -205,8 +205,8 @@ class ParallelExecutionIntegrationTests {
 			DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME, "same_thread");
 		var results = executeWithFixedParallelism(3, configParams, TestCaseA.class, TestCaseB.class, TestCaseC.class);
 
-		results.tests().assertStatistics(stats -> stats.succeeded(9));
-		assertThat(ThreadReporter.getThreadNames(results.all().list())).hasSizeGreaterThanOrEqualTo(3);
+		results.testEvents().assertStatistics(stats -> stats.succeeded(9));
+		assertThat(ThreadReporter.getThreadNames(results.allEvents().list())).hasSizeGreaterThanOrEqualTo(3);
 		TestDescriptor testClassA = findFirstTestDescriptor(results, container(TestCaseA.class));
 		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassA))).hasSize(3);
 		TestDescriptor testClassB = findFirstTestDescriptor(results, container(TestCaseB.class));
@@ -216,12 +216,12 @@ class ParallelExecutionIntegrationTests {
 	}
 
 	private List<Event> getEventsOfChildren(EngineExecutionResults results, TestDescriptor container) {
-		return results.tests().filter(
+		return results.testEvents().filter(
 			event -> event.getTestDescriptor().getParent().orElseThrow().equals(container)).collect(toList());
 	}
 
 	private TestDescriptor findFirstTestDescriptor(EngineExecutionResults results, Condition<Event> condition) {
-		return results.all().filter(condition::matches).map(Event::getTestDescriptor).findFirst().orElseThrow();
+		return results.allEvents().filter(condition::matches).map(Event::getTestDescriptor).findFirst().orElseThrow();
 	}
 
 	private List<Instant> getTimestampsFor(List<Event> events, Condition<Event> condition) {
@@ -235,7 +235,7 @@ class ParallelExecutionIntegrationTests {
 
 	private List<Event> executeConcurrently(int parallelism, Class<?>... testClasses) {
 		return executeWithFixedParallelism(parallelism, Map.of(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent"),
-			testClasses).all().list();
+			testClasses).allEvents().list();
 	}
 
 	private EngineExecutionResults executeWithFixedParallelism(int parallelism, Map<String, String> configParams,

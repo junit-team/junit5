@@ -34,7 +34,7 @@ class EngineTestKitSkippedMethodDemo {
 			.engine("junit-jupiter") // <1>
 			.selectors(selectMethod(ExampleTestCase.class, methodName)) // <2>
 			.execute() // <3>
-			.tests(); // <4>
+			.testEvents(); // <4>
 
 		testEvents.assertStatistics(stats -> stats.skipped(1)); // <6>
 

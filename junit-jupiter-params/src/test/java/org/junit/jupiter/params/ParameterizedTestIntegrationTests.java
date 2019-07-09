@@ -84,7 +84,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void executesWithSingleArgumentsProviderWithMultipleInvocations() {
 		var results = execute("testWithTwoSingleStringArgumentsProvider", String.class);
-		results.all().assertThatEvents() //
+		results.allEvents().assertThatEvents() //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
 	}
@@ -92,7 +92,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void executesWithCsvSource() {
 		var results = execute("testWithCsvSource", String.class);
-		results.all().assertThatEvents() //
+		results.allEvents().assertThatEvents() //
 				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
 	}
@@ -100,7 +100,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void executesWithCustomName() {
 		var results = execute("testWithCustomName", String.class, int.class);
-		results.all().assertThatEvents() //
+		results.allEvents().assertThatEvents() //
 				.haveExactly(1, event(test(), displayName("foo and 23"), finishedWithFailure(message("foo, 23")))) //
 				.haveExactly(1, event(test(), displayName("bar and 42"), finishedWithFailure(message("bar, 42"))));
 	}
@@ -111,7 +111,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void executesWithPrimitiveWideningConversion() {
 		var results = execute("testWithPrimitiveWideningConversion", double.class);
-		results.all().assertThatEvents() //
+		results.allEvents().assertThatEvents() //
 				.haveExactly(1, event(test(), displayName("[1] 1"), finishedWithFailure(message("num: 1.0")))) //
 				.haveExactly(1, event(test(), displayName("[2] 2"), finishedWithFailure(message("num: 2.0"))));
 	}
@@ -122,7 +122,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void executesWithImplicitGenericConverter() {
 		var results = execute("testWithImplicitGenericConverter", Book.class);
-		results.all().assertThatEvents() //
+		results.allEvents().assertThatEvents() //
 				.haveExactly(1, event(test(), displayName("[1] book 1"), finishedWithFailure(message("book 1")))) //
 				.haveExactly(1, event(test(), displayName("[2] book 2"), finishedWithFailure(message("book 2"))));
 	}
@@ -132,7 +132,7 @@ class ParameterizedTestIntegrationTests {
 		var results = execute("testWithCustomName", String.class, int.class);
 
 		// @formatter:off
-		Stream<String> legacyReportingNames = results.tests().dynamicallyRegistered()
+		Stream<String> legacyReportingNames = results.testEvents().dynamicallyRegistered()
 				.map(Event::getTestDescriptor)
 				.map(TestDescriptor::getLegacyReportingName);
 		// @formatter:on
@@ -143,7 +143,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void executesWithExplicitConverter() {
 		var results = execute("testWithExplicitConverter", int.class);
-		results.all().assertThatEvents() //
+		results.allEvents().assertThatEvents() //
 				.haveExactly(1, event(test(), displayName("[1] O"), finishedWithFailure(message("length: 1")))) //
 				.haveExactly(1, event(test(), displayName("[2] XXX"), finishedWithFailure(message("length: 3"))));
 	}
@@ -151,7 +151,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void failsContainerOnEmptyName() {
 		var results = execute("testWithEmptyName", String.class);
-		results.all().assertThatEvents() //
+		results.allEvents().assertThatEvents() //
 				.haveExactly(1, event(container(), displayName("testWithEmptyName(String)"), //
 					finishedWithFailure(message(msg -> msg.contains("must be declared with a non-empty name")))));
 	}
@@ -159,7 +159,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void reportsExceptionForErroneousConverter() {
 		var results = execute("testWithErroneousConverter", Object.class);
-		results.all().assertThatEvents() //
+		results.allEvents().assertThatEvents() //
 				.haveExactly(1, event(test(), finishedWithFailure(instanceOf(ParameterResolutionException.class), //
 					message("Error converting parameter at index 0: something went horribly wrong"))));
 	}
@@ -171,7 +171,7 @@ class ParameterizedTestIntegrationTests {
 		LifecycleTestCase.testMethods.clear();
 
 		var results = execute(selectClass(LifecycleTestCase.class));
-		results.all().assertThatEvents() //
+		results.allEvents().assertThatEvents() //
 				.haveExactly(1, event(test("test1"), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 				.haveExactly(1, event(test("test1"), displayName("[2] bar"), finishedWithFailure(message("bar"))));
 
@@ -223,28 +223,28 @@ class ParameterizedTestIntegrationTests {
 		@Test
 		void executesWithNullSourceForString() {
 			var results = execute("testWithNullSourceForString", String.class);
-			results.tests().failed().assertEventsMatchExactly(
+			results.testEvents().failed().assertEventsMatchExactly(
 				event(test(), displayName("[1] null"), finishedWithFailure(message("null"))));
 		}
 
 		@Test
 		void executesWithNullSourceForStringAndTestInfo() {
 			var results = execute("testWithNullSourceForStringAndTestInfo", String.class, TestInfo.class);
-			results.tests().failed().assertEventsMatchExactly(
+			results.testEvents().failed().assertEventsMatchExactly(
 				event(test(), displayName("[1] null"), finishedWithFailure(message("null"))));
 		}
 
 		@Test
 		void executesWithNullSourceForNumber() {
 			var results = execute("testWithNullSourceForNumber", Number.class);
-			results.tests().failed().assertEventsMatchExactly(
+			results.testEvents().failed().assertEventsMatchExactly(
 				event(test(), displayName("[1] null"), finishedWithFailure(message("null"))));
 		}
 
 		@Test
 		void failsWithNullSourceWithZeroFormalParameters() {
 			String methodName = "testWithNullSourceWithZeroFormalParameters";
-			execute(methodName).containers().failed().assertEventsMatchExactly(//
+			execute(methodName).containerEvents().failed().assertEventsMatchExactly(//
 				event(container(methodName), //
 					finishedWithFailure(//
 						instanceOf(PreconditionViolationException.class), //
@@ -255,7 +255,7 @@ class ParameterizedTestIntegrationTests {
 		@Test
 		void failsWithNullSourceForPrimitive() {
 			var results = execute("testWithNullSourceForPrimitive", int.class);
-			results.tests().failed().assertEventsMatchExactly(event(test(), displayName("[1] null"),
+			results.testEvents().failed().assertEventsMatchExactly(event(test(), displayName("[1] null"),
 				finishedWithFailure(instanceOf(ParameterResolutionException.class), message(
 					"Error converting parameter at index 0: Cannot convert null to primitive value of type int"))));
 		}
@@ -276,61 +276,61 @@ class ParameterizedTestIntegrationTests {
 		@Test
 		void executesWithEmptySourceForString() {
 			var results = execute("testWithEmptySourceForString", String.class);
-			results.tests().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] ")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] ")));
 		}
 
 		@Test
 		void executesWithEmptySourceForStringAndTestInfo() {
 			var results = execute("testWithEmptySourceForStringAndTestInfo", String.class, TestInfo.class);
-			results.tests().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] ")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] ")));
 		}
 
 		@Test
 		void executesWithEmptySourceForList() {
 			var results = execute("testWithEmptySourceForList", List.class);
-			results.tests().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
 		}
 
 		@Test
 		void executesWithEmptySourceForSet() {
 			var results = execute("testWithEmptySourceForSet", Set.class);
-			results.tests().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
 		}
 
 		@Test
 		void executesWithEmptySourceForMap() {
 			var results = execute("testWithEmptySourceForMap", Map.class);
-			results.tests().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] {}")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] {}")));
 		}
 
 		@Test
 		void executesWithEmptySourceForOneDimensionalPrimitiveArray() {
 			var results = execute("testWithEmptySourceForOneDimensionalPrimitiveArray", int[].class);
-			results.tests().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
 		}
 
 		@Test
 		void executesWithEmptySourceForOneDimensionalStringArray() {
 			var results = execute("testWithEmptySourceForOneDimensionalStringArray", String[].class);
-			results.tests().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
 		}
 
 		@Test
 		void executesWithEmptySourceForTwoDimensionalPrimitiveArray() {
 			var results = execute("testWithEmptySourceForTwoDimensionalPrimitiveArray", int[][].class);
-			results.tests().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
 		}
 
 		@Test
 		void executesWithEmptySourceForTwoDimensionalStringArray() {
 			var results = execute("testWithEmptySourceForTwoDimensionalStringArray", String[][].class);
-			results.tests().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
 		}
 
 		@Test
 		void failsWithEmptySourceWithZeroFormalParameters() {
 			String methodName = "testWithEmptySourceWithZeroFormalParameters";
-			execute(methodName).containers().failed().assertEventsMatchExactly(//
+			execute(methodName).containerEvents().failed().assertEventsMatchExactly(//
 				event(container(methodName), //
 					finishedWithFailure(//
 						instanceOf(PreconditionViolationException.class), //
@@ -347,7 +347,7 @@ class ParameterizedTestIntegrationTests {
 				"testWithEmptySourceForUnsupportedMapSubtype, java.util.HashMap"//
 		})
 		void failsWithEmptySourceForUnsupportedType(String methodName, Class<?> parameterType) {
-			execute(methodName, parameterType).containers().failed().assertEventsMatchExactly(//
+			execute(methodName, parameterType).containerEvents().failed().assertEventsMatchExactly(//
 				event(container(methodName), //
 					finishedWithFailure(//
 						instanceOf(PreconditionViolationException.class), //
@@ -405,14 +405,14 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		private void assertNullAndEmptyString(EngineExecutionResults results) {
-			results.tests().succeeded().assertEventsMatchExactly(//
+			results.testEvents().succeeded().assertEventsMatchExactly(//
 				event(test(), displayName("[1] null")), //
 				event(test(), displayName("[2] "))//
 			);
 		}
 
 		private void assertNullAndEmpty(EngineExecutionResults results) {
-			results.tests().succeeded().assertEventsMatchExactly(//
+			results.testEvents().succeeded().assertEventsMatchExactly(//
 				event(test(), displayName("[1] null")), //
 				event(test(), displayName("[2] []"))//
 			);
@@ -425,7 +425,7 @@ class ParameterizedTestIntegrationTests {
 
 		@Test
 		void emptyMethodSource() {
-			execute("emptyMethodSource", String.class).tests().assertThatEvents()//
+			execute("emptyMethodSource", String.class).testEvents().assertThatEvents()//
 					.haveExactly(1, event(test(), finishedWithFailure(message("empty method source"))));
 		}
 
@@ -434,7 +434,7 @@ class ParameterizedTestIntegrationTests {
 		 */
 		@Test
 		void oneDimensionalPrimitiveArray() {
-			execute("oneDimensionalPrimitiveArray", int.class).tests().assertThatEvents()//
+			execute("oneDimensionalPrimitiveArray", int.class).testEvents().assertThatEvents()//
 					.haveExactly(1, event(test(), finishedWithFailure(message("1"))))//
 					.haveExactly(1, event(test(), finishedWithFailure(message("2"))));
 		}
@@ -444,7 +444,7 @@ class ParameterizedTestIntegrationTests {
 		 */
 		@Test
 		void twoDimensionalPrimitiveArray() {
-			execute("twoDimensionalPrimitiveArray", int[].class).tests().assertThatEvents()//
+			execute("twoDimensionalPrimitiveArray", int[].class).testEvents().assertThatEvents()//
 					.haveExactly(1, event(test(), finishedWithFailure(message("[1, 2]"))))//
 					.haveExactly(1, event(test(), finishedWithFailure(message("[3, 4]"))));
 		}
@@ -454,7 +454,7 @@ class ParameterizedTestIntegrationTests {
 		 */
 		@Test
 		void oneDimensionalObjectArray() {
-			execute("oneDimensionalObjectArray", Object.class).tests().assertThatEvents()//
+			execute("oneDimensionalObjectArray", Object.class).testEvents().assertThatEvents()//
 					.haveExactly(1, event(test(), finishedWithFailure(message("one"))))//
 					.haveExactly(1, event(test(), finishedWithFailure(message("2"))))//
 					.haveExactly(1, event(test(), finishedWithFailure(message("three"))));
@@ -465,14 +465,14 @@ class ParameterizedTestIntegrationTests {
 		 */
 		@Test
 		void oneDimensionalStringArray() {
-			execute("oneDimensionalStringArray", String.class).tests().assertThatEvents()//
+			execute("oneDimensionalStringArray", String.class).testEvents().assertThatEvents()//
 					.haveExactly(1, event(test(), finishedWithFailure(message("one"))))//
 					.haveExactly(1, event(test(), finishedWithFailure(message("two"))));
 		}
 
 		@Test
 		void twoDimensionalObjectArray() {
-			execute("twoDimensionalObjectArray", String.class, int.class).tests().assertThatEvents()//
+			execute("twoDimensionalObjectArray", String.class, int.class).testEvents().assertThatEvents()//
 					.haveExactly(1, event(test(), finishedWithFailure(message("one:2"))))//
 					.haveExactly(1, event(test(), finishedWithFailure(message("three:4"))));
 		}
@@ -482,7 +482,7 @@ class ParameterizedTestIntegrationTests {
 		 */
 		@Test
 		void twoDimensionalStringArray() {
-			execute("twoDimensionalStringArray", String.class, String.class).tests().assertThatEvents()//
+			execute("twoDimensionalStringArray", String.class, String.class).testEvents().assertThatEvents()//
 					.haveExactly(1, event(test(), finishedWithFailure(message("one:two"))))//
 					.haveExactly(1, event(test(), finishedWithFailure(message("three:four"))));
 		}
@@ -492,7 +492,7 @@ class ParameterizedTestIntegrationTests {
 		 */
 		@Test
 		void streamOfOneDimensionalPrimitiveArrays() {
-			execute("streamOfOneDimensionalPrimitiveArrays", int[].class).tests().assertThatEvents()//
+			execute("streamOfOneDimensionalPrimitiveArrays", int[].class).testEvents().assertThatEvents()//
 					.haveExactly(1, event(test(), finishedWithFailure(message("[1, 2]"))))//
 					.haveExactly(1, event(test(), finishedWithFailure(message("[3, 4]"))));
 		}
@@ -522,7 +522,7 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		private void assertStreamOfTwoDimensionalPrimitiveArrays(String methodName) {
-			execute(methodName, int[][].class).tests().assertThatEvents()//
+			execute(methodName, int[][].class).testEvents().assertThatEvents()//
 					.haveExactly(1, event(test(), finishedWithFailure(message("[[1, 2], [3, 4]]"))))//
 					.haveExactly(1, event(test(), finishedWithFailure(message("[[5, 6], [7, 8]]"))));
 		}
@@ -532,7 +532,7 @@ class ParameterizedTestIntegrationTests {
 		 */
 		@Test
 		void streamOfOneDimensionalObjectArrays() {
-			execute("streamOfOneDimensionalObjectArrays", String.class, int.class).tests().assertThatEvents()//
+			execute("streamOfOneDimensionalObjectArrays", String.class, int.class).testEvents().assertThatEvents()//
 					.haveExactly(1, event(test(), finishedWithFailure(message("one:2"))))//
 					.haveExactly(1, event(test(), finishedWithFailure(message("three:4"))));
 		}
@@ -542,14 +542,14 @@ class ParameterizedTestIntegrationTests {
 		 */
 		@Test
 		void streamOfTwoDimensionalObjectArrays() {
-			execute("streamOfTwoDimensionalObjectArrays", Object[][].class).tests().assertThatEvents()//
+			execute("streamOfTwoDimensionalObjectArrays", Object[][].class).testEvents().assertThatEvents()//
 					.haveExactly(1, event(test(), finishedWithFailure(message("[[one, 2], [three, 4]]"))))//
 					.haveExactly(1, event(test(), finishedWithFailure(message("[[five, 6], [seven, 8]]"))));
 		}
 
 		@Test
 		void reportsContainerWithAssumptionFailureInMethodSourceAsAborted() {
-			execute("assumptionFailureInMethodSourceFactoryMethod", String.class).all().assertThatEvents() //
+			execute("assumptionFailureInMethodSourceFactoryMethod", String.class).allEvents().assertThatEvents() //
 					.haveExactly(1, event(container("test-template:assumptionFailureInMethodSourceFactoryMethod"), //
 						abortedWithReason(instanceOf(TestAbortedException.class),
 							message("Assumption failed: nothing to test"))));
@@ -568,7 +568,7 @@ class ParameterizedTestIntegrationTests {
 		@Test
 		void executesWithArgumentsSourceProvidingUnusedArguments() {
 			var results = execute("testWithTwoUnusedStringArgumentsProvider", String.class);
-			results.all().assertThatEvents() //
+			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 					.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
 		}
@@ -576,7 +576,7 @@ class ParameterizedTestIntegrationTests {
 		@Test
 		void executesWithCsvSourceContainingUnusedArguments() {
 			var results = execute("testWithCsvSourceContainingUnusedArguments", String.class);
-			results.all().assertThatEvents() //
+			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 					.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
 		}
@@ -584,7 +584,7 @@ class ParameterizedTestIntegrationTests {
 		@Test
 		void executesWithCsvFileSourceContainingUnusedArguments() {
 			var results = execute("testWithCsvFileSourceContainingUnusedArguments", String.class);
-			results.all().assertThatEvents() //
+			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 					.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
 		}
@@ -592,7 +592,7 @@ class ParameterizedTestIntegrationTests {
 		@Test
 		void executesWithMethodSourceProvidingUnusedArguments() {
 			var results = execute("testWithMethodSourceProvidingUnusedArguments", String.class);
-			results.all().assertThatEvents() //
+			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
 					.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
 		}

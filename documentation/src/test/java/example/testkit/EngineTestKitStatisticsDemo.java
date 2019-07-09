@@ -28,7 +28,7 @@ class EngineTestKitStatisticsDemo {
 			.engine("junit-jupiter") // <1>
 			.selectors(selectClass(ExampleTestCase.class)) // <2>
 			.execute() // <3>
-			.containers() // <4>
+			.containerEvents() // <4>
 			.assertStatistics(stats -> stats.started(2).succeeded(2)); // <5>
 	}
 
@@ -38,7 +38,7 @@ class EngineTestKitStatisticsDemo {
 			.engine("junit-jupiter") // <1>
 			.selectors(selectClass(ExampleTestCase.class)) // <2>
 			.execute() // <3>
-			.tests() // <6>
+			.testEvents() // <6>
 			.assertStatistics(stats ->
 				stats.skipped(1).started(3).succeeded(1).aborted(1).failed(1)); // <7>
 	}

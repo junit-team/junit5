@@ -56,8 +56,8 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 	private void assertExecutionResults(Class<?> invalidTestClass) {
 		EngineExecutionResults executionResults = executeTests(selectClass(TestCase.class),
 			selectClass(invalidTestClass));
-		Events containers = executionResults.containers();
-		Events tests = executionResults.tests();
+		Events containers = executionResults.containerEvents();
+		Events tests = executionResults.testEvents();
 
 		// @formatter:off
 		assertAll(

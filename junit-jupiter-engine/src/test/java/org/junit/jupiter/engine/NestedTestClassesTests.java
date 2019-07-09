@@ -43,8 +43,8 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void nestedTestsAreExecuted() {
 		EngineExecutionResults executionResults = executeTestsForClass(TestCaseWithNesting.class);
-		Events containers = executionResults.containers();
-		Events tests = executionResults.tests();
+		Events containers = executionResults.containerEvents();
+		Events tests = executionResults.testEvents();
 
 		assertEquals(3, tests.started().count(), "# tests started");
 		assertEquals(2, tests.succeeded().count(), "# tests succeeded");
@@ -64,8 +64,8 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void doublyNestedTestsAreExecuted() {
 		EngineExecutionResults executionResults = executeTestsForClass(TestCaseWithDoubleNesting.class);
-		Events containers = executionResults.containers();
-		Events tests = executionResults.tests();
+		Events containers = executionResults.containerEvents();
+		Events tests = executionResults.testEvents();
 
 		assertEquals(5, tests.started().count(), "# tests started");
 		assertEquals(3, tests.succeeded().count(), "# tests succeeded");
@@ -89,8 +89,8 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void inheritedNestedTestsAreExecuted() {
 		EngineExecutionResults executionResults = executeTestsForClass(TestCaseWithInheritedNested.class);
-		Events containers = executionResults.containers();
-		Events tests = executionResults.tests();
+		Events containers = executionResults.containerEvents();
+		Events tests = executionResults.testEvents();
 
 		assertEquals(2, tests.started().count(), "# tests started");
 		assertEquals(1, tests.succeeded().count(), "# tests succeeded");

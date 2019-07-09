@@ -42,7 +42,7 @@ class IgnoreConditionTests {
 		Class<?> testClass = IgnoredClassWithDefaultMessageTestCase.class;
 
 		// @formatter:off
-		executeTestsForClass(testClass).all().assertEventsMatchExactly(
+		executeTestsForClass(testClass).allEvents().assertEventsMatchExactly(
 			event(engine(), started()),
 			event(container(testClass), skippedWithReason(testClass + " is disabled via @org.junit.Ignore")),
 			event(engine(), finishedSuccessfully())
@@ -55,7 +55,7 @@ class IgnoreConditionTests {
 		Class<?> testClass = IgnoredClassWithCustomMessageTestCase.class;
 
 		// @formatter:off
-		executeTestsForClass(testClass).all().assertEventsMatchExactly(
+		executeTestsForClass(testClass).allEvents().assertEventsMatchExactly(
 			event(engine(), started()),
 			event(container(testClass), skippedWithReason("Ignored Class")),
 			event(engine(), finishedSuccessfully())
@@ -66,8 +66,8 @@ class IgnoreConditionTests {
 	@Test
 	void ignoredAndNotIgnoredTestMethods() {
 		EngineExecutionResults executionResults = executeTestsForClass(IgnoredMethodsTestCase.class);
-		Events containers = executionResults.containers();
-		Events tests = executionResults.tests();
+		Events containers = executionResults.containerEvents();
+		Events tests = executionResults.testEvents();
 
 		// executionResults.all().debug();
 		// executionResults.all().debug(System.err);
@@ -84,7 +84,7 @@ class IgnoreConditionTests {
 		// containers.executions().debug();
 		// tests.executions().debug();
 
-		executionResults.all().executions().assertThatExecutions().hasSize(5);
+		executionResults.allEvents().executions().assertThatExecutions().hasSize(5);
 		containers.executions().assertThatExecutions().hasSize(2);
 		tests.executions().assertThatExecutions().hasSize(3);
 

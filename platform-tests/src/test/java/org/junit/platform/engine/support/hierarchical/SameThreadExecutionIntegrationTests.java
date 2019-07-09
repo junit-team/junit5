@@ -37,7 +37,7 @@ class SameThreadExecutionIntegrationTests {
 		EngineTestKit.engine("junit-jupiter")//
 				.selectors(selectClass(InterruptedThreadTestCase.class))//
 				.execute()//
-				.tests()//
+				.testEvents()//
 				.assertStatistics(stats -> stats.succeeded(4));
 
 		assertThat(firstDebugLogRecord(listener).getMessage()).matches(

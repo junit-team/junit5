@@ -576,8 +576,9 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 
-		executionResults.containers().assertStatistics(stats -> stats.started(numContainers).finished(numContainers));
-		executionResults.tests().assertStatistics(stats -> stats.started(numTests).finished(numTests));
+		executionResults.containerEvents().assertStatistics(
+			stats -> stats.started(numContainers).finished(numContainers));
+		executionResults.testEvents().assertStatistics(stats -> stats.started(numTests).finished(numTests));
 
 		// @formatter:off
 		assertAll(

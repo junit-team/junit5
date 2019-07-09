@@ -75,8 +75,9 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	void testWatcherIsInvokedForRepeatedTestMethods() {
 		EngineExecutionResults results = executeTestsForClass(TrackingTestWatcherRepeatedTestMethodsTestCase.class);
 
-		results.containers().assertStatistics(stats -> stats.skipped(1).started(5).succeeded(5).aborted(0).failed(0));
-		results.tests().assertStatistics(
+		results.containerEvents().assertStatistics(
+			stats -> stats.skipped(1).started(5).succeeded(5).aborted(0).failed(0));
+		results.testEvents().assertStatistics(
 			stats -> stats.dynamicallyRegistered(6).skipped(0).started(6).succeeded(2).aborted(2).failed(2));
 
 		ArrayList<String> expectedMethods = new ArrayList<>(testWatcherMethodNames);
@@ -91,8 +92,9 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	void testWatcherIsNotInvokedForTestFactoryMethods() {
 		EngineExecutionResults results = executeTestsForClass(TrackingTestWatcherTestFactoryMethodsTestCase.class);
 
-		results.containers().assertStatistics(stats -> stats.skipped(1).started(5).succeeded(5).aborted(0).failed(0));
-		results.tests().assertStatistics(
+		results.containerEvents().assertStatistics(
+			stats -> stats.skipped(1).started(5).succeeded(5).aborted(0).failed(0));
+		results.testEvents().assertStatistics(
 			stats -> stats.dynamicallyRegistered(6).skipped(0).started(6).succeeded(2).aborted(2).failed(2));
 
 		// There should be zero results, since the TestWatcher API is not supported for @TestFactory containers.
@@ -118,14 +120,14 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void testWatcherInvokedForTestMethodsInTestCaseWithProblematicConstructor() {
 		EngineExecutionResults results = executeTestsForClass(ProblematicConstructorTestCase.class);
-		results.tests().assertStatistics(stats -> stats.skipped(0).started(8).succeeded(0).aborted(0).failed(8));
+		results.testEvents().assertStatistics(stats -> stats.skipped(0).started(8).succeeded(0).aborted(0).failed(8));
 		assertThat(TrackingTestWatcher.results.keySet()).containsExactly("testFailed");
 		assertThat(TrackingTestWatcher.results.get("testFailed")).hasSize(8);
 	}
 
 	private void assertCommonStatistics(EngineExecutionResults results) {
-		results.containers().assertStatistics(stats -> stats.started(3).succeeded(3).failed(0));
-		results.tests().assertStatistics(stats -> stats.skipped(2).started(6).succeeded(2).aborted(2).failed(2));
+		results.containerEvents().assertStatistics(stats -> stats.started(3).succeeded(3).failed(0));
+		results.testEvents().assertStatistics(stats -> stats.skipped(2).started(6).succeeded(2).aborted(2).failed(2));
 	}
 
 	// -------------------------------------------------------------------------

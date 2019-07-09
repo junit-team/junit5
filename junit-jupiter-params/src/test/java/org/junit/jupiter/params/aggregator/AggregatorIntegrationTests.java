@@ -179,7 +179,7 @@ public class AggregatorIntegrationTests {
 		var results = execute(
 			selectMethod(ErroneousTestCases.class, "testWithErroneousAggregator", Object.class.getName()));
 
-		results.tests().assertThatEvents()//
+		results.testEvents().assertThatEvents()//
 				.haveExactly(1, event(test(), finishedWithFailure(instanceOf(ParameterResolutionException.class), //
 					message("Error aggregating arguments for parameter at index 0: something went horribly wrong"))));
 	}

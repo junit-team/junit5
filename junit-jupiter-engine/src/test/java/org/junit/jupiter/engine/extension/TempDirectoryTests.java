@@ -70,14 +70,14 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	@Test
 	@DisplayName("does not prevent constructor parameter resolution")
 	void tempDirectoryDoesNotPreventConstructorParameterResolution() {
-		executeTestsForClass(TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase.class).tests()//
+		executeTestsForClass(TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase.class).testEvents()//
 				.assertStatistics(stats -> stats.started(1).succeeded(1));
 	}
 
 	@Test
 	@DisplayName("does not prevent user from deleting the temp dir within a test")
 	void tempDirectoryDoesNotPreventUserFromDeletingTempDir() {
-		executeTestsForClass(UserTempDirectoryDeletionDoesNotCauseFailureTestCase.class).tests()//
+		executeTestsForClass(UserTempDirectoryDeletionDoesNotCauseFailureTestCase.class).testEvents()//
 				.assertStatistics(stats -> stats.started(1).succeeded(1));
 	}
 
@@ -147,7 +147,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		private void assertSharedTempDirForParameterInjection(Class<?> testClass, Supplier<Path> staticTempDir) {
 			var results = executeTestsForClass(testClass);
 
-			results.tests().assertStatistics(stats -> stats.started(2).failed(0).succeeded(2));
+			results.testEvents().assertStatistics(stats -> stats.started(2).failed(0).succeeded(2));
 			assertThat(staticTempDir.get()).isNotNull().doesNotExist();
 		}
 
@@ -204,7 +204,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		void resolvesSeparateTempDirWhenAnnotationIsUsedOnAfterAllMethodParameterOnly() {
 			var results = executeTestsForClass(AnnotationOnAfterAllMethodParameterTestCase.class);
 
-			results.tests().assertStatistics(stats -> stats.started(1).failed(0).succeeded(1));
+			results.testEvents().assertStatistics(stats -> stats.started(1).failed(0).succeeded(1));
 			assertThat(AnnotationOnAfterAllMethodParameterTestCase.firstTempDir).isNotNull().doesNotExist();
 			assertThat(AnnotationOnAfterAllMethodParameterTestCase.secondTempDir).isNotNull().doesNotExist();
 		}
@@ -303,8 +303,9 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	private static void assertSingleFailedContainer(EngineExecutionResults results,
 			Condition<Throwable>... conditions) {
 
-		results.containers().assertStatistics(stats -> stats.started(2).failed(1).succeeded(1));
-		results.containers().assertThatEvents().haveExactly(1, finishedWithFailure(conditions));
+		results.containerEvents()//
+				.assertStatistics(stats -> stats.started(2).failed(1).succeeded(1))//
+				.assertThatEvents().haveExactly(1, finishedWithFailure(conditions));
 	}
 
 	private static void assertSingleFailedTest(EngineExecutionResults results, Class<? extends Throwable> clazz,
@@ -316,8 +317,8 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	@SafeVarargs
 	@SuppressWarnings("varargs")
 	private static void assertSingleFailedTest(EngineExecutionResults results, Condition<Throwable>... conditions) {
-		results.tests().assertStatistics(stats -> stats.started(1).failed(1).succeeded(0));
-		results.tests().assertThatEvents().haveExactly(1, finishedWithFailure(conditions));
+		results.testEvents().assertStatistics(stats -> stats.started(1).failed(1).succeeded(0));
+		results.testEvents().assertThatEvents().haveExactly(1, finishedWithFailure(conditions));
 	}
 
 	private void assertSeparateTempDirsForFieldInjection(
@@ -335,7 +336,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	private void assertResolvesSeparateTempDirs(Class<?> testClass, Deque<Path> tempDirs) {
 		var results = executeTestsForClass(testClass);
 
-		results.tests().assertStatistics(stats -> stats.started(2).failed(0).succeeded(2));
+		results.testEvents().assertStatistics(stats -> stats.started(2).failed(0).succeeded(2));
 		assertThat(tempDirs).hasSize(2);
 	}
 

@@ -19,7 +19,10 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* In the `EngineTestKit` API, the `all()`, `containers()`, and `tests()` methods in
+  `EngineExecutionResults` have been deprecated in favor of the new `allEvents()`,
+  `containerEvents()`, and `testEvents()` methods, respectively. The deprecated methods
+  will be removed in JUnit Platform 1.7.0.
 
 ==== New Features and Improvements
 

@@ -48,7 +48,7 @@ class EngineTestKitAllEventsDemo {
 		EngineTestKit.engine("junit-jupiter") // <1>
 			.selectors(selectClass(ExampleTestCase.class)) // <2>
 			.execute() // <3>
-			.all() // <4>
+			.allEvents() // <4>
 			.debug(writer) // <5>
 			.assertEventsMatchExactly( // <6>
 				event(engine(), started()),

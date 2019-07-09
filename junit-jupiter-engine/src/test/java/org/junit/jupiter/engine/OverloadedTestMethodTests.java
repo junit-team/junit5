@@ -32,7 +32,7 @@ class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void executeTestCaseWithOverloadedMethodsAndThenRerunOnlyOneOfTheMethodsSelectedByUniqueId() {
-		Events tests = executeTestsForClass(TestCase.class).tests();
+		Events tests = executeTestsForClass(TestCase.class).testEvents();
 
 		tests.assertStatistics(stats -> stats.started(2).succeeded(2).failed(0));
 
@@ -42,7 +42,7 @@ class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 		TestIdentifier testIdentifier = TestIdentifier.from(first.get().getTestDescriptor());
 		String uniqueId = testIdentifier.getUniqueId();
 
-		tests = executeTests(selectUniqueId(uniqueId)).tests();
+		tests = executeTests(selectUniqueId(uniqueId)).testEvents();
 
 		tests.assertStatistics(stats -> stats.started(1).succeeded(1).failed(0));
 
@@ -54,7 +54,7 @@ class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void executeTestCaseWithOverloadedMethodsWithSingleMethodThatAcceptsArgumentsSelectedByFullyQualifedMethodName() {
 		String fqmn = TestCase.class.getName() + "#test(" + TestInfo.class.getName() + ")";
-		Events tests = executeTests(selectMethod(fqmn)).tests();
+		Events tests = executeTests(selectMethod(fqmn)).testEvents();
 
 		tests.assertStatistics(stats -> stats.started(1).succeeded(1).failed(0));
 

@@ -115,7 +115,7 @@ class OrderedProgrammaticExtensionRegistrationTests extends AbstractJupiterTestE
 	}
 
 	private void assertOutcome(Class<?> testClass, Integer... values) {
-		executeTestsForClass(testClass).tests().assertStatistics(stats -> stats.succeeded(1));
+		executeTestsForClass(testClass).testEvents().assertStatistics(stats -> stats.succeeded(1));
 		assertThat(callSequence).containsExactly(values);
 	}
 

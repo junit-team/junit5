@@ -51,7 +51,7 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 	void failsTestWhenInterceptorChainDoesNotCallInvocation() {
 		var results = executeTestsForClass(InvocationIgnoringInterceptorTestCase.class);
 
-		var tests = results.tests().assertStatistics(stats -> stats.failed(1).succeeded(0));
+		var tests = results.testEvents().assertStatistics(stats -> stats.failed(1).succeeded(0));
 		tests.failed().assertEventsMatchExactly(
 			event(test("test"), finishedWithFailure(instanceOf(JUnitException.class),
 				message(it -> it.startsWith("Chain of InvocationInterceptors never called invocation")))));
@@ -77,7 +77,7 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 	void failsTestWhenInterceptorChainCallsInvocationMoreThanOnce() {
 		var results = executeTestsForClass(DoubleInvocationInterceptorTestCase.class);
 
-		var tests = results.tests().assertStatistics(stats -> stats.failed(1).succeeded(0));
+		var tests = results.testEvents().assertStatistics(stats -> stats.failed(1).succeeded(0));
 		tests.failed().assertEventsMatchExactly(
 			event(test("test"), finishedWithFailure(instanceOf(JUnitException.class), message(it -> it.startsWith(
 				"Chain of InvocationInterceptors called invocation multiple times instead of just once")))));
@@ -105,7 +105,7 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 	Stream<DynamicTest> callsInterceptors() {
 		var results = executeTestsForClass(TestCaseWithThreeInterceptors.class);
 
-		results.tests().assertStatistics(stats -> stats.failed(0).succeeded(3));
+		results.testEvents().assertStatistics(stats -> stats.failed(0).succeeded(3));
 		return Arrays.stream(InvocationType.values()) //
 				.map(invocationType -> dynamicTest(invocationType.name(), () -> {
 					assertThat(getEvents(results, EnumSet.of(invocationType)).distinct()) //
@@ -115,7 +115,7 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private Stream<String> getEvents(EngineExecutionResults results, EnumSet<InvocationType> types) {
-		return results.all().reportingEntryPublished() //
+		return results.allEvents().reportingEntryPublished() //
 				.map(event -> event.getPayload(ReportEntry.class).orElseThrow()) //
 				.map(ReportEntry::getKeyValuePairs) //
 				.filter(map -> map.keySet().stream().map(InvocationType::valueOf).anyMatch(types::contains)) //

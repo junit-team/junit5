@@ -67,10 +67,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		Class<?> testClass = MultipleFactoriesRegisteredOnSingleTestCase.class;
 		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 
-		assertEquals(0, executionResults.tests().started().count(), "# tests started");
-		assertEquals(0, executionResults.tests().failed().count(), "# tests aborted");
+		assertEquals(0, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(0, executionResults.testEvents().failed().count(), "# tests aborted");
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass),
@@ -86,10 +86,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		Class<?> testClass = MultipleFactoriesRegisteredWithinClassHierarchyTestCase.class;
 		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 
-		assertEquals(0, executionResults.tests().started().count(), "# tests started");
-		assertEquals(0, executionResults.tests().failed().count(), "# tests aborted");
+		assertEquals(0, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(0, executionResults.testEvents().failed().count(), "# tests aborted");
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass),
@@ -106,10 +106,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		Class<?> nestedClass = MultipleFactoriesRegisteredWithinNestedClassStructureTestCase.InnerTestCase.class;
 		EngineExecutionResults executionResults = executeTestsForClass(outerClass);
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded");
+		assertEquals(1, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(1, executionResults.testEvents().succeeded().count(), "# tests succeeded");
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(outerClass), started()), //
 			event(test("outerTest()"), started()), //
@@ -129,10 +129,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		Class<?> testClass = NullTestInstanceFactoryTestCase.class;
 		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(1, executionResults.tests().failed().count(), "# tests aborted");
+		assertEquals(1, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(1, executionResults.testEvents().failed().count(), "# tests aborted");
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("testShouldNotBeCalled"), started()), //
@@ -150,10 +150,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		Class<?> testClass = PerClassLifecycleNullTestInstanceFactoryTestCase.class;
 		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 
-		assertEquals(0, executionResults.tests().started().count(), "# tests started");
-		assertEquals(0, executionResults.tests().failed().count(), "# tests aborted");
+		assertEquals(0, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(0, executionResults.testEvents().failed().count(), "# tests aborted");
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass),
@@ -169,10 +169,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		Class<?> testClass = BogusTestInstanceFactoryTestCase.class;
 		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(1, executionResults.tests().failed().count(), "# tests aborted");
+		assertEquals(1, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(1, executionResults.testEvents().failed().count(), "# tests aborted");
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("testShouldNotBeCalled"), started()), //
@@ -190,10 +190,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		Class<?> testClass = PerClassLifecycleBogusTestInstanceFactoryTestCase.class;
 		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 
-		assertEquals(0, executionResults.tests().started().count(), "# tests started");
-		assertEquals(0, executionResults.tests().failed().count(), "# tests aborted");
+		assertEquals(0, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(0, executionResults.testEvents().failed().count(), "# tests aborted");
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass),
@@ -209,10 +209,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		Class<?> testClass = ExplosiveTestInstanceFactoryTestCase.class;
 		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(1, executionResults.tests().failed().count(), "# tests aborted");
+		assertEquals(1, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(1, executionResults.testEvents().failed().count(), "# tests aborted");
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("testShouldNotBeCalled"), started()), //
@@ -229,10 +229,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		Class<?> testClass = PerClassLifecycleExplosiveTestInstanceFactoryTestCase.class;
 		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 
-		assertEquals(0, executionResults.tests().started().count(), "# tests started");
-		assertEquals(0, executionResults.tests().failed().count(), "# tests aborted");
+		assertEquals(0, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(0, executionResults.testEvents().failed().count(), "# tests aborted");
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass), //
@@ -247,10 +247,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		Class<?> testClass = ProxiedTestCase.class;
 		EngineExecutionResults executionResults = executeTestsForClass(testClass);
 
-		assertEquals(0, executionResults.tests().started().count(), "# tests started");
-		assertEquals(0, executionResults.tests().failed().count(), "# tests aborted");
+		assertEquals(0, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(0, executionResults.testEvents().failed().count(), "# tests aborted");
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(testClass), //
@@ -271,8 +271,8 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	void instanceFactoryOnTopLevelTestClass() {
 		EngineExecutionResults executionResults = executeTestsForClass(ParentTestCase.class);
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded");
+		assertEquals(1, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(1, executionResults.testEvents().succeeded().count(), "# tests succeeded");
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
@@ -286,8 +286,8 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	void inheritedFactoryInTestClassHierarchy() {
 		EngineExecutionResults executionResults = executeTestsForClass(InheritedFactoryTestCase.class);
 
-		assertEquals(2, executionResults.tests().started().count(), "# tests started");
-		assertEquals(2, executionResults.tests().succeeded().count(), "# tests succeeded");
+		assertEquals(2, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(2, executionResults.testEvents().succeeded().count(), "# tests succeeded");
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
@@ -303,8 +303,8 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	void instanceFactoriesInNestedClassStructureAreInherited() {
 		EngineExecutionResults executionResults = executeTestsForClass(OuterTestCase.class);
 
-		assertEquals(3, executionResults.tests().started().count(), "# tests started");
-		assertEquals(3, executionResults.tests().succeeded().count(), "# tests succeeded");
+		assertEquals(3, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(3, executionResults.testEvents().succeeded().count(), "# tests succeeded");
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
@@ -331,8 +331,8 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	void instanceFactoryRegisteredViaTestInterface() {
 		EngineExecutionResults executionResults = executeTestsForClass(FactoryFromInterfaceTestCase.class);
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded");
+		assertEquals(1, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(1, executionResults.testEvents().succeeded().count(), "# tests succeeded");
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
@@ -346,8 +346,8 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	void instanceFactoryRegisteredAsLambdaExpression() {
 		EngineExecutionResults executionResults = executeTestsForClass(LambdaFactoryTestCase.class);
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded");
+		assertEquals(1, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(1, executionResults.testEvents().succeeded().count(), "# tests succeeded");
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
@@ -363,8 +363,8 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 		assertEquals(1, PerClassLifecycleTestCase.counter.get());
 
-		assertEquals(2, executionResults.tests().started().count(), "# tests started");
-		assertEquals(2, executionResults.tests().succeeded().count(), "# tests succeeded");
+		assertEquals(2, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(2, executionResults.testEvents().succeeded().count(), "# tests succeeded");
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(

@@ -56,11 +56,11 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	void beforeAndAfterTestExecutionCallbacks() {
 		EngineExecutionResults executionResults = executeTestsForClass(OuterTestCase.class);
 
-		assertEquals(2, executionResults.tests().started().count(), "# tests started");
-		assertEquals(2, executionResults.tests().succeeded().count(), "# tests succeeded");
-		assertEquals(0, executionResults.tests().skipped().count(), "# tests skipped");
-		assertEquals(0, executionResults.tests().aborted().count(), "# tests aborted");
-		assertEquals(0, executionResults.tests().failed().count(), "# tests failed");
+		assertEquals(2, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(2, executionResults.testEvents().succeeded().count(), "# tests succeeded");
+		assertEquals(0, executionResults.testEvents().skipped().count(), "# tests skipped");
+		assertEquals(0, executionResults.testEvents().aborted().count(), "# tests aborted");
+		assertEquals(0, executionResults.testEvents().failed().count(), "# tests failed");
 
 		// @formatter:off
 		assertEquals(asList(
@@ -95,11 +95,11 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	void beforeAndAfterTestExecutionCallbacksDeclaredOnSuperclassAndSubclass() {
 		EngineExecutionResults executionResults = executeTestsForClass(ChildTestCase.class);
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded");
-		assertEquals(0, executionResults.tests().skipped().count(), "# tests skipped");
-		assertEquals(0, executionResults.tests().aborted().count(), "# tests aborted");
-		assertEquals(0, executionResults.tests().failed().count(), "# tests failed");
+		assertEquals(1, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(1, executionResults.testEvents().succeeded().count(), "# tests succeeded");
+		assertEquals(0, executionResults.testEvents().skipped().count(), "# tests skipped");
+		assertEquals(0, executionResults.testEvents().aborted().count(), "# tests aborted");
+		assertEquals(0, executionResults.testEvents().failed().count(), "# tests failed");
 
 		// @formatter:off
 		assertEquals(asList(
@@ -116,11 +116,11 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	void beforeAndAfterTestExecutionCallbacksDeclaredOnInterfaceAndClass() {
 		EngineExecutionResults executionResults = executeTestsForClass(TestInterfaceTestCase.class);
 
-		assertEquals(2, executionResults.tests().started().count(), "# tests started");
-		assertEquals(2, executionResults.tests().succeeded().count(), "# tests succeeded");
-		assertEquals(0, executionResults.tests().skipped().count(), "# tests skipped");
-		assertEquals(0, executionResults.tests().aborted().count(), "# tests aborted");
-		assertEquals(0, executionResults.tests().failed().count(), "# tests failed");
+		assertEquals(2, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(2, executionResults.testEvents().succeeded().count(), "# tests succeeded");
+		assertEquals(0, executionResults.testEvents().skipped().count(), "# tests skipped");
+		assertEquals(0, executionResults.testEvents().aborted().count(), "# tests aborted");
+		assertEquals(0, executionResults.testEvents().failed().count(), "# tests failed");
 
 		// @formatter:off
 		assertEquals(asList(
@@ -147,11 +147,11 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	void beforeEachMethodThrowsAnException() {
 		EngineExecutionResults executionResults = executeTestsForClass(ExceptionInBeforeEachMethodTestCase.class);
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(0, executionResults.tests().succeeded().count(), "# tests succeeded");
-		assertEquals(0, executionResults.tests().skipped().count(), "# tests skipped");
-		assertEquals(0, executionResults.tests().aborted().count(), "# tests aborted");
-		assertEquals(1, executionResults.tests().failed().count(), "# tests failed");
+		assertEquals(1, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(0, executionResults.testEvents().succeeded().count(), "# tests succeeded");
+		assertEquals(0, executionResults.testEvents().skipped().count(), "# tests skipped");
+		assertEquals(0, executionResults.testEvents().aborted().count(), "# tests aborted");
+		assertEquals(1, executionResults.testEvents().failed().count(), "# tests failed");
 
 		// @formatter:off
 		assertEquals(asList(
@@ -172,11 +172,11 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		EngineExecutionResults executionResults = executeTestsForClass(
 			ExceptionInBeforeTestExecutionCallbackTestCase.class);
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(0, executionResults.tests().succeeded().count(), "# tests succeeded");
-		assertEquals(0, executionResults.tests().skipped().count(), "# tests skipped");
-		assertEquals(0, executionResults.tests().aborted().count(), "# tests aborted");
-		assertEquals(1, executionResults.tests().failed().count(), "# tests failed");
+		assertEquals(1, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(0, executionResults.testEvents().succeeded().count(), "# tests succeeded");
+		assertEquals(0, executionResults.testEvents().skipped().count(), "# tests skipped");
+		assertEquals(0, executionResults.testEvents().aborted().count(), "# tests aborted");
+		assertEquals(1, executionResults.testEvents().failed().count(), "# tests failed");
 
 		// @formatter:off
 		assertEquals(asList(
@@ -201,11 +201,11 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		EngineExecutionResults executionResults = executeTestsForClass(
 			ExceptionInAfterTestExecutionCallbackTestCase.class);
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(0, executionResults.tests().succeeded().count(), "# tests succeeded");
-		assertEquals(0, executionResults.tests().skipped().count(), "# tests skipped");
-		assertEquals(0, executionResults.tests().aborted().count(), "# tests aborted");
-		assertEquals(1, executionResults.tests().failed().count(), "# tests failed");
+		assertEquals(1, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(0, executionResults.testEvents().succeeded().count(), "# tests succeeded");
+		assertEquals(0, executionResults.testEvents().skipped().count(), "# tests skipped");
+		assertEquals(0, executionResults.testEvents().aborted().count(), "# tests aborted");
+		assertEquals(1, executionResults.testEvents().failed().count(), "# tests failed");
 
 		// @formatter:off
 		assertEquals(asList(
@@ -229,11 +229,11 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	void testMethodThrowsAnException() {
 		EngineExecutionResults executionResults = executeTestsForClass(ExceptionInTestMethodTestCase.class);
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(0, executionResults.tests().succeeded().count(), "# tests succeeded");
-		assertEquals(0, executionResults.tests().skipped().count(), "# tests skipped");
-		assertEquals(0, executionResults.tests().aborted().count(), "# tests aborted");
-		assertEquals(1, executionResults.tests().failed().count(), "# tests failed");
+		assertEquals(1, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(0, executionResults.testEvents().succeeded().count(), "# tests succeeded");
+		assertEquals(0, executionResults.testEvents().skipped().count(), "# tests skipped");
+		assertEquals(0, executionResults.testEvents().aborted().count(), "# tests aborted");
+		assertEquals(1, executionResults.testEvents().failed().count(), "# tests failed");
 
 		// @formatter:off
 		assertEquals(asList(

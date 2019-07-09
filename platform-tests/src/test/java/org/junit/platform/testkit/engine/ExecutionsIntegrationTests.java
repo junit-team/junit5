@@ -87,14 +87,11 @@ class ExecutionsIntegrationTests {
 	}
 
 	private Events getTestEvents() {
-		Events testEvents = EngineTestKit.engine("junit-jupiter")//
+		return EngineTestKit.engine("junit-jupiter")//
 				.selectors(selectClass(ExampleTestCase.class))//
 				.execute()//
-				.tests();
-
-		testEvents.assertStatistics(stats -> stats.skipped(1).started(3).succeeded(1).aborted(1).failed(1));
-
-		return testEvents;
+				.testEvents()//
+				.assertStatistics(stats -> stats.skipped(1).started(3).succeeded(1).aborted(1).failed(1));
 	}
 
 	static class ExampleTestCase {

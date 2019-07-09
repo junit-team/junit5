@@ -267,7 +267,7 @@ class OrderedMethodTests {
 				.configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent")
 				.selectors(selectClass(testClass))
 				.execute()
-				.tests();
+				.testEvents();
 		// @formatter:on
 	}
 
@@ -283,7 +283,7 @@ class OrderedMethodTests {
 				.configurationParameters(configurationParameters)
 				.selectors(selectClass(testClass))
 				.execute()
-				.tests();
+				.testEvents();
 		// @formatter:on
 	}
 

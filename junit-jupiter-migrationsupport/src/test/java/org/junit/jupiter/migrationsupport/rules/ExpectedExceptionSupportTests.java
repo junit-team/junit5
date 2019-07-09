@@ -73,7 +73,7 @@ class ExpectedExceptionSupportTests {
 	}
 
 	private Events executeTestsForClass(Class<?> testClass) {
-		return EngineTestKit.execute("junit-jupiter", request().selectors(selectClass(testClass)).build()).tests();
+		return EngineTestKit.execute("junit-jupiter", request().selectors(selectClass(testClass)).build()).testEvents();
 	}
 
 	@ExtendWith(ExpectedExceptionSupport.class)

@@ -665,7 +665,7 @@ class VintageTestEngineExecutionTests {
 	}
 
 	private static Events execute(Class<?> testClass) {
-		return EngineTestKit.execute(new VintageTestEngine(), request(testClass)).all();
+		return EngineTestKit.execute(new VintageTestEngine(), request(testClass)).allEvents();
 	}
 
 	private static void execute(Class<?> testClass, EngineExecutionListener listener) {
