@@ -265,6 +265,20 @@ class JupiterTestDescriptorTests {
 		assertEquals(StaticTestCaseLevel2.class.getName(), descriptor.getLegacyReportingName());
 	}
 
+	@Test
+	void enclosingClassesAreDerivedFromParent() {
+		ClassBasedTestDescriptor parentDescriptor = new ClassTestDescriptor(uniqueId, StaticTestCase.class,
+			configuration);
+		ClassBasedTestDescriptor nestedDescriptor = new NestedClassTestDescriptor(uniqueId, NestedTestCase.class,
+			configuration);
+		assertThat(parentDescriptor.getEnclosingTestClasses()).isEmpty();
+		assertThat(nestedDescriptor.getEnclosingTestClasses()).isEmpty();
+
+		parentDescriptor.addChild(nestedDescriptor);
+		assertThat(parentDescriptor.getEnclosingTestClasses()).isEmpty();
+		assertThat(nestedDescriptor.getEnclosingTestClasses()).containsExactly(StaticTestCase.class);
+	}
+
 	// -------------------------------------------------------------------------
 
 	@Test
