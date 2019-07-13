@@ -193,6 +193,9 @@ tasks {
 
 		title = "JUnit $version API"
 
+		val stylesheetFooterFile = rootProject.file("src/javadoc/stylesheet-footer.css")
+		inputs.file(stylesheetFooterFile)
+
 		options {
 			memberLevel = JavadocMemberLevel.PROTECTED
 			header = rootProject.description
@@ -218,7 +221,6 @@ tasks {
 				links("https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/")
 				links("https://junit.org/junit4/javadoc/${Versions.junit4}/")
 				links("https://joel-costigliola.github.io/assertj/core-8/api/")
-				stylesheetFile = rootProject.file("src/javadoc/stylesheet.css")
 				groups = mapOf(
 						"Jupiter" to listOf("org.junit.jupiter.*"),
 						"Vintage" to listOf("org.junit.vintage.*"),
@@ -240,6 +242,10 @@ tasks {
 				// Remove subproject JARs so Kotlin classes don"t get picked up
 				.filter { it.isDirectory || !it.absolutePath.startsWith(projectDir.absolutePath) }
 
+		doLast {
+			val javadocStylesheet = File(destinationDir, "stylesheet.css")
+			javadocStylesheet.appendBytes(stylesheetFooterFile.readBytes())
+		}
 		doLast {
 			// For compatibility with pre JDK 10 versions of the Javadoc tool
 			copy {
