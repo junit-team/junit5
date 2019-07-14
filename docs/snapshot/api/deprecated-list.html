@@ -102,7 +102,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org/junit/platform/engine/support/filter/ClasspathScanningSupport.html" title="class in org.junit.platform.engine.support.filter">org.junit.platform.engine.support.filter.ClasspathScanningSupport</a></th>
 <td class="colLast">
-<div class="deprecationComment">Please use <a href="org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.html" title="class in org.junit.platform.engine.support.discovery"><code>EngineDiscoveryRequestResolver</code></a></div>
+<div class="deprecationComment">Please use <a href="org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.html" title="class in org.junit.platform.engine.support.discovery"><code>EngineDiscoveryRequestResolver</code></a> instead.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -162,7 +162,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org/junit/platform/commons/util/ReflectionUtils.html#getOutermostInstance(java.lang.Object,java.lang.Class)">org.junit.platform.commons.util.ReflectionUtils.getOutermostInstance&#8203;(Object, Class&lt;?&gt;)</a></th>
-<td class="colLast"></td>
+<td class="colLast">
+<div class="deprecationComment">Please discontinue use of this method since it relies on internal
+ implementation details of the JDK that may not work in the future.</div>
+</td>
 </tr>
 <tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org/junit/platform/commons/util/ReflectionUtils.html#loadClass(java.lang.String)">org.junit.platform.commons.util.ReflectionUtils.loadClass&#8203;(String)</a></th>
@@ -180,19 +183,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org/junit/platform/engine/support/filter/ClasspathScanningSupport.html#buildClassFilter(org.junit.platform.engine.EngineDiscoveryRequest,java.util.function.Predicate)">org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassFilter&#8203;(EngineDiscoveryRequest, Predicate&lt;Class&lt;?&gt;&gt;)</a></th>
 <td class="colLast">
-<div class="deprecationComment">Please use <a href="org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.html" title="class in org.junit.platform.engine.support.discovery"><code>EngineDiscoveryRequestResolver</code></a></div>
+<div class="deprecationComment">Please use <a href="org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.html" title="class in org.junit.platform.engine.support.discovery"><code>EngineDiscoveryRequestResolver</code></a> instead.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org/junit/platform/engine/support/filter/ClasspathScanningSupport.html#buildClassNamePredicate(org.junit.platform.engine.EngineDiscoveryRequest)">org.junit.platform.engine.support.filter.ClasspathScanningSupport.buildClassNamePredicate&#8203;(EngineDiscoveryRequest)</a></th>
 <td class="colLast">
-<div class="deprecationComment">Please use <a href="org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.html" title="class in org.junit.platform.engine.support.discovery"><code>EngineDiscoveryRequestResolver</code></a></div>
+<div class="deprecationComment">Please use <a href="org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.html" title="class in org.junit.platform.engine.support.discovery"><code>EngineDiscoveryRequestResolver</code></a> instead.</div>
 </td>
 </tr>
 <tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="org/junit/platform/launcher/TestPlan.html#add(org.junit.platform.launcher.TestIdentifier)">org.junit.platform.launcher.TestPlan.add&#8203;(TestIdentifier)</a></th>
 <td class="colLast">
-<div class="deprecationComment">without replacement since this method was intended to be internal.</div>
+<div class="deprecationComment">Please discontinue use of this method. A future version of the
+ JUnit Platform will ignore this call and eventually even throw an exception.</div>
 </td>
 </tr>
 <tr class="rowColor">
