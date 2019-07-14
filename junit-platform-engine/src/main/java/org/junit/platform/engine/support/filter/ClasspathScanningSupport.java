@@ -28,7 +28,7 @@ import org.junit.platform.engine.discovery.PackageNameFilter;
  * Support utility methods for classpath scanning.
  *
  * @since 1.0
- * @deprecated Please use {@link org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver}
+ * @deprecated Please use {@link org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver} instead.
  */
 @Deprecated
 @API(status = DEPRECATED, since = "1.5")
@@ -43,7 +43,7 @@ public final class ClasspathScanningSupport {
 	 * classpath scanning from an {@link EngineDiscoveryRequest}.
 	 *
 	 * @param request the request to build a predicate from
-	 * @deprecated Please use {@link org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver}
+	 * @deprecated Please use {@link org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver} instead.
 	 */
 	@Deprecated
 	public static Predicate<String> buildClassNamePredicate(EngineDiscoveryRequest request) {
@@ -60,7 +60,7 @@ public final class ClasspathScanningSupport {
 	 *
 	 * @param request the request to build a name predicate from
 	 * @param classPredicate the class predicate
-	 * @deprecated Please use {@link org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver}
+	 * @deprecated Please use {@link org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver} instead.
 	 */
 	@Deprecated
 	public static ClassFilter buildClassFilter(EngineDiscoveryRequest request, Predicate<Class<?>> classPredicate) {

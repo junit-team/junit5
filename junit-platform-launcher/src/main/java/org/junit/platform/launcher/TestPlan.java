@@ -94,7 +94,8 @@ public class TestPlan {
 	 * Add the supplied {@link TestIdentifier} to this test plan.
 	 *
 	 * @param testIdentifier the identifier to add; never {@code null}
-	 * @deprecated without replacement since this method was intended to be internal.
+	 * @deprecated Please discontinue use of this method. A future version of the
+	 * JUnit Platform will ignore this call and eventually even throw an exception.
 	 */
 	@Deprecated
 	@API(status = DEPRECATED, since = "1.4")

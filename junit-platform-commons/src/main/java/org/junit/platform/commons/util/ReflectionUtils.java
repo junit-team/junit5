@@ -885,6 +885,8 @@ public final class ReflectionUtils {
 	 * @param requiredType the required type of the outermost instance; never {@code null}
 	 * @return an {@code Optional} containing the outermost instance; never {@code null}
 	 * but potentially empty
+	 * @deprecated Please discontinue use of this method since it relies on internal
+	 * implementation details of the JDK that may not work in the future.
 	 */
 	@API(status = DEPRECATED, since = "1.4")
 	@Deprecated
