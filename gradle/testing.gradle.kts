@@ -11,6 +11,9 @@ tasks.named<Test>("test").configure {
 		exceptionFormat = FULL
 	}
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
+	if (JavaVersion.current() == JavaVersion.VERSION_HIGHER) {
+		systemProperty("net.bytebuddy.experimental", true)
+	}
 }
 
 dependencies {
