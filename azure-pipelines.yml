@@ -23,20 +23,17 @@ jobs:
       parameters:
         continueOnError: true
 
-#
-# BLOCKED BY: "openjdk:14" is not yet available on https://hub.docker.com/_/openjdk
-#
-#- job: linux_14
-#  displayName: Linux (OpenJDK 14)
-#  pool:
-#    vmImage: 'ubuntu-16.04'
-#  container: openjdk:14
-#  steps:
-#    - checkout: self
-#      fetchDepth: 10
-#    - template: src/azure/azure-gradle-step.yml
-#      parameters:
-#        continueOnError: true
+- job: linux_14
+  displayName: Linux (OpenJDK 14)
+  pool:
+    vmImage: 'ubuntu-16.04'
+  container: junitteam/openjdk:14
+  steps:
+    - checkout: self
+      fetchDepth: 10
+    - template: src/azure/azure-gradle-step.yml
+      parameters:
+        continueOnError: true
 
 - job: Mac
   pool:
