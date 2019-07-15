@@ -31,7 +31,7 @@ Your donations will help to make that a reality!
       </div>
     </li>
     <li>
-      <div class="cardgold" onclick="location.href='https://www.jetbrains.com/idea/';">
+      <div class="cardgold" onclick="location.href='https://www.jetbrains.com/idea';">
         <div class="cardgold-image">
           <img style="height:100px; padding-left:30px" src="assets/img/sponsor-logo-JetBrains.svg" alt="JetBrains">
         </div>
@@ -56,7 +56,7 @@ Your donations will help to make that a reality!
 <div align="center">
   <ul class="list-inline">
     <li>
-      <div class="cardsilver" onclick="location.href='http://www.micromata.de';">
+      <div class="cardsilver" onclick="location.href='https://www.micromata.de';">
         <div class="cardsilver-image">
           <img style="width:80%" src="assets/img/sponsor-logo-Micromata.svg" alt="MICROMATA">
         </div>
@@ -76,7 +76,7 @@ Your donations will help to make that a reality!
 <div align="center">
   <ul class="list-inline">
     <li>
-      <div class="cardbronze" onclick="location.href='http://www.heuboe.de';">
+      <div class="cardbronze" onclick="location.href='https://www.heuboe.de';">
         <div class="cardbronze-image">
           <img style="width:80%" src="assets/img/sponsor-logo-heuboe.svg" alt="Heusch/Boesefeldt">
         </div>
