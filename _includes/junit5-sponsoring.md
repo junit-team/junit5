@@ -89,6 +89,20 @@ Your donations will help to make that a reality!
         </div>
       </div>
     </li>
+    <li>
+      <div class="cardbronze" onclick="location.href='https://www.premium-minds.com';">
+        <div class="cardbronze-image">
+          <img style="width:80%" src="assets/img/sponsor-logo-PremiumMinds.svg" alt="Premium Minds">
+        </div>
+        <div class="cardbronze-center">
+          <h4>Premium Minds</h4>
+        </div>
+        <div class="cardbronze-bottom">
+          <h4>Bronze Sponsor</h4>
+          <p>Since July 2019</p>
+        </div>
+      </div>
+    </li>
   </ul>
 </div>
 
