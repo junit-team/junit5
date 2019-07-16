@@ -27,7 +27,7 @@ jobs:
   displayName: Linux (OpenJDK 14)
   pool:
     vmImage: 'ubuntu-16.04'
-  container: junitteam/openjdk:14
+  container: openjdk:14
   steps:
     - checkout: self
       fetchDepth: 10
