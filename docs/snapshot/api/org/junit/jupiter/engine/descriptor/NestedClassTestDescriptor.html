@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10};
+var data = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -265,13 +265,18 @@ extends <a href="ClassBasedTestDescriptor.html" title="class in org.junit.jupite
 </tr>
 <tbody>
 <tr class="altColor" id="i0">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEnclosingTestClasses()">getEnclosingTestClasses</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor" id="i1">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="../../../platform/engine/TestTag.html" title="class in org.junit.platform.engine">TestTag</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTags()">getTags</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the set of <a href="../../../platform/engine/TestTag.html" title="class in org.junit.platform.engine">tags</a> associated with this descriptor.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i1">
+<tr class="altColor" id="i2">
 <td class="colFirst"><code>protected <a href="../../api/extension/TestInstances.html" title="interface in org.junit.jupiter.api.extension">TestInstances</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#instantiateTestClass(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.jupiter.engine.extension.ExtensionRegistry,org.junit.jupiter.engine.extension.ExtensionRegistrar,org.junit.jupiter.api.extension.ExtensionContext)">instantiateTestClass</a></span>&#8203;(<a href="../execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;parentExecutionContext,
                     <a href="../extension/ExtensionRegistry.html" title="interface in org.junit.jupiter.engine.extension">ExtensionRegistry</a>&nbsp;registry,
@@ -404,6 +409,19 @@ extends <a href="ClassBasedTestDescriptor.html" title="class in org.junit.jupite
  but potentially empty</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../platform/engine/TestTag.html" title="class in org.junit.platform.engine"><code>TestTag</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="getEnclosingTestClasses()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getEnclosingTestClasses</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;getEnclosingTestClasses()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="ClassBasedTestDescriptor.html#getEnclosingTestClasses()">getEnclosingTestClasses</a></code>&nbsp;in class&nbsp;<code><a href="ClassBasedTestDescriptor.html" title="class in org.junit.jupiter.engine.descriptor">ClassBasedTestDescriptor</a></code></dd>
 </dl>
 </li>
 </ul>
