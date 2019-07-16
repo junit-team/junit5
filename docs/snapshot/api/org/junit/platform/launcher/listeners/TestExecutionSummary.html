@@ -27,8 +27,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":6,"i17":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
+var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":6,"i17":18,"i18":6};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -161,7 +161,7 @@ public interface <span class="typeNameLabel">TestExecutionSummary</span></pre>
 </a>
 <h3>Method Summary</h3>
 <div class="memberSummary">
-<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="tableTab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t3" class="tableTab" onclick="show(4);">Abstract Methods</button></div>
+<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="tableTab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t3" class="tableTab" onclick="show(4);">Abstract Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t5" class="tableTab" onclick="show(16);">Default Methods</button></div>
 <div id="memberSummary_tabpanel" role="tabpanel">
 <table aria-labelledby="t0">
 <tr>
@@ -292,6 +292,15 @@ public interface <span class="typeNameLabel">TestExecutionSummary</span></pre>
 </td>
 </tr>
 <tr class="rowColor" id="i17">
+<td class="colFirst"><code>default void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#printFailuresTo(java.io.PrintWriter,int)">printFailuresTo</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html?is-external=true" title="class or interface in java.io" class="externalLink">PrintWriter</a>&nbsp;writer,
+               int&nbsp;maxStackTraceLines)</code></th>
+<td class="colLast">
+<div class="block">Print failed containers and tests, including sources and exception
+ messages, to the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>PrintWriter</code></a>.</div>
+</td>
+</tr>
+<tr class="altColor" id="i18">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#printTo(java.io.PrintWriter)">printTo</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html?is-external=true" title="class or interface in java.io" class="externalLink">PrintWriter</a>&nbsp;writer)</code></th>
 <td class="colLast">
@@ -510,8 +519,44 @@ public interface <span class="typeNameLabel">TestExecutionSummary</span></pre>
 <div class="block">Print failed containers and tests, including sources and exception
  messages, to the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>PrintWriter</code></a>.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>writer</code> - the <code>PrintWriter</code> to which to print; never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="#printTo(java.io.PrintWriter)"><code>printTo(PrintWriter)</code></a></dd>
+<dd><a href="#printTo(java.io.PrintWriter)"><code>printTo(PrintWriter)</code></a>, 
+<a href="#printFailuresTo(java.io.PrintWriter,int)"><code>printFailuresTo(PrintWriter, int)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="printFailuresTo(java.io.PrintWriter,int)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>printFailuresTo</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#MAINTAINED" title="class or interface in org.apiguardian.api" class="externalLink">MAINTAINED</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.6")
+default&nbsp;void&nbsp;printFailuresTo&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html?is-external=true" title="class or interface in java.io" class="externalLink">PrintWriter</a>&nbsp;writer,
+                             int&nbsp;maxStackTraceLines)</pre>
+<div class="block">Print failed containers and tests, including sources and exception
+ messages, to the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>PrintWriter</code></a>.
+
+ <p>The maximum number of lines to print for exception stack traces (if any)
+ can be specified via the <code>maxStackTraceLines</code> argument.
+
+ <p>By default, this method delegates to <a href="#printFailuresTo(java.io.PrintWriter)"><code>printFailuresTo(PrintWriter)</code></a>,
+ effectively ignoring the <code>maxStackTraceLines</code> argument. Concrete
+ implementations of this interface should therefore override this default
+ method in order to honor the <code>maxStackTraceLines</code> argument.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>writer</code> - the <code>PrintWriter</code> to which to print; never <code>null</code></dd>
+<dd><code>maxStackTraceLines</code> - the maximum number of lines to print for exception
+ stack traces; must be a positive value</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.6</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#printTo(java.io.PrintWriter)"><code>printTo(PrintWriter)</code></a>, 
+<a href="#printFailuresTo(java.io.PrintWriter)"><code>printFailuresTo(PrintWriter)</code></a></dd>
 </dl>
 </li>
 </ul>
