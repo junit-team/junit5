@@ -125,8 +125,9 @@ public interface TestExecutionSummary {
 	 * Print failed containers and tests, including sources and exception
 	 * messages, to the supplied {@link PrintWriter}.
 	 *
-	 * @param writer on which the printing is done; never {@code null}
+	 * @param writer the {@code PrintWriter} to which to print; never {@code null}
 	 * @see #printTo(PrintWriter)
+	 * @see #printFailuresTo(PrintWriter, int)
 	 */
 	void printFailuresTo(PrintWriter writer);
 
@@ -134,22 +135,23 @@ public interface TestExecutionSummary {
 	 * Print failed containers and tests, including sources and exception
 	 * messages, to the supplied {@link PrintWriter}.
 	 *
-	 * <p>The maximum number of lines to print for the exception stack traces
-	 * (if any) can be specified with the given {@code maxStackTraceLines}
-	 * parameter.
+	 * <p>The maximum number of lines to print for exception stack traces (if any)
+	 * can be specified via the {@code maxStackTraceLines} argument.
 	 *
-	 * @param writer on which the printing is done; never {@code null}
-	 * @param maxStackTraceLines maximum number of lines to print; must be positive
+	 * <p>By default, this method delegates to {@link #printFailuresTo(PrintWriter)},
+	 * effectively ignoring the {@code maxStackTraceLines} argument. Concrete
+	 * implementations of this interface should therefore override this default
+	 * method in order to honor the {@code maxStackTraceLines} argument.
+	 *
+	 * @param writer the {@code PrintWriter} to which to print; never {@code null}
+	 * @param maxStackTraceLines the maximum number of lines to print for exception
+	 * stack traces; must be a positive value
 	 * @see #printTo(PrintWriter)
+	 * @see #printFailuresTo(PrintWriter)
 	 * @since 1.6
 	 */
 	@API(status = MAINTAINED, since = "1.6")
 	default void printFailuresTo(PrintWriter writer, int maxStackTraceLines) {
-		/*
-		    Note: default behavior is to ignore maxStackTraceLines parameter.
-		    This was done to avoid breaking backward compatibility with existing
-		    classes extending this interface.
-		 */
 		printFailuresTo(writer);
 	}
 

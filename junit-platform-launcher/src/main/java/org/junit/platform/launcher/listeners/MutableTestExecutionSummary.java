@@ -33,6 +33,7 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 
 	private static final String TAB = "  ";
 	private static final String DOUBLE_TAB = TAB + TAB;
+	private static final int DEFAULT_MAX_STACKTRACE_LINES = 10;
 
 	private static final String CAUSED_BY = "Caused by: ";
 	private static final String SUPPRESSED = "Suppressed: ";
@@ -186,12 +187,12 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 
 	@Override
 	public void printFailuresTo(PrintWriter writer) {
-		printFailuresTo(writer, 10);
+		printFailuresTo(writer, DEFAULT_MAX_STACKTRACE_LINES);
 	}
 
 	@Override
 	public void printFailuresTo(PrintWriter writer, int maxStackTraceLines) {
-		Preconditions.notNull(writer, "Writer must not be null");
+		Preconditions.notNull(writer, "PrintWriter must not be null");
 		Preconditions.condition(maxStackTraceLines >= 0, "maxStackTraceLines must be a positive number");
 
 		if (getTotalFailureCount() > 0) {

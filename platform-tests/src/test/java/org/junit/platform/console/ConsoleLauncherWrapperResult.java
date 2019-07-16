@@ -142,7 +142,8 @@ class ConsoleLauncherWrapperResult implements TestExecutionSummary {
 
 	@Override
 	public void printFailuresTo(PrintWriter writer) {
-		printFailuresTo(writer, 10);
+		checkTestExecutionSummaryState();
+		summary.printFailuresTo(writer);
 	}
 
 	@Override
