@@ -10,13 +10,13 @@
 
 package org.junit.vintage.engine.samples.junit4;
 
+import org.junit.runner.RunWith;
+import org.junit.vintage.engine.samples.junit4.ConfigurableRunner.ChildCount;
+
 /**
- * @since 5.1
+ * Simulates a Spock 1.x test with only {@code @Unroll} feature methods.
  */
-public class NotFilterableRunner extends ConfigurableRunner {
-
-	public NotFilterableRunner(Class<?> testClass) {
-		super(testClass);
-	}
-
+@RunWith(DynamicRunner.class)
+@ChildCount(1)
+public class CompletelyDynamicTestCase {
 }

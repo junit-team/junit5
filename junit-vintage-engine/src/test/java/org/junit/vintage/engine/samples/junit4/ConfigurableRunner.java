@@ -16,10 +16,13 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
+import org.junit.runner.notification.RunNotifier;
 
 /**
  * @since 5.1
@@ -35,21 +38,32 @@ abstract class ConfigurableRunner extends Runner {
 	}
 
 	protected final Class<?> testClass;
+	protected final List<Description> filteredChildren = new ArrayList<>();
 
 	ConfigurableRunner(Class<?> testClass) {
 		this.testClass = testClass;
+		ChildCount childCountAnnotation = testClass.getAnnotation(ChildCount.class);
+		int childCount = Optional.ofNullable(childCountAnnotation).map(ChildCount::value).orElse(0);
+		// @formatter:off
+		range(0, childCount)
+				.mapToObj(index -> Description.createTestDescription(testClass, "Test #" + index))
+				.forEach(filteredChildren::add);
+		// @formatter:on
 	}
 
 	@Override
 	public Description getDescription() {
 		Description suiteDescription = Description.createSuiteDescription(testClass);
-		ChildCount childCountAnnotation = testClass.getAnnotation(ChildCount.class);
-		int childCount = Optional.ofNullable(childCountAnnotation).map(ChildCount::value).orElse(0);
-		// @formatter:off
-		range(0, childCount)
-			.mapToObj(index -> Description.createTestDescription(testClass, "Test #" + index))
-			.forEach(suiteDescription::addChild);
-		// @formatter:on
+		filteredChildren.forEach(suiteDescription::addChild);
 		return suiteDescription;
 	}
+
+	@Override
+	public void run(RunNotifier notifier) {
+		filteredChildren.forEach(child -> {
+			notifier.fireTestStarted(child);
+			notifier.fireTestFinished(child);
+		});
+	}
+
 }

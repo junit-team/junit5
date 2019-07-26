@@ -12,8 +12,10 @@ package org.junit.vintage.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.testkit.engine.EventConditions.abortedWithReason;
 import static org.junit.platform.testkit.engine.EventConditions.container;
+import static org.junit.platform.testkit.engine.EventConditions.displayName;
 import static org.junit.platform.testkit.engine.EventConditions.dynamicTestRegistered;
 import static org.junit.platform.testkit.engine.EventConditions.engine;
 import static org.junit.platform.testkit.engine.EventConditions.event;
@@ -49,6 +51,7 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.junit.vintage.engine.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
+import org.junit.vintage.engine.samples.junit4.CompletelyDynamicTestCase;
 import org.junit.vintage.engine.samples.junit4.EmptyIgnoredTestCase;
 import org.junit.vintage.engine.samples.junit4.EnclosedJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.IgnoredJUnit4TestCase;
@@ -664,8 +667,28 @@ class VintageTestEngineExecutionTests {
 			event(engine(), finishedSuccessfully()));
 	}
 
+	@Test
+	void executesCompletelyDynamicTestCaseDiscoveredByUniqueId() {
+		Class<?> testClass = CompletelyDynamicTestCase.class;
+		var request = LauncherDiscoveryRequestBuilder.request().selectors(
+			selectUniqueId(VintageUniqueIdBuilder.uniqueIdForClass(testClass))).build();
+
+		execute(request).assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(displayName(testClass.getSimpleName()), started()), //
+			event(dynamicTestRegistered("Test #0")), //
+			event(test("Test #0"), started()), //
+			event(test("Test #0"), finishedSuccessfully()), //
+			event(displayName(testClass.getSimpleName()), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
 	private static Events execute(Class<?> testClass) {
-		return EngineTestKit.execute(new VintageTestEngine(), request(testClass)).allEvents();
+		return execute(request(testClass));
+	}
+
+	private static Events execute(LauncherDiscoveryRequest request) {
+		return EngineTestKit.execute(new VintageTestEngine(), request).allEvents();
 	}
 
 	private static void execute(Class<?> testClass, EngineExecutionListener listener) {
