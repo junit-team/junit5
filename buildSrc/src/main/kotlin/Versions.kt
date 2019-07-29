@@ -16,7 +16,7 @@ object Versions {
 
     // Test Dependencies
     val archunit = "0.10.2"
-    val assertJ = "3.13.0"
+    val assertJ = "3.13.1"
     val bartholdy = "0.2.3"
     val classgraph = "4.8.41"
     val commonsIo = "2.6"
