@@ -47,6 +47,13 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
+	void ignoresCommentedOutEntries() {
+		Stream<Object[]> arguments = provideArguments("foo, bar \n#baz, qux", "\n", ',', "");
+
+		assertThat(arguments).containsExactly(new Object[] { "foo", "bar" });
+	}
+
+	@Test
 	void closesInputStream() {
 		AtomicBoolean closed = new AtomicBoolean(false);
 		InputStream inputStream = new ByteArrayInputStream("foo".getBytes()) {

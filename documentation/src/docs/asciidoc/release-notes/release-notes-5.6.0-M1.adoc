@@ -47,7 +47,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Documented the support of commented lines in CSV file with `@CsvFileSource`.
 
 
 [[release-notes-5.6.0-M1-junit-vintage]]
