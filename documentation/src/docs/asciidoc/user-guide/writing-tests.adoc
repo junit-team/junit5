@@ -1142,7 +1142,8 @@ the target type of a `null` reference is a primitive type.
 ===== @CsvFileSource
 
 `@CsvFileSource` lets you use CSV files from the classpath. Each line from a CSV file
-results in one invocation of the parameterized test.
+results in one invocation of the parameterized test, except the ones that are commented
+out (i.e. starting with a `#` symbol).
 
 [source,java,indent=0]
 ----
