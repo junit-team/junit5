@@ -30,24 +30,47 @@ import org.junit.platform.commons.util.Preconditions;
 class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvSource> {
 
 	private static final String LINE_SEPARATOR = "\n";
+	private static final String DEFAULT_DELIMITER = ",";
+	private static final char EMPTY_CHAR = '\0';
 
 	private CsvSource annotation;
+	private CsvParserSettings settings;
 
 	@Override
 	public void accept(CsvSource annotation) {
 		this.annotation = annotation;
+		this.settings = buildParserSettings(annotation);
+	}
+
+	private CsvParserSettings buildParserSettings(CsvSource annotation) {
+		CsvParserSettings settings = new CsvParserSettings();
+		String delimiter = getDelimiterFrom(annotation);
+		settings.getFormat().setDelimiter(delimiter);
+		settings.getFormat().setLineSeparator(LINE_SEPARATOR);
+		settings.getFormat().setQuote('\'');
+		settings.getFormat().setQuoteEscape('\'');
+		settings.setEmptyValue(annotation.emptyValue());
+		settings.setAutoConfigurationEnabled(false);
+		return settings;
+	}
+
+	private String getDelimiterFrom(CsvSource annotation) {
+		if (annotation.delimiter() != EMPTY_CHAR && !annotation.delimiterString().isEmpty()) {
+			throw new PreconditionViolationException(
+					"delimiter and delimiterString cannot be simultaneously set in " + this.annotation);
+		}
+		if (annotation.delimiter() != EMPTY_CHAR) {
+			return String.valueOf(annotation.delimiter());
+		}
+		if (!annotation.delimiterString().isEmpty()) {
+			return annotation.delimiterString();
+		}
+		return DEFAULT_DELIMITER;
 	}
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		CsvParserSettings settings = new CsvParserSettings();
-		settings.getFormat().setDelimiter(this.annotation.delimiter());
-		settings.getFormat().setLineSeparator(LINE_SEPARATOR);
-		settings.getFormat().setQuote('\'');
-		settings.getFormat().setQuoteEscape('\'');
-		settings.setEmptyValue(this.annotation.emptyValue());
-		settings.setAutoConfigurationEnabled(false);
-		CsvParser csvParser = new CsvParser(settings);
+		CsvParser csvParser = new CsvParser(this.settings);
 		AtomicLong index = new AtomicLong(0);
 
 		// @formatter:off
