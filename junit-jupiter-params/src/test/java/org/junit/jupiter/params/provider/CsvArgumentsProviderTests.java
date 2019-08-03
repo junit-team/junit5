@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * @since 5.0
@@ -103,10 +104,35 @@ class CsvArgumentsProviderTests {
 		assertThat(arguments).containsExactly(new Object[][] { { "", "" }, { null, null } });
 	}
 
+	@Test
+	void providesArgumentsWithStringDelimiter() {
+		Stream<Object[]> arguments = provideArguments(",", "", "foo, bar", "bar, foo");
+
+		assertThat(arguments).containsExactly(new String[] { "foo", "bar" }, new String[] { "bar", "foo" });
+	}
+
+	@Test
+	void throwsExceptionIfBothDelimitersAreSimultaneouslySet() {
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> provideArguments(",", ',', "", "foo"));
+
+		assertThat(exception).hasMessageStartingWith("delimiter and delimiterString cannot be simultaneously set in");
+	}
+
 	private Stream<Object[]> provideArguments(char delimiter, String emptyValue, String... value) {
+		return provideArguments("", delimiter, emptyValue, value);
+	}
+
+	private Stream<Object[]> provideArguments(String delimiterString, String emptyValue, String... value) {
+		return provideArguments(delimiterString, '\0', emptyValue, value);
+	}
+
+	private Stream<Object[]> provideArguments(String delimiterString, char delimiter, String emptyValue,
+			String... value) {
 		CsvSource annotation = mock(CsvSource.class);
 		when(annotation.value()).thenReturn(value);
 		when(annotation.delimiter()).thenReturn(delimiter);
+		when(annotation.delimiterString()).thenReturn(delimiterString);
 		when(annotation.emptyValue()).thenReturn(emptyValue);
 
 		CsvArgumentsProvider provider = new CsvArgumentsProvider();

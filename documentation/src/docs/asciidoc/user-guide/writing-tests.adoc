@@ -1122,6 +1122,10 @@ include::{testDir}/example/ExternalMethodSourceDemo.java[tags=external_MethodSou
 include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvSource_example]
 ----
 
+The default delimiter is `,` but you can use another character by setting the `delimiter`
+attribute. Alternatively, the `delimiterString` attribute allows to use a `String` delimiter.
+However, both attributes cannot be set simultaneously.
+
 `@CsvSource` uses a single quote `'` as its quote character. See the `'lemon, lime'` value
 in the example above and in the table below. An empty, quoted value `''` results in an
 empty `String` unless the `emptyValue` attribute is set; whereas, an entirely _empty_

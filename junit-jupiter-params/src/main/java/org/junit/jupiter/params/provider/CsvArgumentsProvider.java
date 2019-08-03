@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 import com.univocity.parsers.csv.CsvParser;
-import com.univocity.parsers.csv.CsvParserSettings;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
@@ -32,22 +31,17 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 	private static final String LINE_SEPARATOR = "\n";
 
 	private CsvSource annotation;
+	private CsvArgumentsParser csvArgumentsParser;
 
 	@Override
 	public void accept(CsvSource annotation) {
 		this.annotation = annotation;
+		this.csvArgumentsParser = CsvArgumentsParser.from(annotation);
 	}
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		CsvParserSettings settings = new CsvParserSettings();
-		settings.getFormat().setDelimiter(this.annotation.delimiter());
-		settings.getFormat().setLineSeparator(LINE_SEPARATOR);
-		settings.getFormat().setQuote('\'');
-		settings.getFormat().setQuoteEscape('\'');
-		settings.setEmptyValue(this.annotation.emptyValue());
-		settings.setAutoConfigurationEnabled(false);
-		CsvParser csvParser = new CsvParser(settings);
+		CsvParser csvParser = csvArgumentsParser.getParser();
 		AtomicLong index = new AtomicLong(0);
 
 		// @formatter:off
