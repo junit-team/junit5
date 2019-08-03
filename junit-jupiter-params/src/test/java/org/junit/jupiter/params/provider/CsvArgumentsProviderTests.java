@@ -114,10 +114,9 @@ class CsvArgumentsProviderTests {
 	@Test
 	void throwsExceptionIfBothDelimitersAreSimultaneouslySet() {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-				() -> provideArguments(",", ',', "", "foo"));
+			() -> provideArguments(",", ',', "", "foo"));
 
-		assertThat(exception)
-				.hasMessageContaining("delimiter and delimiterString cannot be simultaneously set in");
+		assertThat(exception).hasMessageContaining("delimiter and delimiterString cannot be simultaneously set in");
 	}
 
 	private Stream<Object[]> provideArguments(char delimiter, String emptyValue, String... value) {
@@ -128,7 +127,8 @@ class CsvArgumentsProviderTests {
 		return provideArguments(delimiterString, '\0', emptyValue, value);
 	}
 
-	private Stream<Object[]> provideArguments(String delimiterString, char delimiter, String emptyValue, String... value) {
+	private Stream<Object[]> provideArguments(String delimiterString, char delimiter, String emptyValue,
+			String... value) {
 		CsvSource annotation = mock(CsvSource.class);
 		when(annotation.value()).thenReturn(value);
 		when(annotation.delimiter()).thenReturn(delimiter);
