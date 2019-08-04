@@ -9,6 +9,7 @@ object Versions {
 
     // Dependencies
     val apiGuardian = "1.1.0"
+    val classgraph = "4.8.43"
     val junit4 = "4.12"
     val ota4j = "1.2.0"
     val picocli = "3.9.6"
@@ -18,7 +19,6 @@ object Versions {
     val archunit = "0.10.2"
     val assertJ = "3.13.1"
     val bartholdy = "0.2.3"
-    val classgraph = "4.8.41"
     val commonsIo = "2.6"
     val javaCompilerScriptEngine = "0.1.2"
     val log4j = "2.11.2"

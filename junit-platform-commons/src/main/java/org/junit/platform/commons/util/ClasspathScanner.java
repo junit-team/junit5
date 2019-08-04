@@ -11,27 +11,19 @@
 package org.junit.platform.commons.util;
 
 import static java.lang.String.format;
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
-import static org.junit.platform.commons.util.ClassFileVisitor.CLASS_FILE_SUFFIX;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
-import org.junit.platform.commons.PreconditionViolationException;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ScanResult;
+
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -73,162 +65,75 @@ class ClasspathScanner {
 
 		PackageUtils.assertPackageNameIsValid(basePackageName);
 		Preconditions.notNull(classFilter, "classFilter must not be null");
-		basePackageName = basePackageName.trim();
 
-		return findClassesForUris(getRootUrisForPackage(basePackageName), basePackageName, classFilter);
+		try (ScanResult scan = new ClassGraph().addClassLoader(getClassLoader()).whitelistPackages(
+			basePackageName.trim()).ignoreClassVisibility().disableNestedJarScanning().scan()) {
+			return filterScanResult(scan, classFilter);
+		}
 	}
 
 	List<Class<?>> scanForClassesInClasspathRoot(URI root, ClassFilter classFilter) {
 		Preconditions.notNull(root, "root must not be null");
 		Preconditions.notNull(classFilter, "classFilter must not be null");
 
-		return findClassesForUri(root, PackageUtils.DEFAULT_PACKAGE_NAME, classFilter);
-	}
-
-	/**
-	 * Recursively scan for classes in all of the supplied source directories.
-	 */
-	private List<Class<?>> findClassesForUris(List<URI> baseUris, String basePackageName, ClassFilter classFilter) {
-		// @formatter:off
-		return baseUris.stream()
-				.map(baseUri -> findClassesForUri(baseUri, basePackageName, classFilter))
-				.flatMap(Collection::stream)
-				.distinct()
-				.collect(toList());
-		// @formatter:on
-	}
-
-	private List<Class<?>> findClassesForUri(URI baseUri, String basePackageName, ClassFilter classFilter) {
-		try (CloseablePath closeablePath = CloseablePath.create(baseUri)) {
-			Path baseDir = closeablePath.getPath();
-			return findClassesForPath(baseDir, basePackageName, classFilter);
-		}
-		catch (PreconditionViolationException ex) {
-			throw ex;
-		}
-		catch (Exception ex) {
-			logger.warn(ex, () -> "Error scanning files for URI " + baseUri);
-			return emptyList();
+		try (ScanResult scan = new ClassGraph().addClassLoader(getClassLoader()).overrideClasspath(
+			root).ignoreClassVisibility().disableNestedJarScanning().scan()) {
+			return filterScanResult(scan, classFilter);
 		}
 	}
 
-	private List<Class<?>> findClassesForPath(Path baseDir, String basePackageName, ClassFilter classFilter) {
-		Preconditions.condition(Files.exists(baseDir), () -> "baseDir must exist: " + baseDir);
-		List<Class<?>> classes = new ArrayList<>();
+	private List<Class<?>> filterScanResult(ScanResult scanResult, ClassFilter classFilter) {
+		return scanResult.getAllClasses().filter(info -> classFilter.match(info.getName())).stream().map(
+			classInfo -> loadClassSafely(classInfo, classFilter)).filter(Objects::nonNull).collect(toList());
+	}
+
+	private Class<?> loadClassSafely(ClassInfo classInfo, ClassFilter classFilter) {
 		try {
-			Files.walkFileTree(baseDir, new ClassFileVisitor(
-				classFile -> processClassFileSafely(baseDir, basePackageName, classFilter, classFile, classes::add)));
+			return loadClass.apply(classInfo.getName(), getClassLoader()).toOptional().filter(classFilter) // Always use ".filter(classFilter)" to include future predicates.
+					.orElse(null);
 		}
-		catch (IOException ex) {
-			logger.warn(ex, () -> "I/O error scanning files in " + baseDir);
-		}
-		return classes;
-	}
-
-	private void processClassFileSafely(Path baseDir, String basePackageName, ClassFilter classFilter, Path classFile,
-			Consumer<Class<?>> classConsumer) {
-		try {
-			String fullyQualifiedClassName = determineFullyQualifiedClassName(baseDir, basePackageName, classFile);
-			if (classFilter.match(fullyQualifiedClassName)) {
-				try {
-					// @formatter:off
-					loadClass.apply(fullyQualifiedClassName, getClassLoader())
-							.toOptional()
-							.filter(classFilter) // Always use ".filter(classFilter)" to include future predicates.
-							.ifPresent(classConsumer);
-					// @formatter:on
-				}
-				catch (InternalError internalError) {
-					handleInternalError(classFile, fullyQualifiedClassName, internalError);
-				}
-			}
+		catch (InternalError internalError) {
+			handleInternalError(classInfo, internalError);
 		}
 		catch (Throwable throwable) {
-			handleThrowable(classFile, throwable);
+			handleThrowable(classInfo, throwable);
 		}
+		return null;
 	}
 
-	private String determineFullyQualifiedClassName(Path baseDir, String basePackageName, Path classFile) {
-		// @formatter:off
-		return Stream.of(
-					basePackageName,
-					determineSubpackageName(baseDir, classFile),
-					determineSimpleClassName(classFile)
-				)
-				.filter(value -> !value.isEmpty()) // Handle default package appropriately.
-				.collect(joining(PACKAGE_SEPARATOR_STRING));
-		// @formatter:on
-	}
-
-	private String determineSimpleClassName(Path classFile) {
-		String fileName = classFile.getFileName().toString();
-		return fileName.substring(0, fileName.length() - CLASS_FILE_SUFFIX.length());
-	}
-
-	private String determineSubpackageName(Path baseDir, Path classFile) {
-		Path relativePath = baseDir.relativize(classFile.getParent());
-		String pathSeparator = baseDir.getFileSystem().getSeparator();
-		String subpackageName = relativePath.toString().replace(pathSeparator, PACKAGE_SEPARATOR_STRING);
-		if (subpackageName.endsWith(pathSeparator)) {
-			// Workaround for JDK bug: https://bugs.openjdk.java.net/browse/JDK-8153248
-			subpackageName = subpackageName.substring(0, subpackageName.length() - pathSeparator.length());
-		}
-		return subpackageName;
-	}
-
-	private void handleInternalError(Path classFile, String fullyQualifiedClassName, InternalError ex) {
+	private void handleInternalError(ClassInfo classInfo, InternalError ex) {
 		if (MALFORMED_CLASS_NAME_ERROR_MESSAGE.equals(ex.getMessage())) {
-			logMalformedClassName(classFile, fullyQualifiedClassName, ex);
+			logMalformedClassName(classInfo, ex);
 		}
 		else {
-			logGenericFileProcessingException(classFile, ex);
+			logGenericFileProcessingException(classInfo, ex);
 		}
 	}
 
-	private void handleThrowable(Path classFile, Throwable throwable) {
+	private void handleThrowable(ClassInfo classInfo, Throwable throwable) {
 		rethrowIfBlacklisted(throwable);
-		logGenericFileProcessingException(classFile, throwable);
+		logGenericFileProcessingException(classInfo, throwable);
 	}
 
-	private void logMalformedClassName(Path classFile, String fullyQualifiedClassName, InternalError ex) {
+	private void logMalformedClassName(ClassInfo classInfo, InternalError ex) {
 		try {
 			logger.debug(ex, () -> format("The java.lang.Class loaded from path [%s] has a malformed class name [%s].",
-				classFile.toAbsolutePath(), fullyQualifiedClassName));
+				classInfo.getResource(), classInfo.getName()));
 		}
 		catch (Throwable t) {
 			rethrowIfBlacklisted(t);
 			ex.addSuppressed(t);
-			logGenericFileProcessingException(classFile, ex);
+			logGenericFileProcessingException(classInfo, ex);
 		}
 	}
 
-	private void logGenericFileProcessingException(Path classFile, Throwable throwable) {
+	private void logGenericFileProcessingException(ClassInfo classInfo, Throwable throwable) {
 		logger.debug(throwable, () -> format("Failed to load java.lang.Class for path [%s] during classpath scanning.",
-			classFile.toAbsolutePath()));
+			classInfo.getResource()));
 	}
 
 	private ClassLoader getClassLoader() {
 		return this.classLoaderSupplier.get();
-	}
-
-	private static String packagePath(String packageName) {
-		return packageName.replace(PACKAGE_SEPARATOR_CHAR, CLASSPATH_RESOURCE_PATH_SEPARATOR);
-	}
-
-	private List<URI> getRootUrisForPackage(String basePackageName) {
-		try {
-			Enumeration<URL> resources = getClassLoader().getResources(packagePath(basePackageName));
-			List<URI> uris = new ArrayList<>();
-			while (resources.hasMoreElements()) {
-				URL resource = resources.nextElement();
-				uris.add(resource.toURI());
-			}
-			return uris;
-		}
-		catch (Exception ex) {
-			logger.warn(ex, () -> "Error reading URIs from class loader for base package " + basePackageName);
-			return emptyList();
-		}
 	}
 
 }

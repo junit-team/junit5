@@ -18,14 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
@@ -303,12 +302,6 @@ class ClasspathScannerTests {
 	}
 
 	@Test
-	void findAllClassesInClasspathRootForNonExistingRoot() {
-		assertThrows(PreconditionViolationException.class,
-			() -> classpathScanner.scanForClassesInClasspathRoot(Paths.get("does_not_exist").toUri(), allClasses));
-	}
-
-	@Test
 	void findAllClassesInClasspathRootForNullClassFilter() {
 		assertThrows(PreconditionViolationException.class,
 			() -> classpathScanner.scanForClassesInClasspathRoot(getTestClasspathRoot(), null));
@@ -351,8 +344,8 @@ class ClasspathScannerTests {
 	private static class ThrowingClassLoader extends ClassLoader {
 
 		@Override
-		public Enumeration<URL> getResources(String name) throws IOException {
-			throw new IOException("Demo I/O error");
+		public Class<?> loadClass(String name) {
+			throw new UncheckedIOException(new IOException("Demo I/O error"));
 		}
 	}
 
