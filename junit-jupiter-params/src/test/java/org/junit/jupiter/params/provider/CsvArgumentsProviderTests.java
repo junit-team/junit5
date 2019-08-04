@@ -116,7 +116,7 @@ class CsvArgumentsProviderTests {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(",", ',', "", "foo"));
 
-		assertThat(exception).hasMessageContaining("delimiter and delimiterString cannot be simultaneously set in");
+		assertThat(exception).hasMessageStartingWith("delimiter and delimiterString cannot be simultaneously set in");
 	}
 
 	private Stream<Object[]> provideArguments(char delimiter, String emptyValue, String... value) {

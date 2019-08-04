@@ -57,7 +57,7 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 	private String getDelimiterFrom(CsvSource annotation) {
 		if (annotation.delimiter() != EMPTY_CHAR && !annotation.delimiterString().isEmpty()) {
 			throw new PreconditionViolationException(
-				"delimiter and delimiterString cannot be simultaneously set in " + this.annotation);
+				"delimiter and delimiterString cannot be simultaneously set in " + annotation);
 		}
 		if (annotation.delimiter() != EMPTY_CHAR) {
 			return String.valueOf(annotation.delimiter());

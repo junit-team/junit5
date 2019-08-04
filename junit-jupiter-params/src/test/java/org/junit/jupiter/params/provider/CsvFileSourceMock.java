@@ -19,6 +19,7 @@ class CsvFileSourceMock {
 	private String charset = "UTF-8";
 	private String lineSeparator = "\n";
 	private char delimiter = '\0';
+	private String delimiterString = "";
 	private String emptyValue = "";
 	private int numLinesToSkip = 0;
 
@@ -49,6 +50,11 @@ class CsvFileSourceMock {
 		return this;
 	}
 
+	CsvFileSourceMock delimiterString(String delimiterString) {
+		this.delimiterString = delimiterString;
+		return this;
+	}
+
 	CsvFileSourceMock emptyValue(String emptyValue) {
 		this.emptyValue = emptyValue;
 		return this;
@@ -65,6 +71,7 @@ class CsvFileSourceMock {
 		when(annotation.encoding()).thenReturn(charset);
 		when(annotation.lineSeparator()).thenReturn(lineSeparator);
 		when(annotation.delimiter()).thenReturn(delimiter);
+		when(annotation.delimiterString()).thenReturn(delimiterString);
 		when(annotation.emptyValue()).thenReturn(emptyValue);
 		when(annotation.numLinesToSkip()).thenReturn(numLinesToSkip);
 		return annotation;

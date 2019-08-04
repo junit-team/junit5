@@ -36,6 +36,9 @@ import org.junit.platform.commons.util.Preconditions;
  */
 class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvFileSource> {
 
+	private static final String DEFAULT_DELIMITER = ",";
+	private static final char EMPTY_CHAR = '\0';
+
 	private final BiFunction<Class<?>, String, InputStream> inputStreamProvider;
 
 	private CsvFileSource annotation;
@@ -55,25 +58,49 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	@Override
 	public void accept(CsvFileSource annotation) {
 		this.annotation = annotation;
-		resources = annotation.resources();
+		this.resources = annotation.resources();
+		this.charset = getCharsetFrom(annotation);
+		this.numLinesToSkip = annotation.numLinesToSkip();
+		this.settings = buildParserSettings(annotation);
+	}
+
+	private Charset getCharsetFrom(CsvFileSource annotation) {
 		try {
-			this.charset = Charset.forName(annotation.encoding());
+			return Charset.forName(annotation.encoding());
 		}
 		catch (Exception ex) {
-			throw new PreconditionViolationException("The charset supplied in " + this.annotation + " is invalid", ex);
+			throw new PreconditionViolationException("The charset supplied in " + annotation + " is invalid", ex);
 		}
-		numLinesToSkip = annotation.numLinesToSkip();
-		settings = new CsvParserSettings();
+	}
+
+	private CsvParserSettings buildParserSettings(CsvFileSource annotation) {
+		CsvParserSettings settings = new CsvParserSettings();
 		// Do not use the built-in support for skipping rows/lines since it will
 		// throw an IllegalArgumentException if the file does not contain at least
 		// the number of specified lines to skip.
 		// settings.setNumberOfRowsToSkip(annotation.numLinesToSkip());
-		settings.getFormat().setDelimiter(annotation.delimiter());
+		String delimiter = getDelimiterFrom(annotation);
+		settings.getFormat().setDelimiter(delimiter);
 		settings.getFormat().setLineSeparator(annotation.lineSeparator());
 		settings.getFormat().setQuote('"');
 		settings.getFormat().setQuoteEscape('"');
 		settings.setEmptyValue(annotation.emptyValue());
 		settings.setAutoConfigurationEnabled(false);
+		return settings;
+	}
+
+	private String getDelimiterFrom(CsvFileSource annotation) {
+		if (annotation.delimiter() != EMPTY_CHAR && !annotation.delimiterString().isEmpty()) {
+			throw new PreconditionViolationException(
+				"delimiter and delimiterString cannot be simultaneously set in " + annotation);
+		}
+		if (annotation.delimiter() != EMPTY_CHAR) {
+			return String.valueOf(annotation.delimiter());
+		}
+		if (!annotation.delimiterString().isEmpty()) {
+			return annotation.delimiterString();
+		}
+		return DEFAULT_DELIMITER;
 	}
 
 	@Override

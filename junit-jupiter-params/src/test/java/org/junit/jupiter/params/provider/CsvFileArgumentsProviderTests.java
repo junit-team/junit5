@@ -47,6 +47,21 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
+	void providesArgumentsWithStringDelimiter() {
+		Stream<Object[]> arguments = provideArguments("foo, bar \n baz, qux \n", "\n", ",");
+
+		assertThat(arguments).containsExactly(new Object[] { "foo", "bar" }, new Object[] { "baz", "qux" });
+	}
+
+	@Test
+	void throwsExceptionIfBothDelimitersAreSimultaneouslySet() {
+		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
+			() -> provideArguments(new ByteArrayInputStream("foo".getBytes()), "\n", ',', ","));
+
+		assertThat(exception).hasMessageStartingWith("delimiter and delimiterString cannot be simultaneously set in");
+	}
+
+	@Test
 	void ignoresCommentedOutEntries() {
 		Stream<Object[]> arguments = provideArguments("foo, bar \n#baz, qux", "\n", ',');
 
@@ -64,7 +79,7 @@ class CsvFileArgumentsProviderTests {
 			}
 		};
 
-		Stream<Object[]> arguments = provideArguments(inputStream, "\n", ',');
+		Stream<Object[]> arguments = provideArguments(inputStream, "\n", ',', "");
 
 		assertThat(arguments.count()).isEqualTo(1);
 		assertThat(closed.get()).describedAs("closed").isTrue();
@@ -181,13 +196,20 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	private Stream<Object[]> provideArguments(String content, String lineSeparator, char delimiter) {
-		return provideArguments(new ByteArrayInputStream(content.getBytes(UTF_8)), lineSeparator, delimiter);
+		return provideArguments(new ByteArrayInputStream(content.getBytes(UTF_8)), lineSeparator, delimiter, "");
 	}
 
-	private Stream<Object[]> provideArguments(InputStream inputStream, String lineSeparator, char delimiter) {
+	private Stream<Object[]> provideArguments(String content, String lineSeparator, String delimiterString) {
+		return provideArguments(new ByteArrayInputStream(content.getBytes(UTF_8)), lineSeparator, '\0',
+			delimiterString);
+	}
+
+	private Stream<Object[]> provideArguments(InputStream inputStream, String lineSeparator, char delimiter,
+			String delimiterString) {
 		String expectedResource = "foo/bar";
 		CsvFileSource annotation = CsvFileSourceMock.builder().charset("ISO-8859-1").resources(
-			expectedResource).lineSeparator(lineSeparator).delimiter(delimiter).build();
+			expectedResource).lineSeparator(lineSeparator).delimiter(delimiter).delimiterString(
+				delimiterString).build();
 
 		CsvFileArgumentsProvider provider = new CsvFileArgumentsProvider((testClass, resource) -> {
 			assertThat(resource).isEqualTo(expectedResource);

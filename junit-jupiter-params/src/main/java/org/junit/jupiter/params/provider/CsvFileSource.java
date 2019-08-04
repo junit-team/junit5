@@ -66,10 +66,17 @@ public @interface CsvFileSource {
 
 	/**
 	 * The column delimiter to use when reading the CSV files.
-	 *
-	 * <p>Defaults to {@code ","}.
+	 * This can't be set simultaneously with {@link #delimiterString delimiterString}.
+	 * If neither attributes are set, the delimiter will be ','.
 	 */
-	char delimiter() default ',';
+	char delimiter() default '\0';
+
+	/**
+	 * The column delimiter to use when reading the CSV files.
+	 * This can't be set simultaneously with {@link #delimiter delimiter}.
+	 * If neither attributes are set, the delimiter will be ','.
+	 */
+	String delimiterString() default "";
 
 	/**
 	 * The number of lines to skip when reading the CSV files.
