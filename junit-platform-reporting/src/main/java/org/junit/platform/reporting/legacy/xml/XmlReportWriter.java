@@ -40,7 +40,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestIdentifier;
-import org.junit.platform.launcher.listeners.LegacyReportingUtils;
+import org.junit.platform.reporting.legacy.LegacyReportingUtils;
 
 /**
  * {@code XmlReportWriter} writes an XML report whose format is compatible

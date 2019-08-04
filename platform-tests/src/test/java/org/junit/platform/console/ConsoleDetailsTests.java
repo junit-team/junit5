@@ -45,7 +45,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.console.options.Details;
-import org.junit.platform.console.options.Theme;
+import org.junit.platform.reporting.console.Theme;
 
 /**
  * @since 1.0

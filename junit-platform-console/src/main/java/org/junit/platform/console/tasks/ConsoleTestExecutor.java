@@ -26,13 +26,16 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.console.options.CommandLineOptions;
 import org.junit.platform.console.options.Details;
-import org.junit.platform.console.options.Theme;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
+import org.junit.platform.reporting.console.FlatPrintingListener;
+import org.junit.platform.reporting.console.Theme;
+import org.junit.platform.reporting.console.TreePrintingListener;
+import org.junit.platform.reporting.console.VerboseTreePrintingListener;
 import org.junit.platform.reporting.legacy.xml.LegacyXmlReportGeneratingListener;
 
 /**

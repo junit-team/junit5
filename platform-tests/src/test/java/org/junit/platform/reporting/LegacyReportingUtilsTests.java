@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.launcher.listeners;
+package org.junit.platform.reporting;
 
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,6 +21,7 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.reporting.legacy.LegacyReportingUtils;
 
 /**
  * @since 1.0.3

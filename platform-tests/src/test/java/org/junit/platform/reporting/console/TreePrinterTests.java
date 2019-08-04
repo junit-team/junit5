@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console.tasks;
+package org.junit.platform.reporting.console;
 
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;

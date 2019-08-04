@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.platform.engine.discovery.ClassNameFilter;
+import org.junit.platform.reporting.console.Theme;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;

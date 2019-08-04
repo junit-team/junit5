@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.reporting.console.Theme;
 
 class ThemeTests {
 

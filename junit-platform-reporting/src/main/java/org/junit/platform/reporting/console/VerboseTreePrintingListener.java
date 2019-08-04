@@ -8,16 +8,15 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console.tasks;
+package org.junit.platform.reporting.console;
 
 import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
-import static org.junit.platform.console.tasks.Color.NONE;
+import static org.junit.platform.reporting.console.Color.NONE;
 
 import java.io.PrintWriter;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -27,7 +26,7 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * @since 1.0
  */
-class VerboseTreePrintingListener implements TestExecutionListener {
+public class VerboseTreePrintingListener implements TestExecutionListener {
 
 	private final PrintWriter out;
 	private final boolean disableAnsiColors;
@@ -36,7 +35,8 @@ class VerboseTreePrintingListener implements TestExecutionListener {
 	private final String[] verticals;
 	private long executionStartedMillis;
 
-	VerboseTreePrintingListener(PrintWriter out, boolean disableAnsiColors, int maxContainerNestingLevel, Theme theme) {
+	public VerboseTreePrintingListener(PrintWriter out, boolean disableAnsiColors, int maxContainerNestingLevel,
+			Theme theme) {
 		this.out = out;
 		this.disableAnsiColors = disableAnsiColors;
 		this.theme = theme;

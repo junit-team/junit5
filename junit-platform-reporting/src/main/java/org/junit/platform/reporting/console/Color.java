@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console.tasks;
+package org.junit.platform.reporting.console;
 
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestIdentifier;

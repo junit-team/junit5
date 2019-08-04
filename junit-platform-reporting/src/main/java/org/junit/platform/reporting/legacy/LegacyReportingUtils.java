@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.launcher.listeners;
+package org.junit.platform.reporting.legacy;
 
 import static org.apiguardian.api.API.Status.MAINTAINED;
 

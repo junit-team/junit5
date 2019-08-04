@@ -8,9 +8,9 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console.tasks;
+package org.junit.platform.reporting.console;
 
-import static org.junit.platform.console.tasks.Color.NONE;
+import static org.junit.platform.reporting.console.Color.NONE;
 
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
@@ -25,7 +25,7 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * @since 1.0
  */
-class FlatPrintingListener implements TestExecutionListener {
+public class FlatPrintingListener implements TestExecutionListener {
 
 	private static final Pattern LINE_START_PATTERN = Pattern.compile("(?m)^");
 
@@ -34,7 +34,7 @@ class FlatPrintingListener implements TestExecutionListener {
 	private final PrintWriter out;
 	private final boolean disableAnsiColors;
 
-	FlatPrintingListener(PrintWriter out, boolean disableAnsiColors) {
+	public FlatPrintingListener(PrintWriter out, boolean disableAnsiColors) {
 		this.out = out;
 		this.disableAnsiColors = disableAnsiColors;
 	}

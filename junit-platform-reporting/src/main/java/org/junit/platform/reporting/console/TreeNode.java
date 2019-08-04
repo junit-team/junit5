@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console.tasks;
+package org.junit.platform.reporting.console;
 
 import java.util.Optional;
 import java.util.Queue;

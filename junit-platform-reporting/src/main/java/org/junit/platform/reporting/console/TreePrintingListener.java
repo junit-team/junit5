@@ -8,14 +8,13 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console.tasks;
+package org.junit.platform.reporting.console;
 
 import java.io.PrintWriter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -25,13 +24,13 @@ import org.junit.platform.launcher.TestPlan;
 /**
  * @since 1.0
  */
-class TreePrintingListener implements TestExecutionListener {
+public class TreePrintingListener implements TestExecutionListener {
 
 	private final Map<String, TreeNode> nodesByUniqueId = new ConcurrentHashMap<>();
 	private TreeNode root;
 	private final TreePrinter treePrinter;
 
-	TreePrintingListener(PrintWriter out, boolean disableAnsiColors, Theme theme) {
+	public TreePrintingListener(PrintWriter out, boolean disableAnsiColors, Theme theme) {
 		this.treePrinter = new TreePrinter(out, theme, disableAnsiColors);
 	}
 

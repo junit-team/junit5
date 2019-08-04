@@ -42,6 +42,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.reporting.console.Theme;
 
 /**
  * @since 1.0

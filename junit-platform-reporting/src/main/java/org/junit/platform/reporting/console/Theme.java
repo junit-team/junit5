@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console.options;
+package org.junit.platform.reporting.console;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 

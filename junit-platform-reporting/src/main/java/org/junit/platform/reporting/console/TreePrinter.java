@@ -8,15 +8,15 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.console.tasks;
+package org.junit.platform.reporting.console;
 
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
-import static org.junit.platform.console.tasks.Color.CONTAINER;
-import static org.junit.platform.console.tasks.Color.FAILED;
-import static org.junit.platform.console.tasks.Color.GREEN;
-import static org.junit.platform.console.tasks.Color.NONE;
-import static org.junit.platform.console.tasks.Color.SKIPPED;
-import static org.junit.platform.console.tasks.Color.YELLOW;
+import static org.junit.platform.reporting.console.Color.CONTAINER;
+import static org.junit.platform.reporting.console.Color.FAILED;
+import static org.junit.platform.reporting.console.Color.GREEN;
+import static org.junit.platform.reporting.console.Color.NONE;
+import static org.junit.platform.reporting.console.Color.SKIPPED;
+import static org.junit.platform.reporting.console.Color.YELLOW;
 
 import java.io.PrintWriter;
 import java.util.Iterator;
@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.platform.commons.util.StringUtils;
-import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
 import org.junit.platform.engine.reporting.ReportEntry;

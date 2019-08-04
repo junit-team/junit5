@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.junit.platform.reporting.console.Theme;
 
 /**
  * @since 1.0
