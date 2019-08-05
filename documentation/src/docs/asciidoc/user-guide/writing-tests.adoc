@@ -1160,6 +1160,10 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvFileSource_example
 include::{testResourcesDir}/two-column.csv[]
 ----
 
+As with `@CsvSource`, the default delimiter is `,` but you can use another character by
+setting the `delimiter` attribute. Alternatively, the `delimiterString` attribute allows
+to use a `String` delimiter. However, both attributes cannot be set simultaneously.
+
 NOTE: In contrast to the syntax used in `@CsvSource`, `@CsvFileSource` uses a double
 quote `"` as the quote character. See the `"United States of America"` value in the
 example above. An empty, quoted value `""` results in an empty `String` unless the
