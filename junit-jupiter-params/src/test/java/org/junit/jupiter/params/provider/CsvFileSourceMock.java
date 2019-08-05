@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 class CsvFileSourceMock {
 
-	private String[] resources;
+	private String[] resources = new String[]{"foo/bar"};
 	private String charset = "UTF-8";
 	private String lineSeparator = "\n";
 	private char delimiter = '\0';
@@ -28,6 +28,10 @@ class CsvFileSourceMock {
 
 	static CsvFileSourceMock builder() {
 		return new CsvFileSourceMock();
+	}
+
+	static CsvFileSource getDefault() {
+		return new CsvFileSourceMock().build();
 	}
 
 	CsvFileSourceMock resources(String... resources) {
