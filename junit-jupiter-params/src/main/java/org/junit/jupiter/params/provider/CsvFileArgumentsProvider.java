@@ -24,7 +24,6 @@ import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
 import com.univocity.parsers.csv.CsvParser;
-import com.univocity.parsers.csv.CsvParserSettings;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
@@ -36,15 +35,12 @@ import org.junit.platform.commons.util.Preconditions;
  */
 class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvFileSource> {
 
-	private static final String DEFAULT_DELIMITER = ",";
-	private static final char EMPTY_CHAR = '\0';
-
 	private final BiFunction<Class<?>, String, InputStream> inputStreamProvider;
 
 	private CsvFileSource annotation;
 	private String[] resources;
 	private Charset charset;
-	private CsvParserSettings settings;
+	private CsvArgumentsParser csvArgumentsParser;
 	private int numLinesToSkip;
 
 	CsvFileArgumentsProvider() {
@@ -60,8 +56,8 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 		this.annotation = annotation;
 		this.resources = annotation.resources();
 		this.charset = getCharsetFrom(annotation);
+		this.csvArgumentsParser = CsvArgumentsParser.from(annotation);
 		this.numLinesToSkip = annotation.numLinesToSkip();
-		this.settings = buildParserSettings(annotation);
 	}
 
 	private Charset getCharsetFrom(CsvFileSource annotation) {
@@ -71,36 +67,6 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 		catch (Exception ex) {
 			throw new PreconditionViolationException("The charset supplied in " + annotation + " is invalid", ex);
 		}
-	}
-
-	private CsvParserSettings buildParserSettings(CsvFileSource annotation) {
-		CsvParserSettings settings = new CsvParserSettings();
-		// Do not use the built-in support for skipping rows/lines since it will
-		// throw an IllegalArgumentException if the file does not contain at least
-		// the number of specified lines to skip.
-		// settings.setNumberOfRowsToSkip(annotation.numLinesToSkip());
-		String delimiter = getDelimiterFrom(annotation);
-		settings.getFormat().setDelimiter(delimiter);
-		settings.getFormat().setLineSeparator(annotation.lineSeparator());
-		settings.getFormat().setQuote('"');
-		settings.getFormat().setQuoteEscape('"');
-		settings.setEmptyValue(annotation.emptyValue());
-		settings.setAutoConfigurationEnabled(false);
-		return settings;
-	}
-
-	private String getDelimiterFrom(CsvFileSource annotation) {
-		if (annotation.delimiter() != EMPTY_CHAR && !annotation.delimiterString().isEmpty()) {
-			throw new PreconditionViolationException(
-				"delimiter and delimiterString cannot be simultaneously set in " + annotation);
-		}
-		if (annotation.delimiter() != EMPTY_CHAR) {
-			return String.valueOf(annotation.delimiter());
-		}
-		if (!annotation.delimiterString().isEmpty()) {
-			return annotation.delimiterString();
-		}
-		return DEFAULT_DELIMITER;
 	}
 
 	@Override
@@ -121,7 +87,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	}
 
 	private CsvParser createCsvParser(InputStream inputStream) {
-		CsvParser csvParser = new CsvParser(settings);
+		CsvParser csvParser = csvArgumentsParser.getParser();
 		try {
 			csvParser.beginParsing(inputStream, charset);
 		}
