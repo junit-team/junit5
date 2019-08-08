@@ -3590,6 +3590,20 @@ the target type of a <code>null</code> reference is a primitive type.</p>
 <p><code>@CsvFileSource</code> lets you use CSV files from the classpath. Each line from a CSV file
 results in one invocation of the parameterized test.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="title">Comments in CSV files</div>
+Any line beginning with a <code>#</code> symbol will be interpreted as a comment and will be
+ignored.
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
@@ -9591,7 +9605,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-07-20 15:23:46 UTC
+Last updated 2019-08-08 17:37:28 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

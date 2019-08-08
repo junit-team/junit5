@@ -111,7 +111,8 @@ public @interface <span class="memberNameLabel">CsvFileSource</span></pre>
  comma-separated value (CSV) files from one or more classpath <a href="#resources()"><code>resources</code></a>.
 
  <p>The lines of these CSV files will be provided as arguments to the
- annotated <code>@ParameterizedTest</code> method.</div>
+ annotated <code>@ParameterizedTest</code> method. Any line beginning with a
+ <code>#</code> symbol will be interpreted as a comment and will be ignored.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.0</dd>

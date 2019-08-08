@@ -215,7 +215,8 @@ public @interface <span class="memberNameLabel">CsvSource</span></pre>
 <div class="block">The CSV lines to use as source of arguments; must not be empty.
 
  <p>Each value corresponds to a line in a CSV file and will be split using
- the specified <a href="#delimiter()"><code>delimiter</code></a>.</div>
+ the specified <a href="#delimiter()"><code>delimiter</code></a>. Any line beginning with a
+ <code>#</code> symbol will be interpreted as a comment and will be ignored.</div>
 </li>
 </ul>
 </li>
