@@ -5,7 +5,7 @@ object Versions {
     // Languages
     val jvmTarget = JavaVersion.VERSION_1_8
     val kotlin = "1.3.40"
-    val groovy = "3.0.0-beta-2"
+    val groovy = "3.0.0-beta-3"
 
     // Dependencies
     val apiGuardian = "1.1.0"
