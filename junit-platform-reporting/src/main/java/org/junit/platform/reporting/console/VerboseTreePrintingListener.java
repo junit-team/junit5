@@ -12,6 +12,7 @@ package org.junit.platform.reporting.console;
 
 import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
 import static org.junit.platform.reporting.console.Color.NONE;
+import static org.junit.platform.reporting.console.Theme.ASCII;
 
 import java.io.PrintWriter;
 import java.util.ArrayDeque;
@@ -24,21 +25,75 @@ import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 /**
+ * Listener that prints output to the provided {@link PrintWriter} instance. The
+ * output is flat rather than hierarchical, similar to
+ * {@link TreePrintingListener} but more verbose.
+ * <p>
+ *
+ * Optionally will use ANSI escape codes to colorize the output.
+ * <p>
+ *
+ * Can be configured to use plain ASCII or Unicode characters for the tree
+ * elements.
+ * <p>
+ *
+ * This listener will flush its output after each line is printed which makes it
+ * more useful for real-time monitoring of the test output. It also means that
+ * if you are using parallel testing, the outputs of the various threads will
+ * interrupt each other. For multi-threaded testing {@link TreePrintingListener}
+ * may produce more coherent output.
+ * <p>
+ *
  * @since 1.0
+ * @see FlatPrintingListener
+ * @see TreePrintingListener
  */
 public class VerboseTreePrintingListener implements TestExecutionListener {
 
 	private final PrintWriter out;
-	private final boolean disableAnsiColors;
+	private final boolean useAnsiColors;
 	private final Theme theme;
 	private final Deque<Long> frames;
 	private final String[] verticals;
 	private long executionStartedMillis;
 
-	public VerboseTreePrintingListener(PrintWriter out, boolean disableAnsiColors, int maxContainerNestingLevel,
+	/**
+	 * Creates a new listener that prints verbose hierarchical output to
+	 * {@code System.out} using a monochromatic {@link Theme#ASCII ASCII} theme for
+	 * a maximum test depth of 16.
+	 */
+	public VerboseTreePrintingListener() {
+		this(new PrintWriter(System.out));
+	}
+
+	/**
+	 * Creates a new listener that prints verbose hierarchical output to the given
+	 * printer using a monochromatic {@link Theme#ASCII ASCII} theme for a maximum
+	 * test depth of 16.
+	 *
+	 * @param out the printer to which the listener will print.
+	 */
+	public VerboseTreePrintingListener(PrintWriter out) {
+		this(out, false, 16, ASCII);
+	}
+
+	/**
+	 * Creates a new listener that prints verbose hierarchical output to the given
+	 * printer.
+	 *
+	 * @param out                      the printer to which the listener will print.
+	 * @param useAnsiColors            {@code true} to use ANSI color codes to
+	 *                                 colorize the output, {@code false} to use
+	 *                                 monochromatic output.
+	 * @param maxContainerNestingLevel the maximum depth that tests will be
+	 *                                 indented.
+	 * @param theme                    the style to use when printing the hierarchy
+	 *                                 (see {@link Theme}).
+	 */
+	public VerboseTreePrintingListener(PrintWriter out, boolean useAnsiColors, int maxContainerNestingLevel,
 			Theme theme) {
 		this.out = out;
-		this.disableAnsiColors = disableAnsiColors;
+		this.useAnsiColors = useAnsiColors;
 		this.theme = theme;
 
 		// create frame stack and push initial root frame
@@ -152,7 +207,7 @@ public class VerboseTreePrintingListener implements TestExecutionListener {
 	}
 
 	private void printf(Color color, String message, Object... args) {
-		if (disableAnsiColors || color == NONE) {
+		if (!useAnsiColors || color == NONE) {
 			out.printf(message, args);
 		}
 		else {
@@ -178,7 +233,8 @@ public class VerboseTreePrintingListener implements TestExecutionListener {
 			printf(color, format, args);
 			return;
 		}
-		// still here? Split format into separate lines and indent them from the second line on
+		// still here? Split format into separate lines and indent them from the second
+		// line on
 		String[] lines = format.split("\\R");
 		printf(color, "%s", lines[0]);
 		if (lines.length > 1) {

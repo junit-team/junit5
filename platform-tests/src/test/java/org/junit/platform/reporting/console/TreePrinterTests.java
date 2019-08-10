@@ -51,7 +51,7 @@ class TreePrinterTests {
 
 	@Test
 	void emptyTree() {
-		new TreePrinter(out, Theme.UNICODE, true).print(new TreeNode("<root>"));
+		new TreePrinter(out, Theme.UNICODE, false).print(new TreeNode("<root>"));
 		assertIterableEquals(Collections.singletonList("╷"), actual());
 	}
 
@@ -62,7 +62,7 @@ class TreePrinterTests {
 		root.addChild(new TreeNode(identifier("e-1", "engine one")).setResult(successful()));
 		root.addChild(new TreeNode(identifier("e-2", "engine two")).setResult(failed(null)));
 		root.addChild(new TreeNode(identifier("e-3", "engine three")).setResult(aborted(null)));
-		new TreePrinter(out, Theme.UNICODE, true).print(root);
+		new TreePrinter(out, Theme.UNICODE, false).print(root);
 		assertIterableEquals( //
 			Arrays.asList( //
 				"╷", //
@@ -78,7 +78,7 @@ class TreePrinterTests {
 	void printNodeHandlesNullMessageThrowableGracefully() {
 		TestExecutionResult result = TestExecutionResult.failed(new NullPointerException());
 		TreeNode node = new TreeNode(identifier("NPE", "test()")).setResult(result);
-		new TreePrinter(out, Theme.ASCII, true).print(node);
+		new TreePrinter(out, Theme.ASCII, false).print(node);
 		assertLinesMatch(Arrays.asList(".", "+-- test() [X] java.lang.NullPointerException"), actual());
 	}
 
@@ -102,7 +102,7 @@ class TreePrinterTests {
 		m2.addReportEntry(ReportEntry.from("key", "m-2"));
 		c1.addChild(m2);
 
-		new TreePrinter(out, Theme.UNICODE, true).print(root);
+		new TreePrinter(out, Theme.UNICODE, false).print(root);
 		assertLinesMatch(List.of( //
 			"╷", //
 			"└─ engine one ✔", //

@@ -10,7 +10,7 @@
 
 package org.junit.platform.reporting.console;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -19,9 +19,15 @@ import org.apiguardian.api.API;
 import org.junit.platform.engine.TestExecutionResult;
 
 /**
+ * Themes used for printing the decorations for the trees in
+ * hierarchical console printers. Current two options are
+ * ASCII and Unicode.
+ *
+ * Moved from {@link org.junit.platform.console.options} in 1.6.
+ *
  * @since 1.0
  */
-@API(status = INTERNAL, since = "1.0")
+@API(status = EXPERIMENTAL, since = "1.6")
 public enum Theme {
 
 	/**

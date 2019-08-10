@@ -70,7 +70,7 @@ class FlatPrintingListenerTests {
 	}
 
 	private FlatPrintingListener listener(StringWriter stringWriter) {
-		return new FlatPrintingListener(new PrintWriter(stringWriter), true);
+		return new FlatPrintingListener(new PrintWriter(stringWriter), false);
 	}
 
 	private static TestIdentifier newTestIdentifier() {

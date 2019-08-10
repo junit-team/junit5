@@ -10,11 +10,13 @@
 
 package org.junit.platform.reporting.console;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.reporting.console.Color.NONE;
 
 import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -23,8 +25,21 @@ import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 /**
+ * Listener that prints output to the provided {@link PrintWriter} instance. The
+ * output is flat rather than hierarchical.
+ * <p>
+ *
+ * Optionally will use ANSI escape codes to colorize the output.
+ * <p>
+ *
+ * For hierarchical output, see {@link TreePrintingListener} or
+ * {@link VerboseTreePrintingListener}.
+ *
  * @since 1.0
+ * @see TreePrintingListener
+ * @see VerboseTreePrintingListener
  */
+@API(status = EXPERIMENTAL, since = "1.6")
 public class FlatPrintingListener implements TestExecutionListener {
 
 	private static final Pattern LINE_START_PATTERN = Pattern.compile("(?m)^");
@@ -32,11 +47,37 @@ public class FlatPrintingListener implements TestExecutionListener {
 	static final String INDENTATION = "             ";
 
 	private final PrintWriter out;
-	private final boolean disableAnsiColors;
+	private final boolean useAnsiColors;
 
-	public FlatPrintingListener(PrintWriter out, boolean disableAnsiColors) {
+	/**
+	 * Creates a new listener that prints monochromatic flat output to
+	 * {@code System.out}.
+	 */
+	public FlatPrintingListener() {
+		this(new PrintWriter(System.out));
+	}
+
+	/**
+	 * Creates a new listener that prints monochromatic flat output to the given
+	 * printer.
+	 *
+	 * @param out the printer to which the listener will print.
+	 */
+	public FlatPrintingListener(PrintWriter out) {
+		this(out, false);
+	}
+
+	/**
+	 * Creates a new listener that prints flat output to the given printer with ANSI
+	 * colors disabled.
+	 *
+	 * @param out           the printer to which the listener will print.
+	 * @param useAnsiColors {@code true} to use ANSI color codes to colorize the
+	 *                      output, {@code false} to use monochromatic output.
+	 */
+	public FlatPrintingListener(PrintWriter out, boolean useAnsiColors) {
 		this.out = out;
-		this.disableAnsiColors = disableAnsiColors;
+		this.useAnsiColors = useAnsiColors;
 	}
 
 	@Override
@@ -96,20 +137,21 @@ public class FlatPrintingListener implements TestExecutionListener {
 	}
 
 	private void println(Color color, String message) {
-		if (this.disableAnsiColors) {
-			this.out.println(message);
-		}
-		else {
+		if (this.useAnsiColors) {
 			// Use string concatenation to avoid ANSI disruption on console
 			this.out.println(color + message + NONE);
+		}
+		else {
+			this.out.println(message);
 		}
 	}
 
 	/**
 	 * Indent the given message if it is a multi-line string.
 	 *
-	 * <p>{@link #INDENTATION} is used to prefix the start of each new line
-	 * except the first one.
+	 * <p>
+	 * {@link #INDENTATION} is used to prefix the start of each new line except the
+	 * first one.
 	 *
 	 * @param message the message to indent
 	 * @return indented message

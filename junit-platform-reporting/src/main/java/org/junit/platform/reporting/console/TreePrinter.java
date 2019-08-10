@@ -35,12 +35,12 @@ class TreePrinter {
 
 	private final PrintWriter out;
 	private final Theme theme;
-	private final boolean disableAnsiColors;
+	private final boolean useAnsiColors;
 
-	TreePrinter(PrintWriter out, Theme theme, boolean disableAnsiColors) {
+	TreePrinter(PrintWriter out, Theme theme, boolean useAnsiColors) {
 		this.out = out;
 		this.theme = theme;
-		this.disableAnsiColors = disableAnsiColors;
+		this.useAnsiColors = useAnsiColors;
 	}
 
 	void print(TreeNode node) {
@@ -171,7 +171,7 @@ class TreePrinter {
 	}
 
 	private String color(Color color, String text) {
-		if (disableAnsiColors || color == NONE) {
+		if (!useAnsiColors || color == NONE) {
 			return text;
 		}
 		return color.toString() + text + NONE.toString();
