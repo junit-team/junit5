@@ -57,14 +57,14 @@ jobs:
       with:
         fetch-depth: 10
    
-    - run: choco install openjdk --version 12.0.1
+    - run: choco install openjdk --version 12.0.2
       shell: bash
     
     - name: Test
       run: |
         set -e
         
-        export JAVA_HOME="C:\Program Files\OpenJDK\jdk-12.0.1"
+        export JAVA_HOME="C:\Program Files\OpenJDK\jdk-12.0.2"
         export PATH="$JAVA_HOME/bin:$PATH"
         
         ./gradlew --version
