@@ -38,6 +38,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
@@ -46,6 +49,7 @@ import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
+import org.junit.platform.engine.support.hierarchical.DemoHierarchicalContainerDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 import org.junit.platform.fakes.TestDescriptorStub;
@@ -238,6 +242,70 @@ class LegacyXmlReportGeneratingListenerTests {
 			.containsSubsequence(
 				"<testsuite",
 				"<testcase name=\"test\" classname=\"dummy\" time=\"0\"");
+		// @formatter:on
+	}
+
+	private static DemoHierarchicalTestDescriptor addTest(DemoHierarchicalContainerDescriptor cd, String test,
+			Runnable run) {
+		UniqueId uid = cd.getUniqueId().append("test", test);
+		DemoHierarchicalTestDescriptor td = new DemoHierarchicalTestDescriptor(uid, test, null, run);
+		cd.addChild(td);
+		return td;
+	}
+
+	@Test
+	void writesFileForEachCustomizedRoot(@TempDir Path tempDirectory) throws Exception {
+		DemoHierarchicalTestEngine engine = new DemoHierarchicalTestEngine("dummy");
+		DemoHierarchicalContainerDescriptor cd1 = engine.addContainer("container1", () -> {
+		});
+		DemoHierarchicalContainerDescriptor cd2 = engine.addContainer("container2", () -> {
+		});
+		addTest(cd1, "failingTest1", () -> fail("expected to fail"));
+		addTest(cd1, "failingTest2", () -> fail("expected to fail"));
+		addTest(cd2, "failingTest3", () -> fail("expected to fail"));
+		addTest(cd2, "successfulTest1", () -> {
+		});
+
+		PrintWriter out = new PrintWriter(new StringWriter());
+		LegacyXmlReportGeneratingListener reportListener = new LegacyXmlReportGeneratingListener(tempDirectory, out,
+			x -> {
+				Matcher m = Pattern.compile("container\\d").matcher(x.getUniqueId());
+				return m.find() ? Optional.of(m.group()) : Optional.empty();
+			});
+		Launcher launcher = createLauncher(engine);
+		launcher.registerTestExecutionListeners(reportListener);
+		launcher.execute(request().selectors(selectUniqueId(UniqueId.forEngine(engine.getId()))).build());
+
+		String content = readValidXmlFile(tempDirectory.resolve("TEST-container1.xml"));
+
+		// @formatter:off
+		assertThat(content)
+			.containsSubsequence(
+				"<testsuite name=\"container1\" tests=\"2\" skipped=\"0\" failures=\"2\" errors=\"0\"",
+				"<testcase name=\"failingTest1\"",
+				"</testcase>",
+				"<testcase name=\"failingTest2\"",
+				"</testcase>",
+				"</testsuite>");
+		assertThat(content)
+			.doesNotContain("<testcase name=\"failingTest3\"")
+			.doesNotContain("<testcase name=\"successfulTest1\"");
+		// @formatter:on
+
+		content = readValidXmlFile(tempDirectory.resolve("TEST-container2.xml"));
+
+		// @formatter:off
+		assertThat(content)
+			.containsSubsequence(
+				"<testsuite name=\"container2\" tests=\"2\" skipped=\"0\" failures=\"1\" errors=\"0\"",
+				"<testcase name=\"failingTest3\"",
+				"</testcase>",
+				"<testcase name=\"successfulTest1\"",
+				"</testcase>",
+				"</testsuite>");
+		assertThat(content)
+			.doesNotContain("<testcase name=\"failingTest2\"")
+			.doesNotContain("<testcase name=\"failingTest1\"");
 		// @formatter:on
 	}
 
