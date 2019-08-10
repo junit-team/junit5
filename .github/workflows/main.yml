@@ -21,11 +21,6 @@ jobs:
     - name: Test
       run: |
         set -e
-        # when executing on a build agent (not in a container)
-        # default to Java 12
-        if [ -n "${JAVA_HOME_12_X64}" ]; then
-          export JAVA_HOME="${JAVA_HOME_12_X64}"
-        fi
 
         ./gradlew --version
         ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
@@ -46,11 +41,6 @@ jobs:
     - name: Test
       run: |
         set -e
-        # when executing on a build agent (not in a container)
-        # default to Java 12
-        if [ -n "${JAVA_HOME_12_X64}" ]; then
-          export JAVA_HOME="${JAVA_HOME_12_X64}"
-        fi
 
         ./gradlew --version
         ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
@@ -95,11 +85,9 @@ jobs:
     - name: Test
       run: |
         set -e
-        # when executing on a build agent (not in a container)
-        # default to Java 12
-        if [ -n "${JAVA_HOME_12_X64}" ]; then
-          export JAVA_HOME="${JAVA_HOME_12_X64}"
-        fi
+
+        export JAVA_HOME="${JAVA_HOME_12_X64}"
+        export PATH="$JAVA_HOME/bin:$PATH"
 
         ./gradlew --version
         ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
