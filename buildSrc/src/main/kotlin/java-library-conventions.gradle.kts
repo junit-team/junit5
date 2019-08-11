@@ -50,7 +50,7 @@ tasks.checkstyleMain {
 
 if (project in mavenizedProjects) {
 
-	apply(from = "$rootDir/gradle/publishing.gradle.kts")
+	apply(plugin = "publishing-conventions")
 
 	tasks.javadoc {
 		options {
