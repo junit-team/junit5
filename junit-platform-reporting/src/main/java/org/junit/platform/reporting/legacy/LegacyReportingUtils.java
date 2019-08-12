@@ -8,12 +8,11 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.launcher.listeners;
+package org.junit.platform.reporting.legacy;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
+import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
@@ -22,12 +21,12 @@ import org.junit.platform.launcher.TestPlan;
  * Utility methods for dealing with legacy reporting infrastructure, such as
  * reporting systems built on the Ant-based XML reporting format for JUnit 4.
  *
+ * This class was formerly from {@code junit-platform-launcher}
+ * in {@link org.junit.platform.launcher.listeners} package.
+ *
  * @since 1.0.3
- * @deprecated Use {@link org.junit.platform.reporting.legacy.LegacyReportingUtils}
- * instead.
  */
-@Deprecated
-@API(status = DEPRECATED, since = "1.6")
+@API(status = MAINTAINED, since = "1.6")
 public class LegacyReportingUtils {
 
 	private LegacyReportingUtils() {
@@ -50,36 +49,8 @@ public class LegacyReportingUtils {
 	 *                 never {@code null}
 	 * @see TestIdentifier#getLegacyReportingName
 	 */
+	@SuppressWarnings("deprecation")
 	public static String getClassName(TestPlan testPlan, TestIdentifier testIdentifier) {
-		Preconditions.notNull(testPlan, "testPlan must not be null");
-		Preconditions.notNull(testIdentifier, "testIdentifier must not be null");
-		for (TestIdentifier current = testIdentifier; current != null; current = getParent(testPlan, current)) {
-			ClassSource source = getClassSource(current);
-			if (source != null) {
-				return source.getClassName();
-			}
-		}
-		return getParentLegacyReportingName(testPlan, testIdentifier);
-	}
-
-	private static TestIdentifier getParent(TestPlan testPlan, TestIdentifier testIdentifier) {
-		return testPlan.getParent(testIdentifier).orElse(null);
-	}
-
-	private static ClassSource getClassSource(TestIdentifier current) {
-		// @formatter:off
-		return current.getSource()
-				.filter(ClassSource.class::isInstance)
-				.map(ClassSource.class::cast)
-				.orElse(null);
-		// @formatter:on
-	}
-
-	private static String getParentLegacyReportingName(TestPlan testPlan, TestIdentifier testIdentifier) {
-		// @formatter:off
-		return testPlan.getParent(testIdentifier)
-				.map(TestIdentifier::getLegacyReportingName)
-				.orElse("<unrooted>");
-		// @formatter:on
+		return org.junit.platform.launcher.listeners.LegacyReportingUtils.getClassName(testPlan, testIdentifier);
 	}
 }
