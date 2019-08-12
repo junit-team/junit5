@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.launcher.listeners;
+package org.junit.platform.reporting.legacy;
 
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,6 +37,9 @@ class LegacyReportingUtilsTests {
 
 		assertThat(getClassName(engineDescriptor.getUniqueId())).isEqualTo("<unrooted>");
 		assertThat(getClassName(uniqueId)).isEqualTo("Foo");
+
+		assertThat(getClassNameFromOldLocation(engineDescriptor.getUniqueId())).isEqualTo("<unrooted>");
+		assertThat(getClassNameFromOldLocation(uniqueId)).isEqualTo("Foo");
 	}
 
 	@Test
@@ -58,11 +61,23 @@ class LegacyReportingUtilsTests {
 		assertThat(getClassName(classUniqueId)).isEqualTo(LegacyReportingUtilsTests.class.getName());
 		assertThat(getClassName(subUniqueId)).isEqualTo(LegacyReportingUtilsTests.class.getName());
 		assertThat(getClassName(subSubUniqueId)).isEqualTo(LegacyReportingUtilsTests.class.getName());
+
+		assertThat(getClassNameFromOldLocation(engineDescriptor.getUniqueId())).isEqualTo("<unrooted>");
+		assertThat(getClassNameFromOldLocation(classUniqueId)).isEqualTo(LegacyReportingUtilsTests.class.getName());
+		assertThat(getClassNameFromOldLocation(subUniqueId)).isEqualTo(LegacyReportingUtilsTests.class.getName());
+		assertThat(getClassNameFromOldLocation(subSubUniqueId)).isEqualTo(LegacyReportingUtilsTests.class.getName());
 	}
 
 	private String getClassName(UniqueId uniqueId) {
 		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
 		return LegacyReportingUtils.getClassName(testPlan, testPlan.getTestIdentifier(uniqueId.toString()));
+	}
+
+	@SuppressWarnings("deprecation")
+	private String getClassNameFromOldLocation(UniqueId uniqueId) {
+		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+		return org.junit.platform.launcher.listeners.LegacyReportingUtils.getClassName(testPlan,
+			testPlan.getTestIdentifier(uniqueId.toString()));
 	}
 
 	private TestDescriptor createTestDescriptor(UniqueId uniqueId, String displayName, TestSource source) {
