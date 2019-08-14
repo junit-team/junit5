@@ -27,7 +27,7 @@ import org.junit.platform.launcher.TestPlan;
  * @since 1.0.3
  */
 @API(status = MAINTAINED, since = "1.6")
-public class LegacyReportingUtils {
+public final class LegacyReportingUtils {
 
 	private LegacyReportingUtils() {
 		/* no-op */
