@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -23,6 +24,7 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.in
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -49,6 +51,7 @@ import org.junit.jupiter.engine.execution.injection.sample.NullIntegerParameterR
 import org.junit.jupiter.engine.execution.injection.sample.NumberParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveArrayParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveIntegerParameterResolver;
+import org.junit.jupiter.engine.execution.injection.sample.TypeBasedMapOfListsParameterResolver;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
@@ -470,6 +473,13 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		void testMapOfStrings(Map<String, String> map) {
 			assertNotNull(map);
 			assertEquals("value", map.get("key"));
+		}
+
+		@Test
+		@ExtendWith(TypeBasedMapOfListsParameterResolver.class)
+		void testMapOfLists(Map<String, List<Integer>> map) {
+			assertNotNull(map);
+			assertEquals(asList(1, 42), map.get("ids"));
 		}
 	}
 

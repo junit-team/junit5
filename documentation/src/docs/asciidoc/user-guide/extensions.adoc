@@ -325,8 +325,13 @@ If a _test class_ constructor, _test method_, or _lifecycle method_ (see
 _resolved_ at runtime by a `ParameterResolver`. A `ParameterResolver` can either be
 built-in (see `{TestInfoParameterResolver}`) or <<extensions-registration,registered by
 the user>>. Generally speaking, parameters may be resolved by _name_, _type_,
-_annotation_, or any combination thereof. For concrete examples, consult the source code
-for `{CustomTypeParameterResolver}` and `{CustomAnnotationParameterResolver}`.
+_annotation_, or any combination thereof.
+
+A convenient generic adapter `{TypeBasedParameterResolver}` is available if you want to adopt an injection strategy only based
+on the type of the parameter.
+
+For concrete examples, consult the source code
+for `{CustomTypeParameterResolver}`, `{CustomAnnotationParameterResolver}` and `{TypeBasedMapOfListsParameterResolver}`.
 
 [WARNING]
 ====

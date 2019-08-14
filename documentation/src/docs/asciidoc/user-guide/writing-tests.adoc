@@ -654,6 +654,11 @@ class MyRandomParametersTest {
 For real-world use cases, check out the source code for the `{MockitoExtension}` and the
 `{SpringExtension}`.
 
+A generic`{TypeBasedParameterResolver}` is provided when the type of the parameter to inject is the only condition
+for your `{ParameterResolver}` to be executed. The `supportsParameters` method is implemented behind the scene
+and supports templated types.
+
+
 [[writing-tests-test-interfaces-and-default-methods]]
 === Test Interfaces and Default Methods
 
