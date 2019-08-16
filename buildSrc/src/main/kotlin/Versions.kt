@@ -5,7 +5,7 @@ object Versions {
     // Languages
     val jvmTarget = JavaVersion.VERSION_1_8
     val kotlin = "1.3.40"
-    val groovy = "3.0.0-beta-2"
+    val groovy = "3.0.0-beta-3"
 
     // Dependencies
     val apiGuardian = "1.1.0"
@@ -29,7 +29,6 @@ object Versions {
     val buildScanPlugin = "2.3"
     val gitPublishPlugin = "2.1.1"
     val jmhPlugin = "0.4.8"
-    val nexusPublishPlugin = "0.2.0"
     val shadowPlugin = "5.1.0"
     val spotlessPlugin = "3.23.1"
     val versioningPlugin = "2.8.2"

@@ -1,8 +1,7 @@
 plugins {
 	`java-platform`
+	`publishing-conventions`
 }
-
-apply(from = "$rootDir/gradle/publishing.gradle.kts")
 
 description = "${rootProject.description} (Bill of Materials)"
 

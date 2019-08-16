@@ -1,5 +1,8 @@
-apply(plugin = "de.marcphilipp.nexus-publish")
-apply(plugin = "signing")
+plugins {
+	`maven-publish`
+	signing
+	id("de.marcphilipp.nexus-publish")
+}
 
 val isSnapshot = project.version.toString().contains("SNAPSHOT")
 val isContinuousIntegrationEnvironment = System.getenv("CI")?.toBoolean() ?: false
@@ -10,12 +13,19 @@ val build = tasks[LifecycleBasePlugin.BUILD_TASK_NAME]
 tasks[PublishingPlugin.PUBLISH_LIFECYCLE_TASK_NAME].dependsOn(build)
 tasks[MavenPublishPlugin.PUBLISH_LOCAL_LIFECYCLE_TASK_NAME].dependsOn(build)
 
-configure<SigningExtension> {
+signing {
 	sign(the<PublishingExtension>().publications)
 	setRequired(!(isSnapshot || isContinuousIntegrationEnvironment || isJitPackEnvironment))
 }
 
-configure<PublishingExtension> {
+nexusPublishing {
+	packageGroup.set("org.junit")
+	repositories {
+		sonatype()
+	}
+}
+
+publishing {
 	publications {
 		create<MavenPublication>("maven") {
 			pom {
