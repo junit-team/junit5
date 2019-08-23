@@ -51,16 +51,27 @@ public @interface CsvSource {
 
 	/**
 	 * The column delimiter to use when reading the {@linkplain #value lines}.
-	 * This can't be set simultaneously with {@link #delimiterString delimiterString}.
-	 * If neither attributes are set, the delimiter will be ','.
+	 *
+	 * <p>This is an alternative to {@link #delimiterString} and cannot be
+	 * used in conjunction with {@link #delimiterString}.
+	 *
+	 * <p>Defaults implicitly to {@code ','}, if neither delimiter attribute is
+	 * explicitly set.
 	 */
 	char delimiter() default '\0';
 
 	/**
 	 * The column delimiter to use when reading the {@linkplain #value lines}.
-	 * This can't be set simultaneously with {@link #delimiter delimiter}.
-	 * If neither attributes are set, the delimiter will be ','.
+	 *
+	 * <p>This is an alternative to {@link #delimiter} and cannot be used in
+	 * conjunction with {@link #delimiter}.
+	 *
+	 * <p>Defaults implicitly to {@code ","}, if neither delimiter attribute is
+	 * explicitly set.
+	 *
+	 * @since 5.6
 	 */
+	@API(status = EXPERIMENTAL, since = "5.6")
 	String delimiterString() default "";
 
 	/**

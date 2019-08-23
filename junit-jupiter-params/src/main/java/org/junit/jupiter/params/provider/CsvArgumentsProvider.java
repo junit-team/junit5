@@ -31,17 +31,16 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 	private static final String LINE_SEPARATOR = "\n";
 
 	private CsvSource annotation;
-	private CsvArgumentsParser csvArgumentsParser;
+	private CsvParser csvParser;
 
 	@Override
 	public void accept(CsvSource annotation) {
 		this.annotation = annotation;
-		this.csvArgumentsParser = CsvArgumentsParser.from(annotation);
+		this.csvParser = CsvParserFactory.createParserFor(annotation);
 	}
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		CsvParser csvParser = csvArgumentsParser.getParser();
 		AtomicLong index = new AtomicLong(0);
 
 		// @formatter:off
@@ -49,7 +48,7 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 				.map(line -> {
 					String[] parsedLine = null;
 					try {
-						parsedLine = csvParser.parseLine(line + LINE_SEPARATOR);
+						parsedLine = this.csvParser.parseLine(line + LINE_SEPARATOR);
 					}
 					catch (Throwable throwable) {
 						handleCsvException(throwable, this.annotation);

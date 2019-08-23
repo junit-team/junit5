@@ -40,7 +40,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	private CsvFileSource annotation;
 	private String[] resources;
 	private Charset charset;
-	private CsvArgumentsParser csvArgumentsParser;
+	private CsvParser csvParser;
 	private int numLinesToSkip;
 
 	CsvFileArgumentsProvider() {
@@ -56,7 +56,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 		this.annotation = annotation;
 		this.resources = annotation.resources();
 		this.charset = getCharsetFrom(annotation);
-		this.csvArgumentsParser = CsvArgumentsParser.from(annotation);
+		this.csvParser = CsvParserFactory.createParserFor(annotation);
 		this.numLinesToSkip = annotation.numLinesToSkip();
 	}
 
@@ -72,9 +72,9 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
 		// @formatter:off
-		return Arrays.stream(resources)
+		return Arrays.stream(this.resources)
 				.map(resource -> openInputStream(context, resource))
-				.map(this::createCsvParser)
+				.map(this::beginParsing)
 				.flatMap(this::toStream);
 		// @formatter:on
 	}
@@ -86,15 +86,14 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 			() -> "Classpath resource [" + resource + "] does not exist");
 	}
 
-	private CsvParser createCsvParser(InputStream inputStream) {
-		CsvParser csvParser = csvArgumentsParser.getParser();
+	private CsvParser beginParsing(InputStream inputStream) {
 		try {
-			csvParser.beginParsing(inputStream, charset);
+			this.csvParser.beginParsing(inputStream, this.charset);
 		}
 		catch (Throwable throwable) {
 			handleCsvException(throwable, this.annotation);
 		}
-		return csvParser;
+		return this.csvParser;
 	}
 
 	private Stream<Arguments> toStream(CsvParser csvParser) {

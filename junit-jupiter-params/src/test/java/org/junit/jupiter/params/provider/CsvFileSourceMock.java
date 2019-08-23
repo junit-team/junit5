@@ -13,6 +13,9 @@ package org.junit.jupiter.params.provider;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * @since 5.6
+ */
 class CsvFileSourceMock {
 
 	private String[] resources = new String[] { "foo/bar" };
@@ -80,4 +83,5 @@ class CsvFileSourceMock {
 		when(annotation.numLinesToSkip()).thenReturn(numLinesToSkip);
 		return annotation;
 	}
+
 }

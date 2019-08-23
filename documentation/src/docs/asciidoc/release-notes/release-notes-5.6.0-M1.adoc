@@ -47,8 +47,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Support for String delimiters in `@CsvSource` and `@CsvFileSource`.
 * Documented support for comments in CSV files loaded via `@CsvFileSource`.
-* Add support for String delimiters in `@CsvSource` and `@CsvFileSource`.
 
 
 [[release-notes-5.6.0-M1-junit-vintage]]

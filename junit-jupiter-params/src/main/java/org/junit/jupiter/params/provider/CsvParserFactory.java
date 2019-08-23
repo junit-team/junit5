@@ -15,9 +15,12 @@ import java.lang.annotation.Annotation;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 
-import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.Preconditions;
 
-class CsvArgumentsParser {
+/**
+ * @since 5.6
+ */
+class CsvParserFactory {
 
 	private static final String DEFAULT_DELIMITER = ",";
 	private static final String LINE_SEPARATOR = "\n";
@@ -25,33 +28,20 @@ class CsvArgumentsParser {
 	private static final char DOUBLE_QUOTE = '"';
 	private static final char EMPTY_CHAR = '\0';
 
-	private String delimiter;
-	private String lineSeparator;
-	private char quote;
-	private String emptyValue;
-
-	private CsvArgumentsParser(String delimiter, String lineSeparator, char quote, String emptyValue) {
-		this.delimiter = delimiter;
-		this.lineSeparator = lineSeparator;
-		this.quote = quote;
-		this.emptyValue = emptyValue;
+	static CsvParser createParserFor(CsvSource annotation) {
+		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
+		return createParser(delimiter, LINE_SEPARATOR, SINGLE_QUOTE, annotation.emptyValue());
 	}
 
-	public static CsvArgumentsParser from(CsvSource annotation) {
+	static CsvParser createParserFor(CsvFileSource annotation) {
 		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
-		return new CsvArgumentsParser(delimiter, LINE_SEPARATOR, SINGLE_QUOTE, annotation.emptyValue());
-	}
-
-	public static CsvArgumentsParser from(CsvFileSource annotation) {
-		String delimiter = selectDelimiter(annotation, annotation.delimiter(), annotation.delimiterString());
-		return new CsvArgumentsParser(delimiter, annotation.lineSeparator(), DOUBLE_QUOTE, annotation.emptyValue());
+		return createParser(delimiter, annotation.lineSeparator(), DOUBLE_QUOTE, annotation.emptyValue());
 	}
 
 	private static String selectDelimiter(Annotation annotation, char delimiter, String delimiterString) {
-		if (delimiter != EMPTY_CHAR && !delimiterString.isEmpty()) {
-			throw new PreconditionViolationException(
-				"delimiter and delimiterString cannot be simultaneously set in " + annotation);
-		}
+		Preconditions.condition(delimiter == EMPTY_CHAR || delimiterString.isEmpty(),
+			() -> "The delimiter and delimiterString attributes cannot be set simultaneously in " + annotation);
+
 		if (delimiter != EMPTY_CHAR) {
 			return String.valueOf(delimiter);
 		}
@@ -61,12 +51,13 @@ class CsvArgumentsParser {
 		return DEFAULT_DELIMITER;
 	}
 
-	CsvParser getParser() {
-		CsvParserSettings csvParserSettings = buildParserSettings();
-		return new CsvParser(csvParserSettings);
+	private static CsvParser createParser(String delimiter, String lineSeparator, char quote, String emptyValue) {
+		return new CsvParser(createParserSettings(delimiter, lineSeparator, quote, emptyValue));
 	}
 
-	private CsvParserSettings buildParserSettings() {
+	private static CsvParserSettings createParserSettings(String delimiter, String lineSeparator, char quote,
+			String emptyValue) {
+
 		CsvParserSettings settings = new CsvParserSettings();
 		settings.getFormat().setDelimiter(delimiter);
 		settings.getFormat().setLineSeparator(lineSeparator);
