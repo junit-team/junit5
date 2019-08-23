@@ -181,6 +181,13 @@ public @interface <span class="memberNameLabel">CsvSource</span></pre>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delimiterString()">delimiterString</a></span></code></th>
+<td class="colLast">
+<div class="block">The column delimiter to use when reading the <a href="#value()">lines</a>.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#emptyValue()">emptyValue</a></span></code></th>
 <td class="colLast">
 <div class="block">The empty value to use when reading the <a href="#value()">lines</a>.</div>
@@ -234,10 +241,45 @@ public @interface <span class="memberNameLabel">CsvSource</span></pre>
 <pre>char&nbsp;delimiter</pre>
 <div class="block">The column delimiter to use when reading the <a href="#value()">lines</a>.
 
- <p>Defaults to <code>','</code>.</div>
+ <p>This is an alternative to <a href="#delimiterString()"><code>delimiterString()</code></a> and cannot be
+ used in conjunction with <a href="#delimiterString()"><code>delimiterString()</code></a>.
+
+ <p>Defaults implicitly to <code>','</code>, if neither delimiter attribute is
+ explicitly set.</div>
 <dl>
 <dt>Default:</dt>
-<dd>','</dd>
+<dd>'\u0000'</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="delimiterString()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>delimiterString</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.6")
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;delimiterString</pre>
+<div class="block">The column delimiter to use when reading the <a href="#value()">lines</a>.
+
+ <p>This is an alternative to <a href="#delimiter()"><code>delimiter()</code></a> and cannot be used in
+ conjunction with <a href="#delimiter()"><code>delimiter()</code></a>.
+
+ <p>Defaults implicitly to <code>","</code>, if neither delimiter attribute is
+ explicitly set.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.6</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
 </dl>
 </li>
 </ul>

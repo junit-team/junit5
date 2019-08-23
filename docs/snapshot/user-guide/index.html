@@ -3547,6 +3547,12 @@ qualified method name</em> as demonstrated in the following example.</p>
 </div>
 </div>
 <div class="paragraph">
+<p>The default delimiter is a comma (<code>,</code>), but you can use another character by setting the
+<code>delimiter</code> attribute. Alternatively, the <code>delimiterString</code> attribute allows you to use a
+<code>String</code> delimiter instead of a single character. However, both delimiter attributes
+cannot be set simultaneously.</p>
+</div>
+<div class="paragraph">
 <p><code>@CsvSource</code> uses a single quote <code>'</code> as its quote character. See the <code>'lemon, lime'</code> value
 in the example above and in the table below. An empty, quoted value <code>''</code> results in an
 empty <code>String</code> unless the <code>emptyValue</code> attribute is set; whereas, an entirely <em>empty</em>
@@ -3589,6 +3595,12 @@ the target type of a <code>null</code> reference is a primitive type.</p>
 <div class="paragraph">
 <p><code>@CsvFileSource</code> lets you use CSV files from the classpath. Each line from a CSV file
 results in one invocation of the parameterized test.</p>
+</div>
+<div class="paragraph">
+<p>The default delimiter is a comma (<code>,</code>), but you can use another character by setting the
+<code>delimiter</code> attribute. Alternatively, the <code>delimiterString</code> attribute allows you to use a
+<code>String</code> delimiter instead of a single character. However, both delimiter attributes
+cannot be set simultaneously.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -9605,7 +9617,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-08-08 17:37:28 UTC
+Last updated 2019-08-23 09:56:45 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
