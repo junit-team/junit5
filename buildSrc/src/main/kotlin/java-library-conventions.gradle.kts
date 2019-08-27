@@ -152,32 +152,35 @@ tasks.withType<JavaCompile>().configureEach {
 	options.encoding = "UTF-8"
 }
 
-val compileModule by tasks.registering(JavaCompile::class) {
-	destinationDir = file("$buildDir/classes/java/module")
-	source = fileTree("src/module/$javaModuleName")
-	sourceCompatibility = "9"
-	targetCompatibility = "9"
-	classpath = files()
-	options.compilerArgs.addAll(listOf(
-			// "-verbose",
-			// Suppress warnings for automatic modules: org.apiguardian.api, org.opentest4j
-			"-Xlint:all,-requires-automatic,-requires-transitive-automatic",
-			"--release", "9",
-			"--module-version", "${project.version}",
-			"--module-source-path", files(modularProjects.map { "${it.projectDir}/src/module" }).asPath
-	))
-	options.compilerArgumentProviders.add(ModulePathArgumentProvider())
-	options.compilerArgumentProviders.addAll(modularProjects.map { PatchModuleArgumentProvider(it) })
-}
-
 tasks.compileJava {
 	// See: https://docs.oracle.com/en/java/javase/12/tools/javac.html
 	options.compilerArgs.addAll(listOf(
 			"-Xlint:all", // Enables all recommended warnings.
 			"-Werror" // Terminates compilation when warnings occur.
 	))
-	if (modularProjects.contains(project)) {
-		finalizedBy(compileModule)
+}
+
+if (modularProjects.contains(project)) {
+	val compileModule by tasks.registering(JavaCompile::class) {
+		destinationDir = file("$buildDir/classes/java/module")
+		source = fileTree("src/module/$javaModuleName")
+		sourceCompatibility = "9"
+		targetCompatibility = "9"
+		classpath = files()
+		options.compilerArgs.addAll(listOf(
+				// "-verbose",
+				// Suppress warnings for automatic modules: org.apiguardian.api, org.opentest4j
+				"-Xlint:all,-requires-automatic,-requires-transitive-automatic",
+				"--release", "9",
+				"--module-version", "${project.version}",
+				"--module-source-path", files(modularProjects.map { "${it.projectDir}/src/module" }).asPath
+		))
+		options.compilerArgumentProviders.add(ModulePathArgumentProvider())
+		options.compilerArgumentProviders.addAll(modularProjects.map { PatchModuleArgumentProvider(it) })
+		mustRunAfter(tasks.compileJava)
+	}
+	tasks.classes {
+		dependsOn(compileModule)
 	}
 }
 
