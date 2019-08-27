@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * {@link ParameterResolver} adapter which resolves a parameter based on its exact type.
@@ -50,18 +51,31 @@ public abstract class TypeBasedParameterResolver<T> implements ParameterResolver
 	}
 
 	private Type enclosedTypeOfParameterResolver() {
-		return findTypeBasedParameterResolverSuperclass(getClass()).getActualTypeArguments()[0];
+		ParameterizedType typeBasedParameterResolverSuperclass = findTypeBasedParameterResolverSuperclass(getClass());
+		Preconditions.notNull(typeBasedParameterResolverSuperclass,
+			() -> String.format(
+				"Failed to discover parameter type supported by %s; "
+						+ "potentially caused by lacking parameterized type in class declaration.",
+				getClass().getName()));
+		return typeBasedParameterResolverSuperclass.getActualTypeArguments()[0];
 	}
 
-	private ParameterizedType findTypeBasedParameterResolverSuperclass(Class<?> subclass) {
-		Type genericSuperclass = subclass.getGenericSuperclass();
+	private ParameterizedType findTypeBasedParameterResolverSuperclass(Class<?> clazz) {
+		Class<?> superclass = clazz.getSuperclass();
+
+		// Abort?
+		if (superclass == null || superclass == Object.class) {
+			return null;
+		}
+
+		Type genericSuperclass = clazz.getGenericSuperclass();
 		if (genericSuperclass instanceof ParameterizedType) {
 			Type rawType = ((ParameterizedType) genericSuperclass).getRawType();
 			if (rawType == TypeBasedParameterResolver.class) {
 				return (ParameterizedType) genericSuperclass;
 			}
 		}
-		return findTypeBasedParameterResolverSuperclass(subclass.getSuperclass());
+		return findTypeBasedParameterResolverSuperclass(superclass);
 	}
 
 }
