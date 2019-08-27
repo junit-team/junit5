@@ -22,47 +22,46 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
 /**
- * {@link ParameterResolver} adapter which resolve a parameter based on its exact type.
+ * {@link ParameterResolver} adapter which resolves a parameter based on its exact type.
  *
- * @param <T> the type of the parameter to resolve
+ * @param <T> the type of the parameter supported by this {@code ParameterResolver}
  * @since 5.6
  */
-@API(status = EXPERIMENTAL)
+@API(status = EXPERIMENTAL, since = "5.6")
 public abstract class TypeBasedParameterResolver<T> implements ParameterResolver {
 
 	private final Type supportedParameterType;
 
 	public TypeBasedParameterResolver() {
-		supportedParameterType = enclosedTypeOfParameterResolver();
+		this.supportedParameterType = enclosedTypeOfParameterResolver();
+	}
+
+	@Override
+	public final boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		return this.supportedParameterType.equals(getParameterType(parameterContext));
 	}
 
 	@Override
 	public abstract T resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException;
 
-	@Override
-	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-			throws ParameterResolutionException {
-		return supportedParameterType.equals(getParameterType(parameterContext));
-	}
-
 	private Type getParameterType(ParameterContext parameterContext) {
 		return parameterContext.getParameter().getParameterizedType();
 	}
 
 	private Type enclosedTypeOfParameterResolver() {
-		return ((ParameterizedType) findTypeBasedParameterResolverSuperclass(
-			this.getClass())).getActualTypeArguments()[0];
+		return findTypeBasedParameterResolverSuperclass(getClass()).getActualTypeArguments()[0];
 	}
 
-	private Type findTypeBasedParameterResolverSuperclass(Class<?> subClass) {
-		Type genericSuperclass = subClass.getGenericSuperclass();
+	private ParameterizedType findTypeBasedParameterResolverSuperclass(Class<?> subclass) {
+		Type genericSuperclass = subclass.getGenericSuperclass();
 		if (genericSuperclass instanceof ParameterizedType) {
 			Type rawType = ((ParameterizedType) genericSuperclass).getRawType();
 			if (rawType == TypeBasedParameterResolver.class) {
-				return genericSuperclass;
+				return (ParameterizedType) genericSuperclass;
 			}
 		}
-		return findTypeBasedParameterResolverSuperclass(subClass.getSuperclass());
+		return findTypeBasedParameterResolverSuperclass(subclass.getSuperclass());
 	}
+
 }

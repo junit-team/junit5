@@ -122,7 +122,7 @@ endif::[]
 // Jupiter Examples
 :CustomAnnotationParameterResolver:          {current-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomAnnotationParameterResolver.java[CustomAnnotationParameterResolver]
 :CustomTypeParameterResolver:                {current-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/CustomTypeParameterResolver.java[CustomTypeParameterResolver]
-:TypeBasedMapOfListsParameterResolver        {current-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/TypeBasedMapOfListsParameterResolver.java[TypeBasedMapOfListsParameterResolver]
+:MapOfListsTypeBasedParameterResolver:       {current-branch}/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/MapOfListsTypeBasedParameterResolver.java[MapOfListsTypeBasedParameterResolver]
 // Jupiter Migration Support
 :EnableJUnit4MigrationSupport:               {javadoc-root}/org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.html[@EnableJUnit4MigrationSupport]
 :EnableRuleMigrationSupport:                 {javadoc-root}/org/junit/jupiter/migrationsupport/rules/EnableRuleMigrationSupport.html[@EnableRuleMigrationSupport]

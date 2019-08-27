@@ -46,12 +46,12 @@ import org.junit.jupiter.engine.execution.injection.sample.CustomAnnotation;
 import org.junit.jupiter.engine.execution.injection.sample.CustomAnnotationParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.CustomType;
 import org.junit.jupiter.engine.execution.injection.sample.CustomTypeParameterResolver;
+import org.junit.jupiter.engine.execution.injection.sample.MapOfListsTypeBasedParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.MapOfStringsParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.NullIntegerParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.NumberParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveArrayParameterResolver;
 import org.junit.jupiter.engine.execution.injection.sample.PrimitiveIntegerParameterResolver;
-import org.junit.jupiter.engine.execution.injection.sample.TypeBasedMapOfListsParameterResolver;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
@@ -491,7 +491,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	static class TypeBasedParameterResolverTestCase {
 		@Test
-		@ExtendWith(TypeBasedMapOfListsParameterResolver.class)
+		@ExtendWith(MapOfListsTypeBasedParameterResolver.class)
 		void testMapOfLists(Map<String, List<Integer>> map) {
 			assertNotNull(map);
 			assertEquals(asList(1, 42), map.get("ids"));

@@ -15,16 +15,18 @@ import java.util.Map;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.support.TypeBasedParameterResolver;
 
 /**
  * @since 5.6
  */
-public class TypeBasedMapOfListsParameterResolver extends TypeBasedParameterResolver<Map<String, List<Integer>>> {
+public class MapOfListsTypeBasedParameterResolver extends TypeBasedParameterResolver<Map<String, List<Integer>>> {
+
 	@Override
 	public Map<String, List<Integer>> resolveParameter(ParameterContext parameterContext,
-			ExtensionContext extensionContext) throws ParameterResolutionException {
+			ExtensionContext extensionContext) {
+
 		return Map.of("ids", List.of(1, 42));
 	}
+
 }

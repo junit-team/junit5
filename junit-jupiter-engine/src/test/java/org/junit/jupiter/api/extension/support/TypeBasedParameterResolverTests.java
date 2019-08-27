@@ -32,11 +32,14 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.mockito.Mockito;
 
-class TypeBasedParameterResolverTest {
+/**
+ * @since 5.6
+ */
+class TypeBasedParameterResolverTests {
 
-	private ParameterResolver basicTypeParameterResolver = new BasicTypeParameterResolver();
-	private ParameterResolver subClassedBasicTypeParameterResolver = new SubClassedBasicTypeParameterResolver();
-	private ParameterResolver parametrizedTypeParameterResolver = new ParametrizedTypeParameterResolver();
+	private final ParameterResolver basicTypeParameterResolver = new BasicTypeParameterResolver();
+	private final ParameterResolver subClassedBasicTypeParameterResolver = new SubClassedBasicTypeParameterResolver();
+	private final ParameterResolver parametrizedTypeParameterResolver = new ParameterizedTypeParameterResolver();
 
 	@Test
 	void supportsParameterForBasicTypes() {
@@ -49,11 +52,11 @@ class TypeBasedParameterResolverTest {
 	}
 
 	@Test
-	void supportsParameterForParametrizedTypes() {
-		Parameter parameter1 = findParameterOfMethod("methodWithParametrizedTypeParameter", Map.class);
+	void supportsParameterForParameterizedTypes() {
+		Parameter parameter1 = findParameterOfMethod("methodWithParameterizedTypeParameter", Map.class);
 		assertTrue(parametrizedTypeParameterResolver.supportsParameter(parameterContext(parameter1), null));
 
-		Parameter parameter3 = findParameterOfMethod("methodWithAnotherParametrizedTypeParameter", Map.class);
+		Parameter parameter3 = findParameterOfMethod("methodWithAnotherParameterizedTypeParameter", Map.class);
 		assertFalse(parametrizedTypeParameterResolver.supportsParameter(parameterContext(parameter3), null));
 	}
 
@@ -65,7 +68,7 @@ class TypeBasedParameterResolverTest {
 		assertEquals("Displaying TestAnnotation",
 			basicTypeParameterResolver.resolveParameter(parameterContext, extensionContext));
 
-		Parameter parameter2 = findParameterOfMethod("methodWithParametrizedTypeParameter", Map.class);
+		Parameter parameter2 = findParameterOfMethod("methodWithParameterizedTypeParameter", Map.class);
 		assertEquals(Map.of("ids", List.of(1, 42)),
 			parametrizedTypeParameterResolver.resolveParameter(parameterContext(parameter2), extensionContext));
 	}
@@ -87,7 +90,7 @@ class TypeBasedParameterResolverTest {
 		return method.getParameters()[0];
 	}
 
-	class BasicTypeParameterResolver extends TypeBasedParameterResolver<String> {
+	static class BasicTypeParameterResolver extends TypeBasedParameterResolver<String> {
 
 		@Override
 		public String resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
@@ -97,10 +100,11 @@ class TypeBasedParameterResolverTest {
 		}
 	}
 
-	class SubClassedBasicTypeParameterResolver extends BasicTypeParameterResolver {
+	static class SubClassedBasicTypeParameterResolver extends BasicTypeParameterResolver {
 	}
 
-	class ParametrizedTypeParameterResolver extends TypeBasedParameterResolver<Map<String, List<Integer>>> {
+	static class ParameterizedTypeParameterResolver extends TypeBasedParameterResolver<Map<String, List<Integer>>> {
+
 		@Override
 		public Map<String, List<Integer>> resolveParameter(ParameterContext parameterContext,
 				ExtensionContext extensionContext) throws ParameterResolutionException {
@@ -113,17 +117,19 @@ class TypeBasedParameterResolverTest {
 	@interface TestAnnotation {
 	}
 
-	class Sample {
+	static class Sample {
+
 		void methodWithBasicTypeParameter(@TestAnnotation String string) {
 		}
 
 		void methodWithObjectParameter(Object nothing) {
 		}
 
-		void methodWithParametrizedTypeParameter(Map<String, List<Integer>> map) {
+		void methodWithParameterizedTypeParameter(Map<String, List<Integer>> map) {
 		}
 
-		void methodWithAnotherParametrizedTypeParameter(Map<String, List<Object>> nothing) {
+		void methodWithAnotherParameterizedTypeParameter(Map<String, List<Object>> nothing) {
 		}
 	}
+
 }

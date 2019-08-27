@@ -321,18 +321,18 @@ For a concrete example, consult the source code for the `{MockitoExtension}` and
 runtime.
 
 If a _test class_ constructor, _test method_, or _lifecycle method_ (see
-<<writing-tests-classes-and-methods>>) accepts a parameter, the parameter must be
+<<writing-tests-classes-and-methods>>) declares a parameter, the parameter must be
 _resolved_ at runtime by a `ParameterResolver`. A `ParameterResolver` can either be
 built-in (see `{TestInfoParameterResolver}`) or <<extensions-registration,registered by
 the user>>. Generally speaking, parameters may be resolved by _name_, _type_,
 _annotation_, or any combination thereof.
 
-A convenient generic adapter `{TypeBasedParameterResolver}` is available if you want to
-adopt an injection strategy only based on the type of the parameter.
+If you wish to implement a custom `{ParameterResolver}` that resolves parameters based
+solely on the type of the parameter, you may find it convenient to extend the
+`{TypeBasedParameterResolver}` which serves as a generic adapter for such use cases.
 
-For concrete examples, consult the source code
-for `{CustomTypeParameterResolver}`, `{CustomAnnotationParameterResolver}` and
-`{TypeBasedMapOfListsParameterResolver}`.
+For concrete examples, consult the source code for `{CustomTypeParameterResolver}`,
+`{CustomAnnotationParameterResolver}`, and `{MapOfListsTypeBasedParameterResolver}`.
 
 [WARNING]
 ====
