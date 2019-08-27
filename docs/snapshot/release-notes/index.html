@@ -585,6 +585,33 @@ table.CodeRay td.code>pre{padding:0}
 reference documentation for programmers writing tests, extension authors, and engine
 authors as well as build tool and IDE vendors.</p>
 </div>
+<div class="paragraph">
+<p>:TypeBasedMapOfListsParameterResolver        <a href="https://github.com/junit-team/junit5/tree/master/junit-jupiter-engine/src/test/java/org/junit/jupiter/engine/execution/injection/sample/TypeBasedMapOfListsParameterResolver.java">TypeBasedMapOfListsParameterResolver</a>
+:EnableJUnit4MigrationSupport:               <a href="../api/org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.html">@EnableJUnit4MigrationSupport</a>
+:EnableRuleMigrationSupport:                 <a href="../api/org/junit/jupiter/migrationsupport/rules/EnableRuleMigrationSupport.html">@EnableRuleMigrationSupport</a>
+:junit-vintage-engine:                       <a href="../api/org/junit/vintage/engine/package-summary.html">junit-vintage-engine</a>
+:junit5-samples-repo:                        <a href="https://github.com/junit-team/junit5-samples" class="bare">https://github.com/junit-team/junit5-samples</a>
+:junit5-jupiter-starter-ant:                 {junit5-samples-repo}/tree/master/junit5-jupiter-starter-ant[junit5-jupiter-starter-ant]
+:junit5-jupiter-starter-gradle-groovy:       {junit5-samples-repo}/tree/master/junit5-jupiter-starter-gradle-groovy[junit5-jupiter-starter-gradle-groovy]
+:junit5-jupiter-starter-gradle-kotlin:       {junit5-samples-repo}/tree/master/junit5-jupiter-starter-gradle-kotlin[junit5-jupiter-starter-gradle-kotlin]
+:junit5-jupiter-starter-gradle:              {junit5-samples-repo}/tree/master/junit5-jupiter-starter-gradle[junit5-jupiter-starter-gradle]
+:junit5-jupiter-starter-maven:               {junit5-samples-repo}/tree/master/junit5-jupiter-starter-maven[junit5-jupiter-starter-maven]
+:RandomParametersExtension:                  {junit5-samples-repo}/tree/master/junit5-jupiter-extensions/src/main/java/com/example/random/RandomParametersExtension.java[RandomParametersExtension]
+:API:                                        <a href="https://apiguardian-team.github.io/apiguardian/docs/current/api/">@API</a>
+:API_Guardian:                               <a href="https://github.com/apiguardian-team/apiguardian">@API Guardian</a>
+:AssertJ:                                    <a href="https://joel-costigliola.github.io/assertj/">AssertJ</a>
+:Gitter:                                     <a href="https://gitter.im/junit-team/junit5">Gitter</a>
+:Hamcrest:                                   <a href="https://hamcrest.org/JavaHamcrest/">Hamcrest</a>
+:Log4j:                                      <a href="https://logging.apache.org/log4j/2.x/">Log4j</a>
+:Log4j_JDK_Logging_Adapter:                  <a href="https://logging.apache.org/log4j/2.x/log4j-jul/index.html">Log4j JDK Logging Adapter</a>
+:Logback:                                    <a href="https://logback.qos.ch/">Logback</a>
+:LogManager:                                 <a href="https://docs.oracle.com/javase/8/docs/api/java/util/logging/LogManager.html">LogManager</a>
+:Maven_Central:                              <a href="https://search.maven.org/">Maven Central</a>
+:MockitoExtension:                           <a href="https://github.com/mockito/mockito/blob/release/2.x/subprojects/junit-jupiter/src/main/java/org/mockito/junit/jupiter/MockitoExtension.java">MockitoExtension</a>
+:SpringExtension:                            <a href="https://github.com/spring-projects/spring-framework/tree/master/spring-test/src/main/java/org/springframework/test/context/junit/jupiter/SpringExtension.java">SpringExtension</a>
+:StackOverflow:                              <a href="https://stackoverflow.com/questions/tagged/junit5">Stack Overflow</a>
+:Truth:                                      <a href="https://truth.dev/">Truth</a></p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -633,6 +660,11 @@ will be removed in JUnit Platform 1.7.0.</p>
 <li>
 <p>New <code>printFailuresTo(PrintWriter, int)</code> method in <code>TestExecutionSummary</code> that allows one
 to specify the maximum number of lines to print for exception stack traces.</p>
+</li>
+<li>
+<p>New <code>TypeBasedParameterResolver&lt;T&gt;</code> - a generic adapter of <code>ParameterResolver</code> - that
+eases the creation of custom resolver by providing a type-based <code>supportsParameter</code>
+default implementation.</p>
 </li>
 </ul>
 </div>
@@ -798,7 +830,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-08-23 09:56:45 UTC
+Last updated 2019-08-27 09:49:28 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
