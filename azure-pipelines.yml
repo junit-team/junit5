@@ -93,8 +93,8 @@ jobs:
         ./gradlew --scan publish -x check
       displayName: Publish
       env:
-        ORG_GRADLE_PROJECT_nexusUsername: $(nexusUsername)
-        ORG_GRADLE_PROJECT_nexusPassword: $(nexusPassword)
+        ORG_GRADLE_PROJECT_sonatypeUsername: $(sonatypeUsername)
+        ORG_GRADLE_PROJECT_sonatypePassword: $(sonatypePassword)
   condition: and(succeeded(), and(eq(variables['System.PullRequest.IsFork'], False), and(eq(variables['Build.Reason'], 'IndividualCI'), or(startsWith(variables['Build.SourceBranch'], 'refs/heads/releases/'), eq(variables['Build.SourceBranch'], 'refs/heads/master')))))
 
 - job: update_documentation
