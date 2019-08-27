@@ -10,8 +10,6 @@
 
 package org.junit.jupiter.engine.execution.injection.sample;
 
-import static java.util.Arrays.asList;
-
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +25,6 @@ public class TypeBasedMapOfListsParameterResolver extends TypeBasedParameterReso
 	@Override
 	public Map<String, List<Integer>> resolveParameter(ParameterContext parameterContext,
 			ExtensionContext extensionContext) throws ParameterResolutionException {
-		return Map.of("ids", asList(1, 42));
+		return Map.of("ids", List.of(1, 42));
 	}
 }

@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api.extension.support;
 
-import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -67,7 +66,7 @@ class TypeBasedParameterResolverTest {
 			basicTypeParameterResolver.resolveParameter(parameterContext, extensionContext));
 
 		Parameter parameter2 = findParameterOfMethod("methodWithParametrizedTypeParameter", Map.class);
-		assertEquals(Map.of("ids", asList(1, 42)),
+		assertEquals(Map.of("ids", List.of(1, 42)),
 			parametrizedTypeParameterResolver.resolveParameter(parameterContext(parameter2), extensionContext));
 	}
 
@@ -93,7 +92,7 @@ class TypeBasedParameterResolverTest {
 		@Override
 		public String resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 				throws ParameterResolutionException {
-			Class parameterAnnotation = parameterContext.getParameter().getAnnotations()[0].annotationType();
+			Class<?> parameterAnnotation = parameterContext.getParameter().getAnnotations()[0].annotationType();
 			return String.format("%s %s", extensionContext.getDisplayName(), parameterAnnotation.getSimpleName());
 		}
 	}
@@ -105,7 +104,7 @@ class TypeBasedParameterResolverTest {
 		@Override
 		public Map<String, List<Integer>> resolveParameter(ParameterContext parameterContext,
 				ExtensionContext extensionContext) throws ParameterResolutionException {
-			return Map.of("ids", asList(1, 42));
+			return Map.of("ids", List.of(1, 42));
 		}
 	}
 
