@@ -117,18 +117,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
-<dd><code>T</code> - the type of the parameter to resolve</dd>
+<dd><code>T</code> - the type of the parameter supported by this <code>ParameterResolver</code></dd>
 </dl>
 <dl>
 <dt>All Implemented Interfaces:</dt>
 <dd><code><a href="../Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a></code>, <code><a href="../ParameterResolver.html" title="interface in org.junit.jupiter.api.extension">ParameterResolver</a></code></dd>
 </dl>
 <hr>
-<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>)
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.6")
 public abstract class <span class="typeNameLabel">TypeBasedParameterResolver&lt;T&gt;</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
 implements <a href="../ParameterResolver.html" title="interface in org.junit.jupiter.api.extension">ParameterResolver</a></pre>
-<div class="block"><a href="../ParameterResolver.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterResolver</code></a> adapter which resolve a parameter based on its exact type.</div>
+<div class="block"><a href="../ParameterResolver.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterResolver</code></a> adapter which resolves a parameter based on its exact type.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.6</dd>
@@ -246,10 +247,42 @@ implements <a href="../ParameterResolver.html" title="interface in org.junit.jup
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="resolveParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">
+<a id="supportsParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">
 <!--   -->
 </a>
 <ul class="blockList">
+<li class="blockList">
+<h4>supportsParameter</h4>
+<pre class="methodSignature">public final&nbsp;boolean&nbsp;supportsParameter&#8203;(<a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;parameterContext,
+                                       <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../ParameterResolver.html#supportsParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">ParameterResolver</a></code></span></div>
+<div class="block">Determine if this resolver supports resolution of an argument for the
+ <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Parameter</code></a> in the supplied <a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterContext</code></a> for the supplied
+ <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>.
+
+ <p>The <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> or <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Constructor</code></a>
+ in which the parameter is declared can be retrieved via
+ <a href="../ParameterContext.html#getDeclaringExecutable()"><code>ParameterContext.getDeclaringExecutable()</code></a>.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../ParameterResolver.html#supportsParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">supportsParameter</a></code>&nbsp;in interface&nbsp;<code><a href="../ParameterResolver.html" title="interface in org.junit.jupiter.api.extension">ParameterResolver</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>parameterContext</code> - the context for the parameter for which an argument should
+ be resolved; never <code>null</code></dd>
+<dd><code>extensionContext</code> - the extension context for the <code>Executable</code>
+ about to be invoked; never <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd><code>true</code> if this resolver can resolve an argument for the parameter</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../ParameterResolver.html#resolveParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)"><code>ParameterResolver.resolveParameter(org.junit.jupiter.api.extension.ParameterContext, org.junit.jupiter.api.extension.ExtensionContext)</code></a>, 
+<a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterContext</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="resolveParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">
+<!--   -->
+</a>
+<ul class="blockListLast">
 <li class="blockList">
 <h4>resolveParameter</h4>
 <pre class="methodSignature">public abstract&nbsp;<a href="TypeBasedParameterResolver.html" title="type parameter in TypeBasedParameterResolver">T</a>&nbsp;resolveParameter&#8203;(<a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;parameterContext,
@@ -281,41 +314,6 @@ implements <a href="../ParameterResolver.html" title="interface in org.junit.jup
 <dd><code><a href="../ParameterResolutionException.html" title="class in org.junit.jupiter.api.extension">ParameterResolutionException</a></code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../ParameterResolver.html#supportsParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)"><code>ParameterResolver.supportsParameter(org.junit.jupiter.api.extension.ParameterContext, org.junit.jupiter.api.extension.ExtensionContext)</code></a>, 
-<a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterContext</code></a></dd>
-</dl>
-</li>
-</ul>
-<a id="supportsParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>supportsParameter</h4>
-<pre class="methodSignature">public&nbsp;boolean&nbsp;supportsParameter&#8203;(<a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;parameterContext,
-                                 <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)
-                          throws <a href="../ParameterResolutionException.html" title="class in org.junit.jupiter.api.extension">ParameterResolutionException</a></pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../ParameterResolver.html#supportsParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">ParameterResolver</a></code></span></div>
-<div class="block">Determine if this resolver supports resolution of an argument for the
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Parameter.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Parameter</code></a> in the supplied <a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterContext</code></a> for the supplied
- <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>.
-
- <p>The <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Method</code></a> or <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>Constructor</code></a>
- in which the parameter is declared can be retrieved via
- <a href="../ParameterContext.html#getDeclaringExecutable()"><code>ParameterContext.getDeclaringExecutable()</code></a>.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../ParameterResolver.html#supportsParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">supportsParameter</a></code>&nbsp;in interface&nbsp;<code><a href="../ParameterResolver.html" title="interface in org.junit.jupiter.api.extension">ParameterResolver</a></code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>parameterContext</code> - the context for the parameter for which an argument should
- be resolved; never <code>null</code></dd>
-<dd><code>extensionContext</code> - the extension context for the <code>Executable</code>
- about to be invoked; never <code>null</code></dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd><code>true</code> if this resolver can resolve an argument for the parameter</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="../ParameterResolutionException.html" title="class in org.junit.jupiter.api.extension">ParameterResolutionException</a></code></dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../ParameterResolver.html#resolveParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)"><code>ParameterResolver.resolveParameter(org.junit.jupiter.api.extension.ParameterContext, org.junit.jupiter.api.extension.ExtensionContext)</code></a>, 
 <a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterContext</code></a></dd>
 </dl>
 </li>
