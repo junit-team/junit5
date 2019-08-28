@@ -24,10 +24,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -109,36 +110,41 @@ class ParameterizedTestDemo {
 
 	// tag::EnumSource_example[]
 	@ParameterizedTest
-	@EnumSource(TimeUnit.class)
-	void testWithEnumSource(TimeUnit timeUnit) {
-		assertNotNull(timeUnit);
+	@EnumSource(ChronoUnit.class)
+	void testWithEnumSource(TemporalUnit unit) {
+		assertNotNull(unit);
 	}
 	// end::EnumSource_example[]
 
+	// tag::EnumSource_example_autodetection[]
+	@ParameterizedTest
+	@EnumSource
+	void testWithEnumSourceWithAutoDetection(ChronoUnit unit) {
+		assertNotNull(unit);
+	}
+	// end::EnumSource_example_autodetection[]
+
 	// tag::EnumSource_include_example[]
 	@ParameterizedTest
-	@EnumSource(value = TimeUnit.class, names = { "DAYS", "HOURS" })
-	void testWithEnumSourceInclude(TimeUnit timeUnit) {
-		assertTrue(EnumSet.of(TimeUnit.DAYS, TimeUnit.HOURS).contains(timeUnit));
+	@EnumSource(names = { "DAYS", "HOURS" })
+	void testWithEnumSourceInclude(ChronoUnit unit) {
+		assertTrue(EnumSet.of(ChronoUnit.DAYS, ChronoUnit.HOURS).contains(unit));
 	}
 	// end::EnumSource_include_example[]
 
 	// tag::EnumSource_exclude_example[]
 	@ParameterizedTest
-	@EnumSource(value = TimeUnit.class, mode = EXCLUDE, names = { "DAYS", "HOURS" })
-	void testWithEnumSourceExclude(TimeUnit timeUnit) {
-		assertFalse(EnumSet.of(TimeUnit.DAYS, TimeUnit.HOURS).contains(timeUnit));
-		assertTrue(timeUnit.name().length() > 5);
+	@EnumSource(mode = EXCLUDE, names = { "ERAS", "FOREVER" })
+	void testWithEnumSourceExclude(ChronoUnit unit) {
+		assertFalse(EnumSet.of(ChronoUnit.ERAS, ChronoUnit.FOREVER).contains(unit));
 	}
 	// end::EnumSource_exclude_example[]
 
 	// tag::EnumSource_regex_example[]
 	@ParameterizedTest
-	@EnumSource(value = TimeUnit.class, mode = MATCH_ALL, names = "^(M|N).+SECONDS$")
-	void testWithEnumSourceRegex(TimeUnit timeUnit) {
-		String name = timeUnit.name();
-		assertTrue(name.startsWith("M") || name.startsWith("N"));
-		assertTrue(name.endsWith("SECONDS"));
+	@EnumSource(mode = MATCH_ALL, names = "^.*DAYS$")
+	void testWithEnumSourceRegex(ChronoUnit unit) {
+		assertTrue(unit.name().endsWith("DAYS"));
 	}
 	// end::EnumSource_regex_example[]
 
@@ -261,7 +267,7 @@ class ParameterizedTestDemo {
 	// tag::implicit_conversion_example[]
 	@ParameterizedTest
 	@ValueSource(strings = "SECONDS")
-	void testWithImplicitArgumentConversion(TimeUnit argument) {
+	void testWithImplicitArgumentConversion(ChronoUnit argument) {
 		assertNotNull(argument.name());
 	}
 	// end::implicit_conversion_example[]
@@ -297,11 +303,11 @@ class ParameterizedTestDemo {
 	// @formatter:off
 	// tag::explicit_conversion_example[]
 	@ParameterizedTest
-	@EnumSource(TimeUnit.class)
+	@EnumSource(ChronoUnit.class)
 	void testWithExplicitArgumentConversion(
 			@ConvertWith(ToStringArgumentConverter.class) String argument) {
 
-		assertNotNull(TimeUnit.valueOf(argument));
+		assertNotNull(ChronoUnit.valueOf(argument));
 	}
 
 	// end::explicit_conversion_example[]
@@ -312,6 +318,9 @@ class ParameterizedTestDemo {
 		@Override
 		protected Object convert(Object source, Class<?> targetType) {
 			assertEquals(String.class, targetType, "Can only convert to String");
+			if (source instanceof Enum<?>) {
+				return ((Enum<?>) source).name();
+			}
 			return String.valueOf(source);
 		}
 	}

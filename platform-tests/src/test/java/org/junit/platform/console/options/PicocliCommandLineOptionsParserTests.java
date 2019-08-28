@@ -91,7 +91,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidDetails(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -111,7 +111,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidDetailsTheme(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -130,7 +130,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidIncludeClassNamePatterns(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -142,7 +142,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidExcludeClassNamePatterns(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -170,7 +170,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidIncludedPackages(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -185,7 +185,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidExcludedPackages(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -200,7 +200,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidIncludedTags(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -218,7 +218,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidExcludedTags(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -236,7 +236,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidIncludedEngines(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -253,7 +253,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidExcludedEngines(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -270,7 +270,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidAdditionalClasspathEntries(ArgsType type) {
 		Path dir = Paths.get(".");
 		// @formatter:off
@@ -295,7 +295,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidXmlReportsDirs(ArgsType type) {
 		Path dir = Paths.get("build", "test-results");
 		// @formatter:off
@@ -312,7 +312,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidUriSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -333,7 +333,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidFileSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -354,7 +354,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidDirectorySelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -375,7 +375,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidModuleSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -396,7 +396,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidPackageSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -417,7 +417,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidClassSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -438,7 +438,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidMethodSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -460,7 +460,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidClasspathResourceSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -481,7 +481,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseClasspathScanningEntries(ArgsType type) {
 		Path dir = Paths.get(".");
 		// @formatter:off
@@ -502,7 +502,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseValidConfigurationParameters(ArgsType type) {
 		// @formatter:off
 		assertAll(
@@ -526,7 +526,7 @@ class PicocliCommandLineOptionsParserTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(ArgsType.class)
+	@EnumSource
 	void parseInvalidConfigurationParametersWithDuplicateKey(ArgsType type) {
 		Exception e = assertThrows(JUnitException.class, () -> type.parseArgLine("--config foo=bar --config foo=baz"));
 

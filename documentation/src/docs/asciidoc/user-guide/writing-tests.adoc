@@ -1019,14 +1019,24 @@ blank strings supplied via `@ValueSource`.
 [[writing-tests-parameterized-tests-sources-EnumSource]]
 ===== @EnumSource
 
-`@EnumSource` provides a convenient way to use `Enum` constants. The annotation provides
-an optional `names` parameter that lets you specify which constants shall be used. If
-omitted, all constants will be used like in the following example.
+`@EnumSource` provides a convenient way to use `Enum` constants.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_example]
 ----
+
+The annotation's `value` parameter is optional. When omitted, the declared type of the
+first method parameter is used. The test will fail if it does not reference an enum type.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_example_autodetection]
+----
+
+The annotation provides an optional `names` parameter that lets you specify which
+constants shall be used. If omitted, all constants will be used like in the following
+example.
 
 [source,java,indent=0]
 ----

@@ -21,13 +21,17 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.EnumSource.Mode;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.mockito.Mockito;
 
 /**
  * @since 5.0
  */
 class EnumArgumentsProviderTests {
+
+	private ExtensionContext extensionContext = Mockito.mock(ExtensionContext.class);
 
 	@Test
 	void providesAllEnumConstants() {
@@ -71,6 +75,47 @@ class EnumArgumentsProviderTests {
 		assertThat(exception).hasMessageContaining("Pattern compilation failed");
 	}
 
+	@Test
+	void providesEnumConstantsBasedOnTestMethod() throws Exception {
+		when(extensionContext.getRequiredTestMethod()).thenReturn(
+			TestCase.class.getDeclaredMethod("methodWithCorrectParameter", EnumWithTwoConstants.class));
+
+		Stream<Object[]> arguments = provideArguments(NullEnum.class);
+
+		assertThat(arguments).containsExactly(new Object[] { FOO }, new Object[] { BAR });
+	}
+
+	@Test
+	void incorrectParameterTypeIsDetected() throws Exception {
+		when(extensionContext.getRequiredTestMethod()).thenReturn(
+			TestCase.class.getDeclaredMethod("methodWithIncorrectParameter", Object.class));
+
+		Exception exception = assertThrows(PreconditionViolationException.class,
+			() -> provideArguments(NullEnum.class));
+		assertThat(exception).hasMessageStartingWith("First parameter must reference an Enum type");
+	}
+
+	@Test
+	void methodsWithoutParametersAreDetected() throws Exception {
+		when(extensionContext.getRequiredTestMethod()).thenReturn(
+			TestCase.class.getDeclaredMethod("methodWithoutParameters"));
+
+		Exception exception = assertThrows(PreconditionViolationException.class,
+			() -> provideArguments(NullEnum.class));
+		assertThat(exception).hasMessageStartingWith("At least one parameter is required on test method");
+	}
+
+	static class TestCase {
+		void methodWithCorrectParameter(EnumWithTwoConstants parameter) {
+		}
+
+		void methodWithIncorrectParameter(Object parameter) {
+		}
+
+		void methodWithoutParameters() {
+		}
+	}
+
 	enum EnumWithTwoConstants {
 		FOO, BAR
 	}
@@ -89,7 +134,7 @@ class EnumArgumentsProviderTests {
 
 		EnumArgumentsProvider provider = new EnumArgumentsProvider();
 		provider.accept(annotation);
-		return provider.provideArguments(null).map(Arguments::get);
+		return provider.provideArguments(extensionContext).map(Arguments::get);
 	}
 
 }

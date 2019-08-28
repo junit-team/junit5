@@ -82,7 +82,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 	}
 
 	@ParameterizedTest
-	@EnumSource(DefaultParallelExecutionConfigurationStrategy.class)
+	@EnumSource
 	void createsStrategyFromConfigParam(DefaultParallelExecutionConfigurationStrategy strategy) {
 		when(configParams.get("strategy")).thenReturn(Optional.of(strategy.name().toLowerCase()));
 
