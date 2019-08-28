@@ -79,8 +79,10 @@ public enum OS {
 	private static final OS CURRENT_OS = determineCurrentOs();
 
 	private static OS determineCurrentOs() {
-		String osName = System.getProperty("os.name");
+		return parse(System.getProperty("os.name"));
+	}
 
+	static OS parse(String osName) {
 		if (StringUtils.isBlank(osName)) {
 			logger.debug(
 				() -> "JVM system property 'os.name' is undefined. It is therefore not possible to detect the current OS.");
