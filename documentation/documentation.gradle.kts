@@ -131,6 +131,7 @@ tasks {
 
 	asciidoctor {
 		dependsOn(generateConsoleLauncherOptions, generateExperimentalApisTable, generateDeprecatedApisTable)
+		inputs.files(consoleLauncherOptionsFile, experimentalApisTableFile, deprecatedApisTableFile)
 
 		// enable the Asciidoctor Diagram extension
 		requires("asciidoctor-diagram")
@@ -180,8 +181,11 @@ tasks {
 					"testDir" to java.srcDirs.first(),
 					"testResourcesDir" to resources.srcDirs.first()
 			))
+			inputs.dir(java.srcDirs.first())
+			inputs.dir(resources.srcDirs.first())
 			withConvention(KotlinSourceSet::class) {
 				attributes(mapOf("kotlinTestDir" to kotlin.srcDirs.first()))
+				inputs.dir(kotlin.srcDirs.first())
 			}
 		}
 	}
