@@ -7,11 +7,6 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 description = "JUnit Jupiter Engine"
 
-tasks.compileTestGroovy {
-	sourceCompatibility = javaLibrary.testJavaVersion.majorVersion
-	targetCompatibility = javaLibrary.testJavaVersion.majorVersion
-}
-
 val testArtifacts by configurations.creating {
 	extendsFrom(configurations.testRuntime.get())
 }

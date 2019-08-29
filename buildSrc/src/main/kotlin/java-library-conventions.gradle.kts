@@ -242,6 +242,16 @@ afterEvaluate {
 			targetCompatibility = extension.testJavaVersion.majorVersion
 		}
 	}
+	pluginManager.withPlugin("groovy") {
+		tasks.named<GroovyCompile>("compileGroovy").configure {
+			sourceCompatibility = extension.mainJavaVersion.majorVersion
+			targetCompatibility = extension.mainJavaVersion.majorVersion
+		}
+		tasks.named<GroovyCompile>("compileTestGroovy").configure {
+			sourceCompatibility = extension.testJavaVersion.majorVersion
+			targetCompatibility = extension.testJavaVersion.majorVersion
+		}
+	}
 }
 
 checkstyle {
