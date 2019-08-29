@@ -20,10 +20,9 @@ dependencies {
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(":junit-vintage-engine"))
-	testRuntimeOnly("de.sormuras:java-compiler-script-engine:${Versions.javaCompilerScriptEngine}") {
-		because("Tests annotated with @EnabledIf(engine = 'java', ...) need it.")
+	testRuntimeOnly("org.codehaus.groovy:groovy-all:${Versions.groovy}") {
+		because("`ReflectionUtilsTests.findNestedClassesWithInvalidNestedClassFile` needs it")
 	}
-	testRuntimeOnly(localGroovy()) // because `ReflectionUtilsTests.findNestedClassesWithInvalidNestedClassFile` needs it
 
 	// --- https://openjdk.java.net/projects/code-tools/jmh/ -----------------------
 	jmh("org.openjdk.jmh:jmh-core:${Versions.jmh}") {
