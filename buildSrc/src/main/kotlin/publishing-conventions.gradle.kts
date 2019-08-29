@@ -14,7 +14,7 @@ tasks[PublishingPlugin.PUBLISH_LIFECYCLE_TASK_NAME].dependsOn(build)
 tasks[MavenPublishPlugin.PUBLISH_LOCAL_LIFECYCLE_TASK_NAME].dependsOn(build)
 
 signing {
-	sign(the<PublishingExtension>().publications)
+	sign(publishing.publications)
 	setRequired(!(isSnapshot || isContinuousIntegrationEnvironment || isJitPackEnvironment))
 }
 
