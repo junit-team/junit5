@@ -21,7 +21,7 @@ import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.engine.TrackLogRecords;
+import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestExecutionResult;

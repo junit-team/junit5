@@ -1,5 +1,6 @@
 plugins {
 	`kotlin-library-conventions`
+	`java-test-fixtures`
 }
 
 description = "JUnit Jupiter API"

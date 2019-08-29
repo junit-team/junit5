@@ -22,7 +22,7 @@ import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.engine.TrackLogRecords;
+import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.engine.descriptor.CustomDisplayNameGenerator;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.ConfigurationParameters;

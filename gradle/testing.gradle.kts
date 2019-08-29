@@ -27,6 +27,7 @@ dependencies {
 
 		"testRuntimeOnly"(project(":junit-jupiter-engine"))
 	}
+	"testImplementation"(testFixtures(project(":junit-jupiter-api")))
 
 	"testRuntimeOnly"(project(":junit-platform-launcher"))
 

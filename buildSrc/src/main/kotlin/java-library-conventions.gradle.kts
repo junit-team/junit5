@@ -122,6 +122,12 @@ if (project in mavenizedProjects) {
 		}
 	}
 
+	pluginManager.withPlugin("java-test-fixtures") {
+		val javaComponent = components["java"] as AdhocComponentWithVariants
+		javaComponent.withVariantsFromConfiguration(configurations["testFixturesApiElements"]) { skip() }
+		javaComponent.withVariantsFromConfiguration(configurations["testFixturesRuntimeElements"]) { skip() }
+	}
+
 	configure<PublishingExtension> {
 		publications {
 			named<MavenPublication>("maven") {
@@ -305,6 +311,11 @@ tasks {
 		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
 	}
 	checkstyleTest {
+		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
+	}
+}
+pluginManager.withPlugin("java-test-fixtures") {
+	tasks.named<Checkstyle>("checkstyleTestFixtures").configure {
 		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
 	}
 }

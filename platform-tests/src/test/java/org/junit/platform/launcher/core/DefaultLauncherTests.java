@@ -38,7 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.engine.TrackLogRecords;
+import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.JUnitException;
