@@ -30,7 +30,6 @@ dependencies {
 
 	api(project(":junit-platform-engine"))
 	api(project(":junit-jupiter-api"))
-	api(project(":junit-jupiter-params"))
 
 	testImplementation(project(":junit-platform-launcher"))
 	testImplementation(project(":junit-platform-runner"))
