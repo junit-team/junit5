@@ -1,5 +1,3 @@
-import org.gradle.plugins.ide.eclipse.model.Classpath
-
 plugins {
 	`java-library`
 	eclipse
@@ -36,7 +34,7 @@ eclipse {
 
 		// Workaround for https://github.com/gradle/gradle/issues/10393
 		file {
-			whenMerged(Action<Classpath> {
+			whenMerged(Action<org.gradle.plugins.ide.eclipse.model.Classpath> {
 				entries = entries.distinctBy {
 					if (it is org.gradle.plugins.ide.eclipse.model.ProjectDependency)
 						it.path
