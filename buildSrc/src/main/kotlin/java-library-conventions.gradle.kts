@@ -3,6 +3,7 @@ plugins {
 	eclipse
 	idea
 	checkstyle
+	id("custom-java-home")
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
@@ -74,7 +75,7 @@ if (project in mavenizedProjects) {
 				addBooleanOption("html5", true)
 				// Javadoc 13 removed support for `--no-module-directories`
 				// https://bugs.openjdk.java.net/browse/JDK-8215580
-				if (javaVersion.isJava12) {
+				if (javaVersion.isJava12 && executable == null) {
 					addBooleanOption("-no-module-directories", true)
 				}
 				addMultilineStringsOption("tag").value = listOf(
@@ -221,23 +222,31 @@ class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvider {
 			files(it.sourceSets["main"].java.srcDirs)
 	}
 
-	override fun asArguments(): List<String> = listOf("--patch-module", "$module=${patch.get().asPath}")
+	override fun asArguments(): List<String> {
+		val path = patch.get().filter { it.exists() }.asPath
+		if (path.isEmpty()) {
+			return emptyList()
+		}
+		return listOf("--patch-module", "$module=$path")
+	}
 }
 
 afterEvaluate {
 	tasks {
 		compileJava {
 			sourceCompatibility = extension.mainJavaVersion.majorVersion
-			targetCompatibility = extension.mainJavaVersion.majorVersion // needed by asm
-			// --release release
-			// Compiles against the public, supported and documented API for a specific VM version.
-			// Supported release targets are 7, 8, 9, 10, 11, 12
-			// Note that if --release is added then -target and -source are ignored.
-			options.compilerArgs.addAll(listOf("--release", extension.mainJavaVersion.majorVersion))
+			targetCompatibility = extension.mainJavaVersion.majorVersion
 		}
 		compileTestJava {
 			sourceCompatibility = extension.testJavaVersion.majorVersion
 			targetCompatibility = extension.testJavaVersion.majorVersion
+		}
+		withType<JavaCompile>().configureEach {
+			// --release release
+			// Compiles against the public, supported and documented API for a specific VM version.
+			// Supported release targets are 7, 8, 9, 10, 11, 12
+			// Note that if --release is added then -target and -source are ignored.
+			options.compilerArgs.addAll(listOf("--release", targetCompatibility))
 		}
 	}
 	pluginManager.withPlugin("groovy") {

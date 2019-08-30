@@ -11,9 +11,8 @@ tasks.named<Test>("test").configure {
 		exceptionFormat = FULL
 	}
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
-	if (JavaVersion.current() == JavaVersion.VERSION_HIGHER) {
-		systemProperty("net.bytebuddy.experimental", true)
-	}
+	// Required until ASM officially supports the JDK 14
+	systemProperty("net.bytebuddy.experimental", true)
 }
 
 dependencies {

@@ -211,7 +211,7 @@ tasks {
 				// Javadoc 13 removed support for `--no-module-directories`
 				// https://bugs.openjdk.java.net/browse/JDK-8215580
 				val javaVersion = JavaVersion.current()
-				if (javaVersion.isJava11 || javaVersion.isJava12) {
+				if (javaVersion.isJava12 && executable == null) {
 					addBooleanOption("-no-module-directories", true)
 				}
 				addMultilineStringsOption("tag").value = listOf(

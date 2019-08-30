@@ -1,6 +1,7 @@
 plugins {
 	`java-platform`
 	`publishing-conventions`
+	`custom-java-home`
 }
 
 description = "${rootProject.description} (Bill of Materials)"
