@@ -102,7 +102,7 @@ class EnumArgumentsProviderTests {
 
 		Exception exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(NullEnum.class));
-		assertThat(exception).hasMessageStartingWith("At least one parameter is required on test method");
+		assertThat(exception).hasMessageStartingWith("Test method must declare at least one parameter");
 	}
 
 	static class TestCase {
