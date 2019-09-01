@@ -1028,6 +1028,10 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_example]
 
 The annotation's `value` parameter is optional. When omitted, the declared type of the
 first method parameter is used. The test will fail if it does not reference an enum type.
+Thus, the `value` parameter is required in the above example because the method parameter
+is declared as `TemporalUnit`, i.e. the interface implemented by `ChronoUnit`, which isn't
+an enum type. Changing the method parameter type to `ChronoUnit` allows to omit the
+explicit enum type from the annotation as follows.
 
 [source,java,indent=0]
 ----
