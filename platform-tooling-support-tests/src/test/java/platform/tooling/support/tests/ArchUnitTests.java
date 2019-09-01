@@ -10,12 +10,12 @@
 
 package platform.tooling.support.tests;
 
+import static com.tngtech.archunit.base.DescribedPredicate.describe;
 import static com.tngtech.archunit.base.DescribedPredicate.not;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage;
 import static com.tngtech.archunit.core.domain.properties.HasModifiers.Predicates.modifier;
 import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.name;
-import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.nameMatching;
 import static com.tngtech.archunit.lang.conditions.ArchPredicates.are;
 import static com.tngtech.archunit.lang.conditions.ArchPredicates.have;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
@@ -26,6 +26,7 @@ import static platform.tooling.support.Helper.loadJarFiles;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.core.importer.Location;
@@ -43,8 +44,9 @@ class ArchUnitTests {
 	@ArchTest
 	private final ArchRule allPublicTopLevelTypesHaveApiAnnotations = classes() //
 			.that(have(modifier(JavaModifier.PUBLIC))) //
-			.and(not(have(nameMatching(".*\\$.*")))) //
-			.and(not(resideInAnyPackage("..shadow.."))) //
+			.and(describe("are top-level", javaClass -> !javaClass.getEnclosingClass().isPresent())) //
+			.and(not(describe("are anonymous", JavaClass::isAnonymous))) //
+			.and(not(describe("are shadowed", resideInAnyPackage("..shadow..")))) //
 			.should().beAnnotatedWith(API.class);
 
 	@ArchTest
