@@ -1019,21 +1019,35 @@ blank strings supplied via `@ValueSource`.
 [[writing-tests-parameterized-tests-sources-EnumSource]]
 ===== @EnumSource
 
-`@EnumSource` provides a convenient way to use `Enum` constants. The annotation provides
-an optional `names` parameter that lets you specify which constants shall be used. If
-omitted, all constants will be used like in the following example.
+`@EnumSource` provides a convenient way to use `Enum` constants.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_example]
 ----
 
+The annotation's `value` attribute is optional. When omitted, the declared type of the
+first method parameter is used. The test will fail if it does not reference an enum type.
+Thus, the `value` attribute is required in the above example because the method parameter
+is declared as `TemporalUnit`, i.e. the interface implemented by `ChronoUnit`, which isn't
+an enum type. Changing the method parameter type to `ChronoUnit` allows to omit the
+explicit enum type from the annotation as follows.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_example_autodetection]
+----
+
+The annotation provides an optional `names` attribute that lets you specify which
+constants shall be used. If omitted, all constants will be used like in the following
+example.
+
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_include_example]
 ----
 
-The `@EnumSource` annotation also provides an optional `mode` parameter that enables
+The `@EnumSource` annotation also provides an optional `mode` attribute that enables
 fine-grained control over which constants are passed to the test method. For example, you
 can exclude names from the enum constant pool or specify regular expressions as in the
 following examples.

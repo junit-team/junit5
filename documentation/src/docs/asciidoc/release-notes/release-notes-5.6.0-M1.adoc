@@ -49,6 +49,7 @@ on GitHub.
 
 * Support for String delimiters in `@CsvSource` and `@CsvFileSource`.
 * Documented support for comments in CSV files loaded via `@CsvFileSource`.
+* Auto-detection of enum type from method signature for `@EnumSource`.
 * New `TypeBasedParameterResolver<T>` abstract base class that serves as a generic adapter
   for the `ParameterResolver` API and simplifies the implementation of a custom resolver
   that supports parameters of a specific type.
