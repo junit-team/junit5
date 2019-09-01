@@ -12,8 +12,13 @@ package platform.tooling.support.tests;
 
 import static com.tngtech.archunit.base.DescribedPredicate.not;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage;
+import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage;
+import static com.tngtech.archunit.core.domain.properties.HasModifiers.Predicates.modifier;
 import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.name;
+import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.nameMatching;
 import static com.tngtech.archunit.lang.conditions.ArchPredicates.are;
+import static com.tngtech.archunit.lang.conditions.ArchPredicates.have;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static platform.tooling.support.Helper.loadJarFiles;
@@ -22,14 +27,25 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.core.importer.Location;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.junit.LocationProvider;
+import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.library.GeneralCodingRules;
+
+import org.apiguardian.api.API;
 
 @AnalyzeClasses(locations = ArchUnitTests.AllJars.class)
 class ArchUnitTests {
+
+	@ArchTest
+	private final ArchRule allPublicTopLevelTypesHaveApiAnnotations = classes() //
+			.that(have(modifier(JavaModifier.PUBLIC))) //
+			.and(not(have(nameMatching(".*\\$.*")))) //
+			.and(not(resideInAnyPackage("..shadow.."))) //
+			.should().beAnnotatedWith(API.class);
 
 	@ArchTest
 	void allAreIn(JavaClasses classes) {

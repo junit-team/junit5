@@ -20,7 +20,7 @@ import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.engine.EngineExecutionListener;
 
-public class DynamicExtensionContext extends AbstractExtensionContext<DynamicNodeTestDescriptor> {
+class DynamicExtensionContext extends AbstractExtensionContext<DynamicNodeTestDescriptor> {
 
 	DynamicExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			DynamicNodeTestDescriptor testDescriptor, JupiterConfiguration configuration) {
