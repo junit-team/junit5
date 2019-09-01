@@ -61,9 +61,9 @@ class EnumArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Enu
 			Method method = context.getRequiredTestMethod();
 			Class<?>[] parameterTypes = method.getParameterTypes();
 			Preconditions.condition(parameterTypes.length > 0,
-				() -> "At least one parameter is required on test method: " + method.toGenericString());
+				() -> "Test method must declare at least one parameter: " + method.toGenericString());
 			Preconditions.condition(Enum.class.isAssignableFrom(parameterTypes[0]),
-				() -> "First parameter must reference an Enum type (alternatively, use the annotation's 'value' parameter to specify the type explicitly): "
+				() -> "First parameter must reference an Enum type (alternatively, use the annotation's 'value' attribute to specify the type explicitly): "
 						+ method.toGenericString());
 			enumClass = parameterTypes[0];
 		}
