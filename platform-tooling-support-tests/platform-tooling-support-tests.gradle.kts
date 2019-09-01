@@ -71,4 +71,8 @@ tasks.test {
 		// Include only tests from this module
 		includeTestsMatching("platform.tooling.support.*")
 	}
+
+	(options as JUnitPlatformOptions).apply {
+		includeEngines("archunit")
+	}
 }
