@@ -146,8 +146,6 @@ public @interface EnumSource {
 		}
 
 		private static void validateNames(EnumSource enumSource, Set<? extends Enum<?>> constants, Set<String> names) {
-			// Do not map using Enum::name here since it results in a rawtypes warning
-			// that fails our Gradle build which is configured with -Werror.
 			Set<String> allNames = constants.stream().map(Enum::name).collect(toSet());
 			Preconditions.condition(allNames.containsAll(names),
 				() -> "Invalid enum constant name(s) in " + enumSource + ". Valid names include: " + allNames);
