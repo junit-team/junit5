@@ -61,7 +61,7 @@ loadScripts(document, 'script');</script>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
+<li>Required&nbsp;|&nbsp;</li>
 <li><a href="#annotation.type.optional.element.summary">Optional</a></li>
 </ul>
 <ul class="subNavList">
@@ -108,10 +108,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <a href="ArgumentsSource.html" title="annotation in org.junit.jupiter.params.provider">@ArgumentsSource</a>(org.junit.jupiter.params.provider.EnumArgumentsProvider.class)
 public @interface <span class="memberNameLabel">EnumSource</span></pre>
 <div class="block"><code>@EnumSource</code> is an <a href="ArgumentsSource.html" title="annotation in org.junit.jupiter.params.provider"><code>ArgumentsSource</code></a> for constants of a
- specified <a href="#value()">Enum</a>.
+ an <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Enum</code></a>.
 
  <p>The enum constants will be provided as arguments to the annotated
  <code>@ParameterizedTest</code> method.
+
+ <p>The enum type can be specified explicitly using the <a href="#value()"><code>value()</code></a>
+ attribute. Otherwise, the declared type of the first parameter of the
+ <code>@ParameterizedTest</code> method is used.
 
  <p>The set of enum constants can be restricted via the <a href="#names()"><code>names()</code></a> and
  <a href="#mode()"><code>mode()</code></a> attributes.</div>
@@ -128,35 +132,6 @@ public @interface <span class="memberNameLabel">EnumSource</span></pre>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
-<!-- =========== ANNOTATION TYPE REQUIRED MEMBER SUMMARY =========== -->
-<section role="region">
-<ul class="blockList">
-<li class="blockList"><a id="annotation.type.required.element.summary">
-<!--   -->
-</a>
-<h3>Required Element Summary</h3>
-<div class="memberSummary">
-<table>
-<caption><span>Required Elements</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Required Element</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tbody>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html?is-external=true" title="class or interface in java.lang" class="externalLink">Enum</a>&lt;?&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#value()">value</a></span></code></th>
-<td class="colLast">
-<div class="block">The enum type that serves as the source of the enum constants.</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</li>
-</ul>
-</section>
 <!-- =========== ANNOTATION TYPE OPTIONAL MEMBER SUMMARY =========== -->
 <section role="region">
 <ul class="blockList">
@@ -188,6 +163,13 @@ public @interface <span class="memberNameLabel">EnumSource</span></pre>
  the names of enum constants to provide.</div>
 </td>
 </tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html?is-external=true" title="class or interface in java.lang" class="externalLink">Enum</a>&lt;?&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#value()">value</a></span></code></th>
+<td class="colLast">
+<div class="block">The enum type that serves as the source of the enum constants.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -210,22 +192,28 @@ public @interface <span class="memberNameLabel">EnumSource</span></pre>
 <a id="value()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>value</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html?is-external=true" title="class or interface in java.lang" class="externalLink">Enum</a>&lt;?&gt;&gt;&nbsp;value</pre>
-<div class="block">The enum type that serves as the source of the enum constants.</div>
+<div class="block">The enum type that serves as the source of the enum constants.
+
+ <p>If this attribute is not set explicitly, the declared type of the
+ first parameter of the <code>@ParameterizedTest</code> method is used.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="#names()"><code>names()</code></a>, 
 <a href="#mode()"><code>mode()</code></a></dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>org.junit.jupiter.params.provider.NullEnum.class</dd>
 </dl>
 </li>
 </ul>
 </li>
 </ul>
 </section>
-<!-- ============ ANNOTATION TYPE MEMBER DETAIL =========== -->
 <section role="region">
 <ul class="blockList">
 <li class="blockList"><a id="names()">
@@ -318,7 +306,7 @@ public @interface <span class="memberNameLabel">EnumSource</span></pre>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
+<li>Required&nbsp;|&nbsp;</li>
 <li><a href="#annotation.type.optional.element.summary">Optional</a></li>
 </ul>
 <ul class="subNavList">

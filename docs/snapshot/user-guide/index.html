@@ -3350,30 +3350,50 @@ blank strings supplied via <code>@ValueSource</code>.
 <div class="sect4">
 <h5 id="writing-tests-parameterized-tests-sources-EnumSource"><a class="anchor" href="#writing-tests-parameterized-tests-sources-EnumSource"></a>@EnumSource</h5>
 <div class="paragraph">
-<p><code>@EnumSource</code> provides a convenient way to use <code>Enum</code> constants. The annotation provides
-an optional <code>names</code> parameter that lets you specify which constants shall be used. If
-omitted, all constants will be used like in the following example.</p>
+<p><code>@EnumSource</code> provides a convenient way to use <code>Enum</code> constants.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@EnumSource</span>(<span class="predefined-type">TimeUnit</span>.class)
-<span class="type">void</span> testWithEnumSource(<span class="predefined-type">TimeUnit</span> timeUnit) {
-    assertNotNull(timeUnit);
-}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@EnumSource</span>(value = <span class="predefined-type">TimeUnit</span>.class, names = { <span class="string"><span class="delimiter">&quot;</span><span class="content">DAYS</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">HOURS</span><span class="delimiter">&quot;</span></span> })
-<span class="type">void</span> testWithEnumSourceInclude(<span class="predefined-type">TimeUnit</span> timeUnit) {
-    assertTrue(<span class="predefined-type">EnumSet</span>.of(<span class="predefined-type">TimeUnit</span>.DAYS, <span class="predefined-type">TimeUnit</span>.HOURS).contains(timeUnit));
+<span class="annotation">@EnumSource</span>(ChronoUnit.class)
+<span class="type">void</span> testWithEnumSource(TemporalUnit unit) {
+    assertNotNull(unit);
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>@EnumSource</code> annotation also provides an optional <code>mode</code> parameter that enables
+<p>The annotation&#8217;s <code>value</code> attribute is optional. When omitted, the declared type of the
+first method parameter is used. The test will fail if it does not reference an enum type.
+Thus, the <code>value</code> attribute is required in the above example because the method parameter
+is declared as <code>TemporalUnit</code>, i.e. the interface implemented by <code>ChronoUnit</code>, which isn&#8217;t
+an enum type. Changing the method parameter type to <code>ChronoUnit</code> allows to omit the
+explicit enum type from the annotation as follows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@EnumSource</span>
+<span class="type">void</span> testWithEnumSourceWithAutoDetection(ChronoUnit unit) {
+    assertNotNull(unit);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The annotation provides an optional <code>names</code> attribute that lets you specify which
+constants shall be used. If omitted, all constants will be used like in the following
+example.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
+<span class="annotation">@EnumSource</span>(names = { <span class="string"><span class="delimiter">&quot;</span><span class="content">DAYS</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">HOURS</span><span class="delimiter">&quot;</span></span> })
+<span class="type">void</span> testWithEnumSourceInclude(ChronoUnit unit) {
+    assertTrue(<span class="predefined-type">EnumSet</span>.of(ChronoUnit.DAYS, ChronoUnit.HOURS).contains(unit));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>@EnumSource</code> annotation also provides an optional <code>mode</code> attribute that enables
 fine-grained control over which constants are passed to the test method. For example, you
 can exclude names from the enum constant pool or specify regular expressions as in the
 following examples.</p>
@@ -3381,21 +3401,18 @@ following examples.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@EnumSource</span>(value = <span class="predefined-type">TimeUnit</span>.class, mode = EXCLUDE, names = { <span class="string"><span class="delimiter">&quot;</span><span class="content">DAYS</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">HOURS</span><span class="delimiter">&quot;</span></span> })
-<span class="type">void</span> testWithEnumSourceExclude(<span class="predefined-type">TimeUnit</span> timeUnit) {
-    assertFalse(<span class="predefined-type">EnumSet</span>.of(<span class="predefined-type">TimeUnit</span>.DAYS, <span class="predefined-type">TimeUnit</span>.HOURS).contains(timeUnit));
-    assertTrue(timeUnit.name().length() &gt; <span class="integer">5</span>);
+<span class="annotation">@EnumSource</span>(mode = EXCLUDE, names = { <span class="string"><span class="delimiter">&quot;</span><span class="content">ERAS</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">FOREVER</span><span class="delimiter">&quot;</span></span> })
+<span class="type">void</span> testWithEnumSourceExclude(ChronoUnit unit) {
+    assertFalse(<span class="predefined-type">EnumSet</span>.of(ChronoUnit.ERAS, ChronoUnit.FOREVER).contains(unit));
 }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@EnumSource</span>(value = <span class="predefined-type">TimeUnit</span>.class, mode = MATCH_ALL, names = <span class="string"><span class="delimiter">&quot;</span><span class="content">^(M|N).+SECONDS$</span><span class="delimiter">&quot;</span></span>)
-<span class="type">void</span> testWithEnumSourceRegex(<span class="predefined-type">TimeUnit</span> timeUnit) {
-    <span class="predefined-type">String</span> name = timeUnit.name();
-    assertTrue(name.startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">M</span><span class="delimiter">&quot;</span></span>) || name.startsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">N</span><span class="delimiter">&quot;</span></span>));
-    assertTrue(name.endsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">SECONDS</span><span class="delimiter">&quot;</span></span>));
+<span class="annotation">@EnumSource</span>(mode = MATCH_ALL, names = <span class="string"><span class="delimiter">&quot;</span><span class="content">^.*DAYS$</span><span class="delimiter">&quot;</span></span>)
+<span class="type">void</span> testWithEnumSourceRegex(ChronoUnit unit) {
+    assertTrue(unit.name().endsWith(<span class="string"><span class="delimiter">&quot;</span><span class="content">DAYS</span><span class="delimiter">&quot;</span></span>));
 }</code></pre>
 </div>
 </div>
@@ -3717,7 +3734,7 @@ automatically converted into the corresponding <code>TimeUnit</code> enum consta
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
 <span class="annotation">@ValueSource</span>(strings = <span class="string"><span class="delimiter">&quot;</span><span class="content">SECONDS</span><span class="delimiter">&quot;</span></span>)
-<span class="type">void</span> testWithImplicitArgumentConversion(<span class="predefined-type">TimeUnit</span> argument) {
+<span class="type">void</span> testWithImplicitArgumentConversion(ChronoUnit argument) {
     assertNotNull(argument.name());
 }</code></pre>
 </div>
@@ -3979,11 +3996,11 @@ declared as either a top-level class or as a <code>static</code> nested class.</
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@ParameterizedTest</span>
-<span class="annotation">@EnumSource</span>(<span class="predefined-type">TimeUnit</span>.class)
+<span class="annotation">@EnumSource</span>(ChronoUnit.class)
 <span class="type">void</span> testWithExplicitArgumentConversion(
         <span class="annotation">@ConvertWith</span>(ToStringArgumentConverter.class) <span class="predefined-type">String</span> argument) {
 
-    assertNotNull(<span class="predefined-type">TimeUnit</span>.valueOf(argument));
+    assertNotNull(ChronoUnit.valueOf(argument));
 }</code></pre>
 </div>
 </div>
@@ -3994,6 +4011,9 @@ declared as either a top-level class or as a <code>static</code> nested class.</
     <span class="annotation">@Override</span>
     <span class="directive">protected</span> <span class="predefined-type">Object</span> convert(<span class="predefined-type">Object</span> source, <span class="predefined-type">Class</span>&lt;?&gt; targetType) {
         assertEquals(<span class="predefined-type">String</span>.class, targetType, <span class="string"><span class="delimiter">&quot;</span><span class="content">Can only convert to String</span><span class="delimiter">&quot;</span></span>);
+        <span class="keyword">if</span> (source <span class="keyword">instanceof</span> <span class="predefined-type">Enum</span>&lt;?&gt;) {
+            <span class="keyword">return</span> ((<span class="predefined-type">Enum</span>&lt;?&gt;) source).name();
+        }
         <span class="keyword">return</span> <span class="predefined-type">String</span>.valueOf(source);
     }
 }</code></pre>
@@ -9179,6 +9199,11 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.provider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NullEnum</code> <em>(enum)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.6</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.params.provider</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>NullSource</code> <em>(annotation)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
 </tr>
@@ -9641,7 +9666,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-09-01 16:27:22 UTC
+Last updated 2019-09-01 18:19:24 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
