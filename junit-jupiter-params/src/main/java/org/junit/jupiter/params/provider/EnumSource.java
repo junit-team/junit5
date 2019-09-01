@@ -55,6 +55,9 @@ public @interface EnumSource {
 	/**
 	 * The enum type that serves as the source of the enum constants.
 	 *
+	 * <p>If this attribute is not set explicitly, the declared type of the
+	 * first parameter of the {@code @ParameterizedTest} method is used.
+	 *
 	 * @see #names
 	 * @see #mode
 	 */
