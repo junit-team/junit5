@@ -10,11 +10,15 @@
 
 package org.junit.jupiter.params.provider;
 
+import org.apiguardian.api.API;
+
 /**
- * Dummy enum class to be used as default value of annotation attributes.
+ * Dummy enum class used as default value for optional attributes of
+ * annotations.
  *
  * @since 5.6
  * @see EnumSource#value()
  */
-enum NullEnum {
+@API(status = API.Status.EXPERIMENTAL, since = "5.6")
+public enum NullEnum {
 }
