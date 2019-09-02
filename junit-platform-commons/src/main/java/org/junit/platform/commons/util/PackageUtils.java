@@ -16,14 +16,13 @@ import java.io.File;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.regex.Pattern;
-
-import javax.lang.model.SourceVersion;
 
 import org.apiguardian.api.API;
 
@@ -65,7 +64,7 @@ public final class PackageUtils {
 	 * supplied package name is {@code null}, contains only whitespace, or
 	 * contains parts that are not valid in terms of Java syntax (e.g.,
 	 * containing keywords such as {@code void}, {@code import}, etc.)
-	 * @see SourceVersion#isName(CharSequence)
+	 * @see JavaNameUtils#isJavaName(String)
 	 */
 	public static void assertPackageNameIsValid(String packageName) {
 		Preconditions.notNull(packageName, "package name must not be null");
@@ -73,7 +72,7 @@ public final class PackageUtils {
 			return;
 		}
 		Preconditions.notBlank(packageName, "package name must not contain only whitespace");
-		boolean allValid = Arrays.stream(DOT_PATTERN.split(packageName, -1)).allMatch(SourceVersion::isName);
+		boolean allValid = Arrays.stream(DOT_PATTERN.split(packageName, -1)).allMatch(JavaNameUtils::isJavaName);
 		Preconditions.condition(allValid, "invalid part(s) in package name: " + packageName);
 	}
 
@@ -138,6 +137,41 @@ public final class PackageUtils {
 		}
 		catch (Exception e) {
 			return Optional.empty();
+		}
+	}
+
+	static class JavaNameUtils {
+
+		private static final List<String> RESTRICTED_KEYWORDS = Arrays.asList("strictfp", "assert", "enum", "_", "public",
+			"protected", "private", "abstract", "static", "final", "transient", "volatile", "synchronized", "native",
+			"if", "else", "try", "catch", "finally", "do", "while", "for", "continue", "switch", "case", "default",
+			"break", "throw", "return", "this", "new", "super", "import", "instanceof", "goto", "const", "null", "true",
+			"false");
+
+		public static boolean isJavaName(String s) {
+			return isJavaIdentifier(s) && !isJavaKeyword(s);
+		}
+
+		private static boolean isJavaIdentifier(String s) {
+			if (s.length() == 0) {
+				return false;
+			}
+			int start = s.codePointAt(0);
+			if (!Character.isJavaIdentifierStart(start)) {
+				return false;
+			}
+			int charCount = Character.charCount(start);
+			for (int i = charCount; i < s.length(); i += charCount) {
+				int codePoint = s.codePointAt(i);
+				if (!Character.isJavaIdentifierPart(codePoint)) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		private static boolean isJavaKeyword(String s) {
+			return RESTRICTED_KEYWORDS.contains(s);
 		}
 	}
 

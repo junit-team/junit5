@@ -9,7 +9,6 @@
  */
 
 module org.junit.platform.commons {
-	requires java.compiler; // usage of `javax.lang.model.SourceVersion` in `PackageUtils`
 	requires java.logging; // TODO Is "requires transitive java.logging" needed here?
 	requires transitive org.apiguardian.api;
 

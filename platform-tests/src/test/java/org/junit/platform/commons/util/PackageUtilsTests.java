@@ -20,11 +20,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
+import javax.lang.model.SourceVersion;
+
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.PackageUtils.JavaNameUtils;
 import org.opentest4j.ValueWrapper;
 
 /**
@@ -117,6 +123,17 @@ class PackageUtilsTests {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> PackageUtils.getAttribute(getClass(), ""));
 		assertEquals("name must not be blank", exception.getMessage());
+	}
+
+	@Nested
+	class JavaNameUtilsTest {
+
+		@ParameterizedTest
+		@ValueSource(strings = { "name", "_NAME", "null", "public", "$+!", "", "  ", "123" })
+		void isJavaName(String s) {
+			assertEquals(SourceVersion.isName(s), JavaNameUtils.isJavaName(s));
+		}
+
 	}
 
 }
