@@ -154,11 +154,11 @@ public final class PackageUtils {
 	@API(status = INTERNAL, since = "1.5")
 	static class JavaNameUtils {
 
-		private static final List<String> RESTRICTED_KEYWORDS = Arrays.asList("strictfp", "assert", "enum", "_", "public",
-			"protected", "private", "abstract", "static", "final", "transient", "volatile", "synchronized", "native",
-			"if", "else", "try", "catch", "finally", "do", "while", "for", "continue", "switch", "case", "default",
-			"break", "throw", "return", "this", "new", "super", "import", "instanceof", "goto", "const", "null", "true",
-			"false");
+		private static final List<String> RESTRICTED_KEYWORDS = Arrays.asList("strictfp", "assert", "enum", "_",
+			"public", "protected", "private", "abstract", "static", "final", "transient", "volatile", "synchronized",
+			"native", "if", "else", "try", "catch", "finally", "do", "while", "for", "continue", "switch", "case",
+			"default", "break", "throw", "return", "this", "new", "super", "import", "instanceof", "goto", "const",
+			"null", "true", "false");
 
 		/**
 		 * Returns whether or not {@code name} is a syntactically
