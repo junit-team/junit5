@@ -1,9 +1,9 @@
 pluginManagement {
 	plugins {
-		id("com.gradle.build-scan") version "2.3"
+		id("com.gradle.build-scan") version "2.4.1"
 		id("net.nemerosa.versioning") version "2.8.2"
-		id("com.github.ben-manes.versions") version "0.21.0"
-		id("com.diffplug.gradle.spotless") version "3.23.1"
+		id("com.github.ben-manes.versions") version "0.24.0"
+		id("com.diffplug.gradle.spotless") version "3.24.2"
 		id("org.ajoberstar.git-publish") version "2.1.1"
 		kotlin("jvm") version "1.3.50"
 		id("com.github.johnrengelman.shadow") version "5.1.0"
