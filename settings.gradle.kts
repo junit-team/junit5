@@ -1,22 +1,15 @@
 pluginManagement {
-	repositories {
-		gradlePluginPortal()
-	}
-	resolutionStrategy {
-		eachPlugin {
-			when (requested.id.id) {
-				"com.gradle.build-scan" -> useVersion(Versions.buildScanPlugin)
-				"net.nemerosa.versioning" -> useVersion(Versions.versioningPlugin)
-				"com.github.ben-manes.versions" -> useVersion(Versions.versionsPlugin)
-				"com.diffplug.gradle.spotless" -> useVersion(Versions.spotlessPlugin)
-				"org.ajoberstar.git-publish" -> useVersion(Versions.gitPublishPlugin)
-				"org.jetbrains.kotlin.jvm" -> useVersion(Versions.kotlin)
-				"com.github.johnrengelman.shadow" -> useVersion(Versions.shadowPlugin)
-				"org.asciidoctor.convert" -> useVersion(Versions.asciidoctorPlugin)
-				"me.champeau.gradle.jmh" -> useVersion(Versions.jmhPlugin)
-				"io.spring.nohttp" -> useVersion(Versions.noHttpPlugin)
-			}
-		}
+	plugins {
+		id("com.gradle.build-scan") version "2.3"
+		id("net.nemerosa.versioning") version "2.8.2"
+		id("com.github.ben-manes.versions") version "0.21.0"
+		id("com.diffplug.gradle.spotless") version "3.23.1"
+		id("org.ajoberstar.git-publish") version "2.1.1"
+		kotlin("jvm") version "1.3.50"
+		id("com.github.johnrengelman.shadow") version "5.1.0"
+		id("org.asciidoctor.convert") version "1.5.8.1"
+		id("me.champeau.gradle.jmh") version "0.4.8"
+		id("io.spring.nohttp") version "0.0.3.RELEASE"
 	}
 }
 

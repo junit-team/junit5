@@ -2,10 +2,7 @@ import org.gradle.api.JavaVersion
 
 object Versions {
 
-    // Languages
     val jvmTarget = JavaVersion.VERSION_1_8
-    val kotlin = "1.3.50"
-    val groovy = "3.0.0-beta-3"
 
     // Dependencies
     val apiGuardian = "1.1.0"
@@ -20,25 +17,15 @@ object Versions {
     val bartholdy = "0.2.3"
     val classgraph = "4.8.41"
     val commonsIo = "2.6"
+    val groovy = "3.0.0-beta-3"
     val log4j = "2.11.2"
     val mockito = "3.0.0"
     val slf4j = "1.7.26"
-
-    // Plugins
-    val buildScanPlugin = "2.3"
-    val gitPublishPlugin = "2.1.1"
-    val jmhPlugin = "0.4.8"
-    val shadowPlugin = "5.1.0"
-    val spotlessPlugin = "3.23.1"
-    val versioningPlugin = "2.8.2"
-    val versionsPlugin = "0.21.0"
-    val noHttpPlugin = "0.0.3.RELEASE"
 
     // Asciidoctor
     val asciidoctorDiagram = "1.5.9"
     val asciidoctorJ = "1.5.7"
     val asciidoctorPdf = "1.5.0-alpha.17"
-    val asciidoctorPlugin = "1.5.8.1"
     val jruby = "9.1.17.0"
 
     // Tools
