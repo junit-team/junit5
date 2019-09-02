@@ -19,7 +19,7 @@ tasks {
 	shadowJar {
 		classifier = ""
 		configurations = listOf(project.configurations["shadowed"])
-		exclude("META-INF/maven/**")
+		exclude("META-INF/maven/**", "META-INF/versions/9/module-info.class")
 		relocate("picocli", "org.junit.platform.console.shadow.picocli")
 		from(projectDir) {
 			include("LICENSE-picocli.md")

@@ -83,8 +83,7 @@ class ArchUnitTests {
 				.that(are(not(name("org.junit.platform.runner.JUnitPlatformRunnerListener")))) //
 				.that(are(not(name("org.junit.platform.testkit.engine.Events")))) //
 				.that(are(not(name("org.junit.platform.testkit.engine.Executions")))) //
-				.that(are(not(resideInAPackage("org.junit.platform.console.shadow.picocli")))) //
-				.that(are(not(resideInAPackage("org.junit.platform.console.shadow.picocli.groovy"))));
+				.that(are(not(resideInAPackage("org.junit.platform.console.shadow.picocli"))));
 		GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS.check(subset);
 	}
 
