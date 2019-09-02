@@ -169,7 +169,7 @@ public final class PackageUtils {
 		 * syntactically valid name, {@code false} otherwise.
 		 */
 		public static boolean isJavaName(String name) {
-			return isJavaIdentifier(name) && !isJavaKeyword(name);
+			return isJavaIdentifier(name) && isNotRestrictedKeyword(name);
 		}
 
 		private static boolean isJavaIdentifier(String s) {
@@ -190,8 +190,8 @@ public final class PackageUtils {
 			return true;
 		}
 
-		private static boolean isJavaKeyword(String s) {
-			return RESTRICTED_KEYWORDS.contains(s);
+		private static boolean isNotRestrictedKeyword(String s) {
+			return !RESTRICTED_KEYWORDS.contains(s);
 		}
 	}
 
