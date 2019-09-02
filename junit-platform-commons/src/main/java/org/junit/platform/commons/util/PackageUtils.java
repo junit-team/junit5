@@ -140,6 +140,18 @@ public final class PackageUtils {
 		}
 	}
 
+	/**
+	 * Collection of utilities for working with qualified names in Java.
+	 *
+	 * <h3>DISCLAIMER</h3>
+	 *
+	 * <p>These utilities are intended solely for usage within the JUnit framework
+	 * itself. <strong>Any usage by external parties is not supported.</strong>
+	 * Use at your own risk!
+	 *
+	 * @since 1.5
+	 */
+	@API(status = INTERNAL, since = "1.5")
 	static class JavaNameUtils {
 
 		private static final List<String> RESTRICTED_KEYWORDS = Arrays.asList("strictfp", "assert", "enum", "_", "public",
@@ -148,8 +160,16 @@ public final class PackageUtils {
 			"break", "throw", "return", "this", "new", "super", "import", "instanceof", "goto", "const", "null", "true",
 			"false");
 
-		public static boolean isJavaName(String s) {
-			return isJavaIdentifier(s) && !isJavaKeyword(s);
+		/**
+		 * Returns whether or not {@code name} is a syntactically
+		 * valid qualified name.
+		 *
+		 * @param name the string to check
+		 * @return {@code true} if this string is a
+		 * syntactically valid name, {@code false} otherwise.
+		 */
+		public static boolean isJavaName(String name) {
+			return isJavaIdentifier(name) && !isJavaKeyword(name);
 		}
 
 		private static boolean isJavaIdentifier(String s) {
