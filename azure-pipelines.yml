@@ -20,8 +20,6 @@ jobs:
     - checkout: self
       fetchDepth: 10
     - template: src/azure/azure-gradle-step.yml
-      parameters:
-        continueOnError: true
 
 - job: linux_14
   displayName: Linux (OpenJDK 14)
