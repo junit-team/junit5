@@ -16,8 +16,9 @@ import java.io.File;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
@@ -149,31 +150,30 @@ public final class PackageUtils {
 	 * itself. <strong>Any usage by external parties is not supported.</strong>
 	 * Use at your own risk!
 	 *
-	 * @since 1.5
+	 * @since 1.6
 	 */
-	@API(status = INTERNAL, since = "1.5")
 	static class JavaNameUtils {
 
-		private static final List<String> RESTRICTED_KEYWORDS = Arrays.asList("strictfp", "assert", "enum", "_",
-			"public", "protected", "private", "abstract", "static", "final", "transient", "volatile", "synchronized",
-			"native", "if", "else", "try", "catch", "finally", "do", "while", "for", "continue", "switch", "case",
-			"default", "break", "throw", "return", "this", "new", "super", "import", "instanceof", "goto", "const",
-			"null", "true", "false");
+		private static final Set<String> RESTRICTED_KEYWORDS = new HashSet<>(
+			Arrays.asList("_", "abstract", "assert", "break", "case", "catch", "const", "continue", "default", "do",
+				"else", "enum", "false", "final", "finally", "for", "goto", "if", "import", "instanceof", "native",
+				"new", "null", "private", "protected", "public", "return", "static", "strictfp", "super", "switch",
+				"synchronized", "this", "throw", "transient", "true", "try", "volatile", "while"));
 
 		/**
-		 * Returns whether or not {@code name} is a syntactically
+		 * Determine if the supplied {@code name} is a syntactically
 		 * valid qualified name.
 		 *
 		 * @param name the string to check
 		 * @return {@code true} if this string is a
 		 * syntactically valid name, {@code false} otherwise.
 		 */
-		public static boolean isJavaName(String name) {
-			return isJavaIdentifier(name) && isNotRestrictedKeyword(name);
+		static boolean isJavaName(String name) {
+			return isNotRestrictedKeyword(name) && isJavaIdentifier(name);
 		}
 
 		private static boolean isJavaIdentifier(String s) {
-			if (s.length() == 0) {
+			if (s.isEmpty()) {
 				return false;
 			}
 			int start = s.codePointAt(0);
