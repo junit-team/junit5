@@ -24,6 +24,7 @@ import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -31,15 +32,19 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Constructor;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.TrackLogRecords;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -47,6 +52,7 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
@@ -131,7 +137,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	void discoverTestPlanForEngineThatReturnsNullForItsRootDescriptor() {
+	void discoverTestPlanForEngineThatReturnsNullForItsRootDescriptor(LogRecordListener log) {
 		TestEngine engine = new TestEngineStub() {
 
 			@Override
@@ -141,35 +147,208 @@ class DefaultLauncherTests {
 		};
 
 		TestPlan testPlan = createLauncher(engine).discover(request().build());
-		assertThat(testPlan.getRoots()).hasSize(0);
+		assertThat(testPlan.getRoots()).hasSize(1);
+		assertThat(log.stream(DefaultLauncher.class, Level.WARNING).map(LogRecord::getMessage)) //
+				.containsExactly("TestEngine with ID 'TestEngineStub' failed to discover tests");
 	}
 
-	@Test
-	void discoverTestPlanForEngineThatThrowsAnErrorInDiscoveryPhase() {
-		TestEngine engine = new TestEngineStub() {
+	@ParameterizedTest
+	@ValueSource(classes = { Error.class, RuntimeException.class })
+	void discoverErrorTestDescriptorForEngineThatThrowsInDiscoveryPhase(Class<? extends Throwable> throwableClass,
+			LogRecordListener log) {
+		TestEngine engine = new TestEngineStub("my-engine-id") {
 
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-				throw new Error("ignored");
+				try {
+					Constructor<? extends Throwable> constructor = throwableClass.getDeclaredConstructor(String.class);
+					throw ExceptionUtils.throwAsUncheckedException(constructor.newInstance("ignored"));
+				}
+				catch (Exception ignored) {
+					return null;
+				}
 			}
 		};
 
-		TestPlan testPlan = createLauncher(engine).discover(request().build());
-		assertThat(testPlan.getRoots()).hasSize(0);
+		var launcher = createLauncher(engine);
+		var testPlan = launcher.discover(request().build());
+
+		assertThat(testPlan.getRoots()).hasSize(1);
+		assertThat(getOnlyElement(testPlan.getRoots()).getDisplayName()).isEqualTo("my-engine-id");
+		assertThat(log.stream(DefaultLauncher.class, Level.WARNING).map(LogRecord::getMessage)) //
+				.containsExactly("TestEngine with ID 'my-engine-id' failed to discover tests");
+
+		var listener = mock(TestExecutionListener.class);
+		launcher.execute(testPlan, listener);
+
+		var engineIdentifier = getOnlyElement(testPlan.getRoots());
+		var testExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		verify(listener).executionStarted(engineIdentifier);
+		verify(listener).executionFinished(eq(engineIdentifier), testExecutionResult.capture());
+		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
+		assertThat(testExecutionResult.getValue().getThrowable().get()) //
+				.hasMessage("TestEngine with ID 'my-engine-id' failed to discover tests");
 	}
 
 	@Test
-	void discoverTestPlanForEngineThatThrowsRuntimeExceptionInDiscoveryPhase() {
-		TestEngine engine = new TestEngineStub() {
-
+	void reportsEngineExecutionFailuresWithoutPriorEvents() {
+		var rootCause = new RuntimeException("something went horribly wrong");
+		var engine = new TestEngineStub() {
 			@Override
-			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-				throw new RuntimeException("ignored");
+			public void execute(ExecutionRequest request) {
+				throw rootCause;
 			}
 		};
 
-		TestPlan testPlan = createLauncher(engine).discover(request().build());
-		assertThat(testPlan.getRoots()).hasSize(0);
+		var listener = mock(TestExecutionListener.class);
+		createLauncher(engine).execute(request().build(), listener);
+
+		var testExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		verify(listener).executionStarted(any());
+		verify(listener).executionFinished(any(), testExecutionResult.capture());
+		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
+		assertThat(testExecutionResult.getValue().getThrowable().get()) //
+				.hasMessage("TestEngine with ID 'TestEngineStub' failed to execute tests") //
+				.hasCauseReference(rootCause);
+	}
+
+	@Test
+	void reportsEngineExecutionFailuresForSkippedEngine() {
+		var rootCause = new RuntimeException("something went horribly wrong");
+		var engine = new TestEngineStub() {
+			@Override
+			public void execute(ExecutionRequest request) {
+				var engineDescriptor = request.getRootTestDescriptor();
+				request.getEngineExecutionListener().executionSkipped(engineDescriptor, "not today");
+				throw rootCause;
+			}
+		};
+
+		var listener = mock(TestExecutionListener.class);
+		createLauncher(engine).execute(request().build(), listener);
+
+		var testExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		verify(listener).executionStarted(any());
+		verify(listener).executionFinished(any(), testExecutionResult.capture());
+		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
+		assertThat(testExecutionResult.getValue().getThrowable().get()) //
+				.hasMessage("TestEngine with ID 'TestEngineStub' failed to execute tests") //
+				.hasCauseReference(rootCause);
+	}
+
+	@Test
+	void reportsEngineExecutionFailuresForStartedEngine() {
+		var rootCause = new RuntimeException("something went horribly wrong");
+		var engine = new TestEngineStub() {
+			@Override
+			public void execute(ExecutionRequest request) {
+				var engineDescriptor = request.getRootTestDescriptor();
+				request.getEngineExecutionListener().executionStarted(engineDescriptor);
+				throw rootCause;
+			}
+		};
+
+		var listener = mock(TestExecutionListener.class);
+		createLauncher(engine).execute(request().build(), listener);
+
+		var testExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		verify(listener).executionStarted(any());
+		verify(listener).executionFinished(any(), testExecutionResult.capture());
+		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
+		assertThat(testExecutionResult.getValue().getThrowable().get()) //
+				.hasMessage("TestEngine with ID 'TestEngineStub' failed to execute tests") //
+				.hasCauseReference(rootCause);
+	}
+
+	@Test
+	void reportsEngineExecutionFailuresForSucessfullyFinishedEngine() {
+		var rootCause = new RuntimeException("something went horribly wrong");
+		var engine = new TestEngineStub() {
+			@Override
+			public void execute(ExecutionRequest request) {
+				var engineDescriptor = request.getRootTestDescriptor();
+				request.getEngineExecutionListener().executionStarted(engineDescriptor);
+				request.getEngineExecutionListener().executionFinished(engineDescriptor,
+					TestExecutionResult.successful());
+				throw rootCause;
+			}
+		};
+
+		var listener = mock(TestExecutionListener.class);
+		createLauncher(engine).execute(request().build(), listener);
+
+		var testExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		verify(listener).executionStarted(any());
+		verify(listener).executionFinished(any(), testExecutionResult.capture());
+		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
+		assertThat(testExecutionResult.getValue().getThrowable().get()) //
+				.hasMessage("TestEngine with ID 'TestEngineStub' failed to execute tests") //
+				.hasCauseReference(rootCause);
+	}
+
+	@Test
+	void reportsEngineExecutionFailuresForFailedFinishedEngine() {
+		var rootCause = new RuntimeException("something went horribly wrong");
+		var originalFailure = new RuntimeException("suppressed");
+		var engine = new TestEngineStub() {
+			@Override
+			public void execute(ExecutionRequest request) {
+				var engineDescriptor = request.getRootTestDescriptor();
+				var listener = request.getEngineExecutionListener();
+				listener.executionStarted(engineDescriptor);
+				listener.executionFinished(engineDescriptor, TestExecutionResult.failed(originalFailure));
+				throw rootCause;
+			}
+		};
+
+		var listener = mock(TestExecutionListener.class);
+		createLauncher(engine).execute(request().build(), listener);
+
+		var testExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		verify(listener).executionStarted(any());
+		verify(listener).executionFinished(any(), testExecutionResult.capture());
+		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
+		assertThat(testExecutionResult.getValue().getThrowable().get()) //
+				.hasMessage("TestEngine with ID 'TestEngineStub' failed to execute tests") //
+				.hasCauseReference(rootCause) //
+				.hasSuppressedException(originalFailure);
+	}
+
+	@Test
+	void reportsSkippedEngines() {
+		var engine = new TestEngineStub() {
+			@Override
+			public void execute(ExecutionRequest request) {
+				var engineDescriptor = request.getRootTestDescriptor();
+				request.getEngineExecutionListener().executionSkipped(engineDescriptor, "not today");
+			}
+		};
+
+		var listener = mock(TestExecutionListener.class);
+		createLauncher(engine).execute(request().build(), listener);
+
+		verify(listener).executionSkipped(any(TestIdentifier.class), eq("not today"));
+		verify(listener, times(0)).executionStarted(any());
+		verify(listener, times(0)).executionFinished(any(), any());
+	}
+
+	@Test
+	void reportsFinishedEngines() {
+		var engine = new TestEngineStub() {
+			@Override
+			public void execute(ExecutionRequest request) {
+				var engineDescriptor = request.getRootTestDescriptor();
+				var listener = request.getEngineExecutionListener();
+				listener.executionStarted(engineDescriptor);
+				listener.executionFinished(engineDescriptor, TestExecutionResult.successful());
+			}
+		};
+
+		var listener = mock(TestExecutionListener.class);
+		createLauncher(engine).execute(request().build(), listener);
+
+		verify(listener).executionStarted(any());
+		verify(listener).executionFinished(any(), eq(TestExecutionResult.successful()));
 	}
 
 	@Test
