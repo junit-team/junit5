@@ -32,18 +32,6 @@ sourceSets {
 eclipse {
 	classpath {
 		plusConfigurations.add(shadowed)
-
-		// Workaround for https://github.com/gradle/gradle/issues/10393
-		file {
-			whenMerged(Action<org.gradle.plugins.ide.eclipse.model.Classpath> {
-				entries = entries.distinctBy {
-					if (it is org.gradle.plugins.ide.eclipse.model.ProjectDependency)
-						it.path
-					else
-						it
-				}
-			})
-		}
 	}
 }
 
