@@ -4,42 +4,34 @@ on:
   push:
     branches:
     - master
+    - 'releases/*'
+    - 'marc/gh-actions'
   pull_request: 
     branches:
     - master
+    - 'releases/*'
 
 jobs:
-  linux_12:
-    name: Linux (OpenJDK 12)
+  linux:
+    name: Linux
     runs-on: ubuntu-latest
-    container: openjdk:12
+    container: junitteam/build:latest
     steps:
     - uses: actions/checkout@master
       with:
         fetch-depth: 10
-    - name: Test
+    - name: OpenJDK 12
       run: |
         ./gradlew --version
         ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
-      shell: bash
-      env:
-       LC_ALL: en_US.UTF-8
-
-  linux_13:
-    name: Linux (OpenJDK 13)
-    runs-on: ubuntu-latest
-    container: openjdk:13
-    steps:
-    - uses: actions/checkout@master
-      with:
-        fetch-depth: 10
-    - name: Test
+    - name: OpenJDK 13
       run: |
         ./gradlew --version
-        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
-      shell: bash
-      env:
-       LC_ALL: en_US.UTF-8
+        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true --PjavaHome=$JDK13 build
+    - name: OpenJDK 14
+      run: |
+        ./gradlew --version
+        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true --PjavaHome=$JDK14 build
 
   windows:
     name: Windows
