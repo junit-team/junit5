@@ -23,15 +23,15 @@ jobs:
     - name: OpenJDK 12
       run: |
         ./gradlew --version
-        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
+#        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
     - name: OpenJDK 13
       run: |
         ./gradlew --version
-        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true --PjavaHome=$JDK13 build
+        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true -PjavaHome=$JDK13 build
     - name: OpenJDK 14
       run: |
         ./gradlew --version
-        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true --PjavaHome=$JDK14 build
+        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true -PjavaHome=$JDK14 build
 
   windows:
     name: Windows
