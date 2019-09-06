@@ -15,23 +15,15 @@ jobs:
   linux:
     name: Linux
     runs-on: ubuntu-latest
-    container: junitteam/build:latest
+    container: openjdk:12
     steps:
     - uses: actions/checkout@master
       with:
         fetch-depth: 10
-    - name: OpenJDK 12
+    - name: Test
       run: |
         ./gradlew --version
-#        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
-    - name: OpenJDK 13
-      run: |
-        ./gradlew --version
-        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true -PjavaHome=$JDK13 build
-    - name: OpenJDK 14
-      run: |
-        ./gradlew --version
-        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true -PjavaHome=$JDK14 build
+        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
 
   windows:
     name: Windows
@@ -68,3 +60,18 @@ jobs:
       shell: bash
       env:
        LC_ALL: en_US.UTF-8
+
+  coverage:
+    name: Coverage
+    needs: linux
+    runs-on: ubuntu-latest
+    container: openjdk:12
+    steps:
+    - uses: actions/checkout@master
+      with:
+        fetch-depth: 10
+    - env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      run: |
+        ./gradlew --scan --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport
+        bash <(curl -s https://codecov.io/bash)
