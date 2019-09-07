@@ -21,10 +21,13 @@ import de.sormuras.bartholdy.Result;
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import platform.tooling.support.Request;
 
+@DisabledOnJre(JRE.JAVA_14)
 class VintageGradleIntegrationTests {
 
 	@Test

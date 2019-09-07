@@ -20,11 +20,14 @@ import java.time.Duration;
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 import platform.tooling.support.Request;
 
 /**
  * @since 1.3
  */
+@DisabledOnJre(JRE.JAVA_14)
 class GradleKotlinExtensionsTests {
 
 	@Test
