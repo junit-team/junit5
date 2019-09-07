@@ -71,12 +71,14 @@ jobs:
       with:
         fetch-depth: 10
     - name: Run tests with JaCoCo
+      shell: bash
       run: |
         set -e
         export JAVA_HOME="${JAVA_HOME_12_X64}"
         export PATH="${JAVA_HOME}/bin:${PATH}"
         ./gradlew --scan --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport
     - name: Upload to Codecov.io
+      shell: bash
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
