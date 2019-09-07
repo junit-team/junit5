@@ -34,8 +34,8 @@ jobs:
         fetch-depth: 10
     - name: 'Set up JDK 12'
       uses: actions/setup-java@v1
-        with:
-          java-version: 12
+      with:
+        java-version: 12
     - name: 'Test'
       run: |
         gradlew --version
@@ -50,8 +50,8 @@ jobs:
         fetch-depth: 10
     - name: 'Set up JDK 12'
       uses: actions/setup-java@v1
-        with:
-          java-version: 12
+      with:
+        java-version: 12
     - name: 'Test'
       run: |
         ./gradlew --version
@@ -68,8 +68,8 @@ jobs:
         fetch-depth: 10
     - name: 'Set up JDK 12'
       uses: actions/setup-java@v1
-        with:
-          java-version: 12
+      with:
+        java-version: 12
     - name: 'Run tests with JaCoCo'
       shell: bash
       run: |
@@ -92,8 +92,8 @@ jobs:
         fetch-depth: 10
     - name: 'Set up JDK 12'
       uses: actions/setup-java@v1
-        with:
-          java-version: 12
+      with:
+        java-version: 12
     - name: 'Publish'
       if: github.event_name == 'push'
       env:
@@ -111,8 +111,8 @@ jobs:
         fetch-depth: 10
     - name: 'Set up JDK 12'
       uses: actions/setup-java@v1
-        with:
-          java-version: 12
+      with:
+        java-version: 12
     - name: 'Upload Documentation'
       if: github.event_name == 'push'
       env:
