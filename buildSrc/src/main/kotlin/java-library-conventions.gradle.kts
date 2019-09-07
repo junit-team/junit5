@@ -79,6 +79,9 @@ if (project in mavenizedProjects) {
 		dependsOn(tasks.classes)
 		archiveClassifier.set("sources")
 		from(sourceSets.main.get().allSource)
+		from("${project.projectDir}/src/module/$javaModuleName") {
+			include("module-info.java")
+		}
 		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 	}
 
@@ -92,8 +95,11 @@ if (project in mavenizedProjects) {
 			include("LICENSE.md", "LICENSE-notice.md")
 			into("META-INF")
 		}
-		from("$buildDir/classes/java/module/$javaModuleName") {
-			include("module-info.class")
+		val suffix = archiveClassifier.getOrElse("")
+		if (suffix.isBlank() || suffix == "all") { // "all" is used by shadow plugin
+			from("$buildDir/classes/java/module/$javaModuleName") {
+				include("module-info.class")
+			}
 		}
 	}
 
