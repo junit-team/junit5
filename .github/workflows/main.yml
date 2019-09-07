@@ -112,7 +112,7 @@ jobs:
     - name: Upload Documentation
       if: github.event_name == 'push'
       env:
-        GRGIT_USER: ${{ secrets.GH_TOKEN }}
+        GRGIT_USER: ${{ secrets.GITHUB_TOKEN }}
       run: |
         set -e
         export JAVA_HOME="${JAVA_HOME_12_X64}"
