@@ -10,6 +10,15 @@ link:{junit5-repo}+/milestone/43?closed=1+[5.5.2] milestone page in the JUnit re
 on GitHub.
 
 
+[[release-notes-5.5.2-overall-improvements]]
+=== Overall Improvements
+
+* Published artifacts have been fixed regarding module descriptors.
+  - Binary JAR files contain `module-info.class`.
+  - Source JAR files contain `module-info.java`.
+  - Javadoc JAR files contain neither `module-info.class` nor `module-info.java`.
+
+
 [[release-notes-5.5.2-junit-platform]]
 === JUnit Platform
 
