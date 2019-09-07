@@ -1,4 +1,4 @@
-name: JUnit 5 CI
+name: CI
 
 on:
   push:
@@ -15,15 +15,13 @@ jobs:
   linux:
     name: Linux
     runs-on: ubuntu-latest
+    container: junitteam/build:latest
     steps:
     - uses: actions/checkout@master
       with:
         fetch-depth: 10
     - name: Test
       run: |
-        set -e
-        export JAVA_HOME="${JAVA_HOME_12_X64}"
-        export PATH="${JAVA_HOME}/bin:${PATH}"
         ./gradlew --version
         ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
 
@@ -67,6 +65,7 @@ jobs:
     name: Coverage
     needs: linux
     runs-on: ubuntu-latest
+    container: junitteam/build:latest
     steps:
     - uses: actions/checkout@master
       with:
