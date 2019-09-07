@@ -35,7 +35,11 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The `JupiterTestEngine` no longer crashes without executing any tests if JUnit 4 is on
+  the classpath but Hamcrest is not. Specifically, initialization of the
+  `OpenTest4JAndJUnit4AwareThrowableCollector` class no longer fails if the
+  `org.junit.internal.AssumptionViolatedException` class cannot be loaded from the
+  classpath due to a missing Hamcrest dependency.
 
 ==== Deprecations and Breaking Changes
 
