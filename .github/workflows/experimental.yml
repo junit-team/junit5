@@ -1,4 +1,4 @@
-name: JUnit 5 - Experimental
+name: Experimental
 
 on:
   push:
