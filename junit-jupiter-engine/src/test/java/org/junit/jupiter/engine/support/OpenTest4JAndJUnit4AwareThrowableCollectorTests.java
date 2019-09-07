@@ -1,0 +1,80 @@
+/*
+ * Copyright 2015-2019 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * https://www.eclipse.org/legal/epl-v20.html
+ */
+
+package org.junit.jupiter.engine.support;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.net.URL;
+import java.net.URLClassLoader;
+
+import org.junit.internal.AssumptionViolatedException;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.ReflectionUtils;
+
+/**
+ * Unit tests for {@link OpenTest4JAndJUnit4AwareThrowableCollector}.
+ *
+ * @since 5.6
+ */
+class OpenTest4JAndJUnit4AwareThrowableCollectorTests {
+
+	@Test
+	void simulateHamcrestNotInTheClasspath() throws Exception {
+		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+		try {
+			HamcrestHidingClassLoader classLoader = new HamcrestHidingClassLoader();
+
+			// We have to set our custom ClassLoader as the TCCL so that
+			// ReflectionUtils uses it (indirectly via ClassLoaderUtils).
+			Thread.currentThread().setContextClassLoader(classLoader);
+
+			// Ensure that our custom ClassLoader actually throws a NoClassDefFoundError
+			// when attempting to load the AssumptionViolatedException class.
+			assertThrows(NoClassDefFoundError.class,
+				() -> ReflectionUtils.tryToLoadClass(AssumptionViolatedException.class.getName()));
+
+			Class<?> clazz = classLoader.loadClass(OpenTest4JAndJUnit4AwareThrowableCollector.class.getName());
+			assertNotNull(ReflectionUtils.newInstance(clazz));
+		}
+		finally {
+			Thread.currentThread().setContextClassLoader(originalClassLoader);
+		}
+	}
+
+	private static class HamcrestHidingClassLoader extends URLClassLoader {
+
+		HamcrestHidingClassLoader() {
+			super(new URL[] {
+					OpenTest4JAndJUnit4AwareThrowableCollector.class.getProtectionDomain().getCodeSource().getLocation() },
+				getSystemClassLoader());
+		}
+
+		@Override
+		public Class<?> loadClass(String name) throws ClassNotFoundException {
+
+			// Load a new instance of the OpenTest4JAndJUnit4AwareThrowableCollector class
+			if (name.equals(OpenTest4JAndJUnit4AwareThrowableCollector.class.getName())) {
+				return findClass(name);
+			}
+
+			// Simulate that Hamcrest is not in the classpath when loading AssumptionViolatedException
+			if (name.equals(AssumptionViolatedException.class.getName())) {
+				throw new NoClassDefFoundError("org/hamcrest/SelfDescribing");
+			}
+
+			// Else
+			return super.loadClass(name);
+		}
+
+	}
+
+}
