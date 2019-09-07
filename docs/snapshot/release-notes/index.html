@@ -645,7 +645,11 @@ to specify the maximum number of lines to print for exception stack traces.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The <code>JupiterTestEngine</code> no longer crashes without executing any tests if JUnit 4 is on
+the classpath but Hamcrest is not. Specifically, initialization of the
+<code>OpenTest4JAndJUnit4AwareThrowableCollector</code> class no longer fails if the
+<code>org.junit.internal.AssumptionViolatedException</code> class cannot be loaded from the
+classpath due to a missing Hamcrest dependency.</p>
 </li>
 </ul>
 </div>
@@ -806,7 +810,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-09-01 20:53:21 UTC
+Last updated 2019-09-07 15:04:39 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
