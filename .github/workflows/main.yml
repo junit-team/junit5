@@ -13,56 +13,52 @@ on:
 
 jobs:
   linux:
-    name: Linux
+    name: 'Linux (JDK 12)'
     runs-on: ubuntu-latest
     container: junitteam/build:latest
     steps:
     - uses: actions/checkout@master
       with:
         fetch-depth: 10
-    - name: Test
+    - name: 'Test'
       run: |
         ./gradlew --version
         ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
 
   windows:
-    name: Windows
+    name: 'Windows (JDK 12)'
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@master
       with:
         fetch-depth: 10
-    - run: choco install openjdk --version 12.0.2
-      shell: bash
-    - name: Test
+    - name: 'Set up JDK 12'
+      uses: actions/setup-java@v1
+        with:
+          java-version: 12
+    - name: 'Test'
       run: |
-        export JAVA_HOME="C:\Program Files\OpenJDK\jdk-12.0.2"
-        export PATH="$JAVA_HOME/bin:$PATH"
-        ./gradlew --version
-        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
-      shell: bash
-      env:
-       LC_ALL: en_US.UTF-8
+        gradlew --version
+        gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
 
   mac:
-    name: Mac OS
+    name: 'Mac OS (JDK 12)'
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@master
       with:
         fetch-depth: 10
-    - name: Test
+    - name: 'Set up JDK 12'
+      uses: actions/setup-java@v1
+        with:
+          java-version: 12
+    - name: 'Test'
       run: |
-        export JAVA_HOME="${JAVA_HOME_12_X64}"
-        export PATH="$JAVA_HOME/bin:$PATH"
         ./gradlew --version
         ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
-      shell: bash
-      env:
-       LC_ALL: en_US.UTF-8
 
   coverage:
-    name: Coverage
+    name: 'Coverage'
     needs: linux
     runs-on: ubuntu-latest
     container: junitteam/build:latest
@@ -70,12 +66,14 @@ jobs:
     - uses: actions/checkout@master
       with:
         fetch-depth: 10
-    - name: Run tests with JaCoCo
+    - name: 'Set up JDK 12'
+      uses: actions/setup-java@v1
+        with:
+          java-version: 12
+    - name: 'Run tests with JaCoCo'
       shell: bash
       run: |
-        set -e
-        export JAVA_HOME="${JAVA_HOME_12_X64}"
-        export PATH="${JAVA_HOME}/bin:${PATH}"
+        ./gradlew --version
         ./gradlew --scan --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport
     - name: Upload to Codecov.io
       shell: bash
@@ -92,16 +90,16 @@ jobs:
     - uses: actions/checkout@master
       with:
         fetch-depth: 10
-    - name: Publish
+    - name: 'Set up JDK 12'
+      uses: actions/setup-java@v1
+        with:
+          java-version: 12
+    - name: 'Publish'
       if: github.event_name == 'push'
       env:
         ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
         ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
-      run: |
-        set -e
-        export JAVA_HOME="${JAVA_HOME_12_X64}"
-        export PATH="${JAVA_HOME}/bin:${PATH}"
-        ./gradlew --scan publish -x check
+      run: ./gradlew --scan publish -x check
 
   update_documentation:
     name: Update Snapshot Documentation
@@ -111,13 +109,14 @@ jobs:
     - uses: actions/checkout@master
       with:
         fetch-depth: 10
-    - name: Upload Documentation
+    - name: 'Set up JDK 12'
+      uses: actions/setup-java@v1
+        with:
+          java-version: 12
+    - name: 'Upload Documentation'
       if: github.event_name == 'push'
       env:
         GRGIT_USER: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        set -e
-        export JAVA_HOME="${JAVA_HOME_12_X64}"
-        export PATH="${JAVA_HOME}/bin:${PATH}"
         sudo apt-get install graphviz
         ./src/publishDocumentationSnapshotOnlyIfNecessary.sh
