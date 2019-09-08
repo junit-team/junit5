@@ -1,7 +1,7 @@
 [[release-notes-5.5.2]]
 == 5.5.2
 
-*Date of Release:* ❓
+*Date of Release:* September 8, 2019
 
 *Scope:* Bug fixes since 5.5.1
 
