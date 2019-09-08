@@ -1,0 +1,43 @@
+[[release-notes-5.5.2]]
+== 5.5.2
+
+*Date of Release:* September 8, 2019
+
+*Scope:* Bug fixes since 5.5.1
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/43?closed=1+[5.5.2] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.5.2-overall-improvements]]
+=== Overall Improvements
+
+* Published artifacts have been fixed regarding module descriptors.
+  - Binary JAR files contain `module-info.class`.
+  - Source JAR files contain `module-info.java`.
+  - Javadoc JAR files contain neither `module-info.class` nor `module-info.java`.
+
+
+[[release-notes-5.5.2-junit-platform]]
+=== JUnit Platform
+
+No changes.
+
+
+[[release-notes-5.5.2-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* The `JupiterTestEngine` no longer crashes without executing any tests if JUnit 4 is on
+  the classpath but Hamcrest is not. Specifically, initialization of the
+  `OpenTest4JAndJUnit4AwareThrowableCollector` class no longer fails if the
+  `org.junit.internal.AssumptionViolatedException` class cannot be loaded from the
+  classpath due to a missing Hamcrest dependency.
+
+
+[[release-notes-5.5.2-junit-vintage]]
+=== JUnit Vintage
+
+No changes.
