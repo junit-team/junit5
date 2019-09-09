@@ -99,6 +99,7 @@
 26758150e6510c3f472a8c19f21dee59  junit-platform-engine/src/main/java/org/junit/platform/engine/FilterResult.java
 274229a426a169cd4eede711ee31eee4  documentation/src/test/java/example/DisabledClassDemo.java
 2809c2361ecbbd6de5fd819984f13a6e  junit-platform-console/src/main/java/org/junit/platform/console/options/PicocliCommandLineOptionsParser.java
+281481fbee13ff2dd2fb0f162dd9ded3  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 2878e7439bf1dbe7964cc985b1f33879  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertSame.java
 288842d71e081d2f87bb936fa63215a9  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/UniqueIdFilter.java
 28acf407482292ffac359354b5765a7c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/ArgumentConversionException.java
@@ -332,7 +333,6 @@
 83b2c5705b51ccbd4a587ddc19eaa5cc  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ToStringBuilder.java
 8420520e60b9ef4125d8660c0734eb66  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EmptyArgumentsProvider.java
 84557677f43a584e653b06fca90541d0  junit-platform-commons/src/main/java/org/junit/platform/commons/util/StringUtils.java
-847ab598a08943d551de0640026894a7  junit-platform-commons/src/main/java/org/junit/platform/commons/util/PackageUtils.java
 8521fe7b63baa5c50cfd34b74750741d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateExtensionContext.java
 85332669b491322f013f3e3fd8d6408f  junit-vintage-engine/src/main/java/org/junit/vintage/engine/VintageTestEngine.java
 853beb28970f7b6b33da9bb36415610c  documentation/src/docs/asciidoc/tocbot-3.0.2/tocbot.min.js
@@ -456,7 +456,6 @@ b07e4ab801c4048fe731606d56f979d5  junit-jupiter-api/src/main/java/org/junit/jupi
 b0a079d25f31e9b0650277b805a786a6  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClassSelector.java
 b10448700933938e79543044b4908be7  documentation/src/test/kotlin/example/registration/KotlinWebServerDemo.kt
 b115447343ff93ee97b62440d60f2286  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/MethodSelector.java
-b22164ea7b33abf36e2bf5d11f7b54a8  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 b311e9a6df1f91b243250e56b4dafca8  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertLinesMatch.java
 b326d3991d8584d3c4135c6ba6f0d5a2  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeClassNamePatterns.java
 b34af404d09715048d530dbf001b254c  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ReflectionUtils.java
@@ -602,6 +601,7 @@ ef3b688543dc6c7c80e8febacaeacf5e  junit-platform-commons/src/main/java/org/junit
 eff90a7cb1dfa7206dca42ea0e986f7c  junit-platform-testkit/src/main/java/org/junit/platform/testkit/package-info.java
 f0199a36bd738d15424a6f2a49c330f2  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestMethod.java
 f02b067dd26ff65062706c42c2aff2c6  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/package-info.java
+f02ece176df788b2b9f0aa8669d24a82  junit-platform-commons/src/main/java/org/junit/platform/commons/util/PackageUtils.java
 f05ceece99c3f6a17e792a23bfb1a96e  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/SelectorResolver.java
 f074fdf84b78c55ac9b811c35400d5d0  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/support/JupiterThrowableCollectorFactory.java
 f0e99c406aca4a90f3d507998a84d14e  documentation/src/test/resources/junit-platform.properties
