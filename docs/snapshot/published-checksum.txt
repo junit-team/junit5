@@ -99,7 +99,6 @@
 26758150e6510c3f472a8c19f21dee59  junit-platform-engine/src/main/java/org/junit/platform/engine/FilterResult.java
 274229a426a169cd4eede711ee31eee4  documentation/src/test/java/example/DisabledClassDemo.java
 2809c2361ecbbd6de5fd819984f13a6e  junit-platform-console/src/main/java/org/junit/platform/console/options/PicocliCommandLineOptionsParser.java
-281481fbee13ff2dd2fb0f162dd9ded3  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 2878e7439bf1dbe7964cc985b1f33879  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertSame.java
 288842d71e081d2f87bb936fa63215a9  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/UniqueIdFilter.java
 28acf407482292ffac359354b5765a7c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/ArgumentConversionException.java
@@ -136,6 +135,7 @@
 340ad2ad072e26ac6220be45530dddb2  documentation/src/test/java/example/IgnoredTestsDemo.java
 342fa07056f55dbc2fa433658e6f6910  junit-platform-commons/src/main/java/org/junit/platform/commons/support/AnnotationSupport.java
 3453184cca5339fc51dab3e1667b6f5c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/JavaTimeConversionPattern.java
+35067fefab5622925c825c8d4dff38c1  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 3519a20a6b12f97e50a74577c6491ef4  documentation/src/test/java/example/TestingAStackDemo.java
 3591479495b99cd48cdc34e3928c4edc  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/ConvertWith.java
 366ad6786afed0587542a0b0aa718715  junit-platform-engine/src/main/java/org/junit/platform/engine/ConfigurationParameters.java
@@ -174,6 +174,7 @@
 44dc86ad3baa20b8fa011469147874a2  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/MethodArgumentsProvider.java
 457fe274b391e6dd7c95c738e7e55eaf  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrderer.java
 460c4e669f42c11832a878900393829e  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfSystemPropertyCondition.java
+462718c123b046960efe8d9684aeffb1  junit-platform-commons/src/main/java/org/junit/platform/commons/util/PackageUtils.java
 47249a1caa1aa2f0681a6588b99f3ac1  documentation/src/test/java/example/interceptor/SwingEdtInterceptor.java
 4736ae4f17e88ade5a702f33fe2e85a1  documentation/src/docs/asciidoc/user-guide/images/writing-tests_execution_mode.svg
 47adf679fee48dfa589ae98c38fee366  junit-jupiter-params/src/main/java/org/junit/jupiter/params/support/AnnotationConsumerInitializer.java
@@ -601,7 +602,6 @@ ef3b688543dc6c7c80e8febacaeacf5e  junit-platform-commons/src/main/java/org/junit
 eff90a7cb1dfa7206dca42ea0e986f7c  junit-platform-testkit/src/main/java/org/junit/platform/testkit/package-info.java
 f0199a36bd738d15424a6f2a49c330f2  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestMethod.java
 f02b067dd26ff65062706c42c2aff2c6  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/package-info.java
-f02ece176df788b2b9f0aa8669d24a82  junit-platform-commons/src/main/java/org/junit/platform/commons/util/PackageUtils.java
 f05ceece99c3f6a17e792a23bfb1a96e  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/SelectorResolver.java
 f074fdf84b78c55ac9b811c35400d5d0  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/support/JupiterThrowableCollectorFactory.java
 f0e99c406aca4a90f3d507998a84d14e  documentation/src/test/resources/junit-platform.properties
