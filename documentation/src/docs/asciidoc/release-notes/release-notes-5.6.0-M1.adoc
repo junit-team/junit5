@@ -28,8 +28,10 @@ on GitHub.
 
 * New `printFailuresTo(PrintWriter, int)` method in `TestExecutionSummary` that allows one
   to specify the maximum number of lines to print for exception stack traces.
-* Implement equivalent of `SourceVersion.isName()` in `PackageUtils` in order to drop
-  `java.compiler` dependence in `org.junit.platform.commons`.
+* The `junit-platform-commons` module no longer has a dependency on the `java.compiler`
+  module (in terms of the Java Module System). Specifically, a new internal utility has
+  been introduced in `PackageUtils` that implements functionality equivalent to
+  `javax.lang.model.SourceVersion.isName(CharSequence)` from the `java.compiler` module.
 
 
 [[release-notes-5.6.0-M1-junit-jupiter]]

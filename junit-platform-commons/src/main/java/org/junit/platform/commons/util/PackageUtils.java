@@ -16,6 +16,7 @@ import java.io.File;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -144,54 +145,43 @@ public final class PackageUtils {
 	/**
 	 * Collection of utilities for working with qualified names in Java.
 	 *
-	 * <h3>DISCLAIMER</h3>
-	 *
-	 * <p>These utilities are intended solely for usage within the JUnit framework
-	 * itself. <strong>Any usage by external parties is not supported.</strong>
-	 * Use at your own risk!
-	 *
 	 * @since 1.6
 	 */
 	static class JavaNameUtils {
 
-		private static final Set<String> RESTRICTED_KEYWORDS = new HashSet<>(
-			Arrays.asList("_", "abstract", "assert", "break", "case", "catch", "const", "continue", "default", "do",
-				"else", "enum", "false", "final", "finally", "for", "goto", "if", "import", "instanceof", "native",
-				"new", "null", "private", "protected", "public", "return", "static", "strictfp", "super", "switch",
-				"synchronized", "this", "throw", "transient", "true", "try", "volatile", "while"));
+		private static final Set<String> RESTRICTED_KEYWORDS = Collections.unmodifiableSet(
+			new HashSet<>(Arrays.asList("_", "abstract", "assert", "break", "case", "catch", "const", "continue",
+				"default", "do", "else", "enum", "false", "final", "finally", "for", "goto", "if", "import",
+				"instanceof", "native", "new", "null", "private", "protected", "public", "return", "static", "strictfp",
+				"super", "switch", "synchronized", "this", "throw", "transient", "true", "try", "volatile", "while")));
 
 		/**
-		 * Determine if the supplied {@code name} is a syntactically
-		 * valid qualified name.
+		 * Determine if the supplied {@code name} is a syntactically valid qualified name.
 		 *
 		 * @param name the string to check
-		 * @return {@code true} if this string is a
-		 * syntactically valid name, {@code false} otherwise.
+		 * @return {@code true} if the supplied string is a syntactically valid name
 		 */
 		static boolean isJavaName(String name) {
-			return isNotRestrictedKeyword(name) && isJavaIdentifier(name);
+			return name != null && !name.isEmpty() && isNotRestrictedKeyword(name) && isJavaIdentifier(name);
 		}
 
-		private static boolean isJavaIdentifier(String s) {
-			if (s.isEmpty()) {
-				return false;
-			}
-			int start = s.codePointAt(0);
+		private static boolean isNotRestrictedKeyword(String name) {
+			return !RESTRICTED_KEYWORDS.contains(name);
+		}
+
+		private static boolean isJavaIdentifier(String name) {
+			int start = name.codePointAt(0);
 			if (!Character.isJavaIdentifierStart(start)) {
 				return false;
 			}
 			int charCount = Character.charCount(start);
-			for (int i = charCount; i < s.length(); i += charCount) {
-				int codePoint = s.codePointAt(i);
+			for (int i = charCount; i < name.length(); i += charCount) {
+				int codePoint = name.codePointAt(i);
 				if (!Character.isJavaIdentifierPart(codePoint)) {
 					return false;
 				}
 			}
 			return true;
-		}
-
-		private static boolean isNotRestrictedKeyword(String s) {
-			return !RESTRICTED_KEYWORDS.contains(s);
 		}
 	}
 

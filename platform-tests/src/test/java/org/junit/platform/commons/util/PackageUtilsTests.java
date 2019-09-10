@@ -126,12 +126,22 @@ class PackageUtilsTests {
 	}
 
 	@Nested
-	class JavaNameUtilsTest {
+	class JavaNameUtilsTests {
 
 		@ParameterizedTest
-		@ValueSource(strings = { "name", "_NAME", "null", "public", "$+!", "", "  ", "123" })
+		@ValueSource(strings = { "name", "_NAME", "null", "var", "public", "$+!", "", "  ", "123", "true" })
 		void isJavaName(String s) {
 			assertEquals(SourceVersion.isName(s), JavaNameUtils.isJavaName(s));
+		}
+
+		@Test
+		void isJavaNameWithNullValue() {
+			assertFalse(JavaNameUtils.isJavaName(null));
+
+			// It appears that there is a bug in the JDK. SourceVersion.isName(null)
+			// is documented to return false, but it throws a NullPointerException
+			// (at least in JDK 12).
+			assertThrows(NullPointerException.class, () -> SourceVersion.isName(null));
 		}
 
 	}
