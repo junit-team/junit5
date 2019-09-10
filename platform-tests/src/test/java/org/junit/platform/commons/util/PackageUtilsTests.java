@@ -136,12 +136,13 @@ class PackageUtilsTests {
 
 		@Test
 		void isJavaNameWithNullValue() {
-			assertFalse(JavaNameUtils.isJavaName(null));
-
-			// It appears that there is a bug in the JDK. SourceVersion.isName(null)
-			// is documented to return false, but it throws a NullPointerException
-			// (at least in JDK 12).
+			// According to https://bugs.openjdk.java.net/browse/JDK-6362039,
+			// SourceVersion.isName(null) throws a NullPointerException instead
+			// of returning false.
 			assertThrows(NullPointerException.class, () -> SourceVersion.isName(null));
+
+			// However, for our purposes, we return false for a null value.
+			assertFalse(JavaNameUtils.isJavaName(null));
 		}
 
 	}
