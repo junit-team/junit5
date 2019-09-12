@@ -37,9 +37,10 @@ jobs:
       with:
         java-version: 12
     - name: 'Test'
+      shell: bash
       run: |
-        gradlew --version
-        gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
+        ./gradlew --version
+        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
 
   mac:
     name: 'Mac OS (JDK 12)'
