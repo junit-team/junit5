@@ -117,7 +117,7 @@ jobs:
     - name: 'Upload Documentation'
       if: github.event_name == 'push'
       env:
-        GRGIT_USER: ${{ secrets.GITHUB_TOKEN }}
+        GRGIT_USER: ${{ secrets.GH_TOKEN }}
       run: |
         sudo apt-get install graphviz
         ./src/publishDocumentationSnapshotOnlyIfNecessary.sh
