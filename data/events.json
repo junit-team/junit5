@@ -125,7 +125,7 @@
     "title": "Testing with Spring 4.3, JUnit 5, and Beyond",
     "event": "SpringOne Platform",
     "date": "2016-08-02",
-    "location": "Las Vegas, NV",
+    "location": "Las Vegas, NV, USA",
     "link": "https://2016.event.springoneplatform.io/schedule/sessions/testing_with_spring_4_3_junit_5_and_beyond.html",
     "speakers": [
       "sbrannen"
@@ -278,7 +278,7 @@
     "title": "JUnit 5 - The New Testing Framework for Java and Platform for the JVM",
     "event": "Devoxx US 2017",
     "date": "2017-03-23",
-    "location": "San Jose, CA",
+    "location": "San Jose, CA, USA",
     "link": "http://cfp.devoxx.us/2017/talk/ZCD-4979/JUnit_5_-_The_New_Testing_Framework_for_Java_and_Platform_for_the_JVM",
     "speakers": [
       "marcphilipp"
@@ -473,7 +473,7 @@
     "title": "JUnit 5 the Next Step in Automated Testing",
     "event": "SpringOne Platform",
     "date": "2018-09-25",
-    "location": "Washington, D.C.",
+    "location": "Washington, D.C., USA",
     "link": "https://springoneplatform.io/2018/sessions/junit-5-the-next-step-in-automated-testing",
     "speakers": [
       "sbrannen"
@@ -645,7 +645,7 @@
     "title": "JUnit 5 - From @Test up to your own TestEngine",
     "event": "Oracle Code One 2019",
     "date": "2019-09-16",
-    "location": "San Francisco, US",
+    "location": "San Francisco, CA, USA",
     "link": "https://events.rainfocus.com/widget/oracle/oow19/catalogcodeone19?search=%22Sven%20Ruppert%22",
     "speakers": [
       "svenruppert"
@@ -669,6 +669,16 @@
     "link": "https://jcon.one",
     "speakers": [
       "sormuras"
+    ]
+  },
+  {
+    "title": "JUnit 5: Evolution and Innovation",
+    "event": "SpringOne Platform",
+    "date": "2019-10-10",
+    "location": "Austin, TX, USA",
+    "link": "https://springoneplatform.io/2019/sessions/junit-5-evolution-and-innovation",
+    "speakers": [
+      "sbrannen"
     ]
   }
 ]
