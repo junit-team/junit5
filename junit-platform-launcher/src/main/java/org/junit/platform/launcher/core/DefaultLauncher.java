@@ -182,9 +182,9 @@ class DefaultLauncher implements Launcher {
 		catch (Throwable throwable) {
 			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
 			String message = String.format("TestEngine with ID '%s' failed to discover tests", testEngine.getId());
-			logger.warn(throwable, () -> message);
+			logger.error(throwable, () -> message);
 			JUnitException cause = new JUnitException(message, throwable);
-			return new ErrorTestDescriptor(uniqueEngineId, testEngine.getId(), cause);
+			return new EngineDiscoveryErrorDescriptor(uniqueEngineId, testEngine.getId(), cause);
 		}
 	}
 
@@ -198,10 +198,10 @@ class DefaultLauncher implements Launcher {
 				testExecutionListener);
 			for (TestEngine testEngine : root.getTestEngines()) {
 				TestDescriptor engineDescriptor = root.getTestDescriptorFor(testEngine);
-				if (engineDescriptor instanceof ErrorTestDescriptor) {
+				if (engineDescriptor instanceof EngineDiscoveryErrorDescriptor) {
 					engineExecutionListener.executionStarted(engineDescriptor);
 					engineExecutionListener.executionFinished(engineDescriptor,
-						TestExecutionResult.failed(((ErrorTestDescriptor) engineDescriptor).getCause()));
+						TestExecutionResult.failed(((EngineDiscoveryErrorDescriptor) engineDescriptor).getCause()));
 				}
 				else {
 					execute(engineDescriptor, engineExecutionListener, configurationParameters, testEngine);
@@ -236,11 +236,11 @@ class DefaultLauncher implements Launcher {
 
 	private void execute(TestDescriptor engineDescriptor, EngineExecutionListener listener,
 			ConfigurationParameters configurationParameters, TestEngine testEngine) {
-		DelayingEngineExecutionListener delayingListener = new DelayingEngineExecutionListener(listener,
+		OutcomeDelayingEngineExecutionListener delayingListener = new OutcomeDelayingEngineExecutionListener(listener,
 			engineDescriptor);
 		try {
 			testEngine.execute(new ExecutionRequest(engineDescriptor, delayingListener, configurationParameters));
-			delayingListener.reportEngineResult();
+			delayingListener.reportEngineOutcome();
 		}
 		catch (Throwable throwable) {
 			BlacklistedExceptions.rethrowIfBlacklisted(throwable);

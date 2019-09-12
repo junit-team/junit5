@@ -15,12 +15,12 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 
 /**
- * Delays reporting of engine skipped/finished event so that exceptions thrown
+ * Delays reporting of engine skipped/finished events so that exceptions thrown
  * by engines can be reported to listeners.
  *
  * @since 5.6
  */
-class DelayingEngineExecutionListener extends DelegatingEngineExecutionListener {
+class OutcomeDelayingEngineExecutionListener extends DelegatingEngineExecutionListener {
 
 	private final TestDescriptor engineDescriptor;
 
@@ -29,7 +29,7 @@ class DelayingEngineExecutionListener extends DelegatingEngineExecutionListener 
 	private volatile String skipReason;
 	private volatile TestExecutionResult executionResult;
 
-	DelayingEngineExecutionListener(EngineExecutionListener delegate, TestDescriptor engineDescriptor) {
+	OutcomeDelayingEngineExecutionListener(EngineExecutionListener delegate, TestDescriptor engineDescriptor) {
 		super(delegate);
 		this.engineDescriptor = engineDescriptor;
 	}
@@ -61,7 +61,7 @@ class DelayingEngineExecutionListener extends DelegatingEngineExecutionListener 
 		}
 	}
 
-	void reportEngineResult() {
+	void reportEngineOutcome() {
 		if (outcome == Outcome.FINISHED) {
 			super.executionFinished(engineDescriptor, executionResult);
 		}

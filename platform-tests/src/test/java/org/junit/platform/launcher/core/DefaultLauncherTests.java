@@ -148,7 +148,7 @@ class DefaultLauncherTests {
 
 		TestPlan testPlan = createLauncher(engine).discover(request().build());
 		assertThat(testPlan.getRoots()).hasSize(1);
-		assertThat(log.stream(DefaultLauncher.class, Level.WARNING).map(LogRecord::getMessage)) //
+		assertThat(log.stream(DefaultLauncher.class, Level.SEVERE).map(LogRecord::getMessage)) //
 				.containsExactly("TestEngine with ID 'TestEngineStub' failed to discover tests");
 	}
 
@@ -175,7 +175,7 @@ class DefaultLauncherTests {
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		assertThat(getOnlyElement(testPlan.getRoots()).getDisplayName()).isEqualTo("my-engine-id");
-		assertThat(log.stream(DefaultLauncher.class, Level.WARNING).map(LogRecord::getMessage)) //
+		assertThat(log.stream(DefaultLauncher.class, Level.SEVERE).map(LogRecord::getMessage)) //
 				.containsExactly("TestEngine with ID 'my-engine-id' failed to discover tests");
 
 		var listener = mock(TestExecutionListener.class);

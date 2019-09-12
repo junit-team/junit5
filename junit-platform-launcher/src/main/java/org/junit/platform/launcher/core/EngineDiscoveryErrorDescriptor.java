@@ -13,16 +13,26 @@ package org.junit.platform.launcher.core;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 
-class ErrorTestDescriptor extends AbstractTestDescriptor {
+/**
+ * Represents an error thrown by a {@link org.junit.platform.engine.TestEngine}
+ * during discovery.
+ *
+ * <p>The contained {@link Throwable} will be reported as the cause of a test
+ * failure by the {@link DefaultLauncher} when execution is started for this
+ * engine.
+ *
+ * @since 1.6
+ */
+class EngineDiscoveryErrorDescriptor extends AbstractTestDescriptor {
 
 	private final Throwable cause;
 
-	ErrorTestDescriptor(UniqueId uniqueId, String displayName, Throwable cause) {
+	EngineDiscoveryErrorDescriptor(UniqueId uniqueId, String displayName, Throwable cause) {
 		super(uniqueId, displayName);
 		this.cause = cause;
 	}
 
-	public Throwable getCause() {
+	Throwable getCause() {
 		return cause;
 	}
 
