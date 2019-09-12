@@ -21,10 +21,12 @@ import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -161,26 +163,28 @@ class DefaultLauncher implements Launcher {
 			logger.debug(() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 
-			Optional<TestDescriptor> engineRoot = discoverEngineRoot(testEngine, discoveryRequest);
-			engineRoot.ifPresent(rootDescriptor -> root.add(testEngine, rootDescriptor));
+			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, discoveryRequest);
+			root.add(testEngine, rootDescriptor);
 		}
 		root.applyPostDiscoveryFilters(discoveryRequest);
 		root.prune();
 		return root;
 	}
 
-	private Optional<TestDescriptor> discoverEngineRoot(TestEngine testEngine,
-			LauncherDiscoveryRequest discoveryRequest) {
+	private TestDescriptor discoverEngineRoot(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest) {
 
 		UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
 		try {
 			TestDescriptor engineRoot = testEngine.discover(discoveryRequest, uniqueEngineId);
 			discoveryResultValidator.validate(testEngine, engineRoot);
-			return Optional.of(engineRoot);
+			return engineRoot;
 		}
 		catch (Throwable throwable) {
-			handleThrowable(testEngine, "discover", throwable);
-			return Optional.empty();
+			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+			String message = String.format("TestEngine with ID '%s' failed to discover tests", testEngine.getId());
+			logger.error(throwable, () -> message);
+			JUnitException cause = new JUnitException(message, throwable);
+			return new EngineDiscoveryErrorDescriptor(uniqueEngineId, testEngine.getId(), cause);
 		}
 	}
 
@@ -193,9 +197,15 @@ class DefaultLauncher implements Launcher {
 			ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(internalTestPlan,
 				testExecutionListener);
 			for (TestEngine testEngine : root.getTestEngines()) {
-				TestDescriptor testDescriptor = root.getTestDescriptorFor(testEngine);
-				execute(testEngine,
-					new ExecutionRequest(testDescriptor, engineExecutionListener, configurationParameters));
+				TestDescriptor engineDescriptor = root.getTestDescriptorFor(testEngine);
+				if (engineDescriptor instanceof EngineDiscoveryErrorDescriptor) {
+					engineExecutionListener.executionStarted(engineDescriptor);
+					engineExecutionListener.executionFinished(engineDescriptor,
+						TestExecutionResult.failed(((EngineDiscoveryErrorDescriptor) engineDescriptor).getCause()));
+				}
+				else {
+					execute(engineDescriptor, engineExecutionListener, configurationParameters, testEngine);
+				}
 			}
 			testExecutionListener.testPlanExecutionFinished(internalTestPlan);
 		});
@@ -224,19 +234,19 @@ class DefaultLauncher implements Launcher {
 		return registry;
 	}
 
-	private void execute(TestEngine testEngine, ExecutionRequest executionRequest) {
+	private void execute(TestDescriptor engineDescriptor, EngineExecutionListener listener,
+			ConfigurationParameters configurationParameters, TestEngine testEngine) {
+		OutcomeDelayingEngineExecutionListener delayingListener = new OutcomeDelayingEngineExecutionListener(listener,
+			engineDescriptor);
 		try {
-			testEngine.execute(executionRequest);
+			testEngine.execute(new ExecutionRequest(engineDescriptor, delayingListener, configurationParameters));
+			delayingListener.reportEngineOutcome();
 		}
 		catch (Throwable throwable) {
-			handleThrowable(testEngine, "execute", throwable);
+			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+			delayingListener.reportEngineFailure(new JUnitException(
+				String.format("TestEngine with ID '%s' failed to execute tests", testEngine.getId()), throwable));
 		}
-	}
-
-	private void handleThrowable(TestEngine testEngine, String phase, Throwable throwable) {
-		BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-		logger.warn(throwable,
-			() -> String.format("TestEngine with ID '%s' failed to %s tests", testEngine.getId(), phase));
 	}
 
 }

@@ -32,6 +32,8 @@ on GitHub.
   module (in terms of the Java Module System). Specifically, a new internal utility has
   been introduced in `PackageUtils` that implements functionality equivalent to
   `javax.lang.model.SourceVersion.isName(CharSequence)` from the `java.compiler` module.
+* Exceptions thrown by test engines during discovery and execution are now reported to
+  `TestExecutionListeners`.
 
 
 [[release-notes-5.6.0-M1-junit-jupiter]]

@@ -47,10 +47,6 @@ class InternalTestPlan extends TestPlan {
 		return root;
 	}
 
-	TestPlan getDelegate() {
-		return delegate;
-	}
-
 	@Override
 	@SuppressWarnings("deprecation")
 	public void add(TestIdentifier testIdentifier) {
