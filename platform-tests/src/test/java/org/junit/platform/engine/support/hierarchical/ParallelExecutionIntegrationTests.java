@@ -567,18 +567,34 @@ class ParallelExecutionIntegrationTests {
 
 	@ExtendWith(ThreadReporter.class)
 	static class SimpleTestCase {
+
+		private static final CountDownLatch LATCH = new CountDownLatch(3);
+		private static final ThreadLocal<Object> THREAD_LOCAL = ThreadLocal.withInitial(() -> {
+			LATCH.countDown();
+			try {
+				LATCH.await(5, SECONDS);
+			}
+			catch (InterruptedException e) {
+				throw new AssertionError("Interrupted", e);
+			}
+			return null;
+		});
+
 		@Test
 		void test1() throws Exception {
+			THREAD_LOCAL.get();
 			Thread.sleep(10);
 		}
 
 		@Test
 		void test2() throws Exception {
+			THREAD_LOCAL.get();
 			Thread.sleep(10);
 		}
 
 		@Test
 		void test3() throws Exception {
+			THREAD_LOCAL.get();
 			Thread.sleep(10);
 		}
 	}
