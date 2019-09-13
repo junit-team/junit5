@@ -563,14 +563,6 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#release-notes-5.6.0-M1-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
-<li><a href="#release-notes-5.5.2">5.5.2</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.5.2-overall-improvements">Overall Improvements</a></li>
-<li><a href="#release-notes-5.5.2-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.5.2-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.5.2-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
 <li><a href="#release-notes-5.5.1">5.5.1</a>
 <ul class="sectlevel2">
 <li><a href="#release-notes-5.5.1-junit-platform">JUnit Platform</a></li>
@@ -641,16 +633,6 @@ will be removed in JUnit Platform 1.7.0.</p>
 <li>
 <p>New <code>printFailuresTo(PrintWriter, int)</code> method in <code>TestExecutionSummary</code> that allows one
 to specify the maximum number of lines to print for exception stack traces.</p>
-</li>
-<li>
-<p>The <code>junit-platform-commons</code> module no longer has a dependency on the <code>java.compiler</code>
-module (in terms of the Java Module System). Specifically, a new internal utility has
-been introduced in <code>PackageUtils</code> that implements functionality equivalent to
-<code>javax.lang.model.SourceVersion.isName(CharSequence)</code> from the <code>java.compiler</code> module.</p>
-</li>
-<li>
-<p>Exceptions thrown by test engines during discovery and execution are now reported to
-<code>TestExecutionListeners</code>.</p>
 </li>
 </ul>
 </div>
@@ -740,74 +722,6 @@ that supports parameters of a specific type.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="release-notes-5.5.2"><a class="anchor" href="#release-notes-5.5.2"></a>5.5.2</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> September 8, 2019</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong> Bug fixes since 5.5.1</p>
-</div>
-<div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/43?closed=1">5.5.2</a> milestone page in the JUnit repository
-on GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.2-overall-improvements"><a class="anchor" href="#release-notes-5.5.2-overall-improvements"></a>Overall Improvements</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Published artifacts have been fixed regarding module descriptors.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Binary JAR files contain <code>module-info.class</code>.</p>
-</li>
-<li>
-<p>Source JAR files contain <code>module-info.java</code>.</p>
-</li>
-<li>
-<p>Javadoc JAR files contain neither <code>module-info.class</code> nor <code>module-info.java</code>.</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.2-junit-platform"><a class="anchor" href="#release-notes-5.5.2-junit-platform"></a>JUnit Platform</h3>
-<div class="paragraph">
-<p>No changes.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.2-junit-jupiter"><a class="anchor" href="#release-notes-5.5.2-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>JupiterTestEngine</code> no longer crashes without executing any tests if JUnit 4 is on
-the classpath but Hamcrest is not. Specifically, initialization of the
-<code>OpenTest4JAndJUnit4AwareThrowableCollector</code> class no longer fails if the
-<code>org.junit.internal.AssumptionViolatedException</code> class cannot be loaded from the
-classpath due to a missing Hamcrest dependency.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.2-junit-vintage"><a class="anchor" href="#release-notes-5.5.2-junit-vintage"></a>JUnit Vintage</h3>
-<div class="paragraph">
-<p>No changes.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="release-notes-5.5.1"><a class="anchor" href="#release-notes-5.5.1"></a>5.5.1</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -830,7 +744,7 @@ on GitHub.</p>
 <div class="sect2">
 <h3 id="release-notes-5.5.1-junit-jupiter"><a class="anchor" href="#release-notes-5.5.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
+<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -892,7 +806,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-09-13 10:24:19 UTC
+Last updated 2019-09-13 18:11:39 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
