@@ -1,14 +1,6 @@
 name: Experimental
 
-on:
-  push:
-    branches:
-    - master
-    - 'releases/*'
-  pull_request: 
-    branches:
-    - master
-    - 'releases/*'
+on: [push, pull_request]
 
 jobs:
   openjdk13:
