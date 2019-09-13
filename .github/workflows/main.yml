@@ -1,15 +1,6 @@
 name: CI
 
-on:
-  push:
-    branches:
-    - master
-    - 'releases/*'
-    - 'marc/gh-actions'
-  pull_request: 
-    branches:
-    - master
-    - 'releases/*'
+on: [push, pull_request]
 
 jobs:
   linux:
@@ -89,14 +80,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
+      if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/master')
       with:
         fetch-depth: 10
     - name: 'Set up JDK 12'
+      if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/master')
       uses: actions/setup-java@v1
       with:
         java-version: 12
     - name: 'Publish'
-      if: github.event_name == 'push'
+      if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/master')
       env:
         ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
         ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
@@ -108,14 +101,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       with:
         fetch-depth: 10
     - name: 'Set up JDK 12'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       uses: actions/setup-java@v1
       with:
         java-version: 12
     - name: 'Upload Documentation'
-      if: github.event_name == 'push'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       env:
         GRGIT_USER: ${{ secrets.GH_TOKEN }}
       run: |
