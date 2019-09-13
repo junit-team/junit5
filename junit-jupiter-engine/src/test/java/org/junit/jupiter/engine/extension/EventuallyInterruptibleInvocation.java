@@ -10,10 +10,8 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
@@ -21,26 +19,14 @@ import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
 /**
  * @since 5.5
  */
-class UninterruptibleInvocation implements Invocation<Void> {
-
-	private final long duration;
-	private final TimeUnit unit;
-
-	UninterruptibleInvocation(long duration, TimeUnit unit) {
-		this.duration = duration;
-		this.unit = unit;
-	}
+class EventuallyInterruptibleInvocation implements Invocation<Void> {
 
 	@Override
 	public Void proceed() {
-		long startTime = System.nanoTime();
-		while (true) {
+		while (!Thread.currentThread().isInterrupted()) {
 			assertThat(IntStream.range(1, 1_000_000).sum()).isGreaterThan(0);
-			long elapsedTime = System.nanoTime() - startTime;
-			if (elapsedTime > NANOSECONDS.convert(duration, unit)) {
-				return null;
-			}
 		}
+		return null;
 	}
 
 }

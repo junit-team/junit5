@@ -45,7 +45,6 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.Timeout;
-import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
@@ -137,18 +136,18 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	@DisplayName("fails uninterruptible methods")
-	void failsUninterruptibleMethods() {
-		EngineExecutionResults results = executeTestsForClass(UninterruptibleMethodTestCase.class);
+	@DisplayName("fails methods that do not throw InterruptedException")
+	void failsMethodsWithoutInterruptedException() {
+		EngineExecutionResults results = executeTestsForClass(MethodWithoutInterruptedExceptionTestCase.class);
 
-		Execution execution = findExecution(results.testEvents(), "uninterruptibleMethod()");
+		Execution execution = findExecution(results.testEvents(), "methodThatDoesNotThrowInterruptedException()");
 		assertThat(execution.getDuration()) //
-				.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
+				.isGreaterThanOrEqualTo(Duration.ofMillis(1)) //
 				.isLessThan(Duration.ofSeconds(1));
 		assertThat(execution.getTerminationInfo().getExecutionResult().getStatus()).isEqualTo(FAILED);
 		assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
 				.isInstanceOf(TimeoutException.class) //
-				.hasMessage("uninterruptibleMethod() timed out after 1 millisecond");
+				.hasMessage("methodThatDoesNotThrowInterruptedException() timed out after 1 millisecond");
 	}
 
 	@Test
@@ -387,11 +386,11 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 	static class InheritedTimeoutAnnotatedClassTestCase extends TimeoutAnnotatedClassTestCase {
 	}
 
-	static class UninterruptibleMethodTestCase {
+	static class MethodWithoutInterruptedExceptionTestCase {
 		@Test
 		@Timeout(value = 1, unit = MILLISECONDS)
-		void uninterruptibleMethod() {
-			new UninterruptibleInvocation(OS.WINDOWS.isCurrentOs() ? 500 : 50, MILLISECONDS).proceed();
+		void methodThatDoesNotThrowInterruptedException() {
+			new EventuallyInterruptibleInvocation().proceed();
 		}
 	}
 
@@ -437,7 +436,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@Timeout(value = 1, unit = NANOSECONDS)
 		void test() {
-			new UninterruptibleInvocation(10, MILLISECONDS).proceed();
+			new EventuallyInterruptibleInvocation().proceed();
 			throw new OutOfMemoryError();
 		}
 	}
