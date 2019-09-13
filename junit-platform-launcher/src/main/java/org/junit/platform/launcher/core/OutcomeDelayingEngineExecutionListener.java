@@ -18,7 +18,7 @@ import org.junit.platform.engine.TestExecutionResult;
  * Delays reporting of engine skipped/finished events so that exceptions thrown
  * by engines can be reported to listeners.
  *
- * @since 5.6
+ * @since 1.6
  */
 class OutcomeDelayingEngineExecutionListener extends DelegatingEngineExecutionListener {
 
@@ -34,6 +34,7 @@ class OutcomeDelayingEngineExecutionListener extends DelegatingEngineExecutionLi
 		this.engineDescriptor = engineDescriptor;
 	}
 
+	@Override
 	public void executionSkipped(TestDescriptor testDescriptor, String reason) {
 		if (testDescriptor == engineDescriptor) {
 			outcome = Outcome.SKIPPED;
@@ -44,6 +45,7 @@ class OutcomeDelayingEngineExecutionListener extends DelegatingEngineExecutionLi
 		}
 	}
 
+	@Override
 	public void executionStarted(TestDescriptor testDescriptor) {
 		if (testDescriptor == engineDescriptor) {
 			engineStarted = true;
@@ -51,6 +53,7 @@ class OutcomeDelayingEngineExecutionListener extends DelegatingEngineExecutionLi
 		super.executionStarted(testDescriptor);
 	}
 
+	@Override
 	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult executionResult) {
 		if (testDescriptor == engineDescriptor) {
 			outcome = Outcome.FINISHED;
@@ -83,4 +86,5 @@ class OutcomeDelayingEngineExecutionListener extends DelegatingEngineExecutionLi
 	private enum Outcome {
 		SKIPPED, FINISHED
 	}
+
 }

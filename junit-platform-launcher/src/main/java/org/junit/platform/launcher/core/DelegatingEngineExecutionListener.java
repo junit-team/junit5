@@ -16,11 +16,11 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
- * @since 5.6
+ * @since 1.6
  */
 class DelegatingEngineExecutionListener implements EngineExecutionListener {
 
-	private EngineExecutionListener delegate;
+	private final EngineExecutionListener delegate;
 
 	DelegatingEngineExecutionListener(EngineExecutionListener delegate) {
 		this.delegate = delegate;
@@ -50,4 +50,5 @@ class DelegatingEngineExecutionListener implements EngineExecutionListener {
 	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
 		delegate.reportingEntryPublished(testDescriptor, entry);
 	}
+
 }

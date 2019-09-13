@@ -45,4 +45,5 @@ class EngineDiscoveryErrorDescriptor extends AbstractTestDescriptor {
 	public void prune() {
 		// prevent pruning
 	}
+
 }

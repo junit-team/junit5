@@ -172,7 +172,6 @@ class DefaultLauncher implements Launcher {
 	}
 
 	private TestDescriptor discoverEngineRoot(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest) {
-
 		UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
 		try {
 			TestDescriptor engineRoot = testEngine.discover(discoveryRequest, uniqueEngineId);
@@ -213,6 +212,7 @@ class DefaultLauncher implements Launcher {
 
 	private void withInterceptedStreams(ConfigurationParameters configurationParameters,
 			TestExecutionListenerRegistry listenerRegistry, Consumer<TestExecutionListener> action) {
+
 		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
 		Optional<StreamInterceptingTestExecutionListener> streamInterceptingTestExecutionListener = StreamInterceptingTestExecutionListener.create(
 			configurationParameters, testExecutionListener::reportingEntryPublished);
@@ -236,6 +236,7 @@ class DefaultLauncher implements Launcher {
 
 	private void execute(TestDescriptor engineDescriptor, EngineExecutionListener listener,
 			ConfigurationParameters configurationParameters, TestEngine testEngine) {
+
 		OutcomeDelayingEngineExecutionListener delayingListener = new OutcomeDelayingEngineExecutionListener(listener,
 			engineDescriptor);
 		try {
