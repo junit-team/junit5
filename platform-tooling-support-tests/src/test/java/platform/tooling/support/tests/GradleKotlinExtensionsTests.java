@@ -20,14 +20,14 @@ import java.time.Duration;
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnJre;
-import org.junit.jupiter.api.condition.JRE;
+import org.opentest4j.TestAbortedException;
+
+import platform.tooling.support.Helper;
 import platform.tooling.support.Request;
 
 /**
  * @since 1.3
  */
-@DisabledOnJre(JRE.JAVA_14)
 class GradleKotlinExtensionsTests {
 
 	@Test
@@ -37,6 +37,7 @@ class GradleKotlinExtensionsTests {
 				.setProject("gradle-kotlin-extensions") //
 				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
 				.setTimeout(Duration.ofMinutes(2)) //
+				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.build() //
 				.run();
 

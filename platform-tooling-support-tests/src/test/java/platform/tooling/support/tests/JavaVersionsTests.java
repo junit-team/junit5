@@ -54,10 +54,10 @@ class JavaVersionsTests {
 				.setWorkspace("java-versions-" + version) //
 				.addArguments("--debug", "verify") //
 				.setTimeout(Duration.ofMinutes(2)) //
-				.putEnvironment("JAVA_HOME", javaHome.toString()) //
+				.setJavaHome(javaHome) //
 				.build().run();
 		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
-		assertEquals(0, result.getExitCode(), result.toString());
+		assertEquals(0, result.getExitCode());
 		assertEquals("", result.getOutput("err"));
 		return result.getOutputLines("out");
 	}

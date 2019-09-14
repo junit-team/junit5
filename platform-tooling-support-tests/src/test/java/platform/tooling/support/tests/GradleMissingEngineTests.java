@@ -21,14 +21,14 @@ import de.sormuras.bartholdy.Tool;
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnJre;
-import org.junit.jupiter.api.condition.JRE;
+import org.opentest4j.TestAbortedException;
+
+import platform.tooling.support.Helper;
 import platform.tooling.support.Request;
 
 /**
  * @since 1.3
  */
-@DisabledOnJre(JRE.JAVA_14)
 class GradleMissingEngineTests {
 
 	@Test
@@ -43,12 +43,13 @@ class GradleMissingEngineTests {
 				.setWorkspace(project + '-' + version) //
 				.setTool(gradle) //
 				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
+				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.build() //
 				.run();
 
 		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
-		assertEquals(1, result.getExitCode(), result.toString());
+		assertEquals(1, result.getExitCode());
 		assertLinesMatch(List.of( //
 			">> HEAD >>", //
 			".+DEBUG.+Cannot create Launcher without at least one TestEngine.+", //

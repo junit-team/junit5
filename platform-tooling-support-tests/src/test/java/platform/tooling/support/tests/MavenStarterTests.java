@@ -10,6 +10,7 @@
 
 package platform.tooling.support.tests;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
@@ -17,6 +18,9 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import java.time.Duration;
 
 import org.junit.jupiter.api.Test;
+import org.opentest4j.TestAbortedException;
+
+import platform.tooling.support.Helper;
 import platform.tooling.support.Request;
 
 /**
@@ -31,14 +35,16 @@ class MavenStarterTests {
 				.setProject("maven-starter") //
 				.addArguments("--debug", "verify") //
 				.setTimeout(Duration.ofMinutes(2)) //
+				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.build() //
 				.run();
 
 		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
-		assertEquals(0, result.getExitCode(), result.toString());
+		assertEquals(0, result.getExitCode());
 		assertEquals("", result.getOutput("err"));
 		assertTrue(result.getOutputLines("out").contains("[INFO] BUILD SUCCESS"));
 		assertTrue(result.getOutputLines("out").contains("[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0"));
+		assertThat(result.getOutput("out")).contains("Using Java version: 1.8");
 	}
 }
