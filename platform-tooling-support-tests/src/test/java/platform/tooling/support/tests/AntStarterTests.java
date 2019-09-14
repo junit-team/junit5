@@ -10,6 +10,7 @@
 
 package platform.tooling.support.tests;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
@@ -20,6 +21,9 @@ import java.util.List;
 import de.sormuras.bartholdy.tool.Ant;
 
 import org.junit.jupiter.api.Test;
+import org.opentest4j.TestAbortedException;
+
+import platform.tooling.support.Helper;
 import platform.tooling.support.Request;
 
 /**
@@ -34,6 +38,7 @@ class AntStarterTests {
 				.setTool(Ant.install("1.10.6", Paths.get("build", "test-tools"))) //
 				.setProject("ant-starter") //
 				.addArguments("-verbose", "-lib", standalone.toAbsolutePath()) //
+				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.build() //
 				.run();
 
@@ -41,6 +46,7 @@ class AntStarterTests {
 
 		assertEquals(0, result.getExitCode());
 		assertEquals("", result.getOutput("err"), "error log isn't empty");
+		assertThat(result.getOutput("out")).contains("Using Java version: 1.8");
 		assertLinesMatch(List.of(">> HEAD >>", //
 			"test.junit.launcher:", //
 			">>>>", //

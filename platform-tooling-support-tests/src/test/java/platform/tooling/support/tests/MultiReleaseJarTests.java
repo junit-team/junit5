@@ -68,7 +68,7 @@ class MultiReleaseJarTests {
 		result.getOutputLines("out").forEach(System.out::println);
 		result.getOutputLines("err").forEach(System.err::println);
 
-		assertEquals(0, result.getExitCode(), result.toString());
+		assertEquals(0, result.getExitCode());
 		assertEquals("", result.getOutput("err"));
 		assertTrue(result.getOutputLines("out").contains("[INFO] BUILD SUCCESS"));
 

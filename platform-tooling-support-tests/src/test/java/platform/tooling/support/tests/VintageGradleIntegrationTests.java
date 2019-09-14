@@ -21,13 +21,13 @@ import de.sormuras.bartholdy.Result;
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnJre;
-import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.opentest4j.TestAbortedException;
+
+import platform.tooling.support.Helper;
 import platform.tooling.support.Request;
 
-@DisabledOnJre(JRE.JAVA_14)
 class VintageGradleIntegrationTests {
 
 	@Test
@@ -57,6 +57,7 @@ class VintageGradleIntegrationTests {
 	private Result run(String version) {
 		Result result = Request.builder() //
 				.setTool(new GradleWrapper(Paths.get(".."))) //
+				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.setProject("vintage") //
 				.setWorkspace("vintage-gradle-" + version) //
 				.addArguments("clean", "test", "--stacktrace") //

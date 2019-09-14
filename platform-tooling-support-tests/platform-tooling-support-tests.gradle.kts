@@ -52,7 +52,7 @@ tasks.test {
 		// Pass "java.home.N" system properties from sources like "~/.gradle/gradle.properties".
 		// Values will be picked up by: platform.tooling.support.Helper::getJavaHome
 		for (N in 8..99) {
-			val home = project.properties["java.home.$N"]
+			val home = project.properties["java.home.$N"] ?: System.getenv("JDK$N")
 			if (home != null) systemProperty("java.home.$N", home)
 		}
 		// TODO Enabling parallel execution fails due to Gradle's listener not being thread-safe:

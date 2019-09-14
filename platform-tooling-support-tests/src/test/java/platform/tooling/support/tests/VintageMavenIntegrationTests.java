@@ -21,6 +21,9 @@ import de.sormuras.bartholdy.Result;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.opentest4j.TestAbortedException;
+
+import platform.tooling.support.Helper;
 import platform.tooling.support.Request;
 
 class VintageMavenIntegrationTests {
@@ -54,6 +57,7 @@ class VintageMavenIntegrationTests {
 	private Result run(String version) {
 		Result result = Request.builder() //
 				.setTool(Request.maven()) //
+				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.setProject("vintage") //
 				.setWorkspace("vintage-maven-" + version) //
 				.addArguments("clean", "test", "--debug") //

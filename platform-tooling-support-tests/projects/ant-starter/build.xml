@@ -24,6 +24,7 @@
     </target>
 
     <target name="init">
+        <echo message="Using Java version: ${java.version}"/>
         <mkdir dir="build/main"/>
         <mkdir dir="build/test"/>
         <mkdir dir="build/test-report"/>
