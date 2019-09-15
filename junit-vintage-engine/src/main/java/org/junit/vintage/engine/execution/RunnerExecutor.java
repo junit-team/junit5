@@ -19,6 +19,7 @@ import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.runner.JUnitCore;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
+import org.junit.vintage.engine.descriptor.TestSourceProvider;
 
 /**
  * @since 4.12
@@ -27,15 +28,17 @@ import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 public class RunnerExecutor {
 
 	private final EngineExecutionListener engineExecutionListener;
+	private TestSourceProvider testSourceProvider;
 
-	public RunnerExecutor(EngineExecutionListener engineExecutionListener) {
+	public RunnerExecutor(EngineExecutionListener engineExecutionListener, TestSourceProvider testSourceProvider) {
 		this.engineExecutionListener = engineExecutionListener;
+		this.testSourceProvider = testSourceProvider;
 	}
 
 	public void execute(RunnerTestDescriptor runnerTestDescriptor) {
 		TestRun testRun = new TestRun(runnerTestDescriptor);
 		JUnitCore core = new JUnitCore();
-		core.addListener(new RunListenerAdapter(testRun, engineExecutionListener));
+		core.addListener(new RunListenerAdapter(testRun, engineExecutionListener, testSourceProvider));
 		try {
 			core.run(runnerTestDescriptor.toRequest());
 		}

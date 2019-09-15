@@ -25,6 +25,7 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
+import org.junit.vintage.engine.descriptor.TestSourceProvider;
 import org.junit.vintage.engine.descriptor.VintageTestDescriptor;
 import org.junit.vintage.engine.support.UniqueIdReader;
 import org.junit.vintage.engine.support.UniqueIdStringifier;
@@ -36,11 +37,13 @@ class RunListenerAdapter extends RunListener {
 
 	private final TestRun testRun;
 	private final EngineExecutionListener listener;
+	private TestSourceProvider testSourceProvider;
 	private final Function<Description, String> uniqueIdExtractor;
 
-	RunListenerAdapter(TestRun testRun, EngineExecutionListener listener) {
+	RunListenerAdapter(TestRun testRun, EngineExecutionListener listener, TestSourceProvider testSourceProvider) {
 		this.testRun = testRun;
 		this.listener = listener;
+		this.testSourceProvider = testSourceProvider;
 		this.uniqueIdExtractor = new UniqueIdReader().andThen(new UniqueIdStringifier());
 	}
 
@@ -100,7 +103,8 @@ class RunListenerAdapter extends RunListener {
 		// workaround for dynamic children as used by Spock's Runner
 		TestDescriptor parent = findParent(description);
 		UniqueId uniqueId = parent.getUniqueId().append(SEGMENT_TYPE_DYNAMIC, uniqueIdExtractor.apply(description));
-		VintageTestDescriptor dynamicDescriptor = new VintageTestDescriptor(uniqueId, description);
+		VintageTestDescriptor dynamicDescriptor = new VintageTestDescriptor(uniqueId, description,
+			testSourceProvider.findTestSource(description));
 		parent.addChild(dynamicDescriptor);
 		testRun.registerDynamicTest(dynamicDescriptor);
 		dynamicTestRegistered(dynamicDescriptor);

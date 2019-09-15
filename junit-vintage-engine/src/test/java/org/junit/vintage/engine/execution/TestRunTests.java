@@ -54,7 +54,8 @@ class TestRunTests {
 			new BlockJUnit4ClassRunner(testClass));
 		UniqueId dynamicTestId = runnerId.append(SEGMENT_TYPE_DYNAMIC, "dynamicTest");
 		Description dynamicDescription = createTestDescription(testClass, "dynamicTest");
-		VintageTestDescriptor dynamicTestDescriptor = new VintageTestDescriptor(dynamicTestId, dynamicDescription);
+		VintageTestDescriptor dynamicTestDescriptor = new VintageTestDescriptor(dynamicTestId, dynamicDescription,
+			null);
 
 		TestRun testRun = new TestRun(runnerTestDescriptor);
 		testRun.registerDynamicTest(dynamicTestDescriptor);
