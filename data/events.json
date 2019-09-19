@@ -662,16 +662,6 @@
     ]
   },
   {
-    "title": "JUnit 5 - Testing In The Modular World",
-    "event": "JCON 2019",
-    "date": "2019-09-26",
-    "location": "Düsseldorf, Germany",
-    "link": "https://jcon.one",
-    "speakers": [
-      "sormuras"
-    ]
-  },
-  {
     "title": "JUnit 5: Evolution and Innovation",
     "event": "SpringOne Platform",
     "date": "2019-10-10",
