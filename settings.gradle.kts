@@ -14,8 +14,8 @@ pluginManagement {
 }
 
 val javaVersion = JavaVersion.current()
-require(javaVersion.isJava12Compatible) {
-	"The JUnit 5 build requires Java 12 or higher. Currently executing with Java ${javaVersion.majorVersion}."
+require(javaVersion.isJava13Compatible) {
+	"The JUnit 5 build requires Java 13 or higher. Currently executing with Java ${javaVersion.majorVersion}."
 }
 
 rootProject.name = "junit5"
