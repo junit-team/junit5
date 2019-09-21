@@ -294,7 +294,6 @@
 75109eb829d7bd6f879fc6e2e5d100b0  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/ClassNamePatternParameterConverter.java
 757bb07effa81cc601d97c2840586366  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateInvocationTestDescriptor.java
 75b5833f19095f29bcf9ef200b83879c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/package-info.java
-76842c2e5950dae144408e9052ad8b5f  documentation/src/test/kotlin/example/KotlinAssertionsDemo.kt
 76ba902665f3f66ef4f8b6015ad739ce  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutExtension.java
 770a2d1e66c3001e1307b3b2141e786f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Order.java
 77197dd0710d3f39a2703c06e1f28d7d  junit-platform-engine/src/main/java/org/junit/platform/engine/support/filter/ClasspathScanningSupport.java
@@ -329,6 +328,7 @@
 812462abe021d215167ce370722af30a  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/EngineDiscoveryResultValidator.java
 813a50d804024b9e2b65eb8c38dd4f0c  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EngineTestKit.java
 82e90bfbe4417ba3eb01c3b7f40bdaf3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNotNull.java
+833f29de27267afebbf2810b79e28ac5  documentation/src/test/kotlin/example/KotlinAssertionsDemo.kt
 834693b5c10ef5f7dffca34dea22a57e  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeEngines.java
 83b2c5705b51ccbd4a587ddc19eaa5cc  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ToStringBuilder.java
 8420520e60b9ef4125d8660c0734eb66  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EmptyArgumentsProvider.java
