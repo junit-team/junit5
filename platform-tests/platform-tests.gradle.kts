@@ -7,6 +7,8 @@ plugins {
 apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 dependencies {
+	internal(platform(project(":dependencies")))
+
 	// --- Things we are testing --------------------------------------------------
 	testImplementation(project(":junit-platform-commons"))
 	testImplementation(project(":junit-platform-console"))
@@ -19,21 +21,23 @@ dependencies {
 	testImplementation(testFixtures(project(":junit-platform-engine")))
 	testImplementation(testFixtures(project(":junit-platform-launcher")))
 	testImplementation(project(":junit-jupiter-engine"))
-	testImplementation("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
+	testImplementation("org.apiguardian:apiguardian-api")
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(project(":junit-vintage-engine"))
-	testRuntimeOnly("org.codehaus.groovy:groovy-all:${Versions.groovy}") {
+	testRuntimeOnly("org.codehaus.groovy:groovy-all") {
 		because("`ReflectionUtilsTests.findNestedClassesWithInvalidNestedClassFile` needs it")
 	}
 
 	// --- https://openjdk.java.net/projects/code-tools/jmh/ -----------------------
-	jmh("org.openjdk.jmh:jmh-core:${Versions.jmh}") {
+	jmh("org.openjdk.jmh:jmh-core") {
 		exclude(module = "jopt-simple")
 	}
-	jmhAnnotationProcessor("org.openjdk.jmh:jmh-generator-annprocess:${Versions.jmh}")
+	jmhAnnotationProcessor(platform(project(":dependencies")))
+	jmhAnnotationProcessor("org.openjdk.jmh:jmh-generator-annprocess")
+	jmh(platform(project(":dependencies")))
 	jmh(project(":junit-jupiter-api"))
-	jmh("junit:junit:${Versions.junit4}")
+	jmh("junit:junit")
 }
 
 jmh {

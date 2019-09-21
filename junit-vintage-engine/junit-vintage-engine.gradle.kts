@@ -10,9 +10,10 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 description = "JUnit Vintage Engine"
 
 dependencies {
-	api(platform(project(":junit-bom")))
+	internal(platform(project(":dependencies")))
 
-	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
+	api(platform(project(":junit-bom")))
+	api("org.apiguardian:apiguardian-api")
 	api(project(":junit-platform-engine"))
 	api("junit:junit")
 

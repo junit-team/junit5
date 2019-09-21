@@ -32,6 +32,7 @@ require(javaVersion.isJava11Compatible) {
 
 rootProject.name = "junit5"
 
+include("dependencies")
 include("documentation")
 include("junit-jupiter")
 include("junit-jupiter-api")

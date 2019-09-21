@@ -14,6 +14,12 @@ val buildRevision: Any by rootProject.extra
 val builtByValue: String by rootProject.extra
 
 val shadowed by configurations.creating
+val internal by configurations.creating {
+	isVisible = false
+	isCanBeConsumed = false
+	isCanBeResolved = false
+}
+
 val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 
 val moduleSourceDir = file("src/module/$javaModuleName")
@@ -37,12 +43,12 @@ sourceSets {
 }
 
 configurations {
-	named("mainRelease9CompileClasspath") {
-		extendsFrom(compileClasspath.get())
-	}
-	named("mainRelease9CompileClasspath") {
-		extendsFrom(runtimeClasspath.get())
-	}
+	compileClasspath.get().extendsFrom(internal)
+	runtimeClasspath.get().extendsFrom(internal)
+	testCompileClasspath.get().extendsFrom(internal)
+	testRuntimeClasspath.get().extendsFrom(internal)
+	shadowed.extendsFrom(internal)
+	getByName("mainRelease9CompileClasspath").extendsFrom(compileClasspath.get())
 }
 
 eclipse {
@@ -134,6 +140,8 @@ if (project in mavenizedProjects) {
 		val javaComponent = components["java"] as AdhocComponentWithVariants
 		javaComponent.withVariantsFromConfiguration(configurations["testFixturesApiElements"]) { skip() }
 		javaComponent.withVariantsFromConfiguration(configurations["testFixturesRuntimeElements"]) { skip() }
+		configurations["testFixturesCompileClasspath"].extendsFrom(internal)
+		configurations["testFixturesRuntimeClasspath"].extendsFrom(internal)
 	}
 
 	configure<PublishingExtension> {

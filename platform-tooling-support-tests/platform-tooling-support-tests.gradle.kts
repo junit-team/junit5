@@ -9,30 +9,32 @@ javaLibrary {
 }
 
 dependencies {
-	implementation("de.sormuras:bartholdy:${Versions.bartholdy}") {
+	internal(platform(project(":dependencies")))
+
+	implementation("de.sormuras:bartholdy") {
 		because("manage external tool installations")
 	}
-	implementation("commons-io:commons-io:${Versions.commonsIo}") {
+	implementation("commons-io:commons-io") {
 		because("moving/deleting directory trees")
 	}
 
-	testImplementation("org.assertj:assertj-core:${Versions.assertJ}") {
+	testImplementation("org.assertj:assertj-core") {
 		because("more assertions")
 	}
-	testImplementation("com.tngtech.archunit:archunit-junit5-api:${Versions.archunit}") {
+	testImplementation("com.tngtech.archunit:archunit-junit5-api") {
 		because("checking the architecture of JUnit 5")
 	}
-	testImplementation("org.codehaus.groovy:groovy-all:${Versions.groovy}") {
+	testImplementation("org.codehaus.groovy:groovy-all") {
 		because("it provides convenience methods to handle process output")
 		exclude(group = "org.junit.platform", module = "junit-platform-launcher")
 	}
 	testImplementation("biz.aQute.bnd:biz.aQute.bndlib:${Versions.bnd}") {
 		because("parsing OSGi metadata")
 	}
-	testRuntimeOnly("com.tngtech.archunit:archunit-junit5-engine:${Versions.archunit}") {
+	testRuntimeOnly("com.tngtech.archunit:archunit-junit5-engine") {
 		because("contains the ArchUnit TestEngine implementation")
 	}
-	testRuntimeOnly("org.slf4j:slf4j-jdk14:${Versions.slf4j}") {
+	testRuntimeOnly("org.slf4j:slf4j-jdk14") {
 		because("provide appropriate SLF4J binding")
 	}
 }
