@@ -10,7 +10,7 @@
 
 ### Project Licenses
 
-- All modules use [Eclipse Public License v2.0](junit-jupiter-api/LICENSE.md).
+- All modules use [Eclipse Public License v2.0](LICENSE.md).
 
 ## Commit Messages
 
