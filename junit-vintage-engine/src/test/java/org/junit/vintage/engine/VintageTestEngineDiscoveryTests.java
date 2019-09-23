@@ -52,6 +52,7 @@ import org.junit.runner.manipulation.Filter;
 import org.junit.vintage.engine.samples.PlainOldJavaClassWithoutAnyTestsTestCase;
 import org.junit.vintage.engine.samples.junit3.JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails;
 import org.junit.vintage.engine.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
+import org.junit.vintage.engine.samples.junit3.SuiteWithSubsuites;
 import org.junit.vintage.engine.samples.junit4.Categories.Failing;
 import org.junit.vintage.engine.samples.junit4.Categories.Plain;
 import org.junit.vintage.engine.samples.junit4.Categories.Skipped;
@@ -175,6 +176,14 @@ class VintageTestEngineDiscoveryTests {
 		TestDescriptor testMethodDescriptor = getOnlyElement(testClassDescriptor.getChildren());
 		assertTestMethodDescriptor(testMethodDescriptor, testClass, "test",
 			VintageUniqueIdBuilder.uniqueIdForClasses(suiteClass, testClass));
+	}
+
+	@Test
+	void resolvesJUnit3SuiteWithSubsuitesAndDuplicateTestNames() throws Exception {
+		Class<?> suiteClass = SuiteWithSubsuites.class;
+		LauncherDiscoveryRequest discoveryRequest = discoveryRequestForClass(suiteClass);
+		TestDescriptor engineDescriptor = discoverTests(discoveryRequest);
+		System.out.println("engineDescriptor = " + engineDescriptor);
 	}
 
 	@Test

@@ -10,26 +10,19 @@
 
 package org.junit.vintage.engine.execution;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
-import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
 import org.junit.platform.engine.TestDescriptor;
@@ -45,113 +38,42 @@ import org.opentest4j.MultipleFailuresError;
 class TestRun {
 
 	private final RunnerTestDescriptor runnerTestDescriptor;
-	private final Set<TestDescriptor> runnerDescendants;
-	private final Map<Description, List<VintageTestDescriptor>> descriptionToDescriptors;
+	private final Map<Description, VintageTestDescriptor> identityDescriptionToDescriptors;
+	private final Map<Description, VintageTestDescriptor> descriptionToDescriptors;
 	private final Map<TestDescriptor, List<TestExecutionResult>> executionResults = new LinkedHashMap<>();
-	private final Set<TestDescriptor> skippedDescriptors = new LinkedHashSet<>();
-	private final Map<TestDescriptor, EventType> startedDescriptors = new LinkedHashMap<>();
-	private final Set<TestDescriptor> finishedDescriptors = new LinkedHashSet<>();
 
 	TestRun(RunnerTestDescriptor runnerTestDescriptor) {
 		this.runnerTestDescriptor = runnerTestDescriptor;
-		runnerDescendants = new LinkedHashSet<>(runnerTestDescriptor.getDescendants());
+		Set<? extends TestDescriptor> runnerDescendants = runnerTestDescriptor.getDescendants();
 		// @formatter:off
-		descriptionToDescriptors = concat(Stream.of(runnerTestDescriptor), runnerDescendants.stream())
+		Map<Description, VintageTestDescriptor> m = new IdentityHashMap<>();
+		Map<Description, VintageTestDescriptor> m2 = new HashMap<>();
+		concat(Stream.of(runnerTestDescriptor), runnerDescendants.stream())
 				.map(VintageTestDescriptor.class::cast)
-				.collect(groupingBy(
-						VintageTestDescriptor::getDescription, HashMap::new, toCollection(ArrayList::new)));
+				.forEach(v -> {
+					m.put(v.getDescription(), v);
+					m2.put(v.getDescription(), v);
+				});
+		identityDescriptionToDescriptors = m;
+		descriptionToDescriptors = m2;
 		// @formatter:on
-	}
-
-	void registerDynamicTest(VintageTestDescriptor testDescriptor) {
-		descriptionToDescriptors.computeIfAbsent(testDescriptor.getDescription(),
-			key -> new CopyOnWriteArrayList<>()).add(testDescriptor);
-		runnerDescendants.add(testDescriptor);
 	}
 
 	RunnerTestDescriptor getRunnerTestDescriptor() {
 		return runnerTestDescriptor;
 	}
 
-	Collection<TestDescriptor> getInProgressTestDescriptorsWithSyntheticStartEvents() {
-		List<TestDescriptor> result = startedDescriptors.entrySet().stream() //
-				.filter(entry -> entry.getValue().equals(EventType.SYNTHETIC)) //
-				.map(Entry::getKey) //
-				.filter(descriptor -> !isFinished(descriptor)) //
-				.collect(toCollection(ArrayList::new));
-		Collections.reverse(result);
-		return result;
-	}
-
-	boolean isDescendantOfRunnerTestDescriptor(TestDescriptor testDescriptor) {
-		return runnerDescendants.contains(testDescriptor);
-	}
-
-	/**
-	 * Returns the {@link TestDescriptor} that represents the specified
-	 * {@link Description}.
-	 *
-	 * <p>There are edge cases where multiple {@link Description Descriptions}
-	 * with the same {@code uniqueId} exist, e.g. when using overloaded methods
-	 * to define {@linkplain org.junit.experimental.theories.Theory theories}.
-	 * In this case, we try to find the correct {@link TestDescriptor} by
-	 * checking for object identity on the {@link Description} it represents.
-	 *
-	 * @param description the {@code Description} to look up
-	 */
-	Optional<VintageTestDescriptor> lookupTestDescriptor(Description description) {
-		List<VintageTestDescriptor> descriptors = descriptionToDescriptors.get(description);
-		if (descriptors == null) {
-			return Optional.empty();
+	VintageTestDescriptor lookupTestDescriptor(Description description) {
+		VintageTestDescriptor result = identityDescriptionToDescriptors.get(description);
+		if (result != null) {
+			return result;
 		}
-		if (descriptors.size() == 1) {
-			return Optional.of(getOnlyElement(descriptors));
-		}
-		// @formatter:off
-		return descriptors.stream()
-				.filter(testDescriptor -> description == testDescriptor.getDescription())
-				.findFirst();
-		// @formatter:on
+		return descriptionToDescriptors.get(description);
 	}
 
-	void markSkipped(TestDescriptor testDescriptor) {
-		skippedDescriptors.add(testDescriptor);
-	}
-
-	boolean isNotSkipped(TestDescriptor testDescriptor) {
-		return !isSkipped(testDescriptor);
-	}
-
-	boolean isSkipped(TestDescriptor testDescriptor) {
-		return skippedDescriptors.contains(testDescriptor);
-	}
-
-	void markStarted(TestDescriptor testDescriptor, EventType eventType) {
-		startedDescriptors.put(testDescriptor, eventType);
-	}
-
-	boolean isNotStarted(TestDescriptor testDescriptor) {
-		return !startedDescriptors.containsKey(testDescriptor);
-	}
-
-	void markFinished(TestDescriptor testDescriptor) {
-		finishedDescriptors.add(testDescriptor);
-	}
-
-	boolean isNotFinished(TestDescriptor testDescriptor) {
-		return !isFinished(testDescriptor);
-	}
-
-	boolean isFinished(TestDescriptor testDescriptor) {
-		return finishedDescriptors.contains(testDescriptor);
-	}
-
-	boolean areAllFinishedOrSkipped(Set<? extends TestDescriptor> testDescriptors) {
-		return testDescriptors.stream().allMatch(this::isFinishedOrSkipped);
-	}
-
-	boolean isFinishedOrSkipped(TestDescriptor testDescriptor) {
-		return isFinished(testDescriptor) || isSkipped(testDescriptor);
+	void dynamicTestRegistered(VintageTestDescriptor testDescriptor) {
+		identityDescriptionToDescriptors.put(testDescriptor.getDescription(), testDescriptor);
+		descriptionToDescriptors.put(testDescriptor.getDescription(), testDescriptor);
 	}
 
 	void storeResult(TestDescriptor testDescriptor, TestExecutionResult result) {

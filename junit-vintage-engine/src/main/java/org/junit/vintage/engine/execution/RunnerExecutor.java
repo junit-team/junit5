@@ -47,9 +47,7 @@ public class RunnerExecutor {
 
 	private void reportUnexpectedFailure(TestRun testRun, RunnerTestDescriptor runnerTestDescriptor,
 			TestExecutionResult result) {
-		if (testRun.isNotStarted(runnerTestDescriptor)) {
-			engineExecutionListener.executionStarted(runnerTestDescriptor);
-		}
+		engineExecutionListener.executionStarted(runnerTestDescriptor);
 		engineExecutionListener.executionFinished(runnerTestDescriptor, result);
 	}
 

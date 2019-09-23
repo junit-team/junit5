@@ -28,11 +28,9 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
 import org.assertj.core.api.ListAssert;
 import org.assertj.core.api.SoftAssertions;
-import org.assertj.core.data.Index;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
@@ -327,11 +325,10 @@ public final class Events {
 
 	@SafeVarargs
 	private static void assertEventsMatchExactly(List<Event> events, Condition<? super Event>... conditions) {
-		Assertions.assertThat(events).hasSize(conditions.length);
-
 		SoftAssertions softly = new SoftAssertions();
-		for (int i = 0; i < conditions.length; i++) {
-			softly.assertThat(events).has(conditions[i], Index.atIndex(i));
+		softly.assertThat(events).hasSize(conditions.length);
+		for (int i = 0; i < conditions.length && i < events.size(); i++) {
+			softly.assertThat(events.get(i)).as("at index %d", i).is(conditions[i]);
 		}
 		softly.assertAll();
 	}
