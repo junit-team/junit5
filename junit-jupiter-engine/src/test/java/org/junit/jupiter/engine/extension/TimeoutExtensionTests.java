@@ -303,7 +303,6 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 	}
 
 	static class TimeoutAnnotatedTestMethodTestCase {
-
 		@Test
 		@Timeout(value = 10, unit = MILLISECONDS)
 		void testMethod() throws Exception {
