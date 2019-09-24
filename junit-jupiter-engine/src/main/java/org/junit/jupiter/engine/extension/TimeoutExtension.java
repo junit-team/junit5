@@ -55,7 +55,6 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	}
 
 	private void readAndStoreTimeoutSoChildrenInheritIt(ExtensionContext context) {
-
 		readTimeoutFromAnnotation(context.getElement()).ifPresent(
 			timeout -> context.getStore(NAMESPACE).put(TESTABLE_METHOD_TIMEOUT_KEY, timeout));
 	}
