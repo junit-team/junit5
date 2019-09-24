@@ -10,6 +10,9 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static org.junit.jupiter.engine.config.JupiterConfiguration.TIMEOUT_MODE_PROPERTY_NAME;
+
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -38,6 +41,8 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(Timeout.class);
 	private static final String TESTABLE_METHOD_TIMEOUT_KEY = "testable_method_timeout_from_annotation";
 	private static final String GLOBAL_TIMEOUT_CONFIG_KEY = "global_timeout_config";
+	public static final String DISABLED = "disabled";
+	public static final String DISABLED_ON_DEBUG = "disabled_on_debug";
 
 	@Override
 	public void beforeAll(ExtensionContext context) {
@@ -50,6 +55,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	}
 
 	private void readAndStoreTimeoutSoChildrenInheritIt(ExtensionContext context) {
+
 		readTimeoutFromAnnotation(context.getElement()).ifPresent(
 			timeout -> context.getStore(NAMESPACE).put(TESTABLE_METHOD_TIMEOUT_KEY, timeout));
 	}
@@ -145,7 +151,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 
 	private <T> Invocation<T> decorate(Invocation<T> invocation, ReflectiveInvocationContext<Method> invocationContext,
 			ExtensionContext extensionContext, TimeoutDuration timeout) {
-		if (timeout == null) {
+		if (timeout == null || isDebuggingOrDisabled(extensionContext)) {
 			return invocation;
 		}
 		return new TimeoutInvocation<>(invocation, timeout, getExecutor(extensionContext),
@@ -163,6 +169,26 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 
 	private ScheduledExecutorService getExecutor(ExtensionContext extensionContext) {
 		return extensionContext.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent(ExecutorResource.class).get();
+	}
+
+	private boolean isDebuggingOrDisabled(ExtensionContext extensionContext) {
+		if (extensionContext.getConfigurationParameter(TIMEOUT_MODE_PROPERTY_NAME).isPresent()) {
+			if (extensionContext.getConfigurationParameter(TIMEOUT_MODE_PROPERTY_NAME).get().equals(DISABLED)) {
+				return true;
+			}
+			else if (extensionContext.getConfigurationParameter(TIMEOUT_MODE_PROPERTY_NAME).get().equals(
+				DISABLED_ON_DEBUG)) {
+				for (final String argument : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
+					if ("-Xdebug".equals(argument)) {
+						return true;
+					}
+					else if (argument.startsWith("-agentlib:jdwp")) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	@FunctionalInterface

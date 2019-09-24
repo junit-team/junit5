@@ -16,13 +16,7 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.junit.jupiter.engine.Constants.DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
-import static org.junit.jupiter.engine.Constants.DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
-import static org.junit.jupiter.engine.Constants.DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
-import static org.junit.jupiter.engine.Constants.DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME;
-import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME;
-import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME;
-import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME;
+import static org.junit.jupiter.engine.Constants.*;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -34,17 +28,7 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
@@ -72,6 +56,19 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
 				.isInstanceOf(TimeoutException.class) //
 				.hasMessage("testMethod() timed out after 10 milliseconds");
+	}
+
+	@Test
+	@DisplayName("is not applied on annotated @Test methods using timeout mode: disabled")
+	void doesNotApplyTimeoutOnAnnotatedTestMethodsUsingDisabledTimeoutMode() {
+		EngineExecutionResults results = executeTests(request() //
+				.selectors(selectMethod(TimeoutAnnotatedTestMethodTestCase.class, "testMethod")) //
+				.configurationParameter(DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
+				.configurationParameter(TIMEOUT_MODE_PROPERTY_NAME, "disabled").build());
+
+		Execution execution = findExecution(results.testEvents(), "testMethod()");
+		assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable()) //
+				.isEmpty();
 	}
 
 	@Test
@@ -289,6 +286,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 	}
 
 	static class TimeoutAnnotatedTestMethodTestCase {
+
 		@Test
 		@Timeout(value = 10, unit = MILLISECONDS)
 		void testMethod() throws Exception {
