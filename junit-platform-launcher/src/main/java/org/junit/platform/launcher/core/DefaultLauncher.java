@@ -183,7 +183,7 @@ class DefaultLauncher implements Launcher {
 			String message = String.format("TestEngine with ID '%s' failed to discover tests", testEngine.getId());
 			logger.error(throwable, () -> message);
 			JUnitException cause = new JUnitException(message, throwable);
-			return new EngineDiscoveryErrorDescriptor(uniqueEngineId, testEngine.getId(), cause);
+			return new EngineDiscoveryErrorDescriptor(uniqueEngineId, testEngine, cause);
 		}
 	}
 

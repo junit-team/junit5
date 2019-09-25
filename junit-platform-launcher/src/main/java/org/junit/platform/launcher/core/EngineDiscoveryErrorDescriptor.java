@@ -10,8 +10,10 @@
 
 package org.junit.platform.launcher.core;
 
+import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
+import org.junit.platform.engine.support.descriptor.ClassSource;
 
 /**
  * Represents an error thrown by a {@link org.junit.platform.engine.TestEngine}
@@ -27,8 +29,8 @@ class EngineDiscoveryErrorDescriptor extends AbstractTestDescriptor {
 
 	private final Throwable cause;
 
-	EngineDiscoveryErrorDescriptor(UniqueId uniqueId, String displayName, Throwable cause) {
-		super(uniqueId, displayName);
+	EngineDiscoveryErrorDescriptor(UniqueId uniqueId, TestEngine testEngine, Throwable cause) {
+		super(uniqueId, testEngine.getId(), ClassSource.from(testEngine.getClass()));
 		this.cause = cause;
 	}
 
