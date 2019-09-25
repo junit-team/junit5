@@ -439,7 +439,6 @@ public final class Constants {
 	 * <li>{@code disabled_on_debug}: disables timeouts while debugging.
 	 * </ul>
 	 *
-	 * @see org.junit.jupiter.api.extension.ExecutionCondition
 	 * @since 5.6
 	 */
 	@API(status = EXPERIMENTAL, since = "5.6")
