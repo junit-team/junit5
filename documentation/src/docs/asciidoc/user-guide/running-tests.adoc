@@ -787,7 +787,7 @@ finished.
 Please note that the captured output will only contain output emitted by the thread that
 was used to execute a container or test. Any output by other threads will be omitted
 because particularly when
-<<writing-tests-parallel-execution, executing tests in parallel>> it would be impossible
+<<writing-tests#parallel-execution, executing tests in parallel>> it would be impossible
 to attribute it to a specific test or container.
 
 WARNING: Capturing output is currently an _experimental_ feature. You're invited to give
