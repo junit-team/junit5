@@ -56,12 +56,12 @@ class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testIgnored(Description description) {
-		testIgnored(lookupOrRegisterTestDescriptor(description), determineReasonForIgnoredTest(description));
+		testIgnored(lookupOrRegisterNextTestDescriptor(description), determineReasonForIgnoredTest(description));
 	}
 
 	@Override
 	public void testStarted(Description description) {
-		testStarted(lookupOrRegisterTestDescriptor(description), EventType.REPORTED);
+		testStarted(lookupOrRegisterNextTestDescriptor(description), EventType.REPORTED);
 	}
 
 	@Override
@@ -76,7 +76,7 @@ class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testFinished(Description description) {
-		testFinished(lookupOrRegisterTestDescriptor(description));
+		testFinished(lookupOrRegisterCurrentTestDescriptor(description));
 	}
 
 	@Override
@@ -95,13 +95,23 @@ class RunListenerAdapter extends RunListener {
 		}
 	}
 
-	private TestDescriptor lookupOrRegisterTestDescriptor(Description description) {
-		return testRun.lookupTestDescriptor(description).orElseGet(() -> registerDynamicTestDescriptor(description));
+	private TestDescriptor lookupOrRegisterNextTestDescriptor(Description description) {
+		return lookupOrRegisterTestDescriptor(description, testRun::lookupNextTestDescriptor);
 	}
 
-	private VintageTestDescriptor registerDynamicTestDescriptor(Description description) {
+	private TestDescriptor lookupOrRegisterCurrentTestDescriptor(Description description) {
+		return lookupOrRegisterTestDescriptor(description, testRun::lookupCurrentTestDescriptor);
+	}
+
+	private TestDescriptor lookupOrRegisterTestDescriptor(Description description,
+			Function<Description, Optional<VintageTestDescriptor>> lookup) {
+		return lookup.apply(description).orElseGet(() -> registerDynamicTestDescriptor(description, lookup));
+	}
+
+	private VintageTestDescriptor registerDynamicTestDescriptor(Description description,
+			Function<Description, Optional<VintageTestDescriptor>> lookup) {
 		// workaround for dynamic children as used by Spock's Runner
-		TestDescriptor parent = findParent(description);
+		TestDescriptor parent = findParent(description, lookup);
 		UniqueId uniqueId = parent.getUniqueId().append(SEGMENT_TYPE_DYNAMIC, uniqueIdExtractor.apply(description));
 		VintageTestDescriptor dynamicDescriptor = new VintageTestDescriptor(uniqueId, description,
 			testSourceProvider.findTestSource(description));
@@ -111,17 +121,18 @@ class RunListenerAdapter extends RunListener {
 		return dynamicDescriptor;
 	}
 
-	private TestDescriptor findParent(Description description) {
+	private TestDescriptor findParent(Description description,
+			Function<Description, Optional<VintageTestDescriptor>> lookup) {
 		// @formatter:off
 		return Optional.ofNullable(description.getTestClass())
 				.map(Description::createSuiteDescription)
-				.flatMap(testRun::lookupTestDescriptor)
+				.flatMap(lookup)
 				.orElseGet(testRun::getRunnerTestDescriptor);
 		// @formatter:on
 	}
 
 	private void handleFailure(Failure failure, Function<Throwable, TestExecutionResult> resultCreator) {
-		handleFailure(failure, resultCreator, lookupOrRegisterTestDescriptor(failure.getDescription()));
+		handleFailure(failure, resultCreator, lookupOrRegisterCurrentTestDescriptor(failure.getDescription()));
 	}
 
 	private void handleFailure(Failure failure, Function<Throwable, TestExecutionResult> resultCreator,
