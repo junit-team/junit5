@@ -244,6 +244,19 @@ class CsvFileArgumentsProviderTests {
 				.hasRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
 	}
 
+	@Test
+	void emptyValueIsAnEmptyWithCustomNullSymbolString() {
+		CsvFileSource annotation = CsvFileSourceMock.builder()//
+				.lineSeparator("\n")//
+				.delimiter(',')//
+				.nullSymbols(new String[] { "empty" }).build();
+
+		Stream<Object[]> arguments = provideArguments("vacio , , empty , ''\nempty, empty, foo, bar", annotation);
+
+		assertThat(arguments).containsExactly(new Object[] { "vacio", null, null, "''" },
+			new Object[] { null, null, "foo", "bar" });
+	}
+
 	private Stream<Object[]> provideArguments(String content, CsvFileSource annotation) {
 		return provideArguments(new ByteArrayInputStream(content.getBytes(UTF_8)), annotation);
 	}

@@ -35,7 +35,6 @@ on GitHub.
 * Exceptions thrown by test engines during discovery and execution are now reported to
   `TestExecutionListeners`.
 
-
 [[release-notes-5.6.0-M1-junit-jupiter]]
 === JUnit Jupiter
 
@@ -59,6 +58,7 @@ on GitHub.
 * New `TypeBasedParameterResolver<T>` abstract base class that serves as a generic adapter
   for the `ParameterResolver` API and simplifies the implementation of a custom resolver
   that supports parameters of a specific type.
+* New `nullSymbols` attribute in `@CsvFileSource` and `@CsvSource`.
 
 
 [[release-notes-5.6.0-M1-junit-vintage]]
