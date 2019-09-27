@@ -99,7 +99,7 @@ if (project in mavenizedProjects) {
 		val suffix = archiveClassifier.getOrElse("")
 		if (suffix.isBlank() || suffix == "all") { // "all" is used by shadow plugin
 			from("$buildDir/classes/java/module/$javaModuleName") {
-				include("module-info.class")
+				// include("module-info.class") ... include all binaries
 			}
 		}
 	}

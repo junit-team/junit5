@@ -75,9 +75,9 @@ class JavacModulesTests {
 		var lib = temp.resolve("lib");
 		Files.createDirectories(lib);
 		Helper.load(lib, "junit", "junit", "4.12");
-		Helper.load(lib, "org.assertj", "assertj-core", "3.12.2");
-		Helper.load(lib, "org.apiguardian", "apiguardian-api", "1.0.0");
-		Helper.load(lib, "org.opentest4j", "opentest4j", "1.1.1");
+		Helper.load(lib, "org.assertj", "assertj-core", "3.13.2");
+		Helper.load(lib, "org.apiguardian", "apiguardian-api", "1.1.0");
+		Helper.load(lib, "org.opentest4j", "opentest4j", "1.2.0");
 		args.add("--module-path");
 		args.add(lib.toString());
 
@@ -129,33 +129,9 @@ class JavacModulesTests {
 			"destination", //
 			">> CLASSES >>", //
 			"lib", //
-			"lib/apiguardian-api-1.0.0.jar", //
-			"lib/assertj-core-3.12.2.jar", //
+			"lib/apiguardian-api-1.1.0.jar", //
+			"lib/assertj-core-3.13.2.jar", //
 			"lib/junit-4.12.jar", //
-			"lib/opentest4j-1.1.1.jar" //
-		), listing);
-		assertEquals(34, listing.size());
-	}
-
-	@Test
-	void patchMainSources(@TempDir Path temp) throws Exception {
-		var out = new StringWriter();
-		var err = new StringWriter();
-
-		var args = compileModules(temp, out, err, project -> project.mainSources);
-
-		assertTrue(err.toString().isBlank(), () -> err.toString() + "\n\n" + String.join("\n", args));
-
-		var listing = Helper.treeWalk(temp);
-		assertLinesMatch(List.of( //
-			"destination", //
-			">> CLASSES >>", //
-			"lib", //
-			"lib/apiguardian-api-1.0.0.jar", //
-			"lib/assertj-core-3.12.2.jar", //
-			"lib/junit-4.12.jar", //
-			"lib/opentest4j-1.1.1.jar" //
-		), listing);
-		assertTrue(listing.size() > 400);
+			"lib/opentest4j-1.2.0.jar"), listing);
 	}
 }

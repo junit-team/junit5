@@ -35,7 +35,9 @@ on GitHub.
   `javax.lang.model.SourceVersion.isName(CharSequence)` from the `java.compiler` module.
 * Exceptions thrown by test engines during discovery and execution are now reported to
   `TestExecutionListeners`.
-
+* Module `org.junit.platform.console` now provides a `java.util.spi.ToolProvider`
+  implementation that can be acquired by `ToolProvider.findFirst("junit")` when running
+  on Java 9 or above.
 
 [[release-notes-5.6.0-M1-junit-jupiter]]
 === JUnit Jupiter

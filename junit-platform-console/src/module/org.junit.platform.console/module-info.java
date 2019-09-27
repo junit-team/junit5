@@ -11,4 +11,6 @@
 module org.junit.platform.console {
 	requires transitive org.apiguardian.api;
 	requires transitive org.junit.platform.reporting;
+
+	provides java.util.spi.ToolProvider with org.junit.platform.console.ConsoleLauncherToolProvider;
 }
