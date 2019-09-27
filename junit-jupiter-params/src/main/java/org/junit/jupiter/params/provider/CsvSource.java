@@ -87,7 +87,7 @@ public @interface CsvSource {
 	String emptyValue() default "";
 
 	/**
-	 * A List of Strings that should be interpreted as {@code null}.
+	 * A list of strings that should be interpreted as {@code null}.
 	 *
 	 * <p>Defaults to {@code {}}.
 	 *
