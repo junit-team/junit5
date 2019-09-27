@@ -16,8 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.StringUtils.isBlank;
 
-import java.nio.charset.StandardCharsets;
-
 import org.junit.jupiter.api.Test;
 
 /**
@@ -47,7 +45,6 @@ class ConsoleLauncherIntegrationTests {
 		ConsoleLauncherWrapperResult result = new ConsoleLauncherWrapper().execute(args);
 		assertAll("all subpackage test classes are excluded by the class name filter", //
 			() -> assertArrayEquals(args, result.args), //
-			() -> assertEquals(StandardCharsets.UTF_8, result.charset), //
 			() -> assertEquals(0, result.code), //
 			() -> assertEquals(0, result.getTestsFoundCount()), //
 			() -> assertTrue(isBlank(result.err)) //

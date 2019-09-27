@@ -16,11 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.StringUtils.isBlank;
 import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Optional;
 
 import org.junit.platform.console.options.CommandLineOptionsParser;
@@ -31,29 +28,19 @@ import org.junit.platform.console.options.PicocliCommandLineOptionsParser;
  */
 class ConsoleLauncherWrapper {
 
-	private final Charset charset;
-	private final ByteArrayOutputStream out = new ByteArrayOutputStream();
-	private final ByteArrayOutputStream err = new ByteArrayOutputStream();
+	private final StringWriter out = new StringWriter();
+	private final StringWriter err = new StringWriter();
 	private final ConsoleLauncher consoleLauncher;
 
 	ConsoleLauncherWrapper() {
-		this(StandardCharsets.UTF_8);
+		this(new PicocliCommandLineOptionsParser());
 	}
 
-	private ConsoleLauncherWrapper(Charset charset) {
-		this(charset, new PicocliCommandLineOptionsParser());
-	}
+	private ConsoleLauncherWrapper(CommandLineOptionsParser parser) {
+		PrintWriter outWriter = new PrintWriter(out, false);
+		PrintWriter errWriter = new PrintWriter(err, false);
+		this.consoleLauncher = new ConsoleLauncher(parser, outWriter, errWriter);
 
-	private ConsoleLauncherWrapper(Charset charset, CommandLineOptionsParser parser) {
-		this.charset = charset;
-		try {
-			PrintStream streamOut = new PrintStream(out, false, charset.name());
-			PrintStream streamErr = new PrintStream(err, false, charset.name());
-			this.consoleLauncher = new ConsoleLauncher(parser, streamOut, streamErr, charset);
-		}
-		catch (UnsupportedEncodingException exception) {
-			throw new AssertionError("Charset instance created but unsupported?!", exception);
-		}
 	}
 
 	public ConsoleLauncherWrapperResult execute(String... args) {
@@ -67,8 +54,8 @@ class ConsoleLauncherWrapper {
 	public ConsoleLauncherWrapperResult execute(Optional<Integer> expectedCode, String... args) {
 		ConsoleLauncherExecutionResult result = consoleLauncher.execute(args);
 		int code = result.getExitCode();
-		String outText = new String(out.toByteArray(), charset);
-		String errText = new String(err.toByteArray(), charset);
+		String outText = out.toString();
+		String errText = err.toString();
 		if (expectedCode.isPresent()) {
 			int expectedValue = expectedCode.get();
 			assertAll("wrapped execution failed:\n" + outText + "\n", //
@@ -76,7 +63,7 @@ class ConsoleLauncherWrapper {
 				() -> assertTrue(expectedValue == 0 ? isBlank(errText) : isNotBlank(errText)) //
 			);
 		}
-		return new ConsoleLauncherWrapperResult(args, charset, outText, errText, result);
+		return new ConsoleLauncherWrapperResult(args, outText, errText, result);
 	}
 
 }
