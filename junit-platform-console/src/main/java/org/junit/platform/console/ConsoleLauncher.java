@@ -13,12 +13,8 @@ package org.junit.platform.console;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.nio.charset.Charset;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -44,42 +40,29 @@ public class ConsoleLauncher {
 
 	@API(status = INTERNAL, since = "1.0")
 	public static ConsoleLauncherExecutionResult execute(PrintStream out, PrintStream err, String... args) {
+		return execute(new PrintWriter(out), new PrintWriter(err), args);
+	}
+
+	@API(status = INTERNAL, since = "1.0")
+	public static ConsoleLauncherExecutionResult execute(PrintWriter out, PrintWriter err, String... args) {
 		CommandLineOptionsParser parser = new PicocliCommandLineOptionsParser();
 		ConsoleLauncher consoleLauncher = new ConsoleLauncher(parser, out, err);
 		return consoleLauncher.execute(args);
 	}
 
 	private final CommandLineOptionsParser commandLineOptionsParser;
-	private final PrintStream outStream;
-	private final PrintStream errStream;
-	private final Charset charset;
+	private final PrintWriter out;
+	private final PrintWriter err;
 
-	ConsoleLauncher(CommandLineOptionsParser commandLineOptionsParser, PrintStream out, PrintStream err) {
-		this(commandLineOptionsParser, out, err, Charset.defaultCharset());
-	}
-
-	ConsoleLauncher(CommandLineOptionsParser commandLineOptionsParser, PrintStream out, PrintStream err,
-			Charset charset) {
+	ConsoleLauncher(CommandLineOptionsParser commandLineOptionsParser, PrintWriter out, PrintWriter err) {
 		this.commandLineOptionsParser = commandLineOptionsParser;
-		this.outStream = out;
-		this.errStream = err;
-		this.charset = charset;
+		this.out = out;
+		this.err = err;
 	}
 
 	ConsoleLauncherExecutionResult execute(String... args) {
-
-		CommandLineOptions options = null;
 		try {
-			options = commandLineOptionsParser.parse(args);
-		}
-		catch (JUnitException ex) {
-			errStream.println(ex.getMessage());
-			StringWriter sw = new StringWriter();
-			commandLineOptionsParser.printHelp(new PrintWriter(sw));
-			errStream.println(sw);
-			return ConsoleLauncherExecutionResult.failed();
-		}
-		try (PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outStream, charset)))) {
+			CommandLineOptions options = commandLineOptionsParser.parse(args);
 			if (!options.isBannerDisabled()) {
 				displayBanner(out);
 			}
@@ -89,9 +72,15 @@ public class ConsoleLauncher {
 			}
 			return executeTests(options, out);
 		}
+		catch (JUnitException ex) {
+			err.println(ex.getMessage());
+			err.println();
+			commandLineOptionsParser.printHelp(err);
+			return ConsoleLauncherExecutionResult.failed();
+		}
 		finally {
-			outStream.flush();
-			errStream.flush();
+			out.flush();
+			err.flush();
 		}
 	}
 
@@ -107,8 +96,8 @@ public class ConsoleLauncher {
 			return ConsoleLauncherExecutionResult.forSummary(testExecutionSummary, options);
 		}
 		catch (Exception exception) {
-			exception.printStackTrace(errStream);
-			errStream.println();
+			exception.printStackTrace(err);
+			err.println();
 			commandLineOptionsParser.printHelp(out);
 		}
 		return ConsoleLauncherExecutionResult.failed();
