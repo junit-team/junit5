@@ -3579,8 +3579,10 @@ cannot be set simultaneously.</p>
 <p><code>@CsvSource</code> uses a single quote <code>'</code> as its quote character. See the <code>'lemon, lime'</code> value
 in the example above and in the table below. An empty, quoted value <code>''</code> results in an
 empty <code>String</code> unless the <code>emptyValue</code> attribute is set; whereas, an entirely <em>empty</em>
-value is interpreted as a <code>null</code> reference. An <code>ArgumentConversionException</code> is raised if
-the target type of a <code>null</code> reference is a primitive type.</p>
+value is interpreted as a <code>null</code> reference.
+By specifying one or more <code>nullSymbols</code> any value can be interpreted as a <code>null</code> reference.
+An <code>ArgumentConversionException</code> is raised if the target type of a <code>null</code> reference
+is a primitive type.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -3609,6 +3611,10 @@ the target type of a <code>null</code> reference is a primitive type.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@CsvSource({ "apple, " })</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"apple"</code>, <code>null</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@CsvSource(value = { "apple, banana, NaN" }, nullSymbols = {"NaN"})</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"apple"</code>, <code>"banana"</code>, <code>null</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -3669,8 +3675,9 @@ In contrast to the syntax used in <code>@CsvSource</code>, <code>@CsvFileSource<
 quote <code>"</code> as the quote character. See the <code>"United States of America"</code> value in the
 example above. An empty, quoted value <code>""</code> results in an empty <code>String</code> unless the
 <code>emptyValue</code> attribute is set; whereas, an entirely <em>empty</em> value is interpreted as a
-<code>null</code> reference. An <code>ArgumentConversionException</code> is raised if the target type of a
-<code>null</code> reference is a primitive type.
+<code>null</code> reference. By specifying one or more <code>nullSymbols</code> any value can be interpreted
+as a <code>null</code> reference. An <code>ArgumentConversionException</code> is raised if the target type
+of a <code>null</code> reference is a primitive type.
 </td>
 </tr>
 </table>
@@ -9672,7 +9679,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-09-24 09:45:56 UTC
+Last updated 2019-09-27 11:18:34 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
