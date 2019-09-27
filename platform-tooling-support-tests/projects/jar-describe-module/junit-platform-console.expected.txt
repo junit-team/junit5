@@ -2,6 +2,7 @@ org.junit.platform.console@${platformVersion} jar:file:.+junit-platform-console/
 requires java.base mandated
 requires org.apiguardian.api transitive
 requires org.junit.platform.reporting transitive
+provides java.util.spi.ToolProvider with org.junit.platform.console.ConsoleLauncherToolProvider
 contains org.junit.platform.console
 contains org.junit.platform.console.options
 contains org.junit.platform.console.shadow.picocli
