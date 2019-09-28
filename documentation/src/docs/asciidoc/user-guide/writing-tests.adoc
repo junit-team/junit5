@@ -1149,7 +1149,7 @@ cannot be set simultaneously.
 `@CsvSource` uses a single quote `'` as its quote character. See the `'lemon, lime'` value
 in the example above and in the table below. An empty, quoted value `''` results in an
 empty `String` unless the `emptyValue` attribute is set; whereas, an entirely _empty_
-value is interpreted as a `null` reference. By specifying one or more `nullSymbols`, a
+value is interpreted as a `null` reference. By specifying one or more `nullValues`, a
 custom value can be interpreted as a `null` reference (see the `NIL` example in the table
 below). An `ArgumentConversionException` is thrown if the target type of a `null`
 reference is a primitive type.
@@ -1162,7 +1162,7 @@ reference is a primitive type.
 | `@CsvSource({ "apple, 'lemon, lime'" })`                            | `"apple"`, `"lemon, lime"`
 | `@CsvSource({ "apple, ''" })`                                       | `"apple"`, `""`
 | `@CsvSource({ "apple, " })`                                         | `"apple"`, `null`
-| `@CsvSource(value = { "apple, banana, NIL" }, nullSymbols = "NIL")` | `"apple"`, `"banana"`, `null`
+| `@CsvSource(value = { "apple, banana, NIL" }, nullValues = "NIL")` | `"apple"`, `"banana"`, `null`
 |===
 
 [[writing-tests-parameterized-tests-sources-CsvFileSource]]
@@ -1195,7 +1195,7 @@ NOTE: In contrast to the syntax used in `@CsvSource`, `@CsvFileSource` uses a do
 `"` as the quote character. See the `"United States of America"` value in the example
 above. An empty, quoted value `""` results in an empty `String` unless the `emptyValue`
 attribute is set; whereas, an entirely _empty_ value is interpreted as a `null` reference.
-By specifying one or more `nullSymbols`, a custom value can be interpreted as a `null`
+By specifying one or more `nullValues`, a custom value can be interpreted as a `null`
 reference. An `ArgumentConversionException` is thrown if the target type of a `null`
 reference is a primitive type.
 

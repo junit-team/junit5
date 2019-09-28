@@ -25,7 +25,7 @@ class CsvFileSourceMock {
 	private String delimiterString = "";
 	private String emptyValue = "";
 	private int numLinesToSkip = 0;
-	private String[] nullSymbols = new String[] {};
+	private String[] nullValues = new String[] {};
 
 	private CsvFileSourceMock() {
 	}
@@ -73,8 +73,8 @@ class CsvFileSourceMock {
 		return this;
 	}
 
-	CsvFileSourceMock nullSymbols(String[] nullSymbols) {
-		this.nullSymbols = nullSymbols;
+	CsvFileSourceMock nullValues(String[] nullValues) {
+		this.nullValues = nullValues;
 		return this;
 	}
 
@@ -87,7 +87,7 @@ class CsvFileSourceMock {
 		when(annotation.delimiterString()).thenReturn(delimiterString);
 		when(annotation.emptyValue()).thenReturn(emptyValue);
 		when(annotation.numLinesToSkip()).thenReturn(numLinesToSkip);
-		when(annotation.nullSymbols()).thenReturn(nullSymbols);
+		when(annotation.nullValues()).thenReturn(nullValues);
 		return annotation;
 	}
 

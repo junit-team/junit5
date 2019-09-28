@@ -245,11 +245,11 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
-	void emptyValueIsAnEmptyWithCustomNullSymbolString() {
+	void emptyValueIsAnEmptyWithCustomNullValueString() {
 		CsvFileSource annotation = CsvFileSourceMock.builder()//
 				.lineSeparator("\n")//
 				.delimiter(',')//
-				.nullSymbols(new String[] { "empty" }).build();
+				.nullValues(new String[] { "empty" }).build();
 
 		Stream<Object[]> arguments = provideArguments("vacio , , empty , ''\nempty, empty, foo, bar", annotation);
 

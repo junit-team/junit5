@@ -124,6 +124,6 @@ public @interface CsvFileSource {
 	 * @since 5.6
 	 */
 	@API(status = EXPERIMENTAL, since = "5.6")
-	String[] nullSymbols() default {};
+	String[] nullValues() default {};
 
 }

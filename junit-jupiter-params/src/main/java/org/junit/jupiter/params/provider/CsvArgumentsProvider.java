@@ -34,13 +34,13 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 	private static final String LINE_SEPARATOR = "\n";
 
 	private CsvSource annotation;
-	private List<String> nullSymbols;
+	private List<String> nullValues;
 	private CsvParser csvParser;
 
 	@Override
 	public void accept(CsvSource annotation) {
 		this.annotation = annotation;
-		this.nullSymbols = annotation.nullSymbols().length > 0 ? Arrays.asList(annotation.nullSymbols()) : emptyList();
+		this.nullValues = annotation.nullValues().length > 0 ? Arrays.asList(annotation.nullValues()) : emptyList();
 		this.csvParser = CsvParserFactory.createParserFor(annotation);
 	}
 
@@ -54,9 +54,9 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 					String[] parsedLine = null;
 					try {
 						parsedLine = this.csvParser.parseLine(line + LINE_SEPARATOR);
-						if (!this.nullSymbols.isEmpty()) {
+						if (!this.nullValues.isEmpty()) {
 							parsedLine = Arrays.stream(parsedLine)
-									.map(value -> this.nullSymbols.contains(value) ? null : value)
+									.map(value -> this.nullValues.contains(value) ? null : value)
 									.toArray(String[]::new);
 						}
 					} catch (Throwable throwable) {

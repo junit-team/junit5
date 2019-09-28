@@ -116,15 +116,14 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 
 		private final CsvParser csvParser;
 		private final CsvFileSource annotation;
-		private final List<String> nullSymbols;
+		private final List<String> nullValues;
 
 		private Object[] nextCsvRecord;
 
 		CsvParserIterator(CsvParser csvParser, CsvFileSource annotation) {
 			this.csvParser = csvParser;
 			this.annotation = annotation;
-			this.nullSymbols = annotation.nullSymbols().length > 0 ? Arrays.asList(annotation.nullSymbols())
-					: emptyList();
+			this.nullValues = annotation.nullValues().length > 0 ? Arrays.asList(annotation.nullValues()) : emptyList();
 			advance();
 		}
 
@@ -144,9 +143,9 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 			String[] parsedLine = null;
 			try {
 				parsedLine = this.csvParser.parseNext();
-				if (parsedLine != null && !this.nullSymbols.isEmpty()) {
+				if (parsedLine != null && !this.nullValues.isEmpty()) {
 					parsedLine = Arrays.stream(parsedLine)//
-							.map(value -> this.nullSymbols.contains(value) ? null : value)//
+							.map(value -> this.nullValues.contains(value) ? null : value)//
 							.toArray(String[]::new);
 				}
 			}
