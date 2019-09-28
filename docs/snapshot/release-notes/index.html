@@ -688,7 +688,10 @@ combination of other built-in conditions or create and use a custom implementati
 <div class="ulist">
 <ul>
 <li>
-<p>Support for String delimiters in <code>@CsvSource</code> and <code>@CsvFileSource</code>.</p>
+<p>Support for multi-character delimiters in <code>@CsvSource</code> and <code>@CsvFileSource</code>.</p>
+</li>
+<li>
+<p>Support for custom <code>null</code> symbols in <code>@CsvSource</code> and <code>@CsvFileSource</code>.</p>
 </li>
 <li>
 <p>Documented support for comments in CSV files loaded via <code>@CsvFileSource</code>.</p>
@@ -700,9 +703,6 @@ combination of other built-in conditions or create and use a custom implementati
 <p>New <code>TypeBasedParameterResolver&lt;T&gt;</code> abstract base class that serves as a generic adapter
 for the <code>ParameterResolver</code> API and simplifies the implementation of a custom resolver
 that supports parameters of a specific type.</p>
-</li>
-<li>
-<p>New <code>nullSymbols</code> attribute in <code>@CsvFileSource</code> and <code>@CsvSource</code>.</p>
 </li>
 </ul>
 </div>
@@ -896,7 +896,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-09-28 12:23:56 UTC
+Last updated 2019-09-28 12:46:49 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

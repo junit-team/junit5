@@ -197,7 +197,7 @@ public @interface <span class="memberNameLabel">CsvSource</span></pre>
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nullSymbols()">nullSymbols</a></span></code></th>
 <td class="colLast">
-<div class="block">A list of strings that should be interpreted as <code>null</code>.</div>
+<div class="block">A list of strings that should be interpreted as <code>null</code> references.</div>
 </td>
 </tr>
 </tbody>
@@ -333,7 +333,10 @@ public @interface <span class="memberNameLabel">CsvSource</span></pre>
 <pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.6")
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]&nbsp;nullSymbols</pre>
-<div class="block">A list of strings that should be interpreted as <code>null</code>.
+<div class="block">A list of strings that should be interpreted as <code>null</code> references.
+
+ <p>For example, you may wish for certain values such as <code>"N/A"</code> or
+ <code>"NIL"</code> to be converted to <code>null</code> references.
 
  <p>Defaults to <code>{}</code>.</div>
 <dl>
