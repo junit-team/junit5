@@ -50,7 +50,7 @@ public @interface CsvSource {
 	String[] value();
 
 	/**
-	 * The column delimiter to use when reading the {@linkplain #value lines}.
+	 * The column delimiter character to use when reading the {@linkplain #value lines}.
 	 *
 	 * <p>This is an alternative to {@link #delimiterString} and cannot be
 	 * used in conjunction with {@link #delimiterString}.
@@ -61,7 +61,7 @@ public @interface CsvSource {
 	char delimiter() default '\0';
 
 	/**
-	 * The column delimiter to use when reading the {@linkplain #value lines}.
+	 * The column delimiter string to use when reading the {@linkplain #value lines}.
 	 *
 	 * <p>This is an alternative to {@link #delimiter} and cannot be used in
 	 * conjunction with {@link #delimiter}.

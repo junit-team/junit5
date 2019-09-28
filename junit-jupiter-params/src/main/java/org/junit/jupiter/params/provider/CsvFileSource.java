@@ -65,7 +65,7 @@ public @interface CsvFileSource {
 	String lineSeparator() default "\n";
 
 	/**
-	 * The column delimiter to use when reading the CSV files.
+	 * The column delimiter character to use when reading the CSV files.
 	 *
 	 * <p>This is an alternative to {@link #delimiterString} and cannot be
 	 * used in conjunction with {@link #delimiterString}.
@@ -76,7 +76,7 @@ public @interface CsvFileSource {
 	char delimiter() default '\0';
 
 	/**
-	 * The column delimiter to use when reading the CSV files.
+	 * The column delimiter string to use when reading the CSV files.
 	 *
 	 * <p>This is an alternative to {@link #delimiter} and cannot be used in
 	 * conjunction with {@link #delimiter}.
