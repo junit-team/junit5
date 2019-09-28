@@ -176,14 +176,14 @@ public @interface <span class="memberNameLabel">CsvSource</span></pre>
 <td class="colFirst"><code>char</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delimiter()">delimiter</a></span></code></th>
 <td class="colLast">
-<div class="block">The column delimiter to use when reading the <a href="#value()">lines</a>.</div>
+<div class="block">The column delimiter character to use when reading the <a href="#value()">lines</a>.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delimiterString()">delimiterString</a></span></code></th>
 <td class="colLast">
-<div class="block">The column delimiter to use when reading the <a href="#value()">lines</a>.</div>
+<div class="block">The column delimiter string to use when reading the <a href="#value()">lines</a>.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -195,7 +195,7 @@ public @interface <span class="memberNameLabel">CsvSource</span></pre>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nullSymbols()">nullSymbols</a></span></code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nullValues()">nullValues</a></span></code></th>
 <td class="colLast">
 <div class="block">A list of strings that should be interpreted as <code>null</code> references.</div>
 </td>
@@ -246,7 +246,7 @@ public @interface <span class="memberNameLabel">CsvSource</span></pre>
 <li class="blockList">
 <h4>delimiter</h4>
 <pre>char&nbsp;delimiter</pre>
-<div class="block">The column delimiter to use when reading the <a href="#value()">lines</a>.
+<div class="block">The column delimiter character to use when reading the <a href="#value()">lines</a>.
 
  <p>This is an alternative to <a href="#delimiterString()"><code>delimiterString()</code></a> and cannot be
  used in conjunction with <a href="#delimiterString()"><code>delimiterString()</code></a>.
@@ -273,7 +273,7 @@ public @interface <span class="memberNameLabel">CsvSource</span></pre>
 <pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.6")
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;delimiterString</pre>
-<div class="block">The column delimiter to use when reading the <a href="#value()">lines</a>.
+<div class="block">The column delimiter string to use when reading the <a href="#value()">lines</a>.
 
  <p>This is an alternative to <a href="#delimiter()"><code>delimiter()</code></a> and cannot be used in
  conjunction with <a href="#delimiter()"><code>delimiter()</code></a>.
@@ -324,15 +324,15 @@ public @interface <span class="memberNameLabel">CsvSource</span></pre>
 </section>
 <section role="region">
 <ul class="blockList">
-<li class="blockList"><a id="nullSymbols()">
+<li class="blockList"><a id="nullValues()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>nullSymbols</h4>
+<h4>nullValues</h4>
 <pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.6")
-<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]&nbsp;nullSymbols</pre>
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]&nbsp;nullValues</pre>
 <div class="block">A list of strings that should be interpreted as <code>null</code> references.
 
  <p>For example, you may wish for certain values such as <code>"N/A"</code> or
