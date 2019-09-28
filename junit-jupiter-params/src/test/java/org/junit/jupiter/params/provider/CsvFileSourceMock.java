@@ -25,7 +25,7 @@ class CsvFileSourceMock {
 	private String delimiterString = "";
 	private String emptyValue = "";
 	private int numLinesToSkip = 0;
-	private String[] nullValues = new String[] {};
+	private String[] nullValues = new String[0];
 
 	private CsvFileSourceMock() {
 	}
@@ -73,7 +73,7 @@ class CsvFileSourceMock {
 		return this;
 	}
 
-	CsvFileSourceMock nullValues(String[] nullValues) {
+	CsvFileSourceMock nullValues(String... nullValues) {
 		this.nullValues = nullValues;
 		return this;
 	}

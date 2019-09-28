@@ -10,11 +10,12 @@
 
 package org.junit.jupiter.params.provider;
 
-import static java.util.Collections.emptyList;
+import static org.junit.jupiter.params.provider.CsvParserFactory.createParserFor;
+import static org.junit.platform.commons.util.CollectionUtils.toSet;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
@@ -34,14 +35,14 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 	private static final String LINE_SEPARATOR = "\n";
 
 	private CsvSource annotation;
-	private List<String> nullValues;
+	private Set<String> nullValues;
 	private CsvParser csvParser;
 
 	@Override
 	public void accept(CsvSource annotation) {
 		this.annotation = annotation;
-		this.nullValues = annotation.nullValues().length > 0 ? Arrays.asList(annotation.nullValues()) : emptyList();
-		this.csvParser = CsvParserFactory.createParserFor(annotation);
+		this.nullValues = toSet(annotation.nullValues());
+		this.csvParser = createParserFor(annotation);
 	}
 
 	@Override

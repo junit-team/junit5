@@ -249,9 +249,10 @@ class CsvFileArgumentsProviderTests {
 		CsvFileSource annotation = CsvFileSourceMock.builder()//
 				.lineSeparator("\n")//
 				.delimiter(',')//
-				.nullValues(new String[] { "empty" }).build();
+				.nullValues("NIL")//
+				.build();
 
-		Stream<Object[]> arguments = provideArguments("vacio , , empty , ''\nempty, empty, foo, bar", annotation);
+		Stream<Object[]> arguments = provideArguments("vacio, , NIL, ''\nNIL, NIL, foo, bar", annotation);
 
 		assertThat(arguments).containsExactly(new Object[] { "vacio", null, null, "''" },
 			new Object[] { null, null, "foo", "bar" });

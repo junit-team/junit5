@@ -10,17 +10,18 @@
 
 package org.junit.jupiter.params.provider;
 
-import static java.util.Collections.emptyList;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.StreamSupport.stream;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.jupiter.params.provider.CsvArgumentsProvider.handleCsvException;
+import static org.junit.jupiter.params.provider.CsvParserFactory.createParserFor;
+import static org.junit.platform.commons.util.CollectionUtils.toSet;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
@@ -59,7 +60,7 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 		this.resources = annotation.resources();
 		this.charset = getCharsetFrom(annotation);
 		this.numLinesToSkip = annotation.numLinesToSkip();
-		this.csvParser = CsvParserFactory.createParserFor(annotation);
+		this.csvParser = createParserFor(annotation);
 	}
 
 	private Charset getCharsetFrom(CsvFileSource annotation) {
@@ -116,14 +117,13 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 
 		private final CsvParser csvParser;
 		private final CsvFileSource annotation;
-		private final List<String> nullValues;
-
+		private final Set<String> nullValues;
 		private Object[] nextCsvRecord;
 
 		CsvParserIterator(CsvParser csvParser, CsvFileSource annotation) {
 			this.csvParser = csvParser;
 			this.annotation = annotation;
-			this.nullValues = annotation.nullValues().length > 0 ? Arrays.asList(annotation.nullValues()) : emptyList();
+			this.nullValues = toSet(annotation.nullValues());
 			advance();
 		}
 
@@ -144,9 +144,11 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 			try {
 				parsedLine = this.csvParser.parseNext();
 				if (parsedLine != null && !this.nullValues.isEmpty()) {
-					parsedLine = Arrays.stream(parsedLine)//
-							.map(value -> this.nullValues.contains(value) ? null : value)//
-							.toArray(String[]::new);
+					for (int i = 0; i < parsedLine.length; i++) {
+						if (this.nullValues.contains(parsedLine[i])) {
+							parsedLine[i] = null;
+						}
+					}
 				}
 			}
 			catch (Throwable throwable) {
