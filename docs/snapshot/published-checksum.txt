@@ -517,6 +517,7 @@ ccc84dcb33db90c4aeaae36515208b00  junit-jupiter-api/src/main/java/org/junit/jupi
 cce3a8df858d76fc58c605c711cfd382  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestClassWithTests.java
 ce134a3de7e0988de06b631e3d59600a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/FileSource.java
 ce41e4c2785c6688f9b82fe5197100b6  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullSource.java
+cf6dea5cdc4f12b65d0710dcaf9168fc  junit-platform-commons/src/main/java/org/junit/platform/commons/util/CollectionUtils.java
 cfd9aaa093cccbeff33923d4092e2c10  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicTest.java
 d02019eeb797fae6d4ff2ad9af2ee35d  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Events.java
 d08c6cdbb789a5b0bae201dced8c16c2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java
@@ -645,4 +646,3 @@ fe28795456ded6a379f9e479d5c4597d  junit-jupiter-api/src/main/java/org/junit/jupi
 fedaf4f28c690f8a6885ee86f8518e57  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestExecutionListener.java
 ff3875d49a26ec98e59932d46b7153ae  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EventStatistics.java
 ff8d3e2dd9ce74b6d6897d75d237d084  documentation/src/test/java/example/DynamicTestsDemo.java
-ffe86f17f46cda79dc156cf9f96171fc  junit-platform-commons/src/main/java/org/junit/platform/commons/util/CollectionUtils.java
