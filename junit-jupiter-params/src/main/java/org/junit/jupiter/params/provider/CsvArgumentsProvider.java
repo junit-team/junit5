@@ -10,14 +10,14 @@
 
 package org.junit.jupiter.params.provider;
 
+import static java.util.Collections.emptyList;
+
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
-import com.univocity.parsers.common.DefaultConversionProcessor;
-import com.univocity.parsers.common.processor.ObjectRowListProcessor;
-import com.univocity.parsers.conversions.Conversions;
 import com.univocity.parsers.csv.CsvParser;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -34,48 +34,41 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 	private static final String LINE_SEPARATOR = "\n";
 
 	private CsvSource annotation;
+	private List<String> nullSymbols;
 	private CsvParser csvParser;
 
 	@Override
 	public void accept(CsvSource annotation) {
 		this.annotation = annotation;
+		this.nullSymbols = annotation.nullSymbols().length > 0 ? Arrays.asList(annotation.nullSymbols()) : emptyList();
 		this.csvParser = CsvParserFactory.createParserFor(annotation);
 	}
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-
 		AtomicLong index = new AtomicLong(0);
-		DefaultConversionProcessor processor = getConversionProcessor();
 
 		// @formatter:off
-        return Arrays.stream(this.annotation.value())
-                .map(line -> {
-                    String[] parsedLine = null;
-                    try {
-                        parsedLine = this.csvParser.parseLine(line + LINE_SEPARATOR);
-                        if (parsedLine != null) {
-                            parsedLine = Arrays.copyOf(processor.applyConversions(parsedLine, null), parsedLine.length, String[].class);
-                        }
-                    } catch (Throwable throwable) {
-                        handleCsvException(throwable, this.annotation);
-                    }
-                    Preconditions.notNull(parsedLine,
-                                          () -> "Line at index " + index.get() + " contains invalid CSV: \"" + line + "\"");
-                    return parsedLine;
-                })
-                .peek(values -> index.incrementAndGet())
-                .map(Arguments::of);
-        // @formatter:on
-	}
-
-	private DefaultConversionProcessor getConversionProcessor() {
-		ObjectRowListProcessor processor = new ObjectRowListProcessor();
-		if (this.annotation.nullSymbols().length > 0) {
-			processor.convertAll(Conversions.toNull(this.annotation.nullSymbols()));
-		}
-
-		return processor;
+		return Arrays.stream(this.annotation.value())
+				.map(line -> {
+					String[] parsedLine = null;
+					try {
+						parsedLine = this.csvParser.parseLine(line + LINE_SEPARATOR);
+						if (!this.nullSymbols.isEmpty()) {
+							parsedLine = Arrays.stream(parsedLine)
+									.map(value -> this.nullSymbols.contains(value) ? null : value)
+									.toArray(String[]::new);
+						}
+					} catch (Throwable throwable) {
+						handleCsvException(throwable, this.annotation);
+					}
+					Preconditions.notNull(parsedLine,
+										  () -> "Line at index " + index.get() + " contains invalid CSV: \"" + line + "\"");
+					return parsedLine;
+				})
+				.peek(values -> index.incrementAndGet())
+				.map(Arguments::of);
+		// @formatter:on
 	}
 
 	static void handleCsvException(Throwable throwable, Annotation annotation) {

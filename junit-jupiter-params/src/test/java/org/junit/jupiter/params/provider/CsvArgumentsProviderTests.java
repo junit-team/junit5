@@ -123,21 +123,22 @@ class CsvArgumentsProviderTests {
 
 	@Test
 	void emptyValueIsAnEmptyWithCustomNullSymbolString() {
-		Stream<Object[]> arguments = provideArguments("", ',', "", new String[] { "empty" }, "vacio , , empty , ''");
+		Stream<Object[]> arguments = provideArguments("", ',', "", new String[] { "N/A", "NIL" }, "apple, , NIL, ''");
 
-		assertThat(arguments).containsExactly(new String[] { "vacio", null, null, "" });
+		assertThat(arguments).containsExactly(new String[] { "apple", null, null, "" });
 	}
 
 	private Stream<Object[]> provideArguments(char delimiter, String emptyValue, String... value) {
-		return provideArguments("", delimiter, emptyValue, new String[] {}, value);
+		return provideArguments("", delimiter, emptyValue, new String[0], value);
 	}
 
 	private Stream<Object[]> provideArguments(String delimiterString, String emptyValue, String... value) {
-		return provideArguments(delimiterString, '\0', emptyValue, new String[] {}, value);
+		return provideArguments(delimiterString, '\0', emptyValue, new String[0], value);
 	}
 
 	private Stream<Object[]> provideArguments(String delimiterString, char delimiter, String emptyValue,
 			String[] nullSymbols, String... value) {
+
 		CsvSource annotation = mock(CsvSource.class);
 		when(annotation.value()).thenReturn(value);
 		when(annotation.delimiter()).thenReturn(delimiter);

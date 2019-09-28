@@ -87,7 +87,10 @@ public @interface CsvSource {
 	String emptyValue() default "";
 
 	/**
-	 * A list of strings that should be interpreted as {@code null}.
+	 * A list of strings that should be interpreted as {@code null} references.
+	 *
+	 * <p>For example, you may wish for certain values such as {@code "N/A"} or
+	 * {@code "NIL"} to be converted to {@code null} references.
 	 *
 	 * <p>Defaults to {@code {}}.
 	 *
@@ -95,4 +98,5 @@ public @interface CsvSource {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.6")
 	String[] nullSymbols() default {};
+
 }

@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params.provider;
 
+import static java.util.Collections.emptyList;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.StreamSupport.stream;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -19,13 +20,11 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Spliterator;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
-import com.univocity.parsers.common.DefaultConversionProcessor;
-import com.univocity.parsers.common.processor.ObjectRowListProcessor;
-import com.univocity.parsers.conversions.Conversions;
 import com.univocity.parsers.csv.CsvParser;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -43,8 +42,8 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	private CsvFileSource annotation;
 	private String[] resources;
 	private Charset charset;
-	private CsvParser csvParser;
 	private int numLinesToSkip;
+	private CsvParser csvParser;
 
 	CsvFileArgumentsProvider() {
 		this(Class::getResourceAsStream);
@@ -59,8 +58,8 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 		this.annotation = annotation;
 		this.resources = annotation.resources();
 		this.charset = getCharsetFrom(annotation);
-		this.csvParser = CsvParserFactory.createParserFor(annotation);
 		this.numLinesToSkip = annotation.numLinesToSkip();
+		this.csvParser = CsvParserFactory.createParserFor(annotation);
 	}
 
 	private Charset getCharsetFrom(CsvFileSource annotation) {
@@ -116,17 +115,16 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	private static class CsvParserIterator implements Iterator<Arguments> {
 
 		private final CsvParser csvParser;
-
 		private final CsvFileSource annotation;
-
-		private final DefaultConversionProcessor conversionProcessor;
+		private final List<String> nullSymbols;
 
 		private Object[] nextCsvRecord;
 
 		CsvParserIterator(CsvParser csvParser, CsvFileSource annotation) {
 			this.csvParser = csvParser;
 			this.annotation = annotation;
-			this.conversionProcessor = getConversionProcessor();
+			this.nullSymbols = annotation.nullSymbols().length > 0 ? Arrays.asList(annotation.nullSymbols())
+					: emptyList();
 			advance();
 		}
 
@@ -146,9 +144,10 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 			String[] parsedLine = null;
 			try {
 				parsedLine = this.csvParser.parseNext();
-				if (parsedLine != null) {
-					parsedLine = Arrays.copyOf(this.conversionProcessor.applyConversions(parsedLine, null),
-						parsedLine.length, String[].class);
+				if (parsedLine != null && !this.nullSymbols.isEmpty()) {
+					parsedLine = Arrays.stream(parsedLine)//
+							.map(value -> this.nullSymbols.contains(value) ? null : value)//
+							.toArray(String[]::new);
 				}
 			}
 			catch (Throwable throwable) {
@@ -158,14 +157,6 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 			this.nextCsvRecord = parsedLine;
 		}
 
-		private DefaultConversionProcessor getConversionProcessor() {
-			ObjectRowListProcessor processor = new ObjectRowListProcessor();
-			if (this.annotation.nullSymbols().length > 0) {
-				processor.convertAll(Conversions.toNull(this.annotation.nullSymbols()));
-			}
-
-			return processor;
-		}
 	}
 
 }

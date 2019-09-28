@@ -54,13 +54,13 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* Support for String delimiters in `@CsvSource` and `@CsvFileSource`.
+* Support for multi-character delimiters in `@CsvSource` and `@CsvFileSource`.
+* Support for custom `null` symbols in `@CsvSource` and `@CsvFileSource`.
 * Documented support for comments in CSV files loaded via `@CsvFileSource`.
 * Auto-detection of enum type from method signature for `@EnumSource`.
 * New `TypeBasedParameterResolver<T>` abstract base class that serves as a generic adapter
   for the `ParameterResolver` API and simplifies the implementation of a custom resolver
   that supports parameters of a specific type.
-* New `nullSymbols` attribute in `@CsvFileSource` and `@CsvSource`.
 
 
 [[release-notes-5.6.0-M1-junit-vintage]]
