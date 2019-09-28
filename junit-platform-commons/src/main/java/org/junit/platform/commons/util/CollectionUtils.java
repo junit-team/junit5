@@ -75,6 +75,7 @@ public final class CollectionUtils {
 	 * @throws PreconditionViolationException if the array is {@code null}
 	 * @since 1.6
 	 */
+	@API(status = INTERNAL, since = "1.6")
 	public static <T> Set<T> toSet(T[] values) {
 		Preconditions.notNull(values, "values array must not be null");
 		if (values.length == 0) {
@@ -83,7 +84,9 @@ public final class CollectionUtils {
 		if (values.length == 1) {
 			return Collections.singleton(values[0]);
 		}
-		return new HashSet<>(Arrays.asList(values));
+		Set<T> set = new HashSet<>();
+		Collections.addAll(set, values);
+		return set;
 	}
 
 	/**
