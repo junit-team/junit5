@@ -2,11 +2,11 @@ name: Experimental
 
 on:
   push:
-    branches:    
+    branches:
       - master
       - 'releases/*'
   pull_request:
-    branches:    
+    branches:
       - '*'
 
 jobs:
@@ -16,8 +16,6 @@ jobs:
     container: junitteam/build:latest
     steps:
     - uses: actions/checkout@master
-      with:
-        fetch-depth: 10
     - name: Test
       run: |
         ./gradlew --version
@@ -28,8 +26,6 @@ jobs:
     container: junitteam/build:latest
     steps:
     - uses: actions/checkout@master
-      with:
-        fetch-depth: 10
     - name: Test
       run: |
         ./gradlew --version

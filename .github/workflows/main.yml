@@ -2,11 +2,11 @@ name: CI
 
 on:
   push:
-    branches:    
+    branches:
       - master
       - 'releases/*'
   pull_request:
-    branches:    
+    branches:
       - '*'
 
 jobs:
@@ -16,8 +16,6 @@ jobs:
     container: junitteam/build:latest
     steps:
     - uses: actions/checkout@master
-      with:
-        fetch-depth: 10
     - name: 'Test'
       run: |
         ./gradlew --version
@@ -28,8 +26,6 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@master
-      with:
-        fetch-depth: 10
     - name: 'Set up JDK 12'
       uses: actions/setup-java@v1
       with:
@@ -45,8 +41,6 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@master
-      with:
-        fetch-depth: 10
     - name: 'Set up JDK 12'
       uses: actions/setup-java@v1
       with:
@@ -63,8 +57,6 @@ jobs:
     container: junitteam/build:latest
     steps:
     - uses: actions/checkout@master
-      with:
-        fetch-depth: 10
     - name: 'Set up JDK 12'
       uses: actions/setup-java@v1
       with:
@@ -88,8 +80,6 @@ jobs:
     steps:
     - uses: actions/checkout@master
       if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/master')
-      with:
-        fetch-depth: 10
     - name: 'Set up JDK 12'
       if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/master')
       uses: actions/setup-java@v1
@@ -109,8 +99,6 @@ jobs:
     steps:
     - uses: actions/checkout@master
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      with:
-        fetch-depth: 10
     - name: 'Set up JDK 12'
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       uses: actions/setup-java@v1
