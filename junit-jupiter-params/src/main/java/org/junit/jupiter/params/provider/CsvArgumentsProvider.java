@@ -47,28 +47,30 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
 		AtomicLong index = new AtomicLong(0);
-
 		// @formatter:off
 		return Arrays.stream(this.annotation.value())
-				.map(line -> {
-					String[] parsedLine = null;
-					try {
-						parsedLine = this.csvParser.parseLine(line + LINE_SEPARATOR);
-						if (!this.nullValues.isEmpty()) {
-							parsedLine = Arrays.stream(parsedLine)
-									.map(value -> this.nullValues.contains(value) ? null : value)
-									.toArray(String[]::new);
-						}
-					} catch (Throwable throwable) {
-						handleCsvException(throwable, this.annotation);
-					}
-					Preconditions.notNull(parsedLine,
-										  () -> "Line at index " + index.get() + " contains invalid CSV: \"" + line + "\"");
-					return parsedLine;
-				})
-				.peek(values -> index.incrementAndGet())
+				.map(line -> parseLine(index.getAndIncrement(), line))
 				.map(Arguments::of);
 		// @formatter:on
+	}
+
+	private String[] parseLine(long index, String line) {
+		String[] parsedLine = null;
+		try {
+			parsedLine = this.csvParser.parseLine(line + LINE_SEPARATOR);
+			if (parsedLine != null && !this.nullValues.isEmpty()) {
+				for (int i = 0; i < parsedLine.length; i++) {
+					if (this.nullValues.contains(parsedLine[i])) {
+						parsedLine[i] = null;
+					}
+				}
+			}
+		}
+		catch (Throwable throwable) {
+			handleCsvException(throwable, this.annotation);
+		}
+		Preconditions.notNull(parsedLine, () -> "Line at index " + index + " contains invalid CSV: \"" + line + "\"");
+		return parsedLine;
 	}
 
 	static void handleCsvException(Throwable throwable, Annotation annotation) {
