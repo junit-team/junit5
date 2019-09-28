@@ -17,12 +17,13 @@ import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.support.ModifierSupport;
+import org.junit.platform.commons.util.LruCache;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
@@ -34,7 +35,7 @@ import org.junit.runner.Description;
 @API(status = INTERNAL, since = "5.6")
 public class TestSourceProvider {
 
-	private final Map<Class<?>, List<Method>> methodsCache = new ConcurrentHashMap<>();
+	private final Map<Class<?>, List<Method>> methodsCache = Collections.synchronizedMap(new LruCache<>(32));
 
 	public TestSource findTestSource(Description description) {
 		Class<?> testClass = description.getTestClass();
