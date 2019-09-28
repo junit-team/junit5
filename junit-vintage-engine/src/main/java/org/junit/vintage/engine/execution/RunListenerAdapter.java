@@ -37,7 +37,7 @@ class RunListenerAdapter extends RunListener {
 
 	private final TestRun testRun;
 	private final EngineExecutionListener listener;
-	private TestSourceProvider testSourceProvider;
+	private final TestSourceProvider testSourceProvider;
 	private final Function<Description, String> uniqueIdExtractor;
 
 	RunListenerAdapter(TestRun testRun, EngineExecutionListener listener, TestSourceProvider testSourceProvider) {

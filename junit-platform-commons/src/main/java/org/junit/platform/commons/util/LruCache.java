@@ -28,7 +28,7 @@ public class LruCache<K, V> extends LinkedHashMap<K, V> {
 
 	private static final long serialVersionUID = 1L;
 
-	private int maxSize;
+	private final int maxSize;
 
 	public LruCache(int maxSize) {
 		super(maxSize + 1, 0.75f, true);

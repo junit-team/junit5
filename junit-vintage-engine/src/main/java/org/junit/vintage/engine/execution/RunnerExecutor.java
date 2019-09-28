@@ -28,7 +28,7 @@ import org.junit.vintage.engine.descriptor.TestSourceProvider;
 public class RunnerExecutor {
 
 	private final EngineExecutionListener engineExecutionListener;
-	private TestSourceProvider testSourceProvider;
+	private final TestSourceProvider testSourceProvider;
 
 	public RunnerExecutor(EngineExecutionListener engineExecutionListener, TestSourceProvider testSourceProvider) {
 		this.engineExecutionListener = engineExecutionListener;
