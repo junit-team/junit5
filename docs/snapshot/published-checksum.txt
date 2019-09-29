@@ -4,7 +4,6 @@
 009a77eccf222e0634cb7dd09fc5dad6  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/package-info.java
 00bbeba73a18cb36b096de9e890e71f9  documentation/src/test/kotlin/example/FibonacciCalculator.kt
 0106d20c56a047be7edaa4f7f1bf7035  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedField.java
-016bae431184c0df9d0f317ad4da888f  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 017364e616ed895175c82529c621fbb2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfSystemProperty.java
 02e191547a2ae2d72da078c08ca60351  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreePrinter.java
 032c55e3d9d3b542e47322f76337350f  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/ArgumentsAccessor.java
@@ -124,7 +123,6 @@
 2ffb30fcccdf75b1db3f949b0d41048c  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepetitionInfoParameterResolver.java
 303761494463b7e13c135aee062252cd  documentation/src/test/java/example/defaultmethods/ComparableContract.java
 30d84c63df255e82b43c8effec613538  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/PackageNameFilter.java
-30dbe8d739e5dbd5b18943fefe25a0fc  junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncher.java
 30de20fa1079af450a70b42ed9fe8d2f  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestInvocationContext.java
 30fc19ee82a4cb4c00e23fe10895286e  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/ExternalResourceSupport.java
 3197e48ae92059747d3f4cbb7dc33564  junit-platform-engine/src/main/java/org/junit/platform/engine/EngineDiscoveryRequest.java
@@ -137,6 +135,7 @@
 3519a20a6b12f97e50a74577c6491ef4  documentation/src/test/java/example/TestingAStackDemo.java
 3591479495b99cd48cdc34e3928c4edc  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/ConvertWith.java
 366ad6786afed0587542a0b0aa718715  junit-platform-engine/src/main/java/org/junit/platform/engine/ConfigurationParameters.java
+368b55f531705e15874123bdc95d27a4  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 36b583c2d23b3934aca34142271bea92  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicExtensionContext.java
 3753cf712b0599f7aba04bb62c96f3aa  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayNameGenerator.java
 38a6ef7dcc8ec641d0e0e5d53ec1e0df  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Nested.java
@@ -580,6 +579,7 @@ e643ae7bd835b4a971cb5a5bd562fb8a  documentation/src/docs/asciidoc/user-guide/wri
 e6f19413703cf8a206a7b97e13785ee7  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepeatedTestInvocationContext.java
 e722e4401bdee2296024f18005ac24be  junit-jupiter-api/src/main/java/org/junit/jupiter/api/BeforeAll.java
 e7442abb95d125efdc3f09c4f9c175e2  documentation/src/test/java/example/testkit/EngineTestKitSkippedMethodDemo.java
+e7d8d2c871d3fa83e1dc1331d83bd15b  junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncher.java
 e7dd9be98433b501ce56f58d7173b83b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertTrue.java
 e80828f39efa4ad1bb0b807d778480e3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledOnJre.java
 e86656b073a2d9246a3870d48dcc3318  junit-platform-launcher/src/main/java/org/junit/platform/launcher/EngineFilter.java

@@ -653,6 +653,11 @@ been introduced in <code>PackageUtils</code> that implements functionality equiv
 <p>Exceptions thrown by test engines during discovery and execution are now reported to
 <code>TestExecutionListeners</code>.</p>
 </li>
+<li>
+<p>Module <code>org.junit.platform.console</code> now provides a <code>java.util.spi.ToolProvider</code>
+implementation that can be acquired by <code>ToolProvider.findFirst("junit")</code> when running
+on Java 9 or above.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -896,7 +901,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-09-29 16:53:15 UTC
+Last updated 2019-09-29 19:29:56 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
