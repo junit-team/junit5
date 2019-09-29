@@ -25,6 +25,7 @@ dependencies {
 
 tasks {
 	shadowJar {
+		dependsOn(allMainClasses)
 		archiveClassifier.set("")
 		configurations = listOf(project.configurations["shadowed"])
 		exclude("META-INF/maven/**")

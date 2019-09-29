@@ -17,6 +17,7 @@ dependencies {
 
 tasks {
 	shadowJar {
+		dependsOn(allMainClasses)
 		classifier = ""
 		configurations = listOf(project.configurations["shadowed"])
 		exclude("META-INF/maven/**", "META-INF/versions/9/module-info.class")
@@ -25,6 +26,7 @@ tasks {
 			include("LICENSE-picocli.md")
 			into("META-INF")
 		}
+		from(sourceSets.mainRelease9.get().output.classesDirs)
 		doLast {
 			ToolProvider.findFirst("jar").get().run(System.out, System.err, "--update",
 					"--file", archiveFile.get().asFile.absolutePath,
