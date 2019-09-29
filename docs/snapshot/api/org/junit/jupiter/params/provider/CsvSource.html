@@ -147,7 +147,7 @@ public @interface <span class="memberNameLabel">CsvSource</span></pre>
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#value()">value</a></span></code></th>
 <td class="colLast">
-<div class="block">The CSV lines to use as source of arguments; must not be empty.</div>
+<div class="block">The CSV lines to use as the source of arguments; must not be empty.</div>
 </td>
 </tr>
 </tbody>
@@ -226,11 +226,12 @@ public @interface <span class="memberNameLabel">CsvSource</span></pre>
 <li class="blockList">
 <h4>value</h4>
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>[]&nbsp;value</pre>
-<div class="block">The CSV lines to use as source of arguments; must not be empty.
+<div class="block">The CSV lines to use as the source of arguments; must not be empty.
 
  <p>Each value corresponds to a line in a CSV file and will be split using
- the specified <a href="#delimiter()"><code>delimiter</code></a>. Any line beginning with a
- <code>#</code> symbol will be interpreted as a comment and will be ignored.</div>
+ the specified <a href="#delimiter()"><code>delimiter()</code></a> or <a href="#delimiterString()"><code>delimiterString()</code></a>. Any line
+ beginning with a <code>#</code> symbol will be interpreted as a comment and will
+ be ignored.</div>
 </li>
 </ul>
 </li>
