@@ -13,6 +13,7 @@ package org.junit.jupiter.params.provider;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.params.provider.MockCsvAnnotationBuilder.csvFileSource;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -34,48 +35,48 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void providesArgumentsForNewlineAndComma() {
-		CsvFileSource annotation = CsvFileSourceMock.builder()//
+		CsvFileSource annotation = csvFileSource()//
 				.lineSeparator("\n")//
 				.delimiter(',')//
 				.build();
 
-		Stream<Object[]> arguments = provideArguments("foo, bar \n baz, qux \n", annotation);
+		Stream<Object[]> arguments = provideArguments(annotation, "foo, bar \n baz, qux \n");
 
-		assertThat(arguments).containsExactly(new Object[] { "foo", "bar" }, new Object[] { "baz", "qux" });
+		assertThat(arguments).containsExactly(array("foo", "bar"), array("baz", "qux"));
 	}
 
 	@Test
 	void providesArgumentsForCarriageReturnAndSemicolon() {
-		CsvFileSource annotation = CsvFileSourceMock.builder()//
+		CsvFileSource annotation = csvFileSource()//
 				.lineSeparator("\r")//
 				.delimiter(';')//
 				.build();
 
-		Stream<Object[]> arguments = provideArguments("foo; bar \r baz; qux", annotation);
+		Stream<Object[]> arguments = provideArguments(annotation, "foo; bar \r baz; qux");
 
-		assertThat(arguments).containsExactly(new Object[] { "foo", "bar" }, new Object[] { "baz", "qux" });
+		assertThat(arguments).containsExactly(array("foo", "bar"), array("baz", "qux"));
 	}
 
 	@Test
 	void providesArgumentsWithStringDelimiter() {
-		CsvFileSource annotation = CsvFileSourceMock.builder()//
+		CsvFileSource annotation = csvFileSource()//
 				.delimiterString(",")//
 				.build();
 
-		Stream<Object[]> arguments = provideArguments("foo, bar \n baz, qux \n", annotation);
+		Stream<Object[]> arguments = provideArguments(annotation, "foo, bar \n baz, qux \n");
 
-		assertThat(arguments).containsExactly(new Object[] { "foo", "bar" }, new Object[] { "baz", "qux" });
+		assertThat(arguments).containsExactly(array("foo", "bar"), array("baz", "qux"));
 	}
 
 	@Test
 	void throwsExceptionIfBothDelimitersAreSimultaneouslySet() {
-		CsvFileSource annotation = CsvFileSourceMock.builder()//
+		CsvFileSource annotation = csvFileSource()//
 				.delimiter(',')//
 				.delimiterString(";")//
 				.build();
 
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments("foo", annotation));
+			() -> provideArguments(annotation, "foo"));
 
 		assertThat(exception)//
 				.hasMessageStartingWith("The delimiter and delimiterString attributes cannot be set simultaneously in")//
@@ -84,13 +85,13 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void ignoresCommentedOutEntries() {
-		CsvFileSource annotation = CsvFileSourceMock.builder()//
+		CsvFileSource annotation = csvFileSource()//
 				.delimiter(',')//
 				.build();
 
-		Stream<Object[]> arguments = provideArguments("foo, bar \n#baz, qux", annotation);
+		Stream<Object[]> arguments = provideArguments(annotation, "foo, bar \n#baz, qux");
 
-		assertThat(arguments).containsExactly(new Object[] { "foo", "bar" });
+		assertThat(arguments).containsExactly(array("foo", "bar"));
 	}
 
 	@Test
@@ -104,7 +105,7 @@ class CsvFileArgumentsProviderTests {
 			}
 		};
 
-		Stream<Object[]> arguments = provideArguments(inputStream, CsvFileSourceMock.getDefault());
+		Stream<Object[]> arguments = provideArguments(inputStream, csvFileSource().build());
 
 		assertThat(arguments.count()).isEqualTo(1);
 		assertThat(closed.get()).describedAs("closed").isTrue();
@@ -112,35 +113,33 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void readsFromSingleClasspathResource() {
-		CsvFileSource annotation = CsvFileSourceMock.builder()//
-				.charset("ISO-8859-1")//
+		CsvFileSource annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
 				.resources("/single-column.csv")//
 				.build();
 
 		Stream<Object[]> arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
 
-		assertThat(arguments).containsExactly(new Object[] { "foo" }, new Object[] { "bar" }, new Object[] { "baz" },
-			new Object[] { "qux" }, new Object[] { "" });
+		assertThat(arguments).containsExactly(array("foo"), array("bar"), array("baz"), array("qux"), array(""));
 	}
 
 	@Test
 	void readsFromSingleClasspathResourceWithCustomEmptyValue() {
-		CsvFileSource annotation = CsvFileSourceMock.builder()//
-				.charset("ISO-8859-1")//
+		CsvFileSource annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
 				.resources("/single-column.csv")//
-				.emptyValue("vacio")//
+				.emptyValue("EMPTY")//
 				.build();
 
 		Stream<Object[]> arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
 
-		assertThat(arguments).containsExactly(new Object[] { "foo" }, new Object[] { "bar" }, new Object[] { "baz" },
-			new Object[] { "qux" }, new Object[] { "vacio" });
+		assertThat(arguments).containsExactly(array("foo"), array("bar"), array("baz"), array("qux"), array("EMPTY"));
 	}
 
 	@Test
 	void readsFromMultipleClasspathResources() {
-		CsvFileSource annotation = CsvFileSourceMock.builder()//
-				.charset("ISO-8859-1")//
+		CsvFileSource annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
 				.resources("/single-column.csv", "/single-column.csv")//
 				.build();
 
@@ -151,22 +150,21 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void readsFromSingleClasspathResourceWithHeaders() {
-		CsvFileSource annotation = CsvFileSourceMock.builder()//
-				.charset("ISO-8859-1")//
+		CsvFileSource annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
 				.resources("/single-column.csv")//
 				.numLinesToSkip(1)//
 				.build();
 
 		Stream<Object[]> arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
 
-		assertThat(arguments).containsExactly(new Object[] { "bar" }, new Object[] { "baz" }, new Object[] { "qux" },
-			new Object[] { "" });
+		assertThat(arguments).containsExactly(array("bar"), array("baz"), array("qux"), array(""));
 	}
 
 	@Test
 	void readsFromSingleClasspathResourceWithMoreHeadersThanLines() {
-		CsvFileSource annotation = CsvFileSourceMock.builder()//
-				.charset("ISO-8859-1")//
+		CsvFileSource annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
 				.resources("/single-column.csv")//
 				.numLinesToSkip(10)//
 				.build();
@@ -178,22 +176,21 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void readsFromMultipleClasspathResourcesWithHeaders() {
-		CsvFileSource annotation = CsvFileSourceMock.builder()//
-				.charset("ISO-8859-1")//
+		CsvFileSource annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
 				.resources("/single-column.csv", "/single-column.csv")//
 				.numLinesToSkip(1)//
 				.build();
 
 		Stream<Object[]> arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
 
-		assertThat(arguments).containsExactly(new Object[] { "bar" }, new Object[] { "baz" }, new Object[] { "qux" },
-			new Object[] { "" }, new Object[] { "bar" }, new Object[] { "baz" }, new Object[] { "qux" },
-			new Object[] { "" });
+		assertThat(arguments).containsExactly(array("bar"), array("baz"), array("qux"), array(""), array("bar"),
+			array("baz"), array("qux"), array(""));
 	}
 
 	@Test
 	void throwsExceptionForMissingClasspathResource() {
-		CsvFileSource annotation = CsvFileSourceMock.builder()//
+		CsvFileSource annotation = csvFileSource()//
 				.resources("/does-not-exist.csv")//
 				.build();
 
@@ -205,7 +202,7 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void throwsExceptionForBlankClasspathResource() {
-		CsvFileSource annotation = CsvFileSourceMock.builder()//
+		CsvFileSource annotation = csvFileSource()//
 				.resources("    ")//
 				.build();
 
@@ -217,8 +214,8 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void throwsExceptionForInvalidCharset() {
-		CsvFileSource annotation = CsvFileSourceMock.builder()//
-				.charset("Bogus-Charset")//
+		CsvFileSource annotation = csvFileSource()//
+				.encoding("Bogus-Charset")//
 				.resources("/bogus-charset.csv")//
 				.build();
 
@@ -232,7 +229,7 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void throwsExceptionForInvalidCsvFormat() {
-		CsvFileSource annotation = CsvFileSourceMock.builder()//
+		CsvFileSource annotation = csvFileSource()//
 				.resources("/broken.csv")//
 				.build();
 
@@ -246,19 +243,18 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void emptyValueIsAnEmptyWithCustomNullValueString() {
-		CsvFileSource annotation = CsvFileSourceMock.builder()//
+		CsvFileSource annotation = csvFileSource()//
 				.lineSeparator("\n")//
 				.delimiter(',')//
 				.nullValues("NIL")//
 				.build();
 
-		Stream<Object[]> arguments = provideArguments("vacio, , NIL, ''\nNIL, NIL, foo, bar", annotation);
+		Stream<Object[]> arguments = provideArguments(annotation, "apple, , NIL, ''\nNIL, NIL, foo, bar");
 
-		assertThat(arguments).containsExactly(new Object[] { "vacio", null, null, "''" },
-			new Object[] { null, null, "foo", "bar" });
+		assertThat(arguments).containsExactly(array("apple", null, null, "''"), array(null, null, "foo", "bar"));
 	}
 
-	private Stream<Object[]> provideArguments(String content, CsvFileSource annotation) {
+	private Stream<Object[]> provideArguments(CsvFileSource annotation, String content) {
 		return provideArguments(new ByteArrayInputStream(content.getBytes(UTF_8)), annotation);
 	}
 
@@ -278,6 +274,11 @@ class CsvFileArgumentsProviderTests {
 		when(context.getTestClass()).thenReturn(Optional.of(CsvFileArgumentsProviderTests.class));
 		doCallRealMethod().when(context).getRequiredTestClass();
 		return provider.provideArguments(context).map(Arguments::get);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> T[] array(T... elements) {
+		return elements;
 	}
 
 }
