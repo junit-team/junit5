@@ -18,6 +18,8 @@ val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 
 fun javaModuleName(project: Project) = "org." + project.name.replace('-', '.')
 val javaModuleName = javaModuleName(project)
+val moduleSourceDir = file("src/module/$javaModuleName")
+val moduleOutputDir = file("$buildDir/classes/java/module")
 val javaVersion = JavaVersion.current()
 
 sourceSets {
@@ -26,6 +28,22 @@ sourceSets {
 	}
 	test {
 		runtimeClasspath += shadowed
+	}
+	register("mainRelease9") {
+		compileClasspath += main.get().output
+		runtimeClasspath += main.get().output
+		java {
+			setSrcDirs(setOf("src/main/java9"))
+		}
+	}
+}
+
+configurations {
+	named("mainRelease9CompileClasspath") {
+		extendsFrom(compileClasspath.get())
+	}
+	named("mainRelease9CompileClasspath") {
+		extendsFrom(runtimeClasspath.get())
 	}
 }
 
@@ -54,6 +72,7 @@ if (project in mavenizedProjects) {
 	apply(plugin = "publishing-conventions")
 
 	tasks.javadoc {
+		source(sourceSets["mainRelease9"].allJava)
 		options {
 			memberLevel = JavadocMemberLevel.PROTECTED
 			header = project.name
@@ -77,10 +96,10 @@ if (project in mavenizedProjects) {
 	}
 
 	val sourcesJar by tasks.creating(Jar::class) {
-		dependsOn(tasks.classes)
 		archiveClassifier.set("sources")
 		from(sourceSets.main.get().allSource)
-		from("${project.projectDir}/src/module/$javaModuleName") {
+		from(sourceSets["mainRelease9"].allSource)
+		from(moduleSourceDir) {
 			include("module-info.java")
 		}
 		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -98,8 +117,8 @@ if (project in mavenizedProjects) {
 		}
 		val suffix = archiveClassifier.getOrElse("")
 		if (suffix.isBlank() || suffix == "all") { // "all" is used by shadow plugin
-			from("$buildDir/classes/java/module/$javaModuleName") {
-				// include("module-info.class") ... include all binaries
+			from("$moduleOutputDir/$javaModuleName") {
+				include("module-info.class")
 			}
 		}
 	}
@@ -137,7 +156,12 @@ normalization {
 	}
 }
 
+val allMainClasses by tasks.registering {
+	dependsOn(tasks.classes, "mainRelease9Classes")
+}
+
 tasks.jar {
+	dependsOn(allMainClasses)
 	manifest {
 		attributes(
 				"Created-By" to "${System.getProperty("java.version")} (${System.getProperty("java.vendor")} ${System.getProperty("java.vm.version")})",
@@ -169,8 +193,9 @@ tasks.compileJava {
 
 if (modularProjects.contains(project)) {
 	val compileModule by tasks.registering(JavaCompile::class) {
-		destinationDir = file("$buildDir/classes/java/module")
-		source = fileTree("src/module/$javaModuleName")
+		dependsOn(tasks.classes, "mainRelease9Classes")
+		source = fileTree(moduleSourceDir)
+		destinationDir = moduleOutputDir
 		sourceCompatibility = "9"
 		targetCompatibility = "9"
 		classpath = files()
@@ -184,9 +209,8 @@ if (modularProjects.contains(project)) {
 		))
 		options.compilerArgumentProviders.add(ModulePathArgumentProvider())
 		options.compilerArgumentProviders.addAll(modularProjects.map { PatchModuleArgumentProvider(it) })
-		mustRunAfter(tasks.compileJava)
 	}
-	tasks.classes {
+	allMainClasses {
 		dependsOn(compileModule)
 	}
 }
@@ -211,7 +235,7 @@ class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvider {
 
 	@get:Input val patch: Provider<FileCollection> = provider {
 		if (it == project)
-			sourceSets["main"].output + configurations.compileClasspath.get()
+			sourceSets["main"].output + sourceSets["mainRelease9"].output + configurations.compileClasspath.get()
 		else
 			files(it.sourceSets["main"].java.srcDirs)
 	}
@@ -234,6 +258,10 @@ afterEvaluate {
 		compileTestJava {
 			sourceCompatibility = extension.testJavaVersion.majorVersion
 			targetCompatibility = extension.testJavaVersion.majorVersion
+		}
+		named<JavaCompile>("compileMainRelease9Java").configure {
+			sourceCompatibility = "9"
+			targetCompatibility = "9"
 		}
 		withType<JavaCompile>().configureEach {
 			// --release release
@@ -261,6 +289,9 @@ checkstyle {
 }
 tasks {
 	checkstyleMain {
+		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
+	}
+	named<Checkstyle>("checkstyleMainRelease9").configure {
 		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
 	}
 	checkstyleTest {

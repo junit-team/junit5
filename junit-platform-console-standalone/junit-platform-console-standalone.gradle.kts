@@ -25,6 +25,7 @@ tasks {
 		dependsOn(shadowJar)
 	}
 	shadowJar {
+		dependsOn(allMainClasses)
 		classifier = ""
 		configurations = listOf(project.configurations["shadowed"])
 
