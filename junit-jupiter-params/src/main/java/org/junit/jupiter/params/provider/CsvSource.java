@@ -41,11 +41,12 @@ import org.apiguardian.api.API;
 public @interface CsvSource {
 
 	/**
-	 * The CSV lines to use as source of arguments; must not be empty.
+	 * The CSV lines to use as the source of arguments; must not be empty.
 	 *
 	 * <p>Each value corresponds to a line in a CSV file and will be split using
-	 * the specified {@link #delimiter delimiter}. Any line beginning with a
-	 * {@code #} symbol will be interpreted as a comment and will be ignored.
+	 * the specified {@link #delimiter} or {@link #delimiterString}. Any line
+	 * beginning with a {@code #} symbol will be interpreted as a comment and will
+	 * be ignored.
 	 */
 	String[] value();
 
