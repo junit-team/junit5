@@ -14,168 +14,146 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.ParameterizedType;
 
 /**
  * @since 5.6
  */
-class MockCsvAnnotationBuilder<A extends Annotation> {
+abstract class MockCsvAnnotationBuilder<A extends Annotation, B extends MockCsvAnnotationBuilder<A, B>> {
 
 	static CsvSource csvSource(String... lines) {
 		return csvSource().lines(lines).build();
 	}
 
-	static MockCsvAnnotationBuilder<CsvSource> csvSource() {
-		return new MockCsvAnnotationBuilder<>() {
-			// anonymous inner class to capture generic type information
-		};
+	static MockCsvSourceBuilder csvSource() {
+		return new MockCsvSourceBuilder();
 	}
 
-	static MockCsvAnnotationBuilder<CsvFileSource> csvFileSource() {
-		return new MockCsvAnnotationBuilder<>() {
-			// anonymous inner class to capture generic type information
-		};
-	}
-
-	private final Class<? extends Annotation> annotationType;
-
-	// Common
-	private char delimiter = '\0';
-	private String delimiterString = "";
-	private String emptyValue = "";
-	private String[] nullValues = new String[0];
-
-	// @CsvSource
-	private String[] lines = new String[0];
-
-	// @CsvFileSource
-	private String[] resources = { "test.csv" };
-	private String encoding = "UTF-8";
-	private String lineSeparator = "\n";
-	private int numLinesToSkip = 0;
-
-	@SuppressWarnings("unchecked")
-	private MockCsvAnnotationBuilder() {
-		ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
-		this.annotationType = (Class<? extends Annotation>) parameterizedType.getActualTypeArguments()[0];
-	}
-
-	// -- Common ---------------------------------------------------------------
-
-	MockCsvAnnotationBuilder<A> delimiter(char delimiter) {
-		this.delimiter = delimiter;
-		return this;
-	}
-
-	MockCsvAnnotationBuilder<A> delimiterString(String delimiterString) {
-		this.delimiterString = delimiterString;
-		return this;
-	}
-
-	MockCsvAnnotationBuilder<A> emptyValue(String emptyValue) {
-		this.emptyValue = emptyValue;
-		return this;
-	}
-
-	MockCsvAnnotationBuilder<A> nullValues(String... nullValues) {
-		this.nullValues = nullValues;
-		return this;
-	}
-
-	// -- @CsvSource -----------------------------------------------------------
-
-	MockCsvAnnotationBuilder<A> lines(String... lines) {
-		onlyForCsvSource();
-		this.lines = lines;
-		return this;
-	}
-
-	// -- @CsvFileSource -------------------------------------------------------
-
-	/**
-	 * Defaults to "test.csv".
-	 */
-	MockCsvAnnotationBuilder<A> resources(String... resources) {
-		onlyForCsvFileSource();
-		this.resources = resources;
-		return this;
-	}
-
-	MockCsvAnnotationBuilder<A> encoding(String encoding) {
-		onlyForCsvFileSource();
-		this.encoding = encoding;
-		return this;
-	}
-
-	MockCsvAnnotationBuilder<A> lineSeparator(String lineSeparator) {
-		onlyForCsvFileSource();
-		this.lineSeparator = lineSeparator;
-		return this;
-	}
-
-	MockCsvAnnotationBuilder<A> numLinesToSkip(int numLinesToSkip) {
-		onlyForCsvFileSource();
-		this.numLinesToSkip = numLinesToSkip;
-		return this;
+	static MockCsvFileSourceBuilder csvFileSource() {
+		return new MockCsvFileSourceBuilder();
 	}
 
 	// -------------------------------------------------------------------------
 
-	@SuppressWarnings("unchecked")
-	A build() {
-		if (this.annotationType == CsvSource.class) {
-			return (A) buildCsvSource();
-		}
-		if (this.annotationType == CsvFileSource.class) {
-			return (A) buildCsvFileSource();
-		}
-		// Appease the compiler
-		throw new IllegalStateException("Unsupported annotation type: " + this.annotationType.getName());
+	protected char delimiter = '\0';
+	protected String delimiterString = "";
+	protected String emptyValue = "";
+	protected String[] nullValues = new String[0];
+
+	private MockCsvAnnotationBuilder() {
 	}
 
-	private CsvSource buildCsvSource() {
-		CsvSource annotation = mock(CsvSource.class);
+	protected abstract B getSelf();
 
-		// Common
-		when(annotation.delimiter()).thenReturn(this.delimiter);
-		when(annotation.delimiterString()).thenReturn(this.delimiterString);
-		when(annotation.emptyValue()).thenReturn(this.emptyValue);
-		when(annotation.nullValues()).thenReturn(this.nullValues);
-
-		// @CsvSource
-		when(annotation.value()).thenReturn(this.lines);
-
-		return annotation;
+	B delimiter(char delimiter) {
+		this.delimiter = delimiter;
+		return getSelf();
 	}
 
-	private CsvFileSource buildCsvFileSource() {
-		CsvFileSource annotation = mock(CsvFileSource.class);
-
-		// Common
-		when(annotation.delimiter()).thenReturn(this.delimiter);
-		when(annotation.delimiterString()).thenReturn(this.delimiterString);
-		when(annotation.emptyValue()).thenReturn(this.emptyValue);
-		when(annotation.nullValues()).thenReturn(this.nullValues);
-
-		// @CsvFileSource
-		when(annotation.resources()).thenReturn(this.resources);
-		when(annotation.encoding()).thenReturn(this.encoding);
-		when(annotation.lineSeparator()).thenReturn(this.lineSeparator);
-		when(annotation.numLinesToSkip()).thenReturn(this.numLinesToSkip);
-
-		return annotation;
+	B delimiterString(String delimiterString) {
+		this.delimiterString = delimiterString;
+		return getSelf();
 	}
 
-	private void onlyForCsvSource() {
-		if (!(this.annotationType == CsvSource.class)) {
-			throw new UnsupportedOperationException("Only supported for @CsvSource");
+	B emptyValue(String emptyValue) {
+		this.emptyValue = emptyValue;
+		return getSelf();
+	}
+
+	B nullValues(String... nullValues) {
+		this.nullValues = nullValues;
+		return getSelf();
+	}
+
+	abstract A build();
+
+	// -------------------------------------------------------------------------
+
+	static class MockCsvSourceBuilder extends MockCsvAnnotationBuilder<CsvSource, MockCsvSourceBuilder> {
+
+		private String[] lines = new String[0];
+
+		@Override
+		protected MockCsvSourceBuilder getSelf() {
+			return this;
 		}
+
+		MockCsvSourceBuilder lines(String... lines) {
+			this.lines = lines;
+			return this;
+		}
+
+		@Override
+		CsvSource build() {
+			CsvSource annotation = mock(CsvSource.class);
+
+			// Common
+			when(annotation.delimiter()).thenReturn(super.delimiter);
+			when(annotation.delimiterString()).thenReturn(super.delimiterString);
+			when(annotation.emptyValue()).thenReturn(super.emptyValue);
+			when(annotation.nullValues()).thenReturn(super.nullValues);
+
+			// @CsvSource
+			when(annotation.value()).thenReturn(this.lines);
+
+			return annotation;
+		}
+
 	}
 
-	private void onlyForCsvFileSource() {
-		if (!(this.annotationType == CsvFileSource.class)) {
-			throw new UnsupportedOperationException("Only supported for @CsvFileSource");
+	static class MockCsvFileSourceBuilder extends MockCsvAnnotationBuilder<CsvFileSource, MockCsvFileSourceBuilder> {
+
+		private String[] resources = { "test.csv" };
+		private String encoding = "UTF-8";
+		private String lineSeparator = "\n";
+		private int numLinesToSkip = 0;
+
+		@Override
+		protected MockCsvFileSourceBuilder getSelf() {
+			return this;
 		}
+
+		/**
+		 * Defaults to "test.csv".
+		 */
+		MockCsvFileSourceBuilder resources(String... resources) {
+			this.resources = resources;
+			return this;
+		}
+
+		MockCsvFileSourceBuilder encoding(String encoding) {
+			this.encoding = encoding;
+			return this;
+		}
+
+		MockCsvFileSourceBuilder lineSeparator(String lineSeparator) {
+			this.lineSeparator = lineSeparator;
+			return this;
+		}
+
+		MockCsvFileSourceBuilder numLinesToSkip(int numLinesToSkip) {
+			this.numLinesToSkip = numLinesToSkip;
+			return this;
+		}
+
+		@Override
+		CsvFileSource build() {
+			CsvFileSource annotation = mock(CsvFileSource.class);
+
+			// Common
+			when(annotation.delimiter()).thenReturn(super.delimiter);
+			when(annotation.delimiterString()).thenReturn(super.delimiterString);
+			when(annotation.emptyValue()).thenReturn(super.emptyValue);
+			when(annotation.nullValues()).thenReturn(super.nullValues);
+
+			// @CsvFileSource
+			when(annotation.resources()).thenReturn(this.resources);
+			when(annotation.encoding()).thenReturn(this.encoding);
+			when(annotation.lineSeparator()).thenReturn(this.lineSeparator);
+			when(annotation.numLinesToSkip()).thenReturn(this.numLinesToSkip);
+
+			return annotation;
+		}
+
 	}
 
 }
