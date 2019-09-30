@@ -379,7 +379,9 @@ include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_os]
 ==== Java Runtime Environment Conditions
 
 A container or test may be enabled or disabled on a particular version of the Java
-Runtime Environment (JRE) via the `{EnabledOnJre}` and `{DisabledOnJre}` annotations.
+Runtime Environment (JRE) via the `{EnabledOnJre}` and `{DisabledOnJre}` annotations
+or on a particular range of versions of the JRE via the `{EnabledForJreRange}` and
+`{DisabledForJreRange}` annotations
 
 [source,java,indent=0]
 ----

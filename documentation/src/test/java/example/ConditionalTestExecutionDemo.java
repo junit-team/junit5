@@ -23,10 +23,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledForJreRange;
 import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.DisabledOnJre;
 import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.EnabledForJreRange;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledOnJre;
@@ -80,8 +82,20 @@ class ConditionalTestExecutionDemo {
 	}
 
 	@Test
+	@EnabledForJreRange(min = JAVA_9, max = JAVA_10)
+	void onJava9Or10ByRange() {
+		// ...
+	}
+
+	@Test
 	@DisabledOnJre(JAVA_9)
 	void notOnJava9() {
+		// ...
+	}
+
+	@Test
+	@DisabledForJreRange(min = JAVA_9, max = JAVA_10)
+	void notOnJava9Or10ByRange() {
 		// ...
 	}
 	// end::user_guide_jre[]
