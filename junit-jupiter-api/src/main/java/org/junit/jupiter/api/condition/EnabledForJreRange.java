@@ -22,12 +22,12 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
- * {@code @DisabledOnJre} is used to signal that the annotated test class or
- * test method is <em>disabled</em> on one or more specified Java
- * Runtime Environment (JRE) {@linkplain #value versions}.
+ * {@code @EnabledForJreRange} is used to signal that the annotated test class or
+ * test method is only <em>enabled</em> on a specific range of Java
+ * Runtime Environment (JRE) {@linkplain #min version} {@linkplain #max version}.
  *
  * <p>When applied at the class level, all test methods within that class
- * will be disabled on the same specified JRE versions.
+ * will be enabled on the same specified JRE versions.
  *
  * <p>If a test method is disabled via this annotation, that does not prevent
  * the test class from being instantiated. Rather, it prevents the execution of
@@ -40,7 +40,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  *
  * <h4>Warning</h4>
  *
- * <p>As of JUnit Jupiter 5.1, this annotation can only be declared once on an
+ * <p>This annotation can only be declared once on an
  * {@link java.lang.reflect.AnnotatedElement AnnotatedElement} (i.e., test
  * interface, test class, or test method). If this annotation is directly
  * present, indirectly present, or meta-present multiple times on a given
@@ -49,10 +49,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * this annotation may be used in conjunction with other {@code @Enabled*} or
  * {@code @Disabled*} annotations in this package.
  *
- * @since 5.1
+ * @since 5.6
  * @see JRE
  * @see org.junit.jupiter.api.condition.EnabledOnJre
- * @see org.junit.jupiter.api.condition.EnabledForJreRange
+ * @see org.junit.jupiter.api.condition.DisabledOnJre
  * @see org.junit.jupiter.api.condition.DisabledForJreRange
  * @see org.junit.jupiter.api.condition.EnabledOnOs
  * @see org.junit.jupiter.api.condition.DisabledOnOs
@@ -65,16 +65,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ExtendWith(DisabledOnJreCondition.class)
-@API(status = STABLE, since = "5.1")
-public @interface DisabledOnJre {
+@ExtendWith(EnabledForJreRangeCondition.class)
+@API(status = STABLE, since = "5.6")
+public @interface EnabledForJreRange {
 
-	/**
-	 * Java Runtime Environment versions on which the annotated class or
-	 * method should be disabled.
-	 *
-	 * @see JRE
-	 */
-	JRE[] value();
+	JRE min() default JRE.JAVA_8;
+
+	JRE max() default JRE.OTHER;
 
 }

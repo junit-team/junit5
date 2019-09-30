@@ -63,6 +63,8 @@ on GitHub.
 * New `TypeBasedParameterResolver<T>` abstract base class that serves as a generic adapter
   for the `ParameterResolver` API and simplifies the implementation of a custom resolver
   that supports parameters of a specific type.
+* New `@EnabledForJreRange` and `@DisabledForJreRange` annotations for easier test execution
+  handling on multiple versions of JRE.
 
 
 [[release-notes-5.6.0-M1-junit-vintage]]
