@@ -434,6 +434,11 @@ int&nbsp;numLinesToSkip</pre>
  <p>For example, you may wish for certain values such as <code>"N/A"</code> or
  <code>"NIL"</code> to be converted to <code>null</code> references.
 
+ <p>Please note that <em>unquoted</em> empty values will always be converted
+ to <code>null</code> references regardless of the value of this <code>nullValues</code>
+ attribute; whereas, a <em>quoted</em> empty string will be treated as an
+ <a href="#emptyValue()"><code>emptyValue()</code></a>.
+
  <p>Defaults to <code>{}</code>.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>

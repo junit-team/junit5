@@ -3366,7 +3366,7 @@ blank strings supplied via <code>@ValueSource</code>.
 first method parameter is used. The test will fail if it does not reference an enum type.
 Thus, the <code>value</code> attribute is required in the above example because the method parameter
 is declared as <code>TemporalUnit</code>, i.e. the interface implemented by <code>ChronoUnit</code>, which isn&#8217;t
-an enum type. Changing the method parameter type to <code>ChronoUnit</code> allows to omit the
+an enum type. Changing the method parameter type to <code>ChronoUnit</code> allows you to omit the
 explicit enum type from the annotation as follows.</p>
 </div>
 <div class="listingblock">
@@ -3380,8 +3380,8 @@ explicit enum type from the annotation as follows.</p>
 </div>
 <div class="paragraph">
 <p>The annotation provides an optional <code>names</code> attribute that lets you specify which
-constants shall be used. If omitted, all constants will be used like in the following
-example.</p>
+constants shall be used, like in the following example. If omitted, all constants will be
+used.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3584,6 +3584,19 @@ custom value can be interpreted as a <code>null</code> reference (see the <code>
 below). An <code>ArgumentConversionException</code> is thrown if the target type of a <code>null</code>
 reference is a primitive type.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+An <em>unquoted</em> empty value will always be converted to a <code>null</code> reference regardless
+of any custom values configured via the <code>nullValues</code> attribute.
+</td>
+</tr>
+</table>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -3664,6 +3677,15 @@ Poland, 2
 &quot;United States of America&quot;, 3</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>In contrast to the syntax used in <code>@CsvSource</code>, <code>@CsvFileSource</code> uses a double quote <code>"</code>
+as the quote character. See the <code>"United States of America"</code> value in the example above.
+An empty, quoted value <code>""</code> results in an empty <code>String</code> unless the <code>emptyValue</code> attribute
+is set; whereas, an entirely <em>empty</em> value is interpreted as a <code>null</code> reference. By
+specifying one or more <code>nullValues</code>, a custom value can be interpreted as a <code>null</code>
+reference. An <code>ArgumentConversionException</code> is thrown if the target type of a <code>null</code>
+reference is a primitive type.</p>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -3671,13 +3693,8 @@ Poland, 2
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-In contrast to the syntax used in <code>@CsvSource</code>, <code>@CsvFileSource</code> uses a double quote
-<code>"</code> as the quote character. See the <code>"United States of America"</code> value in the example
-above. An empty, quoted value <code>""</code> results in an empty <code>String</code> unless the <code>emptyValue</code>
-attribute is set; whereas, an entirely <em>empty</em> value is interpreted as a <code>null</code> reference.
-By specifying one or more <code>nullValues</code>, a custom value can be interpreted as a <code>null</code>
-reference. An <code>ArgumentConversionException</code> is thrown if the target type of a <code>null</code>
-reference is a primitive type.
+An <em>unquoted</em> empty value will always be converted to a <code>null</code> reference regardless
+of any custom values configured via the <code>nullValues</code> attribute.
 </td>
 </tr>
 </table>
@@ -9684,7 +9701,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-09-29 19:29:56 UTC
+Last updated 2019-10-01 15:48:04 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
