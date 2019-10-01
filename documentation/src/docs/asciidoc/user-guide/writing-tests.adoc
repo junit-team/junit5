@@ -1154,6 +1154,9 @@ custom value can be interpreted as a `null` reference (see the `NIL` example in 
 below). An `ArgumentConversionException` is thrown if the target type of a `null`
 reference is a primitive type.
 
+NOTE: An _unquoted_ empty value will always be converted to a `null` reference regardless
+of any custom values configured via the `nullValues` attribute.
+
 [cols="50,50"]
 |===
 | Example Input                                                       | Resulting Argument List
@@ -1191,13 +1194,16 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvFileSource_example
 include::{testResourcesDir}/two-column.csv[]
 ----
 
-NOTE: In contrast to the syntax used in `@CsvSource`, `@CsvFileSource` uses a double quote
-`"` as the quote character. See the `"United States of America"` value in the example
-above. An empty, quoted value `""` results in an empty `String` unless the `emptyValue`
-attribute is set; whereas, an entirely _empty_ value is interpreted as a `null` reference.
-By specifying one or more `nullValues`, a custom value can be interpreted as a `null`
+In contrast to the syntax used in `@CsvSource`, `@CsvFileSource` uses a double quote `"`
+as the quote character. See the `"United States of America"` value in the example above.
+An empty, quoted value `""` results in an empty `String` unless the `emptyValue` attribute
+is set; whereas, an entirely _empty_ value is interpreted as a `null` reference. By
+specifying one or more `nullValues`, a custom value can be interpreted as a `null`
 reference. An `ArgumentConversionException` is thrown if the target type of a `null`
 reference is a primitive type.
+
+NOTE: An _unquoted_ empty value will always be converted to a `null` reference regardless
+of any custom values configured via the `nullValues` attribute.
 
 [[writing-tests-parameterized-tests-sources-ArgumentsSource]]
 ===== @ArgumentsSource

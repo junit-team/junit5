@@ -93,6 +93,11 @@ public @interface CsvSource {
 	 * <p>For example, you may wish for certain values such as {@code "N/A"} or
 	 * {@code "NIL"} to be converted to {@code null} references.
 	 *
+	 * <p>Please note that <em>unquoted</em> empty values will always be converted
+	 * to {@code null} references regardless of the value of this {@code nullValues}
+	 * attribute; whereas, a <em>quoted</em> empty string will be treated as an
+	 * {@link #emptyValue}.
+	 *
 	 * <p>Defaults to {@code {}}.
 	 *
 	 * @since 5.6
