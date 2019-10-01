@@ -102,7 +102,7 @@ class EnabledForJreRangeConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void javaMin10() {
 		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava10() || onJava11() || onJava12() || onJava13());
+		assertEnabledOnCurrentJreIf(!(onJava8() || onJava9()));
 	}
 
 	/**
