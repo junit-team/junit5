@@ -86,6 +86,7 @@ class DisabledForJreRangeIntegrationTests {
 		assertFalse(onJava10() || onJava11() || onJava12() || onJava13() || onJava14());
 		assertTrue(onJava9());
 	}
+
 	@Test
 	@DisabledForJreRange(min = OTHER, max = OTHER)
 	void other() {
