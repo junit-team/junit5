@@ -1030,7 +1030,7 @@ The annotation's `value` attribute is optional. When omitted, the declared type 
 first method parameter is used. The test will fail if it does not reference an enum type.
 Thus, the `value` attribute is required in the above example because the method parameter
 is declared as `TemporalUnit`, i.e. the interface implemented by `ChronoUnit`, which isn't
-an enum type. Changing the method parameter type to `ChronoUnit` allows to omit the
+an enum type. Changing the method parameter type to `ChronoUnit` allows you to omit the
 explicit enum type from the annotation as follows.
 
 [source,java,indent=0]
@@ -1039,8 +1039,8 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_example_au
 ----
 
 The annotation provides an optional `names` attribute that lets you specify which
-constants shall be used. If omitted, all constants will be used like in the following
-example.
+constants shall be used, like in the following example. If omitted, all constants will be
+used.
 
 [source,java,indent=0]
 ----
