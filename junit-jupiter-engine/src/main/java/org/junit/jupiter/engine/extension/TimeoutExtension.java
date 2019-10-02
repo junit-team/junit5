@@ -29,6 +29,8 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -37,6 +39,8 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * @since 5.5
  */
 class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, InvocationInterceptor {
+
+	private static final Logger logger = LoggerFactory.getLogger(TimeoutExtension.class);
 
 	private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(Timeout.class);
 	private static final String TESTABLE_METHOD_TIMEOUT_KEY = "testable_method_timeout_from_annotation";
@@ -177,13 +181,15 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 			}
 			else if (extensionContext.getConfigurationParameter(TIMEOUT_MODE_PROPERTY_NAME).get().equals(
 				DISABLED_ON_DEBUG)) {
-				for (final String argument : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
-					if ("-Xdebug".equals(argument)) {
-						return true;
+				try {
+					for (final String argument : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
+						if (argument.startsWith("-agentlib:jdwp")) {
+							return true;
+						}
 					}
-					else if (argument.startsWith("-agentlib:jdwp")) {
-						return true;
-					}
+				}
+				catch (NoClassDefFoundError cause) {
+					logger.warn(cause, () -> "ManagementFactory not found");
 				}
 			}
 		}
