@@ -42,7 +42,7 @@ public class TestSourceProvider {
 		if (testClass != null) {
 			String methodName = description.getMethodName();
 			if (methodName != null) {
-				Method method = findMethod(testClass, methodName);
+				Method method = findMethod(testClass, sanitizeMethodName(methodName));
 				if (method != null) {
 					return MethodSource.from(testClass, method);
 				}
@@ -52,11 +52,15 @@ public class TestSourceProvider {
 		return null;
 	}
 
-	private Method findMethod(Class<?> testClass, String methodName) {
+	private String sanitizeMethodName(String methodName) {
 		if (methodName.contains("[") && methodName.endsWith("]")) {
 			// special case for parameterized tests
-			return findMethod(testClass, methodName.substring(0, methodName.indexOf("[")));
+			return methodName.substring(0, methodName.indexOf("["));
 		}
+		return methodName;
+	}
+
+	private Method findMethod(Class<?> testClass, String methodName) {
 		List<Method> methods = methodsCache.computeIfAbsent(testClass, clazz -> findMethods(clazz, m -> true)).stream() //
 				.filter(where(Method::getName, isEqual(methodName))) //
 				.collect(toList());
