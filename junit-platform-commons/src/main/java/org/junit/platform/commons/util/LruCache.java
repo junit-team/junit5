@@ -20,6 +20,8 @@ import org.apiguardian.api.API;
 /**
  * A simple LRU cache with a maximum size.
  *
+ * <p>This class is not thread-safe.
+ *
  * @param <K> the type of keys maintained by this cache
  * @param <V> the type of values maintained by this cache
  */
@@ -30,8 +32,18 @@ public class LruCache<K, V> extends LinkedHashMap<K, V> {
 
 	private final int maxSize;
 
+	/**
+	 * Create a new LRU cache that maintains at most the supplied number of
+	 * entries.
+	 *
+	 * <p>For optimal use of the internal data structures, you should pick a
+	 * number that's one below a power of two since this is based on a
+	 * {@link java.util.HashMap} and the eldest entry will be evicted after
+	 * adding the entry that increases the {@linkplain #size() size} to be above
+	 * {@code maxSize}.
+	 */
 	public LruCache(int maxSize) {
-		super(maxSize + 1, 0.75f, true);
+		super(maxSize + 1, 1, true);
 		this.maxSize = maxSize;
 	}
 

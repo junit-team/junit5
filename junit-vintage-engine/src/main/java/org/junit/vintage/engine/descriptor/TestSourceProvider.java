@@ -35,7 +35,7 @@ import org.junit.runner.Description;
 @API(status = INTERNAL, since = "5.6")
 public class TestSourceProvider {
 
-	private final Map<Class<?>, List<Method>> methodsCache = Collections.synchronizedMap(new LruCache<>(32));
+	private final Map<Class<?>, List<Method>> methodsCache = Collections.synchronizedMap(new LruCache<>(31));
 
 	public TestSource findTestSource(Description description) {
 		Class<?> testClass = description.getTestClass();
