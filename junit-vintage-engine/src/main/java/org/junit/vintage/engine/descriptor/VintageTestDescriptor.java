@@ -12,13 +12,9 @@ package org.junit.vintage.engine.descriptor;
 
 import static java.util.Arrays.stream;
 import static java.util.function.Predicate.isEqual;
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.platform.commons.util.FunctionUtils.where;
-import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -28,15 +24,12 @@ import java.util.Set;
 
 import org.apiguardian.api.API;
 import org.junit.experimental.categories.Category;
-import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
-import org.junit.platform.engine.support.descriptor.ClassSource;
-import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.runner.Description;
 
 /**
@@ -52,8 +45,8 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 
 	protected Description description;
 
-	public VintageTestDescriptor(UniqueId uniqueId, Description description) {
-		this(uniqueId, description, generateDisplayName(description), toTestSource(description));
+	public VintageTestDescriptor(UniqueId uniqueId, Description description, TestSource source) {
+		this(uniqueId, description, generateDisplayName(description), source);
 	}
 
 	VintageTestDescriptor(UniqueId uniqueId, Description description, String displayName, TestSource source) {
@@ -142,40 +135,6 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 					.forEachOrdered(tags::add);
 			// @formatter:on
 		}
-	}
-
-	private static TestSource toTestSource(Description description) {
-		Class<?> testClass = description.getTestClass();
-		if (testClass != null) {
-			String methodName = description.getMethodName();
-			if (methodName != null) {
-				Method method = findMethod(testClass, methodName);
-				if (method != null) {
-					return MethodSource.from(testClass, method);
-				}
-			}
-			return ClassSource.from(testClass);
-		}
-		return null;
-	}
-
-	private static Method findMethod(Class<?> testClass, String methodName) {
-		if (methodName.contains("[") && methodName.endsWith("]")) {
-			// special case for parameterized tests
-			return findMethod(testClass, methodName.substring(0, methodName.indexOf("[")));
-		}
-		List<Method> methods = findMethods(testClass, where(Method::getName, isEqual(methodName)));
-		if (methods.isEmpty()) {
-			return null;
-		}
-		if (methods.size() == 1) {
-			return methods.get(0);
-		}
-		methods = methods.stream().filter(ModifierSupport::isPublic).collect(toList());
-		if (methods.size() == 1) {
-			return methods.get(0);
-		}
-		return null;
 	}
 
 }
