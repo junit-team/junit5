@@ -79,3 +79,4 @@ on GitHub.
 ==== New Features and Improvements
 
 * Improve performance for projects with a large number of tests.
+* Improve performance for test classes with a large number of methods.
