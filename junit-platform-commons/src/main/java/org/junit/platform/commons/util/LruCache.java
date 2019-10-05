@@ -22,6 +22,7 @@ import org.apiguardian.api.API;
  *
  * <p>This class is not thread-safe.
  *
+ * @since 1.6
  * @param <K> the type of keys maintained by this cache
  * @param <V> the type of values maintained by this cache
  */
