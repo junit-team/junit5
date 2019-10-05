@@ -18,6 +18,7 @@ object Versions {
     val bartholdy = "0.2.3"
     val classgraph = "4.8.59"
     val commonsIo = "2.6"
+    val coroutines = "1.3.3"
     val groovy = "3.0.0-rc-2"
     val log4j = "2.12.1"
     val mockito = "3.2.4"
