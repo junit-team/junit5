@@ -44,9 +44,7 @@ import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.DiscoverySelectors;
-import org.junit.platform.engine.discovery.MethodSelector;
-import org.junit.platform.engine.discovery.UniqueIdSelector;
+import org.junit.platform.engine.discovery.*;
 import org.junit.platform.engine.support.discovery.SelectorResolver;
 
 /**

@@ -34,6 +34,7 @@ import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.discovery.NestedMethodSelector;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**

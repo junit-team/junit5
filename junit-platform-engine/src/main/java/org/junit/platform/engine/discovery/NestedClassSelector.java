@@ -8,40 +8,34 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine.discovery;
+package org.junit.platform.engine.discovery;
 
-import java.lang.reflect.Method;
+import static org.apiguardian.api.API.Status.STABLE;
+
 import java.util.List;
 import java.util.Objects;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
 
-/**
- * @since 5.5.1
- */
-class NestedMethodSelector implements DiscoverySelector {
+@API(status = STABLE, since = "1.6")
+public class NestedClassSelector implements DiscoverySelector {
 
 	private final List<Class<?>> enclosingClasses;
 	private final Class<?> nestedClass;
-	private final Method method;
 
-	NestedMethodSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass, Method method) {
+	public NestedClassSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass) {
 		this.enclosingClasses = Preconditions.notEmpty(enclosingClasses, "enclosingClasses must not be null or empty");
 		this.nestedClass = Preconditions.notNull(nestedClass, "nestedClass must not be null");
-		this.method = Preconditions.notNull(method, "method must not be null");
 	}
 
-	List<Class<?>> getEnclosingClasses() {
+	public List<Class<?>> getEnclosingClasses() {
 		return enclosingClasses;
 	}
 
-	Class<?> getNestedClass() {
+	public Class<?> getNestedClass() {
 		return nestedClass;
-	}
-
-	Method getMethod() {
-		return method;
 	}
 
 	@Override
@@ -52,14 +46,13 @@ class NestedMethodSelector implements DiscoverySelector {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		NestedMethodSelector that = (NestedMethodSelector) o;
-		return enclosingClasses.equals(that.enclosingClasses) && nestedClass.equals(that.nestedClass)
-				&& method.equals(that.method);
+		NestedClassSelector that = (NestedClassSelector) o;
+		return enclosingClasses.equals(that.enclosingClasses) && nestedClass.equals(that.nestedClass);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(enclosingClasses, nestedClass, method);
+		return Objects.hash(enclosingClasses, nestedClass);
 	}
 
 }
