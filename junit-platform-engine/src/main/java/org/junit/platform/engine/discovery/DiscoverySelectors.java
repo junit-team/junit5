@@ -45,6 +45,8 @@ import org.junit.platform.engine.UniqueId;
  * @see PackageSelector
  * @see ClassSelector
  * @see MethodSelector
+ * @see NestedClassSelector
+ * @see NestedMethodSelector
  * @see UniqueIdSelector
  */
 @API(status = STABLE, since = "1.0")
@@ -451,6 +453,132 @@ public final class DiscoverySelectors {
 		Preconditions.notNull(javaClass, "Class must not be null");
 		Preconditions.notNull(method, "Method must not be null");
 		return new MethodSelector(javaClass, method);
+	}
+
+	/**
+	 * Create a {@code NestedClassSelector} for the supplied nested {@link Class} and its
+	 * enclosing classes.
+	 *
+	 * @param enclosingClasses the path to the nested class to select; never {@code null} or empty
+	 * @param nestedClass the nested class to select; never {@code null}
+	 * @see NestedClassSelector
+	 */
+	public static NestedClassSelector selectNestedClass(List<Class<?>> enclosingClasses, Class<?> nestedClass) {
+		Preconditions.notEmpty(enclosingClasses, "Enclosing classes must not be null or empty");
+		Preconditions.notNull(nestedClass, "Nested class must not be null");
+		return new NestedClassSelector(enclosingClasses, nestedClass);
+	}
+
+	/**
+	 * Create a {@code NestedClassSelector} for the supplied class name and its enclosing
+	 * classes' names.
+	 *
+	 * @param enclosingClassNames the names of the enclosing classes; never {@code null} or empty
+	 * @param nestedClassName the name of the nested class to select; never {@code null} or blank
+	 * @see NestedClassSelector
+	 */
+	public static NestedClassSelector selectNestedClass(List<String> enclosingClassNames, String nestedClassName) {
+		Preconditions.notEmpty(enclosingClassNames, "Enclosing class names must not be null or empty");
+		Preconditions.notNull(nestedClassName, "Nested class name must not be null or blank");
+		return new NestedClassSelector(enclosingClassNames, nestedClassName);
+	}
+
+	/**
+	 * Create a {@code NestedMethodSelector} for the supplied nested class name and method name.
+	 *
+	 * @param enclosingClassNames the names of the enclosing classes; never {@code null} or empty
+	 * @param nestedClassName the name of the nested class to select; never {@code null} or blank
+	 * @param methodName the name of the method to select; never {@code null} or blank
+	 * @see NestedMethodSelector
+	 */
+	public static NestedMethodSelector selectNestedMethod(List<String> enclosingClassNames, String nestedClassName,
+			String methodName) {
+		Preconditions.notEmpty(enclosingClassNames, "Enclosing class names must not be null or empty");
+		Preconditions.notNull(nestedClassName, "Nested class name must not be null or blank");
+		Preconditions.notBlank(methodName, "Method name must not be null or blank");
+		return new NestedMethodSelector(enclosingClassNames, nestedClassName, methodName);
+	}
+
+	/**
+	 * Create a {@code NestedMethodSelector} for the supplied nested class name, method name,
+	 * and method parameter types.
+	 *
+	 * <p>The parameter types {@code String} is typically a comma-separated list
+	 * of atomic types, fully qualified class names, or array types; however,
+	 * the exact syntax depends on the underlying test engine.
+	 *
+	 * @param enclosingClassNames the names of the enclosing classes; never {@code null} or empty
+	 * @param nestedClassName the name of the nested class to select; never {@code null} or blank
+	 * @param methodName the name of the method to select; never {@code null} or blank
+	 * @param methodParameterTypes the method parameter types as a single string; never
+	 * {@code null} though potentially an empty string if the method does not accept
+	 * arguments
+	 * @see NestedMethodSelector
+	 */
+	public static NestedMethodSelector selectNestedMethod(List<String> enclosingClassNames, String nestedClassName,
+			String methodName, String methodParameterTypes) {
+		Preconditions.notEmpty(enclosingClassNames, "Enclosing class names must not be null or empty");
+		Preconditions.notNull(nestedClassName, "Nested class name must not be null or blank");
+		Preconditions.notBlank(methodName, "Method name must not be null or blank");
+		Preconditions.notNull(methodParameterTypes, "Parameter types must not be null");
+		return new NestedMethodSelector(enclosingClassNames, nestedClassName, methodName, methodParameterTypes);
+	}
+
+	/**
+	 * Create a {@code NestedMethodSelector} for the supplied nested {@link Class} and method name.
+	 *
+	 * @param enclosingClasses the path to the nested class to select; never {@code null} or empty
+	 * @param nestedClass the nested class to select; never {@code null}
+	 * @param methodName the name of the method to select; never {@code null} or blank
+	 * @see NestedMethodSelector
+	 */
+	public static NestedMethodSelector selectNestedMethod(List<Class<?>> enclosingClasses, Class<?> nestedClass,
+			String methodName) {
+		Preconditions.notEmpty(enclosingClasses, "Enclosing classes must not be null or empty");
+		Preconditions.notNull(nestedClass, "Nested class must not be null");
+		Preconditions.notBlank(methodName, "Method name must not be null or blank");
+		return new NestedMethodSelector(enclosingClasses, nestedClass, methodName);
+	}
+
+	/**
+	 * Create a {@code NestedMethodSelector} for the supplied {@link Class}, method name,
+	 * and method parameter types.
+	 *
+	 * <p>The parameter types {@code String} is typically a comma-separated list
+	 * of atomic types, fully qualified class names, or array types; however,
+	 * the exact syntax depends on the underlying test engine.
+	 *
+	 * @param enclosingClasses the path to the nested class to select; never {@code null} or empty
+	 * @param nestedClass the nested class to select; never {@code null}
+	 * @param methodName the name of the method to select; never {@code null} or blank
+	 * @param methodParameterTypes the method parameter types as a single string; never
+	 * {@code null} though potentially an empty string if the method does not accept
+	 * arguments
+	 * @see NestedMethodSelector
+	 */
+	public static NestedMethodSelector selectNestedMethod(List<Class<?>> enclosingClasses, Class<?> nestedClass,
+			String methodName, String methodParameterTypes) {
+		Preconditions.notEmpty(enclosingClasses, "Enclosing classes must not be null or empty");
+		Preconditions.notNull(nestedClass, "Nested class must not be null");
+		Preconditions.notBlank(methodName, "Method name must not be null or blank");
+		Preconditions.notNull(methodParameterTypes, "Parameter types must not be null");
+		return new NestedMethodSelector(enclosingClasses, nestedClass, methodName, methodParameterTypes);
+	}
+
+	/**
+	 * Create a {@code NestedMethodSelector} for the supplied nested {@link Class} and {@link Method}.
+	 *
+	 * @param enclosingClasses the path to the nested class to select; never {@code null} or empty
+	 * @param nestedClass the nested class to select; never {@code null}
+	 * @param method the method to select; never {@code null}
+	 * @see NestedMethodSelector
+	 */
+	public static NestedMethodSelector selectNestedMethod(List<Class<?>> enclosingClasses, Class<?> nestedClass,
+			Method method) {
+		Preconditions.notEmpty(enclosingClasses, "Enclosing classes must not be null or empty");
+		Preconditions.notNull(nestedClass, "Nested class must not be null");
+		Preconditions.notNull(method, "Method must not be null");
+		return new NestedMethodSelector(enclosingClasses, nestedClass, method);
 	}
 
 	/**

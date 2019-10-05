@@ -186,7 +186,7 @@ class MethodSelectorResolver implements SelectorResolver {
 			if (enclosingClasses.isEmpty()) {
 				return DiscoverySelectors.selectClass(testClass);
 			}
-			return new NestedClassSelector(enclosingClasses, testClass);
+			return DiscoverySelectors.selectNestedClass(enclosingClasses, testClass);
 		}
 
 		private Optional<TestDescriptor> resolveUniqueIdIntoTestDescriptor(UniqueId uniqueId, Context context,

@@ -17,32 +17,51 @@ import java.util.List;
 import java.util.Objects;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
 
 @API(status = STABLE, since = "1.6")
 public class NestedMethodSelector implements DiscoverySelector {
 
-	private final List<Class<?>> enclosingClasses;
-	private final Class<?> nestedClass;
-	private final Method method;
+	private final NestedClassSelector nestedClassSelector;
+	private final MethodSelector methodSelector;
 
-	public NestedMethodSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass, Method method) {
-		this.enclosingClasses = Preconditions.notEmpty(enclosingClasses, "enclosingClasses must not be null or empty");
-		this.nestedClass = Preconditions.notNull(nestedClass, "nestedClass must not be null");
-		this.method = Preconditions.notNull(method, "method must not be null");
+	NestedMethodSelector(List<String> enclosingClassNames, String nestedClassName, String methodName) {
+		this.nestedClassSelector = new NestedClassSelector(enclosingClassNames, nestedClassName);
+		this.methodSelector = new MethodSelector(nestedClassName, methodName);
+	}
+
+	NestedMethodSelector(List<String> enclosingClassNames, String nestedClassName, String methodName,
+			String methodParameterTypes) {
+		this.nestedClassSelector = new NestedClassSelector(enclosingClassNames, nestedClassName);
+		this.methodSelector = new MethodSelector(nestedClassName, methodName, methodParameterTypes);
+	}
+
+	NestedMethodSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass, String methodName) {
+		this.nestedClassSelector = new NestedClassSelector(enclosingClasses, nestedClass);
+		this.methodSelector = new MethodSelector(nestedClass, methodName);
+	}
+
+	NestedMethodSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass, String methodName,
+			String methodParameterTypes) {
+		this.nestedClassSelector = new NestedClassSelector(enclosingClasses, nestedClass);
+		this.methodSelector = new MethodSelector(nestedClass, methodName, methodParameterTypes);
+	}
+
+	NestedMethodSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass, Method method) {
+		this.nestedClassSelector = new NestedClassSelector(enclosingClasses, nestedClass);
+		this.methodSelector = new MethodSelector(nestedClass, method);
 	}
 
 	public List<Class<?>> getEnclosingClasses() {
-		return enclosingClasses;
+		return nestedClassSelector.getEnclosingClasses();
 	}
 
 	public Class<?> getNestedClass() {
-		return nestedClass;
+		return nestedClassSelector.getNestedClass();
 	}
 
 	public Method getMethod() {
-		return method;
+		return methodSelector.getJavaMethod();
 	}
 
 	@Override
@@ -54,13 +73,12 @@ public class NestedMethodSelector implements DiscoverySelector {
 			return false;
 		}
 		NestedMethodSelector that = (NestedMethodSelector) o;
-		return enclosingClasses.equals(that.enclosingClasses) && nestedClass.equals(that.nestedClass)
-				&& method.equals(that.method);
+		return nestedClassSelector.equals(that.nestedClassSelector) && methodSelector.equals(that.methodSelector);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(enclosingClasses, nestedClass, method);
+		return Objects.hash(nestedClassSelector, methodSelector);
 	}
 
 }

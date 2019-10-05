@@ -14,9 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.*;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Retention;
@@ -34,7 +32,6 @@ import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.discovery.NestedMethodSelector;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
@@ -133,7 +130,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void discoverDeeplyNestedTestMethodByNestedMethodSelector() throws Exception {
-		var selector = new NestedMethodSelector(
+		var selector = selectNestedMethod(
 			List.of(TestCaseWithExtendedNested.class, TestCaseWithExtendedNested.ConcreteInner1.class),
 			AbstractSuperClass.NestedInAbstractClass.class,
 			AbstractSuperClass.NestedInAbstractClass.class.getDeclaredMethod("test"));
