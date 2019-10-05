@@ -21,6 +21,27 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoverySelector;
 
+/**
+ * A {@link DiscoverySelector} that selects a nested {@link Class}
+ * or class name enclosed in other classes so that
+ * {@link org.junit.platform.engine.TestEngine TestEngines} can discover
+ * tests or containers based on classes.
+ *
+ * <p>If Java {@link Class} references are provided for the nested class or
+ * the enclosing classes, the selector will return these {@code Class} and
+ * their class names accordingly. If class names are provided, the selector
+ * will only attempt to lazily load the {@link Class} if
+ * {@link #getEnclosingClasses()} or {@link #getNestedClass()} are invoked.
+ *
+ * <p>In this context, Java {@link Class} means anything that can be referenced
+ * as a {@link Class} on the JVM &mdash; for example, classes from other JVM
+ * languages such Groovy, Scala, etc.
+ *
+ * @since 1.6
+ * @see DiscoverySelectors#selectNestedClass(List, Class)
+ * @see DiscoverySelectors#selectNestedClass(List, String)
+ * @see org.junit.platform.engine.support.descriptor.ClassSource
+ */
 @API(status = STABLE, since = "1.6")
 public class NestedClassSelector implements DiscoverySelector {
 

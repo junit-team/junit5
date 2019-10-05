@@ -19,6 +19,32 @@ import java.util.Objects;
 import org.apiguardian.api.API;
 import org.junit.platform.engine.DiscoverySelector;
 
+/**
+ * A {@link DiscoverySelector} that selects a nested {@link Method}
+ * or a combination of enclosing classes names, class name, method
+ * name, and parameter types so that
+ * {@link org.junit.platform.engine.TestEngine TestEngines} can discover
+ * tests or containers based on methods.
+ *
+ * <p>If a Java {@link Method} is provided, the selector will return that
+ * {@linkplain #getMethod() method} and its method name, class name, enclosing
+ * classes names and parameter types accordingly. If class or methods names are
+ * provided, this selector will only attempt to lazily load the {@link Class}
+ * and {@link Method} if {@link #getEnclosingClasses()},
+ * {@link #getNestedClass()} or {@link #getMethod()} is invoked.
+ *
+ * <p>In this context, a Java {@code Method} means anything that can be referenced
+ * as a {@link Method} on the JVM &mdash; for example, methods from Java classes
+ * or methods from other JVM languages such Groovy, Scala, etc.
+ *
+ * @since 1.6
+ * @see DiscoverySelectors#selectNestedMethod(List, String, String)
+ * @see DiscoverySelectors#selectNestedMethod(List, String, String, String)
+ * @see DiscoverySelectors#selectNestedMethod(List, Class, String)
+ * @see DiscoverySelectors#selectNestedMethod(List, Class, String, String)
+ * @see DiscoverySelectors#selectNestedMethod(List, Class, Method)
+ * @see org.junit.platform.engine.support.descriptor.MethodSource
+ */
 @API(status = STABLE, since = "1.6")
 public class NestedMethodSelector implements DiscoverySelector {
 
