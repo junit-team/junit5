@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -49,7 +50,8 @@ class TestRun {
 	private final Map<Description, List<VintageTestDescriptor>> descriptionToDescriptors;
 	private final Map<TestDescriptor, List<TestExecutionResult>> executionResults = new LinkedHashMap<>();
 	private final Set<TestDescriptor> skippedDescriptors = new LinkedHashSet<>();
-	private final Map<TestDescriptor, EventType> startedDescriptors = new LinkedHashMap<>();
+	private final Set<TestDescriptor> startedDescriptors = new HashSet<>();
+	private final Map<TestDescriptor, EventType> inProgressDescriptors = new LinkedHashMap<>();
 	private final Set<TestDescriptor> finishedDescriptors = new LinkedHashSet<>();
 
 	TestRun(RunnerTestDescriptor runnerTestDescriptor) {
@@ -74,10 +76,9 @@ class TestRun {
 	}
 
 	Collection<TestDescriptor> getInProgressTestDescriptorsWithSyntheticStartEvents() {
-		List<TestDescriptor> result = startedDescriptors.entrySet().stream() //
+		List<TestDescriptor> result = inProgressDescriptors.entrySet().stream() //
 				.filter(entry -> entry.getValue().equals(EventType.SYNTHETIC)) //
 				.map(Entry::getKey) //
-				.filter(descriptor -> !isFinished(descriptor)) //
 				.collect(toCollection(ArrayList::new));
 		Collections.reverse(result);
 		return result;
@@ -127,14 +128,16 @@ class TestRun {
 	}
 
 	void markStarted(TestDescriptor testDescriptor, EventType eventType) {
-		startedDescriptors.put(testDescriptor, eventType);
+		inProgressDescriptors.put(testDescriptor, eventType);
+		startedDescriptors.add(testDescriptor);
 	}
 
 	boolean isNotStarted(TestDescriptor testDescriptor) {
-		return !startedDescriptors.containsKey(testDescriptor);
+		return !startedDescriptors.contains(testDescriptor);
 	}
 
 	void markFinished(TestDescriptor testDescriptor) {
+		inProgressDescriptors.remove(testDescriptor);
 		finishedDescriptors.add(testDescriptor);
 	}
 
