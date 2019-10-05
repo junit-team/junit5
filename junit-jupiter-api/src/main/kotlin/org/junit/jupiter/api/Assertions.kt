@@ -134,7 +134,7 @@ inline fun <reified T : Throwable> assertThrows(message: String, executable: () 
  * ```
  * @see Assertions.assertThrows
  */
-inline fun <reified T : Throwable> assertThrows(message: () -> String, executable: () -> Unit): T =
+inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, executable: () -> Unit): T =
     assertThrows(message, runCatching(executable))
 
 /**
