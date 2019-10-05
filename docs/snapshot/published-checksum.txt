@@ -137,7 +137,6 @@
 3519a20a6b12f97e50a74577c6491ef4  documentation/src/test/java/example/TestingAStackDemo.java
 3591479495b99cd48cdc34e3928c4edc  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/ConvertWith.java
 366ad6786afed0587542a0b0aa718715  junit-platform-engine/src/main/java/org/junit/platform/engine/ConfigurationParameters.java
-368b55f531705e15874123bdc95d27a4  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 36b583c2d23b3934aca34142271bea92  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicExtensionContext.java
 3753cf712b0599f7aba04bb62c96f3aa  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayNameGenerator.java
 38a6ef7dcc8ec641d0e0e5d53ec1e0df  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Nested.java
@@ -341,6 +340,7 @@
 855e13355685519e5fc57adcac2130ba  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/conditions/package-info.java
 8568f6e74ae984b30b5b50ab9b5b4875  documentation/src/test/java/example/defaultmethods/Testable.java
 86854316aa35f762e54d080ae58bbd2c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/support/TypeBasedParameterResolver.java
+869d2d7bffdb097390ecb2d6d21a28be  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 86a2e992c9a57d0134478e2fc178b3cf  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathResourceSelector.java
 8742585ff247e86caf18b81bdf611b7f  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EmptySource.java
 8793996cae52ab3aa4a24b32a1905a73  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/DiscoverySelectors.java
