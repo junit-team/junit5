@@ -82,6 +82,7 @@
 1e7cc7d51ca2a2c53f94a318565f5690  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledOnJreCondition.java
 1ec185372a153130298b25dbd27f5022  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/Resources.java
 1f6736a39e6dd267c94b461bcc50c9f5  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathRootSelector.java
+1fcce38621e6d1ca6d8d730e03040dc0  junit-platform-commons/src/main/java/org/junit/platform/commons/util/LruCache.java
 200b33c2ebc3809c2d3f3662ad964e8a  junit-platform-console/src/main/java/org/junit/platform/console/tasks/VerboseTreePrintingListener.java
 204b31683bc4e12c2656ece2a612546e  documentation/src/test/java/example/DocumentationTestSuite.java
 204d92a1f4d82c5c133379bf0179e2d0  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/ExternalResourceAdapter.java
@@ -187,7 +188,6 @@
 4b8282264b138889e73288868759677e  junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatform.java
 4bb37b86a49a99d0b47c28f24d93bdbf  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/OutcomeDelayingEngineExecutionListener.java
 4bb8b1bce216ba7772d8995451ca7cbb  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfiguration.java
-4c0c20e18b94ea75000dd2b11576c774  junit-platform-commons/src/main/java/org/junit/platform/commons/util/LruCache.java
 4c7f242e3c683428c0f5d84e7dc1e95a  junit-platform-console/src/main/java/org/junit/platform/console/options/CommandLineOptionsParser.java
 4d14e3735e103786509aace8ceb75c75  documentation/src/test/java/example/timing/TimingExtension.java
 4d1a779a778414da720036e10c1970de  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtensionConfigurationException.java
@@ -342,7 +342,6 @@
 855e13355685519e5fc57adcac2130ba  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/conditions/package-info.java
 8568f6e74ae984b30b5b50ab9b5b4875  documentation/src/test/java/example/defaultmethods/Testable.java
 86854316aa35f762e54d080ae58bbd2c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/support/TypeBasedParameterResolver.java
-869d2d7bffdb097390ecb2d6d21a28be  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 86a2e992c9a57d0134478e2fc178b3cf  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathResourceSelector.java
 8742585ff247e86caf18b81bdf611b7f  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EmptySource.java
 8793996cae52ab3aa4a24b32a1905a73  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/DiscoverySelectors.java
@@ -445,6 +444,7 @@ a83b7248efb36b4d2b242b97690080ad  junit-jupiter-engine/src/main/java/org/junit/j
 a93801a84f5bf1ec8fd8e6ab1e960501  junit-platform-commons/src/main/java/org/junit/platform/commons/function/package-info.java
 aa87b3e6180f9a5e202ec3a995659867  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ServiceLoaderTestExecutionListenerRegistry.java
 aaa981df2823a75b1f70fc49660bda0f  documentation/src/test/java/example/registration/DocumentationDemo.java
+aafd564be7473597ab45ecc823ae33cb  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 ab046c421c1abfc9cb11ebdcb69ed5ab  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTest.java
 ab72e7847b8203ddbb210e7d08a4315a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/package-info.java
 ab83ef64ae475dffa6ef688db027c5e0  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/package-info.java
