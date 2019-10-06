@@ -150,9 +150,24 @@ class TagFilterTests {
 		assertTrue(filter.apply(classWithTag1AndSurroundingWhitespace).included());
 		assertTrue(filter.apply(classWithBothTags).included());
 
+		assertThat(filter.apply(classWithTag1).getReason().get()).contains(
+			"Test included Because it contains tags: [tag1]");
+		assertThat(filter.apply(classWithTag1AndSurroundingWhitespace).getReason().get()).contains(
+			"Test included Because it contains tags: [tag1]");
+		assertThat(filter.apply(classWithBothTags).getReason().get()).contains(
+			"Test included Because it contains tags: [tag1,tag2]");
+
 		assertTrue(filter.apply(classWithTag2).excluded());
 		assertTrue(filter.apply(classWithDifferentTags).excluded());
 		assertTrue(filter.apply(classWithNoTags).excluded());
+
+		assertThat(filter.apply(classWithTag2).getReason().get()).contains(
+			"Test excluded Because it contains tags: [tag2]");
+		assertThat(filter.apply(classWithDifferentTags).getReason().get()).contains(
+			"Test excluded Because it contains tags: [foo,bar]");
+		assertThat(filter.apply(classWithNoTags).getReason().get()).contains(
+			"Test excluded Because it contains tags: []");
+
 	}
 
 	private void excludeSingleTag(PostDiscoveryFilter filter) {
@@ -160,9 +175,24 @@ class TagFilterTests {
 		assertTrue(filter.apply(classWithTag1AndSurroundingWhitespace).excluded());
 		assertTrue(filter.apply(classWithBothTags).excluded());
 
+		assertThat(filter.apply(classWithTag1).getReason().get()).contains(
+			"Test excluded Because it contains tags: [tag1]");
+		assertThat(filter.apply(classWithTag1AndSurroundingWhitespace).getReason().get()).contains(
+			"Test excluded Because it contains tags: [tag1]");
+		assertThat(filter.apply(classWithBothTags).getReason().get()).contains(
+			"Test excluded Because it contains tags: [tag1,tag2]");
+
 		assertTrue(filter.apply(classWithTag2).included());
 		assertTrue(filter.apply(classWithDifferentTags).included());
 		assertTrue(filter.apply(classWithNoTags).included());
+
+		assertThat(filter.apply(classWithTag2).getReason().get()).contains(
+			"Test included Because it contains tags: [tag2]");
+		assertThat(filter.apply(classWithDifferentTags).getReason().get()).contains(
+			"Test included Because it contains tags: [foo,bar]");
+		assertThat(filter.apply(classWithNoTags).getReason().get()).contains(
+			"Test included Because it contains tags: []");
+
 	}
 
 	// -------------------------------------------------------------------------

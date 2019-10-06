@@ -14,10 +14,13 @@ import static org.junit.platform.engine.Filter.composeFilters;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.Filter;
+import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -33,12 +36,22 @@ class Root {
 	private final Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>(4);
 	private final ConfigurationParameters configurationParameters;
 
+	/**
+	 * Maps to store list of {@link TestDescriptor} which are excluded.
+	 * key: Reason of exclusion.
+	 */
+	private final Map<String, List<TestDescriptor>> exclusionReasonToDescriptorMap = new LinkedHashMap<>();
+
 	Root(ConfigurationParameters configurationParameters) {
 		this.configurationParameters = configurationParameters;
 	}
 
 	public ConfigurationParameters getConfigurationParameters() {
 		return configurationParameters;
+	}
+
+	Map<String, List<TestDescriptor>> getExclusionReasonToDescriptorMap() {
+		return exclusionReasonToDescriptorMap;
 	}
 
 	/**
@@ -82,7 +95,13 @@ class Root {
 	}
 
 	private boolean isExcluded(TestDescriptor descriptor, Filter<TestDescriptor> postDiscoveryFilter) {
-		return descriptor.getChildren().isEmpty() && postDiscoveryFilter.apply(descriptor).excluded();
+		FilterResult filterResult = postDiscoveryFilter.apply(descriptor);
+		boolean excluded = descriptor.getChildren().isEmpty() && filterResult.excluded();
+		if (excluded) {
+			exclusionReasonToDescriptorMap.computeIfAbsent(filterResult.getReason().orElse("Unknown"),
+				list -> new LinkedList<>()).add(descriptor);
+		}
+		return excluded;
 	}
 
 	private void acceptInAllTestEngines(TestDescriptor.Visitor visitor) {

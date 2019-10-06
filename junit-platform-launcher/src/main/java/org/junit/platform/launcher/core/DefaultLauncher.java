@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
@@ -167,6 +168,7 @@ class DefaultLauncher implements Launcher {
 			root.add(testEngine, rootDescriptor);
 		}
 		root.applyPostDiscoveryFilters(discoveryRequest);
+		printFilteredReason(root);
 		root.prune();
 		return root;
 	}
@@ -250,4 +252,14 @@ class DefaultLauncher implements Launcher {
 		}
 	}
 
+	/**
+	 * prints the reason for test cases that are excluded in post discovery filter phase.
+	 * @param root of the all engines.
+	 */
+	private void printFilteredReason(Root root) {
+		root.getExclusionReasonToDescriptorMap().forEach((key, value) -> {
+			String displayNames = value.stream().map(TestDescriptor::getDisplayName).collect(Collectors.joining(", "));
+			logger.debug(() -> String.format("Method names [%s] excluded, reason [%s]", displayNames, key));
+		});
+	}
 }

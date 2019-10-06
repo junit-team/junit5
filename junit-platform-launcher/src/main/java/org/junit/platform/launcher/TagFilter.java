@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -126,6 +127,19 @@ public final class TagFilter {
 		return includeMatching(tagExpressions, Stream::noneMatch);
 	}
 
+	private static String inclusionReasonTagContains(Set<TestTag> tags) {
+		return String.format("Test included Because it contains tags: [%s]", formatToString(tags));
+	}
+
+	private static String exclusionReasonTagContains(Set<TestTag> tags) {
+		return String.format("Test excluded Because it contains tags: [%s]", formatToString(tags));
+
+	}
+
+	private static String formatToString(Set<TestTag> testTags) {
+		return testTags.stream().map(TestTag::getName).collect(Collectors.joining(","));
+	}
+
 	private static PostDiscoveryFilter includeMatching(List<String> tagExpressions,
 			BiPredicate<Stream<TagExpression>, Predicate<TagExpression>> matcher) {
 
@@ -133,8 +147,10 @@ public final class TagFilter {
 		List<TagExpression> parsedTagExpressions = parseAll(tagExpressions);
 		return descriptor -> {
 			Set<TestTag> tags = descriptor.getTags();
-			return FilterResult.includedIf(
-				matcher.test(parsedTagExpressions.stream(), expression -> expression.evaluate(tags)));
+			boolean included = matcher.test(parsedTagExpressions.stream(), expression -> expression.evaluate(tags));
+
+			return FilterResult.includedIf(included, () -> inclusionReasonTagContains(tags),
+				() -> exclusionReasonTagContains(tags));
 		};
 	}
 
