@@ -67,13 +67,8 @@ class MethodSelectorResolver implements SelectorResolver {
 	}
 
 	@Override
-	public Resolution resolve(DiscoverySelector selector, Context context) {
-		if (selector instanceof NestedMethodSelector) {
-			NestedMethodSelector nestedMethodSelector = (NestedMethodSelector) selector;
-			return resolve(context, nestedMethodSelector.getEnclosingClasses(), nestedMethodSelector.getNestedClass(),
-				nestedMethodSelector.getMethod());
-		}
-		return unresolved();
+	public Resolution resolve(NestedMethodSelector selector, Context context) {
+		return resolve(context, selector.getEnclosingClasses(), selector.getNestedClass(), selector.getMethod());
 	}
 
 	private Resolution resolve(Context context, List<Class<?>> enclosingClasses, Class<?> testClass, Method method) {

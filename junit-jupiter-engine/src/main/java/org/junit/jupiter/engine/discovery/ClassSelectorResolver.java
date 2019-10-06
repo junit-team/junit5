@@ -76,13 +76,10 @@ class ClassSelectorResolver implements SelectorResolver {
 	}
 
 	@Override
-	public Resolution resolve(DiscoverySelector selector, Context context) {
-		if (selector instanceof NestedClassSelector) {
-			NestedClassSelector nestedClassSelector = (NestedClassSelector) selector;
-			if (isNestedTestClass.test(nestedClassSelector.getNestedClass())) {
-				return toResolution(context.addToParent(() -> selectClass(nestedClassSelector.getEnclosingClasses()),
-					parent -> Optional.of(newNestedClassTestDescriptor(parent, nestedClassSelector.getNestedClass()))));
-			}
+	public Resolution resolve(NestedClassSelector selector, Context context) {
+		if (isNestedTestClass.test(selector.getNestedClass())) {
+			return toResolution(context.addToParent(() -> selectClass(selector.getEnclosingClasses()),
+				parent -> Optional.of(newNestedClassTestDescriptor(parent, selector.getNestedClass()))));
 		}
 		return unresolved();
 	}
@@ -132,14 +129,14 @@ class ClassSelectorResolver implements SelectorResolver {
 			List<Class<?>> testClasses = new ArrayList<>(it.getEnclosingTestClasses());
 			testClasses.add(testClass);
 			// @formatter:off
-			return Resolution.match(Match.exact(it, () -> {
-				Stream<DiscoverySelector> methods = findMethods(testClass, isTestOrTestFactoryOrTestTemplateMethod).stream()
-						.map(method -> selectMethod(testClasses, method));
-				Stream<NestedClassSelector> nestedClasses = findNestedClasses(testClass, isNestedTestClass).stream()
-						.map(nestedClass -> DiscoverySelectors.selectNestedClass(testClasses, nestedClass));
-				return Stream.concat(methods, nestedClasses).collect(toCollection((Supplier<Set<DiscoverySelector>>) LinkedHashSet::new));
-			}));
-			// @formatter:on
+            return Resolution.match(Match.exact(it, () -> {
+                Stream<DiscoverySelector> methods = findMethods(testClass, isTestOrTestFactoryOrTestTemplateMethod).stream()
+                        .map(method -> selectMethod(testClasses, method));
+                Stream<NestedClassSelector> nestedClasses = findNestedClasses(testClass, isNestedTestClass).stream()
+                        .map(nestedClass -> DiscoverySelectors.selectNestedClass(testClasses, nestedClass));
+                return Stream.concat(methods, nestedClasses).collect(toCollection((Supplier<Set<DiscoverySelector>>) LinkedHashSet::new));
+            }));
+            // @formatter:on
 		}).orElse(unresolved());
 	}
 

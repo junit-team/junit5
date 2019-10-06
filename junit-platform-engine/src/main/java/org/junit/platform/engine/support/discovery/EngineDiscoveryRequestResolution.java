@@ -33,16 +33,7 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.ClassSelector;
-import org.junit.platform.engine.discovery.ClasspathResourceSelector;
-import org.junit.platform.engine.discovery.ClasspathRootSelector;
-import org.junit.platform.engine.discovery.DirectorySelector;
-import org.junit.platform.engine.discovery.FileSelector;
-import org.junit.platform.engine.discovery.MethodSelector;
-import org.junit.platform.engine.discovery.ModuleSelector;
-import org.junit.platform.engine.discovery.PackageSelector;
-import org.junit.platform.engine.discovery.UniqueIdSelector;
-import org.junit.platform.engine.discovery.UriSelector;
+import org.junit.platform.engine.discovery.*;
 import org.junit.platform.engine.support.discovery.SelectorResolver.Context;
 import org.junit.platform.engine.support.discovery.SelectorResolver.Match;
 import org.junit.platform.engine.support.discovery.SelectorResolver.Resolution;
@@ -128,6 +119,9 @@ class EngineDiscoveryRequestResolution {
 			if (selector instanceof ClassSelector) {
 				return resolver.resolve((ClassSelector) selector, context);
 			}
+			if (selector instanceof NestedClassSelector) {
+				return resolver.resolve((NestedClassSelector) selector, context);
+			}
 			if (selector instanceof DirectorySelector) {
 				return resolver.resolve((DirectorySelector) selector, context);
 			}
@@ -136,6 +130,9 @@ class EngineDiscoveryRequestResolution {
 			}
 			if (selector instanceof MethodSelector) {
 				return resolver.resolve((MethodSelector) selector, context);
+			}
+			if (selector instanceof NestedMethodSelector) {
+				return resolver.resolve((NestedMethodSelector) selector, context);
 			}
 			if (selector instanceof ModuleSelector) {
 				return resolver.resolve((ModuleSelector) selector, context);
