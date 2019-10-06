@@ -23,6 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.DemoClassTestDescriptor;
@@ -150,9 +151,20 @@ class TagFilterTests {
 		assertTrue(filter.apply(classWithTag1AndSurroundingWhitespace).included());
 		assertTrue(filter.apply(classWithBothTags).included());
 
+		assertReason(filter.apply(classWithTag1), "included because tags match expression(s): [tag1]");
+		assertReason(filter.apply(classWithTag1AndSurroundingWhitespace),
+			"included because tags match expression(s): [tag1]");
+		assertReason(filter.apply(classWithBothTags), "included because tags match expression(s): [tag1]");
+
 		assertTrue(filter.apply(classWithTag2).excluded());
 		assertTrue(filter.apply(classWithDifferentTags).excluded());
 		assertTrue(filter.apply(classWithNoTags).excluded());
+
+		assertReason(filter.apply(classWithTag2), "excluded because tags do not match tag expression(s): [tag1]");
+		assertReason(filter.apply(classWithDifferentTags),
+			"excluded because tags do not match tag expression(s): [tag1]");
+		assertReason(filter.apply(classWithNoTags), "excluded because tags do not match tag expression(s): [tag1]");
+
 	}
 
 	private void excludeSingleTag(PostDiscoveryFilter filter) {
@@ -160,9 +172,24 @@ class TagFilterTests {
 		assertTrue(filter.apply(classWithTag1AndSurroundingWhitespace).excluded());
 		assertTrue(filter.apply(classWithBothTags).excluded());
 
+		assertReason(filter.apply(classWithTag1), "Test excluded Because it satisfy expression(s): [tag1]");
+		assertReason(filter.apply(classWithTag1AndSurroundingWhitespace),
+			"Test excluded Because it satisfy expression(s): [tag1]");
+		assertReason(filter.apply(classWithBothTags), "Test excluded Because it satisfy expression(s): [tag1]");
+
 		assertTrue(filter.apply(classWithTag2).included());
 		assertTrue(filter.apply(classWithDifferentTags).included());
 		assertTrue(filter.apply(classWithNoTags).included());
+
+		assertReason(filter.apply(classWithTag2), "Test included Because it does not satisfy expression(s): [tag1]");
+		assertReason(filter.apply(classWithDifferentTags),
+			"Test included Because it does not satisfy expression(s): [tag1]");
+		assertReason(filter.apply(classWithNoTags), "Test included Because it does not satisfy expression(s): [tag1]");
+
+	}
+
+	private void assertReason(FilterResult filterResult, String expectedReason) {
+		assertThat(filterResult.getReason()).isPresent().contains(expectedReason);
 	}
 
 	// -------------------------------------------------------------------------
