@@ -100,13 +100,12 @@ public class NestedClassSelector implements DiscoverySelector {
 			return false;
 		}
 		NestedClassSelector that = (NestedClassSelector) o;
-		return enclosingClassNames.equals(that.enclosingClassNames) && nestedClassName.equals(that.nestedClassName)
-				&& enclosingClasses.equals(that.enclosingClasses) && nestedClass.equals(that.nestedClass);
+		return enclosingClassNames.equals(that.enclosingClassNames) && nestedClassName.equals(that.nestedClassName);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(enclosingClassNames, nestedClassName, enclosingClasses, nestedClass);
+		return Objects.hash(enclosingClassNames, nestedClassName);
 	}
 
 }
