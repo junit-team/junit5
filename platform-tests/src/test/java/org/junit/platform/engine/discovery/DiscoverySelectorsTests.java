@@ -49,9 +49,9 @@ class DiscoverySelectorsTests {
 
 	@Test
 	void selectUriByName() {
-		assertPreconditionViolated(() -> selectUri((String) null));
-		assertPreconditionViolated(() -> selectUri("   "));
-		assertPreconditionViolated(() -> selectUri("foo:"));
+		assertViolatesPrecondition(() -> selectUri((String) null));
+		assertViolatesPrecondition(() -> selectUri("   "));
+		assertViolatesPrecondition(() -> selectUri("foo:"));
 
 		String uri = "https://junit.org";
 
@@ -61,8 +61,8 @@ class DiscoverySelectorsTests {
 
 	@Test
 	void selectUriByURI() throws Exception {
-		assertPreconditionViolated(() -> selectUri((URI) null));
-		assertPreconditionViolated(() -> selectUri("   "));
+		assertViolatesPrecondition(() -> selectUri((URI) null));
+		assertViolatesPrecondition(() -> selectUri("   "));
 
 		URI uri = new URI("https://junit.org");
 
@@ -72,8 +72,8 @@ class DiscoverySelectorsTests {
 
 	@Test
 	void selectFileByName() {
-		assertPreconditionViolated(() -> selectFile((String) null));
-		assertPreconditionViolated(() -> selectFile("   "));
+		assertViolatesPrecondition(() -> selectFile((String) null));
+		assertViolatesPrecondition(() -> selectFile("   "));
 
 		String path = "src/test/resources/do_not_delete_me.txt";
 
@@ -85,8 +85,8 @@ class DiscoverySelectorsTests {
 
 	@Test
 	void selectFileByFileReference() throws Exception {
-		assertPreconditionViolated(() -> selectFile((File) null));
-		assertPreconditionViolated(() -> selectFile(new File("bogus/nonexistent.txt")));
+		assertViolatesPrecondition(() -> selectFile((File) null));
+		assertViolatesPrecondition(() -> selectFile(new File("bogus/nonexistent.txt")));
 
 		File currentDir = new File(".").getCanonicalFile();
 		File relativeDir = new File("..", currentDir.getName());
@@ -101,8 +101,8 @@ class DiscoverySelectorsTests {
 
 	@Test
 	void selectDirectoryByName() {
-		assertPreconditionViolated(() -> selectDirectory((String) null));
-		assertPreconditionViolated(() -> selectDirectory("   "));
+		assertViolatesPrecondition(() -> selectDirectory((String) null));
+		assertViolatesPrecondition(() -> selectDirectory("   "));
 
 		String path = "src/test/resources";
 
@@ -114,8 +114,8 @@ class DiscoverySelectorsTests {
 
 	@Test
 	void selectDirectoryByFileReference() throws Exception {
-		assertPreconditionViolated(() -> selectDirectory((File) null));
-		assertPreconditionViolated(() -> selectDirectory(new File("bogus/nonexistent")));
+		assertViolatesPrecondition(() -> selectDirectory((File) null));
+		assertViolatesPrecondition(() -> selectDirectory(new File("bogus/nonexistent")));
 
 		File currentDir = new File(".").getCanonicalFile();
 		File relativeDir = new File("..", currentDir.getName());
@@ -130,10 +130,10 @@ class DiscoverySelectorsTests {
 
 	@Test
 	void selectClasspathResources() {
-		assertPreconditionViolated(() -> selectClasspathResource(null));
-		assertPreconditionViolated(() -> selectClasspathResource(""));
-		assertPreconditionViolated(() -> selectClasspathResource("    "));
-		assertPreconditionViolated(() -> selectClasspathResource("\t"));
+		assertViolatesPrecondition(() -> selectClasspathResource(null));
+		assertViolatesPrecondition(() -> selectClasspathResource(""));
+		assertViolatesPrecondition(() -> selectClasspathResource("    "));
+		assertViolatesPrecondition(() -> selectClasspathResource("\t"));
 
 		// with unnecessary "/" prefix
 		ClasspathResourceSelector selector = selectClasspathResource("/foo/bar/spec.xml");
@@ -152,9 +152,9 @@ class DiscoverySelectorsTests {
 
 	@Test
 	void selectModuleByNamePreconditions() {
-		assertPreconditionViolated(() -> selectModule(null));
-		assertPreconditionViolated(() -> selectModule(""));
-		assertPreconditionViolated(() -> selectModule("   "));
+		assertViolatesPrecondition(() -> selectModule(null));
+		assertViolatesPrecondition(() -> selectModule(""));
+		assertViolatesPrecondition(() -> selectModule("   "));
 	}
 
 	@Test
@@ -166,8 +166,8 @@ class DiscoverySelectorsTests {
 
 	@Test
 	void selectModulesByNamesPreconditions() {
-		assertPreconditionViolated(() -> selectModules(null));
-		assertPreconditionViolated(() -> selectModules(new HashSet<>(Arrays.asList("a", " "))));
+		assertViolatesPrecondition(() -> selectModules(null));
+		assertViolatesPrecondition(() -> selectModules(new HashSet<>(Arrays.asList("a", " "))));
 	}
 
 	@Test
@@ -184,49 +184,49 @@ class DiscoverySelectorsTests {
 
 	@Test
 	void selectMethodByClassNameAndMethodNamePreconditions() {
-		assertPreconditionViolated(() -> selectMethod("TestClass", null));
-		assertPreconditionViolated(() -> selectMethod("TestClass", ""));
-		assertPreconditionViolated(() -> selectMethod("TestClass", "  "));
-		assertPreconditionViolated(() -> selectMethod((String) null, "method"));
-		assertPreconditionViolated(() -> selectMethod("", "method"));
-		assertPreconditionViolated(() -> selectMethod("   ", "method"));
+		assertViolatesPrecondition(() -> selectMethod("TestClass", null));
+		assertViolatesPrecondition(() -> selectMethod("TestClass", ""));
+		assertViolatesPrecondition(() -> selectMethod("TestClass", "  "));
+		assertViolatesPrecondition(() -> selectMethod((String) null, "method"));
+		assertViolatesPrecondition(() -> selectMethod("", "method"));
+		assertViolatesPrecondition(() -> selectMethod("   ", "method"));
 	}
 
 	@Test
 	void selectMethodByClassNameMethodNameAndMethodParameterTypesPreconditions() {
-		assertPreconditionViolated(() -> selectMethod("TestClass", null, "int"));
-		assertPreconditionViolated(() -> selectMethod("TestClass", "", "int"));
-		assertPreconditionViolated(() -> selectMethod("TestClass", "  ", "int"));
-		assertPreconditionViolated(() -> selectMethod((String) null, "method", "int"));
-		assertPreconditionViolated(() -> selectMethod("", "method", "int"));
-		assertPreconditionViolated(() -> selectMethod("   ", "method", "int"));
-		assertPreconditionViolated(() -> selectMethod("TestClass", "method", null));
+		assertViolatesPrecondition(() -> selectMethod("TestClass", null, "int"));
+		assertViolatesPrecondition(() -> selectMethod("TestClass", "", "int"));
+		assertViolatesPrecondition(() -> selectMethod("TestClass", "  ", "int"));
+		assertViolatesPrecondition(() -> selectMethod((String) null, "method", "int"));
+		assertViolatesPrecondition(() -> selectMethod("", "method", "int"));
+		assertViolatesPrecondition(() -> selectMethod("   ", "method", "int"));
+		assertViolatesPrecondition(() -> selectMethod("TestClass", "method", null));
 	}
 
 	@Test
 	void selectMethodByClassAndMethodNamePreconditions() {
-		assertPreconditionViolated(() -> selectMethod(getClass(), (String) null));
-		assertPreconditionViolated(() -> selectMethod(getClass(), ""));
-		assertPreconditionViolated(() -> selectMethod(getClass(), "  "));
-		assertPreconditionViolated(() -> selectMethod((Class<?>) null, "method"));
-		assertPreconditionViolated(() -> selectMethod("", "method"));
-		assertPreconditionViolated(() -> selectMethod("   ", "method"));
+		assertViolatesPrecondition(() -> selectMethod(getClass(), (String) null));
+		assertViolatesPrecondition(() -> selectMethod(getClass(), ""));
+		assertViolatesPrecondition(() -> selectMethod(getClass(), "  "));
+		assertViolatesPrecondition(() -> selectMethod((Class<?>) null, "method"));
+		assertViolatesPrecondition(() -> selectMethod("", "method"));
+		assertViolatesPrecondition(() -> selectMethod("   ", "method"));
 	}
 
 	@Test
 	void selectMethodByClassMethodNameAndMethodParameterTypesPreconditions() {
-		assertPreconditionViolated(() -> selectMethod((Class<?>) null, "method", "int"));
-		assertPreconditionViolated(() -> selectMethod(getClass(), null, "int"));
-		assertPreconditionViolated(() -> selectMethod(getClass(), "", "int"));
-		assertPreconditionViolated(() -> selectMethod(getClass(), "  ", "int"));
-		assertPreconditionViolated(() -> selectMethod(getClass(), "method", null));
+		assertViolatesPrecondition(() -> selectMethod((Class<?>) null, "method", "int"));
+		assertViolatesPrecondition(() -> selectMethod(getClass(), null, "int"));
+		assertViolatesPrecondition(() -> selectMethod(getClass(), "", "int"));
+		assertViolatesPrecondition(() -> selectMethod(getClass(), "  ", "int"));
+		assertViolatesPrecondition(() -> selectMethod(getClass(), "method", null));
 	}
 
 	@Test
 	void selectMethodByClassAndMethodPreconditions() {
 		Method method = getClass().getDeclaredMethods()[0];
-		assertPreconditionViolated(() -> selectMethod(null, method));
-		assertPreconditionViolated(() -> selectMethod(getClass(), (Method) null));
+		assertViolatesPrecondition(() -> selectMethod(null, method));
+		assertViolatesPrecondition(() -> selectMethod(getClass(), (Method) null));
 	}
 
 	@ParameterizedTest(name = "FQMN: ''{0}''")
@@ -611,11 +611,11 @@ class DiscoverySelectorsTests {
 
 		@Test
 		void selectNestedClassPreconditions() {
-			assertPreconditionViolated(() -> selectNestedClass(null, "ClassName"));
-			assertPreconditionViolated(() -> selectNestedClass(emptyList(), "ClassName"));
-			assertPreconditionViolated(() -> selectNestedClass(List.of("ClassName"), null));
-			assertPreconditionViolated(() -> selectNestedClass(List.of("ClassName"), ""));
-			assertPreconditionViolated(() -> selectNestedClass(List.of("ClassName"), " "));
+			assertViolatesPrecondition(() -> selectNestedClass(null, "ClassName"));
+			assertViolatesPrecondition(() -> selectNestedClass(emptyList(), "ClassName"));
+			assertViolatesPrecondition(() -> selectNestedClass(List.of("ClassName"), null));
+			assertViolatesPrecondition(() -> selectNestedClass(List.of("ClassName"), ""));
+			assertViolatesPrecondition(() -> selectNestedClass(List.of("ClassName"), " "));
 		}
 
 		@Test
@@ -663,19 +663,19 @@ class DiscoverySelectorsTests {
 
 		@Test
 		void selectNestedMethodPreconditions() {
-			assertPreconditionViolated(() -> selectNestedMethod(null, "ClassName", "methodName"));
-			assertPreconditionViolated(() -> selectNestedMethod(null, "ClassName", "methodName", "int"));
-			assertPreconditionViolated(() -> selectNestedMethod(emptyList(), "ClassName", "methodName"));
-			assertPreconditionViolated(() -> selectNestedMethod(emptyList(), "ClassName", "methodName", "int"));
-			assertPreconditionViolated(() -> selectNestedMethod(List.of("ClassName"), null, "methodName"));
-			assertPreconditionViolated(() -> selectNestedMethod(List.of("ClassName"), null, "methodName", "int"));
-			assertPreconditionViolated(() -> selectNestedMethod(List.of("ClassName"), " ", "methodName"));
-			assertPreconditionViolated(() -> selectNestedMethod(List.of("ClassName"), " ", "methodName", "int"));
-			assertPreconditionViolated(() -> selectNestedMethod(List.of("ClassName"), "ClassName", null));
-			assertPreconditionViolated(() -> selectNestedMethod(List.of("ClassName"), "ClassName", null, "int"));
-			assertPreconditionViolated(() -> selectNestedMethod(List.of("ClassName"), "ClassName", " "));
-			assertPreconditionViolated(() -> selectNestedMethod(List.of("ClassName"), "ClassName", " ", "int"));
-			assertPreconditionViolated(() -> selectNestedMethod(List.of("ClassName"), "ClassName", "methodName", null));
+			assertViolatesPrecondition(() -> selectNestedMethod(null, "ClassName", "methodName"));
+			assertViolatesPrecondition(() -> selectNestedMethod(null, "ClassName", "methodName", "int"));
+			assertViolatesPrecondition(() -> selectNestedMethod(emptyList(), "ClassName", "methodName"));
+			assertViolatesPrecondition(() -> selectNestedMethod(emptyList(), "ClassName", "methodName", "int"));
+			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), null, "methodName"));
+			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), null, "methodName", "int"));
+			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), " ", "methodName"));
+			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), " ", "methodName", "int"));
+			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), "ClassName", null));
+			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), "ClassName", null, "int"));
+			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), "ClassName", " "));
+			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), "ClassName", " ", "int"));
+			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), "ClassName", "methodName", null));
 		}
 
 		abstract class AbstractClassWithNestedInnerClass {
@@ -714,7 +714,7 @@ class DiscoverySelectorsTests {
 
 	// -------------------------------------------------------------------------
 
-	private void assertPreconditionViolated(Executable precondition) {
+	private void assertViolatesPrecondition(Executable precondition) {
 		assertThrows(PreconditionViolationException.class, precondition);
 	}
 
