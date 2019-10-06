@@ -24,7 +24,18 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.discovery.*;
+import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.ClasspathResourceSelector;
+import org.junit.platform.engine.discovery.ClasspathRootSelector;
+import org.junit.platform.engine.discovery.DirectorySelector;
+import org.junit.platform.engine.discovery.FileSelector;
+import org.junit.platform.engine.discovery.MethodSelector;
+import org.junit.platform.engine.discovery.ModuleSelector;
+import org.junit.platform.engine.discovery.NestedClassSelector;
+import org.junit.platform.engine.discovery.NestedMethodSelector;
+import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.UniqueIdSelector;
+import org.junit.platform.engine.discovery.UriSelector;
 
 /**
  * A resolver that supports resolving one or multiple types of

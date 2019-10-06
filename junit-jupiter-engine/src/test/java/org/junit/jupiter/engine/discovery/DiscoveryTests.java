@@ -14,7 +14,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.*;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNestedMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Retention;
