@@ -17,8 +17,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
@@ -45,50 +43,26 @@ import org.junit.platform.engine.DiscoverySelector;
 @API(status = STABLE, since = "1.6")
 public class NestedClassSelector implements DiscoverySelector {
 
-	private final List<String> enclosingClassNames;
-	private final String nestedClassName;
-
-	private List<Class<?>> enclosingClasses;
-	private Class<?> nestedClass;
+	private List<ClassSelector> enclosingClassSelectors;
+	private ClassSelector nestedClassSelector;
 
 	NestedClassSelector(List<String> enclosingClassNames, String nestedClassName) {
-		this.enclosingClassNames = enclosingClassNames;
-		this.nestedClassName = nestedClassName;
+		this.enclosingClassSelectors = enclosingClassNames.stream().map(ClassSelector::new).collect(
+			Collectors.toList());
+		this.nestedClassSelector = new ClassSelector(nestedClassName);
 	}
 
 	NestedClassSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass) {
-		this.enclosingClasses = enclosingClasses;
-		this.nestedClass = nestedClass;
-		this.enclosingClassNames = enclosingClasses.stream().map(Class::getName).collect(Collectors.toList());
-		this.nestedClassName = nestedClass.getName();
+		this.enclosingClassSelectors = enclosingClasses.stream().map(ClassSelector::new).collect(Collectors.toList());
+		this.nestedClassSelector = new ClassSelector(nestedClass);
 	}
 
 	public List<Class<?>> getEnclosingClasses() {
-		lazyLoadEnclosingClasses();
-		return enclosingClasses;
+		return enclosingClassSelectors.stream().map(ClassSelector::getJavaClass).collect(Collectors.toList());
 	}
 
 	public Class<?> getNestedClass() {
-		lazyLoadNestedClass();
-		return nestedClass;
-	}
-
-	private void lazyLoadEnclosingClasses() {
-		if (enclosingClasses == null) {
-			enclosingClasses = enclosingClassNames.stream() //
-					.map(this::loadJavaClass).collect(Collectors.toList());
-		}
-	}
-
-	private void lazyLoadNestedClass() {
-		if (nestedClass == null) {
-			nestedClass = loadJavaClass(nestedClassName);
-		}
-	}
-
-	private Class<?> loadJavaClass(String className) {
-		return ReflectionUtils.tryToLoadClass(className).getOrThrow(
-			cause -> new PreconditionViolationException("Could not load class with name: " + className, cause));
+		return nestedClassSelector.getJavaClass();
 	}
 
 	@Override
@@ -100,12 +74,13 @@ public class NestedClassSelector implements DiscoverySelector {
 			return false;
 		}
 		NestedClassSelector that = (NestedClassSelector) o;
-		return enclosingClassNames.equals(that.enclosingClassNames) && nestedClassName.equals(that.nestedClassName);
+		return enclosingClassSelectors.equals(that.enclosingClassSelectors)
+				&& nestedClassSelector.equals(that.nestedClassSelector);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(enclosingClassNames, nestedClassName);
+		return Objects.hash(enclosingClassSelectors, nestedClassSelector);
 	}
 
 }
