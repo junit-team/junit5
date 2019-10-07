@@ -192,9 +192,43 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 						Files.delete(path);
 					}
 					catch (IOException ex) {
-						failures.put(path, ex);
+						IOException err = deleteUndeletableAndContinue(path, ex);
+						if (err != null) {
+							failures.put(path, err);
+						}
 					}
 					return CONTINUE;
+				}
+
+				private IOException deleteUndeletableAndContinue(Path path, IOException ex) {
+					boolean isWritable;
+					try {
+						isWritable = path.toFile().setWritable(true);
+					}
+					catch (Exception e) {
+						// In case setWritable throws we can't proceed
+						ex.addSuppressed(e);
+						return ex;
+					}
+					if (!isWritable) {
+						ex.addSuppressed(new Exception("Attempt to make file '" + path + "' writable failed") {
+							@Override
+							public synchronized Throwable fillInStackTrace() {
+								return this; // Make the output smaller by omitting the stacktrace
+							}
+						});
+						return ex;
+					}
+					// The file is writable now, the delete might succeed now
+					try {
+						Files.delete(path);
+						return null;
+					}
+					catch (IOException ex2) {
+						// Oh, that is truly un-deletable
+						ex.addSuppressed(ex2);
+						return ex;
+					}
 				}
 			});
 			return failures;
