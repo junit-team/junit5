@@ -30,7 +30,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The `EventConditions` class in Test Kit now correctly handles events from multiple levels
+  of nested classes.
 
 ==== Deprecations and Breaking Changes
 
