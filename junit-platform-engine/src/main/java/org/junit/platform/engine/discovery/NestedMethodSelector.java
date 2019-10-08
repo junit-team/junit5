@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
@@ -78,14 +79,38 @@ public class NestedMethodSelector implements DiscoverySelector {
 		this.methodSelector = new MethodSelector(nestedClass, method);
 	}
 
+	/**
+	 * Get the list of {@link Class} enclosing the nested {@link Class}
+	 * containing the selected {@link Method}.
+	 *
+	 * <p>If the {@link Class} were not provided, but only the name of the
+	 * nested class and its enclosing classes, this method attempts to lazily
+	 * load the list of enclosing {@link Class} and throws a
+	 * {@link PreconditionViolationException} if the classes cannot be loaded.
+	 */
 	public List<Class<?>> getEnclosingClasses() {
 		return nestedClassSelector.getEnclosingClasses();
 	}
 
+	/**
+	 * Get the nested {@link Class} containing the selected {@link Method}.
+	 *
+	 * <p>If the {@link Class} were not provided, but only the name of the
+	 * nested class and its enclosing classes, this method attempts to lazily
+	 * load the nested {@link Class} and throws a
+	 * {@link PreconditionViolationException} if the class cannot be loaded.
+	 */
 	public Class<?> getNestedClass() {
 		return nestedClassSelector.getNestedClass();
 	}
 
+	/**
+	 * Get the selected {@link Method}.
+	 *
+	 * <p>If the {@link Method} was not provided, but only the name, this method
+	 * attempts to lazily load the {@code Method} based on its name and throws a
+	 * {@link PreconditionViolationException} if the method cannot be loaded.
+	 */
 	public Method getMethod() {
 		return methodSelector.getJavaMethod();
 	}

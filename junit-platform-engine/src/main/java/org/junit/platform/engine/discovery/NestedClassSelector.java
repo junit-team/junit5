@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
@@ -57,10 +58,27 @@ public class NestedClassSelector implements DiscoverySelector {
 		this.nestedClassSelector = new ClassSelector(nestedClass);
 	}
 
+	/**
+	 * Get the list of {@link Class} enclosing the selected nested
+	 * {@link Class}.
+	 *
+	 * <p>If the {@link Class} were not provided, but only the name of the
+	 * nested class and its enclosing classes, this method attempts to lazily
+	 * load the list of enclosing {@link Class} and throws a
+	 * {@link PreconditionViolationException} if the classes cannot be loaded.
+	 */
 	public List<Class<?>> getEnclosingClasses() {
 		return enclosingClassSelectors.stream().map(ClassSelector::getJavaClass).collect(Collectors.toList());
 	}
 
+	/**
+	 * Get the selected nested {@link Class}.
+	 *
+	 * <p>If the {@link Class} were not provided, but only the name of the
+	 * nested class and its enclosing classes, this method attempts to lazily
+	 * load the nested {@link Class} and throws a
+	 * {@link PreconditionViolationException} if the class cannot be loaded.
+	 */
 	public Class<?> getNestedClass() {
 		return nestedClassSelector.getJavaClass();
 	}
