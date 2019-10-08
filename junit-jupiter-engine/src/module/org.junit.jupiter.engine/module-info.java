@@ -14,7 +14,6 @@ module org.junit.jupiter.engine {
 	requires transitive org.junit.jupiter.api;
 	requires transitive org.junit.platform.engine;
 	requires transitive org.opentest4j;
-	requires java.management;
 
 	// exports org.junit.jupiter.engine; // Constants...
 
