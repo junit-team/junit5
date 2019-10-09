@@ -48,6 +48,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.RuntimeUtils;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
 import org.junit.platform.testkit.engine.Execution;
@@ -86,6 +87,33 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		Execution execution = findExecution(results.testEvents(), "testMethod()");
 		assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable()) //
 				.isEmpty();
+	}
+
+	@Test
+	@DisplayName("is not applied on annotated @Test methods using timeout mode: disabled")
+	void applyTimeoutOnAnnotatedTestMethodsUsingDisabledOnDebugTimeoutMode() {
+		EngineExecutionResults results = executeTests(request() //
+				.selectors(selectMethod(TimeoutAnnotatedTestMethodTestCase.class, "testMethod")) //
+				.configurationParameter(DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
+				.configurationParameter(TIMEOUT_MODE_PROPERTY_NAME, "disabled_on_debug").build());
+
+		Execution execution = findExecution(results.testEvents(), "testMethod()");
+
+		assertThat(execution.getDuration()) //
+				.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
+				// The check to see if debugging is pushing the timer just above 1 second
+				.isLessThan(Duration.ofSeconds(2));
+
+		// Should we test if we're debugging? This test will fail if we are debugging.
+		if (RuntimeUtils.isDebug()) {
+			assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable()) //
+					.isEmpty();
+		}
+		else {
+			assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
+					.isInstanceOf(TimeoutException.class) //
+					.hasMessage("testMethod() timed out after 10 milliseconds");
+		}
 	}
 
 	@Test
