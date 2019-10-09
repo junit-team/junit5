@@ -42,9 +42,7 @@ class EnabledForJreRangeCondition implements ExecutionCondition {
 					if (isCurrentVersionWithinRange(min, max)) {
 						return ENABLED_ON_CURRENT_JRE;
 					}
-					else {
-						return DISABLED_ON_CURRENT_JRE;
-					}
+					return DISABLED_ON_CURRENT_JRE;
 				}).orElse(ENABLED_BY_DEFAULT);
 
 	}

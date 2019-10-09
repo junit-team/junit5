@@ -69,8 +69,28 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @API(status = STABLE, since = "5.6")
 public @interface EnabledForJreRange {
 
+	/**
+	 * Java Runtime Environment version which should be used as the lower boundary
+	 * for the version range determining if the annotated class or method
+	 * should be enabled.
+	 *
+	 * <p>Defaults to {@link JRE#JAVA_8 JAVA_8}, as this is the lowest
+	 * supported JRE version.
+	 *
+	 * @see JRE
+	 */
 	JRE min() default JRE.JAVA_8;
 
+	/**
+	 * Java Runtime Environment version which should be used as the upper boundary
+	 * for the version range determining if the annotated class or method
+	 * should be enabled.
+	 *
+	 * <p>Defaults to {@link JRE#OTHER OTHER}, as this will always be the highest
+	 * possible version.
+	 *
+	 * @see JRE
+	 */
 	JRE max() default JRE.OTHER;
 
 }

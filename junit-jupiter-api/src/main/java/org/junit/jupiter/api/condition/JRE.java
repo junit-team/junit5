@@ -98,7 +98,7 @@ public enum JRE {
 
 	private static final Logger logger = LoggerFactory.getLogger(JRE.class);
 
-	public static final JRE CURRENT_VERSION = determineCurrentVersion();
+	static final JRE CURRENT_VERSION = determineCurrentVersion();
 
 	private static JRE determineCurrentVersion() {
 		String javaVersion = System.getProperty("java.version");
