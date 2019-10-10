@@ -51,6 +51,7 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.junit.vintage.engine.samples.junit3.JUnit3ParallelSuiteWithSubsuites;
+import org.junit.vintage.engine.samples.junit3.JUnit3SuiteWithSubsuites;
 import org.junit.vintage.engine.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
 import org.junit.vintage.engine.samples.junit4.CompletelyDynamicTestCase;
 import org.junit.vintage.engine.samples.junit4.EmptyIgnoredTestCase;
@@ -707,6 +708,24 @@ class VintageTestEngineExecutionTests {
 					event(test("hello")), //
 					event(test("hello")), //
 					event(test("hello"), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesJUnit3SuiteWithSubsuites() {
+		var suiteClass = JUnit3SuiteWithSubsuites.class;
+		execute(suiteClass).allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(suiteClass), started()), //
+			event(container("Case1"), started()), //
+			event(test("hello"), started()), //
+			event(test("hello"), finishedSuccessfully()), //
+			event(container("Case1"), finishedSuccessfully()), //
+			event(container("Case2"), started()), //
+			event(test("hello"), started()), //
+			event(test("hello"), finishedSuccessfully()), //
+			event(container("Case2"), finishedSuccessfully()), //
+			event(container(suiteClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test
