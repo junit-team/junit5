@@ -157,13 +157,13 @@ public class NestedMethodSelector implements DiscoverySelector {
 		return Objects.hash(nestedClassSelector, methodSelector);
 	}
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this) //
-                .append("enclosingClassNames", getEnclosingClassNames()) //
-                .append("nestedClassName", getNestedClassName()) //
-                .append("methodName", getMethodName()) //
-                .toString();
-    }
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this) //
+				.append("enclosingClassNames", getEnclosingClassNames()) //
+				.append("nestedClassName", getNestedClassName()) //
+				.append("methodName", getMethodName()) //
+				.toString();
+	}
 
 }
