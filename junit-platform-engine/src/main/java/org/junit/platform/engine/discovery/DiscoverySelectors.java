@@ -463,6 +463,7 @@ public final class DiscoverySelectors {
 	 * @param nestedClass the nested class to select; never {@code null}
 	 * @see NestedClassSelector
 	 */
+	@API(status = STABLE, since = "1.6")
 	public static NestedClassSelector selectNestedClass(List<Class<?>> enclosingClasses, Class<?> nestedClass) {
 		Preconditions.notEmpty(enclosingClasses, "Enclosing classes must not be null or empty");
 		Preconditions.notNull(nestedClass, "Nested class must not be null");
@@ -477,6 +478,7 @@ public final class DiscoverySelectors {
 	 * @param nestedClassName the name of the nested class to select; never {@code null} or blank
 	 * @see NestedClassSelector
 	 */
+	@API(status = STABLE, since = "1.6")
 	public static NestedClassSelector selectNestedClass(List<String> enclosingClassNames, String nestedClassName) {
 		Preconditions.notEmpty(enclosingClassNames, "Enclosing class names must not be null or empty");
 		Preconditions.notBlank(nestedClassName, "Nested class name must not be null or blank");
@@ -491,6 +493,7 @@ public final class DiscoverySelectors {
 	 * @param methodName the name of the method to select; never {@code null} or blank
 	 * @see NestedMethodSelector
 	 */
+	@API(status = STABLE, since = "1.6")
 	public static NestedMethodSelector selectNestedMethod(List<String> enclosingClassNames, String nestedClassName,
 			String methodName) {
 		Preconditions.notEmpty(enclosingClassNames, "Enclosing class names must not be null or empty");
@@ -515,6 +518,7 @@ public final class DiscoverySelectors {
 	 * arguments
 	 * @see NestedMethodSelector
 	 */
+	@API(status = STABLE, since = "1.6")
 	public static NestedMethodSelector selectNestedMethod(List<String> enclosingClassNames, String nestedClassName,
 			String methodName, String methodParameterTypes) {
 		Preconditions.notEmpty(enclosingClassNames, "Enclosing class names must not be null or empty");
@@ -532,6 +536,7 @@ public final class DiscoverySelectors {
 	 * @param methodName the name of the method to select; never {@code null} or blank
 	 * @see NestedMethodSelector
 	 */
+	@API(status = STABLE, since = "1.6")
 	public static NestedMethodSelector selectNestedMethod(List<Class<?>> enclosingClasses, Class<?> nestedClass,
 			String methodName) {
 		Preconditions.notEmpty(enclosingClasses, "Enclosing classes must not be null or empty");
@@ -556,6 +561,7 @@ public final class DiscoverySelectors {
 	 * arguments
 	 * @see NestedMethodSelector
 	 */
+	@API(status = STABLE, since = "1.6")
 	public static NestedMethodSelector selectNestedMethod(List<Class<?>> enclosingClasses, Class<?> nestedClass,
 			String methodName, String methodParameterTypes) {
 		Preconditions.notEmpty(enclosingClasses, "Enclosing classes must not be null or empty");
@@ -573,6 +579,7 @@ public final class DiscoverySelectors {
 	 * @param method the method to select; never {@code null}
 	 * @see NestedMethodSelector
 	 */
+	@API(status = STABLE, since = "1.6")
 	public static NestedMethodSelector selectNestedMethod(List<Class<?>> enclosingClasses, Class<?> nestedClass,
 			Method method) {
 		Preconditions.notEmpty(enclosingClasses, "Enclosing classes must not be null or empty");
