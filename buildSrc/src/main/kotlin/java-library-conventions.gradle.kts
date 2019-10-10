@@ -77,6 +77,7 @@ if (project in mavenizedProjects) {
 			memberLevel = JavadocMemberLevel.PROTECTED
 			header = project.name
 			encoding = "UTF-8"
+			locale = "en"
 			(this as StandardJavadocDocletOptions).apply {
 				addBooleanOption("Xdoclint:html,syntax", true)
 				addBooleanOption("html5", true)
