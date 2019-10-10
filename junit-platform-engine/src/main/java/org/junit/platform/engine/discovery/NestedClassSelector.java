@@ -18,6 +18,7 @@ import java.util.Objects;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
 /**
@@ -112,6 +113,14 @@ public class NestedClassSelector implements DiscoverySelector {
 	@Override
 	public int hashCode() {
 		return Objects.hash(enclosingClassSelectors, nestedClassSelector);
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this) //
+				.append("enclosingClassNames", getEnclosingClassNames()) //
+				.append("nestedClassName", getNestedClassName()) //
+				.toString();
 	}
 
 }
