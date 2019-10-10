@@ -41,7 +41,7 @@ class TestRunTests {
 		Description unknownDescription = createTestDescription(testClass, "dynamicTest");
 
 		TestRun testRun = new TestRun(runnerTestDescriptor);
-		Optional<VintageTestDescriptor> testDescriptor = testRun.lookupTestDescriptor(unknownDescription);
+		Optional<VintageTestDescriptor> testDescriptor = testRun.lookupNextTestDescriptor(unknownDescription);
 
 		assertThat(testDescriptor).isEmpty();
 	}
@@ -60,7 +60,7 @@ class TestRunTests {
 		TestRun testRun = new TestRun(runnerTestDescriptor);
 		testRun.registerDynamicTest(dynamicTestDescriptor);
 
-		assertThat(testRun.lookupTestDescriptor(dynamicDescription)).contains(dynamicTestDescriptor);
+		assertThat(testRun.lookupNextTestDescriptor(dynamicDescription)).contains(dynamicTestDescriptor);
 		assertTrue(testRun.isDescendantOfRunnerTestDescriptor(dynamicTestDescriptor));
 	}
 
