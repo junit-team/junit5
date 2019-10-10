@@ -52,6 +52,8 @@ import org.junit.platform.launcher.listeners.LegacyReportingUtils;
  */
 class XmlReportWriter {
 
+	// Using zero-width assertions in the split pattern simplifies the splitting process: All split parts
+	// (including the first and last one) can be used directly, without having to re-add separator characters.
 	private static final Pattern CDATA_SPLIT_PATTERN = Pattern.compile("(?<=]])(?=>)");
 
 	private final XmlReportData reportData;

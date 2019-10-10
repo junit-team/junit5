@@ -229,26 +229,15 @@ class XmlReportWriterTests {
 		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		AssertionError assertionError = new AssertionError("<foo><![CDATA[bar]]></foo>");
 		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(assertionError));
-		Writer assertingNullWriter = new Writer() {
+		Writer assertingWriter = new StringWriter() {
 
 			@Override
 			public void write(char[] cbuf, int off, int len) {
-				//@formatter:off
-				assertThat(new String(cbuf, off, len))
-						.doesNotContain("]]><![CDATA[");
-				//@formatter:on
-			}
-
-			@Override
-			public void flush() {
-			}
-
-			@Override
-			public void close() {
+				assertThat(new String(cbuf, off, len)).doesNotContain("]]><![CDATA[");
 			}
 		};
 
-		writeXmlReport(testPlan, reportData, assertingNullWriter);
+		writeXmlReport(testPlan, reportData, assertingWriter);
 	}
 
 	private String writeXmlReport(TestPlan testPlan, XmlReportData reportData) throws Exception {
