@@ -70,7 +70,7 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* JUnit 3 suites with duplicate test names are now reported correctly.
 
 ==== Deprecations and Breaking Changes
 
