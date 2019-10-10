@@ -132,14 +132,14 @@ class ClassSelectorResolver implements SelectorResolver {
 			List<Class<?>> testClasses = new ArrayList<>(it.getEnclosingTestClasses());
 			testClasses.add(testClass);
 			// @formatter:off
-            return Resolution.match(Match.exact(it, () -> {
-                Stream<DiscoverySelector> methods = findMethods(testClass, isTestOrTestFactoryOrTestTemplateMethod).stream()
-                        .map(method -> selectMethod(testClasses, method));
-                Stream<NestedClassSelector> nestedClasses = findNestedClasses(testClass, isNestedTestClass).stream()
-                        .map(nestedClass -> DiscoverySelectors.selectNestedClass(testClasses, nestedClass));
-                return Stream.concat(methods, nestedClasses).collect(toCollection((Supplier<Set<DiscoverySelector>>) LinkedHashSet::new));
-            }));
-            // @formatter:on
+			return Resolution.match(Match.exact(it, () -> {
+				Stream<DiscoverySelector> methods = findMethods(testClass, isTestOrTestFactoryOrTestTemplateMethod).stream()
+						.map(method -> selectMethod(testClasses, method));
+				Stream<NestedClassSelector> nestedClasses = findNestedClasses(testClass, isNestedTestClass).stream()
+						.map(nestedClass -> DiscoverySelectors.selectNestedClass(testClasses, nestedClass));
+				return Stream.concat(methods, nestedClasses).collect(toCollection((Supplier<Set<DiscoverySelector>>) LinkedHashSet::new));
+			}));
+			// @formatter:on
 		}).orElse(unresolved());
 	}
 
