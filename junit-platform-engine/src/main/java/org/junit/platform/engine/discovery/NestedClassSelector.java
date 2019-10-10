@@ -41,6 +41,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * @see DiscoverySelectors#selectNestedClass(List, Class)
  * @see DiscoverySelectors#selectNestedClass(List, String)
  * @see org.junit.platform.engine.support.descriptor.ClassSource
+ * @see ClassSelector
  */
 @API(status = STABLE, since = "1.6")
 public class NestedClassSelector implements DiscoverySelector {

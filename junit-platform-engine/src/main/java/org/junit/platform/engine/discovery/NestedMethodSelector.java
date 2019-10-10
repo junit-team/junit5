@@ -46,6 +46,8 @@ import org.junit.platform.engine.DiscoverySelector;
  * @see DiscoverySelectors#selectNestedMethod(List, Class, String, String)
  * @see DiscoverySelectors#selectNestedMethod(List, Class, Method)
  * @see org.junit.platform.engine.support.descriptor.MethodSource
+ * @see NestedClassSelector
+ * @see MethodSelector
  */
 @API(status = STABLE, since = "1.6")
 public class NestedMethodSelector implements DiscoverySelector {
