@@ -80,6 +80,14 @@ public class NestedMethodSelector implements DiscoverySelector {
 	}
 
 	/**
+	 * Get the names of the classes enclosing the nested class
+	 * containing the selected method.
+	 */
+	public List<String> getEnclosingClassNames() {
+		return nestedClassSelector.getEnclosingClassNames();
+	}
+
+	/**
 	 * Get the list of {@link Class} enclosing the nested {@link Class}
 	 * containing the selected {@link Method}.
 	 *
@@ -93,6 +101,13 @@ public class NestedMethodSelector implements DiscoverySelector {
 	}
 
 	/**
+	 * Get the name of the nested class containing the selected method.
+	 */
+	public String getNestedClassName() {
+		return nestedClassSelector.getNestedClassName();
+	}
+
+	/**
 	 * Get the nested {@link Class} containing the selected {@link Method}.
 	 *
 	 * <p>If the {@link Class} were not provided, but only the name of the
@@ -102,6 +117,13 @@ public class NestedMethodSelector implements DiscoverySelector {
 	 */
 	public Class<?> getNestedClass() {
 		return nestedClassSelector.getNestedClass();
+	}
+
+	/**
+	 * Get the name of the selected method.
+	 */
+	public String getMethodName() {
+		return methodSelector.getMethodName();
 	}
 
 	/**

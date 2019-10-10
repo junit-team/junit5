@@ -59,6 +59,13 @@ public class NestedClassSelector implements DiscoverySelector {
 	}
 
 	/**
+	 * Get the names of the classes enclosing the selected nested class.
+	 */
+	public List<String> getEnclosingClassNames() {
+		return enclosingClassSelectors.stream().map(ClassSelector::getClassName).collect(Collectors.toList());
+	}
+
+	/**
 	 * Get the list of {@link Class} enclosing the selected nested
 	 * {@link Class}.
 	 *
@@ -69,6 +76,13 @@ public class NestedClassSelector implements DiscoverySelector {
 	 */
 	public List<Class<?>> getEnclosingClasses() {
 		return enclosingClassSelectors.stream().map(ClassSelector::getJavaClass).collect(Collectors.toList());
+	}
+
+	/**
+	 * Get the name of the selected nested class.
+	 */
+	public String getNestedClassName() {
+		return nestedClassSelector.getClassName();
 	}
 
 	/**

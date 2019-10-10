@@ -607,6 +607,9 @@ class DiscoverySelectorsTests {
 
 			assertThat(selector.getEnclosingClasses()).containsOnly(ClassWithNestedInnerClass.class);
 			assertThat(selector.getNestedClass()).isEqualTo(AbstractClassWithNestedInnerClass.NestedClass.class);
+
+			assertThat(selector.getEnclosingClassNames()).containsOnly(enclosingClassName);
+			assertThat(selector.getNestedClassName()).isEqualTo(nestedClassName);
 		}
 
 		@Test
@@ -618,6 +621,9 @@ class DiscoverySelectorsTests {
 				AbstractClassWithNestedInnerClass.NestedClass.class);
 			assertThat(selector.getNestedClass()).isEqualTo(
 				AbstractClassWithNestedInnerClass.NestedClass.DoubleNestedClass.class);
+
+			assertThat(selector.getEnclosingClassNames()).containsExactly(enclosingClassName, nestedClassName);
+			assertThat(selector.getNestedClassName()).isEqualTo(doubleNestedClassName);
 		}
 
 		@Test
@@ -637,6 +643,10 @@ class DiscoverySelectorsTests {
 			assertThat(selector.getEnclosingClasses()).containsOnly(ClassWithNestedInnerClass.class);
 			assertThat(selector.getNestedClass()).isEqualTo(AbstractClassWithNestedInnerClass.NestedClass.class);
 			assertThat(selector.getMethod()).isEqualTo(selector.getNestedClass().getDeclaredMethod(methodName));
+
+			assertThat(selector.getEnclosingClassNames()).containsOnly(enclosingClassName);
+			assertThat(selector.getNestedClassName()).isEqualTo(nestedClassName);
+			assertThat(selector.getMethodName()).isEqualTo(methodName);
 		}
 
 		@Test
@@ -647,6 +657,10 @@ class DiscoverySelectorsTests {
 			assertThat(selector.getEnclosingClasses()).containsOnly(ClassWithNestedInnerClass.class);
 			assertThat(selector.getNestedClass()).isEqualTo(AbstractClassWithNestedInnerClass.NestedClass.class);
 			assertThat(selector.getMethod()).isEqualTo(selector.getNestedClass().getDeclaredMethod(methodName));
+
+			assertThat(selector.getEnclosingClassNames()).containsOnly(enclosingClassName);
+			assertThat(selector.getNestedClassName()).isEqualTo(nestedClassName);
+			assertThat(selector.getMethodName()).isEqualTo(methodName);
 		}
 
 		@Test
@@ -658,18 +672,28 @@ class DiscoverySelectorsTests {
 			assertThat(selector.getNestedClass()).isEqualTo(AbstractClassWithNestedInnerClass.NestedClass.class);
 			assertThat(selector.getMethod()).isEqualTo(
 				selector.getNestedClass().getDeclaredMethod(methodName, String.class));
+
+			assertThat(selector.getEnclosingClassNames()).containsOnly(enclosingClassName);
+			assertThat(selector.getNestedClassName()).isEqualTo(nestedClassName);
+			assertThat(selector.getMethodName()).isEqualTo(methodName);
 		}
 
 		@Test
 		void selectDoubleNestedMethodByEnclosingClassNamesAndMethodName() throws Exception {
+			String doubleNestedMethodName = "doubleNestedTest";
 			NestedMethodSelector selector = selectNestedMethod(List.of(enclosingClassName, nestedClassName),
-				doubleNestedClassName, "doubleNestedTest");
+				doubleNestedClassName, doubleNestedMethodName);
 
 			assertThat(selector.getEnclosingClasses()).containsExactly(ClassWithNestedInnerClass.class,
 				AbstractClassWithNestedInnerClass.NestedClass.class);
 			assertThat(selector.getNestedClass()).isEqualTo(
 				AbstractClassWithNestedInnerClass.NestedClass.DoubleNestedClass.class);
-			assertThat(selector.getMethod()).isEqualTo(selector.getNestedClass().getDeclaredMethod("doubleNestedTest"));
+			assertThat(selector.getMethod()).isEqualTo(
+				selector.getNestedClass().getDeclaredMethod(doubleNestedMethodName));
+
+			assertThat(selector.getEnclosingClassNames()).containsExactly(enclosingClassName, nestedClassName);
+			assertThat(selector.getNestedClassName()).isEqualTo(doubleNestedClassName);
+			assertThat(selector.getMethodName()).isEqualTo(doubleNestedMethodName);
 		}
 
 		@Test
