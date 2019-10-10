@@ -10,11 +10,11 @@
 
 package org.junit.platform.engine.discovery;
 
+import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -48,13 +48,12 @@ public class NestedClassSelector implements DiscoverySelector {
 	private ClassSelector nestedClassSelector;
 
 	NestedClassSelector(List<String> enclosingClassNames, String nestedClassName) {
-		this.enclosingClassSelectors = enclosingClassNames.stream().map(ClassSelector::new).collect(
-			Collectors.toList());
+		this.enclosingClassSelectors = enclosingClassNames.stream().map(ClassSelector::new).collect(toList());
 		this.nestedClassSelector = new ClassSelector(nestedClassName);
 	}
 
 	NestedClassSelector(List<Class<?>> enclosingClasses, Class<?> nestedClass) {
-		this.enclosingClassSelectors = enclosingClasses.stream().map(ClassSelector::new).collect(Collectors.toList());
+		this.enclosingClassSelectors = enclosingClasses.stream().map(ClassSelector::new).collect(toList());
 		this.nestedClassSelector = new ClassSelector(nestedClass);
 	}
 
@@ -62,7 +61,7 @@ public class NestedClassSelector implements DiscoverySelector {
 	 * Get the names of the classes enclosing the selected nested class.
 	 */
 	public List<String> getEnclosingClassNames() {
-		return enclosingClassSelectors.stream().map(ClassSelector::getClassName).collect(Collectors.toList());
+		return enclosingClassSelectors.stream().map(ClassSelector::getClassName).collect(toList());
 	}
 
 	/**
@@ -75,7 +74,7 @@ public class NestedClassSelector implements DiscoverySelector {
 	 * {@link PreconditionViolationException} if the classes cannot be loaded.
 	 */
 	public List<Class<?>> getEnclosingClasses() {
-		return enclosingClassSelectors.stream().map(ClassSelector::getJavaClass).collect(Collectors.toList());
+		return enclosingClassSelectors.stream().map(ClassSelector::getJavaClass).collect(toList());
 	}
 
 	/**

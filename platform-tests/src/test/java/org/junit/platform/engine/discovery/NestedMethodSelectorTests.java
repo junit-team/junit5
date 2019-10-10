@@ -54,25 +54,22 @@ class NestedMethodSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void preservesOriginalExceptionWhenTryingToLoadEnclosingClass() {
-		NestedMethodSelector selector = new NestedMethodSelector(List.of("EnclosingClass"), "NestedTestClass", "method",
-			"int, boolean");
+		var selector = new NestedMethodSelector(List.of("EnclosingClass"), "NestedTestClass", "method", "int, boolean");
 
-		PreconditionViolationException e = assertThrows(PreconditionViolationException.class,
-			selector::getEnclosingClasses);
+		var exception = assertThrows(PreconditionViolationException.class, selector::getEnclosingClasses);
 
-		assertThat(e).hasMessage("Could not load class with name: EnclosingClass").hasCauseInstanceOf(
-			ClassNotFoundException.class);
+		assertThat(exception).hasMessage("Could not load class with name: EnclosingClass") //
+				.hasCauseInstanceOf(ClassNotFoundException.class);
 	}
 
 	@Test
 	void preservesOriginalExceptionWhenTryingToLoadNestedClass() {
-		NestedMethodSelector selector = new NestedMethodSelector(List.of("EnclosingClass"), "NestedTestClass", "method",
-			"int, boolean");
+		var selector = new NestedMethodSelector(List.of("EnclosingClass"), "NestedTestClass", "method", "int, boolean");
 
-		PreconditionViolationException e = assertThrows(PreconditionViolationException.class, selector::getNestedClass);
+		var exception = assertThrows(PreconditionViolationException.class, selector::getNestedClass);
 
-		assertThat(e).hasMessage("Could not load class with name: NestedTestClass").hasCauseInstanceOf(
-			ClassNotFoundException.class);
+		assertThat(exception).hasMessage("Could not load class with name: NestedTestClass") //
+				.hasCauseInstanceOf(ClassNotFoundException.class);
 	}
 
 }

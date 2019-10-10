@@ -43,11 +43,10 @@ class NestedClassSelectorTests extends AbstractEqualsAndHashCodeTests {
 		var selector = new NestedClassSelector(List.of("org.example.EnclosingTestClass"),
 			"org.example.NestedTestClass");
 
-		PreconditionViolationException e = assertThrows(PreconditionViolationException.class,
-			selector::getEnclosingClasses);
+		var exception = assertThrows(PreconditionViolationException.class, selector::getEnclosingClasses);
 
-		assertThat(e).hasMessage("Could not load class with name: org.example.EnclosingTestClass").hasCauseInstanceOf(
-			ClassNotFoundException.class);
+		assertThat(exception).hasMessage("Could not load class with name: org.example.EnclosingTestClass") //
+				.hasCauseInstanceOf(ClassNotFoundException.class);
 	}
 
 	@Test
@@ -55,9 +54,9 @@ class NestedClassSelectorTests extends AbstractEqualsAndHashCodeTests {
 		var selector = new NestedClassSelector(List.of("org.example.EnclosingTestClass"),
 			"org.example.NestedTestClass");
 
-		PreconditionViolationException e = assertThrows(PreconditionViolationException.class, selector::getNestedClass);
+		var exception = assertThrows(PreconditionViolationException.class, selector::getNestedClass);
 
-		assertThat(e).hasMessage("Could not load class with name: org.example.NestedTestClass").hasCauseInstanceOf(
-			ClassNotFoundException.class);
+		assertThat(exception).hasMessage("Could not load class with name: org.example.NestedTestClass") //
+				.hasCauseInstanceOf(ClassNotFoundException.class);
 	}
 }
