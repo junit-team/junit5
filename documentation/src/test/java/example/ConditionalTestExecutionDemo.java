@@ -114,7 +114,7 @@ class ConditionalTestExecutionDemo {
 
 	@Test
 	@DisabledForJreRange(min = JAVA_9)
-	void notFromJava9toCurrentJavaFeatureNumber()() {
+	void notFromJava9toCurrentJavaFeatureNumber() {
 		// ...
 	}
 
