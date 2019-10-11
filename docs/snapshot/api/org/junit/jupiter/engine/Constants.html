@@ -331,6 +331,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Property name used to enable parallel test execution: "junit.jupiter.execution.parallel.enabled"</div>
 </td>
 </tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#TIMEOUT_MODE_PROPERTY_NAME">TIMEOUT_MODE_PROPERTY_NAME</a></span></code></th>
+<td class="colLast">
+<div class="block">Property used to determine if timeouts are applied to tests: "junit.jupiter.execution.timeout.mode".</div>
+</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -923,7 +930,7 @@ public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java
 <a id="DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME</h4>
 <pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
@@ -947,6 +954,35 @@ public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>Timeout</code></a>, 
 <a href="../../../../constant-values.html#org.junit.jupiter.engine.Constants.DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a id="TIMEOUT_MODE_PROPERTY_NAME">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>TIMEOUT_MODE_PROPERTY_NAME</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.6")
+public static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> TIMEOUT_MODE_PROPERTY_NAME</pre>
+<div class="block">Property used to determine if timeouts are applied to tests: "junit.jupiter.execution.timeout.mode".
+
+ <p>The value of this property will be used to toggle whether
+ <a href="../api/Timeout.html" title="annotation in org.junit.jupiter.api"><code>@Timeout</code></a> is applied to tests.</p>
+
+ <h3>Examples</h3>
+
+ <ul>
+ <li><code>enabled</code>: enables timeouts.
+ <li><code>disabled</code>: disables timeouts.
+ <li><code>disabled_on_debug</code>: disables timeouts while debugging.
+ </ul></div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.6</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../constant-values.html#org.junit.jupiter.engine.Constants.TIMEOUT_MODE_PROPERTY_NAME">Constant Field Values</a></dd>
 </dl>
 </li>
 </ul>
