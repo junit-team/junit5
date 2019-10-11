@@ -90,13 +90,13 @@ class ConditionalTestExecutionDemo {
 
 	@Test
 	@EnabledForJreRange(min = JAVA_9)
-	void fromJava9() {
+	void fromJava9toCurrentJavaFeatureNumber() {
 		// ...
 	}
 
 	@Test
-	@EnabledForJreRange(min = JAVA_11)
-	void tillJava11() {
+	@EnabledForJreRange(max = JAVA_11)
+	void fromJava8To11() {
 		// ...
 	}
 
@@ -107,20 +107,20 @@ class ConditionalTestExecutionDemo {
 	}
 
 	@Test
-	@DisabledForJreRange(min = JAVA_9, max = JAVA_10)
+	@DisabledForJreRange(min = JAVA_9, max = JAVA_11)
 	void notFromJava9to11() {
 		// ...
 	}
 
 	@Test
 	@DisabledForJreRange(min = JAVA_9)
-	void notFromJava9() {
+	void notFromJava9toCurrentJavaFeatureNumber()() {
 		// ...
 	}
 
 	@Test
-	@DisabledForJreRange(min = JAVA_11)
-	void notTillJava11() {
+	@DisabledForJreRange(max = JAVA_11)
+	void notFromJava8to11() {
 		// ...
 	}
 	// end::user_guide_jre[]
