@@ -31,6 +31,8 @@ import org.junit.platform.engine.discovery.DirectorySelector;
 import org.junit.platform.engine.discovery.FileSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
+import org.junit.platform.engine.discovery.NestedClassSelector;
+import org.junit.platform.engine.discovery.NestedMethodSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.discovery.UriSelector;
@@ -126,6 +128,25 @@ public interface SelectorResolver {
 	}
 
 	/**
+	 * Resolve the supplied {@link NestedClassSelector} using the supplied
+	 * {@link Context Context}.
+	 *
+	 * <p>The default implementation simply delegates to {@link
+	 * #resolve(DiscoverySelector, Context)}.
+	 *
+	 * @param selector the selector to be resolved; never {@code null}
+	 * @param context the context to be used for resolving the selector; never
+	 * {@code null}
+	 * @return a {@link Resolution Resolution} of {@link Resolution#unresolved()
+	 * unresolved()}, {@link Resolution#selectors(Set) selectors()}, or {@link
+	 * Resolution#matches(Set) matches()}; never {@code null}
+	 * @see #resolve(DiscoverySelector, Context)
+	 */
+	default Resolution resolve(NestedClassSelector selector, Context context) {
+		return resolve((DiscoverySelector) selector, context);
+	}
+
+	/**
 	 * Resolve the supplied {@link DirectorySelector} using the supplied
 	 * {@link Context Context}.
 	 *
@@ -179,6 +200,25 @@ public interface SelectorResolver {
 	 * @see #resolve(DiscoverySelector, Context)
 	 */
 	default Resolution resolve(MethodSelector selector, Context context) {
+		return resolve((DiscoverySelector) selector, context);
+	}
+
+	/**
+	 * Resolve the supplied {@link NestedMethodSelector} using the supplied
+	 * {@link Context Context}.
+	 *
+	 * <p>The default implementation simply delegates to {@link
+	 * #resolve(DiscoverySelector, Context)}.
+	 *
+	 * @param selector the selector to be resolved; never {@code null}
+	 * @param context the context to be used for resolving the selector; never
+	 * {@code null}
+	 * @return a {@link Resolution Resolution} of {@link Resolution#unresolved()
+	 * unresolved()}, {@link Resolution#selectors(Set) selectors()}, or {@link
+	 * Resolution#matches(Set) matches()}; never {@code null}
+	 * @see #resolve(DiscoverySelector, Context)
+	 */
+	default Resolution resolve(NestedMethodSelector selector, Context context) {
 		return resolve((DiscoverySelector) selector, context);
 	}
 
