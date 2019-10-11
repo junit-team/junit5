@@ -2056,13 +2056,13 @@ half open ranges.</p>
 
 <span class="annotation">@Test</span>
 <span class="annotation">@EnabledForJreRange</span>(min = JAVA_9)
-<span class="type">void</span> fromJava9() {
+<span class="type">void</span> fromJava9toCurrentJavaFeatureNumber() {
     <span class="comment">// ...</span>
 }
 
 <span class="annotation">@Test</span>
-<span class="annotation">@EnabledForJreRange</span>(min = JAVA_11)
-<span class="type">void</span> tillJava11() {
+<span class="annotation">@EnabledForJreRange</span>(max = JAVA_11)
+<span class="type">void</span> fromJava8To11() {
     <span class="comment">// ...</span>
 }
 
@@ -2073,20 +2073,20 @@ half open ranges.</p>
 }
 
 <span class="annotation">@Test</span>
-<span class="annotation">@DisabledForJreRange</span>(min = JAVA_9, max = JAVA_10)
+<span class="annotation">@DisabledForJreRange</span>(min = JAVA_9, max = JAVA_11)
 <span class="type">void</span> notFromJava9to11() {
     <span class="comment">// ...</span>
 }
 
 <span class="annotation">@Test</span>
 <span class="annotation">@DisabledForJreRange</span>(min = JAVA_9)
-<span class="type">void</span> notFromJava9() {
+<span class="type">void</span> notFromJava9toCurrentJavaFeatureNumber() {
     <span class="comment">// ...</span>
 }
 
 <span class="annotation">@Test</span>
-<span class="annotation">@DisabledForJreRange</span>(min = JAVA_11)
-<span class="type">void</span> notTillJava11() {
+<span class="annotation">@DisabledForJreRange</span>(max = JAVA_11)
+<span class="type">void</span> notFromJava8to11() {
     <span class="comment">// ...</span>
 }</code></pre>
 </div>
@@ -9756,7 +9756,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-10-11 07:15:19 UTC
+Last updated 2019-10-11 07:47:25 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
