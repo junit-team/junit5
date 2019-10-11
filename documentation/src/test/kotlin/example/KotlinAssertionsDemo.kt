@@ -13,6 +13,7 @@ package example
 
 import example.domain.Person
 import example.util.Calculator
+import example.util.contextScope
 import java.time.Duration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -44,6 +45,16 @@ class KotlinAssertionsDemo {
             calculator.divide(1, 0)
         }
         assertEquals("/ by zero", exception.message)
+    }
+
+    @Test
+    fun `expected context exception testing`() = contextScope<Unit> {
+        val exception: AssertionError = assertThrows {
+            apply {
+                throw AssertionError("Should throw an exception")
+            }
+        }
+        assertEquals("Should throw an exception", exception.message)
     }
 
     @Test
