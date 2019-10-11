@@ -41,6 +41,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.engine.discovery.NestedClassSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.support.discovery.SelectorResolver;
 
@@ -78,13 +79,10 @@ class ClassSelectorResolver implements SelectorResolver {
 	}
 
 	@Override
-	public Resolution resolve(DiscoverySelector selector, Context context) {
-		if (selector instanceof NestedClassSelector) {
-			NestedClassSelector nestedClassSelector = (NestedClassSelector) selector;
-			if (isNestedTestClass.test(nestedClassSelector.getNestedClass())) {
-				return toResolution(context.addToParent(() -> selectClass(nestedClassSelector.getEnclosingClasses()),
-					parent -> Optional.of(newNestedClassTestDescriptor(parent, nestedClassSelector.getNestedClass()))));
-			}
+	public Resolution resolve(NestedClassSelector selector, Context context) {
+		if (isNestedTestClass.test(selector.getNestedClass())) {
+			return toResolution(context.addToParent(() -> selectClass(selector.getEnclosingClasses()),
+				parent -> Optional.of(newNestedClassTestDescriptor(parent, selector.getNestedClass()))));
 		}
 		return unresolved();
 	}
@@ -138,7 +136,7 @@ class ClassSelectorResolver implements SelectorResolver {
 				Stream<DiscoverySelector> methods = findMethods(testClass, isTestOrTestFactoryOrTestTemplateMethod).stream()
 						.map(method -> selectMethod(testClasses, method));
 				Stream<NestedClassSelector> nestedClasses = findNestedClasses(testClass, isNestedTestClass).stream()
-						.map(nestedClass -> new NestedClassSelector(testClasses, nestedClass));
+						.map(nestedClass -> DiscoverySelectors.selectNestedClass(testClasses, nestedClass));
 				return Stream.concat(methods, nestedClasses).collect(toCollection((Supplier<Set<DiscoverySelector>>) LinkedHashSet::new));
 			}));
 			// @formatter:on
@@ -150,7 +148,7 @@ class ClassSelectorResolver implements SelectorResolver {
 			return DiscoverySelectors.selectClass(classes.get(0));
 		}
 		int lastIndex = classes.size() - 1;
-		return new NestedClassSelector(classes.subList(0, lastIndex), classes.get(lastIndex));
+		return DiscoverySelectors.selectNestedClass(classes.subList(0, lastIndex), classes.get(lastIndex));
 	}
 
 	private DiscoverySelector selectMethod(List<Class<?>> classes, Method method) {
@@ -158,7 +156,7 @@ class ClassSelectorResolver implements SelectorResolver {
 			return DiscoverySelectors.selectMethod(classes.get(0), method);
 		}
 		int lastIndex = classes.size() - 1;
-		return new NestedMethodSelector(classes.subList(0, lastIndex), classes.get(lastIndex), method);
+		return DiscoverySelectors.selectNestedMethod(classes.subList(0, lastIndex), classes.get(lastIndex), method);
 	}
 
 }

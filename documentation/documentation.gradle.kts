@@ -204,6 +204,7 @@ tasks {
 			memberLevel = JavadocMemberLevel.PROTECTED
 			header = rootProject.description
 			encoding = "UTF-8"
+			locale = "en"
 			(this as StandardJavadocDocletOptions).apply {
 				splitIndex(true)
 				addBooleanOption("Xdoclint:none", true)

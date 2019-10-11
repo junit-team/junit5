@@ -46,6 +46,7 @@ public interface JupiterConfiguration {
 	String DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.beforeeach.method.default";
 	String DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.aftereach.method.default";
 	String DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME = "junit.jupiter.execution.timeout.afterall.method.default";
+	String TIMEOUT_MODE_PROPERTY_NAME = "junit.jupiter.execution.timeout.mode";
 
 	Optional<String> getRawConfigurationParameter(String key);
 

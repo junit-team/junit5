@@ -1,6 +1,6 @@
 [[user-guide]]
 = JUnit 5 User Guide
-Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Christian Stein
+Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Juliette de Rancourt; Christian Stein
 :imagesdir: images
 :imagesoutdir: {outdir}/user-guide/images
 //

@@ -46,6 +46,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.MethodSelector;
+import org.junit.platform.engine.discovery.NestedMethodSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.support.discovery.SelectorResolver;
 
@@ -69,13 +70,8 @@ class MethodSelectorResolver implements SelectorResolver {
 	}
 
 	@Override
-	public Resolution resolve(DiscoverySelector selector, Context context) {
-		if (selector instanceof NestedMethodSelector) {
-			NestedMethodSelector nestedMethodSelector = (NestedMethodSelector) selector;
-			return resolve(context, nestedMethodSelector.getEnclosingClasses(), nestedMethodSelector.getNestedClass(),
-				nestedMethodSelector.getMethod());
-		}
-		return unresolved();
+	public Resolution resolve(NestedMethodSelector selector, Context context) {
+		return resolve(context, selector.getEnclosingClasses(), selector.getNestedClass(), selector.getMethod());
 	}
 
 	private Resolution resolve(Context context, List<Class<?>> enclosingClasses, Class<?> testClass, Method method) {
@@ -188,7 +184,7 @@ class MethodSelectorResolver implements SelectorResolver {
 			if (enclosingClasses.isEmpty()) {
 				return DiscoverySelectors.selectClass(testClass);
 			}
-			return new NestedClassSelector(enclosingClasses, testClass);
+			return DiscoverySelectors.selectNestedClass(enclosingClasses, testClass);
 		}
 
 		private Optional<TestDescriptor> resolveUniqueIdIntoTestDescriptor(UniqueId uniqueId, Context context,

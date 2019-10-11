@@ -38,6 +38,9 @@ on GitHub.
 * Module `org.junit.platform.console` now provides a `java.util.spi.ToolProvider`
   implementation that can be acquired by `ToolProvider.findFirst("junit")` when running
   on Java 9 or above.
+* New methods in `DiscoverySelectors` to select and execute individual tests in
+  inherited nested classes, via specific selectors (`NestedClassSelector` and
+  `NestedMethodSelector`).
 
 [[release-notes-5.6.0-M1-junit-jupiter]]
 === JUnit Jupiter
@@ -63,14 +66,18 @@ on GitHub.
 * New `TypeBasedParameterResolver<T>` abstract base class that serves as a generic adapter
   for the `ParameterResolver` API and simplifies the implementation of a custom resolver
   that supports parameters of a specific type.
-
+* New configuration parameter `junit.jupiter.execution.timeout.mode` to control whether
+  timeouts are applied to tests or not. Supported values are: `enabled`, `disabled`, and
+  `disabled_on_debug`.
+* New `@EnabledForJreRange` and `@DisabledForJreRange` annotations for easier test execution
+  handling on multiple versions of JRE.
 
 [[release-notes-5.6.0-M1-junit-vintage]]
 === JUnit Vintage
 
 ==== Bug Fixes
 
-* ❓
+* JUnit 3 suites with duplicate test names are now reported correctly.
 
 ==== Deprecations and Breaking Changes
 

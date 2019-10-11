@@ -92,14 +92,17 @@ endif::[]
 :TestTemplateInvocationContextProvider:      {javadoc-jupiter-api-root}/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html[TestTemplateInvocationContextProvider]
 :TestWatcher:                                {javadoc-jupiter-api-root}/org/junit/jupiter/api/extension/TestWatcher.html[TestWatcher]
 // Jupiter Conditions
+:DisabledForJreRange:                        {javadoc-jupiter-api-root}/org/junit/jupiter/api/condition/DisabledForJreRange.html[@DisabledForJreRange]
 :DisabledIfEnvironmentVariable:              {javadoc-jupiter-api-root}/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariable.html[@DisabledIfEnvironmentVariable]
 :DisabledIfSystemProperty:                   {javadoc-jupiter-api-root}/org/junit/jupiter/api/condition/DisabledIfSystemProperty.html[@DisabledIfSystemProperty]
 :DisabledOnJre:                              {javadoc-jupiter-api-root}/org/junit/jupiter/api/condition/DisabledOnJre.html[@DisabledOnJre]
 :DisabledOnOs:                               {javadoc-jupiter-api-root}/org/junit/jupiter/api/condition/DisabledOnOs.html[@DisabledOnOs]
+:EnabledForJreRange:                         {javadoc-jupiter-api-root}/org/junit/jupiter/api/condition/EnabledForJreRange.html[@EnabledForJreRange]
 :EnabledIfEnvironmentVariable:               {javadoc-jupiter-api-root}/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.html[@EnabledIfEnvironmentVariable]
 :EnabledIfSystemProperty:                    {javadoc-jupiter-api-root}/org/junit/jupiter/api/condition/EnabledIfSystemProperty.html[@EnabledIfSystemProperty]
 :EnabledOnJre:                               {javadoc-jupiter-api-root}/org/junit/jupiter/api/condition/EnabledOnJre.html[@EnabledOnJre]
 :EnabledOnOs:                                {javadoc-jupiter-api-root}/org/junit/jupiter/api/condition/EnabledOnOs.html[@EnabledOnOs]
+:JRE:                                        {javadoc-jupiter-api-root}/org/junit/jupiter/api/condition/JRE.html[JRE]
 // Jupiter I/O
 :TempDir:                                    {javadoc-jupiter-api-root}/org/junit/jupiter/api/io/TempDir.html[@TempDir]
 // Jupiter Params
