@@ -1,3 +1,5 @@
+import java.time.Duration
+
 plugins {
 	`maven-publish`
 	signing
@@ -19,6 +21,8 @@ signing {
 }
 
 nexusPublishing {
+	connectTimeout.set(Duration.ofMinutes(2))
+	clientTimeout.set(Duration.ofMinutes(2))
 	packageGroup.set("org.junit")
 	repositories {
 		sonatype()

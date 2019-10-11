@@ -1034,7 +1034,7 @@ The annotation's `value` attribute is optional. When omitted, the declared type 
 first method parameter is used. The test will fail if it does not reference an enum type.
 Thus, the `value` attribute is required in the above example because the method parameter
 is declared as `TemporalUnit`, i.e. the interface implemented by `ChronoUnit`, which isn't
-an enum type. Changing the method parameter type to `ChronoUnit` allows to omit the
+an enum type. Changing the method parameter type to `ChronoUnit` allows you to omit the
 explicit enum type from the annotation as follows.
 
 [source,java,indent=0]
@@ -1043,8 +1043,8 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_example_au
 ----
 
 The annotation provides an optional `names` attribute that lets you specify which
-constants shall be used. If omitted, all constants will be used like in the following
-example.
+constants shall be used, like in the following example. If omitted, all constants will be
+used.
 
 [source,java,indent=0]
 ----
@@ -1158,6 +1158,9 @@ custom value can be interpreted as a `null` reference (see the `NIL` example in 
 below). An `ArgumentConversionException` is thrown if the target type of a `null`
 reference is a primitive type.
 
+NOTE: An _unquoted_ empty value will always be converted to a `null` reference regardless
+of any custom values configured via the `nullValues` attribute.
+
 [cols="50,50"]
 |===
 | Example Input                                                       | Resulting Argument List
@@ -1195,13 +1198,16 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=CsvFileSource_example
 include::{testResourcesDir}/two-column.csv[]
 ----
 
-NOTE: In contrast to the syntax used in `@CsvSource`, `@CsvFileSource` uses a double quote
-`"` as the quote character. See the `"United States of America"` value in the example
-above. An empty, quoted value `""` results in an empty `String` unless the `emptyValue`
-attribute is set; whereas, an entirely _empty_ value is interpreted as a `null` reference.
-By specifying one or more `nullValues`, a custom value can be interpreted as a `null`
+In contrast to the syntax used in `@CsvSource`, `@CsvFileSource` uses a double quote `"`
+as the quote character. See the `"United States of America"` value in the example above.
+An empty, quoted value `""` results in an empty `String` unless the `emptyValue` attribute
+is set; whereas, an entirely _empty_ value is interpreted as a `null` reference. By
+specifying one or more `nullValues`, a custom value can be interpreted as a `null`
 reference. An `ArgumentConversionException` is thrown if the target type of a `null`
 reference is a primitive type.
+
+NOTE: An _unquoted_ empty value will always be converted to a `null` reference regardless
+of any custom values configured via the `nullValues` attribute.
 
 [[writing-tests-parameterized-tests-sources-ArgumentsSource]]
 ===== @ArgumentsSource
@@ -1716,6 +1722,18 @@ include::{testDir}/example/PollingTimeoutDemo.java[tags=user_guide,indent=0]
 NOTE: If you need more control over polling intervals and greater flexibility with
 asynchronous tests, consider using a dedicated library such as
 link:https://github.com/awaitility/awaitility[Awaitility].
+
+
+[[writing-tests-declarative-timeouts-mode]]
+==== Disable @Timeout Globally
+When stepping through your code in a debug session, a fixed timeout limit may influence
+the result of the test, e.g. mark the test as failed although all assertions were met.
+
+JUnit Jupiter supports the `junit.jupiter.execution.timeout.mode` configuration parameter
+to configure when timeouts are applied. There are three modes: `enabled`, `disabled`,
+and `disabled_on_debug`. The default mode is `enabled`.
+A VM runtime is considered to run in debug mode when one of its input parameters starts
+with `-agentlib:jdwp`. This heuristic is queried by the `disabled_on_debug` mode.
 
 
 [[writing-tests-parallel-execution]]

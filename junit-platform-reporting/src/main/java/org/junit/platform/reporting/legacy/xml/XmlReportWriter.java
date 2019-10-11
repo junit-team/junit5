@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -51,8 +52,9 @@ import org.junit.platform.launcher.listeners.LegacyReportingUtils;
  */
 class XmlReportWriter {
 
-	private static final String CDATA_START = "<![CDATA[";
-	private static final String CDATA_END = "]]>";
+	// Using zero-width assertions in the split pattern simplifies the splitting process: All split parts
+	// (including the first and last one) can be used directly, without having to re-add separator characters.
+	private static final Pattern CDATA_SPLIT_PATTERN = Pattern.compile("(?<=]])(?=>)");
 
 	private final XmlReportData reportData;
 
@@ -296,7 +298,9 @@ class XmlReportWriter {
 	}
 
 	private void writeCDataSafely(XMLStreamWriter writer, String data) throws XMLStreamException {
-		writer.writeCData(data.replace(CDATA_END, "]]" + CDATA_END + CDATA_START + ">"));
+		for (String safeDataPart : CDATA_SPLIT_PATTERN.split(data)) {
+			writer.writeCData(safeDataPart);
+		}
 	}
 
 	private void newLine(XMLStreamWriter xmlWriter) throws XMLStreamException {
