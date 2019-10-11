@@ -1720,6 +1720,18 @@ asynchronous tests, consider using a dedicated library such as
 link:https://github.com/awaitility/awaitility[Awaitility].
 
 
+[[writing-tests-declarative-timeouts-mode]]
+==== Disable @Timeout Globally
+When stepping through your code in a debug session, a fixed timeout limit may influence
+the result of the test, e.g. mark the test as failed although all assertions were met.
+
+JUnit Jupiter supports the `junit.jupiter.execution.timeout.mode` configuration parameter
+to configure when timeouts are applied. There are three modes: `enabled`, `disabled`,
+and `disabled_on_debug`. The default mode is `enabled`.
+A VM runtime is considered to run in debug mode when one of its input parameters starts
+with `-agentlib:jdwp`. This heuristic is queried by the `disabled_on_debug` mode.
+
+
 [[writing-tests-parallel-execution]]
 === Parallel Execution
 

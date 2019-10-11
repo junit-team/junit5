@@ -431,13 +431,14 @@ public final class Constants {
 	 * <p>The value of this property will be used to toggle whether
 	 * {@link org.junit.jupiter.api.Timeout @Timeout} is applied to tests.</p>
 	 *
-	 * <h3>Examples</h3>
-	 *
+	 * <h3>Supported timeout mode values:</h3>
 	 * <ul>
-	 * <li>{@code enabled}: enables timeouts.
-	 * <li>{@code disabled}: disables timeouts.
-	 * <li>{@code disabled_on_debug}: disables timeouts while debugging.
+	 * <li>{@code enabled}: enables timeouts
+	 * <li>{@code disabled}: disables timeouts
+	 * <li>{@code disabled_on_debug}: disables timeouts while debugging
 	 * </ul>
+	 *
+	 * <p>If not specified, the default is {@code "enabled"}.
 	 *
 	 * @since 5.6
 	 */

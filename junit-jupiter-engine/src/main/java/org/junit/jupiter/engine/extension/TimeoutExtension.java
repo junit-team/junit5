@@ -42,9 +42,9 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(Timeout.class);
 	private static final String TESTABLE_METHOD_TIMEOUT_KEY = "testable_method_timeout_from_annotation";
 	private static final String GLOBAL_TIMEOUT_CONFIG_KEY = "global_timeout_config";
-	public static final String ENABLED_MODE_VALUE = "enabled";
-	public static final String DISABLED_MODE_VALUE = "disabled";
-	public static final String DISABLED_ON_DEBUG_MODE_VALUE = "disabled_on_debug";
+	private static final String ENABLED_MODE_VALUE = "enabled";
+	private static final String DISABLED_MODE_VALUE = "disabled";
+	private static final String DISABLED_ON_DEBUG_MODE_VALUE = "disabled_on_debug";
 
 	@Override
 	public void beforeAll(ExtensionContext context) {
