@@ -191,43 +191,32 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 					try {
 						Files.delete(path);
 					}
-					catch (IOException ex) {
-						IOException err = deleteUndeletableAndContinue(path, ex);
-						if (err != null) {
-							failures.put(path, err);
-						}
+					catch (IOException exception) {
+						makeWritableAndTryToDeleteAgain(path, exception);
 					}
 					return CONTINUE;
 				}
 
-				private IOException deleteUndeletableAndContinue(Path path, IOException ex) {
-					boolean isWritable;
+				private void makeWritableAndTryToDeleteAgain(Path path, IOException exception) {
 					try {
-						isWritable = path.toFile().setWritable(true);
+						makeWritable(path);
+						Files.delete(path);
 					}
-					catch (Exception e) {
-						// In case setWritable throws we can't proceed
-						ex.addSuppressed(e);
-						return ex;
+					catch (Exception suppressed) {
+						exception.addSuppressed(suppressed);
+						failures.put(path, exception);
 					}
-					if (!isWritable) {
-						ex.addSuppressed(new Exception("Attempt to make file '" + path + "' writable failed") {
+				}
+
+				private void makeWritable(Path path) throws IOException {
+					boolean writable = path.toFile().setWritable(true);
+					if (!writable) {
+						throw new IOException("Attempt to make file '" + path + "' writable failed") {
 							@Override
 							public synchronized Throwable fillInStackTrace() {
 								return this; // Make the output smaller by omitting the stacktrace
 							}
-						});
-						return ex;
-					}
-					// The file is writable now, the delete might succeed now
-					try {
-						Files.delete(path);
-						return null;
-					}
-					catch (IOException ex2) {
-						// Oh, that is truly un-deletable
-						ex.addSuppressed(ex2);
-						return ex;
+						};
 					}
 				}
 			});
