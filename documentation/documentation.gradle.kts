@@ -261,11 +261,11 @@ tasks {
 	}
 
 	val generateJupiterApiJavadocs by registering(Javadoc::class) {
-		dependsOn(mavenizedProjects.filter {it.name=="junit-jupiter-api"}.map { it.tasks.jar })
+		dependsOn(project(":junit-jupiter-api").tasks.jar)
 		group = "Documentation"
-		description = "Generates aggregated Javadocs for Jupiter API"
+		description = "Generates Jupiter API Javadocs"
 
-		title = "JUnit $version Jupiter API"
+		title = "JUnit Jupiter $version API"
 
 		val stylesheetFooterFile = rootProject.file("src/javadoc/stylesheet-footer.css")
 		inputs.file(stylesheetFooterFile)
@@ -299,12 +299,12 @@ tasks {
 				noTimestamp(true)
 			}
 		}
-		source(mavenizedProjects.filter {it.name=="junit-jupiter-api"}.map { it.sourceSets.main.get().allJava })
+		source(project(":junit-jupiter-api").sourceSets.main.get().allJava)
 
 		setMaxMemory("1024m")
 		setDestinationDir(file("$buildDir/docs/jupiterjavadoc"))
 
-		classpath = files(mavenizedProjects.map { it.sourceSets.main.get().compileClasspath })
+		classpath = files(project(":junit-jupiter-api").sourceSets.main.get().compileClasspath)
 				// Remove Kotlin classes from classpath due to "bad" class file
 				// see https://bugs.openjdk.java.net/browse/JDK-8187422
 				.filter { !it.path.contains("kotlin") }
@@ -326,7 +326,7 @@ tasks {
 	}
 
 	val prepareDocsForUploadToGhPages by registering(Copy::class) {
-		dependsOn(aggregateJavadocs,generateJupiterApiJavadocs)
+		dependsOn(aggregateJavadocs, generateJupiterApiJavadocs, asciidoctor)
 		outputs.dir(docsDir)
 
 		from("$buildDir/checksum") {
