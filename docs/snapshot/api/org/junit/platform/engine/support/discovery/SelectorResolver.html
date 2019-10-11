@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":18,"i1":18,"i2":18,"i3":18,"i4":18,"i5":18,"i6":18,"i7":18,"i8":18,"i9":18,"i10":18};
+var data = {"i0":18,"i1":18,"i2":18,"i3":18,"i4":18,"i5":18,"i6":18,"i7":18,"i8":18,"i9":18,"i10":18,"i11":18,"i12":18};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -272,6 +272,24 @@ public interface <span class="typeNameLabel">SelectorResolver</span></pre>
 </tr>
 <tr class="rowColor" id="i7">
 <td class="colFirst"><code>default <a href="SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Resolution</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resolve(org.junit.platform.engine.discovery.NestedClassSelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve</a></span>&#8203;(<a href="../../discovery/NestedClassSelector.html" title="class in org.junit.platform.engine.discovery">NestedClassSelector</a>&nbsp;selector,
+       <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver.Context</a>&nbsp;context)</code></th>
+<td class="colLast">
+<div class="block">Resolve the supplied <a href="../../discovery/NestedClassSelector.html" title="class in org.junit.platform.engine.discovery"><code>NestedClassSelector</code></a> using the supplied
+ <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
+</td>
+</tr>
+<tr class="altColor" id="i8">
+<td class="colFirst"><code>default <a href="SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Resolution</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resolve(org.junit.platform.engine.discovery.NestedMethodSelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve</a></span>&#8203;(<a href="../../discovery/NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a>&nbsp;selector,
+       <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver.Context</a>&nbsp;context)</code></th>
+<td class="colLast">
+<div class="block">Resolve the supplied <a href="../../discovery/NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>NestedMethodSelector</code></a> using the supplied
+ <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
+</td>
+</tr>
+<tr class="rowColor" id="i9">
+<td class="colFirst"><code>default <a href="SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Resolution</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resolve(org.junit.platform.engine.discovery.PackageSelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve</a></span>&#8203;(<a href="../../discovery/PackageSelector.html" title="class in org.junit.platform.engine.discovery">PackageSelector</a>&nbsp;selector,
        <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver.Context</a>&nbsp;context)</code></th>
 <td class="colLast">
@@ -279,7 +297,7 @@ public interface <span class="typeNameLabel">SelectorResolver</span></pre>
  <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i8">
+<tr class="altColor" id="i10">
 <td class="colFirst"><code>default <a href="SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Resolution</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resolve(org.junit.platform.engine.discovery.UniqueIdSelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve</a></span>&#8203;(<a href="../../discovery/UniqueIdSelector.html" title="class in org.junit.platform.engine.discovery">UniqueIdSelector</a>&nbsp;selector,
        <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver.Context</a>&nbsp;context)</code></th>
@@ -288,7 +306,7 @@ public interface <span class="typeNameLabel">SelectorResolver</span></pre>
  <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i9">
+<tr class="rowColor" id="i11">
 <td class="colFirst"><code>default <a href="SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Resolution</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resolve(org.junit.platform.engine.discovery.UriSelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve</a></span>&#8203;(<a href="../../discovery/UriSelector.html" title="class in org.junit.platform.engine.discovery">UriSelector</a>&nbsp;selector,
        <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver.Context</a>&nbsp;context)</code></th>
@@ -297,7 +315,7 @@ public interface <span class="typeNameLabel">SelectorResolver</span></pre>
  <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i10">
+<tr class="altColor" id="i12">
 <td class="colFirst"><code>default <a href="SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Resolution</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#resolve(org.junit.platform.engine.DiscoverySelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">resolve</a></span>&#8203;(<a href="../../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&nbsp;selector,
        <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver.Context</a>&nbsp;context)</code></th>
@@ -398,6 +416,30 @@ public interface <span class="typeNameLabel">SelectorResolver</span></pre>
 </dl>
 </li>
 </ul>
+<a id="resolve(org.junit.platform.engine.discovery.NestedClassSelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>resolve</h4>
+<pre class="methodSignature">default&nbsp;<a href="SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Resolution</a>&nbsp;resolve&#8203;(<a href="../../discovery/NestedClassSelector.html" title="class in org.junit.platform.engine.discovery">NestedClassSelector</a>&nbsp;selector,
+                                            <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver.Context</a>&nbsp;context)</pre>
+<div class="block">Resolve the supplied <a href="../../discovery/NestedClassSelector.html" title="class in org.junit.platform.engine.discovery"><code>NestedClassSelector</code></a> using the supplied
+ <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.
+
+ <p>The default implementation simply delegates to <a href="#resolve(org.junit.platform.engine.DiscoverySelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)"><code>resolve(DiscoverySelector, Context)</code></a>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>selector</code> - the selector to be resolved; never <code>null</code></dd>
+<dd><code>context</code> - the context to be used for resolving the selector; never
+ <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a <a href="SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery"><code>Resolution</code></a> of <a href="SelectorResolver.Resolution.html#unresolved()"><code>unresolved()</code></a>, <a href="SelectorResolver.Resolution.html#selectors(java.util.Set)"><code>selectors()</code></a>, or <a href="SelectorResolver.Resolution.html#matches(java.util.Set)"><code>matches()</code></a>; never <code>null</code></dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#resolve(org.junit.platform.engine.DiscoverySelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)"><code>resolve(DiscoverySelector, Context)</code></a></dd>
+</dl>
+</li>
+</ul>
 <a id="resolve(org.junit.platform.engine.discovery.DirectorySelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">
 <!--   -->
 </a>
@@ -455,6 +497,30 @@ public interface <span class="typeNameLabel">SelectorResolver</span></pre>
 <pre class="methodSignature">default&nbsp;<a href="SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Resolution</a>&nbsp;resolve&#8203;(<a href="../../discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery">MethodSelector</a>&nbsp;selector,
                                             <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver.Context</a>&nbsp;context)</pre>
 <div class="block">Resolve the supplied <a href="../../discovery/MethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>MethodSelector</code></a> using the supplied
+ <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.
+
+ <p>The default implementation simply delegates to <a href="#resolve(org.junit.platform.engine.DiscoverySelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)"><code>resolve(DiscoverySelector, Context)</code></a>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>selector</code> - the selector to be resolved; never <code>null</code></dd>
+<dd><code>context</code> - the context to be used for resolving the selector; never
+ <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a <a href="SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery"><code>Resolution</code></a> of <a href="SelectorResolver.Resolution.html#unresolved()"><code>unresolved()</code></a>, <a href="SelectorResolver.Resolution.html#selectors(java.util.Set)"><code>selectors()</code></a>, or <a href="SelectorResolver.Resolution.html#matches(java.util.Set)"><code>matches()</code></a>; never <code>null</code></dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#resolve(org.junit.platform.engine.DiscoverySelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)"><code>resolve(DiscoverySelector, Context)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="resolve(org.junit.platform.engine.discovery.NestedMethodSelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>resolve</h4>
+<pre class="methodSignature">default&nbsp;<a href="SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Resolution</a>&nbsp;resolve&#8203;(<a href="../../discovery/NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery">NestedMethodSelector</a>&nbsp;selector,
+                                            <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver.Context</a>&nbsp;context)</pre>
+<div class="block">Resolve the supplied <a href="../../discovery/NestedMethodSelector.html" title="class in org.junit.platform.engine.discovery"><code>NestedMethodSelector</code></a> using the supplied
  <a href="SelectorResolver.Context.html" title="interface in org.junit.platform.engine.support.discovery"><code>Context</code></a>.
 
  <p>The default implementation simply delegates to <a href="#resolve(org.junit.platform.engine.DiscoverySelector,org.junit.platform.engine.support.discovery.SelectorResolver.Context)"><code>resolve(DiscoverySelector, Context)</code></a>.</div>
