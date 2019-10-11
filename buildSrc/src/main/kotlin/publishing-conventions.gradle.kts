@@ -80,6 +80,11 @@ publishing {
 						name.set("Christian Stein")
 						email.set("sormuras@gmail.com")
 					}
+					developer {
+						id.set("juliette-derancourt")
+						name.set("Juliette de Rancourt")
+						email.set("derancourt.juliette@gmail.com")
+					}
 				}
 			}
 		}
