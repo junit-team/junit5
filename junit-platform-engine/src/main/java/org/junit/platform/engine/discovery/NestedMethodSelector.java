@@ -140,6 +140,24 @@ public class NestedMethodSelector implements DiscoverySelector {
 		return methodSelector.getJavaMethod();
 	}
 
+	/**
+	 * Get the parameter types for the selected method as a {@link String},
+	 * typically a comma-separated list of primitive types, fully qualified
+	 * class names, or array types.
+	 *
+	 * <p>Note: the parameter types are provided as a single string instead of
+	 * a collection in order to allow this selector to be used in a generic
+	 * fashion by various test engines. It is therefore the responsibility of
+	 * the caller of this method to determine how to parse the returned string.
+	 *
+	 * @return the parameter types supplied to this {@code NestedMethodSelector}
+	 * via a constructor or deduced from a {@code Method} supplied via a
+	 * constructor; never {@code null}
+	 */
+	public String getMethodParameterTypes() {
+		return methodSelector.getMethodParameterTypes();
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -163,6 +181,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 				.append("enclosingClassNames", getEnclosingClassNames()) //
 				.append("nestedClassName", getNestedClassName()) //
 				.append("methodName", getMethodName()) //
+				.append("methodParameterTypes", getMethodParameterTypes()) //
 				.toString();
 	}
 
