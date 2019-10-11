@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static org.junit.jupiter.engine.config.JupiterConfiguration.TIMEOUT_MODE_PROPERTY_NAME;
+
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -21,6 +23,7 @@ import java.util.function.Function;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
@@ -29,6 +32,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.RuntimeUtils;
 
 /**
  * @since 5.5
@@ -38,6 +42,9 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(Timeout.class);
 	private static final String TESTABLE_METHOD_TIMEOUT_KEY = "testable_method_timeout_from_annotation";
 	private static final String GLOBAL_TIMEOUT_CONFIG_KEY = "global_timeout_config";
+	public static final String ENABLED_MODE_VALUE = "enabled";
+	public static final String DISABLED_MODE_VALUE = "disabled";
+	public static final String DISABLED_ON_DEBUG_MODE_VALUE = "disabled_on_debug";
 
 	@Override
 	public void beforeAll(ExtensionContext context) {
@@ -145,7 +152,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 
 	private <T> Invocation<T> decorate(Invocation<T> invocation, ReflectiveInvocationContext<Method> invocationContext,
 			ExtensionContext extensionContext, TimeoutDuration timeout) {
-		if (timeout == null) {
+		if (timeout == null || isModeIndicatingDisabled(extensionContext)) {
 			return invocation;
 		}
 		return new TimeoutInvocation<>(invocation, timeout, getExecutor(extensionContext),
@@ -163,6 +170,24 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 
 	private ScheduledExecutorService getExecutor(ExtensionContext extensionContext) {
 		return extensionContext.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent(ExecutorResource.class).get();
+	}
+
+	private boolean isModeIndicatingDisabled(ExtensionContext extensionContext) {
+		Optional<String> mode = extensionContext.getConfigurationParameter(TIMEOUT_MODE_PROPERTY_NAME);
+		return mode.filter(this::isDisabled).isPresent();
+	}
+
+	private boolean isDisabled(String mode) {
+		if (mode.equals(ENABLED_MODE_VALUE)) {
+			return false;
+		}
+		if (mode.equals(DISABLED_MODE_VALUE)) {
+			return true;
+		}
+		if (mode.equals(DISABLED_ON_DEBUG_MODE_VALUE)) {
+			return RuntimeUtils.isDebug();
+		}
+		throw new ExtensionConfigurationException("Unsupported timeout extension mode: " + mode);
 	}
 
 	@FunctionalInterface

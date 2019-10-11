@@ -9,7 +9,8 @@
  */
 
 module org.junit.platform.commons {
-	requires java.logging; // TODO Is "requires transitive java.logging" needed here?
+	requires java.logging;
+	requires java.management; // needed by RuntimeUtils to determine input arguments
 	requires transitive org.apiguardian.api;
 
 	exports org.junit.platform.commons;
