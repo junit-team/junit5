@@ -378,8 +378,12 @@ include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_os]
 [[writing-tests-conditional-execution-jre]]
 ==== Java Runtime Environment Conditions
 
-A container or test may be enabled or disabled on a particular version of the Java
-Runtime Environment (JRE) via the `{EnabledOnJre}` and `{DisabledOnJre}` annotations.
+A container or test may be enabled or disabled on particular versions of the Java
+Runtime Environment (JRE) via the `{EnabledOnJre}` and `{DisabledOnJre}` annotations
+or on a particular range of versions of the JRE via the `{EnabledForJreRange}` and
+`{DisabledForJreRange}` annotations. The range defaults to `{JRE}.JAVA_8` as the lower
+border (`min`) and `{JRE}.OTHER` as the higher border (`max`), which allows usage of
+half open ranges.
 
 [source,java,indent=0]
 ----
