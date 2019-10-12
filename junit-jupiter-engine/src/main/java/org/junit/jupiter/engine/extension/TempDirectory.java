@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -195,6 +196,9 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 					}
 					catch (NoSuchFileException ignore) {
 						// ignore
+					}
+					catch (DirectoryNotEmptyException exception) {
+						failures.put(path, exception);
 					}
 					catch (IOException exception) {
 						makeWritableAndTryToDeleteAgain(path, exception);
