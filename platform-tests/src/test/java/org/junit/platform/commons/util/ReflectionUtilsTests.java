@@ -1272,7 +1272,6 @@ class ReflectionUtilsTests {
 
 	public class ClassImplementingGenericAndMoreSpecificInterface
 			implements InterfaceWithGenericObjectParameter, InterfaceWithGenericNumberParameter {
-
 	}
 
 	public class ClassOverridingDefaultMethodAndImplementingMoreSpecificInterface
@@ -1280,13 +1279,11 @@ class ReflectionUtilsTests {
 
 		@Override
 		public <T> void foo(T a) {
-
 		}
 	}
 
 	public class ClassImplementingInterfaceWithInvertedHirarchy
 			implements InterfaceExtendingNumberInterfaceWithGenericObjectMethod {
-
 	}
 
 	@Test
@@ -1309,13 +1306,13 @@ class ReflectionUtilsTests {
 	private void assertSpecificFooMethodFound(Class<?> classToSearchIn, Class<?> classWithMostSpecificMethod,
 			Class<?> parameterType) {
 		Method foo = findMethod(classToSearchIn, "foo", parameterType).orElseThrow();
-
 		assertDeclaringClass(foo, classWithMostSpecificMethod);
 	}
 
 	private void assertDeclaringClass(Method method, Class<?> expectedClass) {
 		assertThat(method.getDeclaringClass()).isEqualTo(expectedClass);
 	}
+
 	// -------------------------------------------------------------------------
 
 	void methodWithPrimitiveArray(int[] nums) {
