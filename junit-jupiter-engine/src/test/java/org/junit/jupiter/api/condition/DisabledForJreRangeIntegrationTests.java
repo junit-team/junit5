@@ -36,8 +36,6 @@ import org.junit.jupiter.api.Test;
  */
 class DisabledForJreRangeIntegrationTests {
 
-	private static final String JAVA_VERSION = System.getProperty("java.version");
-
 	@Test
 	@Disabled("Only used in a unit test via reflection")
 	void enabledBecauseAnnotationIsNotPresent() {
