@@ -25,6 +25,9 @@ import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueId
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTopLevelClass;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.platform.engine.SelectorResolutionResult.Status.FAILED;
+import static org.junit.platform.engine.SelectorResolutionResult.Status.RESOLVED;
+import static org.junit.platform.engine.SelectorResolutionResult.Status.UNRESOLVED;
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
@@ -33,8 +36,10 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPacka
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.engine.discovery.PackageNameFilter.excludePackageNames;
 import static org.junit.platform.engine.discovery.PackageNameFilter.includePackageNames;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
@@ -44,8 +49,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -68,8 +72,9 @@ import org.junit.jupiter.engine.descriptor.subpackage.Class2WithTestCases;
 import org.junit.jupiter.engine.descriptor.subpackage.ClassWithStaticInnerTestCases;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.SelectorResolutionResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassSelector;
@@ -77,8 +82,9 @@ import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
-import org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+import org.mockito.ArgumentCaptor;
 
 /**
  * @since 5.0
@@ -86,6 +92,7 @@ import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 class DiscoverySelectorResolverTests {
 
 	private final JupiterConfiguration configuration = mock(JupiterConfiguration.class);
+	private final LauncherDiscoveryListener discoveryListener = mock(LauncherDiscoveryListener.class);
 	private final JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(engineId(), configuration);
 
 	@BeforeEach
@@ -102,14 +109,11 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void abstractClassResolution(LogRecordListener listener) {
+	void abstractClassResolution() {
 		resolve(request().selectors(selectClass(AbstractTestClass.class)));
 
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
-		assertThat(firstDebugLogRecord(listener).getMessage())//
-				.isEqualTo(
-					"ClassSelector [className = '" + AbstractTestClass.class.getName() + "'] could not be resolved.");
+		assertUnresolved(selectClass(AbstractTestClass.class));
 	}
 
 	@Test
@@ -123,15 +127,15 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void classResolutionForNonexistentClass(LogRecordListener listener) {
+	void classResolutionForNonexistentClass() {
 		ClassSelector selector = selectClass("org.example.DoesNotExist");
 
 		resolve(request().selectors(selector));
 
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
-		assertThat(firstDebugLogRecord(listener).getMessage())//
-				.isEqualTo("ClassSelector [className = 'org.example.DoesNotExist'] could not be resolved.");
+		var result = verifySelectorProcessed(selector);
+		assertThat(result.getStatus()).isEqualTo(FAILED);
+		assertThat(result.getThrowable()).hasMessageContaining("Could not load class with name");
 	}
 
 	@Test
@@ -216,8 +220,7 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void methodResolutionForNonexistentClass(LogRecordListener listener) {
+	void methodResolutionForNonexistentClass() {
 		String className = "org.example.DoesNotExist";
 		String methodName = "bogus";
 		MethodSelector selector = selectMethod(className, methodName, "");
@@ -225,26 +228,23 @@ class DiscoverySelectorResolverTests {
 		resolve(request().selectors(selector));
 
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
-		LogRecord logRecord = firstDebugLogRecord(listener);
-		assertThat(logRecord.getMessage())//
-				.startsWith("MethodSelector").endsWith("could not be resolved.")//
-				.contains(className, methodName);
-		assertThat(logRecord.getThrown())//
+		var result = verifySelectorProcessed(selector);
+		assertThat(result.getStatus()).isEqualTo(FAILED);
+		assertThat(result.getThrowable())//
 				.isInstanceOf(PreconditionViolationException.class)//
 				.hasMessageStartingWith("Could not load class with name: " + className);
 	}
 
 	@Test
-	@TrackLogRecords
-	void methodResolutionForNonexistentMethod(LogRecordListener listener) {
+	void methodResolutionForNonexistentMethod() {
 		MethodSelector selector = selectMethod(MyTestClass.class, "bogus", "");
 
 		resolve(request().selectors(selector));
 
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
-		assertThat(firstDebugLogRecord(listener).getMessage())//
-				.startsWith("MethodSelector").endsWith("could not be resolved.")//
-				.contains(MyTestClass.class.getName(), "bogus");
+		var result = verifySelectorProcessed(selector);
+		assertThat(result.getStatus()).isEqualTo(FAILED);
+		assertThat(result.getThrowable()).hasMessageContaining("Could not find method");
 	}
 
 	@Test
@@ -285,16 +285,14 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void resolvingUniqueIdWithUnknownSegmentTypeResolvesNothing(LogRecordListener listener) {
+	void resolvingUniqueIdWithUnknownSegmentTypeResolvesNothing() {
 		UniqueId uniqueId = engineId().append("bogus", "enigma");
 		UniqueIdSelector selector = selectUniqueId(uniqueId);
 
 		resolve(request().selectors(selector));
 
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
-		assertThat(firstWarningLogRecord(listener).getMessage()) //
-				.isEqualTo("UniqueIdSelector [uniqueId = " + uniqueId + "] could not be resolved.");
+		assertUnresolved(selector);
 	}
 
 	@Test
@@ -304,52 +302,47 @@ class DiscoverySelectorResolverTests {
 		resolve(request().selectors(selector));
 
 		assertThat(engineDescriptor.getDescendants()).isEmpty();
+		assertUnresolved(selector);
 	}
 
 	@Test
-	@TrackLogRecords
-	void methodResolutionByUniqueIdWithMissingMethodName(LogRecordListener listener) {
+	void methodResolutionByUniqueIdWithMissingMethodName() {
 		UniqueId uniqueId = uniqueIdForMethod(getClass(), "()");
 
 		resolve(request().selectors(selectUniqueId(uniqueId)));
 
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
-		LogRecord logRecord = firstWarningLogRecord(listener);
-		assertThat(logRecord.getMessage()).isEqualTo(
-			"UniqueIdSelector [uniqueId = " + uniqueId + "] could not be resolved.");
-		assertThat(logRecord.getThrown())//
+		var result = verifySelectorProcessed(selectUniqueId(uniqueId));
+		assertThat(result.getStatus()).isEqualTo(FAILED);
+		assertThat(result.getThrowable())//
 				.isInstanceOf(PreconditionViolationException.class)//
 				.hasMessageStartingWith("Method [()] does not match pattern");
 	}
 
 	@Test
-	@TrackLogRecords
-	void methodResolutionByUniqueIdWithMissingParameters(LogRecordListener listener) {
+	void methodResolutionByUniqueIdWithMissingParameters() {
 		UniqueId uniqueId = uniqueIdForMethod(getClass(), "methodName");
 
 		resolve(request().selectors(selectUniqueId(uniqueId)));
 
 		assertThat(engineDescriptor.getDescendants()).isEmpty();
-		LogRecord logRecord = firstWarningLogRecord(listener);
-		assertThat(logRecord.getMessage()).isEqualTo(
-			"UniqueIdSelector [uniqueId = " + uniqueId + "] could not be resolved.");
-		assertThat(logRecord.getThrown())//
+		var result = verifySelectorProcessed(selectUniqueId(uniqueId));
+		assertThat(result.getStatus()).isEqualTo(FAILED);
+		assertThat(result.getThrowable())//
 				.isInstanceOf(PreconditionViolationException.class)//
 				.hasMessageStartingWith("Method [methodName] does not match pattern");
 	}
 
 	@Test
-	@TrackLogRecords
-	void methodResolutionByUniqueIdWithBogusParameters(LogRecordListener listener) {
+	void methodResolutionByUniqueIdWithBogusParameters() {
 		UniqueId uniqueId = uniqueIdForMethod(getClass(), "methodName(java.lang.String, junit.foo.Enigma)");
 
 		resolve(request().selectors(selectUniqueId(uniqueId)));
 
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
-		LogRecord logRecord = firstWarningLogRecord(listener);
-		assertThat(logRecord.getMessage()).isEqualTo(
-			"UniqueIdSelector [uniqueId = " + uniqueId + "] could not be resolved.");
-		assertThat(logRecord.getThrown())//
+		var result = verifySelectorProcessed(selectUniqueId(uniqueId));
+		assertThat(result.getStatus()).isEqualTo(FAILED);
+		assertThat(result.getThrowable())//
 				.isInstanceOf(JUnitException.class)//
 				.hasMessage("Failed to load parameter type [%s] for method [%s] in class [%s].", "junit.foo.Enigma",
 					"methodName", getClass().getName());
@@ -381,8 +374,7 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void methodResolutionByUniqueIdWithParams(LogRecordListener listener) {
+	void methodResolutionByUniqueIdWithParams() {
 		UniqueIdSelector selector = selectUniqueId(
 			uniqueIdForMethod(HerTestClass.class, "test7(java.lang.String)").toString());
 
@@ -396,15 +388,13 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void resolvingUniqueIdWithWrongParamsResolvesNothing(LogRecordListener listener) {
+	void resolvingUniqueIdWithWrongParamsResolvesNothing() {
 		UniqueId uniqueId = uniqueIdForMethod(HerTestClass.class, "test7(java.math.BigDecimal)");
 
 		resolve(request().selectors(selectUniqueId(uniqueId)));
 
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
-		assertThat(firstWarningLogRecord(listener).getMessage())//
-				.isEqualTo("UniqueIdSelector [uniqueId = " + uniqueId + "] could not be resolved.");
+		assertUnresolved(selectUniqueId(uniqueId));
 	}
 
 	@Test
@@ -633,8 +623,7 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void resolvingDynamicTestByUniqueIdResolvesUpToParentTestFactory(LogRecordListener listener) {
+	void resolvingDynamicTestByUniqueIdResolvesUpToParentTestFactory() {
 		Class<?> clazz = MyTestClass.class;
 		UniqueId factoryUid = uniqueIdForTestFactoryMethod(clazz, "dynamicTest()");
 		UniqueId dynamicTestUid = factoryUid.append(DYNAMIC_TEST_SEGMENT_TYPE, "#1");
@@ -651,12 +640,11 @@ class DiscoverySelectorResolverTests {
 		assertThat(dynamicDescendantFilter.test(dynamicTestUid)).isTrue();
 		assertThat(dynamicDescendantFilter.test(differentDynamicTestUid)).isFalse();
 
-		assertZeroLogRecords(listener);
+		assertAllSelectorsResolved();
 	}
 
 	@Test
-	@TrackLogRecords
-	void resolvingDynamicContainerByUniqueIdResolvesUpToParentTestFactory(LogRecordListener listener) {
+	void resolvingDynamicContainerByUniqueIdResolvesUpToParentTestFactory() {
 		Class<?> clazz = MyTestClass.class;
 		UniqueId factoryUid = uniqueIdForTestFactoryMethod(clazz, "dynamicTest()");
 		UniqueId dynamicContainerUid = factoryUid.append(DYNAMIC_CONTAINER_SEGMENT_TYPE, "#1");
@@ -676,7 +664,7 @@ class DiscoverySelectorResolverTests {
 		assertThat(dynamicDescendantFilter.test(differentDynamicContainerUid)).isFalse();
 		assertThat(dynamicDescendantFilter.test(differentDynamicTestUid)).isFalse();
 
-		assertZeroLogRecords(listener);
+		assertAllSelectorsResolved();
 	}
 
 	@Test
@@ -765,18 +753,29 @@ class DiscoverySelectorResolverTests {
 		return engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId).collect(toList());
 	}
 
-	private void assertZeroLogRecords(LogRecordListener listener) {
-		assertThat(listener.stream(EngineDiscoveryRequestResolver.class)).isEmpty();
+	private LauncherDiscoveryRequestBuilder request() {
+		return LauncherDiscoveryRequestBuilder.request().listeners(discoveryListener);
 	}
 
-	private LogRecord firstWarningLogRecord(LogRecordListener listener) throws AssertionError {
-		return listener.stream(EngineDiscoveryRequestResolver.class, Level.WARNING).findFirst().orElseThrow(
-			() -> new AssertionError("Failed to find warning log record"));
+	private void assertAllSelectorsResolved() {
+		ArgumentCaptor<SelectorResolutionResult> resultCaptor = ArgumentCaptor.forClass(SelectorResolutionResult.class);
+		verify(discoveryListener).selectorProcessed(eq(UniqueId.forEngine("junit-jupiter")), any(),
+			resultCaptor.capture());
+		assertThat(resultCaptor.getAllValues()) //
+				.flatExtracting(SelectorResolutionResult::getStatus) //
+				.allMatch(Predicate.isEqual(RESOLVED));
 	}
 
-	private LogRecord firstDebugLogRecord(LogRecordListener listener) throws AssertionError {
-		return listener.stream(EngineDiscoveryRequestResolver.class, Level.FINE).findFirst().orElseThrow(
-			() -> new AssertionError("Failed to find debug log record"));
+	private void assertUnresolved(DiscoverySelector selector) {
+		var result = verifySelectorProcessed(selector);
+		assertThat(result.getStatus()).isEqualTo(UNRESOLVED);
+	}
+
+	private SelectorResolutionResult verifySelectorProcessed(DiscoverySelector selector) {
+		ArgumentCaptor<SelectorResolutionResult> resultCaptor = ArgumentCaptor.forClass(SelectorResolutionResult.class);
+		verify(discoveryListener).selectorProcessed(eq(UniqueId.forEngine("junit-jupiter")), eq(selector),
+			resultCaptor.capture());
+		return resultCaptor.getValue();
 	}
 
 }

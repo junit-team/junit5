@@ -19,8 +19,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -47,8 +45,6 @@ import org.junit.platform.engine.support.discovery.SelectorResolver.Resolution;
  */
 @API(status = EXPERIMENTAL, since = "1.5")
 public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
-
-	private static final Logger logger = LoggerFactory.getLogger(EngineDiscoveryRequestResolver.class);
 
 	private final List<Function<InitializationContext<T>, SelectorResolver>> resolverCreators;
 	private final List<Function<InitializationContext<T>, TestDescriptor.Visitor>> visitorCreators;
@@ -109,7 +105,7 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		InitializationContext<T> initializationContext = new DefaultInitializationContext<>(request, engineDescriptor);
 		List<SelectorResolver> resolvers = instantiate(resolverCreators, initializationContext);
 		List<TestDescriptor.Visitor> visitors = instantiate(visitorCreators, initializationContext);
-		new EngineDiscoveryRequestResolution(logger, request, engineDescriptor, resolvers, visitors).run();
+		new EngineDiscoveryRequestResolution(request, engineDescriptor, resolvers, visitors).run();
 	}
 
 	private <R> List<R> instantiate(List<Function<InitializationContext<T>, R>> creators,

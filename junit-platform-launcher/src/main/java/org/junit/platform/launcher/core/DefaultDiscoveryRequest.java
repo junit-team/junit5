@@ -21,6 +21,7 @@ import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.launcher.EngineFilter;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 
@@ -47,14 +48,18 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 	// Configuration parameters can be used to provide custom configuration to engines, e.g. for extensions
 	private final LauncherConfigurationParameters configurationParameters;
 
+	// Listener for test discovery that may abort on errors.
+	private final LauncherDiscoveryListener discoveryListener;
+
 	DefaultDiscoveryRequest(List<DiscoverySelector> selectors, List<EngineFilter> engineFilters,
 			List<DiscoveryFilter<?>> discoveryFilters, List<PostDiscoveryFilter> postDiscoveryFilters,
-			LauncherConfigurationParameters configurationParameters) {
+			LauncherConfigurationParameters configurationParameters, LauncherDiscoveryListener discoveryListener) {
 		this.selectors = selectors;
 		this.engineFilters = engineFilters;
 		this.discoveryFilters = discoveryFilters;
 		this.postDiscoveryFilters = postDiscoveryFilters;
 		this.configurationParameters = configurationParameters;
+		this.discoveryListener = discoveryListener;
 	}
 
 	@Override
@@ -82,6 +87,11 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 	@Override
 	public ConfigurationParameters getConfigurationParameters() {
 		return this.configurationParameters;
+	}
+
+	@Override
+	public LauncherDiscoveryListener getDiscoveryListener() {
+		return discoveryListener;
 	}
 
 }

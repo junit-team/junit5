@@ -80,4 +80,7 @@ public interface LauncherDiscoveryRequest extends EngineDiscoveryRequest {
 	 */
 	List<PostDiscoveryFilter> getPostDiscoveryFilters();
 
+	@Override
+	LauncherDiscoveryListener getDiscoveryListener();
+
 }

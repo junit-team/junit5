@@ -15,6 +15,7 @@ import static org.junit.platform.commons.support.ReflectionSupport.findAllClasse
 import static org.junit.platform.commons.support.ReflectionSupport.findAllClassesInModule;
 import static org.junit.platform.commons.support.ReflectionSupport.findAllClassesInPackage;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.selectors;
+import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.unresolved;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -53,6 +54,9 @@ class ClassContainerSelectorResolver implements SelectorResolver {
 	}
 
 	private Resolution classSelectors(List<Class<?>> classes) {
+		if (classes.isEmpty()) {
+			return unresolved();
+		}
 		return selectors(classes.stream().map(DiscoverySelectors::selectClass).collect(toSet()));
 	}
 

@@ -65,4 +65,6 @@ public interface EngineDiscoveryRequest {
 	 */
 	ConfigurationParameters getConfigurationParameters();
 
+	EngineDiscoveryListener getDiscoveryListener();
+
 }

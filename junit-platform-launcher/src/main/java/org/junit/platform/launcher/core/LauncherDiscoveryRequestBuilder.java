@@ -25,8 +25,10 @@ import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.EngineFilter;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
+import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners;
 
 /**
  * The {@code LauncherDiscoveryRequestBuilder} provides a light-weight DSL for
@@ -84,6 +86,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	private List<DiscoveryFilter<?>> discoveryFilters = new ArrayList<>();
 	private List<PostDiscoveryFilter> postDiscoveryFilters = new ArrayList<>();
 	private Map<String, String> configurationParameters = new HashMap<>();
+	private List<LauncherDiscoveryListener> discoveryListeners = new ArrayList<>();
 
 	/**
 	 * Create a new {@code LauncherDiscoveryRequestBuilder}.
@@ -169,6 +172,13 @@ public final class LauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
+	public LauncherDiscoveryRequestBuilder listeners(LauncherDiscoveryListener... listeners) {
+		Preconditions.notNull(listeners, "discovery listener array must not be null");
+		Preconditions.containsNoNullElements(listeners, "individual discovery listeners must not be null");
+		this.discoveryListeners.addAll(Arrays.asList(listeners));
+		return this;
+	}
+
 	private void storeFilter(Filter<?> filter) {
 		if (filter instanceof EngineFilter) {
 			this.engineFilters.add((EngineFilter) filter);
@@ -194,7 +204,14 @@ public final class LauncherDiscoveryRequestBuilder {
 		LauncherConfigurationParameters launcherConfigurationParameters = new LauncherConfigurationParameters(
 			this.configurationParameters);
 		return new DefaultDiscoveryRequest(this.selectors, this.engineFilters, this.discoveryFilters,
-			this.postDiscoveryFilters, launcherConfigurationParameters);
+			this.postDiscoveryFilters, launcherConfigurationParameters, getLauncherDiscoveryListener());
+	}
+
+	private LauncherDiscoveryListener getLauncherDiscoveryListener() {
+		if (this.discoveryListeners.isEmpty()) {
+			return LauncherDiscoveryListeners.logging();
+		}
+		return LauncherDiscoveryListeners.composite(discoveryListeners);
 	}
 
 }
