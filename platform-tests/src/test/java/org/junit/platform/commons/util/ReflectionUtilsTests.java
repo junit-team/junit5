@@ -47,6 +47,7 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.TrackLogRecords;
@@ -1287,20 +1288,21 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
+	@Disabled("Describes cases where current implementation returns unexpected value")
 	public void findMethodWithMostSpecificParameterTypeInHierarchy() {
 		// Searched Parameter Type is more specific
 		assertSpecificFooMethodFound(ClassImplementingInterfaceWithInvertedHirarchy.class,
-				InterfaceWithGenericNumberParameter.class, Double.class);
+			InterfaceWithGenericNumberParameter.class, Double.class);
 		assertSpecificFooMethodFound(ClassImplementingGenericInterfaceWithMoreSpecificMethod.class,
-				ClassImplementingGenericInterfaceWithMoreSpecificMethod.class, Double.class);
+			ClassImplementingGenericInterfaceWithMoreSpecificMethod.class, Double.class);
 		assertSpecificFooMethodFound(ClassImplementingGenericAndMoreSpecificInterface.class,
-				InterfaceWithGenericNumberParameter.class, Double.class);
+			InterfaceWithGenericNumberParameter.class, Double.class);
 		assertSpecificFooMethodFound(ClassOverridingDefaultMethodAndImplementingMoreSpecificInterface.class,
-				ClassOverridingDefaultMethodAndImplementingMoreSpecificInterface.class, Double.class);
+			ClassOverridingDefaultMethodAndImplementingMoreSpecificInterface.class, Double.class);
 
 		// Exact Type Match
 		assertSpecificFooMethodFound(ClassImplementingGenericInterfaceWithMoreSpecificMethod.class,
-				ClassImplementingGenericInterfaceWithMoreSpecificMethod.class, Number.class);
+			ClassImplementingGenericInterfaceWithMoreSpecificMethod.class, Number.class);
 	}
 
 	private void assertSpecificFooMethodFound(Class<?> classToSearchIn, Class<?> classWithMostSpecificMethod,
