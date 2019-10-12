@@ -18,11 +18,6 @@ import java.lang.reflect.Method;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.util.ReflectionUtilsTests.ClassImplementingGenericAndMoreSpecificInterface;
-import org.junit.platform.commons.util.ReflectionUtilsTests.ClassImplementingGenericInterfaceWithMoreSpecificMethod;
-import org.junit.platform.commons.util.ReflectionUtilsTests.ClassImplementingInterfaceWithInvertedHirarchy;
-import org.junit.platform.commons.util.ReflectionUtilsTests.ClassOverridingDefaultMethodAndImplementingMoreSpecificInterface;
-import org.junit.platform.commons.util.ReflectionUtilsTests.InterfaceWithGenericNumberParameter;
 
 class GenericClassHierarchiesReflectionUtilsTests {
 	@Test
