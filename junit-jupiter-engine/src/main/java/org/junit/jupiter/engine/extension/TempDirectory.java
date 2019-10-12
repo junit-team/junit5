@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -191,6 +192,9 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				private FileVisitResult deleteAndContinue(Path path) {
 					try {
 						Files.delete(path);
+					}
+					catch (NoSuchFileException ignore) {
+						// ignore
 					}
 					catch (IOException exception) {
 						makeWritableAndTryToDeleteAgain(path, exception);
