@@ -41,6 +41,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -208,15 +209,10 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 					}
 				}
 
-				private void makeWritable(Path path) throws IOException {
+				private void makeWritable(Path path) {
 					boolean writable = path.toFile().setWritable(true);
 					if (!writable) {
-						throw new IOException("Attempt to make file '" + path + "' writable failed") {
-							@Override
-							public synchronized Throwable fillInStackTrace() {
-								return this; // Make the output smaller by omitting the stacktrace
-							}
-						};
+						throw new UndeletableFileException("Attempt to make file '" + path + "' writable failed");
 					}
 				}
 			});
@@ -254,6 +250,21 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				return path;
 			}
 		}
+	}
+
+	private static class UndeletableFileException extends JUnitException {
+
+		private static final long serialVersionUID = 1L;
+
+		UndeletableFileException(String message) {
+			super(message);
+		}
+
+		@Override
+		public Throwable fillInStackTrace() {
+			return this; // Make the output smaller by omitting the stacktrace
+		}
+
 	}
 
 }
