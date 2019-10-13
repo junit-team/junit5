@@ -5,7 +5,7 @@ plugins {
 apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 javaLibrary {
-	mainJavaVersion = JavaVersion.VERSION_11
+	mainJavaVersion = JvmVersion.`11`
 }
 
 dependencies {

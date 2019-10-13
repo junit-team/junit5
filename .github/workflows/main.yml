@@ -11,25 +11,26 @@ on:
 
 jobs:
   linux:
-    name: 'Linux (JDK 12)'
+    name: 'Linux (JDK 13)'
     runs-on: ubuntu-latest
     container: junitteam/build:latest
     steps:
     - uses: actions/checkout@master
     - name: 'Test'
       run: |
+        export JAVA_HOME=$JDK13
         ./gradlew --version
         ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
 
   windows:
-    name: 'Windows (JDK 12)'
+    name: 'Windows (JDK 13)'
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@master
-    - name: 'Set up JDK 12'
+    - name: 'Set up JDK 13'
       uses: actions/setup-java@v1
       with:
-        java-version: 12
+        java-version: 13
     - name: 'Test'
       shell: bash
       run: |
@@ -37,14 +38,14 @@ jobs:
         ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
 
   mac:
-    name: 'Mac OS (JDK 12)'
+    name: 'Mac OS (JDK 13)'
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@master
-    - name: 'Set up JDK 12'
+    - name: 'Set up JDK 13'
       uses: actions/setup-java@v1
       with:
-        java-version: 12
+        java-version: 13
     - name: 'Test'
       run: |
         ./gradlew --version
@@ -54,13 +55,12 @@ jobs:
     name: 'Coverage'
     needs: linux
     runs-on: ubuntu-latest
-    container: junitteam/build:latest
     steps:
     - uses: actions/checkout@master
-    - name: 'Set up JDK 12'
+    - name: 'Set up JDK 13'
       uses: actions/setup-java@v1
       with:
-        java-version: 12
+        java-version: 13
     - name: 'Run tests with JaCoCo'
       shell: bash
       run: |
@@ -80,10 +80,10 @@ jobs:
     if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/master')
     steps:
     - uses: actions/checkout@master
-    - name: 'Set up JDK 12'
+    - name: 'Set up JDK 13'
       uses: actions/setup-java@v1
       with:
-        java-version: 12
+        java-version: 13
     - name: 'Publish'
       env:
         ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
@@ -97,10 +97,10 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
     - uses: actions/checkout@master
-    - name: 'Set up JDK 12'
+    - name: 'Set up JDK 13'
       uses: actions/setup-java@v1
       with:
-        java-version: 12
+        java-version: 13
     - name: 'Upload Documentation'
       env:
         GRGIT_USER: ${{ secrets.GH_TOKEN }}

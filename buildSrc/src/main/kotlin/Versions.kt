@@ -1,8 +1,6 @@
-import org.gradle.api.JavaVersion
-
 object Versions {
 
-    val jvmTarget = JavaVersion.VERSION_1_8
+    val jvmTarget = JvmVersion.`8`
 
     // Dependencies
     val apiGuardian = "1.1.0"

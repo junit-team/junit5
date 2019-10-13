@@ -185,7 +185,7 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 tasks.compileJava {
-	// See: https://docs.oracle.com/en/java/javase/12/tools/javac.html
+	// See: https://docs.oracle.com/en/java/javase/13/docs/specs/man/javac.html
 	options.compilerArgs.addAll(listOf(
 			"-Xlint:all", // Enables all recommended warnings.
 			"-Werror" // Terminates compilation when warnings occur.
@@ -217,7 +217,7 @@ if (modularProjects.contains(project)) {
 }
 
 tasks.compileTestJava {
-	// See: https://docs.oracle.com/en/java/javase/12/tools/javac.html
+	// See: https://docs.oracle.com/en/java/javase/13/docs/specs/man/javac.html
 	options.compilerArgs.addAll(listOf(
 			"-Xlint", // Enables all recommended warnings.
 			"-Xlint:-overrides", // Disables "method overrides" warnings.
@@ -254,12 +254,12 @@ class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvider {
 afterEvaluate {
 	tasks {
 		compileJava {
-			sourceCompatibility = extension.mainJavaVersion.majorVersion
-			targetCompatibility = extension.mainJavaVersion.majorVersion
+			sourceCompatibility = extension.mainJavaVersion.name
+			targetCompatibility = extension.mainJavaVersion.name
 		}
 		compileTestJava {
-			sourceCompatibility = extension.testJavaVersion.majorVersion
-			targetCompatibility = extension.testJavaVersion.majorVersion
+			sourceCompatibility = extension.testJavaVersion.name
+			targetCompatibility = extension.testJavaVersion.name
 		}
 		named<JavaCompile>("compileMainRelease9Java").configure {
 			sourceCompatibility = "9"
@@ -268,19 +268,19 @@ afterEvaluate {
 		withType<JavaCompile>().configureEach {
 			// --release release
 			// Compiles against the public, supported and documented API for a specific VM version.
-			// Supported release targets are 7, 8, 9, 10, 11, 12
+			// Supported release targets are 7, 8, 9, 10, 11, 12, 13
 			// Note that if --release is added then -target and -source are ignored.
 			options.compilerArgs.addAll(listOf("--release", targetCompatibility))
 		}
 	}
 	pluginManager.withPlugin("groovy") {
 		tasks.named<GroovyCompile>("compileGroovy").configure {
-			sourceCompatibility = extension.mainJavaVersion.majorVersion
-			targetCompatibility = extension.mainJavaVersion.majorVersion
+			sourceCompatibility = extension.mainJavaVersion.name
+			targetCompatibility = extension.mainJavaVersion.name
 		}
 		tasks.named<GroovyCompile>("compileTestGroovy").configure {
-			sourceCompatibility = extension.testJavaVersion.majorVersion
-			targetCompatibility = extension.testJavaVersion.majorVersion
+			sourceCompatibility = extension.testJavaVersion.name
+			targetCompatibility = extension.testJavaVersion.name
 		}
 	}
 }

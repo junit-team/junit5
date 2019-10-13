@@ -26,8 +26,8 @@ val mavenizedProjects: List<Project> by rootProject.extra
 mavenizedProjects.forEach { evaluationDependsOn(it.path) }
 
 javaLibrary {
-	mainJavaVersion = JavaVersion.VERSION_1_8
-	testJavaVersion = JavaVersion.VERSION_1_8
+	mainJavaVersion = JvmVersion.`8`
+	testJavaVersion = JvmVersion.`8`
 }
 
 dependencies {
