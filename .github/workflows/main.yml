@@ -48,9 +48,9 @@ jobs:
         java-version: 13
     - name: 'Test'
       run: |
-        cat /Users/runner/.gradle/init.d/app-center-plugin.gradle
+        mkdir /Users/runner/tmp.gradle
         ./gradlew --version
-        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
+        ./gradlew --gradle-user-home=/Users/runner/tmp.gradle --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
 
   coverage:
     name: 'Coverage'
