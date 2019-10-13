@@ -29,7 +29,7 @@ object Versions {
     val jruby = "9.1.17.0"
 
     // Tools
-    val checkstyle = "8.10"
+    val checkstyle = "8.25"
     val jacoco = "0.8.4"
     val jmh = "1.21"
     val ktlint = "0.35.0"
