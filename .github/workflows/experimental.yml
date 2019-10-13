@@ -18,5 +18,6 @@ jobs:
     - uses: actions/checkout@master
     - name: Test
       run: |
+        export JAVA_HOME=$JDK13
         ./gradlew --version
         ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true -PjavaHome=$JDK14 build
