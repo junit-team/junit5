@@ -12,11 +12,11 @@ package org.junit.platform.launcher.listeners.discovery;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.SelectorResolutionResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 
 class CompositeLauncherDiscoveryListener implements LauncherDiscoveryListener {
@@ -33,8 +33,8 @@ class CompositeLauncherDiscoveryListener implements LauncherDiscoveryListener {
 	}
 
 	@Override
-	public void engineDiscoveryFinished(UniqueId engineId, Optional<Throwable> failure) {
-		listeners.forEach(delegate -> delegate.engineDiscoveryFinished(engineId, failure));
+	public void engineDiscoveryFinished(UniqueId engineId, EngineDiscoveryResult result) {
+		listeners.forEach(delegate -> delegate.engineDiscoveryFinished(engineId, result));
 	}
 
 	@Override

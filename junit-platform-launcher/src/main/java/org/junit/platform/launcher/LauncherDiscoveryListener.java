@@ -10,8 +10,6 @@
 
 package org.junit.platform.launcher;
 
-import java.util.Optional;
-
 import org.junit.platform.engine.EngineDiscoveryListener;
 import org.junit.platform.engine.UniqueId;
 
@@ -20,7 +18,7 @@ public interface LauncherDiscoveryListener extends EngineDiscoveryListener {
 	default void engineDiscoveryStarted(UniqueId engineId) {
 	}
 
-	default void engineDiscoveryFinished(UniqueId engineId, Optional<Throwable> failure) {
+	default void engineDiscoveryFinished(UniqueId engineId, EngineDiscoveryResult result) {
 	}
 
 }

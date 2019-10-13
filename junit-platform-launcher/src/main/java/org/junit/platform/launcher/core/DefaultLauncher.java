@@ -28,6 +28,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -179,14 +180,14 @@ class DefaultLauncher implements Launcher {
 			discoveryListener.engineDiscoveryStarted(uniqueEngineId);
 			TestDescriptor engineRoot = testEngine.discover(discoveryRequest, uniqueEngineId);
 			discoveryResultValidator.validate(testEngine, engineRoot);
-			discoveryListener.engineDiscoveryFinished(uniqueEngineId, Optional.empty());
+			discoveryListener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.successful());
 			return engineRoot;
 		}
 		catch (Throwable throwable) {
 			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
 			String message = String.format("TestEngine with ID '%s' failed to discover tests", testEngine.getId());
 			JUnitException cause = new JUnitException(message, throwable);
-			discoveryListener.engineDiscoveryFinished(uniqueEngineId, Optional.of(cause));
+			discoveryListener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.failed(cause));
 			return new EngineDiscoveryErrorDescriptor(uniqueEngineId, testEngine, cause);
 		}
 	}

@@ -60,6 +60,7 @@ import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine
 import org.junit.platform.fakes.TestDescriptorStub;
 import org.junit.platform.fakes.TestEngineSpy;
 import org.junit.platform.fakes.TestEngineStub;
+import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.PostDiscoveryFilter;
@@ -190,14 +191,15 @@ class DefaultLauncherTests {
 				.hasMessage("TestEngine with ID 'my-engine-id' failed to discover tests");
 	}
 
-	@SuppressWarnings({ "raw", "unchecked" })
 	private void assertDiscoveryFailed(TestEngine testEngine, LauncherDiscoveryListener discoveryListener) {
 		var engineId = testEngine.getId();
-		ArgumentCaptor<Optional<Throwable>> failureCaptor = ArgumentCaptor.forClass(Optional.class);
+		ArgumentCaptor<EngineDiscoveryResult> failureCaptor = ArgumentCaptor.forClass(EngineDiscoveryResult.class);
 		verify(discoveryListener).engineDiscoveryFinished(eq(UniqueId.forEngine(engineId)), failureCaptor.capture());
-		assertThat(failureCaptor.getValue()).isPresent();
-		assertThat(failureCaptor.getValue().get()) //
-				.hasMessage("TestEngine with ID '" + engineId + "' failed to discover tests");
+		var result = failureCaptor.getValue();
+		assertThat(result.getStatus()).isEqualTo(EngineDiscoveryResult.Status.FAILED);
+		assertThat(result.getThrowable()).isPresent();
+		assertThat(result.getThrowable().get()).hasMessage(
+			"TestEngine with ID '" + engineId + "' failed to discover tests");
 	}
 
 	@Test

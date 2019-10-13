@@ -135,7 +135,7 @@ class DiscoverySelectorResolverTests {
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
 		var result = verifySelectorProcessed(selector);
 		assertThat(result.getStatus()).isEqualTo(FAILED);
-		assertThat(result.getThrowable()).hasMessageContaining("Could not load class with name");
+		assertThat(result.getThrowable().get()).hasMessageContaining("Could not load class with name");
 	}
 
 	@Test
@@ -230,7 +230,7 @@ class DiscoverySelectorResolverTests {
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
 		var result = verifySelectorProcessed(selector);
 		assertThat(result.getStatus()).isEqualTo(FAILED);
-		assertThat(result.getThrowable())//
+		assertThat(result.getThrowable().get())//
 				.isInstanceOf(PreconditionViolationException.class)//
 				.hasMessageStartingWith("Could not load class with name: " + className);
 	}
@@ -244,7 +244,7 @@ class DiscoverySelectorResolverTests {
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
 		var result = verifySelectorProcessed(selector);
 		assertThat(result.getStatus()).isEqualTo(FAILED);
-		assertThat(result.getThrowable()).hasMessageContaining("Could not find method");
+		assertThat(result.getThrowable().get()).hasMessageContaining("Could not find method");
 	}
 
 	@Test
@@ -314,7 +314,7 @@ class DiscoverySelectorResolverTests {
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
 		var result = verifySelectorProcessed(selectUniqueId(uniqueId));
 		assertThat(result.getStatus()).isEqualTo(FAILED);
-		assertThat(result.getThrowable())//
+		assertThat(result.getThrowable().get())//
 				.isInstanceOf(PreconditionViolationException.class)//
 				.hasMessageStartingWith("Method [()] does not match pattern");
 	}
@@ -328,7 +328,7 @@ class DiscoverySelectorResolverTests {
 		assertThat(engineDescriptor.getDescendants()).isEmpty();
 		var result = verifySelectorProcessed(selectUniqueId(uniqueId));
 		assertThat(result.getStatus()).isEqualTo(FAILED);
-		assertThat(result.getThrowable())//
+		assertThat(result.getThrowable().get())//
 				.isInstanceOf(PreconditionViolationException.class)//
 				.hasMessageStartingWith("Method [methodName] does not match pattern");
 	}
@@ -342,7 +342,7 @@ class DiscoverySelectorResolverTests {
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
 		var result = verifySelectorProcessed(selectUniqueId(uniqueId));
 		assertThat(result.getStatus()).isEqualTo(FAILED);
-		assertThat(result.getThrowable())//
+		assertThat(result.getThrowable().get())//
 				.isInstanceOf(JUnitException.class)//
 				.hasMessage("Failed to load parameter type [%s] for method [%s] in class [%s].", "junit.foo.Enigma",
 					"methodName", getClass().getName());

@@ -91,7 +91,7 @@ class VintageDiscovererTests {
 
 		doesNotResolve(selectUniqueId(uniqueId), result -> {
 			assertThat(result.getStatus()).isEqualTo(FAILED);
-			assertThat(result.getThrowable()).hasMessageContaining("Unknown class");
+			assertThat(result.getThrowable().get()).hasMessageContaining("Unknown class");
 		});
 	}
 

@@ -20,6 +20,7 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.SelectorResolutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
+import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 
 class LoggingLauncherDiscoveryListener implements LauncherDiscoveryListener {
@@ -32,9 +33,15 @@ class LoggingLauncherDiscoveryListener implements LauncherDiscoveryListener {
 	}
 
 	@Override
-	public void engineDiscoveryFinished(UniqueId engineId, Optional<Throwable> failure) {
-		if (failure.isPresent()) {
-			logger.error(failure.get().getCause(), () -> failure.get().getMessage());
+	public void engineDiscoveryFinished(UniqueId engineId, EngineDiscoveryResult result) {
+		if (result.getStatus() == EngineDiscoveryResult.Status.FAILED) {
+			Optional<Throwable> failure = result.getThrowable();
+			if (failure.isPresent()) {
+				logger.error(failure.get().getCause(), () -> failure.get().getMessage());
+			}
+			else {
+				logger.error(() -> "Engine " + engineId + " failed to discover tests");
+			}
 		}
 		else {
 			logger.trace(() -> "Engine " + engineId + " has finished discovering tests");
@@ -48,7 +55,8 @@ class LoggingLauncherDiscoveryListener implements LauncherDiscoveryListener {
 				logger.debug(() -> selector + " was resolved by " + engineId);
 				break;
 			case FAILED:
-				logger.error(result.getThrowable(), () -> "Resolution of " + selector + " by " + engineId + " failed");
+				logger.error(result.getThrowable().orElse(null),
+					() -> "Resolution of " + selector + " by " + engineId + " failed");
 				break;
 			case UNRESOLVED:
 				Consumer<Supplier<String>> loggingConsumer = logger::debug;

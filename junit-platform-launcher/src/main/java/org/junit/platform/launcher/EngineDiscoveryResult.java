@@ -8,38 +8,32 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.engine;
+package org.junit.platform.launcher;
 
 import java.util.Optional;
 
 import org.junit.platform.commons.util.ToStringBuilder;
 
-public class SelectorResolutionResult {
+public class EngineDiscoveryResult {
 
 	public enum Status {
-		RESOLVED, UNRESOLVED, FAILED
+		SUCCESSFUL, FAILED
 	}
 
-	private static final SelectorResolutionResult RESOLVED_RESULT = new SelectorResolutionResult(Status.RESOLVED, null);
-	private static final SelectorResolutionResult UNRESOLVED_RESULT = new SelectorResolutionResult(Status.UNRESOLVED,
-		null);
+	private static final EngineDiscoveryResult SUCCESSFUL_RESULT = new EngineDiscoveryResult(Status.SUCCESSFUL, null);
 
-	public static SelectorResolutionResult resolved() {
-		return RESOLVED_RESULT;
+	public static EngineDiscoveryResult successful() {
+		return SUCCESSFUL_RESULT;
 	}
 
-	public static SelectorResolutionResult unresolved() {
-		return UNRESOLVED_RESULT;
-	}
-
-	public static SelectorResolutionResult failed(Throwable throwable) {
-		return new SelectorResolutionResult(Status.FAILED, throwable);
+	public static EngineDiscoveryResult failed(Throwable throwable) {
+		return new EngineDiscoveryResult(Status.FAILED, throwable);
 	}
 
 	private final Status status;
 	private final Throwable throwable;
 
-	private SelectorResolutionResult(Status status, Throwable throwable) {
+	private EngineDiscoveryResult(Status status, Throwable throwable) {
 		this.status = status;
 		this.throwable = throwable;
 	}
