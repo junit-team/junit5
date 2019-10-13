@@ -10,10 +10,15 @@
 
 package org.junit.platform.launcher;
 
+import org.apiguardian.api.API;
 import org.junit.platform.engine.EngineDiscoveryListener;
 import org.junit.platform.engine.UniqueId;
 
+@API(status = API.Status.EXPERIMENTAL, since = "1.6")
 public interface LauncherDiscoveryListener extends EngineDiscoveryListener {
+
+	LauncherDiscoveryListener NOOP = new LauncherDiscoveryListener() {
+	};
 
 	default void engineDiscoveryStarted(UniqueId engineId) {
 	}

@@ -10,7 +10,13 @@
 
 package org.junit.platform.engine;
 
+import org.apiguardian.api.API;
+
+@API(status = API.Status.EXPERIMENTAL, since = "1.6")
 public interface EngineDiscoveryListener {
+
+	EngineDiscoveryListener NOOP = new EngineDiscoveryListener() {
+	};
 
 	default void selectorProcessed(UniqueId engineId, DiscoverySelector selector, SelectorResolutionResult result) {
 	}

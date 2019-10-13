@@ -12,9 +12,11 @@ package org.junit.platform.launcher.listeners.discovery;
 
 import java.util.List;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 
+@API(status = API.Status.EXPERIMENTAL, since = "1.6")
 public class LauncherDiscoveryListeners {
 
 	private LauncherDiscoveryListeners() {

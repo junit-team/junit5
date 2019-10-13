@@ -12,8 +12,10 @@ package org.junit.platform.engine;
 
 import java.util.Optional;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
 
+@API(status = API.Status.EXPERIMENTAL, since = "1.6")
 public class SelectorResolutionResult {
 
 	public enum Status {

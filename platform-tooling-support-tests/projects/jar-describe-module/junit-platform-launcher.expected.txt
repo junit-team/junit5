@@ -2,6 +2,7 @@ org.junit.platform.launcher@${platformVersion} jar:file:.+junit-platform-launche
 exports org.junit.platform.launcher
 exports org.junit.platform.launcher.core
 exports org.junit.platform.launcher.listeners
+exports org.junit.platform.launcher.listeners.discovery
 requires java.base mandated
 requires java.logging
 requires org.apiguardian.api transitive

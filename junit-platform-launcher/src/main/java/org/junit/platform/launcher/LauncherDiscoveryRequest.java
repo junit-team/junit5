@@ -80,7 +80,10 @@ public interface LauncherDiscoveryRequest extends EngineDiscoveryRequest {
 	 */
 	List<PostDiscoveryFilter> getPostDiscoveryFilters();
 
+	@API(status = API.Status.EXPERIMENTAL, since = "1.6")
 	@Override
-	LauncherDiscoveryListener getDiscoveryListener();
+	default LauncherDiscoveryListener getDiscoveryListener() {
+		return LauncherDiscoveryListener.NOOP;
+	}
 
 }

@@ -65,6 +65,9 @@ public interface EngineDiscoveryRequest {
 	 */
 	ConfigurationParameters getConfigurationParameters();
 
-	EngineDiscoveryListener getDiscoveryListener();
+	@API(status = API.Status.EXPERIMENTAL, since = "1.6")
+	default EngineDiscoveryListener getDiscoveryListener() {
+		return EngineDiscoveryListener.NOOP;
+	}
 
 }
