@@ -21,10 +21,10 @@ object Versions {
     val slf4j = "1.7.28"
 
     // Asciidoctor
-    val asciidoctorDiagram = "1.5.9"
-    val asciidoctorJ = "1.5.7"
-    val asciidoctorPdf = "1.5.0-alpha.17"
-    val jruby = "9.1.17.0"
+    val asciidoctorDiagram = "1.5.18"
+    val asciidoctorJ = "2.1.0"
+    val asciidoctorPdf = "1.5.0-alpha.18"
+    val jruby = "9.2.8.0"
 
     // Tools
     val checkstyle = "8.25"
