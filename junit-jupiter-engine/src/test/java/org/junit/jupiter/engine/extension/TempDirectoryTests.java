@@ -758,10 +758,10 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void createReadonlyFile(@TempDir Path tempDir) throws IOException {
 			// Removal of setWritable(false) files might fail (e.g. for Windows)
-			// The test verifies that @TempDir is capable of removal of such files
-			Path filePath = Files.write(tempDir.resolve("test.txt"), new byte[0]);
-			assumeTrue(filePath.toFile().setWritable(false),
-				() -> "Unable to set file " + filePath + " readonly via .toFile().setWritable(false)");
+			// The test verifies that @TempDir is capable of removing of such files
+			var path = Files.write(tempDir.resolve("test.txt"), new byte[0]);
+			assumeTrue(path.toFile().setWritable(false),
+				() -> "Unable to set file " + path + " readonly via .toFile().setWritable(false)");
 		}
 
 	}
