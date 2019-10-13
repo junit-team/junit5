@@ -21,8 +21,10 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -41,6 +43,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -191,10 +194,34 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 					try {
 						Files.delete(path);
 					}
-					catch (IOException ex) {
-						failures.put(path, ex);
+					catch (NoSuchFileException ignore) {
+						// ignore
+					}
+					catch (DirectoryNotEmptyException exception) {
+						failures.put(path, exception);
+					}
+					catch (IOException exception) {
+						makeWritableAndTryToDeleteAgain(path, exception);
 					}
 					return CONTINUE;
+				}
+
+				private void makeWritableAndTryToDeleteAgain(Path path, IOException exception) {
+					try {
+						makeWritable(path);
+						Files.delete(path);
+					}
+					catch (Exception suppressed) {
+						exception.addSuppressed(suppressed);
+						failures.put(path, exception);
+					}
+				}
+
+				private void makeWritable(Path path) {
+					boolean writable = path.toFile().setWritable(true);
+					if (!writable) {
+						throw new UndeletableFileException("Attempt to make file '" + path + "' writable failed");
+					}
 				}
 			});
 			return failures;
@@ -231,6 +258,21 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				return path;
 			}
 		}
+	}
+
+	private static class UndeletableFileException extends JUnitException {
+
+		private static final long serialVersionUID = 1L;
+
+		UndeletableFileException(String message) {
+			super(message);
+		}
+
+		@Override
+		public Throwable fillInStackTrace() {
+			return this; // Make the output smaller by omitting the stacktrace
+		}
+
 	}
 
 }
