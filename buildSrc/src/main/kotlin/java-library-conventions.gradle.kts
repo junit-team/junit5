@@ -221,6 +221,7 @@ tasks.compileTestJava {
 	options.compilerArgs.addAll(listOf(
 			"-Xlint", // Enables all recommended warnings.
 			"-Xlint:-overrides", // Disables "method overrides" warnings.
+			"-Werror", // Terminates compilation when warnings occur.
 			"-parameters" // Generates metadata for reflection on method parameters.
 	))
 }
