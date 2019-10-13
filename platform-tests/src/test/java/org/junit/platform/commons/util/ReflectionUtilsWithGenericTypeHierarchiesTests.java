@@ -10,30 +10,30 @@
 
 package org.junit.platform.commons.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
 
 import java.lang.reflect.Method;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-class GenericClassHierarchiesReflectionUtilsTests {
+@SuppressWarnings("TypeParameterExplicitlyExtendsObject")
+class ReflectionUtilsWithGenericTypeHierarchiesTests {
 	@Test
 	@Disabled("Describes a new case that does not yet yield the expected result.")
 	void findsMethodsIndependentlyFromOrderOfImplementationsOfInterfaces() {
 
-		class AB implements InterfaceDouble, InterfaceGenericNumber {
+		class AB implements InterfaceDouble, InterfaceGenericNumber<Number> {
 		}
 
-		class BA implements InterfaceGenericNumber, InterfaceDouble {
+		class BA implements InterfaceGenericNumber<Number>, InterfaceDouble {
 		}
 
 		var methodAB = findMethod(AB.class, "foo", Double.class).orElseThrow();
 		var methodBA = findMethod(BA.class, "foo", Double.class).orElseThrow();
 
-		Assertions.assertEquals(methodAB, methodBA);
+		assertEquals(methodAB, methodBA);
 	}
 
 	@Test
@@ -41,13 +41,12 @@ class GenericClassHierarchiesReflectionUtilsTests {
 		class A implements InterfaceGenericNumber<Long> {
 			@Override
 			public void foo(Long parameter) {
-
 			}
 		}
 
 		Method foo = findMethod(A.class, "foo", Long.class).orElseThrow();
 
-		Assertions.assertEquals(A.class, foo.getDeclaringClass());
+		assertEquals(A.class, foo.getDeclaringClass());
 	}
 
 	@Test
@@ -61,7 +60,7 @@ class GenericClassHierarchiesReflectionUtilsTests {
 
 		Method foo = findMethod(A.class, "foo", Long.class).orElseThrow();
 
-		Assertions.assertEquals(A.class, foo.getDeclaringClass());
+		assertEquals(A.class, foo.getDeclaringClass());
 	}
 
 	@Test
@@ -76,13 +75,12 @@ class GenericClassHierarchiesReflectionUtilsTests {
 		class A extends AParent implements InterfaceGenericNumber<Number> {
 			@Override
 			public void foo(Number parameter) {
-
 			}
 		}
 
 		Method foo = findMethod(A.class, "foo", Long.class).orElseThrow();
 
-		Assertions.assertEquals(A.class, foo.getDeclaringClass());
+		assertEquals(A.class, foo.getDeclaringClass());
 	}
 
 	@Test
@@ -90,7 +88,7 @@ class GenericClassHierarchiesReflectionUtilsTests {
 	void unclearPrecedenceOfImplementationsInParentClassAndInterfaceDefault() {
 
 		class AParent {
-			public void foo(Number parameter) {
+			public void foo(@SuppressWarnings("unused") Number parameter) {
 			}
 		}
 
@@ -100,16 +98,16 @@ class GenericClassHierarchiesReflectionUtilsTests {
 		Method foo = findMethod(A.class, "foo", Long.class).orElseThrow();
 
 		// ????????
-		Assertions.assertEquals(A.class, foo.getDeclaringClass());
-		Assertions.assertEquals(AParent.class, foo.getDeclaringClass());
-		Assertions.assertEquals(InterfaceGenericNumber.class, foo.getDeclaringClass());
+		assertEquals(A.class, foo.getDeclaringClass());
+		assertEquals(AParent.class, foo.getDeclaringClass());
+		assertEquals(InterfaceGenericNumber.class, foo.getDeclaringClass());
 	}
 
 	@Test
 	@Disabled("Describes cases where current implementation returns unexpected value")
 	public void findMethodWithMostSpecificParameterTypeInHierarchy() {
 		// Searched Parameter Type is more specific
-		assertSpecificFooMethodFound(ClassImplementingInterfaceWithInvertedHirarchy.class,
+		assertSpecificFooMethodFound(ClassImplementingInterfaceWithInvertedHierarchy.class,
 			InterfaceWithGenericNumberParameter.class, Double.class);
 		assertSpecificFooMethodFound(ClassImplementingGenericInterfaceWithMoreSpecificMethod.class,
 			ClassImplementingGenericInterfaceWithMoreSpecificMethod.class, Double.class);
@@ -130,58 +128,54 @@ class GenericClassHierarchiesReflectionUtilsTests {
 	}
 
 	private void assertDeclaringClass(Method method, Class<?> expectedClass) {
-		assertThat(method.getDeclaringClass()).isEqualTo(expectedClass);
+		assertEquals(expectedClass, method.getDeclaringClass());
 	}
 
 	interface InterfaceDouble {
-		default void foo(Double parameter) {
+		default void foo(@SuppressWarnings("unused") Double parameter) {
 		}
 	}
 
 	interface InterfaceGenericNumber<T extends Number> {
-		default void foo(T parameter) {
+		default void foo(@SuppressWarnings("unused") T parameter) {
 		}
 	}
 
 	public interface InterfaceWithGenericObjectParameter {
-
-		default <T extends Object> void foo(T a) {
+		default <T extends Object> void foo(@SuppressWarnings("unused") T a) {
 		}
 	}
 
 	public interface InterfaceWithGenericNumberParameter {
-
-		default <T extends Number> void foo(T a) {
+		default <T extends Number> void foo(@SuppressWarnings("unused") T a) {
 		}
 	}
 
 	public interface InterfaceExtendingNumberInterfaceWithGenericObjectMethod
 			extends InterfaceWithGenericNumberParameter {
-
-		default <T extends Object> void foo(T a) {
+		default <T extends Object> void foo(@SuppressWarnings("unused") T a) {
 		}
 	}
 
-	public class ClassImplementingGenericInterfaceWithMoreSpecificMethod
+	public static class ClassImplementingGenericInterfaceWithMoreSpecificMethod
 			implements InterfaceWithGenericObjectParameter {
-
-		public void foo(Number a) {
+		public void foo(@SuppressWarnings("unused") Number a) {
 		}
 	}
 
-	public class ClassImplementingGenericAndMoreSpecificInterface
+	public static class ClassImplementingGenericAndMoreSpecificInterface
 			implements InterfaceWithGenericObjectParameter, InterfaceWithGenericNumberParameter {
 	}
 
-	public class ClassOverridingDefaultMethodAndImplementingMoreSpecificInterface
+	public static class ClassOverridingDefaultMethodAndImplementingMoreSpecificInterface
 			implements InterfaceWithGenericObjectParameter, InterfaceWithGenericNumberParameter {
 
 		@Override
-		public <T> void foo(T a) {
+		public <T> void foo(@SuppressWarnings("unused") T a) {
 		}
 	}
 
-	public class ClassImplementingInterfaceWithInvertedHirarchy
+	public static class ClassImplementingInterfaceWithInvertedHierarchy
 			implements InterfaceExtendingNumberInterfaceWithGenericObjectMethod {
 	}
 }
