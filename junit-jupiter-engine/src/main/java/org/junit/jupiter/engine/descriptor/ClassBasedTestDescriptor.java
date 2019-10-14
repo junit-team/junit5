@@ -43,6 +43,7 @@ import org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestInstances;
+import org.junit.jupiter.api.extension.TestInstancePreDestroyCallback;
 import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
@@ -212,6 +213,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		if (context.beforeAllCallbacksExecuted()) {
 			invokeAfterAllCallbacks(context);
 		}
+
+		invokeTestInstancePreDestroyCallback(context);
 
 		// If the previous Throwable was not null when this method was called,
 		// that means an exception was already thrown either before or during
@@ -419,6 +422,15 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 
 		registry.getReversedExtensions(AfterAllCallback.class)//
 				.forEach(extension -> throwableCollector.execute(() -> extension.afterAll(extensionContext)));
+	}
+
+	private void invokeTestInstancePreDestroyCallback(JupiterEngineExecutionContext context) {
+		ExtensionContext extensionContext = context.getExtensionContext();
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
+		Object testInstance = extensionContext.getTestInstance().orElse(null);
+
+		context.getExtensionRegistry().stream(TestInstancePreDestroyCallback.class)
+				.forEach(extension -> throwableCollector.execute(() -> extension.preDestroyTestInstance(testInstance, extensionContext)));
 	}
 
 	private void registerBeforeEachMethodAdapters(ExtensionRegistrar registrar) {

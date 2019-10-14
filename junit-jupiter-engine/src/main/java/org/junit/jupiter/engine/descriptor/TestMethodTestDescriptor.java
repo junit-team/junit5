@@ -29,6 +29,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.junit.jupiter.api.extension.TestInstancePreDestroyCallback;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
@@ -139,6 +140,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 				invokeAfterEachMethods(context);
 			}
 		invokeAfterEachCallbacks(context);
+		invokeTestInstancePreDestroyCallback(context);
 		// @formatter:on
 
 		throwableCollector.assertEmpty();
@@ -243,6 +245,12 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	private void invokeAfterEachCallbacks(JupiterEngineExecutionContext context) {
 		invokeAllAfterMethodsOrCallbacks(AfterEachCallback.class, context,
 			(callback, extensionContext) -> callback.afterEach(extensionContext));
+	}
+
+	private void invokeTestInstancePreDestroyCallback(JupiterEngineExecutionContext context) {
+		invokeAllAfterMethodsOrCallbacks(TestInstancePreDestroyCallback.class, context,
+			(callback, extensionContext) -> callback.preDestroyTestInstance(extensionContext.getRequiredTestInstance(),
+				extensionContext));
 	}
 
 	private <T extends Extension> void invokeAllAfterMethodsOrCallbacks(Class<T> type,

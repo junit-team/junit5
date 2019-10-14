@@ -46,6 +46,7 @@ import org.apiguardian.api.API;
  * @see #createTestInstance(TestInstanceFactoryContext, ExtensionContext)
  * @see TestInstanceFactoryContext
  * @see TestInstancePostProcessor
+ * @see TestInstancePreDestroyCallback
  * @see ParameterResolver
  */
 @FunctionalInterface

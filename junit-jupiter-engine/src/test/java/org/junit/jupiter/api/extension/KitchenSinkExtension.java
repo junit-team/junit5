@@ -46,6 +46,7 @@ public class KitchenSinkExtension implements
 	// Dependency Injection
 	TestInstanceFactory,
 	TestInstancePostProcessor,
+	TestInstancePreDestroyCallback,
 	ParameterResolver,
 
 	// Conditional Test Execution
@@ -118,6 +119,10 @@ public class KitchenSinkExtension implements
 
 	@Override
 	public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
+	}
+
+	@Override
+	public void preDestroyTestInstance(Object testInstance, ExtensionContext context) {
 	}
 
 	@Override
