@@ -11,6 +11,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
@@ -58,25 +59,6 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
     }
 
     @Test
-    void instancePreDestroyCallbacksInTopLevelClass() {
-        executeTestsForClass(ClassLevelPreDestroyCallbackWithTwoTestMethods.class).testEvents().assertStatistics(//
-                stats -> stats.started(2).succeeded(2));
-
-        // @formatter:off
-        assertThat(callSequence).containsExactly(
-                "fooPostProcessTestInstance:ClassLevelPreDestroyCallbackWithTwoTestMethods",
-                	"beforeEachMethod",
-                		"test1",
-                "fooPreDestroyCallbackTestInstance:ClassLevelPreDestroyCallbackWithTwoTestMethods",
-                "fooPostProcessTestInstance:ClassLevelPreDestroyCallbackWithTwoTestMethods",
-                	"beforeEachMethod",
-                		"test2",
-                "fooPreDestroyCallbackTestInstance:ClassLevelPreDestroyCallbackWithTwoTestMethods"
-        );
-        // @formatter:on
-    }
-
-    @Test
     void testSpecificTestInstancePreDestroyCallbackIsCalled() {
         executeTestsForClass(TestCaseWithTestSpecificTestInstancePreDestroyCallback.class).testEvents().assertStatistics(//
                 stats -> stats.started(1).succeeded(1));
@@ -87,6 +69,23 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
                 	"beforeEachMethod",
                 		"test",
                 			"fooPreDestroyCallbackTestInstance:TestCaseWithTestSpecificTestInstancePreDestroyCallback"
+        );
+        // @formatter:on
+    }
+
+    @Test
+    void classLifecyclePreDestroyCallbacks() {
+        executeTestsForClass(PerClassLifecyclePreDestroyCallbackWithTwoTestMethods.class).testEvents().assertStatistics(//
+                stats -> stats.started(2).succeeded(2));
+
+        // @formatter:off
+        assertThat(callSequence).containsExactly(
+                "fooPostProcessTestInstance:PerClassLifecyclePreDestroyCallbackWithTwoTestMethods",
+                "beforeEachMethod",
+                "test1",
+                "beforeEachMethod",
+                "test2",
+                "fooPreDestroyCallbackTestInstance:PerClassLifecyclePreDestroyCallbackWithTwoTestMethods"
         );
         // @formatter:on
     }
@@ -142,13 +141,13 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
         }
     }
 
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     @ExtendWith(FooInstancePostProcessor.class)
     @ExtendWith(FooInstancePreDestroyCallback.class)
-    static class ClassLevelPreDestroyCallbackWithTwoTestMethods extends Named {
+    static class PerClassLifecyclePreDestroyCallbackWithTwoTestMethods extends Named {
 
         @BeforeEach
         void beforeEachMethod() {
-            assertFalse(isDestroyed);
             callSequence.add("beforeEachMethod");
         }
 

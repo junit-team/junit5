@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -248,9 +249,13 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	private void invokeTestInstancePreDestroyCallback(JupiterEngineExecutionContext context) {
-		invokeAllAfterMethodsOrCallbacks(TestInstancePreDestroyCallback.class, context,
-			(callback, extensionContext) -> callback.preDestroyTestInstance(extensionContext.getRequiredTestInstance(),
-				extensionContext));
+		context.getExtensionContext().getTestInstanceLifecycle().ifPresent(lifecycle -> {
+			if(TestInstance.Lifecycle.PER_METHOD == lifecycle) {
+				invokeAllAfterMethodsOrCallbacks(TestInstancePreDestroyCallback.class, context,
+					(callback, extensionContext) -> callback.preDestroyTestInstance(extensionContext.getRequiredTestInstance(),
+					extensionContext));
+			}
+		});
 	}
 
 	private <T extends Extension> void invokeAllAfterMethodsOrCallbacks(Class<T> type,
