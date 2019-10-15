@@ -16,7 +16,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.Extension;
 
 /**
- * An {@code ExtensionRegistrar} is used to register extension.
+ * An {@code ExtensionRegistrar} is used to register extensions.
  *
  * @since 5.5
  */
@@ -25,7 +25,7 @@ public interface ExtensionRegistrar {
 
 	/**
 	 * Register the supplied {@link Extension}, without checking if an extension
-	 * of that type already exists.
+	 * of that type has already been registered.
 	 *
 	 * <h4>Semantics for Source</h4>
 	 *
