@@ -2,6 +2,7 @@ package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
     }
 
     @Test
-    void instancePostProcessorsInNestedClasses() {
+    void instancePreDestroyCallbacksInNestedClasses() {
         executeTestsForClass(OuterTestCase.class).testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
 
         // @formatter:off
@@ -50,9 +51,27 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
 					"beforeOuterMethod",
 						"beforeInnerMethod",
 							"testInner",
-                "barPreDestroyCallbackTestInstance:InnerTestCase",
+            	"barPreDestroyCallbackTestInstance:InnerTestCase",
             "fooPreDestroyCallbackTestInstance:InnerTestCase"
-            // TODO: missing second fooPreDestroyCallbackTestInstance:OuterTestCase?
+        );
+        // @formatter:on
+    }
+
+    @Test
+    void instancePreDestroyCallbacksInTopLevelClass() {
+        executeTestsForClass(ClassLevelPreDestroyCallbackWithTwoTestMethods.class).testEvents().assertStatistics(//
+                stats -> stats.started(2).succeeded(2));
+
+        // @formatter:off
+        assertThat(callSequence).containsExactly(
+                "fooPostProcessTestInstance:ClassLevelPreDestroyCallbackWithTwoTestMethods",
+                	"beforeEachMethod",
+                		"test1",
+                "fooPreDestroyCallbackTestInstance:ClassLevelPreDestroyCallbackWithTwoTestMethods",
+                "fooPostProcessTestInstance:ClassLevelPreDestroyCallbackWithTwoTestMethods",
+                	"beforeEachMethod",
+                		"test2",
+                "fooPreDestroyCallbackTestInstance:ClassLevelPreDestroyCallbackWithTwoTestMethods"
         );
         // @formatter:on
     }
@@ -85,6 +104,7 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
 
         @Test
         void testOuter() {
+            assertFalse(isDestroyed);
             callSequence.add("testOuter");
         }
 
@@ -95,6 +115,7 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
 
             @BeforeEach
             void beforeInnerMethod() {
+                assertFalse(isDestroyed);
                 callSequence.add("beforeInnerMethod");
             }
 
@@ -109,6 +130,7 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
 
         @BeforeEach
         void beforeEachMethod() {
+            assertFalse(isDestroyed);
             callSequence.add("beforeEachMethod");
         }
 
@@ -117,6 +139,27 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
         @Test
         void test() {
             callSequence.add("test");
+        }
+    }
+
+    @ExtendWith(FooInstancePostProcessor.class)
+    @ExtendWith(FooInstancePreDestroyCallback.class)
+    static class ClassLevelPreDestroyCallbackWithTwoTestMethods extends Named {
+
+        @BeforeEach
+        void beforeEachMethod() {
+            assertFalse(isDestroyed);
+            callSequence.add("beforeEachMethod");
+        }
+
+        @Test
+        void test1() {
+            callSequence.add("test1");
+        }
+
+        @Test
+        void test2() {
+            callSequence.add("test2");
         }
     }
 
@@ -153,6 +196,7 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
                 } else {
                     name = "foo";
                 }
+                ((Named) testInstance).setDestroyed();
                 assertSame(testInstance, context.getTestInstance().get());
                 assertEquals(name + ":" + testInstance.getClass().getSimpleName(), ((Named) testInstance).getName());
             }
@@ -165,6 +209,7 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
         @Override
         public void preDestroyTestInstance(Object testInstance, ExtensionContext context) throws Exception {
             if (testInstance instanceof Named) {
+                ((Named) testInstance).setDestroyed();
                 assertSame(testInstance, context.getTestInstance().get());
                 assertEquals("bar:" + testInstance.getClass().getSimpleName(), ((Named) testInstance).getName());
             }
@@ -175,6 +220,7 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
     private abstract static class Named {
 
         private String name;
+        protected boolean isDestroyed;
 
         public void setName(String name) {
             this.name = name;
@@ -182,6 +228,10 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
 
         public String getName() {
             return name;
+        }
+
+        public void setDestroyed() {
+            isDestroyed = true;
         }
     }
 }
