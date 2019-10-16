@@ -45,16 +45,6 @@ configurations {
 	named("mainRelease9CompileClasspath") {
 		extendsFrom(runtimeClasspath.get())
 	}
-	apiElements {
-		attributes {
-			attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 8)
-		}
-	}
-	runtimeElements {
-		attributes {
-			attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 8)
-		}
-	}
 }
 
 eclipse {
@@ -258,6 +248,18 @@ inner class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvid
 }
 
 afterEvaluate {
+	configurations {
+		apiElements {
+			attributes {
+				attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, extension.mainJavaVersion.majorVersion.toInt())
+			}
+		}
+		runtimeElements {
+			attributes {
+				attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, extension.mainJavaVersion.majorVersion.toInt())
+			}
+		}
+	}
 	tasks {
 		compileJava {
 			sourceCompatibility = extension.mainJavaVersion.majorVersion
