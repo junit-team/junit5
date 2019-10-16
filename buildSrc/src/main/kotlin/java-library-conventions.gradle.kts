@@ -297,7 +297,7 @@ afterEvaluate {
 
 checkstyle {
 	toolVersion = Versions.checkstyle
-	configDir = rootProject.file("src/checkstyle")
+	configDirectory.set(rootProject.file("src/checkstyle"))
 }
 tasks {
 	checkstyleMain {
