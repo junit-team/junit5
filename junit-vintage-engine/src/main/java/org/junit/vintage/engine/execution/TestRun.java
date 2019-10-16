@@ -10,18 +10,21 @@
 
 package org.junit.vintage.engine.execution;
 
-import static java.util.stream.Collectors.groupingBy;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Stream.concat;
-import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.TestExecutionResult.failed;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -29,7 +32,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.junit.platform.engine.TestDescriptor;
@@ -46,11 +49,14 @@ class TestRun {
 
 	private final RunnerTestDescriptor runnerTestDescriptor;
 	private final Set<TestDescriptor> runnerDescendants;
-	private final Map<Description, List<VintageTestDescriptor>> descriptionToDescriptors;
+	private final Map<Description, VintageDescriptors> descriptionToDescriptors;
 	private final Map<TestDescriptor, List<TestExecutionResult>> executionResults = new LinkedHashMap<>();
 	private final Set<TestDescriptor> skippedDescriptors = new LinkedHashSet<>();
-	private final Map<TestDescriptor, EventType> startedDescriptors = new LinkedHashMap<>();
+	private final Set<TestDescriptor> startedDescriptors = new HashSet<>();
+	private final Map<TestDescriptor, EventType> inProgressDescriptors = new LinkedHashMap<>();
 	private final Set<TestDescriptor> finishedDescriptors = new LinkedHashSet<>();
+	private final ThreadLocal<Deque<VintageTestDescriptor>> inProgressDescriptorsByStartingThread = ThreadLocal.withInitial(
+		ArrayDeque::new);
 
 	TestRun(RunnerTestDescriptor runnerTestDescriptor) {
 		this.runnerTestDescriptor = runnerTestDescriptor;
@@ -58,14 +64,13 @@ class TestRun {
 		// @formatter:off
 		descriptionToDescriptors = concat(Stream.of(runnerTestDescriptor), runnerDescendants.stream())
 				.map(VintageTestDescriptor.class::cast)
-				.collect(groupingBy(
-						VintageTestDescriptor::getDescription, HashMap::new, toCollection(ArrayList::new)));
+				.collect(toMap(VintageTestDescriptor::getDescription, VintageDescriptors::new, VintageDescriptors::merge, HashMap::new));
 		// @formatter:on
 	}
 
 	void registerDynamicTest(VintageTestDescriptor testDescriptor) {
-		descriptionToDescriptors.computeIfAbsent(testDescriptor.getDescription(),
-			key -> new CopyOnWriteArrayList<>()).add(testDescriptor);
+		descriptionToDescriptors.computeIfAbsent(testDescriptor.getDescription(), __ -> new VintageDescriptors()).add(
+			testDescriptor);
 		runnerDescendants.add(testDescriptor);
 	}
 
@@ -74,10 +79,9 @@ class TestRun {
 	}
 
 	Collection<TestDescriptor> getInProgressTestDescriptorsWithSyntheticStartEvents() {
-		List<TestDescriptor> result = startedDescriptors.entrySet().stream() //
+		List<TestDescriptor> result = inProgressDescriptors.entrySet().stream() //
 				.filter(entry -> entry.getValue().equals(EventType.SYNTHETIC)) //
 				.map(Entry::getKey) //
-				.filter(descriptor -> !isFinished(descriptor)) //
 				.collect(toCollection(ArrayList::new));
 		Collections.reverse(result);
 		return result;
@@ -87,35 +91,37 @@ class TestRun {
 		return runnerDescendants.contains(testDescriptor);
 	}
 
-	/**
-	 * Returns the {@link TestDescriptor} that represents the specified
-	 * {@link Description}.
-	 *
-	 * <p>There are edge cases where multiple {@link Description Descriptions}
-	 * with the same {@code uniqueId} exist, e.g. when using overloaded methods
-	 * to define {@linkplain org.junit.experimental.theories.Theory theories}.
-	 * In this case, we try to find the correct {@link TestDescriptor} by
-	 * checking for object identity on the {@link Description} it represents.
-	 *
-	 * @param description the {@code Description} to look up
-	 */
-	Optional<VintageTestDescriptor> lookupTestDescriptor(Description description) {
-		List<VintageTestDescriptor> descriptors = descriptionToDescriptors.get(description);
-		if (descriptors == null) {
+	Optional<VintageTestDescriptor> lookupNextTestDescriptor(Description description) {
+		return lookupUnambiguouslyOrApplyFallback(description, VintageDescriptors::getNextUnstarted);
+	}
+
+	Optional<VintageTestDescriptor> lookupCurrentTestDescriptor(Description description) {
+		return lookupUnambiguouslyOrApplyFallback(description, __ -> {
+			VintageTestDescriptor lastStarted = inProgressDescriptorsByStartingThread.get().peekLast();
+			if (lastStarted != null && description.equals(lastStarted.getDescription())) {
+				return Optional.of(lastStarted);
+			}
 			return Optional.empty();
+		});
+	}
+
+	private Optional<VintageTestDescriptor> lookupUnambiguouslyOrApplyFallback(Description description,
+			Function<VintageDescriptors, Optional<VintageTestDescriptor>> fallback) {
+		VintageDescriptors vintageDescriptors = descriptionToDescriptors.getOrDefault(description,
+			VintageDescriptors.NONE);
+		Optional<VintageTestDescriptor> result = vintageDescriptors.getUnambiguously(description);
+		if (!result.isPresent()) {
+			result = fallback.apply(vintageDescriptors);
 		}
-		if (descriptors.size() == 1) {
-			return Optional.of(getOnlyElement(descriptors));
-		}
-		// @formatter:off
-		return descriptors.stream()
-				.filter(testDescriptor -> description == testDescriptor.getDescription())
-				.findFirst();
-		// @formatter:on
+		return result;
 	}
 
 	void markSkipped(TestDescriptor testDescriptor) {
 		skippedDescriptors.add(testDescriptor);
+		if (testDescriptor instanceof VintageTestDescriptor) {
+			VintageTestDescriptor vintageDescriptor = (VintageTestDescriptor) testDescriptor;
+			descriptionToDescriptors.get(vintageDescriptor.getDescription()).incrementSkippedOrStarted();
+		}
 	}
 
 	boolean isNotSkipped(TestDescriptor testDescriptor) {
@@ -127,15 +133,26 @@ class TestRun {
 	}
 
 	void markStarted(TestDescriptor testDescriptor, EventType eventType) {
-		startedDescriptors.put(testDescriptor, eventType);
+		inProgressDescriptors.put(testDescriptor, eventType);
+		startedDescriptors.add(testDescriptor);
+		if (testDescriptor instanceof VintageTestDescriptor) {
+			VintageTestDescriptor vintageDescriptor = (VintageTestDescriptor) testDescriptor;
+			inProgressDescriptorsByStartingThread.get().addLast(vintageDescriptor);
+			descriptionToDescriptors.get(vintageDescriptor.getDescription()).incrementSkippedOrStarted();
+		}
 	}
 
 	boolean isNotStarted(TestDescriptor testDescriptor) {
-		return !startedDescriptors.containsKey(testDescriptor);
+		return !startedDescriptors.contains(testDescriptor);
 	}
 
 	void markFinished(TestDescriptor testDescriptor) {
+		inProgressDescriptors.remove(testDescriptor);
 		finishedDescriptors.add(testDescriptor);
+		if (testDescriptor instanceof VintageTestDescriptor) {
+			VintageTestDescriptor descriptor = (VintageTestDescriptor) testDescriptor;
+			inProgressDescriptorsByStartingThread.get().removeLastOccurrence(descriptor);
+		}
 	}
 
 	boolean isNotFinished(TestDescriptor testDescriptor) {
@@ -178,4 +195,76 @@ class TestRun {
 		// @formatter:on
 		return failed(new MultipleFailuresError("", failures));
 	}
+
+	private static class VintageDescriptors {
+
+		private static final VintageDescriptors NONE = new VintageDescriptors(emptyList());
+
+		private final List<VintageTestDescriptor> descriptors;
+		private int skippedOrStartedCount;
+
+		static VintageDescriptors merge(VintageDescriptors a, VintageDescriptors b) {
+			List<VintageTestDescriptor> mergedDescriptors = new ArrayList<>(
+				a.descriptors.size() + b.descriptors.size());
+			mergedDescriptors.addAll(a.descriptors);
+			mergedDescriptors.addAll(b.descriptors);
+			return new VintageDescriptors(mergedDescriptors);
+		}
+
+		VintageDescriptors(VintageTestDescriptor vintageTestDescriptor) {
+			this();
+			add(vintageTestDescriptor);
+		}
+
+		VintageDescriptors() {
+			this(new ArrayList<>(1));
+		}
+
+		VintageDescriptors(List<VintageTestDescriptor> descriptors) {
+			this.descriptors = descriptors;
+		}
+
+		void add(VintageTestDescriptor descriptor) {
+			descriptors.add(descriptor);
+		}
+
+		/**
+		 * Returns the {@link TestDescriptor} that represents the specified
+		 * {@link Description}.
+		 *
+		 * <p>There are edge cases where multiple {@link Description Descriptions}
+		 * with the same {@code uniqueId} exist, e.g. when using overloaded methods
+		 * to define {@linkplain org.junit.experimental.theories.Theory theories}.
+		 * In this case, we try to find the correct {@link TestDescriptor} by
+		 * checking for object identity on the {@link Description} it represents.
+		 *
+		 * @param description the {@code Description} to look up
+		 */
+		Optional<VintageTestDescriptor> getUnambiguously(Description description) {
+			if (descriptors.isEmpty()) {
+				return Optional.empty();
+			}
+			if (descriptors.size() == 1) {
+				return Optional.of(descriptors.get(0));
+			}
+			// @formatter:off
+			return descriptors.stream()
+					.filter(testDescriptor -> description == testDescriptor.getDescription())
+					.findFirst();
+			// @formatter:on
+		}
+
+		public void incrementSkippedOrStarted() {
+			skippedOrStartedCount++;
+		}
+
+		public Optional<VintageTestDescriptor> getNextUnstarted() {
+			if (skippedOrStartedCount < descriptors.size()) {
+				return Optional.of(descriptors.get(skippedOrStartedCount));
+			}
+			return Optional.empty();
+		}
+
+	}
+
 }

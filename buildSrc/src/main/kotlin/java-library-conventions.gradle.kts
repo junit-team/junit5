@@ -77,6 +77,7 @@ if (project in mavenizedProjects) {
 			memberLevel = JavadocMemberLevel.PROTECTED
 			header = project.name
 			encoding = "UTF-8"
+			locale = "en"
 			(this as StandardJavadocDocletOptions).apply {
 				addBooleanOption("Xdoclint:html,syntax", true)
 				addBooleanOption("html5", true)
@@ -220,6 +221,7 @@ tasks.compileTestJava {
 	options.compilerArgs.addAll(listOf(
 			"-Xlint", // Enables all recommended warnings.
 			"-Xlint:-overrides", // Disables "method overrides" warnings.
+			"-Werror", // Terminates compilation when warnings occur.
 			"-parameters" // Generates metadata for reflection on method parameters.
 	))
 }

@@ -13,6 +13,7 @@ package example
 
 import example.domain.Person
 import example.util.Calculator
+import java.time.Duration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -21,7 +22,6 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.assertTimeout
 import org.junit.jupiter.api.assertTimeoutPreemptively
-import java.time.Duration
 
 class KotlinAssertionsDemo {
 

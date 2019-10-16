@@ -9,6 +9,8 @@
  */
 package org.junit.jupiter.api
 
+import java.util.stream.Stream
+import kotlin.reflect.KClass
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith
 import org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError
@@ -19,8 +21,6 @@ import org.junit.jupiter.api.DynamicContainer.dynamicContainer
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.opentest4j.AssertionFailedError
 import org.opentest4j.MultipleFailuresError
-import java.util.stream.Stream
-import kotlin.reflect.KClass
 
 /**
  * Unit tests for JUnit Jupiter [org.junit.jupiter.api] top-level assertion functions.

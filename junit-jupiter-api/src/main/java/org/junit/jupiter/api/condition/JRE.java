@@ -39,6 +39,8 @@ import org.junit.platform.commons.util.StringUtils;
  * @see #OTHER
  * @see EnabledOnJre
  * @see DisabledOnJre
+ * @see EnabledForJreRange
+ * @see DisabledForJreRange
  */
 @API(status = STABLE, since = "5.1")
 public enum JRE {
@@ -96,7 +98,7 @@ public enum JRE {
 
 	private static final Logger logger = LoggerFactory.getLogger(JRE.class);
 
-	private static final JRE CURRENT_VERSION = determineCurrentVersion();
+	static final JRE CURRENT_VERSION = determineCurrentVersion();
 
 	private static JRE determineCurrentVersion() {
 		String javaVersion = System.getProperty("java.version");

@@ -40,6 +40,8 @@ import org.junit.platform.engine.discovery.DirectorySelector;
 import org.junit.platform.engine.discovery.FileSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
+import org.junit.platform.engine.discovery.NestedClassSelector;
+import org.junit.platform.engine.discovery.NestedMethodSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.discovery.UriSelector;
@@ -128,6 +130,9 @@ class EngineDiscoveryRequestResolution {
 			if (selector instanceof ClassSelector) {
 				return resolver.resolve((ClassSelector) selector, context);
 			}
+			if (selector instanceof NestedClassSelector) {
+				return resolver.resolve((NestedClassSelector) selector, context);
+			}
 			if (selector instanceof DirectorySelector) {
 				return resolver.resolve((DirectorySelector) selector, context);
 			}
@@ -136,6 +141,9 @@ class EngineDiscoveryRequestResolution {
 			}
 			if (selector instanceof MethodSelector) {
 				return resolver.resolve((MethodSelector) selector, context);
+			}
+			if (selector instanceof NestedMethodSelector) {
+				return resolver.resolve((NestedMethodSelector) selector, context);
 			}
 			if (selector instanceof ModuleSelector) {
 				return resolver.resolve((ModuleSelector) selector, context);

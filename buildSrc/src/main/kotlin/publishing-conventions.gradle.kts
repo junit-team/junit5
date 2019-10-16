@@ -1,3 +1,5 @@
+import java.time.Duration
+
 plugins {
 	`maven-publish`
 	signing
@@ -19,6 +21,8 @@ signing {
 }
 
 nexusPublishing {
+	connectTimeout.set(Duration.ofMinutes(2))
+	clientTimeout.set(Duration.ofMinutes(2))
 	packageGroup.set("org.junit")
 	repositories {
 		sonatype()
@@ -75,6 +79,11 @@ publishing {
 						id.set("sormuras")
 						name.set("Christian Stein")
 						email.set("sormuras@gmail.com")
+					}
+					developer {
+						id.set("juliette-derancourt")
+						name.set("Juliette de Rancourt")
+						email.set("derancourt.juliette@gmail.com")
 					}
 				}
 			}

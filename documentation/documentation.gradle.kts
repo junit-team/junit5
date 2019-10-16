@@ -197,13 +197,14 @@ tasks {
 
 		title = "JUnit $version API"
 
-		val stylesheetFooterFile = rootProject.file("src/javadoc/stylesheet-footer.css")
-		inputs.file(stylesheetFooterFile)
+		val additionalStylesheetFile = "src/javadoc/junit-stylesheet.css"
+		inputs.file(additionalStylesheetFile)
 
 		options {
 			memberLevel = JavadocMemberLevel.PROTECTED
 			header = rootProject.description
 			encoding = "UTF-8"
+			locale = "en"
 			(this as StandardJavadocDocletOptions).apply {
 				splitIndex(true)
 				addBooleanOption("Xdoclint:none", true)
@@ -230,6 +231,7 @@ tasks {
 						"Vintage" to listOf("org.junit.vintage.*"),
 						"Platform" to listOf("org.junit.platform.*")
 				)
+				addStringOption("-add-stylesheet", additionalStylesheetFile)
 				use(true)
 				noTimestamp(true)
 			}
@@ -246,10 +248,6 @@ tasks {
 				// Remove subproject JARs so Kotlin classes don"t get picked up
 				.filter { it.isDirectory || !it.absolutePath.startsWith(projectDir.absolutePath) }
 
-		doLast {
-			val javadocStylesheet = File(destinationDir, "stylesheet.css")
-			javadocStylesheet.appendBytes(stylesheetFooterFile.readBytes())
-		}
 		doLast {
 			// For compatibility with pre JDK 10 versions of the Javadoc tool
 			copy {

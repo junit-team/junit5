@@ -16,6 +16,7 @@ import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueId
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNestedMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -132,7 +133,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void discoverDeeplyNestedTestMethodByNestedMethodSelector() throws Exception {
-		var selector = new NestedMethodSelector(
+		var selector = selectNestedMethod(
 			List.of(TestCaseWithExtendedNested.class, TestCaseWithExtendedNested.ConcreteInner1.class),
 			AbstractSuperClass.NestedInAbstractClass.class,
 			AbstractSuperClass.NestedInAbstractClass.class.getDeclaredMethod("test"));

@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.cause;
@@ -78,6 +79,13 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	@DisplayName("does not prevent user from deleting the temp dir within a test")
 	void tempDirectoryDoesNotPreventUserFromDeletingTempDir() {
 		executeTestsForClass(UserTempDirectoryDeletionDoesNotCauseFailureTestCase.class).testEvents()//
+				.assertStatistics(stats -> stats.started(1).succeeded(1));
+	}
+
+	@Test
+	@DisplayName("is capable of removal of a read-only file")
+	void nonWritableFileDoesNotCauseFailureTestCase() {
+		executeTestsForClass(NonWritableFileDoesNotCauseFailureTestCase.class).testEvents()//
 				.assertStatistics(stats -> stats.started(1).succeeded(1));
 	}
 
@@ -740,6 +748,20 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		void deleteTempDir(@TempDir Path tempDir) throws IOException {
 			Files.delete(tempDir);
 			assertThat(tempDir).doesNotExist();
+		}
+
+	}
+
+	// https://github.com/junit-team/junit5/issues/2046
+	static class NonWritableFileDoesNotCauseFailureTestCase {
+
+		@Test
+		void createReadonlyFile(@TempDir Path tempDir) throws IOException {
+			// Removal of setWritable(false) files might fail (e.g. for Windows)
+			// The test verifies that @TempDir is capable of removing of such files
+			var path = Files.write(tempDir.resolve("test.txt"), new byte[0]);
+			assumeTrue(path.toFile().setWritable(false),
+				() -> "Unable to set file " + path + " readonly via .toFile().setWritable(false)");
 		}
 
 	}

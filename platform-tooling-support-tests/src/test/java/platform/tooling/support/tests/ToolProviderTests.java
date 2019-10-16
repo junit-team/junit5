@@ -15,13 +15,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.module.ModuleDescriptor;
 import java.lang.module.ModuleFinder;
 import java.lang.module.ModuleReference;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -29,68 +35,54 @@ import java.util.spi.ToolProvider;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.OS;
-import org.junit.jupiter.api.io.TempDir;
+
 import platform.tooling.support.Helper;
+import platform.tooling.support.Request;
 
 /**
  * @since 1.6
  */
 class ToolProviderTests {
 
-	private static void assertJUnitPrintsHelpMessage(ToolProvider junit) {
-		var out = new StringWriter();
-		var err = new StringWriter();
-		var code = junit.run(new PrintWriter(out), new PrintWriter(err), "--help");
-		assertAll(() -> assertLinesMatch(List.of( //
-			">> USAGE >>", //
-			"Launches the JUnit Platform from the console.", //
-			">> OPTIONS >>"), //
-			out.toString().lines().collect(Collectors.toList())), //
-			() -> assertEquals("", err.toString()), //
-			() -> assertEquals(0, code, "Expected exit of 0, but got: " + code) //
-		);
+	private static final Path LIB = Request.WORKSPACE.resolve("tool-provider-tests/lib");
+
+	@BeforeAll
+	static void prepareLocalLibraryDirectoryWithJUnitPlatformModules() {
+		try {
+			var lib = Files.createDirectories(LIB);
+			for (var module : Helper.loadModuleDirectoryNames()) {
+				if (module.startsWith("junit-platform")) {
+					var jar = Helper.createJarPath(module);
+					Files.copy(jar, lib.resolve(jar.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+				}
+			}
+			Helper.load(lib, "org.apiguardian", "apiguardian-api", Helper.version("apiGuardian", "1.1.0"));
+			Helper.load(lib, "org.opentest4j", "opentest4j", Helper.version("ota4j", "1.2.0"));
+		}
+		catch (Exception e) {
+			throw new AssertionError("Preparing local library folder failed", e);
+		}
 	}
 
 	@Test
-	void findAndRunJUnitOnTheModulePath(@TempDir Path temp) throws Exception {
-		// Prepare the following modules:
-		//
-		// org.apiguardian.api
-		// org.junit.platform.commons
-		// org.junit.platform.console
-		// org.junit.platform.engine
-		// org.junit.platform.launcher
-		// org.junit.platform.reporting
-		// org.junit.platform.runner
-		// org.junit.platform.suite.api
-		// org.junit.platform.testkit
-		// org.opentest4j
-		var lib = Files.createDirectories(temp.resolve("lib"));
-		for (var module : Helper.loadModuleDirectoryNames()) {
-			if (module.startsWith("junit-platform")) {
-				var jar = Helper.createJarPath(module);
-				Files.copy(jar, lib.resolve(jar.getFileName()));
-			}
-		}
-		Helper.load(lib, "org.apiguardian", "apiguardian-api", Helper.version("apiGuardian", "1.1.0"));
-		Helper.load(lib, "org.opentest4j", "opentest4j", Helper.version("ota4j", "1.2.0"));
+	void findAndRunJUnitOnTheClassPath() {
+		try (var loader = new URLClassLoader("junit", urls(LIB), ClassLoader.getPlatformClassLoader())) {
+			var sl = ServiceLoader.load(ToolProvider.class, loader);
+			var junit = StreamSupport.stream(sl.spliterator(), false).filter(p -> p.name().equals("junit")).findFirst();
 
-		try {
-			checkModulePath(lib);
+			assertTrue(junit.isPresent(), "Tool 'junit' not found in: " + LIB);
+			assertJUnitPrintsHelpMessage(junit.get());
 		}
-		finally {
-			// Work around https://bugs.openjdk.java.net/browse/JDK-8224794
-			if (OS.WINDOWS.isCurrentOs()) {
-				System.gc();
-				Thread.sleep(1234);
-			}
+		catch (IOException e) {
+			throw new AssertionError("Closing URLClassLoader failed: " + e, e);
 		}
 	}
 
-	private void checkModulePath(Path lib) {
-		var finder = ModuleFinder.of(lib);
+	@Test
+	void findAndRunJUnitOnTheModulePath() {
+		var finder = ModuleFinder.of(LIB);
 		var modules = finder.findAll().stream() //
 				.map(ModuleReference::descriptor) //
 				.map(ModuleDescriptor::toNameAndVersion) //
@@ -107,6 +99,40 @@ class ToolProviderTests {
 
 		assertTrue(junit.isPresent(), "Tool 'junit' not found in modules: " + modules);
 		assertJUnitPrintsHelpMessage(junit.get());
+	}
+
+	private static URL[] urls(Path directory) {
+		try (var stream = Files.newDirectoryStream(directory, "*.jar")) {
+			var paths = new ArrayList<URL>();
+			stream.forEach(path -> paths.add(url(path)));
+			return paths.toArray(URL[]::new);
+		}
+		catch (Exception e) {
+			throw new AssertionError("Creating URL[] failed: " + e, e);
+		}
+	}
+
+	private static URL url(Path path) {
+		try {
+			return path.toUri().toURL();
+		}
+		catch (MalformedURLException e) {
+			throw new AssertionError("Converting path to URL failed: " + e, e);
+		}
+	}
+
+	private static void assertJUnitPrintsHelpMessage(ToolProvider junit) {
+		var out = new StringWriter();
+		var err = new StringWriter();
+		var code = junit.run(new PrintWriter(out), new PrintWriter(err), "--help");
+		assertAll(() -> assertLinesMatch(List.of( //
+			">> USAGE >>", //
+			"Launches the JUnit Platform from the console.", //
+			">> OPTIONS >>"), //
+			out.toString().lines().collect(Collectors.toList())), //
+			() -> assertEquals("", err.toString()), //
+			() -> assertEquals(0, code, "Expected exit of 0, but got: " + code) //
+		);
 	}
 
 }

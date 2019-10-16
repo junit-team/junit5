@@ -1,6 +1,6 @@
 [[release-notes]]
 = JUnit 5 Release Notes
-Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Christian Stein
+Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Juliette de Rancourt; Christian Stein
 //
 :docinfodir: ../docinfos
 :docinfo2:

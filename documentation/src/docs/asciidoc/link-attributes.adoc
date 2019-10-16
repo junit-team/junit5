@@ -92,14 +92,17 @@ endif::[]
 :TestTemplateInvocationContextProvider:      {javadoc-root}/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html[TestTemplateInvocationContextProvider]
 :TestWatcher:                                {javadoc-root}/org/junit/jupiter/api/extension/TestWatcher.html[TestWatcher]
 // Jupiter Conditions
+:DisabledForJreRange:                         {javadoc-root}/org/junit/jupiter/api/condition/DisabledForJreRange.html[@DisabledForJreRange]
 :DisabledIfEnvironmentVariable:              {javadoc-root}/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariable.html[@DisabledIfEnvironmentVariable]
 :DisabledIfSystemProperty:                   {javadoc-root}/org/junit/jupiter/api/condition/DisabledIfSystemProperty.html[@DisabledIfSystemProperty]
 :DisabledOnJre:                              {javadoc-root}/org/junit/jupiter/api/condition/DisabledOnJre.html[@DisabledOnJre]
 :DisabledOnOs:                               {javadoc-root}/org/junit/jupiter/api/condition/DisabledOnOs.html[@DisabledOnOs]
+:EnabledForJreRange:                         {javadoc-root}/org/junit/jupiter/api/condition/EnabledForJreRange.html[@EnabledForJreRange]
 :EnabledIfEnvironmentVariable:               {javadoc-root}/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.html[@EnabledIfEnvironmentVariable]
 :EnabledIfSystemProperty:                    {javadoc-root}/org/junit/jupiter/api/condition/EnabledIfSystemProperty.html[@EnabledIfSystemProperty]
 :EnabledOnJre:                               {javadoc-root}/org/junit/jupiter/api/condition/EnabledOnJre.html[@EnabledOnJre]
 :EnabledOnOs:                                {javadoc-root}/org/junit/jupiter/api/condition/EnabledOnOs.html[@EnabledOnOs]
+:JRE:                                        {javadoc-root}/org/junit/jupiter/api/condition/JRE.html[JRE]
 // Jupiter I/O
 :TempDir:                                    {javadoc-root}/org/junit/jupiter/api/io/TempDir.html[@TempDir]
 // Jupiter Params

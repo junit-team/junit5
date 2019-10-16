@@ -59,6 +59,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @see org.junit.jupiter.api.condition.DisabledIfSystemProperty
  * @see org.junit.jupiter.api.condition.EnabledOnJre
  * @see org.junit.jupiter.api.condition.DisabledOnJre
+ * @see org.junit.jupiter.api.condition.EnabledForJreRange
+ * @see org.junit.jupiter.api.condition.DisabledForJreRange
  * @see org.junit.jupiter.api.condition.EnabledOnOs
  * @see org.junit.jupiter.api.condition.DisabledOnOs
  * @see org.junit.jupiter.api.Disabled

@@ -425,6 +425,26 @@ public final class Constants {
 	@API(status = EXPERIMENTAL, since = "5.5")
 	public static final String DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME = JupiterConfiguration.DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME;
 
+	/**
+	 * Property used to determine if timeouts are applied to tests: {@value}.
+	 *
+	 * <p>The value of this property will be used to toggle whether
+	 * {@link org.junit.jupiter.api.Timeout @Timeout} is applied to tests.</p>
+	 *
+	 * <h3>Supported timeout mode values:</h3>
+	 * <ul>
+	 * <li>{@code enabled}: enables timeouts
+	 * <li>{@code disabled}: disables timeouts
+	 * <li>{@code disabled_on_debug}: disables timeouts while debugging
+	 * </ul>
+	 *
+	 * <p>If not specified, the default is {@code "enabled"}.
+	 *
+	 * @since 5.6
+	 */
+	@API(status = EXPERIMENTAL, since = "5.6")
+	public static final String TIMEOUT_MODE_PROPERTY_NAME = JupiterConfiguration.TIMEOUT_MODE_PROPERTY_NAME;
+
 	private Constants() {
 		/* no-op */
 	}
