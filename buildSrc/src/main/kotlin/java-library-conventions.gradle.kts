@@ -226,12 +226,12 @@ tasks.compileTestJava {
 	))
 }
 
-class ModulePathArgumentProvider : CommandLineArgumentProvider {
+inner class ModulePathArgumentProvider : CommandLineArgumentProvider {
 	@get:Input val modulePath: Provider<Configuration> = configurations.compileClasspath
 	override fun asArguments(): List<String> = listOf("--module-path", modulePath.get().asPath)
 }
 
-class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvider {
+inner class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvider {
 
 	@get:Input val module: String = javaModuleName(it)
 
