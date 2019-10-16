@@ -45,6 +45,16 @@ configurations {
 	named("mainRelease9CompileClasspath") {
 		extendsFrom(runtimeClasspath.get())
 	}
+	apiElements {
+		attributes {
+			attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 8)
+		}
+	}
+	runtimeElements {
+		attributes {
+			attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 8)
+		}
+	}
 }
 
 eclipse {
