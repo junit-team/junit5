@@ -157,7 +157,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertSame(testInstances.getInnermostInstance(),
 			instanceMap.get(postProcessTestInstanceKey).getInnermostInstance());
 		assertSame(testInstances.getInnermostInstance(),
-				instanceMap.get(preDestroyCallbackTestInstanceKey).getInnermostInstance());
+			instanceMap.get(preDestroyCallbackTestInstanceKey).getInnermostInstance());
 
 		assertThat(lifecyclesMap.keySet()).containsExactly(testClass);
 		assertThat(lifecyclesMap.get(testClass).stream()).allMatch(Lifecycle.PER_METHOD::equals);
@@ -233,7 +233,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertSame(testInstances.getInnermostInstance(),
 			instanceMap.get(postProcessTestInstanceKey).getInnermostInstance());
 		assertSame(testInstances.getInnermostInstance(),
-				instanceMap.get(preDestroyCallbackTestInstanceKey).getInnermostInstance());
+			instanceMap.get(preDestroyCallbackTestInstanceKey).getInnermostInstance());
 
 		assertNull(instanceMap.get(containerExecutionConditionKey));
 
@@ -339,7 +339,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertSame(nestedInstances3.getInnermostInstance(),
 			instanceMap.get(nestedExecutionConditionKey3).getInnermostInstance());
 		assertSame(nestedInstances3.getInnermostInstance(),
-				instanceMap.get(nestedPreDestroyCallbackTestInstanceKey).getInnermostInstance());
+			instanceMap.get(nestedPreDestroyCallbackTestInstanceKey).getInnermostInstance());
 
 		Object outerInstance1 = instanceMap.get(nestedExecutionConditionKey1).findInstance(testClass).get();
 		Object outerInstance2 = instanceMap.get(nestedExecutionConditionKey2).findInstance(testClass).get();
@@ -641,6 +641,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	private static String preDestroyCallbackTestInstanceKey(Class<?> testClass) {
 		return concat(TestInstancePreDestroyCallback.class, testClass);
 	}
+
 	private static String beforeAllCallbackKey(Class<?> testClass) {
 		return concat(BeforeAllCallback.class, testClass);
 	}
@@ -967,8 +968,9 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	// Intentionally not implementing BeforeTestExecutionCallback, AfterTestExecutionCallback,
 	// and TestExecutionExceptionHandler, since they are analogous to BeforeEachCallback and
 	// AfterEachCallback with regard to instance scope and Lifecycle.
-	static class InstanceTrackingExtension implements ExecutionCondition, TestInstancePostProcessor, TestInstancePreDestroyCallback,
-			BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback, TestTemplateInvocationContextProvider {
+	static class InstanceTrackingExtension
+			implements ExecutionCondition, TestInstancePostProcessor, TestInstancePreDestroyCallback, BeforeAllCallback,
+			AfterAllCallback, BeforeEachCallback, AfterEachCallback, TestTemplateInvocationContextProvider {
 
 		@Override
 		public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
@@ -999,7 +1001,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			assertThat(context.getTestInstance()).isPresent();
 			assertNotNull(testInstance);
 			instanceMap.put(preDestroyCallbackTestInstanceKey(context.getRequiredTestClass()),
-					DefaultTestInstances.of(testInstance));
+				DefaultTestInstances.of(testInstance));
 		}
 
 		@Override

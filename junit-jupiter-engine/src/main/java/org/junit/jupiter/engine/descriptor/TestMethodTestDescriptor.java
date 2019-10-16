@@ -250,10 +250,10 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 	private void invokeTestInstancePreDestroyCallback(JupiterEngineExecutionContext context) {
 		context.getExtensionContext().getTestInstanceLifecycle().ifPresent(lifecycle -> {
-			if(TestInstance.Lifecycle.PER_METHOD == lifecycle) {
+			if (TestInstance.Lifecycle.PER_METHOD == lifecycle) {
 				invokeAllAfterMethodsOrCallbacks(TestInstancePreDestroyCallback.class, context,
-					(callback, extensionContext) -> callback.preDestroyTestInstance(extensionContext.getRequiredTestInstance(),
-					extensionContext));
+					(callback, extensionContext) -> callback.preDestroyTestInstance(
+						extensionContext.getRequiredTestInstance(), extensionContext));
 			}
 		});
 	}
