@@ -121,6 +121,7 @@ import org.apiguardian.api.API;
  * <li>{@link AfterTestExecutionCallback}</li>
  * <li>{@link TestInstanceFactory}</li>
  * <li>{@link TestInstancePostProcessor}</li>
+ * <li>{@link TestInstancePreDestroyCallback}</li>
  * <li>{@link ParameterResolver}</li>
  * <li>{@link TestExecutionExceptionHandler}</li>
  * <li>{@link TestTemplateInvocationContextProvider}</li>

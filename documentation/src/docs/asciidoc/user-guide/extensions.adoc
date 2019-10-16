@@ -112,8 +112,8 @@ If a `@RegisterExtension` field is `static`, the extension will be registered af
 extensions that are registered at the class level via `@ExtendWith`. Such _static
 extensions_ are not limited in which extension APIs they can implement. Extensions
 registered via static fields may therefore implement class-level and instance-level
-extension APIs such as `BeforeAllCallback`, `AfterAllCallback`, and
-`TestInstancePostProcessor` as well as method-level extension APIs such as
+extension APIs such as `BeforeAllCallback`, `AfterAllCallback`, `TestInstancePostProcessor`,
+ and `TestInstancePreDestroyCallback` as well as method-level extension APIs such as
 `BeforeEachCallback`, etc.
 
 In the following example, the `server` field in the test class is initialized
@@ -313,6 +313,15 @@ initialization methods on the test instance, etc.
 
 For a concrete example, consult the source code for the `{MockitoExtension}` and the
 `{SpringExtension}`.
+
+[[extensions-test-instance-pre-destroy-callback]]
+=== Test Instance Pre-destroy Callback
+
+`{TestInstancePreDestroyCallback}` defines the API for `Extensions` that wish to process
+test instances _after_ they have been used in tests and _before_ they are destroyed.
+
+Common use cases include cleaning dependencies that have been injecting into the
+test instance, invoking custom de-initialization methods on the test instance, etc.
 
 [[extensions-parameter-resolution]]
 === Parameter Resolution
