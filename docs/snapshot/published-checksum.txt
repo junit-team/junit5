@@ -1,4 +1,5 @@
 00170bdb53df241bcbb4f30fed9dbbad  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherFactory.java
+00349f8dc84bc9514350a8ce53db7bf0  documentation/src/javadoc/junit-stylesheet.css
 0054afbadf6c1378555f31a55304353c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestTemplateInvocationContext.java
 00697cd95518402954448320dfb4f0e5  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullArgumentsProvider.java
 009a77eccf222e0634cb7dd09fc5dad6  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/package-info.java
@@ -242,6 +243,7 @@
 5beeebeb56b5d1f68ce917275a7a5b68  junit-vintage-engine/src/main/java/org/junit/vintage/engine/package-info.java
 5c0ae332fe9f00890a505dcbeebc0f9d  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/MethodSource.java
 5c26dc1d99e858cceddd0ec89e831637  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeEngines.java
+5c6ceb2deec2511a4ebcbdf1c2fe8a8f  documentation/documentation.gradle.kts
 5c7943bb50c093b70ef739c71272777c  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ReflectionSupport.java
 5d29856263ab78318ee15452552ae0e7  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/FileSystemSource.java
 5dd8098db2c78876fd940257e9c8ffdf  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NopLock.java
@@ -645,7 +647,6 @@ fac6a2b8c3a754375b43865e47923672  junit-jupiter-engine/src/main/java/org/junit/j
 facfabd890e3814d17019ffbaa52eab7  documentation/src/test/java/example/exception/IgnoreIOExceptionExtension.java
 fafa5e787e2007fd0f579d35372425de  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ThrowableCollector.java
 fbbdfef7744b4abba3046f1d0fe93dec  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicNode.java
-fc01224485c4cad4d8ae48c282f14c4f  documentation/documentation.gradle.kts
 fc3923a3647a6a99aa1f71e8ff47d667  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ValueSource.java
 fc3ee56c1ab832cd775d8986ebf2eb8c  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java
 fc677f3192fcb09b73a7a32f5a2219b8  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerDecorator.java
