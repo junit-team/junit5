@@ -81,6 +81,11 @@ if (project in mavenizedProjects) {
 
 	apply(plugin = "publishing-conventions")
 
+	java {
+		publishJavadoc()
+		publishSources()
+	}
+
 	tasks.javadoc {
 		source(sourceSets["mainRelease9"].allJava)
 		options {
@@ -106,19 +111,12 @@ if (project in mavenizedProjects) {
 		}
 	}
 
-	val sourcesJar by tasks.creating(Jar::class) {
-		archiveClassifier.set("sources")
-		from(sourceSets.main.get().allSource)
+	tasks.named<Jar>("sourcesJar") {
 		from(sourceSets["mainRelease9"].allSource)
 		from(moduleSourceDir) {
 			include("module-info.java")
 		}
 		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-	}
-
-	val javadocJar by tasks.creating(Jar::class) {
-		archiveClassifier.set("javadoc")
-		from(tasks.javadoc)
 	}
 
 	tasks.withType<Jar>().configureEach {
@@ -138,8 +136,6 @@ if (project in mavenizedProjects) {
 		publications {
 			named<MavenPublication>("maven") {
 				from(components["java"])
-				artifact(sourcesJar)
-				artifact(javadocJar)
 				pom {
 					description.set(provider { "Module \"${project.name}\" of JUnit 5." })
 				}
