@@ -671,6 +671,16 @@
       "sbrannen"
     ]
   },
+    {
+    "title": "workshop: (8h) JUnit5: From @Test Up to Your Own TestEngine ",
+    "event": "J-Fall 2019",
+    "date": "2019-10-30",
+    "location": "Amsterdam, NL",
+    "link": "https://jfall.nl/pre-conference/",
+    "speakers": [
+      "svenruppert"
+    ]
+  },
   {
     "title": "JUnit: time to shift into 5th gear!",
     "event": "Devoxx Belgium",
