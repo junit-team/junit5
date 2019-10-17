@@ -74,8 +74,8 @@ on GitHub.
   handling on multiple versions of JRE.
 * Extension providing `@TempDir` path tries to delete non-writable files by make them
   writable first.
-* New `TestInstancePreDestroyCallback` interface that defines the API for `Extension`'s 
-  that wish to process test instances *after* they have been used in tests and *before* 
+* New `TestInstancePreDestroyCallback` interface that defines the API for `Extension`'s
+  that wish to process test instances *after* they have been used in tests and *before*
   they are destroyed.
 
 
