@@ -711,22 +711,22 @@ combination of other built-in conditions or create and use a custom implementati
 <p>Auto-detection of enum type from method signature for <code>@EnumSource</code>.</p>
 </li>
 <li>
-<p>New <code>TypeBasedParameterResolver&lt;T&gt;</code> abstract base class that serves as a generic adapter
-for the <code>ParameterResolver</code> API and simplifies the implementation of a custom resolver
-that supports parameters of a specific type.</p>
+<p>New <code>@EnabledForJreRange</code> and <code>@DisabledForJreRange</code> annotations for enabling or
+disabling test execution over a range of JRE versions.</p>
 </li>
 <li>
-<p>New configuration parameter <code>junit.jupiter.execution.timeout.mode</code> to control whether
-timeouts are applied to tests or not. Supported values are: <code>enabled</code>, <code>disabled</code>, and
+<p>The <code>@TempDir</code> extension now makes an attempt to delete non-writable files by making
+them writable first.</p>
+</li>
+<li>
+<p>New <code>junit.jupiter.execution.timeout.mode</code> configuration parameter to control whether
+timeouts are applied to tests. Supported values include <code>enabled</code>, <code>disabled</code>, and
 <code>disabled_on_debug</code>.</p>
 </li>
 <li>
-<p>New <code>@EnabledForJreRange</code> and <code>@DisabledForJreRange</code> annotations for easier test execution
-handling on multiple versions of JRE.</p>
-</li>
-<li>
-<p>Extension providing <code>@TempDir</code> path tries to delete non-writable files by make them
-writable first.</p>
+<p>New <code>TypeBasedParameterResolver&lt;T&gt;</code> abstract base class that serves as a generic adapter
+for the <code>ParameterResolver</code> API and simplifies the implementation of a custom resolver
+that supports parameters of a specific type.</p>
 </li>
 </ul>
 </div>
@@ -759,10 +759,10 @@ writable first.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Improve performance for projects with a large number of tests.</p>
+<p>Performance improvements for projects with a large number of tests.</p>
 </li>
 <li>
-<p>Improve performance for test classes with a large number of methods.</p>
+<p>Performance improvements for test classes with a large number of methods.</p>
 </li>
 </ul>
 </div>
@@ -923,7 +923,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-10-16 15:00:34 UTC
+Last updated 2019-10-17 13:11:35 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

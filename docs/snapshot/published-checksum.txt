@@ -45,6 +45,7 @@
 0f75fc48a3eb8179cba4a41b4145bd0f  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/AggregateWith.java
 0f9356cb202231ef628aa1d9baa71f84  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/UriSelector.java
 1058e386e5a8c52cdb5ec77ebb6655de  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/ClasspathResourceSource.java
+105a6dd38500ccf62694306dd6d057a9  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/ExtensionRegistrar.java
 10be7ecc253e4c5a5f59610919918351  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepeatedTestExtension.java
 113cf5d8db104dec1945dff8a65bdd15  junit-platform-commons/src/main/java/org/junit/platform/commons/PreconditionViolationException.java
 114cae6ea2bd5b97a087b778b56ee19e  documentation/src/test/java/example/testkit/EngineTestKitAllEventsDemo.java
@@ -87,6 +88,7 @@
 204d92a1f4d82c5c133379bf0179e2d0  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/ExternalResourceAdapter.java
 2064187820a078d19c1ad18937e9c366  junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatformRunnerListener.java
 20d14d3d146b60516f9783ac54869e0b  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.java
+21d5f4b2929e2ff9065ea5b1f10bafb5  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 22d96ea2eaca4fc33d7c05933a74e34b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/BeforeEachCallback.java
 23024fb5d940b432fcf3b523ce49db52  junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncherExecutionResult.java
 236f919e12df03a148ad0eaae274be97  documentation/src/test/java/example/MyFirstJUnitJupiterTests.java
@@ -188,7 +190,6 @@
 49d4b660b04fca83ea9ce793acb50c74  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/LifecycleMethodUtils.java
 4a164d67b028c45bf421678ce6889307  documentation/src/main/java/example/registration/WebServerExtension.java
 4a1da47ce2b5b7b4d5fd1145737a933a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/io/package-info.java
-4a2449687135403e1866ca682bb85ba8  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 4aea32dcf4957b47b2bfbb38e386abc5  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/SimpleArgumentConverter.java
 4b8282264b138889e73288868759677e  junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatform.java
 4bb37b86a49a99d0b47c28f24d93bdbf  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/OutcomeDelayingEngineExecutionListener.java
@@ -510,7 +511,6 @@ c751641e41bf4e150f7415d2d96f1010  junit-platform-launcher/src/main/java/org/juni
 c77f25d530f08066bf21f2e0eae29e7a  documentation/src/docs/asciidoc/docinfos/docinfo-footer.html
 c8204e0a13f8ea339b97d224ee0057b3  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/DefaultDiscoveryRequest.java
 c8c0a0f8fc39fbbad960af2ff1016e23  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/package-info.java
-c9215985066eca682d069ddf558d66d2  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/ExtensionRegistrar.java
 c92af9b10b5d151f2d9be352c061a43b  junit-jupiter-params/src/main/java/org/junit/jupiter/params/support/AnnotationConsumer.java
 c9a8e70b07de0a0f70126c49b554a492  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertArrayEquals.java
 ca2c6314d32a8d519afaf3f905c64dff  junit-platform-console/src/main/java/org/junit/platform/console/tasks/DiscoveryRequestCreator.java

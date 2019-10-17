@@ -116,7 +116,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#INTERNAL" title="class or interface in org.apiguardian.api" class="externalLink">INTERNAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.5")
 public interface <span class="typeNameLabel">ExtensionRegistrar</span></pre>
-<div class="block">An <code>ExtensionRegistrar</code> is used to register extension.</div>
+<div class="block">An <code>ExtensionRegistrar</code> is used to register extensions.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.5</dd>
@@ -150,7 +150,7 @@ public interface <span class="typeNameLabel">ExtensionRegistrar</span></pre>
                  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;source)</code></th>
 <td class="colLast">
 <div class="block">Register the supplied <a href="../../api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extension</code></a>, without checking if an extension
- of that type already exists.</div>
+ of that type has already been registered.</div>
 </td>
 </tr>
 </tbody>
@@ -182,7 +182,7 @@ public interface <span class="typeNameLabel">ExtensionRegistrar</span></pre>
 <pre class="methodSignature">void&nbsp;registerExtension&#8203;(<a href="../../api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a>&nbsp;extension,
                        <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;source)</pre>
 <div class="block">Register the supplied <a href="../../api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extension</code></a>, without checking if an extension
- of that type already exists.
+ of that type has already been registered.
 
  <h4>Semantics for Source</h4>
 
