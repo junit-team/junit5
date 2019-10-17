@@ -1,6 +1,6 @@
 pluginManagement {
 	plugins {
-		id("com.gradle.build-scan") version "2.4.2"
+		id("com.gradle.enterprise") version "3.0"
 		id("net.nemerosa.versioning") version "2.8.2"
 		id("com.github.ben-manes.versions") version "0.26.0"
 		id("com.diffplug.gradle.spotless") version "3.25.0"
@@ -10,6 +10,17 @@ pluginManagement {
 		id("org.asciidoctor.convert") version "1.5.8.1"
 		id("me.champeau.gradle.jmh") version "0.4.8"
 		id("io.spring.nohttp") version "0.0.3.RELEASE"
+	}
+}
+
+plugins {
+	id("com.gradle.enterprise")
+}
+
+gradleEnterprise {
+	buildScan {
+		termsOfServiceUrl = "https://gradle.com/terms-of-service"
+		termsOfServiceAgree = "yes"
 	}
 }
 
