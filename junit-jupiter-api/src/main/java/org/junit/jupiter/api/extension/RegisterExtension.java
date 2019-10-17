@@ -76,10 +76,11 @@ import org.apiguardian.api.API;
  * deterministic but intentionally nonobvious. This ensures that subsequent runs
  * of a test suite execute extensions in the same order, thereby allowing for
  * repeatable builds. However, there are times when extensions need to be
- * registered in an explicit order. To achieve that, annotate each
- * {@code @RegisterExtension} field with {@link org.junit.jupiter.api.Order @Order}.
- * Any {@code @RegisterExtension} field not annotated with {@code @Order} will
- * appear at the end of the sorted list.
+ * registered in an explicit order. To achieve that, you can annotate
+ * {@code @RegisterExtension} fields with {@link org.junit.jupiter.api.Order @Order}.
+ * Any {@code @RegisterExtension} field not annotated with {@code @Order} will be
+ * ordered using the {@link org.junit.jupiter.api.Order#DEFAULT default} order
+ * value.
  *
  * <h3>Example Usage</h3>
  *

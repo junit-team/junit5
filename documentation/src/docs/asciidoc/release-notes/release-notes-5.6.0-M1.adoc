@@ -57,6 +57,10 @@ on GitHub.
   with the intent to remove them in JUnit Jupiter 5.6. Users must now rely on a
   combination of other built-in conditions or create and use a custom implementation of
   `ExecutionCondition` to evaluate the same conditions.
+* The default `@Order` value for non-annotated `@RegisterExtension` fields and test
+  methods is now `Integer.MAX_VALUE / 2` instead of `Integer.MAX_VALUE`. If you had
+  previously assigned extension fields or test methods an explicit order greater than
+  `Integer.MAX_VALUE / 2`, this may be a breaking change for you.
 
 ==== New Features and Improvements
 
@@ -68,6 +72,12 @@ on GitHub.
   disabling test execution over a range of JRE versions.
 * The `@TempDir` extension now makes an attempt to delete non-writable files by making
   them writable first.
+* The default `@Order` value for non-annotated `@RegisterExtension` fields and test
+  methods is now `Integer.MAX_VALUE / 2` instead of `Integer.MAX_VALUE`. This allows
+  `@Order` annotated fields and methods to be explicitly ordered after non-annotated
+  fields and methods. For example, this allows _before_ callback extensions to be
+  registered last and _after_ callback extensions to be registered first, relative to
+  other programmatically registered extensions.
 * New `junit.jupiter.execution.timeout.mode` configuration parameter to control whether
   timeouts are applied to tests. Supported values include `enabled`, `disabled`, and
   `disabled_on_debug`.
