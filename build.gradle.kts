@@ -2,7 +2,6 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 plugins {
-	id("com.gradle.build-scan")
 	id("net.nemerosa.versioning")
 	id("com.github.ben-manes.versions") // gradle dependencyUpdates
 	id("com.diffplug.gradle.spotless")
@@ -10,9 +9,6 @@ plugins {
 }
 
 buildScan {
-	termsOfServiceUrl = "https://gradle.com/terms-of-service"
-	termsOfServiceAgree = "yes"
-
 	if (System.getenv("CI") != null || System.getenv("GITHUB_WORKFLOW") != null) {
 		tag("CI")
 	} else {
