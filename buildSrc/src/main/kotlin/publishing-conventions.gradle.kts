@@ -17,7 +17,13 @@ tasks[MavenPublishPlugin.PUBLISH_LOCAL_LIFECYCLE_TASK_NAME].dependsOn(build)
 
 signing {
 	sign(publishing.publications)
-	setRequired(!(isSnapshot || isContinuousIntegrationEnvironment || isJitPackEnvironment))
+	isRequired = !(isSnapshot || isContinuousIntegrationEnvironment || isJitPackEnvironment)
+}
+
+tasks.withType<Sign>().configureEach {
+	onlyIf {
+		!isSnapshot // Gradle Module Metadata currently does not support signing snapshots
+	}
 }
 
 nexusPublishing {
