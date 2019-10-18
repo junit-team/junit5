@@ -35,7 +35,7 @@ var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
 var pathtoroot = "../../../../../../";
-var useModuleDirectories = false;
+var useModuleDirectories = true;
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -64,6 +64,30 @@ loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<ul class="navListSearch">
+<li><label for="search">SEARCH:</label>
+<input type="text" id="search" value="search" disabled="disabled">
+<input type="reset" id="reset" value="reset" disabled="disabled">
+</li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -79,16 +103,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
-<ul class="navListSearch">
-<li><label for="search">SEARCH:</label>
-<input type="text" id="search" value="search" disabled="disabled">
-<input type="reset" id="reset" value="reset" disabled="disabled">
-</li>
-</ul>
-</div>
 <a id="skip.navbar.top">
 <!--   -->
-</a>
+</a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
 </div>
 <div class="navPadding">&nbsp;</div>
@@ -147,17 +164,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <!--   -->
 </a>
 <h3>Method Summary</h3>
-<div class="memberSummary">
-<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="tableTab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="tableTab" onclick="show(8);">Concrete Methods</button></div>
-<div id="memberSummary_tabpanel" role="tabpanel">
-<table aria-labelledby="t0">
+<table class="memberSummary">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-<tbody>
-<tr class="altColor" id="i0">
+<tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="EngineDiscoveryRequestResolver.Builder.html" title="class in org.junit.platform.engine.support.discovery">EngineDiscoveryRequestResolver.Builder</a>&lt;<a href="EngineDiscoveryRequestResolver.Builder.html" title="type parameter in EngineDiscoveryRequestResolver.Builder">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addClassContainerSelectorResolver(java.util.function.Predicate)">addClassContainerSelectorResolver</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;classFilter)</code></th>
 <td class="colLast">
@@ -166,21 +180,21 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  predicate in the respective class containers to this builder.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i1">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="EngineDiscoveryRequestResolver.Builder.html" title="class in org.junit.platform.engine.support.discovery">EngineDiscoveryRequestResolver.Builder</a>&lt;<a href="EngineDiscoveryRequestResolver.Builder.html" title="type parameter in EngineDiscoveryRequestResolver.Builder">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addSelectorResolver(java.util.function.Function)">addSelectorResolver</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;<a href="EngineDiscoveryRequestResolver.InitializationContext.html" title="interface in org.junit.platform.engine.support.discovery">EngineDiscoveryRequestResolver.InitializationContext</a>&lt;<a href="EngineDiscoveryRequestResolver.Builder.html" title="type parameter in EngineDiscoveryRequestResolver.Builder">T</a>&gt;,&#8203;<a href="SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver</a>&gt;&nbsp;resolverCreator)</code></th>
 <td class="colLast">
 <div class="block">Add a context sensitive <a href="SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery"><code>SelectorResolver</code></a> to this builder.</div>
 </td>
 </tr>
-<tr class="altColor" id="i2">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="EngineDiscoveryRequestResolver.Builder.html" title="class in org.junit.platform.engine.support.discovery">EngineDiscoveryRequestResolver.Builder</a>&lt;<a href="EngineDiscoveryRequestResolver.Builder.html" title="type parameter in EngineDiscoveryRequestResolver.Builder">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addSelectorResolver(org.junit.platform.engine.support.discovery.SelectorResolver)">addSelectorResolver</a></span>&#8203;(<a href="SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery">SelectorResolver</a>&nbsp;resolver)</code></th>
 <td class="colLast">
 <div class="block">Add a context insensitive <a href="SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery"><code>SelectorResolver</code></a> to this builder.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i3">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="EngineDiscoveryRequestResolver.Builder.html" title="class in org.junit.platform.engine.support.discovery">EngineDiscoveryRequestResolver.Builder</a>&lt;<a href="EngineDiscoveryRequestResolver.Builder.html" title="type parameter in EngineDiscoveryRequestResolver.Builder">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addTestDescriptorVisitor(java.util.function.Function)">addTestDescriptorVisitor</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;<a href="EngineDiscoveryRequestResolver.InitializationContext.html" title="interface in org.junit.platform.engine.support.discovery">EngineDiscoveryRequestResolver.InitializationContext</a>&lt;<a href="EngineDiscoveryRequestResolver.Builder.html" title="type parameter in EngineDiscoveryRequestResolver.Builder">T</a>&gt;,&#8203;<a href="../../TestDescriptor.Visitor.html" title="interface in org.junit.platform.engine">TestDescriptor.Visitor</a>&gt;&nbsp;visitorCreator)</code></th>
 <td class="colLast">
@@ -188,7 +202,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  builder.</div>
 </td>
 </tr>
-<tr class="altColor" id="i4">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="EngineDiscoveryRequestResolver.html" title="class in org.junit.platform.engine.support.discovery">EngineDiscoveryRequestResolver</a>&lt;<a href="EngineDiscoveryRequestResolver.Builder.html" title="type parameter in EngineDiscoveryRequestResolver.Builder">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#build()">build</a></span>()</code></th>
 <td class="colLast">
@@ -196,10 +210,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  configured via this builder.</div>
 </td>
 </tr>
-</tbody>
 </table>
-</div>
-</div>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -340,6 +351,24 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -355,10 +384,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
-</div>
 <a id="skip.navbar.bottom">
 <!--   -->
-</a>
+</a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
 </footer>

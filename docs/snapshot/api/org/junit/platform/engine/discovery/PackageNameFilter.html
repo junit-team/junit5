@@ -29,7 +29,7 @@
     }
 //-->
 var pathtoroot = "../../../../../";
-var useModuleDirectories = false;
+var useModuleDirectories = true;
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -58,6 +58,30 @@ loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<ul class="navListSearch">
+<li><label for="search">SEARCH:</label>
+<input type="text" id="search" value="search" disabled="disabled">
+<input type="reset" id="reset" value="reset" disabled="disabled">
+</li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -73,16 +97,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
-<ul class="navListSearch">
-<li><label for="search">SEARCH:</label>
-<input type="text" id="search" value="search" disabled="disabled">
-<input type="reset" id="reset" value="reset" disabled="disabled">
-</li>
-</ul>
-</div>
 <a id="skip.navbar.top">
 <!--   -->
-</a>
+</a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
 </div>
 <div class="navPadding">&nbsp;</div>
@@ -133,16 +150,14 @@ extends <a href="../DiscoveryFilter.html" title="interface in org.junit.platform
 <!--   -->
 </a>
 <h3>Method Summary</h3>
-<div class="memberSummary">
-<table>
+<table class="memberSummary">
 <caption><span>Static Methods</span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-<tbody>
-<tr class="altColor" id="i0">
+<tr id="i0" class="altColor">
 <td class="colFirst"><code>static <a href="PackageNameFilter.html" title="interface in org.junit.platform.engine.discovery">PackageNameFilter</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#excludePackageNames(java.lang.String...)">excludePackageNames</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;names)</code></th>
 <td class="colLast">
@@ -150,7 +165,7 @@ extends <a href="../DiscoveryFilter.html" title="interface in org.junit.platform
  supplied package names.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i1">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="PackageNameFilter.html" title="interface in org.junit.platform.engine.discovery">PackageNameFilter</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#excludePackageNames(java.util.List)">excludePackageNames</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;names)</code></th>
 <td class="colLast">
@@ -158,7 +173,7 @@ extends <a href="../DiscoveryFilter.html" title="interface in org.junit.platform
  supplied package names.</div>
 </td>
 </tr>
-<tr class="altColor" id="i2">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="PackageNameFilter.html" title="interface in org.junit.platform.engine.discovery">PackageNameFilter</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#includePackageNames(java.lang.String...)">includePackageNames</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;names)</code></th>
 <td class="colLast">
@@ -166,7 +181,7 @@ extends <a href="../DiscoveryFilter.html" title="interface in org.junit.platform
  supplied package names.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i3">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="PackageNameFilter.html" title="interface in org.junit.platform.engine.discovery">PackageNameFilter</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#includePackageNames(java.util.List)">includePackageNames</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;names)</code></th>
 <td class="colLast">
@@ -174,9 +189,7 @@ extends <a href="../DiscoveryFilter.html" title="interface in org.junit.platform
  supplied package names.</div>
 </td>
 </tr>
-</tbody>
 </table>
-</div>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.org.junit.platform.engine.Filter">
 <!--   -->
@@ -328,6 +341,24 @@ extends <a href="../DiscoveryFilter.html" title="interface in org.junit.platform
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -343,10 +374,9 @@ extends <a href="../DiscoveryFilter.html" title="interface in org.junit.platform
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
-</div>
 <a id="skip.navbar.bottom">
 <!--   -->
-</a>
+</a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
 </footer>

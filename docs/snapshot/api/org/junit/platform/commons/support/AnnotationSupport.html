@@ -35,7 +35,7 @@ var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
 var pathtoroot = "../../../../../";
-var useModuleDirectories = false;
+var useModuleDirectories = true;
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -64,6 +64,30 @@ loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<ul class="navListSearch">
+<li><label for="search">SEARCH:</label>
+<input type="text" id="search" value="search" disabled="disabled">
+<input type="reset" id="reset" value="reset" disabled="disabled">
+</li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -79,16 +103,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
-<ul class="navListSearch">
-<li><label for="search">SEARCH:</label>
-<input type="text" id="search" value="search" disabled="disabled">
-<input type="reset" id="reset" value="reset" disabled="disabled">
-</li>
-</ul>
-</div>
 <a id="skip.navbar.top">
 <!--   -->
-</a>
+</a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
 </div>
 <div class="navPadding">&nbsp;</div>
@@ -151,17 +168,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <!--   -->
 </a>
 <h3>Method Summary</h3>
-<div class="memberSummary">
-<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="tableTab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="tableTab" onclick="show(8);">Concrete Methods</button></div>
-<div id="memberSummary_tabpanel" role="tabpanel">
-<table aria-labelledby="t0">
+<table class="memberSummary">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-<tbody>
-<tr class="altColor" id="i0">
+<tr id="i0" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAnnotatedFields(java.lang.Class,java.lang.Class)">findAnnotatedFields</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;&nbsp;annotationType)</code></th>
@@ -172,7 +186,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  hierarchy.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i1">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAnnotatedFields(java.lang.Class,java.lang.Class,java.util.function.Predicate,org.junit.platform.commons.support.HierarchyTraversalMode)">findAnnotatedFields</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                    <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;&nbsp;annotationType,
@@ -185,7 +199,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  the supplied hierarchy traversal mode.</div>
 </td>
 </tr>
-<tr class="altColor" id="i2">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAnnotatedFieldValues(java.lang.Class,java.lang.Class)">findAnnotatedFieldValues</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                         <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;&nbsp;annotationType)</code></th>
@@ -196,7 +210,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  the type hierarchy.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i3">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAnnotatedFieldValues(java.lang.Class,java.lang.Class,java.lang.Class)">findAnnotatedFieldValues</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                         <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;&nbsp;annotationType,
@@ -209,7 +223,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  the type hierarchy.</div>
 </td>
 </tr>
-<tr class="altColor" id="i4">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAnnotatedFieldValues(java.lang.Object,java.lang.Class)">findAnnotatedFieldValues</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;instance,
                         <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;&nbsp;annotationType)</code></th>
@@ -220,7 +234,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  the type hierarchy.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i5">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAnnotatedFieldValues(java.lang.Object,java.lang.Class,java.lang.Class)">findAnnotatedFieldValues</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;instance,
                         <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;&nbsp;annotationType,
@@ -233,7 +247,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  hierarchy.</div>
 </td>
 </tr>
-<tr class="altColor" id="i6">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAnnotatedMethods(java.lang.Class,java.lang.Class,org.junit.platform.commons.support.HierarchyTraversalMode)">findAnnotatedMethods</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                     <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;&nbsp;annotationType,
@@ -244,7 +258,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <code>annotationType</code>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i7">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static &lt;A extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;A&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAnnotation(java.lang.reflect.AnnotatedElement,java.lang.Class)">findAnnotation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/AnnotatedElement.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">AnnotatedElement</a>&nbsp;element,
               <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;A&gt;&nbsp;annotationType)</code></th>
@@ -254,7 +268,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  present</em> on the supplied <code>element</code>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i8">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static &lt;A extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;A&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAnnotation(java.util.Optional,java.lang.Class)">findAnnotation</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/AnnotatedElement.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">AnnotatedElement</a>&gt;&nbsp;element,
               <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;A&gt;&nbsp;annotationType)</code></th>
@@ -264,7 +278,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <code>element</code>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i9">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Field.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Field</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findPublicAnnotatedFields(java.lang.Class,java.lang.Class,java.lang.Class)">findPublicAnnotatedFields</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;fieldType,
@@ -276,7 +290,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <code>annotationType</code>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i10">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>static &lt;A extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;A&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findRepeatableAnnotations(java.lang.reflect.AnnotatedElement,java.lang.Class)">findRepeatableAnnotations</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/AnnotatedElement.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">AnnotatedElement</a>&nbsp;element,
                          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;A&gt;&nbsp;annotationType)</code></th>
@@ -287,7 +301,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/AnnotatedElement.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>AnnotatedElement</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i11">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>static &lt;A extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;<br><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;A&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findRepeatableAnnotations(java.util.Optional,java.lang.Class)">findRepeatableAnnotations</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/AnnotatedElement.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">AnnotatedElement</a>&gt;&nbsp;element,
                          <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;A&gt;&nbsp;annotationType)</code></th>
@@ -298,7 +312,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  optional <code>element</code>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i12">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>static boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isAnnotated(java.lang.reflect.AnnotatedElement,java.lang.Class)">isAnnotated</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/AnnotatedElement.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">AnnotatedElement</a>&nbsp;element,
            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;&nbsp;annotationType)</code></th>
@@ -308,7 +322,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <code>element</code>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i13">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>static boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isAnnotated(java.util.Optional,java.lang.Class)">isAnnotated</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/AnnotatedElement.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">AnnotatedElement</a>&gt;&nbsp;element,
            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;&nbsp;annotationType)</code></th>
@@ -318,10 +332,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <code>element</code>.</div>
 </td>
 </tr>
-</tbody>
 </table>
-</div>
-</div>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -863,6 +874,24 @@ public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -878,10 +907,9 @@ public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
-</div>
 <a id="skip.navbar.bottom">
 <!--   -->
-</a>
+</a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
 </footer>

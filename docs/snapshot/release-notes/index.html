@@ -691,6 +691,12 @@ with the intent to remove them in JUnit Jupiter 5.6. Users must now rely on a
 combination of other built-in conditions or create and use a custom implementation of
 <code>ExecutionCondition</code> to evaluate the same conditions.</p>
 </li>
+<li>
+<p>The default <code>@Order</code> value for non-annotated <code>@RegisterExtension</code> fields and test
+methods is now <code>Integer.MAX_VALUE / 2</code> instead of <code>Integer.MAX_VALUE</code>. If you had
+previously assigned extension fields or test methods an explicit order greater than
+<code>Integer.MAX_VALUE / 2</code>, this may be a breaking change for you.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -717,6 +723,14 @@ disabling test execution over a range of JRE versions.</p>
 <li>
 <p>The <code>@TempDir</code> extension now makes an attempt to delete non-writable files by making
 them writable first.</p>
+</li>
+<li>
+<p>The default <code>@Order</code> value for non-annotated <code>@RegisterExtension</code> fields and test
+methods is now <code>Integer.MAX_VALUE / 2</code> instead of <code>Integer.MAX_VALUE</code>. This allows
+<code>@Order</code> annotated fields and methods to be explicitly ordered after non-annotated
+fields and methods. For example, this allows <em>before</em> callback extensions to be
+registered last and <em>after</em> callback extensions to be registered first, relative to
+other programmatically registered extensions.</p>
 </li>
 <li>
 <p>New <code>junit.jupiter.execution.timeout.mode</code> configuration parameter to control whether
@@ -923,7 +937,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-10-17 13:11:35 UTC
+Last updated 2019-10-18 11:35:26 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

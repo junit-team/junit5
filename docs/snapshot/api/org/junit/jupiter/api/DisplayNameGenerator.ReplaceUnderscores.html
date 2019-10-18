@@ -35,7 +35,7 @@ var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
 var pathtoroot = "../../../../";
-var useModuleDirectories = false;
+var useModuleDirectories = true;
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -64,6 +64,30 @@ loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<ul class="navListSearch">
+<li><label for="search">SEARCH:</label>
+<input type="text" id="search" value="search" disabled="disabled">
+<input type="reset" id="reset" value="reset" disabled="disabled">
+</li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -79,16 +103,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
-<ul class="navListSearch">
-<li><label for="search">SEARCH:</label>
-<input type="text" id="search" value="search" disabled="disabled">
-<input type="reset" id="reset" value="reset" disabled="disabled">
-</li>
-</ul>
-</div>
 <a id="skip.navbar.top">
 <!--   -->
-</a>
+</a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
 </div>
 <div class="navPadding">&nbsp;</div>
@@ -167,21 +184,17 @@ extends <a href="DisplayNameGenerator.Standard.html" title="class in org.junit.j
 <!--   -->
 </a>
 <h3>Constructor Summary</h3>
-<div class="memberSummary">
-<table>
+<table class="memberSummary">
 <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-<tbody>
 <tr class="altColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">ReplaceUnderscores</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-</tbody>
 </table>
-</div>
 </li>
 </ul>
 </section>
@@ -192,24 +205,21 @@ extends <a href="DisplayNameGenerator.Standard.html" title="class in org.junit.j
 <!--   -->
 </a>
 <h3>Method Summary</h3>
-<div class="memberSummary">
-<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="tableTab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="tableTab" onclick="show(8);">Concrete Methods</button></div>
-<div id="memberSummary_tabpanel" role="tabpanel">
-<table aria-labelledby="t0">
+<table class="memberSummary">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-<tbody>
-<tr class="altColor" id="i0">
+<tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateDisplayNameForClass(java.lang.Class)">generateDisplayNameForClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;testClass)</code></th>
 <td class="colLast">
 <div class="block">Generate a display name for the given top-level or <code>static</code> nested test class.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i1">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateDisplayNameForMethod(java.lang.Class,java.lang.reflect.Method)">generateDisplayNameForMethod</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;testClass,
                             <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;testMethod)</code></th>
@@ -217,17 +227,14 @@ extends <a href="DisplayNameGenerator.Standard.html" title="class in org.junit.j
 <div class="block">Generate a display name for the given method.</div>
 </td>
 </tr>
-<tr class="altColor" id="i2">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#generateDisplayNameForNestedClass(java.lang.Class)">generateDisplayNameForNestedClass</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;nestedClass)</code></th>
 <td class="colLast">
 <div class="block">Generate a display name for the given <a href="Nested.html" title="annotation in org.junit.jupiter.api"><code>@Nested</code></a> inner test class.</div>
 </td>
 </tr>
-</tbody>
 </table>
-</div>
-</div>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -367,6 +374,24 @@ extends <a href="DisplayNameGenerator.Standard.html" title="class in org.junit.j
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -382,10 +407,9 @@ extends <a href="DisplayNameGenerator.Standard.html" title="class in org.junit.j
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
-</div>
 <a id="skip.navbar.bottom">
 <!--   -->
-</a>
+</a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
 </footer>

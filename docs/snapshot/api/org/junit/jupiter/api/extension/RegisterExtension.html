@@ -29,7 +29,7 @@
     }
 //-->
 var pathtoroot = "../../../../../";
-var useModuleDirectories = false;
+var useModuleDirectories = true;
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -58,6 +58,30 @@ loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<ul class="navListSearch">
+<li><label for="search">SEARCH:</label>
+<input type="text" id="search" value="search" disabled="disabled">
+<input type="reset" id="reset" value="reset" disabled="disabled">
+</li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -71,16 +95,9 @@ loadScripts(document, 'script');</script>
 <li>Element</li>
 </ul>
 </div>
-<ul class="navListSearch">
-<li><label for="search">SEARCH:</label>
-<input type="text" id="search" value="search" disabled="disabled">
-<input type="reset" id="reset" value="reset" disabled="disabled">
-</li>
-</ul>
-</div>
 <a id="skip.navbar.top">
 <!--   -->
-</a>
+</a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
 </div>
 <div class="navPadding">&nbsp;</div>
@@ -161,10 +178,11 @@ public @interface <span class="memberNameLabel">RegisterExtension</span></pre>
  deterministic but intentionally nonobvious. This ensures that subsequent runs
  of a test suite execute extensions in the same order, thereby allowing for
  repeatable builds. However, there are times when extensions need to be
- registered in an explicit order. To achieve that, annotate each
- <code>@RegisterExtension</code> field with <a href="../Order.html" title="annotation in org.junit.jupiter.api"><code>@Order</code></a>.
- Any <code>@RegisterExtension</code> field not annotated with <code>@Order</code> will
- appear at the end of the sorted list.
+ registered in an explicit order. To achieve that, you can annotate
+ <code>@RegisterExtension</code> fields with <a href="../Order.html" title="annotation in org.junit.jupiter.api"><code>@Order</code></a>.
+ Any <code>@RegisterExtension</code> field not annotated with <code>@Order</code> will be
+ ordered using the <a href="../Order.html#DEFAULT"><code>default</code></a> order
+ value.
 
  <h3>Example Usage</h3>
 
@@ -247,6 +265,24 @@ public @interface <span class="memberNameLabel">RegisterExtension</span></pre>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -260,10 +296,9 @@ public @interface <span class="memberNameLabel">RegisterExtension</span></pre>
 <li>Element</li>
 </ul>
 </div>
-</div>
 <a id="skip.navbar.bottom">
 <!--   -->
-</a>
+</a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
 </footer>

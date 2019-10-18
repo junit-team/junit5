@@ -29,7 +29,7 @@
     }
 //-->
 var pathtoroot = "./";
-var useModuleDirectories = false;
+var useModuleDirectories = true;
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -58,16 +58,33 @@ loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="allclasses.html">All&nbsp;Classes</a></li>
+</ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
 <input type="text" id="search" value="search" disabled="disabled">
 <input type="reset" id="reset" value="reset" disabled="disabled">
 </li>
 </ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
 </div>
 <a id="skip.navbar.top">
 <!--   -->
-</a>
+</a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
 </div>
 <div class="navPadding">&nbsp;</div>
@@ -92,8 +109,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <ul class="blockList">
 <li class="blockList">
-<div class="deprecatedSummary">
-<table>
+<table class="deprecatedSummary">
 <caption><span>Classes</span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Class</th>
@@ -110,12 +126,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colDeprecatedItemName" scope="row"><a href="org/junit/platform/engine/support/hierarchical/SingleTestExecutor.html" title="class in org.junit.platform.engine.support.hierarchical">org.junit.platform.engine.support.hierarchical.SingleTestExecutor</a></th>
 <td class="colLast">
 <div class="deprecationComment">Please use <a href="org/junit/platform/engine/support/hierarchical/ThrowableCollector.html#execute(org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executable)"><code>ThrowableCollector.execute(org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executable)</code></a> and
- <code>ThrowableCollector.toTestExecutionResult()</code> instead.</div>
+ <a href="org/junit/platform/engine/support/hierarchical/ThrowableCollector.html#toTestExecutionResult()"><code>ThrowableCollector.toTestExecutionResult()</code></a> instead.</div>
 </td>
 </tr>
 </tbody>
 </table>
-</div>
 </li>
 </ul>
 <a id="exception">
@@ -123,8 +138,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <ul class="blockList">
 <li class="blockList">
-<div class="deprecatedSummary">
-<table>
+<table class="deprecatedSummary">
 <caption><span>Exceptions</span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Exceptions</th>
@@ -139,7 +153,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 </tbody>
 </table>
-</div>
 </li>
 </ul>
 <a id="method">
@@ -147,8 +160,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <ul class="blockList">
 <li class="blockList">
-<div class="deprecatedSummary">
-<table>
+<table class="deprecatedSummary">
 <caption><span>Methods</span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Method</th>
@@ -220,7 +232,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 </tbody>
 </table>
-</div>
 </li>
 </ul>
 </div>
@@ -247,9 +258,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </ul>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
+<div class="subNav">
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <a id="skip.navbar.bottom">
 <!--   -->
-</a>
+</a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
 </footer>

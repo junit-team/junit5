@@ -35,7 +35,7 @@ var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
 var pathtoroot = "./";
-var useModuleDirectories = false;
+var useModuleDirectories = true;
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -64,16 +64,33 @@ loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="allclasses.html">All&nbsp;Classes</a></li>
+</ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
 <input type="text" id="search" value="search" disabled="disabled">
 <input type="reset" id="reset" value="reset" disabled="disabled">
 </li>
 </ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
 </div>
 <a id="skip.navbar.top">
 <!--   -->
-</a>
+</a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
 </div>
 <div class="navPadding">&nbsp;</div>
@@ -83,15 +100,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </script>
 </nav>
 </header>
-<main role="main">
 <div class="header">
 <h1 class="title">JUnit 5.6.0-SNAPSHOT API</h1>
 </div>
+<main role="main">
 <div class="contentContainer">
-<div class="overviewSummary">
-<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="overviewSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Packages</button><button role="tab" aria-selected="false" aria-controls="overviewSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="tableTab" onclick="show(1);">Jupiter</button><button role="tab" aria-selected="false" aria-controls="overviewSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="tableTab" onclick="show(2);">Vintage</button><button role="tab" aria-selected="false" aria-controls="overviewSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="tableTab" onclick="show(4);">Platform</button></div>
-<div id="overviewSummary_tabpanel" role="tabpanel">
-<table aria-labelledby="t0">
+<table class="overviewSummary">
+<caption><span id="t0" class="activeTableTab"><span>All Packages</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Jupiter</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Vintage</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(4);">Platform</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Package</th>
 <th class="colLast" scope="col">Description</th>
@@ -461,8 +476,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody>
 </table>
 </div>
-</div>
-</div>
 </main>
 <footer role="contentinfo">
 <nav role="navigation">
@@ -486,9 +499,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </ul>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
+<div class="subNav">
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <a id="skip.navbar.bottom">
 <!--   -->
-</a>
+</a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
 </footer>

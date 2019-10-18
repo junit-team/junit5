@@ -35,7 +35,7 @@ var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
 var pathtoroot = "../../../../../../";
-var useModuleDirectories = false;
+var useModuleDirectories = true;
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -64,6 +64,30 @@ loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<ul class="navListSearch">
+<li><label for="search">SEARCH:</label>
+<input type="text" id="search" value="search" disabled="disabled">
+<input type="reset" id="reset" value="reset" disabled="disabled">
+</li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -79,16 +103,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
-<ul class="navListSearch">
-<li><label for="search">SEARCH:</label>
-<input type="text" id="search" value="search" disabled="disabled">
-<input type="reset" id="reset" value="reset" disabled="disabled">
-</li>
-</ul>
-</div>
 <a id="skip.navbar.top">
 <!--   -->
-</a>
+</a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
 </div>
 <div class="navPadding">&nbsp;</div>
@@ -128,8 +145,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">The result of an attempt to resolve a <a href="../../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a>.
 
  <p>A resolution is either <a href="#unresolved()">unresolved</a>, contains a
- <a href="#match(org.junit.platform.engine.support.discovery.SelectorResolver.Match)">match</a> or multiple matches, or a set of
- selectors.</div>
+ <a href="#match(org.junit.platform.engine.support.discovery.SelectorResolver.Match)">match</a> or multiple <a href="#matches">matches</a>, or a set of
+ <a href="#selectors">selectors</a>.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.5</dd>
@@ -149,38 +166,35 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <!--   -->
 </a>
 <h3>Method Summary</h3>
-<div class="memberSummary">
-<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="tableTab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="tableTab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="tableTab" onclick="show(8);">Concrete Methods</button></div>
-<div id="memberSummary_tabpanel" role="tabpanel">
-<table aria-labelledby="t0">
+<table class="memberSummary">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-<tbody>
-<tr class="altColor" id="i0">
+<tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="SelectorResolver.Match.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Match</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMatches()">getMatches</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns the matches contained by this resolution.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i1">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;? extends <a href="../../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSelectors()">getSelectors</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns the selectors contained by this resolution.</div>
 </td>
 </tr>
-<tr class="altColor" id="i2">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isResolved()">isResolved</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Whether this resolution contains matches or selectors.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i3">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Resolution</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#match(org.junit.platform.engine.support.discovery.SelectorResolver.Match)">match</a></span>&#8203;(<a href="SelectorResolver.Match.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Match</a>&nbsp;match)</code></th>
 <td class="colLast">
@@ -188,7 +202,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <a href="SelectorResolver.Match.html" title="class in org.junit.platform.engine.support.discovery"><code>Match</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i4">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Resolution</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#matches(java.util.Set)">matches</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;<a href="SelectorResolver.Match.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Match</a>&gt;&nbsp;matches)</code></th>
 <td class="colLast">
@@ -196,7 +210,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <a href="SelectorResolver.Match.html" title="class in org.junit.platform.engine.support.discovery"><code>Matches</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i5">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Resolution</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectors(java.util.Set)">selectors</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util" class="externalLink">Set</a>&lt;? extends <a href="../../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&gt;&nbsp;selectors)</code></th>
 <td class="colLast">
@@ -204,17 +218,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <a href="../../DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelectors</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i6">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="SelectorResolver.Resolution.html" title="class in org.junit.platform.engine.support.discovery">SelectorResolver.Resolution</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unresolved()">unresolved</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Factory for creating <em>unresolved</em> resolutions.</div>
 </td>
 </tr>
-</tbody>
 </table>
-</div>
-</div>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -382,6 +393,24 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -397,10 +426,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
-</div>
 <a id="skip.navbar.bottom">
 <!--   -->
-</a>
+</a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
 </footer>

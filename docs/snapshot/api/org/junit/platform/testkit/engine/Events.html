@@ -35,7 +35,7 @@ var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
 var pathtoroot = "../../../../../";
-var useModuleDirectories = false;
+var useModuleDirectories = true;
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -64,6 +64,30 @@ loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<ul class="navListSearch">
+<li><label for="search">SEARCH:</label>
+<input type="text" id="search" value="search" disabled="disabled">
+<input type="reset" id="reset" value="reset" disabled="disabled">
+</li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -79,16 +103,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
-<ul class="navListSearch">
-<li><label for="search">SEARCH:</label>
-<input type="text" id="search" value="search" disabled="disabled">
-<input type="reset" id="reset" value="reset" disabled="disabled">
-</li>
-</ul>
-</div>
 <a id="skip.navbar.top">
 <!--   -->
-</a>
+</a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
 </div>
 <div class="navPadding">&nbsp;</div>
@@ -140,24 +157,21 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <!--   -->
 </a>
 <h3>Method Summary</h3>
-<div class="memberSummary">
-<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="tableTab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="tableTab" onclick="show(8);">Concrete Methods</button></div>
-<div id="memberSummary_tabpanel" role="tabpanel">
-<table aria-labelledby="t0">
+<table class="memberSummary">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-<tbody>
-<tr class="altColor" id="i0">
+<tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#aborted()">aborted</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the aborted <a href="Events.html" title="class in org.junit.platform.testkit.engine"><code>Events</code></a> contained in this <code>Events</code> object.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i1">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assertEventsMatchExactly(org.assertj.core.api.Condition...)">assertEventsMatchExactly</a></span>&#8203;(<a href="https://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/Condition.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink">Condition</a>&lt;? super <a href="Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;...&nbsp;conditions)</code></th>
 <td class="colLast">
@@ -165,7 +179,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  object exactly match the provided conditions.</div>
 </td>
 </tr>
-<tr class="altColor" id="i2">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assertStatistics(java.util.function.Consumer)">assertStatistics</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Consumer.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Consumer</a>&lt;<a href="EventStatistics.html" title="class in org.junit.platform.testkit.engine">EventStatistics</a>&gt;&nbsp;statisticsConsumer)</code></th>
 <td class="colLast">
@@ -173,14 +187,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <code>Events</code> object.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i3">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="https://joel-costigliola.github.io/assertj/core-8/api/org/assertj/core/api/ListAssert.html?is-external=true" title="class or interface in org.assertj.core.api" class="externalLink">ListAssert</a>&lt;<a href="Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assertThatEvents()">assertThatEvents</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Shortcut for <code>org.assertj.core.api.Assertions.assertThat(events.list())</code>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i4">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>long</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#count()">count</a></span>()</code></th>
 <td class="colLast">
@@ -188,28 +202,28 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  object.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i5">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#debug()">debug</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Print all events to <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html?is-external=true#out" title="class or interface in java.lang" class="externalLink"><code>System.out</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i6">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#debug(java.io.OutputStream)">debug</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink">OutputStream</a>&nbsp;out)</code></th>
 <td class="colLast">
 <div class="block">Print all events to the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/io/OutputStream.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>OutputStream</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i7">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#debug(java.io.Writer)">debug</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/io/Writer.html?is-external=true" title="class or interface in java.io" class="externalLink">Writer</a>&nbsp;writer)</code></th>
 <td class="colLast">
 <div class="block">Print all events to the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/io/Writer.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>Writer</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i8">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dynamicallyRegistered()">dynamicallyRegistered</a></span>()</code></th>
 <td class="colLast">
@@ -217,49 +231,49 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <code>Events</code> object.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i9">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="Executions.html" title="class in org.junit.platform.testkit.engine">Executions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#executions()">executions</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the <a href="Executions.html" title="class in org.junit.platform.testkit.engine"><code>Executions</code></a> for the current set of <a href="Event.html" title="class in org.junit.platform.testkit.engine">events</a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i10">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#failed()">failed</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the failed <a href="Events.html" title="class in org.junit.platform.testkit.engine"><code>Events</code></a> contained in this <code>Events</code> object.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i11">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#filter(java.util.function.Predicate)">filter</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;? super <a href="Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;&nbsp;predicate)</code></th>
 <td class="colLast">
 <div class="block">Shortcut for <code>events.stream().filter(predicate)</code>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i12">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#finished()">finished</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the finished <a href="Events.html" title="class in org.junit.platform.testkit.engine"><code>Events</code></a> contained in this <code>Events</code> object.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i13">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#list()">list</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the <a href="Event.html" title="class in org.junit.platform.testkit.engine">events</a> as a <a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>List</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i14">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>&lt;R&gt;&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;R&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#map(java.util.function.Function)">map</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;? super <a href="Event.html" title="class in org.junit.platform.testkit.engine">Event</a>,&#8203;? extends R&gt;&nbsp;mapper)</code></th>
 <td class="colLast">
 <div class="block">Shortcut for <code>events.stream().map(mapper)</code>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i15">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#reportingEntryPublished()">reportingEntryPublished</a></span>()</code></th>
 <td class="colLast">
@@ -267,38 +281,35 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  <code>Events</code> object.</div>
 </td>
 </tr>
-<tr class="altColor" id="i16">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#skipped()">skipped</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the skipped <a href="Events.html" title="class in org.junit.platform.testkit.engine"><code>Events</code></a> contained in this <code>Events</code> object.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i17">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#started()">started</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the started <a href="Events.html" title="class in org.junit.platform.testkit.engine"><code>Events</code></a> contained in this <code>Events</code> object.</div>
 </td>
 </tr>
-<tr class="altColor" id="i18">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="Event.html" title="class in org.junit.platform.testkit.engine">Event</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#stream()">stream</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the <a href="Event.html" title="class in org.junit.platform.testkit.engine">events</a> as a <a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink"><code>Stream</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i19">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code><a href="Events.html" title="class in org.junit.platform.testkit.engine">Events</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#succeeded()">succeeded</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the succeeded <a href="Events.html" title="class in org.junit.platform.testkit.engine"><code>Events</code></a> contained in this <code>Events</code> object.</div>
 </td>
 </tr>
-</tbody>
 </table>
-</div>
-</div>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -681,6 +692,24 @@ public final&nbsp;void&nbsp;assertEventsMatchExactly&#8203;(<a href="https://joe
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -696,10 +725,9 @@ public final&nbsp;void&nbsp;assertEventsMatchExactly&#8203;(<a href="https://joe
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
-</div>
 <a id="skip.navbar.bottom">
 <!--   -->
-</a>
+</a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
 </footer>

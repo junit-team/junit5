@@ -6698,9 +6698,20 @@ extension&#8217;s constructor, a static factory method, or a builder API.</p>
 ordered using an algorithm that is deterministic but intentionally nonobvious. This
 ensures that subsequent runs of a test suite execute extensions in the same order, thereby
 allowing for repeatable builds. However, there are times when extensions need to be
-registered in an explicit order. To achieve that, annotate each <code>@RegisterExtension</code> field
-with <code><a href="../api/org/junit/jupiter/api/Order.html">@Order</a></code>. Any <code>@RegisterExtension</code> field not annotated with <code>@Order</code> will appear at
-the end of the sorted list.</p>
+registered in an explicit order. To achieve that, annotate <code>@RegisterExtension</code> fields
+with <code><a href="../api/org/junit/jupiter/api/Order.html">@Order</a></code>.</p>
+</div>
+<div class="paragraph">
+<p>Any <code>@RegisterExtension</code> field not annotated with <code>@Order</code> will be ordered using the
+<em>default</em> order which has a value of <code>Integer.MAX_VALUE / 2</code>. This allows <code>@Order</code>
+annotated extension fields to be explicitly ordered before or after non-annotated
+extension fields. Extensions with an explicit order value less than the default order
+value will be registered before non-annotated extensions. Similarly, extensions with an
+explicit order value greater than the default order value will be registered after
+non-annotated extensions. For example, assigning an extension an explicit order value that
+is greater than the default order value allows <em>before</em> callback extensions to be
+registered last and <em>after</em> callback extensions to be registered first, relative to other
+programmatically registered extensions.</p>
 </div>
 </td>
 </tr>
@@ -9757,7 +9768,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-10-17 13:11:35 UTC
+Last updated 2019-10-18 11:35:26 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

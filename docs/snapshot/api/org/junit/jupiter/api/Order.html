@@ -29,7 +29,7 @@
     }
 //-->
 var pathtoroot = "../../../../";
-var useModuleDirectories = false;
+var useModuleDirectories = true;
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -58,29 +58,46 @@ loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
-<div>
-<ul class="subNavList">
-<li>Summary:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
-<li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
-<li>Optional</li>
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
 </ul>
-<ul class="subNavList">
-<li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
-<li><a href="#annotation.type.element.detail">Element</a></li>
-</ul>
-</div>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
 <input type="text" id="search" value="search" disabled="disabled">
 <input type="reset" id="reset" value="reset" disabled="disabled">
 </li>
 </ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li><a href="#annotation.type.field.summary">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
+<li>Optional</li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li><a href="#annotation.type.field.detail">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.element.detail">Element</a></li>
+</ul>
 </div>
 <a id="skip.navbar.top">
 <!--   -->
-</a>
+</a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
 </div>
 <div class="navPadding">&nbsp;</div>
@@ -118,8 +135,8 @@ public @interface <span class="memberNameLabel">Order</span></pre>
  <a href="MethodOrderer.OrderAnnotation.html" title="class in org.junit.jupiter.api"><code>MethodOrderer.OrderAnnotation</code></a> <a href="MethodOrderer.html" title="interface in org.junit.jupiter.api"><code>MethodOrderer</code></a>, the category applies to
  <em>test methods</em>.
 
- <p>If <code>@Order</code> is not explicitly declared on an element, the default
- order value assigned to the element is <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true#MAX_VALUE" title="class or interface in java.lang" class="externalLink"><code>Integer.MAX_VALUE</code></a>.</div>
+ <p>If <code>@Order</code> is not explicitly declared on an element, the
+ <a href="#DEFAULT"><code>DEFAULT</code></a> order value will be assigned to the element.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.4</dd>
@@ -133,6 +150,32 @@ public @interface <span class="memberNameLabel">Order</span></pre>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- =========== ANNOTATION TYPE FIELD SUMMARY =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="annotation.type.field.summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<table class="memberSummary">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Fields</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static int</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT">DEFAULT</a></span></code></th>
+<td class="colLast">
+<div class="block">Default order value for elements not explicitly annotated with <code>@Order</code>,
+ equal to the value of <code>Integer.MAX_VALUE / 2</code>.</div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+</section>
 <!-- =========== ANNOTATION TYPE REQUIRED MEMBER SUMMARY =========== -->
 <section role="region">
 <ul class="blockList">
@@ -140,15 +183,13 @@ public @interface <span class="memberNameLabel">Order</span></pre>
 <!--   -->
 </a>
 <h3>Required Element Summary</h3>
-<div class="memberSummary">
-<table>
+<table class="memberSummary">
 <caption><span>Required Elements</span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Required Element</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-<tbody>
 <tr class="altColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#value()">value</a></span></code></th>
@@ -156,9 +197,7 @@ public @interface <span class="memberNameLabel">Order</span></pre>
 <div class="block">The order value for the annotated element (i.e., field or method).</div>
 </td>
 </tr>
-</tbody>
 </table>
-</div>
 </li>
 </ul>
 </section>
@@ -168,6 +207,35 @@ public @interface <span class="memberNameLabel">Order</span></pre>
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ============ ANNOTATION TYPE FIELD DETAIL =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="annotation.type.field.detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a id="DEFAULT">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>DEFAULT</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.6")
+static final&nbsp;int&nbsp;DEFAULT</pre>
+<div class="block">Default order value for elements not explicitly annotated with <code>@Order</code>,
+ equal to the value of <code>Integer.MAX_VALUE / 2</code>.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.6</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#value()"><code>value()</code></a></dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</section>
 <!-- ============ ANNOTATION TYPE MEMBER DETAIL =========== -->
 <section role="region">
 <ul class="blockList">
@@ -187,6 +255,10 @@ public @interface <span class="memberNameLabel">Order</span></pre>
  <p>Elements are ordered based on priority where a lower value has greater
  priority than a higher value. For example, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html?is-external=true#MAX_VALUE" title="class or interface in java.lang" class="externalLink"><code>Integer.MAX_VALUE</code></a> has
  the lowest priority.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#DEFAULT"><code>DEFAULT</code></a></dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -221,23 +293,40 @@ public @interface <span class="memberNameLabel">Order</span></pre>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
 <li>Optional</li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#annotation.type.field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#annotation.type.element.detail">Element</a></li>
 </ul>
 </div>
-</div>
 <a id="skip.navbar.bottom">
 <!--   -->
-</a>
+</a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
 </footer>

@@ -35,7 +35,7 @@ var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
 var pathtoroot = "../../../../";
-var useModuleDirectories = false;
+var useModuleDirectories = true;
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -64,6 +64,30 @@ loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<ul class="navListSearch">
+<li><label for="search">SEARCH:</label>
+<input type="text" id="search" value="search" disabled="disabled">
+<input type="reset" id="reset" value="reset" disabled="disabled">
+</li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -79,16 +103,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
-<ul class="navListSearch">
-<li><label for="search">SEARCH:</label>
-<input type="text" id="search" value="search" disabled="disabled">
-<input type="reset" id="reset" value="reset" disabled="disabled">
-</li>
-</ul>
-</div>
 <a id="skip.navbar.top">
 <!--   -->
-</a>
+</a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
 </div>
 <div class="navPadding">&nbsp;</div>
@@ -156,15 +173,13 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <!--   -->
 </a>
 <h3>Constructor Summary</h3>
-<div class="memberSummary">
-<table>
+<table class="memberSummary">
 <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier</th>
 <th class="colSecond" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-<tbody>
 <tr class="altColor">
 <td class="colFirst"><code>protected </code></td>
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">Assumptions</a></span>()</code></th>
@@ -172,9 +187,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Protected constructor allowing subclassing but not direct instantiation.</div>
 </td>
 </tr>
-</tbody>
 </table>
-</div>
 </li>
 </ul>
 </section>
@@ -185,24 +198,21 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <!--   -->
 </a>
 <h3>Method Summary</h3>
-<div class="memberSummary">
-<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="tableTab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="tableTab" onclick="show(8);">Concrete Methods</button></div>
-<div id="memberSummary_tabpanel" role="tabpanel">
-<table aria-labelledby="t0">
+<table class="memberSummary">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-<tbody>
-<tr class="altColor" id="i0">
+<tr id="i0" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assumeFalse(boolean)">assumeFalse</a></span>&#8203;(boolean&nbsp;assumption)</code></th>
 <td class="colLast">
 <div class="block">Validate the given assumption.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i1">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assumeFalse(boolean,java.lang.String)">assumeFalse</a></span>&#8203;(boolean&nbsp;assumption,
            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;message)</code></th>
@@ -210,7 +220,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Validate the given assumption.</div>
 </td>
 </tr>
-<tr class="altColor" id="i2">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assumeFalse(boolean,java.util.function.Supplier)">assumeFalse</a></span>&#8203;(boolean&nbsp;assumption,
            <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Supplier</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;messageSupplier)</code></th>
@@ -218,14 +228,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Validate the given assumption.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i3">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assumeFalse(java.util.function.BooleanSupplier)">assumeFalse</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/BooleanSupplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink">BooleanSupplier</a>&nbsp;assumptionSupplier)</code></th>
 <td class="colLast">
 <div class="block">Validate the given assumption.</div>
 </td>
 </tr>
-<tr class="altColor" id="i4">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assumeFalse(java.util.function.BooleanSupplier,java.lang.String)">assumeFalse</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/BooleanSupplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink">BooleanSupplier</a>&nbsp;assumptionSupplier,
            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;message)</code></th>
@@ -233,7 +243,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Validate the given assumption.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i5">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assumeFalse(java.util.function.BooleanSupplier,java.util.function.Supplier)">assumeFalse</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/BooleanSupplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink">BooleanSupplier</a>&nbsp;assumptionSupplier,
            <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Supplier</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;messageSupplier)</code></th>
@@ -241,14 +251,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Validate the given assumption.</div>
 </td>
 </tr>
-<tr class="altColor" id="i6">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assumeTrue(boolean)">assumeTrue</a></span>&#8203;(boolean&nbsp;assumption)</code></th>
 <td class="colLast">
 <div class="block">Validate the given assumption.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i7">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assumeTrue(boolean,java.lang.String)">assumeTrue</a></span>&#8203;(boolean&nbsp;assumption,
           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;message)</code></th>
@@ -256,7 +266,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Validate the given assumption.</div>
 </td>
 </tr>
-<tr class="altColor" id="i8">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assumeTrue(boolean,java.util.function.Supplier)">assumeTrue</a></span>&#8203;(boolean&nbsp;assumption,
           <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Supplier</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;messageSupplier)</code></th>
@@ -264,14 +274,14 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Validate the given assumption.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i9">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assumeTrue(java.util.function.BooleanSupplier)">assumeTrue</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/BooleanSupplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink">BooleanSupplier</a>&nbsp;assumptionSupplier)</code></th>
 <td class="colLast">
 <div class="block">Validate the given assumption.</div>
 </td>
 </tr>
-<tr class="altColor" id="i10">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assumeTrue(java.util.function.BooleanSupplier,java.lang.String)">assumeTrue</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/BooleanSupplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink">BooleanSupplier</a>&nbsp;assumptionSupplier,
           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;message)</code></th>
@@ -279,7 +289,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Validate the given assumption.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i11">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assumeTrue(java.util.function.BooleanSupplier,java.util.function.Supplier)">assumeTrue</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/BooleanSupplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink">BooleanSupplier</a>&nbsp;assumptionSupplier,
           <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Supplier</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;messageSupplier)</code></th>
@@ -287,7 +297,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="block">Validate the given assumption.</div>
 </td>
 </tr>
-<tr class="altColor" id="i12">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assumingThat(boolean,org.junit.jupiter.api.function.Executable)">assumingThat</a></span>&#8203;(boolean&nbsp;assumption,
             <a href="function/Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&nbsp;executable)</code></th>
@@ -296,7 +306,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  assumption is valid.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i13">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#assumingThat(java.util.function.BooleanSupplier,org.junit.jupiter.api.function.Executable)">assumingThat</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/BooleanSupplier.html?is-external=true" title="class or interface in java.util.function" class="externalLink">BooleanSupplier</a>&nbsp;assumptionSupplier,
             <a href="function/Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&nbsp;executable)</code></th>
@@ -305,10 +315,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
  assumption is valid.</div>
 </td>
 </tr>
-</tbody>
 </table>
-</div>
-</div>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -666,6 +673,24 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -681,10 +706,9 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
-</div>
 <a id="skip.navbar.bottom">
 <!--   -->
-</a>
+</a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
 </footer>

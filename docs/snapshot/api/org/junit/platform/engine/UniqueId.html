@@ -35,7 +35,7 @@ var rowColor = "rowColor";
 var tableTab = "tableTab";
 var activeTableTab = "activeTableTab";
 var pathtoroot = "../../../../";
-var useModuleDirectories = false;
+var useModuleDirectories = true;
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -64,6 +64,30 @@ loadScripts(document, 'script');</script>
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_top">
+<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<ul class="navListSearch">
+<li><label for="search">SEARCH:</label>
+<input type="text" id="search" value="search" disabled="disabled">
+<input type="reset" id="reset" value="reset" disabled="disabled">
+</li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_top");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -79,16 +103,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
-<ul class="navListSearch">
-<li><label for="search">SEARCH:</label>
-<input type="text" id="search" value="search" disabled="disabled">
-<input type="reset" id="reset" value="reset" disabled="disabled">
-</li>
-</ul>
-</div>
 <a id="skip.navbar.top">
 <!--   -->
-</a>
+</a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
 </div>
 <div class="navPadding">&nbsp;</div>
@@ -149,15 +166,13 @@ implements <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Cloneabl
 <!--   -->
 </a>
 <h3>Nested Class Summary</h3>
-<div class="memberSummary">
-<table>
+<table class="memberSummary">
 <caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-<tbody>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="UniqueId.Segment.html" title="class in org.junit.platform.engine">UniqueId.Segment</a></span></code></th>
@@ -166,9 +181,7 @@ implements <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Cloneabl
  <em>value</em>.</div>
 </td>
 </tr>
-</tbody>
 </table>
-</div>
 </li>
 </ul>
 </section>
@@ -179,17 +192,14 @@ implements <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Cloneabl
 <!--   -->
 </a>
 <h3>Method Summary</h3>
-<div class="memberSummary">
-<div role="tablist" aria-orientation="horizontal"><button role="tab" aria-selected="true" aria-controls="memberSummary_tabpanel" tabindex="0" onkeydown="switchTab(event)" id="t0" class="activeTableTab">All Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t1" class="tableTab" onclick="show(1);">Static Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t2" class="tableTab" onclick="show(2);">Instance Methods</button><button role="tab" aria-selected="false" aria-controls="memberSummary_tabpanel" tabindex="-1" onkeydown="switchTab(event)" id="t4" class="tableTab" onclick="show(8);">Concrete Methods</button></div>
-<div id="memberSummary_tabpanel" role="tabpanel">
-<table aria-labelledby="t0">
+<table class="memberSummary">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-<tbody>
-<tr class="altColor" id="i0">
+<tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#append(java.lang.String,java.lang.String)">append</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;segmentType,
       <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</code></th>
@@ -199,7 +209,7 @@ implements <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Cloneabl
  <code>UniqueId</code>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i1">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#append(org.junit.platform.engine.UniqueId.Segment)">append</a></span>&#8203;(<a href="UniqueId.Segment.html" title="class in org.junit.platform.engine">UniqueId.Segment</a>&nbsp;segment)</code></th>
 <td class="colLast">
@@ -207,17 +217,17 @@ implements <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Cloneabl
  the end of this <code>UniqueId</code>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i2">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>protected <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#clone()">clone</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i3">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#equals(java.lang.Object)">equals</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;o)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor" id="i4">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#forEngine(java.lang.String)">forEngine</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;engineId)</code></th>
 <td class="colLast">
@@ -225,21 +235,21 @@ implements <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Cloneabl
  format.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i5">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEngineId()">getEngineId</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the engine ID stored in this <code>UniqueId</code>, if available.</div>
 </td>
 </tr>
-<tr class="altColor" id="i6">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="UniqueId.Segment.html" title="class in org.junit.platform.engine">UniqueId.Segment</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLastSegment()">getLastSegment</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Get the last <a href="UniqueId.Segment.html" title="class in org.junit.platform.engine"><code>UniqueId.Segment</code></a> of this <code>UniqueId</code>.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i7">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="UniqueId.Segment.html" title="class in org.junit.platform.engine">UniqueId.Segment</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSegments()">getSegments</a></span>()</code></th>
 <td class="colLast">
@@ -247,12 +257,12 @@ implements <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Cloneabl
  <code>UniqueId</code>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i8">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hashCode()">hashCode</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor" id="i9">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasPrefix(org.junit.platform.engine.UniqueId)">hasPrefix</a></span>&#8203;(<a href="UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;potentialPrefix)</code></th>
 <td class="colLast">
@@ -260,7 +270,7 @@ implements <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Cloneabl
  <code>UniqueId</code>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i10">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#parse(java.lang.String)">parse</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;uniqueId)</code></th>
 <td class="colLast">
@@ -268,7 +278,7 @@ implements <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Cloneabl
  default format.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i11">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeLastSegment()">removeLastSegment</a></span>()</code></th>
 <td class="colLast">
@@ -276,7 +286,7 @@ implements <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Cloneabl
  this <code>UniqueId</code>.</div>
 </td>
 </tr>
-<tr class="altColor" id="i12">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>static <a href="UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#root(java.lang.String,java.lang.String)">root</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;segmentType,
     <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</code></th>
@@ -285,7 +295,7 @@ implements <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Cloneabl
  <code>value</code> using the default format.</div>
 </td>
 </tr>
-<tr class="rowColor" id="i13">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
 <td class="colLast">
@@ -293,10 +303,7 @@ implements <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Cloneabl
  using the configured <code>UniqueIdFormat</code>.</div>
 </td>
 </tr>
-</tbody>
 </table>
-</div>
-</div>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -598,6 +605,24 @@ public&nbsp;<a href="UniqueId.Segment.html" title="class in org.junit.platform.e
 <div class="aboutLanguage">JUnit 5</div>
 </div>
 <div class="subNav">
+<ul class="navList" id="allclasses_navbar_bottom">
+<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
+</ul>
+<div>
+<script type="text/javascript"><!--
+  allClassesLink = document.getElementById("allclasses_navbar_bottom");
+  if(window==top) {
+    allClassesLink.style.display = "block";
+  }
+  else {
+    allClassesLink.style.display = "none";
+  }
+  //-->
+</script>
+<noscript>
+<div>JavaScript is disabled on your browser.</div>
+</noscript>
+</div>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
@@ -613,10 +638,9 @@ public&nbsp;<a href="UniqueId.Segment.html" title="class in org.junit.platform.e
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
-</div>
 <a id="skip.navbar.bottom">
 <!--   -->
-</a>
+</a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
 </footer>
