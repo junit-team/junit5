@@ -34,7 +34,7 @@ jobs:
       shell: bash
       run: |
         ./gradlew --version
-        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
+        ./gradlew --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
 
   mac:
     name: 'Mac OS'
