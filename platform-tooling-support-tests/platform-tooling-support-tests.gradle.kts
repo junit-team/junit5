@@ -75,4 +75,6 @@ tasks.test {
 	(options as JUnitPlatformOptions).apply {
 		includeEngines("archunit")
 	}
+
+	maxParallelForks = 1 // Bartholdy.install is not parallel safe, see https://github.com/sormuras/bartholdy/issues/4
 }
