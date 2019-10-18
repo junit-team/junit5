@@ -45,7 +45,7 @@ class RunnerTestDescriptorPostProcessorTests {
 
 	@Test
 	void doesNotLogAnythingForFilterableRunner(LogRecordListener listener) {
-		resolve(selectMethod(PlainJUnit4TestCaseWithFiveTestMethods.class, "someTest"));
+		resolve(selectMethod(PlainJUnit4TestCaseWithFiveTestMethods.class, "successfulTest"));
 
 		assertThat(listener.stream(RunnerTestDescriptor.class)).isEmpty();
 	}

@@ -21,6 +21,7 @@ import java.util.Map;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
@@ -204,15 +205,23 @@ public final class LauncherDiscoveryRequestBuilder {
 	public LauncherDiscoveryRequest build() {
 		LauncherConfigurationParameters launcherConfigurationParameters = new LauncherConfigurationParameters(
 			this.configurationParameters);
+		LauncherDiscoveryListener discoveryListener = getLauncherDiscoveryListener(launcherConfigurationParameters);
 		return new DefaultDiscoveryRequest(this.selectors, this.engineFilters, this.discoveryFilters,
-			this.postDiscoveryFilters, launcherConfigurationParameters, getLauncherDiscoveryListener());
+			this.postDiscoveryFilters, launcherConfigurationParameters, discoveryListener);
 	}
 
-	private LauncherDiscoveryListener getLauncherDiscoveryListener() {
-		if (this.discoveryListeners.isEmpty()) {
-			return LauncherDiscoveryListeners.logging();
+	private LauncherDiscoveryListener getLauncherDiscoveryListener(ConfigurationParameters configurationParameters) {
+		LauncherDiscoveryListener defaultDiscoveryListener = LauncherDiscoveryListeners.fromConfigurationParameter(
+			configurationParameters);
+		if (discoveryListeners.isEmpty()) {
+			return defaultDiscoveryListener;
 		}
-		return LauncherDiscoveryListeners.composite(discoveryListeners);
+		if (discoveryListeners.contains(defaultDiscoveryListener)) {
+			return LauncherDiscoveryListeners.composite(discoveryListeners);
+		}
+		List<LauncherDiscoveryListener> allDiscoveryListeners = new ArrayList<>(discoveryListeners);
+		allDiscoveryListeners.add(defaultDiscoveryListener);
+		return LauncherDiscoveryListeners.composite(allDiscoveryListeners);
 	}
 
 }

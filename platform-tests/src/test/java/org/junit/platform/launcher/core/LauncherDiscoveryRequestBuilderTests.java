@@ -23,6 +23,8 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPacka
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners.abortOnFailure;
+import static org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners.logging;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -46,6 +48,7 @@ import org.junit.platform.launcher.DiscoveryFilterStub;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilterStub;
+import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners;
 
 /**
  * @since 1.0
@@ -314,6 +317,50 @@ class LauncherDiscoveryRequestBuilderTests {
 			assertThat(configParams.get("key1")).contains("value1");
 			assertThat(configParams.get("key2")).contains("value2");
 		}
+	}
+
+	@Nested
+	class DisoveryListenerTests {
+
+		@Test
+		void usesAbortOnFailureByDefault() {
+			var request = request().build();
+
+			assertThat(request.getDiscoveryListener()).isEqualTo(abortOnFailure());
+		}
+
+		@Test
+		void onlyAddsAbortOnFailureOnce() {
+			var request = request() //
+					.listeners(abortOnFailure()) //
+					.configurationParameter(
+						LauncherDiscoveryListeners.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME,
+						"abortOnFailure") //
+					.build();
+
+			assertThat(request.getDiscoveryListener()).isEqualTo(abortOnFailure());
+		}
+
+		@Test
+		void onlyAddsLoggingOnce() {
+			var request = request() //
+					.listeners(logging()) //
+					.configurationParameter(
+						LauncherDiscoveryListeners.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+					.build();
+
+			assertThat(request.getDiscoveryListener()).isEqualTo(logging());
+		}
+
+		@Test
+		void createsCompositeForMultipleListeners() {
+			var request = request() //
+					.listeners(logging(), abortOnFailure()) //
+					.build();
+
+			assertThat(request.getDiscoveryListener().getClass().getSimpleName()).startsWith("Composite");
+		}
+
 	}
 
 	private static class SampleTestClass {

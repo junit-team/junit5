@@ -34,6 +34,7 @@ import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners;
 import org.junit.vintage.engine.VintageUniqueIdBuilder;
 import org.junit.vintage.engine.samples.junit3.AbstractJUnit3TestCase;
 import org.junit.vintage.engine.samples.junit4.AbstractJunit4TestCaseWithConstructorParameter;
@@ -106,7 +107,12 @@ class VintageDiscovererTests {
 
 	private void doesNotResolve(DiscoverySelector selector, Consumer<SelectorResolutionResult> resultCheck) {
 		var discoveryListener = mock(LauncherDiscoveryListener.class);
-		LauncherDiscoveryRequest request = request().selectors(selector).listeners(discoveryListener).build();
+		LauncherDiscoveryRequest request = request() //
+				.selectors(selector) //
+				.listeners(discoveryListener) //
+				.configurationParameter(
+					LauncherDiscoveryListeners.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+				.build();
 
 		TestDescriptor testDescriptor = discover(request);
 

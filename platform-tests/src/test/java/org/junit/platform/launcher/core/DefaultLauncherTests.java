@@ -69,6 +69,7 @@ import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 
@@ -149,7 +150,11 @@ class DefaultLauncherTests {
 		};
 
 		var discoveryListener = mock(LauncherDiscoveryListener.class);
-		TestPlan testPlan = createLauncher(engine).discover(request().listeners(discoveryListener).build());
+		var testPlan = createLauncher(engine).discover(request() //
+				.listeners(discoveryListener) //
+				.configurationParameter(
+					LauncherDiscoveryListeners.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+				.build());
 		assertThat(testPlan.getRoots()).hasSize(1);
 		assertDiscoveryFailed(engine, discoveryListener);
 	}
@@ -173,7 +178,11 @@ class DefaultLauncherTests {
 
 		var launcher = createLauncher(engine);
 		var discoveryListener = mock(LauncherDiscoveryListener.class);
-		var testPlan = launcher.discover(request().listeners(discoveryListener).build());
+		var testPlan = launcher.discover(request() //
+				.listeners(discoveryListener) //
+				.configurationParameter(
+					LauncherDiscoveryListeners.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+				.build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);
 		var engineIdentifier = getOnlyElement(testPlan.getRoots());
