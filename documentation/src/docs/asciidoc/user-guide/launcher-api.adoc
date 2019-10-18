@@ -45,6 +45,13 @@ traverse the tree, retrieve details about a node, and get a link to the original
 (like class, method, or file position). Every node in the test plan has a _unique ID_
 that can be used to invoke a particular test or group of tests.
 
+Clients can register one or more `{LauncherDiscoveryListener}` implementations to get
+insights into events that occur during test discovery via the
+`{LauncherDiscoveryRequestBuilder}`. The builder registers a default listener that can be
+changed via the `junit.platform.discovery.listener.default` configuration parameter. If
+the parameter is not set, test discovery will be aborted after the first failure is
+encountered.
+
 [[launcher-api-execution]]
 ==== Executing Tests
 

@@ -35,6 +35,15 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
+* The `Launcher` now propagates errors during test discovery by default instead of only
+  logging and thereby potentially hiding them. In order to restore the old, lenient
+  behavior, you can set the `junit.platform.discovery.listener.default` configuration
+  parameter to `logging`.
+* To support the above feature consistently, a new `EngineDiscoveryListener` interface was
+  introduced. `TestEngine` implementations should now notify the listener that can be
+  accessed via the `EngineDiscoveryRequest.getDiscoveryListener()` method about each
+  processed `DiscoverySelector`. Test engines that use `EngineDiscoveryRequestResolver` do
+  not have to make any changes.
 * In the `EngineTestKit` API, the `all()`, `containers()`, and `tests()` methods in
   `EngineExecutionResults` have been deprecated in favor of the new `allEvents()`,
   `containerEvents()`, and `testEvents()` methods, respectively. The deprecated methods

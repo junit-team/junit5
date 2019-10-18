@@ -42,6 +42,9 @@ public interface EngineDiscoveryListener {
 	 * Must be called after a discovery selector has been processed by a test
 	 * engine.
 	 *
+	 * <p>Exceptions thrown by implementations of this method will cause test
+	 * discovery of the current engine to be aborted.
+	 *
 	 * @param engineId the unique ID of the engine descriptor
 	 * @param selector the processed selector
 	 * @param result the resolution result of the supplied engine and selector

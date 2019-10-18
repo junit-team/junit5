@@ -57,6 +57,9 @@ public abstract class LauncherDiscoveryListener implements EngineDiscoveryListen
 	/**
 	 * Called when test discovery has finished for an engine.
 	 *
+	 * <p>Exceptions thrown by implementations of this method will cause the
+	 * complete test discovery to be aborted.
+	 *
 	 * @param engineId the unique ID of the engine descriptor
 	 * @param result the discovery result of the supplied engine
 	 * @see EngineDiscoveryResult
