@@ -13,6 +13,7 @@ package org.junit.platform.launcher.listeners.discovery;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 
@@ -34,8 +35,7 @@ public class LoggingLauncherDiscoveryListenerTests extends AbstractLauncherDisco
 	void logsWarningOnUnresolvedUniqueIdSelectorWithEnginePrefix(LogRecordListener log) {
 		var engine = createEngineThatCannotResolveAnything("some-engine");
 		var request = request() //
-				.configurationParameter(
-					LauncherDiscoveryListeners.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.selectors(selectUniqueId(UniqueId.forEngine(engine.getId()))) //
 				.build();
 		var launcher = createLauncher(engine);
@@ -52,8 +52,7 @@ public class LoggingLauncherDiscoveryListenerTests extends AbstractLauncherDisco
 	void logsDebugMessageOnUnresolvedUniqueIdSelectorWithoutEnginePrefix(LogRecordListener log) {
 		var engine = createEngineThatCannotResolveAnything("some-engine");
 		var request = request() //
-				.configurationParameter(
-					LauncherDiscoveryListeners.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.selectors(selectUniqueId(UniqueId.forEngine("some-other-engine"))) //
 				.build();
 		var launcher = createLauncher(engine);
@@ -71,8 +70,7 @@ public class LoggingLauncherDiscoveryListenerTests extends AbstractLauncherDisco
 		var rootCause = new RuntimeException();
 		var engine = createEngineThatFailsToResolveAnything("some-engine", rootCause);
 		var request = request() //
-				.configurationParameter(
-					LauncherDiscoveryListeners.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.selectors(selectClass(Object.class)) //
 				.build();
 		var launcher = createLauncher(engine);
@@ -95,8 +93,7 @@ public class LoggingLauncherDiscoveryListenerTests extends AbstractLauncherDisco
 			}
 		};
 		var request = request() //
-				.configurationParameter(
-					LauncherDiscoveryListeners.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.selectors(selectUniqueId(UniqueId.forEngine(engine.getId()))) //
 				.build();
 		var launcher = createLauncher(engine);
@@ -112,8 +109,7 @@ public class LoggingLauncherDiscoveryListenerTests extends AbstractLauncherDisco
 	void logsTraceMessageOnStartAndEnd(LogRecordListener log) {
 		var engine = new TestEngineStub("some-engine");
 		var request = request() //
-				.configurationParameter(
-					LauncherDiscoveryListeners.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.selectors(selectUniqueId(UniqueId.forEngine(engine.getId()))) //
 				.build();
 		var launcher = createLauncher(engine);

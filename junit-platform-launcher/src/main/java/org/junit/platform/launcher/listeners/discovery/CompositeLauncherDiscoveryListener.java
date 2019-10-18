@@ -20,7 +20,11 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 
-class CompositeLauncherDiscoveryListener implements LauncherDiscoveryListener {
+/**
+ * @since 1.6
+ * @see LauncherDiscoveryListeners#composite(List)
+ */
+class CompositeLauncherDiscoveryListener extends LauncherDiscoveryListener {
 
 	private final List<LauncherDiscoveryListener> listeners;
 

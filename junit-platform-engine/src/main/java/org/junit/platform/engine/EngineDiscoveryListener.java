@@ -10,14 +10,43 @@
 
 package org.junit.platform.engine;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import org.apiguardian.api.API;
 
-@API(status = API.Status.EXPERIMENTAL, since = "1.6")
+/**
+ * {@code EngineDiscoveryListener} contains {@link TestEngine} access to the
+ * information necessary to discover tests and containers.
+ *
+ * <p>All methods in this interface have empty <em>default</em> implementations.
+ * Concrete implementations may therefore override one or more of these methods
+ * to be notified of the selected events.
+ *
+ * <p>The methods declared in this interface <em>should</em> be called by
+ * each {@link TestEngine} during test discovery. However, since this interface
+ * was only added in 1.6, older engines might not yet do so.
+ *
+ * @see EngineDiscoveryRequest#getDiscoveryListener()
+ * @since 1.6
+ */
+@API(status = EXPERIMENTAL, since = "1.6")
 public interface EngineDiscoveryListener {
 
+	/**
+	 * No-op implementation of {@code EngineDiscoveryListener}
+	 */
 	EngineDiscoveryListener NOOP = new EngineDiscoveryListener() {
 	};
 
+	/**
+	 * Must be called after a discovery selector has been processed by a test
+	 * engine.
+	 *
+	 * @param engineId the unique ID of the engine descriptor
+	 * @param selector the processed selector
+	 * @param result the resolution result of the supplied engine and selector
+	 * @see SelectorResolutionResult
+	 */
 	default void selectorProcessed(UniqueId engineId, DiscoverySelector selector, SelectorResolutionResult result) {
 	}
 

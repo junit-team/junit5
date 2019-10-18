@@ -22,6 +22,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectModul
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners.abortOnFailure;
 import static org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners.logging;
@@ -48,7 +49,6 @@ import org.junit.platform.launcher.DiscoveryFilterStub;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilterStub;
-import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners;
 
 /**
  * @since 1.0
@@ -320,7 +320,7 @@ class LauncherDiscoveryRequestBuilderTests {
 	}
 
 	@Nested
-	class DisoveryListenerTests {
+	class DiscoveryListenerTests {
 
 		@Test
 		void usesAbortOnFailureByDefault() {
@@ -333,9 +333,7 @@ class LauncherDiscoveryRequestBuilderTests {
 		void onlyAddsAbortOnFailureOnce() {
 			var request = request() //
 					.listeners(abortOnFailure()) //
-					.configurationParameter(
-						LauncherDiscoveryListeners.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME,
-						"abortOnFailure") //
+					.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "abortOnFailure") //
 					.build();
 
 			assertThat(request.getDiscoveryListener()).isEqualTo(abortOnFailure());
@@ -345,8 +343,7 @@ class LauncherDiscoveryRequestBuilderTests {
 		void onlyAddsLoggingOnce() {
 			var request = request() //
 					.listeners(logging()) //
-					.configurationParameter(
-						LauncherDiscoveryListeners.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+					.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 					.build();
 
 			assertThat(request.getDiscoveryListener()).isEqualTo(logging());

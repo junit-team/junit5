@@ -21,6 +21,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPacka
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.mockito.ArgumentMatchers.any;
@@ -69,7 +70,6 @@ import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
-import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 
@@ -152,8 +152,7 @@ class DefaultLauncherTests {
 		var discoveryListener = mock(LauncherDiscoveryListener.class);
 		var testPlan = createLauncher(engine).discover(request() //
 				.listeners(discoveryListener) //
-				.configurationParameter(
-					LauncherDiscoveryListeners.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.build());
 		assertThat(testPlan.getRoots()).hasSize(1);
 		assertDiscoveryFailed(engine, discoveryListener);
@@ -180,8 +179,7 @@ class DefaultLauncherTests {
 		var discoveryListener = mock(LauncherDiscoveryListener.class);
 		var testPlan = launcher.discover(request() //
 				.listeners(discoveryListener) //
-				.configurationParameter(
-					LauncherDiscoveryListeners.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.build());
 
 		assertThat(testPlan.getRoots()).hasSize(1);

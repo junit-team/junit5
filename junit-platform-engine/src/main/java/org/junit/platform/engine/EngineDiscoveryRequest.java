@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
@@ -44,28 +45,42 @@ public interface EngineDiscoveryRequest {
 	 * filtered by a particular type.
 	 *
 	 * @param selectorType the type of {@link DiscoverySelector} to filter by
-	 * @return all selectors of this request that are instances of {@code selectorType}
+	 * @return all selectors of this request that are instances of
+	 * {@code selectorType}; never {@code null} but potentially empty
 	 */
 	<T extends DiscoverySelector> List<T> getSelectorsByType(Class<T> selectorType);
 
 	/**
-	 * Get the {@link DiscoveryFilter DiscoveryFilters} for this request, filtered
-	 * by a particular type.
+	 * Get the {@link DiscoveryFilter DiscoveryFilters} for this request,
+	 * filtered by a particular type.
 	 *
-	 * <p>The returned filters are to be combined using AND semantics, i.e. all of
-	 * them have to include a resource for it to end up in the test plan.
+	 * <p>The returned filters are to be combined using AND semantics, i.e. all
+	 * of them have to include a resource for it to end up in the test plan.
 	 *
 	 * @param filterType the type of {@link DiscoveryFilter} to filter by
-	 * @return all filters of this request that are instances of {@code filterType}
+	 * @return all filters of this request that are instances of
+	 * {@code filterType}; never {@code null} but potentially empty
 	 */
 	<T extends DiscoveryFilter<?>> List<T> getFiltersByType(Class<T> filterType);
 
 	/**
 	 * Get the {@link ConfigurationParameters} for this request.
+	 *
+	 * @return the configuration parameters; never {@code null}
 	 */
 	ConfigurationParameters getConfigurationParameters();
 
-	@API(status = API.Status.EXPERIMENTAL, since = "1.6")
+	/**
+	 * Get the {@link EngineDiscoveryListener} for this request.
+	 *
+	 * <p>The default implementation returns a no-op listener that ignores all
+	 * calls so that engines that call this methods can be used with an earlier
+	 * version of the JUnit Platform that did not yet include it.
+	 *
+	 * @return the discovery listener; never {@code null}
+	 * @since 1.6
+	 */
+	@API(status = EXPERIMENTAL, since = "1.6")
 	default EngineDiscoveryListener getDiscoveryListener() {
 		return EngineDiscoveryListener.NOOP;
 	}

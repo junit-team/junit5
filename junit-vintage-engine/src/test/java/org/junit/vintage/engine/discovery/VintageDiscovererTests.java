@@ -16,6 +16,7 @@ import static org.junit.platform.engine.SelectorResolutionResult.Status.FAILED;
 import static org.junit.platform.engine.SelectorResolutionResult.Status.UNRESOLVED;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.vintage.engine.VintageUniqueIdBuilder.engineId;
 import static org.mockito.ArgumentMatchers.eq;
@@ -34,7 +35,6 @@ import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners;
 import org.junit.vintage.engine.VintageUniqueIdBuilder;
 import org.junit.vintage.engine.samples.junit3.AbstractJUnit3TestCase;
 import org.junit.vintage.engine.samples.junit4.AbstractJunit4TestCaseWithConstructorParameter;
@@ -110,8 +110,7 @@ class VintageDiscovererTests {
 		LauncherDiscoveryRequest request = request() //
 				.selectors(selector) //
 				.listeners(discoveryListener) //
-				.configurationParameter(
-					LauncherDiscoveryListeners.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.build();
 
 		TestDescriptor testDescriptor = discover(request);

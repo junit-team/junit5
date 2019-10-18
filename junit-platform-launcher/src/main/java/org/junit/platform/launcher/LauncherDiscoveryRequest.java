@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
@@ -80,7 +81,17 @@ public interface LauncherDiscoveryRequest extends EngineDiscoveryRequest {
 	 */
 	List<PostDiscoveryFilter> getPostDiscoveryFilters();
 
-	@API(status = API.Status.EXPERIMENTAL, since = "1.6")
+	/**
+	 * Get the {@link LauncherDiscoveryListener} for this request.
+	 *
+	 * <p>The default implementation returns a no-op listener that ignores all
+	 * calls so that engines that call this methods can be used with an earlier
+	 * version of the JUnit Platform that did not yet include it.
+	 *
+	 * @return the discovery listener; never {@code null}
+	 * @since 1.6
+	 */
+	@API(status = EXPERIMENTAL, since = "1.6")
 	@Override
 	default LauncherDiscoveryListener getDiscoveryListener() {
 		return LauncherDiscoveryListener.NOOP;

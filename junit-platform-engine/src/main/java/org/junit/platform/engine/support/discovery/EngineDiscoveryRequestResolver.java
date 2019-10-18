@@ -38,6 +38,11 @@ import org.junit.platform.engine.support.discovery.SelectorResolver.Resolution;
  * and {@link TestDescriptor.Visitor} that can be reused by different
  * {@link org.junit.platform.engine.TestEngine TestEngines}.
  *
+ * <p>This resolver takes care of notifying registered
+ * {@link org.junit.platform.engine.EngineDiscoveryListener
+ * EngineDiscoveryListeners} about the results of processed
+ * {@link org.junit.platform.engine.DiscoverySelector DiscoverySelectors}.
+ *
  * @param <T> the type of the engine's descriptor
  * @see #builder()
  * @see #resolve(EngineDiscoveryRequest, TestDescriptor)

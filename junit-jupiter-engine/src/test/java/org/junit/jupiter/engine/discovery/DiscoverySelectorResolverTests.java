@@ -36,6 +36,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPacka
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.engine.discovery.PackageNameFilter.excludePackageNames;
 import static org.junit.platform.engine.discovery.PackageNameFilter.includePackageNames;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -84,7 +85,6 @@ import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
-import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners;
 import org.mockito.ArgumentCaptor;
 
 /**
@@ -756,8 +756,7 @@ class DiscoverySelectorResolverTests {
 
 	private LauncherDiscoveryRequestBuilder request() {
 		return LauncherDiscoveryRequestBuilder.request() //
-				.configurationParameter(
-					LauncherDiscoveryListeners.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.listeners(discoveryListener);
 	}
 

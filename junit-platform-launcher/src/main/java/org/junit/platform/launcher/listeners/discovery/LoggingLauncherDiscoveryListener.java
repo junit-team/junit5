@@ -10,6 +10,8 @@
 
 package org.junit.platform.launcher.listeners.discovery;
 
+import static org.junit.platform.launcher.EngineDiscoveryResult.Status.FAILED;
+
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -23,7 +25,11 @@ import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 
-class LoggingLauncherDiscoveryListener implements LauncherDiscoveryListener {
+/**
+ * @since 1.6
+ * @see LauncherDiscoveryListeners#logging()
+ */
+class LoggingLauncherDiscoveryListener extends LauncherDiscoveryListener {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoggingLauncherDiscoveryListener.class);
 
@@ -34,7 +40,7 @@ class LoggingLauncherDiscoveryListener implements LauncherDiscoveryListener {
 
 	@Override
 	public void engineDiscoveryFinished(UniqueId engineId, EngineDiscoveryResult result) {
-		if (result.getStatus() == EngineDiscoveryResult.Status.FAILED) {
+		if (result.getStatus() == FAILED) {
 			Optional<Throwable> failure = result.getThrowable();
 			if (failure.isPresent()) {
 				logger.error(failure.get().getCause(), () -> failure.get().getMessage());
