@@ -33,7 +33,7 @@ Ask JUnit 5 related questions on [StackOverflow] or chat with the team and the c
 
 ## Continuous Integration Builds
 
-[![CI Status](https://github.com/junit-team/junit5/workflows/CI/badge.svg)](https://github.com/junit-team/junit5/actions) [![Experimental Status](https://github.com/junit-team/junit5/workflows/Experimental/badge.svg)](https://github.com/junit-team/junit5/actions)
+[![CI Status](https://github.com/junit-team/junit5/workflows/CI/badge.svg)](https://github.com/junit-team/junit5/actions) [![Cross-Version Status](https://github.com/junit-team/junit5/workflows/Cross-Version/badge.svg)](https://github.com/junit-team/junit5/actions)
 
 Official CI build server for JUnit 5. Used to perform quick checks on submitted pull
 requests and for build matrices including the latest released OpenJDK and early access
