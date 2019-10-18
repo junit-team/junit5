@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.jupiter.api.function.Executable;
@@ -186,21 +187,21 @@ class AssertTimeoutAssertionsTests {
 	@Test
 	void assertTimeoutPreemptivelyForExecutableThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
-			() -> assertTimeoutPreemptively(ofMillis(10), this::nap));
+			() -> assertTimeoutPreemptively(ofMillis(10), this::waitForInterrupt));
 		assertMessageEquals(error, "execution timed out after 10 ms");
 	}
 
 	@Test
 	void assertTimeoutPreemptivelyWithMessageForExecutableThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
-			() -> assertTimeoutPreemptively(ofMillis(10), this::nap, "Tempus Fugit"));
+			() -> assertTimeoutPreemptively(ofMillis(10), this::waitForInterrupt, "Tempus Fugit"));
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
 	}
 
 	@Test
 	void assertTimeoutPreemptivelyWithMessageSupplierForExecutableThatCompletesAfterTheTimeout() {
 		AssertionFailedError error = assertThrows(AssertionFailedError.class,
-			() -> assertTimeoutPreemptively(ofMillis(10), this::nap, () -> "Tempus" + " " + "Fugit"));
+			() -> assertTimeoutPreemptively(ofMillis(10), this::waitForInterrupt, () -> "Tempus" + " " + "Fugit"));
 		assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms");
 	}
 
@@ -283,7 +284,20 @@ class AssertTimeoutAssertionsTests {
 	 * Take a nap for 100 milliseconds.
 	 */
 	private void nap() throws InterruptedException {
-		Thread.sleep(100);
+		long start = System.currentTimeMillis();
+		// workaround for imprecise clocks (yes, Windows, I'm talking about you)
+		do {
+			Thread.sleep(100);
+		} while (System.currentTimeMillis() - start < 100);
+	}
+
+	private void waitForInterrupt() {
+		try {
+			new CountDownLatch(1).await();
+		}
+		catch (InterruptedException ignore) {
+			// ignore
+		}
 	}
 
 }
