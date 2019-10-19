@@ -559,6 +559,7 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel1">
 <li><a href="#release-notes-5.6.0-M1">5.6.0-M1</a>
 <ul class="sectlevel2">
+<li><a href="#release-notes-5.6.0-M1-overall-improvements">Overall Improvements</a></li>
 <li><a href="#release-notes-5.6.0-M1-junit-platform">JUnit Platform</a></li>
 <li><a href="#release-notes-5.6.0-M1-junit-jupiter">JUnit Jupiter</a></li>
 <li><a href="#release-notes-5.6.0-M1-junit-vintage">JUnit Vintage</a></li>
@@ -603,12 +604,48 @@ authors as well as build tool and IDE vendors.</p>
 <p><strong>Date of Release:</strong> ❓</p>
 </div>
 <div class="paragraph">
-<p><strong>Scope:</strong> ❓</p>
+<p><strong>Scope:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>New <code>@EnabledForJreRange</code> and <code>@DisabledForJreRange</code> execution conditions</p>
+</li>
+<li>
+<p><code>@Order</code> allows to specify relative order</p>
+</li>
+<li>
+<p>Improvements to <code>@CsvSource</code> and <code>@CsvFileSource</code></p>
+</li>
+<li>
+<p>Improved error reporting for failures during test discovery and execution</p>
+</li>
+<li>
+<p>Performance improvements and bug fixes for the Vintage engine</p>
+</li>
+<li>
+<p><code>org.junit.platform.console</code> now provides a <code>java.util.spi.ToolProvider</code></p>
+</li>
+<li>
+<p><code>DiscoverySelectors</code> for tests in inherited nested classes</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
 <a href="https://github.com/junit-team/junit5/milestone/39?closed=1">5.6 M1</a> milestone page in the JUnit repository
 on GitHub.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-5.6.0-M1-overall-improvements"><a class="anchor" href="#release-notes-5.6.0-M1-overall-improvements"></a>Overall Improvements</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.gradle.org/6.0-rc-1/userguide/publishing_gradle_module_metadata.html">Gradle
+Module Metadata</a> is now published for all artifacts.</p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.6.0-M1-junit-platform"><a class="anchor" href="#release-notes-5.6.0-M1-junit-platform"></a>JUnit Platform</h3>
@@ -937,7 +974,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-10-18 11:35:26 UTC
+Last updated 2019-10-19 09:40:21 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

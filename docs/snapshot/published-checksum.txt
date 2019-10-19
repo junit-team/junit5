@@ -239,6 +239,7 @@
 599181cf7a9b6cdd755b2b86a1b97acd  junit-platform-engine/src/main/java/org/junit/platform/engine/Filter.java
 59d244c82196396922ef1ad66d9ad684  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/FilePosition.java
 5a142d5eee2068e14481b1b5f177857d  junit-platform-commons/src/main/java/org/junit/platform/commons/util/AnnotationUtils.java
+5b0c48e0a05353fb17c8107c0b8ef24d  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 5b143dbb7aceed36bbb3320761d77bff  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/package-info.java
 5b31f0dd55abce9d96922761f3e1f751  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ExceptionUtils.java
 5b7df006d0343a08b38a4b309e658f11  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/JRE.java
@@ -352,7 +353,6 @@
 853beb28970f7b6b33da9bb36415610c  documentation/src/docs/asciidoc/tocbot-3.0.2/tocbot.min.js
 855e13355685519e5fc57adcac2130ba  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/conditions/package-info.java
 8568f6e74ae984b30b5b50ab9b5b4875  documentation/src/test/java/example/defaultmethods/Testable.java
-866c2022d2ffd2fe15fd813179aaa17b  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 86854316aa35f762e54d080ae58bbd2c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/support/TypeBasedParameterResolver.java
 86a2e992c9a57d0134478e2fc178b3cf  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ClasspathResourceSelector.java
 8742585ff247e86caf18b81bdf611b7f  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EmptySource.java
