@@ -320,7 +320,7 @@ For a concrete example, consult the source code for the `{MockitoExtension}` and
 `{TestInstancePreDestroyCallback}` defines the API for `Extensions` that wish to process
 test instances _after_ they have been used in tests and _before_ they are destroyed.
 
-Common use cases include cleaning dependencies that have been injecting into the
+Common use cases include cleaning dependencies that have been injected into the
 test instance, invoking custom de-initialization methods on the test instance, etc.
 
 [[extensions-parameter-resolution]]
