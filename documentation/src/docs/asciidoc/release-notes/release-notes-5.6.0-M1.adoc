@@ -3,7 +3,15 @@
 
 *Date of Release:* ❓
 
-*Scope:* ❓
+*Scope:*
+
+* New `@EnabledForJreRange` and `@DisabledForJreRange` execution conditions
+* `@Order` allows to specify relative order
+* Improvements to `@CsvSource` and `@CsvFileSource`
+* Improved error reporting for failures during test discovery and execution
+* Performance improvements and bug fixes for the Vintage engine
+* `org.junit.platform.console` now provides a `java.util.spi.ToolProvider`
+* `DiscoverySelectors` for tests in inherited nested classes
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/39?closed=1+[5.6 M1] milestone page in the JUnit repository
