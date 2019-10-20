@@ -49,17 +49,6 @@ class GradleModuleFileTests {
 			"      },", //
 			"      \"dependencies\": [", //
 			"        {", //
-			"          \"group\": \"org.junit\",", //
-			"          \"module\": \"junit-bom\",", //
-			"          \"version\": {", //
-			">> VERSION >>", //
-			"          },", //
-			"          \"attributes\": {", //
-			"            \"org.gradle.category\": \"platform\"", //
-			"          },", //
-			"          \"endorseStrictVersions\": true", //
-			"        },", //
-			"        {", //
 			"          \"group\": \"org.junit.jupiter\",", //
 			"          \"module\": \"junit-jupiter-api\",", //
 			"          \"version\": {", //
@@ -90,17 +79,6 @@ class GradleModuleFileTests {
 			"        \"org.gradle.usage\": \"java-runtime\"", //
 			"      },", //
 			"      \"dependencies\": [", //
-			"        {", //
-			"          \"group\": \"org.junit\",", //
-			"          \"module\": \"junit-bom\",", //
-			"          \"version\": {", //
-			">> VERSION >>", //
-			"          },", //
-			"          \"attributes\": {", //
-			"            \"org.gradle.category\": \"platform\"", //
-			"          },", //
-			"          \"endorseStrictVersions\": true", //
-			"        },", //
 			"        {", //
 			"          \"group\": \"org.junit.jupiter\",", //
 			"          \"module\": \"junit-jupiter-api\",", //

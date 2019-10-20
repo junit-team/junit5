@@ -27,17 +27,6 @@ class MavenPomFileTests {
 	void jupiterAggregatorPomDependencies() throws Exception {
 
 		var expected = List.of(">> HEAD >>", //
-			"  <dependencyManagement>", //
-			"    <dependencies>", //
-			"      <dependency>", //
-			"        <groupId>org.junit</groupId>", //
-			"        <artifactId>junit-bom</artifactId>", //
-			">> VERSION >>", //
-			"        <type>pom</type>", //
-			"        <scope>import</scope>", //
-			"      </dependency>", //
-			"    </dependencies>", //
-			"  </dependencyManagement>", //
 			"  <dependencies>", //
 			"    <dependency>", //
 			"      <groupId>org.junit.jupiter</groupId>", //
