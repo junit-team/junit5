@@ -43,5 +43,5 @@ tasks.withType<GenerateMavenPom>().configureEach {
 }
 
 tasks.withType<GenerateModuleMetadata> {
-	enabled = true
+	enabled = false
 }
