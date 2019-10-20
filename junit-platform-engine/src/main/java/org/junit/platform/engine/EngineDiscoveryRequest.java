@@ -75,7 +75,7 @@ public interface EngineDiscoveryRequest {
 	 *
 	 * <p>The default implementation returns a no-op listener that ignores all
 	 * calls so that engines that call this methods can be used with an earlier
-	 * version of the JUnit Platform that did not yet include it.
+	 * version of the JUnit Platform that did not yet include this API.
 	 *
 	 * @return the discovery listener; never {@code null}
 	 * @since 1.6

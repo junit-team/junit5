@@ -88,13 +88,15 @@ public class LauncherDiscoveryListeners {
 				.filter(type -> type.parameterValue.equalsIgnoreCase(value)) //
 				.findFirst() //
 				.map(type -> type.creator.get()) //
-				.orElseThrow(() -> {
-					String allowedValues = Arrays.stream(LauncherDiscoveryListenerType.values()) //
-							.map(type -> type.parameterValue) //
-							.collect(joining("', '", "'", "'"));
-					return new JUnitException("Invalid value of configuration parameter '" + key + "': " //
-							+ value + " (allowed are " + allowedValues + ")");
-				});
+				.orElseThrow(() -> newInvalidConfigurationParameterException(key, value));
+	}
+
+	private static JUnitException newInvalidConfigurationParameterException(String key, String value) {
+		String allowedValues = Arrays.stream(LauncherDiscoveryListenerType.values()) //
+				.map(type -> type.parameterValue) //
+				.collect(joining("', '", "'", "'"));
+		return new JUnitException("Invalid value of configuration parameter '" + key + "': " //
+				+ value + " (allowed are " + allowedValues + ")");
 	}
 
 	private enum LauncherDiscoveryListenerType {
