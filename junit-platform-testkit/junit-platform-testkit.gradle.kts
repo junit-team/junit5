@@ -5,8 +5,6 @@ plugins {
 description = "JUnit Platform Test Kit"
 
 dependencies {
-	api(platform(project(":junit-bom")))
-
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 	api("org.assertj:assertj-core:${Versions.assertJ}")
 	api("org.opentest4j:opentest4j:${Versions.ota4j}")

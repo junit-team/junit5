@@ -7,8 +7,6 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 description = "JUnit Jupiter Migration Support"
 
 dependencies {
-	api(platform(project(":junit-bom")))
-
 	api("junit:junit:${Versions.junit4}")
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 
