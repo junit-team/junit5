@@ -8,6 +8,8 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 description = "JUnit Jupiter Engine"
 
 dependencies {
+	api(platform(project(":junit-bom")))
+
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 
 	api(project(":junit-platform-engine"))

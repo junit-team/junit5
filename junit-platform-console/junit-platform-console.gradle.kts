@@ -8,6 +8,8 @@ plugins {
 description = "JUnit Platform Console"
 
 dependencies {
+	api(platform(project(":junit-bom")))
+
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 
 	api(project(":junit-platform-reporting"))
