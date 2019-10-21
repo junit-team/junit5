@@ -81,23 +81,23 @@ ul.blockList ul.blockList ul.blockList li.blockList h3 {
 .overviewSummary caption span, .memberSummary caption span, .typeSummary caption span,
 .useSummary caption span, .constantsSummary caption span, .deprecatedSummary caption span,
 .requiresSummary caption span, .packagesSummary caption span, .providesSummary caption span,
-.usesSummary caption span, .overviewSummary .tabEnd, .memberSummary .tabEnd, .typeSummary .tabEnd,
+.usesSummary caption span,
+.memberSummary caption span.activeTableTab span, .packagesSummary caption span.activeTableTab span,
+.overviewSummary caption span.activeTableTab span, .typeSummary caption span.activeTableTab span,
+.overviewSummary .tabEnd, .memberSummary .tabEnd, .typeSummary .tabEnd,
 .useSummary .tabEnd, .constantsSummary .tabEnd, .deprecatedSummary .tabEnd,
 .requiresSummary .tabEnd, .packagesSummary .tabEnd, .providesSummary .tabEnd, .usesSummary .tabEnd,
-.overviewSummary caption span, .memberSummary caption span, .typeSummary caption span,
-.useSummary caption span, .constantsSummary caption span, .deprecatedSummary caption span,
-.requiresSummary caption span, .packagesSummary caption span, .providesSummary caption span,
-.usesSummary caption span, .overviewSummary .tabEnd, .memberSummary .tabEnd, .typeSummary .tabEnd,
-.useSummary .tabEnd, .constantsSummary .tabEnd, .deprecatedSummary .tabEnd,
-.requiresSummary .tabEnd, .packagesSummary .tabEnd, .providesSummary .tabEnd, .usesSummary .tabEnd,
-.overviewSummary [role=tablist] .activeTableTab, .memberSummary [role=tablist] .activeTableTab,
-.typeSummary [role=tablist] .activeTableTab, .packagesSummary [role=tablist] .activeTableTab {
+.memberSummary .activeTableTab .tabEnd, .packagesSummary .activeTableTab .tabEnd,
+.overviewSummary .activeTableTab .tabEnd, .typeSummary .activeTableTab .tabEnd {
     background-color:#dc524a;
     color: #fff;
 }
 
-.overviewSummary [role=tablist] .tableTab, .memberSummary [role=tablist] .tableTab,
-.typeSummary [role=tablist] .tableTab, .packagesSummary [role=tablist] .tableTab {
+.memberSummary caption span.tableTab span, .packagesSummary caption span.tableTab span,
+.overviewSummary caption span.tableTab span, .typeSummary caption span.tableTab span,
+.memberSummary .tableTab .tabEnd, .packagesSummary .tableTab .tabEnd,
+.overviewSummary .tableTab .tabEnd, .typeSummary .tableTab .tabEnd,
+.ui-autocomplete-category {
     background-color:#aaa;
     color: #fff;
 }
