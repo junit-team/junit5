@@ -40,7 +40,7 @@ import org.apiguardian.api.API;
 public interface TestInstancePreDestroyCallback extends Extension {
 
 	/**
-	 * Callback for processing the supplied test instance before it is destroyed
+	 * Callback for processing the supplied test instance before it is destroyed.
 	 *
 	 * @param testInstance the instance to process; never {@code null}
 	 * @param context the current extension context; never {@code null}

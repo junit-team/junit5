@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
  *
  * @since 5.6
  */
-public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests {
+class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests {
 
 	private static final List<String> callSequence = new ArrayList<>();
 
@@ -71,7 +72,7 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
 	@Test
 	void testSpecificTestInstancePreDestroyCallbackIsCalled() {
 		executeTestsForClass(
-			TestCaseWithTestSpecificTestInstancePreDestroyCallback.class).testEvents().assertStatistics(//
+			TestCaseWithTestSpecificTestInstancePreDestroyCallback.class).testEvents().assertStatistics(
 				stats -> stats.started(1).succeeded(1));
 
 		// @formatter:off
@@ -86,7 +87,7 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
 
 	@Test
 	void classLifecyclePreDestroyCallbacks() {
-		executeTestsForClass(PerClassLifecyclePreDestroyCallbackWithTwoTestMethods.class).testEvents().assertStatistics(//
+		executeTestsForClass(PerClassLifecyclePreDestroyCallbackWithTwoTestMethods.class).testEvents().assertStatistics(
 			stats -> stats.started(2).succeeded(2));
 
 		// @formatter:off
@@ -198,7 +199,7 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
 	static class FooInstancePreDestroyCallback implements TestInstancePreDestroyCallback {
 
 		@Override
-		public void preDestroyTestInstance(Object testInstance, ExtensionContext context) throws Exception {
+		public void preDestroyTestInstance(Object testInstance, ExtensionContext context) {
 			if (testInstance instanceof Named) {
 				String name;
 				if ("InnerTestCase".equals(testInstance.getClass().getSimpleName())) {
@@ -208,6 +209,7 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
 					name = "foo";
 				}
 				((Named) testInstance).setDestroyed();
+				assertTrue(context.getTestInstance().isPresent());
 				assertSame(testInstance, context.getTestInstance().get());
 				assertEquals(name + ":" + testInstance.getClass().getSimpleName(), ((Named) testInstance).getName());
 			}
@@ -218,9 +220,10 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
 	static class BarInstancePreDestroyCallback implements TestInstancePreDestroyCallback {
 
 		@Override
-		public void preDestroyTestInstance(Object testInstance, ExtensionContext context) throws Exception {
+		public void preDestroyTestInstance(Object testInstance, ExtensionContext context) {
 			if (testInstance instanceof Named) {
 				((Named) testInstance).setDestroyed();
+				assertTrue(context.getTestInstance().isPresent());
 				assertSame(testInstance, context.getTestInstance().get());
 				assertEquals("bar:" + testInstance.getClass().getSimpleName(), ((Named) testInstance).getName());
 			}
@@ -231,7 +234,7 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
 	private abstract static class Named {
 
 		private String name;
-		protected boolean isDestroyed;
+		boolean isDestroyed;
 
 		public void setName(String name) {
 			this.name = name;
@@ -241,7 +244,7 @@ public class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngi
 			return name;
 		}
 
-		public void setDestroyed() {
+		void setDestroyed() {
 			isDestroyed = true;
 		}
 	}

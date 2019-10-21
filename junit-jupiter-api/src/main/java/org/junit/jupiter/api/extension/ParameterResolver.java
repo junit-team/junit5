@@ -41,6 +41,7 @@ import org.apiguardian.api.API;
  * @see ParameterContext
  * @see TestInstanceFactory
  * @see TestInstancePostProcessor
+ * @see TestInstancePreDestroyCallback
  */
 @API(status = STABLE, since = "5.0")
 public interface ParameterResolver extends Extension {

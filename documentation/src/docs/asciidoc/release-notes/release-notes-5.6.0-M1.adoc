@@ -74,14 +74,7 @@ on GitHub.
 * New `TypeBasedParameterResolver<T>` abstract base class that serves as a generic adapter
   for the `ParameterResolver` API and simplifies the implementation of a custom resolver
   that supports parameters of a specific type.
-* New configuration parameter `junit.jupiter.execution.timeout.mode` to control whether
-  timeouts are applied to tests or not. Supported values are: `enabled`, `disabled`, and
-  `disabled_on_debug`.
-* New `@EnabledForJreRange` and `@DisabledForJreRange` annotations for easier test execution
-  handling on multiple versions of JRE.
-* Extension providing `@TempDir` path tries to delete non-writable files by make them
-  writable first.
-* New `TestInstancePreDestroyCallback` interface that defines the API for `Extension`'s
+* New `TestInstancePreDestroyCallback` interface that defines the API for `Extension`
   that wish to process test instances *after* they have been used in tests and *before*
   they are destroyed.
 
