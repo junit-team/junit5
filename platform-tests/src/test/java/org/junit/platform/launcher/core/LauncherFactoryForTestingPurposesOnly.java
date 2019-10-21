@@ -10,17 +10,20 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.Arrays.asList;
-
 import org.junit.platform.engine.TestEngine;
+import org.junit.platform.launcher.Launcher;
 
 /**
  * @since 1.0
  */
 public class LauncherFactoryForTestingPurposesOnly {
 
-	public static DefaultLauncher createLauncher(TestEngine... engines) {
-		return new DefaultLauncher(asList(engines));
+	public static Launcher createLauncher(TestEngine... engines) {
+		return LauncherFactory.create(LauncherConfig.builder() //
+				.enableTestEngineAutoRegistration(false) //
+				.addTestEngines(engines) //
+				.enableTestExecutionListenerAutoRegistration(false) //
+				.build());
 	}
 
 }

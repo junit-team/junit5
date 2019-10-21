@@ -13,6 +13,9 @@ package org.junit.platform.engine.support.discovery;
 import static java.util.stream.Collectors.joining;
 import static org.junit.platform.commons.util.BlacklistedExceptions.rethrowIfBlacklisted;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.platform.engine.SelectorResolutionResult.failed;
+import static org.junit.platform.engine.SelectorResolutionResult.resolved;
+import static org.junit.platform.engine.SelectorResolutionResult.unresolved;
 
 import java.util.ArrayDeque;
 import java.util.HashMap;
@@ -23,13 +26,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.EngineDiscoveryListener;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -54,7 +56,6 @@ import org.junit.platform.engine.support.discovery.SelectorResolver.Resolution;
  */
 class EngineDiscoveryRequestResolution {
 
-	private final Logger logger;
 	private final EngineDiscoveryRequest request;
 	private final Context defaultContext;
 	private final List<SelectorResolver> resolvers;
@@ -65,9 +66,8 @@ class EngineDiscoveryRequestResolution {
 	private final Queue<DiscoverySelector> remainingSelectors = new ArrayDeque<>();
 	private final Map<DiscoverySelector, Context> contextBySelector = new HashMap<>();
 
-	EngineDiscoveryRequestResolution(Logger logger, EngineDiscoveryRequest request, TestDescriptor engineDescriptor,
+	EngineDiscoveryRequestResolution(EngineDiscoveryRequest request, TestDescriptor engineDescriptor,
 			List<SelectorResolver> resolvers, List<TestDescriptor.Visitor> visitors) {
-		this.logger = logger;
 		this.request = request;
 		this.engineDescriptor = engineDescriptor;
 		this.resolvers = resolvers;
@@ -85,18 +85,21 @@ class EngineDiscoveryRequestResolution {
 	}
 
 	private void resolveCompletely(DiscoverySelector selector) {
+		EngineDiscoveryListener discoveryListener = request.getDiscoveryListener();
+		UniqueId engineId = engineDescriptor.getUniqueId();
 		try {
 			Optional<Resolution> result = resolve(selector);
 			if (result.isPresent()) {
+				discoveryListener.selectorProcessed(engineId, selector, resolved());
 				enqueueAdditionalSelectors(result.get());
 			}
 			else {
-				logUnresolvedSelector(selector, null);
+				discoveryListener.selectorProcessed(engineId, selector, unresolved());
 			}
 		}
 		catch (Throwable t) {
 			rethrowIfBlacklisted(t);
-			logUnresolvedSelector(selector, t);
+			discoveryListener.selectorProcessed(engineId, selector, failed(t));
 		}
 	}
 
@@ -188,20 +191,6 @@ class EngineDiscoveryRequestResolution {
 					return resolution;
 				});
 		// @formatter:on
-	}
-
-	private void logUnresolvedSelector(DiscoverySelector selector, Throwable cause) {
-		BiConsumer<Throwable, Supplier<String>> loggingConsumer = logger::debug;
-		if (selector instanceof UniqueIdSelector) {
-			UniqueId uniqueId = ((UniqueIdSelector) selector).getUniqueId();
-			if (uniqueId.hasPrefix(engineDescriptor.getUniqueId())) {
-				loggingConsumer = logger::warn;
-			}
-			else {
-				return;
-			}
-		}
-		loggingConsumer.accept(cause, () -> selector + " could not be resolved.");
 	}
 
 	private class DefaultContext implements Context {

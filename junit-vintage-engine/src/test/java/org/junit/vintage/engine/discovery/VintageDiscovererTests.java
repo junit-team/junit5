@@ -12,35 +12,39 @@ package org.junit.vintage.engine.discovery;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.platform.engine.SelectorResolutionResult.Status.FAILED;
+import static org.junit.platform.engine.SelectorResolutionResult.Status.UNRESOLVED;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.vintage.engine.VintageUniqueIdBuilder.engineId;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
+import java.util.function.Consumer;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.fixtures.TrackLogRecords;
-import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.SelectorResolutionResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.PackageNameFilter;
-import org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.vintage.engine.VintageUniqueIdBuilder;
 import org.junit.vintage.engine.samples.junit3.AbstractJUnit3TestCase;
 import org.junit.vintage.engine.samples.junit4.AbstractJunit4TestCaseWithConstructorParameter;
+import org.mockito.ArgumentCaptor;
 
 /**
  * Tests for {@link VintageDiscoverer}.
  *
  * @since 4.12
  */
-@TrackLogRecords
 class VintageDiscovererTests {
 
 	@Test
@@ -73,38 +77,49 @@ class VintageDiscovererTests {
 	}
 
 	@Test
-	void doesNotResolveAbstractJUnit3Classes(LogRecordListener listener) {
-		doesNotResolve(listener, selectClass(AbstractJUnit3TestCase.class));
+	void doesNotResolveAbstractJUnit3Classes() {
+		doesNotResolve(selectClass(AbstractJUnit3TestCase.class));
 	}
 
 	@Test
-	void doesNotResolveAbstractJUnit4Classes(LogRecordListener listener) {
-		doesNotResolve(listener, selectClass(AbstractJunit4TestCaseWithConstructorParameter.class));
+	void doesNotResolveAbstractJUnit4Classes() {
+		doesNotResolve(selectClass(AbstractJunit4TestCaseWithConstructorParameter.class));
 	}
 
 	@Test
-	void logsWarningOnUnloadableTestClass(LogRecordListener listener) {
+	void failsToResolveUnloadableTestClass() {
 		UniqueId uniqueId = VintageUniqueIdBuilder.uniqueIdForClass("foo.bar.UnknownClass");
 
-		doesNotResolve(listener, selectUniqueId(uniqueId));
-
-		LogRecord logRecord = listener.stream(EngineDiscoveryRequestResolver.class, Level.WARNING).findFirst().get();
-		assertThat(logRecord.getMessage()).isEqualTo(
-			"UniqueIdSelector [uniqueId = " + uniqueId + "] could not be resolved.");
-		assertThat(logRecord.getThrown()).hasCauseInstanceOf(ClassNotFoundException.class);
+		doesNotResolve(selectUniqueId(uniqueId), result -> {
+			assertThat(result.getStatus()).isEqualTo(FAILED);
+			assertThat(result.getThrowable().get()).hasMessageContaining("Unknown class");
+		});
 	}
 
 	@Test
-	void ignoresUniqueIdsOfOtherEngines(LogRecordListener listener) {
-		doesNotResolve(listener, selectUniqueId(UniqueId.forEngine("someEngine")));
+	void ignoresUniqueIdsOfOtherEngines() {
+		doesNotResolve(selectUniqueId(UniqueId.forEngine("someEngine")));
 	}
 
-	private void doesNotResolve(LogRecordListener listener, DiscoverySelector selector) {
-		LauncherDiscoveryRequest request = request().selectors(selector).build();
+	private void doesNotResolve(DiscoverySelector selector) {
+		doesNotResolve(selector, result -> assertThat(result.getStatus()).isEqualTo(UNRESOLVED));
+	}
+
+	private void doesNotResolve(DiscoverySelector selector, Consumer<SelectorResolutionResult> resultCheck) {
+		var discoveryListener = mock(LauncherDiscoveryListener.class);
+		LauncherDiscoveryRequest request = request() //
+				.selectors(selector) //
+				.listeners(discoveryListener) //
+				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+				.build();
 
 		TestDescriptor testDescriptor = discover(request);
 
 		assertThat(testDescriptor.getChildren()).isEmpty();
+		ArgumentCaptor<SelectorResolutionResult> resultCaptor = ArgumentCaptor.forClass(SelectorResolutionResult.class);
+		verify(discoveryListener).selectorProcessed(eq(UniqueId.forEngine("junit-vintage")), eq(selector),
+			resultCaptor.capture());
+		resultCheck.accept(resultCaptor.getValue());
 	}
 
 	private TestDescriptor discover(EngineDiscoveryRequest request) {
