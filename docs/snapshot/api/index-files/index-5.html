@@ -201,6 +201,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Create a new <code>EngineDescriptor</code> with the supplied <a href="../org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine"><code>UniqueId</code></a>
  and display name.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/LauncherDiscoveryListener.html#engineDiscoveryFinished(org.junit.platform.engine.UniqueId,org.junit.platform.launcher.EngineDiscoveryResult)">engineDiscoveryFinished(UniqueId, EngineDiscoveryResult)</a></span> - Method in class org.junit.platform.launcher.<a href="../org/junit/platform/launcher/LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher">LauncherDiscoveryListener</a></dt>
+<dd>
+<div class="block">Called when test discovery has finished for an engine.</div>
+</dd>
+<dt><a href="../org/junit/platform/engine/EngineDiscoveryListener.html" title="interface in org.junit.platform.engine"><span class="typeNameLink">EngineDiscoveryListener</span></a> - Interface in <a href="../org/junit/platform/engine/package-summary.html">org.junit.platform.engine</a></dt>
+<dd>
+<div class="block"><code>EngineDiscoveryListener</code> contains <a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> access to the
+ information necessary to discover tests and containers.</div>
+</dd>
 <dt><a href="../org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><span class="typeNameLink">EngineDiscoveryRequest</span></a> - Interface in <a href="../org/junit/platform/engine/package-summary.html">org.junit.platform.engine</a></dt>
 <dd>
 <div class="block"><code>EngineDiscoveryRequest</code> provides a <a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a> access to the
@@ -221,6 +230,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">The initialization context for creating <a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery">resolvers</a> and <a href="../org/junit/platform/engine/TestDescriptor.Visitor.html" title="interface in org.junit.platform.engine">visitors</a> that depend
  on the <a href="../org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><code>EngineDiscoveryRequest</code></a> to be resolved or the engine
  descriptor that will be used to collect the results.</div>
+</dd>
+<dt><a href="../org/junit/platform/launcher/EngineDiscoveryResult.html" title="class in org.junit.platform.launcher"><span class="typeNameLink">EngineDiscoveryResult</span></a> - Class in <a href="../org/junit/platform/launcher/package-summary.html">org.junit.platform.launcher</a></dt>
+<dd>
+<div class="block"><code>EngineDiscoveryResult</code> encapsulates the result of test discovery by a
+ <a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>.</div>
+</dd>
+<dt><a href="../org/junit/platform/launcher/EngineDiscoveryResult.Status.html" title="enum in org.junit.platform.launcher"><span class="typeNameLink">EngineDiscoveryResult.Status</span></a> - Enum in <a href="../org/junit/platform/launcher/package-summary.html">org.junit.platform.launcher</a></dt>
+<dd>
+<div class="block">Status of test discovery by a
+ <a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/LauncherDiscoveryListener.html#engineDiscoveryStarted(org.junit.platform.engine.UniqueId)">engineDiscoveryStarted(UniqueId)</a></span> - Method in class org.junit.platform.launcher.<a href="../org/junit/platform/launcher/LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher">LauncherDiscoveryListener</a></dt>
+<dd>
+<div class="block">Called when test discovery is about to be started for an engine.</div>
 </dd>
 <dt><a href="../org/junit/platform/engine/support/hierarchical/EngineExecutionContext.html" title="interface in org.junit.platform.engine.support.hierarchical"><span class="typeNameLink">EngineExecutionContext</span></a> - Interface in <a href="../org/junit/platform/engine/support/hierarchical/package-summary.html">org.junit.platform.engine.support.hierarchical</a></dt>
 <dd>

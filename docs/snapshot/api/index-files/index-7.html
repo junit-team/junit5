@@ -443,6 +443,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Get the selected directory as a <a href="https://docs.oracle.com/javase/8/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink"><code>File</code></a>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/EngineDiscoveryRequest.html#getDiscoveryListener()">getDiscoveryListener()</a></span> - Method in interface org.junit.platform.engine.<a href="../org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine">EngineDiscoveryRequest</a></dt>
+<dd>
+<div class="block">Get the <a href="../org/junit/platform/engine/EngineDiscoveryListener.html" title="interface in org.junit.platform.engine"><code>EngineDiscoveryListener</code></a> for this request.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/LauncherDiscoveryRequest.html#getDiscoveryListener()">getDiscoveryListener()</a></span> - Method in interface org.junit.platform.launcher.<a href="../org/junit/platform/launcher/LauncherDiscoveryRequest.html" title="interface in org.junit.platform.launcher">LauncherDiscoveryRequest</a></dt>
+<dd>
+<div class="block">Get the <a href="../org/junit/platform/launcher/LauncherDiscoveryListener.html" title="class in org.junit.platform.launcher"><code>LauncherDiscoveryListener</code></a> for this request.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.InitializationContext.html#getDiscoveryRequest()">getDiscoveryRequest()</a></span> - Method in interface org.junit.platform.engine.support.discovery.<a href="../org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolver.InitializationContext.html" title="interface in org.junit.platform.engine.support.discovery">EngineDiscoveryRequestResolver.InitializationContext</a></dt>
 <dd>
 <div class="block">Get the <a href="../org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine"><code>EngineDiscoveryRequest</code></a> that is about to be resolved.</div>
@@ -651,8 +659,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/EngineDiscoveryRequest.html#getFiltersByType(java.lang.Class)">getFiltersByType(Class&lt;T&gt;)</a></span> - Method in interface org.junit.platform.engine.<a href="../org/junit/platform/engine/EngineDiscoveryRequest.html" title="interface in org.junit.platform.engine">EngineDiscoveryRequest</a></dt>
 <dd>
-<div class="block">Get the <a href="../org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilters</code></a> for this request, filtered
- by a particular type.</div>
+<div class="block">Get the <a href="../org/junit/platform/engine/DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilters</code></a> for this request,
+ filtered by a particular type.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/params/aggregator/ArgumentsAccessor.html#getFloat(int)">getFloat(int)</a></span> - Method in interface org.junit.jupiter.params.aggregator.<a href="../org/junit/jupiter/params/aggregator/ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator">ArgumentsAccessor</a></dt>
 <dd>
@@ -1141,9 +1149,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Get the start <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html?is-external=true" title="class or interface in java.time" class="externalLink"><code>Instant</code></a> of this <code>Execution</code>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/SelectorResolutionResult.html#getStatus()">getStatus()</a></span> - Method in class org.junit.platform.engine.<a href="../org/junit/platform/engine/SelectorResolutionResult.html" title="class in org.junit.platform.engine">SelectorResolutionResult</a></dt>
+<dd>
+<div class="block">Get the <a href="../org/junit/platform/engine/SelectorResolutionResult.Status.html" title="enum in org.junit.platform.engine">status</a> of this result.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/TestExecutionResult.html#getStatus()">getStatus()</a></span> - Method in class org.junit.platform.engine.<a href="../org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a></dt>
 <dd>
 <div class="block">Get the <a href="../org/junit/platform/engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine">status</a> of this result.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/EngineDiscoveryResult.html#getStatus()">getStatus()</a></span> - Method in class org.junit.platform.launcher.<a href="../org/junit/platform/launcher/EngineDiscoveryResult.html" title="class in org.junit.platform.launcher">EngineDiscoveryResult</a></dt>
+<dd>
+<div class="block">Get the <a href="../org/junit/platform/launcher/EngineDiscoveryResult.Status.html" title="enum in org.junit.platform.launcher">status</a> of this result.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/jupiter/api/extension/ExtensionContext.html#getStore(org.junit.jupiter.api.extension.ExtensionContext.Namespace)">getStore(ExtensionContext.Namespace)</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a></dt>
 <dd>
@@ -1313,12 +1329,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/console/options/CommandLineOptions.html#getTheme()">getTheme()</a></span> - Method in class org.junit.platform.console.options.<a href="../org/junit/platform/console/options/CommandLineOptions.html" title="class in org.junit.platform.console.options">CommandLineOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/SelectorResolutionResult.html#getThrowable()">getThrowable()</a></span> - Method in class org.junit.platform.engine.<a href="../org/junit/platform/engine/SelectorResolutionResult.html" title="class in org.junit.platform.engine">SelectorResolutionResult</a></dt>
+<dd>
+<div class="block">Get the throwable that caused this result, if available.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html#getThrowable()">getThrowable()</a></span> - Method in class org.junit.platform.engine.support.hierarchical.<a href="../org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a></dt>
 <dd>
 <div class="block">Get the first <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Throwable</code></a> collected by this
  <code>ThrowableCollector</code>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/TestExecutionResult.html#getThrowable()">getThrowable()</a></span> - Method in class org.junit.platform.engine.<a href="../org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a></dt>
+<dd>
+<div class="block">Get the throwable that caused this result, if available.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/EngineDiscoveryResult.html#getThrowable()">getThrowable()</a></span> - Method in class org.junit.platform.launcher.<a href="../org/junit/platform/launcher/EngineDiscoveryResult.html" title="class in org.junit.platform.launcher">EngineDiscoveryResult</a></dt>
 <dd>
 <div class="block">Get the throwable that caused this result, if available.</div>
 </dd>

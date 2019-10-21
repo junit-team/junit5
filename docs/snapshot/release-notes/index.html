@@ -665,6 +665,19 @@ package <code>java.util.logging</code>.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>The <code>Launcher</code> now propagates errors during test discovery by default instead of only
+logging and thereby potentially hiding them. In order to restore the old, lenient
+behavior, you can set the <code>junit.platform.discovery.listener.default</code> configuration
+parameter to <code>logging</code>.</p>
+</li>
+<li>
+<p>To support the above feature consistently, a new <code>EngineDiscoveryListener</code> interface was
+introduced. <code>TestEngine</code> implementations should now notify the listener that can be
+accessed via the <code>EngineDiscoveryRequest.getDiscoveryListener()</code> method about each
+processed <code>DiscoverySelector</code>. Test engines that use <code>EngineDiscoveryRequestResolver</code> do
+not have to make any changes.</p>
+</li>
+<li>
 <p>In the <code>EngineTestKit</code> API, the <code>all()</code>, <code>containers()</code>, and <code>tests()</code> methods in
 <code>EngineExecutionResults</code> have been deprecated in favor of the new <code>allEvents()</code>,
 <code>containerEvents()</code>, and <code>testEvents()</code> methods, respectively. The deprecated methods
@@ -974,7 +987,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-10-19 09:40:21 UTC
+Last updated 2019-10-21 14:22:41 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

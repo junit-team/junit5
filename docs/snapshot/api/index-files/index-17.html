@@ -239,6 +239,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Create a <code>NestedMethodSelector</code> for the supplied nested class name, method name,
  and method parameter types.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/engine/EngineDiscoveryListener.html#selectorProcessed(org.junit.platform.engine.UniqueId,org.junit.platform.engine.DiscoverySelector,org.junit.platform.engine.SelectorResolutionResult)">selectorProcessed(UniqueId, DiscoverySelector, SelectorResolutionResult)</a></span> - Method in interface org.junit.platform.engine.<a href="../org/junit/platform/engine/EngineDiscoveryListener.html" title="interface in org.junit.platform.engine">EngineDiscoveryListener</a></dt>
+<dd>
+<div class="block">Must be called after a discovery selector has been processed by a test
+ engine.</div>
+</dd>
+<dt><a href="../org/junit/platform/engine/SelectorResolutionResult.html" title="class in org.junit.platform.engine"><span class="typeNameLink">SelectorResolutionResult</span></a> - Class in <a href="../org/junit/platform/engine/package-summary.html">org.junit.platform.engine</a></dt>
+<dd>
+<div class="block"><code>SelectorResolutionResult</code> encapsulates the result of resolving a
+ <a href="../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> by a <a href="../org/junit/platform/engine/TestEngine.html" title="interface in org.junit.platform.engine"><code>TestEngine</code></a>.</div>
+</dd>
+<dt><a href="../org/junit/platform/engine/SelectorResolutionResult.Status.html" title="enum in org.junit.platform.engine"><span class="typeNameLink">SelectorResolutionResult.Status</span></a> - Enum in <a href="../org/junit/platform/engine/package-summary.html">org.junit.platform.engine</a></dt>
+<dd>
+<div class="block">Status of resolving a <a href="../org/junit/platform/engine/DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a>.</div>
+</dd>
 <dt><a href="../org/junit/platform/engine/support/discovery/SelectorResolver.html" title="interface in org.junit.platform.engine.support.discovery"><span class="typeNameLink">SelectorResolver</span></a> - Interface in <a href="../org/junit/platform/engine/support/discovery/package-summary.html">org.junit.platform.engine.support.discovery</a></dt>
 <dd>
 <div class="block">A resolver that supports resolving one or multiple types of
@@ -605,10 +619,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Create a <code>TestExecutionResult</code> for a <em>successful</em> execution
  of a test or container.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/EngineDiscoveryResult.html#successful()">successful()</a></span> - Static method in class org.junit.platform.launcher.<a href="../org/junit/platform/launcher/EngineDiscoveryResult.html" title="class in org.junit.platform.launcher">EngineDiscoveryResult</a></dt>
+<dd>
+<div class="block">Create a <code>EngineDiscoveryResult</code> for a <em>successful</em> test
+ discovery.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../org/junit/platform/engine/TestExecutionResult.Status.html#SUCCESSFUL">SUCCESSFUL</a></span> - org.junit.platform.engine.<a href="../org/junit/platform/engine/TestExecutionResult.Status.html" title="enum in org.junit.platform.engine">TestExecutionResult.Status</a></dt>
 <dd>
 <div class="block">Indicates that the execution of a test or container was
  <em>successful</em>.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../org/junit/platform/launcher/EngineDiscoveryResult.Status.html#SUCCESSFUL">SUCCESSFUL</a></span> - org.junit.platform.launcher.<a href="../org/junit/platform/launcher/EngineDiscoveryResult.Status.html" title="enum in org.junit.platform.launcher">EngineDiscoveryResult.Status</a></dt>
+<dd>
+<div class="block">Indicates that test discovery was <em>successful</em>.</div>
 </dd>
 <dt><a href="../org/junit/platform/suite/api/SuiteDisplayName.html" title="annotation in org.junit.platform.suite.api"><span class="typeNameLink">SuiteDisplayName</span></a> - Annotation Type in <a href="../org/junit/platform/suite/api/package-summary.html">org.junit.platform.suite.api</a></dt>
 <dd>

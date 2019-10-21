@@ -143,18 +143,24 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
+<th class="colFirst" scope="row"><a href="#org.junit.platform.launcher">org.junit.platform.launcher</a></th>
+<td class="colLast">
+<div class="block">Public API for configuring and launching test plans.</div>
+</td>
+</tr>
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="#org.junit.vintage.engine">org.junit.vintage.engine</a></th>
 <td class="colLast">
 <div class="block">Core package for the JUnit Vintage test engine.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#org.junit.vintage.engine.descriptor">org.junit.vintage.engine.descriptor</a></th>
 <td class="colLast">
 <div class="block">Test descriptors used within the JUnit Vintage test engine.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="#org.junit.vintage.engine.discovery">org.junit.vintage.engine.discovery</a></th>
 <td class="colLast">
 <div class="block">Internal classes for test discovery within the JUnit Vintage test engine.</div>
@@ -366,6 +372,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  <code>UniqueId</code>.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><code>default void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">EngineDiscoveryListener.</span><code><span class="memberNameLink"><a href="../EngineDiscoveryListener.html#selectorProcessed(org.junit.platform.engine.UniqueId,org.junit.platform.engine.DiscoverySelector,org.junit.platform.engine.SelectorResolutionResult)">selectorProcessed</a></span>&#8203;(<a href="../UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;engineId,
+                 <a href="../DiscoverySelector.html" title="interface in org.junit.platform.engine">DiscoverySelector</a>&nbsp;selector,
+                 <a href="../SelectorResolutionResult.html" title="class in org.junit.platform.engine">SelectorResolutionResult</a>&nbsp;result)</code></th>
+<td class="colLast">
+<div class="block">Must be called after a discovery selector has been processed by a test
+ engine.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -476,6 +492,38 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">
 <div class="block">Create a new <code>EngineDescriptor</code> with the supplied <a href="../UniqueId.html" title="class in org.junit.platform.engine"><code>UniqueId</code></a>
  and display name.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="org.junit.platform.launcher">
+<!--   -->
+</a>
+<h3>Uses of <a href="../UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a> in <a href="../../launcher/package-summary.html">org.junit.platform.launcher</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../launcher/package-summary.html">org.junit.platform.launcher</a> with parameters of type <a href="../UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">LauncherDiscoveryListener.</span><code><span class="memberNameLink"><a href="../../launcher/LauncherDiscoveryListener.html#engineDiscoveryFinished(org.junit.platform.engine.UniqueId,org.junit.platform.launcher.EngineDiscoveryResult)">engineDiscoveryFinished</a></span>&#8203;(<a href="../UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;engineId,
+                       <a href="../../launcher/EngineDiscoveryResult.html" title="class in org.junit.platform.launcher">EngineDiscoveryResult</a>&nbsp;result)</code></th>
+<td class="colLast">
+<div class="block">Called when test discovery has finished for an engine.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">LauncherDiscoveryListener.</span><code><span class="memberNameLink"><a href="../../launcher/LauncherDiscoveryListener.html#engineDiscoveryStarted(org.junit.platform.engine.UniqueId)">engineDiscoveryStarted</a></span>&#8203;(<a href="../UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;engineId)</code></th>
+<td class="colLast">
+<div class="block">Called when test discovery is about to be started for an engine.</div>
 </td>
 </tr>
 </tbody>

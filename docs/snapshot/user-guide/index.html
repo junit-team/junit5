@@ -8245,6 +8245,14 @@ traverse the tree, retrieve details about a node, and get a link to the original
 (like class, method, or file position). Every node in the test plan has a <em>unique ID</em>
 that can be used to invoke a particular test or group of tests.</p>
 </div>
+<div class="paragraph">
+<p>Clients can register one or more <code><a href="../api/org/junit/platform/launcher/LauncherDiscoveryListener.html">LauncherDiscoveryListener</a></code> implementations to get
+insights into events that occur during test discovery via the
+<code><a href="../api/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html">LauncherDiscoveryRequestBuilder</a></code>. The builder registers a default listener that can be
+changed via the <code>junit.platform.discovery.listener.default</code> configuration parameter. If
+the parameter is not set, test discovery will be aborted after the first failure is
+encountered.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="launcher-api-execution"><a class="anchor" href="#launcher-api-execution"></a>6.1.2. Executing Tests</h4>
@@ -9320,6 +9328,16 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EngineDiscoveryListener</code> <em>(interface)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectorResolutionResult</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.engine.support.config</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>PrefixedConfigurationParameters</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3</code></p></td>
@@ -9411,13 +9429,28 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EngineDiscoveryResult</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LauncherConstants</code> <em>(class)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LauncherDiscoveryListener</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher.core</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LauncherConfig</code> <em>(interface)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.3</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.launcher.listeners.discovery</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LauncherDiscoveryListeners</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.6</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.platform.reporting.legacy.xml</code></p></td>
@@ -9768,7 +9801,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-10-19 09:40:21 UTC
+Last updated 2019-10-21 14:22:41 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
