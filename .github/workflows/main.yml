@@ -19,7 +19,7 @@ jobs:
     - name: 'Test'
       run: |
         ./gradlew --version
-        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
+        ./gradlew --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
 
   windows:
     name: 'Windows'
@@ -48,7 +48,7 @@ jobs:
     - name: 'Test'
       run: |
         ./gradlew --version
-        ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
+        ./gradlew --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
 
   coverage:
     name: 'Coverage'
@@ -65,7 +65,7 @@ jobs:
       shell: bash
       run: |
         ./gradlew --version
-        ./gradlew --scan --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport
+        ./gradlew --scan --no-parallel --stacktrace --warning-mode=all -PenableJaCoCo build jacocoRootReport
     - name: Upload to Codecov.io
       shell: bash
       env:
