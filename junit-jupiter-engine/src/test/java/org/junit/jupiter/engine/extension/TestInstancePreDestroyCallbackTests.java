@@ -11,7 +11,6 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,7 +24,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestInstancePreDestroyCallback;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 
@@ -48,25 +46,21 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 		executeTestsForClass(OuterTestCase.class).testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
 
 		// @formatter:off
-        assertThat(callSequence).containsExactly(
+		assertThat(callSequence).containsExactly(
 
 			// OuterTestCase
-            "fooPostProcessTestInstance:OuterTestCase",
-            	"beforeOuterMethod",
-            		"testOuter",
-             "fooPreDestroyCallbackTestInstance:OuterTestCase",
+			"beforeOuterMethod",
+			"testOuter",
+			"fooPreDestroyCallbackTestInstance:OuterTestCase",
 
 			// InnerTestCase
-			"fooPostProcessTestInstance:OuterTestCase",
-			"fooPostProcessTestInstance:InnerTestCase",
-				"barPostProcessTestInstance:InnerTestCase",
-					"beforeOuterMethod",
-						"beforeInnerMethod",
-							"testInner",
-            	"barPreDestroyCallbackTestInstance:InnerTestCase",
-            "fooPreDestroyCallbackTestInstance:InnerTestCase"
-        );
-        // @formatter:on
+			"beforeOuterMethod",
+			"beforeInnerMethod",
+			"testInner",
+			"barPreDestroyCallbackTestInstance:InnerTestCase",
+			"fooPreDestroyCallbackTestInstance:InnerTestCase"
+		);
+		// @formatter:on
 	}
 
 	@Test
@@ -76,13 +70,12 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 				stats -> stats.started(1).succeeded(1));
 
 		// @formatter:off
-        assertThat(callSequence).containsExactly(
-                "fooPostProcessTestInstance:TestCaseWithTestSpecificTestInstancePreDestroyCallback",
-                	"beforeEachMethod",
-                		"test",
-                			"fooPreDestroyCallbackTestInstance:TestCaseWithTestSpecificTestInstancePreDestroyCallback"
-        );
-        // @formatter:on
+		assertThat(callSequence).containsExactly(
+			"beforeEachMethod",
+			"test",
+			"fooPreDestroyCallbackTestInstance:TestCaseWithTestSpecificTestInstancePreDestroyCallback"
+		);
+		// @formatter:on
 	}
 
 	@Test
@@ -91,20 +84,18 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 			stats -> stats.started(2).succeeded(2));
 
 		// @formatter:off
-        assertThat(callSequence).containsExactly(
-                "fooPostProcessTestInstance:PerClassLifecyclePreDestroyCallbackWithTwoTestMethods",
-                "beforeEachMethod",
-                "test1",
-                "beforeEachMethod",
-                "test2",
-                "fooPreDestroyCallbackTestInstance:PerClassLifecyclePreDestroyCallbackWithTwoTestMethods"
-        );
-        // @formatter:on
+		assertThat(callSequence).containsExactly(
+			"beforeEachMethod",
+			"test1",
+			"beforeEachMethod",
+			"test2",
+			"fooPreDestroyCallbackTestInstance:PerClassLifecyclePreDestroyCallbackWithTwoTestMethods"
+		);
+		// @formatter:on
 	}
 
 	// -------------------------------------------------------------------
 
-	@ExtendWith(FooInstancePostProcessor.class)
 	@ExtendWith(FooInstancePreDestroyCallback.class)
 	static class OuterTestCase extends Named {
 
@@ -120,7 +111,6 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 		}
 
 		@Nested
-		@ExtendWith(BarInstancePostProcessor.class)
 		@ExtendWith(BarInstancePreDestroyCallback.class)
 		class InnerTestCase extends Named {
 
@@ -145,7 +135,6 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 			callSequence.add("beforeEachMethod");
 		}
 
-		@ExtendWith(FooInstancePostProcessor.class)
 		@ExtendWith(FooInstancePreDestroyCallback.class)
 		@Test
 		void test() {
@@ -154,7 +143,6 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 	}
 
 	@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-	@ExtendWith(FooInstancePostProcessor.class)
 	@ExtendWith(FooInstancePreDestroyCallback.class)
 	static class PerClassLifecyclePreDestroyCallbackWithTwoTestMethods extends Named {
 
@@ -174,50 +162,27 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 		}
 	}
 
-	static class FooInstancePostProcessor implements TestInstancePostProcessor {
+	static class FooInstancePreDestroyCallback extends AbstractInstancePreDestroyCallback {
 
-		@Override
-		public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
-			if (testInstance instanceof Named) {
-				((Named) testInstance).setName("foo:" + context.getRequiredTestClass().getSimpleName());
-			}
-			callSequence.add("fooPostProcessTestInstance:" + testInstance.getClass().getSimpleName());
+		protected FooInstancePreDestroyCallback() {
+			super("foo");
 		}
 	}
 
-	static class BarInstancePostProcessor implements TestInstancePostProcessor {
+	static class BarInstancePreDestroyCallback extends AbstractInstancePreDestroyCallback {
 
-		@Override
-		public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
-			if (testInstance instanceof Named) {
-				((Named) testInstance).setName("bar:" + context.getRequiredTestClass().getSimpleName());
-			}
-			callSequence.add("barPostProcessTestInstance:" + testInstance.getClass().getSimpleName());
+		protected BarInstancePreDestroyCallback() {
+			super("bar");
 		}
 	}
 
-	static class FooInstancePreDestroyCallback implements TestInstancePreDestroyCallback {
+	static abstract class AbstractInstancePreDestroyCallback implements TestInstancePreDestroyCallback {
 
-		@Override
-		public void preDestroyTestInstance(Object testInstance, ExtensionContext context) {
-			if (testInstance instanceof Named) {
-				String name;
-				if ("InnerTestCase".equals(testInstance.getClass().getSimpleName())) {
-					name = "bar";
-				}
-				else {
-					name = "foo";
-				}
-				((Named) testInstance).setDestroyed();
-				assertTrue(context.getTestInstance().isPresent());
-				assertSame(testInstance, context.getTestInstance().get());
-				assertEquals(name + ":" + testInstance.getClass().getSimpleName(), ((Named) testInstance).getName());
-			}
-			callSequence.add("fooPreDestroyCallbackTestInstance:" + testInstance.getClass().getSimpleName());
+		private final String name;
+
+		AbstractInstancePreDestroyCallback(String name) {
+			this.name = name;
 		}
-	}
-
-	static class BarInstancePreDestroyCallback implements TestInstancePreDestroyCallback {
 
 		@Override
 		public void preDestroyTestInstance(Object testInstance, ExtensionContext context) {
@@ -225,24 +190,14 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 				((Named) testInstance).setDestroyed();
 				assertTrue(context.getTestInstance().isPresent());
 				assertSame(testInstance, context.getTestInstance().get());
-				assertEquals("bar:" + testInstance.getClass().getSimpleName(), ((Named) testInstance).getName());
 			}
-			callSequence.add("barPreDestroyCallbackTestInstance:" + testInstance.getClass().getSimpleName());
+			callSequence.add(name + "PreDestroyCallbackTestInstance:" + testInstance.getClass().getSimpleName());
 		}
 	}
 
 	private abstract static class Named {
 
-		private String name;
 		boolean isDestroyed;
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public String getName() {
-			return name;
-		}
 
 		void setDestroyed() {
 			isDestroyed = true;
