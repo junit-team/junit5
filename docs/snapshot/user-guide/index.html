@@ -1507,6 +1507,8 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTimeoutPreemptively</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>;
 
+<span class="keyword">import</span> <span class="include">java.util.concurrent.CountDownLatch</span>;
+
 <span class="keyword">import</span> <span class="include">example.domain.Person</span>;
 <span class="keyword">import</span> <span class="include">example.util.Calculator</span>;
 
@@ -1614,7 +1616,7 @@ are <code>static</code> methods in the <code><a href="../api/org/junit/jupiter/a
         <span class="comment">// execution timed out after 10 ms</span>
         assertTimeoutPreemptively(ofMillis(<span class="integer">10</span>), () -&gt; {
             <span class="comment">// Simulate task that takes more than 10 ms.</span>
-            <span class="predefined-type">Thread</span>.sleep(<span class="integer">100</span>);
+            <span class="keyword">new</span> <span class="predefined-type">CountDownLatch</span>(<span class="integer">1</span>).await();
         });
     }
 
@@ -9801,7 +9803,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-10-22 17:01:58 UTC
+Last updated 2019-10-22 19:04:34 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
