@@ -1946,7 +1946,12 @@ conditions <em>programmatically</em>. The simplest example of such a condition i
 <a href="#writing-tests-disabling">Disabling Tests</a>). In addition to <code>@Disabled</code>, JUnit Jupiter also supports
 several other annotation-based conditions in the <code>org.junit.jupiter.api.condition</code>
 package that allow developers to enable or disable containers and tests <em>declaratively</em>.
-See the following sections for details.</p>
+When multiple <code>ExecutionCondition</code> extensions are registered, a container or test is
+disabled as soon as one of the conditions returns <em>disabled</em>.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="#extensions-conditions"><code>ExecutionCondition</code></a> and the following sections for
+details.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -9803,7 +9808,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-10-22 19:04:34 UTC
+Last updated 2019-10-23 07:13:45 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
