@@ -23,11 +23,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * {@code @DisabledForJreRange} is used to signal that the annotated test class or
- * test method is only <em>disabled</em> on a specific range of Java
- * Runtime Environment (JRE) {@linkplain #min version} {@linkplain #max version}.
+ * test method is only <em>disabled</em> for a specific range of Java Runtime
+ * Environment (JRE) versions from {@link #min} to {@link #max}.
  *
- * <p>When applied at the class level, all test methods within that class
- * will be disabled on the same specified JRE versions.
+ * <p>When applied at the class level, all test methods within that class will
+ * be disabled on the same specified JRE versions.
  *
  * <p>If a test method is disabled via this annotation, that does not prevent
  * the test class from being instantiated. Rather, it prevents the execution of
@@ -51,9 +51,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
  *
  * @since 5.6
  * @see JRE
+ * @see org.junit.jupiter.api.condition.EnabledForJreRange
  * @see org.junit.jupiter.api.condition.EnabledOnJre
  * @see org.junit.jupiter.api.condition.DisabledOnJre
- * @see org.junit.jupiter.api.condition.EnabledForJreRange
  * @see org.junit.jupiter.api.condition.EnabledOnOs
  * @see org.junit.jupiter.api.condition.DisabledOnOs
  * @see org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable
@@ -68,9 +68,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(DisabledForJreRangeCondition.class)
 @API(status = STABLE, since = "5.6")
 public @interface DisabledForJreRange {
+
 	/**
 	 * Java Runtime Environment version which is used as the lower boundary
-	 * for the version range determining if the annotated class or method
+	 * for the version range that determines if the annotated class or method
 	 * should be disabled.
 	 *
 	 * <p>Defaults to {@link JRE#JAVA_8 JAVA_8}, as this is the lowest
@@ -82,7 +83,7 @@ public @interface DisabledForJreRange {
 
 	/**
 	 * Java Runtime Environment version which is used as the upper boundary
-	 * for the version range determining if the annotated class or method
+	 * for the version range that determines if the annotated class or method
 	 * should be disabled.
 	 *
 	 * <p>Defaults to {@link JRE#OTHER OTHER}, as this will always be the highest

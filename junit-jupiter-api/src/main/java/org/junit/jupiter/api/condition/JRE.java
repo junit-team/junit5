@@ -98,7 +98,7 @@ public enum JRE {
 
 	private static final Logger logger = LoggerFactory.getLogger(JRE.class);
 
-	static final JRE CURRENT_VERSION = determineCurrentVersion();
+	private static final JRE CURRENT_VERSION = determineCurrentVersion();
 
 	private static JRE determineCurrentVersion() {
 		String javaVersion = System.getProperty("java.version");
@@ -152,6 +152,13 @@ public enum JRE {
 	 */
 	public boolean isCurrentVersion() {
 		return this == CURRENT_VERSION;
+	}
+
+	static boolean isCurrentVersionWithinRange(JRE min, JRE max) {
+		if (CURRENT_VERSION == null) {
+			return true;
+		}
+		return CURRENT_VERSION.compareTo(min) >= 0 && CURRENT_VERSION.compareTo(max) <= 0;
 	}
 
 }
