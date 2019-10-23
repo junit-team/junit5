@@ -303,6 +303,7 @@ checkstyle {
 	toolVersion = Versions.checkstyle
 	configDirectory.set(rootProject.file("src/checkstyle"))
 }
+
 tasks {
 	checkstyleMain {
 		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
@@ -314,6 +315,7 @@ tasks {
 		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
 	}
 }
+
 pluginManager.withPlugin("java-test-fixtures") {
 	tasks.named<Checkstyle>("checkstyleTestFixtures").configure {
 		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
