@@ -22,4 +22,4 @@ jobs:
       - name: Test
         run: |
           ./gradlew --version
-          ./gradlew --scan --warning-mode=all -Dplatform.tooling.support.tests.enabled=true -PjavaHome=$ADDITIONAL_JDK build
+          ./gradlew --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true -PjavaHome=$ADDITIONAL_JDK build
