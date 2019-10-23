@@ -64,6 +64,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	@Override
 	public void interceptBeforeAllMethod(Invocation<Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+
 		interceptLifecycleMethod(invocation, invocationContext, extensionContext,
 			TimeoutConfiguration::getDefaultBeforeAllMethodTimeout);
 	}
@@ -71,6 +72,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	@Override
 	public void interceptBeforeEachMethod(Invocation<Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+
 		interceptLifecycleMethod(invocation, invocationContext, extensionContext,
 			TimeoutConfiguration::getDefaultBeforeEachMethodTimeout);
 	}
@@ -78,6 +80,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	@Override
 	public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext,
 			ExtensionContext extensionContext) throws Throwable {
+
 		interceptTestableMethod(invocation, invocationContext, extensionContext,
 			TimeoutConfiguration::getDefaultTestMethodTimeout);
 	}
@@ -85,6 +88,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	@Override
 	public void interceptTestTemplateMethod(Invocation<Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+
 		interceptTestableMethod(invocation, invocationContext, extensionContext,
 			TimeoutConfiguration::getDefaultTestTemplateMethodTimeout);
 	}
@@ -92,6 +96,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	@Override
 	public <T> T interceptTestFactoryMethod(Invocation<T> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+
 		return interceptTestableMethod(invocation, invocationContext, extensionContext,
 			TimeoutConfiguration::getDefaultTestFactoryMethodTimeout);
 	}
@@ -99,6 +104,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	@Override
 	public void interceptAfterEachMethod(Invocation<Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+
 		interceptLifecycleMethod(invocation, invocationContext, extensionContext,
 			TimeoutConfiguration::getDefaultAfterEachMethodTimeout);
 	}
@@ -106,6 +112,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	@Override
 	public void interceptAfterAllMethod(Invocation<Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+
 		interceptLifecycleMethod(invocation, invocationContext, extensionContext,
 			TimeoutConfiguration::getDefaultAfterAllMethodTimeout);
 	}
@@ -113,6 +120,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	private void interceptLifecycleMethod(Invocation<Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext,
 			TimeoutProvider defaultTimeoutProvider) throws Throwable {
+
 		TimeoutDuration timeout = readTimeoutFromAnnotation(Optional.of(invocationContext.getExecutable())).orElse(
 			null);
 		intercept(invocation, invocationContext, extensionContext, timeout, defaultTimeoutProvider);
@@ -126,6 +134,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	private <T> T interceptTestableMethod(Invocation<T> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext,
 			TimeoutProvider defaultTimeoutProvider) throws Throwable {
+
 		TimeoutDuration timeout = extensionContext.getStore(NAMESPACE).get(TESTABLE_METHOD_TIMEOUT_KEY,
 			TimeoutDuration.class);
 		return intercept(invocation, invocationContext, extensionContext, timeout, defaultTimeoutProvider);
@@ -134,6 +143,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	private <T> T intercept(Invocation<T> invocation, ReflectiveInvocationContext<Method> invocationContext,
 			ExtensionContext extensionContext, TimeoutDuration explicitTimeout, TimeoutProvider defaultTimeoutProvider)
 			throws Throwable {
+
 		TimeoutDuration timeout = explicitTimeout == null ? getDefaultTimeout(extensionContext, defaultTimeoutProvider)
 				: explicitTimeout;
 		return decorate(invocation, invocationContext, extensionContext, timeout).proceed();
@@ -141,6 +151,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 
 	private TimeoutDuration getDefaultTimeout(ExtensionContext extensionContext,
 			TimeoutProvider defaultTimeoutProvider) {
+
 		return defaultTimeoutProvider.apply(getGlobalTimeoutConfiguration(extensionContext)).orElse(null);
 	}
 
@@ -152,7 +163,8 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 
 	private <T> Invocation<T> decorate(Invocation<T> invocation, ReflectiveInvocationContext<Method> invocationContext,
 			ExtensionContext extensionContext, TimeoutDuration timeout) {
-		if (timeout == null || isModeIndicatingDisabled(extensionContext)) {
+
+		if (timeout == null || isTimeoutDisabled(extensionContext)) {
 			return invocation;
 		}
 		return new TimeoutInvocation<>(invocation, timeout, getExecutor(extensionContext),
@@ -172,22 +184,28 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 		return extensionContext.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent(ExecutorResource.class).get();
 	}
 
-	private boolean isModeIndicatingDisabled(ExtensionContext extensionContext) {
+	/**
+	 * Determine if timeouts are disabled for the supplied extension context.
+	 */
+	private boolean isTimeoutDisabled(ExtensionContext extensionContext) {
 		Optional<String> mode = extensionContext.getConfigurationParameter(TIMEOUT_MODE_PROPERTY_NAME);
-		return mode.filter(this::isDisabled).isPresent();
+		return mode.map(this::isTimeoutDisabled).orElse(false);
 	}
 
-	private boolean isDisabled(String mode) {
-		if (mode.equals(ENABLED_MODE_VALUE)) {
-			return false;
+	/**
+	 * Determine if timeouts are disabled for the supplied mode.
+	 */
+	private boolean isTimeoutDisabled(String mode) {
+		switch (mode) {
+			case ENABLED_MODE_VALUE:
+				return false;
+			case DISABLED_MODE_VALUE:
+				return true;
+			case DISABLED_ON_DEBUG_MODE_VALUE:
+				return RuntimeUtils.isDebugMode();
+			default:
+				throw new ExtensionConfigurationException("Unsupported timeout mode: " + mode);
 		}
-		if (mode.equals(DISABLED_MODE_VALUE)) {
-			return true;
-		}
-		if (mode.equals(DISABLED_ON_DEBUG_MODE_VALUE)) {
-			return RuntimeUtils.isDebug();
-		}
-		throw new ExtensionConfigurationException("Unsupported timeout extension mode: " + mode);
 	}
 
 	@FunctionalInterface
