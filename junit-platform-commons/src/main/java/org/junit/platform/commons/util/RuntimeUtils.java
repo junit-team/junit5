@@ -37,9 +37,25 @@ public final class RuntimeUtils {
 	}
 
 	/**
+	 * Try to determine whether the VM was started in debug mode or not.
+	 */
+	public static boolean isDebugMode() {
+		Optional<List<String>> optionalArguments = getInputArguments();
+		if (!optionalArguments.isPresent()) {
+			return false;
+		}
+		for (String argument : optionalArguments.get()) {
+			if (argument.startsWith("-agentlib:jdwp")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Try to get the input arguments the VM was started with.
 	 */
-	public static Optional<List<String>> getInputArguments() {
+	static Optional<List<String>> getInputArguments() {
 		Optional<Class<?>> managementFactoryClass = ReflectionUtils.tryToLoadClass(
 			"java.lang.management.ManagementFactory").toOptional();
 		if (!managementFactoryClass.isPresent()) {
@@ -59,22 +75,6 @@ public final class RuntimeUtils {
 		catch (Exception e) {
 			return Optional.empty();
 		}
-	}
-
-	/**
-	 * Try to determine whether the VM was started in debug mode or not.
-	 */
-	public static boolean isDebug() {
-		Optional<List<String>> optionalArguments = getInputArguments();
-		if (!optionalArguments.isPresent()) {
-			return false;
-		}
-		for (String argument : optionalArguments.get()) {
-			if (argument.startsWith("-agentlib:jdwp")) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 }

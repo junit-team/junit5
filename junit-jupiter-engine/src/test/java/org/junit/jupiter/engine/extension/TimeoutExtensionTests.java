@@ -105,7 +105,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 				.isLessThan(Duration.ofSeconds(2));
 
 		// Should we test if we're debugging? This test will fail if we are debugging.
-		if (RuntimeUtils.isDebug()) {
+		if (RuntimeUtils.isDebugMode()) {
 			assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable()) //
 					.isEmpty();
 		}
