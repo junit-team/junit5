@@ -89,6 +89,13 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 				.assertStatistics(stats -> stats.started(1).succeeded(1));
 	}
 
+	@Test
+	@DisplayName("can be used in nested test class")
+	void canBeUsedInNestedTestClass() {
+		executeTestsForClass(TempDirCanBeUsedInNestedTestClass.class).testEvents()//
+				.assertStatistics(stats -> stats.started(2).succeeded(2));
+	}
+
 	@Nested
 	@DisplayName("resolves shared temp dir")
 	@TestMethodOrder(OrderAnnotation.class)
@@ -766,4 +773,30 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	// https://github.com/junit-team/junit5/issues/2079
+	static class TempDirCanBeUsedInNestedTestClass {
+
+		@TempDir
+		File tempDir;
+
+		@Nested
+		class NestedTestClass {
+
+			@Test
+			void testNested() {
+				assertNotNull(tempDir);
+				assertTrue(tempDir.exists());
+			}
+
+			@Nested
+			class EvenDeeperNestedTestClass {
+
+				@Test
+				void testDeepNested() {
+					assertNotNull(tempDir);
+					assertTrue(tempDir.exists());
+				}
+			}
+		}
+	}
 }

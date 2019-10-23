@@ -71,7 +71,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	 */
 	@Override
 	public void beforeAll(ExtensionContext context) throws Exception {
-		injectFields(context, null, ReflectionUtils::isStatic);
+		injectFields(context, null, context.getRequiredTestClass(), ReflectionUtils::isStatic);
 	}
 
 	/**
@@ -80,12 +80,19 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	 * with {@link TempDir @TempDir}.
 	 */
 	@Override
-	public void beforeEach(ExtensionContext context) throws Exception {
-		injectFields(context, context.getRequiredTestInstance(), ReflectionUtils::isNotStatic);
+	public void beforeEach(ExtensionContext context) throws RuntimeException {
+		injectFields(context, context.getRequiredTestInstance(), context.getRequiredTestClass(),
+			ReflectionUtils::isNotStatic);
+		context.getTestInstances().ifPresent(testinstances -> {
+			testinstances.getEnclosingInstances().forEach(enclosingInstance -> injectFields(context, enclosingInstance,
+				enclosingInstance.getClass(), ReflectionUtils::isNotStatic));
+		});
 	}
 
-	private void injectFields(ExtensionContext context, Object testInstance, Predicate<Field> predicate) {
-		findAnnotatedFields(context.getRequiredTestClass(), TempDir.class, predicate).forEach(field -> {
+	private void injectFields(ExtensionContext context, Object testInstance, Class<?> testClass,
+			Predicate<Field> predicate) {
+
+		findAnnotatedFields(testClass, TempDir.class, predicate).forEach(field -> {
 			assertValidFieldCandidate(field);
 			try {
 				makeAccessible(field).set(testInstance, getPathOrFile(field.getType(), context));
