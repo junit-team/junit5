@@ -340,7 +340,11 @@ conditions _programmatically_. The simplest example of such a condition is the b
 <<writing-tests-disabling>>). In addition to `@Disabled`, JUnit Jupiter also supports
 several other annotation-based conditions in the `org.junit.jupiter.api.condition`
 package that allow developers to enable or disable containers and tests _declaratively_.
-See the following sections for details.
+When multiple `ExecutionCondition` extensions are registered, a container or test is
+disabled as soon as one of the conditions returns _disabled_.
+
+See <<extensions-conditions, `ExecutionCondition`>> and the following sections for
+details.
 
 [TIP]
 .Composed Annotations
