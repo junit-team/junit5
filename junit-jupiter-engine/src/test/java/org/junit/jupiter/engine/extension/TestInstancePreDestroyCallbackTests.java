@@ -50,14 +50,15 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 
 			// OuterTestCase
 			"beforeOuterMethod",
-			"testOuter",
+				"testOuter",
 			"fooPreDestroyCallbackTestInstance:OuterTestCase",
 
 			// InnerTestCase
 			"beforeOuterMethod",
-			"beforeInnerMethod",
-			"testInner",
-			"barPreDestroyCallbackTestInstance:InnerTestCase",
+				"beforeInnerMethod",
+					"testInner",
+				"barPreDestroyCallbackTestInstance:InnerTestCase",
+
 			"fooPreDestroyCallbackTestInstance:InnerTestCase"
 		);
 		// @formatter:on
@@ -72,7 +73,7 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
 			"beforeEachMethod",
-			"test",
+				"test",
 			"fooPreDestroyCallbackTestInstance:TestCaseWithTestSpecificTestInstancePreDestroyCallback"
 		);
 		// @formatter:on
@@ -86,9 +87,9 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
 			"beforeEachMethod",
-			"test1",
+				"test1",
 			"beforeEachMethod",
-			"test2",
+				"test2",
 			"fooPreDestroyCallbackTestInstance:PerClassLifecyclePreDestroyCallbackWithTwoTestMethods"
 		);
 		// @formatter:on
@@ -97,7 +98,7 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 	// -------------------------------------------------------------------
 
 	@ExtendWith(FooInstancePreDestroyCallback.class)
-	static class OuterTestCase extends Named {
+	static class OuterTestCase extends Destroyable {
 
 		@BeforeEach
 		void beforeOuterMethod() {
@@ -112,7 +113,7 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 
 		@Nested
 		@ExtendWith(BarInstancePreDestroyCallback.class)
-		class InnerTestCase extends Named {
+		class InnerTestCase extends Destroyable {
 
 			@BeforeEach
 			void beforeInnerMethod() {
@@ -127,7 +128,7 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 		}
 	}
 
-	static class TestCaseWithTestSpecificTestInstancePreDestroyCallback extends Named {
+	static class TestCaseWithTestSpecificTestInstancePreDestroyCallback extends Destroyable {
 
 		@BeforeEach
 		void beforeEachMethod() {
@@ -144,7 +145,7 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 
 	@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 	@ExtendWith(FooInstancePreDestroyCallback.class)
-	static class PerClassLifecyclePreDestroyCallbackWithTwoTestMethods extends Named {
+	static class PerClassLifecyclePreDestroyCallbackWithTwoTestMethods extends Destroyable {
 
 		@BeforeEach
 		void beforeEachMethod() {
@@ -186,8 +187,8 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 
 		@Override
 		public void preDestroyTestInstance(Object testInstance, ExtensionContext context) {
-			if (testInstance instanceof Named) {
-				((Named) testInstance).setDestroyed();
+			if (testInstance instanceof Destroyable) {
+				((Destroyable) testInstance).setDestroyed();
 				assertTrue(context.getTestInstance().isPresent());
 				assertSame(testInstance, context.getTestInstance().get());
 			}
@@ -195,7 +196,7 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 		}
 	}
 
-	private abstract static class Named {
+	private abstract static class Destroyable {
 
 		boolean isDestroyed;
 
