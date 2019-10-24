@@ -39,10 +39,7 @@ class DisabledForJreRangeCondition implements ExecutionCondition {
 					Preconditions.condition(max.compareTo(min) >= 0,
 						"@DisabledForJreRange.min must be less than or equal to @DisabledForJreRange.max");
 
-					if (JRE.isCurrentVersionWithinRange(min, max)) {
-						return DISABLED_ON_CURRENT_JRE;
-					}
-					return ENABLED_ON_CURRENT_JRE;
+					return JRE.isCurrentVersionWithinRange(min, max) ? DISABLED_ON_CURRENT_JRE : ENABLED_ON_CURRENT_JRE;
 				}).orElse(ENABLED_BY_DEFAULT);
 	}
 

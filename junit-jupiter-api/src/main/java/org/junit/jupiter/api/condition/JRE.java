@@ -13,6 +13,7 @@ package org.junit.jupiter.api.condition;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
+import java.util.EnumSet;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
@@ -155,10 +156,7 @@ public enum JRE {
 	}
 
 	static boolean isCurrentVersionWithinRange(JRE min, JRE max) {
-		if (CURRENT_VERSION == null) {
-			return true;
-		}
-		return CURRENT_VERSION.compareTo(min) >= 0 && CURRENT_VERSION.compareTo(max) <= 0;
+		return EnumSet.range(min, max).contains(CURRENT_VERSION);
 	}
 
 }
