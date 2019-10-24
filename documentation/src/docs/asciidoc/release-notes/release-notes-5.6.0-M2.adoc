@@ -38,7 +38,9 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* New `TestInstancePreDestroyCallback` interface that defines the API for `Extension`
+that wish to process test instances *after* they have been used in tests and *before*
+they are destroyed.
 
 
 [[release-notes-5.6.0-M2️-junit-vintage]]
