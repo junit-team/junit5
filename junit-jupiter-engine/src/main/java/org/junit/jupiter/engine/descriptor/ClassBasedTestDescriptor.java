@@ -437,7 +437,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private boolean isPerClassLifecycle(JupiterEngineExecutionContext context) {
-		return context.getExtensionContext().getTestInstanceLifecycle().orElse(Lifecycle.PER_METHOD) == Lifecycle.PER_CLASS;
+		return context.getExtensionContext().getTestInstanceLifecycle().orElse(
+			Lifecycle.PER_METHOD) == Lifecycle.PER_CLASS;
 	}
 
 	private void registerBeforeEachMethodAdapters(ExtensionRegistrar registrar) {
