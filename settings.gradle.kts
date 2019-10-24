@@ -1,6 +1,6 @@
 pluginManagement {
 	plugins {
-		id("com.gradle.build-scan") version "2.4.2"
+		id("com.gradle.enterprise") version "3.0"
 		id("net.nemerosa.versioning") version "2.8.2"
 		id("com.github.ben-manes.versions") version "0.26.0"
 		id("com.diffplug.gradle.spotless") version "3.25.0"
@@ -13,9 +13,20 @@ pluginManagement {
 	}
 }
 
+plugins {
+	id("com.gradle.enterprise")
+}
+
+gradleEnterprise {
+	buildScan {
+		termsOfServiceUrl = "https://gradle.com/terms-of-service"
+		termsOfServiceAgree = "yes"
+	}
+}
+
 val javaVersion = JavaVersion.current()
-require(javaVersion.isJava12Compatible) {
-	"The JUnit 5 build requires Java 12 or higher. Currently executing with Java ${javaVersion.majorVersion}."
+require(javaVersion.isJava11Compatible) {
+	"The JUnit 5 build requires Java 11 or higher. Currently executing with Java ${javaVersion.majorVersion}."
 }
 
 rootProject.name = "junit5"

@@ -15,7 +15,7 @@ dependencies {
 	// --- Things we are testing with ---------------------------------------------
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(":junit-platform-testkit"))
-	testImplementation(project(path = ":junit-jupiter-engine", configuration = "testArtifacts"))
+	testImplementation(project(":junit-jupiter-engine"))
 	testImplementation("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 
 	// --- Test run-time dependencies ---------------------------------------------

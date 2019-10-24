@@ -71,6 +71,11 @@ if (project in mavenizedProjects) {
 
 	apply(plugin = "publishing-conventions")
 
+	java {
+		publishJavadoc()
+		publishSources()
+	}
+
 	tasks.javadoc {
 		source(sourceSets["mainRelease9"].allJava)
 		options {
@@ -96,19 +101,12 @@ if (project in mavenizedProjects) {
 		}
 	}
 
-	val sourcesJar by tasks.creating(Jar::class) {
-		archiveClassifier.set("sources")
-		from(sourceSets.main.get().allSource)
+	tasks.named<Jar>("sourcesJar") {
 		from(sourceSets["mainRelease9"].allSource)
 		from(moduleSourceDir) {
 			include("module-info.java")
 		}
 		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-	}
-
-	val javadocJar by tasks.creating(Jar::class) {
-		archiveClassifier.set("javadoc")
-		from(tasks.javadoc)
 	}
 
 	tasks.withType<Jar>().configureEach {
@@ -124,12 +122,16 @@ if (project in mavenizedProjects) {
 		}
 	}
 
+	pluginManager.withPlugin("java-test-fixtures") {
+		val javaComponent = components["java"] as AdhocComponentWithVariants
+		javaComponent.withVariantsFromConfiguration(configurations["testFixturesApiElements"]) { skip() }
+		javaComponent.withVariantsFromConfiguration(configurations["testFixturesRuntimeElements"]) { skip() }
+	}
+
 	configure<PublishingExtension> {
 		publications {
 			named<MavenPublication>("maven") {
 				from(components["java"])
-				artifact(sourcesJar)
-				artifact(javadocJar)
 				pom {
 					description.set(provider { "Module \"${project.name}\" of JUnit 5." })
 				}
@@ -226,12 +228,12 @@ tasks.compileTestJava {
 	))
 }
 
-class ModulePathArgumentProvider : CommandLineArgumentProvider {
+inner class ModulePathArgumentProvider : CommandLineArgumentProvider {
 	@get:Input val modulePath: Provider<Configuration> = configurations.compileClasspath
 	override fun asArguments(): List<String> = listOf("--module-path", modulePath.get().asPath)
 }
 
-class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvider {
+inner class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvider {
 
 	@get:Input val module: String = javaModuleName(it)
 
@@ -252,6 +254,18 @@ class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvider {
 }
 
 afterEvaluate {
+	configurations {
+		apiElements {
+			attributes {
+				attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, extension.mainJavaVersion.majorVersion.toInt())
+			}
+		}
+		runtimeElements {
+			attributes {
+				attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, extension.mainJavaVersion.majorVersion.toInt())
+			}
+		}
+	}
 	tasks {
 		compileJava {
 			sourceCompatibility = extension.mainJavaVersion.majorVersion
@@ -287,8 +301,9 @@ afterEvaluate {
 
 checkstyle {
 	toolVersion = Versions.checkstyle
-	configDir = rootProject.file("src/checkstyle")
+	configDirectory.set(rootProject.file("src/checkstyle"))
 }
+
 tasks {
 	checkstyleMain {
 		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
@@ -297,6 +312,12 @@ tasks {
 		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
 	}
 	checkstyleTest {
+		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
+	}
+}
+
+pluginManager.withPlugin("java-test-fixtures") {
+	tasks.named<Checkstyle>("checkstyleTestFixtures").configure {
 		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")
 	}
 }

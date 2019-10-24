@@ -140,9 +140,13 @@ public interface MethodOrderer {
 	 * <p>Any methods that are assigned the same order value will be sorted
 	 * arbitrarily adjacent to each other.
 	 *
-	 * <p>Any methods not annotated with {@code @Order} will be assigned a default
-	 * order value of {@link Integer#MAX_VALUE} which will effectively cause them to
-	 * appear at the end of the sorted list.
+	 * <p>Any methods not annotated with {@code @Order} will be assigned the
+	 * {@link org.junit.jupiter.api.Order#DEFAULT default order} value which will
+	 * effectively cause them to appear at the end of the sorted list, unless
+	 * certain methods are assigned an explicit order value greater than the default
+	 * order value. Any methods assigned an explicit order value greater than the
+	 * default order value will appear after non-annotated methods in the sorted
+	 * list.
 	 */
 	class OrderAnnotation implements MethodOrderer {
 
@@ -157,7 +161,7 @@ public interface MethodOrderer {
 		}
 
 		private static int getOrder(MethodDescriptor descriptor) {
-			return descriptor.findAnnotation(Order.class).map(Order::value).orElse(Integer.MAX_VALUE);
+			return descriptor.findAnnotation(Order.class).map(Order::value).orElse(Order.DEFAULT);
 		}
 	}
 

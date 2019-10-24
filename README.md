@@ -6,9 +6,8 @@ This repository is the home of the next generation of JUnit, _JUnit 5_.
 
 ## Latest Releases
 
-- General Availability (GA): [JUnit 5.5.2](https://github.com/junit-team/junit5/releases/tag/r5.5.2)
-(September 8, 2019).
-- Preview (Milestone/Release Candidate): N/A
+- General Availability (GA): [JUnit 5.5.2](https://github.com/junit-team/junit5/releases/tag/r5.5.2) (September 8, 2019).
+- Preview (Milestone/Release Candidate): [JUnit 5.6.0 M1](https://github.com/junit-team/junit5/releases/tag/r5.6.0-M1) (October 21, 2019)
 
 ## Documentation
 
@@ -33,7 +32,7 @@ Ask JUnit 5 related questions on [StackOverflow] or chat with the team and the c
 
 ## Continuous Integration Builds
 
-[![CI Status](https://github.com/junit-team/junit5/workflows/CI/badge.svg)](https://github.com/junit-team/junit5/actions) [![Experimental Status](https://github.com/junit-team/junit5/workflows/Experimental/badge.svg)](https://github.com/junit-team/junit5/actions)
+[![CI Status](https://github.com/junit-team/junit5/workflows/CI/badge.svg)](https://github.com/junit-team/junit5/actions) [![Cross-Version Status](https://github.com/junit-team/junit5/workflows/Cross-Version/badge.svg)](https://github.com/junit-team/junit5/actions)
 
 Official CI build server for JUnit 5. Used to perform quick checks on submitted pull
 requests and for build matrices including the latest released OpenJDK and early access
@@ -54,7 +53,7 @@ build scan for JUnit 5 can be viewed [here](https://scans.gradle.com/s/bl3pw4mrb
 
 ## Building from Source
 
-You need [JDK 12] to build JUnit 5.
+You need [JDK 11] to build JUnit 5.
 
 All modules can be _built_ with the [Gradle Wrapper] using the following command.
 
@@ -84,7 +83,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 ### JUnit Platform
 
 - **Group ID**: `org.junit.platform`
-- **Version**: `1.5.2` or `1.6.0-SNAPSHOT`
+- **Version**: `1.5.2`, `1.6.0-M1`, or `1.6.0-SNAPSHOT`
 - **Artifact IDs** and Java **module** name:
   - `junit-platform-commons` (`org.junit.platform.commons`)
   - `junit-platform-console` (`org.junit.platform.console`)
@@ -99,7 +98,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 ### JUnit Jupiter
 
 - **Group ID**: `org.junit.jupiter`
-- **Version**: `5.5.2` or `5.6.0-SNAPSHOT`
+- **Version**: `5.5.2`, `5.6.0-M1`, or `5.6.0-SNAPSHOT`
 - **Artifact IDs** and Java **module** name:
   - `junit-jupiter` (`org.junit.jupiter`)
   - `junit-jupiter-api` (`org.junit.jupiter.api`)
@@ -110,7 +109,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 ### JUnit Vintage
 
 - **Group ID**: `org.junit.vintage`
-- **Version**: `5.5.2` or `5.6.0-SNAPSHOT`
+- **Version**: `5.5.2`, `5.6.0-M1`, or `5.6.0-SNAPSHOT`
 - **Artifact ID** and Java **module** name:
   - `junit-vintage-engine` (`org.junit.vintage.engine`)
 
@@ -118,7 +117,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 
 - **Group ID**: `org.junit`
 - **Artifact ID** `junit-bom`
-- **Version**: `5.5.2` or `5.6.0-SNAPSHOT`
+- **Version**: `5.5.2`, `5.6.0-M1`, or `5.6.0-SNAPSHOT`
 
 
 [Codecov]: https://codecov.io/gh/junit-team/junit5
@@ -127,7 +126,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: https://www.eclemma.org/jacoco/
 [Javadoc]: https://junit.org/junit5/docs/current/api/
-[JDK 12]: https://jdk.java.net/12/
+[JDK 11]: https://jdk.java.net/11/
 [Release Notes]: https://junit.org/junit5/docs/current/release-notes/
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
 [User Guide]: https://junit.org/junit5/docs/current/user-guide/

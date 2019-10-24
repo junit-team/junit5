@@ -27,6 +27,8 @@ endif::[]
 // Platform Launcher API
 :junit-platform-launcher:                    {javadoc-root}/org/junit/platform/launcher/package-summary.html[junit-platform-launcher]
 :Launcher:                                   {javadoc-root}/org/junit/platform/launcher/Launcher.html[Launcher]
+:LauncherDiscoveryListener:                  {javadoc-root}/org/junit/platform/launcher/LauncherDiscoveryListener.html[LauncherDiscoveryListener]
+:LauncherDiscoveryRequestBuilder:            {javadoc-root}/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilder.html[LauncherDiscoveryRequestBuilder]
 :LoggingListener:                            {javadoc-root}/org/junit/platform/launcher/listeners/LoggingListener.html[LoggingListener]
 :SummaryGeneratingListener:                  {javadoc-root}/org/junit/platform/launcher/listeners/SummaryGeneratingListener.html[SummaryGeneratingListener]
 :TestExecutionListener:                      {javadoc-root}/org/junit/platform/launcher/TestExecutionListener.html[TestExecutionListener]

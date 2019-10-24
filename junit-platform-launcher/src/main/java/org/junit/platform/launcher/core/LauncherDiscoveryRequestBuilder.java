@@ -21,12 +21,15 @@ import java.util.Map;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.EngineFilter;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
+import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners;
 
 /**
  * The {@code LauncherDiscoveryRequestBuilder} provides a light-weight DSL for
@@ -79,11 +82,23 @@ import org.junit.platform.launcher.PostDiscoveryFilter;
 @API(status = STABLE, since = "1.0")
 public final class LauncherDiscoveryRequestBuilder {
 
+	/**
+	 * Property name used to set the default discovery listener that is added to all : {@value}
+	 *
+	 * <h3>Supported Values</h3>
+	 *
+	 * <p>Supported values are {@code "logging"} and {@code "abortOnFailure"}.
+	 *
+	 * <p>If not specified, the default is {@code "logging"}.
+	 */
+	public static final String DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME = "junit.platform.discovery.listener.default";
+
 	private List<DiscoverySelector> selectors = new ArrayList<>();
 	private List<EngineFilter> engineFilters = new ArrayList<>();
 	private List<DiscoveryFilter<?>> discoveryFilters = new ArrayList<>();
 	private List<PostDiscoveryFilter> postDiscoveryFilters = new ArrayList<>();
 	private Map<String, String> configurationParameters = new HashMap<>();
+	private List<LauncherDiscoveryListener> discoveryListeners = new ArrayList<>();
 
 	/**
 	 * Create a new {@code LauncherDiscoveryRequestBuilder}.
@@ -169,6 +184,30 @@ public final class LauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
+	/**
+	 * Add all of the supplied discovery listeners to the request.
+	 *
+	 * <p>In addition to the {@linkplain LauncherDiscoveryListener listeners}
+	 * registered using this method, this builder will add a default listener
+	 * to this request that can be specified using the
+	 * {@value LauncherDiscoveryRequestBuilder#DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME}
+	 * configuration parameter.
+	 *
+	 * @param listeners the {@code LauncherDiscoveryListeners} to add; never
+	 * {@code null}
+	 * @return this builder for method chaining
+	 * @see LauncherDiscoveryListener
+	 * @see LauncherDiscoveryListeners
+	 * @see LauncherDiscoveryRequestBuilder#DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME
+	 */
+	@API(status = API.Status.EXPERIMENTAL, since = "1.6")
+	public LauncherDiscoveryRequestBuilder listeners(LauncherDiscoveryListener... listeners) {
+		Preconditions.notNull(listeners, "discovery listener array must not be null");
+		Preconditions.containsNoNullElements(listeners, "individual discovery listeners must not be null");
+		this.discoveryListeners.addAll(Arrays.asList(listeners));
+		return this;
+	}
+
 	private void storeFilter(Filter<?> filter) {
 		if (filter instanceof EngineFilter) {
 			this.engineFilters.add((EngineFilter) filter);
@@ -193,8 +232,26 @@ public final class LauncherDiscoveryRequestBuilder {
 	public LauncherDiscoveryRequest build() {
 		LauncherConfigurationParameters launcherConfigurationParameters = new LauncherConfigurationParameters(
 			this.configurationParameters);
+		LauncherDiscoveryListener discoveryListener = getLauncherDiscoveryListener(launcherConfigurationParameters);
 		return new DefaultDiscoveryRequest(this.selectors, this.engineFilters, this.discoveryFilters,
-			this.postDiscoveryFilters, launcherConfigurationParameters);
+			this.postDiscoveryFilters, launcherConfigurationParameters, discoveryListener);
+	}
+
+	private LauncherDiscoveryListener getLauncherDiscoveryListener(ConfigurationParameters configurationParameters) {
+		LauncherDiscoveryListener defaultDiscoveryListener = configurationParameters.get(
+			DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME) //
+				.map(value -> LauncherDiscoveryListeners.fromConfigurationParameter(
+					DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, value)) //
+				.orElseGet(LauncherDiscoveryListeners::abortOnFailure);
+		if (discoveryListeners.isEmpty()) {
+			return defaultDiscoveryListener;
+		}
+		if (discoveryListeners.contains(defaultDiscoveryListener)) {
+			return LauncherDiscoveryListeners.composite(discoveryListeners);
+		}
+		List<LauncherDiscoveryListener> allDiscoveryListeners = new ArrayList<>(discoveryListeners);
+		allDiscoveryListeners.add(defaultDiscoveryListener);
+		return LauncherDiscoveryListeners.composite(allDiscoveryListeners);
 	}
 
 }

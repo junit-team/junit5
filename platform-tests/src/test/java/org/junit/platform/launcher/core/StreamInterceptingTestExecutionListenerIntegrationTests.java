@@ -73,7 +73,7 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 			return null;
 		}).when(listener).executionStarted(any());
 
-		DefaultLauncher launcher = createLauncher(engine);
+		var launcher = createLauncher(engine);
 		LauncherDiscoveryRequest discoveryRequest = request()//
 				.selectors(selectUniqueId(test.getUniqueId()))//
 				.configurationParameter(configParam, String.valueOf(true))//
@@ -106,7 +106,7 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 		assertThat(StreamInterceptor.registerStdout(1)).isPresent();
 		assertThat(StreamInterceptor.registerStderr(1)).isPresent();
 
-		DefaultLauncher launcher = createLauncher(engine);
+		var launcher = createLauncher(engine);
 		LauncherDiscoveryRequest discoveryRequest = request()//
 				.selectors(selectUniqueId(test.getUniqueId()))//
 				.configurationParameter(configParam, String.valueOf(true))//

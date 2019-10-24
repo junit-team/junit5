@@ -14,15 +14,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.mockito.Mockito.mock;
 
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.engine.TrackLogRecords;
+import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.vintage.engine.VintageUniqueIdBuilder;
@@ -43,7 +45,7 @@ class RunnerTestDescriptorPostProcessorTests {
 
 	@Test
 	void doesNotLogAnythingForFilterableRunner(LogRecordListener listener) {
-		resolve(selectMethod(PlainJUnit4TestCaseWithFiveTestMethods.class, "someTest"));
+		resolve(selectMethod(PlainJUnit4TestCaseWithFiveTestMethods.class, "successfulTest"));
 
 		assertThat(listener.stream(RunnerTestDescriptor.class)).isEmpty();
 	}
@@ -70,7 +72,8 @@ class RunnerTestDescriptorPostProcessorTests {
 	}
 
 	private void resolve(DiscoverySelector selector) {
-		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request().selectors(selector).build();
+		LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request().selectors(selector).listeners(
+			mock(LauncherDiscoveryListener.class)).build();
 		TestDescriptor engineDescriptor = new VintageDiscoverer().discover(request, VintageUniqueIdBuilder.engineId());
 		RunnerTestDescriptor runnerTestDescriptor = (RunnerTestDescriptor) getOnlyElement(
 			engineDescriptor.getChildren());

@@ -16,6 +16,7 @@ module org.junit.platform.launcher {
 	exports org.junit.platform.launcher;
 	exports org.junit.platform.launcher.core;
 	exports org.junit.platform.launcher.listeners;
+	exports org.junit.platform.launcher.listeners.discovery;
 
 	uses org.junit.platform.engine.TestEngine;
 	uses org.junit.platform.launcher.TestExecutionListener;

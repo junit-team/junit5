@@ -7,20 +7,9 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 
 description = "JUnit Jupiter Engine"
 
-val testArtifacts by configurations.creating {
-	extendsFrom(configurations.testRuntime.get())
-}
-
-val testJar by tasks.creating(Jar::class) {
-	archiveClassifier.set("test")
-	from(sourceSets.test.get().output)
-}
-
-artifacts {
-	add(testArtifacts.name, testJar)
-}
-
 dependencies {
+	api(platform(project(":junit-bom")))
+
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 
 	api(project(":junit-platform-engine"))

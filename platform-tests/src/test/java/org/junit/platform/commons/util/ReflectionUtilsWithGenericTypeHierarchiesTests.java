@@ -68,6 +68,7 @@ class ReflectionUtilsWithGenericTypeHierarchiesTests {
 	void findMoreSpecificMethodFromImplementationOverDefaultInterfaceMethodAndGenericClassExtension() {
 
 		class AParent {
+			@SuppressWarnings("unused")
 			public void foo(Number parameter) {
 			}
 		}

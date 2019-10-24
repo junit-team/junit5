@@ -22,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.concurrent.CountDownLatch;
+
 import example.domain.Person;
 import example.util.Calculator;
 
@@ -135,7 +137,7 @@ class AssertionsDemo {
 		// execution timed out after 10 ms
 		assertTimeoutPreemptively(ofMillis(10), () -> {
 			// Simulate task that takes more than 10 ms.
-			Thread.sleep(100);
+			new CountDownLatch(1).await();
 		});
 	}
 

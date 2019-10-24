@@ -97,9 +97,19 @@ By default, extensions registered programmatically via `@RegisterExtension` will
 ordered using an algorithm that is deterministic but intentionally nonobvious. This
 ensures that subsequent runs of a test suite execute extensions in the same order, thereby
 allowing for repeatable builds. However, there are times when extensions need to be
-registered in an explicit order. To achieve that, annotate each `@RegisterExtension` field
-with `{Order}`. Any `@RegisterExtension` field not annotated with `@Order` will appear at
-the end of the sorted list.
+registered in an explicit order. To achieve that, annotate `@RegisterExtension` fields
+with `{Order}`.
+
+Any `@RegisterExtension` field not annotated with `@Order` will be ordered using the
+_default_ order which has a value of `Integer.MAX_VALUE / 2`. This allows `@Order`
+annotated extension fields to be explicitly ordered before or after non-annotated
+extension fields. Extensions with an explicit order value less than the default order
+value will be registered before non-annotated extensions. Similarly, extensions with an
+explicit order value greater than the default order value will be registered after
+non-annotated extensions. For example, assigning an extension an explicit order value that
+is greater than the default order value allows _before_ callback extensions to be
+registered last and _after_ callback extensions to be registered first, relative to other
+programmatically registered extensions.
 ====
 
 NOTE: `@RegisterExtension` fields must not be `private` or `null` (at evaluation time) but

@@ -125,7 +125,7 @@ final class ExtensionUtils {
 	 * @since 5.4
 	 */
 	private static int getOrder(Field field) {
-		return findAnnotation(field, Order.class).map(Order::value).orElse(Integer.MAX_VALUE);
+		return findAnnotation(field, Order.class).map(Order::value).orElse(Order.DEFAULT);
 	}
 
 }

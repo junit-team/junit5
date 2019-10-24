@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine;
+package org.junit.jupiter.api.fixtures;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

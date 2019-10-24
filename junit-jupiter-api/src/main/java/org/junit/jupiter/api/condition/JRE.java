@@ -13,6 +13,7 @@ package org.junit.jupiter.api.condition;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
+import java.util.EnumSet;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
@@ -98,7 +99,7 @@ public enum JRE {
 
 	private static final Logger logger = LoggerFactory.getLogger(JRE.class);
 
-	static final JRE CURRENT_VERSION = determineCurrentVersion();
+	private static final JRE CURRENT_VERSION = determineCurrentVersion();
 
 	private static JRE determineCurrentVersion() {
 		String javaVersion = System.getProperty("java.version");
@@ -152,6 +153,10 @@ public enum JRE {
 	 */
 	public boolean isCurrentVersion() {
 		return this == CURRENT_VERSION;
+	}
+
+	static boolean isCurrentVersionWithinRange(JRE min, JRE max) {
+		return EnumSet.range(min, max).contains(CURRENT_VERSION);
 	}
 
 }

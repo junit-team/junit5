@@ -1,13 +1,28 @@
 [[release-notes-5.6.0-M1]]
 == 5.6.0-M1
 
-*Date of Release:* ❓
+*Date of Release:* October 21, 2019
 
-*Scope:* ❓
+*Scope:*
+
+* New `@EnabledForJreRange` and `@DisabledForJreRange` execution conditions
+* `@Order` allows to specify relative order
+* Improvements to `@CsvSource` and `@CsvFileSource`
+* Improved error reporting for failures during test discovery and execution
+* Performance improvements and bug fixes for the Vintage engine
+* `org.junit.platform.console` now provides a `java.util.spi.ToolProvider`
+* `DiscoverySelectors` for tests in inherited nested classes
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/39?closed=1+[5.6 M1] milestone page in the JUnit repository
 on GitHub.
+
+
+[[release-notes-5.6.0-M1-overall-improvements]]
+=== Overall Improvements
+
+* https://docs.gradle.org/6.0-rc-1/userguide/publishing_gradle_module_metadata.html[Gradle
+  Module Metadata] is now published for all artifacts.
 
 
 [[release-notes-5.6.0-M1-junit-platform]]
@@ -20,6 +35,15 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
+* The `Launcher` now propagates errors during test discovery by default instead of only
+  logging and thereby potentially hiding them. In order to restore the old, lenient
+  behavior, you can set the `junit.platform.discovery.listener.default` configuration
+  parameter to `logging`.
+* To support the above feature consistently, a new `EngineDiscoveryListener` interface was
+  introduced. `TestEngine` implementations should now notify the listener that can be
+  accessed via the `EngineDiscoveryRequest.getDiscoveryListener()` method about each
+  processed `DiscoverySelector`. Test engines that use `EngineDiscoveryRequestResolver` do
+  not have to make any changes.
 * In the `EngineTestKit` API, the `all()`, `containers()`, and `tests()` methods in
   `EngineExecutionResults` have been deprecated in favor of the new `allEvents()`,
   `containerEvents()`, and `testEvents()` methods, respectively. The deprecated methods
@@ -57,6 +81,10 @@ on GitHub.
   with the intent to remove them in JUnit Jupiter 5.6. Users must now rely on a
   combination of other built-in conditions or create and use a custom implementation of
   `ExecutionCondition` to evaluate the same conditions.
+* The default `@Order` value for non-annotated `@RegisterExtension` fields and test
+  methods is now `Integer.MAX_VALUE / 2` instead of `Integer.MAX_VALUE`. If you had
+  previously assigned extension fields or test methods an explicit order greater than
+  `Integer.MAX_VALUE / 2`, this may be a breaking change for you.
 
 ==== New Features and Improvements
 
@@ -68,6 +96,12 @@ on GitHub.
   disabling test execution over a range of JRE versions.
 * The `@TempDir` extension now makes an attempt to delete non-writable files by making
   them writable first.
+* The default `@Order` value for non-annotated `@RegisterExtension` fields and test
+  methods is now `Integer.MAX_VALUE / 2` instead of `Integer.MAX_VALUE`. This allows
+  `@Order` annotated fields and methods to be explicitly ordered after non-annotated
+  fields and methods. For example, this allows _before_ callback extensions to be
+  registered last and _after_ callback extensions to be registered first, relative to
+  other programmatically registered extensions.
 * New `junit.jupiter.execution.timeout.mode` configuration parameter to control whether
   timeouts are applied to tests. Supported values include `enabled`, `disabled`, and
   `disabled_on_debug`.
