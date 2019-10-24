@@ -82,7 +82,7 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 	@Test
 	void preDestroyTestInstanceMethodThrowsAnException() {
 		// @formatter:off
-        assertBeforeAllAndAfterAllCallbacks(ExceptionInTestInstancePreDestroyCallbackTestCase.class, 1, 0,
+        assertBeforeAllAndAfterAllCallbacks(ExceptionInTestInstancePreDestroyCallbackTestCase.class, 0,
 			"exceptionPostProcessTestInstance",
 				"test",
 			"exceptionThrowingTestInstancePreDestroyCallback"
@@ -93,23 +93,22 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 	@Test
 	void postProcessTestInstanceMethodThrowsAnException() {
 		// @formatter:off
-        assertBeforeAllAndAfterAllCallbacks(ExceptionInTestInstancePostProcessorTestCase.class, 1, 0,
+        assertBeforeAllAndAfterAllCallbacks(ExceptionInTestInstancePostProcessorTestCase.class, 0,
 			"exceptionThrowingTestInstancePostProcessor"
         );
         // @formatter:on
 	}
 
 	private void assertBeforeAllAndAfterAllCallbacks(Class<?> testClass, String... expectedCalls) {
-		assertBeforeAllAndAfterAllCallbacks(testClass, 1, 1, expectedCalls);
+		assertBeforeAllAndAfterAllCallbacks(testClass, 1, expectedCalls);
 	}
 
-	private void assertBeforeAllAndAfterAllCallbacks(Class<?> testClass, int testsStarted, int testsSuccessful,
-			String... expectedCalls) {
+	private void assertBeforeAllAndAfterAllCallbacks(Class<?> testClass, int testsSuccessful, String... expectedCalls) {
 
 		callSequence.clear();
 
 		executeTestsForClass(testClass).testEvents()//
-				.assertStatistics(stats -> stats.started(testsStarted).succeeded(testsSuccessful));
+				.assertStatistics(stats -> stats.started(1).succeeded(testsSuccessful));
 
 		assertEquals(asList(expectedCalls), callSequence, () -> "wrong call sequence for " + testClass.getName());
 	}
