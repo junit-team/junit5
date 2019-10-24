@@ -176,8 +176,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) {
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		Lifecycle lifecycle = context.getExtensionContext().getTestInstanceLifecycle().orElse(Lifecycle.PER_METHOD);
-		if (lifecycle == Lifecycle.PER_CLASS) {
+		if (isPerClassLifecycle(context)) {
 			// Eagerly load test instance for BeforeAllCallbacks, if necessary,
 			// and store the instance in the ExtensionContext.
 			ClassExtensionContext extensionContext = (ClassExtensionContext) context.getExtensionContext();
@@ -425,13 +424,20 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private void invokeTestInstancePreDestroyCallback(JupiterEngineExecutionContext context) {
-		ExtensionContext extensionContext = context.getExtensionContext();
-		ThrowableCollector throwableCollector = context.getThrowableCollector();
-		Object testInstance = extensionContext.getTestInstance().orElse(null);
+		if (isPerClassLifecycle(context)) {
+			ExtensionContext extensionContext = context.getExtensionContext();
+			ThrowableCollector throwableCollector = context.getThrowableCollector();
+			Object testInstance = extensionContext.getTestInstance().orElse(null);
 
-		context.getExtensionRegistry().stream(TestInstancePreDestroyCallback.class).forEach(
-			extension -> throwableCollector.execute(
-				() -> extension.preDestroyTestInstance(testInstance, extensionContext)));
+			context.getExtensionRegistry().stream(TestInstancePreDestroyCallback.class).forEach(
+				extension -> throwableCollector.execute(
+					() -> extension.preDestroyTestInstance(testInstance, extensionContext)));
+
+		}
+	}
+
+	private boolean isPerClassLifecycle(JupiterEngineExecutionContext context) {
+		return context.getExtensionContext().getTestInstanceLifecycle().orElse(Lifecycle.PER_METHOD) == Lifecycle.PER_CLASS;
 	}
 
 	private void registerBeforeEachMethodAdapters(ExtensionRegistrar registrar) {
