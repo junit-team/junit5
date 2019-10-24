@@ -126,11 +126,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.6")
 public @interface <span class="memberNameLabel">EnabledForJreRange</span></pre>
 <div class="block"><code>@EnabledForJreRange</code> is used to signal that the annotated test class or
- test method is only <em>enabled</em> on a specific range of Java
- Runtime Environment (JRE) <a href="#min()">version</a> <a href="#max()">version</a>.
+ test method is only <em>enabled</em> for a specific range of Java Runtime
+ Environment (JRE) versions from <a href="#min()"><code>min()</code></a> to <a href="#max()"><code>max()</code></a>.
 
- <p>When applied at the class level, all test methods within that class
- will be enabled on the same specified JRE versions.
+ <p>When applied at the class level, all test methods within that class will
+ be enabled on the same specified JRE versions.
 
  <p>If a test method is disabled via this annotation, that does not prevent
  the test class from being instantiated. Rather, it prevents the execution of
@@ -156,9 +156,9 @@ public @interface <span class="memberNameLabel">EnabledForJreRange</span></pre>
 <dd>5.6</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="JRE.html" title="enum in org.junit.jupiter.api.condition"><code>JRE</code></a>, 
+<a href="DisabledForJreRange.html" title="annotation in org.junit.jupiter.api.condition"><code>DisabledForJreRange</code></a>, 
 <a href="EnabledOnJre.html" title="annotation in org.junit.jupiter.api.condition"><code>EnabledOnJre</code></a>, 
 <a href="DisabledOnJre.html" title="annotation in org.junit.jupiter.api.condition"><code>DisabledOnJre</code></a>, 
-<a href="DisabledForJreRange.html" title="annotation in org.junit.jupiter.api.condition"><code>DisabledForJreRange</code></a>, 
 <a href="EnabledOnOs.html" title="annotation in org.junit.jupiter.api.condition"><code>EnabledOnOs</code></a>, 
 <a href="DisabledOnOs.html" title="annotation in org.junit.jupiter.api.condition"><code>DisabledOnOs</code></a>, 
 <a href="EnabledIfEnvironmentVariable.html" title="annotation in org.junit.jupiter.api.condition"><code>EnabledIfEnvironmentVariable</code></a>, 
@@ -192,7 +192,7 @@ public @interface <span class="memberNameLabel">EnabledForJreRange</span></pre>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#max()">max</a></span></code></th>
 <td class="colLast">
 <div class="block">Java Runtime Environment version which should be used as the upper boundary
- for the version range determining if the annotated class or method
+ for the version range that determines if the annotated class or method
  should be enabled.</div>
 </td>
 </tr>
@@ -201,7 +201,7 @@ public @interface <span class="memberNameLabel">EnabledForJreRange</span></pre>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#min()">min</a></span></code></th>
 <td class="colLast">
 <div class="block">Java Runtime Environment version which should be used as the lower boundary
- for the version range determining if the annotated class or method
+ for the version range that determines if the annotated class or method
  should be enabled.</div>
 </td>
 </tr>
@@ -230,7 +230,7 @@ public @interface <span class="memberNameLabel">EnabledForJreRange</span></pre>
 <h4>min</h4>
 <pre><a href="JRE.html" title="enum in org.junit.jupiter.api.condition">JRE</a>&nbsp;min</pre>
 <div class="block">Java Runtime Environment version which should be used as the lower boundary
- for the version range determining if the annotated class or method
+ for the version range that determines if the annotated class or method
  should be enabled.
 
  <p>Defaults to <a href="JRE.html#JAVA_8"><code>JAVA_8</code></a>, as this is the lowest
@@ -258,7 +258,7 @@ public @interface <span class="memberNameLabel">EnabledForJreRange</span></pre>
 <h4>max</h4>
 <pre><a href="JRE.html" title="enum in org.junit.jupiter.api.condition">JRE</a>&nbsp;max</pre>
 <div class="block">Java Runtime Environment version which should be used as the upper boundary
- for the version range determining if the annotated class or method
+ for the version range that determines if the annotated class or method
  should be enabled.
 
  <p>Defaults to <a href="JRE.html#OTHER"><code>OTHER</code></a>, as this will always be the highest
