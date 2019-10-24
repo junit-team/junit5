@@ -158,6 +158,7 @@ public final class EventConditions {
 	 * name of its {@linkplain Class#getEnclosingClass() enclosing class}.
 	 */
 	public static Condition<Event> nestedContainer(Class<?> clazz) {
+		Assertions.assertThat(clazz.getEnclosingClass()).withFailMessage(clazz + " is not nested").isNotNull();
 		if (clazz.getEnclosingClass().getEnclosingClass() == null) {
 			return Assertions.allOf(container(clazz.getEnclosingClass()), uniqueIdSubstring(clazz.getSimpleName()));
 		}

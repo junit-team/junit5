@@ -20,6 +20,7 @@ import static org.junit.platform.testkit.engine.EventConditions.nestedContainer;
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -49,6 +50,21 @@ class NestedContainerEventConditionTests extends AbstractJupiterTestEngineTests 
 					event(container(ATestCase.class), finishedSuccessfully()),
 				event(engine(), finishedSuccessfully()));
 		// @formatter:on
+	}
+
+	@Test
+	void exceptionsWhenUsingNestedContainerIncorrectly() {
+		Assertions.assertDoesNotThrow(() -> container(ATestCase.class));
+		Assertions.assertDoesNotThrow(() -> nestedContainer(ATestCase.class));
+
+		Assertions.assertDoesNotThrow(() -> container(ATestCase.BTestCase.class));
+		Assertions.assertDoesNotThrow(() -> nestedContainer(ATestCase.BTestCase.class));
+
+		Assertions.assertDoesNotThrow(() -> container(ATestCase.BTestCase.CTestCase.class));
+		Assertions.assertDoesNotThrow(() -> nestedContainer(ATestCase.BTestCase.CTestCase.class));
+
+		Assertions.assertDoesNotThrow(() -> container(NestedContainerEventConditionTests.class));
+		Assertions.assertThrows(AssertionError.class, () -> nestedContainer(NestedContainerEventConditionTests.class));
 	}
 
 	static class ATestCase {
