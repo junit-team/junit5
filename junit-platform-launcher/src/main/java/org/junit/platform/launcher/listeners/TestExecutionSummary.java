@@ -13,6 +13,7 @@ package org.junit.platform.launcher.listeners;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.List;
 
 import org.apiguardian.api.API;
@@ -163,7 +164,7 @@ public interface TestExecutionSummary {
 	/**
 	 * Failure of a test or container.
 	 */
-	interface Failure {
+	interface Failure extends Serializable {
 
 		/**
 		 * Get the identifier of the failed test or container.
