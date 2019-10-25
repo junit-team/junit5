@@ -11,7 +11,9 @@
 package org.junit.platform.testkit.engine;
 
 import static java.util.function.Predicate.isEqual;
+import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.assertj.core.api.Assertions.allOf;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
@@ -24,12 +26,12 @@ import static org.junit.platform.testkit.engine.EventType.FINISHED;
 import static org.junit.platform.testkit.engine.EventType.SKIPPED;
 import static org.junit.platform.testkit.engine.EventType.STARTED;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
@@ -58,7 +60,7 @@ public final class EventConditions {
 	@SafeVarargs
 	@SuppressWarnings("varargs")
 	public static Condition<Event> event(Condition<? super Event>... conditions) {
-		return Assertions.allOf(conditions);
+		return allOf(conditions);
 	}
 
 	/**
@@ -81,7 +83,7 @@ public final class EventConditions {
 	 * @see #uniqueIdSubstring(String)
 	 */
 	public static Condition<Event> test(String uniqueIdSubstring) {
-		return Assertions.allOf(test(), uniqueIdSubstring(uniqueIdSubstring));
+		return allOf(test(), uniqueIdSubstring(uniqueIdSubstring));
 	}
 
 	/**
@@ -97,7 +99,7 @@ public final class EventConditions {
 	 * @see #displayName(String)
 	 */
 	public static Condition<Event> test(String uniqueIdSubstring, String displayName) {
-		return Assertions.allOf(test(), uniqueIdSubstring(uniqueIdSubstring), displayName(displayName));
+		return allOf(test(), uniqueIdSubstring(uniqueIdSubstring), displayName(displayName));
 	}
 
 	/**
@@ -139,7 +141,7 @@ public final class EventConditions {
 	 * {@linkplain TestDescriptor#isContainer() container}.
 	 */
 	public static Condition<Event> container(Condition<Event> condition) {
-		return Assertions.allOf(container(), condition);
+		return allOf(container(), condition);
 	}
 
 	/**
@@ -156,8 +158,8 @@ public final class EventConditions {
 	 * {@link Event}'s {@linkplain Event#getTestDescriptor() test descriptor} is
 	 * a {@linkplain TestDescriptor#isContainer() container} and its
 	 * {@linkplain TestDescriptor#getUniqueId() unique id} contains the
-	 * simple name of the supplied {@link Class} as well as the fully-qualified
-	 * name of its {@linkplain Class#getEnclosingClass() enclosing class}.
+	 * simple names of the supplied {@link Class} and all of its
+	 * {@linkplain Class#getEnclosingClass() enclosing classes}.
 	 *
 	 * <p>Please note that this method does not differentiate between static
 	 * nested classes and non-static member classes (e.g., inner classes).
@@ -167,11 +169,12 @@ public final class EventConditions {
 		Class<?> enclosingClass = clazz.getEnclosingClass();
 		Preconditions.notNull(enclosingClass, () -> clazz.getName() + " must be a nested class");
 
-		if (enclosingClass.getEnclosingClass() != null) {
-			// recursively check enclosing class hierarchy
-			return Assertions.allOf(nestedContainer(enclosingClass), uniqueIdSubstring(clazz.getSimpleName()));
+		List<String> enclosingClassNames = new ArrayList<>();
+		for (Class<?> current = enclosingClass; current != null; current = current.getEnclosingClass()) {
+			enclosingClassNames.add(0, current.getSimpleName());
 		}
-		return Assertions.allOf(container(enclosingClass), uniqueIdSubstring(clazz.getSimpleName()));
+
+		return allOf(container(), uniqueIdSubstrings(enclosingClassNames));
 	}
 
 	/**
@@ -192,7 +195,7 @@ public final class EventConditions {
 	 * {@code Condition}.
 	 */
 	public static Condition<Event> dynamicTestRegistered(Condition<Event> condition) {
-		return Assertions.allOf(type(DYNAMIC_TEST_REGISTERED), condition);
+		return allOf(type(DYNAMIC_TEST_REGISTERED), condition);
 	}
 
 	/**
@@ -211,6 +214,30 @@ public final class EventConditions {
 			byTestDescriptor(
 				where(TestDescriptor::getUniqueId, uniqueId -> uniqueId.getSegments().stream().anyMatch(predicate))),
 			"descriptor with uniqueId substring '%s'", uniqueIdSubstring);
+	}
+
+	/**
+	 * Create a new {@link Condition} that matches if and only if the
+	 * {@linkplain TestDescriptor#getUniqueId() unique id} of an
+	 * {@link Event}'s {@linkplain Event#getTestDescriptor() test descriptor}
+	 * contains all of the supplied strings.
+	 *
+	 * @since 1.6
+	 */
+	public static Condition<Event> uniqueIdSubstrings(String... uniqueIdSubstrings) {
+		return uniqueIdSubstrings(Arrays.asList(uniqueIdSubstrings));
+	}
+
+	/**
+	 * Create a new {@link Condition} that matches if and only if the
+	 * {@linkplain TestDescriptor#getUniqueId() unique id} of an
+	 * {@link Event}'s {@linkplain Event#getTestDescriptor() test descriptor}
+	 * contains all of the supplied strings.
+	 *
+	 * @since 1.6
+	 */
+	public static Condition<Event> uniqueIdSubstrings(List<String> uniqueIdSubstrings) {
+		return allOf(uniqueIdSubstrings.stream().map(EventConditions::uniqueIdSubstring).collect(toList()));
 	}
 
 	/**
@@ -234,7 +261,7 @@ public final class EventConditions {
 	 * @see #reason(String)
 	 */
 	public static Condition<Event> skippedWithReason(String expectedReason) {
-		return Assertions.allOf(type(SKIPPED), reason(expectedReason));
+		return allOf(type(SKIPPED), reason(expectedReason));
 	}
 
 	/**
@@ -247,7 +274,7 @@ public final class EventConditions {
 	 * @see #reason(Predicate)
 	 */
 	public static Condition<Event> skippedWithReason(Predicate<String> predicate) {
-		return Assertions.allOf(type(SKIPPED), reason(predicate));
+		return allOf(type(SKIPPED), reason(predicate));
 	}
 
 	/**
@@ -294,7 +321,7 @@ public final class EventConditions {
 		List<Condition<TestExecutionResult>> list = Arrays.asList(TestExecutionResultConditions.status(expectedStatus),
 			TestExecutionResultConditions.throwable(conditions));
 
-		return finished(Assertions.allOf(list));
+		return finished(allOf(list));
 	}
 
 	/**
@@ -329,7 +356,7 @@ public final class EventConditions {
 	 * {@link TestExecutionResult} that matches the supplied {@code Condition}.
 	 */
 	public static Condition<Event> finished(Condition<TestExecutionResult> resultCondition) {
-		return Assertions.allOf(type(FINISHED), result(resultCondition));
+		return allOf(type(FINISHED), result(resultCondition));
 	}
 
 	/**
