@@ -224,6 +224,7 @@ public final class EventConditions {
 	 *
 	 * @since 1.6
 	 */
+	@API(status = EXPERIMENTAL, since = "1.6")
 	public static Condition<Event> uniqueIdSubstrings(String... uniqueIdSubstrings) {
 		return uniqueIdSubstrings(Arrays.asList(uniqueIdSubstrings));
 	}
@@ -236,6 +237,7 @@ public final class EventConditions {
 	 *
 	 * @since 1.6
 	 */
+	@API(status = EXPERIMENTAL, since = "1.6")
 	public static Condition<Event> uniqueIdSubstrings(List<String> uniqueIdSubstrings) {
 		return allOf(uniqueIdSubstrings.stream().map(EventConditions::uniqueIdSubstring).collect(toList()));
 	}
