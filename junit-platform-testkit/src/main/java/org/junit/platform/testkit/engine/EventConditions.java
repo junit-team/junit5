@@ -31,6 +31,7 @@ import java.util.function.Predicate;
 import org.apiguardian.api.API;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
@@ -116,6 +117,7 @@ public final class EventConditions {
 	 * fully-qualified name of the supplied {@link Class}.
 	 */
 	public static Condition<Event> container(Class<?> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
 		return container(clazz.getName());
 	}
 
@@ -156,16 +158,20 @@ public final class EventConditions {
 	 * {@linkplain TestDescriptor#getUniqueId() unique id} contains the
 	 * simple name of the supplied {@link Class} as well as the fully-qualified
 	 * name of its {@linkplain Class#getEnclosingClass() enclosing class}.
+	 *
+	 * <p>Please note that this method does not differentiate between static
+	 * nested classes and non-static member classes (e.g., inner classes).
 	 */
 	public static Condition<Event> nestedContainer(Class<?> clazz) {
-		Assertions.assertThat(clazz.getEnclosingClass()).withFailMessage(clazz + " is not nested").isNotNull();
-		if (clazz.getEnclosingClass().getEnclosingClass() == null) {
-			return Assertions.allOf(container(clazz.getEnclosingClass()), uniqueIdSubstring(clazz.getSimpleName()));
+		Preconditions.notNull(clazz, "Class must not be null");
+		Class<?> enclosingClass = clazz.getEnclosingClass();
+		Preconditions.notNull(enclosingClass, () -> clazz.getName() + " must be a nested class");
+
+		if (enclosingClass.getEnclosingClass() != null) {
+			// recursively check enclosing class hierarchy
+			return Assertions.allOf(nestedContainer(enclosingClass), uniqueIdSubstring(clazz.getSimpleName()));
 		}
-		else {
-			return Assertions.allOf(nestedContainer(clazz.getEnclosingClass()),
-				uniqueIdSubstring(clazz.getSimpleName()));
-		}
+		return Assertions.allOf(container(enclosingClass), uniqueIdSubstring(clazz.getSimpleName()));
 	}
 
 	/**

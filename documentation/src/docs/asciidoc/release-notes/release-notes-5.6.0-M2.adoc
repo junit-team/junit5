@@ -9,12 +9,14 @@ For a complete list of all _closed_ issues and pull requests for this release, c
 link:{junit5-repo}+/milestone/45️?closed=1+[5.6 M2️] milestone page in the JUnit repository
 on GitHub.
 
+
 [[release-notes-5.6.0-M2️-junit-platform]]
 === JUnit Platform
 
 ==== Bug Fixes
 
-* ❓
+* The `EventConditions.nestedContainer()` method in the Engine Test Kit now correctly
+  handles events from multiple levels of nested classes.
 
 ==== Deprecations and Breaking Changes
 
@@ -30,8 +32,7 @@ on GitHub.
 
 ==== Bug Fixes
 
-* The `EventConditions` class in Test Kit now correctly handles events from multiple levels
-  of nested classes.
+* ❓
 
 ==== Deprecations and Breaking Changes
 

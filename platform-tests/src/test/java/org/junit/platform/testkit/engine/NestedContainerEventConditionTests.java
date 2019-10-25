@@ -8,10 +8,11 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine;
+package org.junit.platform.testkit.engine;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.engine;
 import static org.junit.platform.testkit.engine.EventConditions.event;
@@ -20,21 +21,48 @@ import static org.junit.platform.testkit.engine.EventConditions.nestedContainer;
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
-import org.junit.platform.testkit.engine.EngineExecutionResults;
+import org.junit.platform.commons.PreconditionViolationException;
 
-class NestedContainerEventConditionTests extends AbstractJupiterTestEngineTests {
+/**
+ * @since 1.6
+ */
+class NestedContainerEventConditionTests {
 
 	@Test
-	void eventConditionsAssertionOnNestedClasses() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(ATestCase.class)).build();
-		EngineExecutionResults executionResults = executeTests(request);
+	void preconditions() {
+		assertThatExceptionOfType(PreconditionViolationException.class)//
+				.isThrownBy(() -> nestedContainer(null))//
+				.withMessage("Class must not be null");
 
+		assertThatExceptionOfType(PreconditionViolationException.class)//
+				.isThrownBy(() -> nestedContainer(NestedContainerEventConditionTests.class))//
+				.withMessage(NestedContainerEventConditionTests.class.getName() + " must be a nested class");
+	}
+
+	@Test
+	void usingNestedContainerCorrectly() {
+		assertDoesNotThrow(() -> container(ATestCase.class));
+		assertDoesNotThrow(() -> nestedContainer(ATestCase.class));
+
+		assertDoesNotThrow(() -> container(ATestCase.BTestCase.class));
+		assertDoesNotThrow(() -> nestedContainer(ATestCase.BTestCase.class));
+
+		assertDoesNotThrow(() -> container(ATestCase.BTestCase.CTestCase.class));
+		assertDoesNotThrow(() -> nestedContainer(ATestCase.BTestCase.CTestCase.class));
+
+		assertDoesNotThrow(() -> container(NestedContainerEventConditionTests.class));
+	}
+
+	@Test
+	void eventConditionsForMultipleLevelsOfNestedClasses() {
 		// @formatter:off
-		executionResults.allEvents().assertEventsMatchExactly(
+		EngineTestKit.engine("junit-jupiter")
+			.selectors(selectClass(ATestCase.class))
+			.execute()
+			.allEvents()
+			.assertEventsMatchExactly(
 				event(engine(), started()),
 					event(container(ATestCase.class), started()),
 						event(test("test_a"), started()),
@@ -48,23 +76,9 @@ class NestedContainerEventConditionTests extends AbstractJupiterTestEngineTests 
 							event(nestedContainer(ATestCase.BTestCase.CTestCase.class), finishedSuccessfully()),
 						event(nestedContainer(ATestCase.BTestCase.class), finishedSuccessfully()),
 					event(container(ATestCase.class), finishedSuccessfully()),
-				event(engine(), finishedSuccessfully()));
+				event(engine(), finishedSuccessfully())
+			);
 		// @formatter:on
-	}
-
-	@Test
-	void exceptionsWhenUsingNestedContainerIncorrectly() {
-		Assertions.assertDoesNotThrow(() -> container(ATestCase.class));
-		Assertions.assertDoesNotThrow(() -> nestedContainer(ATestCase.class));
-
-		Assertions.assertDoesNotThrow(() -> container(ATestCase.BTestCase.class));
-		Assertions.assertDoesNotThrow(() -> nestedContainer(ATestCase.BTestCase.class));
-
-		Assertions.assertDoesNotThrow(() -> container(ATestCase.BTestCase.CTestCase.class));
-		Assertions.assertDoesNotThrow(() -> nestedContainer(ATestCase.BTestCase.CTestCase.class));
-
-		Assertions.assertDoesNotThrow(() -> container(NestedContainerEventConditionTests.class));
-		Assertions.assertThrows(AssertionError.class, () -> nestedContainer(NestedContainerEventConditionTests.class));
 	}
 
 	static class ATestCase {
@@ -87,4 +101,5 @@ class NestedContainerEventConditionTests extends AbstractJupiterTestEngineTests 
 			}
 		}
 	}
+
 }
