@@ -24,7 +24,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* `TestExecutionSummary.Failure` is now serializable.
 
 
 [[release-notes-5.6.0-M2️-junit-jupiter]]
