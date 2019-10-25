@@ -603,7 +603,10 @@ public static&nbsp;<a href="https://joel-costigliola.github.io/assertj/core-8/ap
  a <a href="../../engine/TestDescriptor.html#isContainer()">container</a> and its
  <a href="../../engine/TestDescriptor.html#getUniqueId()">unique id</a> contains the
  simple name of the supplied <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Class</code></a> as well as the fully-qualified
- name of its <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true#getEnclosingClass()" title="class or interface in java.lang" class="externalLink">enclosing class</a>.</div>
+ name of its <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true#getEnclosingClass()" title="class or interface in java.lang" class="externalLink">enclosing class</a>.
+
+ <p>Please note that this method does not differentiate between static
+ nested classes and non-static member classes (e.g., inner classes).</div>
 </li>
 </ul>
 <a id="dynamicTestRegistered(java.lang.String)">
