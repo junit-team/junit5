@@ -279,6 +279,8 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 
 	private static class DefaultFailure implements Failure {
 
+		private static final long serialVersionUID = 1L;
+
 		private final TestIdentifier testIdentifier;
 		private final Throwable exception;
 
