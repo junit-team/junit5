@@ -166,15 +166,14 @@ public final class EventConditions {
 	 */
 	public static Condition<Event> nestedContainer(Class<?> clazz) {
 		Preconditions.notNull(clazz, "Class must not be null");
-		Class<?> enclosingClass = clazz.getEnclosingClass();
-		Preconditions.notNull(enclosingClass, () -> clazz.getName() + " must be a nested class");
+		Preconditions.notNull(clazz.getEnclosingClass(), () -> clazz.getName() + " must be a nested class");
 
-		List<String> enclosingClassNames = new ArrayList<>();
-		for (Class<?> current = enclosingClass; current != null; current = current.getEnclosingClass()) {
-			enclosingClassNames.add(0, current.getSimpleName());
+		List<String> classNames = new ArrayList<>();
+		for (Class<?> current = clazz; current != null; current = current.getEnclosingClass()) {
+			classNames.add(0, current.getSimpleName());
 		}
 
-		return allOf(container(), uniqueIdSubstrings(enclosingClassNames));
+		return allOf(container(), uniqueIdSubstrings(classNames));
 	}
 
 	/**

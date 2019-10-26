@@ -10,6 +10,7 @@
 
 package org.junit.platform.testkit.engine;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -20,10 +21,19 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessf
 import static org.junit.platform.testkit.engine.EventConditions.nestedContainer;
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
+
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
+import org.junit.platform.testkit.engine.NestedContainerEventConditionTests.ATestCase.BTestCase;
+import org.junit.platform.testkit.engine.NestedContainerEventConditionTests.ATestCase.BTestCase.CTestCase;
 
 /**
  * @since 1.6
@@ -39,6 +49,37 @@ class NestedContainerEventConditionTests {
 		assertThatExceptionOfType(PreconditionViolationException.class)//
 				.isThrownBy(() -> nestedContainer(NestedContainerEventConditionTests.class))//
 				.withMessage(NestedContainerEventConditionTests.class.getName() + " must be a nested class");
+	}
+
+	@Test
+	void nestedContainerChecksSuppliedClassAndAllEnclosingClasses() {
+		UniqueId uniqueId = UniqueId.root("top-level", getClass().getName())//
+				.append("nested", ATestCase.class.getSimpleName())//
+				.append("nested", BTestCase.class.getSimpleName())//
+				.append("nested", CTestCase.class.getSimpleName());
+		Event event = createEvent(uniqueId);
+
+		Condition<Event> condition = nestedContainer(HashMap.Entry.class);
+		assertThat(condition.matches(event)).isFalse();
+		assertThat(condition.toString()).contains(//
+			"is a container", "with uniqueId substring 'Map'", "with uniqueId substring 'Entry'");
+
+		condition = nestedContainer(ATestCase.BTestCase.CTestCase.class);
+		assertThat(condition.matches(event)).isTrue();
+		assertThat(condition.toString()).contains(//
+			"is a container", "with uniqueId substring 'NestedContainerEventConditionTests'",
+			"with uniqueId substring 'ATestCase'", "with uniqueId substring 'BTestCase'",
+			"with uniqueId substring 'CTestCase'");
+	}
+
+	private Event createEvent(UniqueId uniqueId) {
+		TestDescriptor testDescriptor = mock(TestDescriptor.class);
+		when(testDescriptor.isContainer()).thenReturn(true);
+		when(testDescriptor.getUniqueId()).thenReturn(uniqueId);
+
+		Event event = mock(Event.class);
+		when(event.getTestDescriptor()).thenReturn(testDescriptor);
+		return event;
 	}
 
 	@Test
