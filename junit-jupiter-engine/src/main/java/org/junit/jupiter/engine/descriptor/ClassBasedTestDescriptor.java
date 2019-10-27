@@ -213,7 +213,9 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 			invokeAfterAllCallbacks(context);
 		}
 
-		invokeTestInstancePreDestroyCallback(context);
+		if (isPerClassLifecycle(context)) {
+			invokeTestInstancePreDestroyCallback(context);
+		}
 
 		// If the previous Throwable was not null when this method was called,
 		// that means an exception was already thrown either before or during
@@ -424,16 +426,13 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private void invokeTestInstancePreDestroyCallback(JupiterEngineExecutionContext context) {
-		if (isPerClassLifecycle(context)) {
-			ExtensionContext extensionContext = context.getExtensionContext();
-			ThrowableCollector throwableCollector = context.getThrowableCollector();
-			Object testInstance = extensionContext.getTestInstance().orElse(null);
+		ExtensionContext extensionContext = context.getExtensionContext();
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
+		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
-			context.getExtensionRegistry().stream(TestInstancePreDestroyCallback.class).forEach(
-				extension -> throwableCollector.execute(
-					() -> extension.preDestroyTestInstance(testInstance, extensionContext)));
-
-		}
+		context.getExtensionRegistry().stream(TestInstancePreDestroyCallback.class).forEach(
+			extension -> throwableCollector.execute(
+				() -> extension.preDestroyTestInstance(testInstance, extensionContext)));
 	}
 
 	private boolean isPerClassLifecycle(JupiterEngineExecutionContext context) {

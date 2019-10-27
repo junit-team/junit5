@@ -35,22 +35,22 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 	private static final List<String> callSequence = new ArrayList<>();
 
 	@Test
-	void beforeAllAndAfterAllCallbacks() {
+	void postProcessorAndPreDestroyCallbacks() {
 		// @formatter:off
-        assertBeforeAllAndAfterAllCallbacks(TopLevelTestCase.class,
+		assertPostProcessorAndPreDestroyCallbacks(TopLevelTestCase.class,
 			"fooPostProcessTestInstance",
 			"barPostProcessTestInstance",
 				"test-1",
 			"barPreDestroyTestInstance",
 			"fooPreDestroyTestInstance"
-        );
-        // @formatter:on
+		);
+		// @formatter:on
 	}
 
 	@Test
-	void beforeAllAndAfterAllCallbacksInSubclass() {
+	void postProcessorAndPreDestroyCallbacksInSubclass() {
 		// @formatter:off
-        assertBeforeAllAndAfterAllCallbacks(SecondLevelTestCase.class,
+		assertPostProcessorAndPreDestroyCallbacks(SecondLevelTestCase.class,
 			"fooPostProcessTestInstance",
 			"barPostProcessTestInstance",
 				"bazPostProcessTestInstance",
@@ -58,14 +58,14 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 				"bazPreDestroyTestInstance",
 			"barPreDestroyTestInstance",
 			"fooPreDestroyTestInstance"
-        );
-        // @formatter:on
+		);
+		// @formatter:on
 	}
 
 	@Test
-	void beforeAllAndAfterAllCallbacksInSubSubclass() {
+	void postProcessorAndPreDestroyCallbacksInSubSubclass() {
 		// @formatter:off
-        assertBeforeAllAndAfterAllCallbacks(ThirdLevelTestCase.class,
+		assertPostProcessorAndPreDestroyCallbacks(ThirdLevelTestCase.class,
 			"fooPostProcessTestInstance",
 			"barPostProcessTestInstance",
 				"bazPostProcessTestInstance",
@@ -75,35 +75,36 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 				"bazPreDestroyTestInstance",
 			"barPreDestroyTestInstance",
 			"fooPreDestroyTestInstance"
-        );
-        // @formatter:on
+		);
+		// @formatter:on
 	}
 
 	@Test
 	void preDestroyTestInstanceMethodThrowsAnException() {
 		// @formatter:off
-        assertBeforeAllAndAfterAllCallbacks(ExceptionInTestInstancePreDestroyCallbackTestCase.class, 0,
-			"exceptionPostProcessTestInstance",
+		assertPostProcessorAndPreDestroyCallbacks(ExceptionInTestInstancePreDestroyCallbackTestCase.class, 0,
+			"fooPostProcessTestInstance",
 				"test",
 			"exceptionThrowingTestInstancePreDestroyCallback"
-        );
-        // @formatter:on
+		);
+		// @formatter:on
 	}
 
 	@Test
 	void postProcessTestInstanceMethodThrowsAnException() {
 		// @formatter:off
-        assertBeforeAllAndAfterAllCallbacks(ExceptionInTestInstancePostProcessorTestCase.class, 0,
+		assertPostProcessorAndPreDestroyCallbacks(ExceptionInTestInstancePostProcessorTestCase.class, 0,
 			"exceptionThrowingTestInstancePostProcessor"
-        );
-        // @formatter:on
+		);
+		// @formatter:on
 	}
 
-	private void assertBeforeAllAndAfterAllCallbacks(Class<?> testClass, String... expectedCalls) {
-		assertBeforeAllAndAfterAllCallbacks(testClass, 1, expectedCalls);
+	private void assertPostProcessorAndPreDestroyCallbacks(Class<?> testClass, String... expectedCalls) {
+		assertPostProcessorAndPreDestroyCallbacks(testClass, 1, expectedCalls);
 	}
 
-	private void assertBeforeAllAndAfterAllCallbacks(Class<?> testClass, int testsSuccessful, String... expectedCalls) {
+	private void assertPostProcessorAndPreDestroyCallbacks(Class<?> testClass, int testsSuccessful,
+			String... expectedCalls) {
 
 		callSequence.clear();
 
@@ -116,7 +117,7 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 	// -------------------------------------------------------------------------
 
 	// Must NOT be private; otherwise, the @Test method gets discovered but never executed.
-	@ExtendWith({ FooClassLevelCallbacks.class, BarClassLevelCallbacks.class })
+	@ExtendWith({ FooTestInstanceCallbacks.class, BarTestInstanceCallbacks.class })
 	static class TopLevelTestCase {
 
 		@Test
@@ -126,7 +127,7 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 	}
 
 	// Must NOT be private; otherwise, the @Test method gets discovered but never executed.
-	@ExtendWith(BazClassLevelCallbacks.class)
+	@ExtendWith(BazTestInstanceCallbacks.class)
 	static class SecondLevelTestCase extends TopLevelTestCase {
 
 		@Test
@@ -136,7 +137,7 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 		}
 	}
 
-	@ExtendWith(QuuxClassLevelCallbacks.class)
+	@ExtendWith(QuuxTestInstanceCallbacks.class)
 	static class ThirdLevelTestCase extends SecondLevelTestCase {
 
 		@Test
@@ -164,38 +165,38 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 
 	// -------------------------------------------------------------------------
 
-	static class FooClassLevelCallbacks extends AbstractClassLevelCallbacks {
+	static class FooTestInstanceCallbacks extends AbstractTestInstanceCallbacks {
 
-		protected FooClassLevelCallbacks() {
+		protected FooTestInstanceCallbacks() {
 			super("foo");
 		}
 	}
 
-	static class BarClassLevelCallbacks extends AbstractClassLevelCallbacks {
+	static class BarTestInstanceCallbacks extends AbstractTestInstanceCallbacks {
 
-		protected BarClassLevelCallbacks() {
+		protected BarTestInstanceCallbacks() {
 			super("bar");
 		}
 	}
 
-	static class BazClassLevelCallbacks extends AbstractClassLevelCallbacks {
+	static class BazTestInstanceCallbacks extends AbstractTestInstanceCallbacks {
 
-		protected BazClassLevelCallbacks() {
+		protected BazTestInstanceCallbacks() {
 			super("baz");
 		}
 	}
 
-	static class QuuxClassLevelCallbacks extends AbstractClassLevelCallbacks {
+	static class QuuxTestInstanceCallbacks extends AbstractTestInstanceCallbacks {
 
-		protected QuuxClassLevelCallbacks() {
+		protected QuuxTestInstanceCallbacks() {
 			super("quux");
 		}
 	}
 
-	static class ExceptionThrowingTestInstancePreDestroyCallback extends AbstractClassLevelCallbacks {
+	static class ExceptionThrowingTestInstancePreDestroyCallback extends AbstractTestInstanceCallbacks {
 
 		protected ExceptionThrowingTestInstancePreDestroyCallback() {
-			super("exception");
+			super("foo");
 		}
 
 		@Override
@@ -205,7 +206,7 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 		}
 	}
 
-	static class ExceptionThrowingTestInstancePostProcessor extends AbstractClassLevelCallbacks {
+	static class ExceptionThrowingTestInstancePostProcessor extends AbstractTestInstanceCallbacks {
 
 		protected ExceptionThrowingTestInstancePostProcessor() {
 			super("exception");
@@ -218,12 +219,12 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 		}
 	}
 
-	private static abstract class AbstractClassLevelCallbacks
+	private static abstract class AbstractTestInstanceCallbacks
 			implements TestInstancePostProcessor, TestInstancePreDestroyCallback {
 
 		private final String name;
 
-		AbstractClassLevelCallbacks(String name) {
+		AbstractTestInstanceCallbacks(String name) {
 			this.name = name;
 		}
 
