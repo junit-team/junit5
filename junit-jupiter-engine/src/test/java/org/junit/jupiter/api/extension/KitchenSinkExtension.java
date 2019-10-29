@@ -122,7 +122,7 @@ public class KitchenSinkExtension implements
 	}
 
 	@Override
-	public void preDestroyTestInstance(Object testInstance, ExtensionContext context) {
+	public void preDestroyTestInstance(ExtensionContext context) {
 	}
 
 	@Override

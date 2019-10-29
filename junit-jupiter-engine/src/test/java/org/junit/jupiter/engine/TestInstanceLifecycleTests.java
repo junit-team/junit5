@@ -996,12 +996,11 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Override
-		public void preDestroyTestInstance(Object testInstance, ExtensionContext context) {
+		public void preDestroyTestInstance(ExtensionContext context) {
 			trackLifecycle(context);
 			assertThat(context.getTestInstance()).isPresent();
-			assertNotNull(testInstance);
 			instanceMap.put(preDestroyCallbackTestInstanceKey(context.getRequiredTestClass()),
-				DefaultTestInstances.of(testInstance));
+				DefaultTestInstances.of(context.getTestInstance().get()));
 		}
 
 		@Override

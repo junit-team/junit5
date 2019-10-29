@@ -12,7 +12,6 @@ package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -186,11 +185,11 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 		}
 
 		@Override
-		public void preDestroyTestInstance(Object testInstance, ExtensionContext context) {
+		public void preDestroyTestInstance(ExtensionContext context) {
+			assertTrue(context.getTestInstance().isPresent());
+			Object testInstance = context.getTestInstance().get();
 			if (testInstance instanceof Destroyable) {
 				((Destroyable) testInstance).setDestroyed();
-				assertTrue(context.getTestInstance().isPresent());
-				assertSame(testInstance, context.getTestInstance().get());
 			}
 			callSequence.add(name + "PreDestroyCallbackTestInstance:" + testInstance.getClass().getSimpleName());
 		}

@@ -31,7 +31,7 @@ import org.apiguardian.api.API;
  * constructor requirements.
  *
  * @since 5.6
- * @see #preDestroyTestInstance(Object, ExtensionContext)
+ * @see #preDestroyTestInstance(ExtensionContext)
  * @see TestInstanceFactory
  * @see ParameterResolver
  */
@@ -40,10 +40,11 @@ import org.apiguardian.api.API;
 public interface TestInstancePreDestroyCallback extends Extension {
 
 	/**
-	 * Callback for processing the supplied test instance before it is destroyed.
+	 * Callback for processing a test instance before it is destroyed.
 	 *
-	 * @param testInstance the instance to process; never {@code null}
 	 * @param context the current extension context; never {@code null}
+	 * @see ExtensionContext#getTestInstance()
+	 * @see ExtensionContext#getRequiredTestInstance()
 	 */
-	void preDestroyTestInstance(Object testInstance, ExtensionContext context) throws Exception;
+	void preDestroyTestInstance(ExtensionContext context) throws Exception;
 }

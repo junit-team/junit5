@@ -428,11 +428,9 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	private void invokeTestInstancePreDestroyCallback(JupiterEngineExecutionContext context) {
 		ExtensionContext extensionContext = context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
-		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
 		context.getExtensionRegistry().stream(TestInstancePreDestroyCallback.class).forEach(
-			extension -> throwableCollector.execute(
-				() -> extension.preDestroyTestInstance(testInstance, extensionContext)));
+			extension -> throwableCollector.execute(() -> extension.preDestroyTestInstance(extensionContext)));
 	}
 
 	private boolean isPerClassLifecycle(JupiterEngineExecutionContext context) {

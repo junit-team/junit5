@@ -200,7 +200,7 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 		}
 
 		@Override
-		public void preDestroyTestInstance(Object testInstance, ExtensionContext context) {
+		public void preDestroyTestInstance(ExtensionContext context) {
 			callSequence.add("exceptionThrowingTestInstancePreDestroyCallback");
 			throw new EnigmaException("preDestroyTestInstance");
 		}
@@ -234,7 +234,7 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 		}
 
 		@Override
-		public void preDestroyTestInstance(Object testInstance, ExtensionContext context) {
+		public void preDestroyTestInstance(ExtensionContext context) {
 			callSequence.add(name + "PreDestroyTestInstance");
 		}
 	}
