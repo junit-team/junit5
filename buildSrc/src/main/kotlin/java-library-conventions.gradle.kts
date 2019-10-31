@@ -72,8 +72,8 @@ if (project in mavenizedProjects) {
 	apply(plugin = "publishing-conventions")
 
 	java {
-		publishJavadoc()
-		publishSources()
+		withJavadocJar()
+		withSourcesJar()
 	}
 
 	tasks.javadoc {
