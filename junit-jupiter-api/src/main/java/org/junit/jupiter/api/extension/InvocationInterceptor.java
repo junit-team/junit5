@@ -31,9 +31,8 @@ import org.junit.jupiter.api.TestTemplate;
  *
  * <h3>Invocation Contract</h3>
  *
- * <p>Each method in this class must execute the supplied {@linkplain Invocation
- * invocation} exactly once. Otherwise, the enclosing test or container will be
- * reported as failed.
+ * <p>Each method in this class must call {@link Invocation#proceed()} or {@link Invocation#skip()} exactly once
+ * on the supplied invocation. Otherwise, the enclosing test or container will be reported as failed.
  *
  * <p>The default implementation simply calls {@link Invocation#proceed()
  * proceed()} on the supplied {@linkplain Invocation invocation}.
@@ -207,6 +206,13 @@ public interface InvocationInterceptor extends Extension {
 		 */
 		T proceed() throws Throwable;
 
+		/**
+		 * Skip this invocation.
+		 * By default: do nothing.
+		 */
+		default void skip() {
+			//do nothing
+		}
 	}
 
 }
