@@ -52,6 +52,16 @@ class DisabledForJreRangeConditionTests extends AbstractExecutionConditionTests 
 	}
 
 	/**
+	 * @see DisabledForJreRangeIntegrationTests#missingJreDeclaration()
+	 */
+	@Test
+	void missingJreDeclaration() {
+		evaluateCondition();
+		assertDisabled();
+		assertReasonContains("Disabled on JRE version: ");
+	}
+
+	/**
 	 * @see DisabledForJreRangeIntegrationTests#enabledOnAllJavaVersions()
 	 */
 	@Test
