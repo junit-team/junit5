@@ -42,4 +42,12 @@ tasks {
 			attributes("Main-Class" to "org.junit.platform.console.ConsoleLauncher")
 		}
 	}
+
+	// This jar contains some Java 9 code
+	// (org.junit.platform.console.ConsoleLauncherToolProvider which implements
+	// java.util.spi.ToolProvider which is @since 9).
+	// So in order to resolve this, it can only run on Java 9
+	verifyOSGiProperties {
+		property("-runee", "JavaSE-9")
+	}
 }
