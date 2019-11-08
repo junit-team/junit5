@@ -52,10 +52,10 @@ class EnabledForJreRangeConditionTests extends AbstractExecutionConditionTests {
 	}
 
 	/**
-	 * @see EnabledForJreRangeIntegrationTests#missingJreDeclaration()
+	 * @see EnabledForJreRangeIntegrationTests#emptyJreDeclaration()
 	 */
 	@Test
-	void missingJreDeclaration() {
+	void emptyJreDeclaration() {
 		evaluateCondition();
 		assertEnabled();
 		assertReasonContains("Enabled on JRE version: ");

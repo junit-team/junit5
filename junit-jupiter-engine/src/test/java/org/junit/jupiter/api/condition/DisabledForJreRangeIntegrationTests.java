@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.jupiter.api.condition.JRE.JAVA_9;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -37,18 +36,16 @@ import org.junit.jupiter.api.Test;
 class DisabledForJreRangeIntegrationTests {
 
 	@Test
-	@Disabled("Only used in a unit test via reflection")
 	void enabledBecauseAnnotationIsNotPresent() {
 	}
 
 	@Test
-	@Disabled("Only used in a unit test via reflection")
-	@DisabledForJreRange()
-	void missingJreDeclaration() {
+	@DisabledForJreRange
+	void emptyJreDeclaration() {
 	}
 
 	@Test
-	@DisabledForJreRange()
+	@DisabledForJreRange
 	void enabledOnAllJavaVersions() {
 		assertFalse(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14());
 	}
