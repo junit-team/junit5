@@ -36,6 +36,8 @@ class EnabledForJreRangeCondition implements ExecutionCondition {
 				.map(enabledForJreRange -> {
 					JRE min = enabledForJreRange.min();
 					JRE max = enabledForJreRange.max();
+					Preconditions.condition((min != JRE.JAVA_8 || max != JRE.OTHER),
+						"You must declare a non-default value for min or max in @EnabledForJreRange");
 					Preconditions.condition(max.compareTo(min) >= 0,
 						"@EnabledForJreRange.min must be less than or equal to @EnabledForJreRange.max");
 

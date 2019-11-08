@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.jupiter.api.condition.JRE.JAVA_9;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -41,9 +42,10 @@ class DisabledForJreRangeIntegrationTests {
 	}
 
 	@Test
+	@Disabled("Only used in a unit test via reflection")
 	@DisabledForJreRange
-	void disabledOnAllJavaVersions() {
-		fail("should be disabled");
+	void defaultValues() {
+		fail("should result in a configuration exception");
 	}
 
 	@Test
