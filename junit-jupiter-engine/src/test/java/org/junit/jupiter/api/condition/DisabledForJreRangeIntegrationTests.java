@@ -12,6 +12,7 @@ package org.junit.jupiter.api.condition;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava10;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava11;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava12;
@@ -41,13 +42,8 @@ class DisabledForJreRangeIntegrationTests {
 
 	@Test
 	@DisabledForJreRange
-	void emptyJreDeclaration() {
-	}
-
-	@Test
-	@DisabledForJreRange
-	void enabledOnAllJavaVersions() {
-		assertFalse(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14());
+	void disabledOnAllJavaVersions() {
+		fail("should be disabled");
 	}
 
 	@Test

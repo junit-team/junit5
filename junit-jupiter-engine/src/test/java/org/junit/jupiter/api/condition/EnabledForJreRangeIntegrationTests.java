@@ -42,12 +42,6 @@ class EnabledForJreRangeIntegrationTests {
 	}
 
 	@Test
-	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange
-	void emptyJreDeclaration() {
-	}
-
-	@Test
 	@EnabledForJreRange
 	void enabledOnAllJavaVersions() {
 		assertTrue(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14());
