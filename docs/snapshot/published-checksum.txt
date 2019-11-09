@@ -464,7 +464,6 @@ ad78c035194a6867104c1a0ac277e2b2  junit-platform-commons/src/main/java/org/junit
 ad809282dba1546790554425ba8cf7b8  junit-platform-launcher/src/main/java/org/junit/platform/launcher/Launcher.java
 adc44ed7791686b47d6e1f942cd1eca7  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ModuleUtils.java
 adcff83e733aeb61c8730fceccd45743  junit-jupiter-api/src/main/java/org/junit/jupiter/api/BeforeEach.java
-ae34fc445f0672034d137717e99ec66e  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 ae3ad87fb1bf944fe0b32847c59b0839  documentation/src/docs/asciidoc/user-guide/images/extensions_lifecycle_source.docx
 ae749e4e7afdcac3588de36766eb667d  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/Logger.java
 aeef3b2cf19c08c228c91c7c2858e4f4  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/support/OpenTest4JAndJUnit4AwareThrowableCollector.java
@@ -544,6 +543,7 @@ d1ab7eedb6800a6aac9ff86a4c1c4013  junit-platform-commons/src/main/java/org/junit
 d1e1e92249548eef17b15bf4fcb1163d  junit-platform-engine/src/main/java/org/junit/platform/engine/support/config/PrefixedConfigurationParameters.java
 d240f5dcaf14479dd7461d492c682def  documentation/src/test/java/example/testinterface/TestInterfaceDemo.java
 d26dff0325a8a05b2a970043e4c5a233  documentation/src/docs/asciidoc/release-notes/release-notes-5.5.0.adoc
+d3b5038efa369d3a72f4730c7d500a87  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 d3cb378014cdac07c5f1cf5f8d91b238  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.java
 d458fbd87aef43d37a319e18f28e6d21  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnJreCondition.java
 d48ca497e27808531a970f7782107993  junit-vintage-engine/src/main/java/org/junit/vintage/engine/support/package-info.java
