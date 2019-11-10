@@ -14,6 +14,11 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -22,54 +27,67 @@ import org.junit.jupiter.api.Test;
  *
  * @since 5.1
  */
-@Disabled("Disabled since the required environment variable is not set")
-// Tests will pass if you set the following environment variable:
-// DisabledIfEnvironmentVariableTests.key = DisabledIfEnvironmentVariableTests.enigma
+@Disabled("Disabled since the required environment variables are not set")
+// Tests (except those with intentional configuration errors) will pass if you set
+// the following environment variables:
+// DisabledIfEnvironmentVariableTests.key1 = enigma
+// DisabledIfEnvironmentVariableTests.key2 = enigma
 class DisabledIfEnvironmentVariableIntegrationTests {
 
-	static final String KEY = "DisabledIfEnvironmentVariableTests.key";
-	static final String ENIGMA = "DisabledIfEnvironmentVariableTests.enigma";
-	static final String BOGUS = "DisabledIfEnvironmentVariableTests.bogus";
+	static final String KEY1 = "DisabledIfEnvironmentVariableTests.key1";
+	static final String KEY2 = "DisabledIfEnvironmentVariableTests.key2";
+	static final String ENIGMA = "enigma";
+	static final String BOGUS = "bogus";
 
 	@Test
-	@Disabled("Only used in a unit test via reflection")
 	void enabledBecauseAnnotationIsNotPresent() {
 	}
 
 	@Test
-	@Disabled("Only used in a unit test via reflection")
 	@DisabledIfEnvironmentVariable(named = "  ", matches = ENIGMA)
 	void blankNamedAttribute() {
 	}
 
 	@Test
-	@Disabled("Only used in a unit test via reflection")
-	@DisabledIfEnvironmentVariable(named = KEY, matches = "  ")
+	@DisabledIfEnvironmentVariable(named = KEY1, matches = "  ")
 	void blankMatchesAttribute() {
 	}
 
 	@Test
-	@DisabledIfEnvironmentVariable(named = KEY, matches = ENIGMA)
+	@DisabledIfEnvironmentVariable(named = KEY1, matches = ENIGMA)
 	void disabledBecauseEnvironmentVariableMatchesExactly() {
 		fail("should be disabled");
 	}
 
 	@Test
-	@DisabledIfEnvironmentVariable(named = KEY, matches = ".+enigma$")
+	@DisabledIfEnvironmentVariable(named = KEY1, matches = BOGUS)
+	@CustomDisabled
+	void disabledBecauseEnvironmentVariableForComposedAnnotationMatchesExactly() {
+		fail("should be disabled");
+	}
+
+	@Test
+	@DisabledIfEnvironmentVariable(named = KEY1, matches = ".*e.+gma$")
 	void disabledBecauseEnvironmentVariableMatchesPattern() {
 		fail("should be disabled");
 	}
 
 	@Test
-	@DisabledIfEnvironmentVariable(named = KEY, matches = BOGUS)
+	@DisabledIfEnvironmentVariable(named = KEY1, matches = BOGUS)
 	void enabledBecauseEnvironmentVariableDoesNotMatch() {
-		assertNotEquals(BOGUS, System.getenv(KEY));
+		assertNotEquals(BOGUS, System.getenv(KEY1));
 	}
 
 	@Test
 	@DisabledIfEnvironmentVariable(named = BOGUS, matches = "doesn't matter")
 	void enabledBecauseEnvironmentVariableDoesNotExist() {
 		assertNull(System.getenv(BOGUS));
+	}
+
+	@Target(ElementType.METHOD)
+	@Retention(RetentionPolicy.RUNTIME)
+	@DisabledIfEnvironmentVariable(named = KEY2, matches = ENIGMA)
+	@interface CustomDisabled {
 	}
 
 }

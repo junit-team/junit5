@@ -13,13 +13,9 @@ package org.junit.jupiter.api.condition;
 import static java.lang.String.format;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
-
-import java.util.Optional;
 
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -28,21 +24,24 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 5.1
  * @see EnabledIfEnvironmentVariable
  */
-class EnabledIfEnvironmentVariableCondition implements ExecutionCondition {
+class EnabledIfEnvironmentVariableCondition
+		extends AbstractRepeatableAnnotationCondition<EnabledIfEnvironmentVariable> {
 
-	private static final ConditionEvaluationResult ENABLED_BY_DEFAULT = enabled(
-		"@EnabledIfEnvironmentVariable is not present");
+	private static final ConditionEvaluationResult ENABLED = ConditionEvaluationResult.enabled(
+		"No @EnabledIfEnvironmentVariable conditions resulting in 'disabled' execution encountered");
+
+	EnabledIfEnvironmentVariableCondition() {
+		super(EnabledIfEnvironmentVariable.class);
+	}
 
 	@Override
-	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-		Optional<EnabledIfEnvironmentVariable> optional = findAnnotation(context.getElement(),
-			EnabledIfEnvironmentVariable.class);
+	protected ConditionEvaluationResult getNoDisabledConditionsEncounteredResult() {
+		return ENABLED;
+	}
 
-		if (!optional.isPresent()) {
-			return ENABLED_BY_DEFAULT;
-		}
+	@Override
+	protected ConditionEvaluationResult evaluate(EnabledIfEnvironmentVariable annotation) {
 
-		EnabledIfEnvironmentVariable annotation = optional.get();
 		String name = annotation.named().trim();
 		String regex = annotation.matches();
 		Preconditions.notBlank(name, () -> "The 'named' attribute must not be blank in " + annotation);

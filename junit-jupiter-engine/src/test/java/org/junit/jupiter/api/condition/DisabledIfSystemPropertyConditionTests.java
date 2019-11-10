@@ -40,13 +40,13 @@ class DisabledIfSystemPropertyConditionTests extends AbstractExecutionConditionT
 	}
 
 	@BeforeAll
-	static void setSystemProperty() {
-		DisabledIfSystemPropertyIntegrationTests.setSystemProperty();
+	static void setSystemProperties() {
+		DisabledIfSystemPropertyIntegrationTests.setSystemProperties();
 	}
 
 	@AfterAll
-	static void clearSystemProperty() {
-		DisabledIfSystemPropertyIntegrationTests.clearSystemProperty();
+	static void clearSystemProperties() {
+		DisabledIfSystemPropertyIntegrationTests.clearSystemProperties();
 	}
 
 	/**
@@ -56,7 +56,7 @@ class DisabledIfSystemPropertyConditionTests extends AbstractExecutionConditionT
 	void enabledBecauseAnnotationIsNotPresent() {
 		evaluateCondition();
 		assertEnabled();
-		assertReasonContains("@DisabledIfSystemProperty is not present");
+		assertReasonContains("No @DisabledIfSystemProperty conditions resulting in 'disabled' execution encountered");
 	}
 
 	/**
@@ -88,6 +88,16 @@ class DisabledIfSystemPropertyConditionTests extends AbstractExecutionConditionT
 	}
 
 	/**
+	 * @see DisabledIfSystemPropertyIntegrationTests#disabledBecauseSystemPropertyForComposedAnnotationMatchesExactly()
+	 */
+	@Test
+	void disabledBecauseSystemPropertyForComposedAnnotationMatchesExactly() {
+		evaluateCondition();
+		assertDisabled();
+		assertReasonContains("matches regular expression");
+	}
+
+	/**
 	 * @see DisabledIfSystemPropertyIntegrationTests#disabledBecauseSystemPropertyMatchesPattern()
 	 */
 	@Test
@@ -104,7 +114,7 @@ class DisabledIfSystemPropertyConditionTests extends AbstractExecutionConditionT
 	void enabledBecauseSystemPropertyDoesNotMatch() {
 		evaluateCondition();
 		assertEnabled();
-		assertReasonContains("does not match regular expression");
+		assertReasonContains("No @DisabledIfSystemProperty conditions resulting in 'disabled' execution encountered");
 	}
 
 	/**
@@ -114,7 +124,7 @@ class DisabledIfSystemPropertyConditionTests extends AbstractExecutionConditionT
 	void enabledBecauseSystemPropertyDoesNotExist() {
 		evaluateCondition();
 		assertEnabled();
-		assertReasonContains("does not exist");
+		assertReasonContains("No @DisabledIfSystemProperty conditions resulting in 'disabled' execution encountered");
 	}
 
 }
