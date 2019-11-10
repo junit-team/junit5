@@ -127,10 +127,21 @@ public class InvocationInterceptorChain {
 
 		@Override
 		public T proceed() throws Throwable {
+			markInvokedOrSkipped();
+			return delegate.proceed();
+		}
+
+		@Override
+		public void skip() {
+			LOG.debug(() -> "The invocation is skipped");
+			markInvokedOrSkipped();
+			delegate.skip();
+		}
+
+		private void markInvokedOrSkipped() {
 			if (!invokedOrSkipped.compareAndSet(false, true)) {
 				fail("Chain of InvocationInterceptors called invocation multiple times instead of just once");
 			}
-			return delegate.proceed();
 		}
 
 		void verifyInvokedAtLeastOnce() {
@@ -143,15 +154,6 @@ public class InvocationInterceptorChain {
 			String commaSeparatedInterceptorClasses = interceptors.stream().map(Object::getClass).map(
 				Class::getName).collect(joining(", "));
 			throw new JUnitException(prefix + ": " + commaSeparatedInterceptorClasses);
-		}
-
-		@Override
-		public void skip() {
-			LOG.debug(() -> "The invocation is skipped");
-			if (!invokedOrSkipped.compareAndSet(false, true)) {
-				fail("Chain of InvocationInterceptors called invocation multiple times instead of just once");
-			}
-			delegate.skip();
 		}
 	}
 
