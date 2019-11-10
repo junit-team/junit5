@@ -28,8 +28,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
+var data = {"i0":6,"i1":18};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -158,7 +158,7 @@ public static interface <span class="typeNameLabel">InvocationInterceptor.Invoca
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t5" class="tableTab"><span><a href="javascript:show(16);">Default Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -169,6 +169,13 @@ public static interface <span class="typeNameLabel">InvocationInterceptor.Invoca
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#proceed()">proceed</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Proceed with this invocation.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>default void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#skip()">skip</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Explicitly skip this invocation.</div>
 </td>
 </tr>
 </table>
@@ -191,7 +198,7 @@ public static interface <span class="typeNameLabel">InvocationInterceptor.Invoca
 <a id="proceed()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>proceed</h4>
 <pre class="methodSignature"><a href="InvocationInterceptor.Invocation.html" title="type parameter in InvocationInterceptor.Invocation">T</a>&nbsp;proceed()
@@ -203,6 +210,21 @@ public static interface <span class="typeNameLabel">InvocationInterceptor.Invoca
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a></code> - in case the invocation failed</dd>
 </dl>
+</li>
+</ul>
+<a id="skip()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>skip</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.6")
+default&nbsp;void&nbsp;skip()</pre>
+<div class="block">Explicitly skip this invocation.
+
+ <p>This allows to bypass the check that <a href="#proceed()"><code>proceed()</code></a> must be
+ called at least once. The default implementation does nothing.</div>
 </li>
 </ul>
 </li>

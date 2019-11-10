@@ -138,8 +138,8 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 
  <h3>Invocation Contract</h3>
 
- <p>Each method in this class must execute the supplied <a href="InvocationInterceptor.Invocation.html" title="interface in org.junit.jupiter.api.extension">invocation</a> exactly once. Otherwise, the enclosing test or container will be
- reported as failed.
+ <p>Each method in this class must call <a href="InvocationInterceptor.Invocation.html#proceed()"><code>InvocationInterceptor.Invocation.proceed()</code></a> or <a href="InvocationInterceptor.Invocation.html#skip()"><code>InvocationInterceptor.Invocation.skip()</code></a> exactly once on the supplied invocation. Otherwise, the
+ enclosing test or container will be reported as failed.
 
  <p>The default implementation simply calls <a href="InvocationInterceptor.Invocation.html#proceed()"><code>proceed()</code></a> on the supplied <a href="InvocationInterceptor.Invocation.html" title="interface in org.junit.jupiter.api.extension">invocation</a>.
 
