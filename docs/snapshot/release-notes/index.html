@@ -679,6 +679,12 @@ handles events from multiple levels of nested classes.</p>
 <div class="ulist">
 <ul>
 <li>
+<p><code>@EnabledIfEnvironmentVariable</code>, <code>@DisabledIfEnvironmentVariable</code>,
+<code>@EnabledIfSystemProperty</code>, and <code>@DisabledIfSystemProperty</code> may now be used as
+<em>repeatable</em> annotations. In other words, it is now possible to declare each of those
+annotations multiple times on a test interface, test class, or test method.</p>
+</li>
+<li>
 <p><code>InvocationInterceptor</code> extensions may now explicitly <code>skip()</code> an intercepted
 invocation. This allows executing it by other means, e.g. in a forked JVM.</p>
 </li>
@@ -1091,7 +1097,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-11-10 14:47:55 UTC
+Last updated 2019-11-10 15:48:31 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

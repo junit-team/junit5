@@ -1980,13 +1980,13 @@ combine <code>@Test</code> and <code>@EnabledOnOs</code> in a single, reusable a
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Each of the <em>conditional</em> annotations listed in the following sections can only be
-declared once on a given test interface, test class, or test method. If a conditional
-annotation is directly present, indirectly present, or meta-present multiple times on a
-given element, only the first such annotation discovered by JUnit will be used; any
-additional declarations will be silently ignored. Note, however, that each conditional
-annotation may be used in conjunction with other conditional annotations in the
-<code>org.junit.jupiter.api.condition</code> package.</p>
+<p>Unless otherwise stated, each of the <em>conditional</em> annotations listed in the following
+sections can only be declared once on a given test interface, test class, or test method.
+If a conditional annotation is directly present, indirectly present, or meta-present
+multiple times on a given element, only the first such annotation discovered by JUnit will
+be used; any additional declarations will be silently ignored. Note, however, that each
+conditional annotation may be used in conjunction with other conditional annotations in
+the <code>org.junit.jupiter.api.condition</code> package.</p>
 </div>
 </td>
 </tr>
@@ -2123,6 +2123,23 @@ regular expression.</p>
 }</code></pre>
 </div>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>As of JUnit Jupiter 5.6, <code><a href="../api/org/junit/jupiter/api/condition/EnabledIfSystemProperty.html">@EnabledIfSystemProperty</a></code> and <code><a href="../api/org/junit/jupiter/api/condition/DisabledIfSystemProperty.html">@DisabledIfSystemProperty</a></code> are
+<em>repeatable annotations</em>. Consequently, these annotations may be declared multiple times
+on a test interface, test class, or test method. Specifically, these annotations will be
+found if they are directly present, indirectly present, or meta-present on a given element.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect3">
 <h4 id="writing-tests-conditional-execution-environment-variables"><a class="anchor" href="#writing-tests-conditional-execution-environment-variables"></a>2.7.4. Environment Variable Conditions</h4>
@@ -2146,6 +2163,24 @@ value supplied via the <code>matches</code> attribute will be interpreted as a r
     <span class="comment">// ...</span>
 }</code></pre>
 </div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>As of JUnit Jupiter 5.6, <code><a href="../api/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.html">@EnabledIfEnvironmentVariable</a></code> and
+<code><a href="../api/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariable.html">@DisabledIfEnvironmentVariable</a></code> are <em>repeatable annotations</em>. Consequently, these
+annotations may be declared multiple times on a test interface, test class, or test
+method. Specifically, these annotations will be found if they are directly present,
+indirectly present, or meta-present on a given element.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -9808,7 +9843,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-11-10 14:47:55 UTC
+Last updated 2019-11-10 15:48:31 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

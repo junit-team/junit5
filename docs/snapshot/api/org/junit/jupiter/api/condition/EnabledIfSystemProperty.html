@@ -121,6 +121,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Target</a>({<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html?is-external=true#TYPE" title="class or interface in java.lang.annotation" class="externalLink">TYPE</a>,<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/ElementType.html?is-external=true#METHOD" title="class or interface in java.lang.annotation" class="externalLink">METHOD</a>})
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Retention</a>(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation" class="externalLink">RUNTIME</a>)
 <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Documented.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Documented</a>
+<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Repeatable.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Repeatable</a>(<a href="EnabledIfSystemProperties.html" title="annotation in org.junit.jupiter.api.condition">EnabledIfSystemProperties.class</a>)
 <a href="../extension/ExtendWith.html" title="annotation in org.junit.jupiter.api.extension">@ExtendWith</a>(org.junit.jupiter.api.condition.EnabledIfSystemPropertyCondition.class)
 <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#STABLE" title="class or interface in org.apiguardian.api" class="externalLink">STABLE</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.1")
@@ -145,16 +146,11 @@ public @interface <span class="memberNameLabel">EnabledIfSystemProperty</span></
  custom <em>composed annotation</em> that inherits the semantics of this
  annotation.
 
- <h4>Warning</h4>
-
- <p>As of JUnit Jupiter 5.1, this annotation can only be declared once on an
- <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/AnnotatedElement.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>AnnotatedElement</code></a> (i.e., test
- interface, test class, or test method). If this annotation is directly
- present, indirectly present, or meta-present multiple times on a given
- element, only the first such annotation discovered by JUnit will be used;
- any additional declarations will be silently ignored. Note, however, that
- this annotation may be used in conjunction with other <code>@Enabled*</code> or
- <code>@Disabled*</code> annotations in this package.</div>
+ <p>As of JUnit Jupiter 5.6, this annotation is a <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/annotation/Repeatable.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">repeatable</a> annotation. Consequently, this annotation may be declared multiple
+ times on an <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/AnnotatedElement.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink"><code>AnnotatedElement</code></a> (i.e.,
+ test interface, test class, or test method). Specifically, this annotation will
+ be found if it is directly present, indirectly present, or meta-present on a
+ given element.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>5.1</dd>
