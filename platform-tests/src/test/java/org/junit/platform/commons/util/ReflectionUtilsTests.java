@@ -13,6 +13,7 @@ package org.junit.platform.commons.util;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -58,6 +59,13 @@ import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClass
 import org.junit.platform.commons.util.ReflectionUtilsTests.ClassWithNestedClasses.Nested3;
 import org.junit.platform.commons.util.ReflectionUtilsTests.Interface45.Nested5;
 import org.junit.platform.commons.util.ReflectionUtilsTests.InterfaceWithNestedClass.Nested4;
+import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.InnerClass;
+import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.InnerClass.RecursiveInnerInnerClass;
+import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.InnerSiblingClass;
+import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.RecursiveInnerClass;
+import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.StaticNestedClass;
+import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.StaticNestedSiblingClass;
+import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClassImplementingInterface.InnerClassImplementingInterface;
 
 /**
  * Unit tests for {@link ReflectionUtils}.
@@ -656,9 +664,9 @@ class ReflectionUtilsTests {
 	@Test
 	void findNestedClasses() {
 		// @formatter:off
-		assertThat(ReflectionUtils.findNestedClasses(Object.class, clazz -> true)).isEmpty();
+		assertThat(findNestedClasses(Object.class)).isEmpty();
 
-		assertThat(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class, clazz -> true))
+		assertThat(findNestedClasses(ClassWithNestedClasses.class))
 			.containsOnly(Nested1.class, Nested2.class, Nested3.class);
 
 		assertThat(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class, clazz -> clazz.getName().contains("1")))
@@ -667,9 +675,60 @@ class ReflectionUtilsTests {
 		assertThat(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class, ReflectionUtils::isStatic))
 			.containsExactly(Nested3.class);
 
-		assertThat(ReflectionUtils.findNestedClasses(ClassExtendingClassWithNestedClasses.class, clazz -> true))
+		assertThat(findNestedClasses(ClassExtendingClassWithNestedClasses.class))
 			.containsOnly(Nested1.class, Nested2.class, Nested3.class, Nested4.class, Nested5.class);
+
+		assertThat(findNestedClasses(ClassWithNestedClasses.Nested1.class)).isEmpty();
 		// @formatter:on
+	}
+
+	/**
+	 * @since 1.6
+	 */
+	@Test
+	void findNestedClassesWithSeeminglyRecursiveHierarchies() {
+		assertThat(findNestedClasses(AbstractOuterClass.class))//
+				.containsExactly(AbstractOuterClass.InnerClass.class);
+
+		// Sibling types don't actually result in cycles.
+		assertThat(findNestedClasses(StaticNestedSiblingClass.class))//
+				.containsExactly(AbstractOuterClass.InnerClass.class);
+		assertThat(findNestedClasses(InnerSiblingClass.class))//
+				.containsExactly(AbstractOuterClass.InnerClass.class);
+
+		// Interfaces with static nested classes
+		assertThat(findNestedClasses(OuterClassImplementingInterface.class))//
+				.containsExactly(InnerClassImplementingInterface.class, Nested4.class);
+		assertThat(findNestedClasses(InnerClassImplementingInterface.class))//
+				.containsExactly(Nested4.class);
+	}
+
+	/**
+	 * @since 1.6
+	 */
+	@Test
+	void findNestedClassesWithRecursiveHierarchies() {
+		assertNestedCycle(OuterClass.class, InnerClass.class, OuterClass.class);
+		assertNestedCycle(StaticNestedClass.class, InnerClass.class, OuterClass.class);
+		assertNestedCycle(RecursiveInnerClass.class, OuterClass.class);
+		assertNestedCycle(RecursiveInnerInnerClass.class, OuterClass.class);
+		assertNestedCycle(InnerClass.class, RecursiveInnerInnerClass.class, OuterClass.class);
+	}
+
+	private static List<Class<?>> findNestedClasses(Class<?> clazz) {
+		return ReflectionUtils.findNestedClasses(clazz, c -> true);
+	}
+
+	private void assertNestedCycle(Class<?> from, Class<?> to) {
+		assertNestedCycle(from, from, to);
+	}
+
+	private void assertNestedCycle(Class<?> start, Class<?> from, Class<?> to) {
+		assertThatExceptionOfType(JUnitException.class)//
+				.as("expected cycle from %s to %s", from.getSimpleName(), to.getSimpleName())//
+				.isThrownBy(() -> findNestedClasses(start))//
+				.withMessageMatching(String.format("Detected cycle in inner class hierarchy between .+%s and .+%s",
+					from.getSimpleName(), to.getSimpleName()));
 	}
 
 	/**
@@ -689,7 +748,7 @@ class ReflectionUtilsTests {
 				() -> classWithInvalidNestedClassFile.getDeclaredClasses());
 			assertEquals("tests/NestedInterfaceGroovyTests$NestedInterface$1", noClassDefFoundError.getMessage());
 
-			assertThat(ReflectionUtils.findNestedClasses(classWithInvalidNestedClassFile, clazz -> true)).isEmpty();
+			assertThat(findNestedClasses(classWithInvalidNestedClassFile)).isEmpty();
 			// @formatter:off
 			String logMessage = listener.stream(ReflectionUtils.class, Level.FINE)
 					.findFirst()
@@ -1524,6 +1583,40 @@ class ReflectionUtilsTests {
 	}
 
 	static class ClassExtendingClassWithNestedClasses extends ClassWithNestedClasses implements Interface45 {
+	}
+
+	abstract static class AbstractOuterClass {
+
+		class InnerClass {
+		}
+	}
+
+	static class OuterClass extends AbstractOuterClass {
+
+		// sibling of OuterClass due to common super type
+		static class StaticNestedSiblingClass extends AbstractOuterClass {
+		}
+
+		// sibling of OuterClass due to common super type
+		class InnerSiblingClass extends AbstractOuterClass {
+		}
+
+		static class StaticNestedClass extends OuterClass {
+		}
+
+		class RecursiveInnerClass extends OuterClass {
+		}
+
+		class InnerClass {
+			class RecursiveInnerInnerClass extends OuterClass {
+			}
+		}
+	}
+
+	static class OuterClassImplementingInterface implements InterfaceWithNestedClass {
+
+		class InnerClassImplementingInterface implements InterfaceWithNestedClass {
+		}
 	}
 
 	static class GrandparentClass {

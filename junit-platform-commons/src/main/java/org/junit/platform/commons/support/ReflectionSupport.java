@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -307,16 +308,28 @@ public final class ReflectionSupport {
 	}
 
 	/**
-	 * Find all nested classes within the given class that conform to the given
-	 * predicate.
+	 * Find all nested classes within the supplied class, or inherited by the
+	 * supplied class, that conform to the supplied predicate.
+	 *
+	 * <p>This method does <strong>not</strong> search for nested classes
+	 * recursively.
+	 *
+	 * <p>As of JUnit Platform 1.6, this method detects cycles in <em>inner</em>
+	 * class hierarchies &mdash; from the supplied class up to the outermost
+	 * enclosing class &mdash; and throws a {@link JUnitException} if such a cycle
+	 * is detected. Cycles within inner class hierarchies <em>below</em> the
+	 * supplied class are not detected by this method.
 	 *
 	 * @param clazz the class to be searched; never {@code null}
 	 * @param predicate the predicate against which the list of nested classes is
 	 * checked; never {@code null}
 	 * @return an immutable list of all such classes found; never {@code null}
 	 * but potentially empty
+	 * @throws JUnitException if a cycle is detected within an inner class hierarchy
 	 */
-	public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate) {
+	public static List<Class<?>> findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate)
+			throws JUnitException {
+
 		return ReflectionUtils.findNestedClasses(clazz, predicate);
 	}
 
