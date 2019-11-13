@@ -672,7 +672,7 @@
     ]
   },
     {
-    "title": "workshop: (8h) JUnit5: From @Test Up to Your Own TestEngine ",
+    "title": "JUnit5: From @Test Up to Your Own TestEngine ",
     "event": "J-Fall 2019",
     "date": "2019-10-30",
     "location": "Amsterdam, NL",
@@ -690,6 +690,17 @@
     "speakers": [
       "juliettederancourt",
       "julientopcu"
+    ]
+  },
+  {
+    "title": "JUnit 5 & Project Loom",
+    "event": "JavaLand 2020",
+    "date": "2020-03-17",
+    "location": "Cologne, Germany",
+    "link": "https://programm.javaland.eu/2020/#/scheduledEvent/590918",
+    "speakers": [
+      "marcphilipp",
+      "sormuras"
     ]
   }
 ]
