@@ -702,5 +702,16 @@
       "marcphilipp",
       "sormuras"
     ]
+  },
+  {
+    "title": "JUnit : il serait temps de passer la 5ème !",
+    "event": "Snowcamp",
+    "date": "2020-01-23",
+    "location": "Grenoble, France",
+    "link": "https://snowcamp.io",
+    "speakers": [
+      "juliettederancourt",
+      "julientopcu"
+    ]
   }
 ]
