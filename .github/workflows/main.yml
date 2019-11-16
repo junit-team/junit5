@@ -16,10 +16,17 @@ jobs:
     container: junitteam/build:latest
     steps:
     - uses: actions/checkout@master
+    - name: 'Cache Gradle repository'
+      uses: actions/cache@v1
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
+        restore-keys: ${{ runner.os }}-gradle-
     - name: 'Test'
       run: |
         ./gradlew --version
         ./gradlew --scan --no-parallel --warning-mode=all -Dplatform.tooling.support.tests.enabled=true build
+        ./gradlew --stop
 
   windows:
     name: 'Windows'
