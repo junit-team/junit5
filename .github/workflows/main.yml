@@ -22,7 +22,7 @@ jobs:
     - name: 'Cache Gradle repository'
       uses: actions/cache@v1
       with:
-        path: ~/.gradle/caches
+        path: ~/.gradle/caches/jars-3
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
         restore-keys: ${{ runner.os }}-gradle-
     - name: 'Test'
