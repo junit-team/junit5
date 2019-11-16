@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.function.Executable;
@@ -1580,6 +1581,11 @@ public class Assertions {
 	 */
 	public static void assertLinesMatch(List<String> expectedLines, List<String> actualLines) {
 		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines);
+	}
+	
+	
+	public static void assertLinesMatch(Stream<String> expectedLines, Stream<String> actualLines) {
+		AssertLinesMatch.assertLinesMatch(expectedLines.collect(Collectors.toList()), actualLines.collect(Collectors.toList()));
 	}
 
 	/**
