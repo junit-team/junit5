@@ -54,6 +54,9 @@ public interface InvocationInterceptor extends Extension {
 	/**
 	 * Intercept the invocation of a test class constructor.
 	 *
+	 * <p>Note that the test class may <b>not</b> have been initialized
+	 * (static initialization) when this method is invoked.
+	 *
 	 * @param invocation the invocation that is being intercepted; never
 	 * {@code null}
 	 * @param invocationContext the context of the invocation that is being
