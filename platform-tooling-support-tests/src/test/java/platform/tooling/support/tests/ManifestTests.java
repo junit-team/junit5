@@ -44,6 +44,10 @@ class ManifestTests {
 			assertValue(attributes, "Implementation-Version", version);
 			assertValue(attributes, "Implementation-Vendor", "junit.org");
 			assertValue(attributes, "Automatic-Module-Name", null);
+			assertValue(attributes, "Bundle-ManifestVersion", "2");
+			assertValue(attributes, "Bundle-SymbolicName", module);
+			assertValue(attributes, "Bundle-Version",
+				aQute.bnd.version.MavenVersion.parseMavenString(version).getOSGiVersion().toString());
 			switch (module) {
 				case "junit-platform-commons":
 					assertValue(attributes, "Multi-Release", "true");

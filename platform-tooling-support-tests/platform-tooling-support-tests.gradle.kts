@@ -26,6 +26,9 @@ dependencies {
 		because("it provides convenience methods to handle process output")
 		exclude(group = "org.junit.platform", module = "junit-platform-launcher")
 	}
+	testImplementation("biz.aQute.bnd:biz.aQute.bndlib:${Versions.bnd}") {
+		because("parsing OSGi metadata")
+	}
 	testRuntimeOnly("com.tngtech.archunit:archunit-junit5-engine:${Versions.archunit}") {
 		because("contains the ArchUnit TestEngine implementation")
 	}
