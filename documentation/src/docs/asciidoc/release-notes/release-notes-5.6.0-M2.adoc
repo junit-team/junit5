@@ -24,6 +24,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Provide JARs with OSGi metadata.
 * `TestExecutionSummary.Failure` is now serializable.
 
 
@@ -40,6 +41,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Provide JARs with OSGi metadata.
 * `@EnabledIfEnvironmentVariable`, `@DisabledIfEnvironmentVariable`,
   `@EnabledIfSystemProperty`, and `@DisabledIfSystemProperty` may now be used as
   _repeatable_ annotations. In other words, it is now possible to declare each of those
@@ -61,4 +63,4 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Provide JARs with OSGi metadata.
