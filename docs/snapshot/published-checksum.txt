@@ -362,7 +362,6 @@
 86b481375853f8bfe046cf09ee1cfffe  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutExtension.java
 86eeb4217a00c273a4e8c0d7d09ca6d7  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/ClassContainerSelectorResolver.java
 8742585ff247e86caf18b81bdf611b7f  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EmptySource.java
-87a7415a7745caa5996034c5639de64c  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M2.adoc
 87ac3e09355616fdc3c20704be1cb725  junit-platform-engine/src/main/java/org/junit/platform/engine/TestTag.java
 87ec121e16d255807a0a696958d0e5e8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/MethodInvocation.java
 88c58ac2b95079826ea6639f01335ced  documentation/src/main/java/example/registration/WebResponse.java
@@ -529,6 +528,7 @@ c9a8e70b07de0a0f70126c49b554a492  junit-jupiter-api/src/main/java/org/junit/jupi
 ca2c6314d32a8d519afaf3f905c64dff  junit-platform-console/src/main/java/org/junit/platform/console/tasks/DiscoveryRequestCreator.java
 ca344fda4885c6493b156ab2572c541b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicContainer.java
 caa026392e8df5a06306595c5ce09bb0  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageTestDescriptor.java
+cc13f79cb7017b40fe172498d7433948  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M2.adoc
 cc4cbbaf05adf883a9353b72d9526313  junit-platform-engine/src/main/java/org/junit/platform/engine/support/config/package-info.java
 ccc84dcb33db90c4aeaae36515208b00  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertionUtils.java
 cce3a8df858d76fc58c605c711cfd382  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestClassWithTests.java
