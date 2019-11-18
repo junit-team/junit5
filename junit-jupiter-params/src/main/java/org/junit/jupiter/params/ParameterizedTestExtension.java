@@ -15,6 +15,7 @@ import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnno
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
@@ -72,7 +73,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		String displayName = extensionContext.getDisplayName();
 		ParameterizedTestMethodContext methodContext = getStore(extensionContext)//
 				.get(METHOD_CONTEXT_KEY, ParameterizedTestMethodContext.class);
-		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod, displayName);
+		ParameterizedTestNameFormatter formatter = createNameFormatter(templateMethod, methodContext, displayName);
 		AtomicLong invocationCount = new AtomicLong(0);
 
 		// @formatter:off
@@ -118,13 +119,16 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		return new ParameterizedTestInvocationContext(formatter, methodContext, arguments);
 	}
 
-	private ParameterizedTestNameFormatter createNameFormatter(Method templateMethod, String displayName) {
+	private ParameterizedTestNameFormatter createNameFormatter(Method templateMethod,
+			ParameterizedTestMethodContext methodContext, String displayName) {
 		ParameterizedTest parameterizedTest = findAnnotation(templateMethod, ParameterizedTest.class).get();
 		String pattern = Preconditions.notBlank(parameterizedTest.name().trim(),
 			() -> String.format(
 				"Configuration error: @ParameterizedTest on method [%s] must be declared with a non-empty name.",
 				templateMethod));
-		return new ParameterizedTestNameFormatter(pattern, displayName);
+		Parameter[] parameters = templateMethod.getParameters();
+		boolean hasAggregator = methodContext != null && methodContext.hasAggregator();
+		return new ParameterizedTestNameFormatter(pattern, displayName, parameters, hasAggregator);
 	}
 
 	protected static Stream<? extends Arguments> arguments(ArgumentsProvider provider, ExtensionContext context) {
