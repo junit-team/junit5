@@ -19,16 +19,17 @@ import org.apiguardian.api.API;
  * Extensions} that wish to process test instances <em>after</em> they have been
  * used in tests and <em>before</em> they are destroyed.
  *
- * <p>Common use cases include cleaning dependencies that have been injected into the
- * test instance, invoking custom de-initialization methods on the test instance, etc.
+ * <p>Common use cases include cleaning dependencies that have been injected
+ * into the test instance, invoking custom de-initialization methods on the test
+ * instance, etc.
  *
  * <p>Extensions that implement {@code TestInstancePreDestroyCallback} must be
  * registered at the class level.
  *
  * <h3>Constructor Requirements</h3>
  *
- * <p>Consult the documentation in {@link Extension} for details on
- * constructor requirements.
+ * <p>Consult the documentation in {@link Extension} for details on constructor
+ * requirements.
  *
  * @since 5.6
  * @see #preDestroyTestInstance(ExtensionContext)
