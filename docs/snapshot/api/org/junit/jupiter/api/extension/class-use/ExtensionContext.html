@@ -399,6 +399,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">TestInstancePreDestroyCallback.</span><code><span class="memberNameLink"><a href="../TestInstancePreDestroyCallback.html#preDestroyTestInstance(org.junit.jupiter.api.extension.ExtensionContext)">preDestroyTestInstance</a></span>&#8203;(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></th>
+<td class="colLast">
+<div class="block">Callback for processing a test instance before it is destroyed.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html?is-external=true" title="class or interface in java.util.stream" class="externalLink">Stream</a>&lt;<a href="../TestTemplateInvocationContext.html" title="interface in org.junit.jupiter.api.extension">TestTemplateInvocationContext</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestTemplateInvocationContextProvider.</span><code><span class="memberNameLink"><a href="../TestTemplateInvocationContextProvider.html#provideTestTemplateInvocationContexts(org.junit.jupiter.api.extension.ExtensionContext)">provideTestTemplateInvocationContexts</a></span>&#8203;(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></th>
 <td class="colLast">
@@ -406,7 +413,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  for the test template method represented by the supplied <code>context</code>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ParameterResolver.</span><code><span class="memberNameLink"><a href="../ParameterResolver.html#resolveParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">resolveParameter</a></span>&#8203;(<a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;parameterContext,
                 <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
@@ -415,7 +422,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  for the supplied <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ParameterResolver.</span><code><span class="memberNameLink"><a href="../ParameterResolver.html#supportsParameter(org.junit.jupiter.api.extension.ParameterContext,org.junit.jupiter.api.extension.ExtensionContext)">supportsParameter</a></span>&#8203;(<a href="../ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;parameterContext,
                  <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)</code></th>
@@ -425,7 +432,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  <a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestTemplateInvocationContextProvider.</span><code><span class="memberNameLink"><a href="../TestTemplateInvocationContextProvider.html#supportsTestTemplate(org.junit.jupiter.api.extension.ExtensionContext)">supportsTestTemplate</a></span>&#8203;(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></th>
 <td class="colLast">
@@ -433,7 +440,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  test template method represented by the supplied <code>context</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestWatcher.</span><code><span class="memberNameLink"><a href="../TestWatcher.html#testAborted(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)">testAborted</a></span>&#8203;(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
            <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&nbsp;cause)</code></th>
@@ -441,7 +448,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Invoked after a test has been aborted.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestWatcher.</span><code><span class="memberNameLink"><a href="../TestWatcher.html#testDisabled(org.junit.jupiter.api.extension.ExtensionContext,java.util.Optional)">testDisabled</a></span>&#8203;(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
             <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html?is-external=true" title="class or interface in java.util" class="externalLink">Optional</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;reason)</code></th>
@@ -449,7 +456,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Invoked after a disabled test has been skipped.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestWatcher.</span><code><span class="memberNameLink"><a href="../TestWatcher.html#testFailed(org.junit.jupiter.api.extension.ExtensionContext,java.lang.Throwable)">testFailed</a></span>&#8203;(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context,
           <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a>&nbsp;cause)</code></th>
@@ -457,7 +464,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Invoked after a test has failed.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TestWatcher.</span><code><span class="memberNameLink"><a href="../TestWatcher.html#testSuccessful(org.junit.jupiter.api.extension.ExtensionContext)">testSuccessful</a></span>&#8203;(<a href="../ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></th>
 <td class="colLast">

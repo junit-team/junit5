@@ -144,8 +144,9 @@ public @interface <span class="memberNameLabel">RegisterExtension</span></pre>
  which extension APIs they can implement. Extensions registered via static
  fields may therefore implement class-level and instance-level extension APIs
  such as <a href="BeforeAllCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeAllCallback</code></a>, <a href="AfterAllCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterAllCallback</code></a>,
- <a href="TestInstanceFactory.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstanceFactory</code></a>, and <a href="TestInstancePostProcessor.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstancePostProcessor</code></a> as well as
- method-level extension APIs such as <a href="BeforeEachCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeEachCallback</code></a>, etc.
+ <a href="TestInstanceFactory.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstanceFactory</code></a>, <a href="TestInstancePostProcessor.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstancePostProcessor</code></a> and
+ <a href="TestInstancePreDestroyCallback.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstancePreDestroyCallback</code></a> as well as method-level extension APIs
+ such as <a href="BeforeEachCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeEachCallback</code></a>, etc.
 
  <h3>Instance Fields</h3>
 
@@ -223,6 +224,7 @@ public @interface <span class="memberNameLabel">RegisterExtension</span></pre>
  <li><a href="AfterTestExecutionCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterTestExecutionCallback</code></a></li>
  <li><a href="TestInstanceFactory.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstanceFactory</code></a></li>
  <li><a href="TestInstancePostProcessor.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstancePostProcessor</code></a></li>
+ <li><a href="TestInstancePreDestroyCallback.html" title="interface in org.junit.jupiter.api.extension"><code>TestInstancePreDestroyCallback</code></a></li>
  <li><a href="ParameterResolver.html" title="interface in org.junit.jupiter.api.extension"><code>ParameterResolver</code></a></li>
  <li><a href="TestExecutionExceptionHandler.html" title="interface in org.junit.jupiter.api.extension"><code>TestExecutionExceptionHandler</code></a></li>
  <li><a href="TestTemplateInvocationContextProvider.html" title="interface in org.junit.jupiter.api.extension"><code>TestTemplateInvocationContextProvider</code></a></li>

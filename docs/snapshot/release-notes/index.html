@@ -691,6 +691,11 @@ handles events from multiple levels of nested classes.</p>
 annotations multiple times on a test interface, test class, or test method.</p>
 </li>
 <li>
+<p>New <code>TestInstancePreDestroyCallback</code> interface that defines the API for <code>Extension</code>
+that wish to process test instances <strong>after</strong> they have been used in tests and <strong>before</strong>
+they are destroyed.</p>
+</li>
+<li>
 <p><code>InvocationInterceptor</code> extensions may now explicitly <code>skip()</code> an intercepted
 invocation. This allows executing it by other means, e.g. in a forked JVM.</p>
 </li>
@@ -1103,7 +1108,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-11-18 19:54:43 UTC
+Last updated 2019-11-19 12:07:33 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
