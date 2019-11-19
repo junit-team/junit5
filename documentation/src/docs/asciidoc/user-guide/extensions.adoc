@@ -122,9 +122,9 @@ If a `@RegisterExtension` field is `static`, the extension will be registered af
 extensions that are registered at the class level via `@ExtendWith`. Such _static
 extensions_ are not limited in which extension APIs they can implement. Extensions
 registered via static fields may therefore implement class-level and instance-level
-extension APIs such as `BeforeAllCallback`, `AfterAllCallback`, `TestInstancePostProcessor`,
- and `TestInstancePreDestroyCallback` as well as method-level extension APIs such as
-`BeforeEachCallback`, etc.
+extension APIs such as `BeforeAllCallback`, `AfterAllCallback`,
+`TestInstancePostProcessor`, and `TestInstancePreDestroyCallback` as well as method-level
+extension APIs such as `BeforeEachCallback`, etc.
 
 In the following example, the `server` field in the test class is initialized
 programmatically by using a builder pattern supported by the `WebServerExtension`. The
