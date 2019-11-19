@@ -42,6 +42,7 @@ import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import org.junit.jupiter.api.extension.TestInstancePreDestroyCallback;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.junit.jupiter.api.function.Executable;
@@ -175,8 +176,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) {
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		Lifecycle lifecycle = context.getExtensionContext().getTestInstanceLifecycle().orElse(Lifecycle.PER_METHOD);
-		if (lifecycle == Lifecycle.PER_CLASS) {
+		if (isPerClassLifecycle(context)) {
 			// Eagerly load test instance for BeforeAllCallbacks, if necessary,
 			// and store the instance in the ExtensionContext.
 			ClassExtensionContext extensionContext = (ClassExtensionContext) context.getExtensionContext();
@@ -211,6 +211,10 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 
 		if (context.beforeAllCallbacksExecuted()) {
 			invokeAfterAllCallbacks(context);
+		}
+
+		if (isPerClassLifecycle(context)) {
+			invokeTestInstancePreDestroyCallback(context);
 		}
 
 		// If the previous Throwable was not null when this method was called,
@@ -419,6 +423,19 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 
 		registry.getReversedExtensions(AfterAllCallback.class)//
 				.forEach(extension -> throwableCollector.execute(() -> extension.afterAll(extensionContext)));
+	}
+
+	private void invokeTestInstancePreDestroyCallback(JupiterEngineExecutionContext context) {
+		ExtensionContext extensionContext = context.getExtensionContext();
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
+
+		context.getExtensionRegistry().stream(TestInstancePreDestroyCallback.class).forEach(
+			extension -> throwableCollector.execute(() -> extension.preDestroyTestInstance(extensionContext)));
+	}
+
+	private boolean isPerClassLifecycle(JupiterEngineExecutionContext context) {
+		return context.getExtensionContext().getTestInstanceLifecycle().orElse(
+			Lifecycle.PER_METHOD) == Lifecycle.PER_CLASS;
 	}
 
 	private void registerBeforeEachMethodAdapters(ExtensionRegistrar registrar) {
