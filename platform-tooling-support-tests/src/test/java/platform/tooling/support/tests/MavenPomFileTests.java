@@ -70,7 +70,7 @@ class MavenPomFileTests {
 	void jupiterAggregatorGradleMetadataMarker() throws Exception {
 
 		var expected = List.of(">> HEAD >>", //
-			"  <!-- do-not-remove: published-with-gradle-metadata -->", //
+			"  <!-- do_not_remove: published-with-gradle-metadata -->", //
 			">> TAIL >>");
 
 		System.out.println(Path.of(".").toAbsolutePath().normalize());

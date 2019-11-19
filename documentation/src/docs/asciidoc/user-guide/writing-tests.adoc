@@ -358,13 +358,13 @@ combine `@Test` and `@EnabledOnOs` in a single, reusable annotation.
 
 [WARNING]
 ====
-Each of the _conditional_ annotations listed in the following sections can only be
-declared once on a given test interface, test class, or test method. If a conditional
-annotation is directly present, indirectly present, or meta-present multiple times on a
-given element, only the first such annotation discovered by JUnit will be used; any
-additional declarations will be silently ignored. Note, however, that each conditional
-annotation may be used in conjunction with other conditional annotations in the
-`org.junit.jupiter.api.condition` package.
+Unless otherwise stated, each of the _conditional_ annotations listed in the following
+sections can only be declared once on a given test interface, test class, or test method.
+If a conditional annotation is directly present, indirectly present, or meta-present
+multiple times on a given element, only the first such annotation discovered by JUnit will
+be used; any additional declarations will be silently ignored. Note, however, that each
+conditional annotation may be used in conjunction with other conditional annotations in
+the `org.junit.jupiter.api.condition` package.
 ====
 
 [[writing-tests-conditional-execution-os]]
@@ -407,6 +407,14 @@ regular expression.
 include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_system_property]
 ----
 
+[TIP]
+====
+As of JUnit Jupiter 5.6, `{EnabledIfSystemProperty}` and `{DisabledIfSystemProperty}` are
+_repeatable annotations_. Consequently, these annotations may be declared multiple times
+on a test interface, test class, or test method. Specifically, these annotations will be
+found if they are directly present, indirectly present, or meta-present on a given element.
+====
+
 [[writing-tests-conditional-execution-environment-variables]]
 ==== Environment Variable Conditions
 
@@ -419,6 +427,15 @@ value supplied via the `matches` attribute will be interpreted as a regular expr
 ----
 include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_environment_variable]
 ----
+
+[TIP]
+====
+As of JUnit Jupiter 5.6, `{EnabledIfEnvironmentVariable}` and
+`{DisabledIfEnvironmentVariable}` are _repeatable annotations_. Consequently, these
+annotations may be declared multiple times on a test interface, test class, or test
+method. Specifically, these annotations will be found if they are directly present,
+indirectly present, or meta-present on a given element.
+====
 
 
 [[writing-tests-tagging-and-filtering]]

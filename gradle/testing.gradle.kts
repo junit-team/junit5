@@ -1,7 +1,7 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 
-tasks.named<Test>("test").configure {
+tasks.withType<Test>().configureEach {
 	useJUnitPlatform {
 		includeEngines("junit-jupiter")
 	}

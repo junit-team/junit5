@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
@@ -70,6 +71,29 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void test() {
 			// never called
+		}
+	}
+
+	@Test
+	void successTestWhenInterceptorChainSkippedInvocation() {
+		var results = executeTestsForClass(InvocationSkippedTestCase.class);
+
+		results.testEvents().assertStatistics(stats -> stats.failed(0).succeeded(1));
+	}
+
+	static class InvocationSkippedTestCase {
+		@RegisterExtension
+		Extension interceptor = new InvocationInterceptor() {
+			@Override
+			public void interceptTestMethod(Invocation<Void> invocation,
+					ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
+				invocation.skip();
+			}
+		};
+
+		@Test
+		void test() {
+			fail("should not be called");
 		}
 	}
 

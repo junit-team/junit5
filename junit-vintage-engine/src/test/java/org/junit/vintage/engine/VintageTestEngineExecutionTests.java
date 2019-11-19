@@ -189,7 +189,8 @@ class VintageTestEngineExecutionTests {
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(test("initializationError"), started()), //
-			event(test("initializationError"), finishedWithFailure(message("Method nonPublicTest() should be public"))), //
+			event(test("initializationError"),
+				finishedWithFailure(message(it -> it.contains("Method nonPublicTest() should be public")))), //
 			event(container(testClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}

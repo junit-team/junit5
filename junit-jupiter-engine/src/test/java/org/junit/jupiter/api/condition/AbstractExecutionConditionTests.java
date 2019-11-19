@@ -10,20 +10,29 @@
 
 package org.junit.jupiter.api.condition;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
+import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Abstract base class for unit testing a concrete {@link ExecutionCondition}
@@ -31,11 +40,25 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * @since 5.1
  */
+@TestInstance(Lifecycle.PER_CLASS)
 abstract class AbstractExecutionConditionTests {
 
 	private final ExtensionContext context = mock(ExtensionContext.class);
 
 	private ConditionEvaluationResult result;
+
+	@BeforeAll
+	void ensureAllTestMethodsAreCovered() {
+		Predicate<Method> isTestMethod = method -> method.isAnnotationPresent(Test.class);
+
+		List<String> methodsToTest = findMethods(getTestClass(), isTestMethod).stream()//
+				.map(Method::getName).sorted().collect(toList());
+
+		List<String> localTestMethods = findMethods(getClass(), isTestMethod).stream()//
+				.map(Method::getName).sorted().collect(toList());
+
+		assertThat(localTestMethods).isEqualTo(methodsToTest);
+	}
 
 	@BeforeEach
 	void beforeEach(TestInfo testInfo) {
@@ -67,7 +90,7 @@ abstract class AbstractExecutionConditionTests {
 	}
 
 	private Optional<AnnotatedElement> method(Class<?> testClass, String methodName) {
-		return Optional.of(ReflectionUtils.findMethod(testClass, methodName).get());
+		return Optional.of(findMethod(testClass, methodName).get());
 	}
 
 }

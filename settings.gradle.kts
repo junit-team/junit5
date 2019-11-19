@@ -6,7 +6,7 @@ pluginManagement {
 		id("com.diffplug.gradle.spotless") version "3.25.0"
 		id("org.ajoberstar.git-publish") version "2.1.1"
 		kotlin("jvm") version "1.3.50"
-		id("com.github.johnrengelman.shadow") version "5.1.0"
+		id("com.github.johnrengelman.shadow") version "5.2.0"
 		id("org.asciidoctor.convert") version "1.5.8.1"
 		id("me.champeau.gradle.jmh") version "0.4.8"
 		id("io.spring.nohttp") version "0.0.3.RELEASE"

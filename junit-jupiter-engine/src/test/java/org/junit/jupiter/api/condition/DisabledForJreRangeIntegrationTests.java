@@ -12,6 +12,7 @@ package org.junit.jupiter.api.condition;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava10;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava11;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava12;
@@ -37,20 +38,14 @@ import org.junit.jupiter.api.Test;
 class DisabledForJreRangeIntegrationTests {
 
 	@Test
-	@Disabled("Only used in a unit test via reflection")
 	void enabledBecauseAnnotationIsNotPresent() {
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledForJreRange()
-	void missingJreDeclaration() {
-	}
-
-	@Test
-	@DisabledForJreRange()
-	void enabledOnAllJavaVersions() {
-		assertFalse(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14());
+	@DisabledForJreRange
+	void defaultValues() {
+		fail("should result in a configuration exception");
 	}
 
 	@Test

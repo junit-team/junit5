@@ -1,6 +1,6 @@
 ## Overview
 
-Please describe your changes here and list any open questions you might have.
+<!-- Please describe your changes here and list any open questions you might have. -->
 
 ---
 

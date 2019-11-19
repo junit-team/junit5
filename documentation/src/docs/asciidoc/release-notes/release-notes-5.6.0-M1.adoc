@@ -70,10 +70,6 @@ on GitHub.
 [[release-notes-5.6.0-M1-junit-jupiter]]
 === JUnit Jupiter
 
-==== Bug Fixes
-
-* ❓
-
 ==== Deprecations and Breaking Changes
 
 * `@EnabledIf` and `@DisabledIf` have been removed from Jupiter's API. Script-based
@@ -116,10 +112,6 @@ on GitHub.
 ==== Bug Fixes
 
 * JUnit 3 suites with duplicate test names are now reported correctly.
-
-==== Deprecations and Breaking Changes
-
-* ❓
 
 ==== New Features and Improvements
 

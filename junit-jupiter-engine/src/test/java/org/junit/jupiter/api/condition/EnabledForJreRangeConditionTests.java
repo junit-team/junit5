@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api.condition;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava10;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava11;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava12;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJav
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * Unit tests for {@link EnabledForJreRange}.
@@ -52,12 +54,13 @@ class EnabledForJreRangeConditionTests extends AbstractExecutionConditionTests {
 	}
 
 	/**
-	 * @see EnabledForJreRangeIntegrationTests#enabledOnAllJavaVersions()
+	 * @see EnabledForJreRangeIntegrationTests#defaultValues()
 	 */
 	@Test
-	void enabledOnAllJavaVersions() {
-		evaluateCondition();
-		assertEnabledOnCurrentJreIf(true);
+	void defaultValues() {
+		assertThatExceptionOfType(PreconditionViolationException.class)//
+				.isThrownBy(this::evaluateCondition)//
+				.withMessageContaining("You must declare a non-default value for min or max in @EnabledForJreRange");
 	}
 
 	/**
