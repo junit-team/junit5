@@ -41,9 +41,9 @@ import org.apiguardian.api.API;
  * which extension APIs they can implement. Extensions registered via static
  * fields may therefore implement class-level and instance-level extension APIs
  * such as {@link BeforeAllCallback}, {@link AfterAllCallback},
- * {@link TestInstanceFactory}, {@link TestInstancePostProcessor}
- * and {@link TestInstancePreDestroyCallback} as well as method-level
- * extension APIs such as {@link BeforeEachCallback}, etc.
+ * {@link TestInstanceFactory}, {@link TestInstancePostProcessor} and
+ * {@link TestInstancePreDestroyCallback} as well as method-level extension APIs
+ * such as {@link BeforeEachCallback}, etc.
  *
  * <h3>Instance Fields</h3>
  *
