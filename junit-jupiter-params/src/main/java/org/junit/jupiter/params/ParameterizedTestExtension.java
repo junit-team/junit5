@@ -15,7 +15,6 @@ import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnno
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
@@ -126,9 +125,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 			() -> String.format(
 				"Configuration error: @ParameterizedTest on method [%s] must be declared with a non-empty name.",
 				templateMethod));
-		Parameter[] parameters = templateMethod.getParameters();
-		boolean hasAggregator = methodContext != null && methodContext.hasAggregator();
-		return new ParameterizedTestNameFormatter(pattern, displayName, parameters, hasAggregator);
+		return new ParameterizedTestNameFormatter(pattern, displayName, methodContext);
 	}
 
 	protected static Stream<? extends Arguments> arguments(ArgumentsProvider provider, ExtensionContext context) {

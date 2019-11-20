@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -42,14 +43,15 @@ import org.junit.platform.commons.util.StringUtils;
  */
 class ParameterizedTestMethodContext {
 
-	private final List<ResolverType> resolverTypes;
+	private final Parameter[] parameters;
 	private final Resolver[] resolvers;
+	private final List<ResolverType> resolverTypes;
 
 	ParameterizedTestMethodContext(Method testMethod) {
-		Parameter[] parameters = testMethod.getParameters();
-		this.resolverTypes = new ArrayList<>(parameters.length);
-		this.resolvers = new Resolver[parameters.length];
-		for (Parameter parameter : parameters) {
+		this.parameters = testMethod.getParameters();
+		this.resolvers = new Resolver[this.parameters.length];
+		this.resolverTypes = new ArrayList<>(this.parameters.length);
+		for (Parameter parameter : this.parameters) {
 			this.resolverTypes.add(isAggregator(parameter) ? AGGREGATOR : CONVERTER);
 		}
 	}
@@ -100,7 +102,27 @@ class ParameterizedTestMethodContext {
 	 * context.
 	 */
 	int getParameterCount() {
-		return resolvers.length;
+		return parameters.length;
+	}
+
+	/**
+	 * Get the name of the {@link Parameter} with the supplied index, if
+	 * it is present and declared before the aggregators.
+	 *
+	 * @return an {@code Optional} containing the name of the parameter
+	 */
+	Optional<String> getParameterName(int parameterIndex) {
+		if (parameterIndex >= getParameterCount()) {
+			return Optional.empty();
+		}
+		Parameter parameter = this.parameters[parameterIndex];
+		if (!parameter.isNamePresent()) {
+			return Optional.empty();
+		}
+		if (hasAggregator() && parameterIndex >= indexOfFirstAggregator()) {
+			return Optional.empty();
+		}
+		return Optional.of(parameter.getName());
 	}
 
 	/**

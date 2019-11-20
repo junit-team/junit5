@@ -15,9 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.params.ParameterizedTest.*;
+import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedTest.DISPLAY_NAME_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedTest.INDEX_PLACEHOLDER;
+import static org.mockito.Mockito.mock;
 
-import java.lang.reflect.Parameter;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -28,6 +32,11 @@ import java.util.Locale;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.params.aggregator.AggregateWith;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -87,48 +96,42 @@ class ParameterizedTestNameFormatterTests {
 
 	@Test
 	void formatsCompleteArgumentsListWithNames() {
-		Parameter[] parameters = ClassWithParameterizedTest.getMethodParameters();
-		ParameterizedTestNameFormatter formatter = formatter(ARGUMENTS_WITH_NAMES_PLACEHOLDER, "enigma", parameters,
-			false);
+		Method testMethod = ParameterizedTestCases.getMethod("parameterizedTest", int.class, String.class,
+			Object[].class);
+		ParameterizedTestNameFormatter formatter = formatter(ARGUMENTS_WITH_NAMES_PLACEHOLDER, "enigma", testMethod);
 
 		String formattedName = formatter.format(1, 42, "enigma", new Object[] { "foo", 1 });
 		assertEquals("someNumber=42, someString=enigma, someArray=[foo, 1]", formattedName);
 	}
 
 	@Test
-	void formatsCompleteArgumentsListWithoutNamesIfTheyAreNotPresent() {
-		ParameterizedTestNameFormatter formatter = formatter(ARGUMENTS_WITH_NAMES_PLACEHOLDER, "enigma");
+	void formatsCompleteArgumentsListWithoutNamesForAggregators() {
+		Method testMethod = ParameterizedTestCases.getMethod("parameterizedTestWithAggregator", int.class,
+			String.class);
+		ParameterizedTestNameFormatter formatter = formatter(ARGUMENTS_WITH_NAMES_PLACEHOLDER, "enigma", testMethod);
 
-		String formattedName = formatter.format(1, 42, "enigma", new Object[] { "foo", 1 });
-		assertEquals("42, enigma, [foo, 1]", formattedName);
+		String formattedName = formatter.format(1, 42, "foo", "bar");
+		assertEquals("someNumber=42, foo, bar", formattedName);
 	}
 
 	@Test
-	void formatsCompleteArgumentsListWithoutNamesIfThereIsAggregators() {
-		ParameterizedTestNameFormatter formatter = formatter(ARGUMENTS_WITH_NAMES_PLACEHOLDER, "enigma",
-			new Parameter[] {}, true);
-
-		String formattedName = formatter.format(1, 42, "enigma", new Object[] { "foo", 1 });
-		assertEquals("42, enigma, [foo, 1]", formattedName);
-	}
-
-	@Test
-	void formatsInvocationIndexAndCompleteArgumentsListUsingDefaultPattern() {
-		ParameterizedTestNameFormatter formatter = formatter(DEFAULT_DISPLAY_NAME, "enigma");
+	void formatsCompleteArgumentsListWithArrays() {
+		ParameterizedTestNameFormatter formatter = formatter(ARGUMENTS_PLACEHOLDER, "enigma");
 
 		// Explicit test for https://github.com/junit-team/junit5/issues/814
-		assertEquals("[1] [foo, bar]", formatter.format(1, (Object) new String[] { "foo", "bar" }));
+		assertEquals("[foo, bar]", formatter.format(1, (Object) new String[] { "foo", "bar" }));
 
-		assertEquals("[1] [foo, bar], 42, true", formatter.format(1, new String[] { "foo", "bar" }, 42, true));
+		assertEquals("[foo, bar], 42, true", formatter.format(1, new String[] { "foo", "bar" }, 42, true));
 	}
 
 	@Test
 	void formatsEverythingUsingCustomPattern() {
-		String pattern = DISPLAY_NAME_PLACEHOLDER + " :: " + DEFAULT_DISPLAY_NAME + " :: {1}";
+		String pattern = DISPLAY_NAME_PLACEHOLDER + " " + INDEX_PLACEHOLDER + " :: " + ARGUMENTS_PLACEHOLDER
+				+ " :: {1}";
 		ParameterizedTestNameFormatter formatter = formatter(pattern, "enigma");
 
-		assertEquals("enigma :: [1] foo, bar :: bar", formatter.format(1, "foo", "bar"));
-		assertEquals("enigma :: [2] foo, 42 :: 42", formatter.format(2, "foo", 42));
+		assertEquals("enigma 1 :: foo, bar :: bar", formatter.format(1, "foo", "bar"));
+		assertEquals("enigma 2 :: foo, 42 :: 42", formatter.format(2, "foo", 42));
 	}
 
 	@Test
@@ -159,11 +162,11 @@ class ParameterizedTestNameFormatterTests {
 
 	@Test
 	void formattingDoesNotFailIfArgumentToStringImplementationThrowsAnException() {
-		ParameterizedTestNameFormatter formatter = formatter(DEFAULT_DISPLAY_NAME, "enigma");
+		ParameterizedTestNameFormatter formatter = formatter(ARGUMENTS_PLACEHOLDER, "enigma");
 
 		String formattedName = formatter.format(1, new Object[] { new ToStringThrowsException(), "foo" });
 
-		assertThat(formattedName).startsWith("[1] " + ToStringThrowsException.class.getName() + "@");
+		assertThat(formattedName).startsWith(ToStringThrowsException.class.getName() + "@");
 		assertThat(formattedName).endsWith("foo");
 	}
 
@@ -212,12 +215,11 @@ class ParameterizedTestNameFormatterTests {
 	}
 
 	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName) {
-		return formatter(pattern, displayName, new Parameter[] {}, false);
+		return new ParameterizedTestNameFormatter(pattern, displayName, mock(ParameterizedTestMethodContext.class));
 	}
 
-	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName, Parameter[] parameters,
-			boolean hasAggregator) {
-		return new ParameterizedTestNameFormatter(pattern, displayName, parameters, hasAggregator);
+	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName, Method method) {
+		return new ParameterizedTestNameFormatter(pattern, displayName, new ParameterizedTestMethodContext(method));
 	}
 
 	// -------------------------------------------------------------------
@@ -230,17 +232,28 @@ class ParameterizedTestNameFormatterTests {
 		}
 	}
 
-	private static class ClassWithParameterizedTest {
+	private static class ParameterizedTestCases {
 
-		static Parameter[] getMethodParameters() {
-			return ReflectionUtils.findMethod(ClassWithParameterizedTest.class, "parameterizedTest", int.class,
-				String.class, Object[].class).get().getParameters();
+		static Method getMethod(String methodName, Class<?>... parameterTypes) {
+			return ReflectionUtils.findMethod(ParameterizedTestCases.class, methodName, parameterTypes).get();
 		}
 
 		void parameterizedTest(int someNumber, String someString, Object[] someArray) {
 
 		}
 
+		void parameterizedTestWithAggregator(int someNumber,
+				@AggregateWith(CustomAggregator.class) String someAggregatedString) {
+
+		}
+
+		private static class CustomAggregator implements ArgumentsAggregator {
+			@Override
+			public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
+					throws ArgumentsAggregationException {
+				return accessor.get(0);
+			}
+		}
 	}
 
 }

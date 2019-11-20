@@ -16,7 +16,6 @@ import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_WITH_NAMES_PL
 import static org.junit.jupiter.params.ParameterizedTest.DISPLAY_NAME_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedTest.INDEX_PLACEHOLDER;
 
-import java.lang.reflect.Parameter;
 import java.text.Format;
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -32,14 +31,12 @@ class ParameterizedTestNameFormatter {
 
 	private final String pattern;
 	private final String displayName;
-	private final Parameter[] parameters;
-	private final boolean hasAggregator;
+	private final ParameterizedTestMethodContext methodContext;
 
-	ParameterizedTestNameFormatter(String pattern, String displayName, Parameter[] parameters, boolean hasAggregator) {
+	ParameterizedTestNameFormatter(String pattern, String displayName, ParameterizedTestMethodContext methodContext) {
 		this.pattern = pattern;
 		this.displayName = displayName;
-		this.parameters = parameters;
-		this.hasAggregator = hasAggregator;
+		this.methodContext = methodContext;
 	}
 
 	String format(int invocationIndex, Object... arguments) {
@@ -54,43 +51,37 @@ class ParameterizedTestNameFormatter {
 	}
 
 	private String formatSafely(int invocationIndex, Object[] arguments) {
-		String pattern = prepareMessageFormatPattern(invocationIndex, arguments.length);
+		String pattern = prepareMessageFormatPattern(invocationIndex, arguments);
 		MessageFormat format = new MessageFormat(pattern);
 		Object[] humanReadableArguments = makeReadable(format, arguments);
 		return format.format(humanReadableArguments);
 	}
 
-	private String prepareMessageFormatPattern(int invocationIndex, int numberOfArguments) {
+	private String prepareMessageFormatPattern(int invocationIndex, Object[] arguments) {
 		String result = pattern//
 				.replace(DISPLAY_NAME_PLACEHOLDER, this.displayName)//
 				.replace(INDEX_PLACEHOLDER, String.valueOf(invocationIndex));
 
 		if (result.contains(ARGUMENTS_WITH_NAMES_PLACEHOLDER)) {
-			result = result.replace(ARGUMENTS_WITH_NAMES_PLACEHOLDER, argumentsWithNamesPattern(numberOfArguments));
+			result = result.replace(ARGUMENTS_WITH_NAMES_PLACEHOLDER, argumentsWithNamesPattern(arguments));
 		}
 
 		if (result.contains(ARGUMENTS_PLACEHOLDER)) {
-			result = result.replace(ARGUMENTS_PLACEHOLDER, argumentsPattern(numberOfArguments));
+			result = result.replace(ARGUMENTS_PLACEHOLDER, argumentsPattern(arguments));
 		}
 
 		return result;
 	}
 
-	private String argumentsWithNamesPattern(int numberOfArguments) {
-		if (!hasAggregator && areNamesPresent(parameters)) {
-			return IntStream.range(0, numberOfArguments) //
-					.mapToObj(index -> parameters[index].getName() + "={" + index + "}") //
-					.collect(joining(", "));
-		}
-		return ARGUMENTS_PLACEHOLDER;
+	private String argumentsWithNamesPattern(Object[] arguments) {
+		return IntStream.range(0, arguments.length) //
+				.mapToObj(index -> methodContext.getParameterName(index).map(name -> name + "=").orElse("") + "{"
+						+ index + "}") //
+				.collect(joining(", "));
 	}
 
-	private boolean areNamesPresent(Parameter[] parameters) {
-		return parameters.length > 0 && Arrays.stream(parameters).allMatch(Parameter::isNamePresent);
-	}
-
-	private String argumentsPattern(int numberOfArguments) {
-		return IntStream.range(0, numberOfArguments) //
+	private String argumentsPattern(Object[] arguments) {
+		return IntStream.range(0, arguments.length) //
 				.mapToObj(index -> "{" + index + "}") //
 				.collect(joining(", "));
 	}
