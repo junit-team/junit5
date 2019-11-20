@@ -796,6 +796,28 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
+	void findMethodByParameterTypesFromForeignClassLoader() throws Exception {
+		try (URLClassLoader l = ClassLoaderUtils.excludingClassLoader(x -> x.startsWith(getClass().getPackageName()))) {
+			Class<?> cpt = l.loadClass(CustomParameterTest.class.getTypeName());
+			Class<?> cp = l.loadClass(CustomParameter.class.getTypeName());
+			// These two preconditions to guard against regressions in the test code leading to false positives.
+			assertThat(cpt).isNotEqualTo(CustomParameterTest.class);
+			assertThat(cp).isNotEqualTo(CustomParameter.class);
+			Optional<Method> method = findMethod(cpt, "methodWithCustomParameter", CustomParameter.class.getName());
+			assertThat(method).isNotEmpty();
+			assertThat(method.get().getName()).isEqualTo("methodWithCustomParameter");
+			assertThat(method.get().getParameterTypes()).containsExactly(cp);
+		}
+	}
+
+	@Test
+	void findMethodForClassWithNullClassLoader() {
+		Optional<Method> method = findMethod(Boolean.class, "equals", "java.lang.Object");
+		assertThat(method).isNotEmpty();
+		assertThat(method.get().getName()).isEqualTo("equals");
+	}
+
+	@Test
 	void findMethodByParameterTypesInGenericInterface() {
 		Class<?> ifc = InterfaceWithGenericDefaultMethod.class;
 		Optional<Method> method = findMethod(ifc, "foo", Number.class);
@@ -1595,6 +1617,15 @@ class ReflectionUtilsTests {
 		}
 
 		public void method5(Long i) {
+		}
+	}
+
+	static class CustomParameter {
+	}
+
+	static class CustomParameterTest {
+
+		public void methodWithCustomParameter(CustomParameter param) {
 		}
 	}
 

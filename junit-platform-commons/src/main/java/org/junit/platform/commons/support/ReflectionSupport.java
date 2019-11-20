@@ -248,6 +248,9 @@ public final class ReflectionSupport {
 	 *
 	 * <p>The algorithm does not search for methods in {@link java.lang.Object}.
 	 *
+	 * <p>The algorithm will use {@code clazz}'s class loader to attempt to
+	 * resolve the elements of {@code parameterTypeNames} into a {@link Class} object.
+	 *
 	 * @param clazz the class or interface in which to find the method; never {@code null}
 	 * @param methodName the name of the method to find; never {@code null} or empty
 	 * @param parameterTypeNames the fully qualified names of the types of parameters

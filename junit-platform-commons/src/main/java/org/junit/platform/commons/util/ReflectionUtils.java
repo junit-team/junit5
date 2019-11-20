@@ -1207,7 +1207,7 @@ public final class ReflectionUtils {
 
 	private static Class<?> loadRequiredParameterType(Class<?> clazz, String methodName, String typeName) {
 		// @formatter:off
-		return tryToLoadClass(typeName)
+		return tryToLoadClass(typeName, clazz.getClassLoader() == null ? ClassLoaderUtils.getDefaultClassLoader() : clazz.getClassLoader())
 				.getOrThrow(cause -> new JUnitException(
 						String.format("Failed to load parameter type [%s] for method [%s] in class [%s].",
 								typeName, methodName, clazz.getName()), cause));
