@@ -693,6 +693,17 @@
     ]
   },
   {
+    "title": "JUnit : il serait temps de passer la 5ème !",
+    "event": "Snowcamp",
+    "date": "2020-01-23",
+    "location": "Grenoble, France",
+    "link": "https://snowcamp2020.sched.com/event/XoOC",
+    "speakers": [
+      "juliettederancourt",
+      "julientopcu"
+    ]
+  },
+  {
     "title": "JUnit 5 & Project Loom",
     "event": "JavaLand 2020",
     "date": "2020-03-17",
@@ -701,17 +712,6 @@
     "speakers": [
       "marcphilipp",
       "sormuras"
-    ]
-  },
-  {
-    "title": "JUnit : il serait temps de passer la 5ème !",
-    "event": "Snowcamp",
-    "date": "2020-01-23",
-    "location": "Grenoble, France",
-    "link": "https://snowcamp.io",
-    "speakers": [
-      "juliettederancourt",
-      "julientopcu"
     ]
   }
 ]
