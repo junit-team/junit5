@@ -32,6 +32,9 @@ repository on GitHub.
   which return a `Stream`.
 * New `tryToLoadClass(...)` variant in `ReflectionSupport` that accepts an explicit
   `ClassLoader`, allowing classes to be resolved with custom `ClassLoader` arrangements.
+* New overloaded constructors for `ClassSelector` and `MethodSelector` that take an
+  explicit `ClassLoader` as a parameter, allowing selectors to select classes in custom
+  `ClassLoader` arrangements like in OSGi.
 * `ReflectionSupport.findMethod(Class<?>, String, String)` now uses the `ClassLoader` of
   the supplied `Class` to load parameter types instead of using the _default_
   `ClassLoader`. This allows parameter types to be resolved with custom `ClassLoader`
