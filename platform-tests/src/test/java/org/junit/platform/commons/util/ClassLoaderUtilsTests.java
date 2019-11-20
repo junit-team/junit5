@@ -11,10 +11,13 @@
 package org.junit.platform.commons.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+
+import java.net.URLClassLoader;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -68,4 +71,23 @@ class ClassLoaderUtilsTests {
 		assertTrue(ClassLoaderUtils.getLocation(Thread.State.RUNNABLE).isPresent());
 	}
 
+	@Test
+	void excludingClassLoaderLoadsNewVersionOfClassForMatchingClassName() throws Exception {
+		final String ourType = getClass().getTypeName();
+		try (URLClassLoader l = ClassLoaderUtils.excludingClassLoader(ourType::equals)) {
+			Class<?> c = l.loadClass(ourType);
+			assertNotEquals(c, getClass());
+			assertEquals(c.getTypeName(), ourType);
+			assertEquals(ClassLoaderUtils.getLocation(c), ClassLoaderUtils.getLocation(getClass()));
+		}
+	}
+
+	@Test
+	void excludingClassLoaderLoadsSameVersionOfClassForNonMatchingClassName() throws Exception {
+		final String ourType = getClass().getTypeName();
+		try (URLClassLoader l = ClassLoaderUtils.excludingClassLoader(x -> false)) {
+			Class<?> c = l.loadClass(ourType);
+			assertSame(c, getClass());
+		}
+	}
 }
