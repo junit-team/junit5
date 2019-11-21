@@ -307,7 +307,10 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
                                             <a href="ReflectiveInvocationContext.html" title="interface in org.junit.jupiter.api.extension">ReflectiveInvocationContext</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Constructor.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Constructor</a>&lt;T&gt;&gt;&nbsp;invocationContext,
                                             <a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;extensionContext)
                                      throws <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a></pre>
-<div class="block">Intercept the invocation of a test class constructor.</div>
+<div class="block">Intercept the invocation of a test class constructor.
+
+ <p>Note that the test class may <em>not</em> have been initialized
+ (static initialization) when this method is invoked.</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>T</code> - the result type</dd>
