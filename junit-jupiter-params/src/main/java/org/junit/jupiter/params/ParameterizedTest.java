@@ -158,13 +158,13 @@ public @interface ParameterizedTest {
 	/**
 	 * Placeholder for the complete, comma-separated named arguments list
 	 * of the current invocation of a {@code @ParameterizedTest} method:
-	 * <code>{arguments_with_names}</code>
+	 * <code>{argumentsWithNames}</code>
 	 *
 	 * @see #name
 	 * @since 5.6
 	 */
 	@API(status = EXPERIMENTAL, since = "5.6")
-	String ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{arguments_with_names}";
+	String ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentsWithNames}";
 
 	/**
 	 * Default display name pattern for the current invocation of a
