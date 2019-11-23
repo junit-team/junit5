@@ -924,9 +924,9 @@ following.
 
 ....
 palindromes(String) ✔
-├─ [1] racecar ✔
-├─ [2] radar ✔
-└─ [3] able was I ere I saw elba ✔
+├─ [1] candidate=racecar ✔
+├─ [2] candidate=radar ✔
+└─ [3] candidate=able was I ere I saw elba ✔
 ....
 
 WARNING: Parameterized tests are currently an _experimental_ feature. Consult the table
@@ -1451,7 +1451,9 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAggregator_w
 ==== Customizing Display Names
 
 By default, the display name of a parameterized test invocation contains the invocation
-index and the `String` representation of all arguments for that specific invocation.
+index and the `String` representation of all arguments for that specific invocation,
+each of them preceded by the parameter name if it exists and can be found.
+
 However, you can customize invocation display names via the `name` attribute of the
 `@ParameterizedTest` annotation like in the following example.
 
@@ -1465,9 +1467,9 @@ the following.
 
 ....
 Display name of container ✔
-├─ 1 ==> fruit='apple', rank=1 ✔
-├─ 2 ==> fruit='banana', rank=2 ✔
-└─ 3 ==> fruit='lemon, lime', rank=3 ✔
+├─ 1 ==> the rank of 'apple' is 1 ✔
+├─ 2 ==> the rank of 'banana' is 2 ✔
+└─ 3 ==> the rank of 'lemon, lime' is 3 ✔
 ....
 
 The following placeholders are supported within custom display names.
@@ -1476,9 +1478,11 @@ The following placeholders are supported within custom display names.
 |===
 | Placeholder       | Description
 
-| `{index}`         | the current invocation index (1-based)
-| `{arguments}`     | the complete, comma-separated arguments list
-| `{0}`, `{1}`, ... | an individual argument
+| `{displayName}`          | the display name of the method
+| `{index}`                | the current invocation index (1-based)
+| `{arguments}`            | the complete, comma-separated arguments list
+| `{arguments_with_names}` | the complete, comma-separated arguments list with parameter names
+| `{0}`, `{1}`, ...        | an individual argument
 |===
 
 
