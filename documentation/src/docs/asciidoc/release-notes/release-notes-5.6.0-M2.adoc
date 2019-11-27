@@ -47,8 +47,8 @@ on GitHub.
 * `InvocationInterceptor` extensions may now explicitly `skip()` an intercepted
   invocation. This allows executing it by other means, e.g. in a forked JVM.
 * Parameter names are now included in the default display name of a `@ParameterizedTest`
-  invocation (if they can be found). The `{argumentsWithNames}` pattern can also be used
-  in custom names.
+  invocation (if they are present in the bytecode). The `{argumentsWithNames}` pattern
+  can also be used in custom names.
 
 [[release-notes-5.6.0-M2️-junit-vintage]]
 === JUnit Vintage

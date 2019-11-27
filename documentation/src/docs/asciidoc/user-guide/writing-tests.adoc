@@ -1451,8 +1451,10 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAggregator_w
 ==== Customizing Display Names
 
 By default, the display name of a parameterized test invocation contains the invocation
-index and the `String` representation of all arguments for that specific invocation,
-each of them preceded by the parameter name if it exists and can be found.
+index and the `String` representation of all arguments for that specific invocation.
+Each of them is preceded by the parameter name (unless the argument is only available via
+an `ArgumentsAccessor` or `ArgumentAggregator`), if present in the bytecode (for Java,
+test code must be compiled with the `-parameters` compiler flag).
 
 However, you can customize invocation display names via the `name` attribute of the
 `@ParameterizedTest` annotation like in the following example.
