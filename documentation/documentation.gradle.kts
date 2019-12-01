@@ -56,9 +56,11 @@ asciidoctorj {
 	version = Versions.asciidoctorJ
 }
 
-val docsVersion = if (rootProject.version.toString().contains("SNAPSHOT")) "snapshot" else rootProject.version
+val snapshot = rootProject.version.toString().contains("SNAPSHOT")
+val docsVersion = if (snapshot) "snapshot" else rootProject.version
 val docsDir = file("$buildDir/ghpages-docs")
 val replaceCurrentDocs = project.hasProperty("replaceCurrentDocs")
+val uploadPdfs = !snapshot
 val ota4jDocVersion = if (Versions.ota4j.contains("SNAPSHOT")) "snapshot" else Versions.ota4j
 val apiGuardianDocVersion = if (Versions.apiGuardian.contains("SNAPSHOT")) "snapshot" else Versions.apiGuardian
 
@@ -149,7 +151,7 @@ tasks {
 
 		backends("html5")
 		backends("pdf")
-		attributes(mapOf("linkToPdf" to "true"))
+		attributes(mapOf("linkToPdf" to uploadPdfs))
 
 		attributes(mapOf(
 				"jupiter-version" to version,
@@ -269,6 +271,9 @@ tasks {
 			include("user-guide/**")
 			include("release-notes/**")
 			include("tocbot-*/**")
+			if (!uploadPdfs) {
+				exclude("**/*.pdf")
+			}
 		}
 		from("$buildDir/docs") {
 			include("javadoc/**")
