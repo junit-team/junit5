@@ -247,7 +247,6 @@
 5beeebeb56b5d1f68ce917275a7a5b68  junit-vintage-engine/src/main/java/org/junit/vintage/engine/package-info.java
 5c0ae332fe9f00890a505dcbeebc0f9d  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/MethodSource.java
 5c26dc1d99e858cceddd0ec89e831637  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeEngines.java
-5c6ceb2deec2511a4ebcbdf1c2fe8a8f  documentation/documentation.gradle.kts
 5c7943bb50c093b70ef739c71272777c  junit-platform-commons/src/main/java/org/junit/platform/commons/support/ReflectionSupport.java
 5d29856263ab78318ee15452552ae0e7  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/FileSystemSource.java
 5d521e2498b32d96e2425401a51a8777  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfSystemProperty.java
@@ -545,6 +544,7 @@ d26dff0325a8a05b2a970043e4c5a233  documentation/src/docs/asciidoc/release-notes/
 d3b5038efa369d3a72f4730c7d500a87  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 d3cb378014cdac07c5f1cf5f8d91b238  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.java
 d458fbd87aef43d37a319e18f28e6d21  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledOnJreCondition.java
+d45d825b018cb704bd61fdac4853f3f7  documentation/documentation.gradle.kts
 d48ca497e27808531a970f7782107993  junit-vintage-engine/src/main/java/org/junit/vintage/engine/support/package-info.java
 d4ce47495afb2233161e3f4241bc9f98  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/package-info.java
 d4fe811c167b6bbaf3f427b4a26faa0b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/package-info.java
