@@ -252,20 +252,29 @@ public @interface <span class="memberNameLabel">ParameterizedTest</span></pre>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_DISPLAY_NAME">DEFAULT_DISPLAY_NAME</a></span></code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ARGUMENTS_WITH_NAMES_PLACEHOLDER">ARGUMENTS_WITH_NAMES_PLACEHOLDER</a></span></code></th>
 <td class="colLast">
-<div class="block">Default display name pattern for the current invocation of a
- <code>@ParameterizedTest</code> method: "[{index}] {arguments}"</div>
+<div class="block">Placeholder for the complete, comma-separated named arguments list
+ of the current invocation of a <code>@ParameterizedTest</code> method:
+ <code>{argumentsWithNames}</code></div>
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEFAULT_DISPLAY_NAME">DEFAULT_DISPLAY_NAME</a></span></code></th>
+<td class="colLast">
+<div class="block">Default display name pattern for the current invocation of a
+ <code>@ParameterizedTest</code> method: "[{index}] {argumentsWithNames}"</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DISPLAY_NAME_PLACEHOLDER">DISPLAY_NAME_PLACEHOLDER</a></span></code></th>
 <td class="colLast">
 <div class="block">Placeholder for the <a href="../api/TestInfo.html#getDisplayName()">display name</a> of a <code>@ParameterizedTest</code> method: <code>{displayName}</code></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#INDEX_PLACEHOLDER">INDEX_PLACEHOLDER</a></span></code></th>
 <td class="colLast">
@@ -388,6 +397,31 @@ static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/S
 </section>
 <section role="region">
 <ul class="blockList">
+<li class="blockList"><a id="ARGUMENTS_WITH_NAMES_PLACEHOLDER">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>ARGUMENTS_WITH_NAMES_PLACEHOLDER</h4>
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.6")
+static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;ARGUMENTS_WITH_NAMES_PLACEHOLDER</pre>
+<div class="block">Placeholder for the complete, comma-separated named arguments list
+ of the current invocation of a <code>@ParameterizedTest</code> method:
+ <code>{argumentsWithNames}</code></div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.6</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#name()"><code>name()</code></a></dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section role="region">
+<ul class="blockList">
 <li class="blockList"><a id="DEFAULT_DISPLAY_NAME">
 <!--   -->
 </a>
@@ -398,7 +432,7 @@ static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/S
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.3")
 static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;DEFAULT_DISPLAY_NAME</pre>
 <div class="block">Default display name pattern for the current invocation of a
- <code>@ParameterizedTest</code> method: "[{index}] {arguments}"
+ <code>@ParameterizedTest</code> method: "[{index}] {argumentsWithNames}"
 
  <p>Note that the default pattern does <em>not</em> include the
  <a href="#DISPLAY_NAME_PLACEHOLDER">display name</a> of the
@@ -410,7 +444,7 @@ static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/S
 <dd><a href="#name()"><code>name()</code></a>, 
 <a href="#DISPLAY_NAME_PLACEHOLDER"><code>DISPLAY_NAME_PLACEHOLDER</code></a>, 
 <a href="#INDEX_PLACEHOLDER"><code>INDEX_PLACEHOLDER</code></a>, 
-<a href="#ARGUMENTS_PLACEHOLDER"><code>ARGUMENTS_PLACEHOLDER</code></a></dd>
+<a href="#ARGUMENTS_WITH_NAMES_PLACEHOLDER"><code>ARGUMENTS_WITH_NAMES_PLACEHOLDER</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -452,7 +486,7 @@ static final&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/S
 </dl>
 <dl>
 <dt>Default:</dt>
-<dd>"[{index}] {arguments}"</dd>
+<dd>"[{index}] {argumentsWithNames}"</dd>
 </dl>
 </li>
 </ul>

@@ -699,6 +699,11 @@ they are destroyed.</p>
 <p><code>InvocationInterceptor</code> extensions may now explicitly <code>skip()</code> an intercepted
 invocation. This allows executing it by other means, e.g. in a forked JVM.</p>
 </li>
+<li>
+<p>Parameter names are now included in the default display name of a <code>@ParameterizedTest</code>
+invocation (if they are present in the bytecode). The <code>{argumentsWithNames}</code> pattern
+can also be used in custom names.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -1108,7 +1113,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-11-21 08:14:29 UTC
+Last updated 2019-12-01 17:31:40 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

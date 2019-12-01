@@ -3218,9 +3218,9 @@ following.</p>
 <div class="literalblock">
 <div class="content">
 <pre>palindromes(String) ✔
-├─ [1] racecar ✔
-├─ [2] radar ✔
-└─ [3] able was I ere I saw elba ✔</pre>
+├─ [1] candidate=racecar ✔
+├─ [2] candidate=radar ✔
+└─ [3] candidate=able was I ere I saw elba ✔</pre>
 </div>
 </div>
 <div class="admonitionblock warning">
@@ -4263,13 +4263,18 @@ action with a custom <code>@CsvToPerson</code> annotation.</p>
 <div class="paragraph">
 <p>By default, the display name of a parameterized test invocation contains the invocation
 index and the <code>String</code> representation of all arguments for that specific invocation.
-However, you can customize invocation display names via the <code>name</code> attribute of the
+Each of them is preceded by the parameter name (unless the argument is only available via
+an <code>ArgumentsAccessor</code> or <code>ArgumentAggregator</code>), if present in the bytecode (for Java,
+test code must be compiled with the <code>-parameters</code> compiler flag).</p>
+</div>
+<div class="paragraph">
+<p>However, you can customize invocation display names via the <code>name</code> attribute of the
 <code>@ParameterizedTest</code> annotation like in the following example.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@DisplayName</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Display name of container</span><span class="delimiter">&quot;</span></span>)
-<span class="annotation">@ParameterizedTest</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">{index} ==&gt; fruit=''{0}'', rank={1}</span><span class="delimiter">&quot;</span></span>)
+<span class="annotation">@ParameterizedTest</span>(name = <span class="string"><span class="delimiter">&quot;</span><span class="content">{index} ==&gt; the rank of ''{0}'' is {1}</span><span class="delimiter">&quot;</span></span>)
 <span class="annotation">@CsvSource</span>({ <span class="string"><span class="delimiter">&quot;</span><span class="content">apple, 1</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">banana, 2</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">'lemon, lime', 3</span><span class="delimiter">&quot;</span></span> })
 <span class="type">void</span> testWithCustomDisplayNames(<span class="predefined-type">String</span> fruit, <span class="type">int</span> rank) {
 }</code></pre>
@@ -4282,9 +4287,9 @@ the following.</p>
 <div class="literalblock">
 <div class="content">
 <pre>Display name of container ✔
-├─ 1 ==&gt; fruit='apple', rank=1 ✔
-├─ 2 ==&gt; fruit='banana', rank=2 ✔
-└─ 3 ==&gt; fruit='lemon, lime', rank=3 ✔</pre>
+├─ 1 ==&gt; the rank of 'apple' is 1 ✔
+├─ 2 ==&gt; the rank of 'banana' is 2 ✔
+└─ 3 ==&gt; the rank of 'lemon, lime' is 3 ✔</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4303,12 +4308,20 @@ the following.</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{displayName}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the display name of the method</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>{index}</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the current invocation index (1-based)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>{arguments}</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the complete, comma-separated arguments list</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{argumentsWithNames}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the complete, comma-separated arguments list with parameter names</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>{0}</code>, <code>{1}</code>, &#8230;&#8203;</p></td>
@@ -9860,7 +9873,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-11-21 08:14:29 UTC
+Last updated 2019-12-01 17:31:40 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
