@@ -411,7 +411,7 @@ class ParameterizedTestDemo {
 
 	// tag::custom_display_names[]
 	@DisplayName("Display name of container")
-	@ParameterizedTest(name = "{index} ==> fruit=''{0}'', rank={1}")
+	@ParameterizedTest(name = "{index} ==> the rank of ''{0}'' is {1}")
 	@CsvSource({ "apple, 1", "banana, 2", "'lemon, lime', 3" })
 	void testWithCustomDisplayNames(String fruit, int rank) {
 	}

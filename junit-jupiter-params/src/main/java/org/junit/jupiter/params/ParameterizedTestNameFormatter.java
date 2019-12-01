@@ -12,6 +12,7 @@ package org.junit.jupiter.params;
 
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_WITH_NAMES_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedTest.DISPLAY_NAME_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedTest.INDEX_PLACEHOLDER;
 
@@ -30,10 +31,12 @@ class ParameterizedTestNameFormatter {
 
 	private final String pattern;
 	private final String displayName;
+	private final ParameterizedTestMethodContext methodContext;
 
-	ParameterizedTestNameFormatter(String pattern, String displayName) {
+	ParameterizedTestNameFormatter(String pattern, String displayName, ParameterizedTestMethodContext methodContext) {
 		this.pattern = pattern;
 		this.displayName = displayName;
+		this.methodContext = methodContext;
 	}
 
 	String format(int invocationIndex, Object... arguments) {
@@ -59,16 +62,28 @@ class ParameterizedTestNameFormatter {
 				.replace(DISPLAY_NAME_PLACEHOLDER, this.displayName)//
 				.replace(INDEX_PLACEHOLDER, String.valueOf(invocationIndex));
 
+		if (result.contains(ARGUMENTS_WITH_NAMES_PLACEHOLDER)) {
+			result = result.replace(ARGUMENTS_WITH_NAMES_PLACEHOLDER, argumentsWithNamesPattern(arguments));
+		}
+
 		if (result.contains(ARGUMENTS_PLACEHOLDER)) {
-			// @formatter:off
-			String replacement = IntStream.range(0, arguments.length)
-					.mapToObj(index -> "{" + index + "}")
-					.collect(joining(", "));
-			// @formatter:on
-			result = result.replace(ARGUMENTS_PLACEHOLDER, replacement);
+			result = result.replace(ARGUMENTS_PLACEHOLDER, argumentsPattern(arguments));
 		}
 
 		return result;
+	}
+
+	private String argumentsWithNamesPattern(Object[] arguments) {
+		return IntStream.range(0, arguments.length) //
+				.mapToObj(index -> methodContext.getParameterName(index).map(name -> name + "=").orElse("") + "{"
+						+ index + "}") //
+				.collect(joining(", "));
+	}
+
+	private String argumentsPattern(Object[] arguments) {
+		return IntStream.range(0, arguments.length) //
+				.mapToObj(index -> "{" + index + "}") //
+				.collect(joining(", "));
 	}
 
 	private Object[] makeReadable(MessageFormat format, Object[] arguments) {

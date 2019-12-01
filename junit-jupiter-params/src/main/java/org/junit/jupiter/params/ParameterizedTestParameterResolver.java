@@ -35,6 +35,7 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Executable declaringExecutable = parameterContext.getDeclaringExecutable();
 		Method testMethod = extensionContext.getTestMethod().orElse(null);
+		int parameterIndex = parameterContext.getIndex();
 
 		// Not a @ParameterizedTest method?
 		if (!declaringExecutable.equals(testMethod)) {
@@ -42,18 +43,18 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 		}
 
 		// Current parameter is an aggregator?
-		if (this.methodContext.isAggregator(parameterContext.getIndex())) {
+		if (this.methodContext.isAggregator(parameterIndex)) {
 			return true;
 		}
 
 		// Ensure that the current parameter is declared before aggregators.
 		// Otherwise, a different ParameterResolver should handle it.
-		if (this.methodContext.indexOfFirstAggregator() != -1) {
-			return parameterContext.getIndex() < this.methodContext.indexOfFirstAggregator();
+		if (this.methodContext.hasAggregator()) {
+			return parameterIndex < this.methodContext.indexOfFirstAggregator();
 		}
 
 		// Else fallback to behavior for parameterized test methods without aggregators.
-		return parameterContext.getIndex() < this.arguments.length;
+		return parameterIndex < this.arguments.length;
 	}
 
 	@Override
