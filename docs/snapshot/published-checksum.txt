@@ -147,7 +147,6 @@
 3753cf712b0599f7aba04bb62c96f3aa  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayNameGenerator.java
 3867ecf43117d3798f3731e3a60c53ca  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/NestedMethodSelector.java
 38a6ef7dcc8ec641d0e0e5d53ec1e0df  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Nested.java
-38ddd1c9a52c67af632b1661850e1b59  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/LegacyReportingUtils.java
 39515801594e30cd7c24a568f8407112  documentation/src/docs/asciidoc/user-guide/launcher-api.adoc
 3999feee881b7e22bcf60fd50afa031a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/DiscoverySelectorResolver.java
 39d5a6b619ad487b5f2c4d25b2721a29  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ExclusiveResource.java
@@ -192,6 +191,7 @@
 49d4b660b04fca83ea9ce793acb50c74  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/LifecycleMethodUtils.java
 4a164d67b028c45bf421678ce6889307  documentation/src/main/java/example/registration/WebServerExtension.java
 4a1da47ce2b5b7b4d5fd1145737a933a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/io/package-info.java
+4adc3f480444f46558f620d8ca025607  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/LegacyReportingUtils.java
 4aea32dcf4957b47b2bfbb38e386abc5  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/SimpleArgumentConverter.java
 4b8282264b138889e73288868759677e  junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatform.java
 4b87f482b4feda59b783a5e314b89dd0  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/support/OpenTest4JAndJUnit4AwareThrowableCollector.java

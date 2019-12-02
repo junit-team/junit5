@@ -28,8 +28,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":41};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
+var data = {"i0":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -118,7 +118,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">org.junit.platform.launcher.listeners</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">org.junit.platform.reporting.legacy</a></div>
 <h2 title="Class LegacyReportingUtils" class="title">Class LegacyReportingUtils</h2>
 </div>
 <div class="contentContainer">
@@ -126,7 +126,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
-<li>org.junit.platform.launcher.listeners.LegacyReportingUtils</li>
+<li>org.junit.platform.reporting.legacy.LegacyReportingUtils</li>
 </ul>
 </li>
 </ul>
@@ -134,17 +134,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <hr>
-<pre><a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>
-<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#DEPRECATED" title="class or interface in org.apiguardian.api" class="externalLink">DEPRECATED</a>,
+<pre><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#MAINTAINED" title="class or interface in org.apiguardian.api" class="externalLink">MAINTAINED</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="1.6")
-public class <span class="typeNameLabel">LegacyReportingUtils</span>
+public final class <span class="typeNameLabel">LegacyReportingUtils</span>
 extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
-<div class="deprecationComment">Use <a href="../../reporting/legacy/LegacyReportingUtils.html" title="class in org.junit.platform.reporting.legacy"><code>LegacyReportingUtils</code></a>
- instead.</div>
-</div>
 <div class="block">Utility methods for dealing with legacy reporting infrastructure, such as
- reporting systems built on the Ant-based XML reporting format for JUnit 4.</div>
+ reporting systems built on the Ant-based XML reporting format for JUnit 4.
+
+ This class was formerly from <code>junit-platform-launcher</code>
+ in <a href="../../launcher/listeners/package-summary.html"><code>org.junit.platform.launcher.listeners</code></a> package.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.0.3</dd>
@@ -163,7 +161,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -171,12 +169,11 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getClassName(org.junit.platform.launcher.TestPlan,org.junit.platform.launcher.TestIdentifier)">getClassName</a></span>&#8203;(<a href="../TestPlan.html" title="class in org.junit.platform.launcher">TestPlan</a>&nbsp;testPlan,
-            <a href="../TestIdentifier.html" title="class in org.junit.platform.launcher">TestIdentifier</a>&nbsp;testIdentifier)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getClassName(org.junit.platform.launcher.TestPlan,org.junit.platform.launcher.TestIdentifier)">getClassName</a></span>&#8203;(<a href="../../launcher/TestPlan.html" title="class in org.junit.platform.launcher">TestPlan</a>&nbsp;testPlan,
+            <a href="../../launcher/TestIdentifier.html" title="class in org.junit.platform.launcher">TestIdentifier</a>&nbsp;testIdentifier)</code></th>
 <td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
-<div class="block">Get the class name for the supplied <a href="../TestIdentifier.html" title="class in org.junit.platform.launcher"><code>TestIdentifier</code></a> using the
- supplied <a href="../TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a>.</div>
+<div class="block">Get the class name for the supplied <a href="../../launcher/TestIdentifier.html" title="class in org.junit.platform.launcher"><code>TestIdentifier</code></a> using the
+ supplied <a href="../../launcher/TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a>.</div>
 </td>
 </tr>
 </table>
@@ -209,17 +206,16 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getClassName</h4>
-<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getClassName&#8203;(<a href="../TestPlan.html" title="class in org.junit.platform.launcher">TestPlan</a>&nbsp;testPlan,
-                                  <a href="../TestIdentifier.html" title="class in org.junit.platform.launcher">TestIdentifier</a>&nbsp;testIdentifier)</pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
-<div class="block">Get the class name for the supplied <a href="../TestIdentifier.html" title="class in org.junit.platform.launcher"><code>TestIdentifier</code></a> using the
- supplied <a href="../TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a>.
+<pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getClassName&#8203;(<a href="../../launcher/TestPlan.html" title="class in org.junit.platform.launcher">TestPlan</a>&nbsp;testPlan,
+                                  <a href="../../launcher/TestIdentifier.html" title="class in org.junit.platform.launcher">TestIdentifier</a>&nbsp;testIdentifier)</pre>
+<div class="block">Get the class name for the supplied <a href="../../launcher/TestIdentifier.html" title="class in org.junit.platform.launcher"><code>TestIdentifier</code></a> using the
+ supplied <a href="../../launcher/TestPlan.html" title="class in org.junit.platform.launcher"><code>TestPlan</code></a>.
 
  <p>This implementation attempts to find the closest test identifier with
  a <a href="../../engine/support/descriptor/ClassSource.html" title="class in org.junit.platform.engine.support.descriptor"><code>ClassSource</code></a> by traversing the hierarchy upwards towards the
  root starting with the supplied test identifier. In case no such source
  is found, it falls back to using the parent's
- <a href="../TestIdentifier.html#getLegacyReportingName()">legacy reporting name</a>.</div>
+ <a href="../../launcher/TestIdentifier.html#getLegacyReportingName()">legacy reporting name</a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>testPlan</code> - the test plan that contains the <code>TestIdentifier</code>;
@@ -227,7 +223,7 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <dd><code>testIdentifier</code> - the identifier to determine the class name for;
                  never <code>null</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../TestIdentifier.html#getLegacyReportingName()"><code>TestIdentifier.getLegacyReportingName()</code></a></dd>
+<dd><a href="../../launcher/TestIdentifier.html#getLegacyReportingName()"><code>TestIdentifier.getLegacyReportingName()</code></a></dd>
 </dl>
 </li>
 </ul>
