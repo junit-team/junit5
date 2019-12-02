@@ -15,11 +15,11 @@ import java.util.List;
 /**
  * @since 1.1
  */
-class Parser {
+class ShuntingYardBasedParser implements TagExpressionParser {
 
 	private final Tokenizer tokenizer = new Tokenizer();
 
-	ParseResult parse(String infixTagExpression) {
+	public ParseResult parse(String infixTagExpression) {
 		return constructExpressionFrom(tokensDerivedFrom(infixTagExpression));
 	}
 

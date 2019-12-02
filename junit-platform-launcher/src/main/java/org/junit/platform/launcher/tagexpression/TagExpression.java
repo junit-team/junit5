@@ -35,18 +35,11 @@ public interface TagExpression {
 	 */
 	@API(status = INTERNAL, since = "1.1")
 	static ParseResult parseFrom(String infixTagExpression) {
-		System.out.println("infixTagExpression = " + infixTagExpression);
 
-		//TODO: improve with Optional, extract interface for parser
-		if (infixTagExpression != null) {
-			if (infixTagExpression.equals("any()"))
-				return ParseResults.success(TagExpressions.any());
+		//TODO: cleanup
+		//		System.out.println("infixTagExpression = " + infixTagExpression);
 
-			if (infixTagExpression.equals("none()"))
-				return ParseResults.success(TagExpressions.none());
-		}
-
-		return new Parser().parse(infixTagExpression);
+		return new EnhancedParser().parse(infixTagExpression);
 	}
 
 	/**
