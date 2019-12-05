@@ -55,6 +55,15 @@ eclipse {
 	classpath {
 		plusConfigurations.add(shadowed)
 	}
+	jdt {
+		file {
+			// Set properties for org.eclipse.jdt.core.prefs
+			withProperties {
+				// Configure Eclipse projects with -parameters compiler flag.
+				setProperty("org.eclipse.jdt.core.compiler.codegen.methodParameters", "generate")
+			}
+		}
+	}
 }
 
 idea {
