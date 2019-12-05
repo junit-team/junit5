@@ -8,6 +8,12 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+/**
+ * Common APIs and support utilities for the JUnit Platform.
+ *
+ * @moduleGraph
+ * @since 1.0.0
+ */
 module org.junit.platform.commons {
 	requires java.logging;
 	requires java.management; // needed by RuntimeUtils to determine input arguments

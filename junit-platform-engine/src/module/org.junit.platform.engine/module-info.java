@@ -8,6 +8,15 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+/**
+ * Public API for test engines.
+ *
+ * <p>Provides the {@linkplain org.junit.platform.engine.TestEngine} interface, test discovery
+ * and execution reporting support.
+ *
+ * @moduleGraph
+ * @since 1.0.0
+ */
 module org.junit.platform.engine {
 	requires transitive org.apiguardian.api;
 	requires transitive org.junit.platform.commons;
@@ -20,5 +29,6 @@ module org.junit.platform.engine {
 	exports org.junit.platform.engine.support.config;
 	exports org.junit.platform.engine.support.descriptor;
 	exports org.junit.platform.engine.support.discovery;
+	exports org.junit.platform.engine.support.filter;
 	exports org.junit.platform.engine.support.hierarchical;
 }

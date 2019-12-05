@@ -8,9 +8,17 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+/**
+ * Defines the JUnit Platform Reporting API.
+ *
+ * @moduleGraph
+ * @since 1.4.0
+ */
 module org.junit.platform.reporting {
 	requires java.xml;
 	requires transitive org.apiguardian.api;
+	requires org.junit.platform.commons;
+	requires transitive org.junit.platform.engine;
 	requires transitive org.junit.platform.launcher;
 
 	// exports org.junit.platform.reporting; empty package
