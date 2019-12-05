@@ -10,6 +10,12 @@ link:{junit5-repo}+/milestone/45️?closed=1+[5.6 M2️] milestone page in the J
 on GitHub.
 
 
+[[release-notes-5.6.0-M2-overall-improvements]]
+=== Overall Improvements
+
+* OSGi metadata is now published in all binary JARs.
+
+
 [[release-notes-5.6.0-M2️-junit-platform]]
 === JUnit Platform
 
@@ -24,7 +30,6 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* Provide JARs with OSGi metadata.
 * `TestExecutionSummary.Failure` is now serializable.
 * `ReflectionSupport.findNestedClasses(...)` now detects cycles within inner class
   hierarchies. Consult the Javadoc for details.
@@ -43,21 +48,20 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* Provide JARs with OSGi metadata.
 * `@EnabledIfEnvironmentVariable`, `@DisabledIfEnvironmentVariable`,
   `@EnabledIfSystemProperty`, and `@DisabledIfSystemProperty` may now be used as
   _repeatable_ annotations. In other words, it is now possible to declare each of those
   annotations multiple times on a test interface, test class, or test method.
 * Discovery of `@Nested` test classes that form a cycle now results in an exception that
   halts execution of the JUnit Jupiter test engine instead of infinite recursion.
+* Parameter names are now included in the default display name of a `@ParameterizedTest`
+  invocation (if they are present in the bytecode). The `{argumentsWithNames}` pattern
+  can also be used in custom names.
 * New `TestInstancePreDestroyCallback` interface that defines the API for `Extension`
   that wish to process test instances *after* they have been used in tests and *before*
   they are destroyed.
 * `InvocationInterceptor` extensions may now explicitly `skip()` an intercepted
   invocation. This allows executing it by other means, e.g. in a forked JVM.
-* Parameter names are now included in the default display name of a `@ParameterizedTest`
-  invocation (if they are present in the bytecode). The `{argumentsWithNames}` pattern
-  can also be used in custom names.
 
 
 [[release-notes-5.6.0-M2️-junit-vintage]]
@@ -73,4 +77,4 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* Provide JARs with OSGi metadata.
+* ❓
