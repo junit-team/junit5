@@ -651,6 +651,10 @@ handles events from multiple levels of nested classes.</p>
 <li>
 <p><code>TestExecutionSummary.Failure</code> is now serializable.</p>
 </li>
+<li>
+<p><code>ReflectionSupport.findNestedClasses(&#8230;&#8203;)</code> now detects cycles within inner class
+hierarchies. Consult the Javadoc for details.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -689,6 +693,10 @@ handles events from multiple levels of nested classes.</p>
 <code>@EnabledIfSystemProperty</code>, and <code>@DisabledIfSystemProperty</code> may now be used as
 <em>repeatable</em> annotations. In other words, it is now possible to declare each of those
 annotations multiple times on a test interface, test class, or test method.</p>
+</li>
+<li>
+<p>Discovery of <code>@Nested</code> test classes that form a cycle now results in an exception that
+halts execution of the JUnit Jupiter test engine instead of infinite recursion.</p>
 </li>
 <li>
 <p>New <code>TestInstancePreDestroyCallback</code> interface that defines the API for <code>Extension</code>
@@ -1113,7 +1121,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-12-02 19:13:30 UTC
+Last updated 2019-12-05 13:58:06 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

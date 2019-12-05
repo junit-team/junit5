@@ -255,8 +255,8 @@ extends <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findNestedClasses(java.lang.Class,java.util.function.Predicate)">findNestedClasses</a></span>&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
                  <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;predicate)</code></th>
 <td class="colLast">
-<div class="block">Find all nested classes within the given class that conform to the given
- predicate.</div>
+<div class="block">Find all nested classes within the supplied class, or inherited by the
+ supplied class, that conform to the supplied predicate.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
@@ -684,9 +684,19 @@ public static&nbsp;<a href="../function/Try.html" title="class in org.junit.plat
 <li class="blockList">
 <h4>findNestedClasses</h4>
 <pre class="methodSignature">public static&nbsp;<a href="https://docs.oracle.com/javase/8/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;findNestedClasses&#8203;(<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;clazz,
-                                               <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;predicate)</pre>
-<div class="block">Find all nested classes within the given class that conform to the given
- predicate.</div>
+                                               <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Predicate</a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&gt;&nbsp;predicate)
+                                        throws <a href="../JUnitException.html" title="class in org.junit.platform.commons">JUnitException</a></pre>
+<div class="block">Find all nested classes within the supplied class, or inherited by the
+ supplied class, that conform to the supplied predicate.
+
+ <p>This method does <strong>not</strong> search for nested classes
+ recursively.
+
+ <p>As of JUnit Platform 1.6, this method detects cycles in <em>inner</em>
+ class hierarchies &mdash; from the supplied class up to the outermost
+ enclosing class &mdash; and throws a <a href="../JUnitException.html" title="class in org.junit.platform.commons"><code>JUnitException</code></a> if such a cycle
+ is detected. Cycles within inner class hierarchies <em>below</em> the
+ supplied class are not detected by this method.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>clazz</code> - the class to be searched; never <code>null</code></dd>
@@ -695,6 +705,8 @@ public static&nbsp;<a href="../function/Try.html" title="class in org.junit.plat
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>an immutable list of all such classes found; never <code>null</code>
  but potentially empty</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="../JUnitException.html" title="class in org.junit.platform.commons">JUnitException</a></code> - if a cycle is detected within an inner class hierarchy</dd>
 </dl>
 </li>
 </ul>
