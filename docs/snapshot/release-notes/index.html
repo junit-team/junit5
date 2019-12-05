@@ -559,6 +559,7 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel1">
 <li><a href="#release-notes-5.6.0-M2️">5.6.0-M2️</a>
 <ul class="sectlevel2">
+<li><a href="#release-notes-5.6.0-M2-overall-improvements">Overall Improvements</a></li>
 <li><a href="#release-notes-5.6.0-M2️-junit-platform">JUnit Platform</a></li>
 <li><a href="#release-notes-5.6.0-M2️-junit-jupiter">JUnit Jupiter</a></li>
 <li><a href="#release-notes-5.6.0-M2️-junit-vintage">JUnit Vintage</a></li>
@@ -619,6 +620,16 @@ authors as well as build tool and IDE vendors.</p>
 on GitHub.</p>
 </div>
 <div class="sect2">
+<h3 id="release-notes-5.6.0-M2-overall-improvements"><a class="anchor" href="#release-notes-5.6.0-M2-overall-improvements"></a>Overall Improvements</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>OSGi metadata is now published in all binary JARs.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
 <h3 id="release-notes-5.6.0-M2️-junit-platform"><a class="anchor" href="#release-notes-5.6.0-M2️-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
 <h4 id="bug-fixes"><a class="anchor" href="#bug-fixes"></a>Bug Fixes</h4>
@@ -645,9 +656,6 @@ handles events from multiple levels of nested classes.</p>
 <h4 id="new-features-and-improvements"><a class="anchor" href="#new-features-and-improvements"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
-<li>
-<p>Provide JARs with OSGi metadata.</p>
-</li>
 <li>
 <p><code>TestExecutionSummary.Failure</code> is now serializable.</p>
 </li>
@@ -686,9 +694,6 @@ hierarchies. Consult the Javadoc for details.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Provide JARs with OSGi metadata.</p>
-</li>
-<li>
 <p><code>@EnabledIfEnvironmentVariable</code>, <code>@DisabledIfEnvironmentVariable</code>,
 <code>@EnabledIfSystemProperty</code>, and <code>@DisabledIfSystemProperty</code> may now be used as
 <em>repeatable</em> annotations. In other words, it is now possible to declare each of those
@@ -699,6 +704,11 @@ annotations multiple times on a test interface, test class, or test method.</p>
 halts execution of the JUnit Jupiter test engine instead of infinite recursion.</p>
 </li>
 <li>
+<p>Parameter names are now included in the default display name of a <code>@ParameterizedTest</code>
+invocation (if they are present in the bytecode). The <code>{argumentsWithNames}</code> pattern
+can also be used in custom names.</p>
+</li>
+<li>
 <p>New <code>TestInstancePreDestroyCallback</code> interface that defines the API for <code>Extension</code>
 that wish to process test instances <strong>after</strong> they have been used in tests and <strong>before</strong>
 they are destroyed.</p>
@@ -706,11 +716,6 @@ they are destroyed.</p>
 <li>
 <p><code>InvocationInterceptor</code> extensions may now explicitly <code>skip()</code> an intercepted
 invocation. This allows executing it by other means, e.g. in a forked JVM.</p>
-</li>
-<li>
-<p>Parameter names are now included in the default display name of a <code>@ParameterizedTest</code>
-invocation (if they are present in the bytecode). The <code>{argumentsWithNames}</code> pattern
-can also be used in custom names.</p>
 </li>
 </ul>
 </div>
@@ -743,7 +748,7 @@ can also be used in custom names.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Provide JARs with OSGi metadata.</p>
+<p>❓</p>
 </li>
 </ul>
 </div>
@@ -1121,7 +1126,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2019-12-05 13:58:06 UTC
+Last updated 2019-12-05 14:06:04 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
