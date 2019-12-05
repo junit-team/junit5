@@ -35,7 +35,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
-import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
 import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.platform.commons.JUnitException;
@@ -238,19 +237,18 @@ class ParameterizedTestNameFormatterTests {
 			return ReflectionUtils.findMethod(ParameterizedTestCases.class, methodName, parameterTypes).get();
 		}
 
+		@SuppressWarnings("unused")
 		void parameterizedTest(int someNumber, String someString, Object[] someArray) {
-
 		}
 
+		@SuppressWarnings("unused")
 		void parameterizedTestWithAggregator(int someNumber,
 				@AggregateWith(CustomAggregator.class) String someAggregatedString) {
-
 		}
 
 		private static class CustomAggregator implements ArgumentsAggregator {
 			@Override
-			public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
-					throws ArgumentsAggregationException {
+			public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
 				return accessor.get(0);
 			}
 		}
