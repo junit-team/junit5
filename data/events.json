@@ -693,7 +693,18 @@
     ]
   },
   {
-    "title": "JUnit : il serait temps de passer la 5ème!",
+    "title": "JUnit : il serait temps de passer la 5ème !",
+    "event": "JUG Paris",
+    "date": "2019-12-10",
+    "location": "Paris, France",
+    "link": "https://www.parisjug.org/xwiki/wiki/oldversion/view/Meeting/20191210",
+    "speakers": [
+      "juliettederancourt",
+      "julientopcu"
+    ]
+  },
+  {
+    "title": "JUnit : il serait temps de passer la 5ème !",
     "event": "Snowcamp",
     "date": "2020-01-23",
     "location": "Grenoble, France",
