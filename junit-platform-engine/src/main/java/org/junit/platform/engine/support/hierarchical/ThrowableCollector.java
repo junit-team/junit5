@@ -170,8 +170,10 @@ public class ThrowableCollector {
 	 * {@linkplain TestExecutionResult#failed failed} if it <em>failed</em>
 	 * execution; and {@linkplain TestExecutionResult#successful successful}
 	 * otherwise
+	 * @since 1.6
 	 */
-	TestExecutionResult toTestExecutionResult() {
+	@API(status = MAINTAINED, since = "1.6")
+	public TestExecutionResult toTestExecutionResult() {
 		if (isEmpty()) {
 			return successful();
 		}
