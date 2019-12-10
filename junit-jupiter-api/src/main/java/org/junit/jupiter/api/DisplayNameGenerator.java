@@ -15,7 +15,6 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import java.lang.reflect.Method;
 
 import org.apiguardian.api.API;
-import org.jetbrains.annotations.NotNull;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -195,7 +194,8 @@ public interface DisplayNameGenerator {
 					if (classWithDisplayName != null)
 						classIndicativeSentence = classWithDisplayName.value();
 					else
-						classIndicativeSentence = underScoreNameFormatting(super.generateDisplayNameForNestedClass(testClass));
+						classIndicativeSentence = underScoreNameFormatting(
+							super.generateDisplayNameForNestedClass(testClass));
 
 					classIndicativeSentence = classReplaceToIndicativeSentence(classWithEnclosingParent) + ", "
 							+ classIndicativeSentence;
