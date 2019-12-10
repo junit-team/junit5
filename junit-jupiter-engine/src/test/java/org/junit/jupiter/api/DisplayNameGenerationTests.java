@@ -68,6 +68,22 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void indicativeSentencesGenerator() {
+		var expectedDisplayNames = List.of( //
+						"CONTAINER: IndicativeStyleTestCase", //
+						"TEST: @DisplayName prevails", //
+						"TEST: IndicativeStyleTestCase, test", //
+						"TEST: IndicativeStyleTestCase, test (TestInfo)", //
+						"TEST: IndicativeStyleTestCase, test with underscores", //
+						"TEST: IndicativeStyleTestCase, testUsingCamelCase and also UnderScores", //
+						"TEST: IndicativeStyleTestCase, testUsingCamelCase and also UnderScores keepingParameterTypeNamesIntact (TestInfo)", //
+						"TEST: IndicativeStyleTestCase, testUsingCamelCaseStyle" //
+		);
+		check(IndicativeStyleTestCase.class, expectedDisplayNames);
+		//check(IndicativeSentencesInheritedFromSuperClassTestCase.class, expectedDisplayNames);
+	}
+
+	@Test
 	void noNameGenerator() {
 		check(NoNameStyleTestCase.class, List.of( //
 			"CONTAINER: nn", //
@@ -94,6 +110,19 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			"TEST: the stack is no longer empty", //
 			"TEST: throws an EmptyStackException when peeked", //
 			"TEST: throws an EmptyStackException when popped" //
+		));
+	}
+
+	@Test
+	void checkDisplayNameGeneratedForIndicativeGeneratorTestCase() {
+		check(IndicativeGeneratorTestCase.class, List.of( //
+			"CONTAINER: A stack", //
+			"CONTAINER: A stack, when is new", //
+			"CONTAINER: A stack, when is new, after pushing an element to an empty stack", //
+			"TEST: A stack, is instantiated with new constructor", //
+			"TEST: A stack, when is new, after pushing an element to an empty stack, is no longer empty", //
+			"TEST: A stack, when is new, throws EmptyStackException when peeked", //
+			"TEST: A stack, when is new, throws EmptyStackException when popped" //
 		));
 	}
 
@@ -170,6 +199,10 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	static class UnderscoreStyleTestCase extends AbstractTestCase {
 	}
 
+	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentencesGenerator.class)
+	static class IndicativeStyleTestCase extends AbstractTestCase {
+	}
+
 	@DisplayNameGeneration(NoNameGenerator.class)
 	static class NoNameStyleTestCase extends AbstractTestCase {
 	}
@@ -177,7 +210,6 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	// No annotation here! @DisplayNameGeneration is inherited from super class
 	static class UnderscoreStyleInheritedFromSuperClassTestCase extends UnderscoreStyleTestCase {
 	}
-
 	// -------------------------------------------------------------------
 
 	@DisplayName("A stack")
@@ -238,6 +270,55 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 				@Test
 				void peek_returns_that_element_without_removing_it_from_the_stack() {
 					assertEquals(anElement, stack.peek());
+					assertFalse(stack.isEmpty());
+				}
+			}
+		}
+	}
+
+	// -------------------------------------------------------------------
+
+	@DisplayName("A stack")
+	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentencesGenerator.class)
+	static class IndicativeGeneratorTestCase {
+
+		Stack<Object> stack;
+
+		@Test
+		void is_Instantiated_With_New_Constructor() {
+			new Stack<>();
+		}
+
+		@Nested
+		class When_Is_New {
+
+			@BeforeEach
+			void create_With_New_Stack() {
+				stack = new Stack<>();
+			}
+
+			@Test
+			void throws_EmptyStackException_When_Peeked() {
+				assertThrows(EmptyStackException.class, () -> stack.peek());
+			}
+
+			@Test
+			void throws_EmptyStackException_When_Popped() {
+				assertThrows(EmptyStackException.class, () -> stack.pop());
+			}
+
+			@Nested
+			class After_pushing_an_element_to_an_empty_stack {
+
+				String anElement = "an element";
+
+				@BeforeEach
+				void push_An_Element() {
+					stack.push(anElement);
+				}
+
+				@Test
+				void is_no_longer_empty() {
 					assertFalse(stack.isEmpty());
 				}
 			}
