@@ -70,14 +70,14 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void indicativeSentencesGenerator() {
 		var expectedDisplayNames = List.of( //
-						"CONTAINER: IndicativeStyleTestCase", //
-						"TEST: @DisplayName prevails", //
-						"TEST: IndicativeStyleTestCase, test", //
-						"TEST: IndicativeStyleTestCase, test (TestInfo)", //
-						"TEST: IndicativeStyleTestCase, test with underscores", //
-						"TEST: IndicativeStyleTestCase, testUsingCamelCase and also UnderScores", //
-						"TEST: IndicativeStyleTestCase, testUsingCamelCase and also UnderScores keepingParameterTypeNamesIntact (TestInfo)", //
-						"TEST: IndicativeStyleTestCase, testUsingCamelCaseStyle" //
+			"CONTAINER: IndicativeStyleTestCase", //
+			"TEST: @DisplayName prevails", //
+			"TEST: IndicativeStyleTestCase, test", //
+			"TEST: IndicativeStyleTestCase, test (TestInfo)", //
+			"TEST: IndicativeStyleTestCase, test with underscores", //
+			"TEST: IndicativeStyleTestCase, testUsingCamelCase and also UnderScores", //
+			"TEST: IndicativeStyleTestCase, testUsingCamelCase and also UnderScores keepingParameterTypeNamesIntact (TestInfo)", //
+			"TEST: IndicativeStyleTestCase, testUsingCamelCaseStyle" //
 		);
 		check(IndicativeStyleTestCase.class, expectedDisplayNames);
 		//check(IndicativeSentencesInheritedFromSuperClassTestCase.class, expectedDisplayNames);
