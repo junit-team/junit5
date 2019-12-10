@@ -13,6 +13,7 @@ package org.junit.jupiter.api;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ClassUtils;
@@ -138,6 +139,111 @@ public interface DisplayNameGenerator {
 
 		private static boolean hasParameters(Method method) {
 			return method.getParameterCount() > 0;
+		}
+	}
+
+	/**
+	 * {@code DisplayNameGenerator} that supports {@code ReplaceUnderscores} to generate complete sentences.
+	 *
+	 * <p>This generator extends the functionality of {@link ReplaceUnderscores} by
+	 * replacing all underscores ({@code '_'}) found in class and method names
+	 * with spaces ({@code ' '}).
+	 */
+	class IndicativeSentencesGenerator extends ReplaceUnderscores {
+
+		@Override
+		public String generateDisplayNameForClass(Class<?> testClass) {
+			String indicativeName = removeRootCharacter(super.generateDisplayNameForClass(testClass));
+			return indicativeName;
+		}
+
+		@Override
+		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
+			String indicativeName = classReplaceToIndicativeSentence(nestedClass);
+			return indicativeName;
+		}
+
+		@Override
+		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
+			String methodName = underscoreSnakeCaseName(super.generateDisplayNameForMethod(testClass,testMethod));
+			String indicativeName = classReplaceToIndicativeSentence(testClass);
+
+			return indicativeName + ", " + methodName ;
+		}
+
+		private String classReplaceToIndicativeSentence(Class<?> testClass) {
+			String classIndicativeSentence = null;
+			Class<?> classWithEnclosingParent = testClass.getEnclosingClass();
+			DisplayName classWithDisplayName = testClass.getAnnotation(DisplayName.class);
+			DisplayNameGeneration classWithAnnotation = testClass.getAnnotation(DisplayNameGeneration.class);
+
+				if(classWithEnclosingParent == null ) {
+					if(classWithDisplayName != null)
+						classIndicativeSentence = classWithDisplayName.value();
+					else
+						classIndicativeSentence = generateDisplayNameForClass(testClass);
+				}
+				else {
+					if(classWithAnnotation != null) {
+						if (classWithAnnotation.value() == IndicativeSentencesGenerator.class) {
+							if(classWithDisplayName != null)
+								classIndicativeSentence = classWithDisplayName.value();
+							else
+								classIndicativeSentence = generateDisplayNameForClass(testClass);
+						}
+					}
+					else {
+						if(classWithDisplayName != null)
+							classIndicativeSentence = classWithDisplayName.value();
+						else
+							classIndicativeSentence = super.generateDisplayNameForNestedClass(testClass);
+
+						classIndicativeSentence = classReplaceToIndicativeSentence(classWithEnclosingParent) +
+										", " +  classIndicativeSentence;
+					}
+				}
+
+			return underscoreSnakeCaseName(classIndicativeSentence);
+		}
+
+		private String removeRootCharacter(String testName)
+		{
+			int indexOfChar = testName.indexOf('$');
+
+			if(testName.indexOf('$')>=0)
+				testName = testName.substring(indexOfChar+1);
+
+			return testName;
+		}
+
+		private String underscoreSnakeCaseName(String testName)
+		{
+			if(testName.length() <= 1)
+				return testName;
+			else
+			{
+				String [] splitTestWords = testName.split(" ");
+
+				for (int i = 1; i < splitTestWords.length; i++) {
+					if (checkTwoCapsString(splitTestWords[i]) == false)
+						splitTestWords[i] = Character.toLowerCase(splitTestWords[i].charAt(0)) + splitTestWords[i].substring(1);
+				}
+
+				return String.join(" ",splitTestWords);
+			}
+		}
+
+		private boolean checkTwoCapsString(String inputWord) {
+			char fragmentChar;
+			int lowerCaseCount = 0;
+
+			for(int i=0;i < inputWord.length();i++) {
+				fragmentChar = inputWord.charAt(i);
+				if (Character.isUpperCase(fragmentChar))
+					lowerCaseCount++;
+			}
+
+			return (lowerCaseCount >=2);
 		}
 	}
 
