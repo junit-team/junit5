@@ -146,8 +146,8 @@ public interface DisplayNameGenerator {
 	 * {@code DisplayNameGenerator} that supports {@code ReplaceUnderscores} to generate complete sentences.
 	 *
 	 * <p>This generator extends the functionality of {@link ReplaceUnderscores} by
-	 * replacing all underscores ({@code '_'}) found in class and method names
-	 * with spaces ({@code ' '}).
+	 * generating a human-readable display names that form complete sentences divided each
+	 * class, nested class and test by a ({@code ','}).
 	 */
 	class IndicativeSentencesGenerator extends ReplaceUnderscores {
 
