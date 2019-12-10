@@ -298,12 +298,12 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			}
 
 			@Test
-			void throws_EmptyStackException_When_Peeked() {
+			void Throws_EmptyStackException_When_Peeked() {
 				assertThrows(EmptyStackException.class, () -> stack.peek());
 			}
 
 			@Test
-			void throws_EmptyStackException_When_Popped() {
+			void Throws_EmptyStackException_When_Popped() {
 				assertThrows(EmptyStackException.class, () -> stack.pop());
 			}
 
