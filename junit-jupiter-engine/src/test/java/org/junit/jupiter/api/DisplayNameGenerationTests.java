@@ -80,7 +80,6 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			"TEST: IndicativeStyleTestCase, testUsingCamelCaseStyle" //
 		);
 		check(IndicativeStyleTestCase.class, expectedDisplayNames);
-		//check(IndicativeSentencesInheritedFromSuperClassTestCase.class, expectedDisplayNames);
 	}
 
 	@Test
