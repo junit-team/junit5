@@ -13,7 +13,6 @@ package org.junit.jupiter.api;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ClassUtils;
@@ -165,10 +164,10 @@ public interface DisplayNameGenerator {
 
 		@Override
 		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
-			String methodName = underscoreSnakeCaseName(super.generateDisplayNameForMethod(testClass,testMethod));
+			String methodName = underscoreSnakeCaseName(super.generateDisplayNameForMethod(testClass, testMethod));
 			String indicativeName = classReplaceToIndicativeSentence(testClass);
 
-			return indicativeName + ", " + methodName ;
+			return indicativeName + ", " + methodName;
 		}
 
 		private String classReplaceToIndicativeSentence(Class<?> testClass) {
@@ -177,59 +176,57 @@ public interface DisplayNameGenerator {
 			DisplayName classWithDisplayName = testClass.getAnnotation(DisplayName.class);
 			DisplayNameGeneration classWithAnnotation = testClass.getAnnotation(DisplayNameGeneration.class);
 
-				if(classWithEnclosingParent == null ) {
-					if(classWithDisplayName != null)
-						classIndicativeSentence = classWithDisplayName.value();
-					else
-						classIndicativeSentence = generateDisplayNameForClass(testClass);
-				}
-				else {
-					if(classWithAnnotation != null) {
-						if (classWithAnnotation.value() == IndicativeSentencesGenerator.class) {
-							if(classWithDisplayName != null)
-								classIndicativeSentence = classWithDisplayName.value();
-							else
-								classIndicativeSentence = generateDisplayNameForClass(testClass);
-						}
-					}
-					else {
-						if(classWithDisplayName != null)
+			if (classWithEnclosingParent == null) {
+				if (classWithDisplayName != null)
+					classIndicativeSentence = classWithDisplayName.value();
+				else
+					classIndicativeSentence = generateDisplayNameForClass(testClass);
+			}
+			else {
+				if (classWithAnnotation != null) {
+					if (classWithAnnotation.value() == IndicativeSentencesGenerator.class) {
+						if (classWithDisplayName != null)
 							classIndicativeSentence = classWithDisplayName.value();
 						else
-							classIndicativeSentence = super.generateDisplayNameForNestedClass(testClass);
-
-						classIndicativeSentence = classReplaceToIndicativeSentence(classWithEnclosingParent) +
-										", " +  classIndicativeSentence;
+							classIndicativeSentence = generateDisplayNameForClass(testClass);
 					}
 				}
+				else {
+					if (classWithDisplayName != null)
+						classIndicativeSentence = classWithDisplayName.value();
+					else
+						classIndicativeSentence = super.generateDisplayNameForNestedClass(testClass);
+
+					classIndicativeSentence = classReplaceToIndicativeSentence(classWithEnclosingParent) + ", "
+							+ classIndicativeSentence;
+				}
+			}
 
 			return underscoreSnakeCaseName(classIndicativeSentence);
 		}
 
-		private String removeRootCharacter(String testName)
-		{
+		private String removeRootCharacter(String testName) {
 			int indexOfChar = testName.indexOf('$');
 
-			if(testName.indexOf('$')>=0)
-				testName = testName.substring(indexOfChar+1);
+			if (testName.indexOf('$') >= 0)
+				testName = testName.substring(indexOfChar + 1);
 
 			return testName;
 		}
 
-		private String underscoreSnakeCaseName(String testName)
-		{
-			if(testName.length() <= 1)
+		private String underscoreSnakeCaseName(String testName) {
+			if (testName.length() <= 1)
 				return testName;
-			else
-			{
-				String [] splitTestWords = testName.split(" ");
+			else {
+				String[] splitTestWords = testName.split(" ");
 
 				for (int i = 1; i < splitTestWords.length; i++) {
 					if (checkTwoCapsString(splitTestWords[i]) == false)
-						splitTestWords[i] = Character.toLowerCase(splitTestWords[i].charAt(0)) + splitTestWords[i].substring(1);
+						splitTestWords[i] = Character.toLowerCase(splitTestWords[i].charAt(0))
+								+ splitTestWords[i].substring(1);
 				}
 
-				return String.join(" ",splitTestWords);
+				return String.join(" ", splitTestWords);
 			}
 		}
 
@@ -237,13 +234,13 @@ public interface DisplayNameGenerator {
 			char fragmentChar;
 			int lowerCaseCount = 0;
 
-			for(int i=0;i < inputWord.length();i++) {
+			for (int i = 0; i < inputWord.length(); i++) {
 				fragmentChar = inputWord.charAt(i);
 				if (Character.isUpperCase(fragmentChar))
 					lowerCaseCount++;
 			}
 
-			return (lowerCaseCount >=2);
+			return (lowerCaseCount >= 2);
 		}
 	}
 
