@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import java.lang.reflect.Method;
 
 import org.apiguardian.api.API;
+import org.jetbrains.annotations.NotNull;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -164,9 +165,8 @@ public interface DisplayNameGenerator {
 
 		@Override
 		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
-			String methodName = underscoreSnakeCaseName(super.generateDisplayNameForMethod(testClass, testMethod));
+			String methodName = underScoreNameFormatting(super.generateDisplayNameForMethod(testClass, testMethod));
 			String indicativeName = classReplaceToIndicativeSentence(testClass);
-
 			return indicativeName + ", " + methodName;
 		}
 
@@ -180,7 +180,7 @@ public interface DisplayNameGenerator {
 				if (classWithDisplayName != null)
 					classIndicativeSentence = classWithDisplayName.value();
 				else
-					classIndicativeSentence = generateDisplayNameForClass(testClass);
+					classIndicativeSentence = underScoreNameFormatting(generateDisplayNameForClass(testClass));
 			}
 			else {
 				if (classWithAnnotation != null) {
@@ -188,24 +188,34 @@ public interface DisplayNameGenerator {
 						if (classWithDisplayName != null)
 							classIndicativeSentence = classWithDisplayName.value();
 						else
-							classIndicativeSentence = generateDisplayNameForClass(testClass);
+							classIndicativeSentence = underScoreNameFormatting(generateDisplayNameForClass(testClass));
 					}
 				}
 				else {
 					if (classWithDisplayName != null)
 						classIndicativeSentence = classWithDisplayName.value();
 					else
-						classIndicativeSentence = super.generateDisplayNameForNestedClass(testClass);
+						classIndicativeSentence = underScoreNameFormatting(super.generateDisplayNameForNestedClass(testClass));
 
 					classIndicativeSentence = classReplaceToIndicativeSentence(classWithEnclosingParent) + ", "
 							+ classIndicativeSentence;
 				}
 			}
 
-			return underscoreSnakeCaseName(classIndicativeSentence);
+			return classIndicativeSentence;
 		}
 
+		/**
+		 * Generate a string with simply the name of the test name without the
+		 * classes related divided by a $: AnotherParent$ParentName$Class.
+		 *
+		 * @param testName the Test Class from to extract the parameter types from;
+		 * never {@code blank}.
+		 * @return a string without the $ symbol and the root data that comes from
+		 * {@code Class.getName()}.
+		 */
 		private String removeRootCharacter(String testName) {
+			Preconditions.notBlank(testName, "Input Name parameter should not be blank");
 			int indexOfChar = testName.indexOf('$');
 
 			if (testName.indexOf('$') >= 0)
@@ -214,13 +224,22 @@ public interface DisplayNameGenerator {
 			return testName;
 		}
 
-		private String underscoreSnakeCaseName(String testName) {
+		/**
+		 * Generate a string which runs through the test name of a name parsed
+		 * by {@link ReplaceUnderscores} and removes the uppercase of the first letter.
+		 *
+		 * @param testName the Test Class from to extract the parameter types from;
+		 * never {@code blank}.
+		 * @return a string without underscore conversion capital letters.
+		 */
+		private String underScoreNameFormatting(String testName) {
+			Preconditions.notBlank(testName, "Input Name parameter should not be blank");
 			if (testName.length() <= 1)
 				return testName;
 			else {
 				String[] splitTestWords = testName.split(" ");
 
-				for (int i = 1; i < splitTestWords.length; i++) {
+				for (int i = 0; i < splitTestWords.length; i++) {
 					if (checkTwoCapsString(splitTestWords[i]) == false)
 						splitTestWords[i] = Character.toLowerCase(splitTestWords[i].charAt(0))
 								+ splitTestWords[i].substring(1);
@@ -230,6 +249,14 @@ public interface DisplayNameGenerator {
 			}
 		}
 
+		/**
+		 * Check the input chain and be sure that if it has more than 2 capital letters,
+		 * it is a method name, class name, etc, and must not be modified.
+		 *
+		 * @param inputWord the segment of a testName.
+		 * @return returns a boolean that tells you if it's a reserved name
+		 * or a description of something.
+		 */
 		private boolean checkTwoCapsString(String inputWord) {
 			char fragmentChar;
 			int lowerCaseCount = 0;
