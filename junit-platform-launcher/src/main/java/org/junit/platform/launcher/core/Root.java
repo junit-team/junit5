@@ -17,7 +17,10 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.FilterResult;
@@ -32,15 +35,12 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  * @since 1.0
  */
 class Root {
+	private static final Logger logger = LoggerFactory.getLogger(Root.class);
 
 	private final Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>(4);
 	private final ConfigurationParameters configurationParameters;
 
-	/**
-	 * Maps to store list of {@link TestDescriptor} which are excluded.
-	 * key: Reason of exclusion.
-	 */
-	private final Map<String, List<TestDescriptor>> exclusionReasonToDescriptorMap = new LinkedHashMap<>();
+	private final Map<String, List<TestDescriptor>> excludedTestDescriptorsByReason = new LinkedHashMap<>();
 
 	Root(ConfigurationParameters configurationParameters) {
 		this.configurationParameters = configurationParameters;
@@ -48,10 +48,6 @@ class Root {
 
 	public ConfigurationParameters getConfigurationParameters() {
 		return configurationParameters;
-	}
-
-	Map<String, List<TestDescriptor>> getExclusionReasonToDescriptorMap() {
-		return exclusionReasonToDescriptorMap;
 	}
 
 	/**
@@ -76,11 +72,19 @@ class Root {
 	void applyPostDiscoveryFilters(LauncherDiscoveryRequest discoveryRequest) {
 		Filter<TestDescriptor> postDiscoveryFilter = composeFilters(discoveryRequest.getPostDiscoveryFilters());
 		TestDescriptor.Visitor removeExcludedTestDescriptors = descriptor -> {
-			if (!descriptor.isRoot() && isExcluded(descriptor, postDiscoveryFilter)) {
+			FilterResult filterResult = postDiscoveryFilter.apply(descriptor);
+			if (!descriptor.isRoot() && isExcluded(descriptor, filterResult)) {
+				populateExclusionReasonInMap(filterResult, descriptor);
 				descriptor.removeFromHierarchy();
 			}
 		};
 		acceptInAllTestEngines(removeExcludedTestDescriptors);
+		printFilteredReason();
+	}
+
+	private void populateExclusionReasonInMap(FilterResult filterResult, TestDescriptor testDescriptor) {
+		excludedTestDescriptorsByReason.computeIfAbsent(filterResult.getReason().orElse("Unknown"),
+			list -> new LinkedList<>()).add(testDescriptor);
 	}
 
 	/**
@@ -94,18 +98,22 @@ class Root {
 		acceptInAllTestEngines(TestDescriptor::prune);
 	}
 
-	private boolean isExcluded(TestDescriptor descriptor, Filter<TestDescriptor> postDiscoveryFilter) {
-		FilterResult filterResult = postDiscoveryFilter.apply(descriptor);
-		boolean excluded = descriptor.getChildren().isEmpty() && filterResult.excluded();
-		if (excluded) {
-			exclusionReasonToDescriptorMap.computeIfAbsent(filterResult.getReason().orElse("Unknown"),
-				list -> new LinkedList<>()).add(descriptor);
-		}
-		return excluded;
+	private boolean isExcluded(TestDescriptor descriptor, FilterResult filterResult) {
+
+		return descriptor.getChildren().isEmpty() && filterResult.excluded();
 	}
 
 	private void acceptInAllTestEngines(TestDescriptor.Visitor visitor) {
 		this.testEngineDescriptors.values().forEach(descriptor -> descriptor.accept(visitor));
 	}
 
+	/**
+	 * prints the reason for test cases that are excluded in post discovery filter phase.
+	 */
+	private void printFilteredReason() {
+		excludedTestDescriptorsByReason.forEach((key, value) -> {
+			String displayNames = value.stream().map(TestDescriptor::getDisplayName).collect(Collectors.joining(", "));
+			logger.debug(() -> String.format("Method names [%s] excluded, reason [%s]", displayNames, key));
+		});
+	}
 }

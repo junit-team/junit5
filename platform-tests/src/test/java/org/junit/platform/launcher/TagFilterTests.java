@@ -150,23 +150,19 @@ class TagFilterTests {
 		assertTrue(filter.apply(classWithTag1AndSurroundingWhitespace).included());
 		assertTrue(filter.apply(classWithBothTags).included());
 
-		assertThat(filter.apply(classWithTag1).getReason().get()).contains(
-			"Test included Because it contains tags: [tag1]");
-		assertThat(filter.apply(classWithTag1AndSurroundingWhitespace).getReason().get()).contains(
-			"Test included Because it contains tags: [tag1]");
-		assertThat(filter.apply(classWithBothTags).getReason().get()).contains(
-			"Test included Because it contains tags: [tag1,tag2]");
+		assertReason(filter.apply(classWithTag1), "Test included Because it satisfy expression(s): [tag1]");
+		assertReason(filter.apply(classWithTag1AndSurroundingWhitespace),
+				"Test included Because it satisfy expression(s): [tag1]");
+		assertReason(filter.apply(classWithBothTags), "Test included Because it satisfy expression(s): [tag1]");
 
 		assertTrue(filter.apply(classWithTag2).excluded());
 		assertTrue(filter.apply(classWithDifferentTags).excluded());
 		assertTrue(filter.apply(classWithNoTags).excluded());
 
-		assertThat(filter.apply(classWithTag2).getReason().get()).contains(
-			"Test excluded Because it contains tags: [tag2]");
-		assertThat(filter.apply(classWithDifferentTags).getReason().get()).contains(
-			"Test excluded Because it contains tags: [foo,bar]");
-		assertThat(filter.apply(classWithNoTags).getReason().get()).contains(
-			"Test excluded Because it contains tags: []");
+		assertReason(filter.apply(classWithTag2), "Test excluded Because it does not satisfy expression(s): [tag1]");
+		assertReason(filter.apply(classWithDifferentTags),
+				"Test excluded Because it does not satisfy expression(s): [tag1]");
+		assertReason(filter.apply(classWithNoTags), "Test excluded Because it does not satisfy expression(s): [tag1]");
 
 	}
 
@@ -175,24 +171,24 @@ class TagFilterTests {
 		assertTrue(filter.apply(classWithTag1AndSurroundingWhitespace).excluded());
 		assertTrue(filter.apply(classWithBothTags).excluded());
 
-		assertThat(filter.apply(classWithTag1).getReason().get()).contains(
-			"Test excluded Because it contains tags: [tag1]");
-		assertThat(filter.apply(classWithTag1AndSurroundingWhitespace).getReason().get()).contains(
-			"Test excluded Because it contains tags: [tag1]");
-		assertThat(filter.apply(classWithBothTags).getReason().get()).contains(
-			"Test excluded Because it contains tags: [tag1,tag2]");
+		assertReason(filter.apply(classWithTag1), "Test excluded Because it satisfy expression(s): [tag1]");
+		assertReason(filter.apply(classWithTag1AndSurroundingWhitespace),
+				"Test excluded Because it satisfy expression(s): [tag1]");
+		assertReason(filter.apply(classWithBothTags), "Test excluded Because it satisfy expression(s): [tag1]");
 
 		assertTrue(filter.apply(classWithTag2).included());
 		assertTrue(filter.apply(classWithDifferentTags).included());
 		assertTrue(filter.apply(classWithNoTags).included());
 
-		assertThat(filter.apply(classWithTag2).getReason().get()).contains(
-			"Test included Because it contains tags: [tag2]");
-		assertThat(filter.apply(classWithDifferentTags).getReason().get()).contains(
-			"Test included Because it contains tags: [foo,bar]");
-		assertThat(filter.apply(classWithNoTags).getReason().get()).contains(
-			"Test included Because it contains tags: []");
+		assertReason(filter.apply(classWithTag2), "Test included Because it does not satisfy expression(s): [tag1]");
+		assertReason(filter.apply(classWithDifferentTags),
+				"Test included Because it does not satisfy expression(s): [tag1]");
+		assertReason(filter.apply(classWithNoTags), "Test included Because it does not satisfy expression(s): [tag1]");
 
+	}
+
+	private void assertReason(FilterResult filterResult, String expectedReason) {
+		assertThat(filterResult.getReason()).isPresent().contains(expectedReason);
 	}
 
 	// -------------------------------------------------------------------------
