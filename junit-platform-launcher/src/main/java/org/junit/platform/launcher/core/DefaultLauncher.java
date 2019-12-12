@@ -13,6 +13,8 @@ package org.junit.platform.launcher.core;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.Optional;
+
 
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
