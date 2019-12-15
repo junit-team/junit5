@@ -351,6 +351,7 @@
 83b2c5705b51ccbd4a587ddc19eaa5cc  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ToStringBuilder.java
 8420520e60b9ef4125d8660c0734eb66  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EmptyArgumentsProvider.java
 84557677f43a584e653b06fca90541d0  junit-platform-commons/src/main/java/org/junit/platform/commons/util/StringUtils.java
+846394d5f7ffd57bf24ab78ab54cf175  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java
 8521fe7b63baa5c50cfd34b74750741d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateExtensionContext.java
 853beb28970f7b6b33da9bb36415610c  documentation/src/docs/asciidoc/tocbot-3.0.2/tocbot.min.js
 855e13355685519e5fc57adcac2130ba  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/conditions/package-info.java
@@ -511,7 +512,6 @@ c3e8aa02a80117b5853b0c9339864ad6  documentation/src/test/java/example/Fast.java
 c47ddd55f0601dd5aaef9d4259565a21  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/discovery/CompositeLauncherDiscoveryListener.java
 c4df8d60b158bdcb7ff588755d7aedbc  documentation/src/test/java/org/junit/api/tools/MarkdownApiReportWriter.java
 c5bc9421a3ed8835262e6133e6f6cbce  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ServiceLoaderTestEngineRegistry.java
-c619238b7cae978bb3fe4125651440e1  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java
 c665cbffd3af83710d24959605b66d5b  documentation/src/docs/asciidoc/docinfos/docinfo.html
 c6fd7ded7b22e80a089c029762f3cf09  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ResourceLock.java
 c729d069600b5da82c25dc54c9db2e13  documentation/src/test/java/example/TestTemplateDemo.java
