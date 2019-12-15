@@ -53,7 +53,7 @@ final class DisplayNameUtils {
 	private static final DisplayNameGenerator replaceUnderscoresGenerator = new ReplaceUnderscores();
 
 	/**
-	 * Pre-defined display name generator instance with indicative sentences.
+	 * Pre-defined display name generator instance producing indicative sentences.
 	 */
 	private static final DisplayNameGenerator indicativeSentencesGenerator = new IndicativeSentencesGenerator();
 
