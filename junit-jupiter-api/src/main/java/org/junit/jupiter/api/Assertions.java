@@ -2940,7 +2940,7 @@ public class Assertions {
 
 	/**
 	 * <em>Assert</em> that execution of the supplied {@code executable} throws
-	 * an exception of the {@code expectedType} and returns the exception.
+	 * an exception of the {@code expectedType} and return the exception.
 	 *
 	 * <p>If no exception is thrown, or if an exception of a different type is
 	 * thrown, this method will fail.
@@ -2954,7 +2954,7 @@ public class Assertions {
 
 	/**
 	 * <em>Assert</em> that execution of the supplied {@code executable} throws
-	 * an exception of the {@code expectedType} and returns the exception.
+	 * an exception of the {@code expectedType} and return the exception.
 	 *
 	 * <p>If no exception is thrown, or if an exception of a different type is
 	 * thrown, this method will fail.
@@ -2970,7 +2970,7 @@ public class Assertions {
 
 	/**
 	 * <em>Assert</em> that execution of the supplied {@code executable} throws
-	 * an exception of the {@code expectedType} and returns the exception.
+	 * an exception of the {@code expectedType} and return the exception.
 	 *
 	 * <p>If no exception is thrown, or if an exception of a different type is
 	 * thrown, this method will fail.
