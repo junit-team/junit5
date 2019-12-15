@@ -152,14 +152,12 @@ public interface DisplayNameGenerator {
 
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
-			String indicativeName = removeRootCharacter(super.generateDisplayNameForClass(testClass));
-			return indicativeName;
+			return removeRootCharacter(super.generateDisplayNameForClass(testClass));
 		}
 
 		@Override
 		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
-			String indicativeName = classReplaceToIndicativeSentence(nestedClass);
-			return indicativeName;
+			return classReplaceToIndicativeSentence(nestedClass);
 		}
 
 		@Override
@@ -170,39 +168,33 @@ public interface DisplayNameGenerator {
 		}
 
 		private String classReplaceToIndicativeSentence(Class<?> testClass) {
-			String classIndicativeSentence = null;
 			Class<?> classWithEnclosingParent = testClass.getEnclosingClass();
 			DisplayName classWithDisplayName = testClass.getAnnotation(DisplayName.class);
 			DisplayNameGeneration classWithAnnotation = testClass.getAnnotation(DisplayNameGeneration.class);
 
 			if (classWithEnclosingParent == null) {
 				if (classWithDisplayName != null)
-					classIndicativeSentence = classWithDisplayName.value();
+					return classWithDisplayName.value();
 				else
-					classIndicativeSentence = underScoreNameFormatting(generateDisplayNameForClass(testClass));
+					return underScoreNameFormatting(generateDisplayNameForClass(testClass));
 			}
 			else {
-				if (classWithAnnotation != null) {
-					if (classWithAnnotation.value() == IndicativeSentencesGenerator.class) {
-						if (classWithDisplayName != null)
-							classIndicativeSentence = classWithDisplayName.value();
-						else
-							classIndicativeSentence = underScoreNameFormatting(generateDisplayNameForClass(testClass));
-					}
+				if (classWithAnnotation != null && classWithAnnotation.value() == IndicativeSentencesGenerator.class) {
+					if (classWithDisplayName != null)
+						return classWithDisplayName.value();
+					else
+						return underScoreNameFormatting(generateDisplayNameForClass(testClass));
 				}
 				else {
 					if (classWithDisplayName != null)
-						classIndicativeSentence = classWithDisplayName.value();
+						return classReplaceToIndicativeSentence(classWithEnclosingParent) + ", "
+								+ classWithDisplayName.value();
 					else
-						classIndicativeSentence = underScoreNameFormatting(
-							super.generateDisplayNameForNestedClass(testClass));
+						return classReplaceToIndicativeSentence(classWithEnclosingParent) + ", "
+								+ underScoreNameFormatting(super.generateDisplayNameForNestedClass(testClass));
 
-					classIndicativeSentence = classReplaceToIndicativeSentence(classWithEnclosingParent) + ", "
-							+ classIndicativeSentence;
 				}
 			}
-
-			return classIndicativeSentence;
 		}
 
 		/**
@@ -216,12 +208,10 @@ public interface DisplayNameGenerator {
 		 */
 		private String removeRootCharacter(String testName) {
 			Preconditions.notBlank(testName, "Input Name parameter should not be blank");
-			int indexOfChar = testName.indexOf('$');
+			String[] testNameSplit = testName.split("\\$");
+			int last = testNameSplit.length - 1;
 
-			if (testName.indexOf('$') >= 0)
-				testName = testName.substring(indexOfChar + 1);
-
-			return testName;
+			return testNameSplit[last];
 		}
 
 		/**
@@ -240,7 +230,7 @@ public interface DisplayNameGenerator {
 				String[] splitTestWords = testName.split(" ");
 
 				for (int i = 0; i < splitTestWords.length; i++) {
-					if (checkTwoCapsString(splitTestWords[i]) == false)
+					if (!checkTwoCapsString(splitTestWords[i]))
 						splitTestWords[i] = Character.toLowerCase(splitTestWords[i].charAt(0))
 								+ splitTestWords[i].substring(1);
 				}
