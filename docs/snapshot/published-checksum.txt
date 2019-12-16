@@ -181,6 +181,7 @@
 44dc86ad3baa20b8fa011469147874a2  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/MethodArgumentsProvider.java
 4561d9d259e915a81dc88e0be6494e02  junit-jupiter-api/src/main/java/org/junit/jupiter/api/MethodOrderer.java
 462718c123b046960efe8d9684aeffb1  junit-platform-commons/src/main/java/org/junit/platform/commons/util/PackageUtils.java
+46397e5527e4a422b8b532bdbce71acc  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java
 47249a1caa1aa2f0681a6588b99f3ac1  documentation/src/test/java/example/interceptor/SwingEdtInterceptor.java
 4736ae4f17e88ade5a702f33fe2e85a1  documentation/src/docs/asciidoc/user-guide/images/writing-tests_execution_mode.svg
 47701a101994037c8394be924c622810  documentation/src/test/java/example/ConditionalTestExecutionDemo.java
@@ -351,7 +352,6 @@
 83b2c5705b51ccbd4a587ddc19eaa5cc  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ToStringBuilder.java
 8420520e60b9ef4125d8660c0734eb66  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EmptyArgumentsProvider.java
 84557677f43a584e653b06fca90541d0  junit-platform-commons/src/main/java/org/junit/platform/commons/util/StringUtils.java
-846394d5f7ffd57bf24ab78ab54cf175  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assertions.java
 8521fe7b63baa5c50cfd34b74750741d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateExtensionContext.java
 853beb28970f7b6b33da9bb36415610c  documentation/src/docs/asciidoc/tocbot-3.0.2/tocbot.min.js
 855e13355685519e5fc57adcac2130ba  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/conditions/package-info.java
