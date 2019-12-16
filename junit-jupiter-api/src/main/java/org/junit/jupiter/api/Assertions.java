@@ -57,8 +57,8 @@ import org.opentest4j.MultipleFailuresError;
  * will be committed to the persistent store (e.g., relational database) even
  * though the test-managed transaction is rolled back.
  *
- * <p>Similar side side effects may be encountered with other frameworks that
- * rely on {@code ThreadLocal} storage.
+ * <p>Similar side effects may be encountered with other frameworks that rely on
+ * {@code ThreadLocal} storage.
  *
  * <h3>Extensibility</h3>
  *
