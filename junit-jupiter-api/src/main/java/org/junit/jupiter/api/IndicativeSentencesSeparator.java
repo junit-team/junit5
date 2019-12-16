@@ -12,6 +12,7 @@ package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
@@ -29,6 +30,7 @@ import org.apiguardian.api.API;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
+@Documented
 @Inherited
 @API(status = EXPERIMENTAL, since = "5.4")
 public @interface IndicativeSentencesSeparator {
