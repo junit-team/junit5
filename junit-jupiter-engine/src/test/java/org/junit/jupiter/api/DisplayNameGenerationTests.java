@@ -125,6 +125,18 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		));
 	}
 
+	@Test
+	void checkDisplayNameGeneratedForIndicativeGeneratorWithCustomSeparatorTestCase() {
+		check(IndicativeGeneratorWithCustomSeparatorTestCase.class, List.of( //
+			"CONTAINER: A stack", //
+			"CONTAINER: A stack >> when is new", //
+			"CONTAINER: A stack >> when is new >> after pushing an element to an empty stack", //
+			"TEST: A stack >> is instantiated with new constructor", //
+			"TEST: A stack >> when is new >> after pushing an element to an empty stack >> is no longer empty", //
+			"TEST: A stack >> when is new >> throws EmptyStackException when peeked"//
+		));
+	}
+
 	private void check(Class<?> testClass, List<String> expectedDisplayNames) {
 		var request = request().selectors(selectClass(testClass)).build();
 		var descriptors = discoverTests(request).getDescendants();
@@ -304,6 +316,51 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			@Test
 			void Throws_EmptyStackException_When_Popped() {
 				assertThrows(EmptyStackException.class, () -> stack.pop());
+			}
+
+			@Nested
+			class After_pushing_an_element_to_an_empty_stack {
+
+				String anElement = "an element";
+
+				@BeforeEach
+				void push_An_Element() {
+					stack.push(anElement);
+				}
+
+				@Test
+				void is_no_longer_empty() {
+					assertFalse(stack.isEmpty());
+				}
+			}
+		}
+	}
+
+	// -------------------------------------------------------------------
+
+	@DisplayName("A stack")
+	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentencesGenerator.class)
+	@IndicativeSentencesSeparator(" >> ")
+	static class IndicativeGeneratorWithCustomSeparatorTestCase {
+
+		Stack<Object> stack;
+
+		@Test
+		void is_Instantiated_With_New_Constructor() {
+			new Stack<>();
+		}
+
+		@Nested
+		class When_Is_New {
+
+			@BeforeEach
+			void create_With_New_Stack() {
+				stack = new Stack<>();
+			}
+
+			@Test
+			void Throws_EmptyStackException_When_Peeked() {
+				assertThrows(EmptyStackException.class, () -> stack.peek());
 			}
 
 			@Nested
