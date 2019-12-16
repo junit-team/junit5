@@ -162,10 +162,8 @@ public interface DisplayNameGenerator {
 
 		@Override
 		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
-			String methodName = underScoreNameFormatting(super.generateDisplayNameForMethod(testClass, testMethod));
-			String indicativeName = classReplaceToIndicativeSentence(testClass);
-			String sentenceSeparator = getSentenceSeparator(testClass);
-			return indicativeName + getSentenceSeparator(testClass) + methodName;
+			return classReplaceToIndicativeSentence(testClass) + getSentenceSeparator(testClass)
+					+ underScoreNameFormatting(super.generateDisplayNameForMethod(testClass, testMethod));
 		}
 
 		private String classReplaceToIndicativeSentence(Class<?> testClass) {
@@ -187,7 +185,6 @@ public interface DisplayNameGenerator {
 						return underScoreNameFormatting(generateDisplayNameForClass(testClass));
 				}
 				else {
-					String separator = getSentenceSeparator(testClass);
 					if (classWithDisplayName != null)
 						return classReplaceToIndicativeSentence(classWithEnclosingParent)
 								+ getSentenceSeparator(testClass) + classWithDisplayName.value();
@@ -284,5 +281,4 @@ public interface DisplayNameGenerator {
 			return (lowerCaseCount >= 2);
 		}
 	}
-
 }
