@@ -164,7 +164,8 @@ public interface DisplayNameGenerator {
 		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
 			String methodName = underScoreNameFormatting(super.generateDisplayNameForMethod(testClass, testMethod));
 			String indicativeName = classReplaceToIndicativeSentence(testClass);
-			return indicativeName + ", " + methodName;
+			String sentenceSeparator = getSentenceSeparator(testClass);
+			return indicativeName + getSentenceSeparator(testClass) + methodName;
 		}
 
 		private String classReplaceToIndicativeSentence(Class<?> testClass) {
@@ -186,15 +187,38 @@ public interface DisplayNameGenerator {
 						return underScoreNameFormatting(generateDisplayNameForClass(testClass));
 				}
 				else {
+					String separator = getSentenceSeparator(testClass);
 					if (classWithDisplayName != null)
-						return classReplaceToIndicativeSentence(classWithEnclosingParent) + ", "
-								+ classWithDisplayName.value();
+						return classReplaceToIndicativeSentence(classWithEnclosingParent)
+								+ getSentenceSeparator(testClass) + classWithDisplayName.value();
 					else
-						return classReplaceToIndicativeSentence(classWithEnclosingParent) + ", "
+						return classReplaceToIndicativeSentence(classWithEnclosingParent)
+								+ getSentenceSeparator(testClass)
 								+ underScoreNameFormatting(super.generateDisplayNameForNestedClass(testClass));
 
 				}
 			}
+		}
+
+		/**
+		 * Gets the separator for {@link IndicativeSentencesSeparator} when extracting the
+		 * annotation from {@code IndicativeSentencesSeparator}, if it doesn't find it,
+		 * then search for the parent classes, if no separator is found use @code{", "} by default.
+		 *
+		 * @param currentClass the Test Class the separator either custom or default
+		 * @return the indicative sentence separator
+		 * {@code Class.getName()}.
+		 */
+		private String getSentenceSeparator(Class<?> currentClass) {
+			IndicativeSentencesSeparator separator = currentClass.getAnnotation(IndicativeSentencesSeparator.class);
+			if (separator != null)
+				return separator.value();
+
+			Class<?> parentClass = currentClass.getEnclosingClass();
+			if (parentClass != null)
+				return getSentenceSeparator(parentClass);
+
+			return ", ";
 		}
 
 		/**
