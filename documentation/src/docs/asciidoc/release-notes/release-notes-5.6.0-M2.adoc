@@ -33,6 +33,7 @@ on GitHub.
 * `TestExecutionSummary.Failure` is now serializable.
 * `ReflectionSupport.findNestedClasses(...)` now detects cycles within inner class
   hierarchies. Consult the Javadoc for details.
+* `ThrowableCollector.toTestExecutionResult()` is now public.
 
 
 [[release-notes-5.6.0-M2️-junit-jupiter]]
