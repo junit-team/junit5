@@ -69,6 +69,11 @@ import org.junit.runner.notification.RunNotifier;
  * to be run with IDEs and build systems that support JUnit 4 but do not yet
  * support the JUnit Platform directly.
  *
+ * <p>Please note that test classes and suites annotated with
+ * {@code @RunWith(JUnitPlatform.class)} <em>cannot</em> be executed directly on
+ * the JUnit Platform (or as a "JUnit 5" test as documented in some IDEs). Such
+ * classes and suites can only be executed using JUnit 4 infrastructure.
+ *
  * <p>Consult the various annotations in the {@code org.junit.platform.suite.api}
  * package for configuration options.
  *
