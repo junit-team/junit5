@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.TagFilter.includeTags;
+import static org.junit.platform.launcher.TagIntegrationTests.TaggedTestCase.doubleTaggedWasExecuted;
 import static org.junit.platform.launcher.TagIntegrationTests.TaggedTestCase.tag1WasExecuted;
 import static org.junit.platform.launcher.TagIntegrationTests.TaggedTestCase.tag2WasExecuted;
 import static org.junit.platform.launcher.TagIntegrationTests.TaggedTestCase.unTaggedWasExecuted;
-import static org.junit.platform.launcher.TagIntegrationTests.TaggedTestCase.doubleTaggedWasExecuted;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -44,8 +44,8 @@ class TagIntegrationTests {
 
 		assertFalse(tag1WasExecuted);
 		assertFalse(tag2WasExecuted);
-        assertFalse(doubleTaggedWasExecuted);
-        assertFalse(unTaggedWasExecuted);
+		assertFalse(doubleTaggedWasExecuted);
+		assertFalse(unTaggedWasExecuted);
 	}
 
 	@Test
@@ -56,8 +56,8 @@ class TagIntegrationTests {
 
 		assertTrue(tag1WasExecuted);
 		assertFalse(tag2WasExecuted);
-        assertTrue(doubleTaggedWasExecuted);
-        assertFalse(unTaggedWasExecuted);
+		assertTrue(doubleTaggedWasExecuted);
+		assertFalse(unTaggedWasExecuted);
 	}
 
 	@Test
@@ -80,16 +80,16 @@ class TagIntegrationTests {
 
 		assertFalse(tag1WasExecuted);
 		assertFalse(tag2WasExecuted);
-        assertFalse(doubleTaggedWasExecuted);
+		assertFalse(doubleTaggedWasExecuted);
 		assertTrue(unTaggedWasExecuted);
 	}
 
-    private void execute(LauncherDiscoveryRequest request) {
-        Launcher launcher = LauncherFactory.create();
-        launcher.execute(request);
-    }
+	private void execute(LauncherDiscoveryRequest request) {
+		Launcher launcher = LauncherFactory.create();
+		launcher.execute(request);
+	}
 
-    private LauncherDiscoveryRequest buildRequest(PostDiscoveryFilter filter, Class<TaggedTestCase> testClass) {
+	private LauncherDiscoveryRequest buildRequest(PostDiscoveryFilter filter, Class<TaggedTestCase> testClass) {
 		LauncherDiscoveryRequestBuilder requestBuilder = request().selectors(selectClass(testClass)).filters(filter);
 		return requestBuilder.build();
 	}
