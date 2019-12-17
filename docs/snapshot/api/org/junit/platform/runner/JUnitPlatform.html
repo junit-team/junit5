@@ -155,6 +155,11 @@ implements <a href="https://junit.org/junit4/javadoc/4.12/org/junit/runner/manip
  to be run with IDEs and build systems that support JUnit 4 but do not yet
  support the JUnit Platform directly.
 
+ <p>Please note that test classes and suites annotated with
+ <code>@RunWith(JUnitPlatform.class)</code> <em>cannot</em> be executed directly on
+ the JUnit Platform (or as a "JUnit 5" test as documented in some IDEs). Such
+ classes and suites can only be executed using JUnit 4 infrastructure.
+
  <p>Consult the various annotations in the <code>org.junit.platform.suite.api</code>
  package for configuration options.
 
