@@ -41,7 +41,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* When `@Nested` is used, the temporary directory is now also injected into instance
+  fields of enclosing classes annotated with `@TempDir`.
 
 ==== Deprecations and Breaking Changes
 

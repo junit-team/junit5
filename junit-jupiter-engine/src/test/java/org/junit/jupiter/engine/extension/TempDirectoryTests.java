@@ -90,9 +90,16 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	@DisplayName("can be used in nested test class")
-	void canBeUsedInNestedTestClass() {
-		executeTestsForClass(TempDirCanBeUsedInNestedTestClass.class).testEvents()//
+	@DisplayName("can be used via instance field inside nested test classes")
+	void canBeUsedViaInstanceFieldInsideNestedTestClasses() {
+		executeTestsForClass(TempDirUsageInsideNestedClassesTestCase.class).testEvents()//
+				.assertStatistics(stats -> stats.started(3).succeeded(3));
+	}
+
+	@Test
+	@DisplayName("can be used via static field inside nested test classes")
+	void canBeUsedViaStaticFieldInsideNestedTestClasses() {
+		executeTestsForClass(StaticTempDirUsageInsideNestedClassTestCase.class).testEvents()//
 				.assertStatistics(stats -> stats.started(2).succeeded(2));
 	}
 
@@ -774,16 +781,22 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2079
-	static class TempDirCanBeUsedInNestedTestClass {
+	static class TempDirUsageInsideNestedClassesTestCase {
 
 		@TempDir
 		File tempDir;
+
+		@Test
+		void topLevel() {
+			assertNotNull(tempDir);
+			assertTrue(tempDir.exists());
+		}
 
 		@Nested
 		class NestedTestClass {
 
 			@Test
-			void testNested() {
+			void nested() {
 				assertNotNull(tempDir);
 				assertTrue(tempDir.exists());
 			}
@@ -792,10 +805,36 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			class EvenDeeperNestedTestClass {
 
 				@Test
-				void testDeepNested() {
+				void deeplyNested() {
 					assertNotNull(tempDir);
 					assertTrue(tempDir.exists());
 				}
+			}
+		}
+	}
+
+	static class StaticTempDirUsageInsideNestedClassTestCase {
+
+		@TempDir
+		static File tempDir;
+
+		static File initialTempDir;
+
+		@Test
+		void topLevel() {
+			assertNotNull(tempDir);
+			assertTrue(tempDir.exists());
+			initialTempDir = tempDir;
+		}
+
+		@Nested
+		class NestedTestClass {
+
+			@Test
+			void nested() {
+				assertNotNull(tempDir);
+				assertTrue(tempDir.exists());
+				assertSame(initialTempDir, tempDir);
 			}
 		}
 	}

@@ -70,8 +70,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	 * {@link TempDir @TempDir}.
 	 */
 	@Override
-	public void beforeAll(ExtensionContext context) throws Exception {
-		injectFields(context, null, context.getRequiredTestClass(), ReflectionUtils::isStatic);
+	public void beforeAll(ExtensionContext context) {
+		injectStaticFields(context, context.getRequiredTestClass());
 	}
 
 	/**
@@ -80,13 +80,17 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	 * with {@link TempDir @TempDir}.
 	 */
 	@Override
-	public void beforeEach(ExtensionContext context) throws RuntimeException {
-		injectFields(context, context.getRequiredTestInstance(), context.getRequiredTestClass(),
-			ReflectionUtils::isNotStatic);
-		context.getTestInstances().ifPresent(testinstances -> {
-			testinstances.getEnclosingInstances().forEach(enclosingInstance -> injectFields(context, enclosingInstance,
-				enclosingInstance.getClass(), ReflectionUtils::isNotStatic));
-		});
+	public void beforeEach(ExtensionContext context) {
+		context.getRequiredTestInstances().getAllInstances() //
+				.forEach(instance -> injectInstanceFields(context, instance));
+	}
+
+	private void injectStaticFields(ExtensionContext context, Class<?> testClass) {
+		injectFields(context, null, testClass, ReflectionUtils::isStatic);
+	}
+
+	private void injectInstanceFields(ExtensionContext context, Object instance) {
+		injectFields(context, instance, instance.getClass(), ReflectionUtils::isNotStatic);
 	}
 
 	private void injectFields(ExtensionContext context, Object testInstance, Class<?> testClass,
