@@ -26,13 +26,14 @@ import org.apiguardian.api.API;
  * in the IndicativeSentencesGenerator, if this notation was not declared
  * IndicativeSentencesGenerator will use ", " as separator by default.
  *
+ * @since 5.6
  * @see DisplayNameGenerator
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@API(status = EXPERIMENTAL, since = "5.4")
+@API(status = EXPERIMENTAL, since = "5.6")
 public @interface IndicativeSentencesSeparator {
 
 	/**

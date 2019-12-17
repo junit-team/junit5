@@ -120,8 +120,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			"CONTAINER: A stack, when is new, after pushing an element to an empty stack", //
 			"TEST: A stack, is instantiated with new constructor", //
 			"TEST: A stack, when is new, after pushing an element to an empty stack, is no longer empty", //
-			"TEST: A stack, when is new, throws EmptyStackException when peeked", //
-			"TEST: A stack, when is new, throws EmptyStackException when popped" //
+			"TEST: A stack, when is new, throws EmptyStackException when peeked" //
 		));
 	}
 
@@ -296,35 +295,30 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		Stack<Object> stack;
 
 		@Test
-		void is_Instantiated_With_New_Constructor() {
+		void is_instantiated_with_new_constructor() {
 			new Stack<>();
 		}
 
 		@Nested
-		class When_Is_New {
+		class when_is_new {
 
 			@BeforeEach
-			void create_With_New_Stack() {
+			void create_with_new_stack() {
 				stack = new Stack<>();
 			}
 
 			@Test
-			void Throws_EmptyStackException_When_Peeked() {
+			void throws_EmptyStackException_when_peeked() {
 				assertThrows(EmptyStackException.class, () -> stack.peek());
 			}
 
-			@Test
-			void Throws_EmptyStackException_When_Popped() {
-				assertThrows(EmptyStackException.class, () -> stack.pop());
-			}
-
 			@Nested
-			class After_pushing_an_element_to_an_empty_stack {
+			class after_pushing_an_element_to_an_empty_stack {
 
 				String anElement = "an element";
 
 				@BeforeEach
-				void push_An_Element() {
+				void push_an_element() {
 					stack.push(anElement);
 				}
 
@@ -346,30 +340,30 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		Stack<Object> stack;
 
 		@Test
-		void is_Instantiated_With_New_Constructor() {
+		void is_instantiated_with_new_constructor() {
 			new Stack<>();
 		}
 
 		@Nested
-		class When_Is_New {
+		class when_is_new {
 
 			@BeforeEach
-			void create_With_New_Stack() {
+			void create_with_new_stack() {
 				stack = new Stack<>();
 			}
 
 			@Test
-			void Throws_EmptyStackException_When_Peeked() {
+			void throws_EmptyStackException_when_peeked() {
 				assertThrows(EmptyStackException.class, () -> stack.peek());
 			}
 
 			@Nested
-			class After_pushing_an_element_to_an_empty_stack {
+			class after_pushing_an_element_to_an_empty_stack {
 
 				String anElement = "an element";
 
 				@BeforeEach
-				void push_An_Element() {
+				void push_an_element() {
 					stack.push(anElement);
 				}
 

@@ -147,7 +147,10 @@ public interface DisplayNameGenerator {
 	 * <p>This generator extends the functionality of {@link ReplaceUnderscores} by
 	 * generating a human-readable display names that form complete sentences divided each
 	 * class, nested class and test by a ({@code ','}).
+	 *
+	 * @since 5.6
 	 */
+	@API(status = EXPERIMENTAL, since = "5.6")
 	class IndicativeSentencesGenerator extends ReplaceUnderscores {
 
 		@Override
@@ -163,7 +166,7 @@ public interface DisplayNameGenerator {
 		@Override
 		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
 			return classReplaceToIndicativeSentence(testClass) + getSentenceSeparator(testClass)
-					+ underScoreNameFormatting(super.generateDisplayNameForMethod(testClass, testMethod));
+					+ super.generateDisplayNameForMethod(testClass, testMethod);
 		}
 
 		private String classReplaceToIndicativeSentence(Class<?> testClass) {
@@ -175,14 +178,14 @@ public interface DisplayNameGenerator {
 				if (classWithDisplayName != null)
 					return classWithDisplayName.value();
 				else
-					return underScoreNameFormatting(generateDisplayNameForClass(testClass));
+					return generateDisplayNameForClass(testClass);
 			}
 			else {
 				if (classWithAnnotation != null && classWithAnnotation.value() == IndicativeSentencesGenerator.class) {
 					if (classWithDisplayName != null)
 						return classWithDisplayName.value();
 					else
-						return underScoreNameFormatting(generateDisplayNameForClass(testClass));
+						return generateDisplayNameForClass(testClass);
 				}
 				else {
 					if (classWithDisplayName != null)
@@ -190,8 +193,7 @@ public interface DisplayNameGenerator {
 								+ getSentenceSeparator(testClass) + classWithDisplayName.value();
 					else
 						return classReplaceToIndicativeSentence(classWithEnclosingParent)
-								+ getSentenceSeparator(testClass)
-								+ underScoreNameFormatting(super.generateDisplayNameForNestedClass(testClass));
+								+ getSentenceSeparator(testClass) + super.generateDisplayNameForNestedClass(testClass);
 
 				}
 			}
@@ -233,52 +235,6 @@ public interface DisplayNameGenerator {
 			int last = testNameSplit.length - 1;
 
 			return testNameSplit[last];
-		}
-
-		/**
-		 * Generate a string which runs through the test name of a name parsed
-		 * by {@link ReplaceUnderscores} and removes the uppercase of the first letter.
-		 *
-		 * @param testName the Test Class from to extract the parameter types from;
-		 * never {@code blank}.
-		 * @return a string without underscore conversion capital letters.
-		 */
-		private String underScoreNameFormatting(String testName) {
-			Preconditions.notBlank(testName, "Input Name parameter should not be blank");
-			if (testName.length() <= 1)
-				return testName;
-			else {
-				String[] splitTestWords = testName.split(" ");
-
-				for (int i = 0; i < splitTestWords.length; i++) {
-					if (!checkTwoCapsString(splitTestWords[i]))
-						splitTestWords[i] = Character.toLowerCase(splitTestWords[i].charAt(0))
-								+ splitTestWords[i].substring(1);
-				}
-
-				return String.join(" ", splitTestWords);
-			}
-		}
-
-		/**
-		 * Check the input chain and be sure that if it has more than 2 capital letters,
-		 * it is a method name, class name, etc, and must not be modified.
-		 *
-		 * @param inputWord the segment of a testName.
-		 * @return returns a boolean that tells you if it's a reserved name
-		 * or a description of something.
-		 */
-		private boolean checkTwoCapsString(String inputWord) {
-			char fragmentChar;
-			int lowerCaseCount = 0;
-
-			for (int i = 0; i < inputWord.length(); i++) {
-				fragmentChar = inputWord.charAt(i);
-				if (Character.isUpperCase(fragmentChar))
-					lowerCaseCount++;
-			}
-
-			return (lowerCaseCount >= 2);
 		}
 	}
 }
