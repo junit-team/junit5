@@ -35,10 +35,6 @@ public interface TagExpression {
 	 */
 	@API(status = INTERNAL, since = "1.1")
 	static ParseResult parseFrom(String infixTagExpression) {
-
-		//TODO: cleanup
-		//		System.out.println("infixTagExpression = " + infixTagExpression);
-
 		return new EnhancedParser().parse(infixTagExpression);
 	}
 
