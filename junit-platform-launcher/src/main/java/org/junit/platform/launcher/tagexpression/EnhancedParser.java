@@ -22,8 +22,6 @@ class EnhancedParser implements TagExpressionParser {
 
 	@Override
 	public ParseResult parse(String infixTagExpression) {
-
-		//TODO: improve with Optional
 		if (infixTagExpression != null) {
 			if (infixTagExpression.equals("any()"))
 				return ParseResults.success(TagExpressions.any());
@@ -33,6 +31,5 @@ class EnhancedParser implements TagExpressionParser {
 		}
 
 		return this.target.parse(infixTagExpression);
-
 	}
 }
