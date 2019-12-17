@@ -79,7 +79,7 @@ class JavacModulesTests {
 	private static List<String> compileModules(Path temp, Writer out, Writer err, Function<Project, Stream<Path>> patch)
 			throws Exception {
 		var args = new ArrayList<String>();
-		args.add("-Xlint:all,-requires-automatic,-requires-transitive-automatic");
+		args.add("-Xlint:all,-requires-automatic,-requires-transitive-automatic,-path");
 		args.add("-proc:none"); // disable annotation processing
 
 		args.add("-d");
