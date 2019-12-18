@@ -60,8 +60,10 @@ class ModularUserGuideTests {
 		Files.write(documentation.resolve("module-info.java"), DOCUMENTATION_MODULE_DESCRIPTOR);
 
 		var args = new ArrayList<String>();
-		args.add("-Xlint:-path"); // ignore path-related warnings for the time being
+		args.add("-Xlint"); // enable all default warnings
 		args.add("-proc:none"); // disable annotation processing
+		args.add("-cp");
+		args.add(""); // set empty class path, otherwise system property "java.class.path" is read
 
 		args.add("-d");
 		args.add(temp.resolve("destination").toString());

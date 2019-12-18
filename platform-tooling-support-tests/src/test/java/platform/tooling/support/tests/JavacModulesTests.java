@@ -79,8 +79,10 @@ class JavacModulesTests {
 	private static List<String> compileModules(Path temp, Writer out, Writer err, Function<Project, Stream<Path>> patch)
 			throws Exception {
 		var args = new ArrayList<String>();
-		args.add("-Xlint:all,-requires-automatic,-requires-transitive-automatic,-path");
+		args.add("-Xlint:all,-requires-automatic,-requires-transitive-automatic");
 		args.add("-proc:none"); // disable annotation processing
+		args.add("-cp");
+		args.add(""); // set empty class path, otherwise system property "java.class.path" is read
 
 		args.add("-d");
 		args.add(temp.resolve("destination").toString());
