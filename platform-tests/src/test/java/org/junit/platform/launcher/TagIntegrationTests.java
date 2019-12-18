@@ -23,7 +23,8 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.launcher.core.LauncherFactory;
 
 class TagIntegrationTests {
@@ -38,9 +39,7 @@ class TagIntegrationTests {
 
 	@Test
 	void includingWrongTagExecutesNothing() {
-		LauncherDiscoveryRequest request = this.buildRequest(includeTags("whatever"), TaggedTestCase.class);
-
-		this.execute(request);
+		executeTaggedTestCase(includeTags("whatever"));
 
 		assertFalse(tag1WasExecuted);
 		assertFalse(tag2WasExecuted);
@@ -50,9 +49,7 @@ class TagIntegrationTests {
 
 	@Test
 	void includingSuitableTagExecutesTaggedTestOnly() {
-		LauncherDiscoveryRequest request = this.buildRequest(includeTags("tag1"), TaggedTestCase.class);
-
-		this.execute(request);
+		executeTaggedTestCase(includeTags("tag1"));
 
 		assertTrue(tag1WasExecuted);
 		assertFalse(tag2WasExecuted);
@@ -60,11 +57,10 @@ class TagIntegrationTests {
 		assertFalse(unTaggedWasExecuted);
 	}
 
-	@Test
-	void includingTheAnyKeywordExecutesAllTaggedTests() {
-		LauncherDiscoveryRequest request = this.buildRequest(includeTags("any()"), TaggedTestCase.class);
-
-		this.execute(request);
+	@ParameterizedTest
+	@ValueSource(strings = { "any()", "!none()" })
+	void includingTheAnyKeywordExecutesAllTaggedTests(String tagExpression) {
+		executeTaggedTestCase(includeTags(tagExpression));
 
 		assertTrue(tag1WasExecuted);
 		assertTrue(tag2WasExecuted);
@@ -72,11 +68,10 @@ class TagIntegrationTests {
 		assertFalse(unTaggedWasExecuted);
 	}
 
-	@Test
-	void includingTheNoneKeywordExecutesAllUntaggedTests() {
-		LauncherDiscoveryRequest request = this.buildRequest(includeTags("none()"), TaggedTestCase.class);
-
-		this.execute(request);
+	@ParameterizedTest
+	@ValueSource(strings = { "none()", "!any()" })
+	void includingTheNoneKeywordExecutesAllUntaggedTests(String tagExpression) {
+		executeTaggedTestCase(includeTags(tagExpression));
 
 		assertFalse(tag1WasExecuted);
 		assertFalse(tag2WasExecuted);
@@ -84,14 +79,12 @@ class TagIntegrationTests {
 		assertTrue(unTaggedWasExecuted);
 	}
 
-	private void execute(LauncherDiscoveryRequest request) {
-		Launcher launcher = LauncherFactory.create();
-		launcher.execute(request);
-	}
-
-	private LauncherDiscoveryRequest buildRequest(PostDiscoveryFilter filter, Class<TaggedTestCase> testClass) {
-		LauncherDiscoveryRequestBuilder requestBuilder = request().selectors(selectClass(testClass)).filters(filter);
-		return requestBuilder.build();
+	private void executeTaggedTestCase(PostDiscoveryFilter filter) {
+		var request = request() //
+				.selectors(selectClass(TaggedTestCase.class)) //
+				.filters(filter) //
+				.build();
+		LauncherFactory.create().execute(request);
 	}
 
 	static class TaggedTestCase {

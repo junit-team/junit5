@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @since 1.1
  */
-class ShuntingYardBasedParser implements TagExpressionParser {
+class Parser {
 
 	private final Tokenizer tokenizer = new Tokenizer();
 
