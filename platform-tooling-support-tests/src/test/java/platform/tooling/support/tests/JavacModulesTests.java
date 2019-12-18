@@ -29,7 +29,6 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.spi.ToolProvider;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -64,11 +63,12 @@ class JavacModulesTests {
 			}
 		}
 
-		private Stream<Path> getMainOutputDirs() {
-			try {
-				return Files.list(javaClassesDir) //
+		private List<Path> getMainOutputDirs() {
+			try (var files = Files.list(javaClassesDir)) {
+				return files //
 						.filter(file -> Files.isDirectory(file)) //
-						.filter(dir -> dir.getFileName().toString().startsWith("main"));
+						.filter(dir -> dir.getFileName().toString().startsWith("main")) //
+						.collect(Collectors.toList());
 			}
 			catch (IOException e) {
 				throw new UncheckedIOException(e);
@@ -76,10 +76,11 @@ class JavacModulesTests {
 		}
 	}
 
-	private static List<String> compileModules(Path temp, Writer out, Writer err, Function<Project, Stream<Path>> patch)
+	private static List<String> compileModules(Path temp, Writer out, Writer err, Function<Project, List<Path>> patch)
 			throws Exception {
 		var args = new ArrayList<String>();
-		args.add("-Xlint:all,-requires-automatic,-requires-transitive-automatic,-path");
+		args.add("-verbose");
+		args.add("-Xlint:all,-requires-automatic,-requires-transitive-automatic");
 		args.add("-proc:none"); // disable annotation processing
 
 		args.add("-d");
@@ -111,7 +112,8 @@ class JavacModulesTests {
 					.collect(joining(File.pathSeparator)));
 
 			for (var project : projects) {
-				var path = patch.apply(project).map(Path::toString).collect(joining(File.pathSeparator));
+				var path = patch.apply(project).stream() //
+						.filter(Files::isDirectory).map(Path::toString).collect(joining(File.pathSeparator));
 				if (path.isEmpty()) {
 					continue;
 				}

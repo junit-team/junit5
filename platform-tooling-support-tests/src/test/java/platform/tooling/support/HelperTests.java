@@ -63,7 +63,7 @@ class HelperTests {
 	void checkMavenToolchainsPointingValidJdkInstallations(int version) {
 		var home = Helper.getJdkHomeFromMavenToolchains("" + version);
 		assumeTrue(home.isPresent(), "No 'jdk' element found in Maven toolchain for: " + version);
-		assertTrue(Files.isDirectory(home.get()));
+		assertTrue(Files.isDirectory(home.get()), "Toolchain for jdk '" + version + "' is invalid: " + home.get());
 	}
 
 }
