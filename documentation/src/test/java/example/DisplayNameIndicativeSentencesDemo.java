@@ -12,7 +12,6 @@ package example;
 
 // tag::user_guide[]
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.IndicativeSentencesSeparator;
@@ -30,7 +29,6 @@ class DisplayNameIndicativeSentencesDemo {
 		void is_in_a_box() {
 		}
 
-		@DisplayName("can be alive and not at the same time!")
 		@Test
 		void can_be_alive_and_not() {
 		}

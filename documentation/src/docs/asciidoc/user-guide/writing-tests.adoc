@@ -163,6 +163,9 @@ include::{testDir}/example/DisplayNameGeneratorDemo.java[tags=user_guide]
   '-- A year is a leap year [OK]
     +-- A year is a leap year, if it is divisible by 4 but not by 100. [OK]
     '-- A year is a leap year, if it is one of the following years. [OK]
+      +-- Year 2016 is a leap year. [OK]
+      +-- Year 2020 is a leap year. [OK]
+      '-- Year 2048 is a leap year. [OK]
 ```
 
 [[writing-tests-display-name-generator-extensions]]
@@ -183,9 +186,8 @@ Also, by using the annotation that supports the `ReplaceUnderscores`:
 `@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentencesGenerator.class)`
 
 You can generate an output that concatenates the names of your tests,
-by using `@DisplayName` or splitting the name of the test with underscores, always
-taking `@DisplayName` as a priority, in this way making the results more indicative
-and easy to read.
+by splitting the name of the test with underscores, in this way making
+the results more indicative and easy to read.
 
 In addition the separator between the names of the tests, can optionally
 be customized and if this is not declared, by default the separator `", "`.

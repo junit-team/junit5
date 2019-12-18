@@ -46,9 +46,9 @@ class DisplayNameGeneratorDemo {
 		void if_it_is_divisible_by_4_but_not_by_100() {
 		}
 
-		@DisplayName("if it is one of the following years.")
-		@Test
-		void the_following_years() {
+		@ParameterizedTest(name = "Year {0} is a leap year.")
+		@ValueSource(ints = { 2016, 2020, 2048 })
+		void if_it_is_one_of_the_following_years(int year) {
 		}
 
 	}
