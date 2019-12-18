@@ -15,7 +15,7 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -31,11 +31,9 @@ class Tokenizer {
 			return emptyList();
 		}
 		List<Token> parts = new ArrayList<>();
-		try (Scanner scanner = new Scanner(infixTagExpression)) {
-			String match;
-			while ((match = scanner.findWithinHorizon(PATTERN, 0)) != null) {
-				parts.add(new Token(scanner.match().start(), match));
-			}
+		Matcher matcher = PATTERN.matcher(infixTagExpression);
+		while (matcher.find()) {
+			parts.add(new Token(matcher.start(), matcher.group()));
 		}
 		return parts;
 	}
