@@ -20,9 +20,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class ShuntingYardBasedParserTests {
+class ParserTests {
 
-	private final ShuntingYardBasedParser parser = new ShuntingYardBasedParser();
+	private final Parser parser = new Parser();
 
 	@Test
 	void notHasHigherPrecedenceThanAnd() {
@@ -67,7 +67,9 @@ class ShuntingYardBasedParserTests {
 				arguments("(foo & bar ) | baz & quux", "((foo & bar) | (baz & quux))"),
 				arguments("! foo | bar & ! baz | ! quux | quuz & corge", "(((!foo | (bar & !baz)) | !quux) | (quuz & corge))"),
 				arguments("(foo & bar ) | baz & quux", "((foo & bar) | (baz & quux))"),
-				arguments("foo | bar & baz|quux", "((foo | (bar & baz)) | quux)")
+				arguments("foo | bar & baz|quux", "((foo | (bar & baz)) | quux)"),
+				arguments("any()", "any()"),
+				arguments("! none()", "!none()")
 		);
 		// @formatter:on
 	}

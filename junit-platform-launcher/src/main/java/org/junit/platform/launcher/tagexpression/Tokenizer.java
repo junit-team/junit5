@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.tagexpression;
 
 import static java.util.Collections.emptyList;
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,8 @@ import java.util.regex.Pattern;
  */
 class Tokenizer {
 
-	private static final Pattern PATTERN = Pattern.compile("\\s*(?:[()!|&]|(?:[^\\s()!|&]+))");
+	private static final Pattern PATTERN = Pattern.compile("\\s*(?:(?:(?:any|none)\\(\\))|[()!|&]|(?:[^\\s()!|&]+))",
+		CASE_INSENSITIVE);
 
 	List<Token> tokenize(String infixTagExpression) {
 		if (infixTagExpression == null) {

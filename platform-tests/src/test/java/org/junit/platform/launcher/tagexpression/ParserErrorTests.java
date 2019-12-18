@@ -20,9 +20,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class ShuntingYardBasedParserErrorTests {
+class ParserErrorTests {
 
-	private final ShuntingYardBasedParser parser = new ShuntingYardBasedParser();
+	private final Parser parser = new Parser();
 
 	@Test
 	void cantParseExpressionFromNull() {
