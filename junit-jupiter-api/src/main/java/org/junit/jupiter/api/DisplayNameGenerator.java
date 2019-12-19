@@ -173,9 +173,9 @@ public interface DisplayNameGenerator {
 
 		private String classReplaceToIndicativeSentence(Class<?> testClass) {
 			Class<?> enclosingParent = testClass.getEnclosingClass();
-			Optional<DisplayName> displayName = AnnotationSupport.findAnnotation(testClass,DisplayName.class);
-			Optional<DisplayNameGeneration> displayNameGeneration =
-							AnnotationSupport.findAnnotation(testClass,DisplayNameGeneration.class);
+			Optional<DisplayName> displayName = AnnotationSupport.findAnnotation(testClass, DisplayName.class);
+			Optional<DisplayNameGeneration> displayNameGeneration = AnnotationSupport.findAnnotation(testClass,
+				DisplayNameGeneration.class);
 
 			if (enclosingParent == null) {
 				return displayName.map(DisplayName::value).orElseGet(() -> generateDisplayNameForClass(testClass));
@@ -186,9 +186,10 @@ public interface DisplayNameGenerator {
 				}
 				else {
 					return displayName.map(name -> classReplaceToIndicativeSentence(enclosingParent)
-									+ getSentenceSeparator(testClass) + name.value())
-									.orElseGet(() -> classReplaceToIndicativeSentence(enclosingParent)
-									+ getSentenceSeparator(testClass) + super.generateDisplayNameForNestedClass(testClass));
+							+ getSentenceSeparator(testClass) + name.value()).orElseGet(
+								() -> classReplaceToIndicativeSentence(enclosingParent)
+										+ getSentenceSeparator(testClass)
+										+ super.generateDisplayNameForNestedClass(testClass));
 				}
 			}
 		}
@@ -203,8 +204,8 @@ public interface DisplayNameGenerator {
 		 * {@code Class.getName()}.
 		 */
 		private String getSentenceSeparator(Class<?> currentClass) {
-			Optional<IndicativeSentencesGeneration> indicativeSentencesGeneration =
-							AnnotationSupport.findAnnotation(currentClass,IndicativeSentencesGeneration.class);
+			Optional<IndicativeSentencesGeneration> indicativeSentencesGeneration = AnnotationSupport.findAnnotation(
+				currentClass, IndicativeSentencesGeneration.class);
 
 			if (indicativeSentencesGeneration.isPresent())
 				return indicativeSentencesGeneration.get().separator();
