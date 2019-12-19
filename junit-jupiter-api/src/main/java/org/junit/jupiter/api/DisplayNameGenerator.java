@@ -157,7 +157,8 @@ public interface DisplayNameGenerator {
 
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
-			return removeRootCharacter(super.generateDisplayNameForClass(testClass));
+			return super.generateDisplayNameForClass(testClass).contains("$") ? testClass.getSimpleName()
+					: super.generateDisplayNameForClass(testClass);
 		}
 
 		@Override
@@ -214,23 +215,6 @@ public interface DisplayNameGenerator {
 				return getSentenceSeparator(currentClass.getEnclosingClass());
 
 			return IndicativeSentencesGeneration.DEFAULT_SEPARATOR;
-		}
-
-		/**
-		 * Generate a string with simply the name of the test name without the
-		 * classes related divided by a $: AnotherParent$ParentName$Class.
-		 *
-		 * @param testName the Test Class from to extract the parameter types from;
-		 * never {@code blank}.
-		 * @return a string without the $ symbol and the root data that comes from
-		 * {@code Class.getName()}.
-		 */
-		private String removeRootCharacter(String testName) {
-			Preconditions.notBlank(testName, "Input Name parameter should not be blank");
-			String[] testNameSplit = testName.split("\\$");
-			int last = testNameSplit.length - 1;
-
-			return testNameSplit[last];
 		}
 	}
 }
