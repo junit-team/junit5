@@ -22,9 +22,9 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @IndicativeSentencesSeparator} is used to declare a custom separator
- * in the IndicativeSentencesGenerator, if this notation was not declared
- * IndicativeSentencesGenerator will use ", " as separator by default.
+ * {@code @IndicativeSentencesGeneration} is used to declare a custom separator
+ * by {@code IndicativeSentences}, if this notation was not declared
+ * will be use ", " as separator by default.
  *
  * @since 5.6
  * @see DisplayNameGenerator
@@ -34,12 +34,14 @@ import org.apiguardian.api.API;
 @Documented
 @Inherited
 @API(status = EXPERIMENTAL, since = "5.6")
-public @interface IndicativeSentencesSeparator {
+public @interface IndicativeSentencesGeneration {
+
+	static final String DEFAULT_SEPARATOR = ", ";
 
 	/**
 	 * Custom separator for indicative sentences generator.
 	 *
 	 * @return custom separator for indicative sentences
 	 */
-	String value();
+	String separator() default "";
 }

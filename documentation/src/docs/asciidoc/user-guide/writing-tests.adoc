@@ -171,7 +171,7 @@ include::{testDir}/example/DisplayNameGeneratorDemo.java[tags=user_guide]
 [[writing-tests-display-name-generator-extensions]]
 ==== Extensions of Display Name Generators
 The class DisplayNameGenerator already supports the extensions of `ReplaceUnderscores`
-and `IndicativeSentencesGenerator`.
+and `IndicativeSentences`.
 
 By using the annotation that extends `Standard`:
 
@@ -183,7 +183,7 @@ With this you can avoid the use of `@DisplayName` and get a prettier output test
 
 Also, by using the annotation that supports the `ReplaceUnderscores`:
 
-`@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentencesGenerator.class)`
+`@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)`
 
 You can generate an output that concatenates the names of your tests,
 by splitting the name of the test with underscores, in this way making
@@ -193,9 +193,7 @@ In addition the separator between the names of the tests, can optionally
 be customized and if this is not declared, by default the separator `", "`.
 Is used. with the annotation:
 
-`@IndicativeSentencesSeparator(" >> ")`
-
-
+`IndicativeSentencesGeneration(separator = " >> ")`
 
 [source,java,indent=0]
 ----

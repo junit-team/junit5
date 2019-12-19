@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.DisplayNameGenerator.IndicativeSentencesGenerator;
+import org.junit.jupiter.api.DisplayNameGenerator.IndicativeSentences;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.DisplayNameGenerator.Standard;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
@@ -55,7 +55,7 @@ final class DisplayNameUtils {
 	/**
 	 * Pre-defined display name generator instance producing indicative sentences.
 	 */
-	private static final DisplayNameGenerator indicativeSentencesGenerator = new IndicativeSentencesGenerator();
+	private static final DisplayNameGenerator indicativeSentencesGenerator = new IndicativeSentences();
 
 	static String determineDisplayName(AnnotatedElement element, Supplier<String> displayNameSupplier) {
 		Preconditions.notNull(element, "Annotated element must not be null");
@@ -105,7 +105,7 @@ final class DisplayNameUtils {
 					if (displayNameGeneratorClass == ReplaceUnderscores.class) {
 						return replaceUnderscoresGenerator;
 					}
-					if (displayNameGeneratorClass == IndicativeSentencesGenerator.class) {
+					if (displayNameGeneratorClass == IndicativeSentences.class) {
 						return indicativeSentencesGenerator;
 					}
 					return ReflectionUtils.newInstance(displayNameGeneratorClass);

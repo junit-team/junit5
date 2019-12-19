@@ -209,7 +209,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	static class UnderscoreStyleTestCase extends AbstractTestCase {
 	}
 
-	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentencesGenerator.class)
+	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
 	static class IndicativeStyleTestCase extends AbstractTestCase {
 	}
 
@@ -289,7 +289,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------
 
 	@DisplayName("A stack")
-	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentencesGenerator.class)
+	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
 	static class IndicativeGeneratorTestCase {
 
 		Stack<Object> stack;
@@ -333,8 +333,8 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------
 
 	@DisplayName("A stack")
-	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentencesGenerator.class)
-	@IndicativeSentencesSeparator(" >> ")
+	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
+	@IndicativeSentencesGeneration(separator = " >> ")
 	static class IndicativeGeneratorWithCustomSeparatorTestCase {
 
 		Stack<Object> stack;

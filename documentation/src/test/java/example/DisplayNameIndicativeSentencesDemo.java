@@ -14,15 +14,15 @@ package example;
 
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
-import org.junit.jupiter.api.IndicativeSentencesSeparator;
+import org.junit.jupiter.api.IndicativeSentencesGeneration;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 class DisplayNameIndicativeSentencesDemo {
 
 	@Nested
-	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentencesGenerator.class)
-	@IndicativeSentencesSeparator(" >> ")
+	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
+	@IndicativeSentencesGeneration(separator = " >> ")
 	class A_cat_named_schrodinger {
 
 		@Test

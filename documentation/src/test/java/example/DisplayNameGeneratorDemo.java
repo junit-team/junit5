@@ -39,7 +39,7 @@ class DisplayNameGeneratorDemo {
 	}
 
 	@Nested
-	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentencesGenerator.class)
+	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
 	class A_year_is_a_leap_year {
 
 		@Test

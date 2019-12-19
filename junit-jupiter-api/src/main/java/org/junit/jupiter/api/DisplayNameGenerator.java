@@ -13,8 +13,10 @@ package org.junit.jupiter.api;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -142,16 +144,16 @@ public interface DisplayNameGenerator {
 	}
 
 	/**
-	 * {@code DisplayNameGenerator} that supports {@code ReplaceUnderscores} to generate complete sentences.
+	 * {@code DisplayNameGenerator} that generate complete sentences.
 	 *
-	 * <p>This generator extends the functionality of {@link ReplaceUnderscores} by
-	 * generating a human-readable display names that form complete sentences divided each
-	 * class, nested class and test by a ({@code ','}).
+	 * <p>This extends the functionality of {@link ReplaceUnderscores} by
+	 * generating complete sentences display names, divided by a separator
+	 * {@link IndicativeSentencesGeneration}.
 	 *
 	 * @since 5.6
 	 */
 	@API(status = EXPERIMENTAL, since = "5.6")
-	class IndicativeSentencesGenerator extends ReplaceUnderscores {
+	class IndicativeSentences extends ReplaceUnderscores {
 
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
@@ -170,38 +172,30 @@ public interface DisplayNameGenerator {
 		}
 
 		private String classReplaceToIndicativeSentence(Class<?> testClass) {
-			Class<?> classWithEnclosingParent = testClass.getEnclosingClass();
-			DisplayName classWithDisplayName = testClass.getAnnotation(DisplayName.class);
-			DisplayNameGeneration classWithAnnotation = testClass.getAnnotation(DisplayNameGeneration.class);
+			Class<?> enclosingParent = testClass.getEnclosingClass();
+			Optional<DisplayName> displayName = AnnotationSupport.findAnnotation(testClass,DisplayName.class);
+			Optional<DisplayNameGeneration> displayNameGeneration =
+							AnnotationSupport.findAnnotation(testClass,DisplayNameGeneration.class);
 
-			if (classWithEnclosingParent == null) {
-				if (classWithDisplayName != null)
-					return classWithDisplayName.value();
-				else
-					return generateDisplayNameForClass(testClass);
+			if (enclosingParent == null) {
+				return displayName.map(DisplayName::value).orElseGet(() -> generateDisplayNameForClass(testClass));
 			}
-			else {
-				if (classWithAnnotation != null && classWithAnnotation.value() == IndicativeSentencesGenerator.class) {
-					if (classWithDisplayName != null)
-						return classWithDisplayName.value();
-					else
-						return generateDisplayNameForClass(testClass);
+			else { //&& displayNameGeneration.getClass() == IndicativeSentences.class
+				if (displayNameGeneration.isPresent()) {
+					return displayName.map(DisplayName::value).orElseGet(() -> generateDisplayNameForClass(testClass));
 				}
 				else {
-					if (classWithDisplayName != null)
-						return classReplaceToIndicativeSentence(classWithEnclosingParent)
-								+ getSentenceSeparator(testClass) + classWithDisplayName.value();
-					else
-						return classReplaceToIndicativeSentence(classWithEnclosingParent)
-								+ getSentenceSeparator(testClass) + super.generateDisplayNameForNestedClass(testClass);
-
+					return displayName.map(name -> classReplaceToIndicativeSentence(enclosingParent)
+									+ getSentenceSeparator(testClass) + name.value())
+									.orElseGet(() -> classReplaceToIndicativeSentence(enclosingParent)
+									+ getSentenceSeparator(testClass) + super.generateDisplayNameForNestedClass(testClass));
 				}
 			}
 		}
 
 		/**
-		 * Gets the separator for {@link IndicativeSentencesSeparator} when extracting the
-		 * annotation from {@code IndicativeSentencesSeparator}, if it doesn't find it,
+		 * Gets the separator for {@link IndicativeSentencesGeneration} when extracting the
+		 * annotation from {@code IndicativeSentencesGeneration}, if it doesn't find it,
 		 * then search for the parent classes, if no separator is found use @code{", "} by default.
 		 *
 		 * @param currentClass the Test Class the separator either custom or default
@@ -209,15 +203,16 @@ public interface DisplayNameGenerator {
 		 * {@code Class.getName()}.
 		 */
 		private String getSentenceSeparator(Class<?> currentClass) {
-			IndicativeSentencesSeparator separator = currentClass.getAnnotation(IndicativeSentencesSeparator.class);
-			if (separator != null)
-				return separator.value();
+			Optional<IndicativeSentencesGeneration> indicativeSentencesGeneration =
+							AnnotationSupport.findAnnotation(currentClass,IndicativeSentencesGeneration.class);
 
-			Class<?> parentClass = currentClass.getEnclosingClass();
-			if (parentClass != null)
-				return getSentenceSeparator(parentClass);
+			if (indicativeSentencesGeneration.isPresent())
+				return indicativeSentencesGeneration.get().separator();
 
-			return ", ";
+			if (currentClass.getEnclosingClass() != null)
+				return getSentenceSeparator(currentClass.getEnclosingClass());
+
+			return IndicativeSentencesGeneration.DEFAULT_SEPARATOR;
 		}
 
 		/**
