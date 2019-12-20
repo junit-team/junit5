@@ -8,10 +8,17 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+/**
+ * Support for migrating from JUnit 4 to JUnit Jupiter.
+ *
+ * @moduleGraph
+ * @since 5.0.0
+ */
 module org.junit.jupiter.migrationsupport {
+	requires transitive junit; // 4
 	requires transitive org.apiguardian.api;
 	requires transitive org.junit.jupiter.api;
-	requires transitive junit; // 4
+	requires org.junit.platform.commons;
 
 	exports org.junit.jupiter.migrationsupport;
 	exports org.junit.jupiter.migrationsupport.conditions;

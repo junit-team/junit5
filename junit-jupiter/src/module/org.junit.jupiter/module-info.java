@@ -8,6 +8,12 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+/**
+ * Aggregates all JUnit Jupiter modules.
+ *
+ * @moduleGraph
+ * @since 5.4.0
+ */
 module org.junit.jupiter {
 	requires transitive org.junit.jupiter.api;
 	requires transitive org.junit.jupiter.engine;

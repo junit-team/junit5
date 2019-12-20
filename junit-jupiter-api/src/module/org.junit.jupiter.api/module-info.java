@@ -8,6 +8,12 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+/**
+ * JUnit Jupiter API for writing tests.
+ *
+ * @moduleGraph
+ * @since 5.0.0
+ */
 module org.junit.jupiter.api {
 	requires transitive org.apiguardian.api;
 	requires transitive org.junit.platform.commons;
