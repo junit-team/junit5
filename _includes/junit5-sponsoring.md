@@ -117,3 +117,4 @@ Your donations will help to make that a reality!
 - Shuming Iin
 - Zerocode
 - Simon Schrottner
+- Zoran Regvart
