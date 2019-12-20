@@ -10,6 +10,7 @@ object Versions {
     val ota4j = "1.2.0"
     val picocli = "4.0.4"
     val univocity = "2.8.3"
+    val commonsLang3 = "3.9"
 
     // Test Dependencies
     val archunit = "0.12.0"

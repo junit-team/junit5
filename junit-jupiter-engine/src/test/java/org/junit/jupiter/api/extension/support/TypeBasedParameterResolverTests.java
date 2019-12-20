@@ -42,6 +42,8 @@ class TypeBasedParameterResolverTests {
 	private final ParameterResolver basicTypeBasedParameterResolver = new BasicTypeBasedParameterResolver();
 	private final ParameterResolver subClassedBasicTypeBasedParameterResolver = new SubClassedBasicTypeBasedParameterResolver();
 	private final ParameterResolver parametrizedTypeBasedParameterResolver = new ParameterizedTypeBasedParameterResolver();
+	private final ParameterResolver wildCardTypeBasedParameterResolver = new WildcardTypeBasedParameterResolver();
+	private final ParameterResolver subTypeBasedParameterResolver = new SubTypeBasedParameterResolver();
 
 	@Test
 	void missingTypeTypeBasedParameterResolver() {
@@ -59,8 +61,14 @@ class TypeBasedParameterResolverTests {
 		assertTrue(basicTypeBasedParameterResolver.supportsParameter(parameterContext(parameter1), null));
 		assertTrue(subClassedBasicTypeBasedParameterResolver.supportsParameter(parameterContext(parameter1), null));
 
-		Parameter parameter2 = findParameterOfMethod("methodWithObjectParameter", Object.class);
+		Parameter parameter2 = findParameterOfMethod("methodWithAnotherTypeParameter", Double.class);
 		assertFalse(basicTypeBasedParameterResolver.supportsParameter(parameterContext(parameter2), null));
+	}
+
+	@Test
+	void supportsParametersClassHierarchy() {
+		Parameter parameter1 = findParameterOfMethod("methodWithSuperTypeParameter", Number.class);
+		assertTrue(subTypeBasedParameterResolver.supportsParameter(parameterContext(parameter1), null));
 	}
 
 	@Test
@@ -70,6 +78,18 @@ class TypeBasedParameterResolverTests {
 
 		Parameter parameter3 = findParameterOfMethod("methodWithAnotherParameterizedTypeParameter", Map.class);
 		assertFalse(parametrizedTypeBasedParameterResolver.supportsParameter(parameterContext(parameter3), null));
+	}
+
+	@Test
+	void supportsParameterForWildCardTypes() {
+		Parameter parameter1 = findParameterOfMethod("methodWithWildCardTypeParameter", Map.class);
+		assertTrue(parametrizedTypeBasedParameterResolver.supportsParameter(parameterContext(parameter1), null));
+
+		Parameter parameter2 = findParameterOfMethod("methodWithWildCardTypeParameter", Map.class);
+		assertTrue(wildCardTypeBasedParameterResolver.supportsParameter(parameterContext(parameter2), null));
+
+		Parameter parameter3 = findParameterOfMethod("methodWithAnotherWildCardTypeParameter", Map.class);
+		assertFalse(wildCardTypeBasedParameterResolver.supportsParameter(parameterContext(parameter3), null));
 	}
 
 	@Test
@@ -83,6 +103,10 @@ class TypeBasedParameterResolverTests {
 		Parameter parameter2 = findParameterOfMethod("methodWithParameterizedTypeParameter", Map.class);
 		assertEquals(Map.of("ids", List.of(1, 42)),
 			parametrizedTypeBasedParameterResolver.resolveParameter(parameterContext(parameter2), extensionContext));
+
+		Parameter parameter3 = findParameterOfMethod("methodWithWildCardTypeParameter", Map.class);
+		assertEquals(Map.of("ids", List.of(1, 42)),
+			parametrizedTypeBasedParameterResolver.resolveParameter(parameterContext(parameter3), extensionContext));
 	}
 
 	private static ParameterContext parameterContext(Parameter parameter) {
@@ -136,6 +160,26 @@ class TypeBasedParameterResolverTests {
 		}
 	}
 
+	static class WildcardTypeBasedParameterResolver
+			extends TypeBasedParameterResolver<Map<? super String, ? extends List<? extends Integer>>> {
+
+		@Override
+		public Map<? super String, ? extends List<? extends Integer>> resolveParameter(
+				ParameterContext parameterContext, ExtensionContext extensionContext)
+				throws ParameterResolutionException {
+			return Map.of("ids", List.of(1, 42));
+		}
+	}
+
+	static class SubTypeBasedParameterResolver extends TypeBasedParameterResolver<Integer> {
+
+		@Override
+		public Integer resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+				throws ParameterResolutionException {
+			return Integer.MIN_VALUE;
+		}
+	}
+
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.PARAMETER)
 	@interface TestAnnotation {
@@ -146,7 +190,10 @@ class TypeBasedParameterResolverTests {
 		void methodWithBasicTypeParameter(@TestAnnotation String string) {
 		}
 
-		void methodWithObjectParameter(Object nothing) {
+		void methodWithSuperTypeParameter(Number number) {
+		}
+
+		void methodWithAnotherTypeParameter(Double nothing) {
 		}
 
 		void methodWithParameterizedTypeParameter(Map<String, List<Integer>> map) {
@@ -154,6 +201,11 @@ class TypeBasedParameterResolverTests {
 
 		void methodWithAnotherParameterizedTypeParameter(Map<String, List<Object>> nothing) {
 		}
-	}
 
+		void methodWithWildCardTypeParameter(Map<? super String, ? extends List<? extends Integer>> map) {
+		}
+
+		void methodWithAnotherWildCardTypeParameter(Map<? super String, ? extends List<? super Integer>> nothing) {
+		}
+	}
 }

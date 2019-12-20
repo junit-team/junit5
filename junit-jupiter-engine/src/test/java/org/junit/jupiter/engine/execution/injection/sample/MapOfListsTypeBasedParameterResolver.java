@@ -28,5 +28,4 @@ public class MapOfListsTypeBasedParameterResolver extends TypeBasedParameterReso
 
 		return Map.of("ids", List.of(1, 42));
 	}
-
 }

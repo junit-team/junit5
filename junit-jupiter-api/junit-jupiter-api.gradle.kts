@@ -14,4 +14,5 @@ dependencies {
 	api(project(":junit-platform-commons"))
 
 	compileOnly("org.jetbrains.kotlin:kotlin-stdlib")
+	implementation("org.apache.commons:commons-lang3:${Versions.commonsLang3}")
 }

@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import org.apache.commons.lang3.reflect.TypeUtils;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -23,7 +24,8 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
- * {@link ParameterResolver} adapter which resolves a parameter based on its exact type.
+ * {@link ParameterResolver} adapter which resolves a parameter based on its type.
+ * It supports parameterized and wildcard types and the type hierarchy.
  *
  * @param <T> the type of the parameter supported by this {@code ParameterResolver}
  * @since 5.6
@@ -39,7 +41,7 @@ public abstract class TypeBasedParameterResolver<T> implements ParameterResolver
 
 	@Override
 	public final boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return this.supportedParameterType.equals(getParameterType(parameterContext));
+		return TypeUtils.isAssignable(supportedParameterType, getParameterType(parameterContext));
 	}
 
 	@Override
