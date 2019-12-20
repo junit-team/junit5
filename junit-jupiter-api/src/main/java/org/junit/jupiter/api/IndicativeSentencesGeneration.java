@@ -29,6 +29,7 @@ import org.apiguardian.api.API;
  * @since 5.6
  * @see DisplayNameGenerator
  */
+@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

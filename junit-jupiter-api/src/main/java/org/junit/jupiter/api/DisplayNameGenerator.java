@@ -134,7 +134,7 @@ public interface DisplayNameGenerator {
 			return displayName;
 		}
 
-		private static String replaceUnderscores(String name) {
+		public static String replaceUnderscores(String name) {
 			return name.replace('_', ' ');
 		}
 
@@ -157,7 +157,8 @@ public interface DisplayNameGenerator {
 
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
-			return super.generateDisplayNameForClass(testClass).contains("$") ? testClass.getSimpleName()
+			return super.generateDisplayNameForClass(testClass).contains("$")
+					? replaceUnderscores(testClass.getSimpleName())
 					: super.generateDisplayNameForClass(testClass);
 		}
 
@@ -181,7 +182,7 @@ public interface DisplayNameGenerator {
 			if (enclosingParent == null) {
 				return displayName.map(DisplayName::value).orElseGet(() -> generateDisplayNameForClass(testClass));
 			}
-			else { //&& displayNameGeneration.getClass() == IndicativeSentences.class
+			else {
 				if (displayNameGeneration.isPresent()) {
 					return displayName.map(DisplayName::value).orElseGet(() -> generateDisplayNameForClass(testClass));
 				}

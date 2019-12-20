@@ -12,8 +12,6 @@ package example;
 
 // tag::user_guide[]
 
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.IndicativeSentencesGeneration;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,7 +19,6 @@ import org.junit.jupiter.api.Test;
 class DisplayNameIndicativeSentencesDemo {
 
 	@Nested
-	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
 	@IndicativeSentencesGeneration(separator = " >> ")
 	class A_cat_named_schrodinger {
 

@@ -333,7 +333,6 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------
 
 	@DisplayName("A stack")
-	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
 	@IndicativeSentencesGeneration(separator = " >> ")
 	static class IndicativeGeneratorWithCustomSeparatorTestCase {
 

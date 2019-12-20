@@ -191,7 +191,7 @@ the results more indicative and easy to read.
 
 In addition the separator between the names of the tests, can optionally
 be customized and if this is not declared, by default the separator `", "`.
-Is used. with the annotation:
+By using the annotation:
 
 `IndicativeSentencesGeneration(separator = " >> ")`
 
