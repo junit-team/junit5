@@ -40,8 +40,6 @@ class Root {
 	private final Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>(4);
 	private final ConfigurationParameters configurationParameters;
 
-	private final Map<String, List<TestDescriptor>> excludedTestDescriptorsByReason = new LinkedHashMap<>();
-
 	Root(ConfigurationParameters configurationParameters) {
 		this.configurationParameters = configurationParameters;
 	}
@@ -71,18 +69,20 @@ class Root {
 
 	void applyPostDiscoveryFilters(LauncherDiscoveryRequest discoveryRequest) {
 		Filter<TestDescriptor> postDiscoveryFilter = composeFilters(discoveryRequest.getPostDiscoveryFilters());
+		Map<String, List<TestDescriptor>> excludedTestDescriptorsByReason = new LinkedHashMap<>();
 		TestDescriptor.Visitor removeExcludedTestDescriptors = descriptor -> {
 			FilterResult filterResult = postDiscoveryFilter.apply(descriptor);
 			if (!descriptor.isRoot() && isExcluded(descriptor, filterResult)) {
-				populateExclusionReasonInMap(filterResult, descriptor);
+				populateExclusionReasonInMap(filterResult, descriptor, excludedTestDescriptorsByReason);
 				descriptor.removeFromHierarchy();
 			}
 		};
 		acceptInAllTestEngines(removeExcludedTestDescriptors);
-		printFilteredReason();
+		printReasonforFilteredTest(excludedTestDescriptorsByReason);
 	}
 
-	private void populateExclusionReasonInMap(FilterResult filterResult, TestDescriptor testDescriptor) {
+	private void populateExclusionReasonInMap(FilterResult filterResult, TestDescriptor testDescriptor,
+			Map<String, List<TestDescriptor>> excludedTestDescriptorsByReason) {
 		excludedTestDescriptorsByReason.computeIfAbsent(filterResult.getReason().orElse("Unknown"),
 			list -> new LinkedList<>()).add(testDescriptor);
 	}
@@ -107,13 +107,15 @@ class Root {
 		this.testEngineDescriptors.values().forEach(descriptor -> descriptor.accept(visitor));
 	}
 
-	/**
-	 * prints the reason for test cases that are excluded in post discovery filter phase.
-	 */
-	private void printFilteredReason() {
+	private void printReasonforFilteredTest(Map<String, List<TestDescriptor>> excludedTestDescriptorsByReason) {
 		excludedTestDescriptorsByReason.forEach((key, value) -> {
 			String displayNames = value.stream().map(TestDescriptor::getDisplayName).collect(Collectors.joining(", "));
-			logger.debug(() -> String.format("Method names [%s] excluded, reason [%s]", displayNames, key));
+			long containersCount = value.stream().filter(TestDescriptor::isContainer).count();
+			long methodCount = value.size() - containersCount;
+			logger.info(() -> String.format(" %d containers and %d tests were excluded because: %s", containersCount,
+				methodCount, key));
+			logger.debug(() -> String.format("The following containers and tests were excluded because %s: %s", key,
+				displayNames));
 		});
 	}
 }
