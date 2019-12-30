@@ -12,6 +12,7 @@ package example;
 
 // tag::user_guide[]
 
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.IndicativeSentencesGeneration;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ import org.junit.jupiter.api.Test;
 class DisplayNameIndicativeSentencesDemo {
 
 	@Nested
-	@IndicativeSentencesGeneration(separator = " >> ")
+	@IndicativeSentencesGeneration(separator = " >> ", value = DisplayNameGenerator.ReplaceUnderscores.class)
 	class A_cat_named_schrodinger {
 
 		@Test

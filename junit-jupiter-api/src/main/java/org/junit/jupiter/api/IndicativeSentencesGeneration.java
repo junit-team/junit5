@@ -27,6 +27,7 @@ import org.apiguardian.api.API;
  * will be use ", " as separator by default.
  *
  * @since 5.6
+ * @see DisplayName
  * @see DisplayNameGenerator
  */
 @DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
@@ -37,7 +38,12 @@ import org.apiguardian.api.API;
 @API(status = EXPERIMENTAL, since = "5.6")
 public @interface IndicativeSentencesGeneration {
 
-	static final String DEFAULT_SEPARATOR = ", ";
+	String DEFAULT_SEPARATOR = ", ";
+	/**
+	 * Pre-defined display name generator instances.
+	 */
+	DisplayNameGenerator standardGenerator = new DisplayNameGenerator.Standard();
+	DisplayNameGenerator replaceUnderscoresGenerator = new DisplayNameGenerator.ReplaceUnderscores();
 
 	/**
 	 * Custom separator for indicative sentences generator.
@@ -45,4 +51,11 @@ public @interface IndicativeSentencesGeneration {
 	 * @return custom separator for indicative sentences
 	 */
 	String separator() default "";
+
+	/**
+	 * Custom display name generator.
+	 *
+	 * @return custom display name generator class
+	 */
+	Class<? extends DisplayNameGenerator> value();
 }

@@ -117,7 +117,7 @@ public interface DisplayNameGenerator {
 
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
-			return replaceUnderscores(super.generateDisplayNameForClass(testClass));
+			return replaceUnderscores(testClass.getSimpleName());
 		}
 
 		@Override
@@ -134,7 +134,7 @@ public interface DisplayNameGenerator {
 			return displayName;
 		}
 
-		public static String replaceUnderscores(String name) {
+		private static String replaceUnderscores(String name) {
 			return name.replace('_', ' ');
 		}
 
@@ -153,13 +153,11 @@ public interface DisplayNameGenerator {
 	 * @since 5.6
 	 */
 	@API(status = EXPERIMENTAL, since = "5.6")
-	class IndicativeSentences extends ReplaceUnderscores {
+	class IndicativeSentences implements DisplayNameGenerator {
 
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
-			return super.generateDisplayNameForClass(testClass).contains("$")
-					? replaceUnderscores(testClass.getSimpleName())
-					: super.generateDisplayNameForClass(testClass);
+			return getDisplayNameGenerator(testClass).generateDisplayNameForClass(testClass);
 		}
 
 		@Override
@@ -170,7 +168,7 @@ public interface DisplayNameGenerator {
 		@Override
 		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
 			return classReplaceToIndicativeSentence(testClass) + getSentenceSeparator(testClass)
-					+ super.generateDisplayNameForMethod(testClass, testMethod);
+					+ getDisplayNameGenerator(testClass).generateDisplayNameForMethod(testClass, testMethod);
 		}
 
 		private String classReplaceToIndicativeSentence(Class<?> testClass) {
@@ -191,7 +189,8 @@ public interface DisplayNameGenerator {
 							+ getSentenceSeparator(testClass) + name.value()).orElseGet(
 								() -> classReplaceToIndicativeSentence(enclosingParent)
 										+ getSentenceSeparator(testClass)
-										+ super.generateDisplayNameForNestedClass(testClass));
+										+ getDisplayNameGenerator(testClass).generateDisplayNameForNestedClass(
+											testClass));
 				}
 			}
 		}
@@ -210,12 +209,31 @@ public interface DisplayNameGenerator {
 				currentClass, IndicativeSentencesGeneration.class);
 
 			if (indicativeSentencesGeneration.isPresent())
-				return indicativeSentencesGeneration.get().separator();
+				if (indicativeSentencesGeneration.get().separator().equals(""))
+					return IndicativeSentencesGeneration.DEFAULT_SEPARATOR;
+				else
+					return indicativeSentencesGeneration.get().separator();
 
 			if (currentClass.getEnclosingClass() != null)
 				return getSentenceSeparator(currentClass.getEnclosingClass());
 
 			return IndicativeSentencesGeneration.DEFAULT_SEPARATOR;
+		}
+
+		private DisplayNameGenerator getDisplayNameGenerator(Class<?> currentClass) {
+			Optional<IndicativeSentencesGeneration> indicativeSentencesGeneration = AnnotationSupport.findAnnotation(
+				currentClass, IndicativeSentencesGeneration.class);
+
+			if (indicativeSentencesGeneration.isPresent()) {
+				if (indicativeSentencesGeneration.get().value() == ReplaceUnderscores.class)
+					return IndicativeSentencesGeneration.replaceUnderscoresGenerator;
+				return IndicativeSentencesGeneration.standardGenerator;
+			}
+
+			if (currentClass.getEnclosingClass() != null)
+				return getDisplayNameGenerator(currentClass.getEnclosingClass());
+
+			return IndicativeSentencesGeneration.standardGenerator;
 		}
 	}
 }

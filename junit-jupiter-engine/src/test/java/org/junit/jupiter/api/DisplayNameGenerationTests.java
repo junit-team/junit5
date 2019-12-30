@@ -54,7 +54,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void underscoreGenerator() {
 		var expectedDisplayNames = List.of( //
-			"CONTAINER: DisplayNameGenerationTests\\$UnderscoreStyle.*", //
+			"CONTAINER: UnderscoreStyle.*", //
 			"TEST: @DisplayName prevails", //
 			"TEST: test", //
 			"TEST: test (TestInfo)", //
@@ -70,14 +70,14 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void indicativeSentencesGenerator() {
 		var expectedDisplayNames = List.of( //
-			"CONTAINER: IndicativeStyleTestCase", //
+			"CONTAINER: DisplayNameGenerationTests$IndicativeStyleTestCase", //
 			"TEST: @DisplayName prevails", //
-			"TEST: IndicativeStyleTestCase, test", //
-			"TEST: IndicativeStyleTestCase, test (TestInfo)", //
-			"TEST: IndicativeStyleTestCase, test with underscores", //
-			"TEST: IndicativeStyleTestCase, testUsingCamelCase and also UnderScores", //
-			"TEST: IndicativeStyleTestCase, testUsingCamelCase and also UnderScores keepingParameterTypeNamesIntact (TestInfo)", //
-			"TEST: IndicativeStyleTestCase, testUsingCamelCaseStyle" //
+			"TEST: DisplayNameGenerationTests$IndicativeStyleTestCase, test()", //
+			"TEST: DisplayNameGenerationTests$IndicativeStyleTestCase, test(TestInfo)", //
+			"TEST: DisplayNameGenerationTests$IndicativeStyleTestCase, testUsingCamelCaseStyle()", //
+			"TEST: DisplayNameGenerationTests$IndicativeStyleTestCase, testUsingCamelCase_and_also_UnderScores()", //
+			"TEST: DisplayNameGenerationTests$IndicativeStyleTestCase, testUsingCamelCase_and_also_UnderScores_keepingParameterTypeNamesIntact(TestInfo)", //
+			"TEST: DisplayNameGenerationTests$IndicativeStyleTestCase, test_with_underscores()" //
 		);
 		check(IndicativeStyleTestCase.class, expectedDisplayNames);
 	}
@@ -289,7 +289,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------
 
 	@DisplayName("A stack")
-	@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
+	@IndicativeSentencesGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 	static class IndicativeGeneratorTestCase {
 
 		Stack<Object> stack;
@@ -333,7 +333,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------
 
 	@DisplayName("A stack")
-	@IndicativeSentencesGeneration(separator = " >> ")
+	@IndicativeSentencesGeneration(separator = " >> ", value = DisplayNameGenerator.ReplaceUnderscores.class)
 	static class IndicativeGeneratorWithCustomSeparatorTestCase {
 
 		Stack<Object> stack;

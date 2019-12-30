@@ -186,14 +186,16 @@ Also, by using the annotation that supports the `ReplaceUnderscores`:
 `@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)`
 
 You can generate an output that concatenates the names of your tests,
-by splitting the name of the test with underscores, in this way making
+by splitting the display name of the test, in this way making
 the results more indicative and easy to read.
 
-In addition the separator between the names of the tests, can optionally
-be customized and if this is not declared, by default the separator `", "`.
+the separator between the names of the tests, can optionally
+be customized and if this is not declared, by default the separator `", "` and
+the generator you want to use by defining value with the class.
 By using the annotation:
 
-`IndicativeSentencesGeneration(separator = " >> ")`
+`@IndicativeSentencesGeneration(separator = " >> ",
+value = DisplayNameGenerator.ReplaceUnderscores.class)`
 
 [source,java,indent=0]
 ----
@@ -203,10 +205,10 @@ include::{testDir}/example/DisplayNameIndicativeSentencesDemo.java[tags=user_gui
 ```
 +-- DisplayNameIndicativeSentencesDemo [OK]
   +-- A cat named schrodinger [OK]
-  | +-- A_cat_named_schrodinger >> is in a box [OK]
-  | |-- A_cat_named_schrodinger >> can be alive and not at the same time! [OK]
-  ' --- A_cat_named_schrodinger >> when we look the box [OK]
-      '-- A_cat_named_schrodinger >> when we look the box >> our mind will blow [OK]
+  | +-- A cat named schrodinger >> is in a box [OK]
+  | |-- A cat named schrodinger >> can be alive and not at the same time! [OK]
+  ' --- A cat named schrodinger >> when we look the box [OK]
+      '-- A cat named schrodinger >> when we look the box >> our mind will blow [OK]
 ```
 
 [[writing-tests-display-name-generator-default]]
