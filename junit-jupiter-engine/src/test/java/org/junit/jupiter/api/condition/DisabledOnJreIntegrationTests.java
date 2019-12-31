@@ -103,7 +103,7 @@ class DisabledOnJreIntegrationTests {
 	@Test
 	@DisabledOnJre(JAVA_15)
 	void java15() {
-		assertFalse(onJava14());
+		assertFalse(onJava15());
 	}
 
 	@Test
