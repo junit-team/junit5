@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJav
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava12;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava13;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava14;
+import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava15;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava8;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava9;
 import static org.junit.jupiter.api.condition.JRE.JAVA_10;
@@ -82,7 +83,8 @@ class DisabledForJreRangeIntegrationTests {
 	@Test
 	@DisabledForJreRange(min = OTHER, max = OTHER)
 	void other() {
-		assertTrue(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14());
+		assertTrue(
+			onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14() || onJava15());
 	}
 
 }
