@@ -22,7 +22,7 @@ dependencies {
 	testImplementation(project(":junit-platform-launcher"))
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(":junit-platform-testkit"))
-	junit_4_13("junit:junit:4.13-rc-2")
+	junit_4_13("junit:junit:4.13")
 
 	testRuntimeOnly("org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:4.12_1")
 }
