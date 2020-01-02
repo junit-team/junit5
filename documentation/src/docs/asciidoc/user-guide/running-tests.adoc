@@ -736,7 +736,7 @@ Tag expressions are boolean expressions with the operators `!`, `&` and `|`. In 
 
 Two special expressions are supported, `any()` and `none()` which select all tests _with_
 any tags at all, and all tests _without_ any tags, respectively.
-These specials expressions may be combined with other expressions just like normal tags.
+These special expressions may be combined with other expressions just like normal tags.
 
 .Operators (in descending order of precedence)
 |===
