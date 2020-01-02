@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -87,6 +87,20 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	void nonWritableFileDoesNotCauseFailureTestCase() {
 		executeTestsForClass(NonWritableFileDoesNotCauseFailureTestCase.class).testEvents()//
 				.assertStatistics(stats -> stats.started(1).succeeded(1));
+	}
+
+	@Test
+	@DisplayName("can be used via instance field inside nested test classes")
+	void canBeUsedViaInstanceFieldInsideNestedTestClasses() {
+		executeTestsForClass(TempDirUsageInsideNestedClassesTestCase.class).testEvents()//
+				.assertStatistics(stats -> stats.started(3).succeeded(3));
+	}
+
+	@Test
+	@DisplayName("can be used via static field inside nested test classes")
+	void canBeUsedViaStaticFieldInsideNestedTestClasses() {
+		executeTestsForClass(StaticTempDirUsageInsideNestedClassTestCase.class).testEvents()//
+				.assertStatistics(stats -> stats.started(2).succeeded(2));
 	}
 
 	@Nested
@@ -766,4 +780,62 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	// https://github.com/junit-team/junit5/issues/2079
+	static class TempDirUsageInsideNestedClassesTestCase {
+
+		@TempDir
+		File tempDir;
+
+		@Test
+		void topLevel() {
+			assertNotNull(tempDir);
+			assertTrue(tempDir.exists());
+		}
+
+		@Nested
+		class NestedTestClass {
+
+			@Test
+			void nested() {
+				assertNotNull(tempDir);
+				assertTrue(tempDir.exists());
+			}
+
+			@Nested
+			class EvenDeeperNestedTestClass {
+
+				@Test
+				void deeplyNested() {
+					assertNotNull(tempDir);
+					assertTrue(tempDir.exists());
+				}
+			}
+		}
+	}
+
+	static class StaticTempDirUsageInsideNestedClassTestCase {
+
+		@TempDir
+		static File tempDir;
+
+		static File initialTempDir;
+
+		@Test
+		void topLevel() {
+			assertNotNull(tempDir);
+			assertTrue(tempDir.exists());
+			initialTempDir = tempDir;
+		}
+
+		@Nested
+		class NestedTestClass {
+
+			@Test
+			void nested() {
+				assertNotNull(tempDir);
+				assertTrue(tempDir.exists());
+				assertSame(initialTempDir, tempDir);
+			}
+		}
+	}
 }

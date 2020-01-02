@@ -1,3 +1,5 @@
+import aQute.bnd.gradle.BundleTaskConvention;
+
 plugins {
 	`java-library-conventions`
 }
@@ -18,4 +20,20 @@ dependencies {
 	testImplementation(project(":junit-platform-launcher"))
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(":junit-platform-testkit"))
+
+	testRuntimeOnly("org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:4.12_1")
+}
+
+tasks.jar {
+	withConvention(BundleTaskConvention::class) {
+		bnd("""
+			# Import JUnit4 packages with a version
+			Import-Package: \
+				!org.apiguardian.api,\
+				org.junit;version="${Versions.junit4}",\
+				org.junit.platform.commons.logging;status=INTERNAL,\
+				org.junit.rules;version="${Versions.junit4}",\
+				*
+		""")
+	}
 }

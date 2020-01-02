@@ -1,6 +1,6 @@
 pluginManagement {
 	plugins {
-		id("com.gradle.enterprise") version "3.0"
+		id("com.gradle.enterprise") version "3.1"
 		id("net.nemerosa.versioning") version "2.8.2"
 		id("com.github.ben-manes.versions") version "0.26.0"
 		id("com.diffplug.gradle.spotless") version "3.25.0"

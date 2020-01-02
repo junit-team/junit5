@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.junit.jupiter.api.extension.TestInstancePreDestroyCallback;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
@@ -139,6 +141,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 				invokeAfterEachMethods(context);
 			}
 		invokeAfterEachCallbacks(context);
+		invokeTestInstancePreDestroyCallback(context);
 		// @formatter:on
 
 		throwableCollector.assertEmpty();
@@ -243,6 +246,15 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	private void invokeAfterEachCallbacks(JupiterEngineExecutionContext context) {
 		invokeAllAfterMethodsOrCallbacks(AfterEachCallback.class, context,
 			(callback, extensionContext) -> callback.afterEach(extensionContext));
+	}
+
+	private void invokeTestInstancePreDestroyCallback(JupiterEngineExecutionContext context) {
+		context.getExtensionContext().getTestInstanceLifecycle().ifPresent(lifecycle -> {
+			if (TestInstance.Lifecycle.PER_METHOD == lifecycle) {
+				invokeAllAfterMethodsOrCallbacks(TestInstancePreDestroyCallback.class, context,
+					TestInstancePreDestroyCallback::preDestroyTestInstance);
+			}
+		});
 	}
 
 	private <T extends Extension> void invokeAllAfterMethodsOrCallbacks(Class<T> type,

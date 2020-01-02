@@ -1,7 +1,10 @@
 org.junit.platform.console@${platformVersion} jar:file:.+junit-platform-console/build/libs/junit-platform-console-${platformVersion}.jar/!module-info.class
 requires java.base mandated
-requires org.apiguardian.api transitive
-requires org.junit.platform.reporting transitive
+requires org.apiguardian.api
+requires org.junit.platform.commons
+requires org.junit.platform.engine
+requires org.junit.platform.launcher
+requires org.junit.platform.reporting
 provides java.util.spi.ToolProvider with org.junit.platform.console.ConsoleLauncherToolProvider
 contains org.junit.platform.console
 contains org.junit.platform.console.options

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -54,6 +54,10 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.jupiter.params.aggregator.AggregateWith;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
@@ -85,16 +89,16 @@ class ParameterizedTestIntegrationTests {
 	void executesWithSingleArgumentsProviderWithMultipleInvocations() {
 		var results = execute("testWithTwoSingleStringArgumentsProvider", String.class);
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
-				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
+				.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
+				.haveExactly(1, event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
 	}
 
 	@Test
 	void executesWithCsvSource() {
 		var results = execute("testWithCsvSource", String.class);
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
-				.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
+				.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
+				.haveExactly(1, event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
 	}
 
 	@Test
@@ -112,8 +116,8 @@ class ParameterizedTestIntegrationTests {
 	void executesWithPrimitiveWideningConversion() {
 		var results = execute("testWithPrimitiveWideningConversion", double.class);
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(test(), displayName("[1] 1"), finishedWithFailure(message("num: 1.0")))) //
-				.haveExactly(1, event(test(), displayName("[2] 2"), finishedWithFailure(message("num: 2.0"))));
+				.haveExactly(1, event(test(), displayName("[1] num=1"), finishedWithFailure(message("num: 1.0")))) //
+				.haveExactly(1, event(test(), displayName("[2] num=2"), finishedWithFailure(message("num: 2.0"))));
 	}
 
 	/**
@@ -123,8 +127,8 @@ class ParameterizedTestIntegrationTests {
 	void executesWithImplicitGenericConverter() {
 		var results = execute("testWithImplicitGenericConverter", Book.class);
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(test(), displayName("[1] book 1"), finishedWithFailure(message("book 1")))) //
-				.haveExactly(1, event(test(), displayName("[2] book 2"), finishedWithFailure(message("book 2"))));
+				.haveExactly(1, event(test(), displayName("[1] book=book 1"), finishedWithFailure(message("book 1")))) //
+				.haveExactly(1, event(test(), displayName("[2] book=book 2"), finishedWithFailure(message("book 2"))));
 	}
 
 	@Test
@@ -144,8 +148,19 @@ class ParameterizedTestIntegrationTests {
 	void executesWithExplicitConverter() {
 		var results = execute("testWithExplicitConverter", int.class);
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(test(), displayName("[1] O"), finishedWithFailure(message("length: 1")))) //
-				.haveExactly(1, event(test(), displayName("[2] XXX"), finishedWithFailure(message("length: 3"))));
+				.haveExactly(1, event(test(), displayName("[1] length=O"), finishedWithFailure(message("length: 1")))) //
+				.haveExactly(1,
+					event(test(), displayName("[2] length=XXX"), finishedWithFailure(message("length: 3"))));
+	}
+
+	@Test
+	void executesWithAggregator() {
+		var results = execute("testWithAggregator", String.class);
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1,
+					event(test(), displayName("[1] ab, cd"), finishedWithFailure(message("concatenation: abcd")))) //
+				.haveExactly(1,
+					event(test(), displayName("[2] ef, gh"), finishedWithFailure(message("concatenation: efgh"))));
 	}
 
 	@Test
@@ -172,8 +187,10 @@ class ParameterizedTestIntegrationTests {
 
 		var results = execute(selectClass(LifecycleTestCase.class));
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(test("test1"), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
-				.haveExactly(1, event(test("test1"), displayName("[2] bar"), finishedWithFailure(message("bar"))));
+				.haveExactly(1,
+					event(test("test1"), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
+				.haveExactly(1,
+					event(test("test1"), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
 
 		List<String> testMethods = new ArrayList<>(LifecycleTestCase.testMethods);
 
@@ -182,22 +199,22 @@ class ParameterizedTestIntegrationTests {
 			"beforeAll:ParameterizedTestIntegrationTests$LifecycleTestCase",
 				"providerMethod",
 					"constructor:ParameterizedTestIntegrationTests$LifecycleTestCase",
-					"beforeEach:[1] foo",
-						testMethods.get(0) + ":[1] foo",
-					"afterEach:[1] foo",
+					"beforeEach:[1] argument=foo",
+						testMethods.get(0) + ":[1] argument=foo",
+					"afterEach:[1] argument=foo",
 					"constructor:ParameterizedTestIntegrationTests$LifecycleTestCase",
-					"beforeEach:[2] bar",
-						testMethods.get(0) + ":[2] bar",
-					"afterEach:[2] bar",
+					"beforeEach:[2] argument=bar",
+						testMethods.get(0) + ":[2] argument=bar",
+					"afterEach:[2] argument=bar",
 				"providerMethod",
 					"constructor:ParameterizedTestIntegrationTests$LifecycleTestCase",
-					"beforeEach:[1] foo",
-						testMethods.get(1) + ":[1] foo",
-					"afterEach:[1] foo",
+					"beforeEach:[1] argument=foo",
+						testMethods.get(1) + ":[1] argument=foo",
+					"afterEach:[1] argument=foo",
 					"constructor:ParameterizedTestIntegrationTests$LifecycleTestCase",
-					"beforeEach:[2] bar",
-						testMethods.get(1) + ":[2] bar",
-					"afterEach:[2] bar",
+					"beforeEach:[2] argument=bar",
+						testMethods.get(1) + ":[2] argument=bar",
+					"afterEach:[2] argument=bar",
 			"afterAll:ParameterizedTestIntegrationTests$LifecycleTestCase");
 		// @formatter:on
 	}
@@ -224,21 +241,21 @@ class ParameterizedTestIntegrationTests {
 		void executesWithNullSourceForString() {
 			var results = execute("testWithNullSourceForString", String.class);
 			results.testEvents().failed().assertEventsMatchExactly(
-				event(test(), displayName("[1] null"), finishedWithFailure(message("null"))));
+				event(test(), displayName("[1] argument=null"), finishedWithFailure(message("null"))));
 		}
 
 		@Test
 		void executesWithNullSourceForStringAndTestInfo() {
 			var results = execute("testWithNullSourceForStringAndTestInfo", String.class, TestInfo.class);
 			results.testEvents().failed().assertEventsMatchExactly(
-				event(test(), displayName("[1] null"), finishedWithFailure(message("null"))));
+				event(test(), displayName("[1] argument=null"), finishedWithFailure(message("null"))));
 		}
 
 		@Test
 		void executesWithNullSourceForNumber() {
 			var results = execute("testWithNullSourceForNumber", Number.class);
 			results.testEvents().failed().assertEventsMatchExactly(
-				event(test(), displayName("[1] null"), finishedWithFailure(message("null"))));
+				event(test(), displayName("[1] argument=null"), finishedWithFailure(message("null"))));
 		}
 
 		@Test
@@ -255,7 +272,7 @@ class ParameterizedTestIntegrationTests {
 		@Test
 		void failsWithNullSourceForPrimitive() {
 			var results = execute("testWithNullSourceForPrimitive", int.class);
-			results.testEvents().failed().assertEventsMatchExactly(event(test(), displayName("[1] null"),
+			results.testEvents().failed().assertEventsMatchExactly(event(test(), displayName("[1] argument=null"),
 				finishedWithFailure(instanceOf(ParameterResolutionException.class), message(
 					"Error converting parameter at index 0: Cannot convert null to primitive value of type int"))));
 		}
@@ -276,55 +293,55 @@ class ParameterizedTestIntegrationTests {
 		@Test
 		void executesWithEmptySourceForString() {
 			var results = execute("testWithEmptySourceForString", String.class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] ")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=")));
 		}
 
 		@Test
 		void executesWithEmptySourceForStringAndTestInfo() {
 			var results = execute("testWithEmptySourceForStringAndTestInfo", String.class, TestInfo.class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] ")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=")));
 		}
 
 		@Test
 		void executesWithEmptySourceForList() {
 			var results = execute("testWithEmptySourceForList", List.class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
 		}
 
 		@Test
 		void executesWithEmptySourceForSet() {
 			var results = execute("testWithEmptySourceForSet", Set.class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
 		}
 
 		@Test
 		void executesWithEmptySourceForMap() {
 			var results = execute("testWithEmptySourceForMap", Map.class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] {}")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument={}")));
 		}
 
 		@Test
 		void executesWithEmptySourceForOneDimensionalPrimitiveArray() {
 			var results = execute("testWithEmptySourceForOneDimensionalPrimitiveArray", int[].class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
 		}
 
 		@Test
 		void executesWithEmptySourceForOneDimensionalStringArray() {
 			var results = execute("testWithEmptySourceForOneDimensionalStringArray", String[].class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
 		}
 
 		@Test
 		void executesWithEmptySourceForTwoDimensionalPrimitiveArray() {
 			var results = execute("testWithEmptySourceForTwoDimensionalPrimitiveArray", int[][].class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
 		}
 
 		@Test
 		void executesWithEmptySourceForTwoDimensionalStringArray() {
 			var results = execute("testWithEmptySourceForTwoDimensionalStringArray", String[][].class);
-			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] []")));
+			results.testEvents().succeeded().assertEventsMatchExactly(event(test(), displayName("[1] argument=[]")));
 		}
 
 		@Test
@@ -406,15 +423,15 @@ class ParameterizedTestIntegrationTests {
 
 		private void assertNullAndEmptyString(EngineExecutionResults results) {
 			results.testEvents().succeeded().assertEventsMatchExactly(//
-				event(test(), displayName("[1] null")), //
-				event(test(), displayName("[2] "))//
+				event(test(), displayName("[1] argument=null")), //
+				event(test(), displayName("[2] argument="))//
 			);
 		}
 
 		private void assertNullAndEmpty(EngineExecutionResults results) {
 			results.testEvents().succeeded().assertEventsMatchExactly(//
-				event(test(), displayName("[1] null")), //
-				event(test(), displayName("[2] []"))//
+				event(test(), displayName("[1] argument=null")), //
+				event(test(), displayName("[2] argument=[]"))//
 			);
 		}
 
@@ -569,32 +586,36 @@ class ParameterizedTestIntegrationTests {
 		void executesWithArgumentsSourceProvidingUnusedArguments() {
 			var results = execute("testWithTwoUnusedStringArgumentsProvider", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
-					.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
+					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
+					.haveExactly(1,
+						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
 		}
 
 		@Test
 		void executesWithCsvSourceContainingUnusedArguments() {
 			var results = execute("testWithCsvSourceContainingUnusedArguments", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
-					.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
+					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
+					.haveExactly(1,
+						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
 		}
 
 		@Test
 		void executesWithCsvFileSourceContainingUnusedArguments() {
 			var results = execute("testWithCsvFileSourceContainingUnusedArguments", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
-					.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
+					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
+					.haveExactly(1,
+						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
 		}
 
 		@Test
 		void executesWithMethodSourceProvidingUnusedArguments() {
 			var results = execute("testWithMethodSourceProvidingUnusedArguments", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] foo"), finishedWithFailure(message("foo")))) //
-					.haveExactly(1, event(test(), displayName("[2] bar"), finishedWithFailure(message("bar"))));
+					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
+					.haveExactly(1,
+						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
 		}
 
 		private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
@@ -654,6 +675,12 @@ class ParameterizedTestIntegrationTests {
 		@ValueSource(ints = 42)
 		void testWithErroneousConverter(@ConvertWith(ErroneousConverter.class) Object ignored) {
 			fail("this should never be called");
+		}
+
+		@ParameterizedTest
+		@CsvSource({ "ab, cd", "ef, gh" })
+		void testWithAggregator(@AggregateWith(StringAggregator.class) String concatenation) {
+			fail("concatenation: " + concatenation);
 		}
 
 	}
@@ -1088,6 +1115,15 @@ class ParameterizedTestIntegrationTests {
 		@Override
 		public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
 			return String.valueOf(source).length();
+		}
+	}
+
+	private static class StringAggregator implements ArgumentsAggregator {
+
+		@Override
+		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
+				throws ArgumentsAggregationException {
+			return accessor.getString(0) + accessor.getString(1);
 		}
 	}
 

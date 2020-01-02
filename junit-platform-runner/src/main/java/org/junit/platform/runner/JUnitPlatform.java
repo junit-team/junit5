@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -68,6 +68,11 @@ import org.junit.runner.notification.RunNotifier;
  * <p>Annotating a class with {@code @RunWith(JUnitPlatform.class)} allows it
  * to be run with IDEs and build systems that support JUnit 4 but do not yet
  * support the JUnit Platform directly.
+ *
+ * <p>Please note that test classes and suites annotated with
+ * {@code @RunWith(JUnitPlatform.class)} <em>cannot</em> be executed directly on
+ * the JUnit Platform (or as a "JUnit 5" test as documented in some IDEs). Such
+ * classes and suites can only be executed using JUnit 4 infrastructure.
  *
  * <p>Consult the various annotations in the {@code org.junit.platform.suite.api}
  * package for configuration options.

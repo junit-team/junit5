@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -8,9 +8,18 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+/**
+ * Public API for configuring and launching test plans.
+ *
+ * <p>This API is typically used by IDEs and build tools.
+ *
+ * @moduleGraph
+ * @since 1.0.0
+ */
 module org.junit.platform.launcher {
-	requires java.logging;
+	requires transitive java.logging;
 	requires transitive org.apiguardian.api;
+	requires transitive org.junit.platform.commons;
 	requires transitive org.junit.platform.engine;
 
 	exports org.junit.platform.launcher;

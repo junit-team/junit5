@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -53,6 +53,9 @@ public interface InvocationInterceptor extends Extension {
 
 	/**
 	 * Intercept the invocation of a test class constructor.
+	 *
+	 * <p>Note that the test class may <em>not</em> have been initialized
+	 * (static initialization) when this method is invoked.
 	 *
 	 * @param invocation the invocation that is being intercepted; never
 	 * {@code null}

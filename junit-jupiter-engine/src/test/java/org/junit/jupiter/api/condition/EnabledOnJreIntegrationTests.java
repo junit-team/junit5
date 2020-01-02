@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.condition.JRE.JAVA_11;
 import static org.junit.jupiter.api.condition.JRE.JAVA_12;
 import static org.junit.jupiter.api.condition.JRE.JAVA_13;
 import static org.junit.jupiter.api.condition.JRE.JAVA_14;
+import static org.junit.jupiter.api.condition.JRE.JAVA_15;
 import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.jupiter.api.condition.JRE.JAVA_9;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
@@ -45,7 +46,7 @@ class EnabledOnJreIntegrationTests {
 	}
 
 	@Test
-	@EnabledOnJre({ JAVA_8, JAVA_9, JAVA_10, JAVA_11, JAVA_12, JAVA_13, JAVA_14, OTHER })
+	@EnabledOnJre({ JAVA_8, JAVA_9, JAVA_10, JAVA_11, JAVA_12, JAVA_13, JAVA_14, JAVA_15, OTHER })
 	void enabledOnAllJavaVersions() {
 	}
 
@@ -92,9 +93,16 @@ class EnabledOnJreIntegrationTests {
 	}
 
 	@Test
+	@EnabledOnJre(JAVA_15)
+	void java15() {
+		assertTrue(onJava15());
+	}
+
+	@Test
 	@EnabledOnJre(OTHER)
 	void other() {
-		assertFalse(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14());
+		assertFalse(
+			onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14() || onJava15());
 	}
 
 	static boolean onJava8() {
@@ -123,6 +131,10 @@ class EnabledOnJreIntegrationTests {
 
 	static boolean onJava14() {
 		return JAVA_VERSION.startsWith("14");
+	}
+
+	static boolean onJava15() {
+		return JAVA_VERSION.startsWith("15");
 	}
 
 }

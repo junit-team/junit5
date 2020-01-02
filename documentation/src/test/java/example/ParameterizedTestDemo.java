@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -411,7 +411,7 @@ class ParameterizedTestDemo {
 
 	// tag::custom_display_names[]
 	@DisplayName("Display name of container")
-	@ParameterizedTest(name = "{index} ==> fruit=''{0}'', rank={1}")
+	@ParameterizedTest(name = "{index} ==> the rank of ''{0}'' is {1}")
 	@CsvSource({ "apple, 1", "banana, 2", "'lemon, lime', 3" })
 	void testWithCustomDisplayNames(String fruit, int rank) {
 	}

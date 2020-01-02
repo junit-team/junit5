@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -44,6 +44,10 @@ class ManifestTests {
 			assertValue(attributes, "Implementation-Version", version);
 			assertValue(attributes, "Implementation-Vendor", "junit.org");
 			assertValue(attributes, "Automatic-Module-Name", null);
+			assertValue(attributes, "Bundle-ManifestVersion", "2");
+			assertValue(attributes, "Bundle-SymbolicName", module);
+			assertValue(attributes, "Bundle-Version",
+				aQute.bnd.version.MavenVersion.parseMavenString(version).getOSGiVersion().toString());
 			switch (module) {
 				case "junit-platform-commons":
 					assertValue(attributes, "Multi-Release", "true");

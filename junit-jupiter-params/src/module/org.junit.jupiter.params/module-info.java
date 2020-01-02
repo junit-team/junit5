@@ -1,6 +1,5 @@
-
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -9,9 +8,16 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+/**
+ * JUnit Jupiter extension for parameterized tests.
+ *
+ * @moduleGraph
+ * @since 5.0.0
+ */
 module org.junit.jupiter.params {
 	requires transitive org.apiguardian.api;
 	requires transitive org.junit.jupiter.api;
+	requires transitive org.junit.platform.commons;
 
 	exports org.junit.jupiter.params;
 	exports org.junit.jupiter.params.aggregator;

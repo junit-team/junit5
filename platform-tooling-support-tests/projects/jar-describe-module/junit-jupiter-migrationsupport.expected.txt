@@ -8,3 +8,4 @@ requires java.base mandated
 requires junit transitive
 requires org.apiguardian.api transitive
 requires org.junit.jupiter.api transitive
+requires org.junit.platform.commons

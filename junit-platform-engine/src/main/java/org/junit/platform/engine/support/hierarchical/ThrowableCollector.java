@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -170,8 +170,10 @@ public class ThrowableCollector {
 	 * {@linkplain TestExecutionResult#failed failed} if it <em>failed</em>
 	 * execution; and {@linkplain TestExecutionResult#successful successful}
 	 * otherwise
+	 * @since 1.6
 	 */
-	TestExecutionResult toTestExecutionResult() {
+	@API(status = MAINTAINED, since = "1.6")
+	public TestExecutionResult toTestExecutionResult() {
 		if (isEmpty()) {
 			return successful();
 		}
