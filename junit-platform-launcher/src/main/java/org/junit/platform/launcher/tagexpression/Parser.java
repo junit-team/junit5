@@ -19,7 +19,7 @@ class Parser {
 
 	private final Tokenizer tokenizer = new Tokenizer();
 
-	public ParseResult parse(String infixTagExpression) {
+	ParseResult parse(String infixTagExpression) {
 		return constructExpressionFrom(tokensDerivedFrom(infixTagExpression));
 	}
 
