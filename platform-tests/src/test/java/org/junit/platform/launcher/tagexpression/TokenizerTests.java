@@ -49,6 +49,12 @@ class TokenizerTests {
 	}
 
 	@Test
+	void anyAndNoneAreReservedKeywords() {
+		assertThat(tokenStringsExtractedFrom("!(any())")).containsExactly("!", "(", "any()", ")");
+		assertThat(tokenStringsExtractedFrom("!(none())")).containsExactly("!", "(", "none()", ")");
+	}
+
+	@Test
 	void discoverBrackets() {
 		assertThat(tokenStringsExtractedFrom("()")).containsExactly("(", ")");
 		assertThat(tokenStringsExtractedFrom("(tag)")).containsExactly("(", "tag", ")");

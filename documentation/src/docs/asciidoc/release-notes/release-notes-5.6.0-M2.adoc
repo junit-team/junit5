@@ -31,6 +31,8 @@ on GitHub.
 ==== New Features and Improvements
 
 * `TestExecutionSummary.Failure` is now serializable.
+* Running all tests with any tags or without any tags at all is now supported
+  by using the special expressions `any()` and `none()`.
 * `ReflectionSupport.findNestedClasses(...)` now detects cycles within inner class
   hierarchies. Consult the Javadoc for details.
 * `ThrowableCollector.toTestExecutionResult()` is now public.

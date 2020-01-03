@@ -67,7 +67,9 @@ class ParserTests {
 				arguments("(foo & bar ) | baz & quux", "((foo & bar) | (baz & quux))"),
 				arguments("! foo | bar & ! baz | ! quux | quuz & corge", "(((!foo | (bar & !baz)) | !quux) | (quuz & corge))"),
 				arguments("(foo & bar ) | baz & quux", "((foo & bar) | (baz & quux))"),
-				arguments("foo | bar & baz|quux", "((foo | (bar & baz)) | quux)")
+				arguments("foo | bar & baz|quux", "((foo | (bar & baz)) | quux)"),
+				arguments("any()", "any()"),
+				arguments("! none()", "!none()")
 		);
 		// @formatter:on
 	}

@@ -34,6 +34,34 @@ class TagExpressions {
 		};
 	}
 
+	static TagExpression none() {
+		return new TagExpression() {
+			@Override
+			public boolean evaluate(Collection<TestTag> tags) {
+				return tags.isEmpty();
+			}
+
+			@Override
+			public String toString() {
+				return "none()";
+			}
+		};
+	}
+
+	static TagExpression any() {
+		return new TagExpression() {
+			@Override
+			public boolean evaluate(Collection<TestTag> tags) {
+				return !tags.isEmpty();
+			}
+
+			@Override
+			public String toString() {
+				return "any()";
+			}
+		};
+	}
+
 	static TagExpression not(TagExpression toNegate) {
 		return new TagExpression() {
 			@Override
