@@ -16,8 +16,6 @@ val builtByValue: String by rootProject.extra
 val shadowed by configurations.creating
 val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 
-fun javaModuleName(project: Project) = "org." + project.name.replace('-', '.')
-val javaModuleName = javaModuleName(project)
 val moduleSourceDir = file("src/module/$javaModuleName")
 val moduleOutputDir = file("$buildDir/classes/java/module")
 val javaVersion = JavaVersion.current()
@@ -250,7 +248,7 @@ inner class ModulePathArgumentProvider : CommandLineArgumentProvider {
 
 inner class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvider {
 
-	@get:Input val module: String = javaModuleName(it)
+	@get:Input val module: String = it.javaModuleName
 
 	@get:Input val patch: Provider<FileCollection> = provider {
 		if (it == project)
