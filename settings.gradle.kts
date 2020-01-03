@@ -9,7 +9,7 @@ pluginManagement {
 		id("com.github.johnrengelman.shadow") version "5.2.0"
 		id("org.asciidoctor.convert") version "1.5.8.1"
 		id("me.champeau.gradle.jmh") version "0.5.0"
-		id("io.spring.nohttp") version "0.0.3.RELEASE"
+		id("io.spring.nohttp") version "0.0.4.RELEASE"
 	}
 }
 
