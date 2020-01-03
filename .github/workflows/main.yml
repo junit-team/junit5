@@ -77,7 +77,7 @@ jobs:
     name: Publish Snapshot Artifacts
     needs: linux
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/master')
+    if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/master')
     steps:
     - uses: actions/checkout@master
     - name: 'Set up JDK 11'
@@ -94,7 +94,7 @@ jobs:
     name: Update Snapshot Documentation
     needs: linux
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/master'
     steps:
     - uses: actions/checkout@master
     - name: 'Set up JDK 11'
