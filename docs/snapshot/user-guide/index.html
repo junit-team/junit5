@@ -6518,6 +6518,11 @@ those supplied via the configuration file.
 <p>Tag expressions are boolean expressions with the operators <code>!</code>, <code>&amp;</code> and <code>|</code>. In addition,
 <code>(</code> and <code>)</code> can be used to adjust for operator precedence.</p>
 </div>
+<div class="paragraph">
+<p>Two special expressions are supported, <code>any()</code> and <code>none()</code>, which select all tests <em>with</em>
+any tags at all, and all tests <em>without</em> any tags, respectively.
+These special expressions may be combined with other expressions just like normal tags.</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Operators (in descending order of precedence)</caption>
 <colgroup>
@@ -9875,7 +9880,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2020-01-02 17:00:46 UTC
+Last updated 2020-01-03 09:59:10 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
