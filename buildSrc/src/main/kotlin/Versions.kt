@@ -6,7 +6,8 @@ object Versions {
 
     // Dependencies
     val apiGuardian = "1.1.0"
-    val junit4 = "4.12"
+    val junit4 = "4.13"
+    val junit4Min = "4.12"
     val ota4j = "1.2.0"
     val picocli = "4.1.4"
     val univocity = "2.8.4"

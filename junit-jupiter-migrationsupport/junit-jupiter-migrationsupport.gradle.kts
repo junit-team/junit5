@@ -11,7 +11,11 @@ description = "JUnit Jupiter Migration Support"
 dependencies {
 	api(platform(project(":junit-bom")))
 
-	api("junit:junit:${Versions.junit4}")
+	api("junit:junit:[${Versions.junit4Min},)") {
+		version {
+			prefer(Versions.junit4)
+		}
+	}
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 
 	api(project(":junit-jupiter-api"))
@@ -30,9 +34,9 @@ tasks.jar {
 			# Import JUnit4 packages with a version
 			Import-Package: \
 				!org.apiguardian.api,\
-				org.junit;version="${Versions.junit4}",\
+				org.junit;version="@${Versions.junit4Min}",\
 				org.junit.platform.commons.logging;status=INTERNAL,\
-				org.junit.rules;version="${Versions.junit4}",\
+				org.junit.rules;version="@${Versions.junit4Min}",\
 				*
 		""")
 	}
