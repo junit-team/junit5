@@ -44,6 +44,7 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 	private final JUnit4Builder junit4Builder;
 	private final IgnoredBuilder ignoredBuilder;
 
+	@SuppressWarnings("deprecation")
 	DefensiveAllDefaultPossibilitiesBuilder() {
 		super(true);
 		annotatedBuilder = new DefensiveAnnotatedBuilder(this);

@@ -79,6 +79,7 @@ class ExpectedExceptionSupportTests {
 	@ExtendWith(ExpectedExceptionSupport.class)
 	static class ExpectedExceptionTestCase {
 
+		@SuppressWarnings("deprecation")
 		@Rule
 		public ExpectedException thrown = ExpectedException.none();
 

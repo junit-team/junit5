@@ -145,6 +145,11 @@ if (project in mavenizedProjects) {
 		publications {
 			named<MavenPublication>("maven") {
 				from(components["java"])
+				versionMapping {
+					allVariants {
+						fromResolutionResult()
+					}
+				}
 				pom {
 					description.set(provider { "Module \"${project.name}\" of JUnit 5." })
 				}

@@ -88,4 +88,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* To support adoption of the recent JUnit 4.13 release, the Vintage engine now requires
+  the new version in its POM and Gradle Module Metadata. However, if you absolutely have
+  to stay on 4.12, you can safely downgrade the dependency manually because the Vintage
+  engine will remain compatible with 4.12.

@@ -9,7 +9,11 @@ description = "JUnit Platform Runner"
 dependencies {
 	api(platform(project(":junit-bom")))
 
-	api("junit:junit:${Versions.junit4}")
+	api("junit:junit:[${Versions.junit4Min},)") {
+		version {
+			prefer(Versions.junit4)
+		}
+	}
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 
 	api(project(":junit-platform-launcher"))
@@ -25,7 +29,7 @@ tasks.jar {
 			Import-Package: \
 				!org.apiguardian.api,\
 				org.junit.platform.commons.logging;status=INTERNAL,\
-				org.junit.runner.*;version="${Versions.junit4}",\
+				org.junit.runner.*;version="@${Versions.junit4Min}",\
 				*
 		""")
 	}
