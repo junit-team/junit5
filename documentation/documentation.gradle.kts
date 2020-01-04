@@ -1,21 +1,11 @@
+import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import java.io.ByteArrayOutputStream
 import java.nio.file.Files
 
-buildscript {
-	dependencies {
-		// upgrade to latest jruby version due to a bugfix needed for Windows 10.
-		// can be removed, when asciidoctorj uses this as a default version.
-		classpath("org.jruby:jruby-complete:${Versions.jruby}")
-
-		// classpath("org.asciidoctor:asciidoctorj-epub3:${Versions.asciidoctorPdf}")
-		classpath("org.asciidoctor:asciidoctorj-pdf:${Versions.asciidoctorPdf}")
-		classpath("org.asciidoctor:asciidoctorj-diagram:${Versions.asciidoctorDiagram}")
-	}
-}
-
 plugins {
-	id("org.asciidoctor.convert")
+	id("org.asciidoctor.jvm.convert")
+	id("org.asciidoctor.jvm.pdf")
 	id("org.ajoberstar.git-publish")
 	`kotlin-library-conventions`
 }
@@ -31,8 +21,6 @@ javaLibrary {
 }
 
 dependencies {
-	asciidoctor("org.jruby:jruby-complete:${Versions.jruby}")
-
 	// Jupiter API is used in src/main/java
 	implementation(project(":junit-jupiter-api"))
 
@@ -53,7 +41,12 @@ dependencies {
 }
 
 asciidoctorj {
-	version = Versions.asciidoctorJ
+	setJrubyVersion(Versions.jruby)
+	setVersion(Versions.asciidoctorJ)
+	modules {
+		diagram.version(Versions.asciidoctorDiagram)
+		pdf.version(Versions.asciidoctorPdf)
+	}
 }
 
 val snapshot = rootProject.version.toString().contains("SNAPSHOT")
@@ -131,29 +124,23 @@ tasks {
 		redirectOutput(this, deprecatedApisTableFile)
 	}
 
-	asciidoctor {
+	withType<AbstractAsciidoctorTask>().configureEach {
 		dependsOn(generateConsoleLauncherOptions, generateExperimentalApisTable, generateDeprecatedApisTable)
 		inputs.files(consoleLauncherOptionsFile, experimentalApisTableFile, deprecatedApisTableFile)
 
-		// enable the Asciidoctor Diagram extension
-		requires("asciidoctor-diagram")
-
-		separateOutputDirs = false
-		sources(delegateClosureOf<PatternSet> {
+		sources {
 			include("**/index.adoc")
-		})
-		resources(delegateClosureOf<CopySpec> {
-			from(sourceDir) {
-				include("**/images/**")
-				include("tocbot-*/**")
-			}
-		})
+		}
 
-		backends("html5")
-		backends("pdf")
-		attributes(mapOf("linkToPdf" to uploadPdfs))
+		resources {
+			from(sourceDir) {
+				include("**/images/**/*.png")
+				include("**/images/**/*.svg")
+			}
+		}
 
 		attributes(mapOf(
+				"linkToPdf" to uploadPdfs,
 				"jupiter-version" to version,
 				"platform-version" to project.properties["platformVersion"],
 				"vintage-version" to project.properties["vintageVersion"],
@@ -161,7 +148,7 @@ tasks {
 				"junit4-version" to Versions.junit4,
 				"apiguardian-version" to Versions.apiGuardian,
 				"ota4j-version" to Versions.ota4j,
-				"surefire-version" to  Versions.surefire,
+				"surefire-version" to Versions.surefire,
 				"release-branch" to project.properties["releaseBranch"],
 				"docs-version" to project.properties["docsVersion"],
 				"revnumber" to version,
@@ -188,6 +175,28 @@ tasks {
 			withConvention(KotlinSourceSet::class) {
 				attributes(mapOf("kotlinTestDir" to kotlin.srcDirs.first()))
 				inputs.dir(kotlin.srcDirs.first())
+			}
+		}
+	}
+
+	asciidoctor {
+		resources {
+			from(sourceDir) {
+				include("tocbot-*/**")
+			}
+		}
+	}
+
+	asciidoctorPdf {
+		// workaround for https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/493
+		copyNoResources() // explicitly disable regular resources copying which happens after asciidoctor execution
+		doFirst {
+			// manually copy resources before executing asciidoctor so that static and generated images can be included
+			resources {
+				copy {
+					with(this@resources)
+					into(outputDir)
+				}
 			}
 		}
 	}
@@ -261,18 +270,20 @@ tasks {
 	}
 
 	val prepareDocsForUploadToGhPages by registering(Copy::class) {
-		dependsOn(aggregateJavadocs, asciidoctor)
+		dependsOn(aggregateJavadocs, asciidoctor, asciidoctorPdf)
 		outputs.dir(docsDir)
 
 		from("$buildDir/checksum") {
 			include("published-checksum.txt")
 		}
-		from("$buildDir/asciidoc") {
+		from(asciidoctor.map { it.outputDir }) {
 			include("user-guide/**")
 			include("release-notes/**")
 			include("tocbot-*/**")
-			if (!uploadPdfs) {
-				exclude("**/*.pdf")
+		}
+		if (uploadPdfs) {
+			from(asciidoctorPdf.map { it.outputDir }) {
+				include("**/*.pdf")
 			}
 		}
 		from("$buildDir/docs") {

@@ -2,7 +2,8 @@
 = JUnit 5 Release Notes
 Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Juliette de Rancourt; Christian Stein
 //
-:docinfodir: ../docinfos
+:basedir: {includedir}/release-notes
+:docinfodir: {includedir}/docinfos
 :docinfo2:
 :numbered!:
 //
@@ -13,14 +14,14 @@ Please refer to the <<../user-guide/index.adoc#user-guide,User Guide>> for compr
 reference documentation for programmers writing tests, extension authors, and engine
 authors as well as build tool and IDE vendors.
 
-include::../link-attributes.adoc[]
+include::{includedir}/link-attributes.adoc[]
 
-include::release-notes-5.6.0-RC1.adoc[]
+include::{basedir}/release-notes-5.6.0-RC1.adoc[]
 
-include::release-notes-5.6.0-M1.adoc[]
+include::{basedir}/release-notes-5.6.0-M1.adoc[]
 
-include::release-notes-5.5.2.adoc[]
+include::{basedir}/release-notes-5.5.2.adoc[]
 
-include::release-notes-5.5.1.adoc[]
+include::{basedir}/release-notes-5.5.1.adoc[]
 
-include::release-notes-5.5.0.adoc[]
+include::{basedir}/release-notes-5.5.0.adoc[]
