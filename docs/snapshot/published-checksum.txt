@@ -45,10 +45,10 @@
 114ac4b8ca5c515e32bdd2dbd20bde01  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ExcludeClassNameFilter.java
 11a5265a25ab14033d6fcd106bf4d026  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedMethod.java
 11bdb5022af13946bd0136dc4097194c  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/TestInstancesProvider.java
+1258c53224625d7ee8d129b6ed89de4a  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-RC1.adoc
 1261c863f1d1d665b0be2892022c1f61  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.java
 1265a82e76ac911b1266d3adb9e01c20  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ExecutionListenerAdapter.java
 1287fde568a71fed4bb3e37dfced5320  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterResolver.java
-12aee8c1a4b7bb87a31278b937336ec6  documentation/src/docs/asciidoc/release-notes/index.adoc
 13017ef144287ce69114f70f4c79e347  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/ArgumentConversionException.java
 13750fec637a65f85f7be6f24fe7459b  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/TagExpressions.java
 13c76a7853cbb65c8d2f2330aac9495d  documentation/src/docs/asciidoc/user-guide/api-evolution.adoc
@@ -503,6 +503,7 @@ c56d08dfbe2086ea8bba49074beb70ba  junit-vintage-engine/src/main/java/org/junit/v
 c5e815b88b03fb5e0eda36eeb4515225  documentation/src/test/java/example/SharedResourcesDemo.java
 c5e973899c88b6c5b9aea57f8fb5493e  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/NestedMethodSelector.java
 c665cbffd3af83710d24959605b66d5b  documentation/src/docs/asciidoc/docinfos/docinfo.html
+c66a0e842e89f29fc6ba0ebaab636ded  documentation/src/docs/asciidoc/release-notes/index.adoc
 c6b96935084b7518b510b25843d0213d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Token.java
 c77f25d530f08066bf21f2e0eae29e7a  documentation/src/docs/asciidoc/docinfos/docinfo-footer.html
 c792fb63e20484e429723be77d42d0fa  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariables.java
@@ -565,7 +566,6 @@ d5e1cb075ead4038880c936512db328a  junit-jupiter-engine/src/main/java/org/junit/j
 d5ebf392e67dfeed936fad1b592996a9  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ConstructorInvocation.java
 d74c996bb30071fda9093393de0acee1  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/ExtensionRegistry.java
 d74d3876ae8afa0613aec0ca1d09af28  junit-jupiter-api/src/main/java/org/junit/jupiter/api/BeforeEach.java
-d75883507f4e180fc0a65e1935d6dd98  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M2.adoc
 d76489a0ab9735bc58b3f8d7ff4c2e89  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/JavaTimeArgumentConverter.java
 d7b50f81b1d303b66c2ed88e1030c594  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariable.java
 d7dfd73f34b3ca92e1a957d9b98ebd90  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicNodeTestDescriptor.java
