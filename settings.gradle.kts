@@ -1,11 +1,11 @@
 pluginManagement {
 	plugins {
 		id("com.gradle.enterprise") version "3.1"
-		id("net.nemerosa.versioning") version "2.8.2"
-		id("com.github.ben-manes.versions") version "0.26.0"
-		id("com.diffplug.gradle.spotless") version "3.25.0"
-		id("org.ajoberstar.git-publish") version "2.1.1"
-		kotlin("jvm") version "1.3.50"
+		id("net.nemerosa.versioning") version "2.10.0"
+		id("com.github.ben-manes.versions") version "0.27.0"
+		id("com.diffplug.gradle.spotless") version "3.27.0"
+		id("org.ajoberstar.git-publish") version "2.1.3"
+		kotlin("jvm") version "1.3.61"
 		id("com.github.johnrengelman.shadow") version "5.2.0"
 		id("org.asciidoctor.convert") version "1.5.8.1"
 		id("me.champeau.gradle.jmh") version "0.5.0"
