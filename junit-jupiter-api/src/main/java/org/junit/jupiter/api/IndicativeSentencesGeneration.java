@@ -22,28 +22,24 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @IndicativeSentencesGeneration} is used to declare a custom separator
- * by {@code IndicativeSentences}, if this notation was not declared
- * will be use ", " as separator by default.
+ * {@code @IndicativeSentencesGeneration} is used to declare a custom parameters
+ * by {@code IndicativeSentences}, if this notation has some not declared
+ * parameters, it will use the default values instead.
  *
- * @since 5.6
+ * @since 5.7
  * @see DisplayName
  * @see DisplayNameGenerator
  */
 @DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
-@Target(ElementType.TYPE)
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@API(status = EXPERIMENTAL, since = "5.6")
+@API(status = EXPERIMENTAL, since = "5.7")
 public @interface IndicativeSentencesGeneration {
 
 	String DEFAULT_SEPARATOR = ", ";
-	/**
-	 * Pre-defined display name generator instances.
-	 */
-	DisplayNameGenerator standardGenerator = new DisplayNameGenerator.Standard();
-	DisplayNameGenerator replaceUnderscoresGenerator = new DisplayNameGenerator.ReplaceUnderscores();
+	Class<? extends DisplayNameGenerator> DEFAULT_GENERATOR = DisplayNameGenerator.Standard.class;
 
 	/**
 	 * Custom separator for indicative sentences generator.
@@ -57,5 +53,5 @@ public @interface IndicativeSentencesGeneration {
 	 *
 	 * @return custom display name generator class
 	 */
-	Class<? extends DisplayNameGenerator> value();
+	Class<? extends DisplayNameGenerator> generator() default DisplayNameGenerator.Standard.class;
 }
