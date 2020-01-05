@@ -4,6 +4,8 @@ plugins {
 	`java-library-conventions`
 }
 
+apply(from = "$rootDir/gradle/testing.gradle.kts")
+
 description = "JUnit Platform Runner"
 
 dependencies {
@@ -20,6 +22,8 @@ dependencies {
 	api(project(":junit-platform-suite-api"))
 
 	testRuntimeOnly("org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:4.12_1")
+	testImplementation(testFixtures(project(":junit-platform-engine")))
+	testImplementation(testFixtures(project(":junit-platform-launcher")))
 }
 
 tasks.jar {
