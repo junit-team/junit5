@@ -84,11 +84,14 @@ public interface DisplayNameGenerator {
 	/**
 	 * Generates the DisplayNameGenerator instance corresponding to the class it's given.
 	 *
-	 * @param testClass the class to generate the instance; never {@code null}
-	 * @return a DisplayNameGenerator implementation instance.
+	 * @param testClass the class to generate the instance; never {@code null} and being a
+	 * DisplayNameGenerator implementation
+	 * @return a DisplayNameGenerator implementation instance
 	 */
 	static DisplayNameGenerator getDisplayNameGenerator(Class<?> testClass) {
 		Preconditions.notNull(testClass, "Class must not be null");
+		Preconditions.condition(testClass.getEnclosingClass() == DisplayNameGenerator.class,
+			"Class must be a DisplayNameGenerator implementation");
 		if (testClass == Standard.class) {
 			return Standard.INSTANCE;
 		}
@@ -209,18 +212,15 @@ public interface DisplayNameGenerator {
 			if (enclosingParent == null) {
 				return displayName.map(DisplayName::value).orElseGet(() -> generateDisplayNameForClass(testClass));
 			}
-			else {
-				if (displayNameGeneration.isPresent()) {
-					return displayName.map(DisplayName::value).orElseGet(() -> generateDisplayNameForClass(testClass));
-				}
-				else {
-					return displayName.map(name -> classReplaceToIndicativeSentence(enclosingParent)
-							+ getSentenceSeparator(testClass) + name.value()).orElseGet(
-								() -> classReplaceToIndicativeSentence(enclosingParent)
-										+ getSentenceSeparator(testClass) + getGeneratorForIndicativeSentence(
-											testClass).generateDisplayNameForNestedClass(testClass));
-				}
+			if (displayNameGeneration.isPresent()) {
+				return displayName.map(DisplayName::value).orElseGet(() -> generateDisplayNameForClass(testClass));
 			}
+			return displayName.map(name -> classReplaceToIndicativeSentence(enclosingParent)
+					+ getSentenceSeparator(testClass) + name.value()).orElseGet(
+						() -> classReplaceToIndicativeSentence(enclosingParent) + getSentenceSeparator(testClass)
+								+ getGeneratorForIndicativeSentence(testClass).generateDisplayNameForNestedClass(
+									testClass));
+
 		}
 
 		/**
@@ -264,9 +264,7 @@ public interface DisplayNameGenerator {
 				if (displayNameGenerator.getClass() == IndicativeSentences.class) {
 					return getDisplayNameGenerator(IndicativeSentencesGeneration.DEFAULT_GENERATOR);
 				}
-				else {
-					return displayNameGenerator;
-				}
+				return displayNameGenerator;
 			}
 
 			return getDisplayNameGenerator(IndicativeSentencesGeneration.DEFAULT_GENERATOR);

@@ -207,11 +207,11 @@ include::{testDir}/example/DisplayNameIndicativeSentencesDemo.java[tags=user_gui
 
 ```
 +-- DisplayNameIndicativeSentencesDemo [OK]
-  +-- A cat named schrodinger [OK]
-  | +-- A cat named schrodinger >> is in a box [OK]
-  | |-- A cat named schrodinger >> can be alive and not at the same time! [OK]
-  ' --- A cat named schrodinger >> when we look the box [OK]
-      '-- A cat named schrodinger >> when we look the box >> our mind will blow [OK]
+  +-- Schrodingers cat [OK]
+  | +-- Schrodinger cat >> is in a box [OK]
+  | |-- Schrodinger cat >> can be alive and not at the same time! [OK]
+  ' --- Schrodinger cat >> when we look the box [OK]
+      '-- Schrodinger cat >> when we look the box >> our mind will blow [OK]
 ```
 
 [[writing-tests-display-name-generator-default]]

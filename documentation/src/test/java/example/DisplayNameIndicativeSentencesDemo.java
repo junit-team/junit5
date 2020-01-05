@@ -21,7 +21,7 @@ class DisplayNameIndicativeSentencesDemo {
 
 	@Nested
 	@IndicativeSentencesGeneration(separator = " >> ", generator = ReplaceUnderscores.class)
-	class A_cat_named_schrodinger {
+	class Schrodinger_cat {
 
 		@Test
 		void is_in_a_box() {
