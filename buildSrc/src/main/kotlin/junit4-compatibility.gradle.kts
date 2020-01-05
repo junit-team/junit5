@@ -19,7 +19,9 @@ dependencies {
 			strictly("4.12")
 		}
 	}
-	testRuntimeOnly("org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:4.12_1")
+	pluginManager.withPlugin("osgi-conventions") {
+		"osgiVerification"("org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:4.12_1")
+	}
 }
 
 tasks {

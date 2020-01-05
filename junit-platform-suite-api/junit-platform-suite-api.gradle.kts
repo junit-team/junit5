@@ -9,5 +9,5 @@ dependencies {
 
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 
-	testRuntimeOnly(project(":junit-platform-commons"))
+	osgiVerification(project(":junit-platform-commons"))
 }

@@ -61,27 +61,31 @@ tasks.withType<Jar>().matching {
 		// Do the actual work putting OSGi stuff in the jar.
 		btc.buildBundle()
 	}
-
-	finalizedBy("verifyOSGi")
 }
+
+val osgiPropertiesFile = file("$buildDir/verifyOSGiProperties.bndrun")
 
 // Bnd's Resolve task uses a properties file for it's configuration. This
 // task writes out the properties necessary for it to verify the OSGi
 // metadata.
-tasks.register<WriteProperties>("verifyOSGiProperties") {
-	setOutputFile("${buildDir}/verifyOSGiProperties.bndrun")
-	property("-standalone", "true")
+val osgiProperties by tasks.registering(WriteProperties::class) {
+	outputFile = osgiPropertiesFile
+	property("-standalone", true)
 	property("-runee", "JavaSE-${Versions.jvmTarget}")
 	property("-runrequires", "osgi.identity;filter:='(osgi.identity=${project.name})'")
 	property("-runsystempackages", "jdk.internal.misc,sun.misc")
 }
 
+val osgiVerification by configurations.creating {
+	extendsFrom(configurations.runtimeClasspath.get())
+}
+
 // Bnd's Resolve task is what verifies that a jar can be used in OSGi and
 // that it's metadata is valid. If the metadata is invalid this task will
 // fail.
-tasks.register<Resolve>("verifyOSGi") {
-	dependsOn("verifyOSGiProperties")
-	setBndrun("${buildDir}/verifyOSGiProperties.bndrun")
+val verifyOSGi by tasks.registering(Resolve::class) {
+	dependsOn(osgiProperties)
+	setBndrun(osgiPropertiesFile)
 	isReportOptional = false
 	withConvention(FileSetRepositoryConvention::class) {
 
@@ -89,11 +93,15 @@ tasks.register<Resolve>("verifyOSGi") {
 		// 1. project.sourceSets.main.runtimeClasspath
 		// 2. project.configurations.archives.artifacts.files
 		// to validate the metadata.
-		// This adds jars defined in `testRuntimeClasses` also so that bnd
+		// This adds jars defined in `osgiVerification` also so that bnd
 		// can use them to validate the metadata without causing those to
 		// end up in the dependencies of those projects.
-		bundles(sourceSets["test"].runtimeClasspath)
+		bundles(osgiVerification)
 	}
+}
+
+tasks.check {
+	dependsOn(verifyOSGi)
 }
 
 // The ${project.description}, for some odd reason, is only available
