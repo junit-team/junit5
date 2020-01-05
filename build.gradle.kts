@@ -71,6 +71,7 @@ val jacocoTestProjects = listOf(
 		project(":junit-jupiter-engine"),
 		project(":junit-jupiter-migrationsupport"),
 		project(":junit-jupiter-params"),
+		project(":junit-platform-runner"),
 		project(":junit-vintage-engine"),
 		project(":platform-tests")
 )
