@@ -2,6 +2,7 @@ import aQute.bnd.gradle.BundleTaskConvention;
 
 plugins {
 	`java-library-conventions`
+	`junit4-compatibility`
 }
 
 apply(from = "$rootDir/gradle/testing.gradle.kts")
@@ -11,17 +12,12 @@ description = "JUnit Platform Runner"
 dependencies {
 	api(platform(project(":junit-bom")))
 
-	api("junit:junit:[${Versions.junit4Min},)") {
-		version {
-			prefer(Versions.junit4)
-		}
-	}
+	api("junit:junit")
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 
 	api(project(":junit-platform-launcher"))
 	api(project(":junit-platform-suite-api"))
 
-	testRuntimeOnly("org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:4.12_1")
 	testImplementation(testFixtures(project(":junit-platform-engine")))
 	testImplementation(testFixtures(project(":junit-platform-launcher")))
 }
