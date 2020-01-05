@@ -2,6 +2,7 @@ import aQute.bnd.gradle.BundleTaskConvention;
 
 plugins {
 	`java-library-conventions`
+	`junit4-compatibility`
 }
 
 apply(from = "$rootDir/gradle/testing.gradle.kts")
@@ -11,11 +12,7 @@ description = "JUnit Jupiter Migration Support"
 dependencies {
 	api(platform(project(":junit-bom")))
 
-	api("junit:junit:[${Versions.junit4Min},)") {
-		version {
-			prefer(Versions.junit4)
-		}
-	}
+	api("junit:junit")
 	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
 
 	api(project(":junit-jupiter-api"))
@@ -24,8 +21,6 @@ dependencies {
 	testImplementation(project(":junit-platform-launcher"))
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(":junit-platform-testkit"))
-
-	testRuntimeOnly("org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:4.12_1")
 }
 
 tasks.jar {
