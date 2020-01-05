@@ -29,7 +29,7 @@ tasks.withType<Jar>().matching {
 			# the kotlin packages, but enough modules do to make it a default.
 			-fixupmessages.kotlin.import: "Unused Import-Package instructions: \\[kotlin.*\\]";is:=ignore
 
-			# This tells bnd to ignore classes it files in `META-INF/versions/`
+			# This tells bnd to ignore classes it finds in `META-INF/versions/`
 			# because bnd doesn't yet support multi-release jars.
 			-fixupmessages.wrong.dir: "Classes found in the wrong directory: \\{META-INF/versions/...";is:=ignore
 
@@ -65,7 +65,7 @@ tasks.withType<Jar>().matching {
 
 val osgiPropertiesFile = file("$buildDir/verifyOSGiProperties.bndrun")
 
-// Bnd's Resolve task uses a properties file for it's configuration. This
+// Bnd's Resolve task uses a properties file for its configuration. This
 // task writes out the properties necessary for it to verify the OSGi
 // metadata.
 val osgiProperties by tasks.registering(WriteProperties::class) {
@@ -81,7 +81,7 @@ val osgiVerification by configurations.creating {
 }
 
 // Bnd's Resolve task is what verifies that a jar can be used in OSGi and
-// that it's metadata is valid. If the metadata is invalid this task will
+// that its metadata is valid. If the metadata is invalid this task will
 // fail.
 val verifyOSGi by tasks.registering(Resolve::class) {
 	dependsOn(osgiProperties)
@@ -105,7 +105,7 @@ tasks.check {
 }
 
 // The ${project.description}, for some odd reason, is only available
-// afterEvaluate.
+// after evaluation.
 afterEvaluate {
 	tasks.withType<Jar>().configureEach {
 		convention.findPlugin(BundleTaskConvention::class.java)
