@@ -82,20 +82,22 @@ public interface DisplayNameGenerator {
 	}
 
 	/**
-	 * Description //TODO.
+	 * Generates the DisplayNameGenerator instance corresponding to the class it's given.
 	 *
-	 * @param testClass description
-	 * @return description
+	 * @param testClass the class to generate the instance; never {@code null}
+	 * @return a DisplayNameGenerator implementation instance.
 	 */
 	static DisplayNameGenerator getDisplayNameGenerator(Class<?> testClass) {
-
+		Preconditions.notNull(testClass, "Class must not be null");
 		if (testClass == Standard.class) {
-			return Standard.standardGenerator;
+			return Standard.INSTANCE;
 		}
 		if (testClass == ReplaceUnderscores.class) {
-			return ReplaceUnderscores.replaceUnderscoresGenerator;
+			return ReplaceUnderscores.INSTANCE;
 		}
-
+		if (testClass == IndicativeSentences.class) {
+			return IndicativeSentences.INSTANCE;
+		}
 		return (DisplayNameGenerator) ReflectionUtils.newInstance(testClass);
 	}
 
@@ -107,10 +109,7 @@ public interface DisplayNameGenerator {
 	 */
 	class Standard implements DisplayNameGenerator {
 
-		/**
-		 * Pre-defined standard display name generator instance.
-		 */
-		static final DisplayNameGenerator standardGenerator = new Standard();
+		static final DisplayNameGenerator INSTANCE = new Standard();
 
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
@@ -139,10 +138,7 @@ public interface DisplayNameGenerator {
 	 */
 	class ReplaceUnderscores extends Standard {
 
-		/**
-		 * Pre-defined display name generator instance replacing underscores.
-		 */
-		static final DisplayNameGenerator replaceUnderscoresGenerator = new ReplaceUnderscores();
+		static final DisplayNameGenerator INSTANCE = new ReplaceUnderscores();
 
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
@@ -185,6 +181,8 @@ public interface DisplayNameGenerator {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.7")
 	class IndicativeSentences implements DisplayNameGenerator {
+
+		static final DisplayNameGenerator INSTANCE = new IndicativeSentences();
 
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
@@ -255,19 +253,19 @@ public interface DisplayNameGenerator {
 		 * {@link Standard} by default.
 		 *
 		 * @param testClass Class to get Indicative sentence generator either custom or default
-		 * @return the indicative sentence display generator instance
+		 * @return the {@code DisplayNameGenerator} instance to use in indicative sentences generator
 		 */
 		private DisplayNameGenerator getGeneratorForIndicativeSentence(Class<?> testClass) {
 			Optional<IndicativeSentencesGeneration> indicativeSentencesGeneration = getIndicativeSentencesGeneration(
 				testClass);
 			if (indicativeSentencesGeneration.isPresent()) {
-				DisplayNameGenerator generatorClass = getDisplayNameGenerator(
+				DisplayNameGenerator displayNameGenerator = getDisplayNameGenerator(
 					indicativeSentencesGeneration.get().generator());
-				if (generatorClass.getClass() == IndicativeSentences.class) {
+				if (displayNameGenerator.getClass() == IndicativeSentences.class) {
 					return getDisplayNameGenerator(IndicativeSentencesGeneration.DEFAULT_GENERATOR);
 				}
 				else {
-					return getDisplayNameGenerator(indicativeSentencesGeneration.get().generator());
+					return displayNameGenerator;
 				}
 			}
 
