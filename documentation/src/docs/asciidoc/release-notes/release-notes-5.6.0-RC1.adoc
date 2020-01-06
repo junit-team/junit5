@@ -1,7 +1,7 @@
 [[release-notes-5.6.0-RC1]]
 == 5.6.0-RC1
 
-*Date of Release:* ❓
+*Date of Release:* January 6, 2020
 
 *Scope:*
 
@@ -30,10 +30,6 @@ on GitHub.
 * The `EventConditions.nestedContainer()` method in the Engine Test Kit now correctly
   handles events from multiple levels of nested classes.
 
-==== Deprecations and Breaking Changes
-
-* ❓
-
 ==== New Features and Improvements
 
 * `TestExecutionSummary.Failure` is now serializable.
@@ -51,10 +47,6 @@ on GitHub.
 
 * When `@Nested` is used, the temporary directory is now also injected into instance
   fields of enclosing classes annotated with `@TempDir`.
-
-==== Deprecations and Breaking Changes
-
-* ❓
 
 ==== New Features and Improvements
 
@@ -77,14 +69,6 @@ on GitHub.
 
 [[release-notes-5.6.0-RC1-junit-vintage]]
 === JUnit Vintage
-
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
 
 ==== New Features and Improvements
 
