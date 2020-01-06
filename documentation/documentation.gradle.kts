@@ -107,21 +107,21 @@ tasks {
 		classpath = sourceSets["test"].runtimeClasspath
 		main = "org.junit.platform.console.ConsoleLauncher"
 		args("--help")
-		redirectOutput(this, consoleLauncherOptionsFile)
+		redirectOutput(consoleLauncherOptionsFile)
 	}
 
 	val generateExperimentalApisTable by registering(JavaExec::class) {
 		classpath = sourceSets["test"].runtimeClasspath
 		main = "org.junit.api.tools.ApiReportGenerator"
 		args("EXPERIMENTAL")
-		redirectOutput(this, experimentalApisTableFile)
+		redirectOutput(experimentalApisTableFile)
 	}
 
 	val generateDeprecatedApisTable by registering(JavaExec::class) {
 		classpath = sourceSets["test"].runtimeClasspath
 		main = "org.junit.api.tools.ApiReportGenerator"
 		args("DEPRECATED")
-		redirectOutput(this, deprecatedApisTableFile)
+		redirectOutput(deprecatedApisTableFile)
 	}
 
 	withType<AbstractAsciidoctorTask>().configureEach {
@@ -316,15 +316,13 @@ tasks {
 	}
 }
 
-fun redirectOutput(task: JavaExec, outputFile: File) {
-	task.apply {
-		outputs.file(outputFile)
-		val byteStream = ByteArrayOutputStream()
-		standardOutput = byteStream
-		doLast {
-			Files.createDirectories(outputFile.parentFile.toPath())
-			Files.write(outputFile.toPath(), byteStream.toByteArray())
-		}
+fun JavaExec.redirectOutput(outputFile: File) {
+	outputs.file(outputFile)
+	val byteStream = ByteArrayOutputStream()
+	standardOutput = byteStream
+	doLast {
+		Files.createDirectories(outputFile.parentFile.toPath())
+		Files.write(outputFile.toPath(), byteStream.toByteArray())
 	}
 }
 
