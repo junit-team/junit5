@@ -196,7 +196,6 @@
 4a4216873a839d7f0531cbba8491cfc9  documentation/src/test/java/example/exception/IgnoreIOExceptionExtension.java
 4a89f7582f920475573bc1aba0c4a51a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/MethodSource.java
 4aecf93675b557555f6f628a8c4fcd04  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.java
-4b9d298105092702843f0aeba53897b0  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-RC1.adoc
 4ba0dc76e22284daf92d7f68e5f2565c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvArgumentsProvider.java
 4bfc291478e8c2effdd5a97c8ab373cc  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/AbstractRepeatableAnnotationCondition.java
 4c21fe6d2d00209402599baefab52691  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ModuleUtils.java
@@ -218,6 +217,7 @@
 5341346286292b5a4f3b0428cd38323a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayName.java
 53d5c6929f3bbce683db6321e1e7632c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestInvocationContext.java
 54beda599a94e19068b08ee6448c9983  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.java
+5559cc9f9fd47ee9b6c3f95d42b95b89  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-RC1.adoc
 55a758f98d8e67951c2a67a3e9d493c0  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DefaultTestInstanceFactoryContext.java
 55f90ca686cf4a9ac3e3aa229c232e10  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/package-info.java
 570b9f00821d5d49212ee592a7e8f8c2  documentation/src/test/java/example/HamcrestAssertionsDemo.java
