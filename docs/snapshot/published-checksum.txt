@@ -217,7 +217,6 @@
 5341346286292b5a4f3b0428cd38323a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayName.java
 53d5c6929f3bbce683db6321e1e7632c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestInvocationContext.java
 54beda599a94e19068b08ee6448c9983  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.java
-5559cc9f9fd47ee9b6c3f95d42b95b89  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-RC1.adoc
 55a758f98d8e67951c2a67a3e9d493c0  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DefaultTestInstanceFactoryContext.java
 55f90ca686cf4a9ac3e3aa229c232e10  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/package-info.java
 570b9f00821d5d49212ee592a7e8f8c2  documentation/src/test/java/example/HamcrestAssertionsDemo.java
@@ -235,6 +234,7 @@
 5b143dbb7aceed36bbb3320761d77bff  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/package-info.java
 5bc23e1fafd347bea0e1a2a1ed064a47  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicDescendantFilter.java
 5beeebeb56b5d1f68ce917275a7a5b68  junit-vintage-engine/src/main/java/org/junit/vintage/engine/package-info.java
+5c6467b055ac82e9d1ae5633ef69388c  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-RC1.adoc
 5cd6f8a4c39a615c5ab102c3f2dd1395  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/JavaTimeConversionPattern.java
 5d0b6bb941af66aa5933a87c24411514  documentation/src/test/java/example/callbacks/DatabaseTestsDemo.java
 5d223acf6c3040b8fc1e01a43a283712  junit-platform-commons/src/main/java/org/junit/platform/commons/support/HierarchyTraversalMode.java

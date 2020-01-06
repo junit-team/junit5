@@ -617,13 +617,13 @@ authors as well as build tool and IDE vendors.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>New <code>TestInstancePreDestroyCallback</code> extension point</p>
+<p>New <code>TestInstancePreDestroyCallback</code> extension API</p>
 </li>
 <li>
-<p>Include parameter names in default display names of parameterized test invocations</p>
+<p>Parameter names are included in default display names of parameterized test invocations</p>
 </li>
 <li>
-<p>Add support for using <code>any()</code> and <code>none()</code> in tag expressions</p>
+<p>Support for using <code>any()</code> and <code>none()</code> in tag expressions</p>
 </li>
 <li>
 <p>OSGi metadata</p>
@@ -707,6 +707,9 @@ fields of enclosing classes annotated with <code>@TempDir</code>.</p>
 annotations multiple times on a test interface, test class, or test method.</p>
 </li>
 <li>
+<p><code>JAVA_15</code> has been added to the <code>JRE</code> enum for use with JRE-based execution conditions.</p>
+</li>
+<li>
 <p>Discovery of <code>@Nested</code> test classes that form a cycle now results in an exception that
 halts execution of the JUnit Jupiter test engine instead of infinite recursion.</p>
 </li>
@@ -716,16 +719,14 @@ invocation (if they are present in the bytecode). The <code>{argumentsWithNames}
 can also be used in custom names.</p>
 </li>
 <li>
-<p>New <code>TestInstancePreDestroyCallback</code> interface that defines the API for <code>Extension</code>
-that wish to process test instances <strong>after</strong> they have been used in tests and <strong>before</strong>
-they are destroyed.</p>
+<p>New <code>TestInstancePreDestroyCallback</code> interface that defines the API for extensions that
+wish to process test instances <strong>after</strong> they have been used in tests and <strong>before</strong> they
+are destroyed.</p>
 </li>
 <li>
 <p><code>InvocationInterceptor</code> extensions may now explicitly <code>skip()</code> an intercepted
-invocation. This allows executing it by other means, e.g. in a forked JVM.</p>
-</li>
-<li>
-<p><code>JAVA_15</code> has been added to the <code>JRE</code> enum for use with JRE-based execution conditions.</p>
+invocation. This allows executing the invocation by other means — for example, in a
+forked JVM.</p>
 </li>
 </ul>
 </div>
@@ -1119,7 +1120,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.6.0-SNAPSHOT<br>
-Last updated 2020-01-06 11:03:31 UTC
+Last updated 2020-01-06 11:15:57 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
