@@ -238,9 +238,7 @@ public interface DisplayNameGenerator {
 				if (indicativeSentencesGeneration.get().separator().equals("")) {
 					return IndicativeSentencesGeneration.DEFAULT_SEPARATOR;
 				}
-				else {
-					return indicativeSentencesGeneration.get().separator();
-				}
+				return indicativeSentencesGeneration.get().separator();
 			}
 
 			return IndicativeSentencesGeneration.DEFAULT_SEPARATOR;
