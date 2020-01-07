@@ -280,7 +280,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 
 		@Override
-		public Throwable fillInStackTrace() {
+		public synchronized Throwable fillInStackTrace() {
 			return this; // Make the output smaller by omitting the stacktrace
 		}
 
