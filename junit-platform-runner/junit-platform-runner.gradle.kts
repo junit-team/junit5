@@ -5,8 +5,6 @@ plugins {
 	`junit4-compatibility`
 }
 
-apply(from = "$rootDir/gradle/testing.gradle.kts")
-
 description = "JUnit Platform Runner"
 
 dependencies {

@@ -1,5 +1,6 @@
 plugins {
 	`java-library-conventions`
+	`junit4-compatibility`
 	id("me.champeau.gradle.jmh")
 }
 
@@ -45,11 +46,16 @@ jmh {
 }
 
 tasks {
-	test {
+	withType<Test>().configureEach {
 		useJUnitPlatform {
 			excludeTags("exclude")
 		}
 		jvmArgs = listOf("-Xmx1g")
+	}
+	test_4_12 {
+		useJUnitPlatform {
+			includeTags("junit4")
+		}
 	}
 	checkstyleJmh { // use same style rules as defined for tests
 		configFile = rootProject.file("src/checkstyle/checkstyleTest.xml")

@@ -45,6 +45,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -97,6 +98,7 @@ import org.mockito.InOrder;
  *
  * @since 1.0
  */
+@Tag("junit4")
 class JUnitPlatformRunnerTests {
 
 	@Nested
