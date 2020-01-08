@@ -151,19 +151,19 @@ class TagFilterTests {
 		assertTrue(filter.apply(classWithTag1AndSurroundingWhitespace).included());
 		assertTrue(filter.apply(classWithBothTags).included());
 
-		assertReason(filter.apply(classWithTag1), "Test included Because it satisfy expression(s): [tag1]");
+		assertReason(filter.apply(classWithTag1), "included because tags match expression(s): [tag1]");
 		assertReason(filter.apply(classWithTag1AndSurroundingWhitespace),
-			"Test included Because it satisfy expression(s): [tag1]");
-		assertReason(filter.apply(classWithBothTags), "Test included Because it satisfy expression(s): [tag1]");
+			"included because tags match expression(s): [tag1]");
+		assertReason(filter.apply(classWithBothTags), "included because tags match expression(s): [tag1]");
 
 		assertTrue(filter.apply(classWithTag2).excluded());
 		assertTrue(filter.apply(classWithDifferentTags).excluded());
 		assertTrue(filter.apply(classWithNoTags).excluded());
 
-		assertReason(filter.apply(classWithTag2), "Test excluded Because it does not satisfy expression(s): [tag1]");
+		assertReason(filter.apply(classWithTag2), "excluded because tags do not match tag expression(s): [tag1]");
 		assertReason(filter.apply(classWithDifferentTags),
-			"Test excluded Because it does not satisfy expression(s): [tag1]");
-		assertReason(filter.apply(classWithNoTags), "Test excluded Because it does not satisfy expression(s): [tag1]");
+			"excluded because tags do not match tag expression(s): [tag1]");
+		assertReason(filter.apply(classWithNoTags), "excluded because tags do not match tag expression(s): [tag1]");
 
 	}
 

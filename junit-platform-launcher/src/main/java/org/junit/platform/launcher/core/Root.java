@@ -17,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.junit.platform.commons.logging.Logger;
@@ -73,18 +74,18 @@ class Root {
 		TestDescriptor.Visitor removeExcludedTestDescriptors = descriptor -> {
 			FilterResult filterResult = postDiscoveryFilter.apply(descriptor);
 			if (!descriptor.isRoot() && isExcluded(descriptor, filterResult)) {
-				populateExclusionReasonInMap(filterResult, descriptor, excludedTestDescriptorsByReason);
+				populateExclusionReasonInMap(filterResult.getReason(), descriptor, excludedTestDescriptorsByReason);
 				descriptor.removeFromHierarchy();
 			}
 		};
 		acceptInAllTestEngines(removeExcludedTestDescriptors);
-		printReasonforFilteredTest(excludedTestDescriptorsByReason);
+		logTestDescriptorExclusionReasons(excludedTestDescriptorsByReason);
 	}
 
-	private void populateExclusionReasonInMap(FilterResult filterResult, TestDescriptor testDescriptor,
+	private void populateExclusionReasonInMap(Optional<String> reason, TestDescriptor testDescriptor,
 			Map<String, List<TestDescriptor>> excludedTestDescriptorsByReason) {
-		excludedTestDescriptorsByReason.computeIfAbsent(filterResult.getReason().orElse("Unknown"),
-			list -> new LinkedList<>()).add(testDescriptor);
+		excludedTestDescriptorsByReason.computeIfAbsent(reason.orElse("Unknown"), list -> new LinkedList<>()).add(
+			testDescriptor);
 	}
 
 	/**
@@ -107,14 +108,15 @@ class Root {
 		this.testEngineDescriptors.values().forEach(descriptor -> descriptor.accept(visitor));
 	}
 
-	private void printReasonforFilteredTest(Map<String, List<TestDescriptor>> excludedTestDescriptorsByReason) {
-		excludedTestDescriptorsByReason.forEach((key, value) -> {
-			String displayNames = value.stream().map(TestDescriptor::getDisplayName).collect(Collectors.joining(", "));
-			long containersCount = value.stream().filter(TestDescriptor::isContainer).count();
-			long methodCount = value.size() - containersCount;
-			logger.info(() -> String.format(" %d containers and %d tests were excluded because: %s", containersCount,
-				methodCount, key));
-			logger.debug(() -> String.format("The following containers and tests were excluded because %s: %s", key,
+	private void logTestDescriptorExclusionReasons(Map<String, List<TestDescriptor>> excludedTestDescriptorsByReason) {
+		excludedTestDescriptorsByReason.forEach((exclusionReason, testDescriptors) -> {
+			String displayNames = testDescriptors.stream().map(TestDescriptor::getDisplayName).collect(
+				Collectors.joining(", "));
+			long containersCount = testDescriptors.stream().filter(TestDescriptor::isContainer).count();
+			long methodCount = testDescriptors.size() - containersCount;
+			logger.info(() -> String.format("%d containers and %d tests were %s", containersCount, methodCount,
+				exclusionReason));
+			logger.debug(() -> String.format("The following containers and tests were because %s: %s", exclusionReason,
 				displayNames));
 		});
 	}

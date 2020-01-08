@@ -90,11 +90,11 @@ public final class TagFilter {
 	}
 
 	private static String inclusionReasonExpressionSatisfy(List<String> tagExpressions) {
-		return String.format("Test included Because it satisfy expression(s): [%s]", formatToString(tagExpressions));
+		return String.format("included because tags match expression(s): [%s]", formatToString(tagExpressions));
 	}
 
 	private static String exclusionReasonExpressionNotSatisfy(List<String> tagExpressions) {
-		return String.format("Test excluded Because it does not satisfy expression(s): [%s]",
+		return String.format("excluded because tags do not match tag expression(s): [%s]",
 			formatToString(tagExpressions));
 
 	}
