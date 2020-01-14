@@ -140,11 +140,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 public interface <span class="typeNameLabel">TestInstancePreDestroyCallback</span>
 extends <a href="Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a></pre>
 <div class="block"><code>TestInstancePreDestroyCallback</code> defines the API for <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that wish to process test instances <em>after</em> they have been
- used in tests and <em>before</em> they are destroyed.
+ used in tests but <em>before</em> they are destroyed.
 
- <p>Common use cases include cleaning dependencies that have been injected
- into the test instance, invoking custom de-initialization methods on the test
- instance, etc.
+ <p>Common use cases include releasing resources that have been created for
+ the test instance, invoking custom clean-up methods on the test instance, etc.
 
  <p>Extensions that implement <code>TestInstancePreDestroyCallback</code> must be
  registered at the class level.
