@@ -17,11 +17,10 @@ import org.apiguardian.api.API;
 /**
  * {@code TestInstancePreDestroyCallback} defines the API for {@link Extension
  * Extensions} that wish to process test instances <em>after</em> they have been
- * used in tests and <em>before</em> they are destroyed.
+ * used in tests but <em>before</em> they are destroyed.
  *
- * <p>Common use cases include cleaning dependencies that have been injected
- * into the test instance, invoking custom de-initialization methods on the test
- * instance, etc.
+ * <p>Common use cases include releasing resources that have been created for
+ * the test instance, invoking custom clean-up methods on the test instance, etc.
  *
  * <p>Extensions that implement {@code TestInstancePreDestroyCallback} must be
  * registered at the class level.
@@ -49,4 +48,5 @@ public interface TestInstancePreDestroyCallback extends Extension {
 	 * @see ExtensionContext#getRequiredTestInstance()
 	 */
 	void preDestroyTestInstance(ExtensionContext context) throws Exception;
+
 }
