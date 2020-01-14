@@ -33,6 +33,7 @@ import org.apiguardian.api.API;
  *
  * @since 5.6
  * @see #preDestroyTestInstance(ExtensionContext)
+ * @see TestInstancePostProcessor
  * @see TestInstanceFactory
  * @see ParameterResolver
  */

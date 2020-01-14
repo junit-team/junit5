@@ -32,6 +32,7 @@ import org.apiguardian.api.API;
  *
  * @since 5.0
  * @see #postProcessTestInstance(Object, ExtensionContext)
+ * @see TestInstancePreDestroyCallback
  * @see TestInstanceFactory
  * @see ParameterResolver
  */
