@@ -241,7 +241,7 @@ tasks {
 				addStringsOption("-module", ",").value = modularProjects.map { it.javaModuleName }
 				addPathOption("-module-source-path").value = modularProjects.map { it.file("src/module") }
 				addOption(ModuleSpecificJavadocFileOption("-patch-module", modularProjects.associate {
-					it.javaModuleName to files(it.sourceSets.main.get().allJava.srcDirs).asPath
+					it.javaModuleName to files(it.sourceSets.main.get().allJava.srcDirs, it.sourceSets.mainRelease9.get().allJava.srcDirs).asPath
 				}))
 				addStringOption("-add-modules", "info.picocli")
 				addOption(ModuleSpecificJavadocFileOption("-add-reads", mapOf(
@@ -259,7 +259,7 @@ tasks {
 				inputs.files(modulePathOption.value).withNormalizer(ClasspathNormalizer::class)
 			}
 		}
-		source(modularProjects.map { it.sourceSets.main.get().allJava })
+		source(modularProjects.map { files(it.sourceSets.main.get().allJava, it.sourceSets.mainRelease9.get().allJava) })
 
 		setMaxMemory("1024m")
 		setDestinationDir(file("$buildDir/docs/javadoc"))
