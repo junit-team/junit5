@@ -243,6 +243,7 @@ tasks {
 				addOption(ModuleSpecificJavadocFileOption("-patch-module", modularProjects.associate {
 					it.javaModuleName to files(it.sourceSets.main.get().allJava.srcDirs).asPath
 				}))
+				addStringOption("-add-modules", "info.picocli")
 				addOption(ModuleSpecificJavadocFileOption("-add-reads", mapOf(
 						"org.junit.platform.console" to "info.picocli",
 						"org.junit.jupiter.params" to "univocity.parsers"
