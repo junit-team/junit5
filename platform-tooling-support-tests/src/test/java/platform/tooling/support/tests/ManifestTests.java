@@ -10,6 +10,9 @@
 
 package platform.tooling.support.tests;
 
+import static aQute.bnd.osgi.Constants.VERSION_ATTRIBUTE;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
@@ -17,10 +20,15 @@ import java.lang.module.ModuleFinder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.jar.Attributes;
-import java.util.jar.JarFile;
+
+import aQute.bnd.osgi.Domain;
+import aQute.bnd.osgi.Jar;
+import aQute.bnd.version.MavenVersion;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.osgi.framework.Version;
+import org.osgi.framework.VersionRange;
 import platform.tooling.support.Helper;
 
 /**
@@ -34,8 +42,10 @@ class ManifestTests {
 		var version = Helper.version(module);
 		var modulePath = modulePath(module);
 		var uri = ModuleFinder.of(modulePath).findAll().iterator().next().location().orElseThrow();
-		try (var jar = new JarFile(new File(uri))) {
-			var attributes = jar.getManifest().getMainAttributes();
+		var jarFile = new File(uri);
+		try (var jar = new Jar(jarFile)) {
+			var manifest = jar.getManifest();
+			var attributes = manifest.getMainAttributes();
 			assertValue(attributes, "Built-By", "JUnit Team");
 			assertValue(attributes, "Specification-Title", module);
 			assertValue(attributes, "Specification-Version", specificationVersion(version));
@@ -47,7 +57,7 @@ class ManifestTests {
 			assertValue(attributes, "Bundle-ManifestVersion", "2");
 			assertValue(attributes, "Bundle-SymbolicName", module);
 			assertValue(attributes, "Bundle-Version",
-				aQute.bnd.version.MavenVersion.parseMavenString(version).getOSGiVersion().toString());
+				MavenVersion.parseMavenString(version).getOSGiVersion().toString());
 			switch (module) {
 				case "junit-platform-commons":
 					assertValue(attributes, "Multi-Release", "true");
@@ -56,6 +66,20 @@ class ManifestTests {
 					assertValue(attributes, "Main-Class", "org.junit.platform.console.ConsoleLauncher");
 					break;
 			}
+			var domain = Domain.domain(manifest);
+			domain.getExportPackage().forEach((pkg, attrs) -> {
+				final String stringVersion = attrs.get(VERSION_ATTRIBUTE);
+				assertNotNull(stringVersion);
+				assertDoesNotThrow(() -> new Version(stringVersion));
+			});
+			domain.getImportPackage().forEach((pkg, attrs) -> {
+				final String stringVersionRange = attrs.get(VERSION_ATTRIBUTE);
+				if (pkg.startsWith("kotlin.") || (stringVersionRange == null)) {
+					return;
+				}
+				assertNotNull(pkg + " had no import version", stringVersionRange);
+				assertDoesNotThrow(() -> new VersionRange(stringVersionRange));
+			});
 		}
 	}
 
