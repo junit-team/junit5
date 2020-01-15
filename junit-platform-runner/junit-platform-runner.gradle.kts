@@ -27,7 +27,7 @@ tasks.jar {
 			Import-Package: \
 				!org.apiguardian.api,\
 				org.junit.platform.commons.logging;status=INTERNAL,\
-				org.junit.runner.*;version="@${Versions.junit4Min}",\
+				org.junit.runner.*;version="[${Versions.junit4Min},5)",\
 				*
 		""")
 	}
