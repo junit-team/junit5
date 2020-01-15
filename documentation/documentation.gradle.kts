@@ -225,10 +225,10 @@ tasks {
 				)
 				jFlags("-Xmx1g")
 				links("https://docs.oracle.com/en/java/javase/11/docs/api/")
-				links("https://ota4j-team.github.io/opentest4j/docs/$ota4jDocVersion/api/")
-				links("https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/")
+				//links("https://ota4j-team.github.io/opentest4j/docs/$ota4jDocVersion/api/")
+				//links("https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/")
 				links("https://junit.org/junit4/javadoc/${Versions.junit4}/")
-				links("https://joel-costigliola.github.io/assertj/core-8/api/")
+				//links("https://joel-costigliola.github.io/assertj/core-8/api/")
 				groups = mapOf(
 						"Jupiter" to listOf("org.junit.jupiter*"),
 						"Vintage" to listOf("org.junit.vintage*"),
