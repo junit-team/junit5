@@ -230,9 +230,9 @@ tasks {
 				links("https://junit.org/junit4/javadoc/${Versions.junit4}/")
 				links("https://joel-costigliola.github.io/assertj/core-8/api/")
 				groups = mapOf(
-						"Jupiter" to listOf("org.junit.jupiter.*"),
-						"Vintage" to listOf("org.junit.vintage.*"),
-						"Platform" to listOf("org.junit.platform.*")
+						"Jupiter" to listOf("org.junit.jupiter*"),
+						"Vintage" to listOf("org.junit.vintage*"),
+						"Platform" to listOf("org.junit.platform*")
 				)
 				addStringOption("-add-stylesheet", additionalStylesheetFile)
 				use(true)
