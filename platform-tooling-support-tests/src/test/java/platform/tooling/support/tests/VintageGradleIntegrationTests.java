@@ -47,8 +47,8 @@ class VintageGradleIntegrationTests {
 
 		assertThat(result.getExitCode()).isGreaterThan(0);
 		assertThat(result.getOutput("out")) //
-				.contains("com.example.vintage.VintageTest > success PASSED") //
-				.contains("com.example.vintage.VintageTest > failure FAILED");
+				.contains("VintageTest > success PASSED") //
+				.contains("VintageTest > failure FAILED");
 
 		Path testResultsDir = Request.WORKSPACE.resolve("vintage-gradle-" + version).resolve("build/test-results/test");
 		assertThat(testResultsDir.resolve("TEST-com.example.vintage.VintageTest.xml")).isRegularFile();
