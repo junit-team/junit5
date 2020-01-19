@@ -272,7 +272,9 @@ tasks {
 				noTimestamp(true)
 
 				addStringsOption("-module", ",").value = modularProjects.map { it.javaModuleName }
-				addPathOption("-module-source-path").value = modularProjects.map { it.file("src/module") }
+				val moduleSourcePathOption = addPathOption("-module-source-path")
+				moduleSourcePathOption.value = modularProjects.map { it.file("src/module") }
+				moduleSourcePathOption.value.forEach { inputs.dir(it) }
 				addOption(ModuleSpecificJavadocFileOption("-patch-module", modularProjects.associate {
 					it.javaModuleName to files(it.sourceSets.main.get().allJava.srcDirs, it.sourceSets.mainRelease9.get().allJava.srcDirs).asPath
 				}))
