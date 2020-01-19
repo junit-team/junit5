@@ -200,6 +200,12 @@ tasks {
 		}
 	}
 
+	val externalModulesWithoutModularJavadoc = mapOf(
+			"org.apiguardian.api" to "https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/",
+			"org.assertj.core" to "https://joel-costigliola.github.io/assertj/core-8/api/",
+			"org.opentest4j" to "https://ota4j-team.github.io/opentest4j/docs/$ota4jDocVersion/api/"
+	)
+
 	val aggregateJavadocs by registering(Javadoc::class) {
 		dependsOn(modularProjects.map { it.tasks.jar })
 		group = "Documentation"
@@ -224,11 +230,13 @@ tasks {
 						"implNote:a:Implementation Note:"
 				)
 				jFlags("-Xmx1g")
+
 				links("https://docs.oracle.com/en/java/javase/11/docs/api/")
-				linksOffline("https://ota4j-team.github.io/opentest4j/docs/$ota4jDocVersion/api/", "src/javadoc/org.opentest4j")
-				linksOffline("https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/", "src/javadoc/org.apiguardian.api")
 				links("https://junit.org/junit4/javadoc/${Versions.junit4}/")
-				linksOffline("https://joel-costigliola.github.io/assertj/core-8/api/", "src/javadoc/org.assertj.core")
+				externalModulesWithoutModularJavadoc.forEach { (moduleName, url) ->
+					linksOffline(url, "src/javadoc/$moduleName")
+				}
+
 				groups = mapOf(
 						"Jupiter" to listOf("org.junit.jupiter*"),
 						"Vintage" to listOf("org.junit.vintage*"),
@@ -265,19 +273,33 @@ tasks {
 		setDestinationDir(file("$buildDir/docs/javadoc"))
 
 		classpath = files()
+	}
 
-		doLast {
+	val fixedJavadoc by registering(Copy::class) {
+		dependsOn(aggregateJavadocs)
+		val inputDir = aggregateJavadocs.map { it.destinationDir!! }
+		inputs.property("externalModulesWithoutModularJavadoc", externalModulesWithoutModularJavadoc)
+		from(inputDir.map { File(it, "element-list") }) {
 			// For compatibility with pre JDK 10 versions of the Javadoc tool
-			copy {
-				from(File(destinationDir, "element-list"))
-				into("$destinationDir")
-				rename { "package-list" }
+			rename { "package-list" }
+		}
+		from(inputDir) {
+			filesMatching("**/*.html") {
+				val favicon = "<link rel=\"icon\" type=\"image/png\" href=\"https://junit.org/junit5/assets/img/junit5-logo.png\">"
+				filter { line ->
+					var result = if (line.startsWith("<head>")) line.replace("<head>", "<head>$favicon") else line
+					externalModulesWithoutModularJavadoc.forEach { (moduleName, url) ->
+						result = result.replace("$url$moduleName/", url)
+					}
+					return@filter result
+				}
 			}
 		}
+		into("$buildDir/docs/fixedJavadoc")
 	}
 
 	val prepareDocsForUploadToGhPages by registering(Copy::class) {
-		dependsOn(aggregateJavadocs, asciidoctor, asciidoctorPdf)
+		dependsOn(fixedJavadoc, asciidoctor, asciidoctorPdf)
 		outputs.dir(docsDir)
 
 		from("$buildDir/checksum") {
@@ -295,12 +317,6 @@ tasks {
 		}
 		from("$buildDir/docs") {
 			include("javadoc/**")
-			filesMatching("**/*.html") {
-				val favicon = "<link rel=\"icon\" type=\"image/png\" href=\"https://junit.org/junit5/assets/img/junit5-logo.png\">"
-				filter { line ->
-					if (line.startsWith("<head>")) line.replace("<head>", "<head>$favicon") else line
-				}
-			}
 		}
 		into("$docsDir/$docsVersion")
 		filesMatching("javadoc/**") {
