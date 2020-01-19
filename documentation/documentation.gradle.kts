@@ -79,6 +79,15 @@ val consoleLauncherOptionsFile = File(generatedAsciiDocPath, "console-launcher-o
 val experimentalApisTableFile = File(generatedAsciiDocPath, "experimental-apis-table.txt")
 val deprecatedApisTableFile = File(generatedAsciiDocPath, "deprecated-apis-table.txt")
 
+val elementListsDir = file("$buildDir/elementLists")
+val externalModulesWithoutModularJavadoc = mapOf(
+		"org.apiguardian.api" to JavadocCoordinates("https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/", JavadocListType.ELEMENT_LIST),
+		"org.assertj.core" to JavadocCoordinates("https://joel-costigliola.github.io/assertj/core-8/api/", JavadocListType.PACKAGE_LIST),
+		"org.opentest4j" to JavadocCoordinates("https://ota4j-team.github.io/opentest4j/docs/$ota4jDocVersion/api/", JavadocListType.ELEMENT_LIST)
+)
+enum class JavadocListType { ELEMENT_LIST, PACKAGE_LIST }
+data class JavadocCoordinates(val baseUrl: String, val listType: JavadocListType) : java.io.Serializable
+
 tasks {
 
 	val consoleLauncherTest by registering(JavaExec::class) {
@@ -200,14 +209,27 @@ tasks {
 		}
 	}
 
-	val externalModulesWithoutModularJavadoc = mapOf(
-			"org.apiguardian.api" to "https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/",
-			"org.assertj.core" to "https://joel-costigliola.github.io/assertj/core-8/api/",
-			"org.opentest4j" to "https://ota4j-team.github.io/opentest4j/docs/$ota4jDocVersion/api/"
-	)
+	val downloadJavadocElementLists by registering {
+		outputs.dir(elementListsDir)
+		inputs.property("externalModulesWithoutModularJavadoc", externalModulesWithoutModularJavadoc)
+		doFirst {
+			externalModulesWithoutModularJavadoc.forEach { (moduleName, coordinates) ->
+				val fileName = when(coordinates.listType) {
+					JavadocListType.ELEMENT_LIST -> "element-list"
+					JavadocListType.PACKAGE_LIST -> "package-list"
+				}
+				val resource = resources.text.fromUri("${coordinates.baseUrl}$fileName")
+				elementListsDir.resolve(moduleName).apply {
+					mkdir()
+					resolve("element-list").writeText("module:$moduleName\n${resource.asString()}")
+				}
+			}
+		}
+	}
 
 	val aggregateJavadocs by registering(Javadoc::class) {
 		dependsOn(modularProjects.map { it.tasks.jar })
+		dependsOn(downloadJavadocElementLists)
 		group = "Documentation"
 		description = "Generates aggregated Javadocs"
 
@@ -233,8 +255,8 @@ tasks {
 
 				links("https://docs.oracle.com/en/java/javase/11/docs/api/")
 				links("https://junit.org/junit4/javadoc/${Versions.junit4}/")
-				externalModulesWithoutModularJavadoc.forEach { (moduleName, url) ->
-					linksOffline(url, "src/javadoc/$moduleName")
+				externalModulesWithoutModularJavadoc.forEach { (moduleName, coordinates) ->
+					linksOffline(coordinates.baseUrl, "$elementListsDir/$moduleName")
 				}
 
 				groups = mapOf(
@@ -288,8 +310,8 @@ tasks {
 				val favicon = "<link rel=\"icon\" type=\"image/png\" href=\"https://junit.org/junit5/assets/img/junit5-logo.png\">"
 				filter { line ->
 					var result = if (line.startsWith("<head>")) line.replace("<head>", "<head>$favicon") else line
-					externalModulesWithoutModularJavadoc.forEach { (moduleName, url) ->
-						result = result.replace("$url$moduleName/", url)
+					externalModulesWithoutModularJavadoc.forEach { (moduleName, coordinates) ->
+						result = result.replace("${coordinates.baseUrl}$moduleName/", coordinates.baseUrl)
 					}
 					return@filter result
 				}
@@ -315,13 +337,10 @@ tasks {
 				include("**/*.pdf")
 			}
 		}
-		from("$buildDir/docs") {
-			include("javadoc/**")
+		from(fixedJavadoc.map { it.destinationDir }) {
+			into("api")
 		}
 		into("$docsDir/$docsVersion")
-		filesMatching("javadoc/**") {
-			path = path.replace("javadoc/", "api/")
-		}
 		includeEmptyDirs = false
 	}
 
