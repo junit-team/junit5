@@ -684,7 +684,7 @@ with `Test` or end with `Test` or `Tests`.
 .Additional Configuration Options
 NOTE: There are more configuration options for discovering and filtering tests than just
 `@SelectPackages`. Please consult the
-{javadoc-root}/org/junit/platform/suite/api/package-summary.html[Javadoc] for further
+{javadoc-root}/org.junit.platform/org/junit/platform/suite/api/package-summary.html[Javadoc] for further
 details.
 
 WARNING: Test classes and suites annotated with `@RunWith(JUnitPlatform.class)`
