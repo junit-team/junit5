@@ -10,7 +10,8 @@
  */
 
 /**
- * Provides the JUnit Jupiter {@linkplain TestEngine} implementation.
+ * Provides the JUnit Jupiter {@linkplain org.junit.platform.engine.TestEngine}
+ * implementation.
  *
  * @moduleGraph
  * @since 5.0.0
