@@ -11,7 +11,6 @@
 /**
  * JUnit Jupiter extension for parameterized tests.
  *
- * @moduleGraph
  * @since 5.0.0
  */
 module org.junit.jupiter.params {

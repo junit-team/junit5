@@ -11,7 +11,6 @@
 /**
  * Defines the JUnit Platform Reporting API.
  *
- * @moduleGraph
  * @since 1.4.0
  */
 module org.junit.platform.reporting {

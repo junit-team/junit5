@@ -11,7 +11,6 @@
 /**
  * Aggregates all JUnit Jupiter modules.
  *
- * @moduleGraph
  * @since 5.4.0
  */
 module org.junit.jupiter {
