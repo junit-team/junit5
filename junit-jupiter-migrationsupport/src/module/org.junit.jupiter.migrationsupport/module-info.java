@@ -11,7 +11,6 @@
 /**
  * Support for migrating from JUnit 4 to JUnit Jupiter.
  *
- * @moduleGraph
  * @since 5.0.0
  */
 module org.junit.jupiter.migrationsupport {

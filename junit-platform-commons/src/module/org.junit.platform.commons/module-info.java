@@ -11,7 +11,6 @@
 /**
  * Common APIs and support utilities for the JUnit Platform.
  *
- * @moduleGraph
  * @since 1.0.0
  */
 module org.junit.platform.commons {

@@ -11,7 +11,6 @@
 /**
  * Annotations for configuring a test suite on the JUnit Platform.
  *
- * @moduleGraph
  * @since 1.0.0
  */
 module org.junit.platform.suite.api {

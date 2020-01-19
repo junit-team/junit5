@@ -14,7 +14,6 @@
  * <p>Provides the {@linkplain org.junit.platform.engine.TestEngine} interface, test discovery
  * and execution reporting support.
  *
- * @moduleGraph
  * @since 1.0.0
  */
 module org.junit.platform.engine {

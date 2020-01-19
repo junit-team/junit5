@@ -12,7 +12,6 @@
 /**
  * Defines the Test Kit API for the JUnit Platform.
  *
- * @moduleGraph
  * @since 1.4.0
  */
 module org.junit.platform.testkit {

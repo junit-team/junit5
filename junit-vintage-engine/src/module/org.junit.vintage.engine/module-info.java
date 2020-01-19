@@ -12,7 +12,6 @@
  * JUnit Vintage provides a {@linkplain org.junit.platform.engine.TestEngine}
  * for running JUnit 3 and 4 based tests on the platform.
  *
- * @moduleGraph
  * @since 5.5.0
  */
 module org.junit.vintage.engine {

@@ -13,7 +13,6 @@
  *
  * <p>This API is typically used by IDEs and build tools.
  *
- * @moduleGraph
  * @since 1.0.0
  */
 module org.junit.platform.launcher {

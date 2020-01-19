@@ -11,7 +11,6 @@
 /**
  * Support for launching the JUnit Platform from the console.
  *
- * @moduleGraph
  * @since 1.0.0
  */
 module org.junit.platform.console {
