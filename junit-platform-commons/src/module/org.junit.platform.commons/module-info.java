@@ -11,7 +11,7 @@
 /**
  * Common APIs and support utilities for the JUnit Platform.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 module org.junit.platform.commons {
 	requires java.logging;

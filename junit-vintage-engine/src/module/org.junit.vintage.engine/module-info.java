@@ -12,7 +12,7 @@
  * Provides a {@linkplain org.junit.platform.engine.TestEngine} for running
  * JUnit 3 and 4 based tests on the platform.
  *
- * @since 5.5.0
+ * @since 4.12
  */
 module org.junit.vintage.engine {
 	requires junit; // 4

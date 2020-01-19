@@ -11,7 +11,7 @@
 /**
  * Support for migrating from JUnit 4 to JUnit Jupiter.
  *
- * @since 5.0.0
+ * @since 5.0
  */
 module org.junit.jupiter.migrationsupport {
 	requires transitive junit; // 4

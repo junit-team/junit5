@@ -11,7 +11,7 @@
 /**
  * Aggregates all JUnit Jupiter modules.
  *
- * @since 5.4.0
+ * @since 5.4
  */
 module org.junit.jupiter {
 	requires transitive org.junit.jupiter.api;

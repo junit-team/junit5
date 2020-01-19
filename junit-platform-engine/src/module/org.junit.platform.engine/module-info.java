@@ -14,7 +14,7 @@
  * <p>Provides the {@linkplain org.junit.platform.engine.TestEngine} interface, test discovery
  * and execution reporting support.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 module org.junit.platform.engine {
 	requires transitive org.apiguardian.api;

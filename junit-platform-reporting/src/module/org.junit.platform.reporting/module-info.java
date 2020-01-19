@@ -11,7 +11,7 @@
 /**
  * Defines the JUnit Platform Reporting API.
  *
- * @since 1.4.0
+ * @since 1.4
  */
 module org.junit.platform.reporting {
 	requires java.xml;

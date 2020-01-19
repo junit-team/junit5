@@ -11,6 +11,8 @@
 /**
  * {@code Runner} and annotations for configuring and executing tests on the
  * JUnit Platform in a JUnit 4 environment.
+ *
+ * @since 1.0
  */
 module org.junit.platform.runner {
 	requires transitive junit; // 4

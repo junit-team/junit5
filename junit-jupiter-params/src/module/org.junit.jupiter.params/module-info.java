@@ -11,7 +11,7 @@
 /**
  * JUnit Jupiter extension for parameterized tests.
  *
- * @since 5.0.0
+ * @since 5.0
  */
 module org.junit.jupiter.params {
 	requires transitive org.apiguardian.api;
