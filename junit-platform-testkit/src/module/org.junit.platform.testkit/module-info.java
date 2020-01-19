@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2015-2020 the original author or authors.
  *
@@ -12,7 +11,7 @@
 /**
  * Defines the Test Kit API for the JUnit Platform.
  *
- * @since 1.4.0
+ * @since 1.4
  */
 module org.junit.platform.testkit {
 	requires transitive org.apiguardian.api;

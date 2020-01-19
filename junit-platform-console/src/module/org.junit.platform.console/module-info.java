@@ -11,7 +11,7 @@
 /**
  * Support for launching the JUnit Platform from the console.
  *
- * @since 1.0.0
+ * @since 1.0
  */
 module org.junit.platform.console {
 	requires org.apiguardian.api;

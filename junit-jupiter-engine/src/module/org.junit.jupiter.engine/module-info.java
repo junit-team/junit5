@@ -1,4 +1,3 @@
-    
 /*
  * Copyright 2015-2020 the original author or authors.
  *
@@ -13,7 +12,9 @@
  * Provides the JUnit Jupiter {@linkplain org.junit.platform.engine.TestEngine}
  * implementation.
  *
- * @since 5.0.0
+ * @since 5.0
+ * @uses org.junit.jupiter.api.extension.Extension
+ * @provides org.junit.platform.engine.TestEngine
  */
 module org.junit.jupiter.engine {
 	requires org.apiguardian.api;
