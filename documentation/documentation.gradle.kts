@@ -237,6 +237,8 @@ tasks {
 
 		val additionalStylesheetFile = "src/javadoc/junit-stylesheet.css"
 		inputs.file(additionalStylesheetFile)
+		val overviewFile = "src/javadoc/junit-overview.html"
+		inputs.file(overviewFile)
 
 		options {
 			memberLevel = JavadocMemberLevel.PROTECTED
@@ -244,6 +246,7 @@ tasks {
 			encoding = "UTF-8"
 			locale = "en"
 			(this as StandardJavadocDocletOptions).apply {
+				overview(overviewFile)
 				splitIndex(true)
 				addBooleanOption("Xdoclint:none", true)
 				addBooleanOption("html5", true)
@@ -297,8 +300,11 @@ tasks {
 		classpath = files()
 	}
 
-	val fixedJavadoc by registering(Copy::class) {
+	val fixJavadoc by registering(Copy::class) {
 		dependsOn(aggregateJavadocs)
+		group = "Documentation"
+		description = "Fix links to external API specs in the locally aggregated Javadoc HTML files"
+
 		val inputDir = aggregateJavadocs.map { it.destinationDir!! }
 		inputs.property("externalModulesWithoutModularJavadoc", externalModulesWithoutModularJavadoc)
 		from(inputDir.map { File(it, "element-list") }) {
@@ -321,7 +327,7 @@ tasks {
 	}
 
 	val prepareDocsForUploadToGhPages by registering(Copy::class) {
-		dependsOn(fixedJavadoc, asciidoctor, asciidoctorPdf)
+		dependsOn(fixJavadoc, asciidoctor, asciidoctorPdf)
 		outputs.dir(docsDir)
 
 		from("$buildDir/checksum") {
@@ -337,7 +343,7 @@ tasks {
 				include("**/*.pdf")
 			}
 		}
-		from(fixedJavadoc.map { it.destinationDir }) {
+		from(fixJavadoc.map { it.destinationDir }) {
 			into("api")
 		}
 		into("$docsDir/$docsVersion")
