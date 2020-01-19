@@ -9,8 +9,8 @@
  */
 
 /**
- * JUnit Vintage provides a {@linkplain org.junit.platform.engine.TestEngine}
- * for running JUnit 3 and 4 based tests on the platform.
+ * Provides a {@linkplain org.junit.platform.engine.TestEngine} for running
+ * JUnit 3 and 4 based tests on the platform.
  *
  * @since 5.5.0
  */
