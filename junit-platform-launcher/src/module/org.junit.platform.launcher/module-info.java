@@ -14,6 +14,8 @@
  * <p>This API is typically used by IDEs and build tools.
  *
  * @since 1.0
+ * @uses org.junit.platform.engine.TestEngine
+ * @uses org.junit.platform.launcher.TestExecutionListener
  */
 module org.junit.platform.launcher {
 	requires transitive java.logging;

@@ -12,6 +12,7 @@
  * Defines the Test Kit API for the JUnit Platform.
  *
  * @since 1.4
+ * @uses org.junit.platform.engine.TestEngine
  */
 module org.junit.platform.testkit {
 	requires transitive org.apiguardian.api;
