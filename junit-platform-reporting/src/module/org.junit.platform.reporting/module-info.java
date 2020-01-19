@@ -22,5 +22,6 @@ module org.junit.platform.reporting {
 	requires transitive org.junit.platform.launcher;
 
 	// exports org.junit.platform.reporting; empty package
+	exports org.junit.platform.reporting.legacy;
 	exports org.junit.platform.reporting.legacy.xml;
 }
