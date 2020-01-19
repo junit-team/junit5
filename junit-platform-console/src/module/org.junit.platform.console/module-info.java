@@ -12,6 +12,7 @@
  * Support for launching the JUnit Platform from the console.
  *
  * @since 1.0
+ * @provides java.util.spi.ToolProvider
  */
 module org.junit.platform.console {
 	requires org.apiguardian.api;
