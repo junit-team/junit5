@@ -16,10 +16,12 @@ import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.IterableFactory.listOf;
 import static org.junit.jupiter.api.IterableFactory.setOf;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -447,6 +449,15 @@ class AssertIterableEqualsAssertionsTests {
 		var expected = listOf(Path.of("1"));
 		var actual = listOf(Path.of("1"));
 		assertDoesNotThrow(() -> assertIterableEquals(expected, actual));
+	}
+
+	@Test
+	void assertIterableEqualsThrowsStackOverflowErrorForInterlockedRecursiveStructures() {
+		var expected = new ArrayList<>();
+		var actual = new ArrayList<>();
+		actual.add(expected);
+		expected.add(actual);
+		assertThrows(StackOverflowError.class, () -> assertIterableEquals(expected, actual));
 	}
 
 }
