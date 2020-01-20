@@ -1,35 +1,45 @@
-[[release-notes-5.6.0-M1]]
-== 5.6.0-M1
+[[release-notes-5.6.0]]
+== 5.6.0
 
-*Date of Release:* October 21, 2019
+*Date of Release:* January 20, 2020
 
 *Scope:*
 
 * New `@EnabledForJreRange` and `@DisabledForJreRange` execution conditions
 * `@Order` allows to specify relative order
+* Parameter names are included in default display names of parameterized test invocations
 * Improvements to `@CsvSource` and `@CsvFileSource`
-* Improved error reporting for failures during test discovery and execution
+* New `TestInstancePreDestroyCallback` extension API
 * Performance improvements and bug fixes for the Vintage engine
+* Improved error reporting for failures during test discovery and execution
+* Support for using `any()` and `none()` in tag expressions
 * `org.junit.platform.console` now provides a `java.util.spi.ToolProvider`
 * `DiscoverySelectors` for tests in inherited nested classes
+* OSGi metadata
+* Minor bug fixes and improvements
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/39?closed=1+[5.6 M1] milestone page in the JUnit repository
-on GitHub.
+link:{junit5-repo}+/milestone/39?closed=1+[5.6 M1],
+link:{junit5-repo}+/milestone/45?closed=1+[5.6 RC1], and
+link:{junit5-repo}+/milestone/46?closed=1+[5.6 GA]
+milestone pages in the JUnit repository on GitHub.
 
 
-[[release-notes-5.6.0-M1-overall-improvements]]
+[[release-notes-5.6.0-overall-improvements]]
 === Overall Improvements
 
 * https://docs.gradle.org/6.0-rc-1/userguide/publishing_gradle_module_metadata.html[Gradle
   Module Metadata] is now published for all artifacts.
+* OSGi metadata is now published in all binary JARs.
 
 
-[[release-notes-5.6.0-M1-junit-platform]]
+[[release-notes-5.6.0-junit-platform]]
 === JUnit Platform
 
 ==== Bug Fixes
 
+* The `EventConditions.nestedContainer()` method in the Engine Test Kit now correctly
+  handles events from multiple levels of nested classes.
 * Module `org.junit.platform.launcher` now reads `java.logging` due to usage of types in
   package `java.util.logging`.
 
@@ -51,24 +61,35 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Running all tests with any tags or without any tags at all is now supported
+  by using the special expressions `any()` and `none()`.
+* `ReflectionSupport.findNestedClasses(...)` now detects cycles within inner class
+  hierarchies. Consult the Javadoc for details.
+* New methods in `DiscoverySelectors` to select and execute individual tests in
+  inherited nested classes, via specific selectors (`NestedClassSelector` and
+  `NestedMethodSelector`).
 * New `printFailuresTo(PrintWriter, int)` method in `TestExecutionSummary` that allows one
   to specify the maximum number of lines to print for exception stack traces.
+* `TestExecutionSummary.Failure` is now serializable.
+* `ThrowableCollector.toTestExecutionResult()` is now public.
+* Exceptions thrown by test engines during discovery and execution are now reported to
+  `TestExecutionListeners`.
 * The `junit-platform-commons` module no longer has a dependency on the `java.compiler`
   module (in terms of the Java Module System). Specifically, a new internal utility has
   been introduced in `PackageUtils` that implements functionality equivalent to
   `javax.lang.model.SourceVersion.isName(CharSequence)` from the `java.compiler` module.
-* Exceptions thrown by test engines during discovery and execution are now reported to
-  `TestExecutionListeners`.
 * Module `org.junit.platform.console` now provides a `java.util.spi.ToolProvider`
   implementation that can be acquired by `ToolProvider.findFirst("junit")` when running
   on Java 9 or above.
-* New methods in `DiscoverySelectors` to select and execute individual tests in
-  inherited nested classes, via specific selectors (`NestedClassSelector` and
-  `NestedMethodSelector`).
 
 
-[[release-notes-5.6.0-M1-junit-jupiter]]
+[[release-notes-5.6.0-junit-jupiter]]
 === JUnit Jupiter
+
+==== Bug Fixes
+
+* When `@Nested` is used, the temporary directory is now also injected into instance
+  fields of enclosing classes annotated with `@TempDir`.
 
 ==== Deprecations and Breaking Changes
 
@@ -88,8 +109,16 @@ on GitHub.
 * Support for custom `null` values in `@CsvSource` and `@CsvFileSource`.
 * Documented support for comments in CSV files loaded via `@CsvFileSource`.
 * Auto-detection of enum type from method signature for `@EnumSource`.
+* Parameter names are now included in the default display name of a `@ParameterizedTest`
+  invocation (if they are present in the bytecode). The `{argumentsWithNames}` pattern
+  can also be used in custom names.
 * New `@EnabledForJreRange` and `@DisabledForJreRange` annotations for enabling or
   disabling test execution over a range of JRE versions.
+* `@EnabledIfEnvironmentVariable`, `@DisabledIfEnvironmentVariable`,
+  `@EnabledIfSystemProperty`, and `@DisabledIfSystemProperty` may now be used as
+  _repeatable_ annotations. In other words, it is now possible to declare each of those
+  annotations multiple times on a test interface, test class, or test method.
+* `JAVA_15` has been added to the `JRE` enum for use with JRE-based execution conditions.
 * The `@TempDir` extension now makes an attempt to delete non-writable files by making
   them writable first.
 * The default `@Order` value for non-annotated `@RegisterExtension` fields and test
@@ -101,12 +130,20 @@ on GitHub.
 * New `junit.jupiter.execution.timeout.mode` configuration parameter to control whether
   timeouts are applied to tests. Supported values include `enabled`, `disabled`, and
   `disabled_on_debug`.
+* New `TestInstancePreDestroyCallback` interface that defines the API for extensions that
+  wish to process test instances *after* they have been used in tests and *before* they
+  are destroyed.
 * New `TypeBasedParameterResolver<T>` abstract base class that serves as a generic adapter
   for the `ParameterResolver` API and simplifies the implementation of a custom resolver
   that supports parameters of a specific type.
+* `InvocationInterceptor` extensions may now explicitly `skip()` an intercepted
+  invocation. This allows executing the invocation by other means — for example, in a
+  forked JVM.
+* Discovery of `@Nested` test classes that form a cycle now results in an exception that
+  halts execution of the JUnit Jupiter test engine instead of infinite recursion.
 
 
-[[release-notes-5.6.0-M1-junit-vintage]]
+[[release-notes-5.6.0-junit-vintage]]
 === JUnit Vintage
 
 ==== Bug Fixes
@@ -115,5 +152,9 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* To support adoption of the recent JUnit 4.13 release, the Vintage engine now requires
+  the new version in its POM and Gradle Module Metadata. However, if you absolutely have
+  to stay on 4.12, you can safely downgrade the dependency manually because the Vintage
+  engine will remain compatible with 4.12.
 * Performance improvements for projects with a large number of tests.
 * Performance improvements for test classes with a large number of methods.
