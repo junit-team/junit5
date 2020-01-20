@@ -552,7 +552,7 @@ table.CodeRay td.code>pre{padding:0}
 <span id="author5" class="author">Marc Philipp</span><br>
 <span id="author6" class="author">Juliette de Rancourt</span><br>
 <span id="author7" class="author">Christian Stein</span><br>
-<span id="revnumber">version 5.6.0-SNAPSHOT</span>
+<span id="revnumber">version 5.7.0-SNAPSHOT</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -683,6 +683,10 @@ handles events from multiple levels of nested classes.</p>
 <li>
 <p>Module <code>org.junit.platform.launcher</code> now reads <code>java.logging</code> due to usage of types in
 package <code>java.util.logging</code>.</p>
+</li>
+<li>
+<p>Method <code>assertIterableEquals()</code> in <code>Assertions</code> no longer throws a <code>StackOverflowError</code>
+when comparing iterables with components that themselves implement <code>Iterable</code>.</p>
 </li>
 </ul>
 </div>
@@ -1052,8 +1056,8 @@ on GitHub.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 5.6.0-SNAPSHOT<br>
-Last updated 2020-01-20 19:16:32 UTC
+Version 5.7.0-SNAPSHOT<br>
+Last updated 2020-01-20 21:12:45 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

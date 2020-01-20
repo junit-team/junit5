@@ -13,7 +13,6 @@
 0764a5f8bc178b0d5d7e1ee4297a3f51  documentation/src/docs/asciidoc/user-guide/appendix.adoc
 07767bd92a1dbd0fad95a933a5987c8d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicNode.java
 077a804e6210604eecd405af05abb1ef  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfSystemProperty.java
-07a178e6bdb0613bce8c7a70f18cf6f6  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0.adoc
 08ae1d6748c45ceda4e8efab2aad5b5d  junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncherExecutionResult.java
 08e598951238e66c33cba7caedb2bd0e  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/TerminationInfo.java
 0921f3a4d072efa86f57388ca58e9d00  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertEquals.java
@@ -611,6 +610,7 @@ e8b4494972a279f38dc9ac4d8a1567de  junit-platform-engine/src/main/java/org/junit/
 e921f6d0cef22b3c681115a5a161d3d5  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/DefensiveAllDefaultPossibilitiesBuilder.java
 e9dcd13f55b4cf63ac30d8577eca9c85  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ParseStatus.java
 ea253702a64ee9614c2a5342ac23fb2a  documentation/src/docs/asciidoc/tocbot-3.0.2/tocbot.css
+ea286d4cbea8d10c07ca9339c0c7dd6e  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0.adoc
 ea740affec7db6778579dfec63792fbf  documentation/src/test/java/example/testinterface/TimeExecutionLogger.java
 ea8e40eb84353fd89616640ea86a78bc  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/DefaultJupiterConfiguration.java
 eaa4188a41a4ec440c3a15e5139a3f67  junit-platform-console/src/main/java/org/junit/platform/console/tasks/package-info.java
