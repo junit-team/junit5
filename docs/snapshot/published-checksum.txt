@@ -102,7 +102,6 @@
 2606c7978adcabe25e1c59729a1575b6  documentation/src/test/java/example/callbacks/Logger.java
 27d8e84160a5f77d4d7d3a41b41ddd90  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/ConditionEvaluator.java
 28089aba909496e988672ee89d5fe5df  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/EventType.java
-28318313f9b78d24b9a28f273978ea27  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-RC1.adoc
 28777cbb44b1228885445cbed4594e53  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfSystemProperty.java
 2888e0d0632ffee71b3cd64dc7b68d96  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/AfterTestExecutionCallback.java
 28f9bc01e3ef858617c8bc1f185bcd3a  junit-platform-engine/src/main/java/org/junit/platform/engine/Filter.java
@@ -167,6 +166,7 @@
 3ca1dbe934d8a3e75af2fbff74d08773  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/package-info.java
 3cb32970f91c5bc03b020eddea8cedad  documentation/src/test/java/org/junit/api/tools/AsciidocApiReportWriter.java
 3d0678ab539642a12d9cf193e3c0328d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstantiationException.java
+3d8419cde4058f9d58841f0d6f4a428d  documentation/src/docs/asciidoc/release-notes/index.adoc
 3dc0996756b1643627f7fb4f266f5948  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/FallbackStringToObjectConverter.java
 3e76ed8ec9951800599c19be799b9d45  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/FilterableIgnoringRunnerDecorator.java
 400cd951ef11093570e0888ba217be76  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertSame.java
@@ -418,7 +418,6 @@ a3dbb51fdad33db6771c29b2c80f67da  junit-platform-engine/src/main/java/org/junit/
 a4002eb561678bf9ac2facce11dfbe15  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/MethodSelector.java
 a4160080d59dd510e7f78062b37ffee5  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ServiceLoaderTestEngineRegistry.java
 a556392d8bd7ccb7e2c34969b1346ee5  documentation/src/test/java/example/timing/TimingExtensionTests.java
-a588c81e7b35ed5ab5b16e42223c8ec9  documentation/src/docs/asciidoc/release-notes/index.adoc
 a6c6ed2efc81568021bf848d462e591e  junit-platform-commons/src/main/java/org/junit/platform/commons/util/AnnotationUtils.java
 a844319916abe09758a6ea7ab757a31f  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/discovery/LoggingLauncherDiscoveryListener.java
 a868dd235943e86c37f4ca2b47a61c1d  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/SameThreadHierarchicalTestExecutorService.java
@@ -506,6 +505,7 @@ c56d08dfbe2086ea8bba49074beb70ba  junit-vintage-engine/src/main/java/org/junit/v
 c5e815b88b03fb5e0eda36eeb4515225  documentation/src/test/java/example/SharedResourcesDemo.java
 c5e973899c88b6c5b9aea57f8fb5493e  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/NestedMethodSelector.java
 c665cbffd3af83710d24959605b66d5b  documentation/src/docs/asciidoc/docinfos/docinfo.html
+c6896a3fa3c399f1fbb0a514d80e0c1b  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0.adoc
 c6b96935084b7518b510b25843d0213d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Token.java
 c77f25d530f08066bf21f2e0eae29e7a  documentation/src/docs/asciidoc/docinfos/docinfo-footer.html
 c792fb63e20484e429723be77d42d0fa  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariables.java
@@ -553,7 +553,6 @@ d2fcdf215338c77504dc4cc47d1703db  junit-jupiter-engine/src/main/java/org/junit/j
 d3376b79dec9cd7f8c7c5276593bc19e  documentation/src/test/java/example/FastTest.java
 d339f398c66b79876054f5e93825c4df  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfiguration.java
 d3965b9ee3c767be1687d7a8d10d348e  documentation/src/test/java/example/DynamicTestsDemo.java
-d3b5038efa369d3a72f4730c7d500a87  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0-M1.adoc
 d3c7b9d6ab7c8ab7ab1b087f9db4766a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepeatedTestInvocationContext.java
 d3d7dbc7dc745777ed266740e81406d3  documentation/src/test/java/example/DisplayNameDemo.java
 d4267c445de4a9f0d62bd1a040fdcd06  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Assumptions.java
