@@ -49,7 +49,7 @@ tasks.test {
 	if (enabled) {
 		// All maven-aware projects must be installed, i.e. published to the local repository
 		val mavenizedProjects: List<Project> by rootProject.extra
-		mavenizedProjects
+		(mavenizedProjects + project(":junit-bom"))
 				.map { project -> project.tasks.named(MavenPublishPlugin.PUBLISH_LOCAL_LIFECYCLE_TASK_NAME)}
 				.forEach { dependsOn(it) }
 		// Pass "java.home.N" system properties from sources like "~/.gradle/gradle.properties".
