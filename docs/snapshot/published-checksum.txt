@@ -13,6 +13,7 @@
 0764a5f8bc178b0d5d7e1ee4297a3f51  documentation/src/docs/asciidoc/user-guide/appendix.adoc
 07767bd92a1dbd0fad95a933a5987c8d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicNode.java
 077a804e6210604eecd405af05abb1ef  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfSystemProperty.java
+07a178e6bdb0613bce8c7a70f18cf6f6  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0.adoc
 08ae1d6748c45ceda4e8efab2aad5b5d  junit-platform-console/src/main/java/org/junit/platform/console/ConsoleLauncherExecutionResult.java
 08e598951238e66c33cba7caedb2bd0e  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/TerminationInfo.java
 0921f3a4d072efa86f57388ca58e9d00  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertEquals.java
@@ -505,7 +506,6 @@ c56d08dfbe2086ea8bba49074beb70ba  junit-vintage-engine/src/main/java/org/junit/v
 c5e815b88b03fb5e0eda36eeb4515225  documentation/src/test/java/example/SharedResourcesDemo.java
 c5e973899c88b6c5b9aea57f8fb5493e  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/NestedMethodSelector.java
 c665cbffd3af83710d24959605b66d5b  documentation/src/docs/asciidoc/docinfos/docinfo.html
-c6896a3fa3c399f1fbb0a514d80e0c1b  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.0.adoc
 c6b96935084b7518b510b25843d0213d  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Token.java
 c77f25d530f08066bf21f2e0eae29e7a  documentation/src/docs/asciidoc/docinfos/docinfo-footer.html
 c792fb63e20484e429723be77d42d0fa  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariables.java
