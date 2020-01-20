@@ -64,11 +64,6 @@ class AssertIterableEquals {
 			Object expectedElement = expectedIterator.next();
 			Object actualElement = actualIterator.next();
 
-			if (expectedElement == actualElement) {
-				continue;
-			}
-			// Prevent stack overflow error.
-			// See https://github.com/junit-team/junit5/issues/2157 for details.
 			if (Objects.equals(expectedElement, actualElement)) {
 				continue;
 			}
