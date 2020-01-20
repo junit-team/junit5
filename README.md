@@ -6,8 +6,8 @@ This repository is the home of the next generation of JUnit, _JUnit 5_.
 
 ## Latest Releases
 
-- General Availability (GA): [JUnit 5.5.2](https://github.com/junit-team/junit5/releases/tag/r5.5.2) (September 8, 2019).
-- Preview (Milestone/Release Candidate): [JUnit 5.6.0 RC1](https://github.com/junit-team/junit5/releases/tag/r5.6.0-RC1) (January 6, 2020)
+- General Availability (GA): [JUnit 5.6.0](https://github.com/junit-team/junit5/releases/tag/r5.6.0) (January 20, 2020).
+- Preview (Milestone/Release Candidate): n/a
 
 ## Documentation
 
@@ -83,7 +83,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 ### JUnit Platform
 
 - **Group ID**: `org.junit.platform`
-- **Version**: `1.5.2`, `1.6.0-M1`, or `1.6.0-SNAPSHOT`
+- **Version**: `1.6.0` or `1.7.0-SNAPSHOT`
 - **Artifact IDs** and Java **module** name:
   - `junit-platform-commons` (`org.junit.platform.commons`)
   - `junit-platform-console` (`org.junit.platform.console`)
@@ -98,7 +98,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 ### JUnit Jupiter
 
 - **Group ID**: `org.junit.jupiter`
-- **Version**: `5.5.2`, `5.6.0-M1`, or `5.6.0-SNAPSHOT`
+- **Version**: `5.6.0` or `5.7.0-SNAPSHOT`
 - **Artifact IDs** and Java **module** name:
   - `junit-jupiter` (`org.junit.jupiter`)
   - `junit-jupiter-api` (`org.junit.jupiter.api`)
@@ -109,7 +109,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 ### JUnit Vintage
 
 - **Group ID**: `org.junit.vintage`
-- **Version**: `5.5.2`, `5.6.0-M1`, or `5.6.0-SNAPSHOT`
+- **Version**: `5.6.0` or `5.7.0-SNAPSHOT`
 - **Artifact ID** and Java **module** name:
   - `junit-vintage-engine` (`org.junit.vintage.engine`)
 
@@ -117,7 +117,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 
 - **Group ID**: `org.junit`
 - **Artifact ID** `junit-bom`
-- **Version**: `5.5.2`, `5.6.0-M1`, or `5.6.0-SNAPSHOT`
+- **Version**: `5.6.0` or `5.7.0-SNAPSHOT`
 
 
 [Codecov]: https://codecov.io/gh/junit-team/junit5
