@@ -69,7 +69,7 @@ class AssertIterableEquals {
 			}
 			// Prevent stack overflow error.
 			// See https://github.com/junit-team/junit5/issues/2157 for details.
-			if (expectedElement != null && expectedElement.equals(actualElement)) {
+			if (Objects.equals(expectedElement, actualElement)) {
 				continue;
 			}
 
