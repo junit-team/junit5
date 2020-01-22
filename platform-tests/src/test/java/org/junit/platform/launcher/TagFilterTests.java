@@ -121,13 +121,15 @@ class TagFilterTests {
 	void excludeMultipleTags() {
 		PostDiscoveryFilter filter = excludeTags("tag1", "  tag2  ");
 
-		assertTrue(filter.apply(classWithTag1).excluded());
-		assertTrue(filter.apply(classWithTag1AndSurroundingWhitespace).excluded());
-		assertTrue(filter.apply(classWithBothTags).excluded());
-		assertTrue(filter.apply(classWithTag2).excluded());
+		String exclusionReason = "excluded because tags match tag expression(s): [tag1,tag2]";
+		assertExcluded(filter.apply(classWithTag1), exclusionReason);
+		assertExcluded(filter.apply(classWithTag1AndSurroundingWhitespace), exclusionReason);
+		assertExcluded(filter.apply(classWithBothTags), exclusionReason);
+		assertExcluded(filter.apply(classWithTag2), exclusionReason);
 
-		assertTrue(filter.apply(classWithDifferentTags).included());
-		assertTrue(filter.apply(classWithNoTags).included());
+		String inclusionReason = "included because tags do not match expression(s): [tag1,tag2]";
+		assertIncluded(filter.apply(classWithDifferentTags), inclusionReason);
+		assertIncluded(filter.apply(classWithNoTags), inclusionReason);
 	}
 
 	@Test
@@ -147,48 +149,36 @@ class TagFilterTests {
 	}
 
 	private void includeSingleTag(PostDiscoveryFilter filter) {
-		assertTrue(filter.apply(classWithTag1).included());
-		assertTrue(filter.apply(classWithTag1AndSurroundingWhitespace).included());
-		assertTrue(filter.apply(classWithBothTags).included());
+		String inclusionReason = "included because tags match expression(s): [tag1]";
+		assertIncluded(filter.apply(classWithTag1), inclusionReason);
+		assertIncluded(filter.apply(classWithTag1AndSurroundingWhitespace), inclusionReason);
+		assertIncluded(filter.apply(classWithBothTags), inclusionReason);
 
-		assertReason(filter.apply(classWithTag1), "included because tags match expression(s): [tag1]");
-		assertReason(filter.apply(classWithTag1AndSurroundingWhitespace),
-			"included because tags match expression(s): [tag1]");
-		assertReason(filter.apply(classWithBothTags), "included because tags match expression(s): [tag1]");
-
-		assertTrue(filter.apply(classWithTag2).excluded());
-		assertTrue(filter.apply(classWithDifferentTags).excluded());
-		assertTrue(filter.apply(classWithNoTags).excluded());
-
-		assertReason(filter.apply(classWithTag2), "excluded because tags do not match tag expression(s): [tag1]");
-		assertReason(filter.apply(classWithDifferentTags),
-			"excluded because tags do not match tag expression(s): [tag1]");
-		assertReason(filter.apply(classWithNoTags), "excluded because tags do not match tag expression(s): [tag1]");
-
+		String exclusionReason = "excluded because tags do not match tag expression(s): [tag1]";
+		assertExcluded(filter.apply(classWithTag2), exclusionReason);
+		assertExcluded(filter.apply(classWithDifferentTags), exclusionReason);
+		assertExcluded(filter.apply(classWithNoTags), exclusionReason);
 	}
 
 	private void excludeSingleTag(PostDiscoveryFilter filter) {
-		assertTrue(filter.apply(classWithTag1).excluded());
-		assertTrue(filter.apply(classWithTag1AndSurroundingWhitespace).excluded());
-		assertTrue(filter.apply(classWithBothTags).excluded());
+		String exclusionReason = "excluded because tags match tag expression(s): [tag1]";
+		assertExcluded(filter.apply(classWithTag1), exclusionReason);
+		assertExcluded(filter.apply(classWithTag1AndSurroundingWhitespace), exclusionReason);
+		assertExcluded(filter.apply(classWithBothTags), exclusionReason);
 
-		assertReason(filter.apply(classWithTag1), "Test excluded Because it satisfy expression(s): [tag1]");
-		assertReason(filter.apply(classWithTag1AndSurroundingWhitespace),
-			"Test excluded Because it satisfy expression(s): [tag1]");
-		assertReason(filter.apply(classWithBothTags), "Test excluded Because it satisfy expression(s): [tag1]");
-
-		assertTrue(filter.apply(classWithTag2).included());
-		assertTrue(filter.apply(classWithDifferentTags).included());
-		assertTrue(filter.apply(classWithNoTags).included());
-
-		assertReason(filter.apply(classWithTag2), "Test included Because it does not satisfy expression(s): [tag1]");
-		assertReason(filter.apply(classWithDifferentTags),
-			"Test included Because it does not satisfy expression(s): [tag1]");
-		assertReason(filter.apply(classWithNoTags), "Test included Because it does not satisfy expression(s): [tag1]");
-
+		String inclusionReason = "included because tags do not match expression(s): [tag1]";
+		assertIncluded(filter.apply(classWithTag2), inclusionReason);
+		assertIncluded(filter.apply(classWithDifferentTags), inclusionReason);
+		assertIncluded(filter.apply(classWithNoTags), inclusionReason);
 	}
 
-	private void assertReason(FilterResult filterResult, String expectedReason) {
+	private void assertIncluded(FilterResult filterResult, String expectedReason) {
+		assertTrue(filterResult.included());
+		assertThat(filterResult.getReason()).isPresent().contains(expectedReason);
+	}
+
+	private void assertExcluded(FilterResult filterResult, String expectedReason) {
+		assertTrue(filterResult.excluded());
 		assertThat(filterResult.getReason()).isPresent().contains(expectedReason);
 	}
 

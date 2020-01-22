@@ -85,18 +85,8 @@ public final class TagFilter {
 	 * @see TestTag#isValid(String)
 	 */
 	public static PostDiscoveryFilter includeTags(List<String> tagExpressions) throws PreconditionViolationException {
-
+		Preconditions.notEmpty(tagExpressions, "list of tag expressions must not be null or empty");
 		return includeMatching(tagExpressions);
-	}
-
-	private static String inclusionReasonExpressionSatisfy(List<String> tagExpressions) {
-		return String.format("included because tags match expression(s): [%s]", formatToString(tagExpressions));
-	}
-
-	private static String exclusionReasonExpressionNotSatisfy(List<String> tagExpressions) {
-		return String.format("excluded because tags do not match tag expression(s): [%s]",
-			formatToString(tagExpressions));
-
 	}
 
 	/**
@@ -133,26 +123,11 @@ public final class TagFilter {
 	 * @see TestTag#isValid(String)
 	 */
 	public static PostDiscoveryFilter excludeTags(List<String> tagExpressions) throws PreconditionViolationException {
-
+		Preconditions.notEmpty(tagExpressions, "list of tag expressions must not be null or empty");
 		return excludeMatching(tagExpressions);
 	}
 
-	private static String inclusionReasonExpressionNotSatisfy(List<String> tagExpressions) {
-		return String.format("Test included Because it does not satisfy expression(s): [%s]",
-			formatToString(tagExpressions));
-	}
-
-	private static String exclusionReasonExpressionSatisfy(List<String> tagExpressions) {
-		return String.format("Test excluded Because it satisfy expression(s): [%s]", formatToString(tagExpressions));
-	}
-
-	private static String formatToString(List<String> tagExpressions) {
-		return tagExpressions.stream().map(String::trim).sorted().collect(Collectors.joining(","));
-	}
-
 	private static PostDiscoveryFilter includeMatching(List<String> tagExpressions) {
-
-		Preconditions.notEmpty(tagExpressions, "list of tag expressions must not be null or empty");
 		Supplier<String> inclusionReason = () -> inclusionReasonExpressionSatisfy(tagExpressions);
 		Supplier<String> exclusionReason = () -> exclusionReasonExpressionNotSatisfy(tagExpressions);
 		List<TagExpression> parsedTagExpressions = parseAll(tagExpressions);
@@ -164,12 +139,18 @@ public final class TagFilter {
 		};
 	}
 
-	private static PostDiscoveryFilter excludeMatching(List<String> tagExpressions) {
+	private static String inclusionReasonExpressionSatisfy(List<String> tagExpressions) {
+		return String.format("included because tags match expression(s): [%s]", formatToString(tagExpressions));
+	}
 
-		Preconditions.notEmpty(tagExpressions, "list of tag expressions must not be null or empty");
+	private static String exclusionReasonExpressionNotSatisfy(List<String> tagExpressions) {
+		return String.format("excluded because tags do not match tag expression(s): [%s]",
+			formatToString(tagExpressions));
+	}
+
+	private static PostDiscoveryFilter excludeMatching(List<String> tagExpressions) {
 		Supplier<String> inclusionReason = () -> inclusionReasonExpressionNotSatisfy(tagExpressions);
 		Supplier<String> exclusionReason = () -> exclusionReasonExpressionSatisfy(tagExpressions);
-
 		List<TagExpression> parsedTagExpressions = parseAll(tagExpressions);
 		return descriptor -> {
 			Set<TestTag> tags = descriptor.getTags();
@@ -177,6 +158,18 @@ public final class TagFilter {
 
 			return FilterResult.includedIf(included, inclusionReason, exclusionReason);
 		};
+	}
+
+	private static String inclusionReasonExpressionNotSatisfy(List<String> tagExpressions) {
+		return String.format("included because tags do not match expression(s): [%s]", formatToString(tagExpressions));
+	}
+
+	private static String exclusionReasonExpressionSatisfy(List<String> tagExpressions) {
+		return String.format("excluded because tags match tag expression(s): [%s]", formatToString(tagExpressions));
+	}
+
+	private static String formatToString(List<String> tagExpressions) {
+		return tagExpressions.stream().map(String::trim).sorted().collect(Collectors.joining(","));
 	}
 
 	private static List<TagExpression> parseAll(List<String> tagExpressions) {

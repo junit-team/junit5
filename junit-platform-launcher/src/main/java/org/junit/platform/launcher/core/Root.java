@@ -100,7 +100,6 @@ class Root {
 	}
 
 	private boolean isExcluded(TestDescriptor descriptor, FilterResult filterResult) {
-
 		return descriptor.getChildren().isEmpty() && filterResult.excluded();
 	}
 
@@ -112,12 +111,12 @@ class Root {
 		excludedTestDescriptorsByReason.forEach((exclusionReason, testDescriptors) -> {
 			String displayNames = testDescriptors.stream().map(TestDescriptor::getDisplayName).collect(
 				Collectors.joining(", "));
-			long containersCount = testDescriptors.stream().filter(TestDescriptor::isContainer).count();
-			long methodCount = testDescriptors.size() - containersCount;
-			logger.info(() -> String.format("%d containers and %d tests were %s", containersCount, methodCount,
+			long containerCount = testDescriptors.stream().filter(TestDescriptor::isContainer).count();
+			long methodCount = testDescriptors.stream().filter(TestDescriptor::isTest).count();
+			logger.info(() -> String.format("%d containers and %d tests were %s", containerCount, methodCount,
 				exclusionReason));
-			logger.debug(() -> String.format("The following containers and tests were because %s: %s", exclusionReason,
-				displayNames));
+			logger.debug(
+				() -> String.format("The following containers and tests were %s: %s", exclusionReason, displayNames));
 		});
 	}
 }
