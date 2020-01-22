@@ -168,7 +168,6 @@
 3ca1dbe934d8a3e75af2fbff74d08773  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/package-info.java
 3cb32970f91c5bc03b020eddea8cedad  documentation/src/test/java/org/junit/api/tools/AsciidocApiReportWriter.java
 3d0678ab539642a12d9cf193e3c0328d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstantiationException.java
-3d8419cde4058f9d58841f0d6f4a428d  documentation/src/docs/asciidoc/release-notes/index.adoc
 3dc0996756b1643627f7fb4f266f5948  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/FallbackStringToObjectConverter.java
 3e76ed8ec9951800599c19be799b9d45  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/FilterableIgnoringRunnerDecorator.java
 400cd951ef11093570e0888ba217be76  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertSame.java
@@ -369,6 +368,7 @@
 8d110356275616587a6583687c7a57d7  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EnumSource.java
 8d2de47ba783d123b8fa1e0393ad1e4b  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeTestTaskContext.java
 8d6ab3cadfcaa3ea1ae1a2738569d16f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicContainer.java
+8da85c9c6c025d017a351a348cd397ad  documentation/src/docs/asciidoc/release-notes/index.adoc
 8f6554030cac01e55cbae02695abef60  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/GenericBeforeAndAfterAdvice.java
 90b825530696acd8630460ed0cfe6e91  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedField.java
 90e58bf3352aa38c3fe838e96fb19a76  junit-platform-engine/src/main/java/org/junit/platform/engine/ConfigurationParameters.java
@@ -622,6 +622,7 @@ ebf861b91d3c0781002d84c5f4f78062  junit-platform-commons/src/main/java/org/junit
 ec5b587d60bcff9a477ad3e57e69f163  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.java
 ec6d2dfbb5af43b9e394d7a309b735f3  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/JupiterConfiguration.java
 eca8f212417ac57d948d5dc0e40f00ec  junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatform.java
+ece8fad43085854209da9c260a8e6ac0  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-M1.adoc
 ed727cde31649f571d7469060eab244e  junit-platform-engine/src/main/java/org/junit/platform/engine/ExecutionRequest.java
 ed8394139c05c16d002981004170cdff  documentation/src/docs/asciidoc/tocbot-3.0.2/tocbot.js
 ee0d40c3b5452d37d894330c160e4a73  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTest.java
