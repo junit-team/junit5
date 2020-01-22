@@ -25,8 +25,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
-
+* The number of containers and tests excluded by post discovery filters based on their tags
+  is now logged, alongside with the exclusion reasons.
 
 [[release-notes-5.7.0-M1-junit-jupiter]]
 === JUnit Jupiter
