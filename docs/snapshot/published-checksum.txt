@@ -82,6 +82,7 @@
 1fc60e2bcb983038cd3fa97eb18d9c8c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/TestMethodOrder.java
 1fffa327d352347b2252e12064f63008  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeEngines.java
 2008a3c0f2971d7388db3f0bd97e5f7a  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/ExecutionRecorder.java
+202ff679f3d0837caef9d1657ba31cf8  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-M1.adoc
 203b24fe146d9592f7928ab599f610c3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ResourceAccessMode.java
 206341ec67744e0df6a394ce174eec7c  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/StreamInterceptor.java
 2093f0929c8726b544fe1e714f1cc9a3  documentation/src/test/java/example/interceptor/SwingEdtInterceptor.java
@@ -622,7 +623,6 @@ ebf861b91d3c0781002d84c5f4f78062  junit-platform-commons/src/main/java/org/junit
 ec5b587d60bcff9a477ad3e57e69f163  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodBasedTestDescriptor.java
 ec6d2dfbb5af43b9e394d7a309b735f3  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/JupiterConfiguration.java
 eca8f212417ac57d948d5dc0e40f00ec  junit-platform-runner/src/main/java/org/junit/platform/runner/JUnitPlatform.java
-ece8fad43085854209da9c260a8e6ac0  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-M1.adoc
 ed727cde31649f571d7469060eab244e  junit-platform-engine/src/main/java/org/junit/platform/engine/ExecutionRequest.java
 ed8394139c05c16d002981004170cdff  documentation/src/docs/asciidoc/tocbot-3.0.2/tocbot.js
 ee0d40c3b5452d37d894330c160e4a73  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTest.java
