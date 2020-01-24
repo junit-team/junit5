@@ -146,13 +146,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 public interface <span class="typeNameLabel">BeforeEachCallback</span>
 extends <a href="Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a></pre>
 <div class="block"><code>BeforeEachCallback</code> defines the API for <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a>
- that wish to provide additional behavior to tests before each test is invoked.
-
- <p>In this context, the term <em>test</em> refers to the actual test method
- plus any user defined setup methods (e.g.,
- <a href="../BeforeEach.html" title="annotation in org.junit.jupiter.api"><code>@BeforeEach</code></a> methods).
+ that wish to provide additional behavior to tests before an individual test
+ and any user-defined setup methods (e.g.,
+ <a href="../BeforeEach.html" title="annotation in org.junit.jupiter.api"><code>@BeforeEach</code></a> methods) for that test
+ have been executed.
 
  <p>Concrete implementations often implement <a href="AfterEachCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterEachCallback</code></a> as well.
+ If you do not wish to have your callbacks <em>wrapped</em> around user-defined
+ setup and teardown methods, implement <a href="BeforeTestExecutionCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeTestExecutionCallback</code></a> and
+ <a href="AfterTestExecutionCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterTestExecutionCallback</code></a> instead of <a href="BeforeEachCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeEachCallback</code></a> and
+ <a href="AfterEachCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterEachCallback</code></a>.
 
  <h3>Constructor Requirements</h3>
 
@@ -211,7 +214,8 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#beforeEach(org.junit.jupiter.api.extension.ExtensionContext)">beforeEach</a></span>&#8203;(<a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></th>
 <td class="colLast">
-<div class="block">Callback that is invoked <em>before</em> each test is invoked.</div>
+<div class="block">Callback that is invoked <em>before</em> an individual test and any
+ user-defined setup methods for that test have been executed.</div>
 </td>
 </tr>
 </table>
@@ -239,7 +243,8 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <h4>beforeEach</h4>
 <pre class="methodSignature">void&nbsp;beforeEach&#8203;(<a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)
          throws <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a></pre>
-<div class="block">Callback that is invoked <em>before</em> each test is invoked.</div>
+<div class="block">Callback that is invoked <em>before</em> an individual test and any
+ user-defined setup methods for that test have been executed.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>context</code> - the current extension context; never <code>null</code></dd>

@@ -119,45 +119,56 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colFirst" scope="row"><a href="AfterAllCallback.html" title="interface in org.junit.jupiter.api.extension">AfterAllCallback</a></th>
 <td class="colLast">
 <div class="block"><code>AfterAllCallback</code> defines the API for <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a>
- that wish to provide additional behavior to test containers after all tests
- have been invoked.</div>
+ that wish to provide additional behavior to test containers <strong>once</strong>
+ after all tests in the container have been executed.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <th class="colFirst" scope="row"><a href="AfterEachCallback.html" title="interface in org.junit.jupiter.api.extension">AfterEachCallback</a></th>
 <td class="colLast">
 <div class="block"><code>AfterEachCallback</code> defines the API for <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a>
- that wish to provide additional behavior to tests after each test method
- has been invoked.</div>
+ that wish to provide additional behavior to tests after an individual test
+ and any user-defined teardown methods (e.g.,
+ <a href="../AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> methods) for that test
+ have been executed.</div>
 </td>
 </tr>
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="AfterTestExecutionCallback.html" title="interface in org.junit.jupiter.api.extension">AfterTestExecutionCallback</a></th>
 <td class="colLast">
-<div class="block"><code>AfterTestExecutionCallback</code> defines the API for <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that wish to provide additional behavior to tests immediately
- after each test has been executed.</div>
+<div class="block"><code>AfterTestExecutionCallback</code> defines the API for <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that wish to provide additional behavior to tests
+ <strong>immediately</strong> after an individual test has been executed but
+ before any user-defined teardown methods (e.g.,
+ <a href="../AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> methods) have been executed
+ for that test.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <th class="colFirst" scope="row"><a href="BeforeAllCallback.html" title="interface in org.junit.jupiter.api.extension">BeforeAllCallback</a></th>
 <td class="colLast">
 <div class="block"><code>BeforeAllCallback</code> defines the API for <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a>
- that wish to provide additional behavior to test containers before all tests
- are invoked.</div>
+ that wish to provide additional behavior to test containers <strong>once</strong>
+ before all tests in the container have been executed.</div>
 </td>
 </tr>
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="BeforeEachCallback.html" title="interface in org.junit.jupiter.api.extension">BeforeEachCallback</a></th>
 <td class="colLast">
 <div class="block"><code>BeforeEachCallback</code> defines the API for <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a>
- that wish to provide additional behavior to tests before each test is invoked.</div>
+ that wish to provide additional behavior to tests before an individual test
+ and any user-defined setup methods (e.g.,
+ <a href="../BeforeEach.html" title="annotation in org.junit.jupiter.api"><code>@BeforeEach</code></a> methods) for that test
+ have been executed.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <th class="colFirst" scope="row"><a href="BeforeTestExecutionCallback.html" title="interface in org.junit.jupiter.api.extension">BeforeTestExecutionCallback</a></th>
 <td class="colLast">
-<div class="block"><code>BeforeTestExecutionCallback</code> defines the API for <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that wish to provide additional behavior to tests immediately
- before each test is executed.</div>
+<div class="block"><code>BeforeTestExecutionCallback</code> defines the API for <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that wish to provide additional behavior to tests
+ <strong>immediately</strong> before an individual test is executed but after
+ any user-defined teardown methods (e.g.,
+ <a href="../BeforeEach.html" title="annotation in org.junit.jupiter.api"><code>@BeforeEach</code></a> methods) have been
+ executed for that test.</div>
 </td>
 </tr>
 <tr class="altColor">

@@ -263,12 +263,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterAllCallback.html" title="interface in org.junit.jupiter.api.extension"><span class="typeNameLink">AfterAllCallback</span></a> - Interface in <a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a></dt>
 <dd>
 <div class="block"><code>AfterAllCallback</code> defines the API for <a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a>
- that wish to provide additional behavior to test containers after all tests
- have been invoked.</div>
+ that wish to provide additional behavior to test containers <strong>once</strong>
+ after all tests in the container have been executed.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterEachCallback.html#afterEach(org.junit.jupiter.api.extension.ExtensionContext)">afterEach(ExtensionContext)</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterEachCallback.html" title="interface in org.junit.jupiter.api.extension">AfterEachCallback</a></dt>
 <dd>
-<div class="block">Callback that is invoked <em>after</em> each test has been invoked.</div>
+<div class="block">Callback that is invoked <em>after</em> an individual test and any
+ user-defined teardown methods for that test have been executed.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/ExpectedExceptionSupport.html#afterEach(org.junit.jupiter.api.extension.ExtensionContext)">afterEach(ExtensionContext)</a></span> - Method in class org.junit.jupiter.migrationsupport.rules.<a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/ExpectedExceptionSupport.html" title="class in org.junit.jupiter.migrationsupport.rules">ExpectedExceptionSupport</a></dt>
 <dd>&nbsp;</dd>
@@ -286,8 +287,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterEachCallback.html" title="interface in org.junit.jupiter.api.extension"><span class="typeNameLink">AfterEachCallback</span></a> - Interface in <a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a></dt>
 <dd>
 <div class="block"><code>AfterEachCallback</code> defines the API for <a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a>
- that wish to provide additional behavior to tests after each test method
- has been invoked.</div>
+ that wish to provide additional behavior to tests after an individual test
+ and any user-defined teardown methods (e.g.,
+ <a href="../org.junit.jupiter.api/org/junit/jupiter/api/AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> methods) for that test
+ have been executed.</div>
 </dd>
 <dt><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/AfterEachMethodAdapter.html" title="interface in org.junit.jupiter.engine.execution"><span class="typeNameLink">AfterEachMethodAdapter</span></a> - Interface in <a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/package-summary.html">org.junit.jupiter.engine.execution</a></dt>
 <dd>
@@ -296,12 +299,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html#afterTestExecution(org.junit.jupiter.api.extension.ExtensionContext)">afterTestExecution(ExtensionContext)</a></span> - Method in interface org.junit.jupiter.api.extension.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html" title="interface in org.junit.jupiter.api.extension">AfterTestExecutionCallback</a></dt>
 <dd>
-<div class="block">Callback that is invoked <em>immediately after</em> each test has been executed.</div>
+<div class="block">Callback that is invoked <em>immediately after</em> an individual test has
+ been executed but before any user-defined teardown methods have been
+ executed for that test.</div>
 </dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html" title="interface in org.junit.jupiter.api.extension"><span class="typeNameLink">AfterTestExecutionCallback</span></a> - Interface in <a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a></dt>
 <dd>
-<div class="block"><code>AfterTestExecutionCallback</code> defines the API for <a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that wish to provide additional behavior to tests immediately
- after each test has been executed.</div>
+<div class="block"><code>AfterTestExecutionCallback</code> defines the API for <a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that wish to provide additional behavior to tests
+ <strong>immediately</strong> after an individual test has been executed but
+ before any user-defined teardown methods (e.g.,
+ <a href="../org.junit.jupiter.api/org/junit/jupiter/api/AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> methods) have been executed
+ for that test.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org.junit.jupiter.params/org/junit/jupiter/params/aggregator/ArgumentsAggregator.html#aggregateArguments(org.junit.jupiter.params.aggregator.ArgumentsAccessor,org.junit.jupiter.api.extension.ParameterContext)">aggregateArguments(ArgumentsAccessor, ParameterContext)</a></span> - Method in interface org.junit.jupiter.params.aggregator.<a href="../org.junit.jupiter.params/org/junit/jupiter/params/aggregator/ArgumentsAggregator.html" title="interface in org.junit.jupiter.params.aggregator">ArgumentsAggregator</a></dt>
 <dd>

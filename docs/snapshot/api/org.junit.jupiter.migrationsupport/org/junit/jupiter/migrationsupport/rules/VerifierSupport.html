@@ -210,7 +210,8 @@ implements <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/ap
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#afterEach(org.junit.jupiter.api.extension.ExtensionContext)">afterEach</a></span>&#8203;(<a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></th>
 <td class="colLast">
-<div class="block">Callback that is invoked <em>after</em> each test has been invoked.</div>
+<div class="block">Callback that is invoked <em>after</em> an individual test and any
+ user-defined teardown methods for that test have been executed.</div>
 </td>
 </tr>
 </table>
@@ -265,7 +266,8 @@ implements <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/ap
 <pre class="methodSignature">public&nbsp;void&nbsp;afterEach&#8203;(<a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)
                throws <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a></pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterEachCallback.html#afterEach(org.junit.jupiter.api.extension.ExtensionContext)">AfterEachCallback</a></code></span></div>
-<div class="block">Callback that is invoked <em>after</em> each test has been invoked.</div>
+<div class="block">Callback that is invoked <em>after</em> an individual test and any
+ user-defined teardown methods for that test have been executed.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterEachCallback.html#afterEach(org.junit.jupiter.api.extension.ExtensionContext)">afterEach</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterEachCallback.html" title="interface in org.junit.jupiter.api.extension">AfterEachCallback</a></code></dd>

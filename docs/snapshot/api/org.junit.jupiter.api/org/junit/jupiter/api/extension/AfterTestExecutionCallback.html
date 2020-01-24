@@ -141,14 +141,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.0")
 public interface <span class="typeNameLabel">AfterTestExecutionCallback</span>
 extends <a href="Extension.html" title="interface in org.junit.jupiter.api.extension">Extension</a></pre>
-<div class="block"><code>AfterTestExecutionCallback</code> defines the API for <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that wish to provide additional behavior to tests immediately
- after each test has been executed.
-
- <p>Such callbacks will be invoked before any user defined teardown methods (e.g.,
- <a href="../AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> methods).
+<div class="block"><code>AfterTestExecutionCallback</code> defines the API for <a href="Extension.html" title="interface in org.junit.jupiter.api.extension"><code>Extensions</code></a> that wish to provide additional behavior to tests
+ <strong>immediately</strong> after an individual test has been executed but
+ before any user-defined teardown methods (e.g.,
+ <a href="../AfterEach.html" title="annotation in org.junit.jupiter.api"><code>@AfterEach</code></a> methods) have been executed
+ for that test.
 
  <p>Concrete implementations often implement <a href="BeforeTestExecutionCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeTestExecutionCallback</code></a>
- as well.
+ as well. If you wish to have your callbacks <em>wrapped</em> around user-defined
+ setup and teardown methods, implement <a href="BeforeEachCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeEachCallback</code></a> and
+ <a href="AfterEachCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterEachCallback</code></a> instead of <a href="BeforeTestExecutionCallback.html" title="interface in org.junit.jupiter.api.extension"><code>BeforeTestExecutionCallback</code></a> and
+ <a href="AfterTestExecutionCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterTestExecutionCallback</code></a>.
 
  <h3>Constructor Requirements</h3>
 
@@ -207,7 +210,9 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#afterTestExecution(org.junit.jupiter.api.extension.ExtensionContext)">afterTestExecution</a></span>&#8203;(<a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)</code></th>
 <td class="colLast">
-<div class="block">Callback that is invoked <em>immediately after</em> each test has been executed.</div>
+<div class="block">Callback that is invoked <em>immediately after</em> an individual test has
+ been executed but before any user-defined teardown methods have been
+ executed for that test.</div>
 </td>
 </tr>
 </table>
@@ -235,7 +240,9 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 <h4>afterTestExecution</h4>
 <pre class="methodSignature">void&nbsp;afterTestExecution&#8203;(<a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext</a>&nbsp;context)
                  throws <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">Exception</a></pre>
-<div class="block">Callback that is invoked <em>immediately after</em> each test has been executed.</div>
+<div class="block">Callback that is invoked <em>immediately after</em> an individual test has
+ been executed but before any user-defined teardown methods have been
+ executed for that test.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>context</code> - the current extension context; never <code>null</code></dd>
