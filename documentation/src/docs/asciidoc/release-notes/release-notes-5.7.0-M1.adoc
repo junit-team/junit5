@@ -1,5 +1,3 @@
-// TODO: replace all occurrences of ⚠️ with appropriate values, delete this comment, and
-// 'include:' this new file in index.adoc.
 [[release-notes-5.7.0-M1]]
 == 5.7.0-M1
 
@@ -7,8 +5,8 @@
 
 *Scope:* ❓
 
-For a complete list of all _closed_ issues and pull requests for this release, consult
-the link:{junit5-repo}+/milestone/44?closed=1+[5.7 M1] milestone page in the JUnit repository
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/44?closed=1+[5.7 M1] milestone page in the JUnit repository
 on GitHub.
 
 
@@ -26,7 +24,8 @@ on GitHub.
 ==== New Features and Improvements
 
 * The number of containers and tests excluded by post discovery filters based on their tags
-  is now logged, alongside with the exclusion reasons.
+  is now logged, along with the exclusion reasons.
+
 
 [[release-notes-5.7.0-M1-junit-jupiter]]
 === JUnit Jupiter
