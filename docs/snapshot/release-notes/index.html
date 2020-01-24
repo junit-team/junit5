@@ -564,30 +564,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#release-notes-5.7.0-M1-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
-<li><a href="#release-notes-5.6.0">5.6.0</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.6.0-overall-improvements">Overall Improvements</a></li>
-<li><a href="#release-notes-5.6.0-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.6.0-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.6.0-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
-<li><a href="#release-notes-5.5.2">5.5.2</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.5.2-overall-improvements">Overall Improvements</a></li>
-<li><a href="#release-notes-5.5.2-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.5.2-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.5.2-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
-<li><a href="#release-notes-5.5.1">5.5.1</a>
-<ul class="sectlevel2">
-<li><a href="#release-notes-5.5.1-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-5.5.1-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-5.5.1-junit-vintage">JUnit Vintage</a></li>
-</ul>
-</li>
-<li><a href="#release-notes-5.5.0">5.5.0</a></li>
+<li><a href="#release-notes-5.6.0">5.6.0</a></li>
 </ul>
 </div>
 </div>
@@ -595,7 +572,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This document contains the <em>change log</em> for all JUnit 5 releases since 5.5 GA.</p>
+<p>This document contains the <em>change log</em> for all JUnit 5 releases since 5.6 GA.</p>
 </div>
 <div class="paragraph">
 <p>Please refer to the <a href="../user-guide/index.html#user-guide">User Guide</a> for comprehensive
@@ -614,8 +591,8 @@ authors as well as build tool and IDE vendors.</p>
 <p><strong>Scope:</strong> ❓</p>
 </div>
 <div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult
-the <a href="https://github.com/junit-team/junit5/milestone/44?closed=1">5.7 M1</a> milestone page in the JUnit repository
+<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
+<a href="https://github.com/junit-team/junit5/milestone/44?closed=1">5.7 M1</a> milestone page in the JUnit repository
 on GitHub.</p>
 </div>
 <div class="sect2">
@@ -646,7 +623,7 @@ on GitHub.</p>
 <ul>
 <li>
 <p>The number of containers and tests excluded by post discovery filters based on their tags
-is now logged, alongside with the exclusion reasons.</p>
+is now logged, along with the exclusion reasons.</p>
 </li>
 </ul>
 </div>
@@ -770,409 +747,8 @@ is now logged, alongside with the exclusion reasons.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/39?closed=1">5.6 M1</a>,
-<a href="https://github.com/junit-team/junit5/milestone/45?closed=1">5.6 RC1</a>, and
-<a href="https://github.com/junit-team/junit5/milestone/46?closed=1">5.6 GA</a>
-milestone pages in the JUnit repository on GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.6.0-overall-improvements"><a class="anchor" href="#release-notes-5.6.0-overall-improvements"></a>Overall Improvements</h3>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://docs.gradle.org/6.0-rc-1/userguide/publishing_gradle_module_metadata.html">Gradle
-Module Metadata</a> is now published for all artifacts.</p>
-</li>
-<li>
-<p>OSGi metadata is now published in all binary JARs.</p>
-</li>
-<li>
-<p>Javadoc now contains a module API overview page.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.6.0-junit-platform"><a class="anchor" href="#release-notes-5.6.0-junit-platform"></a>JUnit Platform</h3>
-<div class="sect3">
-<h4 id="bug-fixes-4"><a class="anchor" href="#bug-fixes-4"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>EventConditions.nestedContainer()</code> method in the Engine Test Kit now correctly
-handles events from multiple levels of nested classes.</p>
-</li>
-<li>
-<p>Module <code>org.junit.platform.launcher</code> now reads <code>java.logging</code> due to usage of types in
-package <code>java.util.logging</code>.</p>
-</li>
-<li>
-<p>Method <code>assertIterableEquals()</code> in <code>Assertions</code> no longer throws a <code>StackOverflowError</code>
-when comparing iterables with components that themselves implement <code>Iterable</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-4"><a class="anchor" href="#deprecations-and-breaking-changes-4"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>Launcher</code> now propagates errors during test discovery by default instead of only
-logging and thereby potentially hiding them. In order to restore the old, lenient
-behavior, you can set the <code>junit.platform.discovery.listener.default</code> configuration
-parameter to <code>logging</code>.</p>
-</li>
-<li>
-<p>To support the above feature consistently, a new <code>EngineDiscoveryListener</code> interface was
-introduced. <code>TestEngine</code> implementations should now notify the listener that can be
-accessed via the <code>EngineDiscoveryRequest.getDiscoveryListener()</code> method about each
-processed <code>DiscoverySelector</code>. Test engines that use <code>EngineDiscoveryRequestResolver</code> do
-not have to make any changes.</p>
-</li>
-<li>
-<p>In the <code>EngineTestKit</code> API, the <code>all()</code>, <code>containers()</code>, and <code>tests()</code> methods in
-<code>EngineExecutionResults</code> have been deprecated in favor of the new <code>allEvents()</code>,
-<code>containerEvents()</code>, and <code>testEvents()</code> methods, respectively. The deprecated methods
-will be removed in JUnit Platform 1.7.0.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Running all tests with any tags or without any tags at all is now supported
-by using the special expressions <code>any()</code> and <code>none()</code>.</p>
-</li>
-<li>
-<p><code>ReflectionSupport.findNestedClasses(&#8230;&#8203;)</code> now detects cycles within inner class
-hierarchies. Consult the Javadoc for details.</p>
-</li>
-<li>
-<p>New methods in <code>DiscoverySelectors</code> to select and execute individual tests in
-inherited nested classes, via specific selectors (<code>NestedClassSelector</code> and
-<code>NestedMethodSelector</code>).</p>
-</li>
-<li>
-<p>New <code>printFailuresTo(PrintWriter, int)</code> method in <code>TestExecutionSummary</code> that allows one
-to specify the maximum number of lines to print for exception stack traces.</p>
-</li>
-<li>
-<p><code>TestExecutionSummary.Failure</code> is now serializable.</p>
-</li>
-<li>
-<p><code>ThrowableCollector.toTestExecutionResult()</code> is now public.</p>
-</li>
-<li>
-<p>Exceptions thrown by test engines during discovery and execution are now reported to
-<code>TestExecutionListeners</code>.</p>
-</li>
-<li>
-<p>The <code>junit-platform-commons</code> module no longer has a dependency on the <code>java.compiler</code>
-module (in terms of the Java Module System). Specifically, a new internal utility has
-been introduced in <code>PackageUtils</code> that implements functionality equivalent to
-<code>javax.lang.model.SourceVersion.isName(CharSequence)</code> from the <code>java.compiler</code> module.</p>
-</li>
-<li>
-<p>Module <code>org.junit.platform.console</code> now provides a <code>java.util.spi.ToolProvider</code>
-implementation that can be acquired by <code>ToolProvider.findFirst("junit")</code> when running
-on Java 9 or above.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.6.0-junit-jupiter"><a class="anchor" href="#release-notes-5.6.0-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>When <code>@Nested</code> is used, the temporary directory is now also injected into instance
-fields of enclosing classes annotated with <code>@TempDir</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-5"><a class="anchor" href="#deprecations-and-breaking-changes-5"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>@EnabledIf</code> and <code>@DisabledIf</code> have been removed from Jupiter&#8217;s API. Script-based
-condition APIs and their supporting implementations were deprecated in JUnit Jupiter 5.5
-with the intent to remove them in JUnit Jupiter 5.6. Users must now rely on a
-combination of other built-in conditions or create and use a custom implementation of
-<code>ExecutionCondition</code> to evaluate the same conditions.</p>
-</li>
-<li>
-<p>The default <code>@Order</code> value for non-annotated <code>@RegisterExtension</code> fields and test
-methods is now <code>Integer.MAX_VALUE / 2</code> instead of <code>Integer.MAX_VALUE</code>. If you had
-previously assigned extension fields or test methods an explicit order greater than
-<code>Integer.MAX_VALUE / 2</code>, this may be a breaking change for you.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Support for multi-character delimiters in <code>@CsvSource</code> and <code>@CsvFileSource</code>.</p>
-</li>
-<li>
-<p>Support for custom <code>null</code> values in <code>@CsvSource</code> and <code>@CsvFileSource</code>.</p>
-</li>
-<li>
-<p>Documented support for comments in CSV files loaded via <code>@CsvFileSource</code>.</p>
-</li>
-<li>
-<p>Auto-detection of enum type from method signature for <code>@EnumSource</code>.</p>
-</li>
-<li>
-<p>Parameter names are now included in the default display name of a <code>@ParameterizedTest</code>
-invocation (if they are present in the bytecode). The <code>{argumentsWithNames}</code> pattern
-can also be used in custom names.</p>
-</li>
-<li>
-<p>New <code>@EnabledForJreRange</code> and <code>@DisabledForJreRange</code> annotations for enabling or
-disabling test execution over a range of JRE versions.</p>
-</li>
-<li>
-<p><code>@EnabledIfEnvironmentVariable</code>, <code>@DisabledIfEnvironmentVariable</code>,
-<code>@EnabledIfSystemProperty</code>, and <code>@DisabledIfSystemProperty</code> may now be used as
-<em>repeatable</em> annotations. In other words, it is now possible to declare each of those
-annotations multiple times on a test interface, test class, or test method.</p>
-</li>
-<li>
-<p><code>JAVA_15</code> has been added to the <code>JRE</code> enum for use with JRE-based execution conditions.</p>
-</li>
-<li>
-<p>The <code>@TempDir</code> extension now makes an attempt to delete non-writable files by making
-them writable first.</p>
-</li>
-<li>
-<p>The default <code>@Order</code> value for non-annotated <code>@RegisterExtension</code> fields and test
-methods is now <code>Integer.MAX_VALUE / 2</code> instead of <code>Integer.MAX_VALUE</code>. This allows
-<code>@Order</code> annotated fields and methods to be explicitly ordered after non-annotated
-fields and methods. For example, this allows <em>before</em> callback extensions to be
-registered last and <em>after</em> callback extensions to be registered first, relative to
-other programmatically registered extensions.</p>
-</li>
-<li>
-<p>New <code>junit.jupiter.execution.timeout.mode</code> configuration parameter to control whether
-timeouts are applied to tests. Supported values include <code>enabled</code>, <code>disabled</code>, and
-<code>disabled_on_debug</code>.</p>
-</li>
-<li>
-<p>New <code>TestInstancePreDestroyCallback</code> interface that defines the API for extensions that
-wish to process test instances <strong>after</strong> they have been used in tests and <strong>before</strong> they
-are destroyed.</p>
-</li>
-<li>
-<p>New <code>TypeBasedParameterResolver&lt;T&gt;</code> abstract base class that serves as a generic adapter
-for the <code>ParameterResolver</code> API and simplifies the implementation of a custom resolver
-that supports parameters of a specific type.</p>
-</li>
-<li>
-<p><code>InvocationInterceptor</code> extensions may now explicitly <code>skip()</code> an intercepted
-invocation. This allows executing the invocation by other means — for example, in a
-forked JVM.</p>
-</li>
-<li>
-<p>Discovery of <code>@Nested</code> test classes that form a cycle now results in an exception that
-halts execution of the JUnit Jupiter test engine instead of infinite recursion.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.6.0-junit-vintage"><a class="anchor" href="#release-notes-5.6.0-junit-vintage"></a>JUnit Vintage</h3>
-<div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>JUnit 3 suites with duplicate test names are now reported correctly.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>To support adoption of the recent JUnit 4.13 release, the Vintage engine now requires
-the new version in its POM and Gradle Module Metadata. However, if you absolutely have
-to stay on 4.12, you can safely downgrade the dependency manually because the Vintage
-engine will remain compatible with 4.12.</p>
-</li>
-<li>
-<p>Performance improvements for projects with a large number of tests.</p>
-</li>
-<li>
-<p>Performance improvements for test classes with a large number of methods.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="release-notes-5.5.2"><a class="anchor" href="#release-notes-5.5.2"></a>5.5.2</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> September 8, 2019</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong> Bug fixes since 5.5.1</p>
-</div>
-<div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/43?closed=1">5.5.2</a> milestone page in the JUnit repository
-on GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.2-overall-improvements"><a class="anchor" href="#release-notes-5.5.2-overall-improvements"></a>Overall Improvements</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Published artifacts have been fixed regarding module descriptors.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Binary JAR files contain <code>module-info.class</code>.</p>
-</li>
-<li>
-<p>Source JAR files contain <code>module-info.java</code>.</p>
-</li>
-<li>
-<p>Javadoc JAR files contain neither <code>module-info.class</code> nor <code>module-info.java</code>.</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.2-junit-platform"><a class="anchor" href="#release-notes-5.5.2-junit-platform"></a>JUnit Platform</h3>
-<div class="paragraph">
-<p>No changes.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.2-junit-jupiter"><a class="anchor" href="#release-notes-5.5.2-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="bug-fixes-7"><a class="anchor" href="#bug-fixes-7"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>The <code>JupiterTestEngine</code> no longer crashes without executing any tests if JUnit 4 is on
-the classpath but Hamcrest is not. Specifically, initialization of the
-<code>OpenTest4JAndJUnit4AwareThrowableCollector</code> class no longer fails if the
-<code>org.junit.internal.AssumptionViolatedException</code> class cannot be loaded from the
-classpath due to a missing Hamcrest dependency.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.2-junit-vintage"><a class="anchor" href="#release-notes-5.5.2-junit-vintage"></a>JUnit Vintage</h3>
-<div class="paragraph">
-<p>No changes.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="release-notes-5.5.1"><a class="anchor" href="#release-notes-5.5.1"></a>5.5.1</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> July 20, 2019</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong> Bug fixes since 5.5.0</p>
-</div>
-<div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult
-the <a href="https://github.com/junit-team/junit5/milestone/42?closed=1">5.5.1</a> milestone page in the JUnit repository
-on GitHub.</p>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.1-junit-platform"><a class="anchor" href="#release-notes-5.5.1-junit-platform"></a>JUnit Platform</h3>
-<div class="paragraph">
-<p>No changes.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.1-junit-jupiter"><a class="anchor" href="#release-notes-5.5.1-junit-jupiter"></a>JUnit Jupiter</h3>
-<div class="sect3">
-<h4 id="bug-fixes-8"><a class="anchor" href="#bug-fixes-8"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Fix test discovery and execution of inherited <code>@Nested</code> classes.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-5.5.1-junit-vintage"><a class="anchor" href="#release-notes-5.5.1-junit-vintage"></a>JUnit Vintage</h3>
-<div class="paragraph">
-<p>No changes.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="release-notes-5.5.0"><a class="anchor" href="#release-notes-5.5.0"></a>5.5.0</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>Date of Release:</strong> June 30, 2019</p>
-</div>
-<div class="paragraph">
-<p><strong>Scope:</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Declarative <code>@Timeout</code> support</p>
-</li>
-<li>
-<p>New <code>InvocationInterceptor</code> extension API</p>
-</li>
-<li>
-<p>New <code>LifecycleMethodExecutionExceptionHandler</code> extension API</p>
-</li>
-<li>
-<p>Deprecation of script-based conditions (<code>@EnabledIf</code> and <code>@DisabledIf</code>)</p>
-</li>
-<li>
-<p>Configurable test discovery implementation for <code>TestEngine</code> authors</p>
-</li>
-<li>
-<p>Explicit Java module descriptors</p>
-</li>
-<li>
-<p>Various minor improvements and bug fixes</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
 <p>For complete details consult the
-<a href="https://junit.org/junit5/docs/5.5.0/release-notes/index.html">5.5.0 Release Notes</a> online.</p>
+<a href="https://junit.org/junit5/docs/5.6.0/release-notes/index.html">5.6.0 Release Notes</a> online.</p>
 </div>
 </div>
 </div>
@@ -1180,7 +756,7 @@ on GitHub.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-01-22 23:21:03 UTC
+Last updated 2020-01-24 10:06:17 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
