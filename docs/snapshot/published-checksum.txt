@@ -547,7 +547,6 @@ d16b5faaf18ceae574a751ca6e0c9143  junit-platform-launcher/src/main/java/org/juni
 d1ab7eedb6800a6aac9ff86a4c1c4013  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/package-info.java
 d1cb6cd796c6851006323b37026c991c  junit-vintage-engine/src/main/java/org/junit/vintage/engine/JUnit4VersionCheck.java
 d1d6b124bc176a8ffaf7a803f767fba4  documentation/src/test/java/example/callbacks/BrokenLifecycleMethodConfigDemo.java
-d26dff0325a8a05b2a970043e4c5a233  documentation/src/docs/asciidoc/release-notes/release-notes-5.5.0.adoc
 d27d9f84ff4a7510b90b8a520f7a17e9  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestParameterResolver.java
 d2fcdf215338c77504dc4cc47d1703db  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/BeforeEachMethodAdapter.java
 d3376b79dec9cd7f8c7c5276593bc19e  documentation/src/test/java/example/FastTest.java
