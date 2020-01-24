@@ -16,8 +16,8 @@ import org.apiguardian.api.API;
 
 /**
  * {@code AfterAllCallback} defines the API for {@link Extension Extensions}
- * that wish to provide additional behavior to test containers after all tests
- * have been invoked.
+ * that wish to provide additional behavior to test containers <strong>once</strong>
+ * after all tests in the container have been executed.
  *
  * <p>Concrete implementations often implement {@link BeforeAllCallback} as well.
  *

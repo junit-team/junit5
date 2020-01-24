@@ -16,14 +16,17 @@ import org.apiguardian.api.API;
 
 /**
  * {@code AfterTestExecutionCallback} defines the API for {@link Extension
- * Extensions} that wish to provide additional behavior to tests immediately
- * after each test has been executed.
- *
- * <p>Such callbacks will be invoked before any user defined teardown methods (e.g.,
- * {@link org.junit.jupiter.api.AfterEach @AfterEach} methods).
+ * Extensions} that wish to provide additional behavior to tests
+ * <strong>immediately</strong> after an individual test has been executed but
+ * before any user-defined teardown methods (e.g.,
+ * {@link org.junit.jupiter.api.AfterEach @AfterEach} methods) have been executed
+ * for that test.
  *
  * <p>Concrete implementations often implement {@link BeforeTestExecutionCallback}
- * as well.
+ * as well. If you wish to have your callbacks <em>wrapped</em> around user-defined
+ * setup and teardown methods, implement {@link BeforeEachCallback} and
+ * {@link AfterEachCallback} instead of {@link BeforeTestExecutionCallback} and
+ * {@link AfterTestExecutionCallback}.
  *
  * <h3>Constructor Requirements</h3>
  *
@@ -61,7 +64,9 @@ import org.apiguardian.api.API;
 public interface AfterTestExecutionCallback extends Extension {
 
 	/**
-	 * Callback that is invoked <em>immediately after</em> each test has been executed.
+	 * Callback that is invoked <em>immediately after</em> an individual test has
+	 * been executed but before any user-defined teardown methods have been
+	 * executed for that test.
 	 *
 	 * @param context the current extension context; never {@code null}
 	 */
