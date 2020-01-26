@@ -23,12 +23,6 @@ object Versions {
     val mockito = "3.2.4"
     val slf4j = "1.7.30"
 
-    // Asciidoctor
-    val asciidoctorDiagram = "1.5.9"
-    val asciidoctorJ = "1.5.7"
-    val asciidoctorPdf = "1.5.0-alpha.17"
-    val jruby = "9.1.17.0"
-
     // Tools
     val checkstyle = "8.25"
     val jacoco = "0.8.5"

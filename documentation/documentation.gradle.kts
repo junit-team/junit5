@@ -40,11 +40,8 @@ dependencies {
 }
 
 asciidoctorj {
-	setJrubyVersion(Versions.jruby)
-	setVersion(Versions.asciidoctorJ)
 	modules {
-		diagram.version(Versions.asciidoctorDiagram)
-		pdf.version(Versions.asciidoctorPdf)
+		diagram.use()
 	}
 }
 
