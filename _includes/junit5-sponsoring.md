@@ -120,3 +120,4 @@ Your donations will help to make that a reality!
 - Zoran Regvart
 - Juan David Leon
 - Tokuhiro Matsuno
+- Atsushi Komiya
