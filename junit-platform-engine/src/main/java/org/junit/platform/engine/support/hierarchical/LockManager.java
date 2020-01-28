@@ -43,8 +43,8 @@ class LockManager {
 	private List<Lock> getDistinctSortedLocks(Collection<ExclusiveResource> resources) {
 		// @formatter:off
 		Map<String, List<ExclusiveResource>> resourcesByKey = resources.stream()
-				.distinct()
 				.sorted(COMPARATOR)
+				.distinct()
 				.collect(groupingBy(ExclusiveResource::getKey, LinkedHashMap::new, toList()));
 
 		return resourcesByKey.values().stream()
