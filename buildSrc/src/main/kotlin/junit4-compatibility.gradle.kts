@@ -7,13 +7,6 @@ val junit_4_12 by configurations.creating {
 }
 
 dependencies {
-	constraints {
-		api("junit:junit:[${Versions.junit4Min},)") {
-			version {
-				prefer(Versions.junit4)
-			}
-		}
-	}
 	junit_4_12("junit:junit") {
 		version {
 			strictly("4.12")

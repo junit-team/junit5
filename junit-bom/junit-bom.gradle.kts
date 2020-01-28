@@ -15,7 +15,7 @@ dependencies {
 	}
 }
 
-the<PublishingExtension>().publications.named<MavenPublication>("maven") {
+publishing.publications.named<MavenPublication>("maven") {
 	from(components["javaPlatform"])
 	pom {
 		description.set("This Bill of Materials POM can be used to ease dependency management " +
