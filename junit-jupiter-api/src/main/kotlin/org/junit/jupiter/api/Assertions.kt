@@ -12,13 +12,13 @@
 package org.junit.jupiter.api
 
 import java.time.Duration
+import java.util.Arrays
 import java.util.function.Supplier
 import java.util.stream.Stream
 import org.apiguardian.api.API
 import org.apiguardian.api.API.Status.EXPERIMENTAL
 import org.junit.jupiter.api.function.Executable
 import org.junit.jupiter.api.function.ThrowingSupplier
-import java.util.Arrays
 
 /**
  * @see Assertions.fail
