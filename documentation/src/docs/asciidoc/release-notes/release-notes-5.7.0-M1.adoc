@@ -15,7 +15,7 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The javadoc of `TestTemplateInvocationContextProvider` has been fixed: it's allowed to return an empty stream. The error message when all provided streams are empty is now more helpful.
 
 ==== Deprecations and Breaking Changes
 
