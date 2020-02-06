@@ -241,7 +241,7 @@ native support instead.
 
 Starting with https://issues.apache.org/jira/browse/SUREFIRE-1330[version 2.22.0], Maven
 Surefire and Maven Failsafe provide
-http://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html[native support]
+https://maven.apache.org/surefire/maven-surefire-plugin/examples/junit-platform.html[native support]
 for executing tests on the JUnit Platform. The `pom.xml` file in the
 `{junit5-jupiter-starter-maven}` project demonstrates how to use the Maven Surefire plugin
 and can serve as a starting point for configuring your Maven build.
@@ -683,9 +683,8 @@ with `Test` or end with `Test` or `Tests`.
 
 .Additional Configuration Options
 NOTE: There are more configuration options for discovering and filtering tests than just
-`@SelectPackages`. Please consult the
-{javadoc-root}/org/junit/platform/suite/api/package-summary.html[Javadoc] for further
-details.
+`@SelectPackages`. Please consult the Javadoc of the `{suite-api-package}` package for
+further details.
 
 WARNING: Test classes and suites annotated with `@RunWith(JUnitPlatform.class)`
 **cannot** be executed directly on the JUnit Platform (or as a "JUnit 5" test as
@@ -733,6 +732,10 @@ those supplied via the configuration file.
 === Tag Expressions
 Tag expressions are boolean expressions with the operators `!`, `&` and `|`. In addition,
 `(` and `)` can be used to adjust for operator precedence.
+
+Two special expressions are supported, `any()` and `none()`, which select all tests _with_
+any tags at all, and all tests _without_ any tags, respectively.
+These special expressions may be combined with other expressions just like normal tags.
 
 .Operators (in descending order of precedence)
 |===

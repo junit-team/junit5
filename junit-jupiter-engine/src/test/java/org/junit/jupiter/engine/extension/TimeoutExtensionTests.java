@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -23,6 +23,7 @@ import static org.junit.jupiter.engine.Constants.DEFAULT_BEFORE_EACH_METHOD_TIME
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME;
+import static org.junit.jupiter.engine.Constants.TIMEOUT_MODE_PROPERTY_NAME;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -45,9 +46,9 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.Timeout;
-import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.RuntimeUtils;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
 import org.junit.platform.testkit.engine.Execution;
@@ -66,13 +67,53 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 				.configurationParameter(DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
 				.build());
 
-		Execution execution = findExecution(results.tests(), "testMethod()");
+		Execution execution = findExecution(results.testEvents(), "testMethod()");
 		assertThat(execution.getDuration()) //
 				.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
 				.isLessThan(Duration.ofSeconds(1));
 		assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
 				.isInstanceOf(TimeoutException.class) //
 				.hasMessage("testMethod() timed out after 10 milliseconds");
+	}
+
+	@Test
+	@DisplayName("is not applied on annotated @Test methods using timeout mode: disabled")
+	void doesNotApplyTimeoutOnAnnotatedTestMethodsUsingDisabledTimeoutMode() {
+		EngineExecutionResults results = executeTests(request() //
+				.selectors(selectMethod(TimeoutAnnotatedTestMethodTestCase.class, "testMethod")) //
+				.configurationParameter(DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
+				.configurationParameter(TIMEOUT_MODE_PROPERTY_NAME, "disabled").build());
+
+		Execution execution = findExecution(results.testEvents(), "testMethod()");
+		assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable()) //
+				.isEmpty();
+	}
+
+	@Test
+	@DisplayName("is not applied on annotated @Test methods using timeout mode: disabled")
+	void applyTimeoutOnAnnotatedTestMethodsUsingDisabledOnDebugTimeoutMode() {
+		EngineExecutionResults results = executeTests(request() //
+				.selectors(selectMethod(TimeoutAnnotatedTestMethodTestCase.class, "testMethod")) //
+				.configurationParameter(DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
+				.configurationParameter(TIMEOUT_MODE_PROPERTY_NAME, "disabled_on_debug").build());
+
+		Execution execution = findExecution(results.testEvents(), "testMethod()");
+
+		assertThat(execution.getDuration()) //
+				.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
+				// The check to see if debugging is pushing the timer just above 1 second
+				.isLessThan(Duration.ofSeconds(2));
+
+		// Should we test if we're debugging? This test will fail if we are debugging.
+		if (RuntimeUtils.isDebugMode()) {
+			assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable()) //
+					.isEmpty();
+		}
+		else {
+			assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
+					.isInstanceOf(TimeoutException.class) //
+					.hasMessage("testMethod() timed out after 10 milliseconds");
+		}
 	}
 
 	@Test
@@ -84,7 +125,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 				.build());
 
 		Stream.of("repetition 1", "repetition 2").forEach(displayName -> {
-			Execution execution = findExecution(results.tests(), displayName);
+			Execution execution = findExecution(results.testEvents(), displayName);
 			assertThat(execution.getDuration()) //
 					.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
 					.isLessThan(Duration.ofSeconds(1));
@@ -102,7 +143,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 				.configurationParameter(DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
 				.build());
 
-		Execution execution = findExecution(results.containers(), "testFactoryMethod()");
+		Execution execution = findExecution(results.containerEvents(), "testFactoryMethod()");
 		assertThat(execution.getDuration()) //
 				.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
 				.isLessThan(Duration.ofSeconds(1));
@@ -125,7 +166,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 
 				Stream.of("testMethod()", "repetition 1", "repetition 2", "testFactoryMethod()").forEach(
 					displayName -> {
-						Execution execution = findExecution(results.all(), displayName);
+						Execution execution = findExecution(results.allEvents(), displayName);
 						assertThat(execution.getDuration()) //
 								.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
 								.isLessThan(Duration.ofSeconds(1));
@@ -137,18 +178,18 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	@DisplayName("fails uninterruptible methods")
-	void failsUninterruptibleMethods() {
-		EngineExecutionResults results = executeTestsForClass(UninterruptibleMethodTestCase.class);
+	@DisplayName("fails methods that do not throw InterruptedException")
+	void failsMethodsWithoutInterruptedException() {
+		EngineExecutionResults results = executeTestsForClass(MethodWithoutInterruptedExceptionTestCase.class);
 
-		Execution execution = findExecution(results.tests(), "uninterruptibleMethod()");
+		Execution execution = findExecution(results.testEvents(), "methodThatDoesNotThrowInterruptedException()");
 		assertThat(execution.getDuration()) //
-				.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
+				.isGreaterThanOrEqualTo(Duration.ofMillis(1)) //
 				.isLessThan(Duration.ofSeconds(1));
 		assertThat(execution.getTerminationInfo().getExecutionResult().getStatus()).isEqualTo(FAILED);
 		assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
 				.isInstanceOf(TimeoutException.class) //
-				.hasMessage("uninterruptibleMethod() timed out after 1 millisecond");
+				.hasMessage("methodThatDoesNotThrowInterruptedException() timed out after 1 millisecond");
 	}
 
 	@Test
@@ -159,7 +200,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 				.configurationParameter(DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
 				.build());
 
-		Execution execution = findExecution(results.containers(),
+		Execution execution = findExecution(results.containerEvents(),
 			TimeoutAnnotatedBeforeAllMethodTestCase.class.getSimpleName());
 		assertThat(execution.getDuration()) //
 				.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
@@ -177,7 +218,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 				.configurationParameter(DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
 				.build());
 
-		Execution execution = findExecution(results.tests(), "testMethod()");
+		Execution execution = findExecution(results.testEvents(), "testMethod()");
 		assertThat(execution.getDuration()) //
 				.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
 				.isLessThan(Duration.ofSeconds(1));
@@ -194,7 +235,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 				.configurationParameter(DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
 				.build());
 
-		Execution execution = findExecution(results.tests(), "testMethod()");
+		Execution execution = findExecution(results.testEvents(), "testMethod()");
 		assertThat(execution.getDuration()) //
 				.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
 				.isLessThan(Duration.ofSeconds(1));
@@ -211,7 +252,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 				.configurationParameter(DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
 				.build());
 
-		Execution execution = findExecution(results.containers(),
+		Execution execution = findExecution(results.containerEvents(),
 			TimeoutAnnotatedAfterAllMethodTestCase.class.getSimpleName());
 		assertThat(execution.getDuration()) //
 				.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
@@ -236,7 +277,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 					.selectors(selectClass(PlainTestCase.class)) //
 					.configurationParameter(entry.getKey(), "1ns") //
 					.build());
-			var failure = results.all().executions().failed() //
+			var failure = results.allEvents().executions().failed() //
 					.map(execution -> execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
 					.findFirst();
 			assertThat(failure).containsInstanceOf(TimeoutException.class);
@@ -253,8 +294,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 	@Test
 	@DisplayName("does not affect tests that don't exceed the timeout")
 	void doesNotAffectTestsThatDoNotExceedTimeoutDuration() {
-		var results = executeTestsForClass(NonTimeoutExceedingTestCase.class);
-		results.all().assertStatistics(stats -> stats.failed(0));
+		executeTestsForClass(NonTimeoutExceedingTestCase.class).allEvents().assertStatistics(stats -> stats.failed(0));
 	}
 
 	@Test
@@ -262,7 +302,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 	void includesClassNameIfMethodIsNotInTestClass() {
 		EngineExecutionResults results = executeTestsForClass(NestedClassWithOuterSetupMethodTestCase.class);
 
-		Execution execution = findExecution(results.tests(), "testMethod()");
+		Execution execution = findExecution(results.testEvents(), "testMethod()");
 		assertThat(execution.getDuration()) //
 				.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
 				.isLessThan(Duration.ofSeconds(1));
@@ -277,7 +317,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 	void reportsIllegalTimeoutDurations() {
 		EngineExecutionResults results = executeTestsForClass(IllegalTimeoutDurationTestCase.class);
 
-		Execution execution = findExecution(results.tests(), "testMethod()");
+		Execution execution = findExecution(results.testEvents(), "testMethod()");
 		assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
 				.isInstanceOf(PreconditionViolationException.class) //
 				.hasMessage("timeout duration must be a positive number: 0");
@@ -388,11 +428,11 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 	static class InheritedTimeoutAnnotatedClassTestCase extends TimeoutAnnotatedClassTestCase {
 	}
 
-	static class UninterruptibleMethodTestCase {
+	static class MethodWithoutInterruptedExceptionTestCase {
 		@Test
 		@Timeout(value = 1, unit = MILLISECONDS)
-		void uninterruptibleMethod() {
-			new UninterruptibleInvocation(OS.WINDOWS.isCurrentOs() ? 500 : 50, MILLISECONDS).proceed();
+		void methodThatDoesNotThrowInterruptedException() {
+			new EventuallyInterruptibleInvocation().proceed();
 		}
 	}
 
@@ -438,7 +478,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@Timeout(value = 1, unit = NANOSECONDS)
 		void test() {
-			new UninterruptibleInvocation(10, MILLISECONDS).proceed();
+			new EventuallyInterruptibleInvocation().proceed();
 			throw new OutOfMemoryError();
 		}
 	}

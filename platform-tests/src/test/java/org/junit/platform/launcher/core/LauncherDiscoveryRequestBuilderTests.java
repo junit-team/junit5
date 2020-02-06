@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -22,7 +22,10 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectModul
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners.abortOnFailure;
+import static org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListeners.logging;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -314,6 +317,47 @@ class LauncherDiscoveryRequestBuilderTests {
 			assertThat(configParams.get("key1")).contains("value1");
 			assertThat(configParams.get("key2")).contains("value2");
 		}
+	}
+
+	@Nested
+	class DiscoveryListenerTests {
+
+		@Test
+		void usesAbortOnFailureByDefault() {
+			var request = request().build();
+
+			assertThat(request.getDiscoveryListener()).isEqualTo(abortOnFailure());
+		}
+
+		@Test
+		void onlyAddsAbortOnFailureOnce() {
+			var request = request() //
+					.listeners(abortOnFailure()) //
+					.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "abortOnFailure") //
+					.build();
+
+			assertThat(request.getDiscoveryListener()).isEqualTo(abortOnFailure());
+		}
+
+		@Test
+		void onlyAddsLoggingOnce() {
+			var request = request() //
+					.listeners(logging()) //
+					.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+					.build();
+
+			assertThat(request.getDiscoveryListener()).isEqualTo(logging());
+		}
+
+		@Test
+		void createsCompositeForMultipleListeners() {
+			var request = request() //
+					.listeners(logging(), abortOnFailure()) //
+					.build();
+
+			assertThat(request.getDiscoveryListener().getClass().getSimpleName()).startsWith("Composite");
+		}
+
 	}
 
 	private static class SampleTestClass {

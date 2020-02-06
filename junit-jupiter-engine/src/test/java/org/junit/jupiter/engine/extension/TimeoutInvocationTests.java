@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,7 +22,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeoutException;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 
 /**
@@ -34,11 +32,9 @@ class TimeoutInvocationTests {
 	@Test
 	void resetsInterruptFlag() {
 		var exception = assertThrows(TimeoutException.class, () -> withExecutor(executor -> {
-			var uninterruptibleInvocation = new UninterruptibleInvocation(OS.WINDOWS.isCurrentOs() ? 500 : 100,
-				MILLISECONDS);
+			var delegate = new EventuallyInterruptibleInvocation();
 			var duration = new TimeoutDuration(1, NANOSECONDS);
-			var timeoutInvocation = new TimeoutInvocation<>(uninterruptibleInvocation, duration, executor,
-				() -> "execution");
+			var timeoutInvocation = new TimeoutInvocation<>(delegate, duration, executor, () -> "execution");
 			timeoutInvocation.proceed();
 		}));
 		assertFalse(Thread.currentThread().isInterrupted());

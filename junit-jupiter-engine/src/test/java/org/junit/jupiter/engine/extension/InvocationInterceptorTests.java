@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
@@ -51,7 +52,7 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 	void failsTestWhenInterceptorChainDoesNotCallInvocation() {
 		var results = executeTestsForClass(InvocationIgnoringInterceptorTestCase.class);
 
-		var tests = results.tests().assertStatistics(stats -> stats.failed(1).succeeded(0));
+		var tests = results.testEvents().assertStatistics(stats -> stats.failed(1).succeeded(0));
 		tests.failed().assertEventsMatchExactly(
 			event(test("test"), finishedWithFailure(instanceOf(JUnitException.class),
 				message(it -> it.startsWith("Chain of InvocationInterceptors never called invocation")))));
@@ -74,10 +75,33 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void successTestWhenInterceptorChainSkippedInvocation() {
+		var results = executeTestsForClass(InvocationSkippedTestCase.class);
+
+		results.testEvents().assertStatistics(stats -> stats.failed(0).succeeded(1));
+	}
+
+	static class InvocationSkippedTestCase {
+		@RegisterExtension
+		Extension interceptor = new InvocationInterceptor() {
+			@Override
+			public void interceptTestMethod(Invocation<Void> invocation,
+					ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
+				invocation.skip();
+			}
+		};
+
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+	}
+
+	@Test
 	void failsTestWhenInterceptorChainCallsInvocationMoreThanOnce() {
 		var results = executeTestsForClass(DoubleInvocationInterceptorTestCase.class);
 
-		var tests = results.tests().assertStatistics(stats -> stats.failed(1).succeeded(0));
+		var tests = results.testEvents().assertStatistics(stats -> stats.failed(1).succeeded(0));
 		tests.failed().assertEventsMatchExactly(
 			event(test("test"), finishedWithFailure(instanceOf(JUnitException.class), message(it -> it.startsWith(
 				"Chain of InvocationInterceptors called invocation multiple times instead of just once")))));
@@ -105,7 +129,7 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 	Stream<DynamicTest> callsInterceptors() {
 		var results = executeTestsForClass(TestCaseWithThreeInterceptors.class);
 
-		results.tests().assertStatistics(stats -> stats.failed(0).succeeded(3));
+		results.testEvents().assertStatistics(stats -> stats.failed(0).succeeded(3));
 		return Arrays.stream(InvocationType.values()) //
 				.map(invocationType -> dynamicTest(invocationType.name(), () -> {
 					assertThat(getEvents(results, EnumSet.of(invocationType)).distinct()) //
@@ -115,7 +139,7 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private Stream<String> getEvents(EngineExecutionResults results, EnumSet<InvocationType> types) {
-		return results.all().reportingEntryPublished() //
+		return results.allEvents().reportingEntryPublished() //
 				.map(event -> event.getPayload(ReportEntry.class).orElseThrow()) //
 				.map(ReportEntry::getKeyValuePairs) //
 				.filter(map -> map.keySet().stream().map(InvocationType::valueOf).anyMatch(types::contains)) //

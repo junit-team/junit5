@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -15,6 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.engine.TestTag.create;
 import static org.junit.platform.launcher.tagexpression.TagExpressions.and;
+import static org.junit.platform.launcher.tagexpression.TagExpressions.any;
+import static org.junit.platform.launcher.tagexpression.TagExpressions.none;
 import static org.junit.platform.launcher.tagexpression.TagExpressions.not;
 import static org.junit.platform.launcher.tagexpression.TagExpressions.or;
 import static org.junit.platform.launcher.tagexpression.TagExpressions.tag;
@@ -60,8 +62,8 @@ class TagExpressionsTests {
 
 	@Test
 	void notEvaluation() {
-		assertThat(not(True).evaluate(anyTestTags())).isFalse();
-		assertThat(not(False).evaluate(anyTestTags())).isTrue();
+		assertThat(not(True).evaluate(emptyTestTags())).isFalse();
+		assertThat(not(False).evaluate(emptyTestTags())).isTrue();
 	}
 
 	@Test
@@ -71,9 +73,9 @@ class TagExpressionsTests {
 
 	@Test
 	void andEvaluation() {
-		assertThat(and(True, True).evaluate(anyTestTags())).isTrue();
-		assertThat(and(True, False).evaluate(anyTestTags())).isFalse();
-		assertThat(and(False, onEvaluateThrow("should not be evaluated")).evaluate(anyTestTags())).isFalse();
+		assertThat(and(True, True).evaluate(emptyTestTags())).isTrue();
+		assertThat(and(True, False).evaluate(emptyTestTags())).isFalse();
+		assertThat(and(False, onEvaluateThrow()).evaluate(emptyTestTags())).isFalse();
 	}
 
 	@Test
@@ -83,18 +85,30 @@ class TagExpressionsTests {
 
 	@Test
 	void orEvaluation() {
-		assertThat(or(False, False).evaluate(anyTestTags())).isFalse();
-		assertThat(or(True, onEvaluateThrow("should not be evaluated")).evaluate(anyTestTags())).isTrue();
-		assertThat(or(False, True).evaluate(anyTestTags())).isTrue();
+		assertThat(or(False, False).evaluate(emptyTestTags())).isFalse();
+		assertThat(or(True, onEvaluateThrow()).evaluate(emptyTestTags())).isTrue();
+		assertThat(or(False, True).evaluate(emptyTestTags())).isTrue();
 	}
 
-	private TagExpression onEvaluateThrow(String message) {
+	@Test
+	void anyEvaluation() {
+		assertThat(any().evaluate(emptyTestTags())).isFalse();
+		assertThat(any().evaluate(Set.of(TestTag.create("foo")))).isTrue();
+	}
+
+	@Test
+	void noneEvaluation() {
+		assertThat(none().evaluate(emptyTestTags())).isTrue();
+		assertThat(none().evaluate(Set.of(TestTag.create("foo")))).isFalse();
+	}
+
+	private TagExpression onEvaluateThrow() {
 		return tags -> {
-			throw new RuntimeException(message);
+			throw new RuntimeException("should not be evaluated");
 		};
 	}
 
-	private static Set<TestTag> anyTestTags() {
+	private static Set<TestTag> emptyTestTags() {
 		return Collections.emptySet();
 	}
 }

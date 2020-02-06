@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -25,14 +25,19 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.MonthDay;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
+import java.time.Period;
 import java.time.Year;
 import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Currency;
@@ -185,18 +190,23 @@ public class DefaultArgumentConverter extends SimpleArgumentConverter {
 
 	private static class StringToJavaTimeConverter implements StringToObjectConverter {
 
-		private static final Map<Class<?>, Function<CharSequence, ?>> CONVERTERS;
+		private static final Map<Class<?>, Function<String, ?>> CONVERTERS;
 		static {
-			Map<Class<?>, Function<CharSequence, ?>> converters = new HashMap<>();
+			Map<Class<?>, Function<String, ?>> converters = new HashMap<>();
+			converters.put(Duration.class, Duration::parse);
 			converters.put(Instant.class, Instant::parse);
 			converters.put(LocalDate.class, LocalDate::parse);
 			converters.put(LocalDateTime.class, LocalDateTime::parse);
 			converters.put(LocalTime.class, LocalTime::parse);
+			converters.put(MonthDay.class, MonthDay::parse);
 			converters.put(OffsetDateTime.class, OffsetDateTime::parse);
 			converters.put(OffsetTime.class, OffsetTime::parse);
+			converters.put(Period.class, Period::parse);
 			converters.put(Year.class, Year::parse);
 			converters.put(YearMonth.class, YearMonth::parse);
 			converters.put(ZonedDateTime.class, ZonedDateTime::parse);
+			converters.put(ZoneId.class, ZoneId::of);
+			converters.put(ZoneOffset.class, ZoneOffset::of);
 			CONVERTERS = Collections.unmodifiableMap(converters);
 		}
 

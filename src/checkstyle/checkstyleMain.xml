@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+<!DOCTYPE module PUBLIC "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN" "https://checkstyle.org/dtds/configuration_1_3.dtd">
 <module name="Checker">
 	<property name="severity" value="error" />
-	<module name="TreeWalker">
-		<module name="SuppressWarningsHolder" />
 
+	<module name="TreeWalker">
+		<module name="SuppressWarningsHolder" />	
 		<module name="JavadocMethod">
-			<property name="allowMissingJavadoc" value="true" />
 			<property name="allowMissingParamTags" value="true" />
 			<property name="allowMissingReturnTag" value="true" />
 			<property name="allowMissingThrowsTags" value="true" />
@@ -17,21 +16,22 @@
 			<property name="tagOrder" value="@param, @return, @throws, @exception, @since, @see" />
 		</module>
 		<module name="NonEmptyAtclauseDescription" />
-
 		<module name="UnusedImports">
 			<property name="processJavadoc" value="true" />
 		</module>
 		<module name="AvoidStarImport"/>
-
 	</module>
 
 	<module name="JavadocPackage" />
+
 	<module name="SuppressWarningsFilter" />
+
 	<module name="RegexpSingleline">
 		<property name="format" value="@author" />
 		<property name="message" value="Don't use Javadoc @author tags" />
 		<property name="fileExtensions" value="java,groovy,kt" />
 	</module>
+
 	<module name="SuppressionFilter">
 		<property name="file" value="${config_loc}/suppressions.xml"/>
 	</module>

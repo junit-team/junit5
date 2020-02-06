@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	kotlin("jvm") version "1.3.10"
+	kotlin("jvm") version "1.3.61"
 }
 
 repositories {
@@ -17,8 +17,8 @@ project.buildDir = file("bin")
 val jupiterVersion = System.getenv("JUNIT_JUPITER_VERSION")
 
 dependencies {
-	testCompile(kotlin("stdlib-jdk8"))
-	testCompile("org.junit.jupiter:junit-jupiter:$jupiterVersion")
+	testImplementation(kotlin("stdlib-jdk8"))
+	testImplementation("org.junit.jupiter:junit-jupiter:$jupiterVersion")
 }
 
 tasks.withType<KotlinCompile>().configureEach {
@@ -29,7 +29,7 @@ tasks.withType<KotlinCompile>().configureEach {
 	}
 }
 
-tasks.withType<Test>().configureEach {
+tasks.test {
 	useJUnitPlatform()
 	testLogging {
 		events("passed", "skipped", "failed")

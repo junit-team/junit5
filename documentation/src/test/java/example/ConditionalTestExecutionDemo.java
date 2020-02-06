@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,9 +10,8 @@
 
 package example;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.condition.JRE.JAVA_10;
+import static org.junit.jupiter.api.condition.JRE.JAVA_11;
 import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.jupiter.api.condition.JRE.JAVA_9;
 import static org.junit.jupiter.api.condition.OS.LINUX;
@@ -23,16 +22,14 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.time.LocalDate;
 
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIf;
+import org.junit.jupiter.api.condition.DisabledForJreRange;
 import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.DisabledOnJre;
 import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.EnabledIf;
+import org.junit.jupiter.api.condition.EnabledForJreRange;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledOnJre;
@@ -86,8 +83,44 @@ class ConditionalTestExecutionDemo {
 	}
 
 	@Test
+	@EnabledForJreRange(min = JAVA_9, max = JAVA_11)
+	void fromJava9to11() {
+		// ...
+	}
+
+	@Test
+	@EnabledForJreRange(min = JAVA_9)
+	void fromJava9toCurrentJavaFeatureNumber() {
+		// ...
+	}
+
+	@Test
+	@EnabledForJreRange(max = JAVA_11)
+	void fromJava8To11() {
+		// ...
+	}
+
+	@Test
 	@DisabledOnJre(JAVA_9)
 	void notOnJava9() {
+		// ...
+	}
+
+	@Test
+	@DisabledForJreRange(min = JAVA_9, max = JAVA_11)
+	void notFromJava9to11() {
+		// ...
+	}
+
+	@Test
+	@DisabledForJreRange(min = JAVA_9)
+	void notFromJava9toCurrentJavaFeatureNumber() {
+		// ...
+	}
+
+	@Test
+	@DisabledForJreRange(max = JAVA_11)
+	void notFromJava8to11() {
 		// ...
 	}
 	// end::user_guide_jre[]
@@ -119,54 +152,5 @@ class ConditionalTestExecutionDemo {
 		// ...
 	}
 	// end::user_guide_environment_variable[]
-
-	// tag::user_guide_scripts[]
-	@Test // Static JavaScript expression.
-	@EnabledIf("2 * 3 == 6")
-	void willBeExecuted() {
-		// ...
-	}
-
-	@RepeatedTest(10) // Dynamic JavaScript expression.
-	@DisabledIf("Math.random() < 0.314159")
-	void mightNotBeExecuted() {
-		// ...
-	}
-
-	@Test // Regular expression testing bound system property.
-	@DisabledIf("/32/.test(systemProperty.get('os.arch'))")
-	void disabledOn32BitArchitectures() {
-		assertFalse(System.getProperty("os.arch").contains("32"));
-	}
-
-	@Test
-	@EnabledIf("'CI' == systemEnvironment.get('ENV')")
-	void onlyOnCiServer() {
-		assertTrue("CI".equals(System.getenv("ENV")));
-	}
-
-	@Test // Multi-line script, custom engine name and custom reason.
-	// end::user_guide_scripts[]
-	// @formatter:off
-	// tag::user_guide_scripts[]
-	@EnabledIf(value = {
-					"load('nashorn:mozilla_compat.js')",
-					"importPackage(java.time)",
-					"",
-					"var today = LocalDate.now()",
-					"var tomorrow = today.plusDays(1)",
-					"tomorrow.isAfter(today)"
-				},
-				engine = "nashorn",
-				reason = "Self-fulfilling: {result}")
-	// end::user_guide_scripts[]
-	// @formatter:on
-	// tag::user_guide_scripts[]
-	void theDayAfterTomorrow() {
-		LocalDate today = LocalDate.now();
-		LocalDate tomorrow = today.plusDays(1);
-		assertTrue(tomorrow.isAfter(today));
-	}
-	// end::user_guide_scripts[]
 
 }

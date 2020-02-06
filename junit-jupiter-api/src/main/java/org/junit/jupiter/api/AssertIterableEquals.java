@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -64,7 +64,7 @@ class AssertIterableEquals {
 			Object expectedElement = expectedIterator.next();
 			Object actualElement = actualIterator.next();
 
-			if (expectedElement == actualElement) {
+			if (Objects.equals(expectedElement, actualElement)) {
 				continue;
 			}
 

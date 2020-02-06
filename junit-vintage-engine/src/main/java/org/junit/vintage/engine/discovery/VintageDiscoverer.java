@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -17,9 +17,10 @@ import org.junit.platform.commons.util.ClassFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
+import org.junit.vintage.engine.descriptor.TestSourceProvider;
+import org.junit.vintage.engine.descriptor.VintageEngineDescriptor;
 
 /**
  * @since 4.12
@@ -37,10 +38,11 @@ public class VintageDiscoverer {
 			.build();
 	// @formatter:on
 
-	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		EngineDescriptor engineDescriptor = new EngineDescriptor(uniqueId, "JUnit Vintage");
+	public VintageEngineDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+		TestSourceProvider testSourceProvider = new TestSourceProvider();
+		VintageEngineDescriptor engineDescriptor = new VintageEngineDescriptor(uniqueId, testSourceProvider);
 		resolver.resolve(discoveryRequest, engineDescriptor);
-		RunnerTestDescriptorPostProcessor postProcessor = new RunnerTestDescriptorPostProcessor();
+		RunnerTestDescriptorPostProcessor postProcessor = new RunnerTestDescriptorPostProcessor(testSourceProvider);
 		// @formatter:off
 		engineDescriptor.getChildren().stream()
 				.filter(RunnerTestDescriptor.class::isInstance)

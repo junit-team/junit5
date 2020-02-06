@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -49,11 +49,11 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 	void executeAllTestsInClass() {
 		EngineExecutionResults executionResults = executeTestsForClass(LocalTestCase.class);
 
-		assertEquals(6, executionResults.tests().started().count(), "# tests started");
-		assertEquals(3, executionResults.tests().succeeded().count(), "# tests succeeded");
-		assertEquals(0, executionResults.tests().skipped().count(), "# tests skipped");
-		assertEquals(1, executionResults.tests().aborted().count(), "# tests aborted");
-		assertEquals(2, executionResults.tests().failed().count(), "# tests failed");
+		assertEquals(6, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(3, executionResults.testEvents().succeeded().count(), "# tests succeeded");
+		assertEquals(0, executionResults.testEvents().skipped().count(), "# tests skipped");
+		assertEquals(1, executionResults.testEvents().aborted().count(), "# tests aborted");
+		assertEquals(2, executionResults.testEvents().failed().count(), "# tests failed");
 
 		assertEquals(6, LocalTestCase.countBeforeInvoked, "# before calls");
 		assertEquals(6, LocalTestCase.countAfterInvoked, "# after calls");
@@ -65,22 +65,22 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 	void executeSingleTest() {
 		EngineExecutionResults executionResults = executeTests(selectMethod(LocalTestCase.class, "alwaysPasses"));
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded");
-		assertEquals(0, executionResults.tests().skipped().count(), "# tests skipped");
-		assertEquals(0, executionResults.tests().aborted().count(), "# tests aborted");
-		assertEquals(0, executionResults.tests().failed().count(), "# tests failed");
+		assertEquals(1, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(1, executionResults.testEvents().succeeded().count(), "# tests succeeded");
+		assertEquals(0, executionResults.testEvents().skipped().count(), "# tests skipped");
+		assertEquals(0, executionResults.testEvents().aborted().count(), "# tests aborted");
+		assertEquals(0, executionResults.testEvents().failed().count(), "# tests failed");
 	}
 
 	@Test
 	void executeTestDeclaredInSuperClass() {
 		EngineExecutionResults executionResults = executeTests(selectMethod(LocalTestCase.class, "superTest"));
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded");
-		assertEquals(0, executionResults.tests().skipped().count(), "# tests skipped");
-		assertEquals(0, executionResults.tests().aborted().count(), "# tests aborted");
-		assertEquals(0, executionResults.tests().failed().count(), "# tests failed");
+		assertEquals(1, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(1, executionResults.testEvents().succeeded().count(), "# tests succeeded");
+		assertEquals(0, executionResults.testEvents().skipped().count(), "# tests skipped");
+		assertEquals(0, executionResults.testEvents().aborted().count(), "# tests aborted");
+		assertEquals(0, executionResults.testEvents().failed().count(), "# tests failed");
 
 		assertEquals(1, LocalTestCase.countBeforeInvoked, "# after calls");
 		assertEquals(1, LocalTestCase.countAfterInvoked, "# after calls");
@@ -94,11 +94,11 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 		EngineExecutionResults executionResults = executeTests(
 			selectMethod(LocalTestCase.class, "throwExceptionInAfterMethod"));
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(0, executionResults.tests().succeeded().count(), "# tests succeeded");
-		assertEquals(0, executionResults.tests().skipped().count(), "# tests skipped");
-		assertEquals(0, executionResults.tests().aborted().count(), "# tests aborted");
-		assertEquals(1, executionResults.tests().failed().count(), "# tests failed");
+		assertEquals(1, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(0, executionResults.testEvents().succeeded().count(), "# tests succeeded");
+		assertEquals(0, executionResults.testEvents().skipped().count(), "# tests skipped");
+		assertEquals(0, executionResults.testEvents().aborted().count(), "# tests aborted");
+		assertEquals(1, executionResults.testEvents().failed().count(), "# tests failed");
 	}
 
 	@Test
@@ -107,11 +107,11 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 
 		// @formatter:off
 		assertAll(
-			() -> assertEquals(1, executionResults.tests().started().count(), "# tests started"),
-			() -> assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded"),
-			() -> assertEquals(0, executionResults.tests().skipped().count(), "# tests skipped"),
-			() -> assertEquals(0, executionResults.tests().aborted().count(), "# tests aborted"),
-			() -> assertEquals(0, executionResults.tests().failed().count(), "# tests failed")
+			() -> assertEquals(1, executionResults.testEvents().started().count(), "# tests started"),
+			() -> assertEquals(1, executionResults.testEvents().succeeded().count(), "# tests succeeded"),
+			() -> assertEquals(0, executionResults.testEvents().skipped().count(), "# tests skipped"),
+			() -> assertEquals(0, executionResults.testEvents().aborted().count(), "# tests aborted"),
+			() -> assertEquals(0, executionResults.testEvents().failed().count(), "# tests failed")
 		);
 		// @formatter:on
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -16,15 +16,16 @@ import org.apiguardian.api.API;
 
 /**
  * {@code AfterEachCallback} defines the API for {@link Extension Extensions}
- * that wish to provide additional behavior to tests after each test method
- * has been invoked.
+ * that wish to provide additional behavior to tests after an individual test
+ * and any user-defined teardown methods (e.g.,
+ * {@link org.junit.jupiter.api.AfterEach @AfterEach} methods) for that test
+ * have been executed.
  *
- * <p>In this context, the term <em>test</em> refers to the actual test method
- * plus any user defined teardown methods (e.g.,
- * {@link org.junit.jupiter.api.AfterEach @AfterEach} methods).
- *
- * <p>Concrete implementations often implement {@link BeforeEachCallback}
- * as well.
+ * <p>Concrete implementations often implement {@link BeforeEachCallback} as well.
+ * If you do not wish to have your callbacks <em>wrapped</em> around user-defined
+ * setup and teardown methods, implement {@link BeforeTestExecutionCallback} and
+ * {@link AfterTestExecutionCallback} instead of {@link BeforeEachCallback} and
+ * {@link AfterEachCallback}.
  *
  * <h3>Constructor Requirements</h3>
  *
@@ -62,7 +63,8 @@ import org.apiguardian.api.API;
 public interface AfterEachCallback extends Extension {
 
 	/**
-	 * Callback that is invoked <em>after</em> each test has been invoked.
+	 * Callback that is invoked <em>after</em> an individual test and any
+	 * user-defined teardown methods for that test have been executed.
 	 *
 	 * @param context the current extension context; never {@code null}
 	 */

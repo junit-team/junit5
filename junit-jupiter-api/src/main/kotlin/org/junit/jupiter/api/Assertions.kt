@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -11,13 +11,13 @@
 
 package org.junit.jupiter.api
 
+import java.time.Duration
+import java.util.function.Supplier
+import java.util.stream.Stream
 import org.apiguardian.api.API
 import org.apiguardian.api.API.Status.EXPERIMENTAL
 import org.junit.jupiter.api.function.Executable
 import org.junit.jupiter.api.function.ThrowingSupplier
-import java.time.Duration
-import java.util.function.Supplier
-import java.util.stream.Stream
 
 /**
  * @see Assertions.fail

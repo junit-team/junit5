@@ -9,26 +9,32 @@ javaLibrary {
 }
 
 dependencies {
-	implementation("de.sormuras:bartholdy:${Versions.bartholdy}") {
+	internal(platform(project(":dependencies")))
+
+	implementation("de.sormuras:bartholdy") {
 		because("manage external tool installations")
 	}
-	implementation("commons-io:commons-io:${Versions.commonsIo}") {
+	implementation("commons-io:commons-io") {
 		because("moving/deleting directory trees")
 	}
 
-	testImplementation("org.assertj:assertj-core:${Versions.assertJ}") {
+	testImplementation("org.assertj:assertj-core") {
 		because("more assertions")
 	}
-	testImplementation("com.tngtech.archunit:archunit-junit5-api:${Versions.archunit}") {
+	testImplementation("com.tngtech.archunit:archunit-junit5-api") {
 		because("checking the architecture of JUnit 5")
 	}
-	testImplementation("org.codehaus.groovy:groovy-all:${Versions.groovy}") {
+	testImplementation("org.codehaus.groovy:groovy-all") {
 		because("it provides convenience methods to handle process output")
+		exclude(group = "org.junit.platform", module = "junit-platform-launcher")
 	}
-	testRuntimeOnly("com.tngtech.archunit:archunit-junit5-engine:${Versions.archunit}") {
+	testImplementation("biz.aQute.bnd:biz.aQute.bndlib:${Versions.bnd}") {
+		because("parsing OSGi metadata")
+	}
+	testRuntimeOnly("com.tngtech.archunit:archunit-junit5-engine") {
 		because("contains the ArchUnit TestEngine implementation")
 	}
-	testRuntimeOnly("org.slf4j:slf4j-jdk14:${Versions.slf4j}") {
+	testRuntimeOnly("org.slf4j:slf4j-jdk14") {
 		because("provide appropriate SLF4J binding")
 	}
 }
@@ -45,13 +51,13 @@ tasks.test {
 	if (enabled) {
 		// All maven-aware projects must be installed, i.e. published to the local repository
 		val mavenizedProjects: List<Project> by rootProject.extra
-		mavenizedProjects
+		(mavenizedProjects + project(":junit-bom"))
 				.map { project -> project.tasks.named(MavenPublishPlugin.PUBLISH_LOCAL_LIFECYCLE_TASK_NAME)}
 				.forEach { dependsOn(it) }
 		// Pass "java.home.N" system properties from sources like "~/.gradle/gradle.properties".
 		// Values will be picked up by: platform.tooling.support.Helper::getJavaHome
 		for (N in 8..99) {
-			val home = project.properties["java.home.$N"]
+			val home = project.properties["java.home.$N"] ?: System.getenv("JDK$N")
 			if (home != null) systemProperty("java.home.$N", home)
 		}
 		// TODO Enabling parallel execution fails due to Gradle's listener not being thread-safe:
@@ -70,4 +76,10 @@ tasks.test {
 		// Include only tests from this module
 		includeTestsMatching("platform.tooling.support.*")
 	}
+
+	(options as JUnitPlatformOptions).apply {
+		includeEngines("archunit")
+	}
+
+	maxParallelForks = 1 // Bartholdy.install is not parallel safe, see https://github.com/sormuras/bartholdy/issues/4
 }

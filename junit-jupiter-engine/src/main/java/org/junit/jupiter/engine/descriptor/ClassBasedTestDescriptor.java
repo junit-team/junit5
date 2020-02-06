@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -42,6 +42,7 @@ import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import org.junit.jupiter.api.extension.TestInstancePreDestroyCallback;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.junit.jupiter.api.function.Executable;
@@ -54,7 +55,9 @@ import org.junit.jupiter.engine.execution.ExecutableInvoker.ReflectiveIntercepto
 import org.junit.jupiter.engine.execution.ExecutableInvoker.ReflectiveInterceptorCall.VoidMethodInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.TestInstancesProvider;
+import org.junit.jupiter.engine.extension.ExtensionRegistrar;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -102,6 +105,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		return this.testClass;
 	}
 
+	public abstract List<Class<?>> getEnclosingTestClasses();
+
 	@Override
 	public Type getType() {
 		return Type.CONTAINER;
@@ -135,7 +140,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
-		ExtensionRegistry registry = populateNewExtensionRegistryFromExtendWithAnnotation(
+		MutableExtensionRegistry registry = populateNewExtensionRegistryFromExtendWithAnnotation(
 			context.getExtensionRegistry(), this.testClass);
 
 		// Register extensions from static fields here, at the class level but
@@ -159,7 +164,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 
 		// @formatter:off
 		return context.extend()
-				.withTestInstancesProvider(testInstancesProvider(context, registry, extensionContext))
+				.withTestInstancesProvider(testInstancesProvider(context, extensionContext))
 				.withExtensionRegistry(registry)
 				.withExtensionContext(extensionContext)
 				.withThrowableCollector(throwableCollector)
@@ -171,13 +176,12 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) {
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		Lifecycle lifecycle = context.getExtensionContext().getTestInstanceLifecycle().orElse(Lifecycle.PER_METHOD);
-		if (lifecycle == Lifecycle.PER_CLASS) {
+		if (isPerClassLifecycle(context)) {
 			// Eagerly load test instance for BeforeAllCallbacks, if necessary,
 			// and store the instance in the ExtensionContext.
 			ClassExtensionContext extensionContext = (ClassExtensionContext) context.getExtensionContext();
 			throwableCollector.execute(() -> extensionContext.setTestInstances(
-				context.getTestInstancesProvider().getTestInstances(Optional.empty())));
+				context.getTestInstancesProvider().getTestInstances(context.getExtensionRegistry())));
 		}
 
 		if (throwableCollector.isEmpty()) {
@@ -207,6 +211,10 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 
 		if (context.beforeAllCallbacksExecuted()) {
 			invokeAfterAllCallbacks(context);
+		}
+
+		if (isPerClassLifecycle(context)) {
+			invokeTestInstancePreDestroyCallback(context);
 		}
 
 		// If the previous Throwable was not null when this method was called,
@@ -242,29 +250,26 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private TestInstancesProvider testInstancesProvider(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionRegistry registry, ClassExtensionContext extensionContext) {
+			ClassExtensionContext extensionContext) {
 
-		TestInstancesProvider testInstancesProvider = childRegistry -> instantiateAndPostProcessTestInstance(
-			parentExecutionContext, extensionContext, childRegistry.orElse(registry));
-
-		return childRegistry -> extensionContext.getTestInstances().orElseGet(
-			() -> testInstancesProvider.getTestInstances(childRegistry));
+		return (registry, registrar) -> extensionContext.getTestInstances().orElseGet(
+			() -> instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry, registrar));
 	}
 
 	private TestInstances instantiateAndPostProcessTestInstance(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionContext extensionContext, ExtensionRegistry registry) {
+			ExtensionContext extensionContext, ExtensionRegistry registry, ExtensionRegistrar registrar) {
 
-		TestInstances instances = instantiateTestClass(parentExecutionContext, registry, extensionContext);
+		TestInstances instances = instantiateTestClass(parentExecutionContext, registry, registrar, extensionContext);
 		invokeTestInstancePostProcessors(instances.getInnermostInstance(), registry, extensionContext);
 		// In addition, we register extensions from instance fields here since the
 		// best time to do that is immediately following test class instantiation
 		// and post processing.
-		registerExtensionsFromFields(registry, this.testClass, instances.getInnermostInstance());
+		registerExtensionsFromFields(registrar, this.testClass, instances.getInnermostInstance());
 		return instances;
 	}
 
 	protected abstract TestInstances instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionRegistry registry, ExtensionContext extensionContext);
+			ExtensionRegistry registry, ExtensionRegistrar registrar, ExtensionContext extensionContext);
 
 	protected TestInstances instantiateTestClass(Optional<TestInstances> outerInstances, ExtensionRegistry registry,
 			ExtensionContext extensionContext) {
@@ -420,12 +425,25 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 				.forEach(extension -> throwableCollector.execute(() -> extension.afterAll(extensionContext)));
 	}
 
-	private void registerBeforeEachMethodAdapters(ExtensionRegistry registry) {
-		List<Method> beforeEachMethods = findBeforeEachMethods(this.testClass);
-		registerMethodsAsExtensions(beforeEachMethods, registry, this::synthesizeBeforeEachMethodAdapter);
+	private void invokeTestInstancePreDestroyCallback(JupiterEngineExecutionContext context) {
+		ExtensionContext extensionContext = context.getExtensionContext();
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
+
+		context.getExtensionRegistry().stream(TestInstancePreDestroyCallback.class).forEach(
+			extension -> throwableCollector.execute(() -> extension.preDestroyTestInstance(extensionContext)));
 	}
 
-	private void registerAfterEachMethodAdapters(ExtensionRegistry registry) {
+	private boolean isPerClassLifecycle(JupiterEngineExecutionContext context) {
+		return context.getExtensionContext().getTestInstanceLifecycle().orElse(
+			Lifecycle.PER_METHOD) == Lifecycle.PER_CLASS;
+	}
+
+	private void registerBeforeEachMethodAdapters(ExtensionRegistrar registrar) {
+		List<Method> beforeEachMethods = findBeforeEachMethods(this.testClass);
+		registerMethodsAsExtensions(beforeEachMethods, registrar, this::synthesizeBeforeEachMethodAdapter);
+	}
+
+	private void registerAfterEachMethodAdapters(ExtensionRegistrar registrar) {
 		// Make a local copy since findAfterEachMethods() returns an immutable list.
 		List<Method> afterEachMethods = new ArrayList<>(findAfterEachMethods(this.testClass));
 
@@ -435,13 +453,13 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		// we register them as synthesized extensions.
 		Collections.reverse(afterEachMethods);
 
-		registerMethodsAsExtensions(afterEachMethods, registry, this::synthesizeAfterEachMethodAdapter);
+		registerMethodsAsExtensions(afterEachMethods, registrar, this::synthesizeAfterEachMethodAdapter);
 	}
 
-	private void registerMethodsAsExtensions(List<Method> methods, ExtensionRegistry registry,
+	private void registerMethodsAsExtensions(List<Method> methods, ExtensionRegistrar registrar,
 			Function<Method, Extension> extensionSynthesizer) {
 
-		methods.forEach(method -> registry.registerExtension(extensionSynthesizer.apply(method), method));
+		methods.forEach(method -> registrar.registerExtension(extensionSynthesizer.apply(method), method));
 	}
 
 	private BeforeEachMethodAdapter synthesizeBeforeEachMethodAdapter(Method method) {

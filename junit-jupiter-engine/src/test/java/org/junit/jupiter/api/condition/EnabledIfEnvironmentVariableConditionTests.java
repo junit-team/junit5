@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -12,8 +12,10 @@ package org.junit.jupiter.api.condition;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.condition.EnabledIfEnvironmentVariableIntegrationTests.BOGUS;
 import static org.junit.jupiter.api.condition.EnabledIfEnvironmentVariableIntegrationTests.ENIGMA;
-import static org.junit.jupiter.api.condition.EnabledIfEnvironmentVariableIntegrationTests.KEY;
+import static org.junit.jupiter.api.condition.EnabledIfEnvironmentVariableIntegrationTests.KEY1;
+import static org.junit.jupiter.api.condition.EnabledIfEnvironmentVariableIntegrationTests.KEY2;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExecutionCondition;
@@ -32,11 +34,11 @@ class EnabledIfEnvironmentVariableConditionTests extends AbstractExecutionCondit
 	/**
 	 * Stubbed subclass of {@link EnabledIfEnvironmentVariableCondition}.
 	 */
-	private static final ExecutionCondition condition = new EnabledIfEnvironmentVariableCondition() {
+	private ExecutionCondition condition = new EnabledIfEnvironmentVariableCondition() {
 
 		@Override
 		protected String getEnvironmentVariable(String name) {
-			return KEY.equals(name) ? ENIGMA : null;
+			return KEY1.equals(name) ? ENIGMA : null;
 		}
 	};
 
@@ -57,7 +59,8 @@ class EnabledIfEnvironmentVariableConditionTests extends AbstractExecutionCondit
 	void enabledBecauseAnnotationIsNotPresent() {
 		evaluateCondition();
 		assertEnabled();
-		assertReasonContains("@EnabledIfEnvironmentVariable is not present");
+		assertReasonContains(
+			"No @EnabledIfEnvironmentVariable conditions resulting in 'disabled' execution encountered");
 	}
 
 	/**
@@ -85,7 +88,27 @@ class EnabledIfEnvironmentVariableConditionTests extends AbstractExecutionCondit
 	void enabledBecauseEnvironmentVariableMatchesExactly() {
 		evaluateCondition();
 		assertEnabled();
-		assertReasonContains("matches regular expression");
+		assertReasonContains(
+			"No @EnabledIfEnvironmentVariable conditions resulting in 'disabled' execution encountered");
+	}
+
+	/**
+	 * @see EnabledIfEnvironmentVariableIntegrationTests#enabledBecauseBothEnvironmentVariablesMatchExactly()
+	 */
+	@Test
+	void enabledBecauseBothEnvironmentVariablesMatchExactly() {
+		this.condition = new EnabledIfEnvironmentVariableCondition() {
+
+			@Override
+			protected String getEnvironmentVariable(String name) {
+				return KEY1.equals(name) || KEY2.equals(name) ? ENIGMA : null;
+			}
+		};
+
+		evaluateCondition();
+		assertEnabled();
+		assertReasonContains(
+			"No @EnabledIfEnvironmentVariable conditions resulting in 'disabled' execution encountered");
 	}
 
 	/**
@@ -95,7 +118,8 @@ class EnabledIfEnvironmentVariableConditionTests extends AbstractExecutionCondit
 	void enabledBecauseEnvironmentVariableMatchesPattern() {
 		evaluateCondition();
 		assertEnabled();
-		assertReasonContains("matches regular expression");
+		assertReasonContains(
+			"No @EnabledIfEnvironmentVariable conditions resulting in 'disabled' execution encountered");
 	}
 
 	/**
@@ -103,6 +127,24 @@ class EnabledIfEnvironmentVariableConditionTests extends AbstractExecutionCondit
 	 */
 	@Test
 	void disabledBecauseEnvironmentVariableDoesNotMatch() {
+		evaluateCondition();
+		assertDisabled();
+		assertReasonContains("does not match regular expression");
+	}
+
+	/**
+	 * @see EnabledIfEnvironmentVariableIntegrationTests#disabledBecauseEnvironmentVariableForComposedAnnotationDoesNotMatch()
+	 */
+	@Test
+	void disabledBecauseEnvironmentVariableForComposedAnnotationDoesNotMatch() {
+		this.condition = new EnabledIfEnvironmentVariableCondition() {
+
+			@Override
+			protected String getEnvironmentVariable(String name) {
+				return KEY1.equals(name) ? ENIGMA : KEY2.equals(name) ? BOGUS : null;
+			}
+		};
+
 		evaluateCondition();
 		assertDisabled();
 		assertReasonContains("does not match regular expression");

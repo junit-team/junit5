@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -8,9 +8,14 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+/**
+ * Common APIs and support utilities for the JUnit Platform.
+ *
+ * @since 1.0
+ */
 module org.junit.platform.commons {
-	requires java.compiler; // usage of `javax.lang.model.SourceVersion` in `PackageUtils`
-	requires java.logging; // TODO Is "requires transitive java.logging" needed here?
+	requires java.logging;
+	requires java.management; // needed by RuntimeUtils to determine input arguments
 	requires transitive org.apiguardian.api;
 
 	exports org.junit.platform.commons;

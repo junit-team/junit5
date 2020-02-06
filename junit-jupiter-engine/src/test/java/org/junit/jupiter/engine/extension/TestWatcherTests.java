@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -40,8 +40,8 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
+import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.LogRecordListener;
@@ -75,8 +75,9 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	void testWatcherIsInvokedForRepeatedTestMethods() {
 		EngineExecutionResults results = executeTestsForClass(TrackingTestWatcherRepeatedTestMethodsTestCase.class);
 
-		results.containers().assertStatistics(stats -> stats.skipped(1).started(5).succeeded(5).aborted(0).failed(0));
-		results.tests().assertStatistics(
+		results.containerEvents().assertStatistics(
+			stats -> stats.skipped(1).started(5).succeeded(5).aborted(0).failed(0));
+		results.testEvents().assertStatistics(
 			stats -> stats.dynamicallyRegistered(6).skipped(0).started(6).succeeded(2).aborted(2).failed(2));
 
 		ArrayList<String> expectedMethods = new ArrayList<>(testWatcherMethodNames);
@@ -91,8 +92,9 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	void testWatcherIsNotInvokedForTestFactoryMethods() {
 		EngineExecutionResults results = executeTestsForClass(TrackingTestWatcherTestFactoryMethodsTestCase.class);
 
-		results.containers().assertStatistics(stats -> stats.skipped(1).started(5).succeeded(5).aborted(0).failed(0));
-		results.tests().assertStatistics(
+		results.containerEvents().assertStatistics(
+			stats -> stats.skipped(1).started(5).succeeded(5).aborted(0).failed(0));
+		results.testEvents().assertStatistics(
 			stats -> stats.dynamicallyRegistered(6).skipped(0).started(6).succeeded(2).aborted(2).failed(2));
 
 		// There should be zero results, since the TestWatcher API is not supported for @TestFactory containers.
@@ -118,14 +120,14 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void testWatcherInvokedForTestMethodsInTestCaseWithProblematicConstructor() {
 		EngineExecutionResults results = executeTestsForClass(ProblematicConstructorTestCase.class);
-		results.tests().assertStatistics(stats -> stats.skipped(0).started(8).succeeded(0).aborted(0).failed(8));
+		results.testEvents().assertStatistics(stats -> stats.skipped(0).started(8).succeeded(0).aborted(0).failed(8));
 		assertThat(TrackingTestWatcher.results.keySet()).containsExactly("testFailed");
 		assertThat(TrackingTestWatcher.results.get("testFailed")).hasSize(8);
 	}
 
 	private void assertCommonStatistics(EngineExecutionResults results) {
-		results.containers().assertStatistics(stats -> stats.started(3).succeeded(3).failed(0));
-		results.tests().assertStatistics(stats -> stats.skipped(2).started(6).succeeded(2).aborted(2).failed(2));
+		results.containerEvents().assertStatistics(stats -> stats.started(3).succeeded(3).failed(0));
+		results.testEvents().assertStatistics(stats -> stats.skipped(2).started(6).succeeded(2).aborted(2).failed(2));
 	}
 
 	// -------------------------------------------------------------------------

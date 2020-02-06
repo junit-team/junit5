@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -27,6 +27,17 @@ class MavenPomFileTests {
 	void jupiterAggregatorPomDependencies() throws Exception {
 
 		var expected = List.of(">> HEAD >>", //
+			"  <dependencyManagement>", //
+			"    <dependencies>", //
+			"      <dependency>", //
+			"        <groupId>org.junit</groupId>", //
+			"        <artifactId>junit-bom</artifactId>", //
+			">> VERSION >>", //
+			"        <type>pom</type>", //
+			"        <scope>import</scope>", //
+			"      </dependency>", //
+			"    </dependencies>", //
+			"  </dependencyManagement>", //
 			"  <dependencies>", //
 			"    <dependency>", //
 			"      <groupId>org.junit.jupiter</groupId>", //
@@ -47,6 +58,19 @@ class MavenPomFileTests {
 			"      <scope>runtime</scope>", //
 			"    </dependency>", //
 			"  </dependencies>", //
+			">> TAIL >>");
+
+		System.out.println(Path.of(".").toAbsolutePath().normalize());
+
+		assertLinesMatch(expected,
+			Files.readAllLines(Path.of("../junit-jupiter/build/publications/maven/pom-default.xml")));
+	}
+
+	@Test
+	void jupiterAggregatorGradleMetadataMarker() throws Exception {
+
+		var expected = List.of(">> HEAD >>", //
+			"  <!-- do_not_remove: published-with-gradle-metadata -->", //
 			">> TAIL >>");
 
 		System.out.println(Path.of(".").toAbsolutePath().normalize());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -17,8 +17,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,8 +31,8 @@ import org.junit.platform.console.options.CommandLineOptionsParser;
  */
 class ConsoleLauncherTests {
 
-	private final ByteArrayOutputStream printedBytes = new ByteArrayOutputStream(1000);
-	private final PrintStream printSink = new PrintStream(printedBytes);
+	private final StringWriter stringWriter = new StringWriter();
+	private final PrintWriter printSink = new PrintWriter(stringWriter);
 
 	@Test
 	void displayHelp() {
@@ -64,7 +64,7 @@ class ConsoleLauncherTests {
 		assertEquals(0, exitCode);
 		assertLinesMatch(
 			List.of("", "Thanks for using JUnit! Support its development at https://junit.org/sponsoring", ""),
-			printedBytes.toString().lines().collect(Collectors.toList()));
+			stringWriter.toString().lines().collect(Collectors.toList()));
 	}
 
 	@Test
@@ -80,7 +80,7 @@ class ConsoleLauncherTests {
 		int exitCode = consoleLauncher.execute("--help", "--disable-banner").getExitCode();
 
 		assertEquals(0, exitCode);
-		assertLinesMatch(List.of(), printedBytes.toString().lines().collect(Collectors.toList()));
+		assertLinesMatch(List.of(), stringWriter.toString().lines().collect(Collectors.toList()));
 	}
 
 	@Test

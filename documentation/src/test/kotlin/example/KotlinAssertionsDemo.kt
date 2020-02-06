@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -13,6 +13,7 @@ package example
 
 import example.domain.Person
 import example.util.Calculator
+import java.time.Duration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -21,7 +22,6 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.assertTimeout
 import org.junit.jupiter.api.assertTimeoutPreemptively
-import java.time.Duration
 
 class KotlinAssertionsDemo {
 
@@ -76,7 +76,7 @@ class KotlinAssertionsDemo {
     @Test
     fun `timeout not exceeded testing`() {
         val fibonacciCalculator = FibonacciCalculator()
-        val result = assertTimeout(Duration.ofMillis(50)) {
+        val result = assertTimeout(Duration.ofMillis(1000)) {
             fibonacciCalculator.fib(14)
         }
         assertEquals(377, result)

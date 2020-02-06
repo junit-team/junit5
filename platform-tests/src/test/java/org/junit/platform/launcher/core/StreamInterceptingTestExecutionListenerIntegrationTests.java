@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -73,7 +73,7 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 			return null;
 		}).when(listener).executionStarted(any());
 
-		DefaultLauncher launcher = createLauncher(engine);
+		var launcher = createLauncher(engine);
 		LauncherDiscoveryRequest discoveryRequest = request()//
 				.selectors(selectUniqueId(test.getUniqueId()))//
 				.configurationParameter(configParam, String.valueOf(true))//
@@ -106,7 +106,7 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 		assertThat(StreamInterceptor.registerStdout(1)).isPresent();
 		assertThat(StreamInterceptor.registerStderr(1)).isPresent();
 
-		DefaultLauncher launcher = createLauncher(engine);
+		var launcher = createLauncher(engine);
 		LauncherDiscoveryRequest discoveryRequest = request()//
 				.selectors(selectUniqueId(test.getUniqueId()))//
 				.configurationParameter(configParam, String.valueOf(true))//

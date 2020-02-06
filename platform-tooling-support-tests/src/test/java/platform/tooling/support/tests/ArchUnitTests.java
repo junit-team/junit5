@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,10 +10,15 @@
 
 package platform.tooling.support.tests;
 
+import static com.tngtech.archunit.base.DescribedPredicate.describe;
 import static com.tngtech.archunit.base.DescribedPredicate.not;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage;
+import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage;
+import static com.tngtech.archunit.core.domain.properties.HasModifiers.Predicates.modifier;
 import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.name;
 import static com.tngtech.archunit.lang.conditions.ArchPredicates.are;
+import static com.tngtech.archunit.lang.conditions.ArchPredicates.have;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static platform.tooling.support.Helper.loadJarFiles;
@@ -21,15 +26,28 @@ import static platform.tooling.support.Helper.loadJarFiles;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.core.importer.Location;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.junit.LocationProvider;
+import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.library.GeneralCodingRules;
+
+import org.apiguardian.api.API;
 
 @AnalyzeClasses(locations = ArchUnitTests.AllJars.class)
 class ArchUnitTests {
+
+	@ArchTest
+	private final ArchRule allPublicTopLevelTypesHaveApiAnnotations = classes() //
+			.that(have(modifier(JavaModifier.PUBLIC))) //
+			.and(describe("are top-level", javaClass -> !javaClass.getEnclosingClass().isPresent())) //
+			.and(not(describe("are anonymous", JavaClass::isAnonymous))) //
+			.and(not(describe("are shadowed", resideInAnyPackage("..shadow..")))) //
+			.should().beAnnotatedWith(API.class);
 
 	@ArchTest
 	void allAreIn(JavaClasses classes) {
@@ -63,8 +81,9 @@ class ArchUnitTests {
 				.that(are(not(name("org.junit.platform.console.ConsoleLauncher")))) //
 				.that(are(not(name("org.junit.platform.launcher.core.StreamInterceptor")))) //
 				.that(are(not(name("org.junit.platform.runner.JUnitPlatformRunnerListener")))) //
-				.that(are(not(resideInAPackage("org.junit.platform.console.shadow.picocli")))) //
-				.that(are(not(resideInAPackage("org.junit.platform.console.shadow.picocli.groovy"))));
+				.that(are(not(name("org.junit.platform.testkit.engine.Events")))) //
+				.that(are(not(name("org.junit.platform.testkit.engine.Executions")))) //
+				.that(are(not(resideInAPackage("org.junit.platform.console.shadow.picocli"))));
 		GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS.check(subset);
 	}
 

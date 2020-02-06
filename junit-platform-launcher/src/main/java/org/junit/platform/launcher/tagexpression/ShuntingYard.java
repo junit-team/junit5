@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -16,6 +16,8 @@ import static org.junit.platform.launcher.tagexpression.ParseStatus.emptyTagExpr
 import static org.junit.platform.launcher.tagexpression.ParseStatus.missingClosingParenthesis;
 import static org.junit.platform.launcher.tagexpression.ParseStatus.missingOpeningParenthesis;
 import static org.junit.platform.launcher.tagexpression.ParseStatus.success;
+import static org.junit.platform.launcher.tagexpression.TagExpressions.any;
+import static org.junit.platform.launcher.tagexpression.TagExpressions.none;
 import static org.junit.platform.launcher.tagexpression.TagExpressions.tag;
 
 import java.util.List;
@@ -65,19 +67,30 @@ class ShuntingYard {
 	}
 
 	private ParseStatus process(Token token) {
-		if (LeftParenthesis.represents(token.string())) {
+		String trimmed = token.string();
+		if (LeftParenthesis.represents(trimmed)) {
 			pushOperatorAt(token, LeftParenthesis);
 			return success();
 		}
-		if (RightParenthesis.represents(token.string())) {
+		if (RightParenthesis.represents(trimmed)) {
 			return findMatchingLeftParenthesis(token);
 		}
-		if (validOperators.isOperator(token.string())) {
-			Operator operator = validOperators.operatorFor(token.string());
+		if (validOperators.isOperator(trimmed)) {
+			Operator operator = validOperators.operatorFor(trimmed);
 			return findOperands(token, operator);
 		}
-		pushExpressionAt(token, tag(token.string()));
+		pushExpressionAt(token, convertLeafTokenToExpression(trimmed));
 		return success();
+	}
+
+	private TagExpression convertLeafTokenToExpression(String trimmed) {
+		if ("any()".equalsIgnoreCase(trimmed)) {
+			return any();
+		}
+		if ("none()".equalsIgnoreCase(trimmed)) {
+			return none();
+		}
+		return tag(trimmed);
 	}
 
 	private ParseStatus findMatchingLeftParenthesis(Token token) {

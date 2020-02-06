@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -26,12 +26,12 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 
 /**
- * {@code @TempDir} can be used to annotate a field in a test class or a
- * parameter in a lifecycle method or test method of type {@link Path} or
+ * {@code @TempDir} can be used to annotate a non-private field in a test class
+ * or a parameter in a lifecycle method or test method of type {@link Path} or
  * {@link File} that should be resolved into a temporary directory.
  *
  * <p>Please note that {@code @TempDir} is not supported on constructor
- * parameters. Please use field injection instead, by annotating an
+ * parameters. Please use field injection instead, by annotating a non-private
  * instance field with {@code @TempDir}.
  *
  * <h3>Temporary Directory Creation</h3>

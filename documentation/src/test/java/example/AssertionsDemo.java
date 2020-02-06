@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.concurrent.CountDownLatch;
 
 import example.domain.Person;
 import example.util.Calculator;
@@ -135,7 +137,7 @@ class AssertionsDemo {
 		// execution timed out after 10 ms
 		assertTimeoutPreemptively(ofMillis(10), () -> {
 			// Simulate task that takes more than 10 ms.
-			Thread.sleep(100);
+			new CountDownLatch(1).await();
 		});
 	}
 

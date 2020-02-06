@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,10 +10,10 @@
 
 package org.junit.jupiter.engine.discovery;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.matches;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.unresolved;
@@ -21,6 +21,7 @@ import static org.junit.platform.engine.support.discovery.SelectorResolver.Resol
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -43,7 +44,9 @@ import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.MethodSelector;
+import org.junit.platform.engine.discovery.NestedMethodSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.support.discovery.SelectorResolver;
 
@@ -63,9 +66,18 @@ class MethodSelectorResolver implements SelectorResolver {
 
 	@Override
 	public Resolution resolve(MethodSelector selector, Context context) {
+		return resolve(context, emptyList(), selector.getJavaClass(), selector.getJavaMethod());
+	}
+
+	@Override
+	public Resolution resolve(NestedMethodSelector selector, Context context) {
+		return resolve(context, selector.getEnclosingClasses(), selector.getNestedClass(), selector.getMethod());
+	}
+
+	private Resolution resolve(Context context, List<Class<?>> enclosingClasses, Class<?> testClass, Method method) {
 		// @formatter:off
 		Set<Match> matches = Arrays.stream(MethodType.values())
-				.map(methodType -> methodType.resolveMethodSelector(selector, context, configuration))
+				.map(methodType -> methodType.resolve(enclosingClasses, testClass, method, context, configuration))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.map(testDescriptor -> Match.exact(testDescriptor, expansionCallback(testDescriptor)))
@@ -78,8 +90,7 @@ class MethodSelectorResolver implements SelectorResolver {
 					"Possible configuration error: method [%s] resulted in multiple TestDescriptors %s. "
 							+ "This is typically the result of annotating a method with multiple competing annotations "
 							+ "such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.",
-					selector.getJavaMethod().toGenericString(),
-					testDescriptors.map(d -> d.getClass().getName()).collect(toList()));
+					method.toGenericString(), testDescriptors.map(d -> d.getClass().getName()).collect(toList()));
 			});
 		}
 		return matches.isEmpty() ? unresolved() : matches(matches);
@@ -159,16 +170,21 @@ class MethodSelectorResolver implements SelectorResolver {
 			this.dynamicDescendantSegmentTypes = new LinkedHashSet<>(Arrays.asList(dynamicDescendantSegmentTypes));
 		}
 
-		private Optional<TestDescriptor> resolveMethodSelector(MethodSelector selector, Context resolver,
-				JupiterConfiguration configuration) {
-			if (!methodPredicate.test(selector.getJavaMethod())) {
+		private Optional<TestDescriptor> resolve(List<Class<?>> enclosingClasses, Class<?> testClass, Method method,
+				Context context, JupiterConfiguration configuration) {
+			if (!methodPredicate.test(method)) {
 				return Optional.empty();
 			}
-			Class<?> testClass = selector.getJavaClass();
-			Method method = selector.getJavaMethod();
-			return resolver.addToParent(() -> selectClass(testClass), //
+			return context.addToParent(() -> selectClass(enclosingClasses, testClass), //
 				parent -> Optional.of(
 					createTestDescriptor(createUniqueId(method, parent), testClass, method, configuration)));
+		}
+
+		private DiscoverySelector selectClass(List<Class<?>> enclosingClasses, Class<?> testClass) {
+			if (enclosingClasses.isEmpty()) {
+				return DiscoverySelectors.selectClass(testClass);
+			}
+			return DiscoverySelectors.selectNestedClass(enclosingClasses, testClass);
 		}
 
 		private Optional<TestDescriptor> resolveUniqueIdIntoTestDescriptor(UniqueId uniqueId, Context context,

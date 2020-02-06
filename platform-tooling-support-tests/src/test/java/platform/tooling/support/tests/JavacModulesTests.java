@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,13 +10,16 @@
 
 package platform.tooling.support.tests;
 
+import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,6 +29,7 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.spi.ToolProvider;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -42,14 +46,12 @@ class JavacModulesTests {
 		final Path moduleInfo;
 		final Path moduleSource;
 		final String moduleName;
-		final Path mainSources;
-		final Path mainClasses;
+		final Path javaClassesDir;
 
 		Project(Path moduleInfo) {
 			this.moduleInfo = moduleInfo;
 			this.moduleSource = moduleInfo.getParent().getParent();
-			this.mainSources = moduleSource.getParent().getParent().resolve("src/main/java");
-			this.mainClasses = moduleSource.getParent().getParent().resolve("build/classes/java/main");
+			this.javaClassesDir = moduleSource.getParent().getParent().resolve("build/classes/java");
 			try {
 				var nameMatcher = MODULE_NAME_PATTERN.matcher(Files.readString(moduleInfo));
 				if (!nameMatcher.find()) {
@@ -61,13 +63,26 @@ class JavacModulesTests {
 				throw new Error("Extracting module name failed", e);
 			}
 		}
+
+		private Stream<Path> getMainOutputDirs() {
+			try {
+				return Files.list(javaClassesDir) //
+						.filter(file -> Files.isDirectory(file)) //
+						.filter(dir -> dir.getFileName().toString().startsWith("main"));
+			}
+			catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
+		}
 	}
 
-	private static List<String> compileModules(Path temp, Writer out, Writer err, Function<Project, Object> patch)
+	private static List<String> compileModules(Path temp, Writer out, Writer err, Function<Project, Stream<Path>> patch)
 			throws Exception {
 		var args = new ArrayList<String>();
 		args.add("-Xlint:all,-requires-automatic,-requires-transitive-automatic");
 		args.add("-proc:none"); // disable annotation processing
+		args.add("-cp");
+		args.add(""); // set empty class path, otherwise system property "java.class.path" is read
 
 		args.add("-d");
 		args.add(temp.resolve("destination").toString());
@@ -75,9 +90,9 @@ class JavacModulesTests {
 		var lib = temp.resolve("lib");
 		Files.createDirectories(lib);
 		Helper.load(lib, "junit", "junit", "4.12");
-		Helper.load(lib, "org.assertj", "assertj-core", "3.12.2");
-		Helper.load(lib, "org.apiguardian", "apiguardian-api", "1.0.0");
-		Helper.load(lib, "org.opentest4j", "opentest4j", "1.1.1");
+		Helper.load(lib, "org.assertj", "assertj-core", "3.13.2");
+		Helper.load(lib, "org.apiguardian", "apiguardian-api", "1.1.0");
+		Helper.load(lib, "org.opentest4j", "opentest4j", "1.2.0");
 		args.add("--module-path");
 		args.add(lib.toString());
 
@@ -95,14 +110,15 @@ class JavacModulesTests {
 			args.add(projects.stream() //
 					.map(project -> project.moduleSource) //
 					.map(Object::toString) //
-					.collect(Collectors.joining(File.pathSeparator)));
+					.collect(joining(File.pathSeparator)));
 
 			for (var project : projects) {
-				if (Files.notExists(project.mainClasses)) {
+				var path = patch.apply(project).map(Path::toString).collect(joining(File.pathSeparator));
+				if (path.isEmpty()) {
 					continue;
 				}
 				args.add("--patch-module");
-				args.add(project.moduleName + "=" + patch.apply(project));
+				args.add(project.moduleName + "=" + path);
 			}
 
 			projects.forEach(project -> args.add(project.moduleInfo.toString()));
@@ -120,7 +136,7 @@ class JavacModulesTests {
 		var out = new StringWriter();
 		var err = new StringWriter();
 
-		var args = compileModules(temp, out, err, project -> project.mainClasses);
+		var args = compileModules(temp, out, err, Project::getMainOutputDirs);
 
 		assertTrue(err.toString().isBlank(), () -> err.toString() + "\n\n" + String.join("\n", args));
 
@@ -129,33 +145,10 @@ class JavacModulesTests {
 			"destination", //
 			">> CLASSES >>", //
 			"lib", //
-			"lib/apiguardian-api-1.0.0.jar", //
-			"lib/assertj-core-3.12.2.jar", //
+			"lib/apiguardian-api-1.1.0.jar", //
+			"lib/assertj-core-3.13.2.jar", //
 			"lib/junit-4.12.jar", //
-			"lib/opentest4j-1.1.1.jar" //
-		), listing);
-		assertEquals(34, listing.size());
+			"lib/opentest4j-1.2.0.jar"), listing);
 	}
 
-	@Test
-	void patchMainSources(@TempDir Path temp) throws Exception {
-		var out = new StringWriter();
-		var err = new StringWriter();
-
-		var args = compileModules(temp, out, err, project -> project.mainSources);
-
-		assertTrue(err.toString().isBlank(), () -> err.toString() + "\n\n" + String.join("\n", args));
-
-		var listing = Helper.treeWalk(temp);
-		assertLinesMatch(List.of( //
-			"destination", //
-			">> CLASSES >>", //
-			"lib", //
-			"lib/apiguardian-api-1.0.0.jar", //
-			"lib/assertj-core-3.12.2.jar", //
-			"lib/junit-4.12.jar", //
-			"lib/opentest4j-1.1.1.jar" //
-		), listing);
-		assertTrue(listing.size() > 400);
-	}
 }

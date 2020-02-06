@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -82,6 +82,10 @@ public class UniqueId implements Cloneable, Serializable {
 
 	private final UniqueIdFormat uniqueIdFormat;
 	private final List<Segment> segments;
+	// lazily computed
+	private transient int hashCode;
+	// lazily computed
+	private transient String toString;
 
 	private UniqueId(UniqueIdFormat uniqueIdFormat, Segment segment) {
 		this.uniqueIdFormat = uniqueIdFormat;
@@ -221,7 +225,23 @@ public class UniqueId implements Cloneable, Serializable {
 
 	@Override
 	public int hashCode() {
-		return this.segments.hashCode();
+		int value = this.hashCode;
+		if (value == 0) {
+			value = this.segments.hashCode();
+			if (value == 0) {
+				// handle the edge case of the computed hashCode being 0
+				value = 1;
+			}
+			// this is a benign race like String#hash
+			// we potentially read and write values from multiple threads
+			// without a happens-before relationship
+			// however the JMM guarantees us that we only ever see values
+			// that were valid at one point, either 0 or the hash code
+			// so we might end up not seeing a value that a different thread
+			// has computed or multiple threads writing the same value
+			this.hashCode = value;
+		}
+		return value;
 	}
 
 	/**
@@ -230,7 +250,19 @@ public class UniqueId implements Cloneable, Serializable {
 	 */
 	@Override
 	public String toString() {
-		return this.uniqueIdFormat.format(this);
+		String s = this.toString;
+		if (s == null) {
+			s = this.uniqueIdFormat.format(this);
+			// this is a benign race like String#hash
+			// we potentially read and write values from multiple threads
+			// without a happens-before relationship
+			// however the JMM guarantees us that we only ever see values
+			// that were valid at one point, either null or the toString value
+			// so we might end up not seeing a value that a different thread
+			// has computed or multiple threads writing the same value
+			this.toString = s;
+		}
+		return s;
 	}
 
 	/**

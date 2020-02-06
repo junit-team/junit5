@@ -97,9 +97,19 @@ By default, extensions registered programmatically via `@RegisterExtension` will
 ordered using an algorithm that is deterministic but intentionally nonobvious. This
 ensures that subsequent runs of a test suite execute extensions in the same order, thereby
 allowing for repeatable builds. However, there are times when extensions need to be
-registered in an explicit order. To achieve that, annotate each `@RegisterExtension` field
-with `{Order}`. Any `@RegisterExtension` field not annotated with `@Order` will appear at
-the end of the sorted list.
+registered in an explicit order. To achieve that, annotate `@RegisterExtension` fields
+with `{Order}`.
+
+Any `@RegisterExtension` field not annotated with `@Order` will be ordered using the
+_default_ order which has a value of `Integer.MAX_VALUE / 2`. This allows `@Order`
+annotated extension fields to be explicitly ordered before or after non-annotated
+extension fields. Extensions with an explicit order value less than the default order
+value will be registered before non-annotated extensions. Similarly, extensions with an
+explicit order value greater than the default order value will be registered after
+non-annotated extensions. For example, assigning an extension an explicit order value that
+is greater than the default order value allows _before_ callback extensions to be
+registered last and _after_ callback extensions to be registered first, relative to other
+programmatically registered extensions.
 ====
 
 NOTE: `@RegisterExtension` fields must not be `private` or `null` (at evaluation time) but
@@ -112,9 +122,9 @@ If a `@RegisterExtension` field is `static`, the extension will be registered af
 extensions that are registered at the class level via `@ExtendWith`. Such _static
 extensions_ are not limited in which extension APIs they can implement. Extensions
 registered via static fields may therefore implement class-level and instance-level
-extension APIs such as `BeforeAllCallback`, `AfterAllCallback`, and
-`TestInstancePostProcessor` as well as method-level extension APIs such as
-`BeforeEachCallback`, etc.
+extension APIs such as `BeforeAllCallback`, `AfterAllCallback`,
+`TestInstancePostProcessor`, and `TestInstancePreDestroyCallback` as well as method-level
+extension APIs such as `BeforeEachCallback`, etc.
 
 In the following example, the `server` field in the test class is initialized
 programmatically by using a builder pattern supported by the `WebServerExtension`. The
@@ -314,6 +324,15 @@ initialization methods on the test instance, etc.
 For a concrete example, consult the source code for the `{MockitoExtension}` and the
 `{SpringExtension}`.
 
+[[extensions-test-instance-pre-destroy-callback]]
+=== Test Instance Pre-destroy Callback
+
+`{TestInstancePreDestroyCallback}` defines the API for `Extensions` that wish to process
+test instances _after_ they have been used in tests and _before_ they are destroyed.
+
+Common use cases include cleaning dependencies that have been injected into the
+test instance, invoking custom de-initialization methods on the test instance, etc.
+
 [[extensions-parameter-resolution]]
 === Parameter Resolution
 
@@ -321,12 +340,18 @@ For a concrete example, consult the source code for the `{MockitoExtension}` and
 runtime.
 
 If a _test class_ constructor, _test method_, or _lifecycle method_ (see
-<<writing-tests-classes-and-methods>>) accepts a parameter, the parameter must be
+<<writing-tests-classes-and-methods>>) declares a parameter, the parameter must be
 _resolved_ at runtime by a `ParameterResolver`. A `ParameterResolver` can either be
 built-in (see `{TestInfoParameterResolver}`) or <<extensions-registration,registered by
 the user>>. Generally speaking, parameters may be resolved by _name_, _type_,
-_annotation_, or any combination thereof. For concrete examples, consult the source code
-for `{CustomTypeParameterResolver}` and `{CustomAnnotationParameterResolver}`.
+_annotation_, or any combination thereof.
+
+If you wish to implement a custom `{ParameterResolver}` that resolves parameters based
+solely on the type of the parameter, you may find it convenient to extend the
+`{TypeBasedParameterResolver}` which serves as a generic adapter for such use cases.
+
+For concrete examples, consult the source code for `{CustomTypeParameterResolver}`,
+`{CustomAnnotationParameterResolver}`, and `{MapOfListsTypeBasedParameterResolver}`.
 
 [WARNING]
 ====
@@ -635,7 +660,7 @@ The following table further explains the sixteen steps in the
 | 3
 | interface `org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
 #handleBeforeAllMethodExecutionException`
-| extension code for handling exceptions thrown during a method annotated with `@BeforeAll`
+| extension code for handling exceptions thrown from `@BeforeAll` methods
 
 | 4
 | interface `org.junit.jupiter.api.extension.BeforeEachCallback`
@@ -648,7 +673,7 @@ The following table further explains the sixteen steps in the
 | 6
 | interface `org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
 #handleBeforeEachMethodExecutionException`
-| extension code for handling exceptions thrown during a method annotated with `@BeforeEach`
+| extension code for handling exceptions thrown from `@BeforeEach` methods
 
 | 7
 | interface `org.junit.jupiter.api.extension.BeforeTestExecutionCallback`
@@ -673,7 +698,7 @@ The following table further explains the sixteen steps in the
 | 12
 | interface `org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
 #handleAfterEachMethodExecutionException`
-| extension code for handling exceptions thrown during a method annotated with `@AfterEach`
+| extension code for handling exceptions thrown from `@AfterEach` methods
 
 | 13
 | interface `org.junit.jupiter.api.extension.AfterEachCallback`
@@ -686,7 +711,7 @@ The following table further explains the sixteen steps in the
 | 15
 | interface `org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
 #handleAfterAllMethodExecutionException`
-| extension code for handling exceptions thrown during a method annotated with `@AfterAll`
+| extension code for handling exceptions thrown from `@AfterAll` methods
 
 | 16
 | interface `org.junit.jupiter.api.extension.AfterAllCallback`

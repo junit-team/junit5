@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -73,12 +73,13 @@ class ExpectedExceptionSupportTests {
 	}
 
 	private Events executeTestsForClass(Class<?> testClass) {
-		return EngineTestKit.execute("junit-jupiter", request().selectors(selectClass(testClass)).build()).tests();
+		return EngineTestKit.execute("junit-jupiter", request().selectors(selectClass(testClass)).build()).testEvents();
 	}
 
 	@ExtendWith(ExpectedExceptionSupport.class)
 	static class ExpectedExceptionTestCase {
 
+		@SuppressWarnings("deprecation")
 		@Rule
 		public ExpectedException thrown = ExpectedException.none();
 

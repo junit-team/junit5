@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -21,8 +21,10 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -41,6 +43,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -67,8 +70,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	 * {@link TempDir @TempDir}.
 	 */
 	@Override
-	public void beforeAll(ExtensionContext context) throws Exception {
-		injectFields(context, null, ReflectionUtils::isStatic);
+	public void beforeAll(ExtensionContext context) {
+		injectStaticFields(context, context.getRequiredTestClass());
 	}
 
 	/**
@@ -77,12 +80,23 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	 * with {@link TempDir @TempDir}.
 	 */
 	@Override
-	public void beforeEach(ExtensionContext context) throws Exception {
-		injectFields(context, context.getRequiredTestInstance(), ReflectionUtils::isNotStatic);
+	public void beforeEach(ExtensionContext context) {
+		context.getRequiredTestInstances().getAllInstances() //
+				.forEach(instance -> injectInstanceFields(context, instance));
 	}
 
-	private void injectFields(ExtensionContext context, Object testInstance, Predicate<Field> predicate) {
-		findAnnotatedFields(context.getRequiredTestClass(), TempDir.class, predicate).forEach(field -> {
+	private void injectStaticFields(ExtensionContext context, Class<?> testClass) {
+		injectFields(context, null, testClass, ReflectionUtils::isStatic);
+	}
+
+	private void injectInstanceFields(ExtensionContext context, Object instance) {
+		injectFields(context, instance, instance.getClass(), ReflectionUtils::isNotStatic);
+	}
+
+	private void injectFields(ExtensionContext context, Object testInstance, Class<?> testClass,
+			Predicate<Field> predicate) {
+
+		findAnnotatedFields(testClass, TempDir.class, predicate).forEach(field -> {
 			assertValidFieldCandidate(field);
 			try {
 				makeAccessible(field).set(testInstance, getPathOrFile(field.getType(), context));
@@ -191,10 +205,34 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 					try {
 						Files.delete(path);
 					}
-					catch (IOException ex) {
-						failures.put(path, ex);
+					catch (NoSuchFileException ignore) {
+						// ignore
+					}
+					catch (DirectoryNotEmptyException exception) {
+						failures.put(path, exception);
+					}
+					catch (IOException exception) {
+						makeWritableAndTryToDeleteAgain(path, exception);
 					}
 					return CONTINUE;
+				}
+
+				private void makeWritableAndTryToDeleteAgain(Path path, IOException exception) {
+					try {
+						makeWritable(path);
+						Files.delete(path);
+					}
+					catch (Exception suppressed) {
+						exception.addSuppressed(suppressed);
+						failures.put(path, exception);
+					}
+				}
+
+				private void makeWritable(Path path) {
+					boolean writable = path.toFile().setWritable(true);
+					if (!writable) {
+						throw new UndeletableFileException("Attempt to make file '" + path + "' writable failed");
+					}
 				}
 			});
 			return failures;
@@ -231,6 +269,21 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				return path;
 			}
 		}
+	}
+
+	private static class UndeletableFileException extends JUnitException {
+
+		private static final long serialVersionUID = 1L;
+
+		UndeletableFileException(String message) {
+			super(message);
+		}
+
+		@Override
+		public synchronized Throwable fillInStackTrace() {
+			return this; // Make the output smaller by omitting the stacktrace
+		}
+
 	}
 
 }

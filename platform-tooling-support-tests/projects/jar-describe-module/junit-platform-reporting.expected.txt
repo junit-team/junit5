@@ -1,6 +1,9 @@
 org.junit.platform.reporting@${platformVersion} jar:file:.+junit-platform-reporting/build/libs/junit-platform-reporting-${platformVersion}.jar/!module-info.class
+exports org.junit.platform.reporting.legacy
 exports org.junit.platform.reporting.legacy.xml
 requires java.base mandated
 requires java.xml
 requires org.apiguardian.api transitive
+requires org.junit.platform.commons
+requires org.junit.platform.engine transitive
 requires org.junit.platform.launcher transitive

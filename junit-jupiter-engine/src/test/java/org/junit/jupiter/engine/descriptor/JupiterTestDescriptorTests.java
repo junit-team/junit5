@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -263,6 +263,20 @@ class JupiterTestDescriptorTests {
 		staticDisplayName += "$" + StaticTestCaseLevel2.class.getSimpleName();
 		assertEquals(staticDisplayName, descriptor.getDisplayName());
 		assertEquals(StaticTestCaseLevel2.class.getName(), descriptor.getLegacyReportingName());
+	}
+
+	@Test
+	void enclosingClassesAreDerivedFromParent() {
+		ClassBasedTestDescriptor parentDescriptor = new ClassTestDescriptor(uniqueId, StaticTestCase.class,
+			configuration);
+		ClassBasedTestDescriptor nestedDescriptor = new NestedClassTestDescriptor(uniqueId, NestedTestCase.class,
+			configuration);
+		assertThat(parentDescriptor.getEnclosingTestClasses()).isEmpty();
+		assertThat(nestedDescriptor.getEnclosingTestClasses()).isEmpty();
+
+		parentDescriptor.addChild(nestedDescriptor);
+		assertThat(parentDescriptor.getEnclosingTestClasses()).isEmpty();
+		assertThat(nestedDescriptor.getEnclosingTestClasses()).containsExactly(StaticTestCase.class);
 	}
 
 	// -------------------------------------------------------------------------

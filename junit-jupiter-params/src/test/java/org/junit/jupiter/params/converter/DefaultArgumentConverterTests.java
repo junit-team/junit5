@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -21,14 +21,18 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.MonthDay;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
+import java.time.Period;
 import java.time.Year;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Currency;
@@ -167,30 +171,36 @@ class DefaultArgumentConverterTests {
 
 	@Test
 	void convertsStringToURI() {
-		assertConverts("http://java.sun.com/j2se/1.3/", URI.class, URI.create("http://java.sun.com/j2se/1.3/"));
+		assertConverts("https://docs.oracle.com/en/java/javase/12/", URI.class,
+			URI.create("https://docs.oracle.com/en/java/javase/12/"));
 	}
 
 	@Test
 	void convertsStringToURL() throws Exception {
-		assertConverts("http://junit.org/junit5", URL.class, new URL("http://junit.org/junit5"));
+		assertConverts("https://junit.org/junit5", URL.class, new URL("https://junit.org/junit5"));
 	}
 
 	// --- java.time -----------------------------------------------------------
 
 	@Test
 	void convertsStringsToJavaTimeInstances() {
+		assertConverts("PT1234.5678S", Duration.class, Duration.ofSeconds(1234, 567800000));
 		assertConverts("1970-01-01T00:00:00Z", Instant.class, Instant.ofEpochMilli(0));
 		assertConverts("2017-03-14", LocalDate.class, LocalDate.of(2017, 3, 14));
 		assertConverts("2017-03-14T12:34:56.789", LocalDateTime.class,
 			LocalDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000));
 		assertConverts("12:34:56.789", LocalTime.class, LocalTime.of(12, 34, 56, 789_000_000));
+		assertConverts("--03-14", MonthDay.class, MonthDay.of(3, 14));
 		assertConverts("2017-03-14T12:34:56.789Z", OffsetDateTime.class,
 			OffsetDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC));
 		assertConverts("12:34:56.789Z", OffsetTime.class, OffsetTime.of(12, 34, 56, 789_000_000, ZoneOffset.UTC));
+		assertConverts("P2M6D", Period.class, Period.of(0, 2, 6));
 		assertConverts("2017", Year.class, Year.of(2017));
 		assertConverts("2017-03", YearMonth.class, YearMonth.of(2017, 3));
 		assertConverts("2017-03-14T12:34:56.789Z", ZonedDateTime.class,
 			ZonedDateTime.of(2017, 3, 14, 12, 34, 56, 789_000_000, ZoneOffset.UTC));
+		assertConverts("Europe/Berlin", ZoneId.class, ZoneId.of("Europe/Berlin"));
+		assertConverts("+02:30", ZoneOffset.class, ZoneOffset.ofHoursMinutes(2, 30));
 	}
 
 	// --- java.util -----------------------------------------------------------

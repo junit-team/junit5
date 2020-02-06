@@ -10,12 +10,12 @@
 
 ### Project Licenses
 
-- All modules use [Eclipse Public License v2.0](junit-jupiter-api/LICENSE.md).
+- All modules use [Eclipse Public License v2.0](LICENSE.md).
 
 ## Commit Messages
 
 As a general rule, the style and formatting of commit messages should follow the guidelines in
-[How to Write a Git Commit Message](http://chris.beams.io/posts/git-commit/).
+[How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/).
 
 In addition, any commit that is related to an existing issue must reference the issue.
 For example, if a commit in a pull request addresses issue \#999, it must contain the
@@ -118,8 +118,8 @@ In multi-line bullet point entries, subsequent lines should be indented.
 ### Logging
 
 - In general, logging should be used sparingly.
-- All logging must be performed via the internal `Logger` façade provided via the JUnit [LoggerFactory](http://junit.org/junit5/docs/current/api/org/junit/platform/commons/logging/LoggerFactory.html).
-- Levels defined in JUnit's [Logger](http://junit.org/junit5/docs/current/api/org/junit/platform/commons/logging/Logger.html) façade.
+- All logging must be performed via the internal `Logger` façade provided via the JUnit [LoggerFactory](https://junit.org/junit5/docs/current/api/org/junit/platform/commons/logging/LoggerFactory.html).
+- Levels defined in JUnit's [Logger](https://junit.org/junit5/docs/current/api/org/junit/platform/commons/logging/Logger.html) façade.
   - _error_ (JUL: `SEVERE`, Log4J: `ERROR`): extra information (in addition to an Exception) about errors that will halt execution
   - _warn_ (JUL: `WARNING`, Log4J: `WARN`): potential usage or configuration errors that should not halt execution
   - _info_ (JUL: `INFO`, Log4J: `INFO`): information the users might want to know but not by default

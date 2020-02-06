@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Order.DEFAULT;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 import java.lang.reflect.Field;
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -80,6 +82,18 @@ class OrderedProgrammaticExtensionRegistrationTests extends AbstractJupiterTestE
 		assertOutcome(DefaultOrderAndExplicitOrderInstanceLevelExtensionRegistrationTestCase.class, 3, 1, 2);
 	}
 
+	/**
+	 * Verify that an "after" callback can be registered first relative to other
+	 * non-annotated "after" callbacks.
+	 *
+	 * @since 5.6
+	 * @see <a href="https://github.com/junit-team/junit5/issues/1924">gh-1924</a>
+	 */
+	@Test
+	void instanceLevelWithDefaultOrderPlusOneAndDefaultOrder() {
+		assertOutcome(DefaultOrderPlusOneAndDefaultOrderInstanceLevelExtensionRegistrationTestCase.class, 1, 3, 2);
+	}
+
 	@Test
 	void instanceLevelWithDefaultOrderAndExplicitOrderWithTestInstancePerClassLifecycle() {
 		assertOutcome(
@@ -115,7 +129,7 @@ class OrderedProgrammaticExtensionRegistrationTests extends AbstractJupiterTestE
 	}
 
 	private void assertOutcome(Class<?> testClass, Integer... values) {
-		executeTestsForClass(testClass).tests().assertStatistics(stats -> stats.succeeded(1));
+		executeTestsForClass(testClass).testEvents().assertStatistics(stats -> stats.succeeded(1));
 		assertThat(callSequence).containsExactly(values);
 	}
 
@@ -171,6 +185,20 @@ class OrderedProgrammaticExtensionRegistrationTests extends AbstractJupiterTestE
 		@Order(1)
 		@RegisterExtension
 		Extension extension3 = new BeforeEachExtension(3);
+
+	}
+
+	static class DefaultOrderPlusOneAndDefaultOrderInstanceLevelExtensionRegistrationTestCase extends AbstractTestCase {
+
+		@Order(DEFAULT + 1)
+		@RegisterExtension
+		Extension extension1 = new AfterEachExtension(1);
+
+		@RegisterExtension
+		Extension extension2 = new AfterEachExtension(2);
+
+		@RegisterExtension
+		Extension extension3 = new AfterEachExtension(3);
 
 	}
 
@@ -260,6 +288,21 @@ class OrderedProgrammaticExtensionRegistrationTests extends AbstractJupiterTestE
 
 		@Override
 		public void beforeEach(ExtensionContext context) {
+			callSequence.add(this.id);
+		}
+
+	}
+
+	private static class AfterEachExtension implements AfterEachCallback {
+
+		private final int id;
+
+		AfterEachExtension(int id) {
+			this.id = id;
+		}
+
+		@Override
+		public void afterEach(ExtensionContext context) {
 			callSequence.add(this.id);
 		}
 

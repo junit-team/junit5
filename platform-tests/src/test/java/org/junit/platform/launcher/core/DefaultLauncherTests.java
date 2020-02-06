@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -21,9 +21,11 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPacka
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -31,15 +33,19 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Constructor;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.engine.TrackLogRecords;
+import org.junit.jupiter.api.fixtures.TrackLogRecords;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -47,6 +53,7 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
@@ -54,6 +61,9 @@ import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine
 import org.junit.platform.fakes.TestDescriptorStub;
 import org.junit.platform.fakes.TestEngineSpy;
 import org.junit.platform.fakes.TestEngineStub;
+import org.junit.platform.launcher.EngineDiscoveryResult;
+import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.PostDiscoveryFilterStub;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -66,7 +76,6 @@ import org.mockito.InOrder;
 /**
  * @since 1.0
  */
-@TrackLogRecords
 class DefaultLauncherTests {
 
 	private static final String FOO = DefaultLauncherTests.class.getSimpleName() + ".foo";
@@ -93,7 +102,7 @@ class DefaultLauncherTests {
 
 	@Test
 	void registerTestExecutionListenersWithNullArray() {
-		DefaultLauncher launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
+		var launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
 
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> launcher.registerTestExecutionListeners((TestExecutionListener[]) null));
@@ -103,7 +112,7 @@ class DefaultLauncherTests {
 
 	@Test
 	void registerTestExecutionListenersWithEmptyArray() {
-		DefaultLauncher launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
+		var launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
 
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> launcher.registerTestExecutionListeners(new TestExecutionListener[0]));
@@ -113,7 +122,7 @@ class DefaultLauncherTests {
 
 	@Test
 	void registerTestExecutionListenersWithArrayContainingNullElements() {
-		DefaultLauncher launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
+		var launcher = createLauncher(new DemoHierarchicalTestEngine("dummy id"));
 
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> launcher.registerTestExecutionListeners(new TestExecutionListener[] { null }));
@@ -123,7 +132,7 @@ class DefaultLauncherTests {
 
 	@Test
 	void discoverEmptyTestPlanWithEngineWithoutAnyTests() {
-		DefaultLauncher launcher = createLauncher(new DemoHierarchicalTestEngine());
+		Launcher launcher = createLauncher(new DemoHierarchicalTestEngine());
 
 		TestPlan testPlan = launcher.discover(request().build());
 
@@ -132,7 +141,7 @@ class DefaultLauncherTests {
 
 	@Test
 	void discoverTestPlanForEngineThatReturnsNullForItsRootDescriptor() {
-		TestEngine engine = new TestEngineStub() {
+		TestEngine engine = new TestEngineStub("some-engine-id") {
 
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
@@ -140,36 +149,225 @@ class DefaultLauncherTests {
 			}
 		};
 
-		TestPlan testPlan = createLauncher(engine).discover(request().build());
-		assertThat(testPlan.getRoots()).hasSize(0);
+		var discoveryListener = mock(LauncherDiscoveryListener.class);
+		var testPlan = createLauncher(engine).discover(request() //
+				.listeners(discoveryListener) //
+				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+				.build());
+		assertThat(testPlan.getRoots()).hasSize(1);
+		assertDiscoveryFailed(engine, discoveryListener);
 	}
 
-	@Test
-	void discoverTestPlanForEngineThatThrowsAnErrorInDiscoveryPhase() {
-		TestEngine engine = new TestEngineStub() {
+	@ParameterizedTest
+	@ValueSource(classes = { Error.class, RuntimeException.class })
+	void discoverErrorTestDescriptorForEngineThatThrowsInDiscoveryPhase(Class<? extends Throwable> throwableClass) {
+		TestEngine engine = new TestEngineStub("my-engine-id") {
 
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-				throw new Error("ignored");
+				try {
+					Constructor<? extends Throwable> constructor = throwableClass.getDeclaredConstructor(String.class);
+					throw ExceptionUtils.throwAsUncheckedException(constructor.newInstance("ignored"));
+				}
+				catch (Exception ignored) {
+					return null;
+				}
 			}
 		};
 
-		TestPlan testPlan = createLauncher(engine).discover(request().build());
-		assertThat(testPlan.getRoots()).hasSize(0);
+		var launcher = createLauncher(engine);
+		var discoveryListener = mock(LauncherDiscoveryListener.class);
+		var testPlan = launcher.discover(request() //
+				.listeners(discoveryListener) //
+				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+				.build());
+
+		assertThat(testPlan.getRoots()).hasSize(1);
+		var engineIdentifier = getOnlyElement(testPlan.getRoots());
+		assertThat(getOnlyElement(testPlan.getRoots()).getDisplayName()).isEqualTo("my-engine-id");
+		assertDiscoveryFailed(engine, discoveryListener);
+
+		var listener = mock(TestExecutionListener.class);
+		launcher.execute(testPlan, listener);
+
+		var testExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		verify(listener).executionStarted(engineIdentifier);
+		verify(listener).executionFinished(eq(engineIdentifier), testExecutionResult.capture());
+		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
+		assertThat(testExecutionResult.getValue().getThrowable().get()) //
+				.hasMessage("TestEngine with ID 'my-engine-id' failed to discover tests");
+	}
+
+	private void assertDiscoveryFailed(TestEngine testEngine, LauncherDiscoveryListener discoveryListener) {
+		var engineId = testEngine.getId();
+		ArgumentCaptor<EngineDiscoveryResult> failureCaptor = ArgumentCaptor.forClass(EngineDiscoveryResult.class);
+		verify(discoveryListener).engineDiscoveryFinished(eq(UniqueId.forEngine(engineId)), failureCaptor.capture());
+		var result = failureCaptor.getValue();
+		assertThat(result.getStatus()).isEqualTo(EngineDiscoveryResult.Status.FAILED);
+		assertThat(result.getThrowable()).isPresent();
+		assertThat(result.getThrowable().get()).hasMessage(
+			"TestEngine with ID '" + engineId + "' failed to discover tests");
 	}
 
 	@Test
-	void discoverTestPlanForEngineThatThrowsRuntimeExceptionInDiscoveryPhase() {
-		TestEngine engine = new TestEngineStub() {
-
+	void reportsEngineExecutionFailuresWithoutPriorEvents() {
+		var rootCause = new RuntimeException("something went horribly wrong");
+		var engine = new TestEngineStub() {
 			@Override
-			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-				throw new RuntimeException("ignored");
+			public void execute(ExecutionRequest request) {
+				throw rootCause;
 			}
 		};
 
-		TestPlan testPlan = createLauncher(engine).discover(request().build());
-		assertThat(testPlan.getRoots()).hasSize(0);
+		var listener = mock(TestExecutionListener.class);
+		createLauncher(engine).execute(request().build(), listener);
+
+		var testExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		verify(listener).executionStarted(any());
+		verify(listener).executionFinished(any(), testExecutionResult.capture());
+		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
+		assertThat(testExecutionResult.getValue().getThrowable().get()) //
+				.hasMessage("TestEngine with ID 'TestEngineStub' failed to execute tests") //
+				.hasCauseReference(rootCause);
+	}
+
+	@Test
+	void reportsEngineExecutionFailuresForSkippedEngine() {
+		var rootCause = new RuntimeException("something went horribly wrong");
+		var engine = new TestEngineStub() {
+			@Override
+			public void execute(ExecutionRequest request) {
+				var engineDescriptor = request.getRootTestDescriptor();
+				request.getEngineExecutionListener().executionSkipped(engineDescriptor, "not today");
+				throw rootCause;
+			}
+		};
+
+		var listener = mock(TestExecutionListener.class);
+		createLauncher(engine).execute(request().build(), listener);
+
+		var testExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		verify(listener).executionStarted(any());
+		verify(listener).executionFinished(any(), testExecutionResult.capture());
+		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
+		assertThat(testExecutionResult.getValue().getThrowable().get()) //
+				.hasMessage("TestEngine with ID 'TestEngineStub' failed to execute tests") //
+				.hasCauseReference(rootCause);
+	}
+
+	@Test
+	void reportsEngineExecutionFailuresForStartedEngine() {
+		var rootCause = new RuntimeException("something went horribly wrong");
+		var engine = new TestEngineStub() {
+			@Override
+			public void execute(ExecutionRequest request) {
+				var engineDescriptor = request.getRootTestDescriptor();
+				request.getEngineExecutionListener().executionStarted(engineDescriptor);
+				throw rootCause;
+			}
+		};
+
+		var listener = mock(TestExecutionListener.class);
+		createLauncher(engine).execute(request().build(), listener);
+
+		var testExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		verify(listener).executionStarted(any());
+		verify(listener).executionFinished(any(), testExecutionResult.capture());
+		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
+		assertThat(testExecutionResult.getValue().getThrowable().get()) //
+				.hasMessage("TestEngine with ID 'TestEngineStub' failed to execute tests") //
+				.hasCauseReference(rootCause);
+	}
+
+	@Test
+	void reportsEngineExecutionFailuresForSucessfullyFinishedEngine() {
+		var rootCause = new RuntimeException("something went horribly wrong");
+		var engine = new TestEngineStub() {
+			@Override
+			public void execute(ExecutionRequest request) {
+				var engineDescriptor = request.getRootTestDescriptor();
+				request.getEngineExecutionListener().executionStarted(engineDescriptor);
+				request.getEngineExecutionListener().executionFinished(engineDescriptor,
+					TestExecutionResult.successful());
+				throw rootCause;
+			}
+		};
+
+		var listener = mock(TestExecutionListener.class);
+		createLauncher(engine).execute(request().build(), listener);
+
+		var testExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		verify(listener).executionStarted(any());
+		verify(listener).executionFinished(any(), testExecutionResult.capture());
+		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
+		assertThat(testExecutionResult.getValue().getThrowable().get()) //
+				.hasMessage("TestEngine with ID 'TestEngineStub' failed to execute tests") //
+				.hasCauseReference(rootCause);
+	}
+
+	@Test
+	void reportsEngineExecutionFailuresForFailedFinishedEngine() {
+		var rootCause = new RuntimeException("something went horribly wrong");
+		var originalFailure = new RuntimeException("suppressed");
+		var engine = new TestEngineStub() {
+			@Override
+			public void execute(ExecutionRequest request) {
+				var engineDescriptor = request.getRootTestDescriptor();
+				var listener = request.getEngineExecutionListener();
+				listener.executionStarted(engineDescriptor);
+				listener.executionFinished(engineDescriptor, TestExecutionResult.failed(originalFailure));
+				throw rootCause;
+			}
+		};
+
+		var listener = mock(TestExecutionListener.class);
+		createLauncher(engine).execute(request().build(), listener);
+
+		var testExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		verify(listener).executionStarted(any());
+		verify(listener).executionFinished(any(), testExecutionResult.capture());
+		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
+		assertThat(testExecutionResult.getValue().getThrowable().get()) //
+				.hasMessage("TestEngine with ID 'TestEngineStub' failed to execute tests") //
+				.hasCauseReference(rootCause) //
+				.hasSuppressedException(originalFailure);
+	}
+
+	@Test
+	void reportsSkippedEngines() {
+		var engine = new TestEngineStub() {
+			@Override
+			public void execute(ExecutionRequest request) {
+				var engineDescriptor = request.getRootTestDescriptor();
+				request.getEngineExecutionListener().executionSkipped(engineDescriptor, "not today");
+			}
+		};
+
+		var listener = mock(TestExecutionListener.class);
+		createLauncher(engine).execute(request().build(), listener);
+
+		verify(listener).executionSkipped(any(TestIdentifier.class), eq("not today"));
+		verify(listener, times(0)).executionStarted(any());
+		verify(listener, times(0)).executionFinished(any(), any());
+	}
+
+	@Test
+	void reportsFinishedEngines() {
+		var engine = new TestEngineStub() {
+			@Override
+			public void execute(ExecutionRequest request) {
+				var engineDescriptor = request.getRootTestDescriptor();
+				var listener = request.getEngineExecutionListener();
+				listener.executionStarted(engineDescriptor);
+				listener.executionFinished(engineDescriptor, TestExecutionResult.successful());
+			}
+		};
+
+		var listener = mock(TestExecutionListener.class);
+		createLauncher(engine).execute(request().build(), listener);
+
+		verify(listener).executionStarted(any());
+		verify(listener).executionFinished(any(), eq(TestExecutionResult.successful()));
 	}
 
 	@Test
@@ -178,7 +376,7 @@ class DefaultLauncherTests {
 		engine.addTest("test1", noOp);
 		engine.addTest("test2", noOp);
 
-		DefaultLauncher launcher = createLauncher(engine);
+		var launcher = createLauncher(engine);
 
 		TestPlan testPlan = launcher.discover(request().selectors(selectPackage("any")).build());
 
@@ -195,7 +393,7 @@ class DefaultLauncherTests {
 		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("engine2");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
-		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
+		var launcher = createLauncher(firstEngine, secondEngine);
 
 		TestPlan testPlan = launcher.discover(
 			request().selectors(selectUniqueId(test1.getUniqueId()), selectUniqueId(test2.getUniqueId())).build());
@@ -212,7 +410,7 @@ class DefaultLauncherTests {
 		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("second");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
-		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
+		var launcher = createLauncher(firstEngine, secondEngine);
 
 		// @formatter:off
 		TestPlan testPlan = launcher.discover(
@@ -235,7 +433,7 @@ class DefaultLauncherTests {
 		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("second");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
-		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
+		var launcher = createLauncher(firstEngine, secondEngine);
 
 		// @formatter:off
 		TestPlan testPlan = launcher.discover(
@@ -255,7 +453,7 @@ class DefaultLauncherTests {
 		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("second");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
-		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
+		var launcher = createLauncher(firstEngine, secondEngine);
 
 		// @formatter:off
 		TestPlan testPlan = launcher.discover(
@@ -275,7 +473,7 @@ class DefaultLauncherTests {
 		DemoHierarchicalTestEngine secondEngine = new DemoHierarchicalTestEngine("second");
 		TestDescriptor test2 = secondEngine.addTest("test2", noOp);
 
-		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine);
+		var launcher = createLauncher(firstEngine, secondEngine);
 
 		// @formatter:off
 		TestPlan testPlan = launcher.discover(
@@ -300,7 +498,7 @@ class DefaultLauncherTests {
 		DemoHierarchicalTestEngine thirdEngine = new DemoHierarchicalTestEngine("third");
 		TestDescriptor test3 = thirdEngine.addTest("test3", noOp);
 
-		DefaultLauncher launcher = createLauncher(firstEngine, secondEngine, thirdEngine);
+		var launcher = createLauncher(firstEngine, secondEngine, thirdEngine);
 
 		// @formatter:off
 		TestPlan testPlan = launcher.discover(
@@ -322,7 +520,7 @@ class DefaultLauncherTests {
 		DemoHierarchicalTestDescriptor test1 = engine.addTest("test1", noOp);
 		engine.addTest("test2", noOp);
 
-		DefaultLauncher launcher = createLauncher(engine);
+		var launcher = createLauncher(engine);
 
 		PostDiscoveryFilter includeWithUniqueIdContainsTest = new PostDiscoveryFilterStub(
 			descriptor -> FilterResult.includedIf(descriptor.getUniqueId().toString().contains("test")),
@@ -344,7 +542,7 @@ class DefaultLauncherTests {
 	void withoutConfigurationParameters_LauncherPassesEmptyConfigurationParametersIntoTheExecutionRequest() {
 		TestEngineSpy engine = new TestEngineSpy();
 
-		DefaultLauncher launcher = createLauncher(engine);
+		var launcher = createLauncher(engine);
 		launcher.execute(request().build());
 
 		ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
@@ -356,7 +554,7 @@ class DefaultLauncherTests {
 	void withConfigurationParameters_LauncherPassesPopulatedConfigurationParametersIntoTheExecutionRequest() {
 		TestEngineSpy engine = new TestEngineSpy();
 
-		DefaultLauncher launcher = createLauncher(engine);
+		var launcher = createLauncher(engine);
 		launcher.execute(request().configurationParameter("key", "value").build());
 
 		ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
@@ -372,7 +570,7 @@ class DefaultLauncherTests {
 		try {
 			TestEngineSpy engine = new TestEngineSpy();
 
-			DefaultLauncher launcher = createLauncher(engine);
+			var launcher = createLauncher(engine);
 			launcher.execute(request().build());
 
 			ConfigurationParameters configurationParameters = engine.requestForExecution.getConfigurationParameters();
@@ -391,7 +589,7 @@ class DefaultLauncherTests {
 		TestEngineSpy engine = new TestEngineSpy();
 		SummaryGeneratingListener listener = new SummaryGeneratingListener();
 
-		DefaultLauncher launcher = createLauncher(engine);
+		var launcher = createLauncher(engine);
 		launcher.execute(request().build(), listener);
 
 		assertThat(listener.getSummary()).isNotNull();
@@ -422,7 +620,7 @@ class DefaultLauncherTests {
 			}
 		};
 
-		DefaultLauncher launcher = createLauncher(engine);
+		var launcher = createLauncher(engine);
 		TestPlan testPlan = launcher.discover(request().filters(
 			(PostDiscoveryFilter) testDescriptor -> FilterResult.includedIf(testDescriptor.isContainer())).build());
 
@@ -473,7 +671,7 @@ class DefaultLauncherTests {
 			}
 		};
 
-		DefaultLauncher launcher = createLauncher(engine);
+		var launcher = createLauncher(engine);
 		TestExecutionListener listener = mock(TestExecutionListener.class);
 		launcher.execute(request().build(), listener);
 
@@ -508,7 +706,7 @@ class DefaultLauncherTests {
 			return new EngineDescriptor(uniqueId, uniqueId.toString());
 		});
 
-		DefaultLauncher launcher = createLauncher(engine);
+		var launcher = createLauncher(engine);
 		TestPlan testPlan = launcher.discover(request().build());
 		verify(engine, times(1)).discover(any(), any());
 
@@ -517,10 +715,11 @@ class DefaultLauncherTests {
 	}
 
 	@Test
+	@TrackLogRecords
 	@SuppressWarnings("deprecation")
 	void testPlanWarnsWhenModified(LogRecordListener listener) {
 		TestEngine engine = new TestEngineSpy();
-		DefaultLauncher launcher = createLauncher(engine);
+		var launcher = createLauncher(engine);
 		TestPlan testPlan = launcher.discover(request().build());
 		TestIdentifier engineIdentifier = getOnlyElement(testPlan.getRoots());
 		UniqueId engineUniqueId = UniqueId.parse(engineIdentifier.getUniqueId());
@@ -539,6 +738,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
+	@TrackLogRecords
 	void thirdPartyEngineUsingReservedEngineIdPrefixEmitsWarning(LogRecordListener listener) {
 		String id = "junit-using-reserved-prefix";
 		createLauncher(new TestEngineStub(id));

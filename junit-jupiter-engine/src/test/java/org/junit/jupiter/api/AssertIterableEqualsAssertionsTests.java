@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -14,10 +14,14 @@ import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEndsWith;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.IterableFactory.listOf;
 import static org.junit.jupiter.api.IterableFactory.setOf;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -437,6 +441,23 @@ class AssertIterableEqualsAssertionsTests {
 			assertMessageStartsWith(ex, "message");
 			assertMessageEndsWith(ex, "iterable contents differ at index [4][1][0], expected: <3> but was: <5>");
 		}
+	}
+
+	@Test
+	// https://github.com/junit-team/junit5/issues/2157
+	void assertIterableEqualsWithListOfPath() {
+		var expected = listOf(Path.of("1"));
+		var actual = listOf(Path.of("1"));
+		assertDoesNotThrow(() -> assertIterableEquals(expected, actual));
+	}
+
+	@Test
+	void assertIterableEqualsThrowsStackOverflowErrorForInterlockedRecursiveStructures() {
+		var expected = new ArrayList<>();
+		var actual = new ArrayList<>();
+		actual.add(expected);
+		expected.add(actual);
+		assertThrows(StackOverflowError.class, () -> assertIterableEquals(expected, actual));
 	}
 
 }

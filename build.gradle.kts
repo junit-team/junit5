@@ -2,16 +2,29 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 plugins {
-	id("com.gradle.build-scan")
 	id("net.nemerosa.versioning")
 	id("com.github.ben-manes.versions") // gradle dependencyUpdates
 	id("com.diffplug.gradle.spotless")
-	id("de.marcphilipp.nexus-publish") apply false
+	id("io.spring.nohttp")
 }
 
 buildScan {
-	termsOfServiceUrl = "https://gradle.com/terms-of-service"
-	termsOfServiceAgree = "yes"
+	if (System.getenv("CI") != null || System.getenv("GITHUB_WORKFLOW") != null) {
+		tag("CI")
+	} else {
+		tag("LOCAL")
+	}
+
+	value("Git Branch", versioning.info.branch)
+	value("Git Commit", versioning.info.commit)
+	link("Commit", "https://github.com/junit-team/junit5/commit/${versioning.info.commit}")
+	if (versioning.info.dirty) {
+		tag("DIRTY")
+	}
+
+	if (project.hasProperty("javaHome")) {
+		value("Custom Java home", project.property("javaHome") as String)
+	}
 }
 
 val buildTimeAndDate = OffsetDateTime.now()
@@ -49,7 +62,7 @@ val modularProjects by extra(mavenizedProjects - listOf(project(":junit-platform
 
 val license by extra(License(
 		name = "Eclipse Public License v2.0",
-		url = uri("http://www.eclipse.org/legal/epl-v20.html"),
+		url = uri("https://www.eclipse.org/legal/epl-v20.html"),
 		headerFile = file("src/spotless/eclipse-public-license-2.0.java")
 ))
 
@@ -58,6 +71,7 @@ val jacocoTestProjects = listOf(
 		project(":junit-jupiter-engine"),
 		project(":junit-jupiter-migrationsupport"),
 		project(":junit-jupiter-params"),
+		project(":junit-platform-runner"),
 		project(":junit-vintage-engine"),
 		project(":platform-tests")
 )
@@ -162,6 +176,11 @@ rootProject.apply {
 			trimTrailingWhitespace()
 			endWithNewline()
 		}
+	}
+
+	nohttp {
+		// Must cast, since `source` is only exposed as a FileTree
+		(source as ConfigurableFileTree).exclude("buildSrc/build/generated-sources/**")
 	}
 
 	tasks {

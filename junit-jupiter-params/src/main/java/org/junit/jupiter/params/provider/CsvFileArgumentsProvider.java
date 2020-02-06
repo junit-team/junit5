@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -14,17 +14,19 @@ import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.StreamSupport.stream;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.jupiter.params.provider.CsvArgumentsProvider.handleCsvException;
+import static org.junit.jupiter.params.provider.CsvParserFactory.createParserFor;
+import static org.junit.platform.commons.util.CollectionUtils.toSet;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
 import com.univocity.parsers.csv.CsvParser;
-import com.univocity.parsers.csv.CsvParserSettings;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
@@ -41,8 +43,8 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	private CsvFileSource annotation;
 	private String[] resources;
 	private Charset charset;
-	private CsvParserSettings settings;
 	private int numLinesToSkip;
+	private CsvParser csvParser;
 
 	CsvFileArgumentsProvider() {
 		this(Class::getResourceAsStream);
@@ -55,33 +57,27 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	@Override
 	public void accept(CsvFileSource annotation) {
 		this.annotation = annotation;
-		resources = annotation.resources();
+		this.resources = annotation.resources();
+		this.charset = getCharsetFrom(annotation);
+		this.numLinesToSkip = annotation.numLinesToSkip();
+		this.csvParser = createParserFor(annotation);
+	}
+
+	private Charset getCharsetFrom(CsvFileSource annotation) {
 		try {
-			this.charset = Charset.forName(annotation.encoding());
+			return Charset.forName(annotation.encoding());
 		}
 		catch (Exception ex) {
-			throw new PreconditionViolationException("The charset supplied in " + this.annotation + " is invalid", ex);
+			throw new PreconditionViolationException("The charset supplied in " + annotation + " is invalid", ex);
 		}
-		numLinesToSkip = annotation.numLinesToSkip();
-		settings = new CsvParserSettings();
-		// Do not use the built-in support for skipping rows/lines since it will
-		// throw an IllegalArgumentException if the file does not contain at least
-		// the number of specified lines to skip.
-		// settings.setNumberOfRowsToSkip(annotation.numLinesToSkip());
-		settings.getFormat().setDelimiter(annotation.delimiter());
-		settings.getFormat().setLineSeparator(annotation.lineSeparator());
-		settings.getFormat().setQuote('"');
-		settings.getFormat().setQuoteEscape('"');
-		settings.setEmptyValue(annotation.emptyValue());
-		settings.setAutoConfigurationEnabled(false);
 	}
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
 		// @formatter:off
-		return Arrays.stream(resources)
+		return Arrays.stream(this.resources)
 				.map(resource -> openInputStream(context, resource))
-				.map(this::createCsvParser)
+				.map(this::beginParsing)
 				.flatMap(this::toStream);
 		// @formatter:on
 	}
@@ -93,15 +89,14 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 			() -> "Classpath resource [" + resource + "] does not exist");
 	}
 
-	private CsvParser createCsvParser(InputStream inputStream) {
-		CsvParser csvParser = new CsvParser(settings);
+	private CsvParser beginParsing(InputStream inputStream) {
 		try {
-			csvParser.beginParsing(inputStream, charset);
+			this.csvParser.beginParsing(inputStream, this.charset);
 		}
 		catch (Throwable throwable) {
 			handleCsvException(throwable, this.annotation);
 		}
-		return csvParser;
+		return this.csvParser;
 	}
 
 	private Stream<Arguments> toStream(CsvParser csvParser) {
@@ -121,14 +116,14 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 	private static class CsvParserIterator implements Iterator<Arguments> {
 
 		private final CsvParser csvParser;
-
 		private final CsvFileSource annotation;
-
+		private final Set<String> nullValues;
 		private Object[] nextCsvRecord;
 
 		CsvParserIterator(CsvParser csvParser, CsvFileSource annotation) {
 			this.csvParser = csvParser;
 			this.annotation = annotation;
+			this.nullValues = toSet(annotation.nullValues());
 			advance();
 		}
 
@@ -145,13 +140,24 @@ class CsvFileArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<
 		}
 
 		private void advance() {
+			String[] parsedLine = null;
 			try {
-				this.nextCsvRecord = this.csvParser.parseNext();
+				parsedLine = this.csvParser.parseNext();
+				if (parsedLine != null && !this.nullValues.isEmpty()) {
+					for (int i = 0; i < parsedLine.length; i++) {
+						if (this.nullValues.contains(parsedLine[i])) {
+							parsedLine[i] = null;
+						}
+					}
+				}
 			}
 			catch (Throwable throwable) {
 				handleCsvException(throwable, this.annotation);
 			}
+
+			this.nextCsvRecord = parsedLine;
 		}
+
 	}
 
 }

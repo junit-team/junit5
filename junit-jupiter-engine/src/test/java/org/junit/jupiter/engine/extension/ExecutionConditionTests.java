@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -54,13 +54,13 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	void conditionWorksOnContainer() {
 		EngineExecutionResults executionResults = executeTestsForClass(TestCaseWithExecutionConditionOnClass.class);
 
-		executionResults.containers().assertStatistics(stats -> stats.skipped(1));
-		executionResults.tests().assertStatistics(stats -> stats.started(0));
+		executionResults.containerEvents().assertStatistics(stats -> stats.skipped(1));
+		executionResults.testEvents().assertStatistics(stats -> stats.started(0));
 	}
 
 	@Test
 	void conditionWorksOnTest() {
-		Events tests = executeTestsForClass(TestCaseWithExecutionConditionOnMethods.class).tests();
+		Events tests = executeTestsForClass(TestCaseWithExecutionConditionOnMethods.class).testEvents();
 
 		tests.assertStatistics(stats -> stats.started(2).succeeded(2).skipped(3));
 	}
@@ -113,8 +113,8 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 		// @formatter:on
 
 		EngineExecutionResults executionResults = executeTests(request);
-		Events containers = executionResults.containers();
-		Events tests = executionResults.tests();
+		Events containers = executionResults.containerEvents();
+		Events tests = executionResults.testEvents();
 
 		containers.assertStatistics(stats -> stats.skipped(0).started(2));
 		tests.assertStatistics(stats -> stats.started(testStartedCount).failed(testFailedCount));
@@ -128,7 +128,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 				.build();
 		// @formatter:on
 
-		executeTests(request).tests().assertStatistics(
+		executeTests(request).testEvents().assertStatistics(
 			stats -> stats.started(started).succeeded(succeeded).failed(failed));
 	}
 

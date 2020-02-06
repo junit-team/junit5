@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -133,9 +133,9 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 		);
 		// @formatter:on
 
-		executionResults.containers().assertStatistics(//
+		executionResults.containerEvents().assertStatistics(//
 			stats -> stats.started(numContainers).finished(numContainers).failed(numFailedContainers));
-		executionResults.tests().assertStatistics(//
+		executionResults.testEvents().assertStatistics(//
 			stats -> stats.started(numTests).finished(numTests));
 
 		assertEquals(Arrays.asList(methods), methodsInvoked);

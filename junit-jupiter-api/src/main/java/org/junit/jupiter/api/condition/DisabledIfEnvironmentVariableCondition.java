@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -13,13 +13,9 @@ package org.junit.jupiter.api.condition;
 import static java.lang.String.format;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
-
-import java.util.Optional;
 
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -28,21 +24,23 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 5.1
  * @see DisabledIfEnvironmentVariable
  */
-class DisabledIfEnvironmentVariableCondition implements ExecutionCondition {
+class DisabledIfEnvironmentVariableCondition
+		extends AbstractRepeatableAnnotationCondition<DisabledIfEnvironmentVariable> {
 
-	private static final ConditionEvaluationResult ENABLED_BY_DEFAULT = enabled(
-		"@DisabledIfEnvironmentVariable is not present");
+	private static final ConditionEvaluationResult ENABLED = ConditionEvaluationResult.enabled(
+		"No @DisabledIfEnvironmentVariable conditions resulting in 'disabled' execution encountered");
+
+	DisabledIfEnvironmentVariableCondition() {
+		super(DisabledIfEnvironmentVariable.class);
+	}
 
 	@Override
-	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-		Optional<DisabledIfEnvironmentVariable> optional = findAnnotation(context.getElement(),
-			DisabledIfEnvironmentVariable.class);
+	protected ConditionEvaluationResult getNoDisabledConditionsEncounteredResult() {
+		return ENABLED;
+	}
 
-		if (!optional.isPresent()) {
-			return ENABLED_BY_DEFAULT;
-		}
-
-		DisabledIfEnvironmentVariable annotation = optional.get();
+	@Override
+	protected ConditionEvaluationResult evaluate(DisabledIfEnvironmentVariable annotation) {
 		String name = annotation.named().trim();
 		String regex = annotation.matches();
 		Preconditions.notBlank(name, () -> "The 'named' attribute must not be blank in " + annotation);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -54,10 +54,10 @@ class JavaVersionsTests {
 				.setWorkspace("java-versions-" + version) //
 				.addArguments("--debug", "verify") //
 				.setTimeout(Duration.ofMinutes(2)) //
-				.putEnvironment("JAVA_HOME", javaHome.toString()) //
+				.setJavaHome(javaHome) //
 				.build().run();
 		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
-		assertEquals(0, result.getExitCode(), result.toString());
+		assertEquals(0, result.getExitCode());
 		assertEquals("", result.getOutput("err"));
 		return result.getOutputLines("out");
 	}

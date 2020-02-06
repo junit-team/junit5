@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -19,9 +19,9 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,7 +63,7 @@ class UniqueIdFormat implements Serializable {
 	private final char segmentDelimiter;
 	private final char typeValueSeparator;
 	private final Pattern segmentPattern;
-	private final Map<Character, String> encodedCharacterMap = new TreeMap<>();
+	private final Map<Character, String> encodedCharacterMap = new HashMap<>();
 
 	UniqueIdFormat(char openSegment, char typeValueSeparator, char closeSegment, char segmentDelimiter) {
 		this.openSegment = openSegment;
@@ -137,8 +137,9 @@ class UniqueIdFormat implements Serializable {
 	}
 
 	private String encode(String s) {
-		StringBuilder builder = new StringBuilder();
-		for (char c : s.toCharArray()) {
+		StringBuilder builder = new StringBuilder(s.length());
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
 			String value = encodedCharacterMap.get(c);
 			if (value == null) {
 				builder.append(c);

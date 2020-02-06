@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -21,12 +21,16 @@ import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
@@ -161,26 +165,30 @@ class DefaultLauncher implements Launcher {
 			logger.debug(() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 
-			Optional<TestDescriptor> engineRoot = discoverEngineRoot(testEngine, discoveryRequest);
-			engineRoot.ifPresent(rootDescriptor -> root.add(testEngine, rootDescriptor));
+			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, discoveryRequest);
+			root.add(testEngine, rootDescriptor);
 		}
 		root.applyPostDiscoveryFilters(discoveryRequest);
 		root.prune();
 		return root;
 	}
 
-	private Optional<TestDescriptor> discoverEngineRoot(TestEngine testEngine,
-			LauncherDiscoveryRequest discoveryRequest) {
-
+	private TestDescriptor discoverEngineRoot(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest) {
+		LauncherDiscoveryListener discoveryListener = discoveryRequest.getDiscoveryListener();
 		UniqueId uniqueEngineId = UniqueId.forEngine(testEngine.getId());
 		try {
+			discoveryListener.engineDiscoveryStarted(uniqueEngineId);
 			TestDescriptor engineRoot = testEngine.discover(discoveryRequest, uniqueEngineId);
 			discoveryResultValidator.validate(testEngine, engineRoot);
-			return Optional.of(engineRoot);
+			discoveryListener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.successful());
+			return engineRoot;
 		}
 		catch (Throwable throwable) {
-			handleThrowable(testEngine, "discover", throwable);
-			return Optional.empty();
+			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+			String message = String.format("TestEngine with ID '%s' failed to discover tests", testEngine.getId());
+			JUnitException cause = new JUnitException(message, throwable);
+			discoveryListener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.failed(cause));
+			return new EngineDiscoveryErrorDescriptor(uniqueEngineId, testEngine, cause);
 		}
 	}
 
@@ -193,9 +201,15 @@ class DefaultLauncher implements Launcher {
 			ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(internalTestPlan,
 				testExecutionListener);
 			for (TestEngine testEngine : root.getTestEngines()) {
-				TestDescriptor testDescriptor = root.getTestDescriptorFor(testEngine);
-				execute(testEngine,
-					new ExecutionRequest(testDescriptor, engineExecutionListener, configurationParameters));
+				TestDescriptor engineDescriptor = root.getTestDescriptorFor(testEngine);
+				if (engineDescriptor instanceof EngineDiscoveryErrorDescriptor) {
+					engineExecutionListener.executionStarted(engineDescriptor);
+					engineExecutionListener.executionFinished(engineDescriptor,
+						TestExecutionResult.failed(((EngineDiscoveryErrorDescriptor) engineDescriptor).getCause()));
+				}
+				else {
+					execute(engineDescriptor, engineExecutionListener, configurationParameters, testEngine);
+				}
 			}
 			testExecutionListener.testPlanExecutionFinished(internalTestPlan);
 		});
@@ -203,6 +217,7 @@ class DefaultLauncher implements Launcher {
 
 	private void withInterceptedStreams(ConfigurationParameters configurationParameters,
 			TestExecutionListenerRegistry listenerRegistry, Consumer<TestExecutionListener> action) {
+
 		TestExecutionListener testExecutionListener = listenerRegistry.getCompositeTestExecutionListener();
 		Optional<StreamInterceptingTestExecutionListener> streamInterceptingTestExecutionListener = StreamInterceptingTestExecutionListener.create(
 			configurationParameters, testExecutionListener::reportingEntryPublished);
@@ -224,19 +239,20 @@ class DefaultLauncher implements Launcher {
 		return registry;
 	}
 
-	private void execute(TestEngine testEngine, ExecutionRequest executionRequest) {
+	private void execute(TestDescriptor engineDescriptor, EngineExecutionListener listener,
+			ConfigurationParameters configurationParameters, TestEngine testEngine) {
+
+		OutcomeDelayingEngineExecutionListener delayingListener = new OutcomeDelayingEngineExecutionListener(listener,
+			engineDescriptor);
 		try {
-			testEngine.execute(executionRequest);
+			testEngine.execute(new ExecutionRequest(engineDescriptor, delayingListener, configurationParameters));
+			delayingListener.reportEngineOutcome();
 		}
 		catch (Throwable throwable) {
-			handleThrowable(testEngine, "execute", throwable);
+			BlacklistedExceptions.rethrowIfBlacklisted(throwable);
+			delayingListener.reportEngineFailure(new JUnitException(
+				String.format("TestEngine with ID '%s' failed to execute tests", testEngine.getId()), throwable));
 		}
-	}
-
-	private void handleThrowable(TestEngine testEngine, String phase, Throwable throwable) {
-		BlacklistedExceptions.rethrowIfBlacklisted(throwable);
-		logger.warn(throwable,
-			() -> String.format("TestEngine with ID '%s' failed to %s tests", testEngine.getId(), phase));
 	}
 
 }

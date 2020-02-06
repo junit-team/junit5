@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -13,6 +13,7 @@ package org.junit.platform.launcher.listeners;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.List;
 
 import org.apiguardian.api.API;
@@ -125,9 +126,35 @@ public interface TestExecutionSummary {
 	 * Print failed containers and tests, including sources and exception
 	 * messages, to the supplied {@link PrintWriter}.
 	 *
+	 * @param writer the {@code PrintWriter} to which to print; never {@code null}
 	 * @see #printTo(PrintWriter)
+	 * @see #printFailuresTo(PrintWriter, int)
 	 */
 	void printFailuresTo(PrintWriter writer);
+
+	/**
+	 * Print failed containers and tests, including sources and exception
+	 * messages, to the supplied {@link PrintWriter}.
+	 *
+	 * <p>The maximum number of lines to print for exception stack traces (if any)
+	 * can be specified via the {@code maxStackTraceLines} argument.
+	 *
+	 * <p>By default, this method delegates to {@link #printFailuresTo(PrintWriter)},
+	 * effectively ignoring the {@code maxStackTraceLines} argument. Concrete
+	 * implementations of this interface should therefore override this default
+	 * method in order to honor the {@code maxStackTraceLines} argument.
+	 *
+	 * @param writer the {@code PrintWriter} to which to print; never {@code null}
+	 * @param maxStackTraceLines the maximum number of lines to print for exception
+	 * stack traces; must be a positive value
+	 * @see #printTo(PrintWriter)
+	 * @see #printFailuresTo(PrintWriter)
+	 * @since 1.6
+	 */
+	@API(status = MAINTAINED, since = "1.6")
+	default void printFailuresTo(PrintWriter writer, int maxStackTraceLines) {
+		printFailuresTo(writer);
+	}
 
 	/**
 	 * Get an immutable list of the failures of the test plan execution.
@@ -137,7 +164,7 @@ public interface TestExecutionSummary {
 	/**
 	 * Failure of a test or container.
 	 */
-	interface Failure {
+	interface Failure extends Serializable {
 
 		/**
 		 * Get the identifier of the failed test or container.

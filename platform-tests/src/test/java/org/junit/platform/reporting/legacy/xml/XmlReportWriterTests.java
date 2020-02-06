@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -20,6 +20,7 @@ import static org.junit.platform.launcher.LauncherConstants.STDOUT_REPORT_ENTRY_
 import static org.junit.platform.reporting.legacy.xml.XmlReportAssertions.assertValidAccordingToJenkinsSchema;
 
 import java.io.StringWriter;
+import java.io.Writer;
 import java.time.Clock;
 import java.util.Map;
 
@@ -219,10 +220,33 @@ class XmlReportWriterTests {
 		//@formatter:on
 	}
 
+	@Test
+	void doesNotReopenCDataWithinCDataContent() throws Exception {
+		UniqueId uniqueId = engineDescriptor.getUniqueId().append("test", "test");
+		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "test"));
+		TestPlan testPlan = TestPlan.from(singleton(engineDescriptor));
+
+		XmlReportData reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+		AssertionError assertionError = new AssertionError("<foo><![CDATA[bar]]></foo>");
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId.toString()), failed(assertionError));
+		Writer assertingWriter = new StringWriter() {
+
+			@Override
+			public void write(char[] cbuf, int off, int len) {
+				assertThat(new String(cbuf, off, len)).doesNotContain("]]><![CDATA[");
+			}
+		};
+
+		writeXmlReport(testPlan, reportData, assertingWriter);
+	}
+
 	private String writeXmlReport(TestPlan testPlan, XmlReportData reportData) throws Exception {
 		StringWriter out = new StringWriter();
-		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);
+		writeXmlReport(testPlan, reportData, out);
 		return out.toString();
 	}
 
+	private void writeXmlReport(TestPlan testPlan, XmlReportData reportData, Writer out) throws Exception {
+		new XmlReportWriter(reportData).writeXmlReport(getOnlyElement(testPlan.getRoots()), out);
+	}
 }

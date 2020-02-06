@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -399,6 +399,7 @@ public interface ExtensionContext {
 		 * @param key the key; never {@code null}
 		 * @return the value; potentially {@code null}
 		 * @see #get(Object, Class)
+		 * @see #getOrDefault(Object, Class, Object)
 		 */
 		Object get(Object key);
 
@@ -416,8 +417,34 @@ public interface ExtensionContext {
 		 * @param <V> the value type
 		 * @return the value; potentially {@code null}
 		 * @see #get(Object)
+		 * @see #getOrDefault(Object, Class, Object)
 		 */
 		<V> V get(Object key, Class<V> requiredType);
+
+		/**
+		 * Get the value of the specified required type that is stored under
+		 * the supplied {@code key}, or the supplied {@code defaultValue} if no
+		 * value is found for the supplied {@code key} in this store or in an
+		 * ancestor.
+		 *
+		 * <p>If no value is stored in the current {@link ExtensionContext}
+		 * for the supplied {@code key}, ancestors of the context will be queried
+		 * for a value with the same {@code key} in the {@code Namespace} used
+		 * to create this store.
+		 *
+		 * @param key the key; never {@code null}
+		 * @param requiredType the required type of the value; never {@code null}
+		 * @param defaultValue the default value
+		 * @param <V> the value type
+		 * @return the value; potentially {@code null}
+		 * @see #get(Object, Class)
+		 * @since 5.5
+		 */
+		@API(status = STABLE, since = "5.5")
+		default <V> V getOrDefault(Object key, Class<V> requiredType, V defaultValue) {
+			V value = get(key, requiredType);
+			return (value != null ? value : defaultValue);
+		}
 
 		/**
 		 * Get the object of type {@code type} that is present in this

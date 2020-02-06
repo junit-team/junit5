@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -26,7 +26,8 @@ import org.apiguardian.api.API;
  * resources}.
  *
  * <p>The lines of these CSV files will be provided as arguments to the
- * annotated {@code @ParameterizedTest} method.
+ * annotated {@code @ParameterizedTest} method. Any line beginning with a
+ * {@code #} symbol will be interpreted as a comment and will be ignored.
  *
  * @since 5.0
  * @see CsvSource
@@ -64,11 +65,29 @@ public @interface CsvFileSource {
 	String lineSeparator() default "\n";
 
 	/**
-	 * The column delimiter to use when reading the CSV files.
+	 * The column delimiter character to use when reading the CSV files.
 	 *
-	 * <p>Defaults to {@code ","}.
+	 * <p>This is an alternative to {@link #delimiterString} and cannot be
+	 * used in conjunction with {@link #delimiterString}.
+	 *
+	 * <p>Defaults implicitly to {@code ','}, if neither delimiter attribute is
+	 * explicitly set.
 	 */
-	char delimiter() default ',';
+	char delimiter() default '\0';
+
+	/**
+	 * The column delimiter string to use when reading the CSV files.
+	 *
+	 * <p>This is an alternative to {@link #delimiter} and cannot be used in
+	 * conjunction with {@link #delimiter}.
+	 *
+	 * <p>Defaults implicitly to {@code ","}, if neither delimiter attribute is
+	 * explicitly set.
+	 *
+	 * @since 5.6
+	 */
+	@API(status = EXPERIMENTAL, since = "5.6")
+	String delimiterString() default "";
 
 	/**
 	 * The number of lines to skip when reading the CSV files.
@@ -93,5 +112,23 @@ public @interface CsvFileSource {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.5")
 	String emptyValue() default "";
+
+	/**
+	 * A list of strings that should be interpreted as {@code null} references.
+	 *
+	 * <p>For example, you may wish for certain values such as {@code "N/A"} or
+	 * {@code "NIL"} to be converted to {@code null} references.
+	 *
+	 * <p>Please note that <em>unquoted</em> empty values will always be converted
+	 * to {@code null} references regardless of the value of this {@code nullValues}
+	 * attribute; whereas, a <em>quoted</em> empty string will be treated as an
+	 * {@link #emptyValue}.
+	 *
+	 * <p>Defaults to {@code {}}.
+	 *
+	 * @since 5.6
+	 */
+	@API(status = EXPERIMENTAL, since = "5.6")
+	String[] nullValues() default {};
 
 }

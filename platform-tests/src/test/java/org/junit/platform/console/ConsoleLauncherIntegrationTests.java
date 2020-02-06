@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -15,8 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.StringUtils.isBlank;
-
-import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
 
@@ -47,7 +45,6 @@ class ConsoleLauncherIntegrationTests {
 		ConsoleLauncherWrapperResult result = new ConsoleLauncherWrapper().execute(args);
 		assertAll("all subpackage test classes are excluded by the class name filter", //
 			() -> assertArrayEquals(args, result.args), //
-			() -> assertEquals(StandardCharsets.UTF_8, result.charset), //
 			() -> assertEquals(0, result.code), //
 			() -> assertEquals(0, result.getTestsFoundCount()), //
 			() -> assertTrue(isBlank(result.err)) //

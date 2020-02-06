@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -25,7 +25,6 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 
@@ -64,9 +63,9 @@ class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 	void twoTestClassesCanShareStateViaEngineExtensionContext() {
 		Parent.counter.set(0);
 
-		EngineExecutionResults executionResults = executeTests(selectClass(A.class), selectClass(B.class));
+		executeTests(selectClass(A.class), selectClass(B.class)).testEvents()//
+				.assertStatistics(stats -> stats.started(2));
 
-		assertThat(executionResults.tests().started().count()).isEqualTo(2);
 		assertThat(Parent.counter).hasValue(1);
 	}
 

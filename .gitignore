@@ -1,6 +1,7 @@
 # Gradle
 .gradle
-build/
+/build/
+/*/build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -9,7 +10,8 @@ gradle-app.setting
 .classpath
 .settings/
 .project
-bin/
+/bin/
+/*/bin
 
 # IntelliJ
 *.iml
@@ -17,11 +19,11 @@ bin/
 *.iws
 *.uml
 .idea/
-*/out/*
+/out/
+/*/out/
 
 # Misc
 *.log
 *.graphml
 coverage.db*
-out
 .metadata

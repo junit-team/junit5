@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -21,6 +21,9 @@ import de.sormuras.bartholdy.Tool;
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
 import org.junit.jupiter.api.Test;
+import org.opentest4j.TestAbortedException;
+
+import platform.tooling.support.Helper;
 import platform.tooling.support.Request;
 
 /**
@@ -40,12 +43,13 @@ class GradleMissingEngineTests {
 				.setWorkspace(project + '-' + version) //
 				.setTool(gradle) //
 				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
+				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.build() //
 				.run();
 
 		assumeFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
-		assertEquals(1, result.getExitCode(), result.toString());
+		assertEquals(1, result.getExitCode());
 		assertLinesMatch(List.of( //
 			">> HEAD >>", //
 			".+DEBUG.+Cannot create Launcher without at least one TestEngine.+", //

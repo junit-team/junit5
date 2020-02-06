@@ -1,3 +1,5 @@
+import aQute.bnd.gradle.BundleTaskConvention;
+
 plugins {
 	`java-library-conventions`
 	id("com.github.johnrengelman.shadow")
@@ -6,6 +8,7 @@ plugins {
 description = "JUnit Platform Console Standalone"
 
 dependencies {
+	internal(platform(project(":dependencies")))
 	shadowed(project(":junit-platform-reporting"))
 	shadowed(project(":junit-platform-console"))
 	shadowed(project(":junit-jupiter-engine"))
@@ -25,6 +28,7 @@ tasks {
 		dependsOn(shadowJar)
 	}
 	shadowJar {
+		dependsOn(allMainClasses)
 		classifier = ""
 		configurations = listOf(project.configurations["shadowed"])
 
@@ -40,6 +44,19 @@ tasks {
 			into("META-INF")
 		}
 
+		withConvention(BundleTaskConvention::class) {
+			bnd("""
+				# Customize the imports because this is an aggregate jar
+				Import-Package: \
+					!org.apiguardian.api,\
+					kotlin.*;resolution:="optional",\
+					*
+				# Disable the APIGuardian plugin since everything was already
+				# processed, again because this is an aggregate jar
+				-export-apiguardian:
+			""")
+		}
+
 		mergeServiceFiles()
 		manifest.apply {
 			inheritFrom(jar.get().manifest)
@@ -51,11 +68,19 @@ tasks {
 					"Engine-Version-junit-jupiter" to jupiterVersion,
 					"Engine-Version-junit-vintage" to vintageVersion,
 					// Version-aware binaries are already included - set Multi-Release flag here.
-					// See http://openjdk.java.net/jeps/238 for details
+					// See https://openjdk.java.net/jeps/238 for details
 					// Note: the "jar --update ... --release X" command does not work with the
-					// shadowed JAR as it contains nested classes that do comply multi-release jars.
+					// shadowed JAR as it contains nested classes that do not comply with multi-release jars.
 					"Multi-Release" to true
 			))
 		}
+	}
+
+	// This jar contains some Java 9 code
+	// (org.junit.platform.console.ConsoleLauncherToolProvider which implements
+	// java.util.spi.ToolProvider which is @since 9).
+	// So in order to resolve this, it can only run on Java 9
+	osgiProperties {
+		property("-runee", "JavaSE-9")
 	}
 }

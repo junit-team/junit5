@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,6 +10,7 @@
 
 package org.junit.platform.testkit.engine;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.testkit.engine.Event.byTestDescriptor;
 
@@ -27,9 +28,9 @@ import org.junit.platform.engine.TestDescriptor;
  * {@link org.junit.platform.engine.TestEngine TestEngine}.
  *
  * @since 1.4
- * @see #all()
- * @see #containers()
- * @see #tests()
+ * @see #allEvents()
+ * @see #containerEvents()
+ * @see #testEvents()
  * @see ExecutionRecorder
  * @see Events
  * @see Executions
@@ -59,9 +60,25 @@ public class EngineExecutionResults {
 
 	/**
 	 * Get all recorded events.
+	 *
+	 * @since 1.6
+	 * @see #containerEvents()
+	 * @see #testEvents()
 	 */
-	public Events all() {
+	@API(status = EXPERIMENTAL, since = "1.6")
+	public Events allEvents() {
 		return this.allEvents;
+	}
+
+	/**
+	 * Get all recorded events.
+	 *
+	 * @deprecated This method will be removed in 1.7; use {@link #allEvents()} instead.
+	 */
+	@Deprecated
+	@API(status = DEPRECATED, since = "1.6")
+	public Events all() {
+		return allEvents();
 	}
 
 	/**
@@ -69,9 +86,28 @@ public class EngineExecutionResults {
 	 *
 	 * <p>In this context, the word "container" applies to {@link TestDescriptor
 	 * TestDescriptors} that return {@code true} from {@link TestDescriptor#isContainer()}.
+	 *
+	 * @since 1.6
+	 * @see #allEvents()
+	 * @see #testEvents()
 	 */
-	public Events containers() {
+	@API(status = EXPERIMENTAL, since = "1.6")
+	public Events containerEvents() {
 		return this.containerEvents;
+	}
+
+	/**
+	 * Get recorded events for containers.
+	 *
+	 * <p>In this context, the word "container" applies to {@link TestDescriptor
+	 * TestDescriptors} that return {@code true} from {@link TestDescriptor#isContainer()}.
+	 *
+	 * @deprecated This method will be removed in 1.7; use {@link #containerEvents()} instead.
+	 */
+	@Deprecated
+	@API(status = DEPRECATED, since = "1.6")
+	public Events containers() {
+		return containerEvents();
 	}
 
 	/**
@@ -79,9 +115,28 @@ public class EngineExecutionResults {
 	 *
 	 * <p>In this context, the word "test" applies to {@link TestDescriptor
 	 * TestDescriptors} that return {@code true} from {@link TestDescriptor#isTest()}.
+	 *
+	 * @since 1.6
+	 * @see #allEvents()
+	 * @see #containerEvents()
 	 */
-	public Events tests() {
+	@API(status = EXPERIMENTAL, since = "1.6")
+	public Events testEvents() {
 		return this.testEvents;
+	}
+
+	/**
+	 * Get recorded events for tests.
+	 *
+	 * <p>In this context, the word "test" applies to {@link TestDescriptor
+	 * TestDescriptors} that return {@code true} from {@link TestDescriptor#isTest()}.
+	 *
+	 * @deprecated This method will be removed in 1.7; use {@link #testEvents()} instead.
+	 */
+	@Deprecated
+	@API(status = DEPRECATED, since = "1.6")
+	public Events tests() {
+		return testEvents();
 	}
 
 	/**

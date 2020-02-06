@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -22,6 +22,8 @@ import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 
 @API(status = INTERNAL, since = "5.5")
@@ -104,11 +106,17 @@ public class InvocationInterceptorChain {
 			return call.apply(interceptor, invocation);
 		}
 
+		@Override
+		public void skip() {
+			invocation.skip();
+		}
 	}
 
 	private static class ValidatingInvocation<T> implements Invocation<T> {
 
-		private final AtomicBoolean invoked = new AtomicBoolean();
+		private static final Logger LOG = LoggerFactory.getLogger(ValidatingInvocation.class);
+
+		private final AtomicBoolean invokedOrSkipped = new AtomicBoolean();
 		private final Invocation<T> delegate;
 		private final List<InvocationInterceptor> interceptors;
 
@@ -119,14 +127,25 @@ public class InvocationInterceptorChain {
 
 		@Override
 		public T proceed() throws Throwable {
-			if (!invoked.compareAndSet(false, true)) {
-				fail("Chain of InvocationInterceptors called invocation multiple times instead of just once");
-			}
+			markInvokedOrSkipped();
 			return delegate.proceed();
 		}
 
+		@Override
+		public void skip() {
+			LOG.debug(() -> "The invocation is skipped");
+			markInvokedOrSkipped();
+			delegate.skip();
+		}
+
+		private void markInvokedOrSkipped() {
+			if (!invokedOrSkipped.compareAndSet(false, true)) {
+				fail("Chain of InvocationInterceptors called invocation multiple times instead of just once");
+			}
+		}
+
 		void verifyInvokedAtLeastOnce() {
-			if (!invoked.get()) {
+			if (!invokedOrSkipped.get()) {
 				fail("Chain of InvocationInterceptors never called invocation");
 			}
 		}
@@ -136,7 +155,6 @@ public class InvocationInterceptorChain {
 				Class::getName).collect(joining(", "));
 			throw new JUnitException(prefix + ": " + commaSeparatedInterceptorClasses);
 		}
-
 	}
 
 }

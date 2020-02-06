@@ -1,0 +1,22 @@
+[[release-notes-5.6.0]]
+== 5.6.0
+
+*Date of Release:* January 20, 2020
+
+*Scope:*
+
+* New `@EnabledForJreRange` and `@DisabledForJreRange` execution conditions
+* `@Order` allows to specify relative order
+* Parameter names are included in default display names of parameterized test invocations
+* Improvements to `@CsvSource` and `@CsvFileSource`
+* New `TestInstancePreDestroyCallback` extension API
+* Performance improvements and bug fixes for the Vintage engine
+* Improved error reporting for failures during test discovery and execution
+* Support for using `any()` and `none()` in tag expressions
+* `org.junit.platform.console` now provides a `java.util.spi.ToolProvider`
+* `DiscoverySelectors` for tests in inherited nested classes
+* OSGi metadata
+* Minor bug fixes and improvements
+
+For complete details consult the
+https://junit.org/junit5/docs/5.6.0/release-notes/index.html[5.6.0 Release Notes] online.

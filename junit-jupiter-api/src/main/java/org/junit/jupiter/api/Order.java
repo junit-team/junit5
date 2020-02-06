@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -33,8 +33,8 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
  * {@link OrderAnnotation} {@link MethodOrderer}, the category applies to
  * <em>test methods</em>.
  *
- * <p>If {@code @Order} is not explicitly declared on an element, the default
- * order value assigned to the element is {@link Integer#MAX_VALUE}.
+ * <p>If {@code @Order} is not explicitly declared on an element, the
+ * {@link #DEFAULT} order value will be assigned to the element.
  *
  * @since 5.4
  * @see MethodOrderer.OrderAnnotation
@@ -47,11 +47,23 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 public @interface Order {
 
 	/**
+	 * Default order value for elements not explicitly annotated with {@code @Order},
+	 * equal to the value of {@code Integer.MAX_VALUE / 2}.
+	 *
+	 * @since 5.6
+	 * @see Order#value
+	 */
+	@API(status = EXPERIMENTAL, since = "5.6")
+	int DEFAULT = Integer.MAX_VALUE / 2;
+
+	/**
 	 * The order value for the annotated element (i.e., field or method).
 	 *
 	 * <p>Elements are ordered based on priority where a lower value has greater
 	 * priority than a higher value. For example, {@link Integer#MAX_VALUE} has
 	 * the lowest priority.
+	 *
+	 * @see #DEFAULT
 	 */
 	int value();
 

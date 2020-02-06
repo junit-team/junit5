@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -25,9 +25,9 @@ class UriSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void equalsAndHashCode() throws Exception {
-		var selector1 = new UriSelector(new URI("http://junit.org"));
-		var selector2 = new UriSelector(new URI("http://junit.org"));
-		var selector3 = new UriSelector(new URI("http://example.org"));
+		var selector1 = new UriSelector(new URI("https://junit.org"));
+		var selector2 = new UriSelector(new URI("https://junit.org"));
+		var selector3 = new UriSelector(new URI("https://example.org"));
 
 		assertEqualsAndHashCode(selector1, selector2, selector3);
 	}

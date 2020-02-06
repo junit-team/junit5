@@ -38,4 +38,8 @@ tasks.test {
 	reports {
 		html.isEnabled = true
 	}
+
+	doFirst {
+		println("Using Java version: ${JavaVersion.current()}")
+	}
 }

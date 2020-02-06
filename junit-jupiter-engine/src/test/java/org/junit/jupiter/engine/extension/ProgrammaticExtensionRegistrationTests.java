@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -30,6 +30,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -42,6 +43,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.jupiter.engine.execution.injection.sample.LongParameterResolver;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -165,7 +167,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	@Test
 	void instanceLevelWithPrivateField() {
 		Class<?> testClass = InstanceLevelExtensionRegistrationWithPrivateFieldTestCase.class;
-		executeTestsForClass(testClass).tests().assertThatEvents().haveExactly(1, finishedWithFailure(
+		executeTestsForClass(testClass).testEvents().assertThatEvents().haveExactly(1, finishedWithFailure(
 			instanceOf(PreconditionViolationException.class), message(expectedNotPrivateMessage(testClass))));
 	}
 
@@ -175,7 +177,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	@Test
 	void classLevelWithPrivateField() {
 		Class<?> testClass = ClassLevelExtensionRegistrationWithPrivateFieldTestCase.class;
-		executeTestsForClass(testClass).containers().assertThatEvents().haveExactly(1, finishedWithFailure(
+		executeTestsForClass(testClass).containerEvents().assertThatEvents().haveExactly(1, finishedWithFailure(
 			instanceOf(PreconditionViolationException.class), message(expectedNotPrivateMessage(testClass))));
 	}
 
@@ -183,7 +185,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	void instanceLevelWithNullField() {
 		Class<?> testClass = InstanceLevelExtensionRegistrationWithNullFieldTestCase.class;
 
-		executeTestsForClass(testClass).tests().assertThatEvents().haveExactly(1, finishedWithFailure(
+		executeTestsForClass(testClass).testEvents().assertThatEvents().haveExactly(1, finishedWithFailure(
 			instanceOf(PreconditionViolationException.class), message(expectedMessage(testClass, null))));
 	}
 
@@ -191,7 +193,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	void classLevelWithNullField() {
 		Class<?> testClass = ClassLevelExtensionRegistrationWithNullFieldTestCase.class;
 
-		executeTestsForClass(testClass).containers().assertThatEvents().haveExactly(1, finishedWithFailure(
+		executeTestsForClass(testClass).containerEvents().assertThatEvents().haveExactly(1, finishedWithFailure(
 			instanceOf(PreconditionViolationException.class), message(expectedMessage(testClass, null))));
 	}
 
@@ -202,7 +204,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	void instanceLevelWithNonExtensionFieldValue() {
 		Class<?> testClass = InstanceLevelExtensionRegistrationWithNonExtensionFieldValueTestCase.class;
 
-		executeTestsForClass(testClass).tests().assertThatEvents().haveExactly(1, finishedWithFailure(
+		executeTestsForClass(testClass).testEvents().assertThatEvents().haveExactly(1, finishedWithFailure(
 			instanceOf(PreconditionViolationException.class), message(expectedMessage(testClass, String.class))));
 	}
 
@@ -213,7 +215,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	void classLevelWithNonExtensionFieldValue() {
 		Class<?> testClass = ClassLevelExtensionRegistrationWithNonExtensionFieldValueTestCase.class;
 
-		executeTestsForClass(testClass).containers().assertThatEvents().haveExactly(1, finishedWithFailure(
+		executeTestsForClass(testClass).containerEvents().assertThatEvents().haveExactly(1, finishedWithFailure(
 			instanceOf(PreconditionViolationException.class), message(expectedMessage(testClass, String.class))));
 	}
 
@@ -271,17 +273,25 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 		assertTestFails(InstanceLevelExplosiveErrorTestCase.class, allOf(instanceOf(Error.class), message("boom")));
 	}
 
+	@Test
+	void storesExtensionInRegistryOfNestedTestMethods() {
+		var results = executeTestsForClass(TwoNestedClassesTestCase.class);
+
+		results.testEvents().assertStatistics(stats -> stats.succeeded(4));
+	}
+
 	private void assertClassFails(Class<?> testClass, Condition<Throwable> causeCondition) {
 		EngineExecutionResults executionResults = executeTestsForClass(testClass);
-		executionResults.containers().assertThatEvents().haveExactly(1, finishedWithFailure(causeCondition));
+		executionResults.containerEvents().assertThatEvents().haveExactly(1, finishedWithFailure(causeCondition));
 	}
 
 	private void assertTestFails(Class<?> testClass, Condition<Throwable> causeCondition) {
-		executeTestsForClass(testClass).tests().assertThatEvents().haveExactly(1, finishedWithFailure(causeCondition));
+		executeTestsForClass(testClass).testEvents().assertThatEvents().haveExactly(1,
+			finishedWithFailure(causeCondition));
 	}
 
 	private void assertOneTestSucceeded(Class<?> testClass) {
-		executeTestsForClass(testClass).tests().assertStatistics(
+		executeTestsForClass(testClass).testEvents().assertStatistics(
 			stats -> stats.started(1).succeeded(1).skipped(0).aborted(0).failed(0));
 	}
 
@@ -707,6 +717,43 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 					}
 				});
 			// @formatter:on
+		}
+
+	}
+
+	static class TwoNestedClassesTestCase {
+
+		@RegisterExtension
+		Extension extension = new LongParameterResolver();
+
+		@Nested
+		class A {
+
+			@Test
+			void first(Long n) {
+				assertEquals(42L, n);
+			}
+
+			@Test
+			void second(Long n) {
+				assertEquals(42L, n);
+			}
+
+		}
+
+		@Nested
+		class B {
+
+			@Test
+			void first(Long n) {
+				assertEquals(42L, n);
+			}
+
+			@Test
+			void second(Long n) {
+				assertEquals(42L, n);
+			}
+
 		}
 
 	}

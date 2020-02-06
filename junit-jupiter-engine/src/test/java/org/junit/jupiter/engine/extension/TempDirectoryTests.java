@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.cause;
@@ -70,15 +71,36 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	@Test
 	@DisplayName("does not prevent constructor parameter resolution")
 	void tempDirectoryDoesNotPreventConstructorParameterResolution() {
-		executeTestsForClass(TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase.class).tests()//
+		executeTestsForClass(TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase.class).testEvents()//
 				.assertStatistics(stats -> stats.started(1).succeeded(1));
 	}
 
 	@Test
 	@DisplayName("does not prevent user from deleting the temp dir within a test")
 	void tempDirectoryDoesNotPreventUserFromDeletingTempDir() {
-		executeTestsForClass(UserTempDirectoryDeletionDoesNotCauseFailureTestCase.class).tests()//
+		executeTestsForClass(UserTempDirectoryDeletionDoesNotCauseFailureTestCase.class).testEvents()//
 				.assertStatistics(stats -> stats.started(1).succeeded(1));
+	}
+
+	@Test
+	@DisplayName("is capable of removal of a read-only file")
+	void nonWritableFileDoesNotCauseFailureTestCase() {
+		executeTestsForClass(NonWritableFileDoesNotCauseFailureTestCase.class).testEvents()//
+				.assertStatistics(stats -> stats.started(1).succeeded(1));
+	}
+
+	@Test
+	@DisplayName("can be used via instance field inside nested test classes")
+	void canBeUsedViaInstanceFieldInsideNestedTestClasses() {
+		executeTestsForClass(TempDirUsageInsideNestedClassesTestCase.class).testEvents()//
+				.assertStatistics(stats -> stats.started(3).succeeded(3));
+	}
+
+	@Test
+	@DisplayName("can be used via static field inside nested test classes")
+	void canBeUsedViaStaticFieldInsideNestedTestClasses() {
+		executeTestsForClass(StaticTempDirUsageInsideNestedClassTestCase.class).testEvents()//
+				.assertStatistics(stats -> stats.started(2).succeeded(2));
 	}
 
 	@Nested
@@ -147,7 +169,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		private void assertSharedTempDirForParameterInjection(Class<?> testClass, Supplier<Path> staticTempDir) {
 			var results = executeTestsForClass(testClass);
 
-			results.tests().assertStatistics(stats -> stats.started(2).failed(0).succeeded(2));
+			results.testEvents().assertStatistics(stats -> stats.started(2).failed(0).succeeded(2));
 			assertThat(staticTempDir.get()).isNotNull().doesNotExist();
 		}
 
@@ -204,7 +226,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		void resolvesSeparateTempDirWhenAnnotationIsUsedOnAfterAllMethodParameterOnly() {
 			var results = executeTestsForClass(AnnotationOnAfterAllMethodParameterTestCase.class);
 
-			results.tests().assertStatistics(stats -> stats.started(1).failed(0).succeeded(1));
+			results.testEvents().assertStatistics(stats -> stats.started(1).failed(0).succeeded(1));
 			assertThat(AnnotationOnAfterAllMethodParameterTestCase.firstTempDir).isNotNull().doesNotExist();
 			assertThat(AnnotationOnAfterAllMethodParameterTestCase.secondTempDir).isNotNull().doesNotExist();
 		}
@@ -303,8 +325,9 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	private static void assertSingleFailedContainer(EngineExecutionResults results,
 			Condition<Throwable>... conditions) {
 
-		results.containers().assertStatistics(stats -> stats.started(2).failed(1).succeeded(1));
-		results.containers().assertThatEvents().haveExactly(1, finishedWithFailure(conditions));
+		results.containerEvents()//
+				.assertStatistics(stats -> stats.started(2).failed(1).succeeded(1))//
+				.assertThatEvents().haveExactly(1, finishedWithFailure(conditions));
 	}
 
 	private static void assertSingleFailedTest(EngineExecutionResults results, Class<? extends Throwable> clazz,
@@ -316,8 +339,8 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	@SafeVarargs
 	@SuppressWarnings("varargs")
 	private static void assertSingleFailedTest(EngineExecutionResults results, Condition<Throwable>... conditions) {
-		results.tests().assertStatistics(stats -> stats.started(1).failed(1).succeeded(0));
-		results.tests().assertThatEvents().haveExactly(1, finishedWithFailure(conditions));
+		results.testEvents().assertStatistics(stats -> stats.started(1).failed(1).succeeded(0));
+		results.testEvents().assertThatEvents().haveExactly(1, finishedWithFailure(conditions));
 	}
 
 	private void assertSeparateTempDirsForFieldInjection(
@@ -335,7 +358,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	private void assertResolvesSeparateTempDirs(Class<?> testClass, Deque<Path> tempDirs) {
 		var results = executeTestsForClass(testClass);
 
-		results.tests().assertStatistics(stats -> stats.started(2).failed(0).succeeded(2));
+		results.testEvents().assertStatistics(stats -> stats.started(2).failed(0).succeeded(2));
 		assertThat(tempDirs).hasSize(2);
 	}
 
@@ -743,4 +766,76 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	// https://github.com/junit-team/junit5/issues/2046
+	static class NonWritableFileDoesNotCauseFailureTestCase {
+
+		@Test
+		void createReadonlyFile(@TempDir Path tempDir) throws IOException {
+			// Removal of setWritable(false) files might fail (e.g. for Windows)
+			// The test verifies that @TempDir is capable of removing of such files
+			var path = Files.write(tempDir.resolve("test.txt"), new byte[0]);
+			assumeTrue(path.toFile().setWritable(false),
+				() -> "Unable to set file " + path + " readonly via .toFile().setWritable(false)");
+		}
+
+	}
+
+	// https://github.com/junit-team/junit5/issues/2079
+	static class TempDirUsageInsideNestedClassesTestCase {
+
+		@TempDir
+		File tempDir;
+
+		@Test
+		void topLevel() {
+			assertNotNull(tempDir);
+			assertTrue(tempDir.exists());
+		}
+
+		@Nested
+		class NestedTestClass {
+
+			@Test
+			void nested() {
+				assertNotNull(tempDir);
+				assertTrue(tempDir.exists());
+			}
+
+			@Nested
+			class EvenDeeperNestedTestClass {
+
+				@Test
+				void deeplyNested() {
+					assertNotNull(tempDir);
+					assertTrue(tempDir.exists());
+				}
+			}
+		}
+	}
+
+	static class StaticTempDirUsageInsideNestedClassTestCase {
+
+		@TempDir
+		static File tempDir;
+
+		static File initialTempDir;
+
+		@Test
+		void topLevel() {
+			assertNotNull(tempDir);
+			assertTrue(tempDir.exists());
+			initialTempDir = tempDir;
+		}
+
+		@Nested
+		class NestedTestClass {
+
+			@Test
+			void nested() {
+				assertNotNull(tempDir);
+				assertTrue(tempDir.exists());
+				assertSame(initialTempDir, tempDir);
+			}
+		}
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -21,8 +21,10 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
@@ -63,6 +65,28 @@ public final class CollectionUtils {
 		Preconditions.condition(collection.size() == 1,
 			() -> "collection must contain exactly one element: " + collection);
 		return collection.iterator().next();
+	}
+
+	/**
+	 * Convert the supplied array of values to a {@link Set}.
+	 *
+	 * @param values the array of values; never {@code null}
+	 * @return a set of the values
+	 * @throws PreconditionViolationException if the array is {@code null}
+	 * @since 1.6
+	 */
+	@API(status = INTERNAL, since = "1.6")
+	public static <T> Set<T> toSet(T[] values) {
+		Preconditions.notNull(values, "values array must not be null");
+		if (values.length == 0) {
+			return Collections.emptySet();
+		}
+		if (values.length == 1) {
+			return Collections.singleton(values[0]);
+		}
+		Set<T> set = new HashSet<>();
+		Collections.addAll(set, values);
+		return set;
 	}
 
 	/**

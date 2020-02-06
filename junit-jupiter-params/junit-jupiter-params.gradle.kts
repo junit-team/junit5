@@ -8,11 +8,14 @@ apply(from = "$rootDir/gradle/testing.gradle.kts")
 description = "JUnit Jupiter Params"
 
 dependencies {
-	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
+	internal(platform(project(":dependencies")))
 
+	api(platform(project(":junit-bom")))
+	api("org.apiguardian:apiguardian-api")
 	api(project(":junit-jupiter-api"))
 
-	shadowed("com.univocity:univocity-parsers:${Versions.univocity}")
+	shadowed(platform(project(":dependencies")))
+	shadowed("com.univocity:univocity-parsers")
 
 	testImplementation(project(":junit-platform-testkit"))
 	testImplementation(project(":junit-jupiter-engine"))
@@ -25,6 +28,7 @@ dependencies {
 
 tasks {
 	shadowJar {
+		dependsOn(allMainClasses)
 		archiveClassifier.set("")
 		configurations = listOf(project.configurations["shadowed"])
 		exclude("META-INF/maven/**")

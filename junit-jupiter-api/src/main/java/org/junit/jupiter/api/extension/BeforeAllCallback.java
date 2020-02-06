@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -16,8 +16,8 @@ import org.apiguardian.api.API;
 
 /**
  * {@code BeforeAllCallback} defines the API for {@link Extension Extensions}
- * that wish to provide additional behavior to test containers before all tests
- * are invoked.
+ * that wish to provide additional behavior to test containers <strong>once</strong>
+ * before all tests in the container have been executed.
  *
  * <p>Concrete implementations often implement {@link AfterAllCallback} as well.
  *

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -31,9 +31,9 @@ import org.junit.jupiter.api.TestTemplate;
  *
  * <h3>Invocation Contract</h3>
  *
- * <p>Each method in this class must execute the supplied {@linkplain Invocation
- * invocation} exactly once. Otherwise, the enclosing test or container will be
- * reported as failed.
+ * <p>Each method in this class must call {@link Invocation#proceed()} or {@link
+ * Invocation#skip()} exactly once on the supplied invocation. Otherwise, the
+ * enclosing test or container will be reported as failed.
  *
  * <p>The default implementation simply calls {@link Invocation#proceed()
  * proceed()} on the supplied {@linkplain Invocation invocation}.
@@ -53,6 +53,9 @@ public interface InvocationInterceptor extends Extension {
 
 	/**
 	 * Intercept the invocation of a test class constructor.
+	 *
+	 * <p>Note that the test class may <em>not</em> have been initialized
+	 * (static initialization) when this method is invoked.
 	 *
 	 * @param invocation the invocation that is being intercepted; never
 	 * {@code null}
@@ -207,6 +210,16 @@ public interface InvocationInterceptor extends Extension {
 		 */
 		T proceed() throws Throwable;
 
+		/**
+		 * Explicitly skip this invocation.
+		 *
+		 * <p>This allows to bypass the check that {@link #proceed()} must be
+		 * called at least once. The default implementation does nothing.
+		 */
+		@API(status = EXPERIMENTAL, since = "5.6")
+		default void skip() {
+			// do nothing
+		}
 	}
 
 }

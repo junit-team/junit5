@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -19,8 +19,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -40,6 +38,11 @@ import org.junit.platform.engine.support.discovery.SelectorResolver.Resolution;
  * and {@link TestDescriptor.Visitor} that can be reused by different
  * {@link org.junit.platform.engine.TestEngine TestEngines}.
  *
+ * <p>This resolver takes care of notifying registered
+ * {@link org.junit.platform.engine.EngineDiscoveryListener
+ * EngineDiscoveryListeners} about the results of processed
+ * {@link org.junit.platform.engine.DiscoverySelector DiscoverySelectors}.
+ *
  * @param <T> the type of the engine's descriptor
  * @see #builder()
  * @see #resolve(EngineDiscoveryRequest, TestDescriptor)
@@ -47,8 +50,6 @@ import org.junit.platform.engine.support.discovery.SelectorResolver.Resolution;
  */
 @API(status = EXPERIMENTAL, since = "1.5")
 public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
-
-	private static final Logger logger = LoggerFactory.getLogger(EngineDiscoveryRequestResolver.class);
 
 	private final List<Function<InitializationContext<T>, SelectorResolver>> resolverCreators;
 	private final List<Function<InitializationContext<T>, TestDescriptor.Visitor>> visitorCreators;
@@ -109,7 +110,7 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		InitializationContext<T> initializationContext = new DefaultInitializationContext<>(request, engineDescriptor);
 		List<SelectorResolver> resolvers = instantiate(resolverCreators, initializationContext);
 		List<TestDescriptor.Visitor> visitors = instantiate(visitorCreators, initializationContext);
-		new EngineDiscoveryRequestResolution(logger, request, engineDescriptor, resolvers, visitors).run();
+		new EngineDiscoveryRequestResolution(request, engineDescriptor, resolvers, visitors).run();
 	}
 
 	private <R> List<R> instantiate(List<Function<InitializationContext<T>, R>> creators,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -118,6 +119,16 @@ public final class ReflectionUtils {
 
 	private static final ClasspathScanner classpathScanner = new ClasspathScanner(
 		ClassLoaderUtils::getDefaultClassLoader, ReflectionUtils::tryToLoadClass);
+
+	/**
+	 * Set of fully qualified class names for which no cycles have been detected
+	 * in inner class hierarchies.
+	 * <p>This serves as a cache to avoid repeated cycle detection for classes
+	 * that have already been checked.
+	 * @since 1.6
+	 * @see #detectInnerClassCycle(Class)
+	 */
+	private static final Set<String> noCyclesDetectedCache = new HashSet<>();
 
 	/**
 	 * Internal cache of common class names mapped to their types.
@@ -885,6 +896,8 @@ public final class ReflectionUtils {
 	 * @param requiredType the required type of the outermost instance; never {@code null}
 	 * @return an {@code Optional} containing the outermost instance; never {@code null}
 	 * but potentially empty
+	 * @deprecated Please discontinue use of this method since it relies on internal
+	 * implementation details of the JDK that may not work in the future.
 	 */
 	@API(status = DEPRECATED, since = "1.4")
 	@Deprecated
@@ -996,13 +1009,18 @@ public final class ReflectionUtils {
 	}
 
 	private static void findNestedClasses(Class<?> clazz, Set<Class<?>> candidates) {
-		if (clazz == Object.class || clazz == null) {
+		if (!isSearchable(clazz)) {
 			return;
 		}
 
+		detectInnerClassCycle(clazz);
+
 		try {
 			// Candidates in current class
-			Collections.addAll(candidates, clazz.getDeclaredClasses());
+			for (Class<?> nestedClass : clazz.getDeclaredClasses()) {
+				detectInnerClassCycle(nestedClass);
+				candidates.add(nestedClass);
+			}
 		}
 		catch (NoClassDefFoundError error) {
 			logger.debug(error, () -> "Failed to retrieve declared classes for " + clazz.getName());
@@ -1015,6 +1033,42 @@ public final class ReflectionUtils {
 		for (Class<?> ifc : clazz.getInterfaces()) {
 			findNestedClasses(ifc, candidates);
 		}
+	}
+
+	/**
+	 * Detect a cycle in the inner class hierarchy in which the supplied class
+	 * resides &mdash; from the supplied class up to the outermost enclosing class
+	 * &mdash; and throw a {@link JUnitException} if a cycle is detected.
+	 *
+	 * <p>This method does <strong>not</strong> detect cycles within inner class
+	 * hierarchies <em>below</em> the supplied class.
+	 *
+	 * <p>If the supplied class is not an inner class and does not have a
+	 * searchable superclass, this method is effectively a no-op.
+	 *
+	 * @since 1.6
+	 * @see #isInnerClass(Class)
+	 * @see #isSearchable(Class)
+	 */
+	private static void detectInnerClassCycle(Class<?> clazz) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		String className = clazz.getName();
+
+		if (noCyclesDetectedCache.contains(className)) {
+			return;
+		}
+
+		Class<?> superclass = clazz.getSuperclass();
+		if (isInnerClass(clazz) && isSearchable(superclass)) {
+			for (Class<?> enclosing = clazz.getEnclosingClass(); enclosing != null; enclosing = enclosing.getEnclosingClass()) {
+				if (superclass.equals(enclosing)) {
+					throw new JUnitException(String.format("Detected cycle in inner class hierarchy between %s and %s",
+						className, enclosing.getName()));
+				}
+			}
+		}
+
+		noCyclesDetectedCache.add(className);
 	}
 
 	/**
@@ -1228,7 +1282,7 @@ public final class ReflectionUtils {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "Predicate must not be null");
 
-		for (Class<?> current = clazz; current != null && current != Object.class; current = current.getSuperclass()) {
+		for (Class<?> current = clazz; isSearchable(current); current = current.getSuperclass()) {
 			// Search for match in current type
 			List<Method> methods = current.isInterface() ? getMethods(current) : getDeclaredMethods(current, BOTTOM_UP);
 			for (Method method : methods) {
@@ -1485,7 +1539,7 @@ public final class ReflectionUtils {
 
 	private static List<Field> getSuperclassFields(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		Class<?> superclass = clazz.getSuperclass();
-		if (superclass == null || superclass == Object.class) {
+		if (!isSearchable(superclass)) {
 			return Collections.emptyList();
 		}
 		return findAllFieldsInHierarchy(superclass, traversalMode);
@@ -1497,7 +1551,7 @@ public final class ReflectionUtils {
 
 	private static List<Method> getSuperclassMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		Class<?> superclass = clazz.getSuperclass();
-		if (superclass == null || superclass == Object.class) {
+		if (!isSearchable(superclass)) {
 			return Collections.emptyList();
 		}
 		return findAllMethodsInHierarchy(superclass, traversalMode);
@@ -1585,6 +1639,18 @@ public final class ReflectionUtils {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Determine if the supplied class is <em>searchable</em>: is non-null and is
+	 * not equal to the class reference for {@code java.lang.Object}.
+	 *
+	 * <p>This method is often used to determine if a superclass should be
+	 * searched but may be applicable for other use cases as well.
+	 * @since 1.6
+	 */
+	private static boolean isSearchable(Class<?> clazz) {
+		return (clazz != null && clazz != Object.class);
 	}
 
 	/**

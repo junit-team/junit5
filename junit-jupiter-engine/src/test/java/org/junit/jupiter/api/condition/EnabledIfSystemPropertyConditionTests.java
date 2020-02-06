@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -40,13 +40,13 @@ class EnabledIfSystemPropertyConditionTests extends AbstractExecutionConditionTe
 	}
 
 	@BeforeAll
-	static void setSystemProperty() {
-		EnabledIfSystemPropertyIntegrationTests.setSystemProperty();
+	static void setSystemProperties() {
+		EnabledIfSystemPropertyIntegrationTests.setSystemProperties();
 	}
 
 	@AfterAll
-	static void clearSystemProperty() {
-		EnabledIfSystemPropertyIntegrationTests.clearSystemProperty();
+	static void clearSystemProperties() {
+		EnabledIfSystemPropertyIntegrationTests.clearSystemProperties();
 	}
 
 	/**
@@ -56,7 +56,7 @@ class EnabledIfSystemPropertyConditionTests extends AbstractExecutionConditionTe
 	void enabledBecauseAnnotationIsNotPresent() {
 		evaluateCondition();
 		assertEnabled();
-		assertReasonContains("@EnabledIfSystemProperty is not present");
+		assertReasonContains("No @EnabledIfSystemProperty conditions resulting in 'disabled' execution encountered");
 	}
 
 	/**
@@ -84,7 +84,17 @@ class EnabledIfSystemPropertyConditionTests extends AbstractExecutionConditionTe
 	void enabledBecauseSystemPropertyMatchesExactly() {
 		evaluateCondition();
 		assertEnabled();
-		assertReasonContains("matches regular expression");
+		assertReasonContains("No @EnabledIfSystemProperty conditions resulting in 'disabled' execution encountered");
+	}
+
+	/**
+	 * @see EnabledIfSystemPropertyIntegrationTests#enabledBecauseBothSystemPropertiesMatchExactly()
+	 */
+	@Test
+	void enabledBecauseBothSystemPropertiesMatchExactly() {
+		evaluateCondition();
+		assertEnabled();
+		assertReasonContains("No @EnabledIfSystemProperty conditions resulting in 'disabled' execution encountered");
 	}
 
 	/**
@@ -94,7 +104,7 @@ class EnabledIfSystemPropertyConditionTests extends AbstractExecutionConditionTe
 	void enabledBecauseSystemPropertyMatchesPattern() {
 		evaluateCondition();
 		assertEnabled();
-		assertReasonContains("matches regular expression");
+		assertReasonContains("No @EnabledIfSystemProperty conditions resulting in 'disabled' execution encountered");
 	}
 
 	/**
@@ -102,6 +112,13 @@ class EnabledIfSystemPropertyConditionTests extends AbstractExecutionConditionTe
 	 */
 	@Test
 	void disabledBecauseSystemPropertyDoesNotMatch() {
+		evaluateCondition();
+		assertDisabled();
+		assertReasonContains("does not match regular expression");
+	}
+
+	@Test
+	void disabledBecauseSystemPropertyForComposedAnnotationDoesNotMatch() {
 		evaluateCondition();
 		assertDisabled();
 		assertReasonContains("does not match regular expression");

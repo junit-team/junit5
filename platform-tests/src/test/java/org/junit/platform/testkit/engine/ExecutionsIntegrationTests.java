@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -87,14 +87,11 @@ class ExecutionsIntegrationTests {
 	}
 
 	private Events getTestEvents() {
-		Events testEvents = EngineTestKit.engine("junit-jupiter")//
+		return EngineTestKit.engine("junit-jupiter")//
 				.selectors(selectClass(ExampleTestCase.class))//
 				.execute()//
-				.tests();
-
-		testEvents.assertStatistics(stats -> stats.skipped(1).started(3).succeeded(1).aborted(1).failed(1));
-
-		return testEvents;
+				.testEvents()//
+				.assertStatistics(stats -> stats.skipped(1).started(3).succeeded(1).aborted(1).failed(1));
 	}
 
 	static class ExampleTestCase {

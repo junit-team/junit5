@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -9,6 +9,8 @@
  */
 package org.junit.jupiter.api
 
+import java.util.stream.Stream
+import kotlin.reflect.KClass
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith
 import org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError
@@ -19,8 +21,6 @@ import org.junit.jupiter.api.DynamicContainer.dynamicContainer
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.opentest4j.AssertionFailedError
 import org.opentest4j.MultipleFailuresError
-import java.util.stream.Stream
-import kotlin.reflect.KClass
 
 /**
  * Unit tests for JUnit Jupiter [org.junit.jupiter.api] top-level assertion functions.

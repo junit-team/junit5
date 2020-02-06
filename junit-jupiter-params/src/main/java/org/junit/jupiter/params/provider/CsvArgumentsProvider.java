@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,13 +10,16 @@
 
 package org.junit.jupiter.params.provider;
 
+import static org.junit.jupiter.params.provider.CsvParserFactory.createParserFor;
+import static org.junit.platform.commons.util.CollectionUtils.toSet;
+
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 import com.univocity.parsers.csv.CsvParser;
-import com.univocity.parsers.csv.CsvParserSettings;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
@@ -32,41 +35,43 @@ class CsvArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<CsvS
 	private static final String LINE_SEPARATOR = "\n";
 
 	private CsvSource annotation;
+	private Set<String> nullValues;
+	private CsvParser csvParser;
 
 	@Override
 	public void accept(CsvSource annotation) {
 		this.annotation = annotation;
+		this.nullValues = toSet(annotation.nullValues());
+		this.csvParser = createParserFor(annotation);
 	}
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		CsvParserSettings settings = new CsvParserSettings();
-		settings.getFormat().setDelimiter(this.annotation.delimiter());
-		settings.getFormat().setLineSeparator(LINE_SEPARATOR);
-		settings.getFormat().setQuote('\'');
-		settings.getFormat().setQuoteEscape('\'');
-		settings.setEmptyValue(this.annotation.emptyValue());
-		settings.setAutoConfigurationEnabled(false);
-		CsvParser csvParser = new CsvParser(settings);
 		AtomicLong index = new AtomicLong(0);
-
 		// @formatter:off
 		return Arrays.stream(this.annotation.value())
-				.map(line -> {
-					String[] parsedLine = null;
-					try {
-						parsedLine = csvParser.parseLine(line + LINE_SEPARATOR);
-					}
-					catch (Throwable throwable) {
-						handleCsvException(throwable, this.annotation);
-					}
-					Preconditions.notNull(parsedLine,
-						() -> "Line at index " + index.get() + " contains invalid CSV: \"" + line + "\"");
-					return parsedLine;
-				})
-				.peek(values -> index.incrementAndGet())
+				.map(line -> parseLine(index.getAndIncrement(), line))
 				.map(Arguments::of);
 		// @formatter:on
+	}
+
+	private String[] parseLine(long index, String line) {
+		String[] parsedLine = null;
+		try {
+			parsedLine = this.csvParser.parseLine(line + LINE_SEPARATOR);
+			if (parsedLine != null && !this.nullValues.isEmpty()) {
+				for (int i = 0; i < parsedLine.length; i++) {
+					if (this.nullValues.contains(parsedLine[i])) {
+						parsedLine[i] = null;
+					}
+				}
+			}
+		}
+		catch (Throwable throwable) {
+			handleCsvException(throwable, this.annotation);
+		}
+		Preconditions.notNull(parsedLine, () -> "Line at index " + index + " contains invalid CSV: \"" + line + "\"");
+		return parsedLine;
 	}
 
 	static void handleCsvException(Throwable throwable, Annotation annotation) {

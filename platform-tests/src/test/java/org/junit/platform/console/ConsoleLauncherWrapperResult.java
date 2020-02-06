@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -11,7 +11,6 @@
 package org.junit.platform.console;
 
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
@@ -22,16 +21,13 @@ import org.junit.platform.launcher.listeners.TestExecutionSummary;
 class ConsoleLauncherWrapperResult implements TestExecutionSummary {
 
 	final String[] args;
-	final Charset charset;
 	final String out;
 	final String err;
 	final int code;
 	private final TestExecutionSummary summary;
 
-	ConsoleLauncherWrapperResult(String[] args, Charset charset, String out, String err,
-			ConsoleLauncherExecutionResult result) {
+	ConsoleLauncherWrapperResult(String[] args, String out, String err, ConsoleLauncherExecutionResult result) {
 		this.args = args;
-		this.charset = charset;
 		this.out = out;
 		this.err = err;
 		this.code = result.getExitCode();
@@ -144,6 +140,12 @@ class ConsoleLauncherWrapperResult implements TestExecutionSummary {
 	public void printFailuresTo(PrintWriter writer) {
 		checkTestExecutionSummaryState();
 		summary.printFailuresTo(writer);
+	}
+
+	@Override
+	public void printFailuresTo(PrintWriter writer, int maxStackTraceLines) {
+		checkTestExecutionSummaryState();
+		summary.printFailuresTo(writer, maxStackTraceLines);
 	}
 
 	@Override

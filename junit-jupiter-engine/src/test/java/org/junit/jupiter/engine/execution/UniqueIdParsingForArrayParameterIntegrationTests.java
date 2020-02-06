@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -38,12 +38,12 @@ class UniqueIdParsingForArrayParameterIntegrationTests extends AbstractJupiterTe
 	void executeTestsForPrimitiveArrayMethodInjectionCases() {
 		EngineExecutionResults executionResults = executeTestsForClass(PrimitiveArrayMethodInjectionTestCase.class);
 
-		assertEquals(1, executionResults.tests().started().count(), "# tests started");
-		assertEquals(1, executionResults.tests().succeeded().count(), "# tests succeeded");
-		assertEquals(0, executionResults.tests().failed().count(), "# tests failed");
+		assertEquals(1, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(1, executionResults.testEvents().succeeded().count(), "# tests succeeded");
+		assertEquals(0, executionResults.testEvents().failed().count(), "# tests failed");
 
 		// @formatter:off
-		UniqueId uniqueId = executionResults.all()
+		UniqueId uniqueId = executionResults.allEvents()
 				.map(Event::getTestDescriptor)
 				.distinct()
 				.skip(2)

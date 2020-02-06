@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -16,9 +16,8 @@ import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList
 
 import java.util.List;
 import java.util.Set;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -34,7 +33,7 @@ import org.junit.platform.launcher.tagexpression.TagExpression;
  * <p>Tag expressions are boolean expressions with the following allowed
  * operators: {@code !} (not), {@code &} (and), and {@code |} (or). Parentheses
  * can be used to adjust for operator precedence. Please refer to the
- * <a href="http://junit.org/junit5/docs/current/user-guide/#running-tests-tag-expressions">JUnit 5 User Guide</a>
+ * <a href="https://junit.org/junit5/docs/current/user-guide/#running-tests-tag-expressions">JUnit 5 User Guide</a>
  * for usage examples.
  *
  * <p>Please note that a tag name is a valid tag expression. Thus, wherever a tag
@@ -86,7 +85,8 @@ public final class TagFilter {
 	 * @see TestTag#isValid(String)
 	 */
 	public static PostDiscoveryFilter includeTags(List<String> tagExpressions) throws PreconditionViolationException {
-		return includeMatching(tagExpressions, Stream::anyMatch);
+		Preconditions.notEmpty(tagExpressions, "list of tag expressions must not be null or empty");
+		return includeMatching(tagExpressions);
 	}
 
 	/**
@@ -123,19 +123,53 @@ public final class TagFilter {
 	 * @see TestTag#isValid(String)
 	 */
 	public static PostDiscoveryFilter excludeTags(List<String> tagExpressions) throws PreconditionViolationException {
-		return includeMatching(tagExpressions, Stream::noneMatch);
+		Preconditions.notEmpty(tagExpressions, "list of tag expressions must not be null or empty");
+		return excludeMatching(tagExpressions);
 	}
 
-	private static PostDiscoveryFilter includeMatching(List<String> tagExpressions,
-			BiPredicate<Stream<TagExpression>, Predicate<TagExpression>> matcher) {
-
-		Preconditions.notEmpty(tagExpressions, "list of tag expressions must not be null or empty");
+	private static PostDiscoveryFilter includeMatching(List<String> tagExpressions) {
+		Supplier<String> inclusionReason = () -> inclusionReasonExpressionSatisfy(tagExpressions);
+		Supplier<String> exclusionReason = () -> exclusionReasonExpressionNotSatisfy(tagExpressions);
 		List<TagExpression> parsedTagExpressions = parseAll(tagExpressions);
 		return descriptor -> {
 			Set<TestTag> tags = descriptor.getTags();
-			return FilterResult.includedIf(
-				matcher.test(parsedTagExpressions.stream(), expression -> expression.evaluate(tags)));
+			boolean included = parsedTagExpressions.stream().anyMatch(expression -> expression.evaluate(tags));
+
+			return FilterResult.includedIf(included, inclusionReason, exclusionReason);
 		};
+	}
+
+	private static String inclusionReasonExpressionSatisfy(List<String> tagExpressions) {
+		return String.format("included because tags match expression(s): [%s]", formatToString(tagExpressions));
+	}
+
+	private static String exclusionReasonExpressionNotSatisfy(List<String> tagExpressions) {
+		return String.format("excluded because tags do not match tag expression(s): [%s]",
+			formatToString(tagExpressions));
+	}
+
+	private static PostDiscoveryFilter excludeMatching(List<String> tagExpressions) {
+		Supplier<String> inclusionReason = () -> inclusionReasonExpressionNotSatisfy(tagExpressions);
+		Supplier<String> exclusionReason = () -> exclusionReasonExpressionSatisfy(tagExpressions);
+		List<TagExpression> parsedTagExpressions = parseAll(tagExpressions);
+		return descriptor -> {
+			Set<TestTag> tags = descriptor.getTags();
+			boolean included = parsedTagExpressions.stream().noneMatch(expression -> expression.evaluate(tags));
+
+			return FilterResult.includedIf(included, inclusionReason, exclusionReason);
+		};
+	}
+
+	private static String inclusionReasonExpressionNotSatisfy(List<String> tagExpressions) {
+		return String.format("included because tags do not match expression(s): [%s]", formatToString(tagExpressions));
+	}
+
+	private static String exclusionReasonExpressionSatisfy(List<String> tagExpressions) {
+		return String.format("excluded because tags match tag expression(s): [%s]", formatToString(tagExpressions));
+	}
+
+	private static String formatToString(List<String> tagExpressions) {
+		return tagExpressions.stream().map(String::trim).sorted().collect(Collectors.joining(","));
 	}
 
 	private static List<TagExpression> parseAll(List<String> tagExpressions) {

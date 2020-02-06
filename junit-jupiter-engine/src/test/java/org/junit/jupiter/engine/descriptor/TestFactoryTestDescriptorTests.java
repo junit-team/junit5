@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -30,7 +30,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClasspathResourceSource;
@@ -100,7 +100,7 @@ class TestFactoryTestDescriptorTests {
 			File file = new File("src/test/resources");
 			assertThat(file).isDirectory();
 
-			URI uri = URI.create("http://example.com?foo=bar&line=42");
+			URI uri = URI.create("https://example.com?foo=bar&line=42");
 			TestSource testSource = TestFactoryTestDescriptor.fromUri(uri);
 
 			assertThat(testSource).isInstanceOf(UriSource.class);
@@ -144,7 +144,7 @@ class TestFactoryTestDescriptorTests {
 					.extend() //
 					.withThrowableCollector(new OpenTest4JAwareThrowableCollector()) //
 					.withExtensionContext(extensionContext) //
-					.withExtensionRegistry(mock(ExtensionRegistry.class)) //
+					.withExtensionRegistry(mock(MutableExtensionRegistry.class)) //
 					.build();
 
 			Method testMethod = CustomStreamTestCase.class.getDeclaredMethod("customStream");

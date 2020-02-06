@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -143,20 +143,19 @@ public final class LoggerFactory {
 		private void log(Level level, Throwable throwable, Supplier<String> messageSupplier) {
 			boolean loggable = this.julLogger.isLoggable(level);
 			if (loggable || !listeners.isEmpty()) {
-				LogRecord logRecord = createLogRecord(level, throwable, messageSupplier);
+				LogRecord logRecord = createLogRecord(level, throwable, nullSafeGet(messageSupplier));
 				if (loggable) {
 					this.julLogger.log(logRecord);
 				}
-				listeners.forEach(l -> l.logRecordSubmitted(logRecord));
+				listeners.forEach(listener -> listener.logRecordSubmitted(logRecord));
 			}
 		}
 
-		private LogRecord createLogRecord(Level level, Throwable throwable, Supplier<String> messageSupplier) {
-			StackTraceElement[] stack = new Throwable().getStackTrace();
+		private LogRecord createLogRecord(Level level, Throwable throwable, String message) {
 			String sourceClassName = null;
 			String sourceMethodName = null;
 			boolean found = false;
-			for (StackTraceElement element : stack) {
+			for (StackTraceElement element : new Throwable().getStackTrace()) {
 				String className = element.getClassName();
 				if (FQCN.equals(className)) {
 					found = true;
@@ -168,7 +167,7 @@ public final class LoggerFactory {
 				}
 			}
 
-			LogRecord logRecord = new LogRecord(level, nullSafeGet(messageSupplier));
+			LogRecord logRecord = new LogRecord(level, message);
 			logRecord.setLoggerName(this.name);
 			logRecord.setThrown(throwable);
 			logRecord.setSourceClassName(sourceClassName);

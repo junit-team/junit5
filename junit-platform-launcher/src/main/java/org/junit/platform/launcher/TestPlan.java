@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -94,7 +94,8 @@ public class TestPlan {
 	 * Add the supplied {@link TestIdentifier} to this test plan.
 	 *
 	 * @param testIdentifier the identifier to add; never {@code null}
-	 * @deprecated without replacement since this method was intended to be internal.
+	 * @deprecated Please discontinue use of this method. A future version of the
+	 * JUnit Platform will ignore this call and eventually even throw an exception.
 	 */
 	@Deprecated
 	@API(status = DEPRECATED, since = "1.4")

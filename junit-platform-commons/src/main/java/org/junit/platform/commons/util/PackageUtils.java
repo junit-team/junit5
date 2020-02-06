@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -16,14 +16,15 @@ import java.io.File;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.regex.Pattern;
-
-import javax.lang.model.SourceVersion;
 
 import org.apiguardian.api.API;
 
@@ -65,7 +66,7 @@ public final class PackageUtils {
 	 * supplied package name is {@code null}, contains only whitespace, or
 	 * contains parts that are not valid in terms of Java syntax (e.g.,
 	 * containing keywords such as {@code void}, {@code import}, etc.)
-	 * @see SourceVersion#isName(CharSequence)
+	 * @see JavaNameUtils#isJavaName(String)
 	 */
 	public static void assertPackageNameIsValid(String packageName) {
 		Preconditions.notNull(packageName, "package name must not be null");
@@ -73,7 +74,7 @@ public final class PackageUtils {
 			return;
 		}
 		Preconditions.notBlank(packageName, "package name must not contain only whitespace");
-		boolean allValid = Arrays.stream(DOT_PATTERN.split(packageName, -1)).allMatch(SourceVersion::isName);
+		boolean allValid = Arrays.stream(DOT_PATTERN.split(packageName, -1)).allMatch(JavaNameUtils::isJavaName);
 		Preconditions.condition(allValid, "invalid part(s) in package name: " + packageName);
 	}
 
@@ -138,6 +139,49 @@ public final class PackageUtils {
 		}
 		catch (Exception e) {
 			return Optional.empty();
+		}
+	}
+
+	/**
+	 * Collection of utilities for working with qualified names in Java.
+	 *
+	 * @since 1.6
+	 */
+	static class JavaNameUtils {
+
+		private static final Set<String> RESTRICTED_KEYWORDS = Collections.unmodifiableSet(
+			new HashSet<>(Arrays.asList("_", "abstract", "assert", "break", "case", "catch", "const", "continue",
+				"default", "do", "else", "enum", "false", "final", "finally", "for", "goto", "if", "import",
+				"instanceof", "native", "new", "null", "private", "protected", "public", "return", "static", "strictfp",
+				"super", "switch", "synchronized", "this", "throw", "transient", "true", "try", "volatile", "while")));
+
+		/**
+		 * Determine if the supplied {@code name} is a syntactically valid qualified name.
+		 *
+		 * @param name the string to check
+		 * @return {@code true} if the supplied string is a syntactically valid name
+		 */
+		static boolean isJavaName(String name) {
+			return name != null && !name.isEmpty() && isNotRestrictedKeyword(name) && isJavaIdentifier(name);
+		}
+
+		private static boolean isNotRestrictedKeyword(String name) {
+			return !RESTRICTED_KEYWORDS.contains(name);
+		}
+
+		private static boolean isJavaIdentifier(String name) {
+			int start = name.codePointAt(0);
+			if (!Character.isJavaIdentifierStart(start)) {
+				return false;
+			}
+			int charCount = Character.charCount(start);
+			for (int i = charCount; i < name.length(); i += charCount) {
+				int codePoint = name.codePointAt(i);
+				if (!Character.isJavaIdentifierPart(codePoint)) {
+					return false;
+				}
+			}
+			return true;
 		}
 	}
 

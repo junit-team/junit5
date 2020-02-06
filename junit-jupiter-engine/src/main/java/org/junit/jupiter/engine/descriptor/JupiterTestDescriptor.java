@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -101,30 +101,30 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	}
 
 	/**
-	 * Invoke exception handlers for the supplied {@code Throwable} one by one until
-	 * none are left or the throwable to handle has been swallowed.
+	 * Invoke exception handlers for the supplied {@code Throwable} one-by-one
+	 * until none are left or the throwable to handle has been swallowed.
 	 */
-	<T extends Extension> void invokeExecutionExceptionHandlers(Class<T> handlerType, ExtensionRegistry registry,
-			Throwable throwable, ExceptionHandlerInvoker<T> handlerInvoker) {
+	<E extends Extension> void invokeExecutionExceptionHandlers(Class<E> handlerType, ExtensionRegistry registry,
+			Throwable throwable, ExceptionHandlerInvoker<E> handlerInvoker) {
 
 		invokeExecutionExceptionHandlers(registry.getReversedExtensions(handlerType), throwable, handlerInvoker);
 	}
 
-	private <T extends Extension> void invokeExecutionExceptionHandlers(List<T> handlers, Throwable throwable,
-			ExceptionHandlerInvoker<T> handlerInvoker) {
+	private <E extends Extension> void invokeExecutionExceptionHandlers(List<E> exceptionHandlers, Throwable throwable,
+			ExceptionHandlerInvoker<E> handlerInvoker) {
 
 		// No handlers left?
-		if (handlers.isEmpty()) {
+		if (exceptionHandlers.isEmpty()) {
 			ExceptionUtils.throwAsUncheckedException(throwable);
 		}
 
 		try {
 			// Invoke next available handler
-			handlerInvoker.invoke(handlers.remove(0), throwable);
+			handlerInvoker.invoke(exceptionHandlers.remove(0), throwable);
 		}
 		catch (Throwable handledThrowable) {
 			BlacklistedExceptions.rethrowIfBlacklisted(handledThrowable);
-			invokeExecutionExceptionHandlers(handlers, handledThrowable, handlerInvoker);
+			invokeExecutionExceptionHandlers(exceptionHandlers, handledThrowable, handlerInvoker);
 		}
 	}
 
@@ -222,10 +222,16 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		context.close();
 	}
 
+	/**
+	 * @since 5.5
+	 */
 	@FunctionalInterface
-	interface ExceptionHandlerInvoker<T extends Extension> {
+	interface ExceptionHandlerInvoker<E extends Extension> {
 
-		void invoke(T t, Throwable throwable) throws Throwable;
+		/**
+		 * Invoke the supplied {@code exceptionHandler} with the supplied {@code throwable}.
+		 */
+		void invoke(E exceptionHandler, Throwable throwable) throws Throwable;
 
 	}
 

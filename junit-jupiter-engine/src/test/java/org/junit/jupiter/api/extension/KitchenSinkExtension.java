@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -46,6 +46,7 @@ public class KitchenSinkExtension implements
 	// Dependency Injection
 	TestInstanceFactory,
 	TestInstancePostProcessor,
+	TestInstancePreDestroyCallback,
 	ParameterResolver,
 
 	// Conditional Test Execution
@@ -118,6 +119,10 @@ public class KitchenSinkExtension implements
 
 	@Override
 	public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
+	}
+
+	@Override
+	public void preDestroyTestInstance(ExtensionContext context) {
 	}
 
 	@Override

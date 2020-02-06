@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -57,8 +57,8 @@ import org.opentest4j.MultipleFailuresError;
  * will be committed to the persistent store (e.g., relational database) even
  * though the test-managed transaction is rolled back.
  *
- * <p>Similar side side effects may be encountered with other frameworks that
- * rely on {@code ThreadLocal} storage.
+ * <p>Similar side effects may be encountered with other frameworks that rely on
+ * {@code ThreadLocal} storage.
  *
  * <h3>Extensibility</h3>
  *
@@ -2940,7 +2940,7 @@ public class Assertions {
 
 	/**
 	 * <em>Assert</em> that execution of the supplied {@code executable} throws
-	 * an exception of the {@code expectedType} and returns the exception.
+	 * an exception of the {@code expectedType} and return the exception.
 	 *
 	 * <p>If no exception is thrown, or if an exception of a different type is
 	 * thrown, this method will fail.
@@ -2954,7 +2954,7 @@ public class Assertions {
 
 	/**
 	 * <em>Assert</em> that execution of the supplied {@code executable} throws
-	 * an exception of the {@code expectedType} and returns the exception.
+	 * an exception of the {@code expectedType} and return the exception.
 	 *
 	 * <p>If no exception is thrown, or if an exception of a different type is
 	 * thrown, this method will fail.
@@ -2970,7 +2970,7 @@ public class Assertions {
 
 	/**
 	 * <em>Assert</em> that execution of the supplied {@code executable} throws
-	 * an exception of the {@code expectedType} and returns the exception.
+	 * an exception of the {@code expectedType} and return the exception.
 	 *
 	 * <p>If no exception is thrown, or if an exception of a different type is
 	 * thrown, this method will fail.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -156,6 +156,17 @@ public @interface ParameterizedTest {
 	String ARGUMENTS_PLACEHOLDER = "{arguments}";
 
 	/**
+	 * Placeholder for the complete, comma-separated named arguments list
+	 * of the current invocation of a {@code @ParameterizedTest} method:
+	 * <code>{argumentsWithNames}</code>
+	 *
+	 * @see #name
+	 * @since 5.6
+	 */
+	@API(status = EXPERIMENTAL, since = "5.6")
+	String ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentsWithNames}";
+
+	/**
 	 * Default display name pattern for the current invocation of a
 	 * {@code @ParameterizedTest} method: {@value}
 	 *
@@ -166,11 +177,11 @@ public @interface ParameterizedTest {
 	 * @see #name
 	 * @see #DISPLAY_NAME_PLACEHOLDER
 	 * @see #INDEX_PLACEHOLDER
-	 * @see #ARGUMENTS_PLACEHOLDER
+	 * @see #ARGUMENTS_WITH_NAMES_PLACEHOLDER
 	 * @since 5.3
 	 */
 	@API(status = EXPERIMENTAL, since = "5.3")
-	String DEFAULT_DISPLAY_NAME = "[" + INDEX_PLACEHOLDER + "] " + ARGUMENTS_PLACEHOLDER;
+	String DEFAULT_DISPLAY_NAME = "[" + INDEX_PLACEHOLDER + "] " + ARGUMENTS_WITH_NAMES_PLACEHOLDER;
 
 	/**
 	 * The display name to be used for individual invocations of the

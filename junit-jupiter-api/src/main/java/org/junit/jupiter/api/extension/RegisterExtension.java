@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -41,8 +41,9 @@ import org.apiguardian.api.API;
  * which extension APIs they can implement. Extensions registered via static
  * fields may therefore implement class-level and instance-level extension APIs
  * such as {@link BeforeAllCallback}, {@link AfterAllCallback},
- * {@link TestInstanceFactory}, and {@link TestInstancePostProcessor} as well as
- * method-level extension APIs such as {@link BeforeEachCallback}, etc.
+ * {@link TestInstanceFactory}, {@link TestInstancePostProcessor} and
+ * {@link TestInstancePreDestroyCallback} as well as method-level extension APIs
+ * such as {@link BeforeEachCallback}, etc.
  *
  * <h3>Instance Fields</h3>
  *
@@ -76,10 +77,11 @@ import org.apiguardian.api.API;
  * deterministic but intentionally nonobvious. This ensures that subsequent runs
  * of a test suite execute extensions in the same order, thereby allowing for
  * repeatable builds. However, there are times when extensions need to be
- * registered in an explicit order. To achieve that, annotate each
- * {@code @RegisterExtension} field with {@link org.junit.jupiter.api.Order @Order}.
- * Any {@code @RegisterExtension} field not annotated with {@code @Order} will
- * appear at the end of the sorted list.
+ * registered in an explicit order. To achieve that, you can annotate
+ * {@code @RegisterExtension} fields with {@link org.junit.jupiter.api.Order @Order}.
+ * Any {@code @RegisterExtension} field not annotated with {@code @Order} will be
+ * ordered using the {@link org.junit.jupiter.api.Order#DEFAULT default} order
+ * value.
  *
  * <h3>Example Usage</h3>
  *
@@ -120,6 +122,7 @@ import org.apiguardian.api.API;
  * <li>{@link AfterTestExecutionCallback}</li>
  * <li>{@link TestInstanceFactory}</li>
  * <li>{@link TestInstancePostProcessor}</li>
+ * <li>{@link TestInstancePreDestroyCallback}</li>
  * <li>{@link ParameterResolver}</li>
  * <li>{@link TestExecutionExceptionHandler}</li>
  * <li>{@link TestTemplateInvocationContextProvider}</li>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -13,13 +13,9 @@ package org.junit.jupiter.api.condition;
 import static java.lang.String.format;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
-
-import java.util.Optional;
 
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -28,21 +24,22 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 5.1
  * @see DisabledIfSystemProperty
  */
-class DisabledIfSystemPropertyCondition implements ExecutionCondition {
+class DisabledIfSystemPropertyCondition extends AbstractRepeatableAnnotationCondition<DisabledIfSystemProperty> {
 
-	private static final ConditionEvaluationResult ENABLED_BY_DEFAULT = enabled(
-		"@DisabledIfSystemProperty is not present");
+	private static final ConditionEvaluationResult ENABLED = ConditionEvaluationResult.enabled(
+		"No @DisabledIfSystemProperty conditions resulting in 'disabled' execution encountered");
+
+	DisabledIfSystemPropertyCondition() {
+		super(DisabledIfSystemProperty.class);
+	}
 
 	@Override
-	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-		Optional<DisabledIfSystemProperty> optional = findAnnotation(context.getElement(),
-			DisabledIfSystemProperty.class);
+	protected ConditionEvaluationResult getNoDisabledConditionsEncounteredResult() {
+		return ENABLED;
+	}
 
-		if (!optional.isPresent()) {
-			return ENABLED_BY_DEFAULT;
-		}
-
-		DisabledIfSystemProperty annotation = optional.get();
+	@Override
+	protected ConditionEvaluationResult evaluate(DisabledIfSystemProperty annotation) {
 		String name = annotation.named().trim();
 		String regex = annotation.matches();
 		Preconditions.notBlank(name, () -> "The 'named' attribute must not be blank in " + annotation);

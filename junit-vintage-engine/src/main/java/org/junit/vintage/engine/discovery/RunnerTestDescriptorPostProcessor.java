@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -23,6 +23,7 @@ import java.util.function.IntFunction;
 import org.junit.platform.engine.UniqueId;
 import org.junit.runner.Description;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
+import org.junit.vintage.engine.descriptor.TestSourceProvider;
 import org.junit.vintage.engine.descriptor.VintageTestDescriptor;
 import org.junit.vintage.engine.support.UniqueIdReader;
 import org.junit.vintage.engine.support.UniqueIdStringifier;
@@ -34,6 +35,11 @@ class RunnerTestDescriptorPostProcessor {
 
 	private final UniqueIdReader uniqueIdReader = new UniqueIdReader();
 	private final UniqueIdStringifier uniqueIdStringifier = new UniqueIdStringifier();
+	private final TestSourceProvider testSourceProvider;
+
+	public RunnerTestDescriptorPostProcessor(TestSourceProvider testSourceProvider) {
+		this.testSourceProvider = testSourceProvider;
+	}
 
 	void applyFiltersAndCreateDescendants(RunnerTestDescriptor runnerTestDescriptor) {
 		addChildrenRecursively(runnerTestDescriptor);
@@ -53,7 +59,8 @@ class RunnerTestDescriptorPostProcessor {
 				String reallyUniqueId = uniqueIdGenerator.apply(index);
 				Description description = childrenWithSameUniqueId.get(index);
 				UniqueId id = parent.getUniqueId().append(VintageTestDescriptor.SEGMENT_TYPE_TEST, reallyUniqueId);
-				VintageTestDescriptor child = new VintageTestDescriptor(id, description);
+				VintageTestDescriptor child = new VintageTestDescriptor(id, description,
+					testSourceProvider.findTestSource(description));
 				parent.addChild(child);
 				addChildrenRecursively(child);
 			}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -48,7 +48,7 @@ class EngineTestKitAllEventsDemo {
 		EngineTestKit.engine("junit-jupiter") // <1>
 			.selectors(selectClass(ExampleTestCase.class)) // <2>
 			.execute() // <3>
-			.all() // <4>
+			.allEvents() // <4>
 			.debug(writer) // <5>
 			.assertEventsMatchExactly( // <6>
 				event(engine(), started()),

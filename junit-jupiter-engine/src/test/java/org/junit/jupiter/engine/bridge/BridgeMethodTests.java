@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -26,7 +26,6 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.bridge.NumberTestGroup.ByteTestCase;
 import org.junit.jupiter.engine.bridge.NumberTestGroup.ShortTestCase;
-import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
  * @since 5.0
@@ -96,8 +95,8 @@ class BridgeMethodTests extends AbstractJupiterTestEngineTests {
 
 	private String execute(int expectedTestFinishedCount, Class<?> testClass) {
 		sequence.clear();
-		EngineExecutionResults executionResults = executeTestsForClass(testClass);
-		assertEquals(expectedTestFinishedCount, executionResults.tests().started().count());
+		executeTestsForClass(testClass).testEvents()//
+				.assertStatistics(stats -> stats.started(expectedTestFinishedCount));
 		return sequence.toString();
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -7,7 +7,11 @@
  *
  * https://www.eclipse.org/legal/epl-v20.html
  */
+@file:API(status = API.Status.EXPERIMENTAL, since = "5.3")
+
 package org.junit.jupiter.params.aggregator
+
+import org.apiguardian.api.API
 
 /**
  * Get the value of the argument at the given index as an instance of the

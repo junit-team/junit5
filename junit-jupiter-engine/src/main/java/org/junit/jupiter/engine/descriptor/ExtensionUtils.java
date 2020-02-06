@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -29,7 +29,8 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.extension.ExtensionRegistrar;
+import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -37,7 +38,8 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * Collection of utilities for working with extensions and the extension registry.
  *
  * @since 5.1
- * @see ExtensionRegistry
+ * @see ExtensionRegistrar
+ * @see MutableExtensionRegistry
  * @see ExtendWith
  * @see RegisterExtension
  */
@@ -48,7 +50,7 @@ final class ExtensionUtils {
 	}
 
 	/**
-	 * Populate a new {@link ExtensionRegistry} from extension types declared via
+	 * Populate a new {@link MutableExtensionRegistry} from extension types declared via
 	 * {@link ExtendWith @ExtendWith} on the supplied {@link AnnotatedElement}.
 	 *
 	 * @param parentRegistry the parent extension registry to set in the newly
@@ -59,8 +61,8 @@ final class ExtensionUtils {
 	 * @return the new extension registry; never {@code null}
 	 * @since 5.0
 	 */
-	static ExtensionRegistry populateNewExtensionRegistryFromExtendWithAnnotation(ExtensionRegistry parentRegistry,
-			AnnotatedElement annotatedElement) {
+	static MutableExtensionRegistry populateNewExtensionRegistryFromExtendWithAnnotation(
+			MutableExtensionRegistry parentRegistry, AnnotatedElement annotatedElement) {
 
 		Preconditions.notNull(parentRegistry, "Parent ExtensionRegistry must not be null");
 		Preconditions.notNull(annotatedElement, "AnnotatedElement must not be null");
@@ -72,7 +74,7 @@ final class ExtensionUtils {
 				.collect(toList());
 		// @formatter:on
 
-		return ExtensionRegistry.createRegistryFrom(parentRegistry, extensionTypes);
+		return MutableExtensionRegistry.createRegistryFrom(parentRegistry, extensionTypes);
 	}
 
 	/**
@@ -82,13 +84,13 @@ final class ExtensionUtils {
 	 * <p>The extensions will be sorted according to {@link Order @Order} semantics
 	 * prior to registration.
 	 *
-	 * @param registry the registry in which to register the extensions; never {@code null}
+	 * @param registrar the registrar with which to register the extensions; never {@code null}
 	 * @param clazz the class or interface in which to find the fields; never {@code null}
 	 * @param instance the instance of the supplied class; may be {@code null}
 	 * when searching for {@code static} fields in the class
 	 */
-	static void registerExtensionsFromFields(ExtensionRegistry registry, Class<?> clazz, Object instance) {
-		Preconditions.notNull(registry, "ExtensionRegistry must not be null");
+	static void registerExtensionsFromFields(ExtensionRegistrar registrar, Class<?> clazz, Object instance) {
+		Preconditions.notNull(registrar, "ExtensionRegistrar must not be null");
 		Preconditions.notNull(clazz, "Class must not be null");
 
 		Predicate<Field> predicate = (instance == null ? ReflectionUtils::isStatic : ReflectionUtils::isNotStatic);
@@ -108,7 +110,7 @@ final class ExtensionUtils {
 				Preconditions.condition(value instanceof Extension, () -> String.format(
 					"Failed to register extension via @RegisterExtension field [%s]: field value's type [%s] must implement an [%s] API.",
 					field, (value != null ? value.getClass().getName() : null), Extension.class.getName()));
-				registry.registerExtension((Extension) value, field);
+				registrar.registerExtension((Extension) value, field);
 			});
 		});
 	}
@@ -123,7 +125,7 @@ final class ExtensionUtils {
 	 * @since 5.4
 	 */
 	private static int getOrder(Field field) {
-		return findAnnotation(field, Order.class).map(Order::value).orElse(Integer.MAX_VALUE);
+		return findAnnotation(field, Order.class).map(Order::value).orElse(Order.DEFAULT);
 	}
 
 }

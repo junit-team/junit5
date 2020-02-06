@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -67,7 +67,9 @@ class ParserTests {
 				arguments("(foo & bar ) | baz & quux", "((foo & bar) | (baz & quux))"),
 				arguments("! foo | bar & ! baz | ! quux | quuz & corge", "(((!foo | (bar & !baz)) | !quux) | (quuz & corge))"),
 				arguments("(foo & bar ) | baz & quux", "((foo & bar) | (baz & quux))"),
-				arguments("foo | bar & baz|quux", "((foo | (bar & baz)) | quux)")
+				arguments("foo | bar & baz|quux", "((foo | (bar & baz)) | quux)"),
+				arguments("any()", "any()"),
+				arguments("! none()", "!none()")
 		);
 		// @formatter:on
 	}

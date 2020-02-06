@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -16,18 +16,24 @@ import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueId
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNestedMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Method;
+import java.util.List;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
+import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
+import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
@@ -125,6 +131,35 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
+	@Test
+	void discoverDeeplyNestedTestMethodByNestedMethodSelector() throws Exception {
+		var selector = selectNestedMethod(
+			List.of(TestCaseWithExtendedNested.class, TestCaseWithExtendedNested.ConcreteInner1.class),
+			AbstractSuperClass.NestedInAbstractClass.class,
+			AbstractSuperClass.NestedInAbstractClass.class.getDeclaredMethod("test"));
+		LauncherDiscoveryRequest spec = request().selectors(selector).build();
+
+		TestDescriptor engineDescriptor = discoverTests(spec);
+
+		ClassTestDescriptor topLevelClassDescriptor = (ClassTestDescriptor) getOnlyElement(
+			engineDescriptor.getChildren());
+		assertThat(topLevelClassDescriptor.getTestClass()).isEqualTo(TestCaseWithExtendedNested.class);
+
+		NestedClassTestDescriptor firstLevelNestedClassDescriptor = (NestedClassTestDescriptor) getOnlyElement(
+			topLevelClassDescriptor.getChildren());
+		assertThat(firstLevelNestedClassDescriptor.getTestClass()).isEqualTo(
+			TestCaseWithExtendedNested.ConcreteInner1.class);
+
+		NestedClassTestDescriptor secondLevelNestedClassDescriptor = (NestedClassTestDescriptor) getOnlyElement(
+			firstLevelNestedClassDescriptor.getChildren());
+		assertThat(secondLevelNestedClassDescriptor.getTestClass()).isEqualTo(
+			AbstractSuperClass.NestedInAbstractClass.class);
+
+		TestMethodTestDescriptor methodDescriptor = (TestMethodTestDescriptor) getOnlyElement(
+			secondLevelNestedClassDescriptor.getChildren());
+		assertThat(methodDescriptor.getTestMethod().getName()).isEqualTo("test");
+	}
+
 	// -------------------------------------------------------------------
 
 	private static abstract class AbstractTestCase {
@@ -175,6 +210,21 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		void testTemplate() {
 		}
 
+	}
+
+	static abstract class AbstractSuperClass {
+		@Nested
+		class NestedInAbstractClass {
+			@Test
+			void test() {
+			}
+		}
+	}
+
+	static class TestCaseWithExtendedNested {
+		@Nested
+		class ConcreteInner1 extends AbstractSuperClass {
+		}
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -100,7 +100,7 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		assertEquals(1, RethrowExceptionHandler.beforeAllCalls, "Exception should handled in @BeforeAll");
 		assertEquals(1, RethrowExceptionHandler.afterAllCalls, "Exception should handled in @AfterAll");
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(RethrowingTestCase.class), started()), //
 			event(container(RethrowingTestCase.class), finishedWithFailure(instanceOf(RuntimeException.class))), //
@@ -117,7 +117,7 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		assertEquals(1, RethrowExceptionHandler.beforeEachCalls, "Exception should be handled in @BeforeEach");
 		assertEquals(1, RethrowExceptionHandler.afterEachCalls, "Exception should be handled in @AfterEach");
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(RethrowingTestCase.class), started()), //
 			event(test("aTest"), started()), //
@@ -134,7 +134,7 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		assertEquals(1, ConvertExceptionHandler.beforeAllCalls, "Exception should handled in @BeforeAll");
 		assertEquals(1, ConvertExceptionHandler.afterAllCalls, "Exception should handled in @AfterAll");
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(ConvertingTestCase.class), started()), //
 			event(container(ConvertingTestCase.class), finishedWithFailure(instanceOf(IOException.class))), //
@@ -151,7 +151,7 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		assertEquals(1, ConvertExceptionHandler.beforeEachCalls, "Exception should be handled in @BeforeEach");
 		assertEquals(1, ConvertExceptionHandler.afterEachCalls, "Exception should be handled in @AfterEach");
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(ConvertingTestCase.class), started()), //
 			event(test("aTest"), started()), //
@@ -170,7 +170,7 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		assertEquals(1, SwallowExceptionHandler.afterEachCalls, "Exception should be handled in @AfterEach");
 		assertEquals(1, SwallowExceptionHandler.afterAllCalls, "Exception should be handled in @AfterAll");
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(SwallowingTestCase.class), started()), //
 			event(test("aTest"), started()), //
@@ -188,7 +188,7 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		assertEquals(1, SwallowExceptionHandler.afterEachCalls, "Exception should be handled in @AfterEach");
 		assertEquals(2, SwallowExceptionHandler.afterAllCalls, "Exception should be handled in @AfterAll");
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(PerClassLifecycleTestCase.class), started()), //
 			event(test("aTest"), started()), //
@@ -202,7 +202,7 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		LauncherDiscoveryRequest request = request().selectors(selectClass(MultipleHandlersTestCase.class)).build();
 		EngineExecutionResults executionResults = executeTests(request);
 
-		executionResults.all().assertEventsMatchExactly( //
+		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(MultipleHandlersTestCase.class), started()), //
 			event(test("aTest"), started()), //

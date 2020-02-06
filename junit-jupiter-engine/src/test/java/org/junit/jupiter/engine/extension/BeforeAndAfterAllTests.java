@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -27,7 +27,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
  * Integration tests that verify support for {@link BeforeAll}, {@link AfterAll},
@@ -171,10 +170,8 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 
 		callSequence.clear();
 
-		EngineExecutionResults executionResults = executeTestsForClass(testClass);
-
-		assertEquals(testsStarted, executionResults.tests().started().count(), "# tests started");
-		assertEquals(testsSuccessful, executionResults.tests().succeeded().count(), "# tests succeeded");
+		executeTestsForClass(testClass).testEvents()//
+				.assertStatistics(stats -> stats.started(testsStarted).succeeded(testsSuccessful));
 
 		assertEquals(asList(expectedCalls), callSequence, () -> "wrong call sequence for " + testClass.getName());
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.api.MethodOrderer.Random.RANDOM_SEED_PROPERTY_NAME;
+import static org.junit.jupiter.api.Order.DEFAULT;
 import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -46,8 +47,8 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.TestReporter;
+import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.jupiter.engine.TrackLogRecords;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.testkit.engine.EngineTestKit;
@@ -109,8 +110,9 @@ class OrderedMethodTests {
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
-		assertThat(callSequence).containsExactly("test1", "test2", "test3", "test4", "test5", "test6", "nestedTest1",
-			"nestedTest2");
+		assertThat(callSequence)//
+				.containsExactly("test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "nestedTest1",
+					"nestedTest2");
 		assertThat(threadNames).hasSize(1);
 	}
 
@@ -119,7 +121,8 @@ class OrderedMethodTests {
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
-		assertThat(callSequence).containsExactly("test1", "test2", "test3", "test4", "test5", "test6");
+		assertThat(callSequence)//
+				.containsExactly("test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8");
 		assertThat(threadNames).hasSize(1);
 	}
 
@@ -279,7 +282,7 @@ class OrderedMethodTests {
 				.configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent")
 				.selectors(selectClass(testClass))
 				.execute()
-				.tests();
+				.testEvents();
 		// @formatter:on
 	}
 
@@ -295,7 +298,7 @@ class OrderedMethodTests {
 				.configurationParameters(configurationParameters)
 				.selectors(selectClass(testClass))
 				.execute()
-				.tests();
+				.testEvents();
 		// @formatter:on
 	}
 
@@ -375,8 +378,20 @@ class OrderedMethodTests {
 		}
 
 		@Test
+		@DisplayName("test8")
+		@Order(Integer.MAX_VALUE)
+		void maxInteger() {
+		}
+
+		@Test
+		@DisplayName("test7")
+		@Order(DEFAULT + 1)
+		void defaultOrderValuePlusOne() {
+		}
+
+		@Test
 		@DisplayName("test6")
-		// @Order(6)
+		// @Order(DEFAULT)
 		void defaultOrderValue() {
 		}
 

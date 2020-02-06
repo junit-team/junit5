@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -20,11 +20,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
+import javax.lang.model.SourceVersion;
+
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.PackageUtils.JavaNameUtils;
 import org.opentest4j.ValueWrapper;
 
 /**
@@ -117,6 +123,28 @@ class PackageUtilsTests {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
 			() -> PackageUtils.getAttribute(getClass(), ""));
 		assertEquals("name must not be blank", exception.getMessage());
+	}
+
+	@Nested
+	class JavaNameUtilsTests {
+
+		@ParameterizedTest
+		@ValueSource(strings = { "name", "_NAME", "null", "var", "public", "$+!", "", "  ", "123", "true" })
+		void isJavaName(String s) {
+			assertEquals(SourceVersion.isName(s), JavaNameUtils.isJavaName(s));
+		}
+
+		@Test
+		void isJavaNameWithNullValue() {
+			// According to https://bugs.openjdk.java.net/browse/JDK-6362039,
+			// SourceVersion.isName(null) throws a NullPointerException instead
+			// of returning false.
+			assertThrows(NullPointerException.class, () -> SourceVersion.isName(null));
+
+			// However, for our purposes, we return false for a null value.
+			assertFalse(JavaNameUtils.isJavaName(null));
+		}
+
 	}
 
 }

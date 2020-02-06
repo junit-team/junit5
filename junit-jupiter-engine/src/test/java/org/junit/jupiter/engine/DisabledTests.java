@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -33,8 +33,8 @@ class DisabledTests extends AbstractJupiterTestEngineTests {
 	void executeTestsWithDisabledTestClass() {
 		EngineExecutionResults results = executeTestsForClass(DisabledTestClassTestCase.class);
 
-		results.containers().assertStatistics(stats -> stats.skipped(1));
-		results.tests().assertStatistics(stats -> stats.started(0));
+		results.containerEvents().assertStatistics(stats -> stats.skipped(1));
+		results.testEvents().assertStatistics(stats -> stats.started(0));
 	}
 
 	@Test
@@ -42,7 +42,7 @@ class DisabledTests extends AbstractJupiterTestEngineTests {
 		String methodName = "disabledTest";
 		Method method = DisabledTestMethodsTestCase.class.getDeclaredMethod(methodName);
 
-		executeTestsForClass(DisabledTestMethodsTestCase.class).tests()//
+		executeTestsForClass(DisabledTestMethodsTestCase.class).testEvents()//
 				.assertStatistics(stats -> stats.skipped(1).started(1).finished(1).aborted(0).succeeded(1).failed(0))//
 				.skipped().assertEventsMatchExactly(
 					event(test(methodName), skippedWithReason(method + " is @Disabled")));

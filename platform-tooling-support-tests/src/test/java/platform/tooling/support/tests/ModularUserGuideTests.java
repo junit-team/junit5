@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -60,8 +60,10 @@ class ModularUserGuideTests {
 		Files.write(documentation.resolve("module-info.java"), DOCUMENTATION_MODULE_DESCRIPTOR);
 
 		var args = new ArrayList<String>();
-		args.add("-Xlint");
+		args.add("-Xlint"); // enable all default warnings
 		args.add("-proc:none"); // disable annotation processing
+		args.add("-cp");
+		args.add(""); // set empty class path, otherwise system property "java.class.path" is read
 
 		args.add("-d");
 		args.add(temp.resolve("destination").toString());

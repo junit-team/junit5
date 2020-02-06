@@ -1,4 +1,4 @@
-# JUnit 5
+# <img src="https://junit.org/junit5/assets/img/junit5-logo.png" align="right" width="100">JUnit 5
 
 This repository is the home of the next generation of JUnit, _JUnit 5_.
 
@@ -6,9 +6,8 @@ This repository is the home of the next generation of JUnit, _JUnit 5_.
 
 ## Latest Releases
 
-- General Availability (GA): [JUnit 5.4.2](https://github.com/junit-team/junit5/releases/tag/r5.4.2)
-(April 7, 2019).
-- Preview (Milestone/Release Candidate): [JUnit 5.5.0-RC1](https://github.com/junit-team/junit5/releases/tag/r5.5.0-RC1) (June 6, 2019).
+- General Availability (GA): [JUnit 5.6.0](https://github.com/junit-team/junit5/releases/tag/r5.6.0) (January 20, 2020).
+- Preview (Milestone/Release Candidate): n/a
 
 ## Documentation
 
@@ -33,7 +32,7 @@ Ask JUnit 5 related questions on [StackOverflow] or chat with the team and the c
 
 ## Continuous Integration Builds
 
-[![Build Status](https://dev.azure.com/junit-team/junit5/_apis/build/status/junit-team.junit5?branchName=master)](https://dev.azure.com/junit-team/junit5/_build/latest?definitionId=1&branchName=master)
+[![CI Status](https://github.com/junit-team/junit5/workflows/CI/badge.svg)](https://github.com/junit-team/junit5/actions) [![Cross-Version Status](https://github.com/junit-team/junit5/workflows/Cross-Version/badge.svg)](https://github.com/junit-team/junit5/actions)
 
 Official CI build server for JUnit 5. Used to perform quick checks on submitted pull
 requests and for build matrices including the latest released OpenJDK and early access
@@ -84,7 +83,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 ### JUnit Platform
 
 - **Group ID**: `org.junit.platform`
-- **Version**: `1.4.2`, `5.5.0-RC1`, or `1.5.0-SNAPSHOT`
+- **Version**: `1.6.0` or `1.7.0-SNAPSHOT`
 - **Artifact IDs** and Java **module** name:
   - `junit-platform-commons` (`org.junit.platform.commons`)
   - `junit-platform-console` (`org.junit.platform.console`)
@@ -99,7 +98,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 ### JUnit Jupiter
 
 - **Group ID**: `org.junit.jupiter`
-- **Version**: `5.4.2`, `5.5.0-RC1`, or `5.5.0-SNAPSHOT`
+- **Version**: `5.6.0` or `5.7.0-SNAPSHOT`
 - **Artifact IDs** and Java **module** name:
   - `junit-jupiter` (`org.junit.jupiter`)
   - `junit-jupiter-api` (`org.junit.jupiter.api`)
@@ -110,7 +109,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 ### JUnit Vintage
 
 - **Group ID**: `org.junit.vintage`
-- **Version**: `5.4.2`, `5.5.0-RC1`, or `5.5.0-SNAPSHOT`
+- **Version**: `5.6.0` or `5.7.0-SNAPSHOT`
 - **Artifact ID** and Java **module** name:
   - `junit-vintage-engine` (`org.junit.vintage.engine`)
 
@@ -118,14 +117,14 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and <https://o
 
 - **Group ID**: `org.junit`
 - **Artifact ID** `junit-bom`
-- **Version**: `5.4.2`, `5.5.0-RC1`, or `5.5.0-SNAPSHOT`
+- **Version**: `5.6.0` or `5.7.0-SNAPSHOT`
 
 
 [Codecov]: https://codecov.io/gh/junit-team/junit5
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/master/CONTRIBUTING.md
 [Gitter]: https://gitter.im/junit-team/junit5
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
-[JaCoCo]: http://www.eclemma.org/jacoco/
+[JaCoCo]: https://www.eclemma.org/jacoco/
 [Javadoc]: https://junit.org/junit5/docs/current/api/
 [JDK 11]: https://jdk.java.net/11/
 [Release Notes]: https://junit.org/junit5/docs/current/release-notes/

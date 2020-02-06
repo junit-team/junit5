@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -28,7 +28,7 @@ import org.junit.platform.engine.discovery.PackageNameFilter;
  * Support utility methods for classpath scanning.
  *
  * @since 1.0
- * @deprecated Please use {@link org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver}
+ * @deprecated Please use {@link org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver} instead.
  */
 @Deprecated
 @API(status = DEPRECATED, since = "1.5")
@@ -43,7 +43,7 @@ public final class ClasspathScanningSupport {
 	 * classpath scanning from an {@link EngineDiscoveryRequest}.
 	 *
 	 * @param request the request to build a predicate from
-	 * @deprecated Please use {@link org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver}
+	 * @deprecated Please use {@link org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver} instead.
 	 */
 	@Deprecated
 	public static Predicate<String> buildClassNamePredicate(EngineDiscoveryRequest request) {
@@ -60,7 +60,7 @@ public final class ClasspathScanningSupport {
 	 *
 	 * @param request the request to build a name predicate from
 	 * @param classPredicate the class predicate
-	 * @deprecated Please use {@link org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver}
+	 * @deprecated Please use {@link org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver} instead.
 	 */
 	@Deprecated
 	public static ClassFilter buildClassFilter(EngineDiscoveryRequest request, Predicate<Class<?>> classPredicate) {

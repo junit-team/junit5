@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2015-2020 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
@@ -185,43 +186,49 @@ class ParallelExecutionIntegrationTests {
 
 	@Test
 	void executesClassesInParallelIfEnabledViaConfigurationParameter() {
-		var configParams = Map.of(DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME, "concurrent");
-		var results = executeWithFixedParallelism(3, configParams, TestCaseA.class, TestCaseB.class, TestCaseC.class);
+		ParallelClassesTestCase.GLOBAL_BARRIER.reset();
 
-		results.tests().assertStatistics(stats -> stats.succeeded(9));
-		assertThat(ThreadReporter.getThreadNames(results.all().list())).hasSize(3);
-		TestDescriptor testClassA = findFirstTestDescriptor(results, container(TestCaseA.class));
+		var configParams = Map.of(DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME, "concurrent");
+		var results = executeWithFixedParallelism(3, configParams, ParallelClassesTestCaseA.class,
+			ParallelClassesTestCaseB.class, ParallelClassesTestCaseC.class);
+
+		results.testEvents().assertStatistics(stats -> stats.succeeded(9));
+		assertThat(ThreadReporter.getThreadNames(results.allEvents().list())).hasSize(3);
+		TestDescriptor testClassA = findFirstTestDescriptor(results, container(ParallelClassesTestCaseA.class));
 		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassA))).hasSize(1);
-		TestDescriptor testClassB = findFirstTestDescriptor(results, container(TestCaseB.class));
+		TestDescriptor testClassB = findFirstTestDescriptor(results, container(ParallelClassesTestCaseB.class));
 		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassB))).hasSize(1);
-		TestDescriptor testClassC = findFirstTestDescriptor(results, container(TestCaseC.class));
+		TestDescriptor testClassC = findFirstTestDescriptor(results, container(ParallelClassesTestCaseC.class));
 		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassC))).hasSize(1);
 	}
 
 	@Test
 	void executesMethodsInParallelIfEnabledViaConfigurationParameter() {
+		ParallelMethodsTestCase.barriersPerClass.clear();
+
 		var configParams = Map.of( //
 			DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent", //
 			DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME, "same_thread");
-		var results = executeWithFixedParallelism(3, configParams, TestCaseA.class, TestCaseB.class, TestCaseC.class);
+		var results = executeWithFixedParallelism(3, configParams, ParallelMethodsTestCaseA.class,
+			ParallelMethodsTestCaseB.class, ParallelMethodsTestCaseC.class);
 
-		results.tests().assertStatistics(stats -> stats.succeeded(9));
-		assertThat(ThreadReporter.getThreadNames(results.all().list())).hasSizeGreaterThanOrEqualTo(3);
-		TestDescriptor testClassA = findFirstTestDescriptor(results, container(TestCaseA.class));
+		results.testEvents().assertStatistics(stats -> stats.succeeded(9));
+		assertThat(ThreadReporter.getThreadNames(results.allEvents().list())).hasSizeGreaterThanOrEqualTo(3);
+		TestDescriptor testClassA = findFirstTestDescriptor(results, container(ParallelMethodsTestCaseA.class));
 		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassA))).hasSize(3);
-		TestDescriptor testClassB = findFirstTestDescriptor(results, container(TestCaseB.class));
+		TestDescriptor testClassB = findFirstTestDescriptor(results, container(ParallelMethodsTestCaseB.class));
 		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassB))).hasSize(3);
-		TestDescriptor testClassC = findFirstTestDescriptor(results, container(TestCaseC.class));
+		TestDescriptor testClassC = findFirstTestDescriptor(results, container(ParallelMethodsTestCaseC.class));
 		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassC))).hasSize(3);
 	}
 
 	private List<Event> getEventsOfChildren(EngineExecutionResults results, TestDescriptor container) {
-		return results.tests().filter(
+		return results.testEvents().filter(
 			event -> event.getTestDescriptor().getParent().orElseThrow().equals(container)).collect(toList());
 	}
 
 	private TestDescriptor findFirstTestDescriptor(EngineExecutionResults results, Condition<Event> condition) {
-		return results.all().filter(condition::matches).map(Event::getTestDescriptor).findFirst().orElseThrow();
+		return results.allEvents().filter(condition::matches).map(Event::getTestDescriptor).findFirst().orElseThrow();
 	}
 
 	private List<Instant> getTimestampsFor(List<Event> events, Condition<Event> condition) {
@@ -235,7 +242,7 @@ class ParallelExecutionIntegrationTests {
 
 	private List<Event> executeConcurrently(int parallelism, Class<?>... testClasses) {
 		return executeWithFixedParallelism(parallelism, Map.of(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent"),
-			testClasses).all().list();
+			testClasses).allEvents().list();
 	}
 
 	private EngineExecutionResults executeWithFixedParallelism(int parallelism, Map<String, String> configParams,
@@ -566,30 +573,64 @@ class ParallelExecutionIntegrationTests {
 	}
 
 	@ExtendWith(ThreadReporter.class)
-	static class SimpleTestCase {
+	static abstract class BarrierTestCase {
+
 		@Test
 		void test1() throws Exception {
-			Thread.sleep(10);
+			getBarrier().await();
 		}
 
 		@Test
 		void test2() throws Exception {
-			Thread.sleep(10);
+			getBarrier().await();
 		}
 
 		@Test
 		void test3() throws Exception {
-			Thread.sleep(10);
+			getBarrier().await();
+		}
+
+		abstract CyclicBarrier getBarrier();
+
+	}
+
+	static class ParallelMethodsTestCase extends BarrierTestCase {
+
+		static final Map<Class<?>, CyclicBarrier> barriersPerClass = new ConcurrentHashMap<>();
+
+		@Override
+		CyclicBarrier getBarrier() {
+			return barriersPerClass.computeIfAbsent(this.getClass(), key -> new CyclicBarrier(3));
 		}
 	}
 
-	static class TestCaseA extends SimpleTestCase {
+	static class ParallelClassesTestCase extends BarrierTestCase {
+
+		static final CyclicBarrier GLOBAL_BARRIER = new CyclicBarrier(3);
+
+		@Override
+		CyclicBarrier getBarrier() {
+			return GLOBAL_BARRIER;
+		}
+
 	}
 
-	static class TestCaseB extends SimpleTestCase {
+	static class ParallelClassesTestCaseA extends ParallelClassesTestCase {
 	}
 
-	static class TestCaseC extends SimpleTestCase {
+	static class ParallelClassesTestCaseB extends ParallelClassesTestCase {
+	}
+
+	static class ParallelClassesTestCaseC extends ParallelClassesTestCase {
+	}
+
+	static class ParallelMethodsTestCaseA extends ParallelMethodsTestCase {
+	}
+
+	static class ParallelMethodsTestCaseB extends ParallelMethodsTestCase {
+	}
+
+	static class ParallelMethodsTestCaseC extends ParallelMethodsTestCase {
 	}
 
 	private static void incrementBlockAndCheck(AtomicInteger sharedResource, CountDownLatch countDownLatch)
