@@ -14,4 +14,11 @@ dependencies {
 	api(project(":junit-platform-commons"))
 
 	compileOnly("org.jetbrains.kotlin:kotlin-stdlib")
+
+	testImplementation("org.jetbrains.kotlin:kotlin-stdlib")
+	testRuntimeOnly(project(":junit-jupiter-engine"))
+}
+
+tasks.test {
+	useJUnitPlatform()
 }

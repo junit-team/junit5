@@ -18,119 +18,85 @@ import org.apiguardian.api.API
 import org.apiguardian.api.API.Status.EXPERIMENTAL
 import org.junit.jupiter.api.function.Executable
 import org.junit.jupiter.api.function.ThrowingSupplier
+import java.util.Arrays
 
 /**
  * @see Assertions.fail
  */
 fun fail(message: String?, throwable: Throwable? = null): Nothing =
-    Assertions.fail<Nothing>(message, throwable)
+    Assertions.fail(message, throwable)
 
 /**
  * @see Assertions.fail
  */
 fun fail(message: (() -> String)?): Nothing =
-    Assertions.fail<Nothing>(message)
+    Assertions.fail(message)
 
 /**
  * @see Assertions.fail
  */
 fun fail(throwable: Throwable?): Nothing =
-    Assertions.fail<Nothing>(throwable)
-
-/**
- * [Stream] of functions to be executed.
- */
-private typealias ExecutableStream = Stream<() -> Unit>
-private fun ExecutableStream.convert() = map { Executable(it) }
+    Assertions.fail(throwable)
 
 /**
  * @see Assertions.assertAll
  */
-fun assertAll(executables: ExecutableStream) =
-    Assertions.assertAll(executables.convert())
+fun assertAll(executables: Stream<() -> Unit>) =
+    assertAll(null, executables)
 
 /**
  * @see Assertions.assertAll
  */
-fun assertAll(heading: String?, executables: ExecutableStream) =
-    Assertions.assertAll(heading, executables.convert())
-
-/**
- * [Collection] of functions to be executed.
- */
-private typealias ExecutableCollection = Collection<() -> Unit>
-private fun ExecutableCollection.convert() = map { Executable(it) }
+fun assertAll(heading: String?, executables: Stream<() -> Unit>) =
+    Assertions.assertAll(heading, executables.map { Executable(it) })
 
 /**
  * @see Assertions.assertAll
  */
-fun assertAll(executables: ExecutableCollection) =
-    Assertions.assertAll(executables.convert())
+fun assertAll(executables: Collection<() -> Unit>) =
+    assertAll(executables.stream())
 
 /**
  * @see Assertions.assertAll
  */
-fun assertAll(heading: String?, executables: ExecutableCollection) =
-    Assertions.assertAll(heading, executables.convert())
+fun assertAll(heading: String?, executables: Collection<() -> Unit>) =
+    assertAll(heading, executables.stream())
 
 /**
  * @see Assertions.assertAll
  */
 fun assertAll(vararg executables: () -> Unit) =
-    assertAll(executables.toList().stream())
+    assertAll(Arrays.stream(executables))
 
 /**
  * @see Assertions.assertAll
  */
 fun assertAll(heading: String?, vararg executables: () -> Unit) =
-    assertAll(heading, executables.toList().stream())
+    assertAll(heading, Arrays.stream(executables))
 
 /**
- * Example usage:
- * ```kotlin
- * val exception = assertThrows<IllegalArgumentException> {
- *     throw IllegalArgumentException("Talk to a duck")
- * }
- * assertEquals("Talk to a duck", exception.message)
- * ```
+ * @sample org.junit.jupiter.api.AssertionsSamples.assertThrowsSample
  * @see Assertions.assertThrows
  */
 inline fun <reified T : Throwable> assertThrows(noinline executable: () -> Unit): T =
     Assertions.assertThrows(T::class.java, Executable(executable))
 
 /**
- * Example usage:
- * ```kotlin
- * val exception = assertThrows<IllegalArgumentException>("Should throw an Exception") {
- *     throw IllegalArgumentException("Talk to a duck")
- * }
- * assertEquals("Talk to a duck", exception.message)
- * ```
+ * @sample org.junit.jupiter.api.AssertionsSamples.assertThrowsWithMessageSample
  * @see Assertions.assertThrows
  */
 inline fun <reified T : Throwable> assertThrows(message: String, noinline executable: () -> Unit): T =
     assertThrows({ message }, executable)
 
 /**
- * Example usage:
- * ```kotlin
- * val exception = assertThrows<IllegalArgumentException>({ "Should throw an Exception" }) {
- *     throw IllegalArgumentException("Talk to a duck")
- * }
- * assertEquals("Talk to a duck", exception.message)
- * ```
+ * @sample org.junit.jupiter.api.AssertionsSamples.assertThrowsWithLazyMessageSample
  * @see Assertions.assertThrows
  */
 inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, noinline executable: () -> Unit): T =
     Assertions.assertThrows(T::class.java, Executable(executable), Supplier(message))
 
 /**
- * Example usage:
- * ```kotlin
- * val result = assertDoesNotThrow {
- *     // Code block that is expected to not throw an exception
- * }
- * ```
+ * @sample org.junit.jupiter.api.AssertionsSamples.assertDoesNotThrowSample
  * @see Assertions.assertDoesNotThrow
  * @param R the result type of the [executable]
  */
@@ -139,12 +105,7 @@ fun <R> assertDoesNotThrow(executable: () -> R): R =
     Assertions.assertDoesNotThrow(ThrowingSupplier(executable))
 
 /**
- * Example usage:
- * ```kotlin
- * val result = assertDoesNotThrow("Should not throw an exception") {
- *     // Code block that is expected to not throw an exception
- * }
- * ```
+ * @sample org.junit.jupiter.api.AssertionsSamples.assertDoesNotThrowWithMessageSample
  * @see Assertions.assertDoesNotThrow
  * @param R the result type of the [executable]
  */
@@ -153,12 +114,7 @@ fun <R> assertDoesNotThrow(message: String, executable: () -> R): R =
     assertDoesNotThrow({ message }, executable)
 
 /**
- * Example usage:
- * ```kotlin
- * val result = assertDoesNotThrow({ "Should not throw an exception" }) {
- *     // Code block that is expected to not throw an exception
- * }
- * ```
+ * @sample org.junit.jupiter.api.AssertionsSamples.assertDoesNotThrowWithLazyMessageSample
  * @see Assertions.assertDoesNotThrow
  * @param R the result type of the [executable]
  */
@@ -167,84 +123,54 @@ fun <R> assertDoesNotThrow(message: () -> String, executable: () -> R): R =
     Assertions.assertDoesNotThrow(ThrowingSupplier(executable), Supplier(message))
 
 /**
- * Example usage:
- * ```kotlin
- * val result = assertTimeout(Duration.seconds(1)) {
- *     // Code block that is being timed.
- * }
- * ```
+ * @sample org.junit.jupiter.api.AssertionsSamples.assertTimeoutSample
  * @see Assertions.assertTimeout
- * @paramR the result of the [executable].
+ * @param R the result of the [executable].
  */
 @API(status = EXPERIMENTAL, since = "5.5")
 fun <R> assertTimeout(timeout: Duration, executable: () -> R): R =
     Assertions.assertTimeout(timeout, executable)
 
 /**
- * Example usage:
- * ```kotlin
- * val result = assertTimeout(Duration.seconds(1), "Should only take one second") {
- *     // Code block that is being timed.
- * }
- * ```
+ * @sample org.junit.jupiter.api.AssertionsSamples.assertTimeoutWithMessageSample
  * @see Assertions.assertTimeout
- * @paramR the result of the [executable].
+ * @param R the result of the [executable].
  */
 @API(status = EXPERIMENTAL, since = "5.5")
 fun <R> assertTimeout(timeout: Duration, message: String, executable: () -> R): R =
     Assertions.assertTimeout(timeout, executable, message)
 
 /**
- * Example usage:
- * ```kotlin
- * val result = assertTimeout(Duration.seconds(1), { "Should only take one second" }) {
- *     // Code block that is being timed.
- * }
- * ```
+ * @sample org.junit.jupiter.api.AssertionsSamples.assertTimeoutWithLazyMessageSample
  * @see Assertions.assertTimeout
- * @paramR the result of the [executable].
+ * @param R the result of the [executable].
  */
 @API(status = EXPERIMENTAL, since = "5.5")
 fun <R> assertTimeout(timeout: Duration, message: () -> String, executable: () -> R): R =
     Assertions.assertTimeout(timeout, executable, message)
 
 /**
- * Example usage:
- * ```kotlin
- * val result = assertTimeoutPreemptively(Duration.seconds(1)) {
- *     // Code block that is being timed.
- * }
- * ```
+ * @sample org.junit.jupiter.api.AssertionsSamples.assertTimeoutPreemptivelySample
  * @see Assertions.assertTimeoutPreemptively
- * @paramR the result of the [executable].
+ * @param R the result of the [executable].
  */
 @API(status = EXPERIMENTAL, since = "5.5")
 fun <R> assertTimeoutPreemptively(timeout: Duration, executable: () -> R): R =
     Assertions.assertTimeoutPreemptively(timeout, executable)
 
 /**
- * Example usage:
- * ```kotlin
- * val result = assertTimeoutPreemptively(Duration.seconds(1), "Should only take one second") {
- *     // Code block that is being timed.
- * }
- * ```
+ * @sample org.junit.jupiter.api.AssertionsSamples.assertTimeoutPreemptivelyWithMessageSample
  * @see Assertions.assertTimeoutPreemptively
- * @paramR the result of the [executable].
+ * @param R the result of the [executable].
  */
 @API(status = EXPERIMENTAL, since = "5.5")
 fun <R> assertTimeoutPreemptively(timeout: Duration, message: String, executable: () -> R): R =
     Assertions.assertTimeoutPreemptively(timeout, executable, message)
 
 /**
- * Example usage:
- * ```kotlin
- * val result = assertTimeoutPreemptively(Duration.seconds(1), { "Should only take one second" }) {
- *     // Code block that is being timed.
- * }
- * ```
+ * @sample org.junit.jupiter.api.AssertionsSamples.assertTimeoutPreemptivelyWithLazyMessageSample
  * @see Assertions.assertTimeoutPreemptively
- * @paramR the result of the [executable].
+ * @param R the result of the [executable].
  */
 @API(status = EXPERIMENTAL, since = "5.5")
 fun <R> assertTimeoutPreemptively(timeout: Duration, message: () -> String, executable: () -> R): R =
