@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
@@ -105,7 +106,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 				.map(Optional::get)
 				.forEach(invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor));
 		// @formatter:on
-		validateWasAtLeastInvokedOnce(invocationIndex.get());
+		validateWasAtLeastInvokedOnce(invocationIndex.get(), providers);
 		return context;
 	}
 
@@ -138,9 +139,13 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 		dynamicTestExecutor.execute(testDescriptor);
 	}
 
-	private void validateWasAtLeastInvokedOnce(int invocationIndex) {
-		Preconditions.condition(invocationIndex > 0, () -> "No supporting "
-				+ TestTemplateInvocationContextProvider.class.getSimpleName() + " provided an invocation context");
+	private void validateWasAtLeastInvokedOnce(int invocationIndex,
+			List<TestTemplateInvocationContextProvider> providers) {
+		Preconditions.condition(invocationIndex > 0,
+			() -> "None of the " + TestTemplateInvocationContextProvider.class.getSimpleName() + "s "
+					+ providers.stream().map(provider -> provider.getClass().getSimpleName()).collect(
+						joining(", ", "[", "]"))
+					+ " has provided a non-empty stream");
 	}
 
 }

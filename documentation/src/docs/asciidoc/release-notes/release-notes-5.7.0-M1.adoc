@@ -40,7 +40,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* The javadoc of `TestTemplateInvocationContextProvider` has been aligned with the implementation (which was better): it's allowed to return an empty stream. And the error message when all provided streams are empty is now more helpful.
 
 
 [[release-notes-5.7.0-M1-junit-vintage]]
