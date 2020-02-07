@@ -257,7 +257,7 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
 
  <p>This method is only called by the framework if <a href="#supportsTestTemplate(org.junit.jupiter.api.extension.ExtensionContext)"><code>supportsTestTemplate(org.junit.jupiter.api.extension.ExtensionContext)</code></a>
  previously returned <code>true</code> for the same <a href="ExtensionContext.html" title="interface in org.junit.jupiter.api.extension"><code>ExtensionContext</code></a>;
- this method is allowed to return an empty <code>Stream</code>, but not <code>null</code>.
+ this method is allowed to return an empty <code>Stream</code> but not <code>null</code>.
 
  <p>The returned <code>Stream</code> will be properly closed by calling
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/stream/BaseStream.html?is-external=true#close()" title="class or interface in java.util.stream" class="externalLink"><code>BaseStream.close()</code></a>, making it safe to use a resource such as
