@@ -193,7 +193,6 @@
 4a1da47ce2b5b7b4d5fd1145737a933a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/io/package-info.java
 4a4216873a839d7f0531cbba8491cfc9  documentation/src/test/java/example/exception/IgnoreIOExceptionExtension.java
 4a89f7582f920475573bc1aba0c4a51a  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/MethodSource.java
-4aecf93675b557555f6f628a8c4fcd04  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.java
 4ba0dc76e22284daf92d7f68e5f2565c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/CsvArgumentsProvider.java
 4bfc291478e8c2effdd5a97c8ab373cc  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/AbstractRepeatableAnnotationCondition.java
 4c21fe6d2d00209402599baefab52691  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ModuleUtils.java
@@ -215,7 +214,6 @@
 5341346286292b5a4f3b0428cd38323a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DisplayName.java
 53d5c6929f3bbce683db6321e1e7632c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestInvocationContext.java
 54120d8eadfcfca8bb2aa6fa10e7cd95  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/BeforeAllCallback.java
-54beda599a94e19068b08ee6448c9983  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.java
 55a758f98d8e67951c2a67a3e9d493c0  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DefaultTestInstanceFactoryContext.java
 55f90ca686cf4a9ac3e3aa229c232e10  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/package-info.java
 570b9f00821d5d49212ee592a7e8f8c2  documentation/src/test/java/example/HamcrestAssertionsDemo.java
@@ -367,6 +365,7 @@
 8d110356275616587a6583687c7a57d7  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EnumSource.java
 8d2de47ba783d123b8fa1e0393ad1e4b  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/NodeTestTaskContext.java
 8d6ab3cadfcaa3ea1ae1a2738569d16f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicContainer.java
+8da181a86d411497ad1c8e49c6a06e2d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.java
 8f6554030cac01e55cbae02695abef60  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/GenericBeforeAndAfterAdvice.java
 90b825530696acd8630460ed0cfe6e91  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/member/TestRuleAnnotatedField.java
 90e58bf3352aa38c3fe838e96fb19a76  junit-platform-engine/src/main/java/org/junit/platform/engine/ConfigurationParameters.java
@@ -477,7 +476,6 @@ bbd7c8f13456a409ec0c5dc339abeb88  junit-platform-launcher/src/main/java/org/juni
 bbf2666b1ee199e95e8c2ca6394a3e05  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstancePreDestroyCallback.java
 bc379a5e4200d4aa0f87c23b13490d5e  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ValueSource.java
 bc88e2e6e1c07b443a16222f00a9bc8f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledForJreRange.java
-bc8ac234a88b334ef100adb16fa8a007  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-M1.adoc
 bce52367cfa6c5cf78b810cfa0f2d261  documentation/src/test/java/example/SlowTests.java
 bce9d1916eb1f90ebed049df07448bfd  junit-platform-console/src/main/java/org/junit/platform/console/options/Details.java
 bcfb162e8368427d862c84a75f80e6e7  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/UriSelector.java
@@ -534,6 +532,7 @@ cd620b12b260e014835f58a43afe679d  junit-platform-commons/src/main/java/org/junit
 ce03009022614b8dd1d687f7e7601d6d  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/JupiterTestDescriptor.java
 ce078fcf30a66241fdb7d4b38f998392  junit-platform-engine/src/main/java/org/junit/platform/engine/SelectorResolutionResult.java
 ce6bd36ce510921eac72920002e6adaa  junit-platform-console/src/main/java/org/junit/platform/console/options/CommandLineOptions.java
+cf576581dffa21f5f8cfd32d7c6f7d19  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-M1.adoc
 cfde6bc6c4026af29455b1dc7f79408d  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/MethodArgumentsProvider.java
 d00be6f8717a7cebd1d26a1b808e556f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertAll.java
 d0292ddb3127332fdb3180abde784839  documentation/src/test/java/org/junit/api/tools/MarkdownApiReportWriter.java
@@ -668,4 +667,5 @@ fe68bd8a2799ff750d17f9e4d4156a2b  junit-jupiter-api/src/main/java/org/junit/jupi
 fe99b3c49b9cefe65e5a54e82859be9e  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/UniqueIdFilter.java
 fe9c189dbee3697088580485f5bb3676  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ConditionEvaluationResult.java
 ff48bb27a9f4b690ca1e6dd0cd25687a  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/ExternalResourceSupport.java
+ffd8e3adb8692536a64dfd5152ec62e7  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.java
 ffe69cdbb784904d5a1367b7fa7a3564  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageEngineDescriptor.java
