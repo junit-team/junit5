@@ -355,9 +355,9 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithSupportingProviderButNoInvocations"), started()), //
 				event(container("templateWithSupportingProviderButNoInvocations"),
-					finishedWithFailure(message("None of the TestTemplateInvocationContextProviders ["
+					finishedWithFailure(message("None of the supporting TestTemplateInvocationContextProviders ["
 							+ InvocationContextProviderThatSupportsEverythingButProvidesNothing.class.getSimpleName()
-							+ "] has provided a non-empty stream")))));
+							+ "] provided a non-empty stream")))));
 	}
 
 	@Test

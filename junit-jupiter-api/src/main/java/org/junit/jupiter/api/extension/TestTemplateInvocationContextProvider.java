@@ -71,7 +71,7 @@ public interface TestTemplateInvocationContextProvider extends Extension {
 	 *
 	 * <p>This method is only called by the framework if {@link #supportsTestTemplate}
 	 * previously returned {@code true} for the same {@link ExtensionContext};
-	 * this method is allowed to return an empty {@code Stream}, but not {@code null}.
+	 * this method is allowed to return an empty {@code Stream} but not {@code null}.
 	 *
 	 * <p>The returned {@code Stream} will be properly closed by calling
 	 * {@link Stream#close()}, making it safe to use a resource such as

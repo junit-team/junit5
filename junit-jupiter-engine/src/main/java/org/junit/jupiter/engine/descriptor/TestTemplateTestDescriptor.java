@@ -141,11 +141,12 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 
 	private void validateWasAtLeastInvokedOnce(int invocationIndex,
 			List<TestTemplateInvocationContextProvider> providers) {
+
 		Preconditions.condition(invocationIndex > 0,
-			() -> "None of the " + TestTemplateInvocationContextProvider.class.getSimpleName() + "s "
+			() -> "None of the supporting " + TestTemplateInvocationContextProvider.class.getSimpleName() + "s "
 					+ providers.stream().map(provider -> provider.getClass().getSimpleName()).collect(
 						joining(", ", "[", "]"))
-					+ " has provided a non-empty stream");
+					+ " provided a non-empty stream");
 	}
 
 }
