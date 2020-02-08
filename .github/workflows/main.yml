@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     container: junitteam/build:latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
     - name: 'Test'
       run: |
         ./gradlew --version
@@ -25,7 +25,7 @@ jobs:
     name: 'Windows'
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
     - name: 'Set up JDK 11'
       uses: actions/setup-java@v1
       with:
@@ -40,7 +40,7 @@ jobs:
     name: 'Mac OS'
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
     - name: 'Set up JDK 11'
       uses: actions/setup-java@v1
       with:
@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     container: junitteam/build:latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
     - name: 'Set up JDK 11'
       uses: actions/setup-java@v1
       with:
@@ -79,7 +79,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/master')
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
     - name: 'Set up JDK 11'
       uses: actions/setup-java@v1
       with:
@@ -96,7 +96,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/master'
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
     - name: 'Set up JDK 11'
       uses: actions/setup-java@v1
       with:
