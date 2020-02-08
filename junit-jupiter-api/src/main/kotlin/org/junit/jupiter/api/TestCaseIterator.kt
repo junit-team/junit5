@@ -12,13 +12,33 @@
 
 package org.junit.jupiter.api
 
+import java.util.function.BiFunction
+import java.util.stream.Stream
 import org.apiguardian.api.API
 import org.apiguardian.api.API.Status.EXPERIMENTAL
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.function.ThrowingConsumer
-import org.junit.jupiter.api.function.ThrowingConsumers.*
-import java.util.function.BiFunction
-import java.util.stream.Stream
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer10
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer11
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer12
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer13
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer14
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer15
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer16
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer17
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer18
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer19
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer2
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer20
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer21
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer22
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer3
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer4
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer5
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer6
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer7
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer8
+import org.junit.jupiter.api.function.ThrowingConsumers.ThrowingConsumer9
 
 /**
  * The [TestCaseIterator] lazily builds a [DynamicTest] with the given [test]

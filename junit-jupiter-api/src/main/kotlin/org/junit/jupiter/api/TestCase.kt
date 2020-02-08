@@ -12,9 +12,9 @@
 
 package org.junit.jupiter.api
 
+import java.util.function.Function
 import org.apiguardian.api.API
 import org.apiguardian.api.API.Status.EXPERIMENTAL
-import java.util.function.Function
 
 // Implementation Notes
 //
