@@ -401,6 +401,7 @@
 9e3b8ee0c36f3a830b09e8907de8ec8c  documentation/src/test/java/example/DocumentationTestSuite.java
 9ece1eb173906c2552ac6595bad24177  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeTags.java
 9eeb863aa510919e6f24149c6f1c3a99  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectPackages.java
+9f8ec78cf97cc6cb228db66bd8c4de7d  documentation/documentation.gradle.kts
 a017ac3a4a4e757cd70928019fa5653d  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
 a01d618df697d7900953bfdfc06f3256  documentation/src/docs/asciidoc/user-guide/images/extensions_BrokenLifecycleMethodConfigDemo.png
 a050759074c7a4e829fd2c691c8e753a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertionUtils.java
@@ -624,7 +625,6 @@ ee0d40c3b5452d37d894330c160e4a73  junit-jupiter-params/src/main/java/org/junit/j
 ee4ebb7f4bbf9feb3b59fbb64abbd24d  documentation/src/docs/asciidoc/user-guide/extensions.adoc
 ee65a9d23d82994fcbe817b234a06cb5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNotSame.java
 ef3b688543dc6c7c80e8febacaeacf5e  junit-platform-commons/src/main/java/org/junit/platform/commons/annotation/package-info.java
-ef6370ad13b552700af62949a5fc3b52  documentation/documentation.gradle.kts
 ef72c326c954b8def5bf42ed08213647  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/RunListenerAdapter.java
 efe17c1774041d63e44dd9e712be1fc1  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ArgumentsSources.java
 eff90a7cb1dfa7206dca42ea0e986f7c  junit-platform-testkit/src/main/java/org/junit/platform/testkit/package-info.java
