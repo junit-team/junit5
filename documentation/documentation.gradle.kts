@@ -195,17 +195,7 @@ tasks {
 	}
 
 	asciidoctorPdf {
-		// workaround for https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/493
-		copyNoResources() // explicitly disable regular resources copying which happens after asciidoctor execution
-		doFirst {
-			// manually copy resources before executing asciidoctor so that static and generated images can be included
-			resources {
-				copy {
-					with(this@resources)
-					into(outputDir)
-				}
-			}
-		}
+		copyAllResources()
 	}
 
 	val downloadJavadocElementLists by registering {

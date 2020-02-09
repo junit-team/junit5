@@ -7,8 +7,8 @@ pluginManagement {
 		id("org.ajoberstar.git-publish") version "2.1.3"
 		kotlin("jvm") version "1.3.61"
 		id("com.github.johnrengelman.shadow") version "5.2.0"
-		id("org.asciidoctor.jvm.convert") version "3.0.0"
-		id("org.asciidoctor.jvm.pdf") version "3.0.0"
+		id("org.asciidoctor.jvm.convert") version "3.1.0"
+		id("org.asciidoctor.jvm.pdf") version "3.1.0"
 		id("me.champeau.gradle.jmh") version "0.5.0"
 		id("io.spring.nohttp") version "0.0.4.RELEASE"
 	}
