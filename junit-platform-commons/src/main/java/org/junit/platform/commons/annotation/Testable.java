@@ -25,8 +25,8 @@ import org.apiguardian.api.API;
  * {@code @Testable} is used to signal to IDEs and tooling vendors that the
  * annotated or meta-annotated element is <em>testable</em>.
  *
- * <p>In this context, the term "testable" means that the annotated method or
- * class can be executed by a {@code TestEngine} as a test or test container
+ * <p>In this context, the term "testable" means that the annotated method, field,
+ * or class can be executed by a {@code TestEngine} as a test or test container
  * on the JUnit Platform.
  *
  * <h3>Motivation for {@code @Testable}</h3>
@@ -41,20 +41,20 @@ import org.apiguardian.api.API;
  * create a custom <em>composed annotation</em> that inherits the semantics
  * of {@code @Testable}. For example, the {@code @Test} and {@code @TestFactory}
  * annotations in JUnit Jupiter are meta-annotated with {@code @Testable}.
- * <p>For test programming models that do not rely on annotations, test classes
- * or test methods may be directly annotated with {@code @Testable}. Alternatively,
- * if concrete test classes extend from a base class, the base class can be
- * annotated with {@code @Testable}. Note that {@code @Testable} is an
+ * <p>For test programming models that do not rely on annotations, test classes,
+ * test methods, or test fields may be directly annotated with {@code @Testable}.
+ * Alternatively, if concrete test classes extend from a base class, the base class
+ * can be annotated with {@code @Testable}. Note that {@code @Testable} is an
  * {@link Inherited @Inherited} annotation.
  *
  * <h3>Requirements for IDEs and Tooling Vendors</h3>
  * <ul>
  * <li>If a top-level class, static nested class, or inner class is not
- * annotated or meta-annotated with {@code @Testable} but contains a method
+ * annotated or meta-annotated with {@code @Testable} but contains a method or field
  * that is annotated or meta-annotated with {@code @Testable}, the class must
  * be considered to be a <em>testable</em> class.</li>
  * <li>If annotation hierarchies containing {@code @Testable} are present on
- * classes or methods in compiled byte code (e.g., in JARs in the user's
+ * classes, methods, or fields in compiled byte code (e.g., in JARs in the user's
  * classpath), IDEs and tooling vendors must also take such annotation
  * hierarchies into consideration when performing annotation processing for
  * source code.</li>
@@ -70,7 +70,7 @@ import org.apiguardian.api.API;
  *
  * @since 1.0
  */
-@Target({ ElementType.TYPE, ElementType.METHOD })
+@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
