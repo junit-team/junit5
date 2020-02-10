@@ -120,7 +120,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <hr>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Target</a>({<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true#TYPE" title="class or interface in java.lang.annotation" class="externalLink">TYPE</a>,<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true#METHOD" title="class or interface in java.lang.annotation" class="externalLink">METHOD</a>})
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Target</a>({<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true#TYPE" title="class or interface in java.lang.annotation" class="externalLink">TYPE</a>,<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true#METHOD" title="class or interface in java.lang.annotation" class="externalLink">METHOD</a>,<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true#FIELD" title="class or interface in java.lang.annotation" class="externalLink">FIELD</a>})
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation" class="externalLink">RUNTIME</a>)
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Inherited.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Inherited</a>
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Documented.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Documented</a>
@@ -130,8 +130,8 @@ public @interface <span class="memberNameLabel">Testable</span></pre>
 <div class="block"><code>@Testable</code> is used to signal to IDEs and tooling vendors that the
  annotated or meta-annotated element is <em>testable</em>.
 
- <p>In this context, the term "testable" means that the annotated method or
- class can be executed by a <code>TestEngine</code> as a test or test container
+ <p>In this context, the term "testable" means that the annotated method, field,
+ or class can be executed by a <code>TestEngine</code> as a test or test container
  on the JUnit Platform.
 
  <h3>Motivation for <code>@Testable</code></h3>
@@ -146,20 +146,20 @@ public @interface <span class="memberNameLabel">Testable</span></pre>
  create a custom <em>composed annotation</em> that inherits the semantics
  of <code>@Testable</code>. For example, the <code>@Test</code> and <code>@TestFactory</code>
  annotations in JUnit Jupiter are meta-annotated with <code>@Testable</code>.
- <p>For test programming models that do not rely on annotations, test classes
- or test methods may be directly annotated with <code>@Testable</code>. Alternatively,
- if concrete test classes extend from a base class, the base class can be
- annotated with <code>@Testable</code>. Note that <code>@Testable</code> is an
+ <p>For test programming models that do not rely on annotations, test classes,
+ test methods, or test fields may be directly annotated with <code>@Testable</code>.
+ Alternatively, if concrete test classes extend from a base class, the base class
+ can be annotated with <code>@Testable</code>. Note that <code>@Testable</code> is an
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Inherited.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink"><code>@Inherited</code></a> annotation.
 
  <h3>Requirements for IDEs and Tooling Vendors</h3>
  <ul>
  <li>If a top-level class, static nested class, or inner class is not
- annotated or meta-annotated with <code>@Testable</code> but contains a method
+ annotated or meta-annotated with <code>@Testable</code> but contains a method or field
  that is annotated or meta-annotated with <code>@Testable</code>, the class must
  be considered to be a <em>testable</em> class.</li>
  <li>If annotation hierarchies containing <code>@Testable</code> are present on
- classes or methods in compiled byte code (e.g., in JARs in the user's
+ classes, methods, or fields in compiled byte code (e.g., in JARs in the user's
  classpath), IDEs and tooling vendors must also take such annotation
  hierarchies into consideration when performing annotation processing for
  source code.</li>
