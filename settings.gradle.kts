@@ -1,6 +1,8 @@
+import com.gradle.scan.plugin.internal.api.BuildScanExtensionWithHiddenFeatures
+
 pluginManagement {
 	plugins {
-		id("com.gradle.enterprise") version "3.1"
+		id("com.gradle.enterprise") version "3.1.1"
 		id("net.nemerosa.versioning") version "2.10.0"
 		id("com.github.ben-manes.versions") version "0.27.0"
 		id("com.diffplug.gradle.spotless") version "3.27.0"
@@ -18,10 +20,15 @@ plugins {
 	id("com.gradle.enterprise")
 }
 
+val gradleEnterpriseServer = "https://ge.junit.org"
+
 gradleEnterprise {
 	buildScan {
-		termsOfServiceUrl = "https://gradle.com/terms-of-service"
-		termsOfServiceAgree = "yes"
+		server = gradleEnterpriseServer
+		isCaptureTaskInputFiles = true
+		publishAlways()
+		this as BuildScanExtensionWithHiddenFeatures
+		publishIfAuthenticated()
 	}
 }
 
