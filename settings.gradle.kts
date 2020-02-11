@@ -33,6 +33,14 @@ gradleEnterprise {
 		tag(if (isCiServer) "CI" else "LOCAL")
 		this as BuildScanExtensionWithHiddenFeatures
 		publishIfAuthenticated()
+		obfuscation {
+			if (isCiServer) {
+				username { "github" }
+			} else {
+				hostname { null }
+				ipAddresses { emptyList() }
+			}
+		}
 	}
 }
 
