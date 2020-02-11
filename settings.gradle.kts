@@ -21,14 +21,32 @@ plugins {
 }
 
 val gradleEnterpriseServer = "https://ge.junit.org"
+val isCiServer = System.getenv("CI") != null || System.getenv("GITHUB_WORKFLOW") != null
+val junitBuildCacheUsername: String? by extra
+val junitBuildCachePassword: String? by extra
 
 gradleEnterprise {
 	buildScan {
 		server = gradleEnterpriseServer
 		isCaptureTaskInputFiles = true
 		publishAlways()
+		tag(if (isCiServer) "CI" else "LOCAL")
 		this as BuildScanExtensionWithHiddenFeatures
 		publishIfAuthenticated()
+	}
+}
+
+buildCache {
+	local {
+		isEnabled = !isCiServer
+	}
+	remote<HttpBuildCache> {
+		url = uri("$gradleEnterpriseServer/cache/")
+		isPush = isCiServer && junitBuildCacheUsername != null && junitBuildCachePassword != null
+		credentials {
+			username = junitBuildCacheUsername
+			password = junitBuildCachePassword
+		}
 	}
 }
 

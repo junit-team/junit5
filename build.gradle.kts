@@ -9,12 +9,6 @@ plugins {
 }
 
 buildScan {
-	if (System.getenv("CI") != null || System.getenv("GITHUB_WORKFLOW") != null) {
-		tag("CI")
-	} else {
-		tag("LOCAL")
-	}
-
 	value("Git Branch", versioning.info.branch)
 	value("Git Commit", versioning.info.commit)
 	link("Commit", "https://github.com/junit-team/junit5/commit/${versioning.info.commit}")
