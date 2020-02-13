@@ -127,6 +127,7 @@
 2d54e05874cf108e950bb4f966938ed7  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestMethodContext.java
 2deaf843cf79275dfa54361de654fdbc  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/IgnoringRunnerDecorator.java
 2e119c18db992eb3e586ab4b349d955f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledForJreRangeCondition.java
+2ea2e67129620aff9a2e6f63e3ec6527  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-M1.adoc
 2f53895c1817024d1dabb728999df529  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/TestRun.java
 2f6c53349ee30bd5b0ac609dcd27fa35  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/package-info.java
 2fa8f468a324914fc630ea9cce9a9acf  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/package-info.java
@@ -404,7 +405,6 @@
 a017ac3a4a4e757cd70928019fa5653d  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
 a01d618df697d7900953bfdfc06f3256  documentation/src/docs/asciidoc/user-guide/images/extensions_BrokenLifecycleMethodConfigDemo.png
 a050759074c7a4e829fd2c691c8e753a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertionUtils.java
-a08763bfcfa729e209166c87b74e796b  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-M1.adoc
 a0b8710b9ec41bd235260d805b42cae4  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ArgumentsProvider.java
 a13777605819a6ab3a2060956fa0b743  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerTestDescriptor.java
 a1662929c71f344254f5a172bff6b42a  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullEnum.java
