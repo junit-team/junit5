@@ -8,14 +8,9 @@ plugins {
 	id("io.spring.nohttp")
 }
 
-buildScan {
-	value("Git Branch", versioning.info.branch)
-	value("Git Commit", versioning.info.commit)
-	link("Commit", "https://github.com/junit-team/junit5/commit/${versioning.info.commit}")
-	if (versioning.info.dirty) {
-		tag("DIRTY")
-	}
+apply(from = "gradle/build-scan-user-data.gradle")
 
+buildScan {
 	if (project.hasProperty("javaHome")) {
 		value("Custom Java home", project.property("javaHome") as String)
 	}
