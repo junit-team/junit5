@@ -15,9 +15,9 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 import java.util.function.Predicate;
 import java.util.stream.StreamSupport;
+
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ClassNameFilterUtil;
@@ -98,10 +98,10 @@ public class LauncherFactory {
 
 		if (config.isTestExecutionListenerAutoRegistrationEnabled()) {
 			Iterable<TestExecutionListener> listeners = new ServiceLoaderTestExecutionListenerRegistry().loadListeners();
-			StreamSupport.stream(listeners.spliterator(), false)
-					.filter((Predicate<TestExecutionListener>) ClassNameFilterUtil.get(
-									() -> configurationParameters.get(ClassNameFilterUtil.DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME)))
-					.forEach(launcher::registerTestExecutionListeners);
+			StreamSupport.stream(listeners.spliterator(), false).filter(
+				(Predicate<TestExecutionListener>) ClassNameFilterUtil.get(() -> configurationParameters.get(
+					ClassNameFilterUtil.DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME))).forEach(
+						launcher::registerTestExecutionListeners);
 		}
 		config.getAdditionalTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
 

@@ -85,7 +85,7 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	@SuppressWarnings("unchecked")
 	public Predicate<ExecutionCondition> getExecutionConditionFilter() {
 		return (Predicate<ExecutionCondition>) ClassNameFilterUtil.get(
-				() -> configurationParameters.get(DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME));
+			() -> configurationParameters.get(DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME));
 	}
 
 	@Override
