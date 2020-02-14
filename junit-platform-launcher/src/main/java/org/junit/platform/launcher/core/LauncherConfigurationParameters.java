@@ -10,6 +10,8 @@
 
 package org.junit.platform.launcher.core;
 
+import static java.util.Collections.emptyMap;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collections;
@@ -34,6 +36,10 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 
 	private final Map<String, String> explicitConfigParams;
 	private final Properties configParamsFromFile;
+
+	LauncherConfigurationParameters() {
+		this(emptyMap(), ConfigurationParameters.CONFIG_FILE_NAME);
+	}
 
 	LauncherConfigurationParameters(Map<String, String> configParams) {
 		this(configParams, ConfigurationParameters.CONFIG_FILE_NAME);

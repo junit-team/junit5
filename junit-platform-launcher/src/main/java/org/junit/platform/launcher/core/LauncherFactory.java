@@ -16,9 +16,13 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import java.util.function.Predicate;
+import java.util.stream.StreamSupport;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.ClassNameFilterUtil;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -79,6 +83,7 @@ public class LauncherFactory {
 	 * @since 1.3
 	 */
 	@API(status = EXPERIMENTAL, since = "1.3")
+	@SuppressWarnings("unchecked")
 	public static Launcher create(LauncherConfig config) throws PreconditionViolationException {
 		Preconditions.notNull(config, "LauncherConfig must not be null");
 
@@ -89,10 +94,14 @@ public class LauncherFactory {
 		engines.addAll(config.getAdditionalTestEngines());
 
 		Launcher launcher = new DefaultLauncher(engines);
+		ConfigurationParameters configurationParameters = new LauncherConfigurationParameters();
 
 		if (config.isTestExecutionListenerAutoRegistrationEnabled()) {
-			new ServiceLoaderTestExecutionListenerRegistry().loadListeners().forEach(
-				launcher::registerTestExecutionListeners);
+			Iterable<TestExecutionListener> listeners = new ServiceLoaderTestExecutionListenerRegistry().loadListeners();
+			StreamSupport.stream(listeners.spliterator(), false)
+					.filter((Predicate<TestExecutionListener>) ClassNameFilterUtil.get(
+									() -> configurationParameters.get(ClassNameFilterUtil.DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME)))
+					.forEach(launcher::registerTestExecutionListeners);
 		}
 		config.getAdditionalTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
 

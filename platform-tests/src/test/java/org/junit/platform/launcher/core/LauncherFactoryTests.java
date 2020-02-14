@@ -27,7 +27,9 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.listeners.AnotherUnusedTestExecutionListener;
 import org.junit.platform.launcher.listeners.NoopTestExecutionListener;
+import org.junit.platform.launcher.listeners.UnusedTestExecutionListener;
 
 /**
  * @since 1.0
@@ -46,6 +48,25 @@ class LauncherFactoryTests {
 		Optional<TestExecutionListener> listener = listeners.stream().filter(
 			NoopTestExecutionListener.class::isInstance).findFirst();
 		assertThat(listener).isPresent();
+	}
+
+	@Test
+	void unusedTestExecutionListenerIsNotLoadedViaServiceApi() {
+		DefaultLauncher launcher = (DefaultLauncher) LauncherFactory.create();
+		List<TestExecutionListener> listeners = launcher.getTestExecutionListenerRegistry().getTestExecutionListeners();
+
+		Optional<TestExecutionListener> noop = listeners.stream()
+				.filter(NoopTestExecutionListener.class::isInstance).findFirst();
+
+		Optional<TestExecutionListener> unused = listeners.stream()
+				.filter(UnusedTestExecutionListener.class::isInstance).findFirst();
+
+		Optional<TestExecutionListener> anotherUnused = listeners.stream()
+				.filter(AnotherUnusedTestExecutionListener.class::isInstance).findFirst();
+
+		assertThat(unused).isEmpty();
+		assertThat(anotherUnused).isEmpty();
+		assertThat(noop).isPresent();
 	}
 
 	@Test
