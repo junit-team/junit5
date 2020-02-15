@@ -24,7 +24,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Prepare Gradle Enterprise credentials
-        if: github.repository == 'junit-team/junit5'
         run: |
           mkdir -p ~/.gradle/enterprise/
           echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > ~/.gradle/enterprise/keys.properties
