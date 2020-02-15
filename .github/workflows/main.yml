@@ -10,7 +10,6 @@ on:
       - '*'
 
 env:
-  GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
   ORG_GRADLE_PROJECT_junitBuildCacheUsername: ${{ secrets.BUILD_CACHE_USERNAME }}
   ORG_GRADLE_PROJECT_junitBuildCachePassword: ${{ secrets.BUILD_CACHE_PASSWORD }}
 
@@ -21,6 +20,9 @@ jobs:
     container: junitteam/build:latest
     steps:
     - uses: actions/checkout@v2
+    - name: Prepare Gradle Enterprise credentials
+      if: github.repository == 'junit-team/junit5'
+      run: echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > ~/.gradle/enterprise/keys.properties
     - name: 'Test'
       run: |
         ./gradlew --version
@@ -35,6 +37,10 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
+    - name: Prepare Gradle Enterprise credentials
+      if: github.repository == 'junit-team/junit5'
+      shell: bash
+      run: echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > ~/.gradle/enterprise/keys.properties
     - name: 'Test'
       shell: bash
       run: |
@@ -50,6 +56,9 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
+    - name: Prepare Gradle Enterprise credentials
+      if: github.repository == 'junit-team/junit5'
+      run: echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > ~/.gradle/enterprise/keys.properties
     - name: 'Test'
       run: |
         ./gradlew --version
@@ -66,6 +75,9 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
+    - name: Prepare Gradle Enterprise credentials
+      if: github.repository == 'junit-team/junit5'
+      run: echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > ~/.gradle/enterprise/keys.properties
     - name: 'Run tests with JaCoCo'
       shell: bash
       run: |
@@ -93,6 +105,7 @@ jobs:
       env:
         ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
         ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
+        GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
       run: ./gradlew --scan publish -x check
 
   update_documentation:
@@ -109,6 +122,7 @@ jobs:
     - name: 'Upload Documentation'
       env:
         GRGIT_USER: ${{ secrets.GH_TOKEN }}
+        GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
       run: |
         sudo apt-get install graphviz
         ./src/publishDocumentationSnapshotOnlyIfNecessary.sh
