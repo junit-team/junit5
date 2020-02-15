@@ -49,10 +49,10 @@ buildCache {
 	}
 	remote<HttpBuildCache> {
 		url = uri("$gradleEnterpriseServer/cache/")
-		isPush = isCiServer && junitBuildCacheUsername != null && junitBuildCachePassword != null
+		isPush = isCiServer && !junitBuildCacheUsername.isNullOrEmpty() && !junitBuildCachePassword.isNullOrEmpty()
 		credentials {
-			username = junitBuildCacheUsername
-			password = junitBuildCachePassword
+			username = junitBuildCacheUsername?.ifEmpty { null }
+			password = junitBuildCachePassword?.ifEmpty { null }
 		}
 	}
 }
