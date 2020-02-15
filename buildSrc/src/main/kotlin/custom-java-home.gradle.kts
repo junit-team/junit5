@@ -21,7 +21,6 @@ if (project.hasProperty("javaHome")) {
 		withType<JavaCompile>().configureEach {
 			options.isFork = true
 			options.forkOptions.javaHome = file(javaHome)
-			inputs.property("javaHome", javaHome)
 			doFirst {
 				// Avoid compiler warnings for non-existing path entries
 				classpath = classpath.filter { it.exists() }
@@ -30,26 +29,20 @@ if (project.hasProperty("javaHome")) {
 		withType<GroovyCompile>().configureEach {
 			options.isFork = true
 			options.forkOptions.javaHome = file(javaHome)
-			inputs.property("javaHome", javaHome)
 		}
 		withType<KotlinJvmCompile>().configureEach {
 			kotlinOptions {
 				jdkHome = javaHome
 			}
-			inputs.property("javaHome", javaHome)
 		}
 		withType<Javadoc>().configureEach {
 			executable = javaHomeExecutable("javadoc")
-			inputs.property("javaHome", javaHome)
 		}
 		withType<Test>().configureEach {
 			executable = javaHomeExecutable("java")
-			inputs.property("javaHome", javaHome)
 		}
 		withType<JavaExec>().configureEach {
 			setExecutable(javaHomeExecutable("java"))
-			inputs.property("javaHome", javaHome)
 		}
 	}
-
 }
