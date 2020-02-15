@@ -10,7 +10,6 @@ on:
       - '*'
 
 env:
-  GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
   ORG_GRADLE_PROJECT_junitBuildCacheUsername: ${{ secrets.BUILD_CACHE_USERNAME }}
   ORG_GRADLE_PROJECT_junitBuildCachePassword: ${{ secrets.BUILD_CACHE_PASSWORD }}
 
@@ -24,6 +23,10 @@ jobs:
     container: "junitteam/build:${{ matrix.jdk }}"
     steps:
       - uses: actions/checkout@v2
+      - name: Prepare Gradle Enterprise credentials
+        run: |
+          mkdir -p ~/.gradle/enterprise/
+          echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > ~/.gradle/enterprise/keys.properties
       - name: Test
         run: |
           ./gradlew --version
