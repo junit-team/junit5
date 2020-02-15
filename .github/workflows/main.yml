@@ -22,7 +22,9 @@ jobs:
     - uses: actions/checkout@v2
     - name: Prepare Gradle Enterprise credentials
       if: github.repository == 'junit-team/junit5'
-      run: echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > ~/.gradle/enterprise/keys.properties
+      run: |
+        mkdir -p ~/.gradle/enterprise/
+        echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > ~/.gradle/enterprise/keys.properties
     - name: 'Test'
       run: |
         ./gradlew --version
@@ -40,7 +42,9 @@ jobs:
     - name: Prepare Gradle Enterprise credentials
       if: github.repository == 'junit-team/junit5'
       shell: bash
-      run: echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > ~/.gradle/enterprise/keys.properties
+      run: |
+        mkdir -p ~/.gradle/enterprise/
+        echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > ~/.gradle/enterprise/keys.properties
     - name: 'Test'
       shell: bash
       run: |
@@ -58,7 +62,9 @@ jobs:
         java-version: 11
     - name: Prepare Gradle Enterprise credentials
       if: github.repository == 'junit-team/junit5'
-      run: echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > ~/.gradle/enterprise/keys.properties
+      run: |
+        mkdir -p ~/.gradle/enterprise/
+        echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > ~/.gradle/enterprise/keys.properties
     - name: 'Test'
       run: |
         ./gradlew --version
@@ -77,7 +83,9 @@ jobs:
         java-version: 11
     - name: Prepare Gradle Enterprise credentials
       if: github.repository == 'junit-team/junit5'
-      run: echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > ~/.gradle/enterprise/keys.properties
+      run: |
+        mkdir -p ~/.gradle/enterprise/
+        echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > ~/.gradle/enterprise/keys.properties
     - name: 'Run tests with JaCoCo'
       shell: bash
       run: |
