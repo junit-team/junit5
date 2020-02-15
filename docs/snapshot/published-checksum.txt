@@ -161,6 +161,7 @@
 39839c61bbdf1f1466d1e6305eccb751  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/SummaryGeneratingListener.java
 3a002dcaa527f06ebcc3755669a6c028  junit-platform-engine/src/main/java/org/junit/platform/engine/TestTag.java
 3a275936836db0687d615d964f546ac8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/DefaultTestInstances.java
+3a37f10aae911f756343699e3a72a315  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/LockManager.java
 3c5fe4bec6cef4531822dcd884b43d1d  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/ClassContainerSelectorResolver.java
 3c82f45bbf0cb895b2efccd09d5febb1  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutExtension.java
 3ca1dbe934d8a3e75af2fbff74d08773  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/package-info.java
@@ -518,7 +519,6 @@ c96f57f87712e4f6a9d14c42a4ab4292  junit-vintage-engine/src/main/java/org/junit/v
 c9a9ff7a265b117a5a5681dfcf9b42e2  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/IncludeClassNameFilter.java
 c9da9672fea66bf916f3679ce8e6f8fd  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodSelectorResolver.java
 c9eea61ff71c03833429d23138d5df56  junit-platform-engine/src/main/java/org/junit/platform/engine/support/discovery/EngineDiscoveryRequestResolution.java
-c9fe77252a384a6e4dfb250529eed57e  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/LockManager.java
 ca2a8564046f36a56804c2e4fac3dad4  junit-platform-commons/src/main/java/org/junit/platform/commons/util/PreconditionViolationException.java
 ca635710d989819551c40a319cfd4f14  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ResourceLock.java
 cadac3073ee6fc2d0818954074c8352a  documentation/src/test/java/example/testkit/EngineTestKitFailedMethodDemo.java
