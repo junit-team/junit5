@@ -25,8 +25,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Prepare Gradle Enterprise credentials
         run: |
-          mkdir -p ~/.gradle/enterprise/
-          echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > ~/.gradle/enterprise/keys.properties
+          mkdir -p $HOME/.gradle/enterprise/
+          echo "${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}" > $HOME/.gradle/enterprise/keys.properties
       - name: Test
         run: |
           ./gradlew --version
