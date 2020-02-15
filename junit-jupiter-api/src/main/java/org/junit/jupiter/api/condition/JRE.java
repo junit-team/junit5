@@ -165,6 +165,16 @@ public enum JRE {
 		return this == CURRENT_VERSION;
 	}
 
+	/**
+	 * @return the {@link JRE} for the currently executing JVM
+	 *
+	 * @since 5.7
+	 */
+	@API(status = STABLE, since = "5.7")
+	public static JRE currentVersion() {
+		return CURRENT_VERSION;
+	}
+
 	static boolean isCurrentVersionWithinRange(JRE min, JRE max) {
 		return EnumSet.range(min, max).contains(CURRENT_VERSION);
 	}
