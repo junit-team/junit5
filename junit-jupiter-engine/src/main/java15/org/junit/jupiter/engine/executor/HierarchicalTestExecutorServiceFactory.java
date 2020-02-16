@@ -22,7 +22,7 @@ public class HierarchicalTestExecutorServiceFactory {
 	public static HierarchicalTestExecutorService create(JupiterConfiguration configuration,
 			ConfigurationParameters configurationParameters) {
 		if (configuration.getParallelExecutor() == VIRTUAL) {
-			return new VirtualThreadHierarchicalTestExecutorService();
+			return new VirtualThreadHierarchicalTestExecutorService(configurationParameters);
 		}
 		return new ForkJoinPoolHierarchicalTestExecutorService(configurationParameters);
 	}
