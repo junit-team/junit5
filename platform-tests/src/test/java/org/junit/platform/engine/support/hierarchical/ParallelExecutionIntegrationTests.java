@@ -23,6 +23,7 @@ import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
+import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTOR_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.event;
@@ -74,7 +75,9 @@ import org.junit.platform.testkit.engine.Event;
 /**
  * @since 1.3
  */
-class ParallelExecutionIntegrationTests {
+abstract class ParallelExecutionIntegrationTests {
+
+	protected abstract String getParallelExecutor();
 
 	@Test
 	void successfulParallelTest(TestReporter reporter) {
@@ -394,6 +397,7 @@ class ParallelExecutionIntegrationTests {
 		var discoveryRequest = request()
 				.selectors(Arrays.stream(testClasses).map(DiscoverySelectors::selectClass).collect(toList()))
 				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, String.valueOf(true))
+				.configurationParameter(PARALLEL_EXECUTOR_PROPERTY_NAME, getParallelExecutor())
 				.configurationParameter(PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME, "fixed")
 				.configurationParameter(PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, String.valueOf(parallelism))
 				.configurationParameters(configParams)
