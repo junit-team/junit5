@@ -6,7 +6,7 @@ plugins {
 
 val mavenizedProjects: List<Project> by rootProject.extra
 
-listOf(9, 17).forEach { javaVersion ->
+listOf(9, 17, 21).forEach { javaVersion ->
 	val sourceSet = sourceSets.register("mainRelease${javaVersion}") {
 		compileClasspath += sourceSets.main.get().output
 		runtimeClasspath += sourceSets.main.get().output
@@ -27,6 +27,11 @@ listOf(9, 17).forEach { javaVersion ->
 
 		named<JavaCompile>(sourceSet.get().compileJavaTaskName).configure {
 			options.release = javaVersion
+			if (javaVersion == 21) {
+                javaCompiler.set(javaToolchains.compilerFor {
+                    languageVersion.set(JavaLanguageVersion.of(javaVersion))
+                })
+            }
 		}
 
 		named<Checkstyle>("checkstyle${sourceSet.name.capitalized()}").configure {

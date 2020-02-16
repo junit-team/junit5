@@ -216,7 +216,7 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 	 */
 	public static final String CONFIG_CUSTOM_CLASS_PROPERTY_NAME = "custom.class";
 
-	static ParallelExecutionConfigurationStrategy getStrategy(ConfigurationParameters configurationParameters) {
+	public static ParallelExecutionConfigurationStrategy getStrategy(ConfigurationParameters configurationParameters) {
 		return valueOf(
 			configurationParameters.get(CONFIG_STRATEGY_PROPERTY_NAME).orElse("dynamic").toUpperCase(Locale.ROOT));
 	}

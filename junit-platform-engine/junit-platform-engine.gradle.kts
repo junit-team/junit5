@@ -1,5 +1,6 @@
 plugins {
 	id("junitbuild.java-library-conventions")
+	id("junitbuild.java-multi-release-sources")
 	`java-test-fixtures`
 }
 
@@ -16,4 +17,25 @@ dependencies {
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
+}
+
+tasks.jar {
+	val release21ClassesDir = project.sourceSets.mainRelease21.get().output.classesDirs.singleFile
+	inputs.dir(release21ClassesDir).withPathSensitivity(PathSensitivity.RELATIVE)
+	doLast(objects.newInstance(junitbuild.java.ExecJarAction::class).apply {
+		javaLauncher.set(project.javaToolchains.launcherFor(java.toolchain))
+		args.addAll(
+			"--update",
+			"--file", archiveFile.get().asFile.absolutePath,
+			"--release", "21",
+			"-C", release21ClassesDir.absolutePath, "."
+		)
+	})
+}
+
+
+eclipse {
+	classpath {
+		sourceSets -= project.sourceSets.mainRelease21.get()
+	}
 }

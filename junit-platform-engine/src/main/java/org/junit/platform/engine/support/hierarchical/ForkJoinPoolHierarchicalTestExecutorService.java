@@ -208,9 +208,12 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
 	}
 
-	static class WorkerThreadFactory implements ForkJoinPool.ForkJoinWorkerThreadFactory {
+	public static class WorkerThreadFactory implements ForkJoinPool.ForkJoinWorkerThreadFactory {
 
 		private final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+
+		public WorkerThreadFactory() {
+		}
 
 		@Override
 		public ForkJoinWorkerThread newThread(ForkJoinPool pool) {

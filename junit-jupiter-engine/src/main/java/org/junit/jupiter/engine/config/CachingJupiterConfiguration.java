@@ -68,6 +68,12 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
+	public ParallelExecutor getParallelExecutor() {
+		return (ParallelExecutor) cache.computeIfAbsent(PARALLEL_EXECUTOR_PROPERTY_NAME,
+			key -> delegate.getParallelExecutor());
+	}
+
+	@Override
 	public ExecutionMode getDefaultExecutionMode() {
 		return (ExecutionMode) cache.computeIfAbsent(DEFAULT_EXECUTION_MODE_PROPERTY_NAME,
 			key -> delegate.getDefaultExecutionMode());

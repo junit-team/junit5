@@ -26,6 +26,9 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
     abstract val runtimeClasspath: ConfigurableFileCollection
 
     @get:Input
+    abstract val jvmArgs: ListProperty<String>
+
+    @get:Input
     abstract val args: ListProperty<String>
 
     @get:Nested
@@ -62,6 +65,7 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
         val output = ByteArrayOutputStream()
         val result = execOperations.javaexec {
             executable = javaLauncher.get().executablePath.asFile.absolutePath
+            jvmArgs(this@RunConsoleLauncher.jvmArgs.get())
             classpath = runtimeClasspath
             mainClass.set("org.junit.platform.console.ConsoleLauncher")
             args(this@RunConsoleLauncher.args.get())
@@ -80,6 +84,12 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
             System.out.flush()
         }
         result.rethrowFailure().assertNormalExitValue()
+    }
+
+    @Suppress("unused")
+    @Option(option = "jvm-args", description = "JVM args for the console launcher")
+    fun setVMArgs(args: String) {
+        jvmArgs.set(Commandline.translateCommandline(args).toList())
     }
 
     @Suppress("unused")
