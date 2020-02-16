@@ -40,6 +40,13 @@ sourceSets {
 			setSrcDirs(setOf("src/main/java9"))
 		}
 	}
+	register("mainRelease15") {
+		compileClasspath += main.get().output
+		runtimeClasspath += main.get().output
+		java {
+			setSrcDirs(setOf("src/main/java15"))
+		}
+	}
 }
 
 configurations {
@@ -49,6 +56,7 @@ configurations {
 	testRuntimeClasspath.get().extendsFrom(internal)
 	shadowed.extendsFrom(internal)
 	getByName("mainRelease9CompileClasspath").extendsFrom(compileClasspath.get())
+	getByName("mainRelease15CompileClasspath").extendsFrom(compileClasspath.get())
 }
 
 eclipse {
@@ -92,6 +100,7 @@ if (project in mavenizedProjects) {
 
 	tasks.javadoc {
 		source(sourceSets["mainRelease9"].allJava)
+		source(sourceSets["mainRelease15"].allJava)
 		options {
 			memberLevel = JavadocMemberLevel.PROTECTED
 			header = project.name
@@ -117,6 +126,7 @@ if (project in mavenizedProjects) {
 
 	tasks.named<Jar>("sourcesJar") {
 		from(sourceSets["mainRelease9"].allSource)
+		from(sourceSets["mainRelease15"].allSource)
 		from(moduleSourceDir) {
 			include("module-info.java")
 		}
@@ -181,7 +191,7 @@ normalization {
 }
 
 val allMainClasses by tasks.registering {
-	dependsOn(tasks.classes, "mainRelease9Classes")
+	dependsOn(tasks.classes, "mainRelease9Classes", "mainRelease15Classes")
 }
 
 tasks.jar {
@@ -217,7 +227,7 @@ tasks.compileJava {
 
 if (modularProjects.contains(project)) {
 	val compileModule by tasks.registering(JavaCompile::class) {
-		dependsOn(tasks.classes, "mainRelease9Classes")
+		dependsOn(tasks.classes, "mainRelease9Classes", "mainRelease15Classes")
 		source = fileTree(moduleSourceDir)
 		destinationDir = moduleOutputDir
 		sourceCompatibility = "9"
@@ -260,7 +270,7 @@ inner class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvid
 
 	@get:Input val patch: Provider<FileCollection> = provider {
 		if (it == project)
-			sourceSets["main"].output + sourceSets["mainRelease9"].output + configurations.compileClasspath.get()
+			sourceSets["main"].output + sourceSets["mainRelease9"].output + sourceSets["mainRelease15"].output + configurations.compileClasspath.get()
 		else
 			files(it.sourceSets["main"].java.srcDirs)
 	}
@@ -300,6 +310,10 @@ afterEvaluate {
 			sourceCompatibility = "9"
 			targetCompatibility = "9"
 		}
+		named<JavaCompile>("compileMainRelease15Java").configure {
+			sourceCompatibility = "15"
+			targetCompatibility = "15"
+		}
 		withType<JavaCompile>().configureEach {
 			// --release release
 			// Compiles against the public, supported and documented API for a specific VM version.
@@ -330,6 +344,9 @@ tasks {
 		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
 	}
 	named<Checkstyle>("checkstyleMainRelease9").configure {
+		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
+	}
+	named<Checkstyle>("checkstyleMainRelease15").configure {
 		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
 	}
 	checkstyleTest {

@@ -29,6 +29,7 @@ public interface JupiterConfiguration {
 
 	String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = "junit.jupiter.conditions.deactivate";
 	String PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME = "junit.jupiter.execution.parallel.enabled";
+	String PARALLEL_EXECUTOR_PROPERTY_NAME = "junit.jupiter.execution.parallel.executor";
 	String DEFAULT_EXECUTION_MODE_PROPERTY_NAME = "junit.jupiter.execution.parallel.mode.default";
 	String DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME = "junit.jupiter.execution.parallel.mode.classes.default";
 	String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.enabled";
@@ -54,6 +55,8 @@ public interface JupiterConfiguration {
 
 	boolean isExtensionAutoDetectionEnabled();
 
+	ParallelExecutor getParallelExecutor();
+
 	ExecutionMode getDefaultExecutionMode();
 
 	ExecutionMode getDefaultClassesExecutionMode();
@@ -64,4 +67,7 @@ public interface JupiterConfiguration {
 
 	DisplayNameGenerator getDefaultDisplayNameGenerator();
 
+	enum ParallelExecutor {
+		FORK_JOIN_POOL, VIRTUAL
+	}
 }
