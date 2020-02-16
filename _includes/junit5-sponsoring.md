@@ -114,7 +114,6 @@ Your donations will help to make that a reality!
 - linux_china
 - Danny Preussler
 - Peter Quiel
-- Shuming Iin
 - Zerocode
 - Simon Schrottner
 - Zoran Regvart
