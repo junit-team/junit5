@@ -41,103 +41,119 @@ import org.junit.platform.launcher.TestExecutionListener;
 @TestInstance(Lifecycle.PER_CLASS)
 class ClassNameFilterUtilTests {
 
+	//@formatter:off
 	Stream<Arguments> alwaysEnabledConditions() {
-		return Stream.of(arguments("org.junit.jupiter.*"), arguments("org.junit.platform.*.NonExistentClass"),
-			arguments("*.NonExistentClass*"), arguments("*NonExistentClass*"),
-			arguments("AExecutionConditionClass, BExecutionConditionClass"));
+		return Stream.of(
+				arguments("org.junit.jupiter.*"),
+				arguments("org.junit.platform.*.NonExistentClass"),
+				arguments("*.NonExistentClass*"),
+				arguments("*NonExistentClass*"),
+				arguments("AExecutionConditionClass, BExecutionConditionClass"));
 	}
 
 	@MethodSource
 	@ParameterizedTest
 	void alwaysEnabledConditions(String pattern) {
-		//@formatter:off
-		List<? extends ExecutionCondition> executionConditions = asList(new AExecutionConditionClass(), new BExecutionConditionClass());
+		List<? extends ExecutionCondition> executionConditions = asList(new AExecutionConditionClass(),
+																																		new BExecutionConditionClass());
 		assertThat(executionConditions)
 				.filteredOn(
 						(Predicate<ExecutionCondition>)
 				ClassNameFilterUtil.filterForClassName(pattern))
 				.isNotEmpty();
-		//@formatter:on
 	}
 
 	Stream<Arguments> alwaysDisabledConditions() {
-		return Stream.of(arguments("org.junit.platform.*"), arguments("*.platform.*"), arguments("*"),
-			arguments("*AExecutionConditionClass, *BExecutionConditionClass"), arguments("*ExecutionConditionClass"));
+
+		return Stream.of(
+				arguments("org.junit.platform.*"),
+				arguments("*.platform.*"),
+				arguments("*"),
+				arguments("*AExecutionConditionClass, *BExecutionConditionClass"),
+				arguments("*ExecutionConditionClass"));
 	}
 
 	@MethodSource
 	@ParameterizedTest
 	void alwaysDisabledConditions(String pattern) {
-		//@formatter:off
-		List<? extends ExecutionCondition> executionConditions = asList(new AExecutionConditionClass(), new BExecutionConditionClass());
+		List<? extends ExecutionCondition> executionConditions = asList(new AExecutionConditionClass(),
+																																		new BExecutionConditionClass());
 		assertThat(executionConditions)
 				.filteredOn(
 						(Predicate<ExecutionCondition>)
 								ClassNameFilterUtil.filterForClassName(pattern))
 				.isEmpty();
-		//@formatter:on
 	}
 
 	Stream<Arguments> alwaysEnabledListeners() {
-		return Stream.of(arguments("org.junit.jupiter.*"), arguments("org.junit.platform.*.NonExistentClass"),
-			arguments("*.NonExistentClass*"), arguments("*NonExistentClass*"),
-			arguments("ATestExecutionListenerClass, BTestExecutionListenerClass"));
+		return Stream.of(
+				arguments("org.junit.jupiter.*"),
+				arguments("org.junit.platform.*.NonExistentClass"),
+				arguments("*.NonExistentClass*"),
+				arguments("*NonExistentClass*"),
+				arguments("ATestExecutionListenerClass, BTestExecutionListenerClass"));
 	}
 
 	@MethodSource
 	@ParameterizedTest
 	void alwaysEnabledListeners(String pattern) {
-		//@formatter:off
-		List<? extends TestExecutionListener> executionConditions = asList(new ATestExecutionListenerClass(), new BTestExecutionListenerClass());
+		List<? extends TestExecutionListener> executionConditions = asList(new ATestExecutionListenerClass(),
+																																			new BTestExecutionListenerClass());
 		assertThat(executionConditions)
 				.filteredOn(
 						(Predicate<TestExecutionListener>)
 								ClassNameFilterUtil.filterForClassName(pattern))
 				.isNotEmpty();
-		//@formatter:on
 	}
 
 	Stream<Arguments> alwaysDisabledListeners() {
-		return Stream.of(arguments("org.junit.platform.*"), arguments("*.platform.*"), arguments("*"),
-			arguments("*ATestExecutionListenerClass, *BTestExecutionListenerClass"),
-			arguments("*TestExecutionListenerClass"));
+		return Stream.of(
+				arguments("org.junit.platform.*"),
+				arguments("*.platform.*"),
+				arguments("*"),
+				arguments("*ATestExecutionListenerClass, *BTestExecutionListenerClass"),
+				arguments("*TestExecutionListenerClass"));
 	}
 
 	@MethodSource
 	@ParameterizedTest
 	void alwaysDisabledListeners(String pattern) {
-		//@formatter:off
-		List<? extends TestExecutionListener> executionConditions = asList(new ATestExecutionListenerClass(), new BTestExecutionListenerClass());
+		List<? extends TestExecutionListener> executionConditions = asList(new ATestExecutionListenerClass(),
+																																			new BTestExecutionListenerClass());
 		assertThat(executionConditions)
 				.filteredOn(
 						(Predicate<TestExecutionListener>)
 								ClassNameFilterUtil.filterForClassName(pattern))
 				.isEmpty();
-		//@formatter:on
 	}
 
 	Stream<Arguments> alwaysEnabledClass() {
-		return Stream.of(arguments("org.junit.jupiter.*"), arguments("org.junit.platform.*.NonExistentClass"),
-			arguments("*.NonExistentClass*"), arguments("*NonExistentClass*"),
-			arguments("AVanillaEmpty, BVanillaEmpty"));
+		return Stream.of(
+				arguments("org.junit.jupiter.*"),
+				arguments("org.junit.platform.*.NonExistentClass"),
+				arguments("*.NonExistentClass*"),
+				arguments("*NonExistentClass*"),
+				arguments("AVanillaEmpty, BVanillaEmpty"));
 	}
 
 	@MethodSource
 	@ParameterizedTest
 	void alwaysEnabledClass(String pattern) {
-		//@formatter:off
 		List<Object> executionConditions = asList(new AVanillaEmpty(), new BVanillaEmpty());
 		assertThat(executionConditions)
 				.filteredOn(
 						(Predicate<Object>)
 								ClassNameFilterUtil.filterForClassName(pattern))
 				.isNotEmpty();
-		//@formatter:on
 	}
 
 	Stream<Arguments> alwaysDisabledClass() {
-		return Stream.of(arguments("org.junit.platform.*"), arguments("*.platform.*"), arguments("*"),
-			arguments("*AVanillaEmpty, *BVanillaEmpty"), arguments("*VanillaEmpty"));
+		return Stream.of(
+				arguments("org.junit.platform.*"),
+				arguments("*.platform.*"),
+				arguments("*"),
+				arguments("*AVanillaEmpty, *BVanillaEmpty"),
+				arguments("*VanillaEmpty"));
 	}
 
 	@MethodSource
@@ -150,7 +166,6 @@ class ClassNameFilterUtilTests {
 						(Predicate<Object>)
 								ClassNameFilterUtil.filterForClassName(pattern))
 				.isEmpty();
-		//@formatter:on
 	}
-
+	//@formatter:on
 }
