@@ -44,6 +44,9 @@ on GitHub.
   `TestTemplateInvocationContextProvider` has been aligned with the actual implementation.
   Providers are now officially allowed to return an empty stream, and the error message
   when all provided streams are empty is now more helpful.
+* The `JRE` enum now provides a static `currentVersion()` method that returns the enum
+  constant for the currently executing JRE, e.g. for use in custom execution conditions
+  and other extensions.
 
 
 [[release-notes-5.7.0-M1-junit-vintage]]
