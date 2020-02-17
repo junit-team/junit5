@@ -30,15 +30,16 @@ import org.junit.platform.engine.support.hierarchical.ResourceLock;
 
 class VirtualThreadHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
 
-	private final ExecutorService executorService;
 	private final ClassLoader contextClassLoader;
+	private final ForkJoinPool forkJoinPool;
+	private final ExecutorService executorService;
 
 	VirtualThreadHierarchicalTestExecutorService(ConfigurationParameters configurationParameters) {
 		contextClassLoader = Thread.currentThread().getContextClassLoader();
 		var strategy = DefaultParallelExecutionConfigurationStrategy.getStrategy(configurationParameters);
 		var configuration = strategy.createConfiguration(configurationParameters);
 		var systemThreadFactory = new ForkJoinPoolHierarchicalTestExecutorService.WorkerThreadFactory();
-		var forkJoinPool = new ForkJoinPool(configuration.getParallelism(), systemThreadFactory, null, false,
+		forkJoinPool = new ForkJoinPool(configuration.getParallelism(), systemThreadFactory, null, false,
 			configuration.getCorePoolSize(), configuration.getMaxPoolSize(), configuration.getMinimumRunnable(), null,
 			configuration.getKeepAliveSeconds(), TimeUnit.SECONDS);
 		var virtualThreadFactory = Thread.builder().virtual(forkJoinPool).name("junit-executor", 1).factory();
@@ -90,5 +91,6 @@ class VirtualThreadHierarchicalTestExecutorService implements HierarchicalTestEx
 	@Override
 	public void close() {
 		executorService.close();
+		forkJoinPool.close();
 	}
 }
