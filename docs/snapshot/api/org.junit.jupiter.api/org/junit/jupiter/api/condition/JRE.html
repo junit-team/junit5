@@ -28,7 +28,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":9,"i2":9};
+var data = {"i0":9,"i1":10,"i2":9,"i3":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -266,18 +266,23 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static <a href="JRE.html" title="enum in org.junit.jupiter.api.condition">JRE</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#currentVersion()">currentVersion</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isCurrentVersion()">isCurrentVersion</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="JRE.html" title="enum in org.junit.jupiter.api.condition">JRE</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#valueOf(java.lang.String)">valueOf</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
 <td class="colLast">
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="JRE.html" title="enum in org.junit.jupiter.api.condition">JRE</a>[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#values()">values</a></span>()</code></th>
 <td class="colLast">
@@ -487,7 +492,7 @@ not permitted.)</div>
 <a id="isCurrentVersion()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>isCurrentVersion</h4>
 <pre class="methodSignature">public&nbsp;boolean&nbsp;isCurrentVersion()</pre>
@@ -495,6 +500,23 @@ not permitted.)</div>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd><code>true</code> if <em>this</em> <code>JRE</code> is known to be the
  Java Runtime Environment version for the currently executing JVM</dd>
+</dl>
+</li>
+</ul>
+<a id="currentVersion()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>currentVersion</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#STABLE" title="class or interface in org.apiguardian.api" class="externalLink">STABLE</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.7")
+public static&nbsp;<a href="JRE.html" title="enum in org.junit.jupiter.api.condition">JRE</a>&nbsp;currentVersion()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the <a href="JRE.html" title="enum in org.junit.jupiter.api.condition"><code>JRE</code></a> for the currently executing JVM</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.7</dd>
 </dl>
 </li>
 </ul>
