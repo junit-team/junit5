@@ -46,10 +46,13 @@ A code coverage report can also be generated locally via the [Gradle Wrapper] by
 executing `gradlew -PenableJaCoCo clean jacocoRootReport`. The results will be available
 in `build/reports/jacoco/jacocoRootReport/html/index.html`.
 
-## Gradle Build Scans
+## Gradle Build Scans and Build Caching
 
-JUnit 5 utilizes [Gradle's](https://gradle.org/) support for _Build Scans_. An example
-build scan for JUnit 5 can be viewed [here](https://scans.gradle.com/s/bl3pw4mrbgsao).
+JUnit 5 utilizes [Gradle Enterprise](https://gradle.com/) for _Build Scans_ and the
+_Remote Build Cache_. An example build scan for JUnit 5 can be viewed
+[here](https://ge.junit.org/s/2vwrn4rn67dky). Currently, only core team members can
+publish build scans. The remote build cache, however, is enabled by default for everyone
+so that local builds can reuse task outputs from previous CI builds.
 
 ## Building from Source
 
