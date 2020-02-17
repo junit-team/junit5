@@ -60,6 +60,16 @@ class KotlinAssertionsTests {
         assertThrows<AssertionError>({ "should fail" }) { fail(null as Throwable?) }
     }
 
+    @Test
+    fun `expected context exception testing`() = contextScope<Unit> {
+        val exception: AssertionError = assertThrows {
+            apply {
+                fail("Should throw an exception")
+            }
+        }
+        assertEquals("Should throw an exception", exception.message)
+    }
+
     @TestFactory
     fun assertDoesNotThrow(): Stream<out DynamicNode> = Stream.of(
         dynamicContainer("succeeds when no exception thrown", Stream.of(

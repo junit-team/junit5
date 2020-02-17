@@ -7,10 +7,8 @@
  *
  * https://www.eclipse.org/legal/epl-v20.html
  */
+package org.junit.jupiter.api
 
-package example.util;
-
-public interface Function<T, R> {
-
-	R apply(T t);
+interface ContextScope {
+    fun <T> apply(block: ContextScope.() -> T): T
 }
