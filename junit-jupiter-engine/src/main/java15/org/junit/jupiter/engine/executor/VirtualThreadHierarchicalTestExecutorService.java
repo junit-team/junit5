@@ -11,7 +11,11 @@
 package org.junit.jupiter.engine.executor;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
+import static java.util.function.Predicate.isEqual;
+import static java.util.stream.Collectors.toCollection;
+import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.CONCURRENT;
+import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.SAME_THREAD;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +24,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy;
 import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService;
-import org.junit.platform.engine.support.hierarchical.ResourceLock;
+import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 
 class VirtualThreadHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
 
@@ -46,7 +51,6 @@ class VirtualThreadHierarchicalTestExecutorService implements HierarchicalTestEx
 		executorService = Executors.newUnboundedExecutor(virtualThreadFactory);
 	}
 
-	@SuppressWarnings("try")
 	@Override
 	public CompletableFuture<Void> submit(TestTask testTask) {
 		if (testTask.getExecutionMode() == CONCURRENT) {
@@ -62,30 +66,32 @@ class VirtualThreadHierarchicalTestExecutorService implements HierarchicalTestEx
 	}
 
 	private void executeWithLocks(TestTask testTask) {
-		try (ResourceLock lock = testTask.getResourceLock().acquire()) {
+		var lock = testTask.getResourceLock();
+		try {
+			lock.acquire();
 			testTask.execute();
 		}
 		catch (InterruptedException e) {
 			ExceptionUtils.throwAsUncheckedException(e);
 		}
+		finally {
+			lock.release();
+		}
 	}
 
 	@Override
 	public void invokeAll(List<? extends TestTask> testTasks) {
-		var futures = new ArrayList<CompletableFuture<?>>();
-		var sequentialTasks = new ArrayList<TestTask>();
-		for (var task : testTasks) {
-			if (task.getExecutionMode() == CONCURRENT) {
-				futures.add(submit(task));
-			}
-			else {
-				sequentialTasks.add(task);
-			}
-		}
-		for (var task : sequentialTasks) {
-			futures.add(submit(task));
-		}
-		CompletableFuture.allOf(futures.toArray(CompletableFuture<?>[]::new)).join();
+		var futures = submitAll(testTasks, CONCURRENT).collect(toCollection(ArrayList::new));
+		submitAll(testTasks, SAME_THREAD).forEach(futures::add);
+		allOf(futures).join();
+	}
+
+	private Stream<CompletableFuture<Void>> submitAll(List<? extends TestTask> testTasks, ExecutionMode mode) {
+		return testTasks.stream().filter(where(TestTask::getExecutionMode, isEqual(mode))).map(this::submit);
+	}
+
+	private CompletableFuture<Void> allOf(List<CompletableFuture<Void>> futures) {
+		return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
 	}
 
 	@Override
