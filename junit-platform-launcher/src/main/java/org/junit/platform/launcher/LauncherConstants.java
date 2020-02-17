@@ -13,6 +13,7 @@ package org.junit.platform.launcher;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.ClassNameFilterUtil;
 import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
@@ -88,6 +89,46 @@ public class LauncherConstants {
 	 * {@link ReportEntry}: {@value}
 	 */
 	public static final String STDERR_REPORT_ENTRY_KEY = "stderr";
+
+	/**
+	 * Property name used to provide a pattern for deactivating listeners: {@value}
+	 *
+	 * <h3>Pattern Matching Syntax</h3>
+	 *
+	 * <p>If the pattern consists solely of an asterisk ({@code *}), all listeners registered via
+	 * ServiceLoader will be deactivated. Otherwise, the pattern will be used to match against
+	 * comma separated fully qualified class name (<em>FQCN</em>) of each registered listener.
+	 * Any dot ({@code .}) in the pattern will match against a dot ({@code .})
+	 * or a dollar sign ({@code $}) in the FQCN. Any asterisk ({@code *}) will match
+	 * against one or more characters in the FQCN. All other characters in the
+	 * pattern will be matched one-to-one against the FQCN.
+	 *
+	 * <h3>Examples</h3>
+	 *
+	 * <ul>
+	 * <li>{@code *}: deactivates all listeners.
+	 * <li>{@code org.junit.*}: deactivates every listener under the {@code org.junit}
+	 * base package and any of its subpackages.
+	 * <li>{@code *.MyListener}: deactivates every listener whose simple class name is
+	 * exactly {@code MyListener}.
+	 * <li>{@code *System*, *Unit*}: deactivates every listener whose simple class name contains
+	 * {@code System} or {@code Unit}.
+	 * <li>{@code org.example.MyCondition}: deactivates the condition whose FQCN is
+	 * exactly {@code org.example.MyCondition}.
+	 * </ul>
+	 *
+	 * @see #DEACTIVATE_ALL_LISTENERS_PATTERN
+	 * @see org.junit.platform.launcher.TestExecutionListener
+	 */
+	public static final String DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME = "junit.platform.execution.listeners.deactivate";
+
+	/**
+	 * Wildcard pattern which signals that all listeners registered via ServiceLoader should be deactivated: {@value}
+	 *
+	 * @see #DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME
+	 * @see org.junit.platform.launcher.TestExecutionListener
+	 */
+	public static final String DEACTIVATE_ALL_LISTENERS_PATTERN = ClassNameFilterUtil.DEACTIVATE_ALL_PATTERN;
 
 	private LauncherConstants() {
 		/* no-op */

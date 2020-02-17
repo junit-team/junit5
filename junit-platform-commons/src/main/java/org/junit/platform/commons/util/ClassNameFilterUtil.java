@@ -13,9 +13,9 @@ package org.junit.platform.commons.util;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -32,7 +32,7 @@ import org.apiguardian.api.API;
  * Use at your own risk!
  *
  */
-@API(status = INTERNAL, since = "5.5")
+@API(status = INTERNAL, since = "5.7")
 public class ClassNameFilterUtil {
 
 	private ClassNameFilterUtil() {
@@ -42,12 +42,10 @@ public class ClassNameFilterUtil {
 	private static final Predicate<?> alwaysDeactivated = object -> false;
 
 	public static final String DEACTIVATE_ALL_PATTERN = "*";
-	public static final String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = "junit.jupiter.conditions.deactivate";
-	public static final String DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME = "junit.platform.execution.listeners.deactivate";
 
-	public static Predicate<?> get(Supplier<Optional<String>> pattern) {
+	public static Predicate<?> filterForClassName(String pattern) {
 	// @formatter:off
-    return pattern.get()
+    return Optional.ofNullable(pattern)
         .filter(StringUtils::isNotBlank)
         .map(String::trim)
         .map(patternString -> {
@@ -61,19 +59,25 @@ public class ClassNameFilterUtil {
 	}
 
 	private static Predicate<?> matchesRegex(String patternString) {
-		Pattern pattern = Pattern.compile(convertToRegEx(patternString));
-		return object -> !pattern.matcher(object.getClass().getName()).matches();
+		List<Pattern> pattern = convertToRegEx(patternString);
+		// @formatter:off
+		return object -> pattern.stream()
+				.noneMatch(pat -> pat.matcher(object.getClass().getName()).matches());
+		// @formatter:on
 	}
 
-	private static String convertToRegEx(String pattern) {
+	private static List<Pattern> convertToRegEx(String pattern) {
 		pattern = Matcher.quoteReplacement(pattern);
 		// Splitting CSV Separated Pattens
-		pattern = Arrays.stream(pattern.split("[,;]")).map(ClassNameFilterUtil::replaceRegExElements).collect(
-			Collectors.joining(")|("));
 
-		pattern = "(" + pattern + ")";
-
-		return pattern;
+		// @formatter:off
+		return Arrays.stream(pattern.split("[,]"))
+				.filter(StringUtils::isNotBlank)
+				.map(String::trim)
+				.map(ClassNameFilterUtil::replaceRegExElements)
+				.map(Pattern::compile)
+				.collect(Collectors.toList());
+		// @formatter:on
 	}
 
 	private static String replaceRegExElements(String pattern) {
@@ -82,7 +86,7 @@ public class ClassNameFilterUtil {
 		pattern = pattern.replace(".", "[.$]");
 
 		// Convert our "*" wildcard into a proper RegEx pattern.
-		pattern = pattern.replace("*", "[^,;]+");
+		pattern = pattern.replace("*", "[^,]+");
 
 		return pattern;
 	}

@@ -728,6 +728,43 @@ precedence over those supplied via system properties and the configuration file.
 Similarly, configuration parameters supplied via system properties take precedence over
 those supplied via the configuration file.
 
+[[running-tests-config-params-deactivation-pattern]]
+===== Deactivation Pattern Matching Syntax
+
+The following deactivation pattern style can be used to deactivate following
+
+- <<extensions-conditions-deactivation>>
+- <<launcher-api-listeners-custom-deactivation>>
+
+If the pattern _configuration parameter_ consists solely of an asterisk
+(`+*+`), all elements will be deactivated. Otherwise, the pattern will be used to match
+against _comma separated_ fully qualified class name (_FQCN_) of each registered condition. Any dot
+(`.`) in the pattern will match against a dot (`.`) or a dollar sign (`$`) in the FQCN.
+Any asterisk (`+*+`) will match against one or more characters in the FQCN. All other
+characters in the pattern will be matched one-to-one against the FQCN.
+
+Examples:
+
+The following will deactivate any `ExecutionCondition` and `TestExecutionListener` when provided as
+their individual deactivation property as depicted in scope previously.
+
+- `+*+`: deactivates all registered implementation.
+- `+org.junit.*+`: deactivates all registered implementations under the `org.junit` base
+   package and any of its subpackages.
+- `+*.MyCustom+`: deactivates every registered implementation whose simple class name is
+  exactly `MyCustom`.
+- `+*System*+`: deactivates every registered implementation whose simple class name contains
+  `System`.
+- `+*System*+, +*Unit*+`: deactivates every registered implementation whose simple class name
+   contains `System` or `Unit`.
+- `org.example.MyCustomImpl`: deactivates the registered implementation whose FQCN is exactly
+  `org.example.MyCustomImpl`.
+- `org.example.MyCustomImpl, org.example.TheirCustomImpl`: deactivates both the registered
+   implementations whose FQCN is exactly `org.example.MyCustomImpl` and `org.example.TheirCustomImpl`.
+
+WARNING: TestExecutionListeners registered explicitly via LauncherDiscoveryRequest will not be
+deactivated, refer to <<launcher-api-listeners-custom-deactivation>>
+
 [[running-tests-tag-expressions]]
 === Tag Expressions
 Tag expressions are boolean expressions with the operators `!`, `&` and `|`. In addition,

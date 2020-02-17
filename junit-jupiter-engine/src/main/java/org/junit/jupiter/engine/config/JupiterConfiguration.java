@@ -28,7 +28,7 @@ import org.junit.platform.commons.util.ClassNameFilterUtil;
 @API(status = INTERNAL, since = "5.4")
 public interface JupiterConfiguration {
 
-	String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = ClassNameFilterUtil.DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME;
+	String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = "junit.jupiter.conditions.deactivate";
 	String PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME = "junit.jupiter.execution.parallel.enabled";
 	String DEFAULT_EXECUTION_MODE_PROPERTY_NAME = "junit.jupiter.execution.parallel.mode.default";
 	String DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME = "junit.jupiter.execution.parallel.mode.classes.default";

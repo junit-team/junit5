@@ -55,7 +55,7 @@ public final class Constants {
 	 *
 	 * <p>If the pattern consists solely of an asterisk ({@code *}), all conditions
 	 * will be deactivated. Otherwise, the pattern will be used to match against
-	 * the fully qualified class name (<em>FQCN</em>) of each registered condition.
+	 * comma separated fully qualified class name (<em>FQCN</em>) of each registered condition.
 	 * Any dot ({@code .}) in the pattern will match against a dot ({@code .})
 	 * or a dollar sign ({@code $}) in the FQCN. Any asterisk ({@code *}) will match
 	 * against one or more characters in the FQCN. All other characters in the

@@ -117,6 +117,25 @@ declared within the
 `/META-INF/services/org.junit.platform.launcher.TestExecutionListener` file is loaded and
 registered automatically.
 
+[[launcher-api-listeners-custom-deactivation]]
+==== Deactivating Test Execution Listeners
+
+Sometimes it can be useful to run a test suite _without_ certain execution listeners being active.
+For example, we might have custom `{TestExecutionListener}` reporting the test results to external
+medias for reporting purposes and while debugging we might not want the multiple runs to be reported.
+To do this, simply provide a pattern for the `junit.platform.execution.listeners.deactivate`
+_configuration parameter_ to specify which execution listeners should be deactivated
+(i.e. not registered) for the current test run.
+Only the listeners registered via `ServiceLoader` within
+`/META-INF/services/org.junit.platform.launcher.TestExecutionListener` file can be deactivated.
+Since the ExecutionListeners are registered before execution starts, the
+pattern needs to be supplied via the `junit-platform.properties` file in the classpath.
+
+[[launcher-api-listeners-custom-deactivation-pattern]]
+===== Pattern Matching Syntax
+
+Refer to <<running-tests-config-params-deactivation-pattern>>
+
 [[launcher-api-listeners-reporting]]
 ==== JUnit Platform Reporting
 

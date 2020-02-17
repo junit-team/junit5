@@ -12,6 +12,7 @@ package org.junit.platform.launcher.core;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.launcher.LauncherConstants.DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -98,11 +99,15 @@ public class LauncherFactory {
 
 		if (config.isTestExecutionListenerAutoRegistrationEnabled()) {
 			Iterable<TestExecutionListener> listeners = new ServiceLoaderTestExecutionListenerRegistry().loadListeners();
-			StreamSupport.stream(listeners.spliterator(), false).filter(
-				(Predicate<TestExecutionListener>) ClassNameFilterUtil.get(() -> configurationParameters.get(
-					ClassNameFilterUtil.DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME))).forEach(
-						launcher::registerTestExecutionListeners);
+			// @formatter:off
+			StreamSupport.stream(listeners.spliterator(), false)
+					.filter((Predicate<TestExecutionListener>)
+							ClassNameFilterUtil.filterForClassName(
+									configurationParameters.get(DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME)
+											.orElse(null)))
+					.forEach(launcher::registerTestExecutionListeners);
 		}
+		// @formatter:on
 		config.getAdditionalTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
 
 		return launcher;
