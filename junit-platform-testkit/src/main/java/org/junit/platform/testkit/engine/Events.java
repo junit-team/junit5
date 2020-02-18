@@ -260,6 +260,34 @@ public final class Events {
 	}
 
 	/**
+	 * Assert that all provided conditions are matched by an {@linkplain Event event}
+	 * contained in this {@code Events} object regardless of order.
+	 * Note that this method does a partial match, i.e. some events may not match any
+	 * of the provided conditions.
+	 *
+	 * <p>Conditions can be imported statically from {@link EventConditions}
+	 * and {@link TestExecutionResultConditions}.
+	 *
+	 * <h4>Example</h4>
+	 *
+	 * <pre class="code">
+	 * executionResults.tests().assertEventsMatchLoosely(
+	 *     event(test("exampleTestMethod"), started()),
+	 *     event(test("exampleTestMethod"), finishedSuccessfully())
+	 * );
+	 * </pre>
+	 *
+	 * @param conditions the conditions to match against; never {@code null}
+	 * @see EventConditions
+	 * @see TestExecutionResultConditions
+	 */
+	@SafeVarargs
+	public final void assertEventsMatchLoosely(Condition<? super Event>... conditions) {
+		Preconditions.notNull(conditions, "conditions must not be null");
+		assertEventsMatchLoosely(this.events, conditions);
+	}
+
+	/**
 	 * Shortcut for {@code org.assertj.core.api.Assertions.assertThat(events.list())}.
 	 *
 	 * @return an instance of {@link ListAssert} for events; never {@code null}
@@ -334,6 +362,21 @@ public final class Events {
 			softly.assertThat(events).has(conditions[i], Index.atIndex(i));
 		}
 		softly.assertAll();
+	}
+
+	@SafeVarargs
+	private static void assertEventsMatchLoosely(List<Event> events, Condition<? super Event>... conditions) {
+		SoftAssertions softly = new SoftAssertions();
+		for (Condition<? super Event> condition : conditions)
+			checkCondition(events, softly, condition);
+		softly.assertAll();
+	}
+
+	private static void checkCondition(List<Event> events, SoftAssertions softly, Condition<? super Event> condition) {
+		boolean matches = events.stream().anyMatch(condition::matches);
+
+		if (!matches)
+			softly.fail("condition did not match any event: " + condition);
 	}
 
 }
