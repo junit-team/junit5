@@ -131,6 +131,9 @@ Only the listeners registered via `ServiceLoader` within
 Since the ExecutionListeners are registered before execution starts, the
 pattern needs to be supplied via the `junit-platform.properties` file in the classpath.
 
+WARNING: TestExecutionListeners registered explicitly via LauncherDiscoveryRequest will not be
+deactivated
+
 [[launcher-api-listeners-custom-deactivation-pattern]]
 ===== Pattern Matching Syntax
 

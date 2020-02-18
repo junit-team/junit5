@@ -55,18 +55,9 @@ class LauncherFactoryTests {
 		DefaultLauncher launcher = (DefaultLauncher) LauncherFactory.create();
 		List<TestExecutionListener> listeners = launcher.getTestExecutionListenerRegistry().getTestExecutionListeners();
 
-		Optional<TestExecutionListener> noop = listeners.stream().filter(
-			NoopTestExecutionListener.class::isInstance).findFirst();
-
-		Optional<TestExecutionListener> unused = listeners.stream().filter(
-			UnusedTestExecutionListener.class::isInstance).findFirst();
-
-		Optional<TestExecutionListener> anotherUnused = listeners.stream().filter(
-			AnotherUnusedTestExecutionListener.class::isInstance).findFirst();
-
-		assertThat(unused).isEmpty();
-		assertThat(anotherUnused).isEmpty();
-		assertThat(noop).isPresent();
+		assertThat(listeners).filteredOn(AnotherUnusedTestExecutionListener.class::isInstance).isEmpty();
+		assertThat(listeners).filteredOn(UnusedTestExecutionListener.class::isInstance).isEmpty();
+		assertThat(listeners).filteredOn(NoopTestExecutionListener.class::isInstance).isNotEmpty();
 	}
 
 	@Test
