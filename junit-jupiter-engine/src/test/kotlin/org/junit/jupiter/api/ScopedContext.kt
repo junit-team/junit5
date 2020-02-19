@@ -10,5 +10,5 @@
 package org.junit.jupiter.api
 
 fun <T> contextScope(block: ContextScope.() -> T): T = object : ContextScope {
-    override fun <T> apply(block: ContextScope.() -> T): T = run(block)
+    override fun <T> launch(block: ContextScope.() -> T): T = run(block)
 }.run(block)

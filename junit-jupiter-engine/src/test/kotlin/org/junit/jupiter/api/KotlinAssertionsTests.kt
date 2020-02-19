@@ -62,8 +62,8 @@ class KotlinAssertionsTests {
 
     @Test
     fun `expected context exception testing`() = contextScope<Unit> {
-        val exception: AssertionError = assertThrows {
-            apply {
+        val exception = assertThrows<AssertionError> {
+            launch {
                 fail("Should throw an exception")
             }
         }

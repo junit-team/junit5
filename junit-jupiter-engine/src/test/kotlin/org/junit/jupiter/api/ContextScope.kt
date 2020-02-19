@@ -10,5 +10,5 @@
 package org.junit.jupiter.api
 
 interface ContextScope {
-    fun <T> apply(block: ContextScope.() -> T): T
+    fun <T> launch(block: ContextScope.() -> T): T
 }
