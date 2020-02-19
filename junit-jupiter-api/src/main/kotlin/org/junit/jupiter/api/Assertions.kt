@@ -127,7 +127,7 @@ inline fun <reified T : Throwable> assertThrows(message: String, executable: () 
 inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, executable: () -> Unit): T {
     val result = runCatching(executable)
 
-    return Assertions.assertThrows(T::class.java, Executable { executable }, Supplier(message))
+    return Assertions.assertThrows(T::class.java, Executable { result.getOrThrow() }, Supplier(message))
 }
 
 /**
