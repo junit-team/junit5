@@ -74,7 +74,7 @@ publishing {
 					developer {
 						id.set("mmerdes")
 						name.set("Matthias Merdes")
-						email.set("Matthias.Merdes@heidelberg-mobil.com")
+						email.set("matthias.merdes@heidelpay.com")
 					}
 					developer {
 						id.set("sbrannen")
