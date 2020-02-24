@@ -11,6 +11,7 @@ package org.junit.jupiter.api
 
 import java.util.stream.Stream
 import kotlin.reflect.KClass
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageStartsWith
 import org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError
@@ -61,14 +62,12 @@ class KotlinAssertionsTests {
     }
 
     @Test
-    fun `expected context exception testing`() = contextScope<Unit> {
-        val exception = assertThrows<AssertionError> {
-            launch {
-                fail("Should throw an exception")
-            }
-        }
-        assertEquals("Should throw an exception", exception.message)
+    fun `expected context exception testing`() = runBlocking<Unit> {
+        assertThrows<AssertionError>("Should fail async") { failAsync("Should fail async") }
     }
+
+    @Suppress("RedundantSuspendModifier")
+    private suspend fun failAsync(message: String): Nothing = fail(message)
 
     @TestFactory
     fun assertDoesNotThrow(): Stream<out DynamicNode> = Stream.of(
