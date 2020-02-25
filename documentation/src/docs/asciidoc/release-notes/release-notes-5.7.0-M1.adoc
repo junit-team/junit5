@@ -27,6 +27,7 @@ on GitHub.
   is now logged, along with the exclusion reasons.
 * The annotation `@Testable` may now be applied _directly_ to fields.
 
+
 [[release-notes-5.7.0-M1-junit-jupiter]]
 === JUnit Jupiter
 
@@ -40,6 +41,7 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* Synthetic constructors are now ignored when instantiating a test class.
 * The Javadoc for the `provideTestTemplateInvocationContexts()` method in
   `TestTemplateInvocationContextProvider` has been aligned with the actual implementation.
   Providers are now officially allowed to return an empty stream, and the error message
