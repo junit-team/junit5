@@ -63,7 +63,7 @@ class KotlinAssertionsTests {
 
     @Test
     fun `expected context exception testing`() = runBlocking<Unit> {
-        assertThrows<AssertionError>("Should fail async") { 
+        assertThrows<AssertionError>("Should fail async") {
             suspend { fail("Should fail async") }()
         }
     }
