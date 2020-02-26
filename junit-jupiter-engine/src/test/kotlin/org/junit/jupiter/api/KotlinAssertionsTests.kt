@@ -63,11 +63,10 @@ class KotlinAssertionsTests {
 
     @Test
     fun `expected context exception testing`() = runBlocking<Unit> {
-        assertThrows<AssertionError>("Should fail async") { failAsync("Should fail async") }
+        assertThrows<AssertionError>("Should fail async") { 
+            suspend { fail("Should fail async") }()
+        }
     }
-
-    @Suppress("RedundantSuspendModifier")
-    private suspend fun failAsync(message: String): Nothing = fail(message)
 
     @TestFactory
     fun assertDoesNotThrow(): Stream<out DynamicNode> = Stream.of(
