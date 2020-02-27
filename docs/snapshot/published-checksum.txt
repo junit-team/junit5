@@ -88,7 +88,6 @@
 2127d558b9c3ae15f5433b5ef09b1a9c  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ExceptionUtils.java
 216a70bc3cbfc42a599981a12f63cffb  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/PackageSource.java
 21ebe3e6646c9c7d2cc3532fdb2a7607  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestExecutionExceptionHandler.java
-21f6e3333d629a7769294a58ced7a6bb  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-M1.adoc
 221cef53f677f493a3b44e25a3732328  documentation/src/test/java/example/callbacks/Extension1.java
 221e8d1637d2a5569d12f2b8e575f782  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/HierarchicalTestExecutor.java
 2225a493bafcdfbb35b95cb7f4549ee7  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/ResourceUtils.java
@@ -287,6 +286,7 @@
 707d9733a62b1c7941b05398869e0c7d  documentation/src/docs/asciidoc/release-notes/index.adoc
 70c703b533eefd87d2705b42137a261d  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/package-info.java
 70d1178502454f511861141fa67f2624  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/config/DisplayNameGeneratorParameterConverter.java
+710084a4e84f5f97bb3540d5492ed22e  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-M1.adoc
 710d8f478aa13f9a1e155dd22f4b3cfb  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/EngineDescriptor.java
 71372cc3b3cc4991d5e74c34b91df07d  junit-jupiter-api/src/main/java/org/junit/jupiter/api/DynamicTest.java
 7255c711db749f83846f02fc78e4e00c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertLinesMatch.java
