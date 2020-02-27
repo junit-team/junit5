@@ -12,6 +12,7 @@ package org.junit.platform.launcher.core;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,9 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 				URL configFileUrl = resources.get(0);
 				logger.info(() -> String.format(
 					"Loading JUnit Platform configuration parameters from classpath resource [%s].", configFileUrl));
-				try (InputStream inputStream = configFileUrl.openStream()) {
+				URLConnection urlConnection = configFileUrl.openConnection();
+				urlConnection.setUseCaches(false);
+				try (InputStream inputStream = urlConnection.getInputStream()) {
 					props.load(inputStream);
 				}
 			}
