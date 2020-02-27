@@ -10,6 +10,7 @@
 
 package org.junit.vintage.engine;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,6 +22,35 @@ import org.junit.platform.commons.JUnitException;
  * @since 5.4
  */
 class JUnit4VersionCheckTests {
+
+	/**
+	 * @since 5.7
+	 */
+	@Test
+	void handlesParsingSupportedVersionIdWithStandardVersionFormat() {
+		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.12"));
+		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.13"));
+	}
+
+	/**
+	 * @since 5.7
+	 */
+	@Test
+	void handlesParsingSupportedVersionIdWithCustomizedVersionFormat() {
+		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.12-patch_1"));
+		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.12.0"));
+		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.12.0.1"));
+		assertDoesNotThrow(() -> JUnit4VersionCheck.checkSupported(() -> "4.12.0.patch-042"));
+	}
+
+	@Test
+	void throwsExceptionForUnsupportedVersion() {
+		JUnitException exception = assertThrows(JUnitException.class,
+			() -> JUnit4VersionCheck.checkSupported(() -> "4.11"));
+
+		assertEquals("Unsupported version of junit:junit: 4.11. Please upgrade to version 4.12 or later.",
+			exception.getMessage());
+	}
 
 	@Test
 	void handlesErrorsReadingVersion() {
@@ -40,15 +70,6 @@ class JUnit4VersionCheckTests {
 			() -> JUnit4VersionCheck.checkSupported(() -> "not a version"));
 
 		assertEquals("Failed to parse version of junit:junit: not a version", exception.getMessage());
-	}
-
-	@Test
-	void throwsExceptionOnUnsupportedVersion() {
-		JUnitException exception = assertThrows(JUnitException.class,
-			() -> JUnit4VersionCheck.checkSupported(() -> "4.11"));
-
-		assertEquals("Unsupported version of junit:junit: 4.11. Please upgrade to version 4.12 or later.",
-			exception.getMessage());
 	}
 
 }
