@@ -190,7 +190,6 @@
 4736ae4f17e88ade5a702f33fe2e85a1  documentation/src/docs/asciidoc/user-guide/images/writing-tests_execution_mode.svg
 473c66075e6caf5280a0776723f60243  documentation/src/test/java/example/callbacks/Extension2.java
 498b2602883aef8c488e1bfee7c2ffba  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Assertions.java
-49941959945a4bf19606677818e1adab  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherConfigurationParameters.java
 49ed0f98bddb7078204ecb23ef6f0ba1  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/EngineTestKit.java
 4a1da47ce2b5b7b4d5fd1145737a933a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/io/package-info.java
 4a4216873a839d7f0531cbba8491cfc9  documentation/src/test/java/example/exception/IgnoreIOExceptionExtension.java
@@ -637,6 +636,7 @@ f2d708b74a9bb1fe19699f4da643d69b  junit-jupiter-api/src/main/java/org/junit/jupi
 f32fc9bb347c60b4ae59f0edac9b5001  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/TestSourceProvider.java
 f35db7ea25fcf2a1dbf8f0dfb34a388f  documentation/src/test/java/example/StandardTests.java
 f5919de0da68f042c7d92f96abe28f6c  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
+f5d32254e506f3e6a21715d5fc848ab2  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherConfigurationParameters.java
 f5da166ba832f0a1c1b15144ff71f816  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.java
 f5f966bb0e1530748a9531a68e56fadd  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExecutionCondition.java
 f6f4905f2b458d40db54a866fee78af3  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNull.java
