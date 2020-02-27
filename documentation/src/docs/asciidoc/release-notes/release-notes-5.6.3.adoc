@@ -27,4 +27,6 @@ No changes.
 
 ==== Bug Fixes
 
-* ❓
+* The internal `JUnit4VersionCheck` class -- which verifies that a supported version of
+  JUnit 4 is on the classpath -- now implements a lenient version ID parsing algorithm in
+  order to support custom version ID formats such as `4.13.1`, `4.13-patch_1`, etc.
