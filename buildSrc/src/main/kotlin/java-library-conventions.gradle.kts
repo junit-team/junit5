@@ -13,6 +13,7 @@ val buildTime: String by rootProject.extra
 val buildRevision: Any by rootProject.extra
 val builtByValue: String by rootProject.extra
 
+val shadowed by configurations.creating
 val internal by configurations.creating {
 	isVisible = false
 	isCanBeConsumed = false
@@ -26,6 +27,12 @@ val moduleOutputDir = file("$buildDir/classes/java/module")
 val javaVersion = JavaVersion.current()
 
 sourceSets {
+	main {
+		compileClasspath += shadowed
+	}
+	test {
+		runtimeClasspath += shadowed
+	}
 	register("mainRelease9") {
 		compileClasspath += main.get().output
 		runtimeClasspath += main.get().output
@@ -40,10 +47,14 @@ configurations {
 	runtimeClasspath.get().extendsFrom(internal)
 	testCompileClasspath.get().extendsFrom(internal)
 	testRuntimeClasspath.get().extendsFrom(internal)
+	shadowed.extendsFrom(internal)
 	getByName("mainRelease9CompileClasspath").extendsFrom(compileClasspath.get())
 }
 
 eclipse {
+	classpath {
+		plusConfigurations.add(shadowed)
+	}
 	jdt {
 		file {
 			// Set properties for org.eclipse.jdt.core.prefs
@@ -53,6 +64,20 @@ eclipse {
 			}
 		}
 	}
+}
+
+idea {
+	module {
+		scopes["PROVIDED"]!!["plus"]!!.add(shadowed)
+	}
+}
+
+tasks.javadoc {
+	classpath += shadowed
+}
+
+tasks.checkstyleMain {
+	classpath += shadowed
 }
 
 if (project in mavenizedProjects) {
@@ -96,6 +121,19 @@ if (project in mavenizedProjects) {
 			include("module-info.java")
 		}
 		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	}
+
+	tasks.withType<Jar>().configureEach {
+		from(rootDir) {
+			include("LICENSE.md", "LICENSE-notice.md")
+			into("META-INF")
+		}
+		val suffix = archiveClassifier.getOrElse("")
+		if (suffix.isBlank() || suffix == "all") { // "all" is used by shadow plugin
+			from("$moduleOutputDir/$javaModuleName") {
+				include("module-info.class")
+			}
+		}
 	}
 
 	pluginManager.withPlugin("java-test-fixtures") {
@@ -146,21 +184,8 @@ val allMainClasses by tasks.registering {
 	dependsOn(tasks.classes, "mainRelease9Classes")
 }
 
-tasks.withType<Jar>().configureEach {
-	from(rootDir) {
-		include("LICENSE.md", "LICENSE-notice.md")
-		into("META-INF")
-	}
-	val suffix = archiveClassifier.getOrElse("")
-	if (suffix.isBlank() || suffix == "all") { // "all" is used by shadow plugin
-		dependsOn(allMainClasses)
-		from("$moduleOutputDir/$javaModuleName") {
-			include("module-info.class")
-		}
-	}
-}
-
 tasks.jar {
+	dependsOn(allMainClasses)
 	manifest {
 		attributes(
 				"Created-By" to "${System.getProperty("java.version")} (${System.getProperty("java.vendor")} ${System.getProperty("java.vm.version")})",

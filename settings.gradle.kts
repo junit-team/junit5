@@ -8,6 +8,7 @@ pluginManagement {
 		id("com.diffplug.gradle.spotless") version "3.27.0"
 		id("org.ajoberstar.git-publish") version "2.1.3"
 		kotlin("jvm") version "1.3.61"
+		id("com.github.johnrengelman.shadow") version "5.2.0"
 		id("org.asciidoctor.jvm.convert") version "3.1.0"
 		id("org.asciidoctor.jvm.pdf") version "3.1.0"
 		id("me.champeau.gradle.jmh") version "0.5.0"
