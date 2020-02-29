@@ -2,7 +2,7 @@ import aQute.bnd.gradle.BundleTaskConvention;
 
 plugins {
 	`java-library-conventions`
-	id("com.github.johnrengelman.shadow")
+	`shadow-conventions`
 }
 
 description = "JUnit Platform Console Standalone"
@@ -17,21 +17,15 @@ dependencies {
 }
 
 val jupiterVersion = rootProject.version
-val vintageVersion = project.properties["vintageVersion"]
+val vintageVersion: String by project
 
 tasks {
 	jar {
-		enabled = false
 		manifest {
 			attributes("Main-Class" to "org.junit.platform.console.ConsoleLauncher")
 		}
-		dependsOn(shadowJar)
 	}
 	shadowJar {
-		dependsOn(allMainClasses)
-		classifier = ""
-		configurations = listOf(project.configurations["shadowed"])
-
 		// https://github.com/junit-team/junit5/issues/761
 		// prevent duplicates, add 3rd-party licenses explicitly
 		exclude("META-INF/LICENSE*.md")

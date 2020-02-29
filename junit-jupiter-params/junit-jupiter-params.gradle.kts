@@ -1,6 +1,6 @@
 plugins {
 	`kotlin-library-conventions`
-	id("com.github.johnrengelman.shadow")
+	`shadow-conventions`
 }
 
 apply(from = "$rootDir/gradle/testing.gradle.kts")
@@ -28,23 +28,11 @@ dependencies {
 
 tasks {
 	shadowJar {
-		dependsOn(allMainClasses)
-		archiveClassifier.set("")
-		configurations = listOf(project.configurations["shadowed"])
 		exclude("META-INF/maven/**")
 		relocate("com.univocity", "org.junit.jupiter.params.shadow.com.univocity")
 		from(projectDir) {
 			include("LICENSE-univocity-parsers.md")
 			into("META-INF")
 		}
-	}
-	test {
-		// in order to run the test against the shadowJar
-		classpath = classpath - sourceSets.main.get().output + files(shadowJar.get().archiveFile)
-		dependsOn(shadowJar)
-	}
-	jar {
-		enabled = false
-		dependsOn(shadowJar)
 	}
 }
