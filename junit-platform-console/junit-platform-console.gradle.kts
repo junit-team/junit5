@@ -2,7 +2,7 @@ import java.util.spi.ToolProvider
 
 plugins {
 	`java-library-conventions`
-	id("com.github.johnrengelman.shadow")
+	`shadow-conventions`
 }
 
 description = "JUnit Platform Console"
@@ -20,10 +20,7 @@ dependencies {
 
 tasks {
 	shadowJar {
-		dependsOn(allMainClasses)
-		classifier = ""
-		configurations = listOf(project.configurations["shadowed"])
-		exclude("META-INF/maven/**", "META-INF/versions/9/module-info.class")
+		exclude("META-INF/versions/9/module-info.class")
 		relocate("picocli", "org.junit.platform.console.shadow.picocli")
 		from(projectDir) {
 			include("LICENSE-picocli.md")
@@ -37,8 +34,6 @@ tasks {
 		}
 	}
 	jar {
-		enabled = false
-		dependsOn(shadowJar)
 		manifest {
 			attributes("Main-Class" to "org.junit.platform.console.ConsoleLauncher")
 		}

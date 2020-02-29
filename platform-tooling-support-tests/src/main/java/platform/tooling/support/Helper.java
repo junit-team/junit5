@@ -95,8 +95,10 @@ public class Helper {
 	}
 
 	public static Path createJarPath(String module) {
-		var archive = module + '-' + version(module) + ".jar";
-		return Paths.get("..", module, "build", "libs", archive);
+		var parent = Paths.get("..", module, "build", "libs");
+		Path jar = parent.resolve(module + '-' + version(module) + ".jar");
+		Path shadowJar = parent.resolve(module + '-' + version(module) + "-all.jar");
+		return Files.exists(jar) ? jar : shadowJar;
 	}
 
 	static JarFile createJarFile(String module) {
