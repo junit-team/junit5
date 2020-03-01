@@ -120,3 +120,4 @@ Your donations will help to make that a reality!
 - Juan David Leon
 - Tokuhiro Matsuno
 - Atsushi Komiya
+- Claudia Kelmes
