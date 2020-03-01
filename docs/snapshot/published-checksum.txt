@@ -323,6 +323,7 @@
 7b3e4d6ab4cc00da0f0314ade28c6033  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherConfig.java
 7b43c39e5ffc12153bee2397138286e1  documentation/src/main/java/example/domain/Person.java
 7c45a350e04db267187d92bac1612a9f  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/package-info.java
+7d8234306ebe10a6bdfb4b6468ad8011  documentation/documentation.gradle.kts
 7d8441eb40f2ce5ec970844439595caf  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/OpenTest4JAwareThrowableCollector.java
 7d91d07df20d4bad698aa839238ba293  documentation/src/test/java/example/AssertionsDemo.java
 7d92ec1573ddfbb18b3281eee94e05cc  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EmptySource.java
@@ -402,7 +403,6 @@
 9e3b8ee0c36f3a830b09e8907de8ec8c  documentation/src/test/java/example/DocumentationTestSuite.java
 9ece1eb173906c2552ac6595bad24177  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeTags.java
 9eeb863aa510919e6f24149c6f1c3a99  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectPackages.java
-9f8ec78cf97cc6cb228db66bd8c4de7d  documentation/documentation.gradle.kts
 a017ac3a4a4e757cd70928019fa5653d  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
 a01d618df697d7900953bfdfc06f3256  documentation/src/docs/asciidoc/user-guide/images/extensions_BrokenLifecycleMethodConfigDemo.png
 a050759074c7a4e829fd2c691c8e753a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertionUtils.java
