@@ -588,8 +588,12 @@ constant for the currently executing JRE, e.g. for use in custom execution condi
 and other extensions.</p>
 </li>
 <li>
-<p>Clearly document that <code>name</code> attribute of <code>@ParameterizedTest</code> is a <code>MessageFormat</code>
-pattern.</p>
+<p>The <code>name</code> attribute of <code>@ParameterizedTest</code> is now clearly documented to be a
+<code>MessageFormat</code> pattern.</p>
+</li>
+<li>
+<p>Introduce a new <code>DisplayNameGenerator</code> named <code>Simple</code> (based on <code>Standard</code>) that
+removes trailing parentheses for methods with no parameters.</p>
 </li>
 </ul>
 </div>
@@ -691,7 +695,7 @@ order to support custom version ID formats such as <code>4.12.0</code>, <code>4.
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-03-01 17:35:07 UTC
+Last updated 2020-03-03 07:45:46 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

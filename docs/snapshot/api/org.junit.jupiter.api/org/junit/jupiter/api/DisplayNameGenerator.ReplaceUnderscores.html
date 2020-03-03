@@ -131,7 +131,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="DisplayNameGenerator.Standard.html" title="class in org.junit.jupiter.api">org.junit.jupiter.api.DisplayNameGenerator.Standard</a></li>
 <li>
 <ul class="inheritance">
+<li><a href="DisplayNameGenerator.Simple.html" title="class in org.junit.jupiter.api">org.junit.jupiter.api.DisplayNameGenerator.Simple</a></li>
+<li>
+<ul class="inheritance">
 <li>org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -150,10 +155,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dl>
 <hr>
 <pre>public static class <span class="typeNameLabel">DisplayNameGenerator.ReplaceUnderscores</span>
-extends <a href="DisplayNameGenerator.Standard.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Standard</a></pre>
+extends <a href="DisplayNameGenerator.Simple.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Simple</a></pre>
 <div class="block"><code>DisplayNameGenerator</code> that replaces underscores with spaces.
 
- <p>This generator extends the functionality of <a href="DisplayNameGenerator.Standard.html" title="class in org.junit.jupiter.api"><code>DisplayNameGenerator.Standard</code></a> by
+ <p>This generator extends the functionality of <a href="DisplayNameGenerator.Simple.html" title="class in org.junit.jupiter.api"><code>DisplayNameGenerator.Simple</code></a> by
  replacing all underscores (<code>'_'</code>) found in class and method names
  with spaces (<code>' '</code>).</div>
 </li>
@@ -174,7 +179,7 @@ extends <a href="DisplayNameGenerator.Standard.html" title="class in org.junit.j
 <!--   -->
 </a>
 <h3>Nested classes/interfaces inherited from interface&nbsp;org.junit.jupiter.api.<a href="DisplayNameGenerator.html" title="interface in org.junit.jupiter.api">DisplayNameGenerator</a></h3>
-<code><a href="DisplayNameGenerator.ReplaceUnderscores.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.ReplaceUnderscores</a>, <a href="DisplayNameGenerator.Standard.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Standard</a></code></li>
+<code><a href="DisplayNameGenerator.ReplaceUnderscores.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.ReplaceUnderscores</a>, <a href="DisplayNameGenerator.Simple.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Simple</a>, <a href="DisplayNameGenerator.Standard.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Standard</a></code></li>
 </ul>
 </li>
 </ul>
@@ -335,7 +340,7 @@ extends <a href="DisplayNameGenerator.Standard.html" title="class in org.junit.j
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="DisplayNameGenerator.html#generateDisplayNameForMethod(java.lang.Class,java.lang.reflect.Method)">generateDisplayNameForMethod</a></code>&nbsp;in interface&nbsp;<code><a href="DisplayNameGenerator.html" title="interface in org.junit.jupiter.api">DisplayNameGenerator</a></code></dd>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="DisplayNameGenerator.Standard.html#generateDisplayNameForMethod(java.lang.Class,java.lang.reflect.Method)">generateDisplayNameForMethod</a></code>&nbsp;in class&nbsp;<code><a href="DisplayNameGenerator.Standard.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Standard</a></code></dd>
+<dd><code><a href="DisplayNameGenerator.Simple.html#generateDisplayNameForMethod(java.lang.Class,java.lang.reflect.Method)">generateDisplayNameForMethod</a></code>&nbsp;in class&nbsp;<code><a href="DisplayNameGenerator.Simple.html" title="class in org.junit.jupiter.api">DisplayNameGenerator.Simple</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>testClass</code> - the class the test method is invoked on; never <code>null</code></dd>
 <dd><code>testMethod</code> - method to generate a display name for; never <code>null</code></dd>
