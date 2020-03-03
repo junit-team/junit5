@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.config.JupiterConfiguration.ParallelExecutor.VIRTUAL;
 
 import java.util.Optional;
 
@@ -21,13 +22,15 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.jupiter.engine.executor.HierarchicalTestExecutorServiceFactory;
+import org.junit.jupiter.engine.executor.VirtualThreadHierarchicalTestExecutorServiceFactory;
 import org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.config.PrefixedConfigurationParameters;
+import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
@@ -74,8 +77,12 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 	protected HierarchicalTestExecutorService createExecutorService(ExecutionRequest request) {
 		JupiterConfiguration configuration = getJupiterConfiguration(request);
 		if (configuration.isParallelExecutionEnabled()) {
-			return HierarchicalTestExecutorServiceFactory.create(configuration, new PrefixedConfigurationParameters(
-				request.getConfigurationParameters(), Constants.PARALLEL_CONFIG_PREFIX));
+			ConfigurationParameters configurationParameters = new PrefixedConfigurationParameters(
+				request.getConfigurationParameters(), Constants.PARALLEL_CONFIG_PREFIX);
+			if (configuration.getParallelExecutor() == VIRTUAL) {
+				return VirtualThreadHierarchicalTestExecutorServiceFactory.create(configurationParameters);
+			}
+			return new ForkJoinPoolHierarchicalTestExecutorService(configurationParameters);
 		}
 		return super.createExecutorService(request);
 	}
