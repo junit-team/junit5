@@ -22,7 +22,6 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.jupiter.engine.executor.VirtualThreadHierarchicalTestExecutorServiceFactory;
 import org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -34,6 +33,7 @@ import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTe
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
+import org.junit.platform.engine.support.hierarchical.VirtualThreadHierarchicalTestExecutorServiceFactory;
 
 /**
  * The JUnit Jupiter {@link org.junit.platform.engine.TestEngine TestEngine}.

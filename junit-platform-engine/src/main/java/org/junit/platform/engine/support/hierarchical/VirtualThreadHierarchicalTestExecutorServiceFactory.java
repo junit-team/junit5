@@ -8,14 +8,14 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine.executor;
+package org.junit.platform.engine.support.hierarchical;
 
 import org.junit.platform.engine.ConfigurationParameters;
-import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService;
 
 public class VirtualThreadHierarchicalTestExecutorServiceFactory {
 
-	public static HierarchicalTestExecutorService create(ConfigurationParameters configurationParameters) {
+	public static HierarchicalTestExecutorService create(
+			@SuppressWarnings("unused") ConfigurationParameters configurationParameters) {
 		throw new IllegalArgumentException("The virtual executor is only supported on Java 15 and above");
 	}
 }
