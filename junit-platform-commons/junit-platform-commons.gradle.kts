@@ -15,8 +15,12 @@ dependencies {
 	compileOnlyApi(libs.apiguardian)
 }
 
+multiReleaseSources {
+	releases.add(9)
+}
+
 tasks.jar {
-	val release9ClassesDir = sourceSets.mainRelease9.get().output.classesDirs.singleFile
+	val release9ClassesDir = sourceSets["mainRelease9"].output.classesDirs.singleFile
 	inputs.dir(release9ClassesDir).withPathSensitivity(PathSensitivity.RELATIVE)
 	doLast(objects.newInstance(ExecJarAction::class).apply {
 		javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
@@ -35,6 +39,6 @@ tasks.codeCoverageClassesJar {
 
 eclipse {
 	classpath {
-		sourceSets -= project.sourceSets.mainRelease9.get()
+		sourceSets -= project.sourceSets["mainRelease9"]
 	}
 }

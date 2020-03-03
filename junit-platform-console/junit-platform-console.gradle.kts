@@ -21,6 +21,10 @@ dependencies {
 	osgiVerification(projects.junitPlatformLauncher)
 }
 
+multiReleaseSources {
+	releases.add(9)
+}
+
 tasks {
 	compileModule {
 		options.compilerArgs.addAll(listOf(
@@ -37,7 +41,7 @@ tasks {
 			include("LICENSE-picocli.md")
 			into("META-INF")
 		}
-		from(sourceSets.mainRelease9.get().output.classesDirs)
+		from(sourceSets["mainRelease9"].output.classesDirs)
 		doLast(objects.newInstance(junitbuild.java.ExecJarAction::class).apply {
 			javaLauncher.set(project.javaToolchains.launcherFor(java.toolchain))
 			args.addAll(
