@@ -8,10 +8,9 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine.executor;
+package org.junit.platform.engine.support.hierarchical;
 
 import org.junit.platform.engine.ConfigurationParameters;
-import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService;
 
 public class VirtualThreadHierarchicalTestExecutorServiceFactory {
 

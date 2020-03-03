@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine.executor;
+package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.function.Predicate.isEqual;
@@ -28,9 +28,6 @@ import java.util.stream.Stream;
 
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
-import org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy;
-import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
-import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService;
 import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 
 class VirtualThreadHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
