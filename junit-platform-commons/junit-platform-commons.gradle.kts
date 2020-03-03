@@ -2,6 +2,7 @@ import java.util.spi.ToolProvider
 
 plugins {
 	`java-library-conventions`
+	`java-multi-release-sources`
 }
 
 description = "JUnit Platform Commons"
@@ -13,11 +14,13 @@ dependencies {
 }
 
 tasks.jar {
+	val release9ClassesDir = sourceSets.mainRelease9.get().output.classesDirs.singleFile
+	inputs.dir(release9ClassesDir).withPathSensitivity(PathSensitivity.RELATIVE)
 	doLast {
 		ToolProvider.findFirst("jar").get().run(System.out, System.err, "--update",
 				"--file", archiveFile.get().asFile.absolutePath,
 				"--release", "9",
-				"-C", sourceSets.mainRelease9.get().output.classesDirs.singleFile.absolutePath, ".")
+				"-C", release9ClassesDir.absolutePath, ".")
 	}
 }
 

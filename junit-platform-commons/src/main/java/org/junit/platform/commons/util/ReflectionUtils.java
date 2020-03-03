@@ -1072,24 +1072,28 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Get the sole declared {@link Constructor} for the supplied class.
+	 * Get the sole declared, non-synthetic {@link Constructor} for the supplied class.
 	 *
-	 * <p>Throws a {@link org.junit.platform.commons.PreconditionViolationException} if the supplied
-	 * class declares more than one constructor.
+	 * <p>Throws a {@link org.junit.platform.commons.PreconditionViolationException}
+	 * if the supplied class declares more than one non-synthetic constructor.
 	 *
 	 * @param clazz the class to get the constructor for
 	 * @return the sole declared constructor; never {@code null}
 	 * @see Class#getDeclaredConstructors()
+	 * @see Class#isSynthetic()
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> Constructor<T> getDeclaredConstructor(Class<T> clazz) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		try {
-			Constructor<?>[] constructors = clazz.getDeclaredConstructors();
-			Preconditions.condition(constructors.length == 1,
+			List<Constructor<?>> constructors = Arrays.stream(clazz.getDeclaredConstructors())//
+					.filter(ctor -> !ctor.isSynthetic())//
+					.collect(toList());
+
+			Preconditions.condition(constructors.size() == 1,
 				() -> String.format("Class [%s] must declare a single constructor", clazz.getName()));
 
-			return (Constructor<T>) constructors[0];
+			return (Constructor<T>) constructors.get(0);
 		}
 		catch (Throwable t) {
 			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
@@ -1099,10 +1103,17 @@ public final class ReflectionUtils {
 	/**
 	 * Find all constructors in the supplied class that match the supplied predicate.
 	 *
+	 * <p>Note that this method may return {@linkplain Class#isSynthetic() synthetic}
+	 * constructors. If you wish to ignore synthetic constructors, you may filter
+	 * them out with the supplied {@code predicate} or filter them out of the list
+	 * returned by this method.
+	 *
 	 * @param clazz the class in which to search for constructors; never {@code null}
 	 * @param predicate the predicate to use to test for a match; never {@code null}
 	 * @return an immutable list of all such constructors found; never {@code null}
 	 * but potentially empty
+	 * @see Class#getDeclaredConstructors()
+	 * @see Class#isSynthetic()
 	 */
 	public static List<Constructor<?>> findConstructors(Class<?> clazz, Predicate<Constructor<?>> predicate) {
 		Preconditions.notNull(clazz, "Class must not be null");

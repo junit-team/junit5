@@ -105,13 +105,38 @@ public interface DisplayNameGenerator {
 	}
 
 	/**
-	 * {@code DisplayNameGenerator} that replaces underscores with spaces.
+	 * Simple {@code DisplayNameGenerator} that removes trailing parentheses
+	 * for methods with no parameters.
 	 *
 	 * <p>This generator extends the functionality of {@link Standard} by
+	 * removing parentheses ({@code '()'}) found at the end of method names
+	 * with no parameters.
+	 */
+	class Simple extends Standard {
+
+		@Override
+		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
+			String displayName = testMethod.getName();
+			if (hasParameters(testMethod)) {
+				displayName += ' ' + parameterTypesAsString(testMethod);
+			}
+			return displayName;
+		}
+
+		private static boolean hasParameters(Method method) {
+			return method.getParameterCount() > 0;
+		}
+
+	}
+
+	/**
+	 * {@code DisplayNameGenerator} that replaces underscores with spaces.
+	 *
+	 * <p>This generator extends the functionality of {@link Simple} by
 	 * replacing all underscores ({@code '_'}) found in class and method names
 	 * with spaces ({@code ' '}).
 	 */
-	class ReplaceUnderscores extends Standard {
+	class ReplaceUnderscores extends Simple {
 
 		@Override
 		public String generateDisplayNameForClass(Class<?> testClass) {
@@ -125,20 +150,13 @@ public interface DisplayNameGenerator {
 
 		@Override
 		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
-			String displayName = replaceUnderscores(testMethod.getName());
-			if (hasParameters(testMethod)) {
-				displayName += ' ' + parameterTypesAsString(testMethod);
-			}
-			return displayName;
+			return replaceUnderscores(super.generateDisplayNameForMethod(testClass, testMethod));
 		}
 
 		private static String replaceUnderscores(String name) {
 			return name.replace('_', ' ');
 		}
 
-		private static boolean hasParameters(Method method) {
-			return method.getParameterCount() > 0;
-		}
 	}
 
 }

@@ -1474,6 +1474,8 @@ Display name of container ✔
 └─ 3 ==> the rank of 'lemon, lime' is 3 ✔
 ....
 
+Please note that `name` is a `MessageFormat` pattern. Thus, a single quote (`'`) needs to be represented as a doubled single quote (`''`) in order to be displayed.
+
 The following placeholders are supported within custom display names.
 
 [cols="20,80"]

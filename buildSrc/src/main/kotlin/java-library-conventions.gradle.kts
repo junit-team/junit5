@@ -13,7 +13,6 @@ val buildTime: String by rootProject.extra
 val buildRevision: Any by rootProject.extra
 val builtByValue: String by rootProject.extra
 
-val shadowed by configurations.creating
 val internal by configurations.creating {
 	isVisible = false
 	isCanBeConsumed = false
@@ -26,43 +25,14 @@ val moduleSourceDir = file("src/module/$javaModuleName")
 val moduleOutputDir = file("$buildDir/classes/java/module")
 val javaVersion = JavaVersion.current()
 
-sourceSets {
-	main {
-		compileClasspath += shadowed
-	}
-	test {
-		runtimeClasspath += shadowed
-	}
-	register("mainRelease9") {
-		compileClasspath += main.get().output
-		runtimeClasspath += main.get().output
-		java {
-			setSrcDirs(setOf("src/main/java9"))
-		}
-	}
-	register("mainRelease15") {
-		compileClasspath += main.get().output
-		runtimeClasspath += main.get().output
-		java {
-			setSrcDirs(setOf("src/main/java15"))
-		}
-	}
-}
-
 configurations {
 	compileClasspath.get().extendsFrom(internal)
 	runtimeClasspath.get().extendsFrom(internal)
 	testCompileClasspath.get().extendsFrom(internal)
 	testRuntimeClasspath.get().extendsFrom(internal)
-	shadowed.extendsFrom(internal)
-	getByName("mainRelease9CompileClasspath").extendsFrom(compileClasspath.get())
-	getByName("mainRelease15CompileClasspath").extendsFrom(compileClasspath.get())
 }
 
 eclipse {
-	classpath {
-		plusConfigurations.add(shadowed)
-	}
 	jdt {
 		file {
 			// Set properties for org.eclipse.jdt.core.prefs
@@ -72,20 +42,6 @@ eclipse {
 			}
 		}
 	}
-}
-
-idea {
-	module {
-		scopes["PROVIDED"]!!["plus"]!!.add(shadowed)
-	}
-}
-
-tasks.javadoc {
-	classpath += shadowed
-}
-
-tasks.checkstyleMain {
-	classpath += shadowed
 }
 
 if (project in mavenizedProjects) {
@@ -99,8 +55,6 @@ if (project in mavenizedProjects) {
 	}
 
 	tasks.javadoc {
-		source(sourceSets["mainRelease9"].allJava)
-		source(sourceSets["mainRelease15"].allJava)
 		options {
 			memberLevel = JavadocMemberLevel.PROTECTED
 			header = project.name
@@ -124,26 +78,11 @@ if (project in mavenizedProjects) {
 		}
 	}
 
-	tasks.named<Jar>("sourcesJar") {
-		from(sourceSets["mainRelease9"].allSource)
-		from(sourceSets["mainRelease15"].allSource)
+	tasks.named<Jar>("sourcesJar").configure {
 		from(moduleSourceDir) {
 			include("module-info.java")
 		}
 		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-	}
-
-	tasks.withType<Jar>().configureEach {
-		from(rootDir) {
-			include("LICENSE.md", "LICENSE-notice.md")
-			into("META-INF")
-		}
-		val suffix = archiveClassifier.getOrElse("")
-		if (suffix.isBlank() || suffix == "all") { // "all" is used by shadow plugin
-			from("$moduleOutputDir/$javaModuleName") {
-				include("module-info.class")
-			}
-		}
 	}
 
 	pluginManager.withPlugin("java-test-fixtures") {
@@ -191,11 +130,43 @@ normalization {
 }
 
 val allMainClasses by tasks.registering {
-	dependsOn(tasks.classes, "mainRelease9Classes", "mainRelease15Classes")
+	dependsOn(tasks.classes)
+}
+
+val compileModule by tasks.registering(JavaCompile::class) {
+	dependsOn(allMainClasses)
+	source = fileTree(moduleSourceDir)
+	destinationDir = moduleOutputDir
+	sourceCompatibility = "9"
+	targetCompatibility = "9"
+	classpath = files()
+	options.compilerArgs.addAll(listOf(
+			// "-verbose",
+			// Suppress warnings for automatic modules: org.apiguardian.api, org.opentest4j
+			"-Xlint:all,-requires-automatic,-requires-transitive-automatic",
+			"--release", "9",
+			"--module-version", "${project.version}",
+			"--module-source-path", files(modularProjects.map { "${it.projectDir}/src/module" }).asPath
+	))
+	options.compilerArgumentProviders.add(ModulePathArgumentProvider())
+	options.compilerArgumentProviders.addAll(modularProjects.map { PatchModuleArgumentProvider(it) })
+}
+
+tasks.withType<Jar>().configureEach {
+	from(rootDir) {
+		include("LICENSE.md", "LICENSE-notice.md")
+		into("META-INF")
+	}
+	val suffix = archiveClassifier.getOrElse("")
+	if (suffix.isBlank() || suffix == "all") { // "all" is used by shadow plugin
+		dependsOn(allMainClasses, compileModule)
+		from("$moduleOutputDir/$javaModuleName") {
+			include("module-info.class")
+		}
+	}
 }
 
 tasks.jar {
-	dependsOn(allMainClasses)
 	manifest {
 		attributes(
 				"Created-By" to "${System.getProperty("java.version")} (${System.getProperty("java.vendor")} ${System.getProperty("java.vm.version")})",
@@ -225,30 +196,6 @@ tasks.compileJava {
 	))
 }
 
-if (modularProjects.contains(project)) {
-	val compileModule by tasks.registering(JavaCompile::class) {
-		dependsOn(tasks.classes, "mainRelease9Classes", "mainRelease15Classes")
-		source = fileTree(moduleSourceDir)
-		destinationDir = moduleOutputDir
-		sourceCompatibility = "9"
-		targetCompatibility = "9"
-		classpath = files()
-		options.compilerArgs.addAll(listOf(
-				// "-verbose",
-				// Suppress warnings for automatic modules: org.apiguardian.api, org.opentest4j
-				"-Xlint:all,-requires-automatic,-requires-transitive-automatic",
-				"--release", "9",
-				"--module-version", "${project.version}",
-				"--module-source-path", files(modularProjects.map { "${it.projectDir}/src/module" }).asPath
-		))
-		options.compilerArgumentProviders.add(ModulePathArgumentProvider())
-		options.compilerArgumentProviders.addAll(modularProjects.map { PatchModuleArgumentProvider(it) })
-	}
-	allMainClasses {
-		dependsOn(compileModule)
-	}
-}
-
 tasks.compileTestJava {
 	// See: https://docs.oracle.com/en/java/javase/12/tools/javac.html
 	options.compilerArgs.addAll(listOf(
@@ -270,7 +217,7 @@ inner class PatchModuleArgumentProvider(it: Project) : CommandLineArgumentProvid
 
 	@get:Input val patch: Provider<FileCollection> = provider {
 		if (it == project)
-			sourceSets["main"].output + sourceSets["mainRelease9"].output + sourceSets["mainRelease15"].output + configurations.compileClasspath.get()
+			files(sourceSets.matching { it.name.startsWith("main") }.map { it.output }) + configurations.compileClasspath.get()
 		else
 			files(it.sourceSets["main"].java.srcDirs)
 	}
@@ -306,14 +253,6 @@ afterEvaluate {
 			sourceCompatibility = extension.testJavaVersion.majorVersion
 			targetCompatibility = extension.testJavaVersion.majorVersion
 		}
-		named<JavaCompile>("compileMainRelease9Java").configure {
-			sourceCompatibility = "9"
-			targetCompatibility = "9"
-		}
-		named<JavaCompile>("compileMainRelease15Java").configure {
-			sourceCompatibility = "15"
-			targetCompatibility = "15"
-		}
 		withType<JavaCompile>().configureEach {
 			// --release release
 			// Compiles against the public, supported and documented API for a specific VM version.
@@ -341,12 +280,6 @@ checkstyle {
 
 tasks {
 	checkstyleMain {
-		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
-	}
-	named<Checkstyle>("checkstyleMainRelease9").configure {
-		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
-	}
-	named<Checkstyle>("checkstyleMainRelease15").configure {
 		configFile = rootProject.file("src/checkstyle/checkstyleMain.xml")
 	}
 	checkstyleTest {

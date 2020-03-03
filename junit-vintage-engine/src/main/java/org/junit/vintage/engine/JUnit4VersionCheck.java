@@ -25,7 +25,7 @@ import org.junit.platform.commons.util.BlacklistedExceptions;
  */
 class JUnit4VersionCheck {
 
-	private static final Pattern versionPattern = Pattern.compile("^(\\d+\\.\\d+)(?:-.+)?");
+	private static final Pattern versionPattern = Pattern.compile("^(\\d+\\.\\d+).*");
 	private static final BigDecimal minVersion = new BigDecimal("4.12");
 
 	static void checkSupported() {

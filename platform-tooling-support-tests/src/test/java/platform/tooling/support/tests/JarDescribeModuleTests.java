@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static platform.tooling.support.Helper.createJarPath;
 
 import java.lang.module.ModuleFinder;
 import java.nio.file.Files;
@@ -38,7 +39,7 @@ class JarDescribeModuleTests {
 	@ParameterizedTest
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
 	void describeModule(String module) throws Exception {
-		var modulePath = modulePath(module);
+		var modulePath = createJarPath(module);
 		var result = Request.builder() //
 				.setTool(new Jar()) //
 				.setProject("jar-describe-module") //
@@ -65,18 +66,12 @@ class JarDescribeModuleTests {
 	@ParameterizedTest
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
 	void packageNamesStartWithNameOfTheModule(String module) {
-		var modulePath = modulePath(module);
+		var modulePath = createJarPath(module);
 		var moduleDescriptor = ModuleFinder.of(modulePath).findAll().iterator().next().descriptor();
 		var moduleName = moduleDescriptor.name();
 		for (var packageName : moduleDescriptor.packages()) {
 			assertTrue(packageName.startsWith(moduleName));
 		}
-	}
-
-	private static Path modulePath(String module) {
-		var version = Helper.version(module);
-		var archive = module + '-' + version + ".jar";
-		return Paths.get("..", module, "build", "libs", archive);
 	}
 
 }

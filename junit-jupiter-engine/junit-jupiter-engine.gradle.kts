@@ -1,6 +1,7 @@
 plugins {
 	`kotlin-library-conventions`
 	groovy
+	`java-multi-release-sources`
 }
 
 apply(from = "$rootDir/gradle/testing.gradle.kts")
