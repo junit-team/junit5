@@ -21,6 +21,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
+import org.junit.jupiter.api.DisplayNameGenerator.Simple;
 import org.junit.jupiter.api.DisplayNameGenerator.Standard;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.logging.Logger;
@@ -45,6 +46,11 @@ final class DisplayNameUtils {
 	 * Pre-defined standard display name generator instance.
 	 */
 	private static final DisplayNameGenerator standardGenerator = new Standard();
+
+	/**
+	 * Pre-defined simple display name generator instance.
+	 */
+	private static final DisplayNameGenerator simpleGenerator = new Simple();
 
 	/**
 	 * Pre-defined display name generator instance replacing underscores.
@@ -95,6 +101,9 @@ final class DisplayNameUtils {
 				.map(displayNameGeneratorClass -> {
 					if (displayNameGeneratorClass == Standard.class) {
 						return standardGenerator;
+					}
+					if (displayNameGeneratorClass == Simple.class) {
+						return simpleGenerator;
 					}
 					if (displayNameGeneratorClass == ReplaceUnderscores.class) {
 						return replaceUnderscoresGenerator;

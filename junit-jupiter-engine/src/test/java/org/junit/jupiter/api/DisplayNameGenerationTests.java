@@ -52,6 +52,20 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void simpleGenerator() {
+		check(SimpleStyleTestCase.class, List.of( //
+			"CONTAINER: DisplayNameGenerationTests$SimpleStyleTestCase", //
+			"TEST: @DisplayName prevails", //
+			"TEST: test", //
+			"TEST: test (TestInfo)", //
+			"TEST: testUsingCamelCaseStyle", //
+			"TEST: testUsingCamelCase_and_also_UnderScores", //
+			"TEST: testUsingCamelCase_and_also_UnderScores_keepingParameterTypeNamesIntact (TestInfo)", //
+			"TEST: test_with_underscores" //
+		));
+	}
+
+	@Test
 	void underscoreGenerator() {
 		var expectedDisplayNames = List.of( //
 			"CONTAINER: DisplayNameGenerationTests\\$UnderscoreStyle.*", //
@@ -164,6 +178,10 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 
 	@DisplayNameGeneration(DisplayNameGenerator.Standard.class)
 	static class DefaultStyleTestCase extends AbstractTestCase {
+	}
+
+	@DisplayNameGeneration(DisplayNameGenerator.Simple.class)
+	static class SimpleStyleTestCase extends AbstractTestCase {
 	}
 
 	@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)

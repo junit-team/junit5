@@ -49,8 +49,10 @@ on GitHub.
 * The `JRE` enum now provides a static `currentVersion()` method that returns the enum
   constant for the currently executing JRE, e.g. for use in custom execution conditions
   and other extensions.
-* Clearly document that `name` attribute of `@ParameterizedTest` is a `MessageFormat`
-  pattern.
+* The `name` attribute of `@ParameterizedTest` is now clearly documented to be a
+  `MessageFormat` pattern.
+* Introduce a new `DisplayNameGenerator` named `Simple` (based on `Standard`) that
+  removes trailing parentheses for methods with no parameters.
 
 
 [[release-notes-5.7.0-M1-junit-vintage]]
