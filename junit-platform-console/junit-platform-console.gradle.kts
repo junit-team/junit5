@@ -19,6 +19,10 @@ dependencies {
 	shadowed("info.picocli:picocli")
 }
 
+multiReleaseSources {
+	releases.add(9)
+}
+
 tasks {
 	shadowJar {
 		exclude("META-INF/versions/9/module-info.class")
@@ -27,7 +31,7 @@ tasks {
 			include("LICENSE-picocli.md")
 			into("META-INF")
 		}
-		from(sourceSets.mainRelease9.get().output.classesDirs)
+		from(sourceSets["mainRelease9"].output.classesDirs)
 		doLast {
 			ToolProvider.findFirst("jar").get().run(System.out, System.err, "--update",
 					"--file", archiveFile.get().asFile.absolutePath,

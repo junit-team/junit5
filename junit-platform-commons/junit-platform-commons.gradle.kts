@@ -13,8 +13,12 @@ dependencies {
 	api("org.apiguardian:apiguardian-api")
 }
 
+multiReleaseSources {
+	releases.add(9)
+}
+
 tasks.jar {
-	val release9ClassesDir = sourceSets.mainRelease9.get().output.classesDirs.singleFile
+	val release9ClassesDir = sourceSets["mainRelease9"].output.classesDirs.singleFile
 	inputs.dir(release9ClassesDir).withPathSensitivity(PathSensitivity.RELATIVE)
 	doLast {
 		ToolProvider.findFirst("jar").get().run(System.out, System.err, "--update",
@@ -26,6 +30,6 @@ tasks.jar {
 
 eclipse {
 	classpath {
-		sourceSets -= project.sourceSets.mainRelease9.get()
+		sourceSets -= project.sourceSets["mainRelease9"]
 	}
 }

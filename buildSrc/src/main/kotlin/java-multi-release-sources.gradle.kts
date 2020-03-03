@@ -4,7 +4,10 @@ plugins {
 
 val mavenizedProjects: List<Project> by rootProject.extra
 
-setOf("9", "15").forEach { release ->
+val extension = extensions.create<MultiReleaseSourcesExtension>("multiReleaseSources")
+
+extension.releases.all {
+	val release = this.toString()
 
 	val releaseSourceSet = sourceSets.create("mainRelease$release") {
 		compileClasspath += sourceSets.main.get().output

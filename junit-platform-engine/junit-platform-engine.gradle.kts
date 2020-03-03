@@ -17,6 +17,10 @@ dependencies {
 	testImplementation("org.assertj:assertj-core")
 }
 
+multiReleaseSources {
+	releases.add(15)
+}
+
 tasks.jar {
 	doLast {
 		exec {
@@ -25,7 +29,7 @@ tasks.jar {
 					"--file", archiveFile.get().asFile.absolutePath,
 					"--release", "15",
 					// TODO getting the firstfile in classesDirs is a hack
-					"-C", sourceSets.mainRelease15.get().output.classesDirs.files.first().absolutePath, ".")
+					"-C", sourceSets["mainRelease15"].output.classesDirs.files.first().absolutePath, ".")
 		}
 	}
 }
