@@ -24,14 +24,15 @@ multiReleaseSources {
 }
 
 tasks.jar {
+	val release15ClassesDir = sourceSets["mainRelease15"].java.classesDirectory
+	inputs.dir(release15ClassesDir).withPathSensitivity(PathSensitivity.RELATIVE)
 	doLast {
 		exec {
 			val javaHome: String by project
 			commandLine("$javaHome/bin/jar", "--update",
 					"--file", archiveFile.get().asFile.absolutePath,
 					"--release", "15",
-					// TODO getting the firstfile in classesDirs is a hack
-					"-C", sourceSets["mainRelease15"].output.classesDirs.files.first().absolutePath, ".")
+					"-C", release15ClassesDir.get().asFile.absolutePath, ".")
 		}
 	}
 }

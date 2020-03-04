@@ -20,7 +20,7 @@ multiReleaseSources {
 }
 
 tasks.jar {
-	val release9ClassesDir = sourceSets["mainRelease9"].output.classesDirs.singleFile
+	val release9ClassesDir = sourceSets["mainRelease9"].java.classesDirectory
 	inputs.dir(release9ClassesDir).withPathSensitivity(PathSensitivity.RELATIVE)
 	doLast(objects.newInstance(ExecJarAction::class).apply {
 		javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
@@ -28,7 +28,7 @@ tasks.jar {
 			"--update",
 			"--file", archiveFile.get().asFile.absolutePath,
 			"--release", "9",
-			"-C", release9ClassesDir.absolutePath, "."
+			"-C", release9ClassesDir.get().asFile.absolutePath, "."
 		)
 	})
 }
