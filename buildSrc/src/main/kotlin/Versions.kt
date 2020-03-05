@@ -35,6 +35,6 @@ object Versions {
     val jmh = "1.22"
     val ktlint = "0.35.0"
     val surefire = "2.22.2"
-    var bnd = "4.3.1"
+    var bnd = "5.0.0"
 
 }
