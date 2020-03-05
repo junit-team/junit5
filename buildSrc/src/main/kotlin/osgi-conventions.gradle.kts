@@ -45,10 +45,6 @@ tasks.withType<Jar>().matching {
 			# See https://bnd.bndtools.org/instructions/removeheaders.html
 			-removeheaders: Private-Package
 
-			# Add the custom buildSrc/src/main/kotlin/APIGuardianAnnotations.kt
-			# plugin to bnd
-			-plugin.apiguardian.annotations: ${APIGuardianAnnotations::class.qualifiedName}
-
 			# Instruct the APIGuardianAnnotations how to operate.
 			# See https://bnd.bndtools.org/instructions/export-apiguardian.html
 			-export-apiguardian: *;version=${project.version}
