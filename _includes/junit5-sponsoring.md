@@ -76,20 +76,6 @@ Your donations will help to make that a reality!
 <div align="center">
   <ul class="list-inline">
     <li>
-      <div class="cardbronze" onclick="location.href='https://www.heuboe.de';">
-        <div class="cardbronze-image">
-          <img style="width:80%" src="assets/img/sponsor-logo-heuboe.svg" alt="Heusch/Boesefeldt">
-        </div>
-        <div class="cardbronze-center">
-          <h4>Heusch/Boesefeldt GmbH</h4>
-        </div>
-        <div class="cardbronze-bottom">
-          <h4>Bronze Sponsor</h4>
-          <p>Since March 2019</p>
-        </div>
-      </div>
-    </li>
-    <li>
       <div class="cardbronze" onclick="location.href='https://www.premium-minds.com';">
         <div class="cardbronze-image">
           <img style="width:80%" src="assets/img/sponsor-logo-PremiumMinds.svg" alt="Premium Minds">
