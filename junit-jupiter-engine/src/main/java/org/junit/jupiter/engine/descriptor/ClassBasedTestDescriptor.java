@@ -429,7 +429,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		ExtensionContext extensionContext = context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 
-		context.getExtensionRegistry().stream(TestInstancePreDestroyCallback.class).forEach(
+		context.getExtensionRegistry().getReversedExtensions(TestInstancePreDestroyCallback.class).forEach(
 			extension -> throwableCollector.execute(() -> extension.preDestroyTestInstance(extensionContext)));
 	}
 

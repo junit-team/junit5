@@ -31,7 +31,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* `TestInstancePreDestroyCallback` extensions are now invoked in reverse registration
+  order when `PER_CLASS` test instance lifecycle semantics have been configured.
 
 ==== Deprecations and Breaking Changes
 

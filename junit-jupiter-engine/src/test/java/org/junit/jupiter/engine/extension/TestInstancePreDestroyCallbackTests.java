@@ -55,6 +55,7 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 			"beforeOuterMethod",
 				"beforeInnerMethod",
 					"testInner",
+				"bazPreDestroyCallbackTestInstance:InnerTestCase",
 				"barPreDestroyCallbackTestInstance:InnerTestCase",
 			"fooPreDestroyCallbackTestInstance:InnerTestCase"
 		);
@@ -77,7 +78,7 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 
 	@Test
 	void classLifecyclePreDestroyCallbacks() {
-		executeTestsForClass(PerClassLifecyclePreDestroyCallbackWithTwoTestMethods.class).testEvents()//
+		executeTestsForClass(PerClassLifecyclePreDestroyCallbacksWithTwoTestMethods.class).testEvents()//
 				.assertStatistics(stats -> stats.started(2).succeeded(2));
 
 		// @formatter:off
@@ -86,7 +87,8 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 				"test1",
 			"beforeEachMethod",
 				"test2",
-			"fooPreDestroyCallbackTestInstance:PerClassLifecyclePreDestroyCallbackWithTwoTestMethods"
+			"barPreDestroyCallbackTestInstance:PerClassLifecyclePreDestroyCallbacksWithTwoTestMethods",
+			"fooPreDestroyCallbackTestInstance:PerClassLifecyclePreDestroyCallbacksWithTwoTestMethods"
 		);
 		// @formatter:on
 	}
@@ -118,6 +120,7 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 
 		@Nested
 		@ExtendWith(BarInstancePreDestroyCallback.class)
+		@ExtendWith(BazInstancePreDestroyCallback.class)
 		class InnerTestCase extends Destroyable {
 
 			@BeforeEach
@@ -150,7 +153,8 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 
 	@TestInstance(PER_CLASS)
 	@ExtendWith(FooInstancePreDestroyCallback.class)
-	static class PerClassLifecyclePreDestroyCallbackWithTwoTestMethods extends Destroyable {
+	@ExtendWith(BarInstancePreDestroyCallback.class)
+	static class PerClassLifecyclePreDestroyCallbacksWithTwoTestMethods extends Destroyable {
 
 		@BeforeEach
 		void beforeEachMethod() {
@@ -198,6 +202,13 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 
 		BarInstancePreDestroyCallback() {
 			super("bar");
+		}
+	}
+
+	static class BazInstancePreDestroyCallback extends AbstractTestInstancePreDestroyCallback {
+
+		BazInstancePreDestroyCallback() {
+			super("baz");
 		}
 	}
 
