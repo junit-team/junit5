@@ -141,7 +141,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 				invokeAfterEachMethods(context);
 			}
 		invokeAfterEachCallbacks(context);
-		invokeTestInstancePreDestroyCallback(context);
+		invokeTestInstancePreDestroyCallbacks(context);
 		// @formatter:on
 
 		throwableCollector.assertEmpty();
@@ -248,13 +248,12 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			(callback, extensionContext) -> callback.afterEach(extensionContext));
 	}
 
-	private void invokeTestInstancePreDestroyCallback(JupiterEngineExecutionContext context) {
-		context.getExtensionContext().getTestInstanceLifecycle().ifPresent(lifecycle -> {
-			if (TestInstance.Lifecycle.PER_METHOD == lifecycle) {
-				invokeAllAfterMethodsOrCallbacks(TestInstancePreDestroyCallback.class, context,
-					TestInstancePreDestroyCallback::preDestroyTestInstance);
-			}
-		});
+	private void invokeTestInstancePreDestroyCallbacks(JupiterEngineExecutionContext context) {
+		context.getExtensionContext().getTestInstanceLifecycle().filter(TestInstance.Lifecycle.PER_METHOD::equals)//
+				.ifPresent(lifecycle -> {
+					invokeAllAfterMethodsOrCallbacks(TestInstancePreDestroyCallback.class, context,
+						TestInstancePreDestroyCallback::preDestroyTestInstance);
+				});
 	}
 
 	private <T extends Extension> void invokeAllAfterMethodsOrCallbacks(Class<T> type,
