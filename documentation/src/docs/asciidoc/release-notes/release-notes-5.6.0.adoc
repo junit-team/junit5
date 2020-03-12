@@ -43,8 +43,6 @@ milestone pages in the JUnit repository on GitHub.
   handles events from multiple levels of nested classes.
 * Module `org.junit.platform.launcher` now reads `java.logging` due to usage of types in
   package `java.util.logging`.
-* Method `assertIterableEquals()` in `Assertions` no longer throws a `StackOverflowError`
-  when comparing iterables with components that themselves implement `Iterable`.
 
 ==== Deprecations and Breaking Changes
 
@@ -91,6 +89,8 @@ milestone pages in the JUnit repository on GitHub.
 
 ==== Bug Fixes
 
+* Method `assertIterableEquals()` in `Assertions` no longer throws a `StackOverflowError`
+  when comparing iterables with components that themselves implement `Iterable`.
 * When `@Nested` is used, the temporary directory is now also injected into instance
   fields of enclosing classes annotated with `@TempDir`.
 
