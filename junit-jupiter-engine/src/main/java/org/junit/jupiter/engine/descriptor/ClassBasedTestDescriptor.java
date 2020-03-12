@@ -214,7 +214,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		}
 
 		if (isPerClassLifecycle(context)) {
-			invokeTestInstancePreDestroyCallback(context);
+			invokeTestInstancePreDestroyCallbacks(context);
 		}
 
 		// If the previous Throwable was not null when this method was called,
@@ -425,7 +425,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 				.forEach(extension -> throwableCollector.execute(() -> extension.afterAll(extensionContext)));
 	}
 
-	private void invokeTestInstancePreDestroyCallback(JupiterEngineExecutionContext context) {
+	private void invokeTestInstancePreDestroyCallbacks(JupiterEngineExecutionContext context) {
 		ExtensionContext extensionContext = context.getExtensionContext();
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 

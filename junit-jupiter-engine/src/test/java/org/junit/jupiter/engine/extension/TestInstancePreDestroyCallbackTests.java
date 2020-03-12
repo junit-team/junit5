@@ -12,7 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,6 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
-
 			// OuterTestCase
 			"beforeOuterMethod",
 				"testOuter",
@@ -57,7 +56,6 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 				"beforeInnerMethod",
 					"testInner",
 				"barPreDestroyCallbackTestInstance:InnerTestCase",
-
 			"fooPreDestroyCallbackTestInstance:InnerTestCase"
 		);
 		// @formatter:on
@@ -65,9 +63,8 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 
 	@Test
 	void testSpecificTestInstancePreDestroyCallbackIsCalled() {
-		executeTestsForClass(
-			TestCaseWithTestSpecificTestInstancePreDestroyCallback.class).testEvents().assertStatistics(
-				stats -> stats.started(1).succeeded(1));
+		executeTestsForClass(TestCaseWithTestSpecificTestInstancePreDestroyCallback.class).testEvents()//
+				.assertStatistics(stats -> stats.started(1).succeeded(1));
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
@@ -80,8 +77,8 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 
 	@Test
 	void classLifecyclePreDestroyCallbacks() {
-		executeTestsForClass(PerClassLifecyclePreDestroyCallbackWithTwoTestMethods.class).testEvents().assertStatistics(
-			stats -> stats.started(2).succeeded(2));
+		executeTestsForClass(PerClassLifecyclePreDestroyCallbackWithTwoTestMethods.class).testEvents()//
+				.assertStatistics(stats -> stats.started(2).succeeded(2));
 
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
@@ -96,6 +93,15 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 
 	// -------------------------------------------------------------------
 
+	private abstract static class Destroyable {
+
+		boolean destroyed;
+
+		void setDestroyed() {
+			this.destroyed = true;
+		}
+	}
+
 	@ExtendWith(FooInstancePreDestroyCallback.class)
 	static class OuterTestCase extends Destroyable {
 
@@ -106,7 +112,7 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 
 		@Test
 		void testOuter() {
-			assertFalse(isDestroyed);
+			assertFalse(destroyed);
 			callSequence.add("testOuter");
 		}
 
@@ -116,7 +122,7 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 
 			@BeforeEach
 			void beforeInnerMethod() {
-				assertFalse(isDestroyed);
+				assertFalse(destroyed);
 				callSequence.add("beforeInnerMethod");
 			}
 
@@ -131,7 +137,7 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 
 		@BeforeEach
 		void beforeEachMethod() {
-			assertFalse(isDestroyed);
+			assertFalse(destroyed);
 			callSequence.add("beforeEachMethod");
 		}
 
@@ -142,7 +148,7 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 		}
 	}
 
-	@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+	@TestInstance(PER_CLASS)
 	@ExtendWith(FooInstancePreDestroyCallback.class)
 	static class PerClassLifecyclePreDestroyCallbackWithTwoTestMethods extends Destroyable {
 
@@ -162,31 +168,17 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 		}
 	}
 
-	static class FooInstancePreDestroyCallback extends AbstractInstancePreDestroyCallback {
-
-		protected FooInstancePreDestroyCallback() {
-			super("foo");
-		}
-	}
-
-	static class BarInstancePreDestroyCallback extends AbstractInstancePreDestroyCallback {
-
-		protected BarInstancePreDestroyCallback() {
-			super("bar");
-		}
-	}
-
-	static abstract class AbstractInstancePreDestroyCallback implements TestInstancePreDestroyCallback {
+	static abstract class AbstractTestInstancePreDestroyCallback implements TestInstancePreDestroyCallback {
 
 		private final String name;
 
-		AbstractInstancePreDestroyCallback(String name) {
+		AbstractTestInstancePreDestroyCallback(String name) {
 			this.name = name;
 		}
 
 		@Override
 		public void preDestroyTestInstance(ExtensionContext context) {
-			assertTrue(context.getTestInstance().isPresent());
+			assertThat(context.getTestInstance()).isPresent();
 			Object testInstance = context.getTestInstance().get();
 			if (testInstance instanceof Destroyable) {
 				((Destroyable) testInstance).setDestroyed();
@@ -195,12 +187,18 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 		}
 	}
 
-	private abstract static class Destroyable {
+	static class FooInstancePreDestroyCallback extends AbstractTestInstancePreDestroyCallback {
 
-		boolean isDestroyed;
-
-		void setDestroyed() {
-			isDestroyed = true;
+		FooInstancePreDestroyCallback() {
+			super("foo");
 		}
 	}
+
+	static class BarInstancePreDestroyCallback extends AbstractTestInstancePreDestroyCallback {
+
+		BarInstancePreDestroyCallback() {
+			super("bar");
+		}
+	}
+
 }
