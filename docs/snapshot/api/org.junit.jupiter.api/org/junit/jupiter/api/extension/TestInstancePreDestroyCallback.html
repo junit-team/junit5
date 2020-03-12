@@ -148,7 +148,14 @@ extends <a href="Extension.html" title="interface in org.junit.jupiter.api.exten
  the test instance, invoking custom clean-up methods on the test instance, etc.
 
  <p>Extensions that implement <code>TestInstancePreDestroyCallback</code> must be
- registered at the class level.
+ registered at the class level if the test class is configured with
+ <a href="../TestInstance.Lifecycle.html" title="enum in org.junit.jupiter.api"><code>@TestInstance(Lifecycle.PER_CLASS)</code></a>
+ semantics. If the test class is configured with
+ <a href="../TestInstance.Lifecycle.html" title="enum in org.junit.jupiter.api"><code>@TestInstance(Lifecycle.PER_METHOD)</code></a>
+ semantics, <code>TestInstancePreDestroyCallback</code> extensions may be registered
+ at the class level or at the method level. In the latter case, the
+ <code>TestInstancePreDestroyCallback</code> extension will only be applied to the
+ test method for which it is registered.
 
  <h3>Constructor Requirements</h3>
 
