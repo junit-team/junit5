@@ -1,4 +1,6 @@
 import java.time.OffsetDateTime
+import java.time.Instant
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 plugins {
@@ -16,7 +18,24 @@ buildScan {
 	}
 }
 
-val buildTimeAndDate = OffsetDateTime.now()
+val buildTimeAndDate by extra {
+
+	// SOURCE_DATE_EPOCH is a UNIX timestamp for pinning build metadata against
+	// in order to achieve reproducible builds
+	//
+	// More details - https://reproducible-builds.org/docs/source-date-epoch/
+
+	if (System.getenv().containsKey("SOURCE_DATE_EPOCH")) {
+
+		val sourceDateEpoch = System.getenv("SOURCE_DATE_EPOCH").toLong()
+
+		Instant.ofEpochSecond(sourceDateEpoch).atOffset(ZoneOffset.UTC)
+
+	} else {
+		OffsetDateTime.now()
+	}
+}
+
 val buildDate by extra { DateTimeFormatter.ISO_LOCAL_DATE.format(buildTimeAndDate) }
 val buildTime by extra { DateTimeFormatter.ofPattern("HH:mm:ss.SSSZ").format(buildTimeAndDate) }
 val buildRevision by extra { versioning.info.commit }
@@ -103,6 +122,11 @@ subprojects {
 	else if (project in vintageProjects) {
 		group = property("vintageGroup")!!
 		version = property("vintageVersion")!!
+	}
+
+	tasks.withType<AbstractArchiveTask>().configureEach {
+		isPreserveFileTimestamps = false
+		isReproducibleFileOrder = true
 	}
 
 	pluginManager.withPlugin("java") {
