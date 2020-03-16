@@ -7,7 +7,12 @@
  *
  * https://www.eclipse.org/legal/epl-v20.html
  */
+@file:API(status = EXPERIMENTAL, since = "5.7")
+
 package org.junit.jupiter.api
+
+import org.apiguardian.api.API
+import org.apiguardian.api.API.Status.EXPERIMENTAL
 
 /**
  * Value that can be used with [@SinceKotlin][SinceKotlin] to hide symbols from

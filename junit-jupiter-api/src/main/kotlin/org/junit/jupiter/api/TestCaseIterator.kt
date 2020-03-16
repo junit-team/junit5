@@ -7,12 +7,13 @@
  *
  * https://www.eclipse.org/legal/epl-v20.html
  */
+@file:API(status = EXPERIMENTAL, since = "5.7")
 @file:JvmName("TestBuilder")
 @file:Suppress(JAVA_ONLY_HACK, "NOTHING_TO_INLINE")
 
 package org.junit.jupiter.api
 
-import java.util.function.BiFunction
+import java.util.function.Function
 import java.util.stream.Stream
 import org.apiguardian.api.API
 import org.apiguardian.api.API.Status.EXPERIMENTAL
@@ -164,186 +165,93 @@ class TestCaseIterator<T> @PublishedApi internal constructor(
     private val test: (T) -> Unit
 ) : TestCases {
     private var i = 1
-    private var name: ((Int, T) -> String)? = null
+    private var counter: ((Int) -> String)? = null
+    private var name: ((T) -> String)? = null
 
     override fun hasNext() =
         cases.hasNext()
 
     override fun next(): DynamicTest =
         cases.next().let { case ->
-            dynamicTest(name?.invoke(i++, case) ?: "[${i++}] $case") {
-                test(case)
-            }
+            dynamicTest(buildString {
+                counter?.invoke(i++)?.also { append(it) } ?: run {
+                    append('[')
+                    append(i++)
+                    append("] ")
+                }
+                append((case as? TestCase<*>)?.name ?: name?.invoke(case) ?: case.toString())
+            }) { test(case) }
         }
 
     /**
-     * Use the given custom display name generator to all parameters that are to
-     * be tested with this parameterized test.
-     *
-     * The given function will receive the 1-based index of the parameters that
-     * are to be tested as the first argument and the actual parameters as the
-     * second argument. The formatting of individual parameters can be further
-     * customized through the [TestCase.named] function for each individual
-     * parameter collection.
-     *
-     * The default generator encloses the index in brackets and joins the
-     * parameters after calling their respective [toString][Any.toString] with
-     * a comma, e.g. `params("p1", "p2")` will result in `[1] p1, p2`.
-     *
-     * ## Examples
-     * ```kotlin
-     * @TestFactory fun isPalindrom() =
-     *     testOf(case("mum"), case("dad")) {
-     *         assertEquals(it.reversed(), it)
-     *     } named { _, case -> case }
-     * ```
-     *
-     * The above would result in the following output with the `ConsoleLauncher`
-     * and the Unicode theme:
-     *
-     * ```
-     * isPalindrom ✔
-     * ├─ mum ✔
-     * └─ dad ✔
-     * ```
-     *
-     * Instead of the default output that would be:
-     *
-     * ```
-     * isPalindrom ✔
-     * ├─ [1] mum ✔
-     * └─ [2] dad ✔
-     * ```
-     *
-     * The second argument passed to the [name] function provides access to each
-     * individual parameter of the case that is to be tested and thus allows for
-     * sophisticated customization since any library in the classpath is
-     * available for transforming the parameters. The various subclasses of
-     * [TestCase] all support destructuring that makes sure that the individual
-     * parameters can be named properly.
-     *
-     * ```kotlin
-     * @TestFactory fun `Magic constant`() =
-     *     testOf(
-     *         case("Pi", 3.1415926535897932384626433),
-     *         case("Euler‘s Number", 2.71828)
-     *     ) { assertTrue(true) } named { i, (name, x) ->
-     *         "#$i $name := %.2f".format(x)
-     *     }
-     * ```
-     *
-     * ```
-     * Magic constant ✔
-     * ├─ #1 Pi := 3.14 ✔
-     * └─ #2 Euler‘s Number := 2.71 ✔
-     * ```
-     *
-     * The above could be combined with [TestCase.named] if the name is not
-     * required for the actual test:
-     *
-     * ```kotlin
-     * @TestFactory fun `Magic constant`() =
-     *     testOf(
-     *         case(3.1415926535897932384626433) named "Pi",
-     *         case(2.71828) named "Euler‘s Number"
-     *     ) { assertTrue(true) } named { i, case ->
-     *         val (x) = case // or access it with case.p1
-     *         // The toString function of the case returns the name that was
-     *         // given to it.
-     *         "#$i $case := %.2f".format(x)
-     *     }
-     * ```
-     *
-     * @see org.junit.jupiter.api.TestCase.named
+     * Use the given [formatter] to format the counter in the display names of
+     * each test case.
      */
     @JvmSynthetic
-    infix fun named(name: (i: Int, case: T) -> String) =
-        apply { this.name = name }
+    infix fun counter(formatter: (Int) -> String) =
+        apply { this.counter = formatter }
 
     /**
-     * Use the given custom display name generator to all parameters that are to
-     * be tested with this parameterized test.
-     *
-     * The given function will receive the 1-based index of the parameters that
-     * are to be tested as the first argument and the actual parameters as the
-     * second argument. The formatting of individual parameters can be further
-     * customized through the [TestCase.named] function for each individual
-     * parameter collection.
-     *
-     * The default generator encloses the index in brackets and joins the
-     * parameters after calling their respective [toString][Any.toString] with
-     * a comma, e.g. `params("p1", "p2")` will result in `[1] p1, p2`.
-     *
-     * ### Examples
-     * ```java
-     * @TestFactory
-     * TestCases isPalindromTest() {
-     *     return testOf(
-     *         it -> assertTrue(isPalindrom(it)),
-     *         caseOf("mum"),
-     *         caseOf("dad")
-     *     ).named((i, case) -> case);
-     * }
-     * ```
-     *
-     * The above would result in the following output with the `ConsoleLauncher`
-     * and the Unicode theme:
-     *
-     * ```
-     * isPalindrom ✔
-     * ├─ mum ✔
-     * └─ dad ✔
-     * ```
-     *
-     * Instead of the default output that would be:
-     *
-     * ```
-     * isPalindrom ✔
-     * ├─ [1] mum ✔
-     * └─ [2] dad ✔
-     * ```
-     *
-     * The second argument passed to the [name] function provides access to each
-     * individual parameter of the case that is to be tested and thus allows for
-     * sophisticated customization since any library in the classpath is
-     * available for transforming the parameters.
-     *
-     * ```java
-     * @TestFactory
-     * TestCases magicConstants() {
-     *     return testOf(
-     *         (name, x) -> assertTrue(true),
-     *         caseOf("Pi", 3.1415926535897932384626433),
-     *         caseOf("Euler‘s Number", 2.71828)
-     *     ).named((i, case) -> format("#%d %s := %.2f", i, case.p1, case.p2));
-     * }
-     * ```
-     *
-     * ```
-     * Magic constant ✔
-     * ├─ #1 Pi := 3.14 ✔
-     * └─ #2 Euler‘s Number := 2.71 ✔
-     * ```
-     *
-     * The above could be combined with [TestCase.named] if the name is not
-     * required for the actual test:
-     *
-     * ```java
-     * @TestFactory
-     * TestCases magicConstants() {
-     *     return testOf(
-     *         (name, x) -> assertTrue(true),
-     *         caseOf(3.1415926535897932384626433).named("Pi"),
-     *         caseOf(2.71828).named("Euler‘s Number")
-     *     ).named((i, case) -> format("#%d %s := %.2f", i, case.toString(), case.p1));
-     * }
-     * ```
-     *
-     * @see org.junit.jupiter.api.TestCase.named
+     * Use the given [formatter] to format the counter in the display names of
+     * each test case.
      */
     @SinceKotlin(JAVA_ONLY)
-    fun named(name: BiFunction<Int, T, String>) =
-        named(name::apply)
+    fun counter(formatter: Function<Int, String>) =
+        counter(formatter::apply)
+
+    /**
+     * Use the given constant [format] for the counter in the display name of
+     * each test case.
+     */
+    inline infix fun counter(format: String) =
+        counter { format }
+
+    /**
+     * Do not include any counter in the display name of each test case.
+     */
+    inline fun uncounted() =
+        counter("")
+
+    /**
+     * Use the given [formatter] to format the name in the display name of
+     * each test case.
+     *
+     * Individual [TestCase]s can override the value set here through their own
+     * [name][TestCase.named].
+     */
+    @JvmSynthetic
+    infix fun named(formatter: (T) -> String) =
+        apply { this.name = formatter }
+
+    /**
+     * Use the given [formatter] to format the name in the display name of
+     * each test case.
+     *
+     * Individual [TestCase]s can override the value set here through their own
+     * [name][TestCase.named].
+     */
+    @SinceKotlin(JAVA_ONLY)
+    fun named(formatter: Function<T, String>) =
+        named(formatter::apply)
+
+    /**
+     * Use the given constant [format] for the name in the display name of each
+     * test case.
+     *
+     * Individual [TestCase]s can override the value set here through their own
+     * [name][TestCase.named].
+     */
+    inline infix fun named(format: String) =
+        named { format }
+
+    /**
+     * Do not include the name of the case in the display name of this test.
+     *
+     * Individual [TestCase]s can override the value set here through their own
+     * [name][TestCase.named].
+     */
+    inline fun unnamed() =
+        named("")
 }
 
 /**
