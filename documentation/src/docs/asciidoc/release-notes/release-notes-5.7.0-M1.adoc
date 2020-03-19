@@ -55,6 +55,9 @@ on GitHub.
   removes trailing parentheses for methods with no parameters.
 * `assertThrows` for Kotlin can now be used with suspending functions and other lambda
   contexts that require inlining.
+* New MethodOrderer annotation `@DisplayName` that allows controlling test
+  execution order based on the generated test display name
+* Added getDisplayName to MethodDescriptor for DisplayName orderer
 
 
 [[release-notes-5.7.0-M1-junit-vintage]]
