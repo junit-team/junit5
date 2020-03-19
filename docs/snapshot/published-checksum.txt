@@ -78,7 +78,6 @@
 1c2b742a13a1c70906167b476ec7ef20  documentation/src/test/java/example/testinterface/TestLifecycleLogger.java
 1c2d76d68daa210e191e3da5d950e7fb  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ValueArgumentsProvider.java
 1cf9d6dfb1df4afb52232f5ce8a64c9f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstanceFactory.java
-1d3c52c160ab77ca9e3d8080707cb36f  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-M1.adoc
 1dfb6da15e99bbc706ff0c9b0a00bf61  junit-jupiter-params/src/main/java/org/junit/jupiter/params/ParameterizedTestNameFormatter.java
 1e40ae49adf2a41d8be1d9c093d81e78  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullArgumentsProvider.java
 1f7ccd75e0c8a2aac101c04dc2ddf7a2  junit-platform-console/src/main/java/org/junit/platform/console/tasks/CustomContextClassLoaderExecutor.java
@@ -409,6 +408,7 @@
 a017ac3a4a4e757cd70928019fa5653d  documentation/src/docs/asciidoc/user-guide/migration-from-junit4.adoc
 a01d618df697d7900953bfdfc06f3256  documentation/src/docs/asciidoc/user-guide/images/extensions_BrokenLifecycleMethodConfigDemo.png
 a050759074c7a4e829fd2c691c8e753a  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertionUtils.java
+a072bdf9d58d29ef8bfb7500750c5fce  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-M1.adoc
 a0b8710b9ec41bd235260d805b42cae4  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ArgumentsProvider.java
 a13777605819a6ab3a2060956fa0b743  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/RunnerTestDescriptor.java
 a1662929c71f344254f5a172bff6b42a  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullEnum.java
