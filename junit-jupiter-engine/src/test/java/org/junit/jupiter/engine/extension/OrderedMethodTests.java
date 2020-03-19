@@ -35,7 +35,6 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodDescriptor;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
-import org.junit.jupiter.api.MethodOrderer.DisplayNameAnnotation;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.MethodOrderer.Random;
 import org.junit.jupiter.api.MethodOrdererContext;
@@ -101,9 +100,9 @@ class OrderedMethodTests {
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
 		assertThat(callSequence)//
-			.containsExactly("$", "AAA", "No_display_name_attribute_1_caps()", "No_display_name_attribute_2_caps()",
-				"ZZ_Top", "___", "a1", "a2", "b()", "no_display_name_attribute_1()",
-				"no_display_name_attribute_2()", "repetition 1 of 1");
+				.containsExactly("$", "AAA", "No_display_name_attribute_1_caps()", "No_display_name_attribute_2_caps()",
+					"ZZ_Top", "___", "a1", "a2", "b()", "no_display_name_attribute_1()",
+					"no_display_name_attribute_2()", "repetition 1 of 1", "⑦ϼ\uD83D\uDC69\u200D⚕\uD83E\uDDD8\u200D♂");
 		assertThat(threadNames).hasSize(1);
 	}
 
@@ -370,7 +369,7 @@ class OrderedMethodTests {
 		}
 	}
 
-	@TestMethodOrder(DisplayNameAnnotation.class)
+	@TestMethodOrder(MethodOrderer.DisplayName.class)
 	static class DisplayNameTestCase {
 
 		@BeforeEach
@@ -418,6 +417,11 @@ class OrderedMethodTests {
 		@DisplayName("zzz")
 		@RepeatedTest(1)
 		void zzz() {
+		}
+
+		@Test
+		@DisplayName("⑦ϼ\uD83D\uDC69\u200D⚕\uD83E\uDDD8\u200D♂")
+		void special_characters() {
 		}
 
 		@Test

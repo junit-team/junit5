@@ -54,7 +54,7 @@ on GitHub.
 * Introduce a new `DisplayNameGenerator` named `Simple` (based on `Standard`) that
   removes trailing parentheses for methods with no parameters.
 * New MethodOrderer annotation `@DisplayNameAnnotation` that allows controlling test
-  execution order based on the `@DisplayName` applied to a method 
+  execution order based on the generated test display name
 
 [[release-notes-5.7.0-M1-junit-vintage]]
 === JUnit Vintage

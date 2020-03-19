@@ -248,27 +248,20 @@ public interface MethodOrderer {
 
 	/**
 	 * {@code MethodOrderer} that sorts methods alphanumerically based on the
-	 * the {@link DisplayName @DisplayName} names using {@link String#compareTo(String)}.
-	 *
-	 * <p>If no attribute is found for the method, the method name will be used as a fallback
-	 * for comparing the methods.
+	 * the generated test display names using {@link String#compareTo(String)}
 	 */
-	class DisplayNameAnnotation implements MethodOrderer {
+	class DisplayName implements MethodOrderer {
 
 		/**
-		 * Sort the methods encapsulated in the supplied
-		 * {@link MethodOrdererContext} alphanumerically based on the {@link DisplayName @DisplayName} names
+		 * Sort the methods encapsulated in the supplied {@link MethodOrdererContext} alphanumerically
+		 * based on the test display names
 		 */
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
-			context.getMethodDescriptors().sort(Comparator.comparing(DisplayNameAnnotation::getDisplayName));
+			context.getMethodDescriptors().sort(comparator);
 		}
 
-		private static String getDisplayName(MethodDescriptor descriptor) {
-			return descriptor
-				.findAnnotation(DisplayName.class)
-				.map(DisplayName::value)
-				.orElse(descriptor.getMethod().getName());
-		}
+		private static final Comparator<MethodDescriptor> comparator = Comparator.comparing(
+			MethodDescriptor::getDisplayName);
 	}
 }

@@ -45,6 +45,11 @@ class DefaultMethodDescriptor implements MethodDescriptor {
 	}
 
 	@Override
+	public final String getDisplayName() {
+		return this.testDescriptor.getDisplayName();
+	}
+
+	@Override
 	public boolean isAnnotated(Class<? extends Annotation> annotationType) {
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 		return AnnotationUtils.isAnnotated(getMethod(), annotationType);
