@@ -37,7 +37,8 @@ public interface MethodDescriptor {
 
 	/**
 	 * Get the display name for this descriptor.
-	 * @return the method; never {@code null}
+	 *
+	 * @return the display name for this descriptor; never {@code null} or blank
 	 */
 	String getDisplayName();
 
