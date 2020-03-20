@@ -25,5 +25,6 @@ dependencies {
 		api("com.tngtech.archunit:archunit-junit5-api:${Versions.archunit}")
 		api("com.tngtech.archunit:archunit-junit5-engine:${Versions.archunit}")
 		api("org.slf4j:slf4j-jdk14:${Versions.slf4j}")
+		api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
 	}
 }

@@ -53,6 +53,9 @@ on GitHub.
   `MessageFormat` pattern.
 * Introduce a new `DisplayNameGenerator` named `Simple` (based on `Standard`) that
   removes trailing parentheses for methods with no parameters.
+* `assertThrows` for Kotlin can now be used with suspending functions and other lambda
+  contexts that require inlining.
+
 * New MethodOrderer annotation `@DisplayNameAnnotation` that allows controlling test
   execution order based on the generated test display name
 
