@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.util;
 
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -1312,6 +1313,11 @@ public final class ReflectionUtils {
 		}
 
 		return Optional.empty();
+	}
+
+	public static Method getRequiredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
+		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes).orElseThrow(
+			() -> new JUnitException(format("Could not find method [%s] in class [%s]", methodName, clazz.getName())));
 	}
 
 	/**

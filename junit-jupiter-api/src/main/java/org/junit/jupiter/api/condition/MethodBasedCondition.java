@@ -57,9 +57,7 @@ abstract class MethodBasedCondition implements ExecutionCondition {
 
 	private Method findMethod(Class<?> clazz, String methodName) {
 		return ReflectionUtils.findMethod(clazz, methodName) //
-				.orElseGet(() -> ReflectionUtils.findMethod(clazz, methodName, ExtensionContext.class) //
-						.orElseThrow(() -> new JUnitException(
-							format("Could not find method [%s] in class [%s]", methodName, clazz.getName()))));
+				.orElseGet(() -> ReflectionUtils.getRequiredMethod(clazz, methodName, ExtensionContext.class));
 	}
 
 	private Object evaluateCondition(Method method, ExtensionContext context) {
