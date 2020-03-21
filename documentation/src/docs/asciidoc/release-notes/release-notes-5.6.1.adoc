@@ -15,10 +15,10 @@ on GitHub.
 
 ==== Bug Fixes
 
-* Don't cache URL when loading `junit-platform.properties` contents to avoid file locking
-  issues on Windows
-* Only warn about multiple `junit-platform.properties` on the classpath if they have
-  different URLs
+* In order to avoid file locking issues on Microsoft Windows, URLs are no longer cached
+  when loading `junit-platform.properties` files.
+* The presence of multiple `junit-platform.properties` files on the classpath now only
+  results in a warning if the files have different URLs.
 
 
 [[release-notes-5.6.1-junit-jupiter]]
