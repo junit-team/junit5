@@ -75,6 +75,7 @@
 1ac2aacad2423ba23494a0e04a02f4f5  junit-platform-console/src/main/java/org/junit/platform/console/tasks/TreeNode.java
 1b19590eb56b0335bf9ba2fc9084a624  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsNestedTestClass.java
 1b2be64d2e805ad01d96e74bff570bd1  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/DefaultParallelExecutionConfigurationStrategy.java
+1b8bcbd16d2ff20a5be1abe893b06ef6  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherConfigurationParameters.java
 1c2b742a13a1c70906167b476ec7ef20  documentation/src/test/java/example/testinterface/TestLifecycleLogger.java
 1c2d76d68daa210e191e3da5d950e7fb  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ValueArgumentsProvider.java
 1cf9d6dfb1df4afb52232f5ce8a64c9f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestInstanceFactory.java
@@ -517,7 +518,6 @@ c857bbbb5ef4c54d114168325f899196  documentation/src/test/java/example/DisabledCl
 c86faaaf749c6b64fa1ab8417597c18f  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/ExcludeClassNamePatterns.java
 c882ff04010b0c802aa96e5ece6b63c5  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/AbstractClassNameFilter.java
 c8c0a0f8fc39fbbad960af2ff1016e23  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/package-info.java
-c8cb64403a752e87f13b8138c49393ce  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/LauncherConfigurationParameters.java
 c957a6761ef2e9bc6d4973c9218e5538  junit-jupiter-api/src/main/java/org/junit/jupiter/api/condition/EnabledIfSystemPropertyCondition.java
 c96f57f87712e4f6a9d14c42a4ab4292  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/VintageTestDescriptor.java
 c9a9ff7a265b117a5a5681dfcf9b42e2  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/IncludeClassNameFilter.java
