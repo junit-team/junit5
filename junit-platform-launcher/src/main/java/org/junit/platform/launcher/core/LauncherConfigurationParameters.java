@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
@@ -53,7 +53,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 
 		try {
 			ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
-			Set<URL> resources = new HashSet<>(Collections.list(classLoader.getResources(configFileName)));
+			Set<URL> resources = new LinkedHashSet<>(Collections.list(classLoader.getResources(configFileName)));
 
 			if (!resources.isEmpty()) {
 				if (resources.size() > 1) {
