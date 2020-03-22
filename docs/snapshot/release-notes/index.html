@@ -651,7 +651,7 @@ order to support custom version ID formats such as <code>4.12.0</code>, <code>4.
 <h2 id="release-notes-5.6.1"><a class="anchor" href="#release-notes-5.6.1"></a>5.6.1</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Date of Release:</strong> ❓</p>
+<p><strong>Date of Release:</strong> March 22, 2020</p>
 </div>
 <div class="paragraph">
 <p><strong>Scope:</strong> Bug fixes since 5.6.0</p>
@@ -668,27 +668,12 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>In order to avoid file locking issues on Microsoft Windows, URLs are no longer cached
+when loading <code>junit-platform.properties</code> files.</p>
 </li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-4"><a class="anchor" href="#deprecations-and-breaking-changes-4"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
 <li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-4"><a class="anchor" href="#new-features-and-improvements-4"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
+<p>The presence of multiple <code>junit-platform.properties</code> files on the classpath now only
+results in a warning if the files have different URLs.</p>
 </li>
 </ul>
 </div>
@@ -707,58 +692,11 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 </ul>
 </div>
 </div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-5"><a class="anchor" href="#deprecations-and-breaking-changes-5"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-5"><a class="anchor" href="#new-features-and-improvements-5"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
 </div>
 <div class="sect2">
 <h3 id="release-notes-5.6.1-junit-vintage"><a class="anchor" href="#release-notes-5.6.1-junit-vintage"></a>JUnit Vintage</h3>
-<div class="sect3">
-<h4 id="bug-fixes-6"><a class="anchor" href="#bug-fixes-6"></a>Bug Fixes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="deprecations-and-breaking-changes-6"><a class="anchor" href="#deprecations-and-breaking-changes-6"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="new-features-and-improvements-6"><a class="anchor" href="#new-features-and-improvements-6"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>❓</p>
-</li>
-</ul>
-</div>
+<div class="paragraph">
+<p>No changes.</p>
 </div>
 </div>
 </div>
@@ -822,7 +760,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-03-19 19:23:06 UTC
+Last updated 2020-03-22 19:53:13 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

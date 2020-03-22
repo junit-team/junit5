@@ -301,6 +301,7 @@
 750328a0c245a3e075d5feb5a02816a8  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/discovery/package-info.java
 754673671ac2856ca07269ed95faa941  junit-jupiter-params/src/main/java/org/junit/jupiter/params/aggregator/DefaultArgumentsAccessor.java
 75a5a1286cfa81e901fa7c3496b1c122  documentation/src/test/kotlin/example/FibonacciCalculator.kt
+75b1bef2eb26ea07b2a0f9f3518b44ad  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.1.adoc
 75b5833f19095f29bcf9ef200b83879c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/package-info.java
 765ccda693d0793279e5c05e61f641e3  documentation/src/docs/asciidoc/user-guide/running-tests.adoc
 766626284ba869e555875165f7f77ee6  documentation/src/test/java/example/testkit/EngineTestKitSkippedMethodDemo.java
@@ -360,7 +361,6 @@
 889df162da988beb5454b46fee0bf7ae  documentation/src/test/java/example/TempDirectoryDemo.java
 88ccc2e5e44cfcda0d22fd90bcb119b5  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/Event.java
 890008bf1d0acfae9dc477a8433914fc  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestInstanceLifecycleUtils.java
-89af0075c8a3c327c5343acc4725fe2f  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.1.adoc
 8a060057985df69b95fa6e7a9867bc1c  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertTrue.java
 8a067a9d2a07ab83f8ad289063fdffa4  documentation/src/test/java/example/testinterface/TestInterfaceDynamicTestsDemo.java
 8a931f7e8856495520906c05a11af411  junit-platform-console/src/main/java/org/junit/platform/console/tasks/FlatPrintingListener.java
