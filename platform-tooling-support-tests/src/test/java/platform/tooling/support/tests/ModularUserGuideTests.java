@@ -69,10 +69,10 @@ class ModularUserGuideTests {
 		args.add(temp.resolve("destination").toString());
 
 		var lib = Files.createDirectories(temp.resolve("lib"));
-		Helper.load(lib, "junit", "junit", Helper.version("junit4", "4.12"));
-		Helper.load(lib, "org.assertj", "assertj-core", Helper.version("assertJ", "3.12.2"));
+		Helper.load(lib, "junit", "junit", Helper.version("junit4", "4.13"));
+		Helper.load(lib, "org.assertj", "assertj-core", Helper.version("assertJ", "3.14.0"));
 		Helper.load(lib, "org.apiguardian", "apiguardian-api", Helper.version("apiGuardian", "1.1.0"));
-		Helper.load(lib, "org.hamcrest", "hamcrest", Helper.version("hamcrest", "2.1"));
+		Helper.load(lib, "org.hamcrest", "hamcrest", Helper.version("hamcrest", "2.2"));
 		Helper.load(lib, "org.opentest4j", "opentest4j", Helper.version("ota4j", "1.2.0"));
 		Helper.loadAllJUnitModules(lib);
 		args.add("--module-path");
