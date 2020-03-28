@@ -16,7 +16,7 @@ object Versions {
     val archunit = "0.12.0"
     val assertJ = "3.14.0"
     val bartholdy = "0.2.3"
-    val classgraph = "4.8.59"
+    val classgraph = "4.8.65"
     val commonsIo = "2.6"
     val coroutines = "1.3.3"
     val groovy = "3.0.0-rc-2"
