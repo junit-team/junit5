@@ -45,7 +45,7 @@ class ArchUnitTests {
 	private final ArchRule allPublicTopLevelTypesHaveApiAnnotations = classes() //
 			.that(have(modifier(JavaModifier.PUBLIC))) //
 			.and(describe("are top-level", javaClass -> !javaClass.getEnclosingClass().isPresent())) //
-			.and(not(describe("are anonymous", JavaClass::isAnonymousClass))) //
+			.and(not(describe("are anonymous", JavaClass::isAnonymous))) //
 			.and(not(describe("are shadowed", resideInAnyPackage("..shadow..")))) //
 			.should().beAnnotatedWith(API.class);
 
