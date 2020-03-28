@@ -27,7 +27,7 @@ object Versions {
     // Tools
     val checkstyle = "8.25"
     val jacoco = "0.8.5"
-    val jmh = "1.22"
+    val jmh = "1.23"
     val ktlint = "0.35.0"
     val surefire = "2.22.2"
     var bnd = "5.0.0"
