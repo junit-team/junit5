@@ -16,6 +16,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
@@ -1315,6 +1316,29 @@ public final class ReflectionUtils {
 		return Optional.empty();
 	}
 
+	/**
+	 * Find the first {@link Method} of the supplied class or interface that
+	 * meets the specified criteria, beginning with the specified class or
+	 * interface and traversing up the type hierarchy until such a method is
+	 * found or the type hierarchy is exhausted.
+	 *
+	 * <p>Use this method as an alternative to
+	 * {@link #findMethod(Class, String, Class...)} for use cases in which the
+	 * method is required to be present.
+	 *
+	 * @param clazz the class or interface in which to find the method;
+	 * never {@code null}
+	 * @param methodName the name of the method to find; never {@code null}
+	 * or empty
+	 * @param parameterTypes the types of parameters accepted by the method,
+	 * if any; never {@code null}
+	 * @return the {@code Method} found; never {@code null}
+	 * @throws JUnitException if no method is found
+	 *
+	 * @since 1.7
+	 * @see #findMethod(Class, String, Class...)
+	 */
+	@API(status = STABLE, since = "1.7")
 	public static Method getRequiredMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		return ReflectionUtils.findMethod(clazz, methodName, parameterTypes).orElseThrow(
 			() -> new JUnitException(format("Could not find method [%s] in class [%s]", methodName, clazz.getName())));
