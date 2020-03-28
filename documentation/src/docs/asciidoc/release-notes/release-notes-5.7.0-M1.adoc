@@ -41,6 +41,8 @@ on GitHub.
 
 ==== New Features and Improvements
 
+* `assertThrows` for Kotlin can now be used with suspending functions and other lambda
+  contexts that require inlining.
 * Synthetic constructors are now ignored when instantiating a test class.
 * The Javadoc for the `provideTestTemplateInvocationContexts()` method in
   `TestTemplateInvocationContextProvider` has been aligned with the actual implementation.
@@ -51,13 +53,11 @@ on GitHub.
   and other extensions.
 * The `name` attribute of `@ParameterizedTest` is now clearly documented to be a
   `MessageFormat` pattern.
-* Introduce a new `DisplayNameGenerator` named `Simple` (based on `Standard`) that
-  removes trailing parentheses for methods with no parameters.
-* `assertThrows` for Kotlin can now be used with suspending functions and other lambda
-  contexts that require inlining.
-* New MethodOrderer annotation `@DisplayName` that allows controlling test
-  execution order based on the generated test display name
-* Added getDisplayName to MethodDescriptor for DisplayName orderer
+* New `DisplayNameGenerator` named `Simple` (based on `Standard`) that removes trailing
+  parentheses for methods with no parameters.
+* New `MethodOrderer` named `DisplayName` that sorts test methods alphanumerically based
+  on their display names.
+* New `getDisplayName()` method in `MethodDescriptor`.
 
 
 [[release-notes-5.7.0-M1-junit-vintage]]
