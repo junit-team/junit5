@@ -10,10 +10,6 @@
 
 package org.junit.jupiter.engine.extension.sub;
 
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
-
-import java.util.Optional;
-
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -24,24 +20,16 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * condition declared in the same package as the
  * {@link org.junit.jupiter.engine.extension.DisabledCondition}
  *
- * ExecutionCondition always returns disabled, since we want to test the deactivation of the
- * condition itself
- *
+ * ExecutionCondition always returns disabled, since we want to test the
+ * deactivation of the condition itself.
  *
  * @since 5.7
  */
-public class AlsoAlwaysDisableCondition implements ExecutionCondition {
+public class AlwaysDisabledCondition implements ExecutionCondition {
 
 	@Override
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-
-		Optional<DeactivatedConditions> optional = findAnnotation(context.getElement(), DeactivatedConditions.class);
-
-		boolean disable = optional.map(DeactivatedConditions::unlessActivated).filter(Boolean::booleanValue).orElse(
-			false);
-
-		return disable ? ConditionEvaluationResult.enabled("Enabled Required")
-				: ConditionEvaluationResult.disabled("Always Disabled");
+		return ConditionEvaluationResult.disabled("Always Disabled");
 	}
 
 }

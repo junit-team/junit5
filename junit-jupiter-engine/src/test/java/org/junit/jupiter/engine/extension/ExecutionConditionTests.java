@@ -15,14 +15,21 @@ import static org.junit.jupiter.engine.Constants.DEACTIVATE_CONDITIONS_PATTERN_P
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.jupiter.engine.extension.sub.DeactivatedConditions;
+import org.junit.jupiter.engine.extension.sub.AlsoAlwaysDisabledCondition;
+import org.junit.jupiter.engine.extension.sub.AlwaysDisabledCondition;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition.SystemProperty;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -192,6 +199,12 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 			fail("this should be disabled");
 		}
 
+	}
+
+	@Target({ ElementType.METHOD, ElementType.TYPE })
+	@Retention(RetentionPolicy.RUNTIME)
+	@ExtendWith({ AlwaysDisabledCondition.class, AlsoAlwaysDisabledCondition.class })
+	@interface DeactivatedConditions {
 	}
 
 }

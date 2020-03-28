@@ -16,7 +16,6 @@ import static org.junit.platform.launcher.LauncherConstants.DEACTIVATE_LISTENERS
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
@@ -99,15 +98,14 @@ public class LauncherFactory {
 
 		if (config.isTestExecutionListenerAutoRegistrationEnabled()) {
 			Iterable<TestExecutionListener> listeners = new ServiceLoaderTestExecutionListenerRegistry().loadListeners();
+			String deactivatedListenersPattern = configurationParameters.get(
+				DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME).orElse(null);
 			// @formatter:off
 			StreamSupport.stream(listeners.spliterator(), false)
-					.filter((Predicate<TestExecutionListener>)
-							ClassNameFilterUtil.filterForClassName(
-									configurationParameters.get(DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME)
-											.orElse(null)))
+					.filter(ClassNameFilterUtil.filterForClassName(deactivatedListenersPattern))
 					.forEach(launcher::registerTestExecutionListeners);
+			// @formatter:on
 		}
-		// @formatter:on
 		config.getAdditionalTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
 
 		return launcher;

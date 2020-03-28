@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.util;
 
+import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Arrays;
@@ -18,7 +19,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
 
@@ -39,56 +39,46 @@ public class ClassNameFilterUtil {
 	private ClassNameFilterUtil() {
 		/* no-op */
 	}
-	private static final Predicate<?> alwaysActivated = object -> true;
-	private static final Predicate<?> alwaysDeactivated = object -> false;
 
 	public static final String DEACTIVATE_ALL_PATTERN = "*";
 
-	public static Predicate<?> filterForClassName(String pattern) {
-	// @formatter:off
-    return Optional.ofNullable(pattern)
-        .filter(StringUtils::isNotBlank)
-        .map(String::trim)
-        .map(patternString -> {
-          if (DEACTIVATE_ALL_PATTERN.equals(patternString)) {
-            return alwaysDeactivated;
-          }
-          return matchesRegex(patternString);
-        })
-        .orElse(alwaysActivated);
-    // @formatter:on
-	}
-
-	private static Predicate<?> matchesRegex(String patternString) {
-		List<Pattern> pattern = convertToRegEx(patternString);
+	public static <T> Predicate<T> filterForClassName(String pattern) {
 		// @formatter:off
-		return object -> pattern.stream()
-				.noneMatch(pat -> pat.matcher(object.getClass().getName()).matches());
+		return Optional.ofNullable(pattern)
+				.filter(StringUtils::isNotBlank)
+				.map(String::trim)
+				.map(patternString -> {
+					if (DEACTIVATE_ALL_PATTERN.equals(patternString)) {
+						return (Predicate<T>) object -> false;
+					}
+					return ClassNameFilterUtil.<T>matchesRegex(patternString);
+				})
+				.orElse(object -> true);
 		// @formatter:on
 	}
 
-	private static List<Pattern> convertToRegEx(String pattern) {
-		pattern = Matcher.quoteReplacement(pattern);
-		// Splitting CSV Separated Pattens
+	private static <T> Predicate<T> matchesRegex(String patternString) {
+		List<Pattern> patterns = convertToRegEx(patternString);
+		return object -> patterns.stream().noneMatch(it -> it.matcher(object.getClass().getName()).matches());
+	}
 
+	private static List<Pattern> convertToRegEx(String pattern) {
 		// @formatter:off
-		return Arrays.stream(pattern.split("[,]"))
+		return Arrays.stream(pattern.split(","))
 				.filter(StringUtils::isNotBlank)
 				.map(String::trim)
 				.map(ClassNameFilterUtil::replaceRegExElements)
 				.map(Pattern::compile)
-				.collect(Collectors.toList());
+				.collect(toList());
 		// @formatter:on
 	}
 
 	private static String replaceRegExElements(String pattern) {
-		// Match "." against "." and "$" since users may declare a "." instead of a
-		// "$" as the separator between classes and nested classes.
-		pattern = pattern.replace(".", "[.$]");
-
-		// Convert our "*" wildcard into a proper RegEx pattern.
-		pattern = pattern.replace("*", "[^,]+");
-
-		return pattern;
+		return Matcher.quoteReplacement(pattern)
+				// Match "." against "." and "$" since users may declare a "." instead of a
+				// "$" as the separator between classes and nested classes.
+				.replace(".", "[.$]")
+				// Convert our "*" wildcard into a proper RegEx pattern.
+				.replace("*", "[^,]+");
 	}
 }
