@@ -581,6 +581,10 @@ is now logged, along with the exclusion reasons.</p>
 <div class="ulist">
 <ul>
 <li>
+<p><code>assertThrows</code> for Kotlin can now be used with suspending functions and other lambda
+contexts that require inlining.</p>
+</li>
+<li>
 <p>Synthetic constructors are now ignored when instantiating a test class.</p>
 </li>
 <li>
@@ -599,12 +603,15 @@ and other extensions.</p>
 <code>MessageFormat</code> pattern.</p>
 </li>
 <li>
-<p>Introduce a new <code>DisplayNameGenerator</code> named <code>Simple</code> (based on <code>Standard</code>) that
-removes trailing parentheses for methods with no parameters.</p>
+<p>New <code>DisplayNameGenerator</code> named <code>Simple</code> (based on <code>Standard</code>) that removes trailing
+parentheses for methods with no parameters.</p>
 </li>
 <li>
-<p><code>assertThrows</code> for Kotlin can now be used with suspending functions and other lambda
-contexts that require inlining.</p>
+<p>New <code>MethodOrderer</code> named <code>DisplayName</code> that sorts test methods alphanumerically based
+on their display names.</p>
+</li>
+<li>
+<p>New <code>getDisplayName()</code> method in <code>MethodDescriptor</code>.</p>
 </li>
 </ul>
 </div>
@@ -760,7 +767,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-03-22 19:53:13 UTC
+Last updated 2020-03-28 21:38:31 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

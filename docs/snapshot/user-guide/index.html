@@ -1377,7 +1377,7 @@ set the configuration parameter to the corresponding fully qualified class name 
 <p>Similarly, you can specify the fully qualified name of any custom class that implements
 <code>DisplayNameGenerator</code>.</p>
 </div>
-<div class="paragraph">
+<div id="writing-tests-display-name-generator-precedence-rules" class="paragraph">
 <p>In summary, the display name for a test class or method is determined according to the
 following precedence rules:</p>
 </div>
@@ -2239,6 +2239,11 @@ following built-in <code>MethodOrderer</code> implementations.</p>
 parameter lists.</p>
 </li>
 <li>
+<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.DisplayName.html">DisplayName</a></code>: sorts test methods <em>alphanumerically</em> based on their display names (see
+<a href="#writing-tests-display-name-generator-precedence-rules">display name generation
+precedence rules</a>)</p>
+</li>
+<li>
 <p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.OrderAnnotation.html">OrderAnnotation</a></code>: sorts test methods <em>numerically</em> based on values specified via the
 <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/Order.html">@Order</a></code> annotation.</p>
 </li>
@@ -2921,7 +2926,7 @@ static text and dynamic placeholders. The following placeholders are currently s
 <div class="ulist">
 <ul>
 <li>
-<p><code>{displayName}</code>: display name of the <code>@RepeatedTest</code> method</p>
+<p><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.DisplayName.html">DisplayName</a></code>: display name of the <code>@RepeatedTest</code> method</p>
 </li>
 <li>
 <p><code>{currentRepetition}</code>: the current repetition count</p>
@@ -2938,7 +2943,7 @@ names for individual repetitions of the previous <code>repeatedTest()</code> exa
 <code>repetition 1 of 10</code>, <code>repetition 2 of 10</code>, etc. If you would like the display name of
 the <code>@RepeatedTest</code> method included in the name of each repetition, you can define your
 own custom pattern or use the predefined <code>RepeatedTest.LONG_DISPLAY_NAME</code> pattern. The
-latter is equal to <code>"{displayName} :: repetition {currentRepetition} of
+latter is equal to <code>"<a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.DisplayName.html">DisplayName</a> :: repetition {currentRepetition} of
 {totalRepetitions}"</code> which results in display names for individual repetitions like
 <code>repeatedTest() :: repetition 1 of 10</code>, <code>repeatedTest() :: repetition 2 of 10</code>, etc.</p>
 </div>
@@ -2963,7 +2968,7 @@ current repeated test.</p>
 <p>The next two methods demonstrate how to include a custom <code>@DisplayName</code> for the
 <code>@RepeatedTest</code> method in the display name of each repetition. <code>customDisplayName()</code>
 combines a custom display name with a custom pattern and then uses <code>TestInfo</code> to verify
-the format of the generated display name. <code>Repeat!</code> is the <code>{displayName}</code> which comes
+the format of the generated display name. <code>Repeat!</code> is the <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.DisplayName.html">DisplayName</a></code> which comes
 from the <code>@DisplayName</code> declaration, and <code>1/1</code> comes from
 <code>{currentRepetition}/{totalRepetitions}</code>. In contrast,
 <code>customDisplayNameWithLongPattern()</code> uses the aforementioned predefined
@@ -4223,7 +4228,7 @@ the following.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{displayName}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.DisplayName.html">DisplayName</a></code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the display name of the method</p></td>
 </tr>
 <tr>
@@ -9040,6 +9045,11 @@ value of lower stability.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DisplayName</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.7</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.junit.jupiter.api</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MethodOrdererContext</code> <em>(interface)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.4</code></p></td>
 </tr>
@@ -9797,7 +9807,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-03-22 19:53:13 UTC
+Last updated 2020-03-28 21:38:31 UTC
 </div>
 </div>
 <style>
