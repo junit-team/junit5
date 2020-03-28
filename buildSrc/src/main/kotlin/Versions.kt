@@ -9,7 +9,7 @@ object Versions {
     val junit4 = "4.13"
     val junit4Min = "4.12"
     val ota4j = "1.2.0"
-    val picocli = "4.1.4"
+    val picocli = "4.2.0"
     val univocity = "2.8.4"
 
     // Test Dependencies
