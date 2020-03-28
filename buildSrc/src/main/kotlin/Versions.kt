@@ -20,7 +20,7 @@ object Versions {
     val commonsIo = "2.6"
     val coroutines = "1.3.3"
     val groovy = "3.0.0-rc-2"
-    val log4j = "2.12.1"
+    val log4j = "2.13.1"
     val mockito = "3.2.4"
     val slf4j = "1.7.30"
 
