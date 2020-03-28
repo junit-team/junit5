@@ -21,7 +21,7 @@ object Versions {
     val coroutines = "1.3.3"
     val groovy = "3.0.2"
     val log4j = "2.13.1"
-    val mockito = "3.2.4"
+    val mockito = "3.3.3"
     val slf4j = "1.7.30"
 
     // Tools
