@@ -134,6 +134,29 @@ public interface MethodOrderer {
 	}
 
 	/**
+	 * {@code MethodOrderer} that sorts methods alphanumerically based on their
+	 * display names using {@link String#compareTo(String)}
+	 *
+	 * @since 5.7
+	 */
+	@API(status = EXPERIMENTAL, since = "5.7")
+	class DisplayName implements MethodOrderer {
+
+		/**
+		 * Sort the methods encapsulated in the supplied
+		 * {@link MethodOrdererContext} alphanumerically based on their display
+		 * names.
+		 */
+		@Override
+		public void orderMethods(MethodOrdererContext context) {
+			context.getMethodDescriptors().sort(comparator);
+		}
+
+		private static final Comparator<MethodDescriptor> comparator = Comparator.comparing(
+			MethodDescriptor::getDisplayName);
+	}
+
+	/**
 	 * {@code MethodOrderer} that sorts methods based on the {@link Order @Order}
 	 * annotation.
 	 *
@@ -246,22 +269,4 @@ public interface MethodOrderer {
 		}
 	}
 
-	/**
-	 * {@code MethodOrderer} that sorts methods alphanumerically based on the
-	 * the generated test display names using {@link String#compareTo(String)}
-	 */
-	class DisplayName implements MethodOrderer {
-
-		/**
-		 * Sort the methods encapsulated in the supplied {@link MethodOrdererContext} alphanumerically
-		 * based on the test display names
-		 */
-		@Override
-		public void orderMethods(MethodOrdererContext context) {
-			context.getMethodDescriptors().sort(comparator);
-		}
-
-		private static final Comparator<MethodDescriptor> comparator = Comparator.comparing(
-			MethodDescriptor::getDisplayName);
-	}
 }

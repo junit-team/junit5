@@ -36,10 +36,13 @@ public interface MethodDescriptor {
 	Method getMethod();
 
 	/**
-	 * Get the display name for this descriptor.
+	 * Get the display name for this descriptor's {@link #getMethod() method}.
 	 *
-	 * @return the display name for this descriptor; never {@code null} or blank
+	 * @return the display name for this descriptor's method; never {@code null}
+	 * or blank
+	 * @since 5.7
 	 */
+	@API(status = EXPERIMENTAL, since = "5.7")
 	String getDisplayName();
 
 	/**

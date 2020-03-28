@@ -194,6 +194,7 @@ junit.jupiter.displayname.generator.default = \
 Similarly, you can specify the fully qualified name of any custom class that implements
 `DisplayNameGenerator`.
 
+[[writing-tests-display-name-generator-precedence-rules]]
 In summary, the display name for a test class or method is determined according to the
 following precedence rules:
 
@@ -492,8 +493,9 @@ following built-in `MethodOrderer` implementations.
 
 * `{Alphanumeric}`: sorts test methods _alphanumerically_ based on their names and formal
   parameter lists.
-* `{DisplayName}`: sorts test methods _alphanumerically_ based on the display name that has
-  been generated for the test, taking into account usage of the `{DisplayName}` annotation.
+* `{DisplayName}`: sorts test methods _alphanumerically_ based on their display names (see
+  <<writing-tests-display-name-generator-precedence-rules, display name generation
+  precedence rules>>)
 * `{OrderAnnotation}`: sorts test methods _numerically_ based on values specified via the
   `{Order}` annotation.
 * `{Random}`: orders test methods _pseudo-randomly_ and supports configuration of a custom
