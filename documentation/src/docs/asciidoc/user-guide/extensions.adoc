@@ -268,7 +268,7 @@ following system property.
 [[extensions-conditions-deactivation-patterns]]
 ===== Pattern Matching Syntax
 
-Refer to <<running-tests-config-params-deactivation-pattern>>
+Refer to <<running-tests-config-params-deactivation-pattern>> for details.
 
 [[extensions-test-instance-factories]]
 === Test Instance Factories

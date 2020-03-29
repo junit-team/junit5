@@ -731,34 +731,34 @@ those supplied via the configuration file.
 [[running-tests-config-params-deactivation-pattern]]
 ==== Pattern Matching Syntax
 
-The following pattern styling should be used for following
+This section describes the pattern matching syntax that is applied to the _configuration
+parameters_ used for the following features.
 
 - <<extensions-conditions-deactivation>>
 - <<launcher-api-listeners-custom-deactivation>>
 
-If the pattern _configuration parameter_ consists solely of an asterisk
-(`+*+`), all candidate classes will be matched. Otherwise, the pattern will be used to match
-against _comma separated_ fully qualified class name (_FQCN_) of each candidate class. Any dot
-(`.`) in the pattern will match against a dot (`.`) or a dollar sign (`$`) in the FQCN.
-Any asterisk (`+*+`) will match against one or more characters in the FQCN. All other
-characters in the pattern will be matched one-to-one against the FQCN.
+If the value for the given _configuration parameter_ consists solely of an asterisk
+(`+*+`), the pattern will match against all candidate classes. Otherwise, the value will
+be treated as a comma-separated list of patterns where each pattern will be matched
+against the fully qualified class name (_FQCN_) of each candidate class. Any dot (`.`) in
+a pattern will match against a dot (`.`) or a dollar sign (`$`) in a FQCN. Any asterisk
+(`+*+`) will match against one or more characters in a FQCN. All other characters in a
+pattern will be matched one-to-one against a FQCN.
 
 Examples:
 
 - `+*+`: matches all candidate classes.
-- `+org.junit.*+`: matches all candidate classes under the `org.junit` base
-   package and any of its subpackages.
-- `+*.MyCustom+`: matches every candidate class whose simple class name is
-  exactly `MyCustom`.
-- `+*System*+`: matches every candidate class whose simple class name contains
-  `System`.
-- `+*System*+, +*Unit*+`: matches every candidate class whose simple class name
-   contains `System` or `Unit`.
+- `+org.junit.*+`: matches all candidate classes under the `org.junit` base package and
+  any of its subpackages.
+- `+*.MyCustom+`: matches every candidate class whose simple class name is exactly
+  `MyCustom`.
+- `+*System*+`: matches every candidate class whose FQCN contains `System`.
+- `+*System*+, +*Unit*+`: matches every candidate class whose FQCN contains `System` or
+  `Unit`.
 - `org.example.MyCustomImpl`: matches the candidate class whose FQCN is exactly
   `org.example.MyCustomImpl`.
-- `org.example.MyCustomImpl, org.example.TheirCustomImpl`: matches both the candidate classes
-   whose FQCN is exactly `org.example.MyCustomImpl` and `org.example.TheirCustomImpl`.
-
+- `org.example.MyCustomImpl, org.example.TheirCustomImpl`: matches candidate classes whose
+  FQCN is exactly `org.example.MyCustomImpl` or `org.example.TheirCustomImpl`.
 
 [[running-tests-tag-expressions]]
 === Tag Expressions
