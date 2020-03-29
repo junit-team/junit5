@@ -658,7 +658,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#running-tests-junit-platform-runner-test-suite">4.4.4. Test Suite</a></li>
 </ul>
 </li>
-<li><a href="#running-tests-config-params">4.5. Configuration Parameters</a></li>
+<li><a href="#running-tests-config-params">4.5. Configuration Parameters</a>
+<ul class="sectlevel3">
+<li><a href="#running-tests-config-params-deactivation-pattern">4.5.1. Pattern Matching Syntax</a></li>
+</ul>
+</li>
 <li><a href="#running-tests-tag-expressions">4.6. Tag Expressions</a></li>
 <li><a href="#running-tests-capturing-output">4.7. Capturing Standard Output/Error</a></li>
 </ul>
@@ -731,8 +735,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#launcher-api-execution">6.1.2. Executing Tests</a></li>
 <li><a href="#launcher-api-engines-custom">6.1.3. Plugging in your own Test Engine</a></li>
 <li><a href="#launcher-api-listeners-custom">6.1.4. Plugging in your own Test Execution Listener</a></li>
-<li><a href="#launcher-api-listeners-reporting">6.1.5. JUnit Platform Reporting</a></li>
-<li><a href="#launcher-api-launcher-config">6.1.6. Configuring the Launcher</a></li>
+<li><a href="#launcher-api-listeners-custom-deactivation">6.1.5. Deactivating Test Execution Listeners</a>
+<ul class="sectlevel4">
+<li><a href="#launcher-api-listeners-custom-deactivation-pattern">Pattern Matching Syntax</a></li>
+</ul>
+</li>
+<li><a href="#launcher-api-listeners-reporting">6.1.6. JUnit Platform Reporting</a></li>
+<li><a href="#launcher-api-launcher-config">6.1.7. Configuring the Launcher</a></li>
 </ul>
 </li>
 <li><a href="#testkit">6.2. JUnit Platform Test Kit</a>
@@ -6433,6 +6442,64 @@ those supplied via the configuration file.
 </tr>
 </table>
 </div>
+<div class="sect3">
+<h4 id="running-tests-config-params-deactivation-pattern"><a class="anchor" href="#running-tests-config-params-deactivation-pattern"></a>4.5.1. Pattern Matching Syntax</h4>
+<div class="paragraph">
+<p>The following pattern styling should be used for following</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#extensions-conditions-deactivation">Deactivating Conditions</a></p>
+</li>
+<li>
+<p><a href="#launcher-api-listeners-custom-deactivation">Deactivating Test Execution Listeners</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If the pattern <em>configuration parameter</em> consists solely of an asterisk
+(<code>*</code>), all candidate classes will be matched. Otherwise, the pattern will be used to match
+against <em>comma separated</em> fully qualified class name (<em>FQCN</em>) of each candidate class. Any dot
+(<code>.</code>) in the pattern will match against a dot (<code>.</code>) or a dollar sign (<code>$</code>) in the FQCN.
+Any asterisk (<code>*</code>) will match against one or more characters in the FQCN. All other
+characters in the pattern will be matched one-to-one against the FQCN.</p>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>*</code>: matches all candidate classes.</p>
+</li>
+<li>
+<p><code>org.junit.*</code>: matches all candidate classes under the <code>org.junit</code> base
+package and any of its subpackages.</p>
+</li>
+<li>
+<p><code>*.MyCustom</code>: matches every candidate class whose simple class name is
+exactly <code>MyCustom</code>.</p>
+</li>
+<li>
+<p><code>*System*</code>: matches every candidate class whose simple class name contains
+<code>System</code>.</p>
+</li>
+<li>
+<p><code>*System*+, +*Unit*</code>: matches every candidate class whose simple class name
+contains <code>System</code> or <code>Unit</code>.</p>
+</li>
+<li>
+<p><code>org.example.MyCustomImpl</code>: matches the candidate class whose FQCN is exactly
+<code>org.example.MyCustomImpl</code>.</p>
+</li>
+<li>
+<p><code>org.example.MyCustomImpl, org.example.TheirCustomImpl</code>: matches both the candidate classes
+whose FQCN is exactly <code>org.example.MyCustomImpl</code> and <code>org.example.TheirCustomImpl</code>.</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="running-tests-tag-expressions"><a class="anchor" href="#running-tests-tag-expressions"></a>4.6. Tag Expressions</h3>
@@ -6927,37 +6994,7 @@ following system property.</p>
 <div class="sect4">
 <h5 id="extensions-conditions-deactivation-patterns"><a class="anchor" href="#extensions-conditions-deactivation-patterns"></a>Pattern Matching Syntax</h5>
 <div class="paragraph">
-<p>If the <code>junit.jupiter.conditions.deactivate</code> pattern consists solely of an asterisk
-(<code>*</code>), all conditions will be deactivated. Otherwise, the pattern will be used to match
-against the fully qualified class name (<em>FQCN</em>) of each registered condition. Any dot
-(<code>.</code>) in the pattern will match against a dot (<code>.</code>) or a dollar sign (<code>$</code>) in the FQCN.
-Any asterisk (<code>*</code>) will match against one or more characters in the FQCN. All other
-characters in the pattern will be matched one-to-one against the FQCN.</p>
-</div>
-<div class="paragraph">
-<p>Examples:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>*</code>: deactivates all conditions.</p>
-</li>
-<li>
-<p><code>org.junit.*</code>: deactivates every condition under the <code>org.junit</code> base package and any
-of its subpackages.</p>
-</li>
-<li>
-<p><code>*.MyCondition</code>: deactivates every condition whose simple class name is exactly
-<code>MyCondition</code>.</p>
-</li>
-<li>
-<p><code>*System*</code>: deactivates every condition whose simple class name contains <code>System</code>.</p>
-</li>
-<li>
-<p><code>org.example.MyCondition</code>: deactivates the condition whose FQCN is exactly
-<code>org.example.MyCondition</code>.</p>
-</li>
-</ul>
+<p>Refer to <a href="#running-tests-config-params-deactivation-pattern">Pattern Matching Syntax</a></p>
 </div>
 </div>
 </div>
@@ -8367,7 +8404,41 @@ registered automatically.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-listeners-reporting"><a class="anchor" href="#launcher-api-listeners-reporting"></a>6.1.5. JUnit Platform Reporting</h4>
+<h4 id="launcher-api-listeners-custom-deactivation"><a class="anchor" href="#launcher-api-listeners-custom-deactivation"></a>6.1.5. Deactivating Test Execution Listeners</h4>
+<div class="paragraph">
+<p>Sometimes it can be useful to run a test suite <em>without</em> certain execution listeners being active.
+For example, we might have custom <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> reporting the test results to external
+medias for reporting purposes and while debugging we might not want the multiple runs to be reported.
+To do this, simply provide a pattern for the <code>junit.platform.execution.listeners.deactivate</code>
+<em>configuration parameter</em> to specify which execution listeners should be deactivated
+(i.e. not registered) for the current test run.
+Only the listeners registered via <code>ServiceLoader</code> within
+<code>/META-INF/services/org.junit.platform.launcher.TestExecutionListener</code> file can be deactivated.
+Since the ExecutionListeners are registered before execution starts, the
+pattern needs to be supplied via the <code>junit-platform.properties</code> file in the classpath.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+TestExecutionListeners registered explicitly via LauncherDiscoveryRequest will not be
+deactivated
+</td>
+</tr>
+</table>
+</div>
+<div class="sect4">
+<h5 id="launcher-api-listeners-custom-deactivation-pattern"><a class="anchor" href="#launcher-api-listeners-custom-deactivation-pattern"></a>Pattern Matching Syntax</h5>
+<div class="paragraph">
+<p>Refer to <a href="#running-tests-config-params-deactivation-pattern">Pattern Matching Syntax</a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="launcher-api-listeners-reporting"><a class="anchor" href="#launcher-api-listeners-reporting"></a>6.1.6. JUnit Platform Reporting</h4>
 <div class="paragraph">
 <p>The <code>junit-platform-reporting</code> artifact contains <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code>
 implementations that generate test reports. These listeners are typically used by IDEs
@@ -8401,7 +8472,7 @@ implementations that can be used for reporting purposes. See <code><a href="../a
 </div>
 </div>
 <div class="sect3">
-<h4 id="launcher-api-launcher-config"><a class="anchor" href="#launcher-api-launcher-config"></a>6.1.6. Configuring the Launcher</h4>
+<h4 id="launcher-api-launcher-config"><a class="anchor" href="#launcher-api-launcher-config"></a>6.1.7. Configuring the Launcher</h4>
 <div class="paragraph">
 <p>If you require fine-grained control over automatic detection and registration of test
 engines and test execution listeners, you may create an instance of <code>LauncherConfig</code> and
@@ -9807,7 +9878,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-03-28 21:38:31 UTC
+Last updated 2020-03-29 10:46:20 UTC
 </div>
 </div>
 <style>
