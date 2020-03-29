@@ -6445,7 +6445,8 @@ those supplied via the configuration file.
 <div class="sect3">
 <h4 id="running-tests-config-params-deactivation-pattern"><a class="anchor" href="#running-tests-config-params-deactivation-pattern"></a>4.5.1. Pattern Matching Syntax</h4>
 <div class="paragraph">
-<p>The following pattern styling should be used for following</p>
+<p>This section describes the pattern matching syntax that is applied to the <em>configuration
+parameters</em> used for the following features.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -6458,12 +6459,13 @@ those supplied via the configuration file.
 </ul>
 </div>
 <div class="paragraph">
-<p>If the pattern <em>configuration parameter</em> consists solely of an asterisk
-(<code>*</code>), all candidate classes will be matched. Otherwise, the pattern will be used to match
-against <em>comma separated</em> fully qualified class name (<em>FQCN</em>) of each candidate class. Any dot
-(<code>.</code>) in the pattern will match against a dot (<code>.</code>) or a dollar sign (<code>$</code>) in the FQCN.
-Any asterisk (<code>*</code>) will match against one or more characters in the FQCN. All other
-characters in the pattern will be matched one-to-one against the FQCN.</p>
+<p>If the value for the given <em>configuration parameter</em> consists solely of an asterisk
+(<code>*</code>), the pattern will match against all candidate classes. Otherwise, the value will
+be treated as a comma-separated list of patterns where each pattern will be matched
+against the fully qualified class name (<em>FQCN</em>) of each candidate class. Any dot (<code>.</code>) in
+a pattern will match against a dot (<code>.</code>) or a dollar sign (<code>$</code>) in a FQCN. Any asterisk
+(<code>*</code>) will match against one or more characters in a FQCN. All other characters in a
+pattern will be matched one-to-one against a FQCN.</p>
 </div>
 <div class="paragraph">
 <p>Examples:</p>
@@ -6474,28 +6476,27 @@ characters in the pattern will be matched one-to-one against the FQCN.</p>
 <p><code>*</code>: matches all candidate classes.</p>
 </li>
 <li>
-<p><code>org.junit.*</code>: matches all candidate classes under the <code>org.junit</code> base
-package and any of its subpackages.</p>
+<p><code>org.junit.*</code>: matches all candidate classes under the <code>org.junit</code> base package and
+any of its subpackages.</p>
 </li>
 <li>
-<p><code>*.MyCustom</code>: matches every candidate class whose simple class name is
-exactly <code>MyCustom</code>.</p>
+<p><code>*.MyCustom</code>: matches every candidate class whose simple class name is exactly
+<code>MyCustom</code>.</p>
 </li>
 <li>
-<p><code>*System*</code>: matches every candidate class whose simple class name contains
-<code>System</code>.</p>
+<p><code>*System*</code>: matches every candidate class whose FQCN contains <code>System</code>.</p>
 </li>
 <li>
-<p><code>*System*+, +*Unit*</code>: matches every candidate class whose simple class name
-contains <code>System</code> or <code>Unit</code>.</p>
+<p><code>*System*+, +*Unit*</code>: matches every candidate class whose FQCN contains <code>System</code> or
+<code>Unit</code>.</p>
 </li>
 <li>
 <p><code>org.example.MyCustomImpl</code>: matches the candidate class whose FQCN is exactly
 <code>org.example.MyCustomImpl</code>.</p>
 </li>
 <li>
-<p><code>org.example.MyCustomImpl, org.example.TheirCustomImpl</code>: matches both the candidate classes
-whose FQCN is exactly <code>org.example.MyCustomImpl</code> and <code>org.example.TheirCustomImpl</code>.</p>
+<p><code>org.example.MyCustomImpl, org.example.TheirCustomImpl</code>: matches candidate classes whose
+FQCN is exactly <code>org.example.MyCustomImpl</code> or <code>org.example.TheirCustomImpl</code>.</p>
 </li>
 </ul>
 </div>
@@ -6919,10 +6920,10 @@ name in a file named <code>org.junit.jupiter.api.extension.Extension</code> with
 <h5 id="extensions-registration-automatic-enabling"><a class="anchor" href="#extensions-registration-automatic-enabling"></a>Enabling Automatic Extension Detection</h5>
 <div class="paragraph">
 <p>Auto-detection is an advanced feature and is therefore not enabled by default. To enable
-it, simply set the <code>junit.jupiter.extensions.autodetection.enabled</code> <em>configuration
-parameter</em> to <code>true</code>. This can be supplied as a JVM system property, as a <em>configuration
-parameter</em> in the <code>LauncherDiscoveryRequest</code> that is passed to the <code>Launcher</code>, or via the
-JUnit Platform configuration file (see <a href="#running-tests-config-params">Configuration Parameters</a> for details).</p>
+it, set the <code>junit.jupiter.extensions.autodetection.enabled</code> <em>configuration parameter</em> to
+<code>true</code>. This can be supplied as a JVM system property, as a <em>configuration parameter</em> in
+the <code>LauncherDiscoveryRequest</code> that is passed to the <code>Launcher</code>, or via the JUnit Platform
+configuration file (see <a href="#running-tests-config-params">Configuration Parameters</a> for details).</p>
 </div>
 <div class="paragraph">
 <p>For example, to enable auto-detection of extensions, you can start your JVM with the
@@ -6977,7 +6978,7 @@ short-circuiting boolean OR operator.</p>
 <div class="paragraph">
 <p>Sometimes it can be useful to run a test suite <em>without</em> certain conditions being active.
 For example, you may wish to run tests even if they are annotated with <code>@Disabled</code> in
-order to see if they are still <em>broken</em>. To do this, simply provide a pattern for the
+order to see if they are still <em>broken</em>. To do this, provide a pattern for the
 <code>junit.jupiter.conditions.deactivate</code> <em>configuration parameter</em> to specify which
 conditions should be deactivated (i.e., not evaluated) for the current test run. The
 pattern can be supplied as a JVM system property, as a <em>configuration parameter</em> in the
@@ -6994,7 +6995,7 @@ following system property.</p>
 <div class="sect4">
 <h5 id="extensions-conditions-deactivation-patterns"><a class="anchor" href="#extensions-conditions-deactivation-patterns"></a>Pattern Matching Syntax</h5>
 <div class="paragraph">
-<p>Refer to <a href="#running-tests-config-params-deactivation-pattern">Pattern Matching Syntax</a></p>
+<p>Refer to <a href="#running-tests-config-params-deactivation-pattern">Pattern Matching Syntax</a> for details.</p>
 </div>
 </div>
 </div>
@@ -7010,7 +7011,7 @@ instances.</p>
 framework or invoking a static factory method to create the test class instance.</p>
 </div>
 <div class="paragraph">
-<p>If no <code>TestInstanceFactory</code> is registered, the framework will simply invoke the <em>sole</em>
+<p>If no <code>TestInstanceFactory</code> is registered, the framework will invoke the <em>sole</em>
 constructor for the test class to instantiate it, potentially resolving constructor
 arguments via registered <code>ParameterResolver</code> extensions.</p>
 </div>
@@ -7871,8 +7872,8 @@ long as they are not <em>overridden</em>, and <code>@AfterEach</code> default me
 <p>The following examples demonstrate this behavior. Please note that the examples do not
 actually do anything realistic. Instead, they mimic common scenarios for testing
 interactions with the database. All methods imported statically from the <code>Logger</code> class
-simply log contextual information in order to help us better understand the execution
-order of user-supplied callback methods and callback methods in extensions.</p>
+log contextual information in order to help us better understand the execution order of
+user-supplied callback methods and callback methods in extensions.</p>
 </div>
 <div class="listingblock">
 <div class="title">Extension1</div>
@@ -8406,26 +8407,34 @@ registered automatically.</p>
 <div class="sect3">
 <h4 id="launcher-api-listeners-custom-deactivation"><a class="anchor" href="#launcher-api-listeners-custom-deactivation"></a>6.1.5. Deactivating Test Execution Listeners</h4>
 <div class="paragraph">
-<p>Sometimes it can be useful to run a test suite <em>without</em> certain execution listeners being active.
-For example, we might have custom <code><a href="../api/org.junit.platform.launcher/org/junit/platform/launcher/TestExecutionListener.html">TestExecutionListener</a></code> reporting the test results to external
-medias for reporting purposes and while debugging we might not want the multiple runs to be reported.
-To do this, simply provide a pattern for the <code>junit.platform.execution.listeners.deactivate</code>
-<em>configuration parameter</em> to specify which execution listeners should be deactivated
-(i.e. not registered) for the current test run.
-Only the listeners registered via <code>ServiceLoader</code> within
-<code>/META-INF/services/org.junit.platform.launcher.TestExecutionListener</code> file can be deactivated.
-Since the ExecutionListeners are registered before execution starts, the
-pattern needs to be supplied via the <code>junit-platform.properties</code> file in the classpath.</p>
+<p>Sometimes it can be useful to run a test suite <em>without</em> certain execution listeners being
+active. For example, you might have custom a <code>TestExecutionListener</code> that sends the test
+results to an external system for reporting purposes, and while debugging you might not
+want these <em>debug</em> results to be reported. To do this, provide a pattern for the
+<code>junit.platform.execution.listeners.deactivate</code> <em>configuration parameter</em> to specify which
+execution listeners should be deactivated (i.e. not registered) for the current test run.</p>
 </div>
-<div class="admonitionblock warning">
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-TestExecutionListeners registered explicitly via LauncherDiscoveryRequest will not be
-deactivated
+<div class="paragraph">
+<p>Only listeners registered via the <code>ServiceLoader</code> mechanism within the
+<code>/META-INF/services/org.junit.platform.launcher.TestExecutionListener</code> file can be
+deactivated. In other words, any <code>TestExecutionListener</code> registered explicitly via the
+<code>LauncherDiscoveryRequest</code> cannot be deactivated via the
+<code>junit.platform.execution.listeners.deactivate</code> <em>configuration parameter</em>.</p>
+</div>
+<div class="paragraph">
+<p>In addition, since execution listeners are registered before the test run starts, the
+<code>junit.platform.execution.listeners.deactivate</code> <em>configuration parameter</em> can only be
+supplied as a JVM system property or via the JUnit Platform configuration file (see
+<a href="#running-tests-config-params">Configuration Parameters</a> for details). This <em>configuration parameter</em> cannot be
+supplied in the <code>LauncherDiscoveryRequest</code> that is passed to the <code>Launcher</code>.</p>
+</div>
 </td>
 </tr>
 </table>
@@ -8433,7 +8442,7 @@ deactivated
 <div class="sect4">
 <h5 id="launcher-api-listeners-custom-deactivation-pattern"><a class="anchor" href="#launcher-api-listeners-custom-deactivation-pattern"></a>Pattern Matching Syntax</h5>
 <div class="paragraph">
-<p>Refer to <a href="#running-tests-config-params-deactivation-pattern">Pattern Matching Syntax</a></p>
+<p>Refer to <a href="#running-tests-config-params-deactivation-pattern">Pattern Matching Syntax</a> for details.</p>
 </div>
 </div>
 </div>
@@ -9878,7 +9887,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-03-29 10:46:20 UTC
+Last updated 2020-03-29 14:15:22 UTC
 </div>
 </div>
 <style>
