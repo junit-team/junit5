@@ -34,40 +34,38 @@ import org.apiguardian.api.API;
  * @since 5.7
  */
 @API(status = INTERNAL, since = "5.7")
-public class ClassNameFilterUtil {
+public class ClassNamePatternFilterUtils {
 
-	private ClassNameFilterUtil() {
+	private ClassNamePatternFilterUtils() {
 		/* no-op */
 	}
 
 	public static final String DEACTIVATE_ALL_PATTERN = "*";
 
-	public static <T> Predicate<T> filterForClassName(String pattern) {
+	public static <T> Predicate<T> excludeMatchingClasses(String pattern) {
 		// @formatter:off
 		return Optional.ofNullable(pattern)
 				.filter(StringUtils::isNotBlank)
 				.map(String::trim)
-				.map(patternString -> {
-					if (DEACTIVATE_ALL_PATTERN.equals(patternString)) {
-						return (Predicate<T>) object -> false;
-					}
-					return ClassNameFilterUtil.<T>matchesRegex(patternString);
-				})
+				.map(ClassNamePatternFilterUtils::<T>createPredicateForNonBlankPattern)
 				.orElse(object -> true);
 		// @formatter:on
 	}
 
-	private static <T> Predicate<T> matchesRegex(String patternString) {
-		List<Pattern> patterns = convertToRegEx(patternString);
+	private static <T> Predicate<T> createPredicateForNonBlankPattern(String pattern) {
+		if (DEACTIVATE_ALL_PATTERN.equals(pattern)) {
+			return object -> false;
+		}
+		List<Pattern> patterns = convertToRegularExpressions(pattern);
 		return object -> patterns.stream().noneMatch(it -> it.matcher(object.getClass().getName()).matches());
 	}
 
-	private static List<Pattern> convertToRegEx(String pattern) {
+	private static List<Pattern> convertToRegularExpressions(String pattern) {
 		// @formatter:off
 		return Arrays.stream(pattern.split(","))
 				.filter(StringUtils::isNotBlank)
 				.map(String::trim)
-				.map(ClassNameFilterUtil::replaceRegExElements)
+				.map(ClassNamePatternFilterUtils::replaceRegExElements)
 				.map(Pattern::compile)
 				.collect(toList());
 		// @formatter:on
@@ -79,6 +77,6 @@ public class ClassNameFilterUtil {
 				// "$" as the separator between classes and nested classes.
 				.replace(".", "[.$]")
 				// Convert our "*" wildcard into a proper RegEx pattern.
-				.replace("*", "[^,]+");
+				.replace("*", ".+");
 	}
 }

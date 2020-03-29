@@ -16,11 +16,12 @@ import static org.junit.platform.launcher.LauncherConstants.DEACTIVATE_LISTENERS
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.util.ClassNameFilterUtil;
+import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestEngine;
@@ -83,7 +84,6 @@ public class LauncherFactory {
 	 * @since 1.3
 	 */
 	@API(status = EXPERIMENTAL, since = "1.3")
-	@SuppressWarnings("unchecked")
 	public static Launcher create(LauncherConfig config) throws PreconditionViolationException {
 		Preconditions.notNull(config, "LauncherConfig must not be null");
 
@@ -94,21 +94,24 @@ public class LauncherFactory {
 		engines.addAll(config.getAdditionalTestEngines());
 
 		Launcher launcher = new DefaultLauncher(engines);
-		ConfigurationParameters configurationParameters = new LauncherConfigurationParameters();
 
 		if (config.isTestExecutionListenerAutoRegistrationEnabled()) {
-			Iterable<TestExecutionListener> listeners = new ServiceLoaderTestExecutionListenerRegistry().loadListeners();
-			String deactivatedListenersPattern = configurationParameters.get(
-				DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME).orElse(null);
-			// @formatter:off
-			StreamSupport.stream(listeners.spliterator(), false)
-					.filter(ClassNameFilterUtil.filterForClassName(deactivatedListenersPattern))
-					.forEach(launcher::registerTestExecutionListeners);
-			// @formatter:on
+			loadAndFilterTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
 		}
 		config.getAdditionalTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
 
 		return launcher;
+	}
+
+	private static Stream<TestExecutionListener> loadAndFilterTestExecutionListeners() {
+		Iterable<TestExecutionListener> listeners = new ServiceLoaderTestExecutionListenerRegistry().loadListeners();
+		ConfigurationParameters configurationParameters = new LauncherConfigurationParameters();
+		String deactivatedListenersPattern = configurationParameters.get(
+			DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME).orElse(null);
+		// @formatter:off
+		return StreamSupport.stream(listeners.spliterator(), false)
+				.filter(ClassNamePatternFilterUtils.excludeMatchingClasses(deactivatedListenersPattern));
+		// @formatter:on
 	}
 
 }

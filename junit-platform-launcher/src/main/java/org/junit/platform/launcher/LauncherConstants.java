@@ -13,7 +13,7 @@ package org.junit.platform.launcher;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.util.ClassNameFilterUtil;
+import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
 import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
@@ -128,7 +128,7 @@ public class LauncherConstants {
 	 * @see #DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME
 	 * @see org.junit.platform.launcher.TestExecutionListener
 	 */
-	public static final String DEACTIVATE_ALL_LISTENERS_PATTERN = ClassNameFilterUtil.DEACTIVATE_ALL_PATTERN;
+	public static final String DEACTIVATE_ALL_LISTENERS_PATTERN = ClassNamePatternFilterUtils.DEACTIVATE_ALL_PATTERN;
 
 	private LauncherConstants() {
 		/* no-op */

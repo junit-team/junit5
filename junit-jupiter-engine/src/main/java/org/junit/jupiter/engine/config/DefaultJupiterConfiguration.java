@@ -20,7 +20,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.junit.platform.commons.util.ClassNameFilterUtil;
+import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 
@@ -83,7 +83,7 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 
 	@Override
 	public Predicate<ExecutionCondition> getExecutionConditionFilter() {
-		return ClassNameFilterUtil.filterForClassName(
+		return ClassNamePatternFilterUtils.excludeMatchingClasses(
 			configurationParameters.get(DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME).orElse(null));
 	}
 

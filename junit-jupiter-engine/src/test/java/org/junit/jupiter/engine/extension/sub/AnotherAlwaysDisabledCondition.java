@@ -21,5 +21,5 @@ package org.junit.jupiter.engine.extension.sub;
  *
  * @since 5.7
  */
-public class AlsoAlwaysDisabledCondition extends AlwaysDisabledCondition {
+public class AnotherAlwaysDisabledCondition extends AlwaysDisabledCondition {
 }

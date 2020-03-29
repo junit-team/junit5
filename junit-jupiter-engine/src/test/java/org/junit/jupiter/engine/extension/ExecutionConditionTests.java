@@ -28,8 +28,8 @@ import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
-import org.junit.jupiter.engine.extension.sub.AlsoAlwaysDisabledCondition;
 import org.junit.jupiter.engine.extension.sub.AlwaysDisabledCondition;
+import org.junit.jupiter.engine.extension.sub.AnotherAlwaysDisabledCondition;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition;
 import org.junit.jupiter.engine.extension.sub.SystemPropertyCondition.SystemProperty;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -47,7 +47,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 	private static final String FOO = "DisabledTests.foo";
 	private static final String BAR = "DisabledTests.bar";
 	private static final String BOGUS = "DisabledTests.bogus";
-	private static final String DEACTIVATE = "*AlsoAlwaysDisable*, org.junit.jupiter.engine.extension.sub.AlwaysDisable*";
+	private static final String DEACTIVATE = "*AnotherAlwaysDisable*, org.junit.jupiter.engine.extension.sub.AlwaysDisable*";
 
 	@BeforeEach
 	public void setUp() {
@@ -203,7 +203,7 @@ class ExecutionConditionTests extends AbstractJupiterTestEngineTests {
 
 	@Target({ ElementType.METHOD, ElementType.TYPE })
 	@Retention(RetentionPolicy.RUNTIME)
-	@ExtendWith({ AlwaysDisabledCondition.class, AlsoAlwaysDisabledCondition.class })
+	@ExtendWith({ AlwaysDisabledCondition.class, AnotherAlwaysDisabledCondition.class })
 	@interface DeactivatedConditions {
 	}
 
