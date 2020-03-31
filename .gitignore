@@ -27,3 +27,5 @@ gradle-app.setting
 *.graphml
 coverage.db*
 .metadata
+
+checksums*
