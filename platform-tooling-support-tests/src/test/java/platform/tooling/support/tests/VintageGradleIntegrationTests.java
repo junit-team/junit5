@@ -61,6 +61,7 @@ class VintageGradleIntegrationTests {
 				.setProject("vintage") //
 				.setWorkspace("vintage-gradle-" + version) //
 				.addArguments("clean", "test", "--stacktrace") //
+				.addArguments("-Dmaven.repo=" + System.getProperty("maven.repo")) //
 				.addArguments("-Djunit4Version=" + version) //
 				.setTimeout(Duration.ofMinutes(2)) //
 				.build() //
