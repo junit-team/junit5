@@ -81,6 +81,7 @@ class MultiReleaseJarTests {
 		var result = Request.builder() //
 				.setTool(Request.maven()) //
 				.setProject("multi-release-jar") //
+				.addArguments("-Dmaven.repo=" + System.getProperty("maven.repo")) //
 				.addArguments("--show-version", "--errors", "--file", variant, "test") //
 				.setTimeout(Duration.ofMinutes(2)) //
 				.build() //

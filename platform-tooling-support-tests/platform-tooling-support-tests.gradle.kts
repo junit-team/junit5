@@ -50,9 +50,12 @@ tasks.test {
 	// is not executed.
 	if (enabled) {
 		// All maven-aware projects must be installed, i.e. published to the local repository
-		val mavenizedProjects: List<Project> by rootProject.extra
+		val mavenizedProjects: List<Project> by rootProject
+		val tempRepoName: String by rootProject
+		val tempRepoDir: File by rootProject
+
 		(mavenizedProjects + project(":junit-bom"))
-				.map { project -> project.tasks.named(MavenPublishPlugin.PUBLISH_LOCAL_LIFECYCLE_TASK_NAME)}
+				.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalize()}Repository") }
 				.forEach { dependsOn(it) }
 		// Pass "java.home.N" system properties from sources like "~/.gradle/gradle.properties".
 		// Values will be picked up by: platform.tooling.support.Helper::getJavaHome
@@ -70,6 +73,7 @@ tasks.test {
 		systemProperty("Versions.assertJ", Versions.assertJ)
 		systemProperty("Versions.junit4", Versions.junit4)
 		systemProperty("Versions.ota4j", Versions.ota4j)
+		jvmArgumentProviders += MavenRepo(tempRepoDir)
 	}
 
 	filter {
@@ -82,4 +86,8 @@ tasks.test {
 	}
 
 	maxParallelForks = 1 // Bartholdy.install is not parallel safe, see https://github.com/sormuras/bartholdy/issues/4
+}
+
+class MavenRepo(@get:InputDirectory val repoDir: File) : CommandLineArgumentProvider {
+	override fun asArguments() = listOf("-Dmaven.repo=$repoDir")
 }

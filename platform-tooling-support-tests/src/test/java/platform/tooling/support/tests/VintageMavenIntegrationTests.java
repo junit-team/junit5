@@ -61,6 +61,7 @@ class VintageMavenIntegrationTests {
 				.setProject("vintage") //
 				.setWorkspace("vintage-maven-" + version) //
 				.addArguments("clean", "test", "--debug") //
+				.addArguments("-Dmaven.repo=" + System.getProperty("maven.repo")) //
 				.addArguments("-Djunit4Version=" + version) //
 				.setTimeout(Duration.ofMinutes(2)) //
 				.build() //

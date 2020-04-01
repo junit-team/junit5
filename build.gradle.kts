@@ -55,6 +55,9 @@ val license by extra(License(
 		headerFile = file("src/spotless/eclipse-public-license-2.0.java")
 ))
 
+val tempRepoName by extra("temp")
+val tempRepoDir by extra(file("$buildDir/repo"))
+
 val enableJaCoCo = project.hasProperty("enableJaCoCo")
 val jacocoTestProjects = listOf(
 		project(":junit-jupiter-engine"),
@@ -144,6 +147,19 @@ subprojects {
 					onlyIf { jarTask.enabled }
 				}
 				jarTask.finalizedBy(extractJar)
+			}
+		}
+	}
+
+	pluginManager.withPlugin("maven-publish") {
+		configure<PublishingExtension> {
+			repositories {
+				repositories {
+					maven {
+						name = tempRepoName
+						url = uri(tempRepoDir)
+					}
+				}
 			}
 		}
 	}

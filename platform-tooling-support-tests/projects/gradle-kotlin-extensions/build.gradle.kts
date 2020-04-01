@@ -5,7 +5,7 @@ plugins {
 }
 
 repositories {
-	mavenLocal()
+	maven { url = uri(file(System.getProperty("maven.repo"))) }
 	mavenCentral()
 	maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
 }
