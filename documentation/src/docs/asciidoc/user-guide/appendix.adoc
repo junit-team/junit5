@@ -1,6 +1,18 @@
 [[appendix]]
 == Appendix
 
+[[reproducible-builds]]
+=== Reproducible Builds
+
+Starting with version 5.7, JUnit 5 aims for its non-javadoc JARs to be https://reproducible-builds.org/[reproducible]
+
+Under identical build conditions, such as Java version, repeated builds should provide the
+same output byte-for-byte.
+
+This means that anyone can reproduce the build conditions of the artifacts on Maven
+Central/Sonatype and produce the same output artifact locally, confirming that the
+artifacts in the repositories were actually generated from this source code.
+
 [[dependency-metadata]]
 === Dependency Metadata
 
