@@ -18,8 +18,6 @@ buildScan {
 	}
 }
 
-val String.version: String get() = rootProject.extra["$this.version"] as String
-
 val buildTimeAndDate by extra {
 
 	// SOURCE_DATE_EPOCH is a UNIX timestamp for pinning build metadata against
@@ -100,7 +98,7 @@ allprojects {
 	if (enableJaCoCo) {
 		apply(plugin = "jacoco")
 		configure<JacocoPluginExtension> {
-			toolVersion = "jacoco".version
+			toolVersion = versions.jacoco
 		}
 	}
 
@@ -151,7 +149,7 @@ subprojects {
 			}
 
 			kotlin {
-				ktlint("ktlint".version)
+				ktlint(versions.ktlint)
 				licenseHeaderFile(headerFile)
 				trimTrailingWhitespace()
 				endWithNewline()

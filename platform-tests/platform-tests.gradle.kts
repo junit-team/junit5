@@ -40,10 +40,8 @@ dependencies {
 	jmh("junit:junit")
 }
 
-val String.version: String get() = rootProject.extra["$this.version"] as String
-
 jmh {
-	jmhVersion = "jmh".version
+	jmhVersion = versions.jmh
 
 	duplicateClassesStrategy = DuplicatesStrategy.WARN
 	fork = 0 // Too long command line on Windows...

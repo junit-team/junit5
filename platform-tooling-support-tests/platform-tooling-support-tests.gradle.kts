@@ -39,8 +39,6 @@ dependencies {
 	}
 }
 
-val String.version: String get() = rootProject.extra["$this.version"] as String
-
 tasks.test {
 	inputs.dir("projects")
 
@@ -71,10 +69,10 @@ tasks.test {
 		// systemProperty("junit.jupiter.execution.parallel.enabled", "true")
 
 		// Pass version constants (declared in Versions.kt) to tests as system properties
-		systemProperty("Versions.apiGuardian", "apiguardian-api".version)
-		systemProperty("Versions.assertJ", "assertj".version)
-		systemProperty("Versions.junit4", "junit4".version)
-		systemProperty("Versions.ota4j", "opentest4j".version)
+		systemProperty("Versions.apiGuardian", versions.`apiguardian-api`)
+		systemProperty("Versions.assertJ", versions.assertj)
+		systemProperty("Versions.junit4", versions.junit4)
+		systemProperty("Versions.ota4j", versions.opentest4j)
 		jvmArgumentProviders += MavenRepo(tempRepoDir)
 	}
 
