@@ -2,29 +2,49 @@ plugins {
 	`java-platform`
 }
 
+val String.v: String get() = rootProject.extra["$this.version"] as String
+
+fun DependencyConstraintHandlerScope.apiv(
+		notation: String,
+		versionProp: String = notation.substringAfterLast(':')
+) =
+		"api"(notation + ":" + versionProp.v)
+
+fun DependencyConstraintHandlerScope.runtimev(
+		notation: String,
+		versionProp: String = notation.substringAfterLast(':')
+) =
+		"runtime"(notation + ":" + versionProp.v)
+
 dependencies {
 	constraints {
-		api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
-		api("org.opentest4j:opentest4j:${Versions.ota4j}")
-		api("org.apache.logging.log4j:log4j-core:${Versions.log4j}")
-		api("org.apache.logging.log4j:log4j-jul:${Versions.log4j}")
-		api("io.github.classgraph:classgraph:${Versions.classgraph}")
-		api("org.codehaus.groovy:groovy-all:${Versions.groovy}")
-		api("junit:junit:[${Versions.junit4Min},)") {
+		// api means "the dependency is for both compilation and runtime"
+		// runtime means "the dependency is only for runtime, not for compilation"
+		// In other words, marking dependency as "runtime" would avoid accidental
+		// dependency on it during compilation
+		apiv("org.apiguardian:apiguardian-api")
+		apiv("org.opentest4j:opentest4j")
+		runtimev("org.apache.logging.log4j:log4j-core", "log4j")
+		runtimev("org.apache.logging.log4j:log4j-jul", "log4j")
+		apiv("io.github.classgraph:classgraph")
+		apiv("org.codehaus.groovy:groovy-all", "groovy")
+		api("junit:junit:[${"junit4Min".v},)") {
 			version {
-				prefer(Versions.junit4)
+				prefer("junit4".v)
 			}
 		}
-		api("com.univocity:univocity-parsers:${Versions.univocity}")
-		api("info.picocli:picocli:${Versions.picocli}")
-		api("org.assertj:assertj-core:${Versions.assertJ}")
-		api("org.openjdk.jmh:jmh-core:${Versions.jmh}")
-		api("org.openjdk.jmh:jmh-generator-annprocess:${Versions.jmh}")
-		api("de.sormuras:bartholdy:${Versions.bartholdy}")
-		api("commons-io:commons-io:${Versions.commonsIo}")
-		api("com.tngtech.archunit:archunit-junit5-api:${Versions.archunit}")
-		api("com.tngtech.archunit:archunit-junit5-engine:${Versions.archunit}")
-		api("org.slf4j:slf4j-jdk14:${Versions.slf4j}")
-		api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
+		apiv("com.univocity:univocity-parsers")
+		apiv("info.picocli:picocli")
+		apiv("org.assertj:assertj-core", "assertj")
+		apiv("org.openjdk.jmh:jmh-core", "jmh")
+		apiv("org.openjdk.jmh:jmh-generator-annprocess", "jmh")
+		apiv("de.sormuras:bartholdy")
+		apiv("commons-io:commons-io")
+		apiv("com.tngtech.archunit:archunit-junit5-api", "archunit")
+		apiv("com.tngtech.archunit:archunit-junit5-engine", "archunit")
+		apiv("org.slf4j:slf4j-jdk14", "slf4j")
+		apiv("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+		apiv("org.mockito:mockito-junit-jupiter", "mockito")
+		apiv("biz.aQute.bnd:biz.aQute.bndlib", "bnd")
 	}
 }

@@ -8,7 +8,7 @@ dependencies {
 	internal(platform(project(":dependencies")))
 
 	api(platform(project(":junit-bom")))
-	api("org.apiguardian:apiguardian-api:${Versions.apiGuardian}")
+	api("org.apiguardian:apiguardian-api")
 
 	osgiVerification(project(":junit-platform-commons"))
 }

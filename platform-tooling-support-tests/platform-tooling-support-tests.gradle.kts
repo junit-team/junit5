@@ -28,7 +28,7 @@ dependencies {
 		because("it provides convenience methods to handle process output")
 		exclude(group = "org.junit.platform", module = "junit-platform-launcher")
 	}
-	testImplementation("biz.aQute.bnd:biz.aQute.bndlib:${Versions.bnd}") {
+	testImplementation("biz.aQute.bnd:biz.aQute.bndlib") {
 		because("parsing OSGi metadata")
 	}
 	testRuntimeOnly("com.tngtech.archunit:archunit-junit5-engine") {
@@ -38,6 +38,8 @@ dependencies {
 		because("provide appropriate SLF4J binding")
 	}
 }
+
+val String.v: String get() = rootProject.extra["$this.version"] as String
 
 tasks.test {
 	inputs.dir("projects")
@@ -69,10 +71,10 @@ tasks.test {
 		// systemProperty("junit.jupiter.execution.parallel.enabled", "true")
 
 		// Pass version constants (declared in Versions.kt) to tests as system properties
-		systemProperty("Versions.apiGuardian", Versions.apiGuardian)
-		systemProperty("Versions.assertJ", Versions.assertJ)
-		systemProperty("Versions.junit4", Versions.junit4)
-		systemProperty("Versions.ota4j", Versions.ota4j)
+		systemProperty("Versions.apiGuardian", "apiguardian-api".v)
+		systemProperty("Versions.assertJ", "assertj".v)
+		systemProperty("Versions.junit4", "junit4".v)
+		systemProperty("Versions.ota4j", "opentest4j".v)
 		jvmArgumentProviders += MavenRepo(tempRepoDir)
 	}
 
