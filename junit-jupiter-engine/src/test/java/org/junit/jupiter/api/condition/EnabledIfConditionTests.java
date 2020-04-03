@@ -45,6 +45,26 @@ public class EnabledIfConditionTests extends AbstractExecutionConditionTests {
 	}
 
 	/**
+	 * @see EnabledIfIntegrationTests#enabledBecauseStaticConditionMethodReturnsTrue()
+	 */
+	@Test
+	void enabledBecauseStaticConditionMethodReturnsTrue() {
+		evaluateCondition();
+		assertEnabled();
+		assertReasonContains("Condition provided in @EnabledIf evaluates to true");
+	}
+
+	/**
+	 * @see EnabledIfIntegrationTests#disabledBecauseStaticConditionMethodReturnsFalse()
+	 */
+	@Test
+	void disabledBecauseStaticConditionMethodReturnsFalse() {
+		evaluateCondition();
+		assertDisabled();
+		assertReasonContains("Condition provided in @EnabledIf evaluates to false");
+	}
+
+	/**
 	 * @see EnabledIfIntegrationTests#enabledBecauseConditionMethodReturnsTrue()
 	 */
 	@Test

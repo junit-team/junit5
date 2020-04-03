@@ -29,6 +29,17 @@ public class DisabledIfIntegrationTests {
 	}
 
 	@Test
+	@DisabledIf("staticMethodThatReturnsTrue")
+	void disabledBecauseStaticConditionMethodReturnsTrue() {
+		fail("Should be disabled");
+	}
+
+	@Test
+	@DisabledIf("staticMethodThatReturnsFalse")
+	void enabledBecauseStaticConditionMethodReturnsFalse() {
+	}
+
+	@Test
 	@DisabledIf("methodThatReturnsTrue")
 	void disabledBecauseConditionMethodReturnsTrue() {
 		fail("Should be disabled");
@@ -37,14 +48,6 @@ public class DisabledIfIntegrationTests {
 	@Test
 	@DisabledIf("methodThatReturnsFalse")
 	void enabledBecauseConditionMethodReturnsFalse() {
-	}
-
-	private static boolean methodThatReturnsTrue() {
-		return true;
-	}
-
-	private static boolean methodThatReturnsFalse() {
-		return false;
 	}
 
 	@Nested
@@ -61,6 +64,24 @@ public class DisabledIfIntegrationTests {
 		void enabledBecauseConditionMethodReturnsFalse() {
 		}
 
+	}
+
+	// -------------------------------------------------------------------------
+
+	private static boolean staticMethodThatReturnsTrue() {
+		return true;
+	}
+
+	private static boolean staticMethodThatReturnsFalse() {
+		return false;
+	}
+
+	private boolean methodThatReturnsTrue() {
+		return true;
+	}
+
+	private boolean methodThatReturnsFalse() {
+		return false;
 	}
 
 }

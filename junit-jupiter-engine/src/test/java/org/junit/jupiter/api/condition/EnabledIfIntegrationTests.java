@@ -29,6 +29,17 @@ public class EnabledIfIntegrationTests {
 	}
 
 	@Test
+	@EnabledIf("staticMethodThatReturnsTrue")
+	void enabledBecauseStaticConditionMethodReturnsTrue() {
+	}
+
+	@Test
+	@EnabledIf("staticMethodThatReturnsFalse")
+	void disabledBecauseStaticConditionMethodReturnsFalse() {
+		fail("Should be disabled");
+	}
+
+	@Test
 	@EnabledIf("methodThatReturnsTrue")
 	void enabledBecauseConditionMethodReturnsTrue() {
 	}
@@ -39,20 +50,12 @@ public class EnabledIfIntegrationTests {
 		fail("Should be disabled");
 	}
 
-	private static boolean methodThatReturnsTrue() {
-		return true;
-	}
-
-	private static boolean methodThatReturnsFalse() {
-		return false;
-	}
-
 	@Nested
 	class ExternalConditionMethod {
 
 		@Test
 		@EnabledIf("org.junit.jupiter.api.condition.StaticConditionMethods#returnsTrue")
-		void enabledBecausenabeConditionMethodReturnsTrue() {
+		void enabledBecauseConditionMethodReturnsTrue() {
 		}
 
 		@Test
@@ -61,6 +64,24 @@ public class EnabledIfIntegrationTests {
 			fail("Should be disabled");
 		}
 
+	}
+
+	// -------------------------------------------------------------------------
+
+	private static boolean staticMethodThatReturnsTrue() {
+		return true;
+	}
+
+	private static boolean staticMethodThatReturnsFalse() {
+		return false;
+	}
+
+	private boolean methodThatReturnsTrue() {
+		return true;
+	}
+
+	private boolean methodThatReturnsFalse() {
+		return false;
 	}
 
 }
