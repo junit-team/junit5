@@ -22,7 +22,7 @@ dependencies {
 	testImplementation(project(":junit-platform-testkit"))
 }
 
-val String.v: String get() = rootProject.extra["$this.version"] as String
+val String.version: String get() = rootProject.extra["$this.version"] as String
 
 tasks.jar {
 	withConvention(BundleTaskConvention::class) {
@@ -30,13 +30,13 @@ tasks.jar {
 			# Import JUnit4 packages with a version
 			Import-Package: \
 				!org.apiguardian.api,\
-				junit.runner;version="[${"junit4Min".v},5)",\
-				org.junit;version="[${"junit4Min".v},5)",\
-				org.junit.experimental.categories;version="[${"junit4Min".v},5)",\
-				org.junit.internal.builders;version="[${"junit4Min".v},5)",\
+				junit.runner;version="[${"junit4Min".version},5)",\
+				org.junit;version="[${"junit4Min".version},5)",\
+				org.junit.experimental.categories;version="[${"junit4Min".version},5)",\
+				org.junit.internal.builders;version="[${"junit4Min".version},5)",\
 				org.junit.platform.commons.logging;status=INTERNAL,\
-				org.junit.runner.*;version="[${"junit4Min".v},5)",\
-				org.junit.runners.model;version="[${"junit4Min".v},5)",\
+				org.junit.runner.*;version="[${"junit4Min".version},5)",\
+				org.junit.runners.model;version="[${"junit4Min".version},5)",\
 				*
 		""")
 	}

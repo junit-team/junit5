@@ -47,15 +47,15 @@ asciidoctorj {
 	}
 }
 
-val String.v: String get() = rootProject.extra["$this.version"] as String
+val String.version: String get() = rootProject.extra["$this.version"] as String
 
 val snapshot = rootProject.version.toString().contains("SNAPSHOT")
 val docsVersion = if (snapshot) "snapshot" else rootProject.version
 val docsDir = file("$buildDir/ghpages-docs")
 val replaceCurrentDocs = project.hasProperty("replaceCurrentDocs")
 val uploadPdfs = !snapshot
-val ota4jDocVersion = if ("opentest4j".v.contains("SNAPSHOT")) "snapshot" else "opentest4j".v
-val apiGuardianDocVersion = if ("apiguardian-api".v.contains("SNAPSHOT")) "snapshot" else "apiguardian-api".v
+val ota4jDocVersion = if ("opentest4j".version.contains("SNAPSHOT")) "snapshot" else "opentest4j".version
+val apiGuardianDocVersion = if ("apiguardian-api".version.contains("SNAPSHOT")) "snapshot" else "apiguardian-api".version
 
 gitPublish {
 	repoUri.set("https://github.com/junit-team/junit5.git")
@@ -154,10 +154,10 @@ tasks {
 				"platform-version" to project.properties["platformVersion"],
 				"vintage-version" to project.properties["vintageVersion"],
 				"bom-version" to version,
-				"junit4-version" to "junit4".v,
-				"apiguardian-version" to "apiguardian-api".v,
-				"ota4j-version" to "opentest4j".v,
-				"surefire-version" to "surefire".v,
+				"junit4-version" to "junit4".version,
+				"apiguardian-version" to "apiguardian-api".version,
+				"ota4j-version" to "opentest4j".version,
+				"surefire-version" to "surefire".version,
 				"release-branch" to project.properties["releaseBranch"],
 				"docs-version" to project.properties["docsVersion"],
 				"revnumber" to version,
@@ -248,7 +248,7 @@ tasks {
 				jFlags("-Xmx1g")
 
 				links("https://docs.oracle.com/en/java/javase/11/docs/api/")
-				links("https://junit.org/junit4/javadoc/${"junit4".v}/")
+				links("https://junit.org/junit4/javadoc/${"junit4".version}/")
 				externalModulesWithoutModularJavadoc.forEach { (moduleName, coordinates) ->
 					linksOffline(coordinates.baseUrl, "$elementListsDir/$moduleName")
 				}

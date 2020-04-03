@@ -6,7 +6,7 @@ plugins {
 	id("custom-java-home")
 }
 
-val String.v: String get() = rootProject.extra["$this.version"] as String
+val String.version: String get() = rootProject.extra["$this.version"] as String
 
 val mavenizedProjects: List<Project> by rootProject.extra
 val modularProjects: List<Project> by rootProject.extra
@@ -276,7 +276,7 @@ afterEvaluate {
 }
 
 checkstyle {
-	toolVersion = "checkstyle".v
+	toolVersion = "checkstyle".version
 	configDirectory.set(rootProject.file("src/checkstyle"))
 }
 

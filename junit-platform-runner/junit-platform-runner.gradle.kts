@@ -20,7 +20,7 @@ dependencies {
 	testImplementation(testFixtures(project(":junit-platform-launcher")))
 }
 
-val String.v: String get() = rootProject.extra["$this.version"] as String
+val String.version: String get() = rootProject.extra["$this.version"] as String
 
 tasks.jar {
 	withConvention(BundleTaskConvention::class) {
@@ -29,7 +29,7 @@ tasks.jar {
 			Import-Package: \
 				!org.apiguardian.api,\
 				org.junit.platform.commons.logging;status=INTERNAL,\
-				org.junit.runner.*;version="[${"junit4Min".v},5)",\
+				org.junit.runner.*;version="[${"junit4Min".version},5)",\
 				*
 		""")
 	}

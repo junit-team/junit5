@@ -18,7 +18,7 @@ buildScan {
 	}
 }
 
-val String.v: String get() = rootProject.extra["$this.version"] as String
+val String.version: String get() = rootProject.extra["$this.version"] as String
 
 val buildTimeAndDate by extra {
 
@@ -100,7 +100,7 @@ allprojects {
 	if (enableJaCoCo) {
 		apply(plugin = "jacoco")
 		configure<JacocoPluginExtension> {
-			toolVersion = "jacoco".v
+			toolVersion = "jacoco".version
 		}
 	}
 
@@ -151,7 +151,7 @@ subprojects {
 			}
 
 			kotlin {
-				ktlint("ktlint".v)
+				ktlint("ktlint".version)
 				licenseHeaderFile(headerFile)
 				trimTrailingWhitespace()
 				endWithNewline()

@@ -2,19 +2,19 @@ plugins {
 	`java-platform`
 }
 
-val String.v: String get() = rootProject.extra["$this.version"] as String
+val String.version: String get() = rootProject.extra["$this.version"] as String
 
 fun DependencyConstraintHandlerScope.apiv(
 		notation: String,
 		versionProp: String = notation.substringAfterLast(':')
 ) =
-		"api"(notation + ":" + versionProp.v)
+		"api"(notation + ":" + versionProp.version)
 
 fun DependencyConstraintHandlerScope.runtimev(
 		notation: String,
 		versionProp: String = notation.substringAfterLast(':')
 ) =
-		"runtime"(notation + ":" + versionProp.v)
+		"runtime"(notation + ":" + versionProp.version)
 
 dependencies {
 	constraints {
@@ -28,9 +28,9 @@ dependencies {
 		runtimev("org.apache.logging.log4j:log4j-jul", "log4j")
 		apiv("io.github.classgraph:classgraph")
 		apiv("org.codehaus.groovy:groovy-all", "groovy")
-		api("junit:junit:[${"junit4Min".v},)") {
+		api("junit:junit:[${"junit4Min".version},)") {
 			version {
-				prefer("junit4".v)
+				prefer("junit4".version)
 			}
 		}
 		apiv("com.univocity:univocity-parsers")
