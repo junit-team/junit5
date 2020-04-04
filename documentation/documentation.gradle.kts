@@ -81,7 +81,7 @@ val deprecatedApisTableFile = File(generatedAsciiDocPath, "deprecated-apis-table
 val elementListsDir = file("$buildDir/elementLists")
 val externalModulesWithoutModularJavadoc = mapOf(
 		"org.apiguardian.api" to JavadocCoordinates("https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/", JavadocListType.ELEMENT_LIST),
-		"org.assertj.core" to JavadocCoordinates("https://joel-costigliola.github.io/assertj/core-8/api/", JavadocListType.PACKAGE_LIST),
+		"org.assertj.core" to JavadocCoordinates("https://javadoc.io/doc/org.assertj/assertj-core/${versions.assertj}", JavadocListType.PACKAGE_LIST),
 		"org.opentest4j" to JavadocCoordinates("https://ota4j-team.github.io/opentest4j/docs/$ota4jDocVersion/api/", JavadocListType.ELEMENT_LIST)
 )
 enum class JavadocListType { ELEMENT_LIST, PACKAGE_LIST }

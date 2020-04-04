@@ -17,6 +17,7 @@ class Versions(private val project: Project) {
     val junit4Min by properties
     val opentest4j by properties
     val apiguardian by properties
+    val assertj by properties
 
     operator fun get(name: String) = project.extra.get("$name.version") as String
 
