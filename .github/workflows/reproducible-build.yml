@@ -21,5 +21,7 @@ jobs:
         java-version: 11
     - name: Build and compare checksums
       shell: bash
+      env:
+        GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
       run: |
         ./src/checkBuildReproducibility.sh
