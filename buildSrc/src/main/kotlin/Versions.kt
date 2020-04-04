@@ -1,5 +1,7 @@
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.extra
+import kotlin.reflect.KProperty
 
 class Versions(project: Project) {
 
@@ -7,10 +9,10 @@ class Versions(project: Project) {
         val jvmTarget = JavaVersion.VERSION_1_8
     }
 
-    private val properties = project.rootProject.properties
-            .filterKeys { it.endsWith(".version") }
-            .mapKeys { it.key.substringBeforeLast(".version") }
-            .mapValues { it.value.toString() }
+    private val properties = object {
+        operator fun getValue(receiver: Any?, property: KProperty<*>): String =
+                project.extra.get(property.name + ".version") as String
+    }
 
     val `apiguardian-api` by properties
     val junit4 by properties
