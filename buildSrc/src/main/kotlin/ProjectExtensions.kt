@@ -7,7 +7,7 @@ val Project.javaModuleName: String
 
 val Project.versions: Versions
     get() {
-        val versions: Versions by rootProject.extra {
+        val versions by rootProject.extra {
             Versions(rootProject)
         }
         return versions
