@@ -52,8 +52,8 @@ val docsVersion = if (snapshot) "snapshot" else rootProject.version
 val docsDir = file("$buildDir/ghpages-docs")
 val replaceCurrentDocs = project.hasProperty("replaceCurrentDocs")
 val uploadPdfs = !snapshot
-val ota4jDocVersion = if (versions["opentest4j"].contains("SNAPSHOT")) "snapshot" else versions["opentest4j"]
-val apiGuardianDocVersion = if (versions["apiguardian-api"].contains("SNAPSHOT")) "snapshot" else versions["apiguardian-api"]
+val ota4jDocVersion = if (versions.opentest4j.contains("SNAPSHOT")) "snapshot" else versions.opentest4j
+val apiGuardianDocVersion = if (versions.apiguardian.contains("SNAPSHOT")) "snapshot" else versions.apiguardian
 
 gitPublish {
 	repoUri.set("https://github.com/junit-team/junit5.git")
@@ -152,9 +152,9 @@ tasks {
 				"platform-version" to project.properties["platformVersion"],
 				"vintage-version" to project.properties["vintageVersion"],
 				"bom-version" to version,
-				"junit4-version" to versions["junit4"],
-				"apiguardian-version" to versions["apiguardian-api"],
-				"ota4j-version" to versions["opentest4j"],
+				"junit4-version" to versions.junit4,
+				"apiguardian-version" to versions.apiguardian,
+				"ota4j-version" to versions.opentest4j,
 				"surefire-version" to versions["surefire"],
 				"release-branch" to project.properties["releaseBranch"],
 				"docs-version" to project.properties["docsVersion"],
@@ -246,7 +246,7 @@ tasks {
 				jFlags("-Xmx1g")
 
 				links("https://docs.oracle.com/en/java/javase/11/docs/api/")
-				links("https://junit.org/junit4/javadoc/${versions["junit4"]}/")
+				links("https://junit.org/junit4/javadoc/${versions.junit4}/")
 				externalModulesWithoutModularJavadoc.forEach { (moduleName, coordinates) ->
 					linksOffline(coordinates.baseUrl, "$elementListsDir/$moduleName")
 				}
