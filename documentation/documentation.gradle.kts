@@ -87,8 +87,6 @@ val externalModulesWithoutModularJavadoc = mapOf(
 enum class JavadocListType { ELEMENT_LIST, PACKAGE_LIST }
 data class JavadocCoordinates(val baseUrl: String, val listType: JavadocListType) : java.io.Serializable
 
-tasks["test"].enabled = false
-
 tasks {
 
 	val consoleLauncherTest by registering(JavaExec::class) {
