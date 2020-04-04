@@ -69,10 +69,10 @@ tasks.test {
 		// systemProperty("junit.jupiter.execution.parallel.enabled", "true")
 
 		// Pass version constants (declared in Versions.kt) to tests as system properties
-		systemProperty("Versions.apiGuardian", versions.`apiguardian-api`)
-		systemProperty("Versions.assertJ", versions.assertj)
-		systemProperty("Versions.junit4", versions.junit4)
-		systemProperty("Versions.ota4j", versions.opentest4j)
+		systemProperty("Versions.apiGuardian", versions["apiguardian-api"])
+		systemProperty("Versions.assertJ", versions["assertj"])
+		systemProperty("Versions.junit4", versions["junit4"])
+		systemProperty("Versions.ota4j", versions["opentest4j"])
 		jvmArgumentProviders += MavenRepo(tempRepoDir)
 	}
 

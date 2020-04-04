@@ -41,7 +41,7 @@ dependencies {
 }
 
 jmh {
-	jmhVersion = versions.jmh
+	jmhVersion = versions["jmh"]
 
 	duplicateClassesStrategy = DuplicatesStrategy.WARN
 	fork = 0 // Too long command line on Windows...

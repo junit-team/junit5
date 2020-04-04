@@ -98,7 +98,7 @@ allprojects {
 	if (enableJaCoCo) {
 		apply(plugin = "jacoco")
 		configure<JacocoPluginExtension> {
-			toolVersion = versions.jacoco
+			toolVersion = versions["jacoco"]
 		}
 	}
 
@@ -149,7 +149,7 @@ subprojects {
 			}
 
 			kotlin {
-				ktlint(versions.ktlint)
+				ktlint(versions["ktlint"])
 				licenseHeaderFile(headerFile)
 				trimTrailingWhitespace()
 				endWithNewline()
