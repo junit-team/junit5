@@ -1,14 +1,15 @@
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.extra
-import org.gradle.kotlin.dsl.invoke
+import org.gradle.kotlin.dsl.provideDelegate
 
 val Project.javaModuleName: String
     get() = "org." + this.name.replace('-', '.')
 
 val Project.versions: Versions
     get() {
-        val versions by rootProject.extra {
-            Versions(rootProject)
+        var versions: Versions? by rootProject.extra
+        if (versions == null) {
+            versions = Versions(rootProject)
         }
-        return versions
+        return versions!!
     }
