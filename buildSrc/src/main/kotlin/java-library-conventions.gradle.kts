@@ -274,7 +274,7 @@ afterEvaluate {
 }
 
 checkstyle {
-	toolVersion = Versions.checkstyle
+	toolVersion = versions["checkstyle"]
 	configDirectory.set(rootProject.file("src/checkstyle"))
 }
 
