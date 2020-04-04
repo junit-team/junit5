@@ -26,6 +26,7 @@ import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.BlacklistedExceptions;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
@@ -187,23 +188,26 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		private final List<Future<?>> futures = new ArrayList<>();
 
 		@Override
-		public void execute(TestDescriptor dynamicTestDescriptor) {
-			execute(dynamicTestDescriptor, taskContext.getListener());
+		public void execute(TestDescriptor testDescriptor) {
+			execute(testDescriptor, taskContext.getListener());
 		}
 
 		@Override
-		public Future<?> execute(TestDescriptor dynamicTestDescriptor, EngineExecutionListener executionListener) {
-			executionListener.dynamicTestRegistered(dynamicTestDescriptor);
-			Set<ExclusiveResource> exclusiveResources = NodeUtils.asNode(dynamicTestDescriptor).getExclusiveResources();
+		public Future<?> execute(TestDescriptor testDescriptor, EngineExecutionListener executionListener) {
+			Preconditions.notNull(testDescriptor, "testDescriptor must not be null");
+			Preconditions.notNull(executionListener, "executionListener must not be null");
+
+			executionListener.dynamicTestRegistered(testDescriptor);
+			Set<ExclusiveResource> exclusiveResources = NodeUtils.asNode(testDescriptor).getExclusiveResources();
 			if (!exclusiveResources.isEmpty()) {
-				executionListener.executionStarted(dynamicTestDescriptor);
+				executionListener.executionStarted(testDescriptor);
 				String message = "Dynamic test descriptors must not declare exclusive resources: " + exclusiveResources;
-				executionListener.executionFinished(dynamicTestDescriptor, failed(new JUnitException(message)));
+				executionListener.executionFinished(testDescriptor, failed(new JUnitException(message)));
 				return completedFuture(null);
 			}
 			else {
 				NodeTestTask<C> nodeTestTask = new NodeTestTask<>(taskContext.withListener(executionListener),
-					dynamicTestDescriptor);
+					testDescriptor);
 				nodeTestTask.setParentContext(context);
 				Future<?> future = taskContext.getExecutorService().submit(nodeTestTask);
 				futures.add(future);

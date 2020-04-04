@@ -284,7 +284,8 @@ public interface Node<C extends EngineExecutionContext> {
 		/**
 		 * Submit a dynamic test descriptor for immediate execution.
 		 *
-		 * @param testDescriptor the test descriptor to be executed
+		 * @param testDescriptor the test descriptor to be executed; never
+		 * {@code null}
 		 */
 		void execute(TestDescriptor testDescriptor);
 
@@ -292,8 +293,10 @@ public interface Node<C extends EngineExecutionContext> {
 		 * Submit a dynamic test descriptor for immediate execution with a
 		 * custom, potentially no-op, execution listener.
 		 *
-		 * @param testDescriptor the test descriptor to be executed
-		 * @param executionListener the executionListener to be notified
+		 * @param testDescriptor the test descriptor to be executed; never
+		 * {@code null}
+		 * @param executionListener the executionListener to be notified; never
+		 * {@code null}
 		 * @return a future to cancel or wait for the execution
 		 * @see EngineExecutionListener#NOOP
 		 * @since 5.7
