@@ -30,9 +30,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -559,8 +559,8 @@ class HierarchicalTestExecutorTests {
 		MyLeaf dynamicTestDescriptor = spy(new MyLeaf(leafUniqueId.append("dynamic", "child")));
 		root.addChild(child);
 
-		CountDownLatch startedLatch = new CountDownLatch(1);
-		AtomicBoolean interrupted = new AtomicBoolean();
+		var startedLatch = new CountDownLatch(1);
+		var interrupted = new CompletableFuture<Boolean>();
 
 		when(child.execute(any(), any())).thenAnswer(useDynamicTestExecutor(executor -> {
 			Future<?> future = executor.execute(dynamicTestDescriptor, EngineExecutionListener.NOOP);
@@ -572,10 +572,11 @@ class HierarchicalTestExecutorTests {
 			startedLatch.countDown();
 			try {
 				new CountDownLatch(1).await(); // block until interrupted
+				interrupted.complete(false);
 				return null;
 			}
 			catch (InterruptedException e) {
-				interrupted.set(true);
+				interrupted.complete(true);
 				throw e;
 			}
 		});
