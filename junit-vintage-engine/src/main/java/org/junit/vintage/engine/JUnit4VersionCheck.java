@@ -36,9 +36,9 @@ class JUnit4VersionCheck {
 		}
 		catch (NoClassDefFoundError e) {
 			throw new JUnitException(
-				"Invalid classpath/module path: junit-vintage-engine is present but junit:junit is not. "
-						+ "Please remove the former, add the latter, or use an excludeEngines(\"" + ENGINE_ID
-						+ "\") filter.");
+				"Invalid class/module path: junit-vintage-engine is present but junit:junit is not. "
+						+ "Please either remove junit-vintage-engine or add junit:junit, or "
+						+ "alternatively use an excludeEngines(\"" + ENGINE_ID + "\") filter.");
 		}
 	}
 
