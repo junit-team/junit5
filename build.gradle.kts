@@ -214,6 +214,7 @@ rootProject.apply {
 
 	tasks {
 		dependencyUpdates {
+			checkConstraints = true
 			resolutionStrategy {
 				componentSelection {
 					all {
