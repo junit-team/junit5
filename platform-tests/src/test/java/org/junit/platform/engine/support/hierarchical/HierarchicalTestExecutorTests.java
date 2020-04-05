@@ -590,7 +590,7 @@ class HierarchicalTestExecutorTests {
 		}
 
 		verify(listener).executionFinished(child, successful());
-		assertTrue(interrupted.get(), "child was interrupted");
+		assertTrue(interrupted.get(), "dynamic node was interrupted");
 	}
 
 	private Answer<Object> execute(TestDescriptor dynamicChild) {
