@@ -13,7 +13,7 @@ dependencies {
 		}
 	}
 	pluginManager.withPlugin("osgi-conventions") {
-		"osgiVerification"("org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:4.12_1")
+		"osgiVerification"("org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:4.13_1")
 	}
 }
 
