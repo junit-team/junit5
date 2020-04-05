@@ -10,6 +10,7 @@
 
 package org.junit.platform.testkit.engine;
 
+import static java.util.Collections.sort;
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
@@ -20,8 +21,12 @@ import static org.junit.platform.testkit.engine.Event.byType;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -288,6 +293,35 @@ public final class Events {
 	}
 
 	/**
+	 * Assert that all provided conditions are matched by an {@linkplain Event event}
+	 * contained in this {@code Events} object.
+	 * Note that this method does a partial match, i.e. some events may not match any
+	 * of the provided conditions.
+	 * However, the conditions provided must be in the correct order.
+	 *
+	 * <p>Conditions can be imported statically from {@link EventConditions}
+	 * and {@link TestExecutionResultConditions}.
+	 *
+	 * <h4>Example</h4>
+	 *
+	 * <pre class="code">
+	 * executionResults.tests().assertEventsMatchIncompleteButOrdered(
+	 *     event(test("exampleTestMethod"), started()),
+	 *     event(test("exampleTestMethod"), finishedSuccessfully())
+	 * );
+	 * </pre>
+	 *
+	 * @param conditions the conditions to match against; never {@code null}
+	 * @see EventConditions
+	 * @see TestExecutionResultConditions
+	 */
+	@SafeVarargs
+	public final void assertEventsMatchIncompleteButOrdered(Condition<? super Event>... conditions) {
+		Preconditions.notNull(conditions, "conditions must not be null");
+		assertEventsMatchIncompleteButOrdered(this.events, conditions);
+	}
+
+	/**
 	 * Shortcut for {@code org.assertj.core.api.Assertions.assertThat(events.list())}.
 	 *
 	 * @return an instance of {@link ListAssert} for events; never {@code null}
@@ -372,11 +406,42 @@ public final class Events {
 		softly.assertAll();
 	}
 
+	@SafeVarargs
+	private static void assertEventsMatchIncompleteButOrdered(List<Event> events,
+			Condition<? super Event>... conditions) {
+		Assertions.assertThat(conditions).hasSizeLessThanOrEqualTo(events.size());
+		SoftAssertions softly = new SoftAssertions();
+
+		List<Integer> indices = Arrays.stream(conditions).map(condition -> findEvent(events, softly, condition)).filter(
+			Objects::nonNull).map(events::indexOf).collect(toList());
+
+		if (isNotInIncreasingOrder(indices))
+			softly.fail("Conditions are not in the correct order.");
+
+		softly.assertAll();
+	}
+
+	private static boolean isNotInIncreasingOrder(List<Integer> indices) {
+		List<Integer> copy = new ArrayList<>(indices);
+		sort(copy);
+
+		return !indices.equals(copy);
+	}
+
 	private static void checkCondition(List<Event> events, SoftAssertions softly, Condition<? super Event> condition) {
 		boolean matches = events.stream().anyMatch(condition::matches);
 
 		if (!matches)
-			softly.fail("condition did not match any event: " + condition);
+			softly.fail("Condition did not match any event: " + condition);
+	}
+
+	private static Event findEvent(List<Event> events, SoftAssertions softly, Condition<? super Event> condition) {
+		Optional<Event> matchedEvent = events.stream().filter(condition::matches).findFirst();
+
+		if (!matchedEvent.isPresent())
+			softly.fail("Condition did not match any event: " + condition);
+
+		return matchedEvent.orElse(null);
 	}
 
 }
