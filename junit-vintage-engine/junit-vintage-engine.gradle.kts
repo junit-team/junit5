@@ -22,20 +22,41 @@ dependencies {
 	testImplementation(project(":junit-platform-testkit"))
 }
 
-tasks.jar {
-	withConvention(BundleTaskConvention::class) {
-		bnd("""
-			# Import JUnit4 packages with a version
-			Import-Package: \
-				!org.apiguardian.api,\
-				junit.runner;version="[${versions.junit4Min},5)",\
-				org.junit;version="[${versions.junit4Min},5)",\
-				org.junit.experimental.categories;version="[${versions.junit4Min},5)",\
-				org.junit.internal.builders;version="[${versions.junit4Min},5)",\
-				org.junit.platform.commons.logging;status=INTERNAL,\
-				org.junit.runner.*;version="[${versions.junit4Min},5)",\
-				org.junit.runners.model;version="[${versions.junit4Min},5)",\
-				*
-		""")
+tasks {
+	jar {
+		withConvention(BundleTaskConvention::class) {
+			bnd("""
+				# Import JUnit4 packages with a version
+				Import-Package: \
+					!org.apiguardian.api,\
+					junit.runner;version="[${versions.junit4Min},5)",\
+					org.junit;version="[${versions.junit4Min},5)",\
+					org.junit.experimental.categories;version="[${versions.junit4Min},5)",\
+					org.junit.internal.builders;version="[${versions.junit4Min},5)",\
+					org.junit.platform.commons.logging;status=INTERNAL,\
+					org.junit.runner.*;version="[${versions.junit4Min},5)",\
+					org.junit.runners.model;version="[${versions.junit4Min},5)",\
+					*
+			""")
+		}
+	}
+	val testWithoutJUnit4 by registering(Test::class) {
+		(options as JUnitPlatformOptions).apply {
+			includeTags("missing-junit4")
+		}
+		filter {
+			includeTestsMatching("org.junit.vintage.engine.JUnit4VersionCheckTests")
+		}
+		classpath = classpath.filter {
+			!it.name.startsWith("junit-4")
+		}
+	}
+	withType<Test>().matching { it.name != testWithoutJUnit4.name }.configureEach {
+		(options as JUnitPlatformOptions).apply {
+			excludeTags("missing-junit4")
+		}
+	}
+	check {
+		dependsOn(testWithoutJUnit4)
 	}
 }
