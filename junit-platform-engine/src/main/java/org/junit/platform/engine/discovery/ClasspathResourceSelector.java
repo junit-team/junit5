@@ -66,6 +66,10 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 		return this.classpathResourceName;
 	}
 
+	/**
+	 * Get the selected position within the classpath resource as a
+	 * {@link FilePosition}.
+	 */
 	public FilePosition getPosition() {
 		return this.position;
 	}

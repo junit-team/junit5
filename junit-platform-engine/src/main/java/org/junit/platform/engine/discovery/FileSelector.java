@@ -84,6 +84,9 @@ public class FileSelector implements DiscoverySelector {
 		return this.path;
 	}
 
+	/**
+	 * Get the selected position within the file as a {@link FilePosition}.
+	 */
 	public FilePosition getPosition() {
 		return this.position;
 	}
