@@ -2,6 +2,7 @@
 006f356108e1f7295eacb311b3573dda  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/ModuleSelector.java
 009a77eccf222e0634cb7dd09fc5dad6  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/package-info.java
 00cf315ecbf8cf3d6a5f1d840d01eae4  documentation/src/main/java/example/registration/WebServerExtension.java
+010f2f5b88af382714f4991151b865ab  documentation/documentation.gradle.kts
 0115b424dcb83f4316d710d9e0486fc8  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/TestExecutionResultConditions.java
 0140776d46dfedfba9e70e3fc1c921a1  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExtendWith.java
 024b277c95bdda8ac38e620d760afbc8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/MethodSourceSupport.java
@@ -323,7 +324,6 @@
 78f5202023854f5ff8088b2968845932  junit-jupiter-api/src/main/java/org/junit/jupiter/api/Test.java
 79450c974d0e02853aa73d3266a8401d  documentation/src/test/resources/two-column.csv
 7a1b4ae292e24d53c5878c23d2e0b32d  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SuiteDisplayName.java
-7a558d1b283c1cc281cdd79a3095682d  documentation/documentation.gradle.kts
 7a93fb94ec4db6482815a938d889b599  documentation/src/test/resources/log4j2-test.xml
 7ab8e5a7f62e2297dacc139539b65090  junit-platform-engine/src/main/java/org/junit/platform/engine/support/descriptor/ClassSource.java
 7b3887678a50d01f1f137855c460e766  junit-jupiter-api/src/main/java/org/junit/jupiter/api/function/Executable.java
