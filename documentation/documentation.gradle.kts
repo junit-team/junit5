@@ -200,7 +200,8 @@ tasks {
 	}
 
 	val downloadJavadocElementLists by registering {
-		outputs.dir(elementListsDir)
+		outputs.cacheIf { true }
+		outputs.dir(elementListsDir).withPropertyName("elementListsDir")
 		inputs.property("externalModulesWithoutModularJavadoc", externalModulesWithoutModularJavadoc)
 		doFirst {
 			externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->
