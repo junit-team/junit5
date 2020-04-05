@@ -17,6 +17,7 @@ import java.util.Objects;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.support.descriptor.FilePosition;
 
 /**
  * A {@link DiscoverySelector} that selects the name of a <em>classpath resource</em>
@@ -39,10 +40,16 @@ import org.junit.platform.engine.DiscoverySelector;
 public class ClasspathResourceSelector implements DiscoverySelector {
 
 	private final String classpathResourceName;
+	private FilePosition position;
 
 	ClasspathResourceSelector(String classpathResourceName) {
+		this(classpathResourceName, null);
+	}
+
+	ClasspathResourceSelector(String classpathResourceName, FilePosition position) {
 		boolean startsWithSlash = classpathResourceName.startsWith("/");
 		this.classpathResourceName = (startsWithSlash ? classpathResourceName.substring(1) : classpathResourceName);
+		this.position = position;
 	}
 
 	/**
@@ -59,6 +66,10 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 		return this.classpathResourceName;
 	}
 
+	public FilePosition getPosition() {
+		return this.position;
+	}
+
 	/**
 	 * @since 1.3
 	 */
@@ -72,7 +83,8 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 			return false;
 		}
 		ClasspathResourceSelector that = (ClasspathResourceSelector) o;
-		return Objects.equals(this.classpathResourceName, that.classpathResourceName);
+		return Objects.equals(this.classpathResourceName, that.classpathResourceName)
+				&& Objects.equals(this.position, that.position);
 	}
 
 	/**
@@ -81,7 +93,7 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	@API(status = STABLE, since = "1.3")
 	@Override
 	public int hashCode() {
-		return this.classpathResourceName.hashCode();
+		return Objects.hash(this.classpathResourceName, this.position);
 	}
 
 	@Override

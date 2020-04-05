@@ -22,6 +22,7 @@ import java.util.Objects;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.support.descriptor.FilePosition;
 
 /**
  * A {@link DiscoverySelector} that selects a file so that
@@ -41,9 +42,15 @@ import org.junit.platform.engine.DiscoverySelector;
 public class FileSelector implements DiscoverySelector {
 
 	private final String path;
+	private FilePosition position;
 
 	FileSelector(String path) {
+		this(path, null);
+	}
+
+	FileSelector(String path, FilePosition position) {
 		this.path = path;
+		this.position = position;
 	}
 
 	/**
@@ -77,6 +84,10 @@ public class FileSelector implements DiscoverySelector {
 		return this.path;
 	}
 
+	public FilePosition getPosition() {
+		return this.position;
+	}
+
 	/**
 	 * @since 1.3
 	 */
@@ -90,7 +101,7 @@ public class FileSelector implements DiscoverySelector {
 			return false;
 		}
 		FileSelector that = (FileSelector) o;
-		return Objects.equals(this.path, that.path);
+		return Objects.equals(this.path, that.path) && Objects.equals(this.position, that.position);
 	}
 
 	/**
@@ -99,7 +110,7 @@ public class FileSelector implements DiscoverySelector {
 	@API(status = STABLE, since = "1.3")
 	@Override
 	public int hashCode() {
-		return this.path.hashCode();
+		return Objects.hash(path, position);
 	}
 
 	@Override
