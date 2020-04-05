@@ -70,7 +70,7 @@ tasks.test {
 
 		// Pass version constants (declared in Versions.kt) to tests as system properties
 		systemProperty("Versions.apiGuardian", versions.apiguardian)
-		systemProperty("Versions.assertJ", versions["assertj"])
+		systemProperty("Versions.assertJ", versions.assertj)
 		systemProperty("Versions.junit4", versions.junit4)
 		systemProperty("Versions.ota4j", versions.opentest4j)
 		jvmArgumentProviders += MavenRepo(tempRepoDir)

@@ -21,7 +21,7 @@ dependencies {
 		}
 		api("com.univocity:univocity-parsers:${versions["univocity-parsers"]}")
 		api("info.picocli:picocli:${versions["picocli"]}")
-		api("org.assertj:assertj-core:${versions["assertj"]}")
+		api("org.assertj:assertj-core:${versions.assertj}")
 		api("org.openjdk.jmh:jmh-core:${versions["jmh"]}")
 		api("org.openjdk.jmh:jmh-generator-annprocess:${versions["jmh"]}")
 		api("de.sormuras:bartholdy:${versions["bartholdy"]}")
