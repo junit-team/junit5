@@ -12,6 +12,7 @@ package org.junit.platform.engine.discovery;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.AbstractEqualsAndHashCodeTests;
+import org.junit.platform.engine.support.descriptor.FilePosition;
 
 /**
  * Unit tests for {@link ClasspathResourceSelector}.
@@ -26,6 +27,15 @@ class ClasspathResourceSelectorTests extends AbstractEqualsAndHashCodeTests {
 		var selector1 = new ClasspathResourceSelector("/foo/bar.txt");
 		var selector2 = new ClasspathResourceSelector("/foo/bar.txt");
 		var selector3 = new ClasspathResourceSelector("/foo/X.txt");
+
+		assertEqualsAndHashCode(selector1, selector2, selector3);
+	}
+
+	@Test
+	void equalsAndHashCodeWithFilePosition() {
+		var selector1 = new ClasspathResourceSelector("/foo/bar.txt", FilePosition.from(1));
+		var selector2 = new ClasspathResourceSelector("/foo/bar.txt", FilePosition.from(1));
+		var selector3 = new ClasspathResourceSelector("/foo/bar.txt", FilePosition.from(2));
 
 		assertEqualsAndHashCode(selector1, selector2, selector3);
 	}
