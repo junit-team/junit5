@@ -80,12 +80,13 @@ val deprecatedApisTableFile = File(generatedAsciiDocPath, "deprecated-apis-table
 
 val elementListsDir = file("$buildDir/elementLists")
 val externalModulesWithoutModularJavadoc = mapOf(
-		"org.apiguardian.api" to JavadocCoordinates("https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/", JavadocListType.ELEMENT_LIST),
-		"org.assertj.core" to JavadocCoordinates("https://javadoc.io/doc/org.assertj/assertj-core/${versions.assertj}", JavadocListType.PACKAGE_LIST),
-		"org.opentest4j" to JavadocCoordinates("https://ota4j-team.github.io/opentest4j/docs/$ota4jDocVersion/api/", JavadocListType.ELEMENT_LIST)
+		"org.apiguardian.api" to "https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/",
+		"org.assertj.core" to "https://javadoc.io/doc/org.assertj/assertj-core/${versions.assertj}/",
+		"org.opentest4j" to "https://ota4j-team.github.io/opentest4j/docs/$ota4jDocVersion/api/"
 )
-enum class JavadocListType { ELEMENT_LIST, PACKAGE_LIST }
-data class JavadocCoordinates(val baseUrl: String, val listType: JavadocListType) : java.io.Serializable
+require(externalModulesWithoutModularJavadoc.values.all { it.endsWith("/") }) {
+	"all base URLs must end with a trailing slash: $externalModulesWithoutModularJavadoc"
+}
 
 tasks {
 
@@ -202,12 +203,8 @@ tasks {
 		outputs.dir(elementListsDir)
 		inputs.property("externalModulesWithoutModularJavadoc", externalModulesWithoutModularJavadoc)
 		doFirst {
-			externalModulesWithoutModularJavadoc.forEach { (moduleName, coordinates) ->
-				val fileName = when(coordinates.listType) {
-					JavadocListType.ELEMENT_LIST -> "element-list"
-					JavadocListType.PACKAGE_LIST -> "package-list"
-				}
-				val resource = resources.text.fromUri("${coordinates.baseUrl}$fileName")
+			externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->
+				val resource = resources.text.fromUri("${baseUrl}element-list")
 				elementListsDir.resolve(moduleName).apply {
 					mkdir()
 					resolve("element-list").writeText("module:$moduleName\n${resource.asString()}")
@@ -247,8 +244,8 @@ tasks {
 
 				links("https://docs.oracle.com/en/java/javase/11/docs/api/")
 				links("https://junit.org/junit4/javadoc/${versions.junit4}/")
-				externalModulesWithoutModularJavadoc.forEach { (moduleName, coordinates) ->
-					linksOffline(coordinates.baseUrl, "$elementListsDir/$moduleName")
+				externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->
+					linksOffline(baseUrl, "$elementListsDir/$moduleName")
 				}
 
 				groups = mapOf(
@@ -307,8 +304,8 @@ tasks {
 				val favicon = "<link rel=\"icon\" type=\"image/png\" href=\"https://junit.org/junit5/assets/img/junit5-logo.png\">"
 				filter { line ->
 					var result = if (line.startsWith("<head>")) line.replace("<head>", "<head>$favicon") else line
-					externalModulesWithoutModularJavadoc.forEach { (moduleName, coordinates) ->
-						result = result.replace("${coordinates.baseUrl}$moduleName/", coordinates.baseUrl)
+					externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->
+						result = result.replace("${baseUrl}$moduleName/", baseUrl)
 					}
 					return@filter result
 				}
