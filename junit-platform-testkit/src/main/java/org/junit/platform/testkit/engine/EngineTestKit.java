@@ -11,6 +11,7 @@
 package org.junit.platform.testkit.engine;
 
 import static java.lang.String.join;
+import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
@@ -33,10 +34,15 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
+import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.core.EngineDiscoveryOrchestrator;
+import org.junit.platform.launcher.core.EngineExecutionOrchestrator;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+import org.junit.platform.launcher.core.LauncherDiscoveryResult;
 
 /**
  * {@code EngineTestKit} provides support for executing a test plan for a given
@@ -182,11 +188,31 @@ public final class EngineTestKit {
 	private static void execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest,
 			EngineExecutionListener listener) {
 
+		if (discoveryRequest instanceof LauncherDiscoveryRequest) {
+			executeUsingLauncherOrchestration(testEngine, (LauncherDiscoveryRequest) discoveryRequest, listener);
+		}
+		else {
+			executeDirectly(testEngine, discoveryRequest, listener);
+		}
+	}
+
+	private static void executeDirectly(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest,
+			EngineExecutionListener listener) {
 		UniqueId engineUniqueId = UniqueId.forEngine(testEngine.getId());
 		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest, engineUniqueId);
 		ExecutionRequest request = new ExecutionRequest(engineTestDescriptor, listener,
 			discoveryRequest.getConfigurationParameters());
 		testEngine.execute(request);
+	}
+
+	private static void executeUsingLauncherOrchestration(TestEngine testEngine,
+			LauncherDiscoveryRequest discoveryRequest, EngineExecutionListener listener) {
+		TestDescriptor engineTestDescriptor;
+		LauncherDiscoveryResult discoveryResult = new EngineDiscoveryOrchestrator(singleton(testEngine)).discover(
+			discoveryRequest, "testing");
+		engineTestDescriptor = discoveryResult.getTestDescriptorFor(testEngine);
+		Preconditions.notNull(engineTestDescriptor, "TestEngine did not yield a TestDescriptor");
+		new EngineExecutionOrchestrator().execute(discoveryResult, listener);
 	}
 
 	private static TestEngine loadTestEngine(String engineId) {
@@ -286,7 +312,7 @@ public final class EngineTestKit {
 		 * @see #configurationParameters(Map)
 		 * @see #execute()
 		 */
-		public Builder filters(DiscoveryFilter<?>... filters) {
+		public Builder filters(Filter<?>... filters) {
 			this.requestBuilder.filters(filters);
 			return this;
 		}

@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -36,8 +37,8 @@ class ExecutionListenerAdapterTests {
 		TestDescriptor testDescriptor = getSampleMethodTestDescriptor();
 
 		//cannot mock final classes with mockito
-		Root root = new Root(null);
-		root.add(mock(TestEngine.class), testDescriptor);
+		LauncherDiscoveryResult root = new LauncherDiscoveryResult(Map.of(mock(TestEngine.class), testDescriptor),
+			null);
 		InternalTestPlan testPlan = InternalTestPlan.from(root);
 		TestIdentifier testIdentifier = testPlan.getTestIdentifier(testDescriptor.getUniqueId().toString());
 
