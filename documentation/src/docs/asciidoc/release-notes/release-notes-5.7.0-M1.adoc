@@ -26,6 +26,8 @@ on GitHub.
 * The number of containers and tests excluded by post discovery filters based on their tags
   is now logged, along with the exclusion reasons.
 * The annotation `@Testable` may now be applied _directly_ to fields.
+* The TestKit now allows to match conditions with events loosely, i.e. an incomplete match
+  with or without a fixed order.
 
 [[release-notes-5.7.0-M1-junit-jupiter]]
 === JUnit Jupiter
