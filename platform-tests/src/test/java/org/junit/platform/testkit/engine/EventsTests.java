@@ -40,6 +40,7 @@ class EventsTests {
 	Events events = new Events(list, "test");
 
 	@Test
+	@DisplayName("assertEventsMatchExactly: all events in order -> match")
 	void assertEventsMatchExactlyMatchesAllEventsInOrder() {
 		events.assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -50,6 +51,7 @@ class EventsTests {
 	}
 
 	@Test
+	@DisplayName("assertEventsMatchLoosely: all events in order -> match")
 	void assertEventsMatchLooselyMatchesAllEventsInOrder() {
 		events.assertEventsMatchLoosely( //
 			event(engine(), started()), //
@@ -60,6 +62,7 @@ class EventsTests {
 	}
 
 	@Test
+	@DisplayName("assertEventsMatchLoosely: all events in wrong order -> match")
 	void assertEventsMatchLooselyMatchesAllEventsInWrongOrder() {
 		events.assertEventsMatchLoosely( //
 			event(engine(), skippedWithReason("reason2")), //
@@ -70,6 +73,7 @@ class EventsTests {
 	}
 
 	@Test
+	@DisplayName("assertEventsMatchLoosely: tailing subset -> match")
 	void assertEventsMatchLooselyMatchesATailingSubset() {
 		events.assertEventsMatchLoosely( //
 			event(engine(), skippedWithReason("reason1")), //
@@ -78,6 +82,7 @@ class EventsTests {
 	}
 
 	@Test
+	@DisplayName("assertEventsMatchLoosely: starting subset -> match")
 	void assertEventsMatchLooselyMatchesAStartingSubset() {
 		events.assertEventsMatchLoosely( //
 			event(engine(), started()), //
@@ -86,6 +91,7 @@ class EventsTests {
 	}
 
 	@Test
+	@DisplayName("assertEventsMatchLoosely: subset in wrong order -> match")
 	void assertEventsMatchLooselyMatchesASubsetInWrongOrder() {
 		events.assertEventsMatchLoosely( //
 			event(engine(), skippedWithReason("reason1")), //
@@ -94,6 +100,7 @@ class EventsTests {
 	}
 
 	@Test
+	@DisplayName("assertEventsMatchLoosely: only last event -> match")
 	void assertEventsMatchLooselyMatchesTheLastEventAlone() {
 		events.assertEventsMatchLoosely( //
 			event(engine(), finishedSuccessfully()) //
@@ -101,6 +108,7 @@ class EventsTests {
 	}
 
 	@Test
+	@DisplayName("assertEventsMatchLoosely: only first event -> match")
 	void assertEventsMatchLooselyMatchesTheFirstEventAlone() {
 		events.assertEventsMatchLoosely( //
 			event(engine(), started()) //
@@ -108,6 +116,7 @@ class EventsTests {
 	}
 
 	@Test
+	@DisplayName("assertEventsMatchLoosely: only one bad event -> fails")
 	void assertEventsMatchLooselyWithBadConditionsOnlyFails() {
 		Executable willFail = () -> events.assertEventsMatchLoosely( //
 			event(engine(), finishedWithFailure()), //
@@ -123,6 +132,7 @@ class EventsTests {
 	}
 
 	@Test
+	@DisplayName("assertEventsMatchLoosely: one matching and one bad event -> fails")
 	void assertEventsMatchLooselyWithOneMatchingAndOneBadConditionFailsPartly() {
 		Executable willFail = () -> events.assertEventsMatchLoosely( //
 			event(engine(), started()), //
@@ -263,7 +273,7 @@ class EventsTests {
 	}
 
 	@Test
-	@DisplayName("assertEventsMatchIncompleteButOrdered: second and last event in bad order -> fail")
+	@DisplayName("assertEventsMatchIncompleteButOrdered: too many events -> fail")
 	void assertEventsMatchIncompleteButOrderedWithTooEventsFails() {
 		Executable willFail = () -> events.assertEventsMatchIncompleteButOrdered( //
 			event(engine(), finishedSuccessfully()), //
