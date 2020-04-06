@@ -606,6 +606,7 @@ e3fcba7c09402105a82e9b0d2e0399cb  junit-jupiter-api/src/main/java/org/junit/jupi
 e4e6cd80dd40a25fe453cdf32f38b6a6  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/package-info.java
 e5c2056432a9bba93c774d3052a8eaa2  junit-platform-engine/src/main/java/org/junit/platform/engine/DiscoveryFilter.java
 e7807f9667b96151006cb9b77f1a6aaf  junit-platform-commons/src/main/java/org/junit/platform/commons/util/ToStringBuilder.java
+e876f777b696c0f8200f5d25c1f73644  junit-vintage-engine/src/main/java/org/junit/vintage/engine/JUnit4VersionCheck.java
 e893d74a34b1314c33b037951ce2a02b  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludePackages.java
 e8b4494972a279f38dc9ac4d8a1567de  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/NestedClassSelector.java
 e921f6d0cef22b3c681115a5a161d3d5  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/DefensiveAllDefaultPossibilitiesBuilder.java
@@ -624,7 +625,6 @@ ee0d40c3b5452d37d894330c160e4a73  junit-jupiter-params/src/main/java/org/junit/j
 ee65a9d23d82994fcbe817b234a06cb5  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNotSame.java
 ef3b688543dc6c7c80e8febacaeacf5e  junit-platform-commons/src/main/java/org/junit/platform/commons/annotation/package-info.java
 ef72c326c954b8def5bf42ed08213647  junit-vintage-engine/src/main/java/org/junit/vintage/engine/execution/RunListenerAdapter.java
-ef9d3a8254c3b9d9c8c696bf5cc3e2f4  junit-vintage-engine/src/main/java/org/junit/vintage/engine/JUnit4VersionCheck.java
 efe17c1774041d63e44dd9e712be1fc1  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ArgumentsSources.java
 eff90a7cb1dfa7206dca42ea0e986f7c  junit-platform-testkit/src/main/java/org/junit/platform/testkit/package-info.java
 f02b067dd26ff65062706c42c2aff2c6  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/package-info.java
