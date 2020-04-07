@@ -5,8 +5,8 @@
 
 *Scope:* Bug fixes since 5.6.1
 
-For a complete list of all _closed_ issues and pull requests for this release, consult
-the link:{junit5-repo}+/milestone/48?closed=1+[5.6.2] milestone page in the JUnit repository
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/48?closed=1+[5.6.2] milestone page in the JUnit repository
 on GitHub.
 
 
@@ -15,7 +15,10 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* `ReflectionSupport.findNestedClasses()` no longer detects inner class cycles for classes
+  that do not match the supplied `Predicate`. For example, JUnit Jupiter no longer throws
+  an exception if an inner class cycle is detected in a nested class hierarchy whose inner
+  classes are not annotated with `@Nested`.
 
 
 [[release-notes-5.6.2-junit-jupiter]]
@@ -23,7 +26,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Test discovery no longer halts with an exception for inner class hierarchies that form a
+  cycle if such inner classes are not annotated with `@Nested`.
 
 
 [[release-notes-5.6.2-junit-vintage]]
