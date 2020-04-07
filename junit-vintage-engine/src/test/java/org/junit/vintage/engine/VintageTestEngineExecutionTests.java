@@ -75,7 +75,7 @@ import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithErrorInBeforeCl
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithExceptionThrowingRunner;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithFailingDescriptionThatIsNotReportedAsFinished;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithIndistinguishableOverloadedMethod;
-import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithRunnerWithCustomUniqueIds;
+import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithRunnerWithCustomUniqueIdsAndDisplayNames;
 import org.junit.vintage.engine.samples.junit4.JUnit4TestCaseWithRunnerWithDuplicateChangingChildDescriptions;
 import org.junit.vintage.engine.samples.junit4.MalformedJUnit4TestCase;
 import org.junit.vintage.engine.samples.junit4.ParameterizedTestCase;
@@ -610,7 +610,7 @@ class VintageTestEngineExecutionTests {
 
 	@Test
 	void executesJUnit4TestCaseWithRunnerWithCustomUniqueIds() {
-		Class<?> testClass = JUnit4TestCaseWithRunnerWithCustomUniqueIds.class;
+		Class<?> testClass = JUnit4TestCaseWithRunnerWithCustomUniqueIdsAndDisplayNames.class;
 
 		execute(testClass).allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
