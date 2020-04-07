@@ -407,13 +407,19 @@ public final class Events {
 	}
 
 	@SafeVarargs
+	@SuppressWarnings("varargs")
 	private static void assertEventsMatchIncompleteButOrdered(List<Event> events,
 			Condition<? super Event>... conditions) {
 		Assertions.assertThat(conditions).hasSizeLessThanOrEqualTo(events.size());
 		SoftAssertions softly = new SoftAssertions();
 
-		List<Integer> indices = Arrays.stream(conditions).map(condition -> findEvent(events, softly, condition)).filter(
-			Objects::nonNull).map(events::indexOf).collect(toList());
+		// @formatter:off
+		List<Integer> indices = Arrays.stream(conditions)
+				.map(condition -> findEvent(events, softly, condition))
+				.filter(Objects::nonNull)
+				.map(events::indexOf)
+				.collect(toList());
+		// @formatter:on
 
 		if (isNotInIncreasingOrder(indices))
 			softly.fail("Conditions are not in the correct order.");
@@ -436,7 +442,11 @@ public final class Events {
 	}
 
 	private static Event findEvent(List<Event> events, SoftAssertions softly, Condition<? super Event> condition) {
-		Optional<Event> matchedEvent = events.stream().filter(condition::matches).findFirst();
+		// @formatter:off
+		Optional<Event> matchedEvent = events.stream()
+				.filter(condition::matches)
+				.findFirst();
+		// @formatter:on
 
 		if (!matchedEvent.isPresent())
 			softly.fail("Condition did not match any event: " + condition);
