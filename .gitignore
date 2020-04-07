@@ -18,10 +18,8 @@ gradle-app.setting
 *.ipr
 *.iws
 *.uml
-!/.idea
-/.idea/*
-!.idea/icon.png
-*/**/.idea
+**/.idea/*
+!/.idea/icon.png
 /out/
 /*/out/
 
