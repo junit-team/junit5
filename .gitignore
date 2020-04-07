@@ -18,10 +18,8 @@ gradle-app.setting
 *.ipr
 *.iws
 *.uml
-!/.idea
-/.idea/*
+**/.idea/*
 !.idea/vcs.xml
-*/**/.idea
 /out/
 /*/out/
 
