@@ -1004,22 +1004,26 @@ public final class ReflectionUtils {
 		Preconditions.notNull(predicate, "Predicate must not be null");
 
 		Set<Class<?>> candidates = new LinkedHashSet<>();
-		findNestedClasses(clazz, candidates);
-		return candidates.stream().filter(predicate).collect(toUnmodifiableList());
+		findNestedClasses(clazz, predicate, candidates);
+		return Collections.unmodifiableList(new ArrayList<>(candidates));
 	}
 
-	private static void findNestedClasses(Class<?> clazz, Set<Class<?>> candidates) {
+	private static void findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate, Set<Class<?>> candidates) {
 		if (!isSearchable(clazz)) {
 			return;
 		}
 
-		detectInnerClassCycle(clazz);
+		if (isInnerClass(clazz) && predicate.test(clazz)) {
+			detectInnerClassCycle(clazz);
+		}
 
 		try {
 			// Candidates in current class
 			for (Class<?> nestedClass : clazz.getDeclaredClasses()) {
-				detectInnerClassCycle(nestedClass);
-				candidates.add(nestedClass);
+				if (predicate.test(nestedClass)) {
+					detectInnerClassCycle(nestedClass);
+					candidates.add(nestedClass);
+				}
 			}
 		}
 		catch (NoClassDefFoundError error) {
@@ -1027,11 +1031,11 @@ public final class ReflectionUtils {
 		}
 
 		// Search class hierarchy
-		findNestedClasses(clazz.getSuperclass(), candidates);
+		findNestedClasses(clazz.getSuperclass(), predicate, candidates);
 
 		// Search interface hierarchy
 		for (Class<?> ifc : clazz.getInterfaces()) {
-			findNestedClasses(ifc, candidates);
+			findNestedClasses(ifc, predicate, candidates);
 		}
 	}
 
