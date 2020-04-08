@@ -47,7 +47,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Generating display names from JUnit 4 `Descriptions` now falls back to `getDisplayName`
+  if `getMethodName` returns a blank `String` instead of throwing an exception.
 
 ==== Deprecations and Breaking Changes
 
