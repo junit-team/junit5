@@ -17,27 +17,11 @@ on GitHub.
 
 * ❓
 
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
-
 
 [[release-notes-5.6.2-junit-jupiter]]
 === JUnit Jupiter
 
 ==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
 
 * ❓
 
@@ -49,11 +33,3 @@ on GitHub.
 
 * Generating display names from JUnit 4 `Descriptions` now falls back to `getDisplayName`
   if `getMethodName` returns a blank `String` instead of throwing an exception.
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
