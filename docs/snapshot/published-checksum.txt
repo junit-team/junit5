@@ -35,6 +35,7 @@
 0cecd0c8dfd0e435fdf1125c5736407f  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/Execution.java
 0cf0f420d5992d4ee327641258591b16  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ParseResults.java
 0cfd5dbc9cbbc24d5a5ca836c6c26718  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/DynamicTestTestDescriptor.java
+0d4333fd286a04dfbee3e3339b3da3b5  documentation/src/docs/asciidoc/release-notes/index.adoc
 0ddd356184dace9456fde694e2f6ee45  junit-platform-launcher/src/main/java/org/junit/platform/launcher/Launcher.java
 0e3243fcecf6ea279b311312861e099e  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/MethodFinder.java
 0e9207a146fdbd0c5f03cfbd456c417c  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/Root.java
@@ -288,7 +289,6 @@
 6cfaa44232aa9903cf85ba55de667520  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ExecutionMode.java
 6d136daeb867a0cf54faef1b892eb16e  junit-platform-launcher/src/main/java/org/junit/platform/launcher/TestPlan.java
 6d4179c0f73d10a7f70e7b0acab6731b  documentation/src/test/java/org/junit/api/tools/AbstractApiReportWriter.java
-6e3ee4d4efee556f21470aede53e7aea  documentation/src/docs/asciidoc/release-notes/index.adoc
 6e56e3ab3fe2b3823abde0f4359aaced  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java
 6ecd9affb0da45c7722831bd608f8479  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/execution/MethodInvocation.java
 6ef2ae9a8d135fde863c39cf6c551b50  junit-platform-commons/src/main/java/org/junit/platform/commons/util/LruCache.java
@@ -610,6 +610,7 @@ e876f777b696c0f8200f5d25c1f73644  junit-vintage-engine/src/main/java/org/junit/v
 e893d74a34b1314c33b037951ce2a02b  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludePackages.java
 e8b4494972a279f38dc9ac4d8a1567de  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/NestedClassSelector.java
 e921f6d0cef22b3c681115a5a161d3d5  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/DefensiveAllDefaultPossibilitiesBuilder.java
+e9c936dd256693bf2889fb99206b5f12  documentation/src/docs/asciidoc/release-notes/release-notes-5.6.2.adoc
 e9dcd13f55b4cf63ac30d8577eca9c85  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/ParseStatus.java
 ea253702a64ee9614c2a5342ac23fb2a  documentation/src/docs/asciidoc/tocbot-3.0.2/tocbot.css
 ea740affec7db6778579dfec63792fbf  documentation/src/test/java/example/testinterface/TimeExecutionLogger.java
