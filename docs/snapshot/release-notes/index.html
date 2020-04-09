@@ -676,8 +676,8 @@ order to support custom version ID formats such as <code>4.12.0</code>, <code>4.
 <p><strong>Scope:</strong> Bug fixes since 5.6.1</p>
 </div>
 <div class="paragraph">
-<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult
-the <a href="https://github.com/junit-team/junit5/milestone/48?closed=1">5.6.2</a> milestone page in the JUnit repository
+<p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
+<a href="https://github.com/junit-team/junit5/milestone/48?closed=1">5.6.2</a> milestone page in the JUnit repository
 on GitHub.</p>
 </div>
 <div class="sect2">
@@ -687,7 +687,10 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p><code>ReflectionSupport.findNestedClasses()</code> no longer detects inner class cycles for classes
+that do not match the supplied <code>Predicate</code>. For example, JUnit Jupiter no longer throws
+an exception if an inner class cycle is detected in a nested class hierarchy whose inner
+classes are not annotated with <code>@Nested</code>.</p>
 </li>
 </ul>
 </div>
@@ -700,7 +703,8 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>Test discovery no longer halts with an exception for inner class hierarchies that form a
+cycle if such inner classes are not annotated with <code>@Nested</code>.</p>
 </li>
 </ul>
 </div>
@@ -835,7 +839,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-04-09 17:04:34 UTC
+Last updated 2020-04-09 17:18:39 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
