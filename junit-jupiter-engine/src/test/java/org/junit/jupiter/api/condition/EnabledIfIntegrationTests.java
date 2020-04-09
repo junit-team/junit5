@@ -66,6 +66,17 @@ public class EnabledIfIntegrationTests {
 
 	}
 
+	@Nested
+	@EnabledIf("org.junit.jupiter.api.condition.StaticConditionMethods#returnsFalse")
+	class ConditionallyDisabledClass {
+
+		@Test
+		void disabledBecauseConditionMethodReturnsTrue() {
+			fail("Should be disabled");
+		}
+
+	}
+
 	// -------------------------------------------------------------------------
 
 	private static boolean staticMethodThatReturnsTrue() {
