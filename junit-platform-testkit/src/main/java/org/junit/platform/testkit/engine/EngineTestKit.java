@@ -14,6 +14,7 @@ import static java.lang.String.join;
 import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.ArrayList;
@@ -52,8 +53,8 @@ import org.junit.platform.launcher.core.LauncherDiscoveryResult;
  * @since 1.4
  * @see #engine(String)
  * @see #engine(TestEngine)
- * @see #execute(String, EngineDiscoveryRequest)
- * @see #execute(TestEngine, EngineDiscoveryRequest)
+ * @see #execute(String, LauncherDiscoveryRequest)
+ * @see #execute(TestEngine, LauncherDiscoveryRequest)
  * @see EngineExecutionResults
  */
 @API(status = EXPERIMENTAL, since = "1.4")
@@ -87,8 +88,8 @@ public final class EngineTestKit {
 	 * or <em>blank</em>, or if the {@code TestEngine} with the supplied ID
 	 * cannot be loaded
 	 * @see #engine(TestEngine)
-	 * @see #execute(String, EngineDiscoveryRequest)
-	 * @see #execute(TestEngine, EngineDiscoveryRequest)
+	 * @see #execute(String, LauncherDiscoveryRequest)
+	 * @see #execute(TestEngine, LauncherDiscoveryRequest)
 	 */
 	public static Builder engine(String engineId) {
 		Preconditions.notBlank(engineId, "TestEngine ID must not be null or blank");
@@ -114,8 +115,8 @@ public final class EngineTestKit {
 	 * @throws PreconditionViolationException if the {@code TestEngine} is
 	 * {@code null}
 	 * @see #engine(String)
-	 * @see #execute(String, EngineDiscoveryRequest)
-	 * @see #execute(TestEngine, EngineDiscoveryRequest)
+	 * @see #execute(String, LauncherDiscoveryRequest)
+	 * @see #execute(TestEngine, LauncherDiscoveryRequest)
 	 */
 	public static Builder engine(TestEngine testEngine) {
 		Preconditions.notNull(testEngine, "TestEngine must not be null");
@@ -145,11 +146,45 @@ public final class EngineTestKit {
 	 * @return the results of the execution
 	 * @throws PreconditionViolationException for invalid arguments or if the
 	 * {@code TestEngine} with the supplied ID cannot be loaded
-	 * @see #execute(TestEngine, EngineDiscoveryRequest)
+	 * @see #execute(String, LauncherDiscoveryRequest)
 	 * @see #engine(String)
 	 * @see #engine(TestEngine)
+	 * @deprecated Please use {@link #execute(String, LauncherDiscoveryRequest)}
+	 * instead.
 	 */
+	@Deprecated
+	@API(status = DEPRECATED, since = "1.7")
 	public static EngineExecutionResults execute(String engineId, EngineDiscoveryRequest discoveryRequest) {
+		Preconditions.notBlank(engineId, "TestEngine ID must not be null or blank");
+		return execute(loadTestEngine(engineId.trim()), discoveryRequest);
+	}
+
+	/**
+	 * Execute tests for the given {@link LauncherDiscoveryRequest} using the
+	 * {@link TestEngine} with the supplied ID.
+	 *
+	 * <p>The {@code TestEngine} will be loaded via Java's {@link ServiceLoader}
+	 * mechanism, analogous to the manner in which test engines are loaded in
+	 * the JUnit Platform Launcher API.
+	 *
+	 * <p>{@link org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder}
+	 * provides a convenient way to build an appropriate discovery request to
+	 * supply to this method. As an alternative, consider using
+	 * {@link #engine(TestEngine)} for a more fluent API.
+	 *
+	 * @param engineId the ID of the {@code TestEngine} to use; must not be
+	 * {@code null} or <em>blank</em>
+	 * @param discoveryRequest the {@code LauncherDiscoveryRequest} to use
+	 * @return the results of the execution
+	 * @throws PreconditionViolationException for invalid arguments or if the
+	 * {@code TestEngine} with the supplied ID cannot be loaded
+	 * @see #execute(TestEngine, LauncherDiscoveryRequest)
+	 * @see #engine(String)
+	 * @see #engine(TestEngine)
+	 * @since 1.7
+	 */
+	@API(status = EXPERIMENTAL, since = "1.7")
+	public static EngineExecutionResults execute(String engineId, LauncherDiscoveryRequest discoveryRequest) {
 		Preconditions.notBlank(engineId, "TestEngine ID must not be null or blank");
 		return execute(loadTestEngine(engineId.trim()), discoveryRequest);
 	}
@@ -172,28 +207,50 @@ public final class EngineTestKit {
 	 * not be {@code null}
 	 * @return the recorded {@code EngineExecutionResults}
 	 * @throws PreconditionViolationException for invalid arguments
-	 * @see #execute(String, EngineDiscoveryRequest)
+	 * @see #execute(TestEngine, LauncherDiscoveryRequest)
 	 * @see #engine(String)
 	 * @see #engine(TestEngine)
+	 * @deprecated Please use {@link #execute(TestEngine, LauncherDiscoveryRequest)}
+	 * instead.
 	 */
+	@Deprecated
+	@API(status = DEPRECATED, since = "1.7")
 	public static EngineExecutionResults execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest) {
 		Preconditions.notNull(testEngine, "TestEngine must not be null");
 		Preconditions.notNull(discoveryRequest, "EngineDiscoveryRequest must not be null");
 
 		ExecutionRecorder executionRecorder = new ExecutionRecorder();
-		execute(testEngine, discoveryRequest, executionRecorder);
+		executeDirectly(testEngine, discoveryRequest, executionRecorder);
 		return executionRecorder.getExecutionResults();
 	}
 
-	private static void execute(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest,
-			EngineExecutionListener listener) {
+	/**
+	 * Execute tests for the given {@link LauncherDiscoveryRequest} using the
+	 * supplied {@link TestEngine}.
+	 *
+	 * <p>{@link org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder}
+	 * provides a convenient way to build an appropriate discovery request to
+	 * supply to this method. As an alternative, consider using
+	 * {@link #engine(TestEngine)} for a more fluent API.
+	 *
+	 * @param testEngine the {@code TestEngine} to use; must not be {@code null}
+	 * @param discoveryRequest the {@code LauncherDiscoveryRequest} to use; must
+	 * not be {@code null}
+	 * @return the recorded {@code EngineExecutionResults}
+	 * @throws PreconditionViolationException for invalid arguments
+	 * @see #execute(String, LauncherDiscoveryRequest)
+	 * @see #engine(String)
+	 * @see #engine(TestEngine)
+	 * @since 1.7
+	 */
+	@API(status = EXPERIMENTAL, since = "1.7")
+	public static EngineExecutionResults execute(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest) {
+		Preconditions.notNull(testEngine, "TestEngine must not be null");
+		Preconditions.notNull(discoveryRequest, "EngineDiscoveryRequest must not be null");
 
-		if (discoveryRequest instanceof LauncherDiscoveryRequest) {
-			executeUsingLauncherOrchestration(testEngine, (LauncherDiscoveryRequest) discoveryRequest, listener);
-		}
-		else {
-			executeDirectly(testEngine, discoveryRequest, listener);
-		}
+		ExecutionRecorder executionRecorder = new ExecutionRecorder();
+		executeUsingLauncherOrchestration(testEngine, discoveryRequest, executionRecorder);
+		return executionRecorder.getExecutionResults();
 	}
 
 	private static void executeDirectly(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest,
@@ -210,7 +267,7 @@ public final class EngineTestKit {
 		TestDescriptor engineTestDescriptor;
 		LauncherDiscoveryResult discoveryResult = new EngineDiscoveryOrchestrator(singleton(testEngine)).discover(
 			discoveryRequest, "testing");
-		engineTestDescriptor = discoveryResult.getTestDescriptorFor(testEngine);
+		engineTestDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
 		Preconditions.notNull(engineTestDescriptor, "TestEngine did not yield a TestDescriptor");
 		new EngineExecutionOrchestrator().execute(discoveryResult, listener);
 	}
@@ -266,7 +323,7 @@ public final class EngineTestKit {
 	 *
 	 * @since 1.4
 	 * @see #selectors(DiscoverySelector...)
-	 * @see #filters(DiscoveryFilter...)
+	 * @see #filters(Filter...)
 	 * @see #configurationParameter(String, String)
 	 * @see #configurationParameters(Map)
 	 * @see #execute()
@@ -288,7 +345,7 @@ public final class EngineTestKit {
 		 *
 		 * @param selectors the discovery selectors to add; never {@code null}
 		 * @return this builder for method chaining
-		 * @see #filters(DiscoveryFilter...)
+		 * @see #filters(Filter...)
 		 * @see #configurationParameter(String, String)
 		 * @see #configurationParameters(Map)
 		 * @see #execute()
@@ -307,11 +364,40 @@ public final class EngineTestKit {
 		 *
 		 * @param filters the discovery filters to add; never {@code null}
 		 * @return this builder for method chaining
+		 * @see #filters(Filter...)
 		 * @see #selectors(DiscoverySelector...)
 		 * @see #configurationParameter(String, String)
 		 * @see #configurationParameters(Map)
 		 * @see #execute()
+		 * @deprecated Please use {@link #filters(Filter...)} instead.
+		 * instead.
 		 */
+		@Deprecated
+		@API(status = DEPRECATED, since = "1.7")
+		public Builder filters(DiscoveryFilter<?>... filters) {
+			this.requestBuilder.filters(filters);
+			return this;
+		}
+
+		/**
+		 * Add all of the supplied {@linkplain Filter filters}.
+		 *
+		 * <p>Built-in discovery filters can be created via the static factory
+		 * methods in {@link org.junit.platform.engine.discovery.ClassNameFilter}
+		 * and {@link org.junit.platform.engine.discovery.PackageNameFilter}.
+		 *
+		 * <p>Built-in post-discovery filters can be created via the static
+		 * factory methods in {@link org.junit.platform.launcher.TagFilter}.
+		 *
+		 * @param filters the filters to add; never {@code null}
+		 * @return this builder for method chaining
+		 * @see #selectors(DiscoverySelector...)
+		 * @see #configurationParameter(String, String)
+		 * @see #configurationParameters(Map)
+		 * @see #execute()
+		 * @since 1.7
+		 */
+		@API(status = EXPERIMENTAL, since = "1.7")
 		public Builder filters(Filter<?>... filters) {
 			this.requestBuilder.filters(filters);
 			return this;
@@ -325,7 +411,7 @@ public final class EngineTestKit {
 		 * @param value the value to store
 		 * @return this builder for method chaining
 		 * @see #selectors(DiscoverySelector...)
-		 * @see #filters(DiscoveryFilter...)
+		 * @see #filters(Filter...)
 		 * @see #configurationParameters(Map)
 		 * @see #execute()
 		 * @see org.junit.platform.engine.ConfigurationParameters
@@ -342,7 +428,7 @@ public final class EngineTestKit {
 		 * never {@code null}
 		 * @return this builder for method chaining
 		 * @see #selectors(DiscoverySelector...)
-		 * @see #filters(DiscoveryFilter...)
+		 * @see #filters(Filter...)
 		 * @see #configurationParameter(String, String)
 		 * @see #execute()
 		 * @see org.junit.platform.engine.ConfigurationParameters
@@ -360,7 +446,7 @@ public final class EngineTestKit {
 		 *
 		 * @return the recorded {@code EngineExecutionResults}
 		 * @see #selectors(DiscoverySelector...)
-		 * @see #filters(DiscoveryFilter...)
+		 * @see #filters(Filter...)
 		 * @see #configurationParameter(String, String)
 		 * @see #configurationParameters(Map)
 		 */

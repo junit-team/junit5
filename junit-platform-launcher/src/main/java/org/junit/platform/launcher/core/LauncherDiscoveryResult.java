@@ -23,12 +23,12 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 
 /**
- * Represents the root of all discovered {@link TestEngine TestEngines} and
- * their {@link TestDescriptor TestDescriptors}.
+ * Represents the result of test discovery of the configured
+ * {@linkplain TestEngine test engines}.
  *
- * @since 1.0
+ * @since 1.7
  */
-@API(status = INTERNAL, since = "1.7")
+@API(status = INTERNAL, since = "1.7", consumers = "testkit")
 public class LauncherDiscoveryResult {
 
 	private final Map<TestEngine, TestDescriptor> testEngineDescriptors;
@@ -40,20 +40,20 @@ public class LauncherDiscoveryResult {
 		this.configurationParameters = configurationParameters;
 	}
 
-	public ConfigurationParameters getConfigurationParameters() {
+	public TestDescriptor getEngineTestDescriptor(TestEngine testEngine) {
+		return this.testEngineDescriptors.get(testEngine);
+	}
+
+	ConfigurationParameters getConfigurationParameters() {
 		return configurationParameters;
 	}
 
-	Iterable<TestEngine> getTestEngines() {
+	Collection<TestEngine> getTestEngines() {
 		return this.testEngineDescriptors.keySet();
 	}
 
-	Collection<TestDescriptor> getEngineDescriptors() {
+	Collection<TestDescriptor> getEngineTestDescriptors() {
 		return this.testEngineDescriptors.values();
-	}
-
-	public TestDescriptor getTestDescriptorFor(TestEngine testEngine) {
-		return this.testEngineDescriptors.get(testEngine);
 	}
 
 }

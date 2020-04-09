@@ -27,6 +27,8 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestExecutionListener;
 
 /**
+ * Orchestrates test execution using the configured test engines.
+ *
  * @since 1.7
  */
 @API(status = INTERNAL, since = "1.7", consumers = "testkit")
@@ -48,26 +50,9 @@ public class EngineExecutionOrchestrator {
 		TestExecutionListenerRegistry listenerRegistry = buildListenerRegistryForExecution(listeners);
 		withInterceptedStreams(configurationParameters, listenerRegistry, testExecutionListener -> {
 			testExecutionListener.testPlanExecutionStarted(internalTestPlan);
-			ExecutionListenerAdapter engineExecutionListener = new ExecutionListenerAdapter(internalTestPlan,
-				testExecutionListener);
-			execute(discoveryResult, engineExecutionListener);
+			execute(discoveryResult, new ExecutionListenerAdapter(internalTestPlan, testExecutionListener));
 			testExecutionListener.testPlanExecutionFinished(internalTestPlan);
 		});
-	}
-
-	public void execute(LauncherDiscoveryResult discoveryResult, EngineExecutionListener engineExecutionListener) {
-		for (TestEngine testEngine : discoveryResult.getTestEngines()) {
-			TestDescriptor engineDescriptor = discoveryResult.getTestDescriptorFor(testEngine);
-			if (engineDescriptor instanceof EngineDiscoveryErrorDescriptor) {
-				engineExecutionListener.executionStarted(engineDescriptor);
-				engineExecutionListener.executionFinished(engineDescriptor,
-					TestExecutionResult.failed(((EngineDiscoveryErrorDescriptor) engineDescriptor).getCause()));
-			}
-			else {
-				execute(engineDescriptor, engineExecutionListener, discoveryResult.getConfigurationParameters(),
-					testEngine);
-			}
-		}
 	}
 
 	private void withInterceptedStreams(ConfigurationParameters configurationParameters,
@@ -82,6 +67,25 @@ public class EngineExecutionOrchestrator {
 		}
 		finally {
 			streamInterceptingTestExecutionListener.ifPresent(StreamInterceptingTestExecutionListener::unregister);
+		}
+	}
+
+	/**
+	 * Executes tests for the supplied {@linkplain LauncherDiscoveryResult
+	 * discovery results} and notifies the supplied {@linkplain
+	 * EngineExecutionListener listener} of execution events.
+	 */
+	public void execute(LauncherDiscoveryResult discoveryResult, EngineExecutionListener listener) {
+		for (TestEngine testEngine : discoveryResult.getTestEngines()) {
+			TestDescriptor engineDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
+			if (engineDescriptor instanceof EngineDiscoveryErrorDescriptor) {
+				listener.executionStarted(engineDescriptor);
+				listener.executionFinished(engineDescriptor,
+					TestExecutionResult.failed(((EngineDiscoveryErrorDescriptor) engineDescriptor).getCause()));
+			}
+			else {
+				execute(engineDescriptor, listener, discoveryResult.getConfigurationParameters(), testEngine);
+			}
 		}
 	}
 

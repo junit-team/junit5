@@ -36,6 +36,8 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 
 /**
+ * Orchestrates test discovery using the configured test engines.
+ *
  * @since 1.7
  */
 @API(status = INTERNAL, since = "1.7", consumers = "testkit")
@@ -50,6 +52,14 @@ public class EngineDiscoveryOrchestrator {
 		this.testEngines = testEngines;
 	}
 
+	/**
+	 * Discovers tests for the supplied request in the supplied phase using the
+	 * configured test engines.
+	 *
+	 * <p>Applies {@linkplain org.junit.platform.launcher.EngineFilter engine
+	 * filters} and {@linkplain PostDiscoveryFilter post-discovery filters} and
+	 * {@linkplain TestDescriptor#prune() prunes} the resulting test tree.
+	 */
 	public LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, String phase) {
 		Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
 
@@ -99,7 +109,7 @@ public class EngineDiscoveryOrchestrator {
 		}
 	}
 
-	void applyPostDiscoveryFilters(Map<TestEngine, TestDescriptor> testEngineDescriptors,
+	private void applyPostDiscoveryFilters(Map<TestEngine, TestDescriptor> testEngineDescriptors,
 			List<PostDiscoveryFilter> filters) {
 		Filter<TestDescriptor> postDiscoveryFilter = composeFilters(filters);
 		Map<String, List<TestDescriptor>> excludedTestDescriptorsByReason = new LinkedHashMap<>();
@@ -139,7 +149,7 @@ public class EngineDiscoveryOrchestrator {
 	 * <p>If a {@link TestEngine} ends up with no {@code TestDescriptors} after
 	 * pruning, it will <strong>not</strong> be removed.
 	 */
-	void prune(Map<TestEngine, TestDescriptor> testEngineDescriptors) {
+	private void prune(Map<TestEngine, TestDescriptor> testEngineDescriptors) {
 		acceptInAllTestEngines(testEngineDescriptors, TestDescriptor::prune);
 	}
 

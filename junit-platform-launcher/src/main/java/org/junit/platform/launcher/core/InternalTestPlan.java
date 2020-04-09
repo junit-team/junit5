@@ -33,7 +33,7 @@ class InternalTestPlan extends TestPlan {
 	private final TestPlan delegate;
 
 	static InternalTestPlan from(LauncherDiscoveryResult discoveryResult) {
-		TestPlan delegate = TestPlan.from(discoveryResult.getEngineDescriptors());
+		TestPlan delegate = TestPlan.from(discoveryResult.getEngineTestDescriptors());
 		return new InternalTestPlan(discoveryResult, delegate);
 	}
 
