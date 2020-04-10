@@ -136,6 +136,52 @@ public final class DiscoverySelectors {
 	}
 
 	/**
+	 * Create a {@code FileSelector} for the supplied file path.
+	 *
+	 * <p>This method selects the file using the supplied path <em>as is</em>,
+	 * without verifying if the file exists.
+	 *
+	 * @param path the path to the file to select; never {@code null} or blank
+	 * @param line the line number; must be greater than zero
+	 * @param column the column number; must be greater than zero
+	 * @see FileSelector
+	 * @see #selectFile(File, int, int)
+	 * @see #selectDirectory(String)
+	 * @see #selectDirectory(File)
+	 */
+	public static FileSelector selectFile(String path, int line, int column) {
+		Preconditions.notBlank(path, "File path must not be null or blank");
+		return new FileSelector(path, FilePosition.from(line, column));
+	}
+
+	/**
+	 * Create a {@code FileSelector} for the supplied {@linkplain File file}.
+	 *
+	 * <p>This method selects the file in its {@linkplain File#getCanonicalPath()
+	 * canonical} form and throws a {@link PreconditionViolationException} if the
+	 * file does not exist.
+	 *
+	 * @param file the file to select; never {@code null}
+	 * @param line the line number; must be greater than zero
+	 * @param column the column number; must be greater than zero
+	 * @see FileSelector
+	 * @see #selectFile(String, int, int)
+	 * @see #selectDirectory(String)
+	 * @see #selectDirectory(File)
+	 */
+	public static FileSelector selectFile(File file, int line, int column) {
+		Preconditions.notNull(file, "File must not be null");
+		Preconditions.condition(file.isFile(),
+			() -> String.format("The supplied java.io.File [%s] must represent an existing file", file));
+		try {
+			return new FileSelector(file.getCanonicalPath(), FilePosition.from(line, column));
+		}
+		catch (IOException ex) {
+			throw new PreconditionViolationException("Failed to retrieve canonical path for file: " + file, ex);
+		}
+	}
+
+	/**
 	 * Create a {@code DirectorySelector} for the supplied directory path.
 	 *
 	 * <p>This method selects the directory using the supplied path <em>as is</em>,
@@ -240,6 +286,37 @@ public final class DiscoverySelectors {
 	public static ClasspathResourceSelector selectClasspathResource(String classpathResourceName) {
 		Preconditions.notBlank(classpathResourceName, "Classpath resource name must not be null or blank");
 		return new ClasspathResourceSelector(classpathResourceName);
+	}
+
+	/**
+	 * Create a {@code ClasspathResourceSelector} for the supplied classpath
+	 * resource name.
+	 *
+	 * <p>The name of a <em>classpath resource</em> must follow the semantics
+	 * for resource paths as defined in {@link ClassLoader#getResource(String)}.
+	 *
+	 * <p>If the supplied classpath resource name is prefixed with a slash
+	 * ({@code /}), the slash will be removed.
+	 *
+	 * <p>Since {@linkplain org.junit.platform.engine.TestEngine engines} are not
+	 * expected to modify the classpath, the supplied classpath resource must be
+	 * on the classpath of the
+	 * {@linkplain Thread#getContextClassLoader() context class loader} of the
+	 * {@linkplain Thread thread} that uses the resulting selector.
+	 *
+	 * @param classpathResourceName the name of the classpath resource; never
+	 * {@code null} or blank
+	 * @param line the line number; must be greater than zero
+	 * @param column the column number; must be greater than zero
+	 * @see ClasspathResourceSelector
+	 * @see ClassLoader#getResource(String)
+	 * @see ClassLoader#getResourceAsStream(String)
+	 * @see ClassLoader#getResources(String)
+	 */
+	public static ClasspathResourceSelector selectClasspathResource(String classpathResourceName, int line,
+			int column) {
+		Preconditions.notBlank(classpathResourceName, "Classpath resource name must not be null or blank");
+		return new ClasspathResourceSelector(classpathResourceName, FilePosition.from(line, column));
 	}
 
 	/**
