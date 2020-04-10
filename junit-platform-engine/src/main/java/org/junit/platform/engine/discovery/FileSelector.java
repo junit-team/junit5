@@ -117,7 +117,10 @@ public class FileSelector implements DiscoverySelector {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("path", this.path).toString();
+		return new ToStringBuilder(this)
+				.append("path", this.path)
+				.append("position", this.position)
+				.toString();
 	}
 
 }
