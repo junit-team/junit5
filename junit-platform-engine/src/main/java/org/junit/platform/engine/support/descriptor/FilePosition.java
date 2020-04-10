@@ -82,7 +82,7 @@ public class FilePosition extends org.junit.platform.engine.discovery.FilePositi
 	 * @see #from(int)
 	 * @see #from(int, int)
 	 */
-	public static Optional<org.junit.platform.engine.discovery.FilePosition> fromQuery(String query) {
+	public static Optional<FilePosition> fromQuery(String query) {
 		FilePosition result = null;
 		Integer line = null;
 		Integer column = null;

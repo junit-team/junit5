@@ -80,7 +80,7 @@ public class FilePosition implements Serializable {
 	 * @see #from(int)
 	 * @see #from(int, int)
 	 */
-	public static Optional<FilePosition> fromQuery(String query) {
+	public static Optional<? extends FilePosition> fromQuery(String query) {
 		FilePosition result = null;
 		Integer line = null;
 		Integer column = null;
