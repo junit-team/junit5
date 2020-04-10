@@ -18,6 +18,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -86,8 +87,8 @@ public class FileSelector implements DiscoverySelector {
 	/**
 	 * Get the selected position within the file as a {@link FilePosition}.
 	 */
-	public FilePosition getPosition() {
-		return this.position;
+	public Optional<FilePosition> getPosition() {
+		return Optional.ofNullable(this.position);
 	}
 
 	/**

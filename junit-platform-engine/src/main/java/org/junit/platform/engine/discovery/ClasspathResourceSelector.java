@@ -13,6 +13,7 @@ package org.junit.platform.engine.discovery;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -69,8 +70,8 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	 * Get the selected position within the classpath resource as a
 	 * {@link FilePosition}.
 	 */
-	public FilePosition getPosition() {
-		return this.position;
+	public Optional<FilePosition> getPosition() {
+		return Optional.ofNullable(this.position);
 	}
 
 	/**
