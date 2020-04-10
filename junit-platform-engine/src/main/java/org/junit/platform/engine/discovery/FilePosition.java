@@ -27,7 +27,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
 /**
  * Position inside a file represented by {@linkplain #getLine line} and
  * {@linkplain #getColumn column} numbers.
- * 
+ *
  * This class is not intended to be subclassed by clients.
  *
  * @since 1.7
