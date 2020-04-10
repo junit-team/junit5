@@ -74,6 +74,9 @@ public @interface DisabledIf {
 	 * The name of a method within the test class or in external classes
 	 * to use as a condition for the container's execution.
 	 *
+	 * <p>Condition methods must be static if located outside the test class,
+	 * or if {@code @DisabledIf} is used at class level.
+	 *
 	 * <p>Condition methods in external classes must be referenced by <em>fully
 	 * qualified method name</em> &mdash; for example,
 	 * {@code com.example.Conditions#isEncryptionSupported}.

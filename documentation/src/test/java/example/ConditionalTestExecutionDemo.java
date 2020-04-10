@@ -168,7 +168,7 @@ class ConditionalTestExecutionDemo {
 		// ...
 	}
 
-	static boolean customCondition() {
+	boolean customCondition() {
 		return true;
 	}
 	// end::user_guide_custom[]
