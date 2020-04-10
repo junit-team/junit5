@@ -23,8 +23,10 @@ import org.junit.platform.commons.util.StringUtils;
  * {@linkplain #getColumn column} numbers.
  *
  * @since 1.0
+ * @deprecated use {@link org.junit.platform.engine.discovery.FilePosition}
  */
-@API(status = Status.DEPRECATED, since = "5.7")
+@API(status = Status.DEPRECATED, since = "1.7")
+@Deprecated
 public class FilePosition extends org.junit.platform.engine.discovery.FilePosition {
 
 	private static final long serialVersionUID = 1L;
