@@ -21,6 +21,7 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.discovery.FilePosition;
 
 /**
  * Class based {@link org.junit.platform.engine.TestSource TestSource} with

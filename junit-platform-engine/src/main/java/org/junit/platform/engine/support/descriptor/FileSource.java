@@ -22,6 +22,7 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.discovery.FilePosition;
 
 /**
  * File based {@link org.junit.platform.engine.TestSource} with an optional

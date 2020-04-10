@@ -21,6 +21,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.discovery.FilePosition;
 
 /**
  * <em>Classpath resource</em> based {@link org.junit.platform.engine.TestSource}

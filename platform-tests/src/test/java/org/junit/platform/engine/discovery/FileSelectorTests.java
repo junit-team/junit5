@@ -12,7 +12,6 @@ package org.junit.platform.engine.discovery;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.AbstractEqualsAndHashCodeTests;
-import org.junit.platform.engine.support.descriptor.FilePosition;
 
 /**
  * Unit tests for {@link FileSelector}.

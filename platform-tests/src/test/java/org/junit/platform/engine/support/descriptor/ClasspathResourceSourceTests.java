@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.engine.discovery.FilePosition;
 
 /**
  * Unit tests for {@link ClasspathResourceSource}.

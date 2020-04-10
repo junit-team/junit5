@@ -17,7 +17,6 @@ import java.util.Objects;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.support.descriptor.FilePosition;
 
 /**
  * A {@link DiscoverySelector} that selects the name of a <em>classpath resource</em>
