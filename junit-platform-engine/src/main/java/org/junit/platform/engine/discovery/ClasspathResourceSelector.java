@@ -101,10 +101,8 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this)
-				.append("classpathResourceName", this.classpathResourceName)
-				.append("position", this.position)
-				.toString();
+		return new ToStringBuilder(this).append("classpathResourceName", this.classpathResourceName).append("position",
+			this.position).toString();
 	}
 
 }
