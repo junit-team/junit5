@@ -92,6 +92,11 @@ class DiscoverySelectorsTests {
 		assertEquals(path, selector.getRawPath());
 		assertEquals(new File(path), selector.getFile());
 		assertEquals(Paths.get(path), selector.getPath());
+
+		// with file position
+		selector = selectFile(path, 12, 34);
+		assertEquals(path, selector.getRawPath());
+		assertEquals(FilePosition.from(12, 34), selector.getPosition());
 	}
 
 	@Test
@@ -108,6 +113,11 @@ class DiscoverySelectorsTests {
 		assertEquals(path, selector.getRawPath());
 		assertEquals(file.getCanonicalFile(), selector.getFile());
 		assertEquals(Paths.get(path), selector.getPath());
+
+		// with file position
+		selector = selectFile(file, 12, 34);
+		assertEquals(path, selector.getRawPath());
+		assertEquals(FilePosition.from(12, 34), selector.getPosition());
 	}
 
 	@Test
@@ -153,6 +163,11 @@ class DiscoverySelectorsTests {
 		// standard use case
 		selector = selectClasspathResource("A/B/C/spec.json");
 		assertEquals("A/B/C/spec.json", selector.getClasspathResourceName());
+
+		// with file position
+		selector = selectClasspathResource("A/B/C/spec.json", 12, 34);
+		assertEquals("A/B/C/spec.json", selector.getClasspathResourceName());
+		assertEquals(FilePosition.from(12, 34), selector.getPosition());
 	}
 
 	@Test
