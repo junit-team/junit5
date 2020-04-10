@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.engine.support.descriptor;
+package org.junit.platform.engine.discovery;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,8 +23,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.platform.AbstractEqualsAndHashCodeTests;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.engine.discovery.FilePosition;
 
 /**
  * Unit tests for {@link FilePosition}.
@@ -32,12 +32,7 @@ import org.junit.platform.engine.discovery.FilePosition;
  * @since 1.0
  */
 @DisplayName("FilePosition unit tests")
-class FilePositionTests extends AbstractTestSourceTests {
-
-	@Override
-	Stream<FilePosition> createSerializableInstances() {
-		return Stream.of(FilePosition.from(42, 99));
-	}
+class FilePositionTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	@DisplayName("factory method preconditions")
