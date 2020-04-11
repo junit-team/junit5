@@ -64,11 +64,9 @@ public class EngineDiscoveryOrchestrator {
 		Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
 
 		for (TestEngine testEngine : this.testEngines) {
-			// @formatter:off
-            boolean engineIsExcluded = request.getEngineFilters().stream()
-                    .map(engineFilter -> engineFilter.apply(testEngine))
-                    .anyMatch(FilterResult::excluded);
-            // @formatter:on
+			boolean engineIsExcluded = request.getEngineFilters().stream() //
+					.map(engineFilter -> engineFilter.apply(testEngine)) //
+					.anyMatch(FilterResult::excluded);
 
 			if (engineIsExcluded) {
 				logger.debug(() -> String.format(
