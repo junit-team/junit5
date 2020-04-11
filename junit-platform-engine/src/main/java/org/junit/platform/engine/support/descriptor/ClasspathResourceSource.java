@@ -139,7 +139,17 @@ public class ClasspathResourceSource implements TestSource {
 	/**
 	 * Get the {@link FilePosition}, if available.
 	 */
-	public final Optional<FilePosition> getPosition() {
+	@SuppressWarnings("deprecation")
+	public final Optional<org.junit.platform.engine.support.descriptor.FilePosition> getPosition() {
+		return Optional.ofNullable(this.filePosition).map(fp -> fp.getColumn().isPresent()
+				? org.junit.platform.engine.support.descriptor.FilePosition.from(fp.getLine(), fp.getColumn().get())
+				: org.junit.platform.engine.support.descriptor.FilePosition.from(fp.getLine()));
+	}
+
+	/**
+	 * Get the {@link FilePosition}, if available.
+	 */
+	public final Optional<FilePosition> getFilePosition() {
 		return Optional.ofNullable(this.filePosition);
 	}
 

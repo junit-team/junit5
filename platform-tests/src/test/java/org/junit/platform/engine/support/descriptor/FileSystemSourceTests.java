@@ -61,7 +61,7 @@ class FileSystemSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source.getUri()).isEqualTo(canonicalFile.toURI());
 		assertThat(source.getFile()).isEqualTo(canonicalFile);
-		assertThat(source.getPosition()).isEmpty();
+		assertThat(source.getFilePosition()).isEmpty();
 	}
 
 	@Test
@@ -72,7 +72,7 @@ class FileSystemSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source.getUri()).isEqualTo(file.getAbsoluteFile().toURI());
 		assertThat(source.getFile()).isEqualTo(file.getAbsoluteFile());
-		assertThat(source.getPosition()).hasValue(position);
+		assertThat(source.getFilePosition()).hasValue(position);
 	}
 
 	@Test

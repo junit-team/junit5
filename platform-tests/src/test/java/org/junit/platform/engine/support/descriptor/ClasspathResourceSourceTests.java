@@ -55,7 +55,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
-		assertThat(source.getPosition()).isEmpty();
+		assertThat(source.getFilePosition()).isEmpty();
 	}
 
 	@Test
@@ -64,7 +64,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
-		assertThat(source.getPosition()).isEmpty();
+		assertThat(source.getFilePosition()).isEmpty();
 	}
 
 	@Test
@@ -74,7 +74,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
-		assertThat(source.getPosition()).hasValue(position);
+		assertThat(source.getFilePosition()).hasValue(position);
 	}
 
 	@Test
@@ -83,7 +83,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
-		assertThat(source.getPosition()).isEmpty();
+		assertThat(source.getFilePosition()).isEmpty();
 	}
 
 	@Test
@@ -94,7 +94,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
-		assertThat(source.getPosition()).hasValue(position);
+		assertThat(source.getFilePosition()).hasValue(position);
 	}
 
 	@Test
@@ -105,7 +105,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 
 		assertThat(source).isNotNull();
 		assertThat(source.getClasspathResourceName()).isEqualTo(FOO_RESOURCE);
-		assertThat(source.getPosition()).hasValue(position);
+		assertThat(source.getFilePosition()).hasValue(position);
 	}
 
 	@Test
