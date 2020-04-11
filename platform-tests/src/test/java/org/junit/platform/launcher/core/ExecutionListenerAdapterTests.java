@@ -36,10 +36,9 @@ class ExecutionListenerAdapterTests {
 	void testReportingEntryPublished() {
 		TestDescriptor testDescriptor = getSampleMethodTestDescriptor();
 
-		//cannot mock final classes with mockito
-		LauncherDiscoveryResult root = new LauncherDiscoveryResult(Map.of(mock(TestEngine.class), testDescriptor),
-			null);
-		InternalTestPlan testPlan = InternalTestPlan.from(root);
+		LauncherDiscoveryResult discoveryResult = new LauncherDiscoveryResult(
+			Map.of(mock(TestEngine.class), testDescriptor), null);
+		InternalTestPlan testPlan = InternalTestPlan.from(discoveryResult);
 		TestIdentifier testIdentifier = testPlan.getTestIdentifier(testDescriptor.getUniqueId().toString());
 
 		//not yet spyable with mockito? -> https://github.com/mockito/mockito/issues/146
