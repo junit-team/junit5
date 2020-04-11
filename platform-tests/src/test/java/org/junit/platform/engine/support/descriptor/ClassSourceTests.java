@@ -41,8 +41,8 @@ class ClassSourceTests extends AbstractTestSourceTests {
 	void preconditions() {
 		assertThrows(PreconditionViolationException.class, () -> ClassSource.from((String) null));
 		assertThrows(PreconditionViolationException.class, () -> ClassSource.from("    "));
-		assertThrows(PreconditionViolationException.class, () -> ClassSource.from((String) null, null));
-		assertThrows(PreconditionViolationException.class, () -> ClassSource.from("    ", null));
+		assertThrows(PreconditionViolationException.class, () -> ClassSource.from((String) null, (FilePosition) null));
+		assertThrows(PreconditionViolationException.class, () -> ClassSource.from("    ", (FilePosition) null));
 		assertThrows(PreconditionViolationException.class, () -> ClassSource.from((Class<?>) null));
 		assertThrows(PreconditionViolationException.class, () -> ClassSource.from((Class<?>) null, null));
 	}
