@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -138,8 +139,11 @@ public class ClasspathResourceSource implements TestSource {
 
 	/**
 	 * Get the {@link FilePosition}, if available.
+	 *
+	 * @deprecated use {@link #getFilePosition()}
 	 */
-	@SuppressWarnings("deprecation")
+	@API(status = Status.DEPRECATED, since = "1.7")
+	@Deprecated
 	public final Optional<org.junit.platform.engine.support.descriptor.FilePosition> getPosition() {
 		return Optional.ofNullable(this.filePosition).map(fp -> fp.getColumn().isPresent()
 				? org.junit.platform.engine.support.descriptor.FilePosition.from(fp.getLine(), fp.getColumn().get())
