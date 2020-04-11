@@ -452,7 +452,8 @@ public final class EngineTestKit {
 		 */
 		public EngineExecutionResults execute() {
 			ExecutionRecorder executionRecorder = new ExecutionRecorder();
-			EngineTestKit.executeUsingLauncherOrchestration(this.testEngine, this.requestBuilder.build(), executionRecorder);
+			EngineTestKit.executeUsingLauncherOrchestration(this.testEngine, this.requestBuilder.build(),
+				executionRecorder);
 			return executionRecorder.getExecutionResults();
 		}
 
