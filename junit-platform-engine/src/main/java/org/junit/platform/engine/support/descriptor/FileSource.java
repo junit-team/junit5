@@ -52,6 +52,20 @@ public class FileSource implements FileSystemSource {
 	 *
 	 * @param file the source file; must not be {@code null}
 	 * @param filePosition the position in the source file; may be {@code null}
+	 * @deprecated use {@link #from(File, FilePosition)}
+	 */
+	@API(status = Status.DEPRECATED, since = "1.7")
+	@Deprecated
+	public static FileSource from(File file, org.junit.platform.engine.support.descriptor.FilePosition filePosition) {
+		return new FileSource(file, filePosition);
+	}
+
+	/**
+	 * Create a new {@code FileSource} using the supplied {@link File file} and
+	 * {@link FilePosition filePosition}.
+	 *
+	 * @param file the source file; must not be {@code null}
+	 * @param filePosition the position in the source file; may be {@code null}
 	 */
 	public static FileSource from(File file, FilePosition filePosition) {
 		return new FileSource(file, filePosition);
