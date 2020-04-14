@@ -276,7 +276,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
      .engine("junit-jupiter")
      .selectors(selectClass(MyTests.class))
      .execute()
-     .tests()
+     .testEvents()
      .assertStatistics(stats -&gt; stats.started(2).finished(2));
  </pre></div>
 <dl>
@@ -312,7 +312,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
      .engine(new MyTestEngine())
      .selectors(selectClass(MyTests.class))
      .execute()
-     .tests()
+     .testEvents()
      .assertStatistics(stats -&gt; stats.started(2).finished(2));
  </pre></div>
 <dl>
