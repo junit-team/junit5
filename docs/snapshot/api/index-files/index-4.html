@@ -109,7 +109,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherConstants.html#DEACTIVATE_ALL_LISTENERS_PATTERN">DEACTIVATE_ALL_LISTENERS_PATTERN</a></span> - Static variable in class org.junit.platform.launcher.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherConstants.html" title="class in org.junit.platform.launcher">LauncherConstants</a></dt>
 <dd>
-<div class="block">Wildcard pattern which signals that all listeners registered via ServiceLoader should be deactivated: "*"</div>
+<div class="block">Wildcard pattern which signals that all listeners registered via the
+ <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>ServiceLoader</code></a> mechanism should be deactivated:
+ "*"</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org.junit.platform.commons/org/junit/platform/commons/util/ClassNamePatternFilterUtils.html#DEACTIVATE_ALL_PATTERN">DEACTIVATE_ALL_PATTERN</a></span> - Static variable in class org.junit.platform.commons.util.<a href="../org.junit.platform.commons/org/junit/platform/commons/util/ClassNamePatternFilterUtils.html" title="class in org.junit.platform.commons.util">ClassNamePatternFilterUtils</a></dt>
 <dd>&nbsp;</dd>
@@ -117,11 +119,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/Constants.html#DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME">DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME</a></span> - Static variable in class org.junit.jupiter.engine.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/Constants.html" title="class in org.junit.jupiter.engine">Constants</a></dt>
 <dd>
-<div class="block">Property name used to provide a pattern for deactivating conditions: "junit.jupiter.conditions.deactivate"</div>
+<div class="block">Property name used to provide patterns for deactivating conditions: "junit.jupiter.conditions.deactivate"</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherConstants.html#DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME">DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME</a></span> - Static variable in class org.junit.platform.launcher.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/LauncherConstants.html" title="class in org.junit.platform.launcher">LauncherConstants</a></dt>
 <dd>
-<div class="block">Property name used to provide a pattern for deactivating listeners: "junit.platform.execution.listeners.deactivate"</div>
+<div class="block">Property name used to provide patterns for deactivating listeners registered
+ via the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>ServiceLoader</code></a> mechanism: "junit.platform.execution.listeners.deactivate"</div>
 </dd>
 <dt><span class="memberNameLink"><a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/Events.html#debug()">debug()</a></span> - Method in class org.junit.platform.testkit.engine.<a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/Events.html" title="class in org.junit.platform.testkit.engine">Events</a></dt>
 <dd>

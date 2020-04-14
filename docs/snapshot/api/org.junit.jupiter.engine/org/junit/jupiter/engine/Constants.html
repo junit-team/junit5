@@ -190,7 +190,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME">DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME</a></span></code></th>
 <td class="colLast">
-<div class="block">Property name used to provide a pattern for deactivating conditions: "junit.jupiter.conditions.deactivate"</div>
+<div class="block">Property name used to provide patterns for deactivating conditions: "junit.jupiter.conditions.deactivate"</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -397,17 +397,18 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li class="blockList">
 <h4>DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME</h4>
 <pre>public static final&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME</pre>
-<div class="block">Property name used to provide a pattern for deactivating conditions: "junit.jupiter.conditions.deactivate"
+<div class="block">Property name used to provide patterns for deactivating conditions: "junit.jupiter.conditions.deactivate"
 
  <h3>Pattern Matching Syntax</h3>
 
- <p>If the pattern consists solely of an asterisk (<code>*</code>), all conditions
- will be deactivated. Otherwise, the pattern will be used to match against
- comma separated fully qualified class name (<em>FQCN</em>) of each registered condition.
- Any dot (<code>.</code>) in the pattern will match against a dot (<code>.</code>)
- or a dollar sign (<code>$</code>) in the FQCN. Any asterisk (<code>*</code>) will match
- against one or more characters in the FQCN. All other characters in the
- pattern will be matched one-to-one against the FQCN.
+ <p>If the property value consists solely of an asterisk (<code>*</code>), all
+ conditions will be deactivated. Otherwise, the property value will be treated
+ as a comma-separated list of patterns where each individual pattern will be
+ matched against the fully qualified class name (<em>FQCN</em>) of each registered
+ condition. Any dot (<code>.</code>) in a pattern will match against a dot (<code>.</code>)
+ or a dollar sign (<code>$</code>) in a FQCN. Any asterisk (<code>*</code>) will match
+ against one or more characters in a FQCN. All other characters in a pattern
+ will be matched one-to-one against a FQCN.
 
  <h3>Examples</h3>
 
@@ -417,10 +418,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  base package and any of its subpackages.
  <li><code>*.MyCondition</code>: deactivates every condition whose simple class name is
  exactly <code>MyCondition</code>.
- <li><code>*System*</code>: deactivates every condition whose simple class name contains
+ <li><code>*System*</code>: deactivates every condition whose FQCN contains
  <code>System</code>.
- <li><code>org.example.MyCondition</code>: deactivates the condition whose FQCN is
- exactly <code>org.example.MyCondition</code>.
+ <li><code>*System*, *Dev*</code>: deactivates every condition whose FQCN contains
+ <code>System</code> or <code>Dev</code>.
+ <li><code>org.example.MyCondition, org.example.TheirCondition</code>: deactivates
+ conditions whose FQCN is exactly <code>org.example.MyCondition</code> or
+ <code>org.example.TheirCondition</code>.
  </ul></div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
