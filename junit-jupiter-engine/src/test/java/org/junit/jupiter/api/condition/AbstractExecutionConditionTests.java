@@ -15,6 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
+import static org.junit.platform.commons.util.ReflectionUtils.newInstance;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -63,6 +65,8 @@ abstract class AbstractExecutionConditionTests {
 	@BeforeEach
 	void beforeEach(TestInfo testInfo) {
 		when(this.context.getElement()).thenReturn(method(testInfo));
+		when(this.context.getTestInstance()).thenReturn(Optional.of(newInstance(getTestClass())));
+		doReturn(getTestClass()).when(this.context).getRequiredTestClass();
 	}
 
 	protected abstract ExecutionCondition getExecutionCondition();

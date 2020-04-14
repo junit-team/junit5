@@ -61,6 +61,8 @@ on GitHub.
 * New `MethodOrderer` named `DisplayName` that sorts test methods alphanumerically based
   on their display names.
 * New `getDisplayName()` method in `MethodDescriptor`.
+* New annotations `@EnabledIf` and `@DisabledIf` can be used to enable/disable a test
+  or container based on static condition methods.
 
 
 [[release-notes-5.7.0-M1-junit-vintage]]
