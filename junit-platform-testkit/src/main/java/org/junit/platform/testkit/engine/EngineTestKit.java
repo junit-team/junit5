@@ -70,7 +70,7 @@ public final class EngineTestKit {
 	 *     .engine("junit-jupiter")
 	 *     .selectors(selectClass(MyTests.class))
 	 *     .execute()
-	 *     .tests()
+	 *     .testEvents()
 	 *     .assertStatistics(stats -&gt; stats.started(2).finished(2));
 	 * </pre>
 	 *
@@ -99,7 +99,7 @@ public final class EngineTestKit {
 	 *     .engine(new MyTestEngine())
 	 *     .selectors(selectClass(MyTests.class))
 	 *     .execute()
-	 *     .tests()
+	 *     .testEvents()
 	 *     .assertStatistics(stats -&gt; stats.started(2).finished(2));
 	 * </pre>
 	 *
