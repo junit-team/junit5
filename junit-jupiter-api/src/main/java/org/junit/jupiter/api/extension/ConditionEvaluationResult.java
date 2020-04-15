@@ -47,14 +47,6 @@ public class ConditionEvaluationResult {
 		return new ConditionEvaluationResult(false, reason);
 	}
 
-	public static ConditionEvaluationResult disabled(String defaultReason, String customReason) {
-		if (customReason.isEmpty()) {
-			return new ConditionEvaluationResult(false, defaultReason);
-		}
-		String reason = String.format("%s ==> %s", defaultReason, customReason);
-		return new ConditionEvaluationResult(false, reason);
-	}
-
 	private final boolean enabled;
 
 	private final Optional<String> reason;
