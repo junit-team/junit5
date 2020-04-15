@@ -29,6 +29,7 @@ public class ConditionEvaluationResult {
 	 * Factory for creating <em>enabled</em> results.
 	 *
 	 * @param reason the reason why the container or test should be enabled
+	 *
 	 * @return an enabled {@code ConditionEvaluationResult} with the given reason
 	 */
 	public static ConditionEvaluationResult enabled(String reason) {
@@ -39,9 +40,18 @@ public class ConditionEvaluationResult {
 	 * Factory for creating <em>disabled</em> results.
 	 *
 	 * @param reason the reason why the container or test should be disabled
+	 *
 	 * @return a disabled {@code ConditionEvaluationResult} with the given reason
 	 */
 	public static ConditionEvaluationResult disabled(String reason) {
+		return new ConditionEvaluationResult(false, reason);
+	}
+
+	public static ConditionEvaluationResult disabled(String defaultReason, String customReason) {
+		if (customReason.isEmpty()) {
+			return new ConditionEvaluationResult(false, defaultReason);
+		}
+		String reason = String.format("%s ==> %s", defaultReason, customReason);
 		return new ConditionEvaluationResult(false, reason);
 	}
 

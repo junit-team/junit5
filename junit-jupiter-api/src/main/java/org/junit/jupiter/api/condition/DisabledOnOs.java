@@ -79,4 +79,9 @@ public @interface DisabledOnOs {
 	 */
 	OS[] value();
 
+	/**
+	 * Reason to provide if the test of container ends up being disabled.
+	 */
+	String disabledReason() default "";
+
 }

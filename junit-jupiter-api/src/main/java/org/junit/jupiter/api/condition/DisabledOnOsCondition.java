@@ -12,6 +12,7 @@ package org.junit.jupiter.api.condition;
 
 import static org.junit.jupiter.api.condition.EnabledOnOsCondition.DISABLED_ON_CURRENT_OS;
 import static org.junit.jupiter.api.condition.EnabledOnOsCondition.ENABLED_ON_CURRENT_OS;
+import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
@@ -37,10 +38,13 @@ class DisabledOnOsCondition implements ExecutionCondition {
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
 		Optional<DisabledOnOs> optional = findAnnotation(context.getElement(), DisabledOnOs.class);
 		if (optional.isPresent()) {
-			OS[] operatingSystems = optional.get().value();
+			DisabledOnOs annotation = optional.get();
+			OS[] operatingSystems = annotation.value();
 			Preconditions.condition(operatingSystems.length > 0, "You must declare at least one OS in @DisabledOnOs");
-			return (Arrays.stream(operatingSystems).anyMatch(OS::isCurrentOs)) ? DISABLED_ON_CURRENT_OS
-					: ENABLED_ON_CURRENT_OS;
+
+			return Arrays.stream(operatingSystems).anyMatch(OS::isCurrentOs)
+					? disabled(DISABLED_ON_CURRENT_OS, annotation.disabledReason())
+					: enabled(ENABLED_ON_CURRENT_OS);
 		}
 		return ENABLED_BY_DEFAULT;
 	}
