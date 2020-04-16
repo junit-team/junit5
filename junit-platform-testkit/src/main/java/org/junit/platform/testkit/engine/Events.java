@@ -305,7 +305,7 @@ public final class Events {
 	 * <h4>Example</h4>
 	 *
 	 * <pre class="code">
-	 * executionResults.tests().assertEventsMatchIncompleteButOrdered(
+	 * executionResults.tests().assertEventsMatchLooselyInOrder(
 	 *     event(test("exampleTestMethod"), started()),
 	 *     event(test("exampleTestMethod"), finishedSuccessfully())
 	 * );
@@ -316,9 +316,9 @@ public final class Events {
 	 * @see TestExecutionResultConditions
 	 */
 	@SafeVarargs
-	public final void assertEventsMatchIncompleteButOrdered(Condition<? super Event>... conditions) {
+	public final void assertEventsMatchLooselyInOrder(Condition<? super Event>... conditions) {
 		Preconditions.notNull(conditions, "conditions must not be null");
-		assertEventsMatchIncompleteButOrdered(this.events, conditions);
+		assertEventsMatchLooselyInOrder(this.events, conditions);
 	}
 
 	/**
@@ -401,15 +401,15 @@ public final class Events {
 	@SafeVarargs
 	private static void assertEventsMatchLoosely(List<Event> events, Condition<? super Event>... conditions) {
 		SoftAssertions softly = new SoftAssertions();
-		for (Condition<? super Event> condition : conditions)
+		for (Condition<? super Event> condition : conditions) {
 			checkCondition(events, softly, condition);
+		}
 		softly.assertAll();
 	}
 
 	@SafeVarargs
 	@SuppressWarnings("varargs")
-	private static void assertEventsMatchIncompleteButOrdered(List<Event> events,
-			Condition<? super Event>... conditions) {
+	private static void assertEventsMatchLooselyInOrder(List<Event> events, Condition<? super Event>... conditions) {
 		Assertions.assertThat(conditions).hasSizeLessThanOrEqualTo(events.size());
 		SoftAssertions softly = new SoftAssertions();
 
@@ -421,8 +421,9 @@ public final class Events {
 				.collect(toList());
 		// @formatter:on
 
-		if (isNotInIncreasingOrder(indices))
+		if (isNotInIncreasingOrder(indices)) {
 			softly.fail("Conditions are not in the correct order.");
+		}
 
 		softly.assertAll();
 	}
@@ -437,8 +438,9 @@ public final class Events {
 	private static void checkCondition(List<Event> events, SoftAssertions softly, Condition<? super Event> condition) {
 		boolean matches = events.stream().anyMatch(condition::matches);
 
-		if (!matches)
+		if (!matches) {
 			softly.fail("Condition did not match any event: " + condition);
+		}
 	}
 
 	private static Event findEvent(List<Event> events, SoftAssertions softly, Condition<? super Event> condition) {
@@ -448,8 +450,9 @@ public final class Events {
 				.findFirst();
 		// @formatter:on
 
-		if (!matchedEvent.isPresent())
+		if (!matchedEvent.isPresent()) {
 			softly.fail("Condition did not match any event: " + condition);
+		}
 
 		return matchedEvent.orElse(null);
 	}
