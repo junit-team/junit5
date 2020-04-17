@@ -41,6 +41,7 @@ import org.assertj.core.data.Index;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
+import org.opentest4j.AssertionFailedError;
 
 /**
  * {@code Events} is a facade that provides a fluent API for working with
@@ -422,7 +423,7 @@ public final class Events {
 		// @formatter:on
 
 		if (isNotInIncreasingOrder(indices)) {
-			softly.fail("Conditions are not in the correct order.");
+			throw new AssertionFailedError("Conditions are not in the correct order.");
 		}
 
 		softly.assertAll();
