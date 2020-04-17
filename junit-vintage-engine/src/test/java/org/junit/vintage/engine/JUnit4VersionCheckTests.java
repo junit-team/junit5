@@ -78,9 +78,9 @@ class JUnit4VersionCheckTests {
 	void handlesMissingJUnit() {
 		JUnitException exception = assertThrows(JUnitException.class, JUnit4VersionCheck::checkSupported);
 
-		assertEquals(
-			"Invalid classpath/module path: junit-vintage-engine is present but junit:junit is not. "
-					+ "Please remove the former, add the latter, or use an excludeEngines(\"junit-vintage\") filter.",
+		assertEquals("Invalid class/module path: junit-vintage-engine is present but junit:junit is not. "
+				+ "Please either remove junit-vintage-engine or add junit:junit, or alternatively use "
+				+ "an excludeEngines(\"junit-vintage\") filter.",
 			exception.getMessage());
 	}
 }

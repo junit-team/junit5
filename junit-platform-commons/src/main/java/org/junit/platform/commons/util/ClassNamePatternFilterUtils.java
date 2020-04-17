@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 import org.apiguardian.api.API;
 
 /**
- * Class-related predicate holder used by execution listener, execution condition predicates
+ * Collection of utilities for creating filters based on class names.
  *
  * <h3>DISCLAIMER</h3>
  *
@@ -42,27 +42,34 @@ public class ClassNamePatternFilterUtils {
 
 	public static final String DEACTIVATE_ALL_PATTERN = "*";
 
-	public static <T> Predicate<T> excludeMatchingClasses(String pattern) {
+	/**
+	 * Create a {@link Predicate} that can be used to exclude (i.e., filter out)
+	 * objects of type {@code T} whose fully qualified class names match any of
+	 * the supplied patterns.
+	 *
+	 * @param patterns a comma-separated list of patterns
+	 */
+	public static <T> Predicate<T> excludeMatchingClasses(String patterns) {
 		// @formatter:off
-		return Optional.ofNullable(pattern)
+		return Optional.ofNullable(patterns)
 				.filter(StringUtils::isNotBlank)
 				.map(String::trim)
-				.map(ClassNamePatternFilterUtils::<T>createPredicateForNonBlankPattern)
+				.map(ClassNamePatternFilterUtils::<T>createPredicateFromPatterns)
 				.orElse(object -> true);
 		// @formatter:on
 	}
 
-	private static <T> Predicate<T> createPredicateForNonBlankPattern(String pattern) {
-		if (DEACTIVATE_ALL_PATTERN.equals(pattern)) {
+	private static <T> Predicate<T> createPredicateFromPatterns(String patterns) {
+		if (DEACTIVATE_ALL_PATTERN.equals(patterns)) {
 			return object -> false;
 		}
-		List<Pattern> patterns = convertToRegularExpressions(pattern);
-		return object -> patterns.stream().noneMatch(it -> it.matcher(object.getClass().getName()).matches());
+		List<Pattern> patternList = convertToRegularExpressions(patterns);
+		return object -> patternList.stream().noneMatch(it -> it.matcher(object.getClass().getName()).matches());
 	}
 
-	private static List<Pattern> convertToRegularExpressions(String pattern) {
+	private static List<Pattern> convertToRegularExpressions(String patterns) {
 		// @formatter:off
-		return Arrays.stream(pattern.split(","))
+		return Arrays.stream(patterns.split(","))
 				.filter(StringUtils::isNotBlank)
 				.map(String::trim)
 				.map(ClassNamePatternFilterUtils::replaceRegExElements)
@@ -79,4 +86,5 @@ public class ClassNamePatternFilterUtils {
 				// Convert our "*" wildcard into a proper RegEx pattern.
 				.replace("*", ".+");
 	}
+
 }

@@ -19,7 +19,9 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* ❓
+* In the `EngineTestKit` API, the `all()`, `containers()`, and `tests()` methods in
+  `EngineExecutionResults` that were deprecated in JUnit Platform 1.6.0 have been removed
+  in favor of `allEvents()`, `containerEvents()`, and `testEvents()`, respectively.
 
 ==== New Features and Improvements
 
@@ -61,6 +63,8 @@ on GitHub.
 * New `MethodOrderer` named `DisplayName` that sorts test methods alphanumerically based
   on their display names.
 * New `getDisplayName()` method in `MethodDescriptor`.
+* New annotations `@EnabledIf` and `@DisabledIf` can be used to enable/disable a test
+  or container based on static condition methods.
 
 
 [[release-notes-5.7.0-M1-junit-vintage]]

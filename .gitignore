@@ -20,6 +20,7 @@ gradle-app.setting
 *.uml
 **/.idea/*
 !/.idea/icon.png
+!/.idea/vcs.xml
 /out/
 /*/out/
 

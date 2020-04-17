@@ -49,17 +49,18 @@ import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigura
 public final class Constants {
 
 	/**
-	 * Property name used to provide a pattern for deactivating conditions: {@value}
+	 * Property name used to provide patterns for deactivating conditions: {@value}
 	 *
 	 * <h3>Pattern Matching Syntax</h3>
 	 *
-	 * <p>If the pattern consists solely of an asterisk ({@code *}), all conditions
-	 * will be deactivated. Otherwise, the pattern will be used to match against
-	 * comma separated fully qualified class name (<em>FQCN</em>) of each registered condition.
-	 * Any dot ({@code .}) in the pattern will match against a dot ({@code .})
-	 * or a dollar sign ({@code $}) in the FQCN. Any asterisk ({@code *}) will match
-	 * against one or more characters in the FQCN. All other characters in the
-	 * pattern will be matched one-to-one against the FQCN.
+	 * <p>If the property value consists solely of an asterisk ({@code *}), all
+	 * conditions will be deactivated. Otherwise, the property value will be treated
+	 * as a comma-separated list of patterns where each individual pattern will be
+	 * matched against the fully qualified class name (<em>FQCN</em>) of each registered
+	 * condition. Any dot ({@code .}) in a pattern will match against a dot ({@code .})
+	 * or a dollar sign ({@code $}) in a FQCN. Any asterisk ({@code *}) will match
+	 * against one or more characters in a FQCN. All other characters in a pattern
+	 * will be matched one-to-one against a FQCN.
 	 *
 	 * <h3>Examples</h3>
 	 *
@@ -69,10 +70,13 @@ public final class Constants {
 	 * base package and any of its subpackages.
 	 * <li>{@code *.MyCondition}: deactivates every condition whose simple class name is
 	 * exactly {@code MyCondition}.
-	 * <li>{@code *System*}: deactivates every condition whose simple class name contains
+	 * <li>{@code *System*}: deactivates every condition whose FQCN contains
 	 * {@code System}.
-	 * <li>{@code org.example.MyCondition}: deactivates the condition whose FQCN is
-	 * exactly {@code org.example.MyCondition}.
+	 * <li>{@code *System*, *Dev*}: deactivates every condition whose FQCN contains
+	 * {@code System} or {@code Dev}.
+	 * <li>{@code org.example.MyCondition, org.example.TheirCondition}: deactivates
+	 * conditions whose FQCN is exactly {@code org.example.MyCondition} or
+	 * {@code org.example.TheirCondition}.
 	 * </ul>
 	 *
 	 * @see #DEACTIVATE_ALL_CONDITIONS_PATTERN

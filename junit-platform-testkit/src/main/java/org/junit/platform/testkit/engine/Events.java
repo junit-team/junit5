@@ -243,7 +243,7 @@ public final class Events {
 	 * <h4>Example</h4>
 	 *
 	 * <pre class="code">
-	 * executionResults.tests().assertEventsMatchExactly(
+	 * executionResults.testEvents().assertEventsMatchExactly(
 	 *     event(test("exampleTestMethod"), started()),
 	 *     event(test("exampleTestMethod"), finishedSuccessfully())
 	 * );
