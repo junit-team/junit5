@@ -19,7 +19,8 @@ gradle-app.setting
 *.iws
 *.uml
 **/.idea/*
-!.idea/vcs.xml
+!/.idea/icon.png
+!/.idea/vcs.xml
 /out/
 /*/out/
 
