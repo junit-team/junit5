@@ -117,7 +117,7 @@ class EventsTests {
 	}
 
 	@Test
-	@DisplayName("assertEventsMatchLoosely: only one bad event -> fails")
+	@DisplayName("assertEventsMatchLoosely: only bad events -> fails")
 	void assertEventsMatchLooselyWithBadConditionsOnlyFails() {
 		Executable willFail = () -> events.assertEventsMatchLoosely( //
 			event(engine(), finishedWithFailure()), //
@@ -148,8 +148,8 @@ class EventsTests {
 	}
 
 	@Test
-	@DisplayName("assertEventsMatchIncompleteButOrdered: all events in order -> match")
-	void assertEventsMatchIncompleteButOrderedMatchesAllEventsInOrder() {
+	@DisplayName("assertEventsMatchLooselyInOrder: all events in order -> match")
+	void assertEventsMatchLooselyInOrderMatchesAllEventsInOrder() {
 		events.assertEventsMatchLooselyInOrder( //
 			event(engine(), started()), //
 			event(engine(), skippedWithReason("reason1")), //
@@ -159,8 +159,8 @@ class EventsTests {
 	}
 
 	@Test
-	@DisplayName("assertEventsMatchIncompleteButOrdered: all events in wrong order -> fail")
-	void assertEventsMatchIncompleteButOrderedWithAllEventsInWrongOrderFails() {
+	@DisplayName("assertEventsMatchLooselyInOrder: all events in wrong order -> fail")
+	void assertEventsMatchLooselyInOrderWithAllEventsInWrongOrderFails() {
 		Executable willFail = () -> events.assertEventsMatchLooselyInOrder( //
 			event(engine(), skippedWithReason("reason2")), //
 			event(engine(), finishedSuccessfully()), //
@@ -173,8 +173,8 @@ class EventsTests {
 	}
 
 	@Test
-	@DisplayName("assertEventsMatchIncompleteButOrdered: tailing subset in order -> match")
-	void assertEventsMatchIncompleteButOrderedMatchesATailingSubset() {
+	@DisplayName("assertEventsMatchLooselyInOrder: tailing subset in order -> match")
+	void assertEventsMatchLooselyInOrderMatchesATailingSubset() {
 		events.assertEventsMatchLooselyInOrder( //
 			event(engine(), skippedWithReason("reason1")), //
 			event(engine(), finishedSuccessfully()) //
@@ -182,8 +182,8 @@ class EventsTests {
 	}
 
 	@Test
-	@DisplayName("assertEventsMatchIncompleteButOrdered: starting subset in order -> match")
-	void assertEventsMatchIncompleteButOrderedMatchesAStartingSubset() {
+	@DisplayName("assertEventsMatchLooselyInOrder: starting subset in order -> match")
+	void assertEventsMatchLooselyInOrderMatchesAStartingSubset() {
 		events.assertEventsMatchLooselyInOrder( //
 			event(engine(), started()), //
 			event(engine(), skippedWithReason("reason1")) //
@@ -191,8 +191,8 @@ class EventsTests {
 	}
 
 	@Test
-	@DisplayName("assertEventsMatchIncompleteButOrdered: subset in wrong order -> fail")
-	void assertEventsMatchIncompleteButOrderedWithASubsetInWrongOrderFails() {
+	@DisplayName("assertEventsMatchLooselyInOrder: subset in wrong order -> fail")
+	void assertEventsMatchLooselyInOrderWithASubsetInWrongOrderFails() {
 		Executable willFail = () -> events.assertEventsMatchLooselyInOrder( //
 			event(engine(), skippedWithReason("reason1")), //
 			event(engine(), started()) //
@@ -203,24 +203,24 @@ class EventsTests {
 	}
 
 	@Test
-	@DisplayName("assertEventsMatchIncompleteButOrdered: last event alone -> match")
-	void assertEventsMatchIncompleteButOrderedMatchesTheLastEventAlone() {
+	@DisplayName("assertEventsMatchLooselyInOrder: last event alone -> match")
+	void assertEventsMatchLooselyInOrderMatchesTheLastEventAlone() {
 		events.assertEventsMatchLooselyInOrder( //
 			event(engine(), finishedSuccessfully()) //
 		);
 	}
 
 	@Test
-	@DisplayName("assertEventsMatchIncompleteButOrdered: first event alone -> match")
-	void assertEventsMatchIncompleteButOrderedMatchesTheFirstEventAlone() {
+	@DisplayName("assertEventsMatchLooselyInOrder: first event alone -> match")
+	void assertEventsMatchLooselyInOrderMatchesTheFirstEventAlone() {
 		events.assertEventsMatchLooselyInOrder( //
 			event(engine(), started()) //
 		);
 	}
 
 	@Test
-	@DisplayName("assertEventsMatchIncompleteButOrdered: bad events only -> fail")
-	void assertEventsMatchIncompleteButOrderedWithBadConditionsOnlyFails() {
+	@DisplayName("assertEventsMatchLooselyInOrder: bad events only -> fail")
+	void assertEventsMatchLooselyInOrderWithBadConditionsOnlyFails() {
 		Executable willFail = () -> events.assertEventsMatchLooselyInOrder( //
 			event(engine(), finishedWithFailure()), //
 			event(engine(), skippedWithReason("other")) //
@@ -235,8 +235,8 @@ class EventsTests {
 	}
 
 	@Test
-	@DisplayName("assertEventsMatchIncompleteButOrdered: one matching event and one bad event -> fail")
-	void assertEventsMatchIncompleteButOrderedWithOneMatchingAndOneBadConditionFailsPartly() {
+	@DisplayName("assertEventsMatchLooselyInOrder: one matching event and one bad event -> fail")
+	void assertEventsMatchLooselyInOrderWithOneMatchingAndOneBadConditionFailsPartly() {
 		Executable willFail = () -> events.assertEventsMatchLooselyInOrder( //
 			event(engine(), started()), //
 			event(engine(), finishedWithFailure()) //
@@ -247,8 +247,8 @@ class EventsTests {
 	}
 
 	@Test
-	@DisplayName("assertEventsMatchIncompleteButOrdered: first and last event in order -> match")
-	void assertEventsMatchIncompleteButOrderedMatchesFirstAndLastEventInOrder() {
+	@DisplayName("assertEventsMatchLooselyInOrder: first and last event in order -> match")
+	void assertEventsMatchLooselyInOrderMatchesFirstAndLastEventInOrder() {
 		events.assertEventsMatchLooselyInOrder( //
 			event(engine(), started()), //
 			event(engine(), finishedSuccessfully()) //
@@ -256,8 +256,8 @@ class EventsTests {
 	}
 
 	@Test
-	@DisplayName("assertEventsMatchIncompleteButOrdered: second and last event in bad order -> fail")
-	void assertEventsMatchIncompleteButOrderedWithSecondAndLastEventInBadOrderFails() {
+	@DisplayName("assertEventsMatchLooselyInOrder: second and last event in bad order -> fail")
+	void assertEventsMatchLooselyInOrderWithSecondAndLastEventInBadOrderFails() {
 		Executable willFail = () -> events.assertEventsMatchLooselyInOrder( //
 			event(engine(), finishedSuccessfully()), //
 			event(engine(), skippedWithReason("reason1")) //
@@ -268,8 +268,8 @@ class EventsTests {
 	}
 
 	@Test
-	@DisplayName("assertEventsMatchIncompleteButOrdered: too many events -> fail")
-	void assertEventsMatchIncompleteButOrderedWithTooEventsFails() {
+	@DisplayName("assertEventsMatchLooselyInOrder: too many events -> fail")
+	void assertEventsMatchLooselyInOrderWithTooEventsFails() {
 		Executable willFail = () -> events.assertEventsMatchLooselyInOrder( //
 			event(engine(), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()), //
