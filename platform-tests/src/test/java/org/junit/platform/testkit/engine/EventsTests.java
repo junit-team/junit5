@@ -28,6 +28,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
+import org.opentest4j.AssertionFailedError;
 
 class EventsTests {
 
@@ -167,10 +168,8 @@ class EventsTests {
 			event(engine(), started()) //
 		);
 
-		AssertJMultipleFailuresError error = assertThrows(AssertJMultipleFailuresError.class, willFail);
-		List<Throwable> failures = error.getFailures();
-		assertEquals(1, failures.size());
-		assertTrue(failures.get(0).getMessage().contains("Conditions are not in the correct order."));
+		AssertionFailedError error = assertThrows(AssertionFailedError.class, willFail);
+		assertTrue(error.getMessage().contains("Conditions are not in the correct order."));
 	}
 
 	@Test
@@ -199,10 +198,8 @@ class EventsTests {
 			event(engine(), started()) //
 		);
 
-		AssertJMultipleFailuresError error = assertThrows(AssertJMultipleFailuresError.class, willFail);
-		List<Throwable> failures = error.getFailures();
-		assertEquals(1, failures.size());
-		assertTrue(failures.get(0).getMessage().contains("Conditions are not in the correct order."));
+		AssertionFailedError error = assertThrows(AssertionFailedError.class, willFail);
+		assertTrue(error.getMessage().contains("Conditions are not in the correct order."));
 	}
 
 	@Test
@@ -266,10 +263,8 @@ class EventsTests {
 			event(engine(), skippedWithReason("reason1")) //
 		);
 
-		AssertJMultipleFailuresError error = assertThrows(AssertJMultipleFailuresError.class, willFail);
-		List<Throwable> failures = error.getFailures();
-		assertEquals(1, failures.size());
-		assertTrue(failures.get(0).getMessage().contains("Conditions are not in the correct order."));
+		AssertionFailedError error = assertThrows(AssertionFailedError.class, willFail);
+		assertTrue(error.getMessage().contains("Conditions are not in the correct order."));
 	}
 
 	@Test
