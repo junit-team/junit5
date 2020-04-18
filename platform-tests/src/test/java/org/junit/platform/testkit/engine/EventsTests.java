@@ -269,7 +269,7 @@ class EventsTests {
 
 	@Test
 	@DisplayName("assertEventsMatchLooselyInOrder: too many events -> fail")
-	void assertEventsMatchLooselyInOrderWithTooEventsFails() {
+	void assertEventsMatchLooselyInOrderWithTooManyEventsFails() {
 		Executable willFail = () -> events.assertEventsMatchLooselyInOrder( //
 			event(engine(), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()), //
