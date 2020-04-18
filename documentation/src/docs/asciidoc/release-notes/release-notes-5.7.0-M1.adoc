@@ -43,7 +43,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The Jupiter engine now ignores `MethodSelectors` for methods in non-Jupiter test
+  classes instead of failing for missing methods in such cases.
 
 ==== Deprecations and Breaking Changes
 
