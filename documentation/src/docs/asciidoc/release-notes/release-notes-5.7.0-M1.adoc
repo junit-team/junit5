@@ -77,7 +77,9 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The Vintage engine no longer fails when resolving a `MethodSelector` for methods of test
+  classes that cannot be found via reflection. This allows selecting Spock feature methods
+  by their source code name even though they have a generated method name in the bytecode.
 
 ==== Deprecations and Breaking Changes
 

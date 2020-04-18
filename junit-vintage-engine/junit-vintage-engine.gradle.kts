@@ -3,6 +3,8 @@ import aQute.bnd.gradle.BundleTaskConvention;
 plugins {
 	`java-library-conventions`
 	`junit4-compatibility`
+	`java-test-fixtures`
+	groovy
 }
 
 apply(from = "$rootDir/gradle/testing.gradle.kts")
@@ -17,9 +19,20 @@ dependencies {
 	api(project(":junit-platform-engine"))
 	api("junit:junit")
 
+	testFixturesApi("org.spockframework:spock-core")
+
 	testImplementation(project(":junit-platform-launcher"))
 	testImplementation(project(":junit-platform-runner"))
 	testImplementation(project(":junit-platform-testkit"))
+}
+
+configurations.all {
+	resolutionStrategy.eachDependency {
+		if (requested.group == "org.codehaus.groovy") {
+			useVersion("2.5.11")
+			because("Spock is not yet compatible with Groovy 3.x")
+		}
+	}
 }
 
 tasks {
