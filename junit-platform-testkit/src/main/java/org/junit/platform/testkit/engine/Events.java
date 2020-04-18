@@ -277,7 +277,7 @@ public final class Events {
 	 * <h4>Example</h4>
 	 *
 	 * <pre class="code">
-	 * executionResults.tests().assertEventsMatchLoosely(
+	 * executionResults.testEvents().assertEventsMatchLoosely(
 	 *     event(test("exampleTestMethod"), started()),
 	 *     event(test("exampleTestMethod"), finishedSuccessfully())
 	 * );
@@ -306,7 +306,7 @@ public final class Events {
 	 * <h4>Example</h4>
 	 *
 	 * <pre class="code">
-	 * executionResults.tests().assertEventsMatchLooselyInOrder(
+	 * executionResults.testEvents().assertEventsMatchLooselyInOrder(
 	 *     event(test("exampleTestMethod"), started()),
 	 *     event(test("exampleTestMethod"), finishedSuccessfully())
 	 * );
