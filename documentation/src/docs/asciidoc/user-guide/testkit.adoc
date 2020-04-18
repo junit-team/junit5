@@ -133,7 +133,7 @@ reliable.
 ====
 
 If you want to do a _partial_ match _with_ or _without_ ordering requirements, you can use
-the methods `assertEventsMatchIncompleteButOrdered()` and `assertEventsMatchLoosely()`,
+the methods `assertEventsMatchLooselyInOrder()` and `assertEventsMatchLoosely()`,
 respectively.
 
 [source,java,indent=0]
