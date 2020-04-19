@@ -644,6 +644,7 @@ f2d29095e193feeeb0a255546206c9f7  junit-platform-commons/src/main/java/org/junit
 f2d708b74a9bb1fe19699f4da643d69b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/TestWatcher.java
 f32fc9bb347c60b4ae59f0edac9b5001  junit-vintage-engine/src/main/java/org/junit/vintage/engine/descriptor/TestSourceProvider.java
 f35db7ea25fcf2a1dbf8f0dfb34a388f  documentation/src/test/java/example/StandardTests.java
+f4786faf0b9bb496f070c770cbdc3a34  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-M1.adoc
 f5919de0da68f042c7d92f96abe28f6c  documentation/src/docs/asciidoc/release-notes/release-notes-TEMPLATE.adoc
 f5da166ba832f0a1c1b15144ff71f816  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/TestTemplateTestDescriptor.java
 f5f966bb0e1530748a9531a68e56fadd  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExecutionCondition.java
@@ -660,7 +661,6 @@ fad6c8144f87135732391c6b3495a58c  junit-platform-engine/src/main/java/org/junit/
 fadece59a381fa8335c0be8668911a43  junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ParallelExecutionConfigurationStrategy.java
 fb6cb48e67b12100aa652cfe9e1f8b78  junit-platform-commons/src/main/java/org/junit/platform/commons/util/FunctionUtils.java
 fb7ae904b9dbe9b53f960e0a5a27a20c  junit-platform-launcher/src/main/java/org/junit/platform/launcher/listeners/discovery/LauncherDiscoveryListeners.java
-fb91e05a85b1394060a144d00926903f  documentation/src/docs/asciidoc/release-notes/release-notes-5.7.0-M1.adoc
 fbc0a0a1024e8999ef70bbd8a36f01fd  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/OutcomeDelayingEngineExecutionListener.java
 fbc99937f40cc5ae7e0e47113ff01fe4  junit-platform-launcher/src/main/java/org/junit/platform/launcher/LauncherDiscoveryListener.java
 fbd729c2f6f643430f1e886e5cc0a4d5  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/IncludeTags.java

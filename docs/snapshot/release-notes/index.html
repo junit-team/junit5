@@ -577,15 +577,6 @@ implementations.</p>
 <p>The TestKit now allows to match conditions with events loosely, i.e. an incomplete match
 with or without a fixed order.</p>
 </li>
-<li>
-<p>Add <code>Node.DynamicTestExecutor#execute(TestDescriptor, EngineExecutionListener)</code> for
-engines that wish to pass a custom <code>EngineExecutionListener</code> and cancel or wait for the
-execution of a submitted test via the returned <code>Future</code>.</p>
-</li>
-<li>
-<p>Add <code>EngineExecutionListener.NOOP</code> and change all declared methods to have empty default
-implementations.</p>
-</li>
 </ul>
 </div>
 </div>
@@ -870,7 +861,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-04-19 14:41:46 UTC
+Last updated 2020-04-19 14:55:49 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
