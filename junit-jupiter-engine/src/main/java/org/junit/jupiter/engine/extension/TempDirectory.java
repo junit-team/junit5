@@ -219,6 +219,12 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 				private void makeWritableAndTryToDeleteAgain(Path path, IOException exception) {
 					try {
+						Path relativePath = dir.relativize(path);
+						Path parent = dir;
+						for (int i = 0; i < relativePath.getNameCount(); i++) {
+							makeWritable(parent);
+							parent = parent.resolve(relativePath.getName(i));
+						}
 						makeWritable(path);
 						Files.delete(path);
 					}
