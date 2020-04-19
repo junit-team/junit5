@@ -96,9 +96,17 @@ fun assertAll(heading: String?, vararg executables: () -> Unit) =
  * @see Assertions.assertThrows
  */
 inline fun <reified T : Throwable> assertThrows(executable: () -> Unit): T {
-    val result = runCatching(executable)
+    val throwable: Throwable? = try {
+        executable()
+    } catch (caught: Throwable) {
+        caught
+    } as? Throwable
 
-    return Assertions.assertThrows(T::class.java) { result.getOrThrow() }
+    return Assertions.assertThrows(T::class.java) {
+        if (throwable != null) {
+            throw throwable
+        }
+    }
 }
 
 /**
@@ -125,9 +133,17 @@ inline fun <reified T : Throwable> assertThrows(message: String, executable: () 
  * @see Assertions.assertThrows
  */
 inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, executable: () -> Unit): T {
-    val result = runCatching(executable)
+    val throwable: Throwable? = try {
+        executable()
+    } catch (caught: Throwable) {
+        caught
+    } as? Throwable
 
-    return Assertions.assertThrows(T::class.java, Executable { result.getOrThrow() }, Supplier(message))
+    return Assertions.assertThrows(T::class.java, Executable {
+        if (throwable != null) {
+            throw throwable
+        }
+    }, Supplier(message))
 }
 
 /**

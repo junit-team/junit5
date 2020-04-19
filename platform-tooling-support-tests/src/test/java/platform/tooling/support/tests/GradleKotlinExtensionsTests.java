@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
-import java.nio.file.Paths;
 import java.time.Duration;
 
 import de.sormuras.bartholdy.tool.GradleWrapper;
@@ -33,7 +32,7 @@ class GradleKotlinExtensionsTests {
 	@Test
 	void gradle_wrapper() {
 		var result = Request.builder() //
-				.setTool(new GradleWrapper(Paths.get(".."))) //
+				.setTool(new GradleWrapper(Request.PROJECTS.resolve("gradle-kotlin-extensions"))) //
 				.setProject("gradle-kotlin-extensions") //
 				.addArguments("-Dmaven.repo=" + System.getProperty("maven.repo")) //
 				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
