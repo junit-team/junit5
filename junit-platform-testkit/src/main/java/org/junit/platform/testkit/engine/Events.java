@@ -288,6 +288,7 @@ public final class Events {
 	 * @see TestExecutionResultConditions
 	 */
 	@SafeVarargs
+	@SuppressWarnings("varargs")
 	public final void assertEventsMatchLoosely(Condition<? super Event>... conditions) {
 		Preconditions.notNull(conditions, "conditions must not be null");
 		Preconditions.containsNoNullElements(conditions, "conditions must not contain null elements");
@@ -318,6 +319,7 @@ public final class Events {
 	 * @see TestExecutionResultConditions
 	 */
 	@SafeVarargs
+	@SuppressWarnings("varargs")
 	public final void assertEventsMatchLooselyInOrder(Condition<? super Event>... conditions) {
 		Preconditions.notNull(conditions, "conditions must not be null");
 		Preconditions.containsNoNullElements(conditions, "conditions must not contain null elements");
