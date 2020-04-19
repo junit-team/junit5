@@ -45,6 +45,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.io.TempDir;
@@ -86,6 +88,14 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	@DisplayName("is capable of removal of a read-only file")
 	void nonWritableFileDoesNotCauseFailureTestCase() {
 		executeTestsForClass(NonWritableFileDoesNotCauseFailureTestCase.class).testEvents()//
+				.assertStatistics(stats -> stats.started(1).succeeded(1));
+	}
+
+	@Test
+	@DisplayName("is capable of removal of a read-only directory")
+	@DisabledOnOs(OS.WINDOWS)
+	void nonWritableDirectoryDoesNotCauseFailureTestCase() {
+		executeTestsForClass(NonWritableDirectoryDoesNotCauseFailureTestCase.class).testEvents()//
 				.assertStatistics(stats -> stats.started(1).succeeded(1));
 	}
 
@@ -776,6 +786,18 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			var path = Files.write(tempDir.resolve("test.txt"), new byte[0]);
 			assumeTrue(path.toFile().setWritable(false),
 				() -> "Unable to set file " + path + " readonly via .toFile().setWritable(false)");
+		}
+
+	}
+
+	// https://github.com/junit-team/junit5/issues/2171
+	static class NonWritableDirectoryDoesNotCauseFailureTestCase {
+
+		@Test
+		void createReadonlyDirectory(@TempDir Path tempDir) throws IOException {
+			var dir = Files.createDirectories(tempDir.resolve("dir"));
+			assumeTrue(dir.toFile().setWritable(false),
+				() -> "Unable to set directory " + dir + " readonly via .toFile().setWritable(false)");
 		}
 
 	}
