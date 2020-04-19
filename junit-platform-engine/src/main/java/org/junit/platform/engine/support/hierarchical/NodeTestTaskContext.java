@@ -30,6 +30,13 @@ class NodeTestTaskContext {
 		this.executionAdvisor = executionAdvisor;
 	}
 
+	NodeTestTaskContext withListener(EngineExecutionListener listener) {
+		if (this.listener == listener) {
+			return this;
+		}
+		return new NodeTestTaskContext(listener, executorService, throwableCollectorFactory, executionAdvisor);
+	}
+
 	EngineExecutionListener getListener() {
 		return listener;
 	}

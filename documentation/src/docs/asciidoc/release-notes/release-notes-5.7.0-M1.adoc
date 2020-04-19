@@ -31,6 +31,11 @@ on GitHub.
   one to specify a comma-separated list of patterns for deactivating
   `TestExecutionListener` implementations registered via the `ServiceLoader` mechanism.
 * The `@Testable` annotation may now be applied _directly_ to fields.
+* Add `Node.DynamicTestExecutor#execute(TestDescriptor, EngineExecutionListener)` for
+  engines that wish to pass a custom `EngineExecutionListener` and cancel or wait for the
+  execution of a submitted test via the returned `Future`.
+* Add `EngineExecutionListener.NOOP` and change all declared methods to have empty default
+  implementations.
 
 
 [[release-notes-5.7.0-M1-junit-jupiter]]
