@@ -439,7 +439,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>void</code></td>
+<td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">EngineExecutionListener.</span><code><span class="memberNameLink"><a href="../EngineExecutionListener.html#dynamicTestRegistered(org.junit.platform.engine.TestDescriptor)">dynamicTestRegistered</a></span>&#8203;(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</code></th>
 <td class="colLast">
 <div class="block">Must be called when a new, dynamic <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has been
@@ -447,7 +447,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
+<td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">EngineExecutionListener.</span><code><span class="memberNameLink"><a href="../EngineExecutionListener.html#executionFinished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">executionFinished</a></span>&#8203;(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
                  <a href="../TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;testExecutionResult)</code></th>
 <td class="colLast">
@@ -456,7 +456,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>void</code></td>
+<td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">EngineExecutionListener.</span><code><span class="memberNameLink"><a href="../EngineExecutionListener.html#executionSkipped(org.junit.platform.engine.TestDescriptor,java.lang.String)">executionSkipped</a></span>&#8203;(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;reason)</code></th>
 <td class="colLast">
@@ -465,7 +465,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
+<td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">EngineExecutionListener.</span><code><span class="memberNameLink"><a href="../EngineExecutionListener.html#executionStarted(org.junit.platform.engine.TestDescriptor)">executionStarted</a></span>&#8203;(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</code></th>
 <td class="colLast">
 <div class="block">Must be called when the execution of a leaf or subtree of the test tree
@@ -480,7 +480,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>void</code></td>
+<td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">EngineExecutionListener.</span><code><span class="memberNameLink"><a href="../EngineExecutionListener.html#reportingEntryPublished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.reporting.ReportEntry)">reportingEntryPublished</a></span>&#8203;(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
                        <a href="../reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting">ReportEntry</a>&nbsp;entry)</code></th>
 <td class="colLast">
@@ -825,6 +825,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Future.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">Future</a>&lt;?&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Node.DynamicTestExecutor.</span><code><span class="memberNameLink"><a href="../support/hierarchical/Node.DynamicTestExecutor.html#execute(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.EngineExecutionListener)">execute</a></span>&#8203;(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+       <a href="../EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a>&nbsp;executionListener)</code></th>
+<td class="colLast">
+<div class="block">Submit a dynamic test descriptor for immediate execution with a
+ custom, potentially no-op, execution listener.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Node.</span><code><span class="memberNameLink"><a href="../support/hierarchical/Node.html#nodeFinished(C,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">nodeFinished</a></span>&#8203;(<a href="../support/hierarchical/Node.html" title="type parameter in Node">C</a>&nbsp;context,
             <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
@@ -833,7 +842,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Callback invoked when the execution of this node has finished.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Node.</span><code><span class="memberNameLink"><a href="../support/hierarchical/Node.html#nodeSkipped(C,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.support.hierarchical.Node.SkipResult)">nodeSkipped</a></span>&#8203;(<a href="../support/hierarchical/Node.html" title="type parameter in Node">C</a>&nbsp;context,
            <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,

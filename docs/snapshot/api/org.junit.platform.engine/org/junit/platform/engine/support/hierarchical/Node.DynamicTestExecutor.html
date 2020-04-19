@@ -28,7 +28,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6};
+var data = {"i0":6,"i1":6,"i2":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -180,6 +180,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Submit a dynamic test descriptor for immediate execution.</div>
 </td>
 </tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Future.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">Future</a>&lt;?&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#execute(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.EngineExecutionListener)">execute</a></span>&#8203;(<a href="../../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+       <a href="../../EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a>&nbsp;executionListener)</code></th>
+<td class="colLast">
+<div class="block">Submit a dynamic test descriptor for immediate execution with a
+ custom, potentially no-op, execution listener.</div>
+</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -207,7 +216,35 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Submit a dynamic test descriptor for immediate execution.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>testDescriptor</code> - the test descriptor to be executed</dd>
+<dd><code>testDescriptor</code> - the test descriptor to be executed; never
+ <code>null</code></dd>
+</dl>
+</li>
+</ul>
+<a id="execute(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.EngineExecutionListener)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>execute</h4>
+<pre class="methodSignature"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true" title="class or interface in org.apiguardian.api" class="externalLink">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#status()" title="class or interface in org.apiguardian.api" class="externalLink">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.Status.html?is-external=true#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="externalLink">EXPERIMENTAL</a>,
+     <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.0/api/org/apiguardian/api/API.html?is-external=true#since()" title="class or interface in org.apiguardian.api" class="externalLink">since</a>="5.7")
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Future.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">Future</a>&lt;?&gt;&nbsp;execute&#8203;(<a href="../../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+                  <a href="../../EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a>&nbsp;executionListener)</pre>
+<div class="block">Submit a dynamic test descriptor for immediate execution with a
+ custom, potentially no-op, execution listener.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>testDescriptor</code> - the test descriptor to be executed; never
+ <code>null</code></dd>
+<dd><code>executionListener</code> - the executionListener to be notified; never
+ <code>null</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a future to cancel or wait for the execution</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>5.7</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../EngineExecutionListener.html#NOOP"><code>EngineExecutionListener.NOOP</code></a></dd>
 </dl>
 </li>
 </ul>

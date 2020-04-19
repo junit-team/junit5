@@ -28,8 +28,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
+var data = {"i0":18,"i1":18,"i2":18,"i3":18,"i4":18};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -93,13 +93,13 @@ loadScripts(document, 'script');</script>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -150,6 +150,31 @@ public interface <span class="typeNameLabel">EngineExecutionListener</span></pre
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- =========== FIELD SUMMARY =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="field.summary">
+<!--   -->
+</a>
+<h3>Field Summary</h3>
+<table class="memberSummary">
+<caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Field</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#NOOP">NOOP</a></span></code></th>
+<td class="colLast">
+<div class="block">No-op implementation of <code>EngineExecutionListener</code></div>
+</td>
+</tr>
+</table>
+</li>
+</ul>
+</section>
 <!-- ========== METHOD SUMMARY =========== -->
 <section role="region">
 <ul class="blockList">
@@ -158,14 +183,14 @@ public interface <span class="typeNameLabel">EngineExecutionListener</span></pre
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t5" class="tableTab"><span><a href="javascript:show(16);">Default Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>void</code></td>
+<td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dynamicTestRegistered(org.junit.platform.engine.TestDescriptor)">dynamicTestRegistered</a></span>&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</code></th>
 <td class="colLast">
 <div class="block">Must be called when a new, dynamic <a href="TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has been
@@ -173,7 +198,7 @@ public interface <span class="typeNameLabel">EngineExecutionListener</span></pre
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>void</code></td>
+<td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#executionFinished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)">executionFinished</a></span>&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
                  <a href="TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;testExecutionResult)</code></th>
 <td class="colLast">
@@ -182,7 +207,7 @@ public interface <span class="typeNameLabel">EngineExecutionListener</span></pre
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>void</code></td>
+<td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#executionSkipped(org.junit.platform.engine.TestDescriptor,java.lang.String)">executionSkipped</a></span>&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;reason)</code></th>
 <td class="colLast">
@@ -191,7 +216,7 @@ public interface <span class="typeNameLabel">EngineExecutionListener</span></pre
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code>void</code></td>
+<td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#executionStarted(org.junit.platform.engine.TestDescriptor)">executionStarted</a></span>&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</code></th>
 <td class="colLast">
 <div class="block">Must be called when the execution of a leaf or subtree of the test tree
@@ -199,7 +224,7 @@ public interface <span class="typeNameLabel">EngineExecutionListener</span></pre
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>void</code></td>
+<td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#reportingEntryPublished(org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.reporting.ReportEntry)">reportingEntryPublished</a></span>&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
                        <a href="reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting">ReportEntry</a>&nbsp;entry)</code></th>
 <td class="colLast">
@@ -222,6 +247,26 @@ public interface <span class="typeNameLabel">EngineExecutionListener</span></pre
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ============ FIELD DETAIL =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="field.detail">
+<!--   -->
+</a>
+<h3>Field Detail</h3>
+<a id="NOOP">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>NOOP</h4>
+<pre>static final&nbsp;<a href="EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a> NOOP</pre>
+<div class="block">No-op implementation of <code>EngineExecutionListener</code></div>
+</li>
+</ul>
+</li>
+</ul>
+</section>
 <!-- ============ METHOD DETAIL ========== -->
 <section role="region">
 <ul class="blockList">
@@ -235,7 +280,7 @@ public interface <span class="typeNameLabel">EngineExecutionListener</span></pre
 <ul class="blockList">
 <li class="blockList">
 <h4>dynamicTestRegistered</h4>
-<pre class="methodSignature">void&nbsp;dynamicTestRegistered&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</pre>
+<pre class="methodSignature">default&nbsp;void&nbsp;dynamicTestRegistered&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</pre>
 <div class="block">Must be called when a new, dynamic <a href="TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> has been
  registered.
 
@@ -254,8 +299,8 @@ public interface <span class="typeNameLabel">EngineExecutionListener</span></pre
 <ul class="blockList">
 <li class="blockList">
 <h4>executionSkipped</h4>
-<pre class="methodSignature">void&nbsp;executionSkipped&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
-                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;reason)</pre>
+<pre class="methodSignature">default&nbsp;void&nbsp;executionSkipped&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;reason)</pre>
 <div class="block">Must be called when the execution of a leaf or subtree of the test tree
  has been skipped.
 
@@ -280,7 +325,7 @@ public interface <span class="typeNameLabel">EngineExecutionListener</span></pre
 <ul class="blockList">
 <li class="blockList">
 <h4>executionStarted</h4>
-<pre class="methodSignature">void&nbsp;executionStarted&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</pre>
+<pre class="methodSignature">default&nbsp;void&nbsp;executionStarted&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor)</pre>
 <div class="block">Must be called when the execution of a leaf or subtree of the test tree
  is about to be started.
 
@@ -306,8 +351,8 @@ public interface <span class="typeNameLabel">EngineExecutionListener</span></pre
 <ul class="blockList">
 <li class="blockList">
 <h4>executionFinished</h4>
-<pre class="methodSignature">void&nbsp;executionFinished&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
-                       <a href="TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;testExecutionResult)</pre>
+<pre class="methodSignature">default&nbsp;void&nbsp;executionFinished&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+                               <a href="TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a>&nbsp;testExecutionResult)</pre>
 <div class="block">Must be called when the execution of a leaf or subtree of the test tree
  has finished, regardless of the outcome.
 
@@ -342,8 +387,8 @@ public interface <span class="typeNameLabel">EngineExecutionListener</span></pre
 <ul class="blockListLast">
 <li class="blockList">
 <h4>reportingEntryPublished</h4>
-<pre class="methodSignature">void&nbsp;reportingEntryPublished&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
-                             <a href="reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting">ReportEntry</a>&nbsp;entry)</pre>
+<pre class="methodSignature">default&nbsp;void&nbsp;reportingEntryPublished&#8203;(<a href="TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
+                                     <a href="reporting/ReportEntry.html" title="class in org.junit.platform.engine.reporting">ReportEntry</a>&nbsp;entry)</pre>
 <div class="block">Can be called for any <a href="TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> in order to publish additional
  information to the reporting infrastructure &mdash; for example:
 
@@ -417,13 +462,13 @@ public interface <span class="typeNameLabel">EngineExecutionListener</span></pre
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>

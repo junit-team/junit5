@@ -564,6 +564,15 @@ one to specify a comma-separated list of patterns for deactivating
 <li>
 <p>The <code>@Testable</code> annotation may now be applied <em>directly</em> to fields.</p>
 </li>
+<li>
+<p>Add <code>Node.DynamicTestExecutor#execute(TestDescriptor, EngineExecutionListener)</code> for
+engines that wish to pass a custom <code>EngineExecutionListener</code> and cancel or wait for the
+execution of a submitted test via the returned <code>Future</code>.</p>
+</li>
+<li>
+<p>Add <code>EngineExecutionListener.NOOP</code> and change all declared methods to have empty default
+implementations.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -845,7 +854,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-04-14 17:15:57 UTC
+Last updated 2020-04-19 07:08:37 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
