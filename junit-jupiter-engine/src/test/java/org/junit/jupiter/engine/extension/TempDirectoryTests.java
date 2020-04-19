@@ -45,6 +45,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.io.TempDir;
@@ -90,6 +92,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	@DisabledOnOs(OS.WINDOWS)
 	@DisplayName("is capable of removal of a read-only file in a read-only dir")
 	void readOnlyFileInReadOnlyDirDoesNotCauseFailure() {
 		executeTestsForClass(ReadOnlyFileInReadOnlyDirDoesNotCauseFailureTestCase.class).testEvents()//
@@ -97,6 +100,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	@DisabledOnOs(OS.WINDOWS)
 	@DisplayName("is capable of removal of a read-only file in a dir in a read-only dir")
 	void readOnlyFileInNestedReadOnlyDirDoesNotCauseFailure() {
 		executeTestsForClass(ReadOnlyFileInDirInReadOnlyDirDoesNotCauseFailureTestCase.class).testEvents()//
