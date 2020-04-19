@@ -1,9 +1,17 @@
 [[release-notes-5.7.0-M1]]
 == 5.7.0-M1
 
-*Date of Release:* ❓
+*Date of Release:* April 19, 2020
 
-*Scope:* ❓
+*Scope:*
+
+* New `@EnabledIf`/`@DisabledIf` for conditional execution based on method calls
+* New `MethodOrderer` named `DisplayName`
+* New `DisplayNameGenerator` named `Simple` that removes empty parentheses
+* `assertThrows` for Kotlin can now be used with suspending functions
+* `TestExecutionListener` deactivation via configuration parameter
+* `EngineTestKit` now allows for testing post-discovery filtering and pruning
+* Interoperability improvements for the Vintage test engine with Spock
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/44?closed=1+[5.7 M1] milestone page in the JUnit repository
@@ -12,10 +20,6 @@ on GitHub.
 
 [[release-notes-5.7.0-M1-junit-platform]]
 === JUnit Platform
-
-==== Bug Fixes
-
-* ❓
 
 ==== Deprecations and Breaking Changes
 
@@ -56,31 +60,27 @@ on GitHub.
 * The Jupiter engine now ignores `MethodSelectors` for methods in non-Jupiter test
   classes instead of failing for missing methods in such cases.
 
-==== Deprecations and Breaking Changes
-
-* ❓
-
 ==== New Features and Improvements
 
+* New annotations `@EnabledIf` and `@DisabledIf` can be used to enable/disable a test
+or container based on static condition methods.
+* New `MethodOrderer` named `DisplayName` that sorts test methods alphanumerically based
+on their display names.
+* New `DisplayNameGenerator` named `Simple` (based on `Standard`) that removes trailing
+parentheses for methods with no parameters.
 * `assertThrows` for Kotlin can now be used with suspending functions and other lambda
   contexts that require inlining.
+* The `JRE` enum now provides a static `currentVersion()` method that returns the enum
+  constant for the currently executing JRE, e.g. for use in custom execution conditions
+  and other extensions.
 * Synthetic constructors are now ignored when instantiating a test class.
 * The Javadoc for the `provideTestTemplateInvocationContexts()` method in
   `TestTemplateInvocationContextProvider` has been aligned with the actual implementation.
   Providers are now officially allowed to return an empty stream, and the error message
   when all provided streams are empty is now more helpful.
-* The `JRE` enum now provides a static `currentVersion()` method that returns the enum
-  constant for the currently executing JRE, e.g. for use in custom execution conditions
-  and other extensions.
 * The `name` attribute of `@ParameterizedTest` is now clearly documented to be a
   `MessageFormat` pattern.
-* New `DisplayNameGenerator` named `Simple` (based on `Standard`) that removes trailing
-  parentheses for methods with no parameters.
-* New `MethodOrderer` named `DisplayName` that sorts test methods alphanumerically based
-  on their display names.
 * New `getDisplayName()` method in `MethodDescriptor`.
-* New annotations `@EnabledIf` and `@DisabledIf` can be used to enable/disable a test
-  or container based on static condition methods.
 
 
 [[release-notes-5.7.0-M1-junit-vintage]]
@@ -91,10 +91,6 @@ on GitHub.
 * The Vintage engine no longer fails when resolving a `MethodSelector` for methods of test
   classes that cannot be found via reflection. This allows selecting Spock feature methods
   by their source code name even though they have a generated method name in the bytecode.
-
-==== Deprecations and Breaking Changes
-
-* ❓
 
 ==== New Features and Improvements
 
