@@ -45,6 +45,7 @@ on GitHub.
 
 ==== Bug Fixes
 
+* `@TempDir` is now able to clean up files in read-only directories.
 * The Jupiter engine now ignores `MethodSelectors` for methods in non-Jupiter test
   classes instead of failing for missing methods in such cases.
 
