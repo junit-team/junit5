@@ -584,7 +584,8 @@ implementations.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The Jupiter engine now ignores <code>MethodSelectors</code> for methods in non-Jupiter test
+classes instead of failing for missing methods in such cases.</p>
 </li>
 </ul>
 </div>
@@ -651,7 +652,9 @@ or container based on static condition methods.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The Vintage engine no longer fails when resolving a <code>MethodSelector</code> for methods of test
+classes that cannot be found via reflection. This allows selecting Spock feature methods
+by their source code name even though they have a generated method name in the bytecode.</p>
 </li>
 </ul>
 </div>
@@ -854,7 +857,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-04-19 07:08:37 UTC
+Last updated 2020-04-19 11:57:48 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
