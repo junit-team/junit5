@@ -38,11 +38,7 @@ on GitHub.
   implementations.
 * The TestKit now allows to match conditions with events loosely, i.e. an incomplete match
   with or without a fixed order.
-* Add `Node.DynamicTestExecutor#execute(TestDescriptor, EngineExecutionListener)` for
-  engines that wish to pass a custom `EngineExecutionListener` and cancel or wait for the
-  execution of a submitted test via the returned `Future`.
-* Add `EngineExecutionListener.NOOP` and change all declared methods to have empty default
-  implementations.
+
 
 [[release-notes-5.7.0-M1-junit-jupiter]]
 === JUnit Jupiter
