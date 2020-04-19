@@ -132,6 +132,10 @@ methods are executed, which in turn allows our `verifyAllJupiterEvents()` test t
 reliable.
 ====
 
+If you want to do a _partial_ match _with_ or _without_ ordering requirements, you can use
+the methods `assertEventsMatchLooselyInOrder()` and `assertEventsMatchLoosely()`,
+respectively.
+
 [source,java,indent=0]
 ----
 include::{testDir}/example/testkit/EngineTestKitAllEventsDemo.java[tags=user_guide]

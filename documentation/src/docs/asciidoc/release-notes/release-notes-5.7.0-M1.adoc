@@ -43,6 +43,8 @@ on GitHub.
 * The `EngineTestKit` now reuses the same test discovery and execution logic as the
   `Launcher`. Thus, it's now possible to test that an engine's behavior in the presence of
   post-discovery filters (e.g. tag filters) and with regard to pruning.
+* The TestKit now allows to match conditions with events loosely, i.e. an incomplete match
+  with or without a fixed order.
 
 
 [[release-notes-5.7.0-M1-junit-jupiter]]
@@ -50,6 +52,7 @@ on GitHub.
 
 ==== Bug Fixes
 
+* `@TempDir` is now able to clean up files in read-only directories.
 * The Jupiter engine now ignores `MethodSelectors` for methods in non-Jupiter test
   classes instead of failing for missing methods in such cases.
 

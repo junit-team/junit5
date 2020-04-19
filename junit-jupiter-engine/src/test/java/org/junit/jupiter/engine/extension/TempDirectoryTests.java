@@ -45,6 +45,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.io.TempDir;
@@ -84,8 +86,24 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	@DisplayName("is capable of removal of a read-only file")
-	void nonWritableFileDoesNotCauseFailureTestCase() {
+	void nonWritableFileDoesNotCauseFailure() {
 		executeTestsForClass(NonWritableFileDoesNotCauseFailureTestCase.class).testEvents()//
+				.assertStatistics(stats -> stats.started(1).succeeded(1));
+	}
+
+	@Test
+	@DisabledOnOs(OS.WINDOWS)
+	@DisplayName("is capable of removal of a read-only file in a read-only dir")
+	void readOnlyFileInReadOnlyDirDoesNotCauseFailure() {
+		executeTestsForClass(ReadOnlyFileInReadOnlyDirDoesNotCauseFailureTestCase.class).testEvents()//
+				.assertStatistics(stats -> stats.started(1).succeeded(1));
+	}
+
+	@Test
+	@DisabledOnOs(OS.WINDOWS)
+	@DisplayName("is capable of removal of a read-only file in a dir in a read-only dir")
+	void readOnlyFileInNestedReadOnlyDirDoesNotCauseFailure() {
+		executeTestsForClass(ReadOnlyFileInDirInReadOnlyDirDoesNotCauseFailureTestCase.class).testEvents()//
 				.assertStatistics(stats -> stats.started(1).succeeded(1));
 	}
 
@@ -776,6 +794,34 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			var path = Files.write(tempDir.resolve("test.txt"), new byte[0]);
 			assumeTrue(path.toFile().setWritable(false),
 				() -> "Unable to set file " + path + " readonly via .toFile().setWritable(false)");
+		}
+
+	}
+
+	// https://github.com/junit-team/junit5/issues/2171
+	static class ReadOnlyFileInReadOnlyDirDoesNotCauseFailureTestCase {
+
+		@Test
+		void createReadOnlyFileInReadOnlyDir(@TempDir File tempDir) throws IOException {
+			File file = tempDir.toPath().resolve("file").toFile();
+			assumeTrue(file.createNewFile());
+			assumeTrue(tempDir.setReadOnly());
+			assumeTrue(file.setReadOnly());
+		}
+
+	}
+
+	// https://github.com/junit-team/junit5/issues/2171
+	static class ReadOnlyFileInDirInReadOnlyDirDoesNotCauseFailureTestCase {
+
+		@Test
+		void createReadOnlyFileInReadOnlyDir(@TempDir File tempDir) throws IOException {
+			File file = tempDir.toPath().resolve("dir").resolve("file").toFile();
+			assumeTrue(file.getParentFile().mkdirs());
+			assumeTrue(file.createNewFile());
+			assumeTrue(tempDir.setReadOnly());
+			assumeTrue(file.getParentFile().setReadOnly());
+			assumeTrue(file.setReadOnly());
 		}
 
 	}
