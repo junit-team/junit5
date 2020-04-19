@@ -5,13 +5,15 @@
 
 *Scope:*
 
-* New `@EnabledIf`/`@DisabledIf` for conditional execution based on method calls
-* New `MethodOrderer` named `DisplayName`
-* New `DisplayNameGenerator` named `Simple` that removes empty parentheses
-* `assertThrows` for Kotlin can now be used with suspending functions
-* `TestExecutionListener` deactivation via configuration parameter
+* New `@EnabledIf`/`@DisabledIf` annotations for conditional execution based on method
+  calls
+* New `MethodOrderer` named `DisplayName` that orders methods based on their display names
+* New `DisplayNameGenerator` named `Simple` that removes parentheses for empty parameter
+  lists
+* `assertThrows()` for Kotlin can now be used with suspending functions
+* `TestExecutionListener` deactivation via a configuration parameter
 * `EngineTestKit` now allows for testing post-discovery filtering and pruning
-* Interoperability improvements for the Vintage test engine with Spock
+* Improved interoperability with Spock for the Vintage test engine
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/44?closed=1+[5.7 M1] milestone page in the JUnit repository
@@ -39,16 +41,17 @@ on GitHub.
   one to specify a comma-separated list of patterns for deactivating
   `TestExecutionListener` implementations registered via the `ServiceLoader` mechanism.
 * The `@Testable` annotation may now be applied _directly_ to fields.
-* Add `Node.DynamicTestExecutor#execute(TestDescriptor, EngineExecutionListener)` for
-  engines that wish to pass a custom `EngineExecutionListener` and cancel or wait for the
-  execution of a submitted test via the returned `Future`.
-* Add `EngineExecutionListener.NOOP` and change all declared methods to have empty default
+* New `Node.DynamicTestExecutor#execute(TestDescriptor, EngineExecutionListener)` method
+  for engines that wish to provide a custom `EngineExecutionListener` and cancel or wait
+  for the execution of a submitted test via the returned `Future`.
+* New `EngineExecutionListener.NOOP` `EngineExecutionListener` implementation.
+* All declared methods in the `EngineExecutionListener` API now have empty `default`
   implementations.
 * The `EngineTestKit` now reuses the same test discovery and execution logic as the
-  `Launcher`. Thus, it's now possible to test that an engine's behavior in the presence of
+  `Launcher`. Thus, it's now possible to test an engine's behavior in the presence of
   post-discovery filters (e.g. tag filters) and with regard to pruning.
-* The TestKit now allows to match conditions with events loosely, i.e. an incomplete match
-  with or without a fixed order.
+* The `EngineTestKit` now supports matching conditions with events loosely, i.e. an
+  incomplete match with or without a fixed order.
 
 
 [[release-notes-5.7.0-M1-junit-jupiter]]
@@ -62,25 +65,26 @@ on GitHub.
 
 ==== New Features and Improvements
 
-* New annotations `@EnabledIf` and `@DisabledIf` can be used to enable/disable a test
-or container based on static condition methods.
+* New `@EnabledIf` and `@DisabledIf` annotations can be used to enable or disable a test
+  or container based on condition methods.
 * New `MethodOrderer` named `DisplayName` that sorts test methods alphanumerically based
-on their display names.
+  on their display names.
 * New `DisplayNameGenerator` named `Simple` (based on `Standard`) that removes trailing
-parentheses for methods with no parameters.
-* `assertThrows` for Kotlin can now be used with suspending functions and other lambda
+  parentheses for methods with no parameters.
+* `assertThrows()` for Kotlin can now be used with suspending functions and other lambda
   contexts that require inlining.
 * The `JRE` enum now provides a static `currentVersion()` method that returns the enum
   constant for the currently executing JRE, e.g. for use in custom execution conditions
   and other extensions.
+* The `name` attribute of `@ParameterizedTest` is now clearly documented to be a
+  `MessageFormat` pattern.
 * Synthetic constructors are now ignored when instantiating a test class.
 * The Javadoc for the `provideTestTemplateInvocationContexts()` method in
   `TestTemplateInvocationContextProvider` has been aligned with the actual implementation.
   Providers are now officially allowed to return an empty stream, and the error message
   when all provided streams are empty is now more helpful.
-* The `name` attribute of `@ParameterizedTest` is now clearly documented to be a
-  `MessageFormat` pattern.
-* New `getDisplayName()` method in `MethodDescriptor`.
+* New `getDisplayName()` method in `MethodDescriptor` for use in `MethodOrderer`
+  implementations.
 
 
 [[release-notes-5.7.0-M1-junit-vintage]]
