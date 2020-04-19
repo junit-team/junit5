@@ -522,25 +522,27 @@ authors as well as build tool and IDE vendors.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>New <code>@EnabledIf</code>/<code>@DisabledIf</code> for conditional execution based on method calls</p>
+<p>New <code>@EnabledIf</code>/<code>@DisabledIf</code> annotations for conditional execution based on method
+calls</p>
 </li>
 <li>
-<p>New <code>MethodOrderer</code> named <code>DisplayName</code></p>
+<p>New <code>MethodOrderer</code> named <code>DisplayName</code> that orders methods based on their display names</p>
 </li>
 <li>
-<p>New <code>DisplayNameGenerator</code> named <code>Simple</code> that removes empty parentheses</p>
+<p>New <code>DisplayNameGenerator</code> named <code>Simple</code> that removes parentheses for empty parameter
+lists</p>
 </li>
 <li>
-<p><code>assertThrows</code> for Kotlin can now be used with suspending functions</p>
+<p><code>assertThrows()</code> for Kotlin can now be used with suspending functions</p>
 </li>
 <li>
-<p><code>TestExecutionListener</code> deactivation via configuration parameter</p>
+<p><code>TestExecutionListener</code> deactivation via a configuration parameter</p>
 </li>
 <li>
 <p><code>EngineTestKit</code> now allows for testing post-discovery filtering and pruning</p>
 </li>
 <li>
-<p>Interoperability improvements for the Vintage test engine with Spock</p>
+<p>Improved interoperability with Spock for the Vintage test engine</p>
 </li>
 </ul>
 </div>
@@ -596,22 +598,25 @@ one to specify a comma-separated list of patterns for deactivating
 <p>The <code>@Testable</code> annotation may now be applied <em>directly</em> to fields.</p>
 </li>
 <li>
-<p>Add <code>Node.DynamicTestExecutor#execute(TestDescriptor, EngineExecutionListener)</code> for
-engines that wish to pass a custom <code>EngineExecutionListener</code> and cancel or wait for the
-execution of a submitted test via the returned <code>Future</code>.</p>
+<p>New <code>Node.DynamicTestExecutor#execute(TestDescriptor, EngineExecutionListener)</code> method
+for engines that wish to provide a custom <code>EngineExecutionListener</code> and cancel or wait
+for the execution of a submitted test via the returned <code>Future</code>.</p>
 </li>
 <li>
-<p>Add <code>EngineExecutionListener.NOOP</code> and change all declared methods to have empty default
+<p>New <code>EngineExecutionListener.NOOP</code> <code>EngineExecutionListener</code> implementation.</p>
+</li>
+<li>
+<p>All declared methods in the <code>EngineExecutionListener</code> API now have empty <code>default</code>
 implementations.</p>
 </li>
 <li>
 <p>The <code>EngineTestKit</code> now reuses the same test discovery and execution logic as the
-<code>Launcher</code>. Thus, it&#8217;s now possible to test that an engine&#8217;s behavior in the presence of
+<code>Launcher</code>. Thus, it&#8217;s now possible to test an engine&#8217;s behavior in the presence of
 post-discovery filters (e.g. tag filters) and with regard to pruning.</p>
 </li>
 <li>
-<p>The TestKit now allows to match conditions with events loosely, i.e. an incomplete match
-with or without a fixed order.</p>
+<p>The <code>EngineTestKit</code> now supports matching conditions with events loosely, i.e. an
+incomplete match with or without a fixed order.</p>
 </li>
 </ul>
 </div>
@@ -638,8 +643,8 @@ classes instead of failing for missing methods in such cases.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>New annotations <code>@EnabledIf</code> and <code>@DisabledIf</code> can be used to enable/disable a test
-or container based on static condition methods.</p>
+<p>New <code>@EnabledIf</code> and <code>@DisabledIf</code> annotations can be used to enable or disable a test
+or container based on condition methods.</p>
 </li>
 <li>
 <p>New <code>MethodOrderer</code> named <code>DisplayName</code> that sorts test methods alphanumerically based
@@ -650,13 +655,17 @@ on their display names.</p>
 parentheses for methods with no parameters.</p>
 </li>
 <li>
-<p><code>assertThrows</code> for Kotlin can now be used with suspending functions and other lambda
+<p><code>assertThrows()</code> for Kotlin can now be used with suspending functions and other lambda
 contexts that require inlining.</p>
 </li>
 <li>
 <p>The <code>JRE</code> enum now provides a static <code>currentVersion()</code> method that returns the enum
 constant for the currently executing JRE, e.g. for use in custom execution conditions
 and other extensions.</p>
+</li>
+<li>
+<p>The <code>name</code> attribute of <code>@ParameterizedTest</code> is now clearly documented to be a
+<code>MessageFormat</code> pattern.</p>
 </li>
 <li>
 <p>Synthetic constructors are now ignored when instantiating a test class.</p>
@@ -668,11 +677,8 @@ Providers are now officially allowed to return an empty stream, and the error me
 when all provided streams are empty is now more helpful.</p>
 </li>
 <li>
-<p>The <code>name</code> attribute of <code>@ParameterizedTest</code> is now clearly documented to be a
-<code>MessageFormat</code> pattern.</p>
-</li>
-<li>
-<p>New <code>getDisplayName()</code> method in <code>MethodDescriptor</code>.</p>
+<p>New <code>getDisplayName()</code> method in <code>MethodDescriptor</code> for use in <code>MethodOrderer</code>
+implementations.</p>
 </li>
 </ul>
 </div>
@@ -880,7 +886,7 @@ order when <code>PER_CLASS</code> test instance lifecycle semantics have been co
 <div id="footer">
 <div id="footer-text">
 Version 5.7.0-SNAPSHOT<br>
-Last updated 2020-04-19 15:21:43 UTC
+Last updated 2020-04-19 15:40:49 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
