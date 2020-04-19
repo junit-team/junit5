@@ -22,6 +22,10 @@ on GitHub.
 * In the `EngineTestKit` API, the `all()`, `containers()`, and `tests()` methods in
   `EngineExecutionResults` that were deprecated in JUnit Platform 1.6.0 have been removed
   in favor of `allEvents()`, `containerEvents()`, and `testEvents()`, respectively.
+* The following methods in `EngineTestKit` are now deprecated with replacements:
+  - `execute(String, EngineDiscoveryRequest)` → `execute(String, LauncherDiscoveryRequest)`
+  - `execute(TestEngine, EngineDiscoveryRequest)` → `execute(TestEngine, LauncherDiscoveryRequest)`
+  - `Builder.filters(DiscoveryFilter...)` → `Builder.filters(Filter...)`
 
 ==== New Features and Improvements
 
@@ -36,6 +40,9 @@ on GitHub.
   execution of a submitted test via the returned `Future`.
 * Add `EngineExecutionListener.NOOP` and change all declared methods to have empty default
   implementations.
+* The `EngineTestKit` now reuses the same test discovery and execution logic as the
+  `Launcher`. Thus, it's now possible to test that an engine's behavior in the presence of
+  post-discovery filters (e.g. tag filters) and with regard to pruning.
 * The TestKit now allows to match conditions with events loosely, i.e. an incomplete match
   with or without a fixed order.
 

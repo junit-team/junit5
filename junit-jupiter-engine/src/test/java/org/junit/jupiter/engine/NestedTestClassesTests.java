@@ -12,6 +12,7 @@ package org.junit.jupiter.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.util.Throwables.getRootCause;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -182,7 +183,7 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 		assertThatExceptionOfType(JUnitException.class)//
 				.isThrownBy(() -> executeTestsForClass(start))//
 				.withCauseExactlyInstanceOf(JUnitException.class)//
-				.satisfies(ex -> assertThat(ex.getCause()).hasMessageMatching(
+				.satisfies(ex -> assertThat(getRootCause(ex)).hasMessageMatching(
 					String.format("Detected cycle in inner class hierarchy between .+%s and .+%s", from.getSimpleName(),
 						to.getSimpleName())));
 	}

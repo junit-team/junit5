@@ -742,7 +742,7 @@ class DefaultLauncherTests {
 	void thirdPartyEngineUsingReservedEngineIdPrefixEmitsWarning(LogRecordListener listener) {
 		String id = "junit-using-reserved-prefix";
 		createLauncher(new TestEngineStub(id));
-		assertThat(listener.stream(DefaultLauncher.class, Level.WARNING).map(LogRecord::getMessage)) //
+		assertThat(listener.stream(EngineIdValidator.class, Level.WARNING).map(LogRecord::getMessage)) //
 				.containsExactly(
 					"Third-party TestEngine implementations are forbidden to use the reserved 'junit-' prefix for their ID: '"
 							+ id + "'");
